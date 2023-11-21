@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -56,7 +57,7 @@ class Cwmstats
      *
      * @since 9.0.0
      */
-    public static function total_plays(int $id): int
+    public static function totalPlays(int $id): int
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
@@ -80,7 +81,7 @@ class Cwmstats
      *
      * @since 9.0.0
      */
-    public static function get_total_messages(string $start = '', string $end = ''): int
+    public static function getTotalMessages(string $start = '', string $end = ''): int
     {
         if ($start != self::$total_messages_start || $end != self::$total_messages_end || !self::$total_messages) {
             self::$total_messages_start = $start;
@@ -124,7 +125,7 @@ class Cwmstats
      *
      * @since 9.0.0
      */
-    public static function get_total_topics(string $start = '', string $end = ''): int
+    public static function getTotalTopics(string $start = '', string $end = ''): int
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
@@ -155,7 +156,7 @@ class Cwmstats
      *
      * @since 9.0.0
      */
-    public static function get_top_studies(): string
+    public static function getTopStudies(): string
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
@@ -179,78 +180,13 @@ class Cwmstats
     }
 
     /**
-     * Total media files in Bible Study
-     *
-     * @return int
-     *
-     * @since      9.0.0
-     * @deprecated 10.0.0
-     */
-    public static function get_total_categories(): int
-    {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query
-            ->select('*')
-            ->from('#__bsms_mediafiles')
-            ->where('published = ' . $db->q('1'));
-        $db->setQuery($query);
-        die('need to see this why using this');
-
-        return (int)$db->loadResult();
-    }
-
-    /**
-     * Get top books
-     *
-     * @return object
-     *
-     * @deprecated Not used as of 8.0.0
-     *
-     * @since      9.0.0
-     */
-    public static function get_top_books()
-    {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query
-            ->select('booknumber, COUNT( hits ) AS totalmsg')
-            ->from('#__bsms_studies')
-            ->group('booknumber')
-            ->order('totalmsg DESC');
-        $db->setQuery($query, 0, 5);
-        $results = $db->loadObjectList();
-
-        if (count($results) > 0) {
-            $ids   = implode(',', $results);
-            $query = $db->getQuery(true);
-            $query
-                ->select('bookname')
-                ->from('#__bsms_books')
-                ->where('booknumber IN (' . $ids . ')')
-                ->order('booknumber');
-            $db->setQuery($query);
-            $names = $db->loadResult();
-            $i     = 0;
-
-            foreach ($results as $result) {
-                $result->bookname = $names[$i++];
-            }
-        } else {
-            $results = new \stdClass;
-        }
-
-        return $results;
-    }
-
-    /**
      * Total comments
      *
      * @return int
      *
      * @since 9.0.0
      */
-    public static function get_total_comments(): int
+    public static function getTotalComments(): int
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
@@ -270,7 +206,7 @@ class Cwmstats
      *
      * @since 9.0.0
      */
-    public static function get_top_thirty_days(): string
+    public static function getTopThirtyDays(): string
     {
         $month      = mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"));
         $last_month = date("Y-m-d 00:00:01", $month);
@@ -307,7 +243,7 @@ class Cwmstats
      *
      * @since 9.0.0
      */
-    public static function total_media_files(): int
+    public static function getTotalMediaFiles(): int
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
@@ -327,7 +263,7 @@ class Cwmstats
      *
      * @since 9.0.0
      */
-    public static function get_top_downloads(): string
+    public static function getTopDownloads(): string
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
@@ -357,13 +293,13 @@ class Cwmstats
     }
 
     /**
-     * Get Downloads ninety
+     * Get Downloads Last three Months
      *
      * @return  string list of download links
      *
      * @since 9.0.0
      */
-    public static function get_downloads_ninety(): string
+    public static function getDownloadsLastThreeMonths(): string
     {
         $month     = mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"));
         $lastmonth = date("Y-m-d 00:00:01", $month);
@@ -404,7 +340,7 @@ class Cwmstats
      *
      * @since 9.0.0
      */
-    public static function total_downloads(): int
+    public static function getTotalDownloads(): int
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
@@ -428,7 +364,7 @@ class Cwmstats
      *
      * @since 9.0.0
      */
-    public static function top_score(): string
+    public static function getTopScore(): string
     {
         $final           = [];
         $top_score_table = '';
@@ -484,11 +420,11 @@ class Cwmstats
     /**
      * Returns a System of Player
      *
-     * @return string
+     * @return string|null
      *
      * @since 9.0.0
      */
-    public static function players(): ?string
+    public static function getPlayers(): ?string
     {
         $count_no_player       = 0;
         $count_global_player   = 0;
@@ -505,7 +441,7 @@ class Cwmstats
         $db->setQuery($query);
         $params = $db->loadObjectList();
 
-        $registry      = new Registry;
+        $registry      = new Registry();
         $media_players = null;
 
         if ($params) {
@@ -556,7 +492,7 @@ class Cwmstats
      *
      * @since 9.0.0
      */
-    public static function popups(): string
+    public static function getPopups(): string
     {
         $no_player    = 0;
         $pop_count    = 0;
@@ -576,7 +512,7 @@ class Cwmstats
             $total_media_files = count($popups);
 
             foreach ($popups as $popup) {
-                $registry = new Registry;
+                $registry = new Registry();
                 $registry->loadString($popup->params);
                 $popup = $registry->get('popup', null);
 
@@ -611,12 +547,12 @@ class Cwmstats
     /**
      * Top Score Site
      *
-     * @return string
+     * @return bool|string
      *
      * @throws \Exception
      * @since 9.0.0
      */
-    public function top_score_site()
+    public function getTopScoreSite(): bool|string
     {
         $input = Factory::getApplication()->input;
         $t     = $input->get('t', 1, 'int');

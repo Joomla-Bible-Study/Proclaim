@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package         CWM
  * @subpackage      com_proclaim
@@ -66,7 +67,7 @@ if (!empty($editor)) {
                 <?php
                 echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
             </div>
-        <?php
+            <?php
         else : ?>
             <table class="table table-sm">
                 <caption class="visually-hidden">
@@ -109,7 +110,7 @@ if (!empty($editor)) {
                                 $listOrder
                             ); ?>
                         </th>
-                    <?php
+                        <?php
                     endif; ?>
                     <th scope="col" class="w-10 d-none d-md-table-cell">
                         <?php
@@ -148,10 +149,10 @@ if (!empty($editor)) {
                     <tr class="row<?php
                     echo $i % 2; ?>">
                         <td class="text-center">
-							<span class="tbody-icon">
-								<span class="<?php
+                            <span class="tbody-icon">
+                                <span class="<?php
                                 echo $iconStates[$this->escape($item->state)]; ?>" aria-hidden="true"></span>
-							</span>
+                            </span>
                         </td>
                         <th scope="row">
                             <?php
@@ -169,11 +170,11 @@ if (!empty($editor)) {
                                 echo $this->escape($item->title); ?>
                             </a>
                             <span class="small break-word">
-								<?php
+                                <?php
                                 if (empty($item->note)) : ?>
                                     <?php
                                     echo Text::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
-                                <?php
+                                    <?php
                                 else : ?>
                                     <?php
                                     echo Text::sprintf(
@@ -181,9 +182,9 @@ if (!empty($editor)) {
                                         $this->escape($item->alias),
                                         $this->escape($item->note)
                                     ); ?>
-                                <?php
+                                    <?php
                                 endif; ?>
-							</span>
+                            </span>
                             <div class="small">
                                 <?php
                                 echo Text::_('JCATEGORY') . ': ' . $this->escape($item->category_title); ?>
@@ -199,7 +200,7 @@ if (!empty($editor)) {
                                 <?php
                                 echo LayoutHelper::render('joomla.content.language', $item); ?>
                             </td>
-                        <?php
+                            <?php
                         endif; ?>
                         <td class="small d-none d-md-table-cell">
                             <?php
@@ -210,7 +211,7 @@ if (!empty($editor)) {
                             echo (int)$item->id; ?>
                         </td>
                     </tr>
-                <?php
+                    <?php
                 endforeach; ?>
                 </tbody>
             </table>
@@ -220,7 +221,7 @@ if (!empty($editor)) {
             <?php
             echo $this->pagination->getListFooter(); ?>
 
-        <?php
+            <?php
         endif; ?>
 
         <input type="hidden" name="task" value="">

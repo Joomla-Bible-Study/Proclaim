@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Joomla.Administrator
  * @subpackage  com_config
@@ -9,7 +10,10 @@
 
 namespace CWM\Component\Proclaim\Administrator\Field;
 
-\defined('JPATH_BASE') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+
+// phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
@@ -96,9 +100,9 @@ class FiltersField extends FormField
             $html[] = '	<tr>';
             $html[] = '		<td class="acl-groups left">';
             $html[] = '			' . LayoutHelper::render(
-                    'joomla.html.treeprefix',
-                    array('level' => $group->level + 1)
-                ) . $group->text;
+                'joomla.html.treeprefix',
+                array('level' => $group->level + 1)
+            ) . $group->text;
             $html[] = '		</td>';
             $html[] = '		<td>';
             $html[] = '			<label for="' . $this->id . $group->value . '_filter_type" class="visually-hidden">'

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Default
  *
@@ -33,7 +34,7 @@ $archived  = $this->state->get('filter.published') == 2 ? true : false;
 $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'ordering';
 
-$CWMedia = new Cwmmedia;
+$CWMedia = new Cwmmedia();
 ?>
 <div class="container-fluid">
     <div class="col-lg-6">
@@ -74,18 +75,18 @@ $CWMedia = new Cwmmedia;
             <?php
             foreach ($this->media as $item) {
                 // Sparams are the server parameters
-                $reg = new Joomla\Registry\Registry;
+                $reg = new Joomla\Registry\Registry();
                 $reg->loadString($item->sparams);
                 $item->sparams = $reg;
 
                 // Params are the individual params for the media file record
-                $reg = new Joomla\Registry\Registry;
+                $reg = new Joomla\Registry\Registry();
                 $reg->loadString($item->params);
                 $item->params = $reg;
                 ?>
                 <tr>
                     <?php
-                    $path1 = Cwmhelper::MediaBuildUrl(
+                    $path1 = Cwmhelper::mediaBuildUrl(
                         $item->sparams->get('path'),
                         $item->params->get('filename'),
                         $item->params,
@@ -108,9 +109,9 @@ $CWMedia = new Cwmmedia;
                         </a>
                     </td>
                 </tr>
-            <?php
+                <?php
             } ?></table>
-    <?php
+        <?php
     } else { ?>
         <div style="clear: both"></div>
         <p><?php

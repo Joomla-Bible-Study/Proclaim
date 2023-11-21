@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -30,7 +31,6 @@ use Joomla\Registry\Registry;
  */
 class Cwmteacher extends Cwmlisting
 {
-
     /**
      * Get Teacher for Fluid layout
      *
@@ -66,7 +66,7 @@ class Cwmteacher extends Cwmlisting
 
             // Check to see if com_contact used instead
             if ($result->contact) {
-                $contactmodel = new ContactModel;
+                $contactmodel = new ContactModel();
                 $contact      = $contactmodel->getItem($pk = $result->contact);
 
                 // Substitute contact info from com_contacts for duplicate fields
@@ -107,9 +107,9 @@ class Cwmteacher extends Cwmlisting
     public function getTeacher($params, $id): string
     {
         $input       = Factory::getApplication()->input;
-        $JViewLegacy = new HtmlView;
+        $JViewLegacy = new HtmlView();
         $JViewLegacy->loadHelper('image');
-        $teacherids = new \stdClass;
+        $teacherids = new \stdClass();
         $t          = (int)$params->get('teachertemplateid');
 
         if (!$t) {
@@ -194,7 +194,7 @@ class Cwmteacher extends Cwmlisting
      */
     public function getTeacherListExp($row, $params, $oddeven, $template)
     {
-        $JViewLegacy = new HtmlView;
+        $JViewLegacy = new HtmlView();
         $JViewLegacy->loadHelper('image');
         $imagelarge = Cwmimages::getTeacherThumbnail($row->teacher_image, $row->image);
 
@@ -242,7 +242,7 @@ class Cwmteacher extends Cwmlisting
      */
     public function getTeacherDetailsExp($row, $params)
     {
-        $JViewLegacy = new HtmlView;
+        $JViewLegacy = new HtmlView();
         $JViewLegacy->loadHelper('image');
 
         // Get the image folders and images

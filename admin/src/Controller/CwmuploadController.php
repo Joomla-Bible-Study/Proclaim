@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -13,8 +14,8 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 use JetBrains\PhpStorm\NoReturn;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Path;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Path;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\Session\Session;
@@ -34,7 +35,7 @@ use Joomla\Input\Input;
 class CwmuploadController extends AdminController
 {
     /**
-     * File upload hanlder
+     * File upload handler
      * Controller adapted from COM_MEDIAMU
      *
      * @return void JSON response
@@ -57,7 +58,7 @@ class CwmuploadController extends AdminController
             error_reporting(0);
         }
 
-        $input   = new Input;
+        $input   = new Input();
         $params  = ComponentHelper::getParams('com_proclaim');
         $app     = Factory::getApplication();
         $session = $app->getSession();
@@ -101,22 +102,22 @@ class CwmuploadController extends AdminController
 
         // Check token
         if (!$session->checkToken('request')) {
-            $this->_setResponse(400, Text::_('JINVALID_TOKEN'));
+            $this->setResponse(400, Text::_('JINVALID_TOKEN'));
         }
 
         // Check user perms
         if (!$user->authorise('core.create', 'com_proclaim')) {
-            $this->_setResponse(400, Text::_('JBS_ERROR_PERM_DENIDED'));
+            $this->setResponse(400, Text::_('JBS_ERROR_PERM_DENIDED'));
         }
 
         // Directory check
         if (!file_exists($targetDir) && !is_dir($targetDir) && strpos(Uri::base(), $targetDir) !== false) {
-            $this->_setResponse(100, Text::_('JBS_ERROR_UPLOAD_INVALID_PATH'));
+            $this->setResponse(100, Text::_('JBS_ERROR_UPLOAD_INVALID_PATH'));
         }
 
         // File type check
         if (!in_array(File::getExt($fileName), $exts_arr, true)) {
-            $this->_setResponse(100, Text::_('JBS_ERROR_UPLOAD_INVALID_FILE_EXTENSION'));
+            $this->setResponse(100, Text::_('JBS_ERROR_UPLOAD_INVALID_FILE_EXTENSION'));
         }
 
         // Make sure the fileName is unique but only if chunk is disabled
@@ -142,15 +143,17 @@ class CwmuploadController extends AdminController
                 $tmpfilePath = $targetDir . '/' . $file;
 
                 // Remove temp file if it is older than the max age and is not the current file
-                if (preg_match('/\.part$/', $file) && (filemtime($tmpfilePath) < time(
-                        ) - $maxFileAge) && ($tmpfilePath != "{$filePath}.part")) {
+                if (
+                    preg_match('/\.part$/', $file) && (filemtime($tmpfilePath) < time(
+                    ) - $maxFileAge) && ($tmpfilePath !== "{$filePath}.part")
+                ) {
                     File::delete($tmpfilePath);
                 }
             }
 
             closedir($dir);
         } else {
-            $this->_setResponse(100, 'Failed to open temp directory.');
+            $this->setResponse(100, 'Failed to open temp directory.');
         }
 
         // Look for the content type header
@@ -163,7 +166,7 @@ class CwmuploadController extends AdminController
         }
 
         // Handle non multipart uploads older WebKit versions didn't support multipart in HTML5
-        if (strpos($contentType, "multipart") !== false) {
+        if (str_contains($contentType, "multipart")) {
             if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
                 // Open temp file
                 $out = fopen("{$filePath}.part", $chunk == 0 ? "wb" : "ab");
@@ -177,17 +180,17 @@ class CwmuploadController extends AdminController
                             fwrite($out, $buff);
                         }
                     } else {
-                        $this->_setResponse(101, "Failed to open input stream.");
+                        $this->setResponse(101, "Failed to open input stream.");
                     }
 
                     fclose($in);
                     fclose($out);
                     File::delete($_FILES['file']['tmp_name']);
                 } else {
-                    $this->_setResponse(102, "Failed to open output stream.");
+                    $this->setResponse(102, "Failed to open output stream.");
                 }
             } else {
-                $this->_setResponse(103, "Failed to move uploaded file");
+                $this->setResponse(103, "Failed to move uploaded file");
             }
         } else {
             // Open temp file
@@ -202,13 +205,13 @@ class CwmuploadController extends AdminController
                         fwrite($out, $buff);
                     }
                 } else {
-                    $this->_setResponse(101, "Failed to open input stream.");
+                    $this->setResponse(101, "Failed to open input stream.");
                 }
 
                 fclose($in);
                 fclose($out);
             } else {
-                $this->_setResponse(102, "Failed to open output stream.");
+                $this->setResponse(102, "Failed to open output stream.");
             }
         }
 
@@ -218,7 +221,7 @@ class CwmuploadController extends AdminController
             @rename("{$filePath}.part", $filePath);
         }
 
-        $this->_setResponse(0, null, false);
+        $this->setResponse(0, null, false);
     }
 
     /**
@@ -233,7 +236,7 @@ class CwmuploadController extends AdminController
      * @throws \JsonException
      * @since 9.0
      */
-    #[NoReturn] private function _setResponse(int $code, string $msg = null, bool $error = true): void
+    #[NoReturn] private function setResponse(int $code, string $msg = null, bool $error = true): void
     {
         if ($error) {
             $jsonrpc = array(

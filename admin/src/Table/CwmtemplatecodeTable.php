@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -103,11 +104,13 @@ class CwmtemplatecodeTable extends Table
      */
     public function store($updateNulls = false)
     {
-        if ($this->filename === 'main'
+        if (
+            $this->filename === 'main'
             || $this->filename === 'simple'
             || $this->filename === 'custom'
             || $this->filename === 'formheader'
-            || $this->filename === 'formfooter') {
+            || $this->filename === 'formfooter'
+        ) {
             Factory::getApplication()->enqueueMessage('JBS_STYLE_RESTRICED_FILE_NAME', 'error');
 
             return false;

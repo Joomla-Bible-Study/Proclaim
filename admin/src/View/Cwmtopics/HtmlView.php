@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Topics html
  *
@@ -154,9 +155,11 @@ class HtmlView extends BaseHtmlView
             }
         }
 
-        if ($this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED && $this->canDo->get(
+        if (
+            $this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED && $this->canDo->get(
                 'core.delete'
-            )) {
+            )
+        ) {
             $toolbar->delete('cwmtopics.delete')
                 ->text('JTOOLBAR_EMPTY_TRASH')
                 ->message('JGLOBAL_CONFIRM_DELETE')

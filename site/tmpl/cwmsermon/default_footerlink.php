@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Default FooterLink
  *
@@ -20,7 +21,7 @@ use Joomla\Input\Input;
 ?>
 <div class="listingfooter">
     <?php
-    $input     = new Input;
+    $input     = new Input();
     $link_text = $this->item->params->get('link_text');
 
     if (!$link_text) {

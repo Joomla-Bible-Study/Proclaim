@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -41,7 +42,6 @@ $workflow_enabled  = ComponentHelper::getParams('com_proclaim')->get('workflow_e
 $workflow_state    = false;
 $workflow_featured = false;
 if ($workflow_enabled) :
-
 // @todo move the script to a file
     $js = <<<JS
 	(function() {
@@ -55,7 +55,7 @@ if ($workflow_enabled) :
 		  });
 		});
 	})();
-	JS;
+    JS;
 
     $wa->getRegistry()->addExtensionRegistryFile('com_workflow');
     $wa->useScript('com_workflow.admin-items-workflow-buttons')
@@ -100,11 +100,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                     <div class="alert alert-info">
                         <span class="icon-info-circle" aria-hidden="true"></span><span
                                 class="visually-hidden"><?php
-                            echo Text::_('INFO'); ?></span>
+                                echo Text::_('INFO'); ?></span>
                         <?php
                         echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                     </div>
-                <?php
+                    <?php
                 else : ?>
                     <table class="table itemList" id="messagesList">
                         <caption class="visually-hidden">
@@ -211,7 +211,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                         $listOrder
                                     ); ?>
                                 </th>
-                            <?php
+                                <?php
                             endif; ?>
                             <th scope="col" class="w-3 d-none d-lg-table-cell">
                                 <?php
@@ -233,7 +233,8 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                         </tr>
                         </tfoot>
                         <tbody<?php
-                        if ($saveOrder) : ?> class="js-draggable" data-url="<?php
+                        if ($saveOrder) :
+                            ?> class="js-draggable" data-url="<?php
                         echo $saveOrderingUrl; ?>" data-direction="<?php
                         echo strtolower($listDirn); ?>" data-nested="true"<?php
                         endif; ?>>
@@ -241,9 +242,9 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                         foreach ($this->items as $i => $item) :
                             $item->max_ordering = 0;
                             $canCheckin = $user->authorise(
-                                    'core.manage',
-                                    'com_checkin'
-                                ) || $item->checked_out == $userId || is_null($item->checked_out);
+                                'core.manage',
+                                'com_checkin'
+                            ) || $item->checked_out == $userId || is_null($item->checked_out);
                             $canCreate = $user->authorise('core.create');
                             $canEdit = $user->authorise('core.edit', 'com_proclaim.message.' . $item->id);
                             $canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.message.' . $item->id);
@@ -263,8 +264,8 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                         $iconClass = ' inactive';
                                     } elseif (!$saveOrder) {
                                         $iconClass = ' inactive" title="' . HtmlHelper::tooltipText(
-                                                'JORDERINGDISABLED'
-                                            );
+                                            'JORDERINGDISABLED'
+                                        );
                                     }
                                     ?>
                                     <span class="sortable-handler<?php
@@ -275,9 +276,9 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                     if ($canChange && $saveOrder) : ?>
                                         <input type="text" name="order[]" size="5"
                                                value="<?php
-                                               echo $item->ordering; ?>"
+                                                echo $item->ordering; ?>"
                                                class="width-20 text-area-order hidden"/>
-                                    <?php
+                                        <?php
                                     endif; ?>
                                 </td>
                                 <td class="text-center d-none d-md-table-cell">
@@ -288,7 +289,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                         'id'          => 'state-' . $item->id
                                     ];
 
-                                    echo (new PublishedButton)->render(
+                                    echo (new PublishedButton())->render(
                                         (int)$item->published,
                                         $i,
                                         $options,
@@ -315,17 +316,17 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                                 <?php
                                                 echo $this->escape($item->studytitle); ?>
                                             </a>
-                                        <?php
+                                            <?php
                                         else : ?>
                                             <?php
                                             echo $this->escape($item->studytitle); ?>
-                                        <?php
+                                            <?php
                                         endif; ?>
                                         <br/>
                                         <span class="small">
-										<?php
+                                        <?php
                                         echo Text::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
-									</span>
+                                    </span>
                                     </div>
                                 </td>
                                 <td class="small d-none d-md-table-cell">
@@ -365,14 +366,14 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                         <?php
                                         echo LayoutHelper::render('joomla.content.language', $item); ?>
                                     </td>
-                                <?php
+                                    <?php
                                 endif; ?>
                                 <td class="d-none d-lg-table-cell">
                                     <?php
                                     echo $item->id; ?>
                                 </td>
                             </tr>
-                        <?php
+                            <?php
                         endforeach; ?>
                         </tbody>
                     </table>
@@ -385,7 +386,8 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                     <?php
                     // Load the batch processing form. ?>
                     <?php
-                    if ($user->authorise('core.create', 'com_proclaim')
+                    if (
+                        $user->authorise('core.create', 'com_proclaim')
                         && $user->authorise('core.edit', 'com_proclaim')
                         && $user->authorise('core.edit.state', 'com_proclaim')
                     ) : ?>
@@ -399,9 +401,9 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                             ),
                             $this->loadTemplate('batch_body')
                         ); ?>
-                    <?php
+                        <?php
                     endif; ?>
-                <?php
+                    <?php
                 endif; ?>
 
                 <input type="hidden" name="task" value=""/>

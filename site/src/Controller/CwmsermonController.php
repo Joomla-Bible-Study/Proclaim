@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -160,7 +161,7 @@ class CwmsermonController extends FormController
         $input->set('t', $t);
 
         // Convert parameter fields to objects.
-        $registry = new Registry;
+        $registry = new Registry();
         $registry->loadString($model->_template[0]->params);
         $params = $registry;
 
@@ -258,10 +259,10 @@ class CwmsermonController extends FormController
         }
 
         $Body = $comment_author . ' ' . Text::_(
-                'JBS_STY_HAS_ENTERED_COMMENT'
-            ) . ': ' . $comment_title . ' - ' . $comment_study_date . ' ' . Text::_(
-                'JBS_STY_ON'
-            ) . ': ' . $comment_date;
+            'JBS_STY_HAS_ENTERED_COMMENT'
+        ) . ': ' . $comment_title . ' - ' . $comment_study_date . ' ' . Text::_(
+            'JBS_STY_ON'
+        ) . ': ' . $comment_date;
 
         if ($comment_published > 0) {
             $Body .= ' ' . Text::_('JBS_STY_COMMENT_PUBLISHED');
@@ -291,7 +292,7 @@ class CwmsermonController extends FormController
         $mid   = $input->getInt('mid');
 
         if ($task === 'download') {
-            $downloader = new Cwmdownload;
+            $downloader = new Cwmdownload();
             $downloader->download($mid);
         }
     }

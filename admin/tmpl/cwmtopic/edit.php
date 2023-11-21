@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form
  *
@@ -42,15 +43,14 @@ $wa->useScript('keepalive')
 /** @type Joomla\Registry\Registry $params */
 $params = $this->state->get('params');
 $params = $params->toArray();
-$input  = new Input;
+$input  = new Input();
 ?>
 <form action="<?php
 echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate">
     <div class="main-card">
         <?php
-        echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general', 'recall' => true, 'breakpoint' => 768]
-        ); ?>
+        echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general', 'recall' => true, 'breakpoint' => 768]); ?>
 
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_DETAILS')); ?>
@@ -70,7 +70,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                             echo "<br/>"; ?>
                         </div>
                     </div>
-                <?php
+                    <?php
                 } ?>
                 <div class="control-group">
                     <div class="control-label">
@@ -83,7 +83,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     </div>
                 </div>
                 <?php
-                foreach ($this->form->getFieldset('params') as $field): ?>
+                foreach ($this->form->getFieldset('params') as $field) : ?>
                     <div class="control-group">
                         <div class="control-label">
                             <?php
@@ -94,7 +94,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                             echo $field->input; ?>
                         </div>
                     </div>
-                <?php
+                    <?php
                 endforeach; ?>
             </div>
 
@@ -125,7 +125,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
-        if ($this->canDo->get('core.admin')): ?>
+        if ($this->canDo->get('core.admin')) : ?>
             <?php
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
             <div class="row-fluid">
@@ -134,7 +134,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
             </div>
             <?php
             echo HTMLHelper::_('uitab.endTab'); ?>
-        <?php
+            <?php
         endif; ?>
         <?php
         echo $this->form->getInput('id'); ?>

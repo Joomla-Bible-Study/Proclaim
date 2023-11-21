@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -51,8 +52,7 @@ class CwmpodcastModel extends AdminModel
     public function getForm($data = array(), $loadData = true): Form
     {
         // Get the form.
-        return $this->loadForm('com_proclaim.podcast', 'podcast', array('control' => 'jform', 'load_data' => $loadData)
-        );
+        return $this->loadForm('com_proclaim.podcast', 'podcast', array('control' => 'jform', 'load_data' => $loadData));
     }
 
     /**

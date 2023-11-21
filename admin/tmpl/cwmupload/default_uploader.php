@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -40,7 +41,7 @@ defined('_JEXEC') or die();
 </script>
 <form action="
 <?php
-$input = new Joomla\Input\Input;
+$input = new Joomla\Input\Input();
 if ($input->get('layout', '', 'string') === 'modal') {
     $url = 'index.php?option=com_proclaim&view=cwmupload&tmpl=component&layout=modal';
 } else {
@@ -88,5 +89,5 @@ if ($this->enableLog) : ?>
     <button id="log_btn"><?php
         echo Text::_('JBS_UPLOADER_LOG_BTN'); ?></button>
     <div id="log"></div>
-<?php
+    <?php
 endif; ?>

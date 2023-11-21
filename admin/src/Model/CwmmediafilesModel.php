@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -107,7 +108,7 @@ class CwmmediafilesModel extends ListModel
 
         try {
             // This is to load the server model into the Media Files Variable.
-            $serverModel = new CwmserverModel;
+            $serverModel = new CwmserverModel();
 
             $items = $this->_getList($this->_getListQuery(), $this->getStart(), $this->getState('list.limit'));
 
@@ -133,11 +134,11 @@ class CwmmediafilesModel extends ListModel
                 $item->serverConfig = $serverModel->getConfig($item->serverType);
 
                 // Convert all JSON strings to Arrays
-                $registry = new Registry;
+                $registry = new Registry();
                 $registry->loadString($item->params);
                 $item->params = $registry;
 
-                $registry2 = new Registry;
+                $registry2 = new Registry();
                 $registry2->loadString($item->metadata);
                 $item->metadata = $registry2;
             }
@@ -391,5 +392,4 @@ class CwmmediafilesModel extends ListModel
 
         return $query;
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form
  *
@@ -140,7 +141,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
-        if ($this->canDo->get('core.admin')): ?>
+        if ($this->canDo->get('core.admin')) : ?>
             <?php
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
             <div class="row-fluid">
@@ -149,7 +150,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
             </div>
             <?php
             echo HTMLHelper::_('uitab.endTab'); ?>
-        <?php
+            <?php
         endif; ?>
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="return" value="<?php

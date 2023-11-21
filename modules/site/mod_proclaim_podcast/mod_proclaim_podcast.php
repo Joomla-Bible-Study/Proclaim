@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Podcast Model
  *
@@ -31,7 +32,7 @@ if (!ComponentHelper::isEnabled('com_proclaim')) {
     throw new Exception("Extension Proclaim not present or enabled");
 }
 
-$podcast   = new Cwmpodcastsubscribe;
+$podcast   = new Cwmpodcastsubscribe();
 $subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 
 // Display the module

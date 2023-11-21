@@ -1,4 +1,5 @@
 <?php
+
 /**
  * View html
  *
@@ -21,7 +22,7 @@ $session = Factory::getApplication()->getSession();
 $session->set('migration_stack', '', 'CWM');
 ?>
 <?php
-if (!empty($errors)): ?>
+if (!empty($errors)) : ?>
     <!--suppress HtmlUnknownTarget -->
     <div style="background-color: #900; color: #fff; font-size: large;">
         <h1>MySQL errors during installation</h1>
@@ -40,7 +41,7 @@ if (!empty($errors)): ?>
             echo implode("<br/>", $errors); ?>
         </p>
     </div>
-<?php
+    <?php
 endif; ?>
 
 <h1>
@@ -91,9 +92,9 @@ $rows = 0; ?>
                         echo ($module['result']) ? 'Installed' : 'Not installed'; ?></strong>
                 </td>
             </tr>
-        <?php
+            <?php
         endforeach; ?>
-    <?php
+        <?php
     endif; ?>
     <?php
     if (count($this->status->cwmplugins)) : ?>
@@ -116,9 +117,9 @@ $rows = 0; ?>
                         echo ($plugin['result']) ? 'Installed' : 'Not installed'; ?></strong>
                 </td>
             </tr>
-        <?php
+            <?php
         endforeach; ?>
-    <?php
+        <?php
     endif; ?>
     </tbody>
 </table>

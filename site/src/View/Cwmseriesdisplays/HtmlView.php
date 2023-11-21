@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -106,8 +107,8 @@ class HtmlView extends BaseHtmlView
         $this->params   = $params;
         $this->template = $this->state->get('template');
 
-        $uri         = new Uri;
-        $pagebuilder = new Cwmpagebuilder;
+        $uri         = new Uri();
+        $pagebuilder = new Cwmpagebuilder();
         $items       = $this->get('Items');
 
         // Adjust the slug if there is no alias in the row
@@ -140,7 +141,7 @@ class HtmlView extends BaseHtmlView
 
         $this->items           = $items;
         $pagination            = $this->get('Pagination');
-        $this->page            = new \stdClass;
+        $this->page            = new \stdClass();
         $this->page->pagelinks = $pagination->getPagesLinks();
         $this->page->counter   = $pagination->getPagesCounter();
 
@@ -156,8 +157,8 @@ class HtmlView extends BaseHtmlView
 
         if ($params->get('series_list_show_pagination') === '1') {
             $this->page->limits = '<span class="display-limit">' . Text::_(
-                    'JGLOBAL_DISPLAY_NUM'
-                ) . $this->pagination->getLimitBox() . '</span>';
+                'JGLOBAL_DISPLAY_NUM'
+            ) . $this->pagination->getLimitBox() . '</span>';
         }
 
         $uri_tostring = $uri->toString();
@@ -167,6 +168,4 @@ class HtmlView extends BaseHtmlView
 
         parent::display($tpl);
     }
-
-
 }

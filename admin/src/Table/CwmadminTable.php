@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -116,7 +117,7 @@ class CwmadminTable extends Table
 
         // For Saving the page.
         if (isset($array['params']) && is_array($array['params'])) {
-            $registry = new Registry;
+            $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = (string)$registry;
         }
@@ -124,7 +125,7 @@ class CwmadminTable extends Table
         // For loading the administrator page
         if (isset($array['params']) && is_string($array['params'])) {
             // Convert the params field to a string.
-            $parameter = new Registry;
+            $parameter = new Registry();
             $parameter->loadString($array['params']);
             $params = $parameter->toArray();
         }

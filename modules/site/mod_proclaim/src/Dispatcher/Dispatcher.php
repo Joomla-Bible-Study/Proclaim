@@ -60,7 +60,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             $this->app->enqueueMessage($e, 'error');
         }
 
-        $pagebuilder = new Cwmpagebuilder;
+        $pagebuilder = new Cwmpagebuilder();
 
         $admin = Cwmparams::getAdmin();
         /** @var Registry $admin_params */
@@ -75,9 +75,11 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             $this->getApplication()
         );
 
-        if ($data['params']->get('useexpert_module') > 0 || is_string(
+        if (
+            $data['params']->get('useexpert_module') > 0 || is_string(
                 $data['params']->get('moduletemplate')
-            ) === true) {
+            ) === true
+        ) {
             foreach ($data['list'] as $item) {
                 try {
                     $pelements = $pagebuilder->buildPage($item, $data['params'], $data['cwmtemplate']);

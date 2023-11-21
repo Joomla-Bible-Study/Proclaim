@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -76,5 +77,4 @@ class StudyImageField extends MediaField
 
         return parent::getInput();
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -13,13 +14,6 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
-
-// Always load CWM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
-
-if (file_exists($api)) {
-    require_once $api;
-}
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
@@ -627,7 +621,7 @@ class Cwmlisting
      */
     public function getListParamsArray(string $paramtext): \stdClass
     {
-        $l = new \stdClass;
+        $l = new \stdClass();
 
         if ($paramtext === 'tdteacherimage') {
             if ($this->params->get($paramtext . 'rrow')) {
@@ -767,7 +761,6 @@ class Cwmlisting
                 $extra = 'sd';
                 break;
             case 'sermons':
-
                 break;
             case 'teachers':
                 $extra = 'ts';
@@ -940,13 +933,13 @@ class Cwmlisting
                     // If ($extra == 's'){$thadd = 'class="col-12"';}
                     // $thadd = '';
                     $frow .= '<th scope="col"' . $thadd . '>' . $this->getFluidData(
-                            $item,
-                            $row,
-                            $params,
-                            $template,
-                            $header = 1,
-                            $type
-                        );
+                        $item,
+                        $row,
+                        $params,
+                        $template,
+                        $header = 1,
+                        $type
+                    );
                 } else {
                     $frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
                 }
@@ -1055,13 +1048,13 @@ class Cwmlisting
 
                     // $thadd = '';
                     $frow .= '<tr scope="row"><th ' . $thadd . ' scope="col">' . $this->getFluidData(
-                            $item,
-                            $row,
-                            $params,
-                            $template,
-                            $header = 1,
-                            $type
-                        );
+                        $item,
+                        $row,
+                        $params,
+                        $template,
+                        $header = 1,
+                        $type
+                    );
                 } else {
                     $frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
                 }
@@ -1089,13 +1082,13 @@ class Cwmlisting
 
                     // $thadd = '';
                     $frow .= '<tr scope="row"><th ' . $thadd . ' scope="col">' . $this->getFluidData(
-                            $item,
-                            $row,
-                            $params,
-                            $template,
-                            $header = 1,
-                            $type
-                        );
+                        $item,
+                        $row,
+                        $params,
+                        $template,
+                        $header = 1,
+                        $type
+                    );
                 } else {
                     $frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
                 }
@@ -1176,7 +1169,7 @@ class Cwmlisting
      * @param   Object     $row       Row Setup data
      * @param   Registry   $params    Parameters for the study
      * @param   \stdClass  $template  Template table
-     * @param   integer    $header    Header will display if 1, Do not display if 0
+     * @param   int        $header    Header will display if 1, Do not display if 0
      * @param   string     $type      Type of Fluid Data
      *
      * @return string
@@ -1192,7 +1185,7 @@ class Cwmlisting
         int $header,
         string $type
     ): string {
-        $registry = new Registry;
+        $registry = new Registry();
 
         if (isset($item->params)) {
             $registry->loadString($item->params);
@@ -1223,7 +1216,6 @@ class Cwmlisting
 
         switch ($row->name) {
             case $extra . 'custom':
-
                 if ($header === 1) {
                     $data = '';
                 } else {
@@ -1240,11 +1232,13 @@ class Cwmlisting
 				<span class="fas fa-envelope" style="font-size:20px;" title="Website"></span></a>' : $data);
 
                         if ($item->website) {
-                            if (substr_count($item->website, 'https://', 0) || substr_count(
+                            if (
+                                substr_count($item->website, 'https://', 0) || substr_count(
                                     $item->website,
                                     'http://',
                                     0
-                                )) {
+                                )
+                            ) {
                                 $data .= '<a href="' . $item->website . '" target="_blank">
 						<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
                             } else {
@@ -1254,11 +1248,13 @@ class Cwmlisting
                         }
 
                         if ($item->facebooklink) {
-                            if (substr_count($item->facebooklink, 'https://', 0) || substr_count(
+                            if (
+                                substr_count($item->facebooklink, 'https://', 0) || substr_count(
                                     $item->facebooklink,
                                     'http://',
                                     0
-                                )) {
+                                )
+                            ) {
                                 $data .= '<a href="' . $item->facebooklink . '" target="_blank">
 						<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
                             } else {
@@ -1268,11 +1264,13 @@ class Cwmlisting
                         }
 
                         if ($item->twitterlink) {
-                            if (substr_count($item->twitterlink, 'https://', 0) || substr_count(
+                            if (
+                                substr_count($item->twitterlink, 'https://', 0) || substr_count(
                                     $item->twitterlink,
                                     'http://',
                                     0
-                                )) {
+                                )
+                            ) {
                                 $data .= '<a href="' . $item->twitterlink . '" target="_blank">
 						<span class="fab fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
                             } else {
@@ -1282,12 +1280,14 @@ class Cwmlisting
                         }
 
                         if ($item->bloglink) {
-                            if (substr_count($item->bloglink, 'https://', 0, 7) || substr_count(
+                            if (
+                                substr_count($item->bloglink, 'https://', 0, 7) || substr_count(
                                     $item->bloglink,
                                     'http://',
                                     0,
                                     7
-                                )) {
+                                )
+                            ) {
                                 $data .= '<a href="' . $item->bloglink . '" target="_blank">
 						<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
                             } else {
@@ -1298,17 +1298,17 @@ class Cwmlisting
 
                         if ($item->link1) {
                             if (substr_count($item->link1, 'https://', 0) || substr_count($item->link1, 'http://', 0)) {
-                                $data .= '<a href="' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
+                                $data .= '<a href="' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
                             } else {
-                                $data .= '<a href="https://' . $item->link1 . '" target="_blank">' . $item->link1label . '</a>';
+                                $data .= '<a href="https://' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
                             }
                         }
 
                         if ($item->link2) {
                             if (substr_count($item->link2, 'https://', 0) || substr_count($item->link2, 'http://', 0)) {
-                                $data .= '<a href="' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
+                                $data .= '<a href="' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
                             } else {
-                                $data .= '<a href="http://' . $item->link2 . '" target="_blank">' . $item->link2label . '</a>';
+                                $data .= '<a href="http://' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
                             }
                         }
 
@@ -1347,13 +1347,11 @@ class Cwmlisting
             case $extra . 'teacherlink1':
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_LINK1');
-                } else {
-                    if ($item->link1) {
-                        if (substr_count($item->link1, 'http://', 0)) {
-                            $data = '<a href="' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
-                        } else {
-                            $data = '<a href="http://' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
-                        }
+                } elseif ($item->link1) {
+                    if (substr_count($item->link1, 'http://', 0)) {
+                        $data = '<a href="' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
+                    } else {
+                        $data = '<a href="http://' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
                     }
                 }
                 break;
@@ -1361,13 +1359,11 @@ class Cwmlisting
             case $extra . 'teacherlink2':
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_LINK2');
-                } else {
-                    if ($item->link2) {
-                        if (substr_count($item->link2, 'http://', 0)) {
-                            $data = '<a href="' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
-                        } else {
-                            $data = '<a href="http://' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
-                        }
+                } elseif ($item->link2) {
+                    if (substr_count($item->link2, 'http://', 0)) {
+                        $data = '<a href="' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
+                    } else {
+                        $data = '<a href="http://' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
                     }
                 }
                 break;
@@ -1375,13 +1371,11 @@ class Cwmlisting
             case $extra . 'teacherlink3':
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_LINK3');
-                } else {
-                    if ($item->link3) {
-                        if (substr_count($item->link3, 'http://', 0)) {
-                            $data = '<a href="' . $item->link3 . '" target="_blank">' . $item->linklabel3 . '</a>';
-                        } else {
-                            $data = '<a href="http://' . $item->link3 . '" target="_blank">' . $item->linklabel3 . '</a>';
-                        }
+                } elseif ($item->link3) {
+                    if (substr_count($item->link3, 'http://', 0)) {
+                        $data = '<a href="' . $item->link3 . '" target="_blank">' . $item->linklabel3 . '</a>';
+                    } else {
+                        $data = '<a href="http://' . $item->link3 . '" target="_blank">' . $item->linklabel3 . '</a>';
                     }
                 }
                 break;
@@ -1397,15 +1391,13 @@ class Cwmlisting
             case $extra . 'teacherweb':
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_WEBSITE');
-                } else {
-                    if ($item->website) {
-                        if (substr_count($item->website, 'http://', 0)) {
-                            $data = '<a href="' . $item->website . '" target="_blank">
-							<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
-                        } else {
-                            $data = '<a href="http://' . $item->website . '" target="_blank">
-							<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
-                        }
+                } elseif ($item->website) {
+                    if (substr_count($item->website, 'http://', 0)) {
+                        $data = '<a href="' . $item->website . '" target="_blank">
+                        <span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
+                    } else {
+                        $data = '<a href="http://' . $item->website . '" target="_blank">
+                        <span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
                     }
                 }
                 break;
@@ -2007,7 +1999,6 @@ class Cwmlisting
                 }
                 break;
             case 'series_description':
-
                 if (isset($row->sdescription)) {
                     if ($type === 'seriesdisplays' || $type === 'seriesdisplay') {
                         $element = HtmlHelper::_('content.prepare', $row->description, '', 'com_proclaim.' . $type);
@@ -2195,7 +2186,7 @@ class Cwmlisting
      */
     public function getFluidMediaFiles(object $item, Registry $params, $template): string
     {
-        $med = new Cwmmedia;
+        $med = new Cwmmedia();
 
         $mediarow = '<div class="bsms_media_container row" style="float:left;"  >';
 
@@ -2341,7 +2332,7 @@ class Cwmlisting
         $column = '';
 
         switch ($islink) {
-            case 1 :
+            case 1:
                 $link = Route::_(
                     Cwmhelperroute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid')
                 );
@@ -2355,12 +2346,12 @@ class Cwmlisting
                 $column = '<a href="' . $link . '">';
                 break;
 
-            case 3 :
+            case 3:
                 $link   = Route::_(Cwmhelperroute::getTeacherRoute($tid) . '&t=' . $params->get('teachertemplateid'));
                 $column .= '<a href="' . $link . '">';
                 break;
 
-            case 4 :
+            case 4:
                 // Case 4 is a details link with tooltip
 
                 $link = Route::_(
@@ -2372,26 +2363,26 @@ class Cwmlisting
 
                 break;
 
-            case 5 :
+            case 5:
                 $column = Cwmhelper::getTooltip($row, $params, $template);
                 break;
 
-            case 6 :
+            case 6:
                 // Case 6 is for a link to the 1st article in the media file records
                 $column .= '<a href="' . $this->getOtherlinks($id3, $islink, $params) . '">';
                 break;
 
-            case 7 :
+            case 7:
                 // Case 7 is for Virtuemart
                 $column .= '<a href="' . $this->getOtherlinks($id3, $islink, $params) . '">';
                 break;
 
-            case 8 :
+            case 8:
                 // Case 8 is for Docman
                 $column .= '<a href="' . $this->getOtherlinks($id3, $islink, $params) . '">';
                 break;
 
-            case 9 :
+            case 9:
                 // Case 9 is a link to download
                 $column .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermon&amp;mid=' .
                     $row->download_id . '&amp;task=download">';
@@ -2468,8 +2459,8 @@ class Cwmlisting
      */
     public function getListingExp($row, $params, $template)
     {
-        $Media  = new Cwmmedia;
-        $images = new Cwmimages;
+        $Media  = new Cwmmedia();
+        $images = new Cwmimages();
         $image  = Cwmimages::getStudyThumbnail($row->thumbnailm);
         $label  = $params->get('templatecode');
         $label  = str_replace('{{teacher}}', $row->teachername, $label);
@@ -2596,7 +2587,7 @@ class Cwmlisting
      * @throws \JsonException
      * @since 7.0
      */
-    private function make_bitly_url($url, $login, $appkey, $format = 'xml', $version = '2.0.1')
+    private function makeBitlyUrl($url, $login, $appkey, $format = 'xml', $version = '2.0.1')
     {
         // Create the URL
         $bitly = 'http://api.bit.ly/shorten?version=' . $version . '&longUrl=' . urlencode($url) . '&login='

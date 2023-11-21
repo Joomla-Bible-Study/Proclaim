@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -80,7 +81,7 @@ class UploadField extends FormField
                         <div class="input-append">
                         <input type="text" placeholder="Enter the upload path" class="' . $class . '" name="' . $this->name .
             '" id="' . $this->id . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' . $required . '/>
-			<input id="uploader-file" placeholder="Choose a media file" style="border-left: 0; border-radius: 0;" class="span7" type="text" disabled>
+			<input id="uploader-file" placeholder="Choose a media file" style="border-left: 0; border-radius: 0;" class="col-7" type="text" disabled>
                            <a id="btn-upload" class="btn btn-success" disabled>
                              <i class="icon-upload"></i>
                              Upload

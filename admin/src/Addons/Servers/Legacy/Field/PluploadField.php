@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -49,7 +50,7 @@ class PluploadField extends FormField
      * @throws Exception
      * @since 1.5
      */
-    protected function getInput()
+    protected function getInput(): string
     {
         // Include Plupload libraries
         $document = Factory::getApplication()->getDocument();
@@ -86,12 +87,12 @@ class PluploadField extends FormField
 			});'
         );
 
-        $class = $this->element['class'] ? ' class="' . (string)$this->element['class'] . ' span12"' : '';
+        $class = $this->element['class'] ? ' class="' . (string)$this->element['class'] . ' col-12"' : '';
 
         $html = ' <input type="text" placeholder="Enter a filename" ' . $class . ' name="' . $this->name . '" id="' .
             $this->id . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"/><br />
                           <input id="uploader-file" placeholder="Choose a media file"
-                          style="border-left: 0; border-radius: 0;" class="span7" type="text" disabled>
+                          style="border-left: 0; border-radius: 0;" class="col-7" type="text" disabled>
                           <a id="browse" href="javascript:;" class="btn btn-default">
                              <i class="icon-plus"></i>
                              Add File

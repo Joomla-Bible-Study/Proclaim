@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -45,7 +46,7 @@ class MimeTypeField extends ListField
      */
     protected function getOptions(): array
     {
-        $MediaHelper = new Cwmmedia;
+        $MediaHelper = new Cwmmedia();
         $mimetypes   = $MediaHelper->getMimetypes();
 
         $options = array();

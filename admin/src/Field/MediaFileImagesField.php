@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -58,7 +59,7 @@ class MediaFileImagesField extends ListField
 
         if ($mediafiles) {
             foreach ($mediafiles as $media) {
-                $reg = new Registry;
+                $reg = new Registry();
                 $reg->loadString($media->params);
                 $media->params = $reg;
 
@@ -67,8 +68,8 @@ class MediaFileImagesField extends ListField
                         case 1:
                             $button             = $this->getButton($media);
                             $media->media_image = Text::_('JBS_MED_BUTTON') . ': ' . $button . ' - ' . Text::_(
-                                    'JBS_MED_TEXT'
-                                ) .
+                                'JBS_MED_TEXT'
+                            ) .
                                 ': ' . $media->params->get('media_button_text');
                             $options[]          = HTMLHelper::_(
                                 'select.option',
@@ -89,8 +90,8 @@ class MediaFileImagesField extends ListField
                             $button             = $this->getButton($media);
                             $icon               = $this->getIcon($media);
                             $media->media_image = Text::_('JBS_MED_BUTTON') . ': ' . $button . ' - ' . Text::_(
-                                    'JBS_MED_ICON'
-                                ) . ': ' . $icon;
+                                'JBS_MED_ICON'
+                            ) . ': ' . $icon;
                             $options[]          = HTMLHelper::_(
                                 'select.option',
                                 '{"media_use_button_icon":"' .
@@ -232,10 +233,11 @@ class MediaFileImagesField extends ListField
      */
     public function getIcon($media)
     {
-        $MediaHelper = new Cwmmedia;
+        $MediaHelper = new Cwmmedia();
         $mimetypes   = $MediaHelper->getIcons();
 
-        if ($media->params->get('media_icon_type') !== '1'
+        if (
+            $media->params->get('media_icon_type') !== '1'
             && substr($media->params->get('media_icon_type'), 0, 2) !== 'fa'
             && !empty($media->params->get('media_icon_type'))
         ) {

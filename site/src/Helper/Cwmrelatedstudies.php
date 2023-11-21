@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -76,7 +77,7 @@ class Cwmrelatedstudies
             foreach ($studies as $study) {
                 if (is_string($study->params) && !empty($study->params) && $study->params !== "{}") {
                     if (json_decode($study->params, false, 512, JSON_INVALID_UTF8_IGNORE)) {
-                        $registry = new Registry;
+                        $registry = new Registry();
                         $registry->loadString($study->params);
                         $sparams = $registry;
                         $compare = $sparams->get('metakey');
@@ -201,7 +202,8 @@ class Cwmrelatedstudies
             }
         }
 
-        if (($sourceisarray && !$compareisarray && in_array($compare, $sourcearray, true))
+        if (
+            ($sourceisarray && !$compareisarray && in_array($compare, $sourcearray, true))
             || (!$sourceisarray && $compareisarray && in_array($source, $comparearray, true))
             || (!$sourceisarray && !$compareisarray && strcmp($source, $compare))
         ) {

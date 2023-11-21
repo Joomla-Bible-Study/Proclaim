@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -41,7 +42,7 @@ class CwmmessagetypeModel extends AdminModel
     public function store(): bool
     {
         $row   = new CwmmessageTable($this->_db);
-        $input = new Input;
+        $input = new Input();
         $data  = $input->get('post');
 
         // Bind the form fields to the hello table

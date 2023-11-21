@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Default
  *
@@ -73,11 +74,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                     <div class="alert alert-info">
                         <span class="icon-info-circle" aria-hidden="true"></span><span
                                 class="visually-hidden"><?php
-                            echo Text::_('INFO'); ?></span>
+                                echo Text::_('INFO'); ?></span>
                         <?php
                         echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                     </div>
-                <?php
+                    <?php
                 else : ?>
                     <table class="table table-striped itemlist" id="comments">
                         <caption class="visually-hidden">
@@ -160,7 +161,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                                         $listOrder
                                     ); ?>
                                 </th>
-                            <?php
+                                <?php
                             endif; ?>
                             <th scope="col" class="w-3 d-none d-lg-table-cell">
                                 <?php
@@ -182,7 +183,8 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                         </tr>
                         </tfoot>
                         <tbody<?php
-                        if ($saveOrder) : ?> class="js-draggable" data-url="<?php
+                        if ($saveOrder) :
+                            ?> class="js-draggable" data-url="<?php
                         echo $saveOrderingUrl; ?>" data-direction="<?php
                         echo strtolower($listDirn); ?>" data-nested="true"<?php
                         endif; ?>>
@@ -224,13 +226,13 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                                             echo $link; ?>"><?php
                                                 echo $this->escape($item->studytitle) . ' - '
                                                     . Text::_($item->bookname) . ' ' . $item->chapter_begin; ?></a>
-                                        <?php
+                                            <?php
                                         else : ?>
                                             <?php
                                             echo $this->escape($item->studytitle) . ' - ' . Text::_(
-                                                    $item->bookname
-                                                ) . ' ' . $item->chapter_begin; ?>
-                                        <?php
+                                                $item->bookname
+                                            ) . ' ' . $item->chapter_begin; ?>
+                                            <?php
                                         endif; ?>
                                     </div>
                                 </td>
@@ -256,14 +258,14 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                                         <?php
                                         echo LayoutHelper::render('joomla.content.language', $item); ?>
                                     </td>
-                                <?php
+                                    <?php
                                 endif; ?>
                                 <td class="d-none d-lg-table-cell">
                                     <?php
                                     echo (int)$item->id; ?>
                                 </td>
                             </tr>
-                        <?php
+                            <?php
                         endforeach; ?>
                         </tbody>
                     </table>
@@ -276,7 +278,8 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                     <?php
                     // Load the batch processing form. ?>
                     <?php
-                    if ($user->authorise('core.create', 'com_proclaim')
+                    if (
+                        $user->authorise('core.create', 'com_proclaim')
                         && $user->authorise('core.edit', 'com_proclaim')
                         && $user->authorise('core.edit.state', 'com_proclaim')
                     ) : ?>
@@ -290,9 +293,9 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                             ),
                             $this->loadTemplate('batch_body')
                         ); ?>
-                    <?php
+                        <?php
                     endif; ?>
-                <?php
+                    <?php
                 endif; ?>
                 <?php
                 // Load the batch processing form. ?>

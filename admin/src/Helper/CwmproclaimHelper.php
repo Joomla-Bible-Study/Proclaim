@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -301,15 +302,12 @@ class CwmproclaimHelper
                     // Blacklist attributes
                     1
                 );
+            } elseif ($whiteList) {
+                // Turn off xss auto clean
+                $filter = InputFilter::getInstance($whiteListTags, $whiteListAttributes, 0, 0, 0);
             } else {
-                // White lists take third precedence.
-                if ($whiteList) {
-                    // Turn off xss auto clean
-                    $filter = InputFilter::getInstance($whiteListTags, $whiteListAttributes, 0, 0, 0);
-                } else {
-                    // No HTML takes last place.
-                    $filter = InputFilter::getInstance();
-                }
+                // No HTML takes last place.
+                $filter = InputFilter::getInstance();
             }
         }
 
@@ -333,7 +331,7 @@ class CwmproclaimHelper
             }
 
             if (!isset(self::$admin_params->debug)) {
-                self::$admin_params        = new stdClass;
+                self::$admin_params        = new stdClass();
                 self::$admin_params->debug = 1;
             }
 
@@ -589,7 +587,7 @@ class CwmproclaimHelper
      *
      * @since 1.5
      */
-    public static function array_sort_by_column(array &$arr, string $col, int $dir = SORT_ASC): void
+    public static function arraySortByColumn(array &$arr, string $col, int $dir = SORT_ASC): void
     {
         $sort_col = array();
 
@@ -647,10 +645,10 @@ class CwmproclaimHelper
     {
         // Search forward starting from end minus needle length characters
         return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos(
-                    $haystack,
-                    $needle,
-                    $temp
-                ) !== false);
+            $haystack,
+            $needle,
+            $temp
+        ) !== false);
     }
 
     /**
@@ -666,7 +664,7 @@ class CwmproclaimHelper
     {
         $count = count($array);
 
-        $return        = new stdClass;
+        $return        = new stdClass();
         $return->half  = floor($count / 2);
         $return->count = $count;
 

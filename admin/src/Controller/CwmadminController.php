@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -221,9 +222,11 @@ class CwmadminController extends FormController
                     $reg = new Registry();
                     $reg->loadString($media->params);
 
-                    if ($reg->get('media_button_type') == $buttontype && $reg->get(
+                    if (
+                        $reg->get('media_button_type') == $buttontype && $reg->get(
                             'media_button_text'
-                        ) == $buttontext) {
+                        ) == $buttontext
+                    ) {
                         $query = $db->getQuery(true);
                         $reg->set('media_button_color', $post['media_button_color']);
                         $reg->set('media_button_text', $post['media_button_text']);
@@ -254,8 +257,8 @@ class CwmadminController extends FormController
                 }
 
                 $msg .= Text::_('JBS_ERROR') . ': ' . $error . '<br />' . $errortext . '<br />' . Text::_(
-                        'JBS_RESULTS'
-                    ) .
+                    'JBS_RESULTS'
+                ) .
                     ': ' . $added . ' ' . Text::_('JBS_SUCCESS');
                 break;
             case 2:
@@ -297,8 +300,8 @@ class CwmadminController extends FormController
                 }
 
                 $msg .= Text::_('JBS_ERROR') . ': ' . $error . '<br />' . $errortext . '<br />' . Text::_(
-                        'JBS_RESULTS'
-                    ) .
+                    'JBS_RESULTS'
+                ) .
                     ': ' . $added . ' ' . Text::_('JBS_SUCCESS');
                 break;
             case 3:
@@ -344,8 +347,8 @@ class CwmadminController extends FormController
                 }
 
                 $msg .= Text::_('JBS_ERROR') . ': ' . $error . '<br />' . $errortext . '<br />' . Text::_(
-                        'JBS_RESULTS'
-                    ) .
+                    'JBS_RESULTS'
+                ) .
                     ': ' . $added . ' ' . Text::_('JBS_SUCCESS');
                 break;
             case 0:
@@ -391,8 +394,8 @@ class CwmadminController extends FormController
                 }
 
                 $msg .= Text::_('JBS_ERROR') . ': ' . $error . '<br />' . $errortext . '<br />' . Text::_(
-                        'JBS_RESULTS'
-                    ) .
+                    'JBS_RESULTS'
+                ) .
                     ': ' . $added . ' ' . Text::_('JBS_SUCCESS');
                 break;
             default:

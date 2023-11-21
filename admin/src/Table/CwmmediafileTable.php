@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -160,7 +161,7 @@ class CwmmediafileTable extends Table
     public function bind($array, $ignore = ''): bool
     {
         if (isset($array['params']) && is_array($array['params'])) {
-            $registry = new Registry;
+            $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = (string)$registry;
         }

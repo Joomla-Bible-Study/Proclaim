@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -217,7 +218,8 @@ class HtmlView extends BaseHtmlView
             }
 
             // Add a batch button
-            if ($user->authorise('core.create', 'com_proclaim')
+            if (
+                $user->authorise('core.create', 'com_proclaim')
                 && $user->authorise('core.edit', 'com_proclaim')
                 && $user->authorise('core.execute.transition', 'com_proclaim')
             ) {
@@ -228,9 +230,11 @@ class HtmlView extends BaseHtmlView
             }
         }
 
-        if (!$this->isEmptyState && $this->state->get(
+        if (
+            !$this->isEmptyState && $this->state->get(
                 'filter.published'
-            ) == ContentComponent::CONDITION_TRASHED && $canDo->get('core.delete')) {
+            ) == ContentComponent::CONDITION_TRASHED && $canDo->get('core.delete')
+        ) {
             $toolbar->delete('cwmmessages.delete')
                 ->text('JTOOLBAR_EMPTY_TRASH')
                 ->message('JGLOBAL_CONFIRM_DELETE')

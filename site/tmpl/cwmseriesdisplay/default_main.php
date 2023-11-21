@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Default Main
  *
@@ -24,7 +25,7 @@ $t = $this->template;
     <div class="row-fluid">
         <div class="col-lg-12">
             <?php
-            $listing = new Cwmlisting;
+            $listing = new Cwmlisting();
             $list    = $listing->getFluidListing($this->items, $this->params, $t, $type = 'seriesdisplay');
             echo $list;
             ?>

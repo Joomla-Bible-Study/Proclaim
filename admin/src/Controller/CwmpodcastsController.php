@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -42,7 +43,7 @@ class CwmpodcastsController extends AdminController
         // Check for request forgeries.
         Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-        $podcasts = new Cwmpodcast;
+        $podcasts = new Cwmpodcast();
         $result   = $podcasts->makePodcasts();
         $this->setRedirect('index.php?option=com_proclaim&view=Cwmpodcasts&' . Session::getFormToken() . '=1', $result);
     }

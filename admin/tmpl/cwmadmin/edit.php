@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Admin Form
  *
@@ -191,14 +192,13 @@ $this->useCoreUI = true;
 echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post" name="adminForm" id="item-admin"
       aria-label="<?php
-      echo Text::_('COM_CONTENT_FORM_TITLE_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>"
+        echo Text::_('COM_CONTENT_FORM_TITLE_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>"
       class="form-validate">
     <?php
     echo LayoutHelper::render('joomla.edit.title_alias', $this); ?>
     <div class="row-fluid">
         <?php
-        echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'cpanl', 'recall' => true, 'breakpoint' => 768]
-        ); ?>
+        echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'cpanl', 'recall' => true, 'breakpoint' => 768]); ?>
 
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'cpanl', Text::_('JBS_ADM_ADMIN_CPANL')); ?>
@@ -213,21 +213,21 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                             Session::getFormToken() . '=1'
                         ); ?>"
                            title="<?php
-                           echo Text::_('JBS_ADM_ASSET_CHECK'); ?>" class="btn"> <i
+                            echo Text::_('JBS_ADM_ASSET_CHECK'); ?>" class="btn"> <i
                                     class="icon-big icon-list"> </i>
                             <span><br/> <?php
                                 echo Text::_('JBS_ADM_ASSET_CHECK'); ?> </span></a>
                         <a href="<?php
                         echo Route::_('index.php?option=com_proclaim&view=cwmbackup'); ?>"
                            title="<?php
-                           echo Text::_('JBS_ADM_BACKUP_RESTORE'); ?>" class="btn"> <i
+                            echo Text::_('JBS_ADM_BACKUP_RESTORE'); ?>" class="btn"> <i
                                     class="icon-big icon-database"></i>
                             <span><br/> <?php
                                 echo Text::_('JBS_ADM_BACKUP_RESTORE'); ?> </span></a>
                         <a href="<?php
                         echo Route::_('index.php?option=com_proclaim&view=cwmarchive'); ?>"
                            title="<?php
-                           echo Text::_('JBS_ADM_ARCHIVE'); ?>" class="btn"> <i
+                            echo Text::_('JBS_ADM_ARCHIVE'); ?>" class="btn"> <i
                                     class="icon-archive icon-big"></i>
                             <span><br/> <?php
                                 echo Text::_('JBS_ADM_ARCHIVE'); ?> </span></a>
@@ -237,14 +237,14 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                             Session::getFormToken() . '=1'
                         ) ?>"
                            title="<?php
-                           echo Text::_('JBS_ADM_RESET_ALIAS'); ?>" class="btn"> <i
+                            echo Text::_('JBS_ADM_RESET_ALIAS'); ?>" class="btn"> <i
                                     class="icon-big icon-tree-2"></i>
                             <span><br/> <?php
                                 echo Text::_('JBS_ADM_RESET_ALIAS'); ?> </span></a>
                         <a href="<?php
                         echo Route::_('index.php?option=com_installer&view=database'); ?>"
                            title="<?php
-                           echo Text::_('JBS_ADM_DATABASE'); ?>" class="btn"> <i
+                            echo Text::_('JBS_ADM_DATABASE'); ?>" class="btn"> <i
                                     class="icon-database icon-big"></i>
                             <span><br/> <?php
                                 echo Text::_('JBS_ADM_DATABASE'); ?> </span></a>
@@ -661,7 +661,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'playersettings', Text::_('JBS_ADM_PLAYER_SETTINGS')); ?>
         <div class="row" id="playersettings">
-            <div class="span4" style="border: ridge; padding: 3px">
+            <div class="col-4" style="border: ridge; padding: 3px">
                 <h3 class="tab-description"><?php
                     echo Text::_('JBS_CMN_MEDIA_FILES'); ?></h3>
 
@@ -696,7 +696,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                     </button>
                 </div>
             </div>
-            <div class="span4" style="border: ridge; padding: 3px">
+            <div class="col-4" style="border: ridge; padding: 3px">
                 <h3 class="tab-description"><?php
                     echo Text::_('JBS_ADM_POPUP_OPTIONS'); ?></h3>
 
@@ -731,7 +731,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                     </button>
                 </div>
             </div>
-            <div class="span4" style="border: ridge; padding: 3px">
+            <div class="col-4" style="border: ridge; padding: 3px">
                 <h3 class="tab-description"><?php
                     echo Text::_('JBS_ADM_MEDIATYPES_OPTIONS'); ?></h3>
                 <div class="control-group">
@@ -781,7 +781,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                 Session::getFormToken() . '=1'
             ); ?>"
                title="<?php
-               echo Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER'); ?>" class="btn"> <i
+                echo Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER'); ?>" class="btn"> <i
                         class="icon-big icon-book"> </i>
                 <span><br/> <?php
                     echo Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER'); ?> </span></a>
@@ -791,7 +791,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                 Session::getFormToken() . '=1'
             ); ?>"
                title="<?php
-               echo Text::_('JBS_ADM_PREACHIT'); ?>" class="btn"> <i
+                echo Text::_('JBS_ADM_PREACHIT'); ?>" class="btn"> <i
                         class="icon-big icon-list"> </i>
                 <span><br/> <?php
                     echo Text::_('JBS_ADM_PREACHIT'); ?> </span></a>
@@ -803,13 +803,13 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
         <!-- Track thumbnail sizes to fire event if they are changed -->
         <input type="hidden" id="thumbnail_teacher_size_old"
                value="<?php
-               echo @$this->item->params['thumbnail_teacher_size']; ?>"/>
+                echo @$this->item->params['thumbnail_teacher_size']; ?>"/>
         <input type="hidden" id="thumbnail_series_size_old"
                value="<?php
-               echo @$this->item->params['thumbnail_series_size']; ?>"/>
+                echo @$this->item->params['thumbnail_series_size']; ?>"/>
         <input type="hidden" id="thumbnail_study_size_old"
                value="<?php
-               echo @$this->item->params['thumbnail_study_size']; ?>"/>
+                echo @$this->item->params['thumbnail_study_size']; ?>"/>
         <input type="hidden" name="tooltype" value=""/>
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="return" value="<?php

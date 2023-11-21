@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -46,7 +47,7 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0
      */
-    public function display($tpl = null)
+    public function display($tpl = null): void
     {
         $this->state      = $this->get('State');
         $this->items      = $this->get('items');
@@ -61,7 +62,7 @@ class HtmlView extends BaseHtmlView
 
         $this->attribs = $attribs;
 
-        $this->_prepareDocument();
+        $this->prepareDocument();
 
         parent::display($tpl);
     }
@@ -74,7 +75,7 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0
      */
-    protected function _prepareDocument(): void
+    protected function prepareDocument(): void
     {
         $app   = Factory::getApplication('site');
         $menus = $app->getMenu()->getActive();

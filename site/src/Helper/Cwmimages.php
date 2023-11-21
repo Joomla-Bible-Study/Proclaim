@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -56,7 +57,7 @@ class Cwmimages
             $params = $database->loadObject();
 
             // Convert parameter fields to objects.
-            $registry = new Registry;
+            $registry = new Registry();
             $registry->loadString($params->params);
             $params = $registry;
         }
@@ -88,7 +89,7 @@ class Cwmimages
      */
     public static function getImagePath(string $path): object
     {
-        $tmp         = new \stdClass;
+        $tmp         = new \stdClass();
         $tmp->path   = null;
         $tmp->size   = null;
         $tmp->width  = 0;

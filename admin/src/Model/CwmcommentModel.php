@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -88,8 +89,7 @@ class CwmcommentModel extends AdminModel
     public function getForm($data = array(), $loadData = true)
     {
         // Get the form.
-        $form = $this->loadForm('com_proclaim.comment', 'comment', array('control' => 'jform', 'load_data' => $loadData)
-        );
+        $form = $this->loadForm('com_proclaim.comment', 'comment', array('control' => 'jform', 'load_data' => $loadData));
 
         if (empty($form)) {
             return false;
@@ -109,8 +109,10 @@ class CwmcommentModel extends AdminModel
 
         // Check for existing article.
         // Modify the form based on Edit State access controls.
-        if (($id !== 0 && (!$user->authorise('core.edit.state', 'com_proclaim.comment.' . (int)$id)))
-            || ($id === 0 && !$user->authorise('core.edit.state', 'com_proclaim'))) {
+        if (
+            ($id !== 0 && (!$user->authorise('core.edit.state', 'com_proclaim.comment.' . (int)$id)))
+            || ($id === 0 && !$user->authorise('core.edit.state', 'com_proclaim'))
+        ) {
             // Disable fields for display.
             $form->setFieldAttribute('ordering', 'disabled', 'true');
             $form->setFieldAttribute('state', 'disabled', 'true');

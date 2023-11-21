@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -68,11 +69,7 @@ class CwminstallModel extends ListModel
      * @since 7.1
      */
     public array $installQuery = [];
-    /**
-     * @var \Joomla\Database\DatabaseDriver|null
-     * @since 10.0.0
-     */
-    public ?DatabaseDriver $_db;
+
     /** @var string Path to Mysql files
      *
      * @since 7.1
@@ -230,7 +227,7 @@ class CwminstallModel extends ListModel
      */
     private function resetTimer(): void
     {
-        $this->startTime = $this->microtime_float();
+        $this->startTime = $this->microtimeFloat();
     }
 
     /**
@@ -240,7 +237,7 @@ class CwminstallModel extends ListModel
      *
      * @since 7.1
      */
-    private function microtime_float(): float
+    private function microtimeFloat(): float
     {
         [$usec, $sec] = explode(" ", microtime());
 
@@ -470,7 +467,7 @@ class CwminstallModel extends ListModel
      */
     private function haveEnoughTime(): bool
     {
-        $now     = $this->microtime_float();
+        $now     = $this->microtimeFloat();
         $elapsed = abs($now - $this->startTime);
 
         return $elapsed < 2;
@@ -496,7 +493,7 @@ class CwminstallModel extends ListModel
         $result = true;
 
         while ($result && $this->haveEnoughTime()) {
-            $result = $this->RealRun();
+            $result = $this->realRun();
         }
 
         $this->saveStack();
@@ -572,7 +569,7 @@ class CwminstallModel extends ListModel
      * @throws  \Exception
      * @since   7.1
      */
-    private function RealRun(): bool
+    private function realRun(): bool
     {
         $app = Factory::getApplication();
         $run = true;
@@ -580,7 +577,7 @@ class CwminstallModel extends ListModel
         if (!empty($this->start)) {
             $this->running = 'Backup DB';
             $this->doneSteps++;
-            $export = new Cwmbackup;
+            $export = new Cwmbackup();
             $export->exportdb(2);
             Log::add('Backup DB', Log::INFO, 'com_proclaim');
             $this->start = [];
@@ -634,17 +631,19 @@ class CwminstallModel extends ListModel
                     $this->running = $this->version . ' String: ' . $string;
                     $run           = $this->runUpdates($string);
                     $this->doneSteps++;
-                } elseif (in_array(
+                } elseif (
+                    in_array(
                         $this->version,
                         $this->subFiles,
                         true
-                    ) && @empty($this->allupdates[$this->version])) {
+                    ) && @empty($this->allupdates[$this->version])
+                ) {
                     // Check for the corresponding PHP file and run migration
                     $migrationfile = JPATH_ADMINISTRATOR . '/components/com_proclaim/install/updates/' . $this->version . '.php';
 
                     require_once $migrationfile;
                     $migrationClass = "Migration" . str_ireplace(".", '', $this->version);
-                    $migration      = new $migrationClass;
+                    $migration      = new $migrationClass();
 
                     if (!class_exists($migrationClass)) {
                         Log::add('Missing Class' . $migrationClass, Log::WARNING, 'com_proclaim');
@@ -700,12 +699,14 @@ class CwminstallModel extends ListModel
 
                                 if (!empty($query) && is_array($query)) {
                                     $queryString = (string)$query['id'];
-                                    $queryString = str_replace(array("\r", "\n"),
+                                    $queryString = str_replace(
+                                        array("\r", "\n"),
                                         array('', ' '),
-                                        substr($queryString, 0, 80));
+                                        substr($queryString, 0, 80)
+                                    );
                                     $queryString = ' ID:' . $queryString . ' Query count: ' . count(
-                                            $this->subQuery[$this->version][$step]
-                                        );
+                                        $this->subQuery[$this->version][$step]
+                                    );
                                 }
 
                                 Log::add(
@@ -743,11 +744,13 @@ class CwminstallModel extends ListModel
         }
 
         /** We are going to walk thought the assets that need to be fixed that were found form the finish lookup. */
-        if (!empty($this->installQuery)
+        if (
+            !empty($this->installQuery)
             && empty($this->finish)
             && empty($this->versionStack)
             && empty($this->allupdates)
-            && empty($this->subFiles)) {
+            && empty($this->subFiles)
+        ) {
             krsort($this->installQuery);
 
             while (!empty($this->installQuery) && $this->haveEnoughTime()) {
@@ -764,12 +767,14 @@ class CwminstallModel extends ListModel
             }
         }
 
-        if (empty($this->installQuery)
+        if (
+            empty($this->installQuery)
             && empty($this->finish)
             && empty($this->versionStack)
             && empty($this->allupdates)
-            && empty($this->subFiles)) {
-            $admin = new CwmadminModel;
+            && empty($this->subFiles)
+        ) {
+            $admin = new CwmadminModel();
             $admin->fix();
 
             // Just finished
@@ -867,9 +872,9 @@ class CwminstallModel extends ListModel
             $migrationClass = "Migration" . str_ireplace(".", '', $value);
 
             if (class_exists($migrationClass)) {
-                $migration = new $migrationClass;
+                $migration = new $migrationClass();
 
-                if (isset($migration->postinstall_messages)) {
+                if (isset($migration->postinstallMessages)) {
                     $steps            = $migration->steps;
                     $this->totalSteps += count($steps);
 
@@ -955,7 +960,7 @@ class CwminstallModel extends ListModel
                 break;
             case 'fixassets':
                 // Final step is to fix assets by building what need to be fixed.
-                $assets             = new Cwmassets;
+                $assets             = new Cwmassets();
                 $string             = $assets->build();
                 $this->installQuery = $string->query;
                 $this->totalSteps   += $string->count;
@@ -1012,14 +1017,14 @@ class CwminstallModel extends ListModel
                 $this->_db->setQuery($query);
                 $this->_db->execute();
 
-                $updateurl           = new \stdClass;
+                $updateurl           = new \stdClass();
                 $updateurl->name     = 'Proclaim Package';
                 $updateurl->type     = 'extension';
                 $updateurl->location = 'https://www.christianwebministries.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;id=2&amp;format=xml';
                 $updateurl->enabled  = '1';
                 $this->_db->insertObject('#__update_sites', $updateurl);
                 $lastid                     = $this->_db->insertid();
-                $updateurl1                 = new \stdClass;
+                $updateurl1                 = new \stdClass();
                 $updateurl1->update_site_id = $lastid;
                 $updateurl1->extension_id   = $eid;
                 $this->_db->insertObject('#__update_sites_extensions', $updateurl1);
@@ -1288,7 +1293,7 @@ class CwminstallModel extends ListModel
      *
      * @since 7.1
      */
-    public function postinstall_messages($message)
+    public function postinstallMessages($message)
     {
         // Find Extension ID of component
         $query = $this->_db->getQuery(true);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -52,7 +53,7 @@ class Cwmhelper
      */
     public static function getTooltip(object $row, Registry $params, \stdClass $template): string
     {
-        $JBSMElements = new Cwmlisting;
+        $JBSMElements = new Cwmlisting();
 
         $linktext = '<span class="hasTip" title="<strong>' . $params->get('tip_title') . '  :: ';
 
@@ -163,7 +164,7 @@ class Cwmhelper
      *
      * @since 9.0.14
      */
-    public static function SetFileSize(int $id, int $size): void
+    public static function setFileSize(int $id, int $size): void
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
@@ -174,11 +175,11 @@ class Cwmhelper
         $db->setQuery($query);
         $media = $db->loadObject();
 
-        $reg = new Registry;
+        $reg = new Registry();
         $reg->loadString($media->params);
         $reg->set('size', $size);
 
-        $update         = new \stdClass;
+        $update         = new \stdClass();
         $update->id     = $id;
         $update->params = $reg->toString();
 
@@ -199,7 +200,7 @@ class Cwmhelper
      *
      * @since 9.0.3
      */
-    public static function MediaBuildUrl(
+    public static function mediaBuildUrl(
         $spath,
         $path,
         Registry $params,
@@ -308,7 +309,7 @@ class Cwmhelper
      *
      * @since 9.0.18
      */
-    public static function remove_http(string $url): array|string
+    public static function removeHttp(string $url): array|string
     {
         $disallowed = array('http://', 'https://');
 
@@ -333,14 +334,14 @@ class Cwmhelper
      */
     public static function getSimpleView(?Registry $params = null): \stdClass
     {
-        $simple = new \stdClass;
+        $simple = new \stdClass();
 
         if ($params === null) {
             $params = Cwmparams::getAdmin()->params;
         }
 
-        $simple->mode    = (integer)$params->get('simple_mode');
-        $simple->display = (integer)$params->get('simple_mode_display');
+        $simple->mode    = (int)$params->get('simple_mode');
+        $simple->display = (int)$params->get('simple_mode_display');
 
         return $simple;
     }

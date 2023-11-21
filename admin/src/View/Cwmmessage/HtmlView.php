@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -107,7 +108,7 @@ class HtmlView extends BaseHtmlView
         $this->form       = $this->get("Form");
         $this->item       = $this->get("Item");
         $this->canDo      = ContentHelper::getActions('com_proclaim', 'message', (int)$this->item->id);
-        $input            = new Input;
+        $input            = new Input();
         $option           = $input->get('option', '', 'cmd');
         $this->mediafiles = $this->get('MediaFiles');
         $this->state      = $this->get('State');
@@ -122,7 +123,7 @@ class HtmlView extends BaseHtmlView
         $app->setUserState($option . 'sid', $this->item->id);
         $app->setUserState($option . 'sdate', $this->item->studydate);
         $this->admin = Cwmparams::getAdmin();
-        $registry    = new Registry;
+        $registry    = new Registry();
         $registry->loadString($this->admin->params);
         $this->admin_params = $registry;
         $this->document     = Factory::getApplication()->getDocument();

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -15,13 +16,16 @@ namespace CWM\Component\Proclaim\Site\View\Cwmteachers;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
+use Joomla\CMS\Document\Document;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
 
 /**
  * View class for Teachers
@@ -34,7 +38,7 @@ class HtmlView extends BaseHtmlView
     /**
      * Document
      *
-     * @var JDocument
+     * @var Document
      *
      * @since 7.0
      */
@@ -43,7 +47,7 @@ class HtmlView extends BaseHtmlView
     /**
      * Template Table
      *
-     * @var TableTemplate
+     * @var CwmtemplateTable
      *
      * @since 7.0
      */
@@ -70,20 +74,20 @@ class HtmlView extends BaseHtmlView
     /**
      * State
      *
-     * @var Joomla\Registry\Registry
+     * @var Registry
      *
      * @since 7.0
      */
-    protected $state = null;
+    protected Registry $state;
 
     /**
      * Params
      *
-     * @var Joomla\Registry\Registry
+     * @var Registry
      *
      * @since 7.0
      */
-    protected $params = null;
+    protected Registry $params;
 
     /**
      * Admin
@@ -119,9 +123,10 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0
      */
-    public function display($tpl = null)
+    public function display($tpl = null): void
     {
         $state = $this->get('State');
         $items = $this->get('Items');
@@ -138,12 +143,12 @@ class HtmlView extends BaseHtmlView
 
         // Load the Admin settings and params from the template
         $this->admin = $state->get('administrator');
-        $uri         = new Uri;
+        $uri         = new Uri();
 
-        $images = new Cwmimages;
+        $images = new Cwmimages();
 
         if ($params->get('useexpert_teacherdetail') > 0 || is_string($params->get('teacherstemplate'))) {
-            $pagebuilder = new Cwmpagebuilder;
+            $pagebuilder = new Cwmpagebuilder();
 
             foreach ($items as $i => $item) {
                 if (isset($item->teacher_thumbnail)) {
@@ -172,7 +177,7 @@ class HtmlView extends BaseHtmlView
         }
 
         $pagination            = $this->get('Pagination');
-        $this->page            = new \stdClass;
+        $this->page            = new \stdClass();
         $this->page->pagelinks = $pagination->getPagesLinks();
         $this->page->counter   = $pagination->getPagesCounter();
         $this->pagination      = $pagination;
@@ -181,7 +186,7 @@ class HtmlView extends BaseHtmlView
         $this->params          = $params;
         $this->items           = $items;
 
-        $this->_prepareDocument();
+        $this->prepareDocument();
 
         parent::display($tpl);
     }
@@ -191,14 +196,15 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0
      */
-    protected function _prepareDocument()
+    protected function prepareDocument(): void
     {
         $app   = Factory::getApplication('site');
         $menus = $app->getMenu();
 
-        /** @var Joomla\Registry\Registry $itemparams */
+        /** @var Registry $itemparams */
         $itemparams = $app->getParams();
         $title      = null;
 

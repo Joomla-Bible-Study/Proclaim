@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -147,8 +148,8 @@ class CwmserverModel extends AdminModel
     public function getConfig(string $addon)
     {
         $path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst(
-                $addon
-            ) . '/' . strtolower($addon) . '.xml';
+            $addon
+        ) . '/' . strtolower($addon) . '.xml';
 
         return simplexml_load_string(file_get_contents($path));
     }

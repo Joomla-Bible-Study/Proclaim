@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Mod_Proclaim core file
  *
@@ -21,9 +22,9 @@ use Joomla\Registry\Registry;
 /** @var Registry $params */
 $show_link = $params->get('show_link', 1);
 
-$Listing = new Cwmlisting; ?>
+$Listing = new Cwmlisting(); ?>
 
-<div class="row-fluid span12">
+<div class="row-fluid col-12">
     <h5>
         <?php
         echo Text::_('JBS_CMN_TEACHINGS'); ?>
@@ -63,11 +64,11 @@ foreach ($list as $study) {
     <div>
         <hr/>
     </div>
-<?php
+    <?php
 } ?>
 
 <div class="row-fluid">
-    <div class="span12">
+    <div class="col-12">
         <?php
         if ($params->get('show_link') > 0) {
             echo '<span class="fas fa-bible" aria-hidden="true"></span>' . $link;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -152,7 +153,7 @@ class CwmassetsModel extends ListModel
      */
     private function resetTimer(): void
     {
-        $this->startTime = $this->microtime_float();
+        $this->startTime = $this->microtimeFloat();
     }
 
     /**
@@ -162,7 +163,7 @@ class CwmassetsModel extends ListModel
      *
      * @since 7.0
      */
-    private function microtime_float(): float
+    private function microtimeFloat(): float
     {
         [$usec, $sec] = explode(" ", microtime());
 
@@ -178,7 +179,7 @@ class CwmassetsModel extends ListModel
      */
     private function getSteps(): void
     {
-        $fix     = new Cwmassets;
+        $fix     = new Cwmassets();
         $results = $fix->build();
 
         $this->versionStack = $results->query;
@@ -226,7 +227,7 @@ class CwmassetsModel extends ListModel
      */
     private function haveEnoughTime(): bool
     {
-        $now     = $this->microtime_float();
+        $now     = $this->microtimeFloat();
         $elapsed = abs($now - $this->startTime);
 
         return $elapsed < 2;
@@ -253,7 +254,7 @@ class CwmassetsModel extends ListModel
         $result = true;
 
         while ($result && $this->haveEnoughTime()) {
-            $result = $this->RealRun();
+            $result = $this->realRun();
         }
 
         $this->saveStack();
@@ -306,12 +307,12 @@ class CwmassetsModel extends ListModel
     /**
      * Start the Run through the Pre Versions then SQL files then After PHP functions.
      *
-     * @return boolean
+     * @return bool
      *
      * @throws \Exception
      * @since 7.0
      */
-    private function RealRun(): bool
+    private function realRun(): bool
     {
         if (!empty($this->versionStack)) {
             krsort($this->versionStack);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Teachers view subset main
  *
@@ -17,7 +18,7 @@ use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Html\HtmlHelper;
 use Joomla\CMS\Language\Text;
 
-$listing = new Cwmlisting;
+$listing = new Cwmlisting();
 $classelement = $listing->createelement($this->params->get('teachers_element'));
 ?>
 <div class="container">
@@ -26,7 +27,7 @@ $classelement = $listing->createelement($this->params->get('teachers_element'));
         if ($classelement) : ?>
             <<?php
             echo $classelement; ?> class="componentheading">
-        <?php
+            <?php
         endif; ?>
         <?php
         echo $this->params->get('teacher_title', Text::_('JBS_TCH_OUR_TEACHERS')); ?>
@@ -34,8 +35,8 @@ $classelement = $listing->createelement($this->params->get('teachers_element'));
         if ($classelement) : ?>
     </<?php
     echo $classelement; ?> >
-    <?php
-    endif; ?>
+            <?php
+        endif; ?>
 </div>
 <div class="row">
     <div class="col-12">

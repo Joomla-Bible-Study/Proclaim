@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Default view for Squeezebox
  *

@@ -48,7 +48,7 @@ echo $class; ?>">
         <span class="field-label <?php
         echo $labelClass; ?>"><?php
             echo htmlentities($label, ENT_QUOTES | ENT_IGNORE, 'UTF-8'); ?>: </span>
-    <?php
+        <?php
     endif; ?>
 </dt>
 <dd class="contact-field-entry <?php

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -44,29 +45,31 @@ class VirtuemartField extends ListField
     /**
      * Method to get a list of options for a list input.
      *
-     * @return      array           An array of JHtml options.
+     * @return  array An array of JHtml options.
      *
      * @since 1.5
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         $params = ComponentHelper::getParams('com_languages');
 
         // Use default joomla
         $siteLang = $params->get('site', 'en-GB');
-        $lang     = strtolower(strtr($siteLang, '-', '_'));
+        $lang = strtolower(str_replace('-', '_', $siteLang));
         define('VMLANG', $lang);
 
         // Check to see if component installed
         jimport('joomla.filesystem.folder');
 
-        if (!Folder::exists(
-            JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_virtuemart'
-        )) {
+        if (
+            !Folder::exists(
+                JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_virtuemart'
+            )
+        ) {
             return [Text::_('JBS_CMN_VIRTUEMART_NOT_INSTALLED')];
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query->select('v.virtuemart_product_id, v.product_name');
         $query->from('#__virtuemart_products_' . VMLANG . ' AS v');
@@ -75,7 +78,7 @@ class VirtuemartField extends ListField
         $query->order('v.virtuemart_product_id DESC');
         $db->setQuery((string)$query);
         $products = $db->loadObjectList();
-        $options  = array();
+        $options = array();
 
         if ($products) {
             foreach ($products as $product) {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -74,7 +75,7 @@ class Cwmtranslated
         // If there is no topic to translate, just return
         if ($topicItem) {
             // First choice: evaluate language strings
-            $itemparams = new Registry;
+            $itemparams = new Registry();
 
             // Here to catch the Topic Params value being null.
             if ($topicItem->topic_params === null) {

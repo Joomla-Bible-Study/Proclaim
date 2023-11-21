@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package         Joomla.Site
  * @subpackage      com_contact
@@ -69,4 +70,3 @@ if (!$isMail) {
     // Close the container
     echo '</dl>';
 }
-

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -10,8 +11,10 @@
 
 namespace CWM\Component\Proclaim\Administrator\Helper;
 
-// No direct access
-defined("_JEXEC") or die();
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+
+// phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Client\ClientHelper;
 use Joomla\CMS\Component\ComponentHelper;
@@ -63,7 +66,7 @@ class Cwmuploadscript
         $contentLength = (int)$_SERVER['CONTENT_LENGTH'];
 
         // Instantiate the media helper
-        $mediaHelper = new MediaHelper;
+        $mediaHelper = new MediaHelper();
 
         // Maximum allowed size of post back data in MB.
         $postMaxSize = $mediaHelper->toBytes(ini_get('post_max_size'));
@@ -72,8 +75,10 @@ class Cwmuploadscript
         $memoryLimit = $mediaHelper->toBytes(ini_get('memory_limit'));
 
         // Check for the total size of post back data.
-        if (($postMaxSize > 0 && $contentLength > $postMaxSize)
-            || ($memoryLimit != -1 && $contentLength > $memoryLimit)) {
+        if (
+            ($postMaxSize > 0 && $contentLength > $postMaxSize)
+            || ($memoryLimit != -1 && $contentLength > $memoryLimit)
+        ) {
             return ['data' => '', 'error' => ''];
         }
 
@@ -84,9 +89,11 @@ class Cwmuploadscript
         $file['name']     = str_replace(' ', '-', $file['name']);
         $file['filepath'] = Path::clean(implode(DIRECTORY_SEPARATOR, array(JPATH_ROOT, $this->folder, $file['name'])));
 
-        if (($file['error'] == 1)
+        if (
+            ($file['error'] == 1)
             || ($uploadMaxSize > 0 && $file['size'] > $uploadMaxSize)
-            || ($uploadMaxFileSize > 0 && $file['size'] > $uploadMaxFileSize)) {
+            || ($uploadMaxFileSize > 0 && $file['size'] > $uploadMaxFileSize)
+        ) {
             // File size exceed either 'upload_max_filesize' or 'upload_maxsize'.
             return ['data' => '', 'error' => 'File size exceed either \'upload_max_filesize\' or \'upload_maxsize\''];
         }

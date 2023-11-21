@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -109,7 +110,7 @@ class CwmmessagetypeTable extends Table
         }
 
         if (isset($array['params']) && is_array($array['params'])) {
-            $registry = new Registry;
+            $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = (string)$registry;
         }
@@ -166,7 +167,7 @@ class CwmmessagetypeTable extends Table
         if (parent::load($keys, $reset)) {
             // Convert the language field to a registry.
             if ($this->params) {
-                $params = new Registry;
+                $params = new Registry();
                 $params->loadString($this->params);
                 $this->params = $params;
             }

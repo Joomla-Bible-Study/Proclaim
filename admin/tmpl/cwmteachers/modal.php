@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Modal
  *
@@ -59,11 +60,11 @@ if (!empty($editor)) {
             <div class="alert alert-info">
                 <span class="icon-info-circle" aria-hidden="true"></span><span
                         class="visually-hidden"><?php
-                    echo Text::_('INFO'); ?></span>
+                        echo Text::_('INFO'); ?></span>
                 <?php
                 echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
             </div>
-        <?php
+            <?php
         else : ?>
             <table class="table table-sm">
                 <caption class="visually-hidden">
@@ -118,7 +119,7 @@ if (!empty($editor)) {
                                 $listOrder
                             ); ?>
                         </th>
-                    <?php
+                        <?php
                     endif; ?>
                     <th scope="col" class="w-1 d-none d-md-table-cell">
                         <?php
@@ -159,11 +160,11 @@ if (!empty($editor)) {
                     <tr class="row<?php
                     echo $i % 2; ?>">
                         <td class="text-center">
-							<span class="tbody-icon">
-								<span class="<?php
+                            <span class="tbody-icon">
+                                <span class="<?php
                                 echo $iconStates[$this->escape($item->published)]; ?>"
                                       aria-hidden="true"></span>
-							</span>
+                            </span>
                         </td>
 
                         <th scope="row">
@@ -186,7 +187,7 @@ if (!empty($editor)) {
                                 if (empty($item->note)) : ?>
                                     <?php
                                     echo Text::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
-                                <?php
+                                    <?php
                                 else : ?>
                                     <?php
                                     echo Text::sprintf(
@@ -194,7 +195,7 @@ if (!empty($editor)) {
                                         $this->escape($item->alias),
                                         $this->escape($item->note)
                                     ); ?>
-                                <?php
+                                    <?php
                                 endif; ?>
                             </div>
                         </th>
@@ -208,18 +209,18 @@ if (!empty($editor)) {
                                 <?php
                                 echo LayoutHelper::render('joomla.content.language', $item); ?>
                             </td>
-                        <?php
+                            <?php
                         endif; ?>
                         <td class="small d-none d-md-table-cell">
                             <?php
                             echo (int)$item->id; ?>
                         </td>
                     </tr>
-                <?php
+                    <?php
                 endforeach; ?>
                 </tbody>
             </table>
-        <?php
+            <?php
         endif; ?>
         <div>
             <input type="hidden" name="task" value=""/>
@@ -230,7 +231,7 @@ if (!empty($editor)) {
             echo $listDirn; ?>"/>
             <input type="hidden" name="forcedLanguage"
                    value="<?php
-                   echo $app->input->get('forcedLanguage', '', 'CMD'); ?>">
+                    echo $app->input->get('forcedLanguage', '', 'CMD'); ?>">
             <?php
             echo HTMLHelper::_('form.token'); ?>
         </div>

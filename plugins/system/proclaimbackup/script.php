@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -73,7 +74,7 @@ class PlgSystemProclaimBackupInstallerScript
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8";
             $db->setQuery($query);
             $db->execute();
-            $data          = new stdClass;
+            $data          = new stdClass();
             $data->timeset = 1281646339;
             $data->backup  = 1281646339;
             $db->insertObject('#__jbsbackup_timeset', $data);

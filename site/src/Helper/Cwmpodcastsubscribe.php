@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -61,22 +62,22 @@ class Cwmpodcastsubscribe
                         break;
 
                     case 2:
-                        $subscribe .= '<div class="pcell span6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title . '</h5>';
+                        $subscribe .= '<div class="pcell col-6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title . '</h5>';
                         $subscribe .= $this->buildStandardPodcast($podcast);
                         $subscribe .= '<hr /></div>';
                         break;
 
                     case 3:
-                        $subscribe .= '<div class="pcell span6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title . '</h5>';
+                        $subscribe .= '<div class="pcell col-6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title . '</h5>';
                         $subscribe .= $this->buildAlternatePodcast($podcast);
                         $subscribe .= '<hr /></div>';
                         break;
 
                     case 4:
-                        $subscribe .= '<div class="pcell span6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title
-                            . '</h5><div class="span2">';
+                        $subscribe .= '<div class="pcell col-6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title
+                            . '</h5><div class="col-2">';
                         $subscribe .= $this->buildStandardPodcast($podcast);
-                        $subscribe .= '</div><div class="span2">';
+                        $subscribe .= '</div><div class="col-2">';
                         $subscribe .= $this->buildAlternatePodcast($podcast);
                         $subscribe .= '<hr /></div></div>';
                         break;
@@ -132,7 +133,7 @@ class Cwmpodcastsubscribe
         if (!empty($podcast->podcast_image_subscribe)) {
             $image     = $this->buildPodcastImage($podcast->podcast_image_subscribe, $podcast->podcast_subscribe_desc);
             $link      = '<div class="image"><a href="' . Uri::base(
-                ) . $podcast->filename . '">' . $image . '</a></div><div class="clr"></div>';
+            ) . $podcast->filename . '">' . $image . '</a></div><div class="clr"></div>';
             $subscribe .= $link;
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -177,7 +178,7 @@ class CwmtemplatecodeModel extends AdminModel
         $key   = $table->getKeyName();
 
         // Get the pk of the record from the request.
-        $input = new Input;
+        $input = new Input();
         $pk    = $input->get($key, '', 'int');
         $this->setState($this->getName() . '.id', $pk);
 

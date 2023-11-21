@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -15,8 +16,8 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use Joomla\CMS\Image\Image;
 
 /**
@@ -27,6 +28,8 @@ use Joomla\CMS\Image\Image;
  */
 class Cwmthumbnail
 {
+    public const SCALE_INSIDE = 2;
+
     /**
      * Creates a thumbnail for an uploaded image
      *
@@ -38,9 +41,7 @@ class Cwmthumbnail
      *
      * @since 9.0.0
      */
-    const SCALE_INSIDE = 2;
-
-    public static function create($file, $path, $size = 300)
+    public static function create($file, $path, int $size = 300): void
     {
         $name     = basename($file);
         $original = JPATH_ROOT . '/' . $file;
@@ -48,10 +49,9 @@ class Cwmthumbnail
         $w        = 300;
         $h        = 169;
         // Delete destination folder if it exists
-        if (Folder::exists(JPATH_ROOT . '/' . $path)) {
+        if (is_dir(JPATH_ROOT . '/' . $path)) {
             Folder::delete(JPATH_ROOT . '/' . $path);
         }
-        //$path = JPATH_ROOT .'images/biblestudy/studies/CapitolBuildings.jpg'; var_dump($path);
         // Move uploaded image to destination
         Folder::create(JPATH_ROOT . '/' . $path);
 
@@ -64,14 +64,14 @@ class Cwmthumbnail
     /**
      * Resize image
      *
-     * @param   string  $path      Path to file
-     * @param   int     $new_size  New image size
+     * @param string $path      Path to file
+     * @param int $new_size  New image size
      *
      * @return void
      *
      * @since 9.0
      */
-    public static function resize($path, $new_size)
+    public static function resize(string $path, int $new_size): void
     {
         $filename = str_replace('original_', '', basename($path));
 
@@ -89,23 +89,23 @@ class Cwmthumbnail
     }
 
     /**
-     * Check image path
+     * Check an image path
      *
-     * @param   string  $path  Path to file
-     * @param   string  $file  file to check
+     * @param string $path  Path to file
+     * @param string|null $file  file to check
      *
-     * @return boolean
+     * @return bool
      *
      * @since 9.0
      */
-    public static function check($path, $file = null)
+    public static function check(string $path, string $file = null): bool
     {
-        if (!Folder::exists($path)) {
+        if (!is_dir($path)) {
             return false;
         }
 
         if ($file) {
-            return File::exists(JPATH_ROOT . $path . $file);
+            return file_exists(JPATH_ROOT . $path . $file);
         }
 
         return true;

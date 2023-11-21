@@ -1,4 +1,5 @@
 <?php
+
 /**
  * View html
  *
@@ -223,9 +224,9 @@ class HtmlView extends BaseHtmlView
         // End for database
         $this->tmp_dest = $app->get('tmp_path');
 
-        $this->playerstats = Cwmstats::players();
+        $this->playerstats = Cwmstats::getPlayers();
         $this->assets      = $app->input->get('checkassets', null, 'get');
-        $popups            = Cwmstats::popups();
+        $popups            = Cwmstats::getPopups();
         $this->popups      = $popups;
 
         // Get the list of backup files

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -15,10 +16,9 @@ namespace CWM\Component\Proclaim\Administrator\Addons;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\Log\Log;
-use Joomla\Filesystem\Path;
 use Joomla\Input\Input;
+use Joomla\CMS\Language\Text;
+use Joomla\Filesystem\Path;
 use SimpleXMLElement;
 
 /**
@@ -79,7 +79,7 @@ abstract class CWMAddon
     /**
      * Construct
      *
-     * @param   array  $config  Array of Obtains
+     * @param array $config Array of Obtains
      *
      * @throws \Exception
      *
@@ -99,9 +99,9 @@ abstract class CWMAddon
             $this->xml = $this->getXml();
 
             if ($this->xml) {
-                $this->name        = $this->xml->name->__toString();
+                $this->name = $this->xml->name->__toString();
                 $this->description = $this->xml->description->__toString();
-                $this->config      = $this->xml->config;
+                $this->config = $this->xml->config;
             }
         }
     }
@@ -132,7 +132,7 @@ abstract class CWMAddon
     /**
      * Loads the addon configuration from the xml file
      *
-     * @return  boolean|SimpleXMLElement
+     * @return  bool|SimpleXMLElement
      *
      * @throws  \Exception
      * @since   9.0.0
@@ -153,8 +153,8 @@ abstract class CWMAddon
     /**
      * Returns a Addon object, always creating it
      *
-     * @param   string  $type    ?
-     * @param   array   $config  ?
+     * @param string $type ?
+     * @param array $config ?
      *
      * @return mixed
      *
@@ -162,64 +162,46 @@ abstract class CWMAddon
      */
     public static function getInstance(string $type, array $config = array()): mixed
     {
-        $type       = ucfirst(preg_replace('/[^A-Z0-9_\.-]/i', '', $type));
-        $addonClass = "CWMAddon" . ucfirst($type);
+        $type = ucfirst(preg_replace('/[^A-Z0-9_\.-]/i', '', $type));
+        $class = "CWM\Component\Proclaim\Administrator\Addons\Servers\\" . ucfirst($type) . "\CWMAddon" . ucfirst(
+            $type
+        );
 
-        if (!class_exists($addonClass, false)) {
-            self::$path = Path::find(
-                BIBLESTUDY_PATH_ADMIN . '/src/Addons/Servers/' . ucfirst($type) . '/',
-                'CWMAddon' . $type . '.php'
-            );
-
-            // Try and load missing class
-            spl_autoload_register(
-                static function () {
-                    include_once self::$path;
-                }
-            );
-
-            if (!self::$path) {
-                Log::add(Text::sprintf('JBS_CMN_CANT_ADDON_LOAD_CLASS_NAME', $addonClass), Log::WARNING, 'jerror');
-
-                return false;
-            }
-        }
-
-        return new $addonClass($config);
+        return new $class($config);
     }
 
     /**
      * Render Fields for general view.
      *
-     * @param   object  $media_form  Media files form
-     * @param   bool    $new         If media is new
+     * @param object $media_form Media files form
+     * @param bool $new If media is new
      *
      * @return string
      *
      * @since 9.1.3
      */
-    abstract protected function renderGeneral($media_form, $new): string;
+    abstract protected function renderGeneral($media_form, bool $new): string;
 
     /**
      * Render Layout and fields
      *
-     * @param   object  $media_form  Media files form
-     * @param   bool    $new         If media is new
+     * @param object $media_form Media files form
+     * @param bool $new If media is new
      *
      * @return string
      *
      * @since 9.1.3
      */
-    abstract protected function render($media_form, $new): string;
+    abstract protected function render($media_form, bool $new): string;
 
     /**
      * Upload
      *
-     * @param   Input|array  $data  Data to upload
+     * @param Input|array $data Data to upload
      *
      * @return mixed
      *
      * @since 9.0.0
      */
-    abstract protected function upload($data): mixed;
+    abstract protected function upload(Input|array $data): mixed;
 }

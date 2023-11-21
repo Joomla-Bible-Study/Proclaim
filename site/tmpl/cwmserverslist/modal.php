@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -61,13 +62,13 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
         </tfoot>
         <tbody>
         <?php
-        foreach ($this->items as $i => $item): ?>
+        foreach ($this->items as $i => $item) : ?>
             <tr class="row<?php
             echo $i % 2; ?>">
                 <td class="center">
                     <a href="javascript:void(0)"
                        onclick="if (window.parent) window.parent.<?php
-                       echo $this->escape($function); ?>('<?php
+                        echo $this->escape($function); ?>('<?php
                        echo $item->id; ?>', '<?php
                        echo $item->server_name; ?>', '', null, '<?php
                        echo "index.php?option=com_proclaim&view=server&id=" . $item->id; ?>', '', null);">
@@ -76,7 +77,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                     </a>
                 </td>
             </tr>
-        <?php
+            <?php
         endforeach; ?>
         </tbody>
     </table>

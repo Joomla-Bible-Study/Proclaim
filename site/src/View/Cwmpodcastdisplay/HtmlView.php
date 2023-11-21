@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -39,7 +40,6 @@ class HtmlView extends BaseHtmlView
 
     protected $media;
 
-    /** @var  Registry */
     protected $params;
 
     private $studies;
@@ -51,9 +51,10 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void
      *
+     * @throws \Exception
      * @since 7.0
      */
-    public function display($tpl = null)
+    public function display($tpl = null): void
     {
         $mainframe = Factory::getApplication();
         $input     = $mainframe->input;
@@ -88,13 +89,13 @@ class HtmlView extends BaseHtmlView
         if ($this->studies) {
             foreach ($this->studies as $s => $stude) {
                 $exmedias = explode(',', $stude->mids);
-                $jbsmedia = new Cwmmedia;
+                $jbsmedia = new Cwmmedia();
 
                 foreach ($exmedias as $i => $exmedia) {
                     $rmedia = $jbsmedia->getMediaRows2($exmedia);
 
                     if ($rmedia) {
-                        $reg = new Registry;
+                        $reg = new Registry();
                         $reg->loadString($rmedia->params);
                         $rparams = $reg;
 
@@ -137,7 +138,7 @@ class HtmlView extends BaseHtmlView
         // End process prepare content plugins
         $this->params      = &$params;
         $this->item        = $item;
-        $uri               = new Uri;
+        $uri               = new Uri();
         $stringuri         = $uri->toString();
         $this->request_url = $stringuri;
 
@@ -150,34 +151,18 @@ class HtmlView extends BaseHtmlView
      * @param   string  $haystack  Search string
      * @param   string  $needle    What to search for.
      *
-     * @return boolean
+     * @return bool
      *
      * @since version
      */
-    private function endsWith($haystack, $needle)
+    private function endsWith(string $haystack, string $needle): bool
     {
         $length = strlen($needle);
 
-        if ($length == 0) {
+        if ($length === 0) {
             return true;
         }
 
         return (substr($haystack, -$length) === $needle);
-    }
-
-    /**
-     * Prepares the document
-     *
-     * @return void
-     *
-     * @since 7.0
-     */
-    protected function _prepareDocument()
-    {
-        $app   = Factory::getApplication('site');
-        $menus = $app->getMenu()->getActive();
-        $this->params->merge($menus->params);
-
-        $title = null;
     }
 }

@@ -45,7 +45,7 @@
             <option value="1">JBS_CMN_YES</option>
         </field>
 
-        <field name="user_id" type="user" label="JBS_CMN_SUBMITTED_BY" class="span12 small"/>
+        <field name="user_id" type="user" label="JBS_CMN_SUBMITTED_BY" class="col-12 small"/>
 
         <field name="studytitle" type="text" class="inputbox" size="60" label="JBS_CMN_TITLE" required="true"/>
         <field name="alias"
@@ -125,7 +125,7 @@
             <option value="-1">JBS_CMN_SELECT_MESSAGETYPE</option>
         </field>
         <field name="thumbnailm" type="hidden"/>
-        <field name="image" type="media" label="JBS_STY_STUDY_IMAGE" class="span12" accept="image/*"/>
+        <field name="image" type="media" label="JBS_STY_STUDY_IMAGE" class="col-12" accept="image/*"/>
         <field name="studytext" type="editor" class="inputbox" label="JBS_STY_STUDY_TEXT"
                filter= CwmproclaimHelper: :filterText" buttons="true"/>
         <field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
@@ -167,7 +167,7 @@
                filter="user_utc"/>
 
         <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
-               description="JFIELD_ACCESS_DESC" class="inputbox span12 small"/>
+               description="JFIELD_ACCESS_DESC" class="inputbox col-12 small"/>
         <field name="asset_id" type="hidden" filter="unset"/>
     </fieldset>
 

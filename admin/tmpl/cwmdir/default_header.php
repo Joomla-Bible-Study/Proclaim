@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -22,14 +23,15 @@ $first_bc = true;
                 <?php
                 if (!$first_bc) : ?>
                     &GT;
-                <?php
+                    <?php
                 endif; ?>
                 <a href="index.php?option=com_proclaim&view=dir&tmpl=component&dir=<?php
                 echo $bc->link; ?>"><?php
                     echo $bc->name ?></a>
             </li>
             <?php
-            $first_bc = false; endforeach; ?>
+            $first_bc = false;
+        endforeach; ?>
         <li><a id="new_folder" href="#"><img src="<?php
                 echo $this->imgURL ?>folder_new.png"/></a></li>
     </ul>
@@ -43,7 +45,7 @@ $first_bc = true;
             <input id="folder_name" type="text" name="folder_name" value=""/>
             <input id="create_folder" type="submit"
                    value="<?php
-                   echo Text::_('COM_MEDIAMU_DIR_BROSWER_BTN_CREATE'); ?>"/>
+                    echo Text::_('COM_MEDIAMU_DIR_BROSWER_BTN_CREATE'); ?>"/>
             <input id="current_folder" type="hidden" name="current_folder" value="<?php
             echo $this->currentFolder; ?>"/>
             <input id="token" type="hidden" name="<?php

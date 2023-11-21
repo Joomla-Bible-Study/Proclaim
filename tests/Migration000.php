@@ -7,6 +7,8 @@
  * @link       https://www.christianwebministries.org
  */
 
+namespace Test\Migration000;
+
 // phpcs:disable PSR1.Files.SideEffects
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Filesystem\File;

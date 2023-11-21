@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -108,7 +109,7 @@ class CwmlandingpageModel extends ListModel
         $db              = Factory::getContainer()->get('DatabaseDriver');
         $query           = $db->getQuery(true);
         $template_params = Cwmparams::getTemplateparams();
-        $registry        = new Registry;
+        $registry        = new Registry();
         $registry->loadString($template_params->params);
         $t_params = $registry;
 
@@ -117,7 +118,7 @@ class CwmlandingpageModel extends ListModel
         /** @var Registry $params */
         $params = $app->getParams();
         $this->setState('params', $params);
-        $menuparams = new Registry;
+        $menuparams = new Registry();
         $menu       = $app->getMenu()->getActive();
 
         if ($menu) {

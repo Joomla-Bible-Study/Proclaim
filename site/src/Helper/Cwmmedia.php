@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -35,7 +36,7 @@ use Joomla\Registry\Registry;
 class Cwmmedia
 {
     /**
-     * @var integer File Size
+     * @var int File Size
      *
      * @since    7.0
      */
@@ -44,7 +45,7 @@ class Cwmmedia
     /**
      * @param   string  $url  url to process
      *
-     * @return boolean
+     * @return bool
      *
      * @since 10.0.0
      */
@@ -79,7 +80,7 @@ class Cwmmedia
      * @param   Registry                 $params    Params
      * @param   CwmtemplateTable|Object  $template  Template Table
      *
-     * @return string
+     * @return string|null
      *
      * @throws \Exception
      * @since 9.0.0
@@ -91,18 +92,18 @@ class Cwmmedia
 
         if (isset($media->smedia)) {
             // $smedia are the media settings for each server
-            $registory = new Registry;
+            $registory = new Registry();
             $registory->loadString($media->smedia);
             $media->smedia = $registory;
         }
 
         // $params are the individual params for the media file record
-        $registory = new Registry;
+        $registory = new Registry();
         $registory->loadString($media->params);
         $media->params = $registory;
 
         // Ssparams are the server parameters
-        $registory = new Registry;
+        $registory = new Registry();
         $registory->loadString($media->sparams);
         $media->sparams = $registory;
 
@@ -112,9 +113,11 @@ class Cwmmedia
             $imageparams = $media->params;
         }
 
-        if ($imageparams->get('media_use_button_icon') >= 1 || (int)$params->get('simple_mode') === 1 || $params->get(
+        if (
+            $imageparams->get('media_use_button_icon') >= 1 || (int)$params->get('simple_mode') === 1 || $params->get(
                 'sermonstemplate'
-            ) === 'easy') {
+            ) === 'easy'
+        ) {
             $image = $this->mediaButton($imageparams, $params, $media->params);
         } else {
             $mediaimage = (string)$imageparams->get('media_image');
@@ -151,14 +154,14 @@ class Cwmmedia
 
             if (!$file_size && $link_type !== 0) {
                 $file_size = Cwmhelper::getRemoteFileSize(
-                    Cwmhelper::MediaBuildUrl(
+                    Cwmhelper::mediaBuildUrl(
                         $media->sparams->get('path'),
                         $media->params->get('filename'),
                         $params,
                         true
                     )
                 );
-                Cwmhelper::SetFilesize($media->id, $file_size);
+                Cwmhelper::setFileSize($media->id, $file_size);
             }
 
             $file_size = $this->convertFileSize((int)$file_size, $params, $media);
@@ -323,7 +326,7 @@ class Cwmmedia
      */
     public function getPlayerAttributes(Registry $params, object $media): object
     {
-        $player               = new \stdClass;
+        $player               = new \stdClass();
         $player->playerwidth  = $params->get('player_width');
         $player->playerheight = $params->get('player_height');
 
@@ -356,20 +359,12 @@ class Cwmmedia
         if ($item_mediaplayer === 100) {
             // Player is set from the $params
             $player->player = $params->get('media_player', '0');
+        } elseif ($params->get('pcplaylist')) {
+            $player->player = 7;
+        } elseif ($media->params->get('player', null) !== null) {
+            $player->player = (int)$media->params->get('player');
         } else {
-            /*
-            * In this case, the item has a player set for it, so we use that instead.
-             * We also need to change the old player
-            *	type of 3 to 2 for all videos reloaded that we don't support
-            */
-
-            if ($params->get('pcplaylist')) {
-                $player->player = 7;
-            } elseif ($media->params->get('player', null) !== null) {
-                $player->player = (int)$media->params->get('player');
-            } else {
-                $player->player = (int)$params->get('player', 0);
-            }
+            $player->player = (int)$params->get('player', 0);
         }
 
         if ($player->player === 3) {
@@ -441,13 +436,13 @@ class Cwmmedia
         $params = clone $params;
         $params->merge($media->params);
 
-        $input    = new Input;
+        $input    = new Input();
         $template = $input->getInt('t', '1');
 
         // Here we get more information about the particular media file
         $filesize = $this->getFluidFilesize($media, $params);
 
-        $path = Cwmhelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
+        $path = Cwmhelper::mediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
 
         switch ($player->player) {
             case 0: // Direct
@@ -485,7 +480,6 @@ class Cwmmedia
 
                 switch ($player->type) {
                     case 3: // Squeezebox view
-
                         return $this->rendersb($media, $params, $player, $image, $path);
                         break;
 
@@ -508,8 +502,8 @@ class Cwmmedia
                                 '" allow="autoplay; encrypted-media" allowfullscreen style="border: none"></iframe>';
                         } elseif (preg_match('(vimeo.com)', $path) === 1) {
                             $playercode = '<iframe class="playhit" data-id="' . $media->id . '" src="' . $this->convertVimeo(
-                                    $path
-                                ) .
+                                $path
+                            ) .
                                 '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
                                 '" webkitallowfullscreen mozallowfullscreen allowfullscreen style="border: none"></iframe>';
                         } else {
@@ -598,14 +592,14 @@ class Cwmmedia
 
         if ($file_size === 0) {
             $file_size = Cwmhelper::getRemoteFileSize(
-                Cwmhelper::MediaBuildUrl(
+                Cwmhelper::mediaBuildUrl(
                     $media->sparams->get('path'),
                     $params->get('filename'),
                     $params,
                     true
                 )
             );
-            Cwmhelper::SetFilesize($media->id, $file_size);
+            Cwmhelper::setFileSize($media->id, $file_size);
         }
 
         if ($file_size !== 0) {
@@ -631,27 +625,27 @@ class Cwmmedia
         $file_size_results = '';
 
         switch ($file_size) {
-            case $file_size = 0 :
+            case $file_size = 0:
                 $file_size_results = '0 Bytes';
                 break;
-            case  $file_size < 1024 :
+            case $file_size < 1024:
                 $this->fsize       = $file_size;
                 $file_size_results .= $file_size . ' Bytes';
                 break;
-            case $file_size < 1048576 :
+            case $file_size < 1048576:
                 $file_size         /= 1024;
                 $file_size_results = number_format($file_size, 0);
                 $this->fsize       = $file_size_results;
                 $file_size_results .= ' KB';
                 break;
-            case $file_size < 1073741824 :
+            case $file_size < 1073741824:
                 $file_size         /= 1024;
                 $file_size         /= 1024;
                 $file_size_results = number_format($file_size, 1);
                 $this->fsize       = $file_size_results;
                 $file_size_results .= ' MB';
                 break;
-            case $file_size > 1073741824 :
+            case $file_size > 1073741824:
                 $file_size         /= 1024;
                 $file_size         /= 1024;
                 $file_size         /= 1024;
@@ -717,8 +711,8 @@ class Cwmmedia
         }
 
         return '<a data-src="' . $path . '" data-id="' . $media->id . '" id="linkmedia' . $media->id . '" title="' . $params->get(
-                'filename'
-            ) .
+            'filename'
+        ) .
             '" class="fancybox fancybox_jwplayer hitplay" potext="' . $popout . '" ptype="' . $player->player .
             '" pwidth="' . $player->playerwidth . '" pheight="' .
             $player->playerheight . '" autostart="' . $params->get('autostart', false) . '" controls="' .
@@ -784,14 +778,14 @@ class Cwmmedia
         if ($isonlydash) {
             $mediacode = substr_replace(
                 $mediacode,
-                'https://' . Cwmhelper::MediaBuildUrl($media->spath, $media->filename, null),
+                'https://' . Cwmhelper::mediaBuildUrl($media->spath, $media->filename, null),
                 $dashposition,
                 1
             );
         } elseif ($dashposition) {
             $mediacode = substr_replace(
                 $mediacode,
-                Cwmhelper::MediaBuildUrl($media->spath, $media->filename, null),
+                Cwmhelper::mediaBuildUrl($media->spath, $media->filename, null),
                 $bracketend - 1,
                 1
             );
@@ -876,15 +870,19 @@ class Cwmmedia
 
         $downloadlink = '';
 
-        if ($params->get('download_use_button_icon') >= 2 && $params->get('simple_mode') === '0' && $params->get(
+        if (
+            $params->get('download_use_button_icon') >= 2 && $params->get('simple_mode') === '0' && $params->get(
                 'sermonstemplate'
-            ) != 'easy') {
+            ) !== 'easy'
+        ) {
             $download_image = $this->downloadButton($params);
         }
 
-        if ($params->get('download_use_button_icon') >= 2 && ($params->get('simple_mode') === '1' || $params->get(
-                    'sermonstemplate'
-                ) === 'easy')) {
+        if (
+            $params->get('download_use_button_icon') >= 2 && ($params->get('simple_mode') === '1' || $params->get(
+                'sermonstemplate'
+            ) === 'easy')
+        ) {
             $download_image = $this->downloadButton($params);
         } elseif ($params->get('default_download_image')) {
             $d_image        = $params->get('default_download_image');
@@ -898,8 +896,9 @@ class Cwmmedia
             $link_type = $media->params->get('link_type');
         }
 
-        if (($params->get('download_show')
-            && (!$media->params->get('link_type')))
+        if (
+            ($params->get('download_show')
+                && (!$media->params->get('link_type')))
             // || $params->get('simple_mode') === '1'
             // || $params->get('sermonstemplate') === 'easy'
         ) {
@@ -913,7 +912,7 @@ class Cwmmedia
                 $downloadlink = '<a style="color: #5F5A58;" href="index.php?option=com_proclaim&amp;view=Cwmsermon&amp;id=' .
                     $media->study_id . '&amp;mid=' . $media->id . '&amp;task=Cwmsermon.download">' . $download_image . '</a>';
             } else {
-                $url = Cwmhelper::MediaBuildUrl(
+                $url = Cwmhelper::mediaBuildUrl(
                     $media->sparams->get('path'),
                     $media->params->get('filename'),
                     $params,
@@ -922,12 +921,12 @@ class Cwmmedia
 
                 if ($media->params->get('size') === '0') {
                     $size = Cwmhelper::getRemoteFileSize($url);
-                    Cwmhelper::SetFilesize($media->id, $size);
+                    Cwmhelper::setFileSize($media->id, $size);
                 } else {
                     $size = $media->params->get('size');
                 }
 
-                $url = Cwmhelper::remove_http($url);
+                $url = Cwmhelper::removeHttp($url);
 
                 $downloadlink = '<a style="color: #5F5A58;" href="https://christianwebministries.org/router.php?file=' .
                     $url . '&amp;size=' . $size . '">';
@@ -1099,7 +1098,7 @@ class Cwmmedia
         $media = $db->loadObject();
 
         if ($media) {
-            $reg = new Registry;
+            $reg = new Registry();
             $reg->loadString($media->sparams);
             $params = $reg->toObject();
 

@@ -17,25 +17,25 @@
 use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 
-// Always load Proclaim API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
-
-if (file_exists($api)) {
-    require_once $api;
-}
-
 /**
  * Checks if the template is set up right.
  *
  * This check returns true Templates is not setup yet, meaning
  * that the message concerning it should be displayed.
  *
- * @return  boolean
+ * @return  bool
  *
  * @since   3.2
  */
 function admin_postinstall_template_condition(): bool
 {
+    // Always load Proclaim API if it exists.
+    $api = '../components/com_proclaim/api.php';
+
+    if (file_exists($api)) {
+        require_once $api;
+    }
+
     $results = null;
 
     $db    = Factory::getContainer()->get('DatabaseDriver');
@@ -73,6 +73,13 @@ function admin_postinstall_template_condition(): bool
  */
 function admin_postinstall_template_action(): void
 {
+    // Always load Proclaim API if it exists.
+    $api = '../components/com_proclaim/api.php';
+
+    if (file_exists($api)) {
+        require_once $api;
+    }
+
     $url = 'index.php?option=com_proclaim&view=templates';
     Factory::getApplication()->redirect($url);
 }

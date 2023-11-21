@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -105,8 +106,10 @@ class CwmteacherModel extends AdminModel
 
         // Check for existing article.
         // Modify the form based on Edit State access controls.
-        if (($id !== 0 && (!$user->authorise('core.edit.state', 'com_proclaim.teacher.' . (int)$id)))
-            || ($id === 0 && !$user->authorise('core.edit.state', 'com_proclaim'))) {
+        if (
+            ($id !== 0 && (!$user->authorise('core.edit.state', 'com_proclaim.teacher.' . (int)$id)))
+            || ($id === 0 && !$user->authorise('core.edit.state', 'com_proclaim'))
+        ) {
             // Disable fields for display.
             $form->setFieldAttribute('ordering', 'disabled', 'true');
             $form->setFieldAttribute('published', 'disabled', 'true');
@@ -132,7 +135,7 @@ class CwmteacherModel extends AdminModel
      */
     public function getItem($pk = null): mixed
     {
-        $jinput = new Input;
+        $jinput = new Input();
 
         // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
         if ($jinput->get('a_id')) {

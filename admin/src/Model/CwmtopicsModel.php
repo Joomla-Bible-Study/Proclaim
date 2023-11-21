@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -85,7 +86,7 @@ class CwmtopicsModel extends ListModel
     protected function populateState($ordering = 'topic.topic_text', $direction = 'ASC')
     {
         // Adjust the context to support modal layouts.
-        $input  = new Input;
+        $input  = new Input();
         $layout = $input->get('layout');
 
         if ($layout) {

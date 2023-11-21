@@ -3,7 +3,7 @@
     <field
             name="published"
             type="list"
-            class="span12 small"
+            class="col-12 small"
             id="published"
             label="JSTATUS"
             description="JFIELD_PUBLISHED_DESC"
@@ -25,7 +25,7 @@
         </option>
     </field>
     <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-           description="JBS_CMN_SELECT_LANGUAGE_DESC" class="inputbox span12">
+           description="JBS_CMN_SELECT_LANGUAGE_DESC" class="inputbox col-12">
         <option value="*">JALL</option>
     </field>
     <field name="study_id" type="Modal_Study" label="JBS_CMN_STUDY"

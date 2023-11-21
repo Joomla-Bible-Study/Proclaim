@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -104,7 +105,7 @@ class CwmtopicTable extends Table
         }
 
         if (isset($array['params']) && is_array($array['params'])) {
-            $registry = new Registry;
+            $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = (string)$registry;
         }
@@ -160,7 +161,7 @@ class CwmtopicTable extends Table
     {
         if (parent::load($keys, $reset)) {
             if ($this->params) {
-                $params = new Registry;
+                $params = new Registry();
                 $params->loadString($this->params);
                 $this->params = $params;
             }

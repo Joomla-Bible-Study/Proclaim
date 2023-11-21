@@ -1,4 +1,5 @@
 <?php
+
 /**
  * View html
  *
@@ -80,7 +81,7 @@ class HtmlView extends BaseHtmlView
      */
     public function display($tpl = null): void
     {
-        $model       = new CwmcpanelModel;
+        $model       = new CwmcpanelModel();
         $component   = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
         $this->state = $this->get('State');
 
@@ -88,7 +89,7 @@ class HtmlView extends BaseHtmlView
             $this->xml = simplexml_load_string(file_get_contents($component));
         }
 
-        $this->total_messages = Cwmstats::get_total_messages();
+        $this->total_messages = Cwmstats::getTotalMessages();
 
         $this->hasPostInstallationMessages = $model->hasPostInstallMessages();
         $this->extension_id                = (int)$this->state->get('extension_id', 0, 'int');

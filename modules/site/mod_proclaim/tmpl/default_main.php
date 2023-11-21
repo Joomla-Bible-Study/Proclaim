@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Main view
  *
@@ -21,14 +22,14 @@ use Joomla\Registry\Registry;
 /** @var Registry $params */
 $show_link = $params->get('show_link', 1);
 
-$Listing = new Cwmlisting;
+$Listing = new Cwmlisting();
 ?>
 <div class="container-fluid">
     <?php
     if ($params->get('pageheader')) {
         ?>
         <div class="row-fluid">
-            <div class="span12">
+            <div class="col-12">
                 <?php
                 echo HtmlHelper::_('content.prepare', $params->get('pageheader'), '', 'com_proclaim.module'); ?>
             </div>
@@ -37,7 +38,7 @@ $Listing = new Cwmlisting;
     }
     ?>
     <div class="row-fluid">
-        <div class="span12">
+        <div class="col-12">
             <?php
             /** @var \stdClass $list */
 
@@ -48,7 +49,7 @@ $Listing = new Cwmlisting;
     </div>
 
     <div class="row-fluid">
-        <div class="span12">
+        <div class="col-12">
             <?php
             if ($params->get('show_link') > 0) {
                 /** @var string $link */

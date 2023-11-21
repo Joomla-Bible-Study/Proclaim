@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -87,7 +88,7 @@ class HtmlView extends BaseHtmlView
         $this->media = $db->loadObject();
 
         // Params are the individual params for the media file record
-        $registory = new Registry;
+        $registory = new Registry();
         $registory->loadString($this->media->params);
         $this->media->params = $registory;
         ?>
@@ -100,7 +101,7 @@ class HtmlView extends BaseHtmlView
             <?php
             if ((int)$compat_mode === 1) {
                 echo '<a href="https://www.christianwebministries.org/router.php?file=' .
-                    Cwmhelper::MediaBuildUrl($this->media->spath, $this->media->filename, $this->params)
+                    Cwmhelper::mediaBuildUrl($this->media->spath, $this->media->filename, $this->params)
                     . '&size=' . $this->media->size . '">' . Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
             } else {
                 echo '<a href="index.php?option=com_proclaim&task=cwmsermons.download&id=' . $this->media->study_id
@@ -111,7 +112,7 @@ class HtmlView extends BaseHtmlView
         </div>
         <?php
 
-        $this->_prepareDocument();
+        $this->prepareDocument();
     }
 
     /**
@@ -122,7 +123,7 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0.0
      */
-    protected function _prepareDocument()
+    protected function prepareDocument()
     {
         $app   = Factory::getApplication();
         $menus = $app->getMenu();

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Edit
  *
@@ -163,7 +164,7 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
         echo $this->addon->render($this->media_form, $new); ?>
 
         <?php
-        if ($this->canDo->get('core.admin')): ?>
+        if ($this->canDo->get('core.admin')) : ?>
             <?php
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
             <div class="row-fluid">
@@ -172,7 +173,7 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
             </div>
             <?php
             echo HTMLHelper::_('uitab.endTab'); ?>
-        <?php
+            <?php
         endif; ?>
 
         <?php

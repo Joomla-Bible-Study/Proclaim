@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -95,7 +96,7 @@ class HtmlView extends BaseHtmlView
         // Get the main study list image
         $this->main = Cwmimages::mainStudyImage();
 
-        $uri               = new Uri;
+        $uri               = new Uri();
         $Uri_toString      = $uri->toString();
         $this->request_url = $Uri_toString;
 
@@ -131,7 +132,7 @@ class HtmlView extends BaseHtmlView
 
                     // $showhideall .= "\n\t\t" . '<img src="' . Uri::base() . $showhide_tmp->path . '" alt="' . Text::_('JBS_CMN_SHOW_HIDE_ALL');
                     // $showhideall .= ' ' . $showIt_phrase . '" title="' . Text::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' .
-                    //	$showIt_phrase . '" border="0" width="';
+                    //  $showIt_phrase . '" border="0" width="';
                     // $showhideall .= $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
                     $showhideall .= '<i class="fas fa-arrow-down" title="x"></i>';
 
@@ -144,9 +145,9 @@ class HtmlView extends BaseHtmlView
                     $showhideall .= $buttonlink;
 
                     // $showhideall .= "\n\t\t" . '<img src="' . Uri::base() . $showhide_tmp->path . '" alt="' .
-                    //	Text::_('JBS_CMN_SHOW_HIDE_ALL');
+                    //  Text::_('JBS_CMN_SHOW_HIDE_ALL');
                     // $showhideall .= ' ' . $showIt_phrase . '" title="' . Text::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' .
-                    //	$showIt_phrase . '" border="0" width="';
+                    //  $showIt_phrase . '" border="0" width="';
                     // $showhideall .= $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
 
                     $showhideall .= '<i class="fas fa-arrow-down" title="x"></i>';
@@ -156,16 +157,16 @@ class HtmlView extends BaseHtmlView
                     $showhideall .= "\n\t" . '</a>';
                     $showhideall .= $labellink;
                     $showhideall .= "\n\t\t" . '<span id="landing_label">' . $this->params->get(
-                            'landing_hidelabel'
-                        ) . '</span>';
+                        'landing_hidelabel'
+                    ) . '</span>';
                     $showhideall .= "\n\t" . '</a>';
                     break;
 
                 case 2: // Label only
                     $showhideall .= $labellink;
                     $showhideall .= "\n\t\t" . '<span id="landing_label">' . $this->params->get(
-                            'landing_hidelabel'
-                        ) . '</span>';
+                        'landing_hidelabel'
+                    ) . '</span>';
                     $showhideall .= "\n\t" . '</a>';
                     break;
             }

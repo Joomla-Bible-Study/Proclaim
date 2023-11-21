@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package         Proclaim.Admin
  * @subpackage      com_proclaim

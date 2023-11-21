@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Proclaim/Site
  * @subpackage  com_proclaim
@@ -26,7 +27,6 @@ use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
  */
 class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 {
-
     /**
      * @param   array                         $config   An optional associative array of configuration settings.
      *                                                  Recognized key values include 'name', 'default_task', 'model_path', and
@@ -45,8 +45,7 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 
         if ($this->input->get('view') === 'cwmlandingpage' && $this->input->get('layout') === 'modal') {
             $config['base_path'] = JPATH_ADMINISTRATOR . '/components';
-        } // Sermon frontpage Editor article proxying:
-        elseif ($this->input->get('view') === 'cwmsermons' && $this->input->get('layout') === 'modal') {
+        } elseif ($this->input->get('view') === 'cwmsermons' && $this->input->get('layout') === 'modal') {
             $config['base_path'] = JPATH_ADMINISTRATOR . '/components';
         }
 
@@ -77,7 +76,8 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 
         $user = $this->app->getIdentity();
 
-        if ($user->get('id')
+        if (
+            $user->get('id')
             || ($this->input->getMethod() === 'POST'
                 && strpos($vName, 'form') !== false)
             || $vName === 'cwmpopup'

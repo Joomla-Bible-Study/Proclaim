@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form
  *
@@ -37,8 +38,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
       method="post" name="adminForm" id="item-form" class="form-validate">
     <div class="main-card">
         <?php
-        echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general', 'recall' => true, 'breakpoint' => 768]
-        ); ?>
+        echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general', 'recall' => true, 'breakpoint' => 768]); ?>
 
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_GENERAL')); ?>
@@ -102,7 +102,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
             <?php
             $c     = 0;
             $count = CwmproclaimHelper::halfarray($this->form->getFieldset('TEMPLATES'));
-            foreach ($this->form->getFieldset('TEMPLATES') as $field):
+            foreach ($this->form->getFieldset('TEMPLATES') as $field) :
                 if ($c === 0) {
                     echo '<div class="col-12 col-lg-6">';
                 } elseif ($c === (int)$count->half) {
@@ -129,7 +129,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         <hr/>
         <div class="col-12 col-lg-12">
             <?php
-            foreach ($this->form->getFieldset('TERMS') as $field): ?>
+            foreach ($this->form->getFieldset('TERMS') as $field) : ?>
                 <div class="control-group">
                     <div class="control-label">
                         <?php
@@ -140,7 +140,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         echo $field->input; ?>
                     </div>
                 </div>
-            <?php
+                <?php
             endforeach; ?>
         </div>
         <?php
@@ -152,7 +152,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
             <?php
             $c     = 0;
             $count = CwmproclaimHelper::halfarray($this->form->getFieldset('MEDIA'));
-            foreach ($this->form->getFieldset('MEDIA') as $field):
+            foreach ($this->form->getFieldset('MEDIA') as $field) :
                 if ($c === 0) {
                     echo '<div class="col-12 col-lg-6">';
                 } elseif ($c === (int)$count->half) {
@@ -185,8 +185,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
             <?php
             $c     = 0;
             $count = CwmproclaimHelper::halfarray($this->form->getFieldset('LANDINGPAGE'));
-            foreach ($this->form->getFieldset('LANDINGPAGE') as $field):
-
+            foreach ($this->form->getFieldset('LANDINGPAGE') as $field) :
                 if ($c === 0) {
                     echo '<div class="col-12 col-lg-7">';
                 } elseif ($c === $count->half) {
@@ -229,7 +228,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('VERSES') as $field): ?>
+                            foreach ($this->form->getFieldset('VERSES') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -240,7 +239,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                         echo $field->input; ?>
                                     </div>
                                 </div>
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -257,7 +256,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('LISTITEMS') as $field): ?>
+                            foreach ($this->form->getFieldset('LISTITEMS') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -268,7 +267,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                         echo $field->input; ?>
                                     </div>
                                 </div>
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -285,7 +284,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('FILTERS') as $field): ?>
+                            foreach ($this->form->getFieldset('FILTERS') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -296,7 +295,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                         echo $field->input; ?>
                                     </div>
                                 </div>
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -313,7 +312,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('TOOLTIP') as $field): ?>
+                            foreach ($this->form->getFieldset('TOOLTIP') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -324,7 +323,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                         echo $field->input; ?>
                                     </div>
                                 </div>
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -341,8 +340,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('DISPLAYELEMENTS1') as $field): ?>
-
+                            foreach ($this->form->getFieldset('DISPLAYELEMENTS1') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -354,7 +352,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     </div>
                                 </div>
 
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -371,8 +369,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('DISPLAYELEMENTS2') as $field): ?>
-
+                            foreach ($this->form->getFieldset('DISPLAYELEMENTS2') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -384,7 +381,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     </div>
                                 </div>
 
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -402,8 +399,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('DISPLAYELEMENTS3') as $field): ?>
-
+                            foreach ($this->form->getFieldset('DISPLAYELEMENTS3') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -415,7 +411,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     </div>
                                 </div>
 
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -432,8 +428,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('DISPLAYELEMENTS4') as $field): ?>
-
+                            foreach ($this->form->getFieldset('DISPLAYELEMENTS4') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -445,7 +440,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     </div>
                                 </div>
 
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -463,8 +458,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('DISPLAYELEMENTS5') as $field): ?>
-
+                            foreach ($this->form->getFieldset('DISPLAYELEMENTS5') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -476,7 +470,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     </div>
                                 </div>
 
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -494,8 +488,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('DISPLAYELEMENTS6') as $field): ?>
-
+                            foreach ($this->form->getFieldset('DISPLAYELEMENTS6') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -507,7 +500,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     </div>
                                 </div>
 
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -533,8 +526,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('DETAILS') as $field): ?>
-
+                            foreach ($this->form->getFieldset('DETAILS') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -546,7 +538,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     </div>
                                 </div>
 
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -563,8 +555,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS1') as $field): ?>
-
+                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS1') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -576,7 +567,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     </div>
                                 </div>
 
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -593,8 +584,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS2') as $field): ?>
-
+                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS2') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -606,7 +596,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     </div>
                                 </div>
 
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -623,8 +613,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS3') as $field): ?>
-
+                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS3') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -636,7 +625,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     </div>
                                 </div>
 
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -653,8 +642,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS4') as $field): ?>
-
+                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS4') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -666,7 +654,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     </div>
                                 </div>
 
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -683,8 +671,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS5') as $field): ?>
-
+                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS5') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -696,7 +683,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     </div>
                                 </div>
 
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -714,8 +701,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS6') as $field): ?>
-
+                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS6') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -727,7 +713,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     </div>
                                 </div>
 
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -753,8 +739,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('TEACHERDETAILS') as $field): ?>
-
+                            foreach ($this->form->getFieldset('TEACHERDETAILS') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -766,7 +751,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     </div>
                                 </div>
 
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -783,8 +768,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('TEACHER') as $field): ?>
-
+                            foreach ($this->form->getFieldset('TEACHER') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -796,7 +780,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     </div>
                                 </div>
 
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -813,8 +797,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('TEACHERDISPLAY') as $field): ?>
-
+                            foreach ($this->form->getFieldset('TEACHERDISPLAY') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -826,7 +809,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     </div>
                                 </div>
 
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -843,8 +826,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('TEACHERDETAILSDISPLAY') as $field): ?>
-
+                            foreach ($this->form->getFieldset('TEACHERDETAILSDISPLAY') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -856,7 +838,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     </div>
                                 </div>
 
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -882,7 +864,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('SERIES') as $field): ?>
+                            foreach ($this->form->getFieldset('SERIES') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -893,7 +875,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                         echo $field->input; ?>
                                     </div>
                                 </div>
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -910,7 +892,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('SERIESDISPALY') as $field): ?>
+                            foreach ($this->form->getFieldset('SERIESDISPALY') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -921,7 +903,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                         echo $field->input; ?>
                                     </div>
                                 </div>
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -938,7 +920,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('SERIESDETAIL') as $field): ?>
+                            foreach ($this->form->getFieldset('SERIESDETAIL') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -949,7 +931,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                         echo $field->input; ?>
                                     </div>
                                 </div>
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -966,7 +948,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('SERIESDETAILDISPALY') as $field): ?>
+                            foreach ($this->form->getFieldset('SERIESDETAILDISPALY') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
@@ -977,7 +959,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                         echo $field->input; ?>
                                     </div>
                                 </div>
-                            <?php
+                                <?php
                             endforeach; ?>
                         </div>
                     </div>
@@ -987,7 +969,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
         <?php
-        if ($this->canDo->get('core.admin')): ?>
+        if ($this->canDo->get('core.admin')) : ?>
             <?php
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
             <div class="row-fluid">
@@ -996,7 +978,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
             </div>
             <?php
             echo HTMLHelper::_('uitab.endTab'); ?>
-        <?php
+            <?php
         endif; ?>
 
         <input type="hidden" name="task" value=""/>

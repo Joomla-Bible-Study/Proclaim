@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Backup html
  *
@@ -85,7 +86,7 @@ class HtmlView extends BaseHtmlView
      */
     public function display($tpl = null): void
     {
-        $model = new CwmadminModel;
+        $model = new CwmadminModel();
         $this->setModel($model, true);
 
         // Get data from the model

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -30,11 +31,11 @@ abstract class Cwmhelperroute
     /**
      * Lookup
      *
-     * @var string
+     * @var string|array
      *
      * @since    7.2
      */
-    protected static string $lookup;
+    protected static string|array $lookup;
 
     /**
      * Get Article Rout
@@ -118,7 +119,7 @@ abstract class Cwmhelperroute
      * @throws \Exception
      * @since    7.2
      */
-    protected static function _findItem(array $needles = array())
+    protected static function findItem(array $needles = array())
     {
         $app   = Factory::getApplication();
         $menus = $app->getMenu('site');

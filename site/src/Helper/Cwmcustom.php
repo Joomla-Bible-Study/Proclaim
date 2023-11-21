@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -45,7 +46,7 @@ class Cwmcustom
     {
         $isCustom     = $rowid === 24;
         $countbraces  = substr_count($custom, '{');
-        $JBSMElements = new Cwmlisting;
+        $JBSMElements = new Cwmlisting();
 
         while ($countbraces > 0) {
             $bracebegin = strpos($custom, '{');
@@ -81,76 +82,76 @@ class Cwmcustom
         $rowID = 0;
 
         switch ($row) {
-            case 'scripture1' :
+            case 'scripture1':
                 $rowID = 1;
                 break;
-            case 'scripture2' :
+            case 'scripture2':
                 $rowID = 2;
                 break;
-            case 'secondary' :
+            case 'secondary':
                 $rowID = 3;
                 break;
-            case 'duration' :
+            case 'duration':
                 $rowID = 4;
                 break;
-            case 'studytitle' :
+            case 'studytitle':
                 $rowID = 5;
                 break;
-            case 'studyintro' :
+            case 'studyintro':
                 $rowID = 6;
                 break;
-            case 'teachername' :
+            case 'teachername':
                 $rowID = 7;
                 break;
-            case 'teacher-title-name' :
+            case 'teacher-title-name':
                 $rowID = 8;
                 break;
             case 'teacher-image':
                 $rowID = 30;
                 break;
-            case 'series_text' :
+            case 'series_text':
                 $rowID = 9;
                 break;
-            case 'date' :
+            case 'date':
                 $rowID = 10;
                 break;
-            case 'submitted' :
+            case 'submitted':
                 $rowID = 11;
                 break;
-            case 'hits' :
+            case 'hits':
                 $rowID = 12;
                 break;
-            case 'studynumber' :
+            case 'studynumber':
                 $rowID = 13;
                 break;
-            case 'topic_text' :
+            case 'topic_text':
                 $rowID = 14;
                 break;
-            case 'location_text' :
+            case 'location_text':
                 $rowID = 15;
                 break;
-            case 'message_type' :
+            case 'message_type':
                 $rowID = 16;
                 break;
-            case 'details-text' :
+            case 'details-text':
                 $rowID = 17;
                 break;
-            case 'details-text-pdf' :
+            case 'details-text-pdf':
                 $rowID = 18;
                 break;
-            case 'details-pdf' :
+            case 'details-pdf':
                 $rowID = 19;
                 break;
-            case 'media' :
+            case 'media':
                 $rowID = 20;
                 break;
-            case 'store' :
+            case 'store':
                 $rowID = 22;
                 break;
-            case 'filesize' :
+            case 'filesize':
                 $rowID = 23;
                 break;
-            case 'thumbnail' :
+            case 'thumbnail':
                 $rowID = 25;
                 break;
             case 'series_thumbnail':

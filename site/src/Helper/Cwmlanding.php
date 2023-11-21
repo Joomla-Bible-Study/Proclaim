@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -59,7 +60,7 @@ class Cwmlanding
         $locationuselimit = $params->get('landinglocationsuselimit', 0);
         $menu             = $mainframe->getMenu();
         $item             = $menu->getActive();
-        $registry         = new Registry;
+        $registry         = new Registry();
 
         if (isset($params)) {
             $registry->loadString($params);
@@ -132,7 +133,7 @@ class Cwmlanding
                             }
                         }
 
-                        $location .= '<div class="span4 style="display: inline-block; margin-right:7px"">';
+                        $location .= '<div class="col-4 style="display: inline-block; margin-right:7px"">';
                         $location .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_location=' . $b->id . '&amp;sendingview=cwmlanding' .
                             '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
                             . $template . '">';
@@ -160,7 +161,6 @@ class Cwmlanding
                     break;
 
                 case 1:
-
                     $location = '<div class="landingtable" style="display:inline-block;">';
 
                     foreach ($tresult as $b) {
@@ -231,7 +231,7 @@ class Cwmlanding
         $teacheruselimit = $params->get('landingteachersuselimit', 0);
         $menu            = $mainframe->getMenu();
         $item            = $menu->getActive();
-        $registry        = new Registry;
+        $registry        = new Registry();
 
         if (isset($params)) {
             $registry->loadString($params);
@@ -303,17 +303,17 @@ class Cwmlanding
                         }
 
                         if ($params->get('linkto') == 0) {
-                            $teacher .= '<div class="span4" style="display: inline-block; margin-right:7px">';
+                            $teacher .= '<div class="col-4" style="display: inline-block; margin-right:7px">';
                             $teacher .= '<a href="' . Route::_(
-                                    'index.php?option=com_proclaim&amp;view=Cwmsermons&amp;t=' . $template
-                                )
+                                'index.php?option=com_proclaim&amp;view=Cwmsermons&amp;t=' . $template
+                            )
                                 . '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
                                 . $langlink . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
                         } else {
-                            $teacher .= '<div class="span4" style="display: inline-block; margin-right:7px">';
+                            $teacher .= '<div class="col-4" style="display: inline-block; margin-right:7px">';
                             $teacher .= '<a href="' . Route::_(
-                                    'index.php?option=com_proclaim&amp;view=cwmteacher&id=' . $b->id . $langlink . '&t=' . $template
-                                ) . '">';
+                                'index.php?option=com_proclaim&amp;view=cwmteacher&id=' . $b->id . $langlink . '&t=' . $template
+                            ) . '">';
                         }
 
                         $teacher .= $b->teachername;
@@ -342,12 +342,12 @@ class Cwmlanding
                     foreach ($tresult as $b) {
                         if ($b->landing_show == 1) {
                             if ($params->get('linkto') == 0) {
-                                $teacher .= '<div class="span4" style="display: inline-block; margin-right:7px"> <a '
+                                $teacher .= '<div class="col-4" style="display: inline-block; margin-right:7px"> <a '
                                     . Route::_('index.php?option=com_proclaim&amp;view=Cwmsermons&amp;t=' . $template)
                                     . '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
                                     . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
                             } else {
-                                $teacher .= '<div class="span4" style="display: inline-block; margin-right:7px"><a href="'
+                                $teacher .= '<div class="col-4" style="display: inline-block; margin-right:7px"><a href="'
                                     . Route::_(
                                         'index.php?option=com_proclaim&amp;view=cwmteacher&amp;id=' . $b->id . '&amp;t=' . $template
                                     ) . '">';
@@ -363,12 +363,12 @@ class Cwmlanding
                     foreach ($tresult as $b) {
                         if ($b->landing_show == 2) {
                             if ($params->get('linkto') == 0) {
-                                $teacher .= '<div class="span4"><a href="'
+                                $teacher .= '<div class="col-4"><a href="'
                                     . Route::_('index.php?option=com_proclaim&amp;view=Cwmsermons&amp;t=' . $template)
                                     . '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
                                     . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
                             } else {
-                                $teacher .= '<div class="span4"><a href="'
+                                $teacher .= '<div class="col-4"><a href="'
                                     . Route::_(
                                         'index.php?option=com_proclaim&amp;sendingview=landing&amp;view=teacher&amp;id=' .
                                         $b->id . '&amp;t=' . $template
@@ -424,7 +424,7 @@ class Cwmlanding
         $seriesuselimit = $params->get('landingseriesuselimit', 0);
         $menu           = $mainframe->getMenu();
         $item           = $menu->getActive();
-        $registry       = new Registry;
+        $registry       = new Registry();
 
         if (isset($params)) {
             $registry->loadString($params);
@@ -491,13 +491,13 @@ class Cwmlanding
                         }
 
                         if ($params->get('series_linkto') === '0') {
-                            $series .= '<div class="span4">';
+                            $series .= '<div class="col-4">';
                             $series .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_series=' . $b->id
                                 . '&amp;sendingview=landing&amp;filter_book=0&amp;filter_teacher=0'
                                 . '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
                                 . $template . '">';
                         } else {
-                            $series .= '<div class="span4" style="display: inline-block; margin-right:7px">';
+                            $series .= '<div class="col-4" style="display: inline-block; margin-right:7px">';
                             $series .= '<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=cwmseriesdisplay&amp;id=' .
                                 $b->id . '&amp;t=' . $template . '">';
                         }
@@ -617,7 +617,7 @@ class Cwmlanding
 
         $menu     = $mainframe->getMenu();
         $item     = $menu->getActive();
-        $registry = new Registry;
+        $registry = new Registry();
 
         if (isset($params)) {
             $registry->loadString($params);
@@ -678,7 +678,7 @@ class Cwmlanding
                     }
                 }
 
-                $year .= '<div class="span2" style="display: inline-block; margin-right:7px">';
+                $year .= '<div class="col-2" style="display: inline-block; margin-right:7px">';
                 $year .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_year='
                     . $b->theYear . '&amp;sendingview=cwmlanding&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;'
                     . 'filter_book=0&amp;filter_messagetype=0&amp;t='
@@ -741,7 +741,7 @@ class Cwmlanding
 
         $menu     = Factory::getApplication()->getMenu();
         $item     = $menu->getActive();
-        $registry = new Registry;
+        $registry = new Registry();
 
         if (isset($params)) {
             $registry->loadString($params);
@@ -807,11 +807,11 @@ class Cwmlanding
                     }
                 }
 
-                $topic .= '<div class="span2" style="display: inline-block; margin-right:7px">';
+                $topic .= '<div class="col-2" style="display: inline-block; margin-right:7px">';
                 $topic .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_topic=' .
                     $b->id . '&amp;sendingview=cwmlanding&amp;filter_teacher=0'
                     . '&amp;filter_series=0&amp;filter_location=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
-                $trans = new Cwmtranslated;
+                $trans = new Cwmtranslated();
                 $topic .= $trans::getTopicItemTranslated($b);
 
                 $topic .= '</a>';
@@ -868,7 +868,7 @@ class Cwmlanding
         $messagetypeuselimit = $params->get('landingmessagetypeuselimit', 0);
         $menu                = $mainframe->getMenu();
         $item                = $menu->getActive();
-        $registry            = new Registry;
+        $registry            = new Registry();
 
         if (isset($params)) {
             $registry->loadString($params);
@@ -939,7 +939,7 @@ class Cwmlanding
                             }
                         }
 
-                        $messagetype .= '<div class="span2 style="display: inline-block; margin-right:7px"">';
+                        $messagetype .= '<div class="col-2 style="display: inline-block; margin-right:7px"">';
                         $messagetype .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_messagetype=' .
                             $b->id . '&amp;sendingview=cwmlanding&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0' .
                             '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t=' . $template . '">';
@@ -1039,7 +1039,7 @@ class Cwmlanding
         $app      = Factory::getApplication();
         $menu     = $app->getMenu();
         $item     = $menu->getActive();
-        $registry = new Registry;
+        $registry = new Registry();
 
         if (isset($params)) {
             $registry->loadString($params);
@@ -1108,7 +1108,7 @@ class Cwmlanding
                     }
                 }
 
-                $book .= '<div class="span2" style="display: inline-block; margin-right:7px">';
+                $book .= '<div class="col-2" style="display: inline-block; margin-right:7px">';
                 $book .= '<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=Cwmsermons&amp;filter_book=' . $b->booknumber
                     . '&amp;sendingview=cwmlanding&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0' .
                     '&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -80,7 +81,7 @@ class HtmlView extends BaseHtmlView
         $this->item = $this->get("Item");
         $this->canDo = ContentHelper::getActions('com_proclaim', 'serie', (int)$this->item->id);
         $admin = Cwmparams::getAdmin();
-        $registry = new Registry;
+        $registry = new Registry();
         $registry->loadString($admin->params);
         $this->admin_params = $registry;
 

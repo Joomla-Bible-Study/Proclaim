@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -136,10 +137,12 @@ class CwmsermonModel extends FormModel
                 $query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
                 $query->join('LEFT', '#__bsms_mediafiles AS m on s.id = m.study_id');
 
-                if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
+                if (
+                    (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
                         'core.edit',
                         'com_proclaim'
-                    ))) {
+                    ))
+                ) {
                     // Filter by start and end dates.
                     $nullDate = $db->quote($db->getNullDate());
                     $date     = Factory::getDate();
@@ -176,9 +179,11 @@ class CwmsermonModel extends FormModel
                 }
 
                 // Check for published state if filter set.
-                if (((is_numeric($published)) || (is_numeric(
-                            $archived
-                        ))) && (($data->published != $published) && ($data->published != $archived))) {
+                if (
+                    ((is_numeric($published)) || (is_numeric(
+                        $archived
+                    ))) && (($data->published != $published) && ($data->published != $archived))
+                ) {
                     Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_ITEM_NOT_PUBLISHED'), 'error');
                     $data = null;
 
@@ -191,14 +196,14 @@ class CwmsermonModel extends FormModel
                 $data->topic_text = $topic_text;
                 $data->bookname   = Text::_($data->bookname);
 
-                $registry = new Registry;
+                $registry = new Registry();
                 $registry->loadString($data->params);
                 $data->params = $registry;
                 $template     = Cwmparams::getTemplateparams();
 
                 $data->params->merge($template->params);
                 $mparams = clone $this->getState('params');
-                $mj      = new Registry;
+                $mj      = new Registry();
                 $mj->loadString($mparams);
                 $data->params->merge($mj);
 
@@ -212,8 +217,7 @@ class CwmsermonModel extends FormModel
                     // Check general edit permission first.
                     if ($user->authorise('core.edit', $asset)) {
                         $data->params->set('access-edit', true);
-                    } // Now check if edit.own is available.
-                    elseif (!empty($userId) && $user->authorise('core.edit.own', $asset)) {
+                    } elseif (!empty($userId) && $user->authorise('core.edit.own', $asset)) {
                         // Check for a valid user and that they are the owner.
                         if ($userId == $data->created_by) {
                             $data->params->set('access-edit', true);
@@ -237,7 +241,7 @@ class CwmsermonModel extends FormModel
 
                 $this->_item[$pk] = $data;
             } catch (\Exception $e) {
-                if ($e->getCode() == 404) {
+                if ((int) $e->getCode() === 404) {
                     // Need to go through the error handler to allow Redirect to work.
                     Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
                 } else {
@@ -371,14 +375,14 @@ class CwmsermonModel extends FormModel
 
         $user = $app->getSession()->get('user');
 
-        if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
+        if (
+            (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
                 'core.edit',
                 'com_proclaim'
-            ))) {
+            ))
+        ) {
             $this->setState('filter.published', 1);
             $this->setState('filter.archived', 2);
         }
     }
-
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -127,7 +128,7 @@ class CwmadminModel extends AdminModel
      */
     public function save($data): bool
     {
-        $params = new Registry;
+        $params = new Registry();
         $params->loadArray($data['params']);
 
         // Load the image, then turn it into an array because Joomla's mediafield
@@ -189,7 +190,7 @@ class CwmadminModel extends AdminModel
         $mediafiles = $db->loadObjectList();
 
         foreach ($mediafiles as $i => $mediafile) {
-            $reg = new Registry;
+            $reg = new Registry();
             $reg->loadString($mediafile->params);
             $mediafiles[$i]->params = $reg;
         }
@@ -215,7 +216,7 @@ class CwmadminModel extends AdminModel
         $this->fixSchemaVersion($changeSet);
         $this->fixUpdateVersion();
         $this->fixUpdateJBSMVersion();
-        $installer = new CwminstallModel;
+        $installer = new CwminstallModel();
         $installer->fixMenus();
         $installer->fixemptyaccess();
         $installer->fixemptylanguage();
@@ -445,7 +446,7 @@ class CwmadminModel extends AdminModel
             $contentParams = ComponentHelper::getParams('com_proclaim');
 
             if ($contentParams->get('filters')) {
-                $newParams = new Registry;
+                $newParams = new Registry();
                 $newParams->set('filters', $contentParams->get('filters'));
                 $table->params = (string)$newParams;
                 $table->store();
@@ -551,14 +552,14 @@ class CwmadminModel extends AdminModel
         $db   = Factory::getContainer()->get('DatabaseDriver');
         $msg  = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
         $post = $_POST['jform'];
-        $reg  = new Registry;
+        $reg  = new Registry();
         $reg->loadArray($post['params']);
         $from    = $reg->get('mtFrom', 'x');
         $to      = $reg->get('mtTo', 'x');
         $account = 0;
         $count   = 0;
 
-        $MediaHelper = new Cwmmedia;
+        $MediaHelper = new Cwmmedia();
         $mimetypes   = $MediaHelper->getMimetypes();
 
         if ($from !== 'x') {
@@ -577,7 +578,7 @@ class CwmadminModel extends AdminModel
             $count++;
             $search = false;
             $isfrom = '';
-            $reg    = new Registry;
+            $reg    = new Registry();
             $reg->loadString($media->params);
             $filename  = $reg->get('filename', '');
             $mediacode = $reg->get('mediacode');

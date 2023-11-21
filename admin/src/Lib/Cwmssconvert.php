@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -10,11 +11,15 @@
 
 namespace CWM\Component\Proclaim\Administrator\Lib;
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+
+// phpcs:enable PSR1.Files.SideEffects
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
-defined('_JEXEC') or die();
 
 /**
  * Class script to convert SermonSpeaker 5.2 to Proclaim
@@ -55,7 +60,7 @@ class Cwmssconvert
         // Make a server record
         $base              = Uri::base();
         $site              = str_replace('/administrator/', '', $base);
-        $data              = new \stdClass;
+        $data              = new \stdClass();
         $data->server_name = $site;
         $data->server_path = $site;
 
@@ -84,12 +89,12 @@ class Cwmssconvert
 
         if (!$teachers) {
             $result_table .= '<tr><td><span style="color: red;">' . Text::_(
-                    'JBS_IBM_NO_TEACHERS_FOUND_SS'
-                ) . '</span></td></tr>';
+                'JBS_IBM_NO_TEACHERS_FOUND_SS'
+            ) . '</span></td></tr>';
         }
 
         foreach ($teachers as $teacher) {
-            $data              = new \stdClass;
+            $data              = new \stdClass();
             $teachername       = $teacher->name;
             $data->teachername = $teachername;
             $data->website     = $teacher->website;
@@ -145,7 +150,7 @@ class Cwmssconvert
                 }
 
                 $series_thumbnail       = $single->avatar;
-                $data                   = new \stdClass;
+                $data                   = new \stdClass();
                 $data->series_text      = $series_text;
                 $data->description      = $description;
                 $data->published        = $published;
@@ -228,7 +233,7 @@ class Cwmssconvert
     public function newStudies($sermon, $seriesspeakers)
     {
         $db   = Factory::getContainer()->get('DatabaseDriver');
-        $data = new \stdClass;
+        $data = new \stdClass();
 
         foreach ($seriesspeakers as $speakers) {
             if ($speakers->speaker_id == $sermon->speaker_id) {
@@ -269,7 +274,7 @@ class Cwmssconvert
 
         $db->setQuery($query, 0, 1);
         $study              = $db->loadAssoc();
-        $data1              = new \stdClass;
+        $data1              = new \stdClass();
         $data1->study_id    = $study['id'];
         $data1->server_id   = $this->serverid;
         $data1->filename    = $sermon->audiofile;
@@ -282,7 +287,7 @@ class Cwmssconvert
         $db->insertObject('#__bsms_mediafiles', $data1, 'id');
 
         if ($sermon->videofile) {
-            $data2              = new \stdClass;
+            $data2              = new \stdClass();
             $data2->study_id    = $study['id'];
             $data2->server      = $this->serverid;
             $data2->filename    = $sermon->videofile;
@@ -307,7 +312,7 @@ class Cwmssconvert
      */
     public function getVerses($sermon)
     {
-        $sermonscripture             = new \stdClass;
+        $sermonscripture             = new \stdClass();
         $sermonscripture->booknumber = '101';
         $secondcolon                 = 0;
 

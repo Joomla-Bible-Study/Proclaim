@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -50,7 +51,7 @@ class CwmsermonsController extends BaseController
         $mid   = $input->getInt('id');
 
         if ($task === 'download') {
-            $downloader = new Cwmdownload;
+            $downloader = new Cwmdownload();
             $downloader->download($mid);
         }
     }
@@ -85,7 +86,7 @@ class CwmsermonsController extends BaseController
     public function playHit(): void
     {
         $app      = Factory::getApplication();
-        $getMedia = new Cwmmedia;
+        $getMedia = new Cwmmedia();
         $getMedia->hitPlay((int)$app->input->get('id', '', 'int'));
 
         // Now the hit has been updated will redirect to the url.

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -200,7 +201,7 @@ class HtmlView extends BaseHtmlView
             );
         }
 
-        $this->getMedia = new Cwmmedia;
+        $this->getMedia = new Cwmmedia();
         $this->media    = $this->getMedia->getMediaRows2($mediaid);
         $this->state    = $this->get('state');
         $this->template = $this->state->get('template');
@@ -208,21 +209,21 @@ class HtmlView extends BaseHtmlView
         /*
          *  Convert parameter fields to objects.
          */
-        $registry = new Registry;
+        $registry = new Registry();
         $registry->loadString($this->template->params);
         $this->params = $registry;
 
-        $registry = new Registry;
+        $registry = new Registry();
         $registry->loadString($this->media->sparams);
         $this->params->merge($registry);
         $this->media->sparams = $registry;
-        $registry             = new Registry;
+        $registry             = new Registry();
         $registry->loadString($this->media->params);
         $this->params->merge($registry);
 
         $saveid          = $this->media->id;
         $this->media->id = $this->media->study_id;
-        $JBSMListing     = new Cwmlisting;
+        $JBSMListing     = new Cwmlisting();
         $this->scripture = $JBSMListing->getScripture($this->params, $this->media, $esv = '0', $scripturerow = '1');
         $this->media->id = $saveid;
         $this->date      = $JBSMListing->getStudyDate($this->params, $this->media->studydate);
@@ -234,14 +235,14 @@ class HtmlView extends BaseHtmlView
 
         $seriesimage            = Cwmimages::getSeriesThumbnail($this->media->series_thumbnail);
         $this->series_thumbnail = '<img src="' . Uri::base(
-            ) . $seriesimage->path . '" width="' . $seriesimage->width . '" height="'
+        ) . $seriesimage->path . '" width="' . $seriesimage->width . '" height="'
             . $seriesimage->height . '" alt="' . $this->media->series_text . '" />';
         $image                  = Cwmimages::getTeacherThumbnail($this->media->teacher_thumbnail, $this->media->thumb);
         $this->teacherimage     = '<img src="' . Uri::base(
-            ) . $image->path . '" width="' . $image->width . '" height="' . $image->height
+        ) . $image->path . '" width="' . $image->width . '" height="' . $image->height
             . '" alt="' . $this->media->teachername . '" />';
 
-        $this->path1 = Cwmhelper::MediaBuildUrl(
+        $this->path1 = Cwmhelper::mediaBuildUrl(
             $this->media->spath,
             $this->params->get('filename'),
             $this->params,

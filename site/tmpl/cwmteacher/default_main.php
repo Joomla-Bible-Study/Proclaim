@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Teacher view subset main
  *
@@ -17,8 +18,8 @@ use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
-$listing = new Cwmlisting;
-$teacher = new Cwmlisting;
+$listing = new Cwmlisting();
+$teacher = new Cwmlisting();
 ?>
 <div class="container">
 

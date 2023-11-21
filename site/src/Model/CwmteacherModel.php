@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -57,7 +58,7 @@ class CwmteacherModel extends ItemModel
 
         if (!isset($this->_item[$pk])) {
             try {
-                $db = Factory::getContainer()->get('DatabaseDriver');
+                $db    = Factory::getContainer()->get('DatabaseDriver');
                 $query = $db->getQuery(true);
                 $query->select(
                     $this->getState(
@@ -132,10 +133,12 @@ class CwmteacherModel extends ItemModel
         $this->setState('params', $params);
         $user = $app->getSession()->get('user');
 
-        if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
+        if (
+            (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
                 'core.edit',
                 'com_proclaim'
-            ))) {
+            ))
+        ) {
             $this->setState('filter.published', 1);
             $this->setState('filter.archived', 2);
         }

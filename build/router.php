@@ -44,7 +44,7 @@ readfile($file);
  *
  * @since 8.0.0
  */
-function getRemoteFileSize($url)
+function getRemoteFileSize($url): bool|int
 {
     if (empty($url)) {
         return 0;
@@ -67,7 +67,7 @@ function getRemoteFileSize($url)
 
     if (isset($head['content-length'])) {
         return $head['content-length'];
-    } else {
-        return 0;
     }
+
+    return 0;
 }

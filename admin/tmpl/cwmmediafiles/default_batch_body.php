@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Batch Template
  *
@@ -20,19 +21,19 @@ HTMLHelper::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html');
 ?>
 
 <div class="row-fluid">
-    <div class="control-group span4">
+    <div class="control-group col-4">
         <div class="controls">
             <?php
             echo HTMLHelper::_('proclaim.players'); ?>
         </div>
     </div>
-    <div class="control-group span4">
+    <div class="control-group col-4">
         <div class="controls">
             <?php
             echo HTMLHelper::_('proclaim.popup'); ?>
         </div>
     </div>
-    <div class="control-group span4">
+    <div class="control-group col-4">
         <div class="controls">
             <?php
             echo HTMLHelper::_('proclaim.Mediatype'); ?>
@@ -40,19 +41,19 @@ HTMLHelper::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html');
     </div>
 </div>
 <div class="row-fluid">
-    <div class="control-group span4">
+    <div class="control-group col-4">
         <div class="controls">
             <?php
             echo HTMLHelper::_('proclaim.link_type'); ?>
         </div>
     </div>
-    <div class="control-group span4">
+    <div class="control-group col-4">
         <div class="controls">
             <?php
             echo HTMLHelper::_('batch.access'); ?>
         </div>
     </div>
-    <div class="control-group span4">
+    <div class="control-group col-4">
         <div class="controls">
             <?php
             echo HTMLHelper::_('batch.language'); ?>

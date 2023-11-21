@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Helper for mod_biblestudy.php
  *
@@ -158,10 +159,12 @@ class ModProclaimHelper implements DatabaseAwareInterface
         $nowDate  = $db->quote(Factory::getDate()->toSql(true));
 
         // Filter by start and end dates.
-        if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
+        if (
+            (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
                 'core.edit',
                 'com_proclaim'
-            ))) {
+            ))
+        ) {
             $query->where('(study.publish_up = ' . $nullDate . ' OR study.publish_up <= ' . $nowDate . ')')
                 ->where('(study.publish_down = ' . $nullDate . ' OR study.publish_down >= ' . $nowDate . ')');
         }

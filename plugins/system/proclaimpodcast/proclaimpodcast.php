@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Proclaim
  * @subpackage  Plugin.JBSPodcast
@@ -132,6 +133,7 @@ class PlgSystemProclaimPodcast extends CMSPlugin
      *
      * @return boolean Check to see if to day is right.
      *
+     * @throws \Exception
      * @since   7.0.5
      */
     public function checkdays(?Registry $params)
@@ -230,7 +232,7 @@ class PlgSystemProclaimPodcast extends CMSPlugin
      */
     public function doPodcast(): bool|string
     {
-        return (new Cwmpodcast)->makePodcasts();
+        return (new Cwmpodcast())->makePodcasts();
     }
 
     /**

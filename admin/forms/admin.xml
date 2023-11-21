@@ -147,11 +147,11 @@
         </field>
         <!--Thumbnail sizes-->
         <field name="thumbnail_teacher_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE"
-               description="JBS_ADM_THUMBNAIL_TEACHER_SIZE_DESC" labelclass="control-label" class="span2"/>
+               description="JBS_ADM_THUMBNAIL_TEACHER_SIZE_DESC" labelclass="control-label" class="col-2"/>
         <field name="thumbnail_series_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_SERIES_SIZE"
-               description="JBS_ADM_THUMBNAIL_SERIES_SIZE_DESC" labelclass="control-label" class="span2"/>
+               description="JBS_ADM_THUMBNAIL_SERIES_SIZE_DESC" labelclass="control-label" class="col-2"/>
         <field name="thumbnail_study_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_STUDY_SIZE"
-               description="JBS_ADM_THUMBNAIL_STUDY_SIZE_DESC" labelclass="control-label" class="span2"/>
+               description="JBS_ADM_THUMBNAIL_STUDY_SIZE_DESC" labelclass="control-label" class="col-2"/>
 
         <field name="location_id" type="sql" extension="com_proclaim" label="JBS_CMN_LOCATION"
                description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox"
@@ -285,10 +285,10 @@
             </field>
             <field name="jwplayer_key" type="text"
                    label="JBS_ADM_JWPLAYER_KEY_LABEL" description=""
-                   class="inputbox span6" labelclass="control-label"/>
+                   class="inputbox col-6" labelclass="control-label"/>
             <field name="jwplayer_cdn" type="text"
                    label="JBS_ADM_JWPLAYER_CDN_LABEL" description=""
-                   class="inputbox span6" filter="row" labelclass="control-label"/>
+                   class="inputbox col-6" filter="row" labelclass="control-label"/>
         </fieldset>
         <fieldset name="jwplayer_pro_standard" label="JBS_ADM_PLAYER_ADMIN_LABLE"
                   description="JBS_ADM_PLAYER_ADMIN_DESC">
@@ -454,7 +454,7 @@
                description="JBS_ADDON_FONT_SIZE_DESC" class="inputbox" labelclass="control-label"/>
         <field name="media_image" type="media" directory="biblestudy"
                label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
-               class="inputbox span6" labelclass="control-label">
+               class="inputbox col-6" labelclass="control-label">
         </field>
     </fieldset>
 </form>

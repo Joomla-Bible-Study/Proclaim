@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -46,11 +47,11 @@ $onclick   = $this->escape($function);
             <div class="alert alert-info">
                 <span class="icon-info-circle" aria-hidden="true"></span><span
                         class="visually-hidden"><?php
-                    echo Text::_('INFO'); ?></span>
+                        echo Text::_('INFO'); ?></span>
                 <?php
                 echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
             </div>
-        <?php
+            <?php
         else : ?>
             <table class="table table-sm">
                 <caption class="visually-hidden">
@@ -85,7 +86,7 @@ $onclick   = $this->escape($function);
                 </tfoot>
                 <tbody>
                 <?php
-                foreach ($this->items as $i => $item): ?>
+                foreach ($this->items as $i => $item) : ?>
                     <tr class="row<?php
                     echo $i % 2; ?>">
                         <th scope="row">
@@ -105,12 +106,12 @@ $onclick   = $this->escape($function);
                             </a>
                         </th>
                     </tr>
-                <?php
+                    <?php
                 endforeach; ?>
                 </tbody>
             </table>
 
-        <?php
+            <?php
         endif; ?>
 
         <input type="hidden" name="task" value=""/>

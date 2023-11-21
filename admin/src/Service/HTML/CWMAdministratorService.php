@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package         Joomla.Administrator
  * @subpackage      com_content
@@ -29,7 +30,6 @@ use Joomla\Database\ParameterType;
  */
 class CWMAdministratorService
 {
-
     /**
      * Render the list of associated items
      *
@@ -46,12 +46,14 @@ class CWMAdministratorService
         $html = '';
 
         // Get the associations
-        if ($associations = Associations::getAssociations(
-            'com_proclaim',
-            '#__bsms_studies',
-            'com_proclaim.item',
-            $messageid
-        )) {
+        if (
+            $associations = Associations::getAssociations(
+                'com_proclaim',
+                '#__bsms_studies',
+                'com_proclaim.item',
+                $messageid
+            )
+        ) {
             foreach ($associations as $tag => $associated) {
                 $associations[$tag] = (int)$associated->id;
             }
@@ -96,10 +98,10 @@ class CWMAdministratorService
                         $text    = $item->lang_code;
                         $url     = Route::_('index.php?option=com_proclaim&task=cwmmessage.edit&id=' . (int)$item->id);
                         $tooltip = '<strong>' . htmlspecialchars(
-                                $item->language_title,
-                                ENT_QUOTES,
-                                'UTF-8'
-                            ) . '</strong><br>'
+                            $item->language_title,
+                            ENT_QUOTES,
+                            'UTF-8'
+                        ) . '</strong><br>'
                             . htmlspecialchars($item->title, ENT_QUOTES, 'UTF-8') .
                             '<br>' . Text::sprintf('JCATEGORY_SPRINTF', $item->category_title);
                         $classes = 'badge bg-secondary';

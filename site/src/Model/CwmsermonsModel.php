@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -600,10 +601,12 @@ class CwmsermonsModel extends ListModel
         $nowDate  = $db->quote(Factory::getDate()->toSql());
 
         // Filter by start and end dates.
-        if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
+        if (
+            (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
                 'core.edit',
                 'com_proclaim'
-            ))) {
+            ))
+        ) {
             $query->where('(study.publish_up = ' . $nullDate . ' OR study.publish_up <= ' . $nowDate . ')')
                 ->where('(study.publish_down = ' . $nullDate . ' OR study.publish_down >= ' . $nowDate . ')');
         }
@@ -615,15 +618,19 @@ class CwmsermonsModel extends ListModel
         $filters_group = [];
 
         // Teacher ID for podcast display
-        if (!is_null($params->get('mteacher_id')) && $params->get('mteacher_id')[0] !== '-1' && empty(
-            $this->getState(
-                'filter.teacher'
+        if (
+            !is_null($params->get('mteacher_id')) && $params->get('mteacher_id')[0] !== '-1' && empty(
+                $this->getState(
+                    'filter.teacher'
+                )
             )
-            )) {
+        ) {
             $filters_group[] = ['study.teacher_id' => $params->get('mteacher_id')];
-        } elseif (!is_null($params->get('mteacher_id')) && $params->get(
+        } elseif (
+            !is_null($params->get('mteacher_id')) && $params->get(
                 'mteacher_id'
-            )[0] !== '-1' && !empty($this->getState('filter.teacher'))) {
+            )[0] !== '-1' && !empty($this->getState('filter.teacher'))
+        ) {
             $filters_group[] = ['study.teacher_id' => $params->get('mteacher_id')];
             $filters_group[] = ['study.teacher_id' => [$this->getState('filter.teacher')]];
         } elseif (!empty($this->getState('filter.teacher'))) {
@@ -631,15 +638,19 @@ class CwmsermonsModel extends ListModel
         }
 
         // Teacher ID from template
-        if (!is_null($params->get('lteacher_id')) && $params->get('lteacher_id')[0] !== '-1' && empty(
-            $this->getState(
-                'filter.teacher'
+        if (
+            !is_null($params->get('lteacher_id')) && $params->get('lteacher_id')[0] !== '-1' && empty(
+                $this->getState(
+                    'filter.teacher'
+                )
             )
-            )) {
+        ) {
             $filters_group[] = ['study.teacher_id' => $params->get('lteacher_id')];
-        } elseif (!is_null($params->get('lteacher_id')) && $params->get(
+        } elseif (
+            !is_null($params->get('lteacher_id')) && $params->get(
                 'lteacher_id'
-            )[0] !== '-1' && !empty($this->getState('filter.teacher'))) {
+            )[0] !== '-1' && !empty($this->getState('filter.teacher'))
+        ) {
             $filters_group[] = ['study.teacher_id' => $params->get('lteacher_id')];
             $filters_group[] = ['study.teacher_id' => [$this->getState('filter.teacher')]];
         } elseif (!empty($this->getState('filter.teacher'))) {
@@ -647,15 +658,19 @@ class CwmsermonsModel extends ListModel
         }
 
         // Location ID
-        if (!is_null($params->get('mlocations')) && $params->get('mlocations')[0] !== '-1' && empty(
-            $this->getState(
-                'filter.location'
+        if (
+            !is_null($params->get('mlocations')) && $params->get('mlocations')[0] !== '-1' && empty(
+                $this->getState(
+                    'filter.location'
+                )
             )
-            )) {
+        ) {
             $filters_group[] = ['study.location_id' => $params->get('mlocations')];
-        } elseif (!is_null($params->get('mlocations')) && $params->get(
+        } elseif (
+            !is_null($params->get('mlocations')) && $params->get(
                 'mlocations'
-            )[0] !== '-1' && !empty($this->getState('filter.location'))) {
+            )[0] !== '-1' && !empty($this->getState('filter.location'))
+        ) {
             $filters_group[] = ['study.location_id' => $params->get('mlocations')];
             $filters_group[] = ['study.location_id' => [$this->getState('filter.location')]];
         } elseif (!empty($this->getState('filter.location'))) {
@@ -663,15 +678,19 @@ class CwmsermonsModel extends ListModel
         }
 
         // Location ID from template
-        if (!is_null($params->get('llocations')) && $params->get('llocations')[0] !== '-1' && empty(
-            $this->getState(
-                'filter.location'
+        if (
+            !is_null($params->get('llocations')) && $params->get('llocations')[0] !== '-1' && empty(
+                $this->getState(
+                    'filter.location'
+                )
             )
-            )) {
+        ) {
             $filters_group[] = ['study.location_id' => $params->get('llocations')];
-        } elseif (!is_null($params->get('llocations')) && $params->get(
+        } elseif (
+            !is_null($params->get('llocations')) && $params->get(
                 'llocations'
-            )[0] !== '-1' && !empty($this->getState('filter.location'))) {
+            )[0] !== '-1' && !empty($this->getState('filter.location'))
+        ) {
             $filters_group[] = ['study.location_id' => $params->get('llocations')];
             $filters_group[] = ['study.location_id' => [$this->getState('filter.location')]];
         } elseif (!empty($this->getState('filter.location'))) {
@@ -679,15 +698,19 @@ class CwmsermonsModel extends ListModel
         }
 
         // Book Number ID
-        if (!is_null($params->get('mbooknumber')) && $params->get('mbooknumber')[0] !== '-1' && empty(
-            $this->getState(
-                'filter.book'
+        if (
+            !is_null($params->get('mbooknumber')) && $params->get('mbooknumber')[0] !== '-1' && empty(
+                $this->getState(
+                    'filter.book'
+                )
             )
-            )) {
+        ) {
             $filters_group[] = ['study.booknumber' => $params->get('mbooknumber')];
-        } elseif (!is_null($params->get('mbooknumber')) && $params->get(
+        } elseif (
+            !is_null($params->get('mbooknumber')) && $params->get(
                 'mbooknumber'
-            )[0] !== '-1' && !empty($this->getState('filter.book'))) {
+            )[0] !== '-1' && !empty($this->getState('filter.book'))
+        ) {
             $filters_group[] = ['study.booknumber' => $params->get('mbooknumber')];
             $filters_group[] = ['study.booknumber' => [$this->getState('filter.book')]];
         } elseif (!empty($this->getState('filter.book'))) {
@@ -695,15 +718,19 @@ class CwmsermonsModel extends ListModel
         }
 
         // Book Number ID from template
-        if (!is_null($params->get('lbooknumber')) && $params->get('lbooknumber')[0] !== '-1' && empty(
-            $this->getState(
-                'filter.book'
+        if (
+            !is_null($params->get('lbooknumber')) && $params->get('lbooknumber')[0] !== '-1' && empty(
+                $this->getState(
+                    'filter.book'
+                )
             )
-            )) {
+        ) {
             $filters_group[] = ['study.booknumber' => $params->get('lbooknumber')];
-        } elseif (!is_null($params->get('lbooknumber')) && $params->get(
+        } elseif (
+            !is_null($params->get('lbooknumber')) && $params->get(
                 'lbooknumber'
-            )[0] !== '-1' && !empty($this->getState('filter.book'))) {
+            )[0] !== '-1' && !empty($this->getState('filter.book'))
+        ) {
             $filters_group[] = ['study.booknumber' => $params->get('lbooknumber')];
             $filters_group[] = ['study.booknumber' => [$this->getState('filter.book')]];
         } elseif (!empty($this->getState('filter.book'))) {
@@ -711,15 +738,19 @@ class CwmsermonsModel extends ListModel
         }
 
         // Series ID
-        if (!is_null($params->get('mseries_id')) && $params->get('mseries_id')[0] !== '-1' && empty(
-            $this->getState(
-                'filter.series'
+        if (
+            !is_null($params->get('mseries_id')) && $params->get('mseries_id')[0] !== '-1' && empty(
+                $this->getState(
+                    'filter.series'
+                )
             )
-            )) {
+        ) {
             $filters_group[] = ['study.series_id' => $params->get('mseries_id')];
-        } elseif (!is_null($params->get('mseries_id')) && $params->get(
+        } elseif (
+            !is_null($params->get('mseries_id')) && $params->get(
                 'mseries_id'
-            )[0] !== '-1' && !empty($this->getState('filter.series'))) {
+            )[0] !== '-1' && !empty($this->getState('filter.series'))
+        ) {
             $filters_group[] = ['study.series_id' => $params->get('mseries_id')];
             $filters_group[] = ['study.series_id' => [$this->getState('filter.series')]];
         } elseif (!empty($this->getState('filter.series'))) {
@@ -727,15 +758,19 @@ class CwmsermonsModel extends ListModel
         }
 
         // Series ID from template
-        if (!is_null($params->get('lseries_id')) && $params->get('lseries_id')[0] !== '-1' && empty(
-            $this->getState(
-                'filter.series'
+        if (
+            !is_null($params->get('lseries_id')) && $params->get('lseries_id')[0] !== '-1' && empty(
+                $this->getState(
+                    'filter.series'
+                )
             )
-            )) {
+        ) {
             $filters_group[] = ['study.series_id' => $params->get('lseries_id')];
-        } elseif (!is_null($params->get('lseries_id')) && $params->get(
+        } elseif (
+            !is_null($params->get('lseries_id')) && $params->get(
                 'lseries_id'
-            )[0] !== '-1' && !empty($this->getState('filter.series'))) {
+            )[0] !== '-1' && !empty($this->getState('filter.series'))
+        ) {
             $filters_group[] = ['study.series_id' => $params->get('lseries_id')];
             $filters_group[] = ['study.series_id' => [$this->getState('filter.series')]];
         } elseif (!empty($this->getState('filter.series'))) {
@@ -743,15 +778,19 @@ class CwmsermonsModel extends ListModel
         }
 
         // Topic ID
-        if (!is_null($params->get('mtopic_id')) && $params->get('mtopic_id')[0] !== '-1' && empty(
-            $this->getState(
-                'filter.topic'
+        if (
+            !is_null($params->get('mtopic_id')) && $params->get('mtopic_id')[0] !== '-1' && empty(
+                $this->getState(
+                    'filter.topic'
+                )
             )
-            )) {
+        ) {
             $filters_group[] = ['st.topic_id' => $params->get('mtopic_id')];
-        } elseif (!is_null($params->get('mtopic_id')) && $params->get(
+        } elseif (
+            !is_null($params->get('mtopic_id')) && $params->get(
                 'mtopic_id'
-            )[0] !== '-1' && !empty($this->getState('filter.topic'))) {
+            )[0] !== '-1' && !empty($this->getState('filter.topic'))
+        ) {
             $filters_group[] = ['st.topic_id' => $params->get('mtopic_id')];
             $filters_group[] = ['st.topic_id' => [$this->getState('filter.topic')]];
         } elseif (!empty($this->getState('filter.topic'))) {
@@ -759,15 +798,19 @@ class CwmsermonsModel extends ListModel
         }
 
         // Topic ID from template
-        if (!is_null($params->get('ltopic_id')) && $params->get('ltopic_id')[0] !== '-1' && empty(
-            $this->getState(
-                'filter.topic'
+        if (
+            !is_null($params->get('ltopic_id')) && $params->get('ltopic_id')[0] !== '-1' && empty(
+                $this->getState(
+                    'filter.topic'
+                )
             )
-            )) {
+        ) {
             $filters_group[] = ['st.topic_id' => $params->get('ltopic_id')];
-        } elseif (!is_null($params->get('ltopic_id')) && $params->get(
+        } elseif (
+            !is_null($params->get('ltopic_id')) && $params->get(
                 'ltopic_id'
-            )[0] !== '-1' && !empty($this->getState('filter.topic'))) {
+            )[0] !== '-1' && !empty($this->getState('filter.topic'))
+        ) {
             $filters_group[] = ['st.topic_id' => $params->get('ltopic_id')];
             $filters_group[] = ['st.topic_id' => [$this->getState('filter.topic')]];
         } elseif (!empty($this->getState('filter.topic'))) {
@@ -775,13 +818,16 @@ class CwmsermonsModel extends ListModel
         }
 
         // Message Type ID
-        if (!is_null($params->get('mmessagetype')) && $params->get('mmessagetype')[0] !== '-1' && empty(
-            $this->getState(
-                'filter.messagetype'
+        if (
+            !is_null($params->get('mmessagetype')) && $params->get('mmessagetype')[0] !== '-1' && empty(
+                $this->getState(
+                    'filter.messagetype'
+                )
             )
-            )) {
+        ) {
             $filters_group[] = ['study.messagetype' => $params->get('mmessagetype')];
-        } elseif (!is_null($params->get('mmessagetype'))
+        } elseif (
+            !is_null($params->get('mmessagetype'))
             && $params->get('mmessagetype')[0] !== '-1'
             && !empty($this->getState('filter.messagetype'))
         ) {
@@ -792,13 +838,16 @@ class CwmsermonsModel extends ListModel
         }
 
         // Message Type ID from template
-        if (!is_null($params->get('lmessagetype')) && $params->get('lmessagetype')[0] !== '-1' && empty(
-            $this->getState(
-                'filter.messagetype'
+        if (
+            !is_null($params->get('lmessagetype')) && $params->get('lmessagetype')[0] !== '-1' && empty(
+                $this->getState(
+                    'filter.messagetype'
+                )
             )
-            )) {
+        ) {
             $filters_group[] = ['study.messagetype' => $params->get('lmessagetype')];
-        } elseif (!is_null($params->get('lmessagetype'))
+        } elseif (
+            !is_null($params->get('lmessagetype'))
             && $params->get('lmessagetype')[0] !== '-1'
             && !empty($this->getState('filter.messagetype'))
         ) {
@@ -809,17 +858,21 @@ class CwmsermonsModel extends ListModel
         }
 
         // Year ID
-        if (!is_null($params->get('years')) && $params->get('years')[0] !== '-1' && empty(
-            $this->getState(
-                'filter.year'
+        if (
+            !is_null($params->get('years')) && $params->get('years')[0] !== '-1' && empty(
+                $this->getState(
+                    'filter.year'
+                )
             )
-            )) {
+        ) {
             $filters_group[] = ['YEAR(study.studydate)' => $params->get('years')];
-        } elseif (!is_null($params->get('years')) && $params->get('years')[0] !== '-1' && !empty(
-            $this->getState(
-                'filter.year'
+        } elseif (
+            !is_null($params->get('years')) && $params->get('years')[0] !== '-1' && !empty(
+                $this->getState(
+                    'filter.year'
+                )
             )
-            )) {
+        ) {
             $filters_group[] = ['YEAR(study.studydate)' => [$this->getState('filter.year')]];
             $filters_group[] = ['YEAR(study.studydate)' => $params->get('years')];
         } elseif (!empty($this->getState('filter.year'))) {
@@ -827,17 +880,21 @@ class CwmsermonsModel extends ListModel
         }
 
         // Year ID from template
-        if (!is_null($params->get('lyears')) && $params->get('lyears')[0] !== '-1' && empty(
-            $this->getState(
-                'filter.year'
+        if (
+            !is_null($params->get('lyears')) && $params->get('lyears')[0] !== '-1' && empty(
+                $this->getState(
+                    'filter.year'
+                )
             )
-            )) {
+        ) {
             $filters_group[] = ['YEAR(study.studydate)' => $params->get('lyears')];
-        } elseif (!is_null($params->get('lyears')) && $params->get('lyears')[0] !== '-1' && !empty(
-            $this->getState(
-                'filter.year'
+        } elseif (
+            !is_null($params->get('lyears')) && $params->get('lyears')[0] !== '-1' && !empty(
+                $this->getState(
+                    'filter.year'
+                )
             )
-            )) {
+        ) {
             $filters_group[] = ['YEAR(study.studydate)' => [$this->getState('filter.year')]];
             $filters_group[] = ['YEAR(study.studydate)' => $params->get('lyears')];
         } elseif (!empty($this->getState('filter.year'))) {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -40,7 +41,7 @@ class CwmlocationModel extends AdminModel
     public function store()
     {
         $row   = $this->getTable();
-        $input = new Input;
+        $input = new Input();
         $data  = $input->get('post');
 
         // Bind the form fields to the table

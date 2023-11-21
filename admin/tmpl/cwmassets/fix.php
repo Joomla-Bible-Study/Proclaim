@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Default
  *
@@ -53,14 +54,14 @@ $wa->addInlineScript(
             <?php
             if ($this->state === 'start') { ?>
                 <input type="hidden" name="task" value="cwmassets.browse"/>
-            <?php
+                <?php
             } elseif ($this->more === true) { ?>
                 <input type="hidden" name="task" value="cwmassets.run"/>
-            <?php
+                <?php
             } ?>
 
             <?php
-            if (!$this->more): ?>
+            if (!$this->more) : ?>
                 <div class="alert alert-info">
                     <p><?php
                         echo Text::_('Will refresh go back to Assets check in 3 seconds. If not press back button.');
@@ -72,7 +73,7 @@ $wa->addInlineScript(
                             ); ?></p>
                     <input type="hidden" name="task" value="cwmassets.checkassets"/>
                 </div>
-            <?php
+                <?php
             endif; ?>
             <?php
             echo HTMLHelper::_('form.token'); ?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Joomla! Content Management System
  *
@@ -86,11 +87,13 @@ class ProclaimNomenuRules implements RulesInterface
                     if ($view->nestable) {
                         $vars[$view->key] = 0;
 
-                        while (count($segments)) {
+                        while ($segments) {
                             $segment = array_shift($segments);
-                            $result  = call_user_func([$this->router, 'get' . ucfirst($view->name) . 'Id'],
+                            $result  = call_user_func(
+                                [$this->router, 'get' . ucfirst($view->name) . 'Id'],
                                 $segment,
-                                $vars);
+                                $vars
+                            );
 
                             if (!$result) {
                                 array_unshift($segments, $segment);
@@ -101,9 +104,11 @@ class ProclaimNomenuRules implements RulesInterface
                         }
                     } else {
                         $segment = array_shift($segments);
-                        $result  = call_user_func([$this->router, 'get' . ucfirst($view->name) . 'Id'],
+                        $result  = call_user_func(
+                            [$this->router, 'get' . ucfirst($view->name) . 'Id'],
                             $segment,
-                            $vars);
+                            $vars
+                        );
 
                         $vars[$view->key] = preg_replace('/-/', ':', $result, 1);
                     }
@@ -135,14 +140,16 @@ class ProclaimNomenuRules implements RulesInterface
 
                 if ($view->key && isset($query[$view->key])) {
                     if (\is_callable([$this->router, 'get' . ucfirst($view->name) . 'Segment'])) {
-                        $result = call_user_func([$this->router, 'get' . ucfirst($view->name) . 'Segment'],
+                        $result = call_user_func(
+                            [$this->router, 'get' . ucfirst($view->name) . 'Segment'],
                             $query[$view->key],
-                            $query);
+                            $query
+                        );
 
                         if ($view->nestable) {
                             array_pop($result);
 
-                            while (count($result)) {
+                            while ($result) {
                                 $segments[] = str_replace(':', '-', array_pop($result));
                             }
                         } else {

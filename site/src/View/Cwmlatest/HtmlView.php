@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -34,9 +35,10 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void
      *
+     * @throws \Exception
      * @since 7.0
      */
-    public function display($tpl = null)
+    public function display($tpl = null): void
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery('true');

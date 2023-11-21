@@ -165,7 +165,7 @@ class com_proclaimInstallerScript extends InstallerScript
         }
 
         return true;
-    }//end preflight()
+    }
 
 
     /**
@@ -187,7 +187,7 @@ class com_proclaimInstallerScript extends InstallerScript
         $this->renderPostUninstallation($this->status, $parent);
 
         return true;
-    }//end uninstall()
+    }
 
 
     /**
@@ -208,7 +208,7 @@ class com_proclaimInstallerScript extends InstallerScript
 
         // Show the post-installation page
         $this->renderPostInstallation($this->status, $parent);
-    }//end postflight()
+    }
 
 
     /**
@@ -231,7 +231,7 @@ class com_proclaimInstallerScript extends InstallerScript
         );
 
         return $this->checkExtensions(self::$extensions);
-    }//end checkRequirements()
+    }
 
 
     /**
@@ -265,7 +265,7 @@ class com_proclaimInstallerScript extends InstallerScript
         }
 
         return $pass;
-    }//end checkExtensions()
+    }
 
     /**
      * Renders the post-installation message
@@ -354,7 +354,7 @@ class com_proclaimInstallerScript extends InstallerScript
         }//end if
 
         echo '</tbody></table>';
-    }//end renderPostInstallation()
+    }
 
 
     /**
@@ -454,7 +454,7 @@ class com_proclaimInstallerScript extends InstallerScript
         }//end if
 
         echo '</tbody></table>';
-    }//end renderPostUninstallation()
+    }
 
 
     /**
@@ -634,7 +634,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 }//end if
             }//end foreach
         }//end if
-    }//end installSubextensions()
+    }
 
     /**
      * Uninstalls subextensions (modules, plugins) bundled with the main extension
@@ -708,7 +708,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 }//end if
             }//end foreach
         }//end if
-    }//end uninstallSubextensions()
+    }
 
     /**
      * Set the database object from the installation adapter, if possible

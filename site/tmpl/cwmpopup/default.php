@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Default
  *
@@ -24,7 +25,7 @@ $style = 'body { background-color:' . $this->params->get('popupbackground', 'bla
 $app   = Factory::getApplication();
 $doc   = $app->getDocument();
 $doc->addStyleDeclaration($style);
-$CWMedia = new Cwmmedia;
+$CWMedia = new Cwmmedia();
 
 // @todo need to move some of the is build process into the media helper. BCC
 
@@ -36,18 +37,20 @@ $CWMedia = new Cwmmedia;
     </div>
     <?php
     // Here is where we choose whether to use the Internal Viewer or All Videos
-    if ($this->params->get('player') === "3" || $this->player === 3 || $this->params->get(
+    if (
+        $this->params->get('player') === "3" || $this->player === 3 || $this->params->get(
             'player'
-        ) === "2" || $this->player === 2) {
+        ) === "2" || $this->player === 2
+    ) {
         $mediacode = $this->getMedia->getAVmediacode($this->media->mediacode, $this->media);
         echo HtmlHelper::_('content.prepare', $mediacode);
     }
     // Legacy Player (since JBS 6.2.2) is now deprecated and will be rendered with JWPlayer.
     if ($this->params->get('player') === "1" || $this->player === 1 || $this->player === 7) {
-        $player = new stdClass;
+        $player = new stdClass();
         $player->mp3 = $this->player === 7;
         HtmlHelper::_('jwplayer.framework');
-        $path = Cwmhelper::MediaBuildUrl(
+        $path = Cwmhelper::mediaBuildUrl(
             $this->media->sparams->get('path'),
             $this->params->get('filename'),
             $this->params,
@@ -56,15 +59,15 @@ $CWMedia = new Cwmmedia;
 
         if (preg_match('(youtube.com|youtu.be)', $path) === 1) {
             echo '<iframe width="' . $this->params->get('player_width') . '" height="' . $this->params->get(
-                    'player_height'
-                ) . '" src="' .
+                'player_height'
+            ) . '" src="' .
                 $CWMedia->convertYoutube(
                     $path
                 ) . '" style="border:0;" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
         } elseif (preg_match('(vimeo.com)', $path) === 1) {
             echo '<iframe src="' . $CWMedia->convertVimeo($path) . '" width="' . $this->params->get(
-                    'player_width'
-                ) . '" height="' .
+                'player_width'
+            ) . '" height="' .
                 $this->params->get(
                     'player_height'
                 ) . '" style="border:0;" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';

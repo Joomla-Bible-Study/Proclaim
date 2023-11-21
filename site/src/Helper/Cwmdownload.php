@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Proclaim Download Class
  *
@@ -42,7 +43,7 @@ class Cwmdownload
         clearstatcache();
 
         $this->hitDownloads((int)$mid);
-        $input    = new Input;
+        $input    = new Input();
         $template = $input->get('t', '1', 'int');
         $db       = Factory::getContainer()->get('DatabaseDriver');
         $mid      = $input->get('mid', '1', 'int');
@@ -56,7 +57,7 @@ class Cwmdownload
         $template = $db->loadObject();
 
         // Convert parameter fields to objects.
-        $registry = new Registry;
+        $registry = new Registry();
         $registry->loadString($template->params);
         $params = $registry;
 
@@ -73,7 +74,7 @@ class Cwmdownload
         $media = $db->loadObject();
 
         if ($media) {
-            $reg = new Registry;
+            $reg = new Registry();
             $reg->loadString($media->sparams);
             $sparams = $reg->toObject();
 
@@ -84,11 +85,11 @@ class Cwmdownload
             }
         }
 
-        $registry = new Registry;
+        $registry = new Registry();
         $registry->loadString($media->params);
         $params->merge($registry);
 
-        $download_file = Cwmhelper::MediaBuildUrl($media->spath, $params->get('filename'), $params, true);
+        $download_file = Cwmhelper::mediaBuildUrl($media->spath, $params->get('filename'), $params, true);
 
         if ((int)$params->get('size', 0) === 0) {
             $getsize = Cwmhelper::getRemoteFileSize($download_file);

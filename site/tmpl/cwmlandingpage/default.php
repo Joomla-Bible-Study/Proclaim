@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Default
  *
@@ -17,7 +18,7 @@ use CWM\Component\Proclaim\Site\Helper\Cwmlanding;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
-$CWMLanding = new Cwmlanding;
+$CWMLanding = new Cwmlanding();
 $params     = $this->params;
 ?>
 
@@ -31,11 +32,11 @@ $params     = $this->params;
                     <img src="<?php
                     echo Uri::base() . $this->main->path; ?>"
                          alt="<?php
-                         echo $this->params->get('landing_page_title'); ?>"
+                            echo $this->params->get('landing_page_title'); ?>"
                          width="<?php
-                         echo $this->main->width; ?>"
+                            echo $this->main->width; ?>"
                          height="<?php
-                         echo $this->main->height; ?>"/>
+                            echo $this->main->height; ?>"/>
                     <?php
                     // End of column for logo
                 }

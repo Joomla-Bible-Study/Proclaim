@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -17,7 +18,10 @@ use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 
-defined('_JEXEC') or die();
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
  * Directory View
@@ -47,7 +51,7 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since    7.0.0
      */
-    public function display($tpl = null)
+    public function display($tpl = null): void
     {
         $document = Factory::getApplication()->getDocument();
         $mediaDir = Uri::root() . "media/com_proclaim/";
@@ -60,7 +64,7 @@ class HtmlView extends BaseHtmlView
         // Add scripts
         $document->addScript($mediaDir . 'js/jquery.min.js');
         $document->addScript($mediaDir . 'js/jquery.tooltip.js');
-        $script = $this->_dirBrowserScript();
+        $script = $this->dirBrowserScript();
         $document->addScriptDeclaration($script);
 
         // Setup template vars
@@ -81,7 +85,7 @@ class HtmlView extends BaseHtmlView
      *
      * @since    7.0.0
      */
-    private function _dirBrowserScript()
+    private function dirBrowserScript(): string
     {
         ob_start();
         ?>

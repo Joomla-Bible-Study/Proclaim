@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -59,8 +60,8 @@ class Cwmpagebuilder
 
         // Media files image, links, download
         $mids        = $item->mids;
-        $page        = new \stdClass;
-        $CWMElements = new Cwmlisting;
+        $page        = new \stdClass();
+        $CWMElements = new Cwmlisting();
 
         if ($mids) {
             $page->media = $this->mediaBuilder($mids, $params, $template, $item);
@@ -112,7 +113,7 @@ class Cwmpagebuilder
         if ($item->thumbnailm) {
             $image                 = Cwmimages::getStudyThumbnail($item->thumbnailm);
             $page->study_thumbnail = '<img src="' . Uri::base(
-                ) . $image->path . '" width="' . $image->width . '" height="' . $image->height
+            ) . $image->path . '" width="' . $image->width . '" height="' . $image->height
                 . '" alt="' . $item->studytitle . '" />';
         } else {
             $page->study_thumbnail = '';
@@ -121,7 +122,7 @@ class Cwmpagebuilder
         if ($item->series_thumbnail) {
             $image                  = Cwmimages::getSeriesThumbnail($item->series_thumbnail);
             $page->series_thumbnail = '<img src="' . Uri::base(
-                ) . $image->path . '" width="' . $image->width . '" height="' . $image->height
+            ) . $image->path . '" width="' . $image->width . '" height="' . $image->height
                 . '" alt="' . $item->series_text . '" />';
         } else {
             $page->series_thumnail = '';
@@ -142,7 +143,7 @@ class Cwmpagebuilder
         if ($item->image || $item->thumb) {
             $image              = Cwmimages::getTeacherImage($item->image, $item->thumb);
             $page->teacherimage = '<img src="' . Uri::base(
-                ) . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="'
+            ) . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="'
                 . $item->teachername . '" />';
         } else {
             $page->teacherimage = '';
@@ -220,7 +221,7 @@ class Cwmpagebuilder
      */
     private function mediaBuilder($mediaids, $params, $template, $item)
     {
-        $listing          = new Cwmlisting;
+        $listing          = new Cwmlisting();
         $mediaIDs         = $listing->getFluidMediaids($item);
         $media            = $listing->getMediaFiles($mediaIDs);
         $item->mediafiles = $media;
@@ -254,18 +255,16 @@ class Cwmpagebuilder
                 & $item,
                 & $params,
                 $offset
-            )
-        );
+            ));
 
-        $item->event = new \stdClass;
+        $item->event = new \stdClass();
 
         $results                        = $dispatcher->triggerEvent('onContentAfterTitle', array(
                 'com_proclaim.sermon',
                 &$item,
                 &$params,
                 $offset
-            )
-        );
+            ));
         $item->event->afterDisplayTitle = trim(implode("\n", $results));
 
         $results                           = $dispatcher->triggerEvent('onContentBeforeDisplay', array(
@@ -273,8 +272,7 @@ class Cwmpagebuilder
                 &$item,
                 &$params,
                 $offset
-            )
-        );
+            ));
         $item->event->beforeDisplayContent = trim(implode("\n", $results));
 
         $results                          = $dispatcher->triggerEvent('onContentAfterDisplay', array(
@@ -282,8 +280,7 @@ class Cwmpagebuilder
                 &$item,
                 &$params,
                 $offset
-            )
-        );
+            ));
         $item->event->afterDisplayContent = trim(implode("\n", $results));
 
         return $item;
@@ -410,10 +407,12 @@ class Cwmpagebuilder
         $nowDate  = $db->quote(Factory::getDate()->toSql());
 
         // Filter by start and end dates.
-        if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
+        if (
+            (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
                 'core.edit',
                 'com_proclaim'
-            ))) {
+            ))
+        ) {
             $query->where('(study.publish_up = ' . $nullDate . ' OR study.publish_up <= ' . $nowDate . ')')
                 ->where('(study.publish_down = ' . $nullDate . ' OR study.publish_down >= ' . $nowDate . ')');
         }

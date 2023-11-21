@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -114,12 +115,12 @@ class CwmserversModel extends ListModel
                 // Create the reverse lookup for Endpoint type to Endpoint name
                 $this->rlu_type[strtolower($server)] = (string)$xml->name;
 
-                $o              = new \stdClass;
+                $o              = new \stdClass();
                 $o->id          = $i;
                 $o->type        = (string)$xml['type'];
                 $o->name        = (string)$server;
                 $o->image_url   = Uri::base(
-                    ) . 'components/com_proclaim/src/Addons/Servers/' . $server . '/' . strtolower($server) . '.png';
+                ) . 'components/com_proclaim/src/Addons/Servers/' . $server . '/' . strtolower($server) . '.png';
                 $o->title       = (string)$xml->name;
                 $o->description = (string)$xml->description;
                 $o->path        = $path . '/' . $server . '/';

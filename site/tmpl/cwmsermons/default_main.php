@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Default for sermons
  *
@@ -20,9 +21,9 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
-$CWMTeacher = new Cwmteacher;
+$CWMTeacher = new Cwmteacher();
 $teachers = $CWMTeacher->getTeachersFluid($this->params);
-$listing = new Cwmlisting;
+$listing = new Cwmlisting();
 $classelement = $listing->createelement($this->params->get('studies_element'));
 $app = Factory::getApplication();
 $itemid = $app->input->get('Itemid');
@@ -49,18 +50,18 @@ $itemid = $app->input->get('Itemid');
                         echo '<div class="col">';
                         if ($this->params->get('teacherlink') > 0) {
                             echo '<a href="' . Route::_(
-                                    'index.php?option=com_proclaim&view=cwmteacher&id=' . $teacher['id'] . '&t=' . $teacher['t'] . '&Itemid=' . $itemid
-                                ) . '" >
+                                'index.php?option=com_proclaim&view=cwmteacher&id=' . $teacher['id'] . '&t=' . $teacher['t'] . '&Itemid=' . $itemid
+                            ) . '" >
 							<img class="img-polaroid" src="' . Uri::base(
-                                ) . $teacher['image'] . '" alt="Teachers Image"></a>';
+                            ) . $teacher['image'] . '" alt="Teachers Image"></a>';
                         } else {
                             echo '<img class="img-polaroid" src="' . Uri::base() . $teacher['image'] . '">';
                         }
                         if ($this->params->get('teacherlink') > 0) {
                             echo '<div class="caption"><p><a href="' . Route::_(
-                                    'index.php?option=com_proclaim&view=cwmteacher&id=' .
+                                'index.php?option=com_proclaim&view=cwmteacher&id=' .
                                     $teacher['id'] . '&t=' . $teacher['t']
-                                ) . '">' . $teacher['name'] . '</a></p></div>';
+                            ) . '">' . $teacher['name'] . '</a></p></div>';
                         } else {
                             echo '<div class="caption"><p>' . $teacher['name'] . '</p></div>';
                         }
@@ -70,7 +71,7 @@ $itemid = $app->input->get('Itemid');
 
                 </div>
             </div>
-        <?php
+            <?php
         } ?>
         <?php
         if ($this->params->get('show_page_image == 1') || $this->params->get('show_page_title') > 0) { ?>
@@ -86,12 +87,12 @@ $itemid = $app->input->get('Itemid');
                 }
                 if ($this->params->get('show_page_title') > 0) {
                     echo '<h2 style="display: flex; list-style: none;"> ' . $this->params->get(
-                            'list_page_title'
-                        ) . '</h2>';
+                        'list_page_title'
+                    ) . '</h2>';
                 }
                 ?>
             </div>
-        <?php
+            <?php
         } ?>
         <div class="row">
             <div class="col-12">
@@ -103,12 +104,12 @@ $itemid = $app->input->get('Itemid');
                         <?php
                         echo $this->params->get('list_intro'); ?>
                     </div>
-                <?php
+                    <?php
                 } ?>
 
             </div>
         </div>
-    <?php
+        <?php
     } ?>
 </div>
 
@@ -125,10 +126,12 @@ $itemid = $app->input->get('Itemid');
             <?php
             if (!empty($this->items)) : ?>
                 <?php
-                if (($this->pagination->pagesTotal > 1) &&
+                if (
+                    ($this->pagination->pagesTotal > 1) &&
                     ($this->params->def('show_pagination', 1) === '1' || ($this->params->get(
-                                'show_pagination'
-                            ) === '1'))) : ?>
+                        'show_pagination'
+                    ) === '1'))
+                ) : ?>
                     <div class="pagination">
                         <?php
                         if ($this->params->def('show_pagination_results', 1)) : ?>
@@ -136,15 +139,15 @@ $itemid = $app->input->get('Itemid');
                                 <?php
                                 echo $this->pagination->getPagesCounter(); ?>
                             </p>
-                        <?php
+                            <?php
                         endif; ?>
 
                         <?php
                         echo $this->pagination->getPagesLinks(); ?>
                     </div>
-                <?php
+                    <?php
                 endif; ?>
-            <?php
+                <?php
             endif; ?>
             <?php
             if ($this->items) {
@@ -156,10 +159,12 @@ $itemid = $app->input->get('Itemid');
             <?php
             if (!empty($this->items)) : ?>
                 <?php
-                if (($this->pagination->pagesTotal > 1) &&
+                if (
+                    ($this->pagination->pagesTotal > 1) &&
                     ($this->params->def('show_pagination', 2) === '2' || ($this->params->get(
-                                'show_pagination'
-                            ) === '2'))) : ?>
+                        'show_pagination'
+                    ) === '2'))
+                ) : ?>
                     <div class="pagination">
                         <?php
                         if ($this->params->def('show_pagination_results', 1)) : ?>
@@ -167,15 +172,15 @@ $itemid = $app->input->get('Itemid');
                                 <?php
                                 echo $this->pagination->getPagesCounter(); ?>
                             </p>
-                        <?php
+                            <?php
                         endif; ?>
 
                         <?php
                         echo $this->pagination->getPagesLinks(); ?>
                     </div>
-                <?php
+                    <?php
                 endif; ?>
-            <?php
+                <?php
             endif; ?>
             <?php
             if ($this->params->get('showpodcastsubscribelist') === '2') {

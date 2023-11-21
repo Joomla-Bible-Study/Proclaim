@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -54,7 +55,7 @@ class CwmmessageController extends FormController
         Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
         $msg   = null;
-        $input = new Input;
+        $input = new Input();
         $id    = $input->get('id', 0, 'int');
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
@@ -114,7 +115,7 @@ class CwmmessageController extends FormController
         // Check for request forgeries.
         Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-        $model = new CwmtopicModel;
+        $model = new CwmtopicModel();
         $app   = Factory::getApplication();
         $data  = $this->input->post->get('jform', array(), 'array');
 

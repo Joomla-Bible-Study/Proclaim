@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -76,7 +77,7 @@ class Cwmparams
             $admin = $db->loadObject();
 
             if (isset($admin->params)) {
-                $registry = new Registry;
+                $registry = new Registry();
 
                 // Used to Catch Jason Error's
                 try {
@@ -140,12 +141,12 @@ class Cwmparams
             }
 
             if ($template) {
-                $registry = new Registry;
+                $registry = new Registry();
                 $registry->loadString($template->params);
                 $template->params = $registry;
             } else {
-                $template         = new \stdClass;
-                $template->params = new Registry;
+                $template         = new \stdClass();
+                $template->params = new Registry();
             }
 
             self::$templateTable = $template;

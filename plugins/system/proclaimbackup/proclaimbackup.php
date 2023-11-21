@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Proclaim
  * @subpackage  Plugin.JBSBackup
@@ -25,7 +26,7 @@ use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
 
 /**
- * JBSBackup jPlugin class
+ * CWM Proclaim Backup Plugin class
  *
  * @package     Proclaim
  * @subpackage  Plugin.JBSBackup
@@ -224,7 +225,7 @@ class PlgSystemProclaimBackup extends CMSPlugin
      */
     public function doBackup(): bool
     {
-        return (new Cwmbackup)->exportdb($run = 2);
+        return (new Cwmbackup())->exportdb($run = 2);
     }
 
     /**

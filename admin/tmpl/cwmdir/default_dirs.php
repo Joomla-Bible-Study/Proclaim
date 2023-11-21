@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -23,14 +24,14 @@ if (is_array($this->folders)) : ?>
                 <td class="file_icon folder">
                     <a class="folder_link"
                        href="index.php?option=com_proclaim&view=dir&tmpl=component&dir=<?php
-                       echo $folder->parentShort; ?>"><img
+                        echo $folder->parentShort; ?>"><img
                                 src="<?php
                                 echo $this->imgURL . 'ext/_folder_up.png'; ?>"/></a>
                 </td>
                 <td class="file_name">
                     <a class="folder_link"
                        href="index.php?option=com_proclaim&view=dir&tmpl=component&dir=<?php
-                       echo $folder->parentShort; ?>">..</a>
+                        echo $folder->parentShort; ?>">..</a>
                 </td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
@@ -44,7 +45,7 @@ if (is_array($this->folders)) : ?>
                     <a class="finfo" id="folder_info<?php
                     echo $index; ?>"
                        href="index.php?option=com_proclaim&view=dir&tmpl=component&dir=<?php
-                       echo $folder->folderLink; ?>"><img
+                        echo $folder->folderLink; ?>"><img
                                 src="<?php
                                 echo ($folder->fileCount == 0 && $folder->folderCount == 0) ? $this->imgURL .
                                     'ext/_folder.png' : $this->imgURL . 'ext/_folder_open.png'; ?>"/></a>
@@ -58,7 +59,7 @@ if (is_array($this->folders)) : ?>
                         <div class="prev_left">
                             <img alt="preview not available"
                                  src="<?php
-                                 echo ($folder->fileCount == 0 && $folder->folderCount == 0) ? $this->imgURL .
+                                    echo ($folder->fileCount == 0 && $folder->folderCount == 0) ? $this->imgURL .
                                      'ext/_folder.png' : $this->imgURL . 'ext/_folder_open.png'; ?>"/>
                         </div>
                         <div class="prev_right">
@@ -67,7 +68,7 @@ if (is_array($this->folders)) : ?>
                             <?php
                             echo $folder->fileCount; ?> <span
                                     class="label"><?php
-                                echo Text::_('COM_MEDIAMU_FINFO_FILES_AND'); ?></span> <?php
+                                    echo Text::_('COM_MEDIAMU_FINFO_FILES_AND'); ?></span> <?php
                             echo $folder->folderCount; ?>
                             <span class="label"><?php
                                 echo Text::_('COM_MEDIAMU_FINFO_FOLDERS'); ?></span> <br/>
@@ -81,14 +82,14 @@ if (is_array($this->folders)) : ?>
                             <span>|</span> <a class="path_rm_btn" name="<?php
                             echo base64_encode($folder->basename); ?>"
                                               href="#"><?php
-                                echo Text::_('COM_MEDIAMU_FINFO_DELETE'); ?></a>
+                                                echo Text::_('COM_MEDIAMU_FINFO_DELETE'); ?></a>
                         </div>
                     </div>
                 </td>
                 <td class="file_name">
                     <a class="folder_link"
                        href="index.php?option=com_proclaim&view=dir&tmpl=component&dir=<?php
-                       echo $folder->folderLink; ?>">
+                        echo $folder->folderLink; ?>">
                         <?php
                         echo $folder->basename; ?></a>
                 </td>
@@ -96,15 +97,15 @@ if (is_array($this->folders)) : ?>
                 <td class="selection">
                     <input class="delete" name="paths[]" type="checkbox"
                            value="<?php
-                           echo base64_encode($folder->basename); ?>"/>
+                            echo base64_encode($folder->basename); ?>"/>
                 </td>
             </tr>
 
-        <?php
+            <?php
         } //endif ?>
 
-    <?php
+        <?php
     endforeach; ?>
 
-<?php
+    <?php
 endif; ?>

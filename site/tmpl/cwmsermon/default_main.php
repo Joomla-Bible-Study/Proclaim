@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Default Main
  *
@@ -22,7 +23,7 @@ $params  = $this->item->params;
 $user    = Factory::getApplication()->getSession()->get('user');
 $canEdit = $params->get('access-edit');
 
-$JViewLegacy = new JViewLegacy;
+$JViewLegacy = new JViewLegacy();
 
 $JViewLegacy->loadHelper('title');
 $JViewLegacy->loadHelper('teacher');
@@ -78,7 +79,7 @@ if ($this->item->params->get('socialnetworking') > 0) {
     <!-- Begin Fluid layout -->
 
 <?php
-$listing = new Cwmlisting;
+$listing = new Cwmlisting();
 try {
     $list = $listing->getFluidListing($this->item, $this->item->params, $this->template, $type = 'sermon');
 } catch (Exception $e) {
@@ -93,9 +94,9 @@ echo $this->passage;
 ?>
     <hr/> <?php
 
-echo $this->item->studytext;
+    echo $this->item->studytext;
 
-?>
+    ?>
 <?php
 if ($this->item->params->get('showrelated') === '2') {
     echo $this->related;

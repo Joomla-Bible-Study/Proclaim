@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -257,10 +258,12 @@ class CwmpodcastdisplayModel extends ItemModel
 
         $user = Factory::getApplication()->getSession()->get('user');
 
-        if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
+        if (
+            (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
                 'core.edit',
                 'com_proclaim'
-            ))) {
+            ))
+        ) {
             $this->setState('filter.published', 1);
             $this->setState('filter.archived', 2);
         }

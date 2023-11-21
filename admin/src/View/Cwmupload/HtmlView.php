@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -20,7 +21,10 @@ use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Uri\Uri;
 
-defined('_JEXEC') or die();
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
  * Mediamu View
@@ -101,7 +105,7 @@ class HtmlView extends BaseHtmlView
      *
      * @since 7.0
      */
-    protected function addToolbar()
+    protected function addToolbar(): void
     {
         ToolbarHelper::title(Text::_('JBS_TITLE_UPLOAD_FORM'), 'mp3.png');
     }

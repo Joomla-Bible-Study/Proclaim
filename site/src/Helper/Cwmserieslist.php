@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -88,7 +89,7 @@ class Cwmserieslist extends Cwmlisting
      */
     public function getSerieslistExp($row, $params, $template)
     {
-        $images = new Cwmimages;
+        $images = new Cwmimages();
         $image  = $images::getSeriesThumbnail($row->series_thumbnail);
 
         $label = $params->get('series_templatecode');

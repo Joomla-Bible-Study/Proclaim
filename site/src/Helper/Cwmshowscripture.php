@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -141,10 +142,10 @@ class Cwmshowscripture
     public function getHideShow(): string
     {
         $contents = '<iframe id="scripture" src="' . $this->link . '" width="100%" height="400px;"></iframe>';
-        $passage  = '<div class = "fluid-row"><div class="span12"></div>';
+        $passage  = '<div class = "fluid-row"><div class="col-12"></div>';
         $passage  .= '<a class="heading" href="javascript:ReverseDisplay(\'scripture\')">>>' . Text::_(
-                'JBS_CMN_SHOW_HIDE_SCRIPTURE'
-            ) . '<<</a>';
+            'JBS_CMN_SHOW_HIDE_SCRIPTURE'
+        ) . '<<</a>';
         $passage  .= '<div id="scripture" style="display: none;">';
         $passage  .= $contents;
         $passage  .= '</div>';
@@ -211,7 +212,7 @@ class Cwmshowscripture
      *
      * @since 8.0.0
      */
-    public function body_only($html): string
+    public function bodyOnly(string $html): string
     {
         return '<iframe id = "scripture" src = "' . $this->link . '" width = "100%" height = "400px;" ></iframe >';
     }

@@ -71,7 +71,7 @@
         <fieldset name="parameters2" label="JBS_ADDON_LOCAL_MEDIA_PARAMETERS">
             <field name="media_image" type="media" directory="biblestudy"
                    label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
-                   class="inputbox span6">
+                   class="inputbox col-6">
             </field>
             <field name="media_use_button_icon" label="JBS_ADDON_LOCAL_MEDIA_USE_BUTTON"
                    description="JBS_ADDON_MEDIA_USE_BUTTON_DESC"

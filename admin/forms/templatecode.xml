@@ -3,7 +3,7 @@
     <field
             name="published"
             type="list"
-            class="span12 small"
+            class="col-12 small"
             id="published"
             label="JSTATUS"
             description="JFIELD_PUBLISHED_DESC"
@@ -44,5 +44,5 @@
            section="style" validate="rules"/>
     <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
            description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
-           class="readonly span12"/>
+           class="readonly col-12"/>
 </form>

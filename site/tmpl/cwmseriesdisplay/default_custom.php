@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Default Custom
  *
@@ -28,7 +29,7 @@ $url       = $this->params->get('stylesheet');
 if ($url) {
     $document->addStyleSheet($url);
 }
-$JBSMSerieslist = new Cwmserieslist;
+$JBSMSerieslist = new Cwmserieslist();
 $t              = $this->template->id;
 ?>
 <form action="<?php
@@ -40,7 +41,7 @@ echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="admi
         <table class="table table-striped bslisttable"> <?php
             $studies = $JBSMSerieslist->getSeriesstudiesExp($this->items->id, $this->params, $this->template);
             echo $studies;
-            ?></table>
+        ?></table>
         <?php
         if ($this->params->get('series_list_return') > 0) {
             ?>

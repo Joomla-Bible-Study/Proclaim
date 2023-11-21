@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -58,7 +59,7 @@ class CwmdbHelper
      *
      * @since 7.0
      */
-    public static function checkIfTable($cktable)
+    public static function checkIfTable($cktable): bool
     {
         $db     = Factory::getContainer()->get('DatabaseDriver');
         $tables = $db->getTableList();
@@ -87,7 +88,7 @@ class CwmdbHelper
      * @throws  \Exception
      * @since   7.0
      */
-    public static function alterDB($tables, $from = null)
+    public static function alterDB($tables, $from = null): bool
     {
         $db = Factory::getContainer()->get('DatabaseDriver');
 
@@ -196,7 +197,7 @@ class CwmdbHelper
      *
      * @since 7.0
      */
-    public static function checkTables($table, $field)
+    public static function checkTables($table, $field): bool
     {
         $db = Factory::getContainer()->get('DatabaseDriver');
 
@@ -223,7 +224,7 @@ class CwmdbHelper
      * @throws  \Exception
      * @since   7.0
      */
-    public static function performDB($query, string $from = null, int $limit = null)
+    public static function performDB($query, string $from = null, int $limit = null): bool
     {
         if (!$query) {
             return false;
@@ -257,7 +258,7 @@ class CwmdbHelper
      * @throws \Exception
      * @since 7.0
      */
-    public static function checkDB($table, $field)
+    public static function checkDB($table, $field): bool
     {
         $done = self::checkTables($table, $field);
 
@@ -279,7 +280,7 @@ class CwmdbHelper
      *
      * @since 7.0
      */
-    public static function getObjects()
+    public static function getObjects(): array
     {
         $db        = Factory::getContainer()->get('DatabaseDriver');
         $tables    = $db->getTableList();
@@ -301,11 +302,11 @@ class CwmdbHelper
     /**
      * Get State of install for Main Admin Controller
      *
-     * @return  boolean false if table exists | true if dos not
+     * @return  bool false if table exists | true if dos not
      *
      * @since 7.1.0
      */
-    public static function getInstallState()
+    public static function getInstallState(): bool
     {
         if (!is_bool(self::$install_state)) {
             $db = Factory::getContainer()->get('DatabaseDriver');
@@ -326,11 +327,11 @@ class CwmdbHelper
      * Fix up css.
      *
      * @param   string    $filename  Name of css file
-     * @param   boolean   $parent    if coming form the update script
+     * @param   bool      $parent    if coming form the update script
      * @param   string    $newcss    New css style
      * @param   int|null  $id        this is the id of record to be fixed
      *
-     * @return boolean
+     * @return bool
      *
      * @throws  \Exception
      * @since   7.1.0
@@ -421,7 +422,7 @@ class CwmdbHelper
      * @param   object  $result  Object list that we will get the id from.
      * @param   string  $table   Table to be reloaded.
      *
-     * @return boolean
+     * @return bool
      *
      * @throws \Exception
      *
@@ -454,12 +455,12 @@ class CwmdbHelper
      *
      * @param   bool  $install  If coming from the installer true|false not form installer
      *
-     * @return boolean|integer
+     * @return bool|int
      *
      * @throws \Exception
      * @since  7.0
      */
-    public static function resetdb($install = false)
+    public static function resetdb($install = false): bool|int
     {
         $app = Factory::getApplication();
         $db  = Factory::getContainer()->get('DatabaseDriver');
@@ -536,7 +537,7 @@ class CwmdbHelper
      * @since   8.0.0
      *
      */
-    public static function CleanStudyTopics()
+    public static function cleanStudyTopics(): void
     {
         $app   = Factory::getApplication();
         $db    = Factory::getContainer()->get('DatabaseDriver');

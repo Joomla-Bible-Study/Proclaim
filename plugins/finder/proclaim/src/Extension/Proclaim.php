@@ -1,17 +1,21 @@
 <?php
 
-namespace CWM\Plugin\Finder\Proclaim\Extension;
-
 /**
  * Finder adapter for Proclaim.
  *
- * @package     Proclaim.Finder
+ * @package    Proclaim.Finder
  * @subpackage  plg_finder_proclaim
- * @copyright   2007 - 2019 (C) CWM Team All rights reserved
- * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link        https://www.christianwebministries.org
+ * @copyright  2007-2022 (C) CWM Team All rights reserved
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link       https://www.christianwebministries.org
  * */
-defined('JPATH_BASE') or die;
+
+namespace CWM\Plugin\Finder\Proclaim\Extension;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+
+// phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Helper\Cwmhelperroute;
 use Joomla\CMS\Component\ComponentHelper;
@@ -211,6 +215,7 @@ final class Proclaim extends Adapter
 
     /**
      * @throws \Exception
+     * @since 10.0.0
      */
     private function seriesStateChange(array $pks, int $value)
     {

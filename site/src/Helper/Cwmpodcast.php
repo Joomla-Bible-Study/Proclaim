@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -26,15 +27,6 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
-/* Put in do to this file is used in a plugin. */
-
-// Always load CWM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
-
-if (file_exists($api)) {
-    require_once $api;
-}
-
 /**
  * Proclaim Podcast Class
  *
@@ -44,7 +36,7 @@ if (file_exists($api)) {
 class Cwmpodcast
 {
     /**
-     * @var integer
+     * @var int
      * @since version
      */
     private int $templateid = 0;
@@ -87,8 +79,8 @@ class Cwmpodcast
             ->where('#__bsms_podcast.published = ' . 1);
         $db->setQuery($query);
         $podids     = $db->loadObjectList();
-        $custom     = new Cwmcustom;
-        $CWMlisting = new Cwmlisting;
+        $custom     = new Cwmcustom();
+        $CWMlisting = new Cwmlisting();
         $title      = null;
 
         // Now iterate through the podcasts, and pick up the mediafiles
@@ -124,7 +116,7 @@ class Cwmpodcast
                     }
 
                     $episodes = $this->getEpisodes((int)$podinfo->id, $limit);
-                    $registry = new Registry;
+                    $registry = new Registry();
                     $registry->loadString(Cwmparams::getAdmin()->params);
                     $registry->merge(Cwmparams::getTemplateparams()->params);
                     $params = $registry;
@@ -153,8 +145,8 @@ class Cwmpodcast
                 	<link>' . $protocol . $podinfo->podcastlink . '</link>
                 	<image>
                 	    <url>' . $protocol . $podinfo->website . '/' . Cwmimages::getImagePath(
-                            $podinfo->podcastimage
-                        )->path . '</url>
+                        $podinfo->podcastimage
+                    )->path . '</url>
                         <title>' . $this->escapeHTML($podinfo->title) . '</title>
                         <link>' . $protocol . $podinfo->podcastlink . '</link>
 					</image>
@@ -192,7 +184,7 @@ class Cwmpodcast
                     }
 
                     $episodedetail = '';
-                    $list          = new Cwmlisting;
+                    $list          = new Cwmlisting();
 
                     foreach ($episodes as $episode) {
                         $episodedate = date("r", strtotime($episode->createdate));
@@ -332,7 +324,6 @@ class Cwmpodcast
                                     $params,
                                     $this->template,
                                     'podcast'
-
                                 );
                                 $subtitle = $element;
                                 break;
@@ -345,7 +336,7 @@ class Cwmpodcast
                         	   <itunes:episodeType>full</itunes:episodeType>
                         		<title>' . $title . '</title>';
                         $file              = str_replace(' ', "%20", $episode->params->get('filename'));
-                        $path              = Cwmhelper::MediaBuildUrl(
+                        $path              = Cwmhelper::mediaBuildUrl(
                             $episode->srparams->get('path'),
                             $file,
                             $params,
@@ -375,13 +366,14 @@ class Cwmpodcast
                         }
 
                         // Make a duration build from Params of media.
-                        if (($episode->params->toObject()->media_hours !== '00' && !empty(
+                        if (
+                            ($episode->params->toObject()->media_hours !== '00' && !empty(
                                 $episode->params->toObject()->media_hours
-                                ))
+                            ))
                             || ($episode->params->toObject(
-                                )->media_minutes !== '00' && !empty($episode->params->toObject()->media_minutes))
+                            )->media_minutes !== '00' && !empty($episode->params->toObject()->media_minutes))
                             || ($episode->params->toObject(
-                                )->media_seconds !== '00' && !empty($episode->params->toObject()->media_seconds))
+                            )->media_seconds !== '00' && !empty($episode->params->toObject()->media_seconds))
                         ) {
                             $duration = $episode->params->get('media_hours', '00') . ':' .
                                 $episode->params->get('media_minutes', '00') .
@@ -538,11 +530,11 @@ class Cwmpodcast
         $epis = array();
 
         foreach ($episodes as $e) {
-            $registry = new Registry;
+            $registry = new Registry();
             $registry->loadString($e->params);
             $e->params = $registry;
 
-            $registry = new Registry;
+            $registry = new Registry();
             $registry->loadString($e->srparams);
             $e->srparams = $registry;
 
@@ -622,7 +614,7 @@ class Cwmpodcast
      */
     public function formatTime(int $duration): object
     {
-        $time = new \stdClass;
+        $time = new \stdClass();
 
         if ($duration !== 0) {
             $time->hours   = floor($duration / 3600);
@@ -833,7 +825,7 @@ class Cwmpodcast
      *
      * @since version
      */
-    public function remove_http(string $url): string
+    public function removeHttp(string $url): string
     {
         $disallowed = array('http://', 'https://');
 

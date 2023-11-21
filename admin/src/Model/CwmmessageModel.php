@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -91,7 +92,7 @@ class CwmmessageModel extends AdminModel
     public function getTopics()
     {
         // Do search in case of present study only, suppress otherwise
-        $input          = new Input;
+        $input          = new Input();
         $translatedList = array();
         $id             = $input->get('a_id', 0, 'int');
 
@@ -184,7 +185,7 @@ class CwmmessageModel extends AdminModel
         $mediafiles = $db->loadObjectList();
 
         foreach ($mediafiles as $i => $mediafile) {
-            $reg = new Registry;
+            $reg = new Registry();
             $reg->loadString($mediafile->params);
             $mediafiles[$i]->params = $reg;
         }
@@ -312,7 +313,7 @@ class CwmmessageModel extends AdminModel
         }
 
         // Object uses for checking edit state permission of article
-        $record = new \stdClass;
+        $record = new \stdClass();
 
         // Get ID of the article from input, for frontend, we use a_id while backend uses id
         $messageIdFromInput = $app->isClient('site')

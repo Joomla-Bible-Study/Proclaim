@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -21,7 +22,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CWMImageLib
+class Cwmimagelib
 {
     /**
      * Extension Name
@@ -53,7 +54,7 @@ class CWMImageLib
 
         if (file_exists($img_sub) && !file_exists($new_sub)) {
             if (function_exists('gd_info') && extension_loaded('gd')) {
-                GDLib::resize_image($new_sub, $img_sub);
+                self::resizeImage($new_sub, $img_sub);
 
                 return $NewfileName;
             }
@@ -62,85 +63,6 @@ class CWMImageLib
         }
 
         return $NewfileName;
-    }
-}
-
-/**
- * Abstraction layer for the ImageMagick PHP library
- *
- * @package  Proclaim.Admin
- * @since    7.0.0
- */
-class ImageMagickLib extends CWMImageLib
-{
-    /**
-     * Extension Name
-     *
-     * @var string
-     *
-     * @since 1.5
-     */
-    public static $extension = 'com_proclaim';
-
-    /**
-     * Resize Image
-     *
-     * @param   string  $targetFile    Target File Path
-     * @param   string  $originalFile  File
-     * @param   int     $newWidth      Image New Width
-     * @param   float   $canv_width    Image Canvas Width
-     * @param   float   $canv_height   Image Canvas Height
-     *
-     * @return void
-     *
-     * @since 9.0.18
-     */
-    public static function resize_image(
-        $targetFile,
-        $originalFile,
-        $newWidth = 300,
-        $canv_width = 300,
-        $canv_height = 169
-    ) {
-        try {
-            // Need to make
-            return;
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-        }
-
-        return null;
-    }
-}
-
-/**
- * Abstraction layer for the GD PHP library
- *
- * @package  Proclaim.Admin
- * @since    7.0.0
- */
-class GDLib extends CWMImageLib
-{
-    /**
-     * Extension Name
-     *
-     * @var string
-     *
-     * @since 1.5
-     */
-    public static $extension = 'com_proclaim';
-
-    /**
-     * Construct System.
-     *
-     * @since 1.5
-     */
-    public function __construct()
-    {
-        // Check that the library exists
-        if (!function_exists("gd_info")) {
-            die("GD is not found");
-        }
     }
 
     /**
@@ -157,7 +79,7 @@ class GDLib extends CWMImageLib
      * @throws \Exception
      * @since 9.0.18
      */
-    public static function resize_image(
+    public static function resizeImage(
         string $targetFile,
         string $originalFile,
         int $newWidth = 300,
@@ -187,7 +109,7 @@ class GDLib extends CWMImageLib
                 break;
 
             default:
-                throw new \Exception('Unknown image type.');
+                throw new \RuntimeException('Unknown image type.');
         }
 
         $img = $image_create_func($originalFile);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -139,7 +140,7 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0
      */
-    public function display($tpl = null)
+    public function display($tpl = null): void
     {
         $mainframe = Factory::getApplication();
         $input     = $mainframe->input;
@@ -171,7 +172,7 @@ class HtmlView extends BaseHtmlView
 
         if ($params->get('useexpert_list') > 0 || is_string($params->get('seriesdisplaytemplate')) == true) {
             // Get studies associated with the series
-            $pagebuilder = new Cwmpagebuilder;
+            $pagebuilder = new Cwmpagebuilder();
             $whereitem   = $items->id;
             $wherefield  = 'study.series_id';
 
@@ -254,7 +255,7 @@ class HtmlView extends BaseHtmlView
 
         if ($plugin) {
             // Convert parameter fields to objects.
-            $registry = new Registry;
+            $registry = new Registry();
             $registry->loadString($plugin->params);
             $stParams = $registry;
             $version  = $stParams->get('bible_version');
@@ -264,7 +265,7 @@ class HtmlView extends BaseHtmlView
         $this->params     = &$params;
         $this->items      = $items;
         $this->studies    = $studies;
-        $uri              = new Uri;
+        $uri              = new Uri();
         $stringuri        = $uri->toString();
         $this->requestUrl = $stringuri;
 

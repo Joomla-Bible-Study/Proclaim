@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -47,11 +48,13 @@ class DocmanField extends ListField
      *
      * @since 9.0.0
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
-        if (!Folder::exists(
-            JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_docman'
-        )) {
+        if (
+            !Folder::exists(
+                JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_docman'
+            )
+        ) {
             // @Todo Need to find different solutions.
             return [Text::_('JBS_CMN_DOCMAN_NOT_INSTALLED')];
         }

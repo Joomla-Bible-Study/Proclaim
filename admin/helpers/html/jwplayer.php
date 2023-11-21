@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package    Proclaim.Admin
  * @copyright  2007 - 2022 (C) CWM Team All rights reserved
@@ -92,7 +93,7 @@ abstract class JHtmlJwplayer
             $media->playerheight = $params->get('player_hight');
         }
 
-        $media->path1 = Cwmhelper::MediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
+        $media->path1 = Cwmhelper::mediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
 
         // Fall back check to see if JWplayer can play the media. if not will try and return a link to the file.
         $acceptedFormats = array(
@@ -113,13 +114,15 @@ abstract class JHtmlJwplayer
             'DVR'
         );
 
-        if (!in_array(pathinfo($media->path1, PATHINFO_EXTENSION), $acceptedFormats, true)
+        if (
+            !in_array(pathinfo($media->path1, PATHINFO_EXTENSION), $acceptedFormats, true)
             && !strpos($media->path1, 'youtube.com')
             && !strpos($media->path1, 'youtu.be')
-            && !strpos($media->path1, 'rtmp://')) {
+            && !strpos($media->path1, 'rtmp://')
+        ) {
             return '<a href="' . $media->path1 . '" ><img src="' . JUri::root() . $params->get(
-                    'media_image'
-                ) . '"/></a>';
+                'media_image'
+            ) . '"/></a>';
         }
 
         if ($params->get('playerheight') < 55 && $params->get('playerheight') && !isset($player->mp3)) {

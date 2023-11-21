@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Controller for Seriesdisplay
  *
@@ -50,5 +51,4 @@ class CwmseriesdisplayController extends BaseController
     {
         return parent::display();
     }
-
 }

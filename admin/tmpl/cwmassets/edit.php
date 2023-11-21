@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Admin Form
  *
@@ -108,21 +109,21 @@ echo Route::_('index.php?option=com_proclaim&view=cwmassets') ?>" method="post" 
             echo '</table>';
         }
         ?>
-        <!--		--><?php
+        <!--        --><?php
         //if ($user->authorise('core.create', 'com_proclaim')
-        //			&& $user->authorise('core.edit', 'com_proclaim')
-        //			&& $user->authorise('core.edit.state', 'com_proclaim')
-        //		) : ?>
-        <!--			--><?php
+        //          && $user->authorise('core.edit', 'com_proclaim')
+        //          && $user->authorise('core.edit.state', 'com_proclaim')
+        //      ) : ?>
+        <!--            --><?php
         //echo HTMLHelper::_(
-        //				'bootstrap.renderModal',
-        //				'collapseModal',
-        //				array(
-        //					'title'  => Text::_('JBS_ADM_FIX'),
-        //					'footer' => $this->loadTemplate('fix'),
-        //				),
-        //			); ?>
-        <!--		--><?php
+        //              'bootstrap.renderModal',
+        //              'collapseModal',
+        //              array(
+        //                  'title'  => Text::_('JBS_ADM_FIX'),
+        //                  'footer' => $this->loadTemplate('fix'),
+        //              ),
+        //          ); ?>
+        <!--        --><?php
         //endif; ?>
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="tooltype" value=""/>

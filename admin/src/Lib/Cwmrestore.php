@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -17,9 +18,9 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
-use Joomla\CMS\Filesystem\Path;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\Path;
 use Joomla\CMS\Installer\InstallerHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
@@ -35,11 +36,11 @@ class Cwmrestore
     /**
      * Alter tables for Blob
      *
-     * @return boolean
+     * @return bool
      *
      * @since 7.0.0
      */
-    protected static function TablestoBlob()
+    protected static function tablesToBlob(): bool
     {
         $backuptables = self::getObjects();
 
@@ -85,7 +86,7 @@ class Cwmrestore
      *
      * @since 7.0.0
      */
-    protected static function getObjects()
+    protected static function getObjects(): array
     {
         $db        = Factory::getContainer()->get('DatabaseDriver');
         $tables    = $db->getTableList();
@@ -107,11 +108,11 @@ class Cwmrestore
     /**
      * Modify tables to Text
      *
-     * @return boolean
+     * @return bool
      *
      * @since 9.0.0
      */
-    protected static function TablestoText()
+    protected static function tablesToText(): bool
     {
         $backuptables = self::getObjects();
 
@@ -153,14 +154,14 @@ class Cwmrestore
     /**
      * Import DB
      *
-     * @param   boolean  $parent  Switch to see if it is coming from migration or restore.
+     * @param bool $parent Switch to see if it is coming from migration or restore.
      *
-     * @return boolean
+     * @return bool|array
      *
      * @throws \Exception
      * @since 9.0.0
      */
-    public function importdb($parent)
+    public function importdb($parent): bool|array
     {
         jimport('joomla.filesystem.file');
 
@@ -185,13 +186,15 @@ class Cwmrestore
         }
 
         // Start finding how to restore files.
-        if (!empty($installtype) && $installtype !== '/' && $installtype != Factory::getConfig()->get(
+        if (
+            !empty($installtype) && $installtype !== '/' && $installtype !== Factory::getApplication()->getConfig()->get(
                 'tmp_path'
-            ) . '/') {
-            $uploadresults = self::_getPackageFromFolder();
+            ) . '/'
+        ) {
+            $uploadresults = self::getPackageFromFolder();
             $result        = $uploadresults;
         } else {
-            $uploadresults = $this->_getPackageFromUpload();
+            $uploadresults = $this->getPackageFromUpload();
             $result        = $uploadresults;
         }
 
@@ -212,7 +215,7 @@ class Cwmrestore
 
             // Cleanup the install files.
             if (!is_file($uploadresults['packagefile'])) {
-                $config                 = Factory::getConfig();
+                $config                 = Factory::getApplication()->getConfig();
                 $package['packagefile'] = $config->get('tmp_path') . '/' . $uploadresults['packagefile'];
             }
 
@@ -233,7 +236,7 @@ class Cwmrestore
      *
      * @param   string  $backuprestore  file name to restore
      *
-     * @return boolean See if the restore worked.
+     * @return bool See if the restore worked.
      *
      * @throws \Exception
      * @since 9.0.0
@@ -278,7 +281,7 @@ class Cwmrestore
         foreach ($queries as $query) {
             $query = trim($query);
 
-            if ($query !== '' && $query[0] != '#') {
+            if ($query !== '' && $query[0] !== '#') {
                 $db->setQuery($query);
                 $db->execute();
             }
@@ -290,12 +293,12 @@ class Cwmrestore
     /**
      * Get Package from Folder
      *
-     * @return array|boolean
+     * @return array|bool
      *
      * @throws \Exception
      * @since 9.0.0
      */
-    private static function _getPackageFromFolder()
+    private static function getPackageFromFolder(): bool|array
     {
         $input = Factory::getApplication()->input;
 
@@ -305,7 +308,7 @@ class Cwmrestore
 
         // Did you give us a valid directory?
         if (!is_dir($p_dir)) {
-            throw new \Exception(Text::_('COM_INSTALLER_MSG_INSTALL_PLEASE_ENTER_A_PACKAGE_DIRECTORY'), '502');
+            throw new \RuntimeException(Text::_('COM_INSTALLER_MSG_INSTALL_PLEASE_ENTER_A_PACKAGE_DIRECTORY'), '502');
         }
 
         $package['packagefile'] = null;
@@ -319,12 +322,12 @@ class Cwmrestore
     /**
      * Get Package form Upload
      *
-     * @return boolean
+     * @return bool|array
      *
      * @throws \Exception
      * @since 9.0.0
      */
-    public function _getPackageFromUpload()
+    public function getPackageFromUpload(): bool|array
     {
         $app   = Factory::getApplication();
         $input = $app->input;
@@ -385,7 +388,7 @@ class Cwmrestore
         }
 
         // Build the appropriate paths
-        $config   = Factory::getConfig();
+        $config   = Factory::getApplication()->getConfig();
         $tmp_dest = $config->get('tmp_path') . '/' . $userfile['name'];
         $tmp_src  = $userfile['tmp_name'];
 
@@ -411,16 +414,15 @@ class Cwmrestore
      * Install DB
      *
      * @param   string   $tmp_src  Temp info
-     * @param   boolean  $parent   To tell if coming from migration
+     * @param bool $parent   To tell if coming from migration
      *
-     * @return boolean if db installed correctly.
+     * @return bool if db installed correctly.
      *
      * @throws \Exception
      * @since 9.0.0
      */
     protected static function installdb($tmp_src, $parent = true)
     {
-        jimport('joomla.filesystem.file');
         /**
          * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
          */
@@ -485,7 +487,7 @@ class Cwmrestore
         foreach ($queries as $query) {
             $query = trim($query);
 
-            if ($query !== '' && $query[0] != '#') {
+            if ($query !== '' && $query[0] !== '#') {
                 $db->setQuery($query);
 
                 if (!$db->execute()) {

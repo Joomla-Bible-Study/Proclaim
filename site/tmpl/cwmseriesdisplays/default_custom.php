@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Default Custom
  *
@@ -29,7 +30,7 @@ if ($url) {
     $document->addStyleSheet($url);
 }
 
-$CWMSerieslist = new Cwmserieslist;
+$CWMSerieslist = new Cwmserieslist();
 ?>
 <form action="<?php
 echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
@@ -42,11 +43,11 @@ echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="admi
                     <img src="<?php
                     echo JUri::base() . $this->main->path; ?>"
                          alt="<?php
-                         echo $this->params->get('series_title') ?>"
+                            echo $this->params->get('series_title') ?>"
                          width="<?php
-                         echo $this->main->width; ?>"
+                            echo $this->main->width; ?>"
                          height="<?php
-                         echo $this->main->height; ?>"/>
+                            echo $this->main->height; ?>"/>
                     <?php
                     // End of column for logo
                 }

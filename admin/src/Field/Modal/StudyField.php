@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Study field modal
  *
@@ -96,9 +97,9 @@ class StudyField extends FormField
 
         // Setup variables for display.
         $linkSeries = 'index.php?option=com_proclaim&amp;view=cwmmessages&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken(
-            ) . '=1';
+        ) . '=1';
         $linkSerie  = 'index.php?option=com_proclaim&amp;view=cwmmessage&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken(
-            ) . '=1';
+        ) . '=1';
 
         if (isset($this->element['language'])) {
             $linkSeries .= '&amp;forcedLanguage=' . $this->element['language'];

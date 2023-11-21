@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Modal
  *
@@ -62,11 +63,11 @@ if (!empty($editor)) {
             <div class="alert alert-info">
                 <span class="icon-info-circle" aria-hidden="true"></span><span
                         class="visually-hidden"><?php
-                    echo Text::_('INFO'); ?></span>
+                        echo Text::_('INFO'); ?></span>
                 <?php
                 echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
             </div>
-        <?php
+            <?php
         else : ?>
             <table class="table table-sm">
                 <caption class="visually-hidden">
@@ -145,7 +146,7 @@ if (!empty($editor)) {
                                 $listOrder
                             ); ?>
                         </th>
-                    <?php
+                        <?php
                     endif; ?>
                 </tr>
                 </thead>
@@ -176,11 +177,11 @@ if (!empty($editor)) {
                     <tr class="row<?php
                     echo $i % 2; ?>">
                         <td class="text-center">
-							<span class="tbody-icon">
-								<span class="<?php
+                            <span class="tbody-icon">
+                                <span class="<?php
                                 echo $iconStates[$this->escape($item->published)]; ?>"
                                       aria-hidden="true"></span>
-							</span>
+                            </span>
                         </td>
                         <th scope="row">
                             <?php
@@ -220,14 +221,14 @@ if (!empty($editor)) {
                                 <?php
                                 echo LayoutHelper::render('joomla.content.language', $item); ?>
                             </td>
-                        <?php
+                            <?php
                         endif; ?>
                     </tr>
-                <?php
+                    <?php
                 endforeach; ?>
                 </tbody>
             </table>
-        <?php
+            <?php
         endif; ?>
 
         <input type="hidden" name="task" value=""/>

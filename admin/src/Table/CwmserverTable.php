@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -109,14 +110,14 @@ class CwmserverTable extends Table
     {
         // Bind the server params
         if (isset($array['params']) && is_array($array['params'])) {
-            $registry = new Registry;
+            $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = (string)$registry;
         }
 
         // Bind the media defaults
         if (isset($array['media']) && is_array($array['media'])) {
-            $registry = new Registry;
+            $registry = new Registry();
             $registry->loadArray($array['media']);
             $array['media'] = (string)$registry;
         }

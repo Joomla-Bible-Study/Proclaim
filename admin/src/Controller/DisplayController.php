@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Proclaim.Administrator
  * @subpackage  com_proclaim
@@ -116,15 +117,15 @@ class DisplayController extends BaseController
             'lang'             => 'CMD'
         );
 //
-//		// Get and render the view.
-//		if ($view = $this->getView($vName, $vFormat))
-//		{
-//			// Get the model for the view.
-//			$model = $this->getModel($vName, 'Administrator', ['name' => $vName . '.' . substr($this->extension, 4)]);
+//      // Get and render the view.
+//      if ($view = $this->getView($vName, $vFormat))
+//      {
+//          // Get the model for the view.
+//          $model = $this->getModel($vName, 'Administrator', ['name' => $vName . '.' . substr($this->extension, 4)]);
 //
-//			// Push the model into the view (as default).
-//			$view->setModel($model, true);
-//		}
+//          // Push the model into the view (as default).
+//          $view->setModel($model, true);
+//      }
 
         return parent::display($cachable, $safeurlparams);
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -402,7 +403,7 @@ class CwmmessageTable extends Table
     public function bind($array, $ignore = ''): bool
     {
         if (array_key_exists('params', $array) && is_array($array['params'])) {
-            $registry = new Registry;
+            $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = $registry->toString();
         }

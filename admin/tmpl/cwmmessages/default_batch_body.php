@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Batch Template
  *
@@ -35,7 +36,7 @@ $user = Factory::getApplication()->getSession()->get('user');
                     echo LayoutHelper::render('joomla.html.batch.language', []); ?>
                 </div>
             </div>
-        <?php
+            <?php
         endif; ?>
         <div class="form-group col-md-6">
             <div class="controls">
@@ -53,7 +54,7 @@ $user = Factory::getApplication()->getSession()->get('user');
                     echo LayoutHelper::render('joomla.html.batch.item', ['extension' => 'com_proclaim']); ?>
                 </div>
             </div>
-        <?php
+            <?php
         endif; ?>
     </div>
     <div class="form-group col-md-4">

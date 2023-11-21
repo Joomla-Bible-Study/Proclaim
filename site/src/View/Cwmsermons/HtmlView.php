@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -180,7 +181,7 @@ class HtmlView extends BaseHtmlView
 
         $items                 = $this->get('Items');
         $pagination            = $this->get('Pagination');
-        $this->page            = new \stdClass;
+        $this->page            = new \stdClass();
         $this->page->pagelinks = $pagination->getPagesLinks();
         $this->page->counter   = $pagination->getPagesCounter();
         $this->activeFilters   = $this->get('ActiveFilters');
@@ -195,7 +196,7 @@ class HtmlView extends BaseHtmlView
         /**
          * @todo not ready for live and could be slowing down site.
          * // Searched all code and not seeing it used in core.
-         * // $this->page->popular = (new Cwmstats)->top_score_site();
+         * // $this->page->popular = (new Cwmstats)->getTopScoreSite();
          */
 
         // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
@@ -206,14 +207,16 @@ class HtmlView extends BaseHtmlView
 
         // Build go button
         $this->page->gobutton = '<input class="btn btn-primary" type="submit" value="' . Text::_(
-                'JBS_STY_GO_BUTTON'
-            ) . '">';
+            'JBS_STY_GO_BUTTON'
+        ) . '">';
 
         // Only load PageBuilder if the default template is NOT being used
-        if ($params->get('useexpert_list') > 0
+        if (
+            $params->get('useexpert_list') > 0
             || ($params->get('simple_mode') === '1')
-            || (is_string($params->get('sermonstemplate')) === true && $params->get('sermonstemplate') !== '0')) {
-            $page_builder = new Cwmpagebuilder;
+            || (is_string($params->get('sermonstemplate')) === true && $params->get('sermonstemplate') !== '0')
+        ) {
+            $page_builder = new Cwmpagebuilder();
 
             foreach ($items as $iValue) {
                 $item = &$iValue;
@@ -266,10 +269,10 @@ class HtmlView extends BaseHtmlView
         // Get the podcast subscription
         $wa = $mainframe->getDocument()->getWebAssetManager();
         $wa->useStyle('com_proclaim.podcast');
-        $podcast         = new Cwmpodcastsubscribe;
+        $podcast         = new Cwmpodcastsubscribe();
         $this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 
-        $uri = new Uri;
+        $uri = new Uri();
 
         $this->pagination  = &$pagination;
         $this->limitbox    = $this->pagination->getLimitBox();
@@ -280,7 +283,7 @@ class HtmlView extends BaseHtmlView
 
         $this->updateFilters();
 
-        $this->_prepareDocument();
+        $this->prepareDocument();
 
         parent::display($tpl);
     }
@@ -342,7 +345,7 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0
      */
-    protected function _prepareDocument(): void
+    protected function prepareDocument(): void
     {
         $app   = Factory::getApplication();
         $menus = $app->getMenu();

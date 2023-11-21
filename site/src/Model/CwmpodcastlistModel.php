@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -39,7 +40,7 @@ class CwmpodcastlistModel extends ListModel
      * @throws \Exception
      * @since   9.0.0
      */
-    public function getItems()
+    public function getItems(): mixed
     {
         $items  = parent::getItems();
         $user   = Factory::getApplication()->getSession()->get('user');
@@ -59,8 +60,7 @@ class CwmpodcastlistModel extends ListModel
                 // Check general edit permission first.
                 if ($user->authorise('core.edit', $asset)) {
                     $item->params->set('access-edit', true);
-                } // Now check if edit.own is available.
-                elseif (!empty($userId) && $user->authorise('core.edit.own', $asset)) {
+                } elseif (!empty($userId) && $user->authorise('core.edit.own', $asset)) {
                     // Check for a valid user and that they are the owner.
                     if ($userId == $item->created_by) {
                         $item->params->set('access-edit', true);
@@ -73,21 +73,18 @@ class CwmpodcastlistModel extends ListModel
             if ($access) {
                 // If the access filter has been set, we already have only the articles this user can view.
                 $item->params->set('access-view', true);
+            } elseif ($item->catid == 0 || $item->category_access === null) {
+                $item->params->set('access-view', in_array($item->access, $groups));
             } else {
-                // If no access filter is set, the layout takes some responsibility for display of limited information.
-                if ($item->catid == 0 || $item->category_access === null) {
-                    $item->params->set('access-view', in_array($item->access, $groups));
-                } else {
-                    $item->params->set(
-                        'access-view',
-                        in_array($item->access, $groups) && in_array($item->category_access, $groups)
-                    );
-                }
+                $item->params->set(
+                    'access-view',
+                    in_array($item->access, $groups) && in_array($item->category_access, $groups)
+                );
             }
 
             // Get the tags
             if ($item->params->get('show_tags')) {
-                $item->tags = new TagsHelper;
+                $item->tags = new TagsHelper();
                 $item->tags->getItemTags('com_proclaim.series', $item->id);
             }
         }
@@ -145,10 +142,12 @@ class CwmpodcastlistModel extends ListModel
 
         $user = $app->getSession()->get('user');
 
-        if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
+        if (
+            (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
                 'core.edit',
                 'com_proclaim'
-            ))) {
+            ))
+        ) {
             // Filter on published for those who do not have edit or edit.state rights.
             $this->setState('filter.published', 1);
         }

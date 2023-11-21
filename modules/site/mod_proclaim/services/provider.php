@@ -8,7 +8,7 @@
  * @license         GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-defined('_JEXEC') or die;
+\defined('_JEXEC') or die;
 
 use Joomla\CMS\Extension\Service\Provider\HelperFactory;
 use Joomla\CMS\Extension\Service\Provider\Module;
@@ -36,6 +36,6 @@ return new class () implements ServiceProviderInterface {
         $container->registerServiceProvider(new ModuleDispatcherFactory('\\CWM\\Module\\Proclaim'));
         $container->registerServiceProvider(new HelperFactory('\\CWM\\Module\\Proclaim\\Site\\Helper'));
 
-        $container->registerServiceProvider(new Module);
+        $container->registerServiceProvider(new Module());
     }
 };

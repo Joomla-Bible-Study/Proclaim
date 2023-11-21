@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form
  *
@@ -85,7 +86,7 @@ echo Route::_(
     'index.php?option=com_proclaim&view=cwmmessage&layout=' . $layout . $tmpl . '&id=' . (int)$this->item->id
 ); ?>"
       method="post" name="adminForm" id="message-form" aria-label="<?php
-echo Text::_('JBS_CMN_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>" class="form-validate"
+        echo Text::_('JBS_CMN_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>" class="form-validate"
       enctype="multipart/form-data">
     <?php
     echo LayoutHelper::render('edit.studytitle_alias', $this); ?>
@@ -120,7 +121,7 @@ echo Text::_('JBS_CMN_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); 
                                 <a class="btn btn-primary" href="<?php
                                 echo $link; ?>"
                                    title="<?php
-                                   echo $this->escape($item->params->get('filename'))
+                                    echo $this->escape($item->params->get('filename'))
                                        ? $this->escape($item->params->get('filename'))
                                        : $this->escape($item->params->get('media_image_name')); ?>">
                                     <?php
@@ -160,15 +161,15 @@ echo Text::_('JBS_CMN_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); 
                             </td>
 
                         </tr>
-                    <?php
+                        <?php
                     endforeach;
-                else:
+                else :
                     ?>
                     <tr>
                         <td colspan="5" class="center"><?php
                             echo Text::_('JBS_STY_NO_MEDIAFILES'); ?></td>
                     </tr>
-                <?php
+                    <?php
                 endif; ?>
 
                 </tbody>
@@ -183,13 +184,13 @@ echo Text::_('JBS_CMN_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); 
                         if (empty($this->item->id)) {
                             ?> <a onClick="Joomla.submitbutton('message.apply');"
                                   href="#"> <?php
-                                echo Text::_('JBS_STY_SAVE_FIRST'); ?> </a> <?php
+                                    echo Text::_('JBS_STY_SAVE_FIRST'); ?> </a> <?php
                         } else {
                             ?>
                             <a class="btn btn-primary" href="<?php
                             echo $link; ?>"
                                title="<?php
-                               echo Text::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
+                                echo Text::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
                                 <?php
                                 echo Text::_('JBS_STY_ADD_MEDIA_FILE'); ?></a> <?php
                         }
@@ -227,7 +228,7 @@ echo Text::_('JBS_CMN_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); 
                         </fieldset>
                     </div>
                 </div>
-            <?php
+                <?php
             } ?>
             <div class="col-lg-5">
                 <div class="control-group">
@@ -257,7 +258,7 @@ echo Text::_('JBS_CMN_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); 
                         <?php
                         echo $this->form->getLabel('studydate'); ?>
                     </div>
-                    <div class="controls span10 small">
+                    <div class="controls col-10 small">
                         <?php
                         echo $this->form->getInput('studydate'); ?>
                     </div>
@@ -433,7 +434,7 @@ echo Text::_('JBS_CMN_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); 
             </div>
             <?php
             echo HTMLHelper::_('uitab.endTab'); ?>
-        <?php
+            <?php
         } ?>
 
         <?php
@@ -443,7 +444,7 @@ echo Text::_('JBS_CMN_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); 
                 <?php
                 echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
             </div>
-            <div class="span6">
+            <div class="col-6">
                 <div class="control-group">
                     <div class="control-label">
                         <?php
@@ -474,7 +475,7 @@ echo Text::_('JBS_CMN_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); 
         echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
-        if ($this->canDo->get('core.admin')): ?>
+        if ($this->canDo->get('core.admin')) : ?>
             <?php
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
             <div class="row-fluid">
@@ -483,7 +484,7 @@ echo Text::_('JBS_CMN_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); 
             </div>
             <?php
             echo HTMLHelper::_('uitab.endTab'); ?>
-        <?php
+            <?php
         endif; ?>
 
         <!-- Hidden fields -->

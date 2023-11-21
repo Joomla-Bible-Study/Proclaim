@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Study field modal
  *
@@ -93,9 +94,9 @@ class ServerField extends FormField
 
         // Setup variables for display.
         $linkServers = 'index.php?option=com_proclaim&amp;view=cwmservers&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken(
-            ) . '=1';
+        ) . '=1';
         $linkServer  = 'index.php?option=com_proclaim&amp;view=cwmserver&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken(
-            ) . '=1';
+        ) . '=1';
 
         if (isset($this->element['language'])) {
             $linkServers .= '&amp;forcedLanguage=' . $this->element['language'];

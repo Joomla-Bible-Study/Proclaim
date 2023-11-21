@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form sub Archive
  *
@@ -40,7 +41,7 @@ Factory::getDocument()->addScriptDeclaration(
 echo Route::_('index.php?option=com_proclaim&view=cwmarchive'); ?>" enctype="multipart/form-data"
       method="post" name="adminForm" id="adminForm">
     <div class="row-fluid" style="margin-top: 50px;">
-        <div class="span12 form-horizontal">
+        <div class="col-12 form-horizontal">
             <div class="control-group">
                 <div class="control-label">
                     <?php

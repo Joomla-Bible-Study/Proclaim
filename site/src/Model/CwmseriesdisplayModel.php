@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -50,7 +51,7 @@ class CwmseriesdisplayModel extends ItemModel
      * @since 7.1.0
      * @todo  look are removing this may not used. bcc
      */
-    public function getItem($pk = null)
+    public function getItem($pk = null): mixed
     {
         // Initialise variables.
         $pk = (!empty($pk)) ? $pk : (int)$this->getState('series.id');
@@ -90,12 +91,12 @@ class CwmseriesdisplayModel extends ItemModel
     /**
      * Get Studies
      *
-     * @return boolean|mixed
+     * @return mixed
      *
      * @throws \Exception
      * @since 7.0
      */
-    public function getStudies()
+    public function getStudies(): mixed
     {
         $app = Factory::getApplication();
         $sid = (int)$app->getUserState('sid');
@@ -249,7 +250,7 @@ class CwmseriesdisplayModel extends ItemModel
         $template->params->merge($admin->params);
         $params = $template->params;
 
-        $t = (int)$params->get('seriesid');
+        $t = (int) $params->get('seriesid');
 
         if (!$t) {
             $t = $app->input->get('t', 1, 'int');
@@ -262,10 +263,12 @@ class CwmseriesdisplayModel extends ItemModel
 
         $user = $app->getSession()->get('user');
 
-        if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
+        if (
+            (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
                 'core.edit',
                 'com_proclaim'
-            ))) {
+            ))
+        ) {
             $this->setState('filter.published', 1);
             $this->setState('filter.archived', 2);
         }

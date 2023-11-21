@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Joomla.Administrator
  * @subpackage  com_mywalks
@@ -34,7 +35,10 @@ use Psr\Container\ContainerInterface;
  * @since  4.0.0
  */
 class ProclaimComponent extends MVCComponent implements
-    BootableExtensionInterface, FieldsServiceInterface, RouterServiceInterface, WorkflowServiceInterface
+    BootableExtensionInterface,
+    FieldsServiceInterface,
+    RouterServiceInterface,
+    WorkflowServiceInterface
 {
     use RouterServiceTrait;
     use HTMLRegistryAwareTrait;
@@ -94,9 +98,9 @@ class ProclaimComponent extends MVCComponent implements
      *
      * @since   4.0.0
      */
-    public function boot(ContainerInterface $container): void
+    public function boot(ContainerInterface $container)
     {
-        $this->getRegistry()->register('proclaimadministrator', new CWMAdministratorService);
+        $this->getRegistry()->register('proclaimadministrator', new CWMAdministratorService());
     }
 
     /**
@@ -111,7 +115,7 @@ class ProclaimComponent extends MVCComponent implements
      * @throws \Exception
      * @since   4.0.0
      */
-    public function validateSection($section, $item = null): ?string
+    public function validateSection($section, $item = null)
     {
         if (Factory::getApplication()->isClient('site')) {
             // On the front end we need to map some sections

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form
  *
@@ -46,8 +47,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
       method="post" name="adminForm" id="item-form" class="form-validate">
     <div class="main-card">
         <?php
-        echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general', 'recall' => true, 'breakpoint' => 768]
-        ); ?>
+        echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general', 'recall' => true, 'breakpoint' => 768]); ?>
 
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_DETAILS')); ?>
@@ -157,7 +157,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
-        if ($this->canDo->get('core.admin')): ?>
+        if ($this->canDo->get('core.admin')) : ?>
             <?php
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_CMN_FIELDSET_RULES')); ?>
             <div class="row">
@@ -168,7 +168,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
             </div>
             <?php
             echo HTMLHelper::_('uitab.endTab'); ?>
-        <?php
+            <?php
         endif; ?>
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="return" value="<?php

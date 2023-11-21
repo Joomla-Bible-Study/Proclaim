@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -71,8 +72,8 @@ class Cwmbackup
         $date             = date('Y_F_j');
         $site             = Uri::root();
         $this->saveAsName = strtolower(
-                trim(preg_replace('#\W+#', '_', $site), '_')
-            ) . '_jbs-db-backup_' . $date . '_' . time() . '.sql';
+            trim(preg_replace('#\W+#', '_', $site), '_')
+        ) . '_jbs-db-backup_' . $date . '_' . time() . '.sql';
         $objects          = CwmdbHelper::getObjects();
         $config           = Factory::getApplication()->getConfig();
         $path             = $config->get('tmp_path') . '/' . $this->saveAsName;
@@ -96,7 +97,7 @@ class Cwmbackup
                     $mime_type = 'application/zip';
                     $files     = (array)$this->dumpFile;
                     $path1     = $path . '.zip';
-                    $zip       = new \ZipArchive;
+                    $zip       = new \ZipArchive();
                     $zip->open($path1, \ZipArchive::CREATE);
 
                     foreach ($files as $file) {
@@ -107,7 +108,7 @@ class Cwmbackup
                     File::delete($path);
                 }
 
-                $this->output_file($path1, basename($path1), $mime_type);
+                $this->outputFile($path1, basename($path1), $mime_type);
 
                 break;
             case 2:
@@ -120,7 +121,7 @@ class Cwmbackup
                 if (Factory::getApplication()->input->getInt('jbs_compress', 1)) {
                     $files = (array)$this->dumpFile;
                     $path1 = $this->dumpFile . '.zip';
-                    $zip   = new \ZipArchive;
+                    $zip   = new \ZipArchive();
                     $zip->open($path1, \ZipArchive::CREATE);
 
                     foreach ($files as $file) {
@@ -250,7 +251,7 @@ class Cwmbackup
      *
      * @since 9.0.0
      */
-    #[NoReturn] public function output_file($file, $name, $mime_type = ''): void
+    public function outputFile($file, $name, $mime_type = ''): void
     {
         // Clears file status cache
         clearstatcache();
@@ -359,11 +360,11 @@ class Cwmbackup
                 // ex.: -500 -> the last 500 bytes
                 if (empty($httpRange[0])) {
                     $resultRange = $resultLenght . '-' . $size;
-                } // Ex.: 500- -> from 500 bytes to file size
-                elseif (empty($httpRange[1])) {
+                } elseif (empty($httpRange[1])) {
+                    // Ex.: 500- -> from 500 bytes to file size
                     $resultRange = $httpRange[0] . '-' . $size;
-                } // Ex.: 500-1000 -> from 500 to 1000 bytes
-                else {
+                } else {
+                    // Ex.: 500-1000 -> from 500 to 1000 bytes
                     $resultRange = $httpRange[0] . '-' . $httpRange[1];
                 }
             }
@@ -391,7 +392,6 @@ class Cwmbackup
         }
 
         flush();
-        exit;
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -17,13 +18,6 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
-
-// Always load JBSM API if it exists.
-$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
-
-if (file_exists($api)) {
-    require_once $api;
-}
 
 /**
  * This is a dummy form element to load the components language file

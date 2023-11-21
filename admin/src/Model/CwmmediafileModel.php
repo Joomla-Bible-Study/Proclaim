@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -118,14 +119,14 @@ class CwmmediafileModel extends AdminModel
             // Implode only if they selected at least one podcast. Otherwise just clear the podcast_id field
             $data['podcast_id'] = empty($data['podcast_id']) ? '' : implode(",", $data['podcast_id']);
 
-            $params = new Registry;
+            $params = new Registry();
             $params->loadArray($data['params']);
 
             $jdb   = Factory::getContainer()->get('DatabaseDriver');
             $table = new CwmserverTable($jdb);
             $table->load($data['server_id']);
 
-            $path = new Registry;
+            $path = new Registry();
             $path->loadString($table->params);
             $set_path = '';
 
@@ -142,17 +143,19 @@ class CwmmediafileModel extends AdminModel
 
                 if ($table->type === 'legacy' || $table->type === 'local') {
                     $size = Cwmhelper::getRemoteFileSize(
-                        Cwmhelper::MediaBuildUrl($set_path, $params->get('filename'), $params, true, true)
+                        Cwmhelper::mediaBuildUrl($set_path, $params->get('filename'), $params, true, true)
                     );
                     $params->set('size', $size);
                 }
             }
 
-            if (!Cwmmedia::isExternal($params->get('filename'))
+            if (
+                !Cwmmedia::isExternal($params->get('filename'))
                 && ($params->toObject()->media_hours === '00' || empty($params->toObject()->media_hours))
                 && ($params->toObject()->media_minutes === '00' || empty($params->toObject()->media_minutes))
-                && ($params->toObject()->media_seconds === '00' || (empty($params->toObject()->media_seconds)))) {
-                $path_server = Cwmhelper::MediaBuildUrl(
+                && ($params->toObject()->media_seconds === '00' || (empty($params->toObject()->media_seconds)))
+            ) {
+                $path_server = Cwmhelper::mediaBuildUrl(
                     $set_path,
                     $params->get('filename'),
                     $params,
@@ -160,11 +163,11 @@ class CwmmediafileModel extends AdminModel
                     false,
                     true
                 );
-                $jbspodcast  = new Cwmpodcast;
+                $jbspodcast  = new Cwmpodcast();
 
                 // Make a duration build from Params of media.
                 $prefix   = Uri::root();
-                $nohttp   = $jbspodcast->remove_http($prefix);
+                $nohttp   = $jbspodcast->removeHttp($prefix);
                 $siteinfo = strpos($path_server, $nohttp);
 
                 if ($siteinfo) {
@@ -218,14 +221,14 @@ class CwmmediafileModel extends AdminModel
         }
 
         // Reverse lookup server_id to server type
-        $model       = new CwmserverModel;
+        $model       = new CwmserverModel();
         $s_item      = $model->getItem($server_id);
         $server_type = $s_item->type;
 
-        $reg = new Registry;
+        $reg = new Registry();
         $reg->loadArray($s_item->params);
 
-        $reg1 = new Registry;
+        $reg1 = new Registry();
         $reg1->loadArray($s_item->media);
         $reg1->merge($reg);
 
@@ -367,8 +370,10 @@ class CwmmediafileModel extends AdminModel
 
         // Check for existing article.
         // Modify the form based on Edit State access controls.
-        if (($id !== 0 && (!$user->authorise('core.edit.state', 'com_proclaim.mediafile.' . (int)$id)))
-            || ($id === 0 && !$user->authorise('core.edit.state', 'com_proclaim'))) {
+        if (
+            ($id !== 0 && (!$user->authorise('core.edit.state', 'com_proclaim.mediafile.' . (int)$id)))
+            || ($id === 0 && !$user->authorise('core.edit.state', 'com_proclaim'))
+        ) {
             // Disable fields for display.
             $form->setFieldAttribute('ordering', 'disabled', 'true');
             $form->setFieldAttribute('state', 'disabled', 'true');
@@ -421,7 +426,7 @@ class CwmmediafileModel extends AdminModel
         }
 
         if ($commands['link_type'] !== '') {
-            if (!$this->batchlink_type($commands['link_type'], $pks, $contexts)) {
+            if (!$this->batchLinkType($commands['link_type'], $pks, $contexts)) {
                 return false;
             }
 
@@ -537,7 +542,7 @@ class CwmmediafileModel extends AdminModel
      * @throws \Exception
      * @since   2.5
      */
-    protected function batchlink_type($value, $pks, $contexts): bool
+    protected function batchLinkType($value, $pks, $contexts): bool
     {
         // Set the variables
         $user = Factory::getApplication()->getSession()->get('user');
@@ -548,7 +553,7 @@ class CwmmediafileModel extends AdminModel
             if ($user->authorise('core.edit', $contexts[$pk])) {
                 $table->reset();
                 $table->load($pk);
-                $reg = new Registry;
+                $reg = new Registry();
                 $reg->loadString($table->params);
                 $reg->set('link_type', (int)$value);
                 $table->params = $reg->toString();
@@ -594,7 +599,7 @@ class CwmmediafileModel extends AdminModel
             if ($user->authorise('core.edit', $contexts[$pk])) {
                 $table->reset();
                 $table->load($pk);
-                $reg = new Registry;
+                $reg = new Registry();
                 $reg->loadString($table->params);
                 $reg->set('mime_type', (int)$value);
                 $table->params = $reg->toString();
@@ -639,7 +644,7 @@ class CwmmediafileModel extends AdminModel
             if ($user->authorise('core.edit', $contexts[$pk])) {
                 $table->reset();
                 $table->load($pk);
-                $reg = new Registry;
+                $reg = new Registry();
                 $reg->loadString($table->params);
                 $reg->set('media_image', (int)$value);
                 $table->params = $reg->toString();
@@ -684,7 +689,7 @@ class CwmmediafileModel extends AdminModel
             if ($user->authorise('core.edit', $contexts[$pk])) {
                 $table->reset();
                 $table->load($pk);
-                $reg = new Registry;
+                $reg = new Registry();
                 $reg->loadString($table->params);
                 $reg->set('popup', (int)$value);
                 $table->params = $reg->toString();
@@ -803,7 +808,7 @@ class CwmmediafileModel extends AdminModel
 
         // Load the Admin settings
         $admin    = Cwmparams::getAdmin();
-        $registry = new Registry;
+        $registry = new Registry();
         $registry->loadString($admin->params);
         $this->setState('administrator', $registry);
 

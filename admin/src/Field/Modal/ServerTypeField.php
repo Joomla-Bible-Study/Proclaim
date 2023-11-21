@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -124,7 +125,7 @@ class ServerTypeField extends FormField
         }
 
         // Get a reverse lookup of the endpoint type to endpoint name
-        $model    = new CwmserversModel;
+        $model    = new CwmserversModel();
         $rlu_type = $model->getTypeReverseLookup();
 
         $text = (string)ArrayHelper::getValue($rlu_type, $this->value);

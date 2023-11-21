@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package    Proclaim.Admin
  * @copyright  2007 - 2022 (C) CWM Team All rights reserved

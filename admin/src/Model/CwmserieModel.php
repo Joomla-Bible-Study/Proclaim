@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -102,8 +103,10 @@ class CwmserieModel extends AdminModel
 
         // Check for existing article.
         // Modify the form based on Edit State access controls.
-        if (($id != 0 && (!$user->authorise('core.edit.state', 'com_proclaim.serie.' . (int)$id)))
-            || ($id == 0 && !$user->authorise('core.edit.state', 'com_proclaim'))) {
+        if (
+            ($id != 0 && (!$user->authorise('core.edit.state', 'com_proclaim.serie.' . (int)$id)))
+            || ($id == 0 && !$user->authorise('core.edit.state', 'com_proclaim'))
+        ) {
             // Disable fields for display.
             $form->setFieldAttribute('ordering', 'disabled', 'true');
             $form->setFieldAttribute('published', 'disabled', 'true');

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form sub backup
  *
@@ -134,7 +135,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmbackup'); ?>" enctype="mult
                     </label><input type="text" id="install_directory" name="install_directory"
                                    class="form-control inputbox valid form-control-success"
                                    value="<?php
-                                   echo $this->tmp_dest . DIRECTORY_SEPARATOR; ?>"/>
+                                    echo $this->tmp_dest . DIRECTORY_SEPARATOR; ?>"/>
                 </div>
             </div>
             <div class="control-group">

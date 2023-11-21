@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -8,12 +9,18 @@
  * @link       https://www.christianwebministries.org
  * */
 
+namespace CWM\Component\Proclaim\Administrator\Model;
+
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\User\CurrentUserInterface;
 use Joomla\CMS\Versioning\VersionableModelTrait;
 
 /**
@@ -34,18 +41,18 @@ class CwmarchiveModel extends AdminModel
     /**
      * Gets the form from the XML file.
      *
-     * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param array $data Data for the form.
+     * @param bool $loadData True if the form is to load its own data (default case), false if not.
      *
-     * @return  mixed  A JForm object on success, false on failure
+     * @return  false|Form|CurrentUserInterface  A JForm object on success, false on failure
      *
+     * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = array(), $loadData = true): bool|CurrentUserInterface|Form
     {
         // Get the form.
-        $form = $this->loadForm('com_proclaim.archive', 'archive', array('control' => 'jform', 'load_data' => $loadData)
-        );
+        $form = $this->loadForm('com_proclaim.archive', 'archive', array('control' => 'jform', 'load_data' => $loadData));
 
         if ($form === null) {
             return false;
@@ -59,9 +66,10 @@ class CwmarchiveModel extends AdminModel
      *
      * @return string
      *
+     * @throws \Exception
      * @since  9.0.1
      */
-    public function doArchive()
+    public function doArchive(): string
     {
         $db         = Factory::getContainer()->get('DatabaseDriver');
         $query      = $db->getQuery(true);
@@ -111,6 +119,6 @@ class CwmarchiveModel extends AdminModel
 
         $frame = $timeframe . ' ' . $swich . 's';
 
-        return JText::sprintf('JBS_ARCHIVE_DB_CHANGE', $studies, $mediafiles, $frame);
+        return Text::sprintf('JBS_ARCHIVE_DB_CHANGE', $studies, $mediafiles, $frame);
     }
 }

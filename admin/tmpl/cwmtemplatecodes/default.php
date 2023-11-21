@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Default
  *
@@ -49,11 +50,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplatecodes'); ?>" method
                     <div class="alert alert-info">
                         <span class="icon-info-circle" aria-hidden="true"></span><span
                                 class="visually-hidden"><?php
-                            echo Text::_('INFO'); ?></span>
+                                echo Text::_('INFO'); ?></span>
                         <?php
                         echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                     </div>
-                <?php
+                    <?php
                 else : ?>
                     <table class="table itemList" id="templatecodes">
                         <thead>
@@ -133,11 +134,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplatecodes'); ?>" method
                                             <a href="<?php
                                             echo $link; ?>"><?php
                                                 echo $item->filename; ?></a>
-                                        <?php
+                                            <?php
                                         else : ?>
                                             <?php
                                             echo $item->filename; ?>
-                                        <?php
+                                            <?php
                                         endif; ?>
                                     </div>
                                 </td>
@@ -152,11 +153,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplatecodes'); ?>" method
                                     echo $item->id; ?>
                                 </td>
                             </tr>
-                        <?php
+                            <?php
                         endforeach; ?>
                         </tbody>
                     </table>
-                <?php
+                    <?php
                 endif; ?>
                 <?php
                 echo $this->pagination->getListFooter(); ?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -68,7 +69,7 @@ class TopicsListField extends ListField
         }
 
         // Sort the Topics after Translation to Alphabetically
-        usort($options, array($this, "order_new"));
+        usort($options, array($this, "orderNew"));
 
         return array_merge(parent::getOptions(), $options);
     }
@@ -79,11 +80,11 @@ class TopicsListField extends ListField
      * @param   object  $a  Start.
      * @param   object  $b  End.
      *
-     * @return integer Used to place in new sort.
+     * @return int Used to place in new sort.
      *
      * @since 7.0
      */
-    private function order_new(object $a, object $b): int
+    private function orderNew(object $a, object $b): int
     {
         $a = (array)$a;
         $b = (array)$b;

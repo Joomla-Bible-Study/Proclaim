@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -12,17 +13,16 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // No direct access
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
-use Joomla\CMS\Filesystem\Path;
-use Joomla\CMS\MVC\Model\ItemModel;
+use Joomla\CMS\MVC\Model\BaseModel;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\Path;
 use Joomla\CMS\Uri\Uri;
 
-defined('_JEXEC') or die();
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
 
-// Import the Joomla modellist library
-jimport('joomla.filesystem.folder');
-jimport('joomla.filesystem.file');
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
  * Description of dir
@@ -30,19 +30,20 @@ jimport('joomla.filesystem.file');
  * @package  Proclaim.Admin
  * @since    9.0.0
  */
-class CwmdirModel extends ItemModel
+class CwmdirModel extends BaseModel
 {
     /**
      * Get folder names and their links
      *
      * @return array Filled with object with: name, link properties
      *
+     * @throws \Exception
      * @since 7.0
      */
-    public function getBreadcrumbs()
+    public function getBreadcrumbs(): array
     {
         $bc         = array();
-        $currentDir = $this->_getCurrentDir();
+        $currentDir = $this->getCurrentDir();
 
         $parts = explode('/', $currentDir);
         $link  = '';
@@ -52,7 +53,7 @@ class CwmdirModel extends ItemModel
         foreach ($parts as $part) {
             if ($part !== '' && $part !== ' ') {
                 $link         .= '/' . $part;
-                $bc[$i]       = new \stdClass;
+                $bc[$i]       = new \stdClass();
                 $bc[$i]->name = $part;
                 $bc[$i]->link = $link;
                 $i++;
@@ -60,7 +61,7 @@ class CwmdirModel extends ItemModel
         }
 
         // Prepend home dir
-        $firstBC       = new stdClass;
+        $firstBC       = new \stdClass();
         $firstBC->name = BIBLESTUDY_MEDIA_PATH;
         $firstBC->link = '';
         array_unshift($bc, $firstBC);
@@ -71,14 +72,15 @@ class CwmdirModel extends ItemModel
     /**
      * Get current directory from request
      *
-     * @param   bool    $fullPath   ?
-     * @param   string  $separator  ?
+     * @param bool $fullPath ?
+     * @param string $separator ?
      *
      * @return string
      *
+     * @throws \Exception
      * @since 7.0
      */
-    private function _getCurrentDir($fullPath = false, $separator = '/')
+    private function getCurrentDir($fullPath = false, $separator = '/'): string
     {
         $defaultDirVar  = "";
         $defaultDirPath = BIBLESTUDY_ROOT_PATH;
@@ -95,7 +97,7 @@ class CwmdirModel extends ItemModel
 
         if (file_exists($dirPath)) {
             // Save current directory in session whenever this function gets called
-            $this->_setDirectoryState($dirPath);
+            $this->setDirectoryState($dirPath);
 
             if ($fullPath) {
                 return $dirPath;
@@ -114,13 +116,14 @@ class CwmdirModel extends ItemModel
     /**
      * Save current directory in session for file upload
      *
-     * @param   string  $directoryPath  ?
+     * @param string $directoryPath ?
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0
      */
-    private function _setDirectoryState($directoryPath)
+    private function setDirectoryState($directoryPath): void
     {
         $app                  = Factory::getApplication();
         $session              = $app->getSession();
@@ -142,19 +145,20 @@ class CwmdirModel extends ItemModel
      *
      * @return array
      *
+     * @throws \Exception
      * @since 7.0
      */
-    public function getFolders()
+    public function getFolders(): array
     {
-        $currentDir = $this->_getCurrentDir(true);
+        $currentDir = $this->getCurrentDir(true);
 
         // Get all folders in current dir
         $folders = Folder::folders($currentDir, '.', false, true);
 
-        // Set current folder on first place in array
+        // Set the current folder on first place in array
         array_unshift($folders, $currentDir);
 
-        return $this->_setFolderInfo($folders);
+        return $this->setFolderInfo($folders);
     }
 
     /**
@@ -166,13 +170,13 @@ class CwmdirModel extends ItemModel
      *
      * @since 7.0
      */
-    private function _setFolderInfo($folderPaths)
+    private function setFolderInfo($folderPaths): array
     {
         $OFolders = array();
 
         for ($i = 0, $iMax = count($folderPaths); $i < $iMax; $i++) {
             $path                         = Path::clean($folderPaths[$i]);
-            $OFolders[$i]                 = new \stdClass;
+            $OFolders[$i]                 = new \stdClass();
             $OFolders[$i]->fullPath       = $path;
             $OFolders[$i]->basename       = basename($path);
             $OFolders[$i]->parentFullPath = dirname($path) . '/';
@@ -180,8 +184,8 @@ class CwmdirModel extends ItemModel
             $OFolders[$i]->folderCount    = count(Folder::folders($path, '.', false, false));
             $OFolders[$i]->fileCount      = count(Folder::files($path, '.', false, false, array("index.html")));
 
-            // Make parent short path for go up directory
-            if ($path == BIBLESTUDY_ROOT_PATH . '/' . basename($path)) {
+            // Make parent short path for go-up directory
+            if ($path === BIBLESTUDY_ROOT_PATH . '/' . basename($path)) {
                 $OFolders[$i]->parentShort = "";
             } else {
                 $OFolders[$i]->parentShort = dirname(str_replace(BIBLESTUDY_ROOT_PATH, "", $path . '/'));
@@ -194,20 +198,21 @@ class CwmdirModel extends ItemModel
     }
 
     /**
-     * Files in current directory
+     * Files in the current directory
      *
      * @return array
      *
+     * @throws \Exception
      * @since 7.0
      */
-    public function getFiles()
+    public function getFiles(): array
     {
-        $currentDir = $this->_getCurrentDir(true);
+        $currentDir = $this->getCurrentDir(true);
 
         // Get all files
         $files = Folder::files($currentDir, '.', false, true, array('index.html'));
 
-        return $this->_setFileInfo($files);
+        return $this->setFileInfo($files);
     }
 
     /**
@@ -219,16 +224,16 @@ class CwmdirModel extends ItemModel
      *
      * @since 7.0
      */
-    private function _setFileInfo($filePaths)
+    private function setFileInfo($filePaths): array
     {
         $OFiles = array();
 
         for ($i = 0, $iMax = count($filePaths); $i < $iMax; $i++) {
             $path                 = Path::clean($filePaths[$i]);
-            $OFiles[$i]           = new \stdClass;
+            $OFiles[$i]           = new \stdClass();
             $OFiles[$i]->basename = basename($path);
             $OFiles[$i]->fullPath = dirname($path) . '/' . basename($path);
-            $OFiles[$i]->link     = Uri::root() . '/images' . $this->_getCurrentDir(false, "/") . '/' . basename($path);
+            $OFiles[$i]->link     = Uri::root() . '/images' . $this->getCurrentDir(false, "/") . '/' . basename($path);
             $OFiles[$i]->ext      = File::getExt($path);
 
             // Image info, if file is image
@@ -262,15 +267,10 @@ class CwmdirModel extends ItemModel
             $OFiles[$i]->size = $size;
 
             // Last accessed and last modified time
-            $OFiles[$i]->accessTime   = @strftime("%d/%m/%Y %H:%M:%S", @fileatime($path));
-            $OFiles[$i]->modifiedTime = @strftime("%d/%m/%Y %H:%M:%S", @filemtime($path));
+            $OFiles[$i]->accessTime   = @date("%d/%m/%Y %H:%M:%S", @fileatime($path));
+            $OFiles[$i]->modifiedTime = @date("%d/%m/%Y %H:%M:%S", @filemtime($path));
         }
 
         return $OFiles;
-    }
-
-    public function getItem($pk = null)
-    {
-        // TODO: Implement getItem() method.
     }
 }

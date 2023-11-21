@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Proclaim.Site
  * @subpackage  com_Proclaim
@@ -61,10 +62,10 @@ class Router extends RouterView
     /**
      * Proclaim Component router constructor
      *
-     * @param   SiteApplication           $app              The application object
-     * @param   AbstractMenu              $menu             The menu object to work with
-     * @param   CategoryFactoryInterface  $categoryFactory  The category object
-     * @param   DatabaseInterface         $db               The database object
+     * @param   SiteApplication                $app              The application object
+     * @param   AbstractMenu                   $menu             The menu object to work with
+     * @param   CategoryFactoryInterface|null  $categoryFactory  The category object
+     * @param   DatabaseInterface|null         $db               The database object
      *
      * @since 10.0.0
      */

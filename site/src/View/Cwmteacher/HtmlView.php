@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -86,11 +87,11 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0
      */
-    public function display($tpl = null)
+    public function display($tpl = null): void
     {
-        $pagebuilder = new Cwmpagebuilder;
+        $pagebuilder = new Cwmpagebuilder();
 
-        $images      = new Cwmimages;
+        $images      = new Cwmimages();
         $this->state = $this->get('state');
 
         /** @var Registry $params */
@@ -101,10 +102,10 @@ class HtmlView extends BaseHtmlView
 
         // Add the slug
         $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : str_replace(
-                ' ',
-                '-',
-                htmlspecialchars_decode($item->teachername, ENT_QUOTES)
-            ) . ':' . $item->id;
+            ' ',
+            '-',
+            htmlspecialchars_decode($item->teachername, ENT_QUOTES)
+        ) . ':' . $item->id;
         $id         = $input->get('id', '0', 'get');
         $item->id   = $id;
 
@@ -135,7 +136,7 @@ class HtmlView extends BaseHtmlView
             $language = Factory::getApplication()->getLanguage();
             $language->load('com_contact', JPATH_SITE);
 
-            $contactmodel = new ContactModel;
+            $contactmodel = new ContactModel();
 
             try {
                 $this->contact = $contactmodel->getItem($pk = $item->contact);
@@ -153,7 +154,7 @@ class HtmlView extends BaseHtmlView
                     . $largeimage->width . '" alt="" />';
                 $item->information = $this->contact->misc;
                 $item->phone       = $this->contact->telephone;
-                $cregistry         = new Registry;
+                $cregistry         = new Registry();
                 $cregistry->loadString($this->contact->params);
                 $contact_params     = $cregistry;
                 $item->facebooklink = $contact_params->get('linka');
@@ -241,7 +242,7 @@ class HtmlView extends BaseHtmlView
         $this->template = $this->state->template;
         $this->document = Factory::getApplication()->getDocument();
 
-        $this->_prepareDocument();
+        $this->prepareDocument();
 
         parent::display($tpl);
     }
@@ -254,7 +255,7 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0
      */
-    protected function _prepareDocument(): void
+    protected function prepareDocument(): void
     {
         $app   = Factory::getApplication('site');
         $menus = $app->getMenu();

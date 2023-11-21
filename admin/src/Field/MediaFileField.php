@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -62,7 +63,7 @@ class MediaFileField extends ListField
 
         if ($messages) {
             foreach ($messages as $message) {
-                $reg = new Registry;
+                $reg = new Registry();
                 $reg->loadString($message->params);
                 $message->params = $reg;
                 $options[]       = HTMLHelper::_(

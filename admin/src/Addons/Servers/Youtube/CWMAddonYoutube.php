@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -8,6 +9,8 @@
  * @link       https://www.christianwebministries.org
  * */
 
+namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube;
+
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 
@@ -15,6 +18,7 @@
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Input\Input;
 use Joomla\CMS\Language\Text;
 
 /**
@@ -44,13 +48,13 @@ class CWMAddonYoutube extends CWMAddon
     /**
      * Upload
      *
-     * @param   JInput|array  $data  Data to upload
+     * @param array|Input $data  Data to upload
      *
      * @return array
      *
      * @since 9.0.0
      */
-    public function upload($data)
+    public function upload(\Joomla\Input\Input|array $data): mixed
     {
         // Holds for nothing
         return $data;
@@ -60,20 +64,19 @@ class CWMAddonYoutube extends CWMAddon
      * Render Fields for general view.
      *
      * @param   object  $media_form  Medea files form
-     * @param   bool    $new         If media is new
+     * @param bool $new         If media is new
      *
      * @return string
      *
      * @since 9.1.3
      */
-    public function renderGeneral($media_form, $new): string
+    public function renderGeneral($media_form, bool $new): string
     {
         $html   = '';
         $fields = $media_form->getFieldset('general');
 
         if ($fields) {
-            foreach ($fields as $field)
-                :
+            foreach ($fields as $field) :
                 $html .= '<div class="control-group">';
                 $html .= '<div class="control-label">';
                 $html .= $field->label;
@@ -101,14 +104,14 @@ class CWMAddonYoutube extends CWMAddon
     /**
      * Render Layout and fields
      *
-     * @param   object  $media_form  Midea files form
-     * @param   bool    $new         If media is new
+     * @param   object  $media_form  Medea files form
+     * @param bool $new         If media is new
      *
      * @return string
      *
      * @since 9.1.3
      */
-    public function render($media_form, $new): string
+    public function render($media_form, bool $new): string
     {
         $html = '';
         $html .= HtmlHelper::_('uitab.addTab', 'myTab', 'options', Text::_('Options'));
@@ -117,10 +120,9 @@ class CWMAddonYoutube extends CWMAddon
 
         foreach ($media_form->getFieldsets('params') as $name => $fieldset) {
             if ($name !== 'general') {
-                $html .= '<div class="span6">';
+                $html .= '<div class="col-6">';
 
-                foreach ($media_form->getFieldset($name) as $field)
-                    :
+                foreach ($media_form->getFieldset($name) as $field) :
                     $html .= '<div class="control-group">';
                     $html .= '<div class="control-label">';
                     $html .= $field->label;

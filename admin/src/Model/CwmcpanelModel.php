@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package    Proclaim.Admin
  * @copyright  2007 - 2022 (C) CWM Team All rights reserved
@@ -36,7 +37,7 @@ class CwmcpanelModel extends BaseModel
     {
         // Get version information
         $db     = Factory::getContainer()->get('DatabaseDriver');
-        $return = new \stdClass;
+        $return = new \stdClass();
         $query  = $db->getQuery(true);
         $query->select('*');
         $query->from('#__extensions');
@@ -47,7 +48,7 @@ class CwmcpanelModel extends BaseModel
             $data = $db->loadObject();
 
             // Convert parameter fields to objects.
-            $registry = new Registry;
+            $registry = new Registry();
             $registry->loadString($data->manifest_cache);
 
             if ($data) {
@@ -104,7 +105,7 @@ class CwmcpanelModel extends BaseModel
 
         // Do I have messages?
         try {
-            $pimModel = new MessagesModel;
+            $pimModel = new MessagesModel();
             $pimModel->setState('eid', $extension_id);
 
             $list   = $pimModel->getitems();

@@ -46,12 +46,12 @@ echo Route::_('index.php?option=com_proclaim&view=cwmlocations'); ?>" method="po
       id="adminForm">
     <?php
     if (!empty($this->sidebar)): ?>
-    <div id="j-sidebar-container" class="span2">
+    <div id="j-sidebar-container" class="col-2">
         <?php
         echo $this->sidebar; ?>
         <hr/>
     </div>
-    <div id="j-main-container" class="span10">
+    <div id="j-main-container" class="col-10">
         <?php
         else : ?>
         <div id="j-main-container">

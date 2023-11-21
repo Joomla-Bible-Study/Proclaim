@@ -2,7 +2,7 @@
 <form>
     <field name="published"
            type="list"
-           class="span12 small"
+           class="col-12 small"
            id="published"
            label="JSTATUS"
            description="JFIELD_PUBLISHED_DESC"
@@ -39,5 +39,5 @@
            description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
            class="readonly"/>
     <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
-           description="JFIELD_ACCESS_DESC" class="span12 small" size="1"/>
+           description="JFIELD_ACCESS_DESC" class="col-12 small" size="1"/>
 </form>

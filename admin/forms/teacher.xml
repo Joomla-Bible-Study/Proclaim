@@ -3,10 +3,10 @@
     <fieldset addfieldprefix="Joomla\Component\Contact\Administrator\Field">
         <field name="id" type="hidden" label="JGLOBAL_FIELD_ID_LABEL"
                description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
-               class="readonly span12 small"/>
+               class="readonly col-12 small"/>
         <field name="published"
                type="list"
-               class="span12 small"
+               class="col-12 small"
                id="published"
                label="JSTATUS"
                description="JFIELD_PUBLISHED_DESC"
@@ -23,14 +23,14 @@
                 JTRASHED
             </option>
         </field>
-        <field name="list_show" type="list" label="JBS_TCH_SHOW_LIST_VIEW" class="span12 small"
+        <field name="list_show" type="list" label="JBS_TCH_SHOW_LIST_VIEW" class="col-12 small"
                description="JBS_TCH_SHOW_LIST_VIEW_DESC" default="0"
                required="true">
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>
         <field name="landing_show" default="1" type="list" label="JBS_CMN_LANDING_SHOW"
-               description="JBS_CMN_LANDING_SHOW_DESC" class="span12 small">
+               description="JBS_CMN_LANDING_SHOW_DESC" class="col-12 small">
             <option value="0">JBS_CMN_NO_SHOW_LANDING</option>
             <option value="1">JBS_CMN_SHOW_ABOVE_LANDING</option>
             <option value="2">JBS_CMN_SHOW_BELOW_LANDING</option>
@@ -50,7 +50,7 @@
         <field name="title" type="text" class="inputbox" size="60"
                label="JBS_CMN_TITLE" description="JBS_TCH_TITLE_DESC"/>
         <field name="image" type="media" directory="biblestudy/teachers" label="JBS_TCH_TEACHER_IMAGE_LARGE"
-               class="span10 small"/>
+               class="col-10 small"/>
         <field name="teacher_image" type="hidden"/>
         <field name="phone" type="tel" class="inputbox" size="60"
                label="JBS_TCH_PHONE"/>
@@ -68,7 +68,7 @@
                translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
                section="teacher" validate="rules"/>
         <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-               description="JBS_CMN_FIELD_LANGUAGE_DESC" class="inputbox span12 small">
+               description="JBS_CMN_FIELD_LANGUAGE_DESC" class="inputbox col-12 small">
             <option value="*">JALL</option>
         </field>
         <field name="facebooklink" type="text" format="raw" label="JBS_TCH_FACEBOOK" description="JBS_TCH_FACEBOOK_DESC"

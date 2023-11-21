@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -145,7 +146,7 @@ class HtmlView extends BaseHtmlView
         $app            = Factory::getApplication();
         $this->form     = $this->get('Form');
         $user           = $app->getSession()->get('user');
-        $CWMListing     = new Cwmlisting;
+        $CWMListing     = new Cwmlisting();
         $this->item     = $this->get('Item');
         $this->state    = $this->get('State');
         $this->user     = $user;
@@ -172,7 +173,7 @@ class HtmlView extends BaseHtmlView
             return;
         }
 
-        $BiblePassage  = new Cwmshowscripture;
+        $BiblePassage  = new Cwmshowscripture();
         $this->passage = $BiblePassage->buildPassage($this->item, $this->item->params);
 
         // Add router helpers.
@@ -238,9 +239,11 @@ class HtmlView extends BaseHtmlView
         $offset = (int)$this->state->get('list.offset');
 
         // Check the view access to the article (the model has already computed the values).
-        if ($item->params->get('access-view') !== true && (($item->params->get('show_noauth') !== true && $user->get(
-                    'guest'
-                )))) {
+        if (
+            $item->params->get('access-view') !== true && (($item->params->get('show_noauth') !== true && $user->get(
+                'guest'
+            )))
+        ) {
             $app->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
         }
 
@@ -259,17 +262,19 @@ class HtmlView extends BaseHtmlView
         $this->item->topics = $this->item->topic_text;
 
         if ($item->params->get('showrelated') > 0) {
-            $relatedstudies = new Cwmrelatedstudies;
+            $relatedstudies = new Cwmrelatedstudies();
             $this->related  = $relatedstudies->getRelated($this->item, $item->params);
         }
 
         // Only load page builder if the default template is NOT being used
-        if ($item->params->get('useexpert_list') > 0
+        if (
+            $item->params->get('useexpert_list') > 0
             || ($item->params->get('simple_mode') === '1')
             || (is_string($item->params->get('sermontemplate')) === true && $item->params->get(
-                    'sermontemplate'
-                ) !== '0')) {
-            $pagebuilder            = new Cwmpagebuilder;
+                'sermontemplate'
+            ) !== '0')
+        ) {
+            $pagebuilder            = new Cwmpagebuilder();
             $pelements              = $pagebuilder->buildPage(
                 $this->item,
                 $this->item->params,
@@ -314,7 +319,7 @@ class HtmlView extends BaseHtmlView
         }
 
         PluginHelper::importPlugin('content');
-        $article       = new \stdClass;
+        $article       = new \stdClass();
         $article->text = $this->item->scripture1;
         $app->triggerEvent(
             'onContentPrepare',
@@ -344,7 +349,7 @@ class HtmlView extends BaseHtmlView
 
         // Get the podcast subscription
         HtmlHelper::_('stylesheet', 'media/css/podcast.css');
-        $podcast         = new Cwmpodcastsubscribe;
+        $podcast         = new Cwmpodcastsubscribe();
         $this->subscribe = $podcast->buildSubscribeTable($this->item->params->get('subscribeintro', 'Our Podcasts'));
 
         // Passage link to BibleGateway
@@ -354,7 +359,7 @@ class HtmlView extends BaseHtmlView
             $plugin = PluginHelper::getPlugin('content', 'scripturelinks');
 
             // Convert parameter fields to objects.
-            $registry = new Registry;
+            $registry = new Registry();
             $registry->loadString($plugin->params);
             $st_params  = $registry;
             $version    = $st_params->get('bible_version');
@@ -373,7 +378,7 @@ class HtmlView extends BaseHtmlView
         $this->menuid = $menuid;
 
         if ($this->getLayout() === 'pagebreak') {
-            $this->_displayPagebrake($tpl);
+            $this->displayPagebrake($tpl);
 
             return;
         }
@@ -403,7 +408,7 @@ class HtmlView extends BaseHtmlView
             $this->item->studytext = $article->text;
         }
 
-        $Biblepassage  = new Cwmshowscripture;
+        $Biblepassage  = new Cwmshowscripture();
         $this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);
 
         // Prepares a link string for use in social networking
@@ -412,7 +417,7 @@ class HtmlView extends BaseHtmlView
         $detailslink       = Route::_($detailslink);
         $this->detailslink = $detailslink;
 
-        $this->page         = new \stdClass;
+        $this->page         = new \stdClass();
         $this->page->social = $CWMListing->getShare($detailslink, $this->item, $this->item->params);
 
         // End process prepares content plugins
@@ -426,7 +431,7 @@ class HtmlView extends BaseHtmlView
             $model->hit();
         }
 
-        $this->_prepareDocument();
+        $this->prepareDocument();
 
         parent::display($tpl);
     }
@@ -441,7 +446,7 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0
      */
-    protected function _displayPageBrake(string $tpl): void
+    protected function displayPageBrake(string $tpl): void
     {
         $this->document->setTitle(Text::_('JBS_CMN_READ_MORE'));
         parent::display($tpl);
@@ -455,7 +460,7 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0
      */
-    protected function _prepareDocument(): void
+    protected function prepareDocument(): void
     {
         $app     = Factory::getApplication();
         $menu    = $app->getMenu()->getActive();

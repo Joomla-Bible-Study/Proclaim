@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -11,11 +12,9 @@
 // No direct access
 defined('_JEXEC') or die();
 
-if (is_array($this->files))
-    : ?>
+if (is_array($this->files)) : ?>
     <?php
-    foreach ($this->files as $i => $file)
-        : ?>
+    foreach ($this->files as $i => $file) : ?>
         <tr>
             <td class="file_icon file">
                 <a class="finfo" id="file_info<?php
@@ -32,30 +31,29 @@ if (is_array($this->files))
                     <div class="prev_left">
                         <img alt="preview not available"
                              src="<?php
-                             echo (!is_array(
-                                 $file->imgInfo
-                             )) ? $this->imgURL . 'ext/' . $file->ext . '.png' : $file->link; ?>"/>
+                                echo (!is_array(
+                                    $file->imgInfo
+                                )) ? $this->imgURL . 'ext/' . $file->ext . '.png' : $file->link; ?>"/>
                     </div>
                     <div class="prev_right">
                         <?php
-                        if (is_array($file->imgInfo))
-                        : ?>
+                        if (is_array($file->imgInfo)) : ?>
                         <span><?php
                             echo Text::_('COM_MEDIAMU_FINFO_DIMS') . '</span> ' . Text::_('COM_MEDIAMU_FINFO_WIDTH'); ?>
                             <?php
                             echo $file->imgInfo[0] . Text::_('COM_MEDIAMU_FINFO_HEIGHT') . ' ' . $file->imgInfo[1]; ?>
-							<br/>
-						<?php
+                            <br/>
+                            <?php
                         endif;
                         ?>
-						<span><?php
+                        <span><?php
                             echo Text::_('COM_MEDIAMU_FINFO_SIZE') . '</span>' . $file->size; ?><br/>
-						<span><?php
+                        <span><?php
                             echo Text::_('COM_MEDIAMU_FINFO_L_ACCESSED') . '</span> ' . $file->accessTime; ?>
-						<br/>
-						<span><?php
+                        <br/>
+                        <span><?php
                             echo Text::_('COM_MEDIAMU_FINFO_L_MODIFIED') . '</span> ' . $file->modifiedTime; ?>
-						<br/>
+                        <br/>
                     </div>
                     <div class="prev_footer">
                         <a class="open_btn" target="_blank" href="<?php
@@ -65,7 +63,7 @@ if (is_array($this->files))
                         <span>|</span> <a class="path_rm_btn" name="<?php
                         echo base64_encode($file->basename); ?>"
                                           href="#"><?php
-                            echo Text::_('COM_MEDIAMU_FINFO_DELETE'); ?></a>
+                                            echo Text::_('COM_MEDIAMU_FINFO_DELETE'); ?></a>
                     </div>
                 </div>
             </td>
@@ -80,12 +78,12 @@ if (is_array($this->files))
             <td class="selection">
                 <input class="delete" name="paths[]" type="checkbox"
                        value="<?php
-                       echo base64_encode($file->basename); ?>"/>
+                        echo base64_encode($file->basename); ?>"/>
             </td>
         </tr>
-    <?php
+        <?php
     endforeach; ?>
-<?php
+    <?php
 endif;
 ?>
 

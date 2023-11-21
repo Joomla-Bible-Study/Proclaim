@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -100,7 +101,7 @@ class HtmlView extends BaseHtmlView
         $this->addon = CWMAddon::getInstance($this->state->type);
 
         $options       = $app->input->get('options');
-        $this->options = new \stdClass;
+        $this->options = new \stdClass();
 
         $this->options->study_id   = null;
         $this->options->createdate = null;

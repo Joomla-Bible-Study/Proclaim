@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Default CommonetForm
  *
@@ -39,23 +40,22 @@ HtmlHelper::_('behavior.keepalive');
 <?php
 $commentjava = "javascript:ReverseDisplay('jbscomments')";
 
-switch ($this->item->params->get('link_comments', 0))
-{
-case 0:
-echo '<div style="margin: auto;"></div><strong><a class="heading' . $this->item->params->get(
-        'pageclass_sfx'
-    ) . '" href="' . $commentjava . '"><i class="fas fa-comment fa-3x"></i>'
-    . Text::_('JBS_CMT_SHOW_HIDE_COMMENTS') . '</a></strong></div>';
-?>
+switch ($this->item->params->get('link_comments', 0)) {
+    case 0:
+        echo '<div style="margin: auto;"></div><strong><a class="heading' . $this->item->params->get(
+            'pageclass_sfx'
+        ) . '" href="' . $commentjava . '"><i class="fas fa-comment fa-3x"></i>'
+        . Text::_('JBS_CMT_SHOW_HIDE_COMMENTS') . '</a></strong></div>';
+        ?>
 <div id="JBScomments" style="display:none;">
 
-    <?php
-    break;
+        <?php
+        break;
     case 1:
         echo '<div id="JBScomments">';
         break;
-    }
-    ?>
+}
+?>
     <div id="commentstable">
         <div class="container-fluid" style="padding-bottom: 10px;">
 
@@ -77,7 +77,7 @@ echo '<div style="margin: auto;"></div><strong><a class="heading' . $this->item-
             if (!count($this->comments)) {
                 ?>
                 <div class="row-fluid">
-                    <div class="span12"><?php
+                    <div class="col-12"><?php
                         echo Text::_('JBS_STY_NO_COMMENT') ?></div>
                 </div>
 
@@ -125,9 +125,8 @@ echo '<div style="margin: auto;"></div><strong><a class="heading' . $this->item-
                 $allow = 10;
             }
 
-            if ($allow > 9)
-            {
-            ?>
+            if ($allow > 9) {
+                ?>
         </div>
         <div class="container-fluid">
             <form action="index.php" method="post" class="form-validate form-horizontal well">
@@ -139,9 +138,8 @@ echo '<div style="margin: auto;"></div><strong><a class="heading' . $this->item-
 
                         <?php
                     }
-                    if ($allow >= 10)
-                    {
-                    ?>
+                    if ($allow >= 10) {
+                        ?>
                     <div class="col-lg-12">
                         <?php
                         if ($user->name) {
@@ -167,7 +165,7 @@ echo '<div style="margin: auto;"></div><strong><a class="heading' . $this->item-
                         <div class="col-lg-7">
                             <input class="text_area" size="50" type="text" name="full_name" id="full_name"
                                    value="<?php
-                                   echo $full_name ?>"/>
+                                    echo $full_name ?>"/>
                         </div>
                     </div>
                     <div class="row-fluid">
@@ -178,7 +176,7 @@ echo '<div style="margin: auto;"></div><strong><a class="heading' . $this->item-
                         <div class="col-lg-7">
                             <input class="text_area" type="text" name="user_email" id="user_email"
                                    value="<?php
-                                   echo $user->email ?>"/>
+                                    echo $user->email ?>"/>
                         </div>
                     </div>
                     <div class="row-fluid">
@@ -202,7 +200,7 @@ echo '<div style="margin: auto;"></div><strong><a class="heading' . $this->item-
                                 if ($fieldset->name === 'captcha' && !$this->captchaEnabled) : ?>
                                     <?php
                                     continue; ?>
-                                <?php
+                                    <?php
                                 endif; ?>
                                 <?php
                                 $fields = $this->form->getFieldset($fieldset->name); ?>
@@ -210,23 +208,25 @@ echo '<div style="margin: auto;"></div><strong><a class="heading' . $this->item-
                                 if (count($fields)) : ?>
                                     <fieldset class="m-0">
                                         <?php
-                                        if (isset($fieldset->label) && ($legend = trim(
+                                        if (
+                                            isset($fieldset->label) && ($legend = trim(
                                                 Text::_($fieldset->label)
-                                            )) !== '') : ?>
+                                            )) !== ''
+                                        ) : ?>
                                             <legend><?php
                                                 echo $legend; ?></legend>
-                                        <?php
+                                            <?php
                                         endif; ?>
                                         <?php
                                         foreach ($fields as $field) : ?>
                                             <?php
                                             echo $field->renderField(); ?>
-                                        <?php
+                                            <?php
                                         endforeach; ?>
                                     </fieldset>
-                                <?php
+                                    <?php
                                 endif; ?>
-                            <?php
+                                <?php
                             endforeach; ?>
 
                             <?php
@@ -240,26 +240,26 @@ echo '<div style="margin: auto;"></div><strong><a class="heading' . $this->item-
                             <input type="hidden" name="option" value="com_proclaim"/>
                             <input type="hidden" name="published" id="published"
                                    value="<?php
-                                   echo $this->item->params->get('comment_publish') ?>"/>
+                                    echo $this->item->params->get('comment_publish') ?>"/>
                             <input type="hidden" name="view" value="sermon"/>
 
                             <input type="hidden" name="comment_date" id="comment_date"
                                    value="<?php
-                                   echo date('Y-m-d H:i:s') ?>"/>
+                                    echo date('Y-m-d H:i:s') ?>"/>
                             <input type="hidden" name="study_detail_id" id="study_detail_id"
                                    value="<?php
-                                   echo $this->item->id ?>"/>
+                                    echo $this->item->id ?>"/>
 
                             <input type="submit" class="button" id="button" value="Submit"/>
                             <?php
-                            } // End of if $allow > 10
-                            ?>
+                    } // End of if $allow > 10
+                    ?>
                         </div>
                     </div>
                 </div>
             </form>
 
-            <?php
+                <?php
             } // End if $allow > 9
             ?>
         </div>

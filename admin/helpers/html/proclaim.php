@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -56,7 +57,7 @@ abstract class JHtmlProclaim
         // If no debugging value is set, use the configuration setting
         if ($debug === null) {
             $config = Factory::getApplication()->getConfig();
-            $debug  = (boolean)$config->get('debug');
+            $debug  = (bool)$config->get('debug');
         }
 
         HtmlHelper::_('bootstrap.framework', $debug);
@@ -165,7 +166,7 @@ abstract class JHtmlProclaim
         $options[] = array('value' => 3, 'text' => Text::_('JBS_CMN_USE_AV'));
         $options[] = array('value' => 7, 'text' => Text::_('JBS_CMN_USE_MP3_PLAYER'));
         $options[] = array('value' => 8, 'text' => Text::_('JBS_CMN_USE_EMBED_CODE'));
-        $object    = new \stdClass;
+        $object    = new \stdClass();
 
         foreach ($options as $key => $value) {
             $object->$key = $value;
@@ -215,7 +216,7 @@ abstract class JHtmlProclaim
         $options[] = array('value' => 1, 'text' => Text::_('JBS_MED_SHOW_DOWNLOAD_ICON'));
         $options[] = array('value' => 2, 'text' => Text::_('JBS_MED_SHOW_ONLY_DOWNLOAD_ICON'));
 
-        $object = new \stdClass;
+        $object = new \stdClass();
 
         foreach ($options as $key => $value) {
             $object->$key = $value;
@@ -262,7 +263,7 @@ abstract class JHtmlProclaim
         $options[] = array('value' => 2, 'text' => Text::_('JBS_CMN_INLINE'));
         $options[] = array('value' => 1, 'text' => Text::_('JBS_CMN_POPUP'));
 
-        $object = new \stdClass;
+        $object = new \stdClass();
 
         foreach ($options as $key => $value) {
             $object->$key = $value;

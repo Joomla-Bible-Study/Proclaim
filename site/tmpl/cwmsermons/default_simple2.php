@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -157,8 +158,8 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 $archived  = $this->state->get('filter.published') == 2 ? true : false;
 $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'study.ordering';
-$listing   = new Cwmlisting;
-$files     = new File;
+$listing   = new Cwmlisting();
+$files     = new File();
 $folder    = Folder::files('media/com_proclaim/images/rotating');
 $count     = count($folder);
 
@@ -178,11 +179,11 @@ $count     = count($folder);
                 <div id="media__items__list"
                      class="su_macro_prototype list-unstyled media__view media__container list_contains_thumbnail"
                      style="display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 15px;">
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;">
                     <?php
                     foreach ($this->items as $item) {
-                        $itemparams = new Registry;
+                        $itemparams = new Registry();
                         $params     = $itemparams->loadString($item->params);
                         $studyimage = $params->get('studyimage');
                         if (!empty($item->thumbnailm)) {
@@ -211,9 +212,11 @@ $count     = count($folder);
                                 $image = 'media/com_proclaim/images/rotating/bible01.jpg';
                             }
                         }
-                        if ($this->params->get('simplegridtextoverlay') == 1 || $params->get(
+                        if (
+                            $this->params->get('simplegridtextoverlay') == 1 || $params->get(
                                 'nooverlaysimplemode'
-                            ) == 'yes') {
+                            ) == 'yes'
+                        ) {
                             $overlaytext = '<h5 class="card-title text-uppercase overlay-text -webkit-text-stroke" style="text-shadow: 2px 2px #000000;">' . $item->studytitle . '</h5>';
                         }
                         if ($params->get('nooverlaysimplemode') == 'no') {
@@ -258,11 +261,11 @@ $count     = count($folder);
     </div>
 </div>
 <div class="row-fluid col-sm-12 pagination pagelinks" style="background-color: #A9A9A9;
-	margin: 0 -5px;
-	padding: 8px 8px;
-	border: 1px solid #C5C1BE;
-	position: relative;
-	-webkit-border-radius: 9px;">
+    margin: 0 -5px;
+    padding: 8px 8px;
+    border: 1px solid #C5C1BE;
+    position: relative;
+    -webkit-border-radius: 9px;">
     <?php
     echo $this->pagination->getPageslinks(); ?>
 </div>

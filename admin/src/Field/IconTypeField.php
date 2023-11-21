@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -77,7 +78,7 @@ class IconTypeField extends ListField
      */
     protected function getOptions(): array
     {
-        $MediaHelper = new Cwmmedia;
+        $MediaHelper = new Cwmmedia();
         $icontypes   = $MediaHelper->getIcons();
 
         $options = [];

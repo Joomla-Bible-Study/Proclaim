@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -19,7 +20,7 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplatecodeTable;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
+use Joomla\Filesystem\File;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\Session\Session;
@@ -44,26 +45,26 @@ class CwmtemplatesController extends AdminController
      * @throws \Exception
      * @since 8.0
      */
-    public function template_import(): CwmtemplatesController|int
+    public function templateImport(): CwmtemplatesController|int
     {
         // Check for request forgeries.
         Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
         // Set Variables.
-        $sermonstemplate        = null;
-        $sermontemplate         = null;
-        $teacherstemplate       = null;
-        $teachertemplate        = null;
+        $sermonstemplate = null;
+        $sermontemplate = null;
+        $teacherstemplate = null;
+        $teachertemplate = null;
         $seriesdisplaystemplate = null;
-        $seriesdisplaytemplate  = null;
-        $moduletemplate         = null;
+        $seriesdisplaytemplate = null;
+        $moduletemplate = null;
 
         set_time_limit(300);
 
-        $input    = new Files;
+        $input = new Files();
         $userfile = $input->get('template_import');
-        $app      = Factory::getApplication();
-        $tc       = 0;
+        $app = Factory::getApplication();
+        $tc = 0;
 
         // Make sure that file uploads are enabled in php
         if (!(bool)ini_get('file_uploads')) {
@@ -89,12 +90,11 @@ class CwmtemplatesController extends AdminController
         $tmp_src = $userfile['tmp_name'];
 
         // Move uploaded file
-        jimport('joomla.filesystem.file');
         move_uploaded_file($tmp_src, $tmp_dest);
 
         $db = Factory::getContainer()->get('DatabaseDriver');
 
-        $query   = file_get_contents(JPATH_SITE . '/tmp/' . $userfile['name']);
+        $query = file_get_contents(JPATH_SITE . '/tmp/' . $userfile['name']);
         $queries = DatabaseDriver::splitSql($query);
 
         if (count($queries) === 0) {
@@ -118,7 +118,7 @@ class CwmtemplatesController extends AdminController
                             ->from('#__bsms_templatecode')
                             ->order($db->q('id') . ' DESC');
                         $db->setQuery($query, 0, 1);
-                        $data  = $db->loadObject();
+                        $data = $db->loadObject();
                         $query = $db->getQuery(true);
                         $query->update('#__bsms_styles')
                             ->set($db->qn('filename') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
@@ -146,7 +146,7 @@ class CwmtemplatesController extends AdminController
                             ->from('#__bsms_templates')
                             ->order($db->q('id') . ' DESC');
                         $db->setQuery($query, 0, 1);
-                        $data  = $db->loadObject();
+                        $data = $db->loadObject();
                         $query = $db->getQuery(true);
                         $query->update('#__bsms_templates')
                             ->set($db->qn('title') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
@@ -219,7 +219,7 @@ class CwmtemplatesController extends AdminController
         }
 
         // Need to adjust the params and write back
-        $registry = new Registry;
+        $registry = new Registry();
         $registry->loadString($table->params);
         $params = $registry;
         $params->set('sermonstemplate', $sermonstemplate);
@@ -243,38 +243,33 @@ class CwmtemplatesController extends AdminController
     /**
      * Perform DB Query
      *
-     * @param   string  $query  Query
+     * @param string $query Query
      *
-     * @return boolean
+     * @return void
      *
      * @since 8.0
      */
-    private function performDB(string $query): bool
+    private function performDB(string $query): void
     {
         $db = Factory::getContainer()->get('DatabaseDriver');
         $db->setQuery($query);
-
-        if (!$db->execute()) {
-            return false;
-        }
-
-        return true;
+        $db->execute();
     }
 
     /**
      * Export the Template
      *
-     * @return \CWM\Component\Proclaim\Administrator\Controller\CwmtemplatesController|false
+     * @return CwmtemplatesController|false
      *
      * @since 8.0
      */
-    public function template_export(): bool|CwmtemplatesController
+    public function templateExport(): bool|CwmtemplatesController
     {
         // Check for request forgeries.
         Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-        $input          = new Input;
-        $data           = $input->get('template_export');
+        $input = new Input();
+        $data = $input->get('template_export');
         $exporttemplate = $data;
 
         if (!$exporttemplate) {
@@ -282,25 +277,24 @@ class CwmtemplatesController extends AdminController
             $this->setRedirect('index.php?option=com_proclaim&view=templates', $message);
         }
 
-        jimport('joomla.filesystem.file');
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query->select('t.id, t.type, t.params, t.title, t.text');
         $query->from('#__bsms_templates as t');
         $query->where('t.id = ' . $exporttemplate);
         $db->setQuery($query);
-        $result       = $db->loadObject();
-        $objects[]    = $this->getExportSetting($result);
+        $result = $db->loadObject();
+        $objects[] = $this->getExportSetting($result);
         $filecontents = implode(' ', $objects);
-        $filename     = $result->title . '.sql';
-        $filepath     = JPATH_ROOT . '/tmp/' . $filename;
+        $filename = $result->title . '.sql';
+        $filepath = JPATH_ROOT . '/tmp/' . $filename;
 
         if (!File::write($filepath, $filecontents)) {
             return false;
         }
 
-        $xport = new Cwmbackup;
-        $xport->output_file($filepath, $filename, 'text/x-sql');
+        $xport = new Cwmbackup();
+        $xport->outputFile($filepath, $filename, 'text/x-sql');
         File::delete($filepath);
         $message = Text::_('JBS_TPL_EXPORT_SUCCESS');
 
@@ -310,7 +304,7 @@ class CwmtemplatesController extends AdminController
     /**
      * Get Exported Template Settings
      *
-     * @param   object  $result  ?
+     * @param object $result ?
      *
      * @return string
      *
@@ -319,26 +313,26 @@ class CwmtemplatesController extends AdminController
     private function getExportSetting($result): string
     {
         // Export must be in this order: css, template files, template.
-        $registry = new Registry;
+        $registry = new Registry();
         $registry->loadString($result->params);
-        $params  = $registry;
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $params = $registry;
+        $db = Factory::getContainer()->get('DatabaseDriver');
         $objects = '';
-        $css     = $params->get('css');
-        $css     = substr($css, 0, -4);
+        $css = $params->get('css');
+        $css = substr($css, 0, -4);
 
         if ($css) {
             $objects = "--\n-- CSS Style Code\n--\n";
-            $query2  = $db->getQuery(true);
+            $query2 = $db->getQuery(true);
             $query2->select('style.*');
             $query2->from('#__bsms_styles AS style');
             $query2->where('style.filename = "' . $css . '"');
             $db->setQuery($query2);
             $db->execute();
             $cssresult = $db->loadObject();
-            $objects   .= "\nINSERT INTO #__bsms_styles SET `published` = '1',\n`filename` = " . $db->q(
-                    $cssresult->filename
-                )
+            $objects .= "\nINSERT INTO #__bsms_styles SET `published` = '1',\n`filename` = " . $db->q(
+                $cssresult->filename
+            )
                 . ",\n`stylecode` = " . $db->q($cssresult->stylecode) . ";\n";
         }
 
@@ -401,15 +395,15 @@ class CwmtemplatesController extends AdminController
     /**
      * Get Template Settings
      *
-     * @param   array  $template  ?
+     * @param array $template ?
      *
-     * @return boolean|string
+     * @return bool|string
      *
      * @since 8.0
      */
     public function getTemplate($template): bool|string
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query->select('tc.id, tc.templatecode,tc.type,tc.filename');
         $query->from('#__bsms_templatecode as tc');

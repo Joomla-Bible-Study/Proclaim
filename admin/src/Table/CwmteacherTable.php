@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -84,7 +85,7 @@ class CwmteacherTable extends Table
     public function bind($array, $ignore = '')
     {
         if (array_key_exists('params', $array) && is_array($array['params'])) {
-            $registry = new Registry;
+            $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = (string)$registry;
         }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -226,7 +227,7 @@ class CwmseriesdisplaysModel extends ListModel
         $query->select('s.id as sid, s.series_id, s.studydate');
         $query->join('INNER', '#__bsms_studies as s on s.series_id = se.id');
         $query->group('se.id');
-        $where = $this->_buildContentWhere();
+        $where = $this->buildContentWhere();
         $query->where($where);
 
         // Filter by language
@@ -251,7 +252,7 @@ class CwmseriesdisplaysModel extends ListModel
      * @throws \Exception
      * @since 7.0
      */
-    public function _buildContentWhere(): string
+    public function buildContentWhere(): string
     {
         $mainframe      = Factory::getApplication();
         $input          = $mainframe->input;
@@ -284,7 +285,7 @@ class CwmseriesdisplaysModel extends ListModel
             $filters = $params->get('series_id');
 
             switch ($filters) {
-                case is_array($filters) :
+                case is_array($filters):
                     foreach ($filters as $filter) {
                         if ($filter === '-1') {
                             break;

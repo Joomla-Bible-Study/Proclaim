@@ -3,7 +3,7 @@
     <fieldset>
         <field name="published"
                type="list"
-               class="span12 small"
+               class="col-12 small"
                id="published"
                label="JSTATUS"
                description="JFIELD_PUBLISHED_DESC"
@@ -59,14 +59,14 @@
         <field name="image" type="media" directory="biblestudy" label="JBS_CMN_SERIES_THUMBNAIL"
                labelclass="control-label"/>
         <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
-               description="JFIELD_ACCESS_DESC" class="span12 small" size="1"/>
+               description="JFIELD_ACCESS_DESC" class="col-12 small" size="1"/>
         <field name="asset_id" type="hidden" filter="unset"/>
         <field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
                translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
                section="serie" validate="rules"/>
         <field name="id" type="hidden" default="0"/>
         <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-               description="COM_CONTENT_FIELD_LANGUAGE_DESC" class="span12 small"
+               description="COM_CONTENT_FIELD_LANGUAGE_DESC" class="col-12 small"
         >
             <option value="*">JALL</option>
         </field>

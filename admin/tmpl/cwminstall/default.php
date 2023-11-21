@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Default
  *
@@ -75,7 +76,7 @@ $wa->addInlineScript(
 
             <div id="backup-complete">
                 <?php
-                if (!$this->more): ?>
+                if (!$this->more) : ?>
                     <div class="alert alert-info">
                         <p><?php
                             echo Text::_('JBS_LBL_REDIRECT_IN_3S');
@@ -86,7 +87,7 @@ $wa->addInlineScript(
 								}, 3000);"
                                 ); ?></p>
                     </div>
-                <?php
+                    <?php
                 endif; ?>
             </div>
             <?php
