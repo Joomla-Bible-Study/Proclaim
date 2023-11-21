@@ -240,7 +240,7 @@ class HtmlView extends BaseHtmlView
                     'proclaim' => 1,
                 ),
                 'system' => array(
-                    'proclaimbackup'  => 0,
+                    'proclaim'  => 0,
                     'proclaimpodcast' => 0,
                 )
             )
