@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package    Joomla.Test
  *
@@ -14,41 +15,41 @@
  */
 class TestMockController
 {
-	/**
-	 * Creates and instance of the mock JController object.
-	 *
-	 * @param   object  $test  A test object.
-	 *
-	 * @return  object
-	 *
-	 * @since   12.1
-	 */
-	public static function create($test)
-	{
-		// Collect all the relevant methods in JController.
-		$methods = array(
-			'execute',
-			'getApplication',
-			'getInput',
-			'serialize',
-			'unserialize',
-		);
+    /**
+     * Creates and instance of the mock JController object.
+     *
+     * @param   object  $test  A test object.
+     *
+     * @return  object
+     *
+     * @since   12.1
+     */
+    public static function create($test)
+    {
+        // Collect all the relevant methods in JController.
+        $methods = array(
+            'execute',
+            'getApplication',
+            'getInput',
+            'serialize',
+            'unserialize',
+        );
 
-		// Create the mock.
-		$mockObject = $test->getMock(
-			'JControllerBase',
-			$methods,
-			// Constructor arguments.
-			array(),
-			// Mock class name.
-			'',
-			// Call original constructor.
-			false
-		);
+        // Create the mock.
+        $mockObject = $test->getMock(
+            'JControllerBase',
+            $methods,
+            // Constructor arguments.
+            array(),
+            // Mock class name.
+            '',
+            // Call original constructor.
+            false
+        );
 
-		// TODO  Mock the input.
-		TestReflection::setValue($mockObject, 'input', new JInput);
+        // TODO  Mock the input.
+        TestReflection::setValue($mockObject, 'input', new JInput());
 
-		return $mockObject;
-	}
+        return $mockObject;
+    }
 }

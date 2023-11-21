@@ -1,144 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
 <media>
-	<fields name="params">
-		<fieldset name="general"
-		          addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Legacy\Field">
-			<field name="filename"
-			       type="Media"
-			       label="JBS_MED_FILENAME"
-			       description="JBS_MED_USE_FILENAME_AS_PATH"
-				   directory="/images/biblestudy/media/"
-				   types="images,audios,videos,documents"
-			       required="true"/>
-			<field name="size" type="Filesize" label="JBS_CMN_FILESIZE"
-			       description="JBS_MED_FILESIZE_DESC" class="form-control" size="35"/>
-			<field name="media_hours" type="text" label="JBS_CMN_HOURS" description="" default="00" size="2">
-			</field>
-			<field name="media_minutes" type="text" label="JBS_CMN_MINUTES" description="" default="00" size="2">
-			</field>
-			<field name="media_seconds" type="text" label="JBS_CMN_SECONDS" description="" default="00" size="2">
-			</field>
-		</fieldset>
-		<fieldset name="parameters1">
-			<field name="special" type="list" label="JBS_MED_LINK_TARGET"
-			       description="JBS_MED_LINK_TARGET_DESC"
-			       class="form-select-color-state"
-			       size="1"
-			       default=""
-			       validate="options">
-				<option value="">JGLOBAL_USE_GLOBAL</option>
-				<option value="_blank">JBS_MED_LINK_TARGET_BLANK</option>
-				<option value="_self">JBS_MED_LINK_TARGET_SELF</option>
-				<option value="_parent">JBS_MED_LINK_TARGET_PARENT</option>
-				<option value="_top">JBS_MED_LINK_TARGET_TOP</option>
-			</field>
-			<field name="link_type" type="list" extension="com_proclaim"
-			       label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
-			       class="form-select-color-state"
-			       size="1"
-			       default=""
-			       validate="options">
-				<option value="">JGLOBAL_USE_GLOBAL</option>
-				<option value="0">JBS_MED_NO_DOWNLOAD_ICON</option>
-				<option value="1">JBS_MED_SHOW_DOWNLOAD_ICON</option>
-				<option value="2">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
-			</field>
-			<field name="player" type="list" label="JBS_MED_PLAYER"
-			       description="JBS_MED_PLAYER_DESC"
-			       class="form-select-color-state"
-			       size="1"
-			       default=""
-			       validate="options">
-				<option value="">JGLOBAL_USE_GLOBAL</option>
-				<option value="0">JBS_CMN_DIRECT_LINK</option>
-				<option value="1">JBS_CMN_USE_INTERNAL_PLAYER</option>
-				<option value="3">JBS_CMN_USE_AV</option>
-				<option value="7">JBS_CMN_USE_MP3_PLAYER</option>
-				<option value="8">JBS_CMN_USE_EMBED_CODE</option>
-			</field>
-			<field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
-			       description="JBS_MED_INTERNAL_POPUP_DESC"
-			       class="form-select-color-state"
-			       size="1"
-			       default=""
-			       validate="options">
-				<option value="">JGLOBAL_USE_GLOBAL</option>
-				<option value="1">JBS_CMN_POPUP</option>
-				<option value="2">JBS_CMN_INLINE</option>
-				<option value="3">JBS_CMN_SQUEEZEBOX</option>
-			</field>
-		</fieldset>
-		<fieldset name="parameters2" label="JBS_ADDON_LOCAL_MEDIA_PARAMETERS">
-			<field name="media_image" type="media" directory="biblestudy"
-			       label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
-			       class="inputbox span6">
-			</field>
-			<field name="media_use_button_icon" label="JBS_ADDON_LOCAL_MEDIA_USE_BUTTON"
-			       description="JBS_ADDON_MEDIA_USE_BUTTON_DESC"
-			       class="form-select-color-state"
-			       size="1"
-			       default=""
-			       validate="options">
-				<option value="-1">JBS_MED_SERVER_OPTIONS</option>
-				<option value="">JBS_MED_NONE</option>
-				<option value="1">JBS_MED_BUTTON_ONLY</option>
-				<option value="2">JBS_MED_BUTTON_AND_ICON</option>
-				<option value="3">JBS_MED_ICON_ONLY</option>
-			</field>
-			<field name="media_button_text" type="text" default="Audio" label="JBS_ADDON_LOCAL_BUTTON_TEXT"
-			       description="JBS_ADDON_LOCAL_BUTTON_TEXT_DESC"/>
-			<field name="media_button_type" type="list"
-			       class="form-select-color-state"
-			       size="1"
-			       default=""
-			       validate="options"
-			       label="JBS_ADDON_LOCAL_BUTTON_TYPE"
-			       description="JBS_ADDON_LOCAL_BUTTON_TYPE_DESC">
-				<option value="btn-link">JBS_MED_NO_COLOR</option>
-				<option value="btn-primary">JBS_MED_PRIMARY</option>
-				<option value="btn-success">JBS_MED_SUCCESS</option>
-				<option value="btn-info">JBS_MED_INFO</option>
-				<option value="btn-warning">JBS_MED_WARNING</option>
-				<option value="btn-danger">JBS_MED_DANGER</option>
-			</field>
-			<field name="media_button_color" type="color" description="JBS_ADDON_LOCAL_BUTTON_COLOR_DESC"
-			       label="JBS_ADDON_LOCAL_BUTTON_COLOR"/>
-			<field name="media_icon_type" type="IconType"
-				   class="form-select-color-state"
-				   size="1"
-				   default=""
-				   validate="options"
-			       label="JBS_ADDON_LOCAL_ICON_TYPE"
-			       description="JBS_ADDON_LOCAL_ICON_TYPE_DESC">
-			</field>
-			<field name="media_custom_icon" type="text" default="" label="JBS_ADDON_LOCAL_CUSTOM_ICON"
-			       description="JBS_ADDON_LOCAL_CUSTOM_ICON_DESC"/>
-			<field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_LOCAL_FONT_SIZE"
-			       description="JBS_ADDON_LOCAL_FONT_SIZE_DESC"/>
-			<field name="mime_type" type="MimeType" extension="com_proclaim"
-			       label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
-			       class="inputbox" default="">
-			</field>
-			<field name="playerwidth" default="" type="text" label="JBS_MED_PLAYERWIDTH"
-			       description="JBS_MED_PLAYERWIDTH_DESC"/>
-			<field name="playerheight" default="" type="text"
-			       label="JBS_MED_PLAYERHIGHT" description="JBS_MED_PLAYERHIGHT_DESC"/>
-			<field name="itempopuptitle" type="textarea" cols="54" rows="10" default="" filter="raw"
-			       label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_MED_MEDIA_POPUPTITLE_FOOTER_DESC"/>
-			<field name="itempopupfooter" type="textarea" cols="54" rows="10" default="" filter="raw"
-			       label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_MED_MEDIA_POPUPTITLE_FOOTER_DESC"/>
-			<field name="popupmargin" type="text" default="50"
-			       label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_MED_MEDIA_POPUPMARGIN_DESC"/>
-			<field name="autostart" type="list"
-			       label="JBS_CMN_MEDIA_AUTOSTART" description="JBS_CMN_MEDIA_AUTOSTART_DESC"
-			       class="form-select-color-state"
-			       size="1"
-			       default=""
-			       validate="options">
-				<option value="">JGLOBAL_USE_GLOBAL</option>
-				<option value="true">JYES</option>
-				<option value="false">JNO</option>
-			</field>
-		</fieldset>
-	</fields>
+    <fields name="params">
+        <fieldset name="general"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Legacy\Field">
+            <field name="filename"
+                   type="Media"
+                   label="JBS_MED_FILENAME"
+                   description="JBS_MED_USE_FILENAME_AS_PATH"
+                   directory="/images/biblestudy/media/"
+                   types="images,audios,videos,documents"
+                   required="true"/>
+            <field name="size" type="Filesize" label="JBS_CMN_FILESIZE"
+                   description="JBS_MED_FILESIZE_DESC" class="form-control" size="35"/>
+            <field name="media_hours" type="text" label="JBS_CMN_HOURS" description="" default="00" size="2">
+            </field>
+            <field name="media_minutes" type="text" label="JBS_CMN_MINUTES" description="" default="00" size="2">
+            </field>
+            <field name="media_seconds" type="text" label="JBS_CMN_SECONDS" description="" default="00" size="2">
+            </field>
+        </fieldset>
+        <fieldset name="parameters1">
+            <field name="special" type="list" label="JBS_MED_LINK_TARGET"
+                   description="JBS_MED_LINK_TARGET_DESC"
+                   class="form-select-color-state"
+                   size="1"
+                   default=""
+                   validate="options">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="_blank">JBS_MED_LINK_TARGET_BLANK</option>
+                <option value="_self">JBS_MED_LINK_TARGET_SELF</option>
+                <option value="_parent">JBS_MED_LINK_TARGET_PARENT</option>
+                <option value="_top">JBS_MED_LINK_TARGET_TOP</option>
+            </field>
+            <field name="link_type" type="list" extension="com_proclaim"
+                   label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
+                   class="form-select-color-state"
+                   size="1"
+                   default=""
+                   validate="options">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">JBS_MED_NO_DOWNLOAD_ICON</option>
+                <option value="1">JBS_MED_SHOW_DOWNLOAD_ICON</option>
+                <option value="2">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
+            </field>
+            <field name="player" type="list" label="JBS_MED_PLAYER"
+                   description="JBS_MED_PLAYER_DESC"
+                   class="form-select-color-state"
+                   size="1"
+                   default=""
+                   validate="options">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">JBS_CMN_DIRECT_LINK</option>
+                <option value="1">JBS_CMN_USE_INTERNAL_PLAYER</option>
+                <option value="3">JBS_CMN_USE_AV</option>
+                <option value="7">JBS_CMN_USE_MP3_PLAYER</option>
+                <option value="8">JBS_CMN_USE_EMBED_CODE</option>
+            </field>
+            <field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
+                   description="JBS_MED_INTERNAL_POPUP_DESC"
+                   class="form-select-color-state"
+                   size="1"
+                   default=""
+                   validate="options">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="1">JBS_CMN_POPUP</option>
+                <option value="2">JBS_CMN_INLINE</option>
+                <option value="3">JBS_CMN_SQUEEZEBOX</option>
+            </field>
+        </fieldset>
+        <fieldset name="parameters2" label="JBS_ADDON_LOCAL_MEDIA_PARAMETERS">
+            <field name="media_image" type="media" directory="biblestudy"
+                   label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
+                   class="inputbox col-6">
+            </field>
+            <field name="media_use_button_icon" label="JBS_ADDON_LOCAL_MEDIA_USE_BUTTON"
+                   description="JBS_ADDON_MEDIA_USE_BUTTON_DESC"
+                   class="form-select-color-state"
+                   size="1"
+                   default=""
+                   validate="options">
+                <option value="-1">JBS_MED_SERVER_OPTIONS</option>
+                <option value="">JBS_MED_NONE</option>
+                <option value="1">JBS_MED_BUTTON_ONLY</option>
+                <option value="2">JBS_MED_BUTTON_AND_ICON</option>
+                <option value="3">JBS_MED_ICON_ONLY</option>
+            </field>
+            <field name="media_button_text" type="text" default="Audio" label="JBS_ADDON_LOCAL_BUTTON_TEXT"
+                   description="JBS_ADDON_LOCAL_BUTTON_TEXT_DESC"/>
+            <field name="media_button_type" type="list"
+                   class="form-select-color-state"
+                   size="1"
+                   default=""
+                   validate="options"
+                   label="JBS_ADDON_LOCAL_BUTTON_TYPE"
+                   description="JBS_ADDON_LOCAL_BUTTON_TYPE_DESC">
+                <option value="btn-link">JBS_MED_NO_COLOR</option>
+                <option value="btn-primary">JBS_MED_PRIMARY</option>
+                <option value="btn-success">JBS_MED_SUCCESS</option>
+                <option value="btn-info">JBS_MED_INFO</option>
+                <option value="btn-warning">JBS_MED_WARNING</option>
+                <option value="btn-danger">JBS_MED_DANGER</option>
+            </field>
+            <field name="media_button_color" type="color" description="JBS_ADDON_LOCAL_BUTTON_COLOR_DESC"
+                   label="JBS_ADDON_LOCAL_BUTTON_COLOR"/>
+            <field name="media_icon_type" type="IconType"
+                   class="form-select-color-state"
+                   size="1"
+                   default=""
+                   validate="options"
+                   label="JBS_ADDON_LOCAL_ICON_TYPE"
+                   description="JBS_ADDON_LOCAL_ICON_TYPE_DESC">
+            </field>
+            <field name="media_custom_icon" type="text" default="" label="JBS_ADDON_LOCAL_CUSTOM_ICON"
+                   description="JBS_ADDON_LOCAL_CUSTOM_ICON_DESC"/>
+            <field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_LOCAL_FONT_SIZE"
+                   description="JBS_ADDON_LOCAL_FONT_SIZE_DESC"/>
+            <field name="mime_type" type="MimeType" extension="com_proclaim"
+                   label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
+                   class="inputbox" default="">
+            </field>
+            <field name="playerwidth" default="" type="text" label="JBS_MED_PLAYERWIDTH"
+                   description="JBS_MED_PLAYERWIDTH_DESC"/>
+            <field name="playerheight" default="" type="text"
+                   label="JBS_MED_PLAYERHIGHT" description="JBS_MED_PLAYERHIGHT_DESC"/>
+            <field name="itempopuptitle" type="textarea" cols="54" rows="10" default="" filter="raw"
+                   label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_MED_MEDIA_POPUPTITLE_FOOTER_DESC"/>
+            <field name="itempopupfooter" type="textarea" cols="54" rows="10" default="" filter="raw"
+                   label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_MED_MEDIA_POPUPTITLE_FOOTER_DESC"/>
+            <field name="popupmargin" type="text" default="50"
+                   label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_MED_MEDIA_POPUPMARGIN_DESC"/>
+            <field name="autostart" type="list"
+                   label="JBS_CMN_MEDIA_AUTOSTART" description="JBS_CMN_MEDIA_AUTOSTART_DESC"
+                   class="form-select-color-state"
+                   size="1"
+                   default=""
+                   validate="options">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="true">JYES</option>
+                <option value="false">JNO</option>
+            </field>
+        </fieldset>
+    </fields>
 </media>

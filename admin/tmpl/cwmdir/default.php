@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -7,6 +8,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 // No direct access
 defined('_JEXEC') or die();
 

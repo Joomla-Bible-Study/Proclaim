@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package    Joomla.Test
  *
@@ -14,40 +15,40 @@
  */
 class TestMockApplication
 {
-	/**
-	 * Creates and instance of the mock JApplication object.
-	 *
-	 * @param   object  $test  A test object.
-	 *
-	 * @return  object
-	 *
-	 * @since   11.3
-	 */
-	public static function create($test)
-	{
-		// Collect all the relevant methods in JApplication (work in progress).
-		$methods = array(
-			'get',
-			'getCfg',
-			'getIdentity',
-			'getRouter',
-			'getTemplate',
-		);
+    /**
+     * Creates and instance of the mock JApplication object.
+     *
+     * @param   object  $test  A test object.
+     *
+     * @return  object
+     *
+     * @since   11.3
+     */
+    public static function create($test)
+    {
+        // Collect all the relevant methods in JApplication (work in progress).
+        $methods = array(
+            'get',
+            'getCfg',
+            'getIdentity',
+            'getRouter',
+            'getTemplate',
+        );
 
-		// Create the mock.
-		$mockObject = $test->getMock(
-			'JApplication',
-			$methods,
-			// Constructor arguments.
-			array(),
-			// Mock class name.
-			'',
-			// Call original constructor.
-			false
-		);
+        // Create the mock.
+        $mockObject = $test->getMock(
+            'JApplication',
+            $methods,
+            // Constructor arguments.
+            array(),
+            // Mock class name.
+            '',
+            // Call original constructor.
+            false
+        );
 
-		$mockObject->input = new JInput;
+        $mockObject->input = new JInput();
 
-		return $mockObject;
-	}
+        return $mockObject;
+    }
 }

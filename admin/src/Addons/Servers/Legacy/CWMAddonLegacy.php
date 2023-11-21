@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -8,12 +9,15 @@
  * @link       https://www.christianwebministries.org
  * */
 
+namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Legacy;
+
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
-use CWM\Component\Proclaim\Administrator\Helper\CWMUploadScript;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmuploadscript;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\Input\Input;
@@ -26,133 +30,125 @@ use Joomla\Input\Input;
  */
 class CWMAddonLegacy extends CWMAddon
 {
-	/**
-	 * Name of Add-on
-	 *
-	 * @var     string
-	 * @since   9.0.0
-	 */
-	protected $name = 'Legacy';
+    /**
+     * Name of Add-on
+     *
+     * @var     string
+     * @since   9.0.0
+     */
+    protected $name = 'Legacy';
 
-	/**
-	 * Description of add-on
-	 *
-	 * @var     string
-	 * @since   9.0.0
-	 */
-	protected $description = 'Legacy Server that we brought over from 8.x.x version of proclaim';
+    /**
+     * Description of add-on
+     *
+     * @var     string
+     * @since   9.0.0
+     */
+    protected $description = 'Legacy Server that we brought over from 8.x.x version of proclaim';
 
-	/**
-	 * Upload
-	 *
-	 * @param   Input|array  $data  Data to upload
-	 *
-	 * @return array
-	 *
-	 * @throws \Exception
-	 * @since 9.0.0
-	 */
-	public function upload($data): array
-	{
-		return (new CWMUploadScript)->upload($data);
-	}
+    /**
+     * Upload
+     *
+     * @param array|Input $data  Data to upload
+     *
+     * @return array
+     *
+     * @throws \Exception
+     * @since 9.0.0
+     */
+    public function upload(Input|array $data): array
+    {
+        return (new Cwmuploadscript())->upload($data);
+    }
 
-	/**
-	 * Render Fields for general view.
-	 *
-	 * @param   object  $media_form  Media files form
-	 * @param   bool    $new         If media is new
-	 *
-	 * @return string
-	 *
-	 * @since 9.1.3
-	 */
-	public function renderGeneral($media_form, $new): string
-	{
-		$html = '';
+    /**
+     * Render Fields for general view.
+     *
+     * @param   object  $media_form  Media files form
+     * @param bool $new         If media is new
+     *
+     * @return string
+     *
+     * @since 9.1.3
+     */
+    public function renderGeneral($media_form, bool $new): string
+    {
+        $html = '';
 
-		foreach ($media_form->getFieldset('general') as $field)
-		:
-			$html .= '<div class="control-group">';
-			$html .= '<div class="control-label">';
-			$html .= $field->label;
-			$html .= '</div>';
-			$html .= '<div class="controls">';
+        foreach ($media_form->getFieldset('general') as $field) :
+            $html .= '<div class="control-group">';
+            $html .= '<div class="control-label">';
+            $html .= $field->label;
+            $html .= '</div>';
+            $html .= '<div class="controls">';
 
-			// Way to set defaults on new media
-			if ($new)
-			{
-				$s_name = $field->fieldname;
+            // Way to set defaults on new media
+            if ($new) {
+                $s_name = $field->fieldname;
 
-				if (isset($media_form->s_params[$s_name]))
-				{
-					$field->setValue($media_form->s_params[$s_name]);
-				}
-			}
+                if (isset($media_form->s_params[$s_name])) {
+                    $field->setValue($media_form->s_params[$s_name]);
+                }
+            }
 
-			$html .= $field->input;
-			$html .= '</div>';
-			$html .= '</div>';
-		endforeach;
+            $html .= $field->input;
+            $html .= '</div>';
+            $html .= '</div>';
+        endforeach;
 
-		return $html;
-	}
+        return $html;
+    }
 
-	/**
-	 * Render Layout and fields
-	 *
-	 * @param   object  $media_form  Media files form
-	 * @param   bool    $new         If media is new
-	 *
-	 * @return string
-	 *
-	 * @since 9.1.3
-	 */
-	public function render($media_form, $new): string
-	{
-		$html = '';
+    /**
+     * Render Layout and fields
+     *
+     * @param   object  $media_form  Media files form
+     * @param bool $new         If media is new
+     *
+     * @return string
+     *
+     * @since 9.1.3
+     */
+    public function render($media_form, bool $new): string
+    {
+        $html = '';
 
-		$html .= HTMLHelper::_('uitab.addTab', 'myTab', 'options', Text::_('Options'));
+        $html .= HTMLHelper::_('uitab.addTab', 'myTab', 'options', Text::_('Options'));
 
-		$html .= '<div class="row-fluid">';
+        $html .= '<div class="row-fluid">';
 
-		foreach ($media_form->getFieldsets('params') as $name => $fieldset)
-		{
-			if ($name !== 'general')
-			{
-				$html .= '<div class="span6">';
+        foreach ($media_form->getFieldsets('params') as $name => $fieldset) {
+            if ($name !== 'general') {
+                $html .= '<div class="col-6">';
 
-				foreach ($media_form->getFieldset($name) as $field)
-				:
-					$html .= '<div class="control-group">';
-					$html .= '<div class="control-label">';
-					$html .= $field->label;
-					$html .= '</div>';
-					$html .= '<div class="controls">';
+                foreach ($media_form->getFieldset($name) as $field) :
+                    $html .= '<div class="control-group">';
+                    $html .= '<div class="control-label">';
+                    $html .= $field->label;
+                    $html .= '</div>';
+                    $html .= '<div class="controls">';
 
-					// Way to set defaults on new media
-					if ($new)
-					{
-						$s_name = $field->fieldname;
+                    // Way to set defaults on new media
+                    if ($new) {
+                        $s_name = $field->fieldname;
 
-						if (isset($media_form->s_params[$s_name]))
-						{
-							$field->setValue($media_form->s_params[$s_name]);
-						}
-					}
+                        if (isset($media_form->s_params[$s_name])) {
+                            $field->setValue($media_form->s_params[$s_name]);
+                        }
+                    }
 
-					$html .= $field->input;
-					$html .= '</div>';
-					$html .= '</div>';
-				endforeach;
+                    $html .= $field->input;
+                    $html .= '</div>';
+                    $html .= '</div>';
+                endforeach;
 
-				$html .= '</div>';
-			}
-		}
+                $html .= '</div>';
+            }
+        }
 
-		$html .= '</div>';
-		$html .= HTMLHelper::_('uitab.endTab');
+        $html .= '</div>';
+        $html .= HTMLHelper::_('uitab.endTab');
 
-		return $html;
-	}
+        return $html;
+    }
 }

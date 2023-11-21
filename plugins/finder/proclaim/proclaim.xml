@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" group="finder" method="upgrade">
-	<name>plg_finder_proclaim</name>
-	<author>CWM Team</author>
-	<creationDate>October 1, 2022</creationDate>
-	<copyright>(C) 2007 Proclaim All rights reserved.</copyright>
-	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-	<authorEmail>info@christianwebministries.org</authorEmail>
-	<authorUrl>www.christianwebministries.org</authorUrl>
-	<version>10.0.0</version>
-	<description>PLG_FINDER_PROCLAIM_XML_DESCRIPTION</description>
-	<namespace path="src">CWM\Plugin\Finder\Proclaim</namespace>
-	<files>
-		<folder plugin="proclaim">services</folder>
-		<folder>src</folder>
-	</files>
+    <name>plg_finder_proclaim</name>
+    <author>CWM Team</author>
+    <creationDate>Nov 14, 2023</creationDate>
+    <copyright>(C) 2007 Proclaim All rights reserved.</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <authorEmail>info@christianwebministries.org</authorEmail>
+    <authorUrl>www.christianwebministries.org</authorUrl>
+    <version>10.0.0.DEV-20231114</version>
+    <description>PLG_FINDER_PROCLAIM_XML_DESCRIPTION</description>
+    <namespace path="src">CWM\Plugin\Finder\Proclaim</namespace>
+    <files>
+        <folder plugin="proclaim">services</folder>
+        <folder>src</folder>
+    </files>
 </extension>

@@ -39,6 +39,8 @@
     <scriptfile>script.proclaim.php</scriptfile>
 
     <updateservers>
-        <server type="extension" priority="1" name="CWM Proclaim for Joomla!">https://www.christionwebministries.com/updates/pkgadmintoolspro.xml</server>
+        <server type="extension" priority="1" name="CWM Proclaim for Joomla!">
+            https://www.christionwebministries.com/updates/pkgadmintoolspro.xml
+        </server>
     </updateservers>
 </extension>

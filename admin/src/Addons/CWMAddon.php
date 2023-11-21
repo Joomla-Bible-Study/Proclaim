@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -12,13 +13,12 @@ namespace CWM\Component\Proclaim\Administrator\Addons;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
-use JLoader;
-use Joomla\Filesystem\Path;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\Log\Log;
 use Joomla\Input\Input;
+use Joomla\CMS\Language\Text;
+use Joomla\Filesystem\Path;
 use SimpleXMLElement;
 
 /**
@@ -28,196 +28,180 @@ use SimpleXMLElement;
  */
 abstract class CWMAddon
 {
-	/**
-	 * Addon configuration
-	 *
-	 * @var     object
-	 * @since   9.0.0
-	 */
-	protected $xml = null;
+    /**
+     * Path for the class to load
+     *
+     * @var bool|string
+     * @since 10.0.0
+     */
+    private static string|bool $path;
 
-	/**
-	 * Name of Add-on
-	 *
-	 * @var     string
-	 * @since   9.0.0
-	 */
-	protected $name = '';
+    /**
+     * Addon configuration
+     *
+     * @var     bool|null|SimpleXMLElement
+     * @since   9.0.0
+     */
+    protected bool|null|SimpleXMLElement $xml = null;
 
-	/**
-	 * Description of add-on
-	 *
-	 * @var     string
-	 * @since   9.0.0
-	 */
-	protected $description = '';
+    /**
+     * Name of Add-on
+     *
+     * @var     string
+     * @since   9.0.0
+     */
+    protected $name = '';
 
-	/**
-	 * Config information
-	 *
-	 * @var     string
-	 * @since   9.0.0
-	 */
-	protected $config = '';
+    /**
+     * Description of add-on
+     *
+     * @var     string
+     * @since   9.0.0
+     */
+    protected $description = '';
 
-	/**
-	 * The type of server
-	 *
-	 * @var     string
-	 * @since   9.0.0
-	 */
-	protected $type = '';
+    /**
+     * Config information
+     *
+     * @var     string
+     * @since   9.0.0
+     */
+    protected $config = '';
 
-	/**
-	 * Construct
-	 *
-	 * @param   array  $config  Array of Obtains
-	 *
-	 * @throws \Exception
-	 *
-	 * @since 9.0.0
-	 */
-	public function __construct($config = array())
-	{
-		if (empty($this->type))
-		{
-			if (array_key_exists('type', $config))
-			{
-				$this->type = $config['type'];
-			}
-			else
-			{
-				$this->type = $this->getType();
-			}
-		}
+    /**
+     * The type of server
+     *
+     * @var     string
+     * @since   9.0.0
+     */
+    protected $type = '';
 
-		if (empty($this->xml))
-		{
-			$this->xml = $this->getXml();
+    /**
+     * Construct
+     *
+     * @param array $config Array of Obtains
+     *
+     * @throws \Exception
+     *
+     * @since 9.0.0
+     */
+    public function __construct(array $config = array())
+    {
+        if (empty($this->type)) {
+            if (array_key_exists('type', $config)) {
+                $this->type = $config['type'];
+            } else {
+                $this->type = $this->getType();
+            }
+        }
 
-			if ($this->xml)
-			{
-				$this->name        = $this->xml->name->__toString();
-				$this->description = $this->xml->description->__toString();
-				$this->config      = $this->xml->config;
-			}
-		}
-	}
+        if (empty($this->xml)) {
+            $this->xml = $this->getXml();
 
-	/**
-	 * Gets the type of addon loaded based on the class name
-	 *
-	 * @return  string
-	 *
-	 * @throws  \Exception
-	 * @since   9.0.0
-	 */
-	public function getType()
-	{
-		if (empty($this->type))
-		{
-			$r = null;
+            if ($this->xml) {
+                $this->name = $this->xml->name->__toString();
+                $this->description = $this->xml->description->__toString();
+                $this->config = $this->xml->config;
+            }
+        }
+    }
 
-			if (!preg_match('/CWMAddon(.*)/i', get_class($this), $r))
-			{
-				throw new \RuntimeException(Text::sprintf('JBS_CMN_CANT_ADDON_CLASS_NAME', $this->type), 500);
-			}
+    /**
+     * Gets the type of addon loaded based on the class name
+     *
+     * @return  string
+     *
+     * @throws  \Exception
+     * @since   9.0.0
+     */
+    public function getType(): string
+    {
+        if (empty($this->type)) {
+            $r = null;
 
-			$this->type = strtolower($r[1]);
-		}
+            if (!preg_match('/CWMAddon(.*)/i', get_class($this), $r)) {
+                throw new \RuntimeException(Text::sprintf('JBS_CMN_CANT_ADDON_CLASS_NAME', $this->type), 500);
+            }
 
-		return $this->type;
-	}
+            $this->type = strtolower($r[1]);
+        }
 
-	/**
-	 * Loads the addon configuration from the xml file
-	 *
-	 * @return  boolean|SimpleXMLElement
-	 *
-	 * @throws  \Exception
-	 * @since   9.0.0
-	 */
-	public function getXml()
-	{
-		$path = Path::find(BIBLESTUDY_PATH_ADMIN . '/src/Addons/Servers/' . ucfirst($this->type), $this->type . '.xml');
+        return $this->type;
+    }
 
-		if ($path)
-		{
-			$xml = simplexml_load_string(file_get_contents($path));
-		}
-		else
-		{
-			throw new \RuntimeException(Text::_('JBS_CMN_COULD_NOT_LOAD_ADDON_CONFIGURATION'), 404);
-		}
+    /**
+     * Loads the addon configuration from the xml file
+     *
+     * @return  bool|SimpleXMLElement
+     *
+     * @throws  \Exception
+     * @since   9.0.0
+     */
+    public function getXml(): SimpleXMLElement|bool
+    {
+        $path = Path::find(BIBLESTUDY_PATH_ADMIN . '/src/Addons/Servers/' . ucfirst($this->type), $this->type . '.xml');
 
-		return $xml;
-	}
+        if ($path) {
+            $xml = simplexml_load_string(file_get_contents($path));
+        } else {
+            throw new \RuntimeException(Text::_('JBS_CMN_COULD_NOT_LOAD_ADDON_CONFIGURATION'), 404);
+        }
 
-	/**
-	 * Returns a Addon object, always creating it
-	 *
-	 * @param   string  $type    ?
-	 * @param   array   $config  ?
-	 *
-	 * @return mixed
-	 *
-	 * @since   9.0.0
-	 */
-	public static function getInstance(string $type, array $config = array())
-	{
-		$type       = ucfirst(preg_replace('/[^A-Z0-9_\.-]/i', '', $type));
-		$addonClass = "CWMAddon" . ucfirst($type);
+        return $xml;
+    }
 
-		if (!class_exists($addonClass))
-		{
-			$path = Path::find(BIBLESTUDY_PATH_ADMIN . '/src/Addons/Servers/' . ucfirst($type) . '/', 'CWMAddon' . $type . '.php');
+    /**
+     * Returns a Addon object, always creating it
+     *
+     * @param string $type ?
+     * @param array $config ?
+     *
+     * @return mixed
+     *
+     * @since   9.0.0
+     */
+    public static function getInstance(string $type, array $config = array()): mixed
+    {
+        $type = ucfirst(preg_replace('/[^A-Z0-9_\.-]/i', '', $type));
+        $class = "CWM\Component\Proclaim\Administrator\Addons\Servers\\" . ucfirst($type) . "\CWMAddon" . ucfirst(
+            $type
+        );
 
-			// Try and load missing class
-			JLoader::register($addonClass, $path);
+        return new $class($config);
+    }
 
-			if (!$path)
-			{
-				Log::add(Text::sprintf('JBS_CMN_CANT_ADDON_LOAD_CLASS_NAME', $addonClass), Log::WARNING, 'jerror');
+    /**
+     * Render Fields for general view.
+     *
+     * @param object $media_form Media files form
+     * @param bool $new If media is new
+     *
+     * @return string
+     *
+     * @since 9.1.3
+     */
+    abstract protected function renderGeneral($media_form, bool $new): string;
 
-				return false;
-			}
-		}
+    /**
+     * Render Layout and fields
+     *
+     * @param object $media_form Media files form
+     * @param bool $new If media is new
+     *
+     * @return string
+     *
+     * @since 9.1.3
+     */
+    abstract protected function render($media_form, bool $new): string;
 
-		return new $addonClass($config);
-	}
-
-	/**
-	 * Render Fields for general view.
-	 *
-	 * @param   object  $media_form  Media files form
-	 * @param   bool    $new         If media is new
-	 *
-	 * @return string
-	 *
-	 * @since 9.1.3
-	 */
-	abstract protected function renderGeneral($media_form, $new): string;
-
-	/**
-	 * Render Layout and fields
-	 *
-	 * @param   object  $media_form  Media files form
-	 * @param   bool    $new         If media is new
-	 *
-	 * @return string
-	 *
-	 * @since 9.1.3
-	 */
-	abstract protected function render($media_form, $new): string;
-
-	/**
-	 * Upload
-	 *
-	 * @param   Input|array  $data  Data to upload
-	 *
-	 * @return mixed
-	 *
-	 * @since 9.0.0
-	 */
-	abstract protected function upload($data);
+    /**
+     * Upload
+     *
+     * @param Input|array $data Data to upload
+     *
+     * @return mixed
+     *
+     * @since 9.0.0
+     */
+    abstract protected function upload(Input|array $data): mixed;
 }

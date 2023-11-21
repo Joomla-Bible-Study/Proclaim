@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -7,12 +8,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       https://www.christianwebministries.org
  * */
+
 // No direct access
 defined('_JEXEC') or die();
 
 ?>
-        <input type="hidden" name="current_folder" value="<?php echo $this->currentFolder; ?>" />
-        <input type="hidden" name="<?php echo JSession::getFormToken(); ?>" value="1" />
-        </tbody>
-    </table>
+<input type="hidden" name="current_folder" value="<?php
+echo $this->currentFolder; ?>"/>
+<input type="hidden" name="<?php
+echo JSession::getFormToken(); ?>" value="1"/>
+</tbody>
+</table>
 </form>

@@ -10,8 +10,8 @@
 
 namespace CWM\Module\Proclaim\Site\Dispatcher;
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
-use CWM\Component\Proclaim\Site\Helper\CWMPagebuilder;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
 use Joomla\CMS\Helper\HelperFactoryAwareInterface;
 use Joomla\CMS\Helper\HelperFactoryAwareTrait;
@@ -29,150 +29,127 @@ use Joomla\Registry\Registry;
  */
 class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareInterface
 {
-	use HelperFactoryAwareTrait;
+    use HelperFactoryAwareTrait;
 
-	/**
-	 * Returns the layout data.
-	 *
-	 * @return  array
-	 *
-	 * @throws \Exception
-	 * @since   4.2.0
-	 */
-	protected function getLayoutData(): array
-	{
-		// Always load Proclaim API if it exists.
-		$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
+    /**
+     * Returns the layout data.
+     *
+     * @return  array
+     *
+     * @throws \Exception
+     * @since   4.2.0
+     */
+    protected function getLayoutData(): array
+    {
+        // Always load Proclaim API if it exists.
+        $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
-		if (file_exists($api))
-		{
-			require_once $api;
-		}
-		else
-		{
-			return [];
-		}
+        if (file_exists($api)) {
+            require_once $api;
+        } else {
+            return [];
+        }
 
-		$data = parent::getLayoutData();
+        $data = parent::getLayoutData();
 
-		$templatemenuid = $data['params']->get('t');
+        $templatemenuid = $data['params']->get('t');
 
-		try
-		{
-			$data['cwmtemplate'] = CWMParams::getTemplateparams($templatemenuid);
-		}
-		catch (\Exception $e)
-		{
-			$this->app->enqueueMessage($e, 'error');
-		}
+        try {
+            $data['cwmtemplate'] = Cwmparams::getTemplateparams($templatemenuid);
+        } catch (\Exception $e) {
+            $this->app->enqueueMessage($e, 'error');
+        }
 
-		$pagebuilder = new CWMPageBuilder;
+        $pagebuilder = new Cwmpagebuilder();
 
-		$admin = CWMParams::getAdmin();
-		/** @var Registry $admin_params */
-		$admin_params = $admin->params;
-		$admin_params->merge($data['cwmtemplate']->params);
-		$admin_params->merge($data['params']);
-		$data['params'] = $admin_params;
+        $admin = Cwmparams::getAdmin();
+        /** @var Registry $admin_params */
+        $admin_params = $admin->params;
+        $admin_params->merge($data['cwmtemplate']->params);
+        $admin_params->merge($data['params']);
+        $data['params'] = $admin_params;
 
 
-		$data['list'] = $this->getHelperFactory()->getHelper('ModProclaimHelper')->getLatest($data['params'], $this->getApplication());
+        $data['list'] = $this->getHelperFactory()->getHelper('ModProclaimHelper')->getLatest(
+            $data['params'],
+            $this->getApplication()
+        );
 
-		if ($data['params']->get('useexpert_module') > 0 || is_string($data['params']->get('moduletemplate')) === true)
-		{
-			foreach ($data['list'] AS $item)
-			{
-				try
-				{
-					$pelements = $pagebuilder->buildPage($item, $data['params'], $data['cwmtemplate']);
-				}
-				catch (\Exception $e)
-				{
-					$this->app->enqueueMessage($e, 'error');
-				}
+        if (
+            $data['params']->get('useexpert_module') > 0 || is_string(
+                $data['params']->get('moduletemplate')
+            ) === true
+        ) {
+            foreach ($data['list'] as $item) {
+                try {
+                    $pelements = $pagebuilder->buildPage($item, $data['params'], $data['cwmtemplate']);
+                } catch (\Exception $e) {
+                    $this->app->enqueueMessage($e, 'error');
+                }
 
-				$item->scripture1 = $pelements->scripture1;
-				$item->scripture2 = $pelements->scripture2;
-				$item->media      = $pelements->media;
+                $item->scripture1 = $pelements->scripture1;
+                $item->scripture2 = $pelements->scripture2;
+                $item->media      = $pelements->media;
 
-				if (isset($pelements->duration))
-				{
-					$item->duration = $pelements->duration;
-				}
-				else
-				{
-					$item->duration = null;
-				}
+                if (isset($pelements->duration)) {
+                    $item->duration = $pelements->duration;
+                } else {
+                    $item->duration = null;
+                }
 
-				if (isset($pelements->studydate))
-				{
-					$item->studydate = $pelements->studydate;
-				}
-				else
-				{
-					$item->studydate = null;
-				}
+                if (isset($pelements->studydate)) {
+                    $item->studydate = $pelements->studydate;
+                } else {
+                    $item->studydate = null;
+                }
 
-				$item->topics = $pelements->topics;
+                $item->topics = $pelements->topics;
 
-				if (isset($pelements->study_thumbnail))
-				{
-					$item->study_thumbnail = $pelements->study_thumbnail;
-				}
-				else
-				{
-					$item->study_thumbnail = null;
-				}
+                if (isset($pelements->study_thumbnail)) {
+                    $item->study_thumbnail = $pelements->study_thumbnail;
+                } else {
+                    $item->study_thumbnail = null;
+                }
 
-				if (isset($pelements->series_thumbnail))
-				{
-					$item->series_thumbnail = $pelements->series_thumbnail;
-				}
-				else
-				{
-					$item->series_thumbnail = null;
-				}
+                if (isset($pelements->series_thumbnail)) {
+                    $item->series_thumbnail = $pelements->series_thumbnail;
+                } else {
+                    $item->series_thumbnail = null;
+                }
 
-				$item->detailslink = $pelements->detailslink;
-			}
-		}
+                $item->detailslink = $pelements->detailslink;
+            }
+        }
 
-		$link_text = $data['params']->get('pagetext');
+        $link_text = $data['params']->get('pagetext');
 
-		$input = $this->input;
+        $input = $this->input;
 
-		if (!$templatemenuid)
-		{
-			$templatemenuid = $input->getInt('templatemenuid', 1);
-		}
+        if (!$templatemenuid) {
+            $templatemenuid = $input->getInt('templatemenuid', 1);
+        }
 
-		$linkurl = Route::_('index.php?option=com_proclaim&view=cwmsermons&t=' . $templatemenuid);
-		$data['link']    = '<a href="' . $linkurl . '"><button class="btn btn-primary">' . $link_text . '</button></a>';
+        $linkurl = Route::_('index.php?option=com_proclaim&view=cwmsermons&t=' . $templatemenuid);
+        $data['link'] = '<a href="' . $linkurl . '"><button class="btn btn-primary">' . $link_text . '</button></a>';
 
-		$wa = $this->app->getDocument()->getWebAssetManager();
-		$wa->useStyle('com_proclaim.cwmcore');
-		$wa->useStyle('com_proclaim.general');
+        $wa = $this->app->getDocument()->getWebAssetManager();
+        $wa->useStyle('com_proclaim.cwmcore');
+        $wa->useStyle('com_proclaim.general');
 
-		$url = $data['params']->get('stylesheet');
+        $url = $data['params']->get('stylesheet');
 
-		if ($url)
-		{
-			$wa->load($url);
-		}
+        if ($url) {
+            $wa->load($url);
+        }
 
-		if ($data['params']->get('simple_mode') === '1')
-		{
-			$data['params']->set('layout', 'default_simple');
-		}
-		elseif ($data['params']->get('moduletemplate') && !$data['params']->get('simple_mode'))
-		{
-			$data['params']->set('layout', 'default_' . $data['params']->get('moduletemplate'));
-		}
-		else
-		{
-			$data['params']->set('layout', 'default_main');
-		}
+        if ($data['params']->get('simple_mode') === '1') {
+            $data['params']->set('layout', 'default_simple');
+        } elseif ($data['params']->get('moduletemplate') && !$data['params']->get('simple_mode')) {
+            $data['params']->set('layout', 'default_' . $data['params']->get('moduletemplate'));
+        } else {
+            $data['params']->set('layout', 'default_main');
+        }
 
-		return $data;
-	}
+        return $data;
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -12,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
@@ -26,33 +28,37 @@ use Joomla\CMS\Session\Session;
  */
 class UploadField extends FormField
 {
-	/**
-	 * @var string
-	 * @since 9.0.0
-	 */
-	public $type = 'Uploads';
+    /**
+     * @var string
+     * @since 9.0.0
+     */
+    public $type = 'Uploads';
 
-	/**
-	 * Get Input
-	 *
-	 * @return string
-	 *
-	 * @throws \Exception
-	 * @since 9.0.0
-	 */
-	protected function getInput(): string
-	{
-		$wa = $this->document->getWebAssetManager();
-		$wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
-		$wa->useScript('/administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/plupload.full.min.js')
-			->useScript('/administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/legacy.js');
+    /**
+     * Get Input
+     *
+     * @return string
+     *
+     * @throws \Exception
+     * @since 9.0.0
+     */
+    protected function getInput(): string
+    {
+        $wa = $this->document->getWebAssetManager();
+        $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
+        $wa->useScript(
+            '/administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/plupload.full.min.js'
+        )
+            ->useScript('/administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/legacy.js');
 
-		// Include Plupload libraries
-		$document = Factory::getApplication()->getDocument();
+        // Include Plupload libraries
+        $document = Factory::getApplication()->getDocument();
 
-		$document->addScriptDeclaration('
+        $document->addScriptDeclaration(
+            '
             jQuery(document).ready(function() {
-                uploader.setOption("url", "index.php?option=com_proclaim&task=cwmmediafile.xhr&' . Session::getFormToken() . '=1");
+                uploader.setOption("url", "index.php?option=com_proclaim&task=cwmmediafile.xhr&' . Session::getFormToken(
+            ) . '=1");
                 uploader.bind("BeforeUpload", function() {
                     var path = jQuery("#jform_params_localFolder").val();
                     var type = jQuery("#jform_serverType").val();
@@ -64,17 +70,18 @@ class UploadField extends FormField
                 });
                 uploader.init();
             });
-            ');
+            '
+        );
 
-		$class = $this->getAttribute('class') ? (string) $this->getAttribute('class') : '';
+        $class = $this->getAttribute('class') ? (string)$this->getAttribute('class') : '';
 
-		$required = 'requires="' . $this->getAttribute('required') . '"';
+        $required = 'requires="' . $this->getAttribute('required') . '"';
 
-		$html = '<div class="control-group">
+        $html = '<div class="control-group">
                         <div class="input-append">
                         <input type="text" placeholder="Enter the upload path" class="' . $class . '" name="' . $this->name .
-			'" id="' . $this->id . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' . $required . '/>
-			<input id="uploader-file" placeholder="Choose a media file" style="border-left: 0; border-radius: 0;" class="span7" type="text" disabled>
+            '" id="' . $this->id . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' . $required . '/>
+			<input id="uploader-file" placeholder="Choose a media file" style="border-left: 0; border-radius: 0;" class="col-7" type="text" disabled>
                            <a id="btn-upload" class="btn btn-success" disabled>
                              <i class="icon-upload"></i>
                              Upload
@@ -90,9 +97,9 @@ class UploadField extends FormField
                         </div>
                         </div>
                     </div>';
-		$html .= '
+        $html .= '
             ';
 
-		return $html;
-	}
+        return $html;
+    }
 }

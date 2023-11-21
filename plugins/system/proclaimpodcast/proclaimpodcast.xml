@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="10.0.0" type="plugin" group="system" method="upgrade">
+<extension type="plugin" group="system" method="upgrade">
     <name>plg_system_proclaimpodcast</name>
     <author>CWM Team</author>
     <authorEmail>info@christianwebministries.org</authorEmail>
     <authorUrl>https://www.christianwebministries.org</authorUrl>
-    <copyright>(C) 2007 - 2019 Proclaim All rights reserved.</copyright>
-    <version>10.0.0</version>
-    <creationDate>October 1, 2022</creationDate>
-    <license>http://www.gnu.org/licenses/gpl.html</license>
+    <copyright>(C) 2007 Proclaim All rights reserved.</copyright>
+    <version>10.0.0.DEV-20231114</version>
+    <creationDate>Nov 14, 2023</creationDate>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <description>PLG_SYSTEM_PROCLAIMPODCAST_XML_DESCRIPTION</description>
     <namespace path="src">Joomla\Plugin\System\ProclaimPodcast</namespace>
     <!-- Runs on install/uninstall/update; New in 1.7 -->
@@ -29,25 +29,29 @@
                       addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
                 <field name="dummy" type="LoadLanguageFile" default=""/>   <!-- load common language file -->
                 <field name="email" type="list" default="0"
-                       label="PLG_SYSTEM_PROCLAIMPODCAST_EMAIL_SEND" description="PLG_SYSTEM_PROCLAIMPODCAST_EMAIL_SEND_DESC">
+                       label="PLG_SYSTEM_PROCLAIMPODCAST_EMAIL_SEND"
+                       description="PLG_SYSTEM_PROCLAIMPODCAST_EMAIL_SEND_DESC">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                     <option value="2">JBS_PLG_PODCAST_ONLY_EMAIL_ERRORS</option>
                 </field>
                 <field name="recipients" type="text" default="" size="80"
-                       label="PLG_SYSTEM_PROCLAIMPODCAST_EMAIL_TO" description="PLG_SYSTEM_PROCLAIMPODCAST_EMAIL_TO_DESC"/>
+                       label="PLG_SYSTEM_PROCLAIMPODCAST_EMAIL_TO"
+                       description="PLG_SYSTEM_PROCLAIMPODCAST_EMAIL_TO_DESC"/>
                 <field name="subject" type="text"
                        default="Proclaim Podcast(s) Published" size="60"
                        label="PLG_SYSTEM_PROCLAIMPODCAST_EMAIL_SUBJECT" description=""/>
                 <field name="body" type="text" default="Podcast(s) publishing status:"
                        size="60" label="PLG_SYSTEM_PROCLAIMPODCAST_EMAIL_BODY" description=""/>
                 <field name="method" type="list" default="0"
-                       label="PLG_SYSTEM_PROCLAIMPODCAST_GENERATE_METHOD" description="PLG_SYSTEM_PROCLAIMPODCAST_GENERATE_METHOD_DESC">
+                       label="PLG_SYSTEM_PROCLAIMPODCAST_GENERATE_METHOD"
+                       description="PLG_SYSTEM_PROCLAIMPODCAST_GENERATE_METHOD_DESC">
                     <option value="0">PLG_SYSTEM_PROCLAIMPODCAST_HOURS</option>
                     <option value="1">PLG_SYSTEM_PROCLAIMPODCAST_SCHEDULE</option>
                 </field>
                 <field name="xhours" type="text" default="24" size="3"
-                       label="PLG_SYSTEM_PROCLAIMPODCAST_GENERATE_EVERY" description="PLG_SYSTEM_PROCLAIMPODCAST_GENERATE_EVERY_DESC"/>
+                       label="PLG_SYSTEM_PROCLAIMPODCAST_GENERATE_EVERY"
+                       description="PLG_SYSTEM_PROCLAIMPODCAST_GENERATE_EVERY_DESC"/>
                 <field name="day1" type="list" default="0" label="PLG_SYSTEM_PROCLAIMPODCAST_DAY1"
                        description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_DAY">
                     <option value="-1">PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_DAY</option>
@@ -60,7 +64,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour1" type="list" default="0"
-                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY1" description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
+                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY1"
+                       description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
                     <option value="0">PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -99,7 +104,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour2" type="list" default="0"
-                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY2" description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
+                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY2"
+                       description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
                     <option value="0">PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -138,7 +144,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour3" type="list" default="0"
-                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY3" description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
+                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY3"
+                       description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
                     <option value="0">PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -177,7 +184,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour4" type="list" default="0"
-                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY4" description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
+                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY4"
+                       description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
                     <option value="0">PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -216,7 +224,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour5" type="list" default="0"
-                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY5" description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
+                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY5"
+                       description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
                     <option value="0">PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -255,7 +264,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour6" type="list" default="0"
-                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY6" description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
+                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY6"
+                       description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
                     <option value="0">PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -294,7 +304,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour7" type="list" default="0"
-                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY7" description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
+                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY7"
+                       description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
                     <option value="0">PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -333,7 +344,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour8" type="list" default="0"
-                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY8" description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
+                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY8"
+                       description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
                     <option value="0">PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -372,7 +384,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour9" type="list" default="0"
-                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY9" description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
+                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY9"
+                       description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
                     <option value="0">PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -411,7 +424,8 @@
                     <option value="6">SATURDAY</option>
                 </field>
                 <field name="hour10" type="list" default="0"
-                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY10" description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
+                       label="PLG_SYSTEM_PROCLAIMPODCAST_HOUR_DAY10"
+                       description="PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR">
                     <option value="0">PLG_SYSTEM_PROCLAIMPODCAST_CHOOSE_HOUR</option>
                     <option value="1">1:00</option>
                     <option value="2">2:00</option>
@@ -456,7 +470,6 @@
     </tables>
     <!-- Dependencies -->
     <dependencies>
-        <dependency type="platform" name="joomla" operator="="
-                    version="3.2"/>
+        <dependency type="platform" name="joomla" operator="=" version="3.2"/>
     </dependencies>
 </extension>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -12,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Form\FormField;
@@ -24,24 +26,24 @@ use Joomla\CMS\Form\FormField;
  */
 class TopicsFormField extends FormField
 {
-	/**
-	 * Set type to topics
-	 *
-	 * @var string
-	 *
-	 * @since 9.0.0
-	 */
-	public $type = 'TopicsForm';
+    /**
+     * Set type to topics
+     *
+     * @var string
+     *
+     * @since 9.0.0
+     */
+    public $type = 'TopicsForm';
 
-	/**
-	 * Get input form
-	 *
-	 * @return string
-	 *
-	 * @since 9.0.0
-	 */
-	protected function getInput(): string
-	{
-		return '<input type="hidden" id="topics" name="jform[topics]"/>';
-	}
+    /**
+     * Get input form
+     *
+     * @return string
+     *
+     * @since 9.0.0
+     */
+    protected function getInput(): string
+    {
+        return '<input type="hidden" id="topics" name="jform[topics]"/>';
+    }
 }
