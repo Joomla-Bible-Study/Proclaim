@@ -21,8 +21,8 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Client\ClientHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Path;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Path;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
@@ -54,7 +54,7 @@ class Cwmpodcast
     private string $filename;
 
     /**
-     * Make Podcasts
+     * Make All Podcasts
      *
      * @return string
      *
@@ -72,21 +72,20 @@ class Cwmpodcast
         $language = Factory::getApplication()->getLanguage();
         $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 
-        // First get all of the podcast that are published
+        // First, get all podcasts that are published
         $query = $db->getQuery(true);
         $query->select('*')
             ->from('#__bsms_podcast')
             ->where('#__bsms_podcast.published = ' . 1);
         $db->setQuery($query);
         $podids     = $db->loadObjectList();
-        $custom     = new Cwmcustom();
         $CWMlisting = new Cwmlisting();
         $title      = null;
 
         // Now iterate through the podcasts, and pick up the mediafiles
         if ($podids) {
             foreach ($podids as $podinfo) {
-                // Work Around all language
+                // Work Around all languages
                 if ($podinfo->language === '*') {
                     $podlanguage = Factory::getApplication()->getConfig()->get('language');
                 } else {
@@ -586,7 +585,7 @@ class Cwmpodcast
         $ftp = ClientHelper::getCredentials('ftp');
 
         // Try to make the template file writable
-        if (!$ftp['enabled'] && File::exists($file) && !Path::setPermissions($file, '0755')) {
+        if (!$ftp['enabled'] && is_file($file) && !Path::setPermissions($file, '0755')) {
             Factory::getApplication()->enqueueMessage('Could not make the file writable', 'notice');
         }
 
@@ -634,7 +633,7 @@ class Cwmpodcast
      *
      * @param   string  $filename  File name of media.
      *
-     * @return integer
+     * @return int
      *
      * @since 9.2.4
      */
@@ -666,7 +665,7 @@ class Cwmpodcast
 
                     fseek($fd, $info['Framesize'] - 10, SEEK_CUR);
                     $duration += ($info['Samples'] / $info['Sampling Rate']);
-                } elseif (strpos($block, 'TAG') === 0) {
+                } elseif (str_starts_with($block, 'TAG')) {
                     fseek($fd, 128 - 10, SEEK_CUR);
                     // Skip over id3v1 tag size
                 } else {
@@ -797,12 +796,12 @@ class Cwmpodcast
     /**
      * Frame size setup
      *
-     * @param   integer  $layer        Layer
-     * @param   integer  $bitrate      Bit Rate
-     * @param   integer  $sample_rate  Sample rate
-     * @param   integer  $padding_bit  Padding
+     * @param   int  $layer        Layer
+     * @param   int  $bitrate      Bit Rate
+     * @param   int  $sample_rate  Sample rate
+     * @param   int  $padding_bit  Padding
      *
-     * @return integer
+     * @return int
      *
      * @since 9.2.4
      */
@@ -830,7 +829,7 @@ class Cwmpodcast
         $disallowed = array('http://', 'https://');
 
         foreach ($disallowed as $d) {
-            if (strpos($url, $d) === 0) {
+            if (str_starts_with($url, $d)) {
                 return str_replace($d, '', $url);
             }
         }

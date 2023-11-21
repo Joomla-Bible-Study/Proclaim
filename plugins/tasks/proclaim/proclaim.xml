@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="plugin" group="task" method="upgrade">
+	<name>plg_task_proclaim</name>
+	<author>CWM Team</author>
+	<creationDate>2021-08</creationDate>
+	<copyright>(C) 2007 Proclaim All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>info@christianwebministries.org</authorEmail>
+	<authorUrl>www.christianwebministries.org</authorUrl>
+	<version>10.0.0.DEV-20231114</version>
+	<description>PLG_TASK_PROCLAIM_XML_DESCRIPTION</description>
+	<namespace path="src">CWM\Plugin\Task\Proclaim</namespace>
+	<files>
+		<folder plugin="proclaim">services</folder>
+		<folder>src</folder>
+		<folder>forms</folder>
+		<folder>language</folder>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/plg_task_proclaim.ini</language>
+		<language tag="en-GB">language/en-GB/plg_task_proclaim.sys.ini</language>
+	</languages>
+</extension>
