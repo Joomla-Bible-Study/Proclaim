@@ -1,11 +1,11 @@
 <?php
 
 /**
- * @package         Joomla.Plugin
- * @subpackage      Finder.content
- *
- * @copyright   (C) 2023 Open Source Matters, Inc. <https://www.joomla.org>
- * @license         GNU General Public License version 2 or later; see LICENSE.txt
+ * @package        Proclaim.Finder
+ * @subpackage     plg_finder_proclaim
+ * @copyright  (C) 2007 CWM Team All rights reserved
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
+ * @link           https://www.christianwebministries.org
  */
 
 \defined('_JEXEC') or die;

@@ -5,7 +5,7 @@
  *
  * @package        Proclaim.Admin
  * @copyright  (C) 2007 - 2012 CWM Team All rights reserved
- * @license        http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
 

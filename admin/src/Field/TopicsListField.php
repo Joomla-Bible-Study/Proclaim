@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2022 (C) CWM Team All rights reserved
+ * @copyright  (C) 2007 CWM Team All rights reserved
  * @license    http://www.gnu.org/copyleft/gpl.HtmlHelper GNU/GPL
  * @link       https://www.christianwebministries.org
  * */

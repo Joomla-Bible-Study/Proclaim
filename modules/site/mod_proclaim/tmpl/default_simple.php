@@ -3,11 +3,11 @@
 /**
  * Mod_Proclaim core file
  *
- * @package     Proclaim
- * @subpackage  Module.Proclaim
- * @copyright   2007 - 2019 (C) CWM Team All rights reserved
- * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link        https://www.christianwebministries.org
+ * @package         Proclaim
+ * @subpackage      mod_proclaim
+ * @copyright   (C) 2007 CWM Team All rights reserved
+ * @license         GNU General Public License version 2 or later; see LICENSE.txt
+ * @link            https://www.christianwebministries.org
  * */
 
 // phpcs:disable PSR1.Files.SideEffects

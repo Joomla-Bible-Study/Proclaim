@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Joomla! Content Management System
- *
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @package        Proclaim.Site
+ * @copyright  (C) 2007 CWM Team All rights reserved
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
+ * @link           https://www.christianwebministries.org
  */
 
 namespace CWM\Component\Proclaim\Site\Service;

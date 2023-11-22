@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Helper for mod_biblestudy.php
+ * Helper for
  *
  * @package     Proclaim
- * @subpackage  Model.BibleStudy
- * @copyright   2007 - 2019 (C) CWM Team All rights reserved
- * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @subpackage  mod.proclaim
+ * @copyright   (C) 2007 CWM Team All rights reserved
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  * @link        https://www.christianwebministries.org
  * */
 
@@ -27,7 +27,7 @@ use Joomla\Registry\Registry;
  * BibleStudy mod helper
  *
  * @package     Proclaim
- * @subpackage  Model.BibleStudy
+ * @subpackage  mod.proclaim
  * @since       7.1.0
  */
 class ProclaimHelper implements DatabaseAwareInterface

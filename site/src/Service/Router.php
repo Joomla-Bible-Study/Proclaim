@@ -1,11 +1,10 @@
 <?php
 
 /**
- * @package     Proclaim.Site
- * @subpackage  com_Proclaim
- *
- * @copyright   Copyright (C) 2007 - 2021 Christian Web Ministries.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @package        Proclaim.Site
+ * @copyright  (C) 2007 CWM Team All rights reserved
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
+ * @link           https://www.christianwebministries.org
  */
 
 namespace CWM\Component\Proclaim\Site\Service;

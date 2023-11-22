@@ -2,9 +2,9 @@
 
 /**
  * @package     Proclaim
- * @subpackage  Plugin.JBSBackup
+ * @subpackage  Plugin.Backup
  * @copyright   2007 - 2019 (C) CWM Team All rights reserved
- * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  * @link        https://www.christianwebministries.org
  * */
 
@@ -29,7 +29,7 @@ use Joomla\Registry\Registry;
  * CWM Proclaim Backup Plugin class
  *
  * @package     Proclaim
- * @subpackage  Plugin.JBSBackup
+ * @subpackage  Plugin.Backup
  * @since       7.1.0
  */
 class PlgSystemProclaimBackup extends CMSPlugin

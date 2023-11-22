@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @package         Joomla.Site
- * @subpackage      com_contact
+ * @package         Proclaim.Site
+ * @subpackage      com_proclaim
  *
- * @copyright   (C) 2016 Open Source Matters, Inc. <https://www.joomla.org>
+ * @copyright   (C) 2007 CWM Team All rights reserved
  * @license         GNU General Public License version 2 or later; see LICENSE.txt
  */
 

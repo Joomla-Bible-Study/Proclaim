@@ -1,11 +1,11 @@
 <?php
 
 /**
- * @package         Joomla.Plugins
- * @subpackage      Task.CheckFiles
- *
- * @copyright   (C) 2021 Open Source Matters, Inc. <https://www.joomla.org>
+ * @package         Proclaim.Plugins
+ * @subpackage      Task.Proclaim
+ * @copyright  (C)  2007 CWM Team All rights reserved
  * @license         GNU General Public License version 2 or later; see LICENSE.txt
+ * @link            https://www.christianwebministries.org
  */
 
 namespace CWM\Plugin\Task\Proclaim\Extension;
@@ -18,8 +18,6 @@ use Joomla\Component\Scheduler\Administrator\Task\Status;
 use Joomla\Component\Scheduler\Administrator\Traits\TaskPluginTrait;
 use Joomla\Event\DispatcherInterface;
 use Joomla\Event\SubscriberInterface;
-use Joomla\Filesystem\File;
-use Joomla\Filesystem\Folder;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;

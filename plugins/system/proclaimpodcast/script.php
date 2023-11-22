@@ -3,9 +3,10 @@
 /**
  * Part of Proclaim Package
  *
- * @package    Proclaim.Admin
- * @copyright  2007 - 2022 (C) CWM Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @package    Proclaim
+ * @subpackage  Plugin.Podcast
+ * @copyright  (C) 2007 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
@@ -21,7 +22,7 @@ use Joomla\CMS\Language\Text;
  * Script file of JBSPodcast component
  *
  * @package     Proclaim
- * @subpackage  Plugin.JBSPodcast
+ * @subpackage  Plugin.Podcast
  * @since       7.0.4
  */
 class PlgSystemJBSPodcastInstallerScript

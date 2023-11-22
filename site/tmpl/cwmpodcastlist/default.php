@@ -2,10 +2,10 @@
 /**
  * Default
  *
- * @package    Proclaim.Site
- * @copyright  2007 - 2016 (C) CWM Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       http://www.christianwebministries.org
+ * @package        Proclaim.Site
+ * @copyright  (C) 2007 CWM Team All rights reserved
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
+ * @link           https://www.christianwebministries.org
  * */
 
 // phpcs:disable PSR1.Files.SideEffects

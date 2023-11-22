@@ -3,11 +3,11 @@
 /**
  * Proclaim Script install
  *
- * @package    Proclaim.Admin
+ * @package    Proclaim
  * @subpackage com_proclaim
- *
- * @copyright  2007 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @copyright  (C) 2007 CWM Team All rights reserved
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
+ * @link           https://www.christianwebministries.org
  * */
 
 use Joomla\CMS\Factory;
