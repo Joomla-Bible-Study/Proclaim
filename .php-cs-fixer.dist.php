@@ -1,9 +1,9 @@
 <?php
 /**
- * @package    Proclaim.Site
+ * @package        Proclaim.Site
  *
  * @copyright  (C) 2021 Open Source Matters, Inc. <https://www.joomla.org>
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 /**
@@ -29,20 +29,16 @@
  *        ./libraries/vendor/bin/php-cs-fixer fix administrator/index.php
  */
 
-// Add all the core Joomla folders
+// Add all the core Proclaim folders
 $finder = PhpCsFixer\Finder::create()
     ->in(
         [
-            __DIR__ . '/admin',
-            __DIR__ . '/api',
-            __DIR__ . '/build',
-            __DIR__ . '/cache',
-            __DIR__ . '/cli',
-            __DIR__ . '/site',
-            __DIR__ . '/includes',
-            __DIR__ . '/modules',
-            __DIR__ . '/plugins',
-            __DIR__ . '/tests',
+            './admin',
+            './build',
+            './site',
+            './modules',
+            './plugins',
+            './tests',
         ]
     )
     // Ignore template files as PHP CS fixer can't handle them properly
@@ -77,9 +73,14 @@ $config
             // Remove unused imports
             'no_unused_imports'              => true,
             // Classes from the global namespace should not be imported
-            'global_namespace_import'        => ['import_classes' => false, 'import_constants' => false, 'import_functions' => false],
+            'global_namespace_import'        => ['import_classes'   => false,
+                                                 'import_constants' => false,
+                                                 'import_functions' => false
+            ],
             // Alpha order imports
-            'ordered_imports'                => ['imports_order' => ['class', 'function', 'const'], 'sort_algorithm' => 'alpha'],
+            'ordered_imports'                => ['imports_order'  => ['class', 'function', 'const'],
+                                                 'sort_algorithm' => 'alpha'
+            ],
         ]
     )
     ->setFinder($finder);
