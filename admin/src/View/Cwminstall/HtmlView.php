@@ -3,10 +3,10 @@
 /**
  * Part of Proclaim Package
  *
- * @package    Proclaim.Admin
+ * @package        Proclaim.Admin
  * @copyright  (C) 2007 CWM Team All rights reserved
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
- * @link       https://www.christianwebministries.org
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
+ * @link           https://www.christianwebministries.org
  * */
 
 namespace CWM\Component\Proclaim\Administrator\View\CWMInstall;
@@ -29,12 +29,12 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var integer Total numbers of Steps
+    /** @var int Total numbers of Steps
      * @since    7.0.0
      */
     public int $totalSteps = 0;
 
-    /** @var integer Numbers of Steps already processed
+    /** @var int Numbers of Steps already processed
      * @since    7.0.0
      */
     public int $doneSteps = 0;
@@ -58,7 +58,7 @@ class HtmlView extends BaseHtmlView
     public string $version = '0.0.0';
 
     public array $query = [];
-    /** @var string Starte of install
+    /** @var string Start of installation
      * @since    7.0.0
      */
     public $state;
@@ -74,7 +74,7 @@ class HtmlView extends BaseHtmlView
      * @since    7.0.0
      */
     public array $install = [];
-    /** @var boolean More
+    /** @var bool More
      * @since    7.0.0
      */
     protected bool $more;
@@ -86,7 +86,7 @@ class HtmlView extends BaseHtmlView
      * @since    7.0.0
      */
     protected string $type;
-    /** @var array The pre versions to process
+    /** @var array The pre-versions to process
      * @since    7.0.0
      */
     private array $versionStack;
@@ -98,7 +98,7 @@ class HtmlView extends BaseHtmlView
      * @since    7.0.0
      */
     private array $finish = [];
-    /** @var integer If was imported
+    /** @var int If was imported
      * @since    7.0.0
      */
     private int $isimport = 0;
@@ -193,7 +193,7 @@ class HtmlView extends BaseHtmlView
             }
         }
 
-        $stack = json_decode($stack, true);
+        $stack = json_decode($stack, true, 512, JSON_THROW_ON_ERROR);
 
         $this->version       = $stack['aversion'];
         $this->versionStack  = $stack['version'];
@@ -218,6 +218,7 @@ class HtmlView extends BaseHtmlView
      * Setup Array for installation System
      *
      * @return void
+     * @throws \Exception
      * @since 7.0.0
      *
      */
@@ -239,15 +240,13 @@ class HtmlView extends BaseHtmlView
                 'finder' => array(
                     'proclaim' => 1,
                 ),
-                'system' => array(
-                    'proclaim'  => 0,
-                    'proclaimpodcast' => 0,
+                'task'   => array(
+                    'proclaim' => 1,
                 )
             )
         );
 
         // -- General settings
-        jimport('joomla.installer.installer');
         $db                       = Factory::getContainer()->get('DatabaseDriver');
         $this->status             = new \stdClass();
         $this->status->cwmmodules = array();

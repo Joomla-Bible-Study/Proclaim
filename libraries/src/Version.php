@@ -1,12 +1,16 @@
 <?php
 
 /**
- * Joomla! Content Management System
+ * Part of Proclaim Package
  *
- * @copyright  (C) 2005 Open Source Matters, Inc. <https://www.joomla.org>
+ * @package    Proclaim.Admin
+ * @subpackage Libraries
+ * @copyright  (C) 2007 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
- */
+ * @link       https://www.christianwebministries.org
+ * */
 
+namespace CWM\Proclaim\Libraries\Version;
 
 use Joomla\CMS\Cache\CacheController;
 use Joomla\CMS\Cache\CacheControllerFactoryInterface;

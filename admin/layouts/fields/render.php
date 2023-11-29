@@ -41,7 +41,10 @@ $fields    = null;
 if (array_key_exists('fields', $displayData)) {
     $fields = $displayData['fields'];
 } else {
-    $fields = $item->jcfields ?: FieldsHelper::getFields($context, $item, true);
+    try {
+        $fields = $item->jcfields ?: FieldsHelper::getFields($context, $item, true);
+    } catch (Exception $e) {
+    }
 }
 
 if (!$fields) {

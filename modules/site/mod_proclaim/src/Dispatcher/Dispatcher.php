@@ -20,14 +20,15 @@ use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
-// phpcs:enable PSR1.Files.SideEffects
 
-// Always load Proclaim API if it exists.
 $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
     require_once $api;
 }
+// phpcs:enable PSR1.Files.SideEffects
+
+// Always load Proclaim API if it exists.
 
 /**
  * Dispatcher class for mod_articles_latest
@@ -48,6 +49,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
      */
     protected function getLayoutData(): array
     {
+        /** @var array $data */
         $data = parent::getLayoutData();
 
 

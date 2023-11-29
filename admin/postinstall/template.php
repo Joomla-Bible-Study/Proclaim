@@ -12,6 +12,13 @@
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 
+// Always load Proclaim API if it exists.
+$api = '../components/com_proclaim/api.php';
+
+if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
+    require_once $api;
+}
+
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
@@ -29,13 +36,6 @@ use Joomla\Registry\Registry;
  */
 function admin_postinstall_template_condition(): bool
 {
-    // Always load Proclaim API if it exists.
-    $api = '../components/com_proclaim/api.php';
-
-    if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
-        require_once $api;
-    }
-
     $results = null;
 
     $db    = Factory::getContainer()->get('DatabaseDriver');
@@ -73,13 +73,6 @@ function admin_postinstall_template_condition(): bool
  */
 function admin_postinstall_template_action(): void
 {
-    // Always load Proclaim API if it exists.
-    $api = '../components/com_proclaim/api.php';
-
-    if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
-        require_once $api;
-    }
-
     $url = 'index.php?option=com_proclaim&view=templates';
     Factory::getApplication()->redirect($url);
 }

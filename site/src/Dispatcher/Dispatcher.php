@@ -11,6 +11,13 @@ namespace CWM\Component\Proclaim\Site\Dispatcher;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
+// Always load Proclaim API if it exists.
+$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
+
+if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
+    require_once $api;
+}
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
@@ -41,13 +48,6 @@ class Dispatcher extends ComponentDispatcher
     public function dispatch(): void
     {
         CwmproclaimHelper::applyViewAndController($this->defaultController);
-
-        // Always load Proclaim API if it exists.
-        $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
-
-        if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
-            require_once $api;
-        }
 
         if ($this->input->get('view') === 'cwmlandingpage' && $this->input->get('layout') === 'modal') {
             if (!$this->app->getIdentity()->authorise('core.create', 'com_proclaim')) {
