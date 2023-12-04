@@ -1,14 +1,16 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
- * @package    Proclaim.Admin
- * @copyright  2007 - 2022 (C) CWM Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @package    Proclaim.Site
+ * @copyright  (C) 2007 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Site\Controller;
-use Joomla\CMS\Factory;
+
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\User\CurrentUserInterface;
@@ -25,21 +27,21 @@ use Joomla\CMS\User\CurrentUserInterface;
  */
 class CwmteachersController extends BaseController
 {
-	/**
-	 * Proxy for getModel
-	 *
-	 * @param   string  $name    The name of the model
-	 * @param   string  $prefix  The prefix for the PHP class name
-	 * @param   array   $config  Set ignore request
-	 *
-	 * @return boolean|BaseDatabaseModel|CurrentUserInterface $model
-	 *
-	 * @since 7.0
-	 */
-	public function &getModel($name = 'CWMTeacher', $prefix = '', $config = array('ignore_request' => true))
-	{
-		$model = parent::getModel($name, $prefix, $config);
+    /**
+     * Proxy for getModel
+     *
+     * @param   string  $name    The name of the model
+     * @param   string  $prefix  The prefix for the PHP class name
+     * @param   array   $config  Set ignore request
+     *
+     * @return boolean|BaseDatabaseModel|CurrentUserInterface $model
+     *
+     * @since 7.0
+     */
+    public function &getModel($name = 'Cwmteacher', $prefix = '', $config = array('ignore_request' => true))
+    {
+        $model = parent::getModel($name, $prefix, $config);
 
-		return $model;
-	}
+        return $model;
+    }
 }

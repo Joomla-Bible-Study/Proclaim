@@ -1,15 +1,17 @@
 <?php
+
 /**
  * Batch Template
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2022 (C) CWM Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @copyright  (C) 2007 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Component\ComponentHelper;
@@ -20,49 +22,59 @@ use Joomla\CMS\Layout\LayoutHelper;
 
 $params = ComponentHelper::getParams('com_proclaim');
 
-$published = (int) $this->state->get('filter.published');
+$published = (int)$this->state->get('filter.published');
 
 $user = Factory::getApplication()->getSession()->get('user');
 ?>
 <div class="p-3">
-	<div class="row">
-		<?php if (Multilanguage::isEnabled()) : ?>
-			<div class="form-group col-md-6">
-				<div class="controls">
-					<?php echo LayoutHelper::render('joomla.html.batch.language', []); ?>
-				</div>
-			</div>
-		<?php endif; ?>
-		<div class="form-group col-md-6">
-			<div class="controls">
-				<?php echo LayoutHelper::render('joomla.html.batch.access', []); ?>
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<?php if ($published >= 0) : ?>
-			<div class="form-group col-md-6">
-				<div class="controls">
-					<?php echo LayoutHelper::render('joomla.html.batch.item', ['extension' => 'com_proclaim']); ?>
-				</div>
-			</div>
-		<?php endif; ?>
-	</div>
-	<div class="form-group col-md-4">
-		<div class="controls">
-			<?php echo HTMLHelper::_('Proclaim.Teacher'); ?>
-		</div>
-	</div>
+    <div class="row">
+        <?php
+        if (Multilanguage::isEnabled()) : ?>
+            <div class="form-group col-md-6">
+                <div class="controls">
+                    <?php
+                    echo LayoutHelper::render('joomla.html.batch.language', []); ?>
+                </div>
+            </div>
+            <?php
+        endif; ?>
+        <div class="form-group col-md-6">
+            <div class="controls">
+                <?php
+                echo LayoutHelper::render('joomla.html.batch.access', []); ?>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <?php
+        if ($published >= 0) : ?>
+            <div class="form-group col-md-6">
+                <div class="controls">
+                    <?php
+                    echo LayoutHelper::render('joomla.html.batch.item', ['extension' => 'com_proclaim']); ?>
+                </div>
+            </div>
+            <?php
+        endif; ?>
+    </div>
+    <div class="form-group col-md-4">
+        <div class="controls">
+            <?php
+            echo HTMLHelper::_('Proclaim.Teacher'); ?>
+        </div>
+    </div>
 </div>
 <div class="row">
-	<div class="form-group col-md-6">
-		<div class="controls">
-			<?php echo HTMLHelper::_('Proclaim.Series'); ?>
-		</div>
-	</div>
-	<div class="form-group col-md-4">
-		<div class="controls">
-			<?php echo HTMLHelper::_('Proclaim.MessageType'); ?>
-		</div>
-	</div>
+    <div class="form-group col-md-6">
+        <div class="controls">
+            <?php
+            echo HTMLHelper::_('Proclaim.Series'); ?>
+        </div>
+    </div>
+    <div class="form-group col-md-4">
+        <div class="controls">
+            <?php
+            echo HTMLHelper::_('Proclaim.MessageType'); ?>
+        </div>
+    </div>
 </div>

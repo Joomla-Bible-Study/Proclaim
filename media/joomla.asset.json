@@ -452,8 +452,6 @@
 		"core",
 		"jquery-noconflict",
 		"com_proclaim.modernizr",
-		"bootstrap.popover",
-		"bootstrap.es5",
 		"com_proclaim.popper"
 	  ],
 	  "version": "dfda2cadb929cf361efab69cd56c9ef003a65dbe"
