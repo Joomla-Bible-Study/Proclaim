@@ -14,6 +14,7 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -60,7 +61,7 @@ $user = Factory::getApplication()->getSession()->get('user');
     <div class="form-group col-md-4">
         <div class="controls">
             <?php
-            echo HTMLHelper::_('Proclaim.Teacher'); ?>
+            echo Cwmhelper::teacher(); ?>
         </div>
     </div>
 </div>
@@ -68,13 +69,13 @@ $user = Factory::getApplication()->getSession()->get('user');
     <div class="form-group col-md-6">
         <div class="controls">
             <?php
-            echo HTMLHelper::_('Proclaim.Series'); ?>
+            echo Cwmhelper::series(); ?>
         </div>
     </div>
     <div class="form-group col-md-4">
         <div class="controls">
             <?php
-            echo HTMLHelper::_('Proclaim.MessageType'); ?>
+            echo Cwmhelper::messageType(); ?>
         </div>
     </div>
 </div>

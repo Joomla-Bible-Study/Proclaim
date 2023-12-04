@@ -15,6 +15,7 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmjwplayer;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Html\HTMLHelper;
@@ -49,7 +50,10 @@ $CWMedia = new Cwmmedia();
     if ($this->params->get('player') === "1" || $this->player === 1 || $this->player === 7) {
         $player = new stdClass();
         $player->mp3 = $this->player === 7;
-        HtmlHelper::_('jwplayer.framework');
+        try {
+            Cwmjwplayer::framework();
+        } catch (Exception $e) {
+        }
         $path = Cwmhelper::mediaBuildUrl(
             $this->media->sparams->get('path'),
             $this->params->get('filename'),
@@ -72,7 +76,7 @@ $CWMedia = new Cwmmedia();
                     'player_height'
                 ) . '" style="border:0;" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
         } else {
-            echo HtmlHelper::_('jwplayer.render', $this->media, $this->params, true, $player);
+            echo Cwmjwplayer::render($this->media, $this->params, true, $player);
         }
     }
 

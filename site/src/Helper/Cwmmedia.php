@@ -16,9 +16,10 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmfancybox;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmjwplayer;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
-use JHtmlJwplayer;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
@@ -484,7 +485,7 @@ class Cwmmedia
                         break;
 
                     case 2: // Inline
-                        HtmlHelper::_('Jwplayer.framework', true, true);
+                        Cwmjwplayer::framework();
 
                         if ($player->player == 7) {
                             $player->playerheight    = '40';
@@ -691,7 +692,7 @@ class Cwmmedia
         string $path,
         bool $direct = false
     ): string {
-        HtmlHelper::_('fancybox.framework', true, true);
+        Cwmfancybox::framework();
 
         if ($player->player === '7' && !$direct) {
             $player->playerheight = '40';

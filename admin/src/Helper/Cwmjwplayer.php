@@ -1,13 +1,18 @@
 <?php
 
 /**
- * @package    Proclaim.Admin
+ * @package        Proclaim.Admin
  * @copyright  (C) 2007 CWM Team All rights reserved
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
- * @link       https://www.christianwebministries.org
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
+ * @link           https://www.christianwebministries.org
  */
 
-defined('JPATH_PLATFORM') or die;
+namespace CWM\Component\Proclaim\Administrator\Helper;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+
+// phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
@@ -19,20 +24,17 @@ use Joomla\Registry\Registry;
 /**
  * Utility class for JWplayer behaviors
  *
- * @todo        need to move to namespace insted
- *
  * @package     Proclaim.Admin
  * @subpackage  HTML
  * @since       3.0
- * @deprecated  10.0.0
  */
-abstract class JHtmlJwplayer
+class Cwmjwplayer
 {
     /**
      * @var    array  Array containing information for loaded files
      * @since  3.0
      */
-    protected static $loaded = array();
+    protected static array $loaded = array();
 
     /**
      * Method to load the JWplayer JavaScript framework into the document head
@@ -43,7 +45,6 @@ abstract class JHtmlJwplayer
      *
      * @throws \Exception
      * @since      3.0
-     * @deprecated 10.0.0
      */
     public static function framework(): void
     {
@@ -55,7 +56,7 @@ abstract class JHtmlJwplayer
         $doc    = Factory::getApplication()->getDocument();
         $params = Cwmparams::getAdmin()->params;
         $key    = $params->get('jwplayer_key', '8eJ+ik6aOUabfOisJzomcM2Z3h1VZ9+6cufBXQ==');
-        $cdn    = $params->get('jwplayer_cdn', 'https://content.jwplatform.com/libraries/HPyI6990.js');
+        $cdn    = $params->get('jwplayer_cdn');
 
         if ($cdn) {
             $doc->addScriptDeclaration('jwplayer.key="' . $key . '";');
@@ -80,9 +81,8 @@ abstract class JHtmlJwplayer
      * @return  string
      *
      * @since      9.0.0
-     * @deprecated 10.0.0
      */
-    public static function render($media, $params, $popup = false, $player = null, $t = null)
+    public static function render($media, $params, $popup = false, $player = null, $t = null): string
     {
         $popupmarg = 0;
 
