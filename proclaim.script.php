@@ -54,7 +54,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * @var    string
      * @since  3.6
      */
-    protected $minimumPhp = '8.0.0';
+    protected $minimumPhp = '8.1.0';
 
     /**
      * Minimum Joomla! version required to install the extension
@@ -107,9 +107,7 @@ class com_proclaimInstallerScript extends InstallerScript
         // -- plugins => { (folder) => { (element) => (published) }* }*
         'plugins' => [
             'finder' => ['proclaim' => 1],
-            'system' => [
-                'proclaimpodcast' => 0,
-                'proclaim'  => 0,
+            'task' => ['proclaim'  => 1,
             ],
         ],
     ];
