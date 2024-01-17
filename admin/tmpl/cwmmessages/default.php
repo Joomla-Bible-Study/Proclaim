@@ -43,7 +43,7 @@ $workflow_state    = false;
 $workflow_featured = false;
 if ($workflow_enabled) :
 // @todo move the script to a file
-    $js = <<<JS
+	$js = <<<JS
 	(function() {
 		document.addEventListener('DOMContentLoaded', function() {
 		  var elements = [].slice.call(document.querySelectorAll('.message-status'));
@@ -55,7 +55,7 @@ if ($workflow_enabled) :
 		  });
 		});
 	})();
-    JS;
+	JS;
 
     $wa->getRegistry()->addExtensionRegistryFile('com_workflow');
     $wa->useScript('com_workflow.admin-items-workflow-buttons')
