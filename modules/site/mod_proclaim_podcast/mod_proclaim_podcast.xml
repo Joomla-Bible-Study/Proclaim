@@ -2,12 +2,12 @@
 <extension type="module" client="site" method="upgrade">
     <name>mod_proclaim_podcast</name>
     <author>CWM Team</author>
-    <creationDate>Nov 14, 2023</creationDate>
+    <creationDate>Feb 15, 2024</creationDate>
     <copyright>(C) 2007 Christian Web Ministries All rights reserved.</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <authorEmail>info@christianwebministries.org</authorEmail>
     <authorUrl>www.christianwebministries.org</authorUrl>
-    <version>10.0.0.DEV-20231114</version>
+    <version>10.0.0-alpha.20230215</version>
     <description>MOD_PROCLAIM_PODCAST_XML_DESCRIPTION</description>
     <namespace path="src">CWM\Module\ProclaimPodcast</namespace>
     <files>
