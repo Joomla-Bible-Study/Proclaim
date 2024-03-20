@@ -56,15 +56,15 @@ class CwmtemplatecodeModel extends AdminModel
     /**
      * Method to get the record form.
      *
-     * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param   array  $data      Data for the form.
+     * @param   bool   $loadData  True if the form is to load its own data (default case), false if not.
      *
      * @return  mixed  A JForm object on success, false on failure
      *
      * @throws \Exception
      * @since    2.5
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = array(), $loadData = true): mixed
     {
         // Get the form.
         $form = $this->loadForm(
@@ -83,13 +83,13 @@ class CwmtemplatecodeModel extends AdminModel
     /**
      * Method to check-out a row for editing.
      *
-     * @param   integer  $pk  The numeric id of the primary key.
+     * @param   null  $pk  The numeric id of the primary key.
      *
-     * @return  boolean  False on failure or error, true otherwise.
+     * @return bool|int|null False on failure or error, true otherwise.
      *
      * @since   11.1
      */
-    public function checkout($pk = null)
+    public function checkout($pk = null): bool|int|null
     {
         return $pk;
     }
@@ -101,7 +101,7 @@ class CwmtemplatecodeModel extends AdminModel
      *
      * @since 7.0
      */
-    public function getType()
+    public function getType(): ?string
     {
         $item  = $this->getItem();
         $type2 = $item->type;
@@ -134,9 +134,6 @@ class CwmtemplatecodeModel extends AdminModel
             case 7:
                 $type = Text::_('JBS_TPLCODE_MODULE');
                 break;
-            case null:
-                $type = null;
-                break;
         }
 
         return $type;
@@ -145,13 +142,13 @@ class CwmtemplatecodeModel extends AdminModel
     /**
      * Method to get a single record.
      *
-     * @param   integer  $pk  The id of the primary key.
+     * @param   int  $pk  The id of the primary key.
      *
      * @return  mixed    Object on success, false on failure.
      *
      * @since    1.6
      */
-    public function getItem($pk = null)
+    public function getItem($pk = null): mixed
     {
         return parent::getItem($pk);
     }
@@ -212,7 +209,7 @@ class CwmtemplatecodeModel extends AdminModel
      * @throws \Exception
      * @since    2.5
      */
-    protected function loadFormData()
+    protected function loadFormData(): mixed
     {
         // Check the session for previously entered form data.
         $data = Factory::getApplication()->getUserState('com_proclaim.edit.templatecode.data', array());

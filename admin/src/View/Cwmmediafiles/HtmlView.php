@@ -27,7 +27,7 @@ use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * View class for Mediafiles
+ * View class for MediaFiles
  *
  * @package  Proclaim.Admin
  * @since    7.0

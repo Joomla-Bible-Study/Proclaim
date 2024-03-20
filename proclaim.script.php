@@ -39,7 +39,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * @var    string
      * @since  3.6
      */
-    protected $release = '10.0.0-alpha.20230215';
+    protected $release = '10.0.0-alpha.20240315';
 
     /**
      * @var   DatabaseDriver|DatabaseInterface|null

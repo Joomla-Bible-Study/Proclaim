@@ -156,10 +156,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmediafiles'); ?>" method="p
                             $ordering = ($listOrder === 'mediafile.ordering');
                             $canCreate = $user->authorise('core.create');
                             $canEdit = $user->authorise('core.edit', 'com_proclaim.mediafile.' . $item->id);
-                            $canCheckin = $user->authorise(
-                                    'core.manage',
-                                    'com_checkin'
-                                ) || $item->checked_out == $userId || $item->checked_out == 0;
+                            $canCheckin           = $user->authorise('core.manage', 'com_checkin') || $item->checked_out == $userId || is_null($item->checked_out);
                             $canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.mediafile.' . $item->id);
                             $canChange = $user->authorise('core.edit.state', 'com_proclaim.mediafile.' . $item->id);
                             $label = $this->escape($item->serverConfig->name->__toString()) . ' - ';

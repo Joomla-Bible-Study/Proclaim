@@ -124,12 +124,6 @@ class HtmlView extends BaseHtmlView
         $this->addToolbar();
 
         parent::display($tpl);
-
-        $isNew = ($this->item->id < 1);
-        $this->setDocumentTitle(
-            $isNew ? Text::_('JBS_TITLE_TEMPLATECODES_CREATING')
-                : Text::sprintf('JBS_TITLE_TEMPLATECODES_EDITING', $this->item->topic_text)
-        );
     }
 
     /**
@@ -140,7 +134,7 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0.0
      */
-    protected function addToolbar()
+    protected function addToolbar(): void
     {
         Factory::getApplication()->input->set('hidemainmenu', true);
         $isNew = ((int)$this->item->id === 0);

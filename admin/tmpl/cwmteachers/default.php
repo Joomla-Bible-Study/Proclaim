@@ -2,10 +2,10 @@
 /**
  * Default
  *
- * @package    Proclaim.Admin
+ * @package        Proclaim.Admin
  * @copyright  (C) 2007 CWM Team All rights reserved
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
- * @link       https://www.christianwebministries.org
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
+ * @link           https://www.christianwebministries.org
  * */
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -191,16 +191,14 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                                                 ) : 'ID: ' . $this->escape($item->id)); ?>
                                             </a>
                                         <?php
-                                        else : ?>
-                                            <?php
+                                        else :
                                             echo($this->escape($item->teachername) ? $this->escape(
                                                 $item->teachername
-                                            ) : 'ID: ' . $this->escape($item->id)); ?>
-                                        <?php
+                                            ) : 'ID: ' . $this->escape($item->id));
                                         endif; ?>
+                                        <br />
                                         <span class="small">
-										<?php
-                                        echo Text::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
+										<?php echo Text::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
 									</span>
                                     </div>
                                 </td>

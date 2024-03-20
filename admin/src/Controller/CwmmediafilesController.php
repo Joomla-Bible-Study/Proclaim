@@ -16,6 +16,8 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel;
+use CWM\Component\Proclaim\Administrator\Model\CwmmediafilesModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
@@ -34,7 +36,7 @@ class CwmmediafilesController extends AdminController
     /**
      * Check in of one or more records.
      *
-     * @return  boolean  True on success
+     * @return  bool  True on success
      *
      * @throws \Exception
      * @since   12.2
@@ -46,7 +48,8 @@ class CwmmediafilesController extends AdminController
 
         $ids = Factory::getApplication()->input->post->get('cid', array(), 'array');
 
-        $model  = $this->getModel();
+        /** @var CwmmediafileModel $model */
+        $model  = $this->getModel($name = 'Cwmmediafile', $prefix = 'Administrator', $config = ['ignore_request' => true]);
         $return = $model->checkin($ids);
 
         if ($return === false) {

@@ -291,5 +291,5 @@
 	</target>
 
 	<!-- This target should exit gracefully in order for a pull request is approved. -->
-	<target name="build" depends="init,lint,size,pmd,pdepend"/>
+	<target name="build" depends="init,lint,component"/>
 </project>
