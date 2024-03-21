@@ -3,14 +3,15 @@
 /**
  * Proclaim Script install
  *
- * @package    Proclaim
- * @subpackage com_proclaim
+ * @package        Proclaim
+ * @subpackage     com_proclaim
  * @copyright  (C) 2007 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
 
 use Joomla\CMS\Factory;
+use Joomla\Filesystem\File;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
 use Joomla\CMS\Installer\Adapter\FileAdapter;
 use Joomla\CMS\Installer\Installer;
@@ -39,7 +40,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * @var    string
      * @since  3.6
      */
-    protected $release = '10.0.0-alpha.20240315';
+    protected $release = '10.0.0-alpha.20240321';
 
     /**
      * @var   DatabaseDriver|DatabaseInterface|null
@@ -107,7 +108,8 @@ class com_proclaimInstallerScript extends InstallerScript
         // -- plugins => { (folder) => { (element) => (published) }* }*
         'plugins' => [
             'finder' => ['proclaim' => 1],
-            'task' => ['proclaim'  => 1,
+            'task'   => [
+                'proclaim' => 1,
             ],
         ],
     ];
@@ -211,29 +213,27 @@ class com_proclaimInstallerScript extends InstallerScript
         $this->removeOldMenuItems();
     }
 
-	/**
-	 * Remove old menu items prior to version 10
+    /**
+     * Remove old menu items prior to version 10
      * @return bool
      * @since 10.0.0
-	 */
-public function removeOldMenuItems() :bool
-{
-	$query = $this->dbo->getQuery(true);
+     */
+    public function removeOldMenuItems(): bool
+    {
+        $query = $this->dbo->getQuery(true);
 
-	$conditions = array(
-		$this->dbo->quoteName('link') . ' LIKE %com_biblestudy% '
-	);
+        $conditions = array(
+            $this->dbo->quoteName('link') . ' LIKE %com_biblestudy% '
+        );
 
-	$query->delete($this->dbo->quoteName('#__menu'));
-	$query->where($conditions);
+        $query->delete($this->dbo->quoteName('#__menu'));
+        $query->where($conditions);
 
-	$this->dbo->setQuery($query);
+        $this->dbo->setQuery($query);
 
-	$result = $this->dbo->execute();
+        return $this->dbo->execute();
+    }
 
-
-    return $result;
-}
     /**
      * Check Requirements
      *
@@ -435,8 +435,8 @@ public function removeOldMenuItems() :bool
                         echo '' . ($module['result'] ? 'green' : 'red'); ?>">
                             <?php
                             echo ' ' . ($module['result'] ? Text::_('JBS_INS_REMOVED') : Text::_(
-                                    'JBS_INS_NOT_REMOVED'
-                                ));
+                                'JBS_INS_NOT_REMOVED'
+                            ));
                             ?>
                         </strong>
                     </td>
@@ -495,6 +495,29 @@ public function removeOldMenuItems() :bool
         $this->status          = new stdClass();
         $this->status->modules = [];
         $this->status->plugins = [];
+
+        // Clean up old installed language files
+        $languages = [
+            "en-GB.com_proclaim.ini",
+            "en-GB.com_proclaim.sys.ini",
+            "en-GB.mod_proclaim.ini",
+            "en-GB.mod_proclaim.sys.ini",
+            "en-GB.mod_proclaim_podcast.ini",
+            "en-GB.mod_proclaim_podcast.sys.ini",
+            "en-GB.plg_proclaim.ini",
+            "en-GB.plg_proclaim.sys.ini",
+            "en-GB.plg_finder_proclaim.ini",
+            "en-GB.plg_finder_proclaim.sys.ini"
+        ];
+
+        foreach ($languages as $language) {
+            if (file_exists(JPATH_ADMINISTRATOR . "/language/en-GB/$language")) {
+                File::delete(JPATH_ADMINISTRATOR . "/language/en-GB/$language");
+            }
+            if (file_exists(JPATH_ROOT . "/language/en-GB/$language")) {
+                File::delete(JPATH_ROOT . "/language/en-GB/$language");
+            }
+        }
 
         // Modules installation
         if (count(self::$installActionQueue['modules'])) {

@@ -224,12 +224,10 @@
 		         link="${joomla_path}${joomla_dir}/modules/mod_proclaim" overwrite="true"/>
 		<symlink target="${basedir}/modules/site/mod_proclaim_podcast"
 		         link="${joomla_path}${joomla_dir}/modules/mod_proclaim_podcast" overwrite="true"/>
-		<symlink target="${basedir}/plugins/system/proclaimbackup"
-		         link="${joomla_path}${joomla_dir}/plugins/system/proclaimbackup" overwrite="true"/>
 		<symlink target="${basedir}/plugins/finder/proclaim"
 		         link="${joomla_path}${joomla_dir}/plugins/finder/proclaim" overwrite="true"/>
-		<symlink target="${basedir}/plugins/system/proclaimpodcast"
-		         link="${joomla_path}${joomla_dir}/plugins/system/proclaimpodcast" overwrite="true"/>
+		<symlink target="${basedir}/plugins/task/proclaim"
+		         link="${joomla_path}${joomla_dir}/plugins/task/proclaim" overwrite="true"/>
 
 		<phingcall target="dev.init"/>
 	</target>

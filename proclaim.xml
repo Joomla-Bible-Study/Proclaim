@@ -6,7 +6,7 @@
     <authorEmail>info@christianwebministries.org</authorEmail>
     <authorUrl>www.christianwebministries.org</authorUrl>
     <copyright>(C) 2007 Proclaim All rights reserved.</copyright>
-    <version>10.0.0-alpha.20240315</version>
+    <version>10.0.0-alpha.20240321</version>
     <creationDate>March 15, 2024</creationDate>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <description>JBS_INS_XML_DESCRIPTION</description>
@@ -15,7 +15,7 @@
     <!-- Installer Hooks -->
     <scriptfile>proclaim.script.php</scriptfile>
 
-    <!-- Installer Hooks -->
+    <!-- Installer DB Hooks -->
     <install>
         <sql>
             <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
@@ -34,11 +34,6 @@
         </schemas>
     </update>
 
-    <!-- Front end translation files -->
-    <languages folder="admin/language">
-        <language tag="en-GB">en-GB/en-GB.com_proclaim.ini</language>
-        <language tag="en-GB">en-GB/en-GB.com_proclaim.sys.ini</language>
-    </languages>
     <updateservers>
         <server type="extension" priority="1" name="CWM Proclaim Package">
             https://www.christianwebministries.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1&amp;dummy=extension.xml
