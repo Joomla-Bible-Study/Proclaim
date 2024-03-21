@@ -206,9 +206,34 @@ class com_proclaimInstallerScript extends InstallerScript
 
         // Show the post-installation page
         $this->renderPostInstallation($this->status, $parent);
+
+        //Remove old com_biblestudy menu items on admin side
+        $this->removeOldMenuItems();
     }
 
+	/**
+	 * Remove old menu items prior to version 10
+     * @return bool
+     * @since 10.0.0
+	 */
+public function removeOldMenuItems() :bool
+{
+	$query = $this->dbo->getQuery(true);
 
+	$conditions = array(
+		$this->dbo->quoteName('link') . ' LIKE %com_biblestudy% '
+	);
+
+	$query->delete($this->dbo->quoteName('#__menu'));
+	$query->where($conditions);
+
+	$this->dbo->setQuery($query);
+
+	$result = $this->dbo->execute();
+
+
+    return $result;
+}
     /**
      * Check Requirements
      *
