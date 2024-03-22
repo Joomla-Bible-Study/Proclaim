@@ -47,7 +47,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @since 7.2.0
      */
-    protected $dbo;
+    protected DatabaseDriver|null|DatabaseInterface $dbo;
 
     /**
      * Minimum PHP version required to install the extension

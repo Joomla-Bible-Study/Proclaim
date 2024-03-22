@@ -396,9 +396,10 @@ class CwmmediafileModel extends AdminModel
      *
      * @return    boolean     Returns true on success, false on failure.
      *
+     * @throws \Exception
      * @since    2.5
      */
-    public function batch($commands, $pks, $contexts): bool
+    public function batch($commands, $pks, $contexts)
     {
         // Sanitize user ids.
         $pks = array_unique($pks);
@@ -425,8 +426,8 @@ class CwmmediafileModel extends AdminModel
             $done = true;
         }
 
-        if ($commands['link_type'] !== '') {
-            if (!$this->batchLinkType($commands['link_type'], $pks, $contexts)) {
+        if ($commands['linkType'] !== '') {
+            if (!$this->batchLinkType($commands['linkType'], $pks, $contexts)) {
                 return false;
             }
 
@@ -441,8 +442,8 @@ class CwmmediafileModel extends AdminModel
             $done = true;
         }
 
-        if ($commands['mediatype'] !== '') {
-            if (!$this->batchMediatype($commands['mediatype'], $pks, $contexts)) {
+        if ($commands['mediaType'] !== '') {
+            if (!$this->batchMediatype($commands['mediaType'], $pks, $contexts)) {
                 return false;
             }
 
@@ -457,16 +458,10 @@ class CwmmediafileModel extends AdminModel
             $done = true;
         }
 
-        if (!$done) {
-            $this->setError(Text::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
-
-            return false;
-        }
-
         // Clear the cache
         $this->cleanCache();
 
-        return true;
+        return $done;
     }
 
     /**

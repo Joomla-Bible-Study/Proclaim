@@ -320,7 +320,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmediafiles'); ?>" method="p
                                 'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
                                 'footer' => $this->loadTemplate('batch_footer')
                             ),
-                        //$this->loadTemplate('batch_body')
+                        $this->loadTemplate('batch_body')
                         ); ?>
                     <?php
                     endif; ?>

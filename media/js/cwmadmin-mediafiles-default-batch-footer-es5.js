@@ -20,7 +20,7 @@
             {
                 var form = document.getElementById(formId)
 
-                if (form && task === 'cwmmessage.batch') {
+                if (form && task === 'cwmmediafiles.batch') {
                     submitForm(task, form)
                 }
             } // Register events

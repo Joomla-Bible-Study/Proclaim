@@ -16,17 +16,13 @@
 
 use Joomla\CMS\Language\Text;
 
-$published = $this->state->get('filter.published');
-
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('com_proclaim.cwmadmin-messages-batch');
 ?>
 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-    <?php
-    echo Text::_('JCANCEL'); ?>
+    <?php echo Text::_('JCANCEL'); ?>
 </button>
-<button type="submit" id='batch-submit-button-id' class="btn btn-success" data-submit-task='message.batch'>
-    <?php
-    echo Text::_('JGLOBAL_BATCH_PROCESS'); ?>
+<button type="submit" id='batch-submit-button-id' class="btn btn-success" data-submit-task='cwmmessage.batch'>
+    <?php echo Text::_('JGLOBAL_BATCH_PROCESS'); ?>
 </button>

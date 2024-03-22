@@ -3,10 +3,10 @@
 /**
  * Part of Proclaim Package
  *
- * @package    Proclaim.Admin
+ * @package        Proclaim.Admin
  * @copyright  (C) 2007 CWM Team All rights reserved
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
- * @link       https://www.christianwebministries.org
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
+ * @link           https://www.christianwebministries.org
  * */
 
 namespace CWM\Component\Proclaim\Administrator\Controller;
@@ -138,6 +138,12 @@ class CwmmediafileController extends FormController
      */
     public function batch($model = null): bool
     {
+        $this->checkToken();
+
+        // Set the model
+        /** @var CwmmediafileModel $model */
+        $model = $this->getModel('Cwmmediafile', 'Administrator', []);
+
         // Preset the redirect
         $this->setRedirect(
             Route::_('index.php?option=com_proclaim&view=cwmmediafiles' . $this->getRedirectToListAppend(), false)

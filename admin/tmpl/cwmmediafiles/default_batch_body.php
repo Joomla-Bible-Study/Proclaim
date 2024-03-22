@@ -3,10 +3,10 @@
 /**
  * Batch Template
  *
- * @package    Proclaim.Admin
+ * @package        Proclaim.Admin
  * @copyright  (C) 2007 CWM Team All rights reserved
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
- * @link       https://www.christianwebministries.org
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
+ * @link           https://www.christianwebministries.org
  * */
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -14,49 +14,64 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Layout\LayoutHelper;
 
-$published = $this->state->get('filter.published');
-HTMLHelper::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html');
+$params = ComponentHelper::getParams('com_proclaim');
+
+$published = (int)$this->state->get('filter.published');
+
+$user = Factory::getApplication()->getSession()->get('user');
 ?>
 
-<div class="row-fluid">
-    <div class="control-group col-4">
-        <div class="controls">
-            <?php
-            echo HTMLHelper::_('proclaim.players'); ?>
+<div class="p-3">
+    <div class="row">
+        <?php
+        if (Multilanguage::isEnabled()) : ?>
+            <div class="form-group col-md-6">
+                <div class="controls">
+                    <?php
+                    echo LayoutHelper::render('joomla.html.batch.language', []); ?>
+                </div>
+            </div>
+        <?php
+        endif; ?>
+        <div class="form-group col-md-6">
+            <div class="controls">
+                <?php
+                echo LayoutHelper::render('joomla.html.batch.access', []); ?>
+            </div>
         </div>
     </div>
-    <div class="control-group col-4">
-        <div class="controls">
-            <?php
-            echo HTMLHelper::_('proclaim.popup'); ?>
+    <div class="row">
+        <div class="form-group col-md-4">
+            <div class="controls">
+                <?php
+                echo HTMLHelper::_('proclaim.players'); ?>
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            <div class="controls">
+                <?php
+                echo HTMLHelper::_('proclaim.popup'); ?>
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            <div class="controls">
+                <?php
+                echo HTMLHelper::_('proclaim.mediaType'); ?>
+            </div>
         </div>
     </div>
-    <div class="control-group col-4">
-        <div class="controls">
-            <?php
-            echo HTMLHelper::_('proclaim.Mediatype'); ?>
-        </div>
-    </div>
-</div>
-<div class="row-fluid">
-    <div class="control-group col-4">
-        <div class="controls">
-            <?php
-            echo HTMLHelper::_('proclaim.link_type'); ?>
-        </div>
-    </div>
-    <div class="control-group col-4">
-        <div class="controls">
-            <?php
-            echo HTMLHelper::_('batch.access'); ?>
-        </div>
-    </div>
-    <div class="control-group col-4">
-        <div class="controls">
-            <?php
-            echo HTMLHelper::_('batch.language'); ?>
+    <div class="row">
+        <div class="form-group col-md-4">
+            <div class="controls">
+                <?php
+                echo HTMLHelper::_('proclaim.linkType'); ?>
+            </div>
         </div>
     </div>
 </div>

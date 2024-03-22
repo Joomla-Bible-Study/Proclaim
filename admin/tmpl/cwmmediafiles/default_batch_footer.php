@@ -16,14 +16,13 @@
 
 use Joomla\CMS\Language\Text;
 
-$published = $this->state->get('filter.published');
+/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('com_proclaim.cwmadmin-mediafiles-batch');
 ?>
-<a class="btn" type="button"
-   onclick="document.id('batch-mediafiles-id');document.id('batch-access').value=''" data-dismiss="modal">
-    <?php
-    echo Text::_('JCANCEL'); ?>
-</a>
-<button class="btn btn-success" type="submit" onclick="Joomla.submitbutton('mediafile.batch');">
-    <?php
-    echo Text::_('JGLOBAL_BATCH_PROCESS'); ?>
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+    <?php echo Text::_('JCANCEL'); ?>
+</button>
+<button type="submit" id='batch-submit-button-id' class="btn btn-success" data-submit-task='cwmmediafile.batch'>
+    <?php echo Text::_('JGLOBAL_BATCH_PROCESS'); ?>
 </button>

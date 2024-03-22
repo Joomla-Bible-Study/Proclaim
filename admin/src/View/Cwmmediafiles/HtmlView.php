@@ -3,20 +3,22 @@
 /**
  * Part of Proclaim Package
  *
- * @package    Proclaim.Admin
+ * @package        Proclaim.Admin
  * @copyright  (C) 2007 CWM Team All rights reserved
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
- * @link       https://www.christianwebministries.org
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
+ * @link           https://www.christianwebministries.org
  * */
 
 namespace CWM\Component\Proclaim\Administrator\View\CWMMediaFiles;
 
 // No Direct Access
-use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Component\Content\Administrator\Extension\ContentComponent;
@@ -91,6 +93,22 @@ class HtmlView extends BaseHtmlView
     protected $state;
 
     /**
+     * All transitions, which can be executed of one if the items
+     *
+     * @var  array
+     * @since 4.0.0
+     */
+    protected array $transitions = [];
+
+    /**
+     * Is this view an Empty State
+     *
+     * @var   boolean
+     * @since 4.0.0
+     */
+    private bool $isEmptyState = false;
+
+    /**
      * Execute and display a template script.
      *
      * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
@@ -103,17 +121,19 @@ class HtmlView extends BaseHtmlView
      */
     public function display($tpl = null): void
     {
-        $this->items      = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
-        $this->state      = $this->get('State');
-        $this->mediatypes = $this->get('Mediatypes');
-
-
+        $this->items         = $this->get('Items');
+        $this->pagination    = $this->get('Pagination');
+        $this->state         = $this->get('State');
+        $this->canDo         = ContentHelper::getActions('com_proclaim', 'message');
+        $this->mediatypes    = $this->get('Mediatypes');
         $this->filterForm    = $this->get('FilterForm');
         $this->activeFilters = $this->get('ActiveFilters');
 
-        $this->sortDirection = $this->state->get('list.direction');
-        $this->sortColumn    = $this->state->get('list.ordering');
+        if (ComponentHelper::getParams('com_proclaim')->get('workflow_enabled')) {
+            PluginHelper::importPlugin('workflow');
+
+            $this->transitions = $this->get('Transitions');
+        }
 
         // Check for errors.
         if (\count($errors = $this->get('Errors'))) {
@@ -123,6 +143,21 @@ class HtmlView extends BaseHtmlView
         // We don't need toolbar in the modal window.
         if ($this->getLayout() !== 'modal') {
             $this->addToolbar();
+
+            // We do not need to filter by language when multilingual is disabled
+            if (!Multilanguage::isEnabled()) {
+                unset($this->activeFilters['language']);
+                $this->filterForm->removeField('language', 'filter');
+            }
+        } elseif ($forcedLanguage = Factory::getApplication()->input->get('forcedLanguage', '', 'CMD')) {
+            // If the language is forced we can't allow to select the language, so transform the language selector filter into a hidden field.
+            $languageXml = new \SimpleXMLElement(
+                '<field name="language" type="hidden" default="' . $forcedLanguage . '" />'
+            );
+            $this->filterForm->setField($languageXml, 'filter', true);
+
+            // Also, unset the active language filter so the search tools is not open by default with this filter.
+            unset($this->activeFilters['language']);
         }
 
         $this->setDocumentTitle(Text::_('JBS_TITLE_MEDIA_FILES'));
@@ -153,29 +188,31 @@ class HtmlView extends BaseHtmlView
             $toolbar->addNew('cwmmediafile.add');
         }
 
-        $dropdown = $toolbar->dropdownButton('status-group')
-            ->text('JTOOLBAR_CHANGE_STATUS')
-            ->toggleSplit(false)
-            ->icon('icon-ellipsis-h')
-            ->buttonClass('btn btn-action')
-            ->listCheck(true);
+        if (!$this->isEmptyState && ($canDo->get('core.edit.state') || \count($this->transitions))) {
+            $dropdown = $toolbar->dropdownButton('status-group')
+                ->text('JTOOLBAR_CHANGE_STATUS')
+                ->toggleSplit(false)
+                ->icon('icon-ellipsis-h')
+                ->buttonClass('btn btn-action')
+                ->listCheck(true);
 
-        $childBar = $dropdown->getChildToolbar();
+            $childBar = $dropdown->getChildToolbar();
 
-        if ($canDo->get('core.edit.state')) {
-            $childBar->publish('cwmmediafiles.publish');
-            $childBar->unpublish('cwmmediafiles.unpublish');
-            $childBar->archive('cwmmediafiles.archive');
+            if ($canDo->get('core.edit.state')) {
+                $childBar->publish('cwmmediafiles.publish');
+                $childBar->unpublish('cwmmediafiles.unpublish');
+                $childBar->archive('cwmmediafiles.archive');
 
-            if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
-                $childBar->trash('cwmmediafiles.trash')->listCheck(true);
+                if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
+                    $childBar->trash('cwmmediafiles.trash')->listCheck(true);
+                }
             }
 
             // Add a batch button
             if (
                 $user->authorise('core.create', 'com_proclaim')
                 && $user->authorise('core.edit', 'com_proclaim')
-                && $user->authorise('core.edit.state', 'com_proclaim')
+                && $user->authorise('core.edit.transition', 'com_proclaim')
             ) {
                 $childBar->popupButton('batch')
                     ->text('JTOOLBAR_BATCH')
@@ -185,7 +222,8 @@ class HtmlView extends BaseHtmlView
         }
 
         if (
-            $this->state->get('filter.published') == ProclaimComponent::CONDITION_TRASHED && $canDo->get(
+            !$this->isEmptyState
+            && $this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED && $canDo->get(
                 'core.delete'
             )
         ) {

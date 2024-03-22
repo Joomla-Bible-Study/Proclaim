@@ -3,10 +3,10 @@
 /**
  * Modal
  *
- * @package    Proclaim.Admin
+ * @package        Proclaim.Admin
  * @copyright  (C) 2007 CWM Team All rights reserved
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
- * @link       https://www.christianwebministries.org
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
+ * @link           https://www.christianwebministries.org
  * */
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -34,11 +34,11 @@ $wa = $this->document->getWebAssetManager();
 $wa->useScript('core')
     ->useScript('com_proclaim.cwmadmin-messages-modal');
 
-$function = $app->input->getCmd('function', 'jSelectMessages');
-$editor = $app->input->getCmd('editor', '');
+$function  = $app->input->getCmd('function', 'jSelectMessages');
+$editor    = $app->input->getCmd('editor', '');
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn = $this->escape($this->state->get('list.direction'));
-$onclick = $this->escape($function);
+$listDirn  = $this->escape($this->state->get('list.direction'));
+$onclick   = $this->escape($function);
 $multilang = Multilanguage::isEnabled();
 
 if (!empty($editor)) {

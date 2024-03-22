@@ -18,6 +18,7 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 
 $params = ComponentHelper::getParams('com_proclaim');
@@ -45,22 +46,10 @@ $user = Factory::getApplication()->getSession()->get('user');
             </div>
         </div>
     </div>
-    <div class="row">
-        <?php
-        if ($published >= 0) : ?>
-            <div class="form-group col-md-6">
-                <div class="controls">
-                    <?php
-                    echo LayoutHelper::render('joomla.html.batch.item', ['extension' => 'com_proclaim']); ?>
-                </div>
-            </div>
-            <?php
-        endif; ?>
-    </div>
     <div class="form-group col-md-4">
         <div class="controls">
             <?php
-            echo HTMLHelper::_('Proclaim.Teacher'); ?>
+            echo HTMLHelper::_('Proclaim.teacher'); ?>
         </div>
     </div>
 </div>
@@ -68,13 +57,13 @@ $user = Factory::getApplication()->getSession()->get('user');
     <div class="form-group col-md-6">
         <div class="controls">
             <?php
-            echo HTMLHelper::_('Proclaim.Series'); ?>
+            echo HTMLHelper::_('Proclaim.series'); ?>
         </div>
     </div>
     <div class="form-group col-md-4">
         <div class="controls">
             <?php
-            echo HTMLHelper::_('Proclaim.MessageType'); ?>
+            echo HTMLHelper::_('Proclaim.messageType'); ?>
         </div>
     </div>
 </div>

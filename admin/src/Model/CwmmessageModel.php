@@ -164,6 +164,7 @@ class CwmmessageModel extends AdminModel
      * Returns a list of media files associated with this study
      *
      * @return object
+     * @throws \Exception
      * @since   7.0
      */
     public function getMediaFiles()
@@ -171,7 +172,7 @@ class CwmmessageModel extends AdminModel
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
 
-        $query->select('m.id, m.language, m.published, m.createdate, m.params');
+        $query->select('m.id, m.language, m.published, m.createdate, m.params, m.access');
         $query->from('#__bsms_mediafiles AS m');
         $query->where('m.study_id = ' . (int)$this->getItem()->id);
         $query->where('(m.published = 0 OR m.published = 1)');
@@ -203,7 +204,7 @@ class CwmmessageModel extends AdminModel
      * @throws  \Exception
      * @since   9.0.0
      */
-    public function getItem($pk = null)
+    public function getItem($pk = null): mixed
     {
         $jinput = Factory::getApplication()->getInput();
 
@@ -482,6 +483,9 @@ class CwmmessageModel extends AdminModel
             $done = true;
         }
 
+        // Clear the cache
+        $this->cleanCache();
+
         return $done;
     }
 
@@ -494,6 +498,7 @@ class CwmmessageModel extends AdminModel
      *
      * @return  boolean  True if successful, false otherwise and internal error is set.
      *
+     * @throws \Exception
      * @since   2.5
      */
     protected function batchTeacher($value, $pks, $contexts)
@@ -553,6 +558,7 @@ class CwmmessageModel extends AdminModel
      *
      * @return  boolean  True if successful, false otherwise and internal error is set.
      *
+     * @throws \Exception
      * @since   2.5
      */
     protected function batchSeries($value, $pks, $contexts)
@@ -595,6 +601,7 @@ class CwmmessageModel extends AdminModel
      *
      * @return  boolean  True if successful, false otherwise and internal error is set.
      *
+     * @throws \Exception
      * @since   2.5
      */
     protected function batchMessagetype($value, $pks, $contexts)

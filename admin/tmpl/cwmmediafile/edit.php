@@ -138,6 +138,16 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
                 <div class="control-group">
                     <div class="control-label">
                         <?php
+                        echo $this->form->getLabel('access'); ?>
+                    </div>
+                    <div class="controls">
+                        <?php
+                        echo $this->form->getInput('access'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
+                        <?php
                         echo $this->form->getLabel('language'); ?>
                     </div>
                     <div class="controls">

@@ -16,15 +16,17 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwmmessagesModel;
 use CWM\Component\Proclaim\Administrator\Model\CwmtopicModel;
 use CWM\Component\Proclaim\Administrator\Table\CwmstudytopicsTable;
+use JetBrains\PhpStorm\NoReturn;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Input\Input;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
-use Joomla\Input\Input;
 
 /**
  * Controller for Message
@@ -85,18 +87,23 @@ class CwmmessageController extends FormController
      *
      * @param   BaseDatabaseModel  $model  The model.
      *
-     * @return  boolean     True if successful, false otherwise and internal error is set.
+     * @return  bool     True if successful, false otherwise and internal error is set.
      *
+     * @throws \Exception
      * @since   1.6
      */
-    public function batch($model = null)
+    public function batch($model = null): bool
     {
-        // Preset the redirect
-        $this->setRedirect(
-            Route::_('index.php?option=com_proclaim&view=cwmmessages' . $this->getRedirectToListAppend(), false)
-        );
+        $this->checkToken();
 
-        return parent::batch($this->getModel());
+        // Set the model
+        /** @var CwmmessagesModel $model */
+        $model = $this->getModel('Cwmmessage', 'Administrator', []);
+
+        // Preset the redirect
+        $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmmessages' . $this->getRedirectToListAppend(), false));
+
+        return parent::batch($model);
     }
 
     /**
