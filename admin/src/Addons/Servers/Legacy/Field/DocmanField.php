@@ -51,11 +51,8 @@ class DocmanField extends ListField
     protected function getOptions(): array
     {
         if (
-            !Folder::exists(
-                JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'com_docman'
-            )
+            !Folder::exists(JPATH_ADMINISTRATOR . '/components/com_docman')
         ) {
-            // @Todo Need to find different solutions.
             return [Text::_('JBS_CMN_DOCMAN_NOT_INSTALLED')];
         }
 

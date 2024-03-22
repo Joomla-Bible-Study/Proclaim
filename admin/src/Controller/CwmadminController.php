@@ -25,7 +25,7 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmrestore;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmssconvert;
 use CwmarchiveModel;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Folder;
+use Joomla\Filesystem\Folder;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
@@ -760,10 +760,9 @@ class CwmadminController extends FormController
         $count       = 0;
 
         foreach ($image_types as $image_type) {
-            // @todo will need to move from biblestudy folder to com_proclaim at some point.
             $images = Folder::files(JPATH_ROOT . '/images/biblestudy/' . $image_type, 'original_', true, true);
 
-            if ($images != false) {
+            if ($images) {
                 $count += count($images);
             }
 

@@ -193,12 +193,6 @@ class HtmlView extends BaseHtmlView
 
         $params = $this->state->params;
 
-        /**
-         * @todo not ready for live and could be slowing down site.
-         * // Searched all code and not seeing it used in core.
-         * // $this->page->popular = (new Cwmstats)->getTopScoreSite();
-         */
-
         // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user            = $mainframe->getIdentity();
         $groups          = $user->getAuthorisedViewLevels();

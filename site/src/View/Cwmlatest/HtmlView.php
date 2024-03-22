@@ -51,7 +51,7 @@ class HtmlView extends BaseHtmlView
         $input = Factory::getApplication()->input;
         $t     = $input->get('t', '1');
 
-        // @todo move to slug asap
+        // @todo move to slug asap, this will require a new query to load both alias and ID.
         $link = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $id . '&t=' . $t);
         $app  = Factory::getApplication();
 

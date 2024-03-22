@@ -317,7 +317,7 @@ class CwmserverModel extends AdminModel
      * @throws \Exception
      * @since   9.0.0
      * @TODO    This gets called twice, because we're loading two forms. (There is a redundancy
-     *          in the bind() because the data is itereted over 2 times, 1 for each form). Possibly,
+     *          in the bind() because the data is iterated over 2 times, 1 for each form). Possibly,
      *          figure out a way to iterate over only the relevant data)
      */
     protected function loadFormData()

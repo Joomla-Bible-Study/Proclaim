@@ -37,8 +37,6 @@ class FiltersField extends FormField
     /**
      * Method to get the field input markup.
      *
-     * TODO: Add access check.
-     *
      * @return  string   The field input markup.
      *
      * @since    1.6

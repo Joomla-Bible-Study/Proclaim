@@ -38,8 +38,6 @@ use Joomla\Registry\Registry;
  * @property mixed document
  * @package  Proclaim.Site
  * @since    7.0.0
- *
- * @todo     Still need to fix all the problems.
  */
 class HtmlView extends BaseHtmlView
 {
