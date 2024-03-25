@@ -3,10 +3,10 @@
 /**
  * Part of Proclaim Package
  *
- * @package    Proclaim.Admin
+ * @package        Proclaim.Admin
  * @copyright  (C) 2007 CWM Team All rights reserved
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
- * @link       https://www.christianwebministries.org
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
+ * @link           https://www.christianwebministries.org
  * */
 
 namespace CWM\Component\Proclaim\Administrator\Helper;
@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Exception;
 use Joomla\CMS\Access\Access;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
@@ -55,14 +56,14 @@ class CwmproclaimHelper
      * @param   string  $defaultController  Default Controller
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      * @since    10.0.0
      */
     public static function applyViewAndController(string $defaultController): void
     {
         $input      = Factory::getApplication()->input;
-        $controller = $input->getCmd('controller', null);
-        $view       = $input->getCmd('view', null);
+        $controller = $input->getCmd('controller');
+        $view       = $input->getCmd('view');
         $task       = $input->getCmd('task', 'display');
 
         if (str_contains($task, '.')) {
@@ -83,13 +84,13 @@ class CwmproclaimHelper
     }
 
     /**
-     * Configure the Linkbar.
+     * Configure the Link bar.
      *
      * @param   string  $vName  The name of the active view.
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since    1.6
      */
     public static function addSubmenu(string $vName): void
@@ -199,16 +200,15 @@ class CwmproclaimHelper
      *
      * @return string The filtered string
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 1.5
      */
     public static function filterText(string $text): string
     {
         // Filter settings
-        jimport('joomla.application.component.helper');
         $config     = ComponentHelper::getParams('com_proclaim');
         $user       = Factory::getApplication()->getIdentity();
-        $userGroups = Access::getGroupsByUser($user->get('id'));
+        $userGroups = Access::getGroupsByUser($user->id);
 
         $filters = $config->get('filters');
 
@@ -268,12 +268,10 @@ class CwmproclaimHelper
                         $blackList           = true;
                         $blackListTags       = array_merge([], ...$tempTags);
                         $blackListAttributes = array_merge([], ...$tempAttributes);
-                    } else {
-                        if ($filterType == 'WL') {
-                            $whiteList           = true;
-                            $whiteListTags       = array_merge([], ...$tempTags);
-                            $whiteListAttributes = array_merge([], ...$tempAttributes);
-                        }
+                    } elseif ($filterType == 'WL') {
+                        $whiteList           = true;
+                        $whiteListTags       = array_merge([], ...$tempTags);
+                        $whiteListAttributes = array_merge([], ...$tempAttributes);
                     }
                 }
             }
@@ -317,7 +315,7 @@ class CwmproclaimHelper
     /**
      * Debug switch state form Admin Settings page
      *
-     * @return integer '1' is on '0' is off
+     * @return int '1' is on '0' is off
      *
      * @since 7.1.0
      */
@@ -326,7 +324,7 @@ class CwmproclaimHelper
         if (!CwmdbHelper::getInstallState()) {
             try {
                 self::$admin_params = Cwmparams::getAdmin();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 return 0;
             }
 
@@ -344,9 +342,9 @@ class CwmproclaimHelper
     /**
      * Media Years
      *
-     * @return array        Returns list of years of media files based on createdate
+     * @return array        Returns array of years from media files based on creation date
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 8.0.0
      */
     public static function getMediaYears(): array
@@ -378,7 +376,7 @@ class CwmproclaimHelper
      *
      * @return array  Returns list of message types
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 8.0.0
      */
     public static function getMessageTypes(): array
@@ -410,9 +408,9 @@ class CwmproclaimHelper
     /**
      * Study Years
      *
-     * @return array Returns list of years of studies based on studydate
+     * @return array Returns array of years from studies based on study date
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 8.0.0
      */
     public static function getStudyYears(): array
@@ -442,9 +440,9 @@ class CwmproclaimHelper
     /**
      * Teachers
      *
-     * @return array       Returns list of Teachers
+     * @return array       Returns array of Teachers
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 8.0.0
      */
     public static function getTeachers(): array
@@ -475,9 +473,9 @@ class CwmproclaimHelper
     /**
      * Study Books
      *
-     * @return array Returns list of books
+     * @return array Returns array of books
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 8.0.0
      */
     public static function getStudyBooks(): array
@@ -513,9 +511,9 @@ class CwmproclaimHelper
     /**
      * Study Media Types
      *
-     * @return array       Returns list of books
+     * @return array       Returns array of books
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 8.0.0
      */
     public static function getStudyMediaTypes(): array
@@ -547,9 +545,9 @@ class CwmproclaimHelper
     /**
      * Study Locations
      *
-     * @return array       Returns list of books
+     * @return array       Returns array of books
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 8.0.0
      */
     public static function getStudyLocations(): array
@@ -601,11 +599,11 @@ class CwmproclaimHelper
     /**
      * Debug stop
      *
-     * @param   string  $msg  Message to sent.
+     * @param   string  $msg  Message to send.
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @since 1.5
      */
@@ -621,9 +619,10 @@ class CwmproclaimHelper
      * @param   string  $haystack  String to search.
      * @param   string  $needle    What to search for.
      *
-     * @return boolean
+     * @return bool
      *
-     * @since 1.5
+     * @since      1.5
+     * @deprecated 10.0.0 "PHP 8+ has this native function"
      */
     public static function startsWith(string $haystack, string $needle): bool
     {
@@ -637,9 +636,10 @@ class CwmproclaimHelper
      * @param   string  $haystack  String to search.
      * @param   string  $needle    What to search for.
      *
-     * @return boolean
+     * @return bool
      *
-     * @since 1.5
+     * @since      1.5
+     * @deprecated 10.0.0 "PHP 8+ has this native function"
      */
     public static function endsWith(string $haystack, string $needle): bool
     {
