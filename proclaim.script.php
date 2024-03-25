@@ -96,21 +96,6 @@ class com_proclaimInstallerScript extends InstallerScript
      * @author CWM Team
      * @since  9.0.18
      */
-	/**
-	 * A list of files to be deleted
-	 *
-	 * @var    array
-	 * @since  3.6
-	 */
-	protected $deleteFiles = [];
-
-	/**
-	 * A list of folders to be deleted
-	 *
-	 * @var    array
-	 * @since  3.6
-	 */
-	protected $deleteFolders = [];
     private static array $installActionQueue = [
         // -- modules => { (folder) => { (module) => { (position), (published) } }* }*
         'modules' => [
@@ -142,17 +127,23 @@ class com_proclaimInstallerScript extends InstallerScript
         'SimpleXML',
     ];
 
+    /**
+     * Allow downgrades of your extension
+     *
+     * Use at your own risk as if there is a change in functionality people may wish to downgrade.
+     *
+     * @var    bool
+     * @since  3.6
+     */
+    protected $allowDowngrades = true;
 
     /**
-     * $parent is the class calling this method.
-     * $type is the type of change (install, update or discover_install, not uninstall).
-     * preflight runs before anything else and while the extracted files are in the uploaded temp folder.
-     * If preflight returns false, Joomla will abort the update and undo everything already done.
+     * Function called before extension installation/update/removal procedure commences
      *
-     * @param   string            $type    Type of installation
-     * @param   ComponentAdapter  $parent  Where it is coming from
+     * @param   string            $type    The type of change (install, update or discover_install, not uninstall)
+     * @param   ComponentAdapter  $parent  The class calling this method
      *
-     * @return boolean
+     * @return bool
      *
      * @throws \Exception
      * @since  1.5
@@ -163,30 +154,17 @@ class com_proclaimInstallerScript extends InstallerScript
             return false;
         }
 
+        $this->checkRequirements();
         $this->setDboFromAdapter($parent);
-
-        // Do not run uninstall at this point.
-        if ($type === 'uninstall') {
-            return true;
-        }
-
-        // Prevent users from installing this on Joomla 3
-        if (version_compare(JVERSION, '3.999.999', 'le')) {
-            $msg = "<p>This version of Proclaim cannot run on Joomla 3.</p>";
-
-            Log::add($msg, Log::WARNING, 'jerror');
-
-            return false;
-        }
 
         return true;
     }
 
 
     /**
-     * Uninstall rout to CwminstallModel
+     * Uninstall rout
      *
-     * @param   FileAdapter  $parent  ?
+     * @param   FileAdapter  $parent  The class calling this method
      *
      * @return bool
      *
@@ -208,8 +186,8 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Post Flight
      *
-     * @param   string            $type    Type of install
-     * @param   ComponentAdapter  $parent  Where it is coming from
+     * @param   string            $type    The type of change (install, update or discover_install, not uninstall)
+     * @param   ComponentAdapter  $parent  The class calling this method
      *
      * @return void
      *
@@ -221,18 +199,15 @@ class com_proclaimInstallerScript extends InstallerScript
         // Install subExtensions
         $this->installSubextensions($parent);
 
-	    //Remove old com_biblestudy menu items on admin side
-	    $this->removeOldMenuItems();
+        //Remove old com_biblestudy menu items on admin side
+        $this->removeOldMenuItems();
 
         //Remove old com_biblestudy folders and files
-	    $this->deleteFolders = ['components/com_biblestudy', 'administrator/components/com_biblestudy'];
-	    $this->removefiles();
-
+        $this->deleteFolders = ['components/com_biblestudy', 'administrator/components/com_biblestudy'];
+        $this->removefiles();
 
         // Show the post-installation page
         $this->renderPostInstallation($this->status, $parent);
-
-
     }
 
     /**
@@ -266,15 +241,8 @@ class com_proclaimInstallerScript extends InstallerScript
      * @throws Exception
      * @since  7.1.0
      */
-    public function checkRequirements(string $version): bool
+    public function checkRequirements(string $version = ''): bool
     {
-        // Include the JLog class.
-        Log::addLogger(
-            ['text_file' => 'com_proclaim.errors.php'],
-            Log::ALL,
-            'com_proclaim'
-        );
-
         return $this->checkExtensions(self::$extensions);
     }
 
@@ -315,8 +283,8 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Renders the post-installation message
      *
-     * @param   object            $status  ?
-     * @param   InstallerAdapter  $parent  is the class calling this method.
+     * @param   object            $status  Object of things to install
+     * @param   InstallerAdapter  $parent  The class calling this method
      *
      * @return void
      * @since  1.7.0
@@ -405,8 +373,8 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Render Post Uninstalling
      *
-     * @param   object            $status  ?
-     * @param   InstallerAdapter  $parent  is the class calling this method.
+     * @param   object            $status  Object of things to uninstall
+     * @param   InstallerAdapter  $parent  The class calling this method
      *
      * @return void
      *
@@ -503,9 +471,9 @@ class com_proclaimInstallerScript extends InstallerScript
 
 
     /**
-     * Installs subextensions (modules, plugins) bundled with the main extension
+     * Installs extensions (modules, plugins) bundled with the main extension
      *
-     * @param   InstallerAdapter  $parent  is the class calling this method.
+     * @param   InstallerAdapter  $parent  The class calling this method
      *
      * @return void
      *
@@ -705,9 +673,9 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
-     * Uninstalls subextensions (modules, plugins) bundled with the main extension
+     * Uninstalls extensions (modules, plugins) bundled with the main extension
      *
-     * @param   InstallerAdapter  $parent  is the class calling this method.
+     * @param   InstallerAdapter  $parent  The class calling this method
      *
      * @return void
      *
@@ -781,12 +749,12 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Set the database object from the installation adapter, if possible
      *
-     * @param   InstallerAdapter|mixed  $adapter  The installation adapter, hopefully.
+     * @param   InstallerAdapter|mixed  $adapter  The class calling this method
      *
      * @return  void
      * @since   7.2.0
      */
-    private function setDboFromAdapter($adapter): void
+    private function setDboFromAdapter(mixed $adapter): void
     {
         $this->dbo = null;
 
