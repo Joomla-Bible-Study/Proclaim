@@ -96,6 +96,21 @@ class com_proclaimInstallerScript extends InstallerScript
      * @author CWM Team
      * @since  9.0.18
      */
+	/**
+	 * A list of files to be deleted
+	 *
+	 * @var    array
+	 * @since  3.6
+	 */
+	protected $deleteFiles = [];
+
+	/**
+	 * A list of folders to be deleted
+	 *
+	 * @var    array
+	 * @since  3.6
+	 */
+	protected $deleteFolders = [];
     private static array $installActionQueue = [
         // -- modules => { (folder) => { (module) => { (position), (published) } }* }*
         'modules' => [
@@ -206,11 +221,18 @@ class com_proclaimInstallerScript extends InstallerScript
         // Install subExtensions
         $this->installSubextensions($parent);
 
+	    //Remove old com_biblestudy menu items on admin side
+	    $this->removeOldMenuItems();
+
+        //Remove old com_biblestudy folders and files
+	    $this->deleteFolders = ['components/com_biblestudy', 'administrator/components/com_biblestudy'];
+	    $this->removefiles();
+
+
         // Show the post-installation page
         $this->renderPostInstallation($this->status, $parent);
 
-        //Remove old com_biblestudy menu items on admin side
-        $this->removeOldMenuItems();
+
     }
 
     /**
