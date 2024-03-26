@@ -215,19 +215,15 @@ class com_proclaimInstallerScript extends InstallerScript
      * @return bool
      * @since 10.0.0
      */
-    public function removeOldMenuItems(): bool
+    public function removeBiblestudyVersion(): bool
     {
         $query = $this->dbo->getQuery(true);
-
         $conditions = array(
             $this->dbo->quoteName('link') . ' LIKE %com_biblestudy% '
         );
-
         $query->delete($this->dbo->quoteName('#__menu'));
         $query->where($conditions);
-
         $this->dbo->setQuery($query);
-
         return $this->dbo->execute();
     }
 
