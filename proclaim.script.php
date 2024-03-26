@@ -224,6 +224,7 @@ class com_proclaimInstallerScript extends InstallerScript
         $query->delete($this->dbo->quoteName('#__menu'));
         $query->where($conditions);
         $this->dbo->setQuery($query);
+
         return $this->dbo->execute();
     }
 
