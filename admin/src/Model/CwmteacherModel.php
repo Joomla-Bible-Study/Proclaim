@@ -3,10 +3,10 @@
 /**
  * Part of Proclaim Package
  *
- * @package    Proclaim.Admin
+ * @package        Proclaim.Admin
  * @copyright  (C) 2007 CWM Team All rights reserved
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
- * @link       https://www.christianwebministries.org
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
+ * @link           https://www.christianwebministries.org
  * */
 
 namespace CWM\Component\Proclaim\Administrator\Model;
@@ -20,8 +20,11 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CwmteacherTable;
+use Exception;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Filter\OutputFilter;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
@@ -67,12 +70,12 @@ class CwmteacherModel extends AdminModel
     /**
      * Get the form data
      *
-     * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param   array  $data      Data for the form.
+     * @param   bool   $loadData  True if the form is to load its own data (default case), false if not.
      *
      * @return  mixed  A JForm object on success, false on failure
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     public function getForm($data = array(), $loadData = true): mixed
@@ -130,7 +133,7 @@ class CwmteacherModel extends AdminModel
      *
      * @return    mixed    Object on success, false on failure.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since    1.7.0
      */
     public function getItem($pk = null): mixed
@@ -155,11 +158,11 @@ class CwmteacherModel extends AdminModel
     }
 
     /**
-     * Method to check-out a row for editing.
+     * Method to check out a row for editing.
      *
-     * @param   integer  $pk  The numeric id of the primary key.
+     * @param   int  $pk  The numeric id of the primary key.
      *
-     * @return  boolean  False on failure or error, true otherwise.
+     * @return  bool  False on failure or error, true otherwise.
      *
      * @since   11.1
      */
@@ -169,13 +172,62 @@ class CwmteacherModel extends AdminModel
     }
 
     /**
+     * Method to validate the form data.
+     *
+     * @param   Form    $form   The form to validate against.
+     * @param   array   $data   The data to validate.
+     * @param   string  $group  The name of the field group to validate.
+     *
+     * @return  array|bool  Array of filtered data if valid, false otherwise.
+     *
+     * @throws Exception
+     * @see     JFilterInput
+     * @since   3.7.0
+     * @see     \Joomla\CMS\Form\FormRule
+     */
+    public function validate($form, $data, $group = null): bool|array
+    {
+        $app   = Factory::getApplication();
+        $input = $app->getInput();
+
+        if (!$this->getCurrentUser()->authorise('core.admin', 'com_proclaim') && isset($data['rules'])) {
+            unset($data['rules']);
+        }
+
+        // Check for duplicates on new teachers
+        if (
+            (!isset($data['id']) || (int)$data['id'] === 0) && $data['alias'] === null &&
+            in_array(
+                $input->get('task'),
+                ['apply', 'save', 'save2new']
+            )
+        ) {
+            if ((int)$app->get('unicodeslugs') === 1) {
+                $data['alias'] = OutputFilter::stringUrlUnicodeSlug($data['teachername']);
+            } else {
+                $data['alias'] = OutputFilter::stringURLSafe($data['teachername']);
+            }
+
+            $table = $this->getTable();
+
+            if ($table->load(['alias' => $data['alias']])) {
+                $this->setError(Text::_('JBS_TCH_DUPLICATE'));
+
+                return false;
+            }
+        }
+
+        return parent::validate($form, $data, $group);
+    }
+
+    /**
      * Saves data creating image thumbnails
      *
      * @param   array  $data  Data
      *
-     * @return boolean
+     * @return bool
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.0.0
      */
     public function save($data): bool
@@ -216,16 +268,19 @@ class CwmteacherModel extends AdminModel
         }
 
         // Set contact to be a Int to work with Database
-
         $data['contact'] = (int)$data['contact'];
 
-        // Fix Save of update file to match path.
-        if ($data['teacher_image'] != $data['image']) {
+        // Fix Save of update file to match paths.
+        if ($data['teacher_image'] !== $data['image']) {
             $data['teacher_thumbnail'] = $data['image'];
             $data['teacher_image']     = $data['image'];
         }
 
-        return parent::save($data);
+        if (parent::save($data)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -233,10 +288,10 @@ class CwmteacherModel extends AdminModel
      *
      * @param   object  $record  A record object.
      *
-     * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the
+     * @return  bool  True if allowed to change the state of the record. Defaults to the permission for the
      *                   component.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   12.2
      */
     protected function canEditState($record): bool
@@ -279,7 +334,7 @@ class CwmteacherModel extends AdminModel
      *
      * @return    mixed    The data for the form.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   7.0
      */
     protected function loadFormData(): mixed
@@ -291,7 +346,7 @@ class CwmteacherModel extends AdminModel
     }
 
     /**
-     * Prepare and sanitise the table prior to saving.
+     * Prepare and sanitize the table prior to saving.
      *
      * @param   CwmteacherTable  $table  A reference to a JTable object.
      *
@@ -325,14 +380,14 @@ class CwmteacherModel extends AdminModel
     /**
      * Custom clean the cache of com_proclaim and proclaim modules
      *
-     * @param   string   $group      The cache group
-     * @param   integer  $client_id  The ID of the client
+     * @param   string  $group      The cache group
+     * @param   int     $client_id  The ID of the client
      *
      * @return  void
      *
      * @since    1.6
      */
-    protected function cleanCache($group = null, $client_id = 0): void
+    protected function cleanCache($group = null, int $client_id = 0): void
     {
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');
