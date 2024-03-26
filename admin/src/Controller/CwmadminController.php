@@ -23,7 +23,8 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Administrator\Lib\CwmpIconvert;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmrestore;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmssconvert;
-use CwmarchiveModel;
+use CWM\Component\Proclaim\Administrator\Model\CwmarchiveModel;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\Filesystem\Folder;
 use Joomla\CMS\Language\Text;
@@ -53,7 +54,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.0.0
      */
     public function tools(): void
@@ -190,7 +191,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
-     * @throws \JsonException
+     * @throws Exception
      * @since 7.0.0
      */
     public function mediaimages(): void
@@ -496,7 +497,7 @@ class CwmadminController extends FormController
     }
 
     /**
-     * Return back to c-panel
+     * Return to c-panel
      *
      * @return void
      *
@@ -546,7 +547,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.1.0
      */
     public function dbReset(): void
@@ -588,11 +589,11 @@ class CwmadminController extends FormController
     /**
      * Do the import
      *
-     * @param   boolean  $parent  Source of info
+     * @param   bool  $parent  Source of info
      *
      * @return void
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.0.0
      */
     public function doimport(bool $parent = true): void
@@ -600,8 +601,6 @@ class CwmadminController extends FormController
         // Check for request forgeries.
         Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-        $copysuccess = false;
-        $result      = null;
         $alt         = '';
 
         // This should be where the form administrator/form_migrate comes to with either the file select box or the tmp folder input field
@@ -613,14 +612,12 @@ class CwmadminController extends FormController
         $oldprefix = $input->get('oldprefix', '', 'string');
 
         if ($oldprefix) {
-            if ($this->copyTables($oldprefix)) {
-                $copysuccess = 1;
-            } else {
+            if (!($this->copyTables($oldprefix))) {
                 $app->enqueueMessage(Text::_('JBS_CMN_DATABASE_NOT_COPIED'), 'worning');
             }
         } else {
             $import = new Cwmrestore();
-            $result = $import->importdb($parent);
+            $import->importdb($parent);
             $alt    = '&cwmalt=1';
         }
 
@@ -632,9 +629,9 @@ class CwmadminController extends FormController
      *
      * @param   string  $oldprefix  Old table Prefix
      *
-     * @return boolean
+     * @return bool
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.0.0
      */
     public function copyTables(string $oldprefix): bool
@@ -683,7 +680,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.1.0
      */
     public function import(): void
@@ -693,15 +690,14 @@ class CwmadminController extends FormController
 
         $application = Factory::getApplication();
         $import      = new Cwmrestore();
-        $parent      = false;
-        $result      = $import->importdb($parent);
+        $result      = $import->importdb(false);
 
         if ($result === true) {
-            $application->enqueueMessage('' . Text::_('JBS_CMN_OPERATION_SUCCESSFUL') . '');
+            $application->enqueueMessage(Text::_('JBS_CMN_OPERATION_SUCCESSFUL'));
         } elseif ($result === false) {
             // Do nothing
         } else {
-            $application->enqueueMessage('' . $result . '');
+            $application->enqueueMessage($result);
         }
 
         $this->setRedirect('index.php?option=com_proclaim&view=cwmbackup');
@@ -712,7 +708,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0.0
      */
     public function export(): void
@@ -743,7 +739,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @since 9.0.0
      */
@@ -779,7 +775,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @since 9.0.0
      */
@@ -812,7 +808,11 @@ class CwmadminController extends FormController
         Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
         $model = new CwmarchiveModel();
-        $msg   = $model->doArchive();
+        try {
+            $msg = $model->doArchive();
+        } catch (Exception $e) {
+            throw new \RuntimeException($e);
+        }
         $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', $msg);
     }
 
@@ -822,9 +822,9 @@ class CwmadminController extends FormController
      * @param   int|null     $key     ID
      * @param   string|null  $urlVar  URL variable
      *
-     * @return boolean
+     * @return bool
      *
-     * @throws \Exception
+     * @throws Exception
      * @since version
      */
     public function submit(int $key = null, string $urlVar = null): bool
@@ -841,7 +841,7 @@ class CwmadminController extends FormController
             return false;
         }
 
-        // Name of array 'jform' must match 'control' => 'jform' line in the model code
+        // Name of an array 'jform' must match 'control' => 'jform' line in the model code
         $data = $this->input->post->get('jform', array(), 'array');
 
         // This is validate() from the FormModel class, not the Form class
@@ -852,7 +852,7 @@ class CwmadminController extends FormController
             $errors = $model->getErrors();
 
             foreach ($errors as $error) {
-                if ($error instanceof \Exception) {
+                if ($error instanceof Exception) {
                     $app->enqueueMessage($error->getMessage(), 'warning');
                 } else {
                     $app->enqueueMessage($error, 'warning');
