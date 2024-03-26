@@ -221,6 +221,44 @@ class CwmteacherModel extends AdminModel
     }
 
     /**
+     * Method to test whether a record can have its state changed.
+     *
+     * @param   object  $record  A record object.
+     *
+     * @return  bool  True if allowed to change the state of the record. Defaults to the permission for the component.
+     *
+     * @throws Exception
+     * @since   1.6
+     */
+    protected function canEditState($record)
+    {
+        $db         = Factory::getContainer()->get('DatabaseDriver');
+        $text       = '';
+
+        if (!empty($record) && $this->getState('task') === 'trash') {
+            $query = $db->getQuery(true);
+            $query->select('id, studytitle')
+                ->from('#__bsms_studies')
+                ->where('teacher_id = ' . $record->id)
+                ->where('published != ' . $db->q('-2'));
+            $db->setQuery($query);
+            $studies = $db->loadObjectList();
+
+            if ($studies) {
+                foreach ($studies as $studie) {
+                    $text .= ' ' . $studie->id . '-"' . $studie->studytitle . '",';
+                }
+
+                Factory::getApplication()->enqueueMessage(Text::_('JBS_TCH_CAN_NOT_DELETE') . $text);
+
+                return false;
+            }
+        }
+
+        return Factory::getUser()->authorise('core.edit.state', $this->option);
+    }
+
+    /**
      * Saves data creating image thumbnails
      *
      * @param   array  $data  Data
@@ -267,6 +305,35 @@ class CwmteacherModel extends AdminModel
             }
         }
 
+        $db         = Factory::getContainer()->get('DatabaseDriver');
+        $user       = Factory::getApplication()->getSession()->get('user');
+        $canDoState = $user->authorise('core.edit.state', $this->option);
+        $text       = '';
+
+        if (!empty($data)) {
+            $query = $db->getQuery(true);
+            $query->select('id, studytitle')
+                ->from('#__bsms_studies')
+                ->where('teacher_id = ' . $data['id'])
+                ->where('published != ' . $db->q('-2'));
+            $db->setQuery($query);
+            $studies = $db->loadObjectList();
+
+            if (!$studies && $canDoState) {
+                return true;
+            }
+
+            if ($data['published'] == '-2' || $data['published'] == '0') {
+                foreach ($studies as $studie) {
+                    $text .= ' ' . $studie->id . '-"' . $studie->studytitle . '",';
+                }
+
+                Factory::getApplication()->enqueueMessage(Text::_('JBS_TCH_CAN_NOT_DELETE') . $text);
+            }
+
+            return false;
+        }
+
         // Set contact to be a Int to work with Database
         $data['contact'] = (int)$data['contact'];
 
@@ -281,52 +348,6 @@ class CwmteacherModel extends AdminModel
         }
 
         return false;
-    }
-
-    /**
-     * Method to test whether a record can be deleted.
-     *
-     * @param   object  $record  A record object.
-     *
-     * @return  bool  True if allowed to change the state of the record. Defaults to the permission for the
-     *                   component.
-     *
-     * @throws Exception
-     * @since   12.2
-     */
-    protected function canEditState($record): bool
-    {
-        $tmp        = (array)$record;
-        $db         = Factory::getContainer()->get('DatabaseDriver');
-        $user       = Factory::getApplication()->getSession()->get('user');
-        $canDoState = $user->authorise('core.edit.state', $this->option);
-        $text       = '';
-
-        if (!empty($tmp)) {
-            $query = $db->getQuery(true);
-            $query->select('id, studytitle')
-                ->from('#__bsms_studies')
-                ->where('teacher_id = ' . $record->id)
-                ->where('published != ' . $db->q('-2'));
-            $db->setQuery($query);
-            $studies = $db->loadObjectList();
-
-            if (!$studies && $canDoState) {
-                return true;
-            }
-
-            if ($record->published == '-2' || $record->published == '0') {
-                foreach ($studies as $studie) {
-                    $text .= ' ' . $studie->id . '-"' . $studie->studytitle . '",';
-                }
-
-                Factory::getApplication()->enqueueMessage(Text::_('JBS_TCH_CAN_NOT_DELETE') . $text);
-            }
-
-            return false;
-        }
-
-        return $canDoState;
     }
 
     /**

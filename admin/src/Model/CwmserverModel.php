@@ -16,8 +16,10 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\Filesystem\Path;
@@ -54,7 +56,7 @@ class CwmserverModel extends AdminModel
     private object $data;
 
     /**
-     * @var boolean
+     * @var bool
      * @since 9.0.0
      * @todo  need to look into this and see if we need it still.
      */
@@ -65,7 +67,7 @@ class CwmserverModel extends AdminModel
      *
      * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   12.2
      */
     public function __construct($config = array())
@@ -165,6 +167,9 @@ class CwmserverModel extends AdminModel
      */
     public function save($data): bool
     {
+        $db         = Factory::getContainer()->get('DatabaseDriver');
+        $text       = '';
+
         if (strpos($data['server_name'], '"onmouseover="prompt(1)"') !== false) {
             $this->setError('"Illegal character use in Server Name field"');
 
@@ -176,6 +181,28 @@ class CwmserverModel extends AdminModel
                 $data['params']['path'] = substr($data['params']['path'], strpos($data['params']['path'], '//'));
             } elseif (strpos($data['params']['path'], '//') === false) {
                 $data['params']['path'] = '//' . $data['params']['path'];
+            }
+        }
+
+        if (!empty($data)) {
+            $query = $db->getQuery(true);
+            $query->select('id, params')
+                ->from('#__bsms_mediafiles')
+                ->where('server_id = ' . $data['id']);
+            $db->setQuery($query);
+            $studies = $db->loadObjectList();
+
+            if ($data['published'] == '-2' || $data['published'] == '0') {
+                foreach ($studies as $studie) {
+                    $registry = new Registry();
+                    $registry->loadString($studie->params);
+                    $studie->params = $registry;
+                    $text .= ' ' . $studie->id . '-"' . $studie->params->get('filename') . '",';
+                }
+
+                Factory::getApplication()->enqueueMessage(Text::sprintf('JBS_SVR_CAN_NOT_DELETE', $text));
+
+                return false;
             }
         }
 
@@ -191,7 +218,7 @@ class CwmserverModel extends AdminModel
      *
      * @return \Joomla\CMS\Form\Form|string
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @since   9.0.0
      */
@@ -231,7 +258,7 @@ class CwmserverModel extends AdminModel
      *
      * @return  mixed  A JForm object on success, false on failure
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     public function getForm($data = array(), $loadData = true)
@@ -259,7 +286,7 @@ class CwmserverModel extends AdminModel
      *
      * @return  Table  A Table object
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   3.0
      */
     public function getTable($name = 'Cwmserver', $prefix = '', $options = array()): Table
@@ -274,7 +301,7 @@ class CwmserverModel extends AdminModel
      *
      * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since    1.6
      */
     protected function canDelete($record): bool
@@ -290,39 +317,38 @@ class CwmserverModel extends AdminModel
      *
      * @param   object  $record  A record object.
      *
-     * @return   boolean  True if allowed to change the state of the record. Defaults to the permission set in the
+     * @return   bool  True if allowed to change the state of the record. Defaults to the permission set in the
      *                    component.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since    1.6
      */
     protected function canEditState($record)
     {
-        $user = Factory::getApplication()->getSession()->get('user');
+        $tmp        = (array)$record;
+        $db         = Factory::getContainer()->get('DatabaseDriver');
+        $user       = Factory::getApplication()->getSession()->get('user');
+        $canDoState = $user->authorise('core.edit.state', $this->option);
 
         // Check for existing article.
         if (!empty($record->id)) {
             return $user->authorise('core.edit.state', 'com_proclaim.cwmserver.' . (int)$record->id);
         }
 
-        // Default to component settings if neither article nor category known.
         return parent::canEditState($record);
     }
 
     /**
      * Method to get the data that should be injected in the form.
      *
-     * @return  object    The default data is an empty array.
+     * @return  array|object    The default data is an empty array.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   9.0.0
-     * @TODO    This gets called twice, because we're loading two forms. (There is a redundancy
-     *          in the bind() because the data is iterated over 2 times, 1 for each form). Possibly,
-     *          figure out a way to iterate over only the relevant data)
      */
-    protected function loadFormData()
+    protected function loadFormData(): array|object
     {
-        // If current state has data, use it instead of data from db
+        // If the current state has data, use it instead of data from db
         $session = Factory::getApplication()->getUserState('com_proclaim.edit.cwmserver.data', array());
 
         return empty($session) ? $this->data : $session;
@@ -349,7 +375,7 @@ class CwmserverModel extends AdminModel
      *
      * @return  void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   9.0.0
      */
     protected function populateState()

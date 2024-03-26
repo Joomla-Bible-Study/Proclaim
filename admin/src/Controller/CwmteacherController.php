@@ -48,11 +48,11 @@ class CwmteacherController extends FormController
      *
      * @param   BaseModel  $model  The model.
      *
-     * @return  boolean     True if successful, false otherwise and internal error is set.
+     * @return  bool     True if successful, false otherwise and internal error is set.
      *
      * @since   1.6
      */
-    public function batch($model = null)
+    public function batch($model = null): bool
     {
         // Preset the redirect
         $this->setRedirect(
