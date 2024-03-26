@@ -58,4 +58,20 @@ class CwmseriesController extends AdminController
         // Close the application
         Factory::getApplication()->close();
     }
+
+    /**
+     * Proxy for getModel.
+     *
+     * @param   string  $name    The model name. Optional.
+     * @param   string  $prefix  The class prefix. Optional.
+     * @param   array   $config  The array of possible config values. Optional.
+     *
+     * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel
+     *
+     * @since   1.6
+     */
+    public function getModel($name = 'Cwmserie', $prefix = 'Administrator', $config = ['ignore_request' => true]): \Joomla\CMS\MVC\Model\BaseDatabaseModel
+    {
+        return parent::getModel($name, $prefix, $config);
+    }
 }

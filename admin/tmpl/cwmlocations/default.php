@@ -13,6 +13,7 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Button\PublishedButton;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -142,20 +143,15 @@ echo Route::_('index.php?option=com_proclaim&view=cwmlocations'); ?>" method="po
                                 <?php
                                 echo HTMLHelper::_('grid.id', $i, $item->id); ?>
                             </td>
-                            <td class="center">
-                                <div class="btn-group">
-                                    <?php
-                                    echo HTMLHelper::_(
-                                        'jgrid.published',
-                                        $item->published,
-                                        $i,
-                                        'locations.',
-                                        $canChange,
-                                        'cb',
-                                        '',
-                                        ''
-                                    ); ?>
-                                </div>
+                            <td class="text-center d-none d-md-table-cell">
+                                <?php
+                                $options = [
+                                    'task_prefix' => 'cwmlocations.',
+                                    'disabled' => !$canChange,
+                                    'id' => 'state-' . $item->id
+                                ];
+                                echo (new PublishedButton())->render((int) $item->published, $i, $options);
+                                ?>
                             </td>
                             <td class="nowrap has-context">
                                 <div class="pull-left">

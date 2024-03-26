@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMTeachers;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
@@ -151,8 +152,8 @@ class HtmlView extends BaseHtmlView
             $childBar->unpublish('cwmteachers.unpublish');
             $childBar->archive('cwmteachers.archive');
 
-            if ($canDo->get('core.edit.state')) {
-                $childBar->trash('cwmteachers.trash');
+            if ($this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED) {
+                $childBar->trash('cwmteachers.trash')->listCheck(true);
             }
 
             // Add a batch button

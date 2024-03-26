@@ -47,4 +47,20 @@ class CwmpodcastsController extends AdminController
         $result   = $podcasts->makePodcasts();
         $this->setRedirect('index.php?option=com_proclaim&view=Cwmpodcasts&' . Session::getFormToken() . '=1', $result);
     }
+
+    /**
+     * Proxy for getModel.
+     *
+     * @param   string  $name    The model name. Optional.
+     * @param   string  $prefix  The class prefix. Optional.
+     * @param   array   $config  The array of possible config values. Optional.
+     *
+     * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel
+     *
+     * @since   1.6
+     */
+    public function getModel($name = 'Cwmpodcast', $prefix = 'Administrator', $config = ['ignore_request' => true]): \Joomla\CMS\MVC\Model\BaseDatabaseModel
+    {
+        return parent::getModel($name, $prefix, $config);
+    }
 }

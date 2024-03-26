@@ -50,4 +50,20 @@ class CwmserversController extends AdminController
 
         echo new JsonResponse($result);
     }
+
+    /**
+     * Proxy for getModel.
+     *
+     * @param   string  $name    The model name. Optional.
+     * @param   string  $prefix  The class prefix. Optional.
+     * @param   array   $config  The array of possible config values. Optional.
+     *
+     * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel
+     *
+     * @since   1.6
+     */
+    public function getModel($name = 'Cwmserver', $prefix = 'Administrator', $config = ['ignore_request' => true]): \Joomla\CMS\MVC\Model\BaseDatabaseModel
+    {
+        return parent::getModel($name, $prefix, $config);
+    }
 }

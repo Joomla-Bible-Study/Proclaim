@@ -78,7 +78,12 @@ class ProclaimComponent extends MVCComponent implements
      * @since   4.0.0
      */
     public const CONDITION_TRASHED = -2;
-    /** @var array Supported functionality */
+
+    /**
+     * @var array Supported functionality
+     *
+     * @since 4.0.0
+     */
     protected array $supportedFunctionality = [
         'core.featured' => true,
         'core.state'    => true,

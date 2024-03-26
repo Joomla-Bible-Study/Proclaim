@@ -13,6 +13,8 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Button\FeaturedButton;
+use Joomla\CMS\Button\PublishedButton;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
@@ -88,35 +90,35 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                             </th>
                             <th scope="col" style="min-width:100px">
                                 <?php
-                                echo HtmlHelper::_(
-                                    'searchtools.sort',
-                                    'JBS_CMN_TEACHER',
-                                    'cwmteacher.teachername',
-                                    $listDirn,
-                                    $listOrder
-                                ); ?>
+                                                                echo HtmlHelper::_(
+                                                                    'searchtools.sort',
+                                                                    'JBS_CMN_TEACHER',
+                                                                    'cwmteacher.teachername',
+                                                                    $listDirn,
+                                                                    $listOrder
+                                                                ); ?>
                             </th>
                             <th scope="col" class="w-1 text-center">
                                 <?php
-                                echo HtmlHelper::_(
-                                    'searchtools.sort',
-                                    'JGRID_HEADING_ACCESS',
-                                    'cwmteacher.access',
-                                    $listDirn,
-                                    $listOrder
-                                ); ?>
+                                                                echo HtmlHelper::_(
+                                                                    'searchtools.sort',
+                                                                    'JGRID_HEADING_ACCESS',
+                                                                    'cwmteacher.access',
+                                                                    $listDirn,
+                                                                    $listOrder
+                                                                ); ?>
                             </th>
                             <?php
                             if (Multilanguage::isEnabled()) : ?>
                                 <th scope="col" class="w-10 d-none d-md-table-cell">
                                     <?php
-                                    echo HTMLHelper::_(
-                                        'searchtools.sort',
-                                        'JGRID_HEADING_LANGUAGE',
-                                        'language',
-                                        $listDirn,
-                                        $listOrder
-                                    ); ?>
+                                                                    echo HTMLHelper::_(
+                                                                        'searchtools.sort',
+                                                                        'JGRID_HEADING_LANGUAGE',
+                                                                        'language',
+                                                                        $listDirn,
+                                                                        $listOrder
+                                                                    ); ?>
                                 </th>
                             <?php
                             endif; ?>
@@ -163,39 +165,35 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                                     echo HtmlHelper::_('grid.id', $i, $item->id); ?>
                                 </td>
                                 <td class="text-center d-none d-md-table-cell">
-                                    <div class="btn-group">
-                                        <?php
-                                        echo HtmlHelper::_(
-                                            'jgrid.published',
-                                            $item->published,
-                                            $i,
-                                            'teachers.',
-                                            $canChange,
-                                            'cb',
-                                            '',
-                                            ''
-                                        ); ?>
-                                    </div>
+                                    <?php
+                                    $options = [
+                                        'task_prefix' => 'cwmteachers.',
+                                        'disabled' => !$canChange,
+                                        'id' => 'state-' . $item->id
+                                    ];
+                            echo (new PublishedButton())->render((int) $item->published, $i, $options);
+                            ?>
+                                </td>
                                 </td>
                                 <td class="nowrap has-context">
                                     <div class="pull-left">
                                         <?php
-                                        if ($canEdit || $canEditOwn) : ?>
+                                if ($canEdit || $canEditOwn) : ?>
                                             <a href="<?php
-                                            echo Route::_(
-                                                'index.php?option=com_proclaim&task=cwmteacher.edit&id=' . (int)$item->id
-                                            ); ?>">
+                                    echo Route::_(
+                                        'index.php?option=com_proclaim&task=cwmteacher.edit&id=' . (int)$item->id
+                                    ); ?>">
                                                 <?php
                                                 echo($this->escape($item->teachername) ? $this->escape(
                                                     $item->teachername
                                                 ) : 'ID: ' . $this->escape($item->id)); ?>
                                             </a>
                                         <?php
-                                        else :
-                                            echo($this->escape($item->teachername) ? $this->escape(
-                                                $item->teachername
-                                            ) : 'ID: ' . $this->escape($item->id));
-                                        endif; ?>
+                                else :
+                                    echo($this->escape($item->teachername) ? $this->escape(
+                                        $item->teachername
+                                    ) : 'ID: ' . $this->escape($item->id));
+                                endif; ?>
                                         <br />
                                         <span class="small">
 										<?php echo Text::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
@@ -210,7 +208,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                                 if (Multilanguage::isEnabled()) : ?>
                                     <td class="small d-none d-md-table-cell">
                                         <?php
-                                        echo LayoutHelper::render('joomla.content.language', $item); ?>
+                                echo LayoutHelper::render('joomla.content.language', $item); ?>
                                     </td>
                                 <?php
                                 endif; ?>
@@ -220,25 +218,25 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                                         if (!$item->list_show) {
                                             echo Text::_('JNO');
                                         }
-                                        if ($item->list_show > 0) {
-                                            echo Text::_('JYES');
-                                        } ?>
+                            if ($item->list_show > 0) {
+                                echo Text::_('JYES');
+                            } ?>
                                     </div>
                                 </td>
                                 <td class="small d-none d-md-table-cell">
                                     <div class="pull-left">
                                         <?php
-                                        if (!$item->landing_show) {
-                                            echo Text::_('JNO');
-                                        }
-                                        if ($item->landing_show > 0) {
-                                            echo Text::_('JYES');
-                                        }
-                                        if ($item->landing_show == '1') {
-                                            echo ' - ' . Text::_('JBS_TCH_ABOVE');
-                                        } elseif ($item->landing_show == '2') {
-                                            echo ' - ' . Text::_('JBS_TCH_BELOW');
-                                        } ?>
+                            if (!$item->landing_show) {
+                                echo Text::_('JNO');
+                            }
+                            if ($item->landing_show > 0) {
+                                echo Text::_('JYES');
+                            }
+                            if ($item->landing_show == '1') {
+                                echo ' - ' . Text::_('JBS_TCH_ABOVE');
+                            } elseif ($item->landing_show == '2') {
+                                echo ' - ' . Text::_('JBS_TCH_BELOW');
+                            } ?>
                                     </div>
                                 </td>
                                 <td class="d-none d-lg-table-cell">
@@ -251,7 +249,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                         </tbody>
                     </table>
                     <?php
-                    // Load the batch processing form. ?>
+                    // Load the batch processing form.?>
                     <?php
                     if ($user->authorise('core.create', 'com_proclaim')
                         && $user->authorise('core.edit', 'com_proclaim')
@@ -262,9 +260,9 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                             'bootstrap.renderModal',
                             'collapseModal',
                             array(
-                                'title'  => Text::_('COM_CONTENT_BATCH_OPTIONS'),
-                                'footer' => $this->loadTemplate('batch_footer'),
-                            ),
+                                    'title'  => Text::_('COM_CONTENT_BATCH_OPTIONS'),
+                                    'footer' => $this->loadTemplate('batch_footer'),
+                                ),
                             $this->loadTemplate('batch_body')
                         ); ?>
                     <?php
@@ -275,7 +273,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                 <?php
                 echo $this->pagination->getListFooter(); ?>
                 <?php
-                //Load the batch processing form. ?>
+                //Load the batch processing form.?>
                 <input type="hidden" name="task" value=""/>
                 <input type="hidden" name="boxchecked" value="0"/>
                 <?php
