@@ -16,7 +16,7 @@
                    key_field="id"
                    value_field="title"
                    required="true"
-                    />
+            />
         </fieldset>
     </fields>
 </metadata>

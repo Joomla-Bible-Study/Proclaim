@@ -1,63 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- $Id: default.xml tf 12-11-2007 $ -->
 <metadata>
-	<layout title="JBS_MNU_SINGLE_SERIES_LAYOUT">
-		<message>
-			<![CDATA[JBS_MNU_SINGLE_SERIES_LAYOUT_DESC]]>
-		</message>
-	</layout>
-	<state>
-		<name>JBS_MNU_SINGLE_SERIES_LAYOUT</name>
-		<url addpath="/administrator/components/com_proclaim/elements">
-			<param name="id" type="Series" default="" label="JBS_CMN_SELECT_SERIES"
-			       description="JBS_MNU_SELECT_SERIES_DESC"/>
-		</url>
-		<params addpath="/components/com_proclaim/elements">
-			<param name="type" type="hidden" default=""/>
-			<param name="t" type="t" default="" label="JBS_MNU_SELECT_TEMPLATE"
-			       description="JBS_MNU_SELECT_TEMPLATE_DESC"/>
-		</params>
-	</state>
-	<fields name="request">
-		<fieldset name="request"
-		          addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
-		>
-			<field name="id" type="Modal_Series"
-			       description="JBS_MNU_SELECT_SERIES_DESC"
-			       label="JBS_CMN_SELECT_SERIES"
-			       required="true"
-			/>
-			<field name="t" type="sql"
-			       description="JBS_MNU_SELECT_TEMPLATE_DESC"
-			       label="JBS_MNU_SELECT_TEMPLATE"
-			       default="1"
-			       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
-			       key_field="id"
-			       value_field="title"
-			       required="true"
-			/>
-		</fieldset>
-	</fields>
-	<fields name="params">
-		<fieldset name="basic"
-		          label="JBS_MNU_SINGLE_SERIES_LAYOUT">
+    <layout title="JBS_MNU_SINGLE_SERIES_LAYOUT">
+        <message>
+            <![CDATA[JBS_MNU_SINGLE_SERIES_LAYOUT_DESC]]>
+        </message>
+    </layout>
+    <state>
+        <name>JBS_MNU_SINGLE_SERIES_LAYOUT</name>
+        <url addpath="/administrator/components/com_proclaim/elements">
+            <param name="id" type="Series" default="" label="JBS_CMN_SELECT_SERIES"
+                   description="JBS_MNU_SELECT_SERIES_DESC"/>
+        </url>
+        <params addpath="/components/com_proclaim/elements">
+            <param name="type" type="hidden" default=""/>
+            <param name="t" type="t" default="" label="JBS_MNU_SELECT_TEMPLATE"
+                   description="JBS_MNU_SELECT_TEMPLATE_DESC"/>
+        </params>
+    </state>
+    <fields name="request">
+        <fieldset name="request"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
+        >
+            <field name="id" type="Modal_Series"
+                   description="JBS_MNU_SELECT_SERIES_DESC"
+                   label="JBS_CMN_SELECT_SERIES"
+                   required="true"
+            />
+            <field name="t" type="sql"
+                   description="JBS_MNU_SELECT_TEMPLATE_DESC"
+                   label="JBS_MNU_SELECT_TEMPLATE"
+                   default="1"
+                   query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
+                   key_field="id"
+                   value_field="title"
+                   required="true"
+            />
+        </fieldset>
+    </fields>
+    <fields name="params">
+        <fieldset name="basic"
+                  label="JBS_MNU_SINGLE_SERIES_LAYOUT">
 
-			<field name="metakey"
-			       type="text"
-			       class="inputbox"
-			       size="50"
-			       label="JBS_STY_METAKEYWORDS"
-			       description="JBS_STY_METAKEYWORDS_DESC"/>
+            <field name="metakey"
+                   type="text"
+                   class="inputbox"
+                   size="50"
+                   label="JBS_STY_METAKEYWORDS"
+                   description="JBS_STY_METAKEYWORDS_DESC"/>
 
-			<field name="metadesc"
-			       type="textarea"
-			       class="inputbox"
-			       cols="50"
-			       rows="4"
-			       label="JBS_STY_METADESCRIPTION"
-			       description="JBS_STY_METADESCRIPTION_DESC"/>
+            <field name="metadesc"
+                   type="textarea"
+                   class="inputbox"
+                   cols="50"
+                   rows="4"
+                   label="JBS_STY_METADESCRIPTION"
+                   description="JBS_STY_METADESCRIPTION_DESC"/>
 
-		</fieldset>
-	</fields>
+        </fieldset>
+    </fields>
 </metadata>
 

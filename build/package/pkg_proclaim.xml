@@ -9,9 +9,9 @@
     <dlid prefix="dlid=" suffix=""/>
     <name>pkg_proclaim</name>
     <author>Christian Web Ministries</author>
-    <creationDate>2023-08-30</creationDate>
+    <creationDate>Feb 15, 2024</creationDate>
     <packagename>proclaim</packagename>
-    <version>10.0.0</version>
+    <version>10.0.0-alpha.20240321</version>
     <url>https://www.christionwebministries.com/</url>
     <packager>CWM</packager>
     <packagerurl>https://www.christionwebministries.com</packagerurl>
@@ -39,6 +39,8 @@
     <scriptfile>script.proclaim.php</scriptfile>
 
     <updateservers>
-        <server type="extension" priority="1" name="CWM Proclaim for Joomla!">https://www.christionwebministries.com/updates/pkgadmintoolspro.xml</server>
+        <server type="extension" priority="1" name="CWM Proclaim for Joomla!">
+            https://www.christionwebministries.com/updates/pkgadmintoolspro.xml
+        </server>
     </updateservers>
 </extension>

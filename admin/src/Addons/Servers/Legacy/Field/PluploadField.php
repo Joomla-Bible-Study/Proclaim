@@ -1,23 +1,29 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2022 (C) CWM Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @copyright  (C) 2007 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
+
 namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Legacy\Field;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CWMParams;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use Exception;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Session\Session;
 use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
+
+use function defined;
 
 /**
  * Class JFormFieldPlupload
@@ -27,46 +33,50 @@ use Joomla\CMS\Uri\Uri;
  */
 class PluploadField extends FormField
 {
-	/**
-	 * The field type.
-	 *
-	 * @var  string
-	 *
-	 * @since 9.0.0
-	 */
-	public $type = 'Plupload';
+    /**
+     * The field type.
+     *
+     * @var  string
+     *
+     * @since 9.0.0
+     */
+    public $type = 'Plupload';
 
-	/**
-	 * Get Input
-	 *
-	 * @return string
-	 *
-	 * @since 1.5
-	 * @throws \Exception
-	 */
-	protected function getInput()
-	{
-		// Include Plupload libraries
-		$document = Factory::getApplication()->getDocument();
-		$app = Factory::getApplication();
+    /**
+     * Get Input
+     *
+     * @return string
+     *
+     * @throws Exception
+     * @since 1.5
+     */
+    protected function getInput(): string
+    {
+        // Include Plupload libraries
+        $document = Factory::getApplication()->getDocument();
+        $app      = Factory::getApplication();
 
-		$document->addScript(Uri::root() . 'administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/plupload.full.min.js');
-		$document->addScript(Uri::root() . 'administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/legacy.js');
-		$view = $app->input->get('view');
-		$admin = CWMParams::getAdmin();
+        $document->addScript(
+            Uri::root(
+            ) . 'administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/plupload.full.min.js'
+        );
+        $document->addScript(
+            Uri::root() . 'administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/legacy.js'
+        );
+        $view  = $app->input->get('view');
+        $admin = Cwmparams::getAdmin();
 
-		if (isset($this->form->s_params['uploadpath']))
-		{
-			$upload = $this->form->s_params['uploadpath'];
-		}
-		else
-		{
-			$upload = $admin->params->get('uploadpath', '/images/biblestudy/media/');
-		}
+        if (isset($this->form->s_params['uploadpath'])) {
+            $upload = $this->form->s_params['uploadpath'];
+        } else {
+            $upload = $admin->params->get('uploadpath', '/images/biblestudy/media/');
+        }
 
-		$document->addScriptDeclaration('
+        $document->addScriptDeclaration(
+            '
 			jQuery(document).ready(function() {
-				uploader.setOption("url", "index.php?option=com_proclaim&task=' . $view . '.xhr&' . Session::getFormToken() . '=1");
+				uploader.setOption("url", "index.php?option=com_proclaim&task=' . $view . '.xhr&' . Session::getFormToken(
+            ) . '=1");
 				uploader.bind("BeforeUpload", function() {
 					uploader.setOption("multipart_params", {
 						handler: "' . $this->element["handler"] . '",
@@ -75,14 +85,14 @@ class PluploadField extends FormField
 				});
 				uploader.init();
 			});'
-		);
+        );
 
-		$class = $this->element['class'] ? ' class="' . (string) $this->element['class'] . ' span12"' : '';
+        $class = $this->element['class'] ? ' class="' . (string)$this->element['class'] . ' col-12"' : '';
 
-		$html = ' <input type="text" placeholder="Enter a filename" ' . $class . ' name="' . $this->name . '" id="' .
-			$this->id . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"/><br />
+        $html = ' <input type="text" placeholder="Enter a filename" ' . $class . ' name="' . $this->name . '" id="' .
+            $this->id . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"/><br />
                           <input id="uploader-file" placeholder="Choose a media file"
-                          style="border-left: 0; border-radius: 0;" class="span7" type="text" disabled>
+                          style="border-left: 0; border-radius: 0;" class="col-7" type="text" disabled>
                           <a id="browse" href="javascript:;" class="btn btn-default">
                              <i class="icon-plus"></i>
                              Add File
@@ -95,9 +105,9 @@ class PluploadField extends FormField
                         class="progress progress-striped active">
                         <div class="bar" style="width: 0;"></div></div><br />
 						<pre id="console" class="hidden"></pre>';
-		$html .= '
+        $html .= '
             ';
 
-		return $html;
-	}
+        return $html;
+    }
 }

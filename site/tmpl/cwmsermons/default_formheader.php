@@ -1,10 +1,11 @@
 <?php
+
 /**
  * Default FormHeader
  *
  * @package    Proclaim.Site
- * @copyright  2007 - 2022 (C) CWM Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @copyright  (C) 2007 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
@@ -22,5 +23,6 @@ use Joomla\CMS\Router\Route;
 
 $input = Factory::getApplication()->input;
 ?>
-<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmsermons&t=' . $input->get('t', '1', 'int')); ?>"
+<form action="<?php
+echo Route::_('index.php?option=com_proclaim&view=cwmsermons&t=' . $input->get('t', '1', 'int')); ?>"
       method="post" name="adminForm" id="adminForm">

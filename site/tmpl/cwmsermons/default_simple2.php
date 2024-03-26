@@ -1,32 +1,35 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
- * @package    Proclaim.Admin
- * @copyright  2007 - 2021 (C) CWM Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @link       https://www.christianwebministries.org
+ * @package        Proclaim.Site
+ * @copyright  (C) 2007 CWM Team All rights reserved
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
+ * @link           https://www.christianwebministries.org
  * */
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Html\HtmlHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
-use CWM\Component\Proclaim\Site\Helper\CWMListing;
 use Joomla\Registry\Registry;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
 
 HtmlHelper::_('dropdown.init');
 HtmlHelper::_('behavior.multiselect');
 HtmlHelper::_('formbehavior.chosen', 'select');
 $wa = $this->document->getWebAssetManager();
 
-$wa->addInlineStyle("
+$wa->addInlineStyle(
+    "
 .title {text-transform: uppercase;
     color: #1e3e48;
     font-family: 'Fjalla One',sans-serif; font-size: 16px;
@@ -145,7 +148,8 @@ position: absolute;
    position:absolute;
    background-color:#000;
    opacity:.7;
-}");
+}"
+);
 $app       = Factory::getApplication();
 $user      = $user = Factory::getApplication()->getSession()->get('user');
 $userId    = $user->get('id');
@@ -154,109 +158,114 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 $archived  = $this->state->get('filter.published') == 2 ? true : false;
 $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder == 'study.ordering';
-$listing      = new CWMListing;
-$files = new File;
-$folder = Folder::files('media/com_proclaim/images/rotating');
-$count = count($folder);
+$listing   = new Cwmlisting();
+$files     = new File();
+$folder    = Folder::files('media/com_proclaim/images/rotating');
+$count     = count($folder);
 
 
 ?>
 
 <div class="container">
-	<div class="row">
-		<div class="col-sm-12 content">
-			<div id="filters">
-				<?php
-				// Search tools bar
-				echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
-				?>
-			</div>
-			<section class="media__container">
-				<div id="media__items__list" class="su_macro_prototype list-unstyled media__view media__container list_contains_thumbnail" style="display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 15px;">
-					<?php foreach($this->items as $item){
-						$itemparams = new Registry;
-						$params = $itemparams->loadString($item->params);
+    <div class="row">
+        <div class="col-sm-12 content">
+            <div id="filters">
+                <?php
+                // Search tools bar
+                echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+                ?>
+            </div>
+            <section class="media__container">
+                <div id="media__items__list"
+                     class="su_macro_prototype list-unstyled media__view media__container list_contains_thumbnail"
+                     style="display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;">
+                    <?php
+                    foreach ($this->items as $item) {
+                        $itemparams = new Registry();
+                        $params     = $itemparams->loadString($item->params);
                         $studyimage = $params->get('studyimage');
-                        if (!empty($item->thumbnailm))
-                        {
+                        if (!empty($item->thumbnailm)) {
                             $image = $item->thumbnailm;
                         }
-                        if ($params->get('studyimage') !== -1)
-                        {
+                        if ($params->get('studyimage') !== -1) {
                             //clean up extra data in the image
                             $hash = str_contains($params->get('studyimage'), '#');
-                            if ($hash == 1)
-                            {
-                               $imageparam = $params->get('studyimage');
-                               $hashlocation = strpos($imageparam, '#');
-                               $image = substr($imageparam, 0,$hashlocation);
-                            }
-                            else{
-	                            $image = 'media/com_proclaim/images/stockimages/'.$params->get('studyimage');
+                            if ($hash == 1) {
+                                $imageparam   = $params->get('studyimage');
+                                $hashlocation = strpos($imageparam, '#');
+                                $image        = substr($imageparam, 0, $hashlocation);
+                            } else {
+                                $image = 'media/com_proclaim/images/stockimages/' . $params->get('studyimage');
                             }
                         }
-                        if ($studyimage === null || (empty($item->thumbnailm) && ($params->get('studyimage') == -1)))
-                        {
-                            $random = rand(0, $count);
-                            if (array_key_exists($random, $folder))
-                            {
-	                            $image = 'media/com_proclaim/images/rotating/' . $folder[$random];
+                        if ($studyimage === null || (empty($item->thumbnailm) && ($params->get('studyimage') == -1))) {
+                            $random = random_int(0, $count);
+                            if (array_key_exists($random, $folder)) {
+                                $image = 'media/com_proclaim/images/rotating/' . $folder[$random];
                             }
-                            if ($image == 'media/com_proclaim/images/stockimages/')
-                            {
+                            if ($image == 'media/com_proclaim/images/stockimages/') {
                                 $image = 'media/com_proclaim/images/rotating/bible01.jpg';
                             }
-	                        if ($image == 'media/com_proclaim/images/stockimages/-1')
-	                        {
-		                        $image = 'media/com_proclaim/images/rotating/bible01.jpg';
-	                        }
+                            if ($image == 'media/com_proclaim/images/stockimages/-1') {
+                                $image = 'media/com_proclaim/images/rotating/bible01.jpg';
+                            }
                         }
-                    if ($this->params->get('simplegridtextoverlay') == 1 || $params->get('nooverlaysimplemode') == 'yes')
-                    {
-	                    $overlaytext = '<h5 class="card-title text-uppercase overlay-text -webkit-text-stroke" style="text-shadow: 2px 2px #000000;">' . $item->studytitle . '</h5>';
-                    }
-                    if ($params->get('nooverlaysimplemode') == 'no')
-                    {
-                        $overlaytext = '';
-                    }
-					?>
-					<article class="media__item__wrapper">
-                        <div class="thumbnail text-center">
-                            <div class="card overflow-hidden border-0 rounded-0 text-center text-white">
-                                <img src="<?php echo $image; ?>" class="card-img rounded-0" alt="...">
-                                <div class="card-img-overlay d-flex flex-column justify-content-center">
-                                    <?php echo $overlaytext; ?>
+                        if (
+                            $this->params->get('simplegridtextoverlay') == 1 || $params->get(
+                                'nooverlaysimplemode'
+                            ) == 'yes'
+                        ) {
+                            $overlaytext = '<h5 class="card-title text-uppercase overlay-text -webkit-text-stroke" style="text-shadow: 2px 2px #000000;">' . $item->studytitle . '</h5>';
+                        }
+                        if ($params->get('nooverlaysimplemode') == 'no') {
+                            $overlaytext = '';
+                        }
+                        ?>
+                        <article class="media__item__wrapper">
+                            <div class="thumbnail text-center">
+                                <div class="card overflow-hidden border-0 rounded-0 text-center text-white">
+                                    <img src="<?php
+                                    echo $image; ?>" class="card-img rounded-0" alt="...">
+                                    <div class="card-img-overlay d-flex flex-column justify-content-center">
+                                        <?php
+                                        echo $overlaytext; ?>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                             <div class="media__item__info">
-                                <h4 class="title"><?php echo $item->studytitle; ?></h4>
+                                <h4 class="title"><?php
+                                    echo $item->studytitle; ?></h4>
                                 <small class="media__item__details">
-                                    <span class="authordate" data-prefix="by"><?php echo Text::_('CWM_BY'); echo $item->teachername; ?></span>
+                                    <span class="authordate" data-prefix="by"><?php
+                                        echo Text::_('CWM_BY');
+                                        echo $item->teachername; ?></span>
                                     <span class="media__item__details__divider">|</span>
-                                    <span class="authordate"><?php echo $item->studydate; ?></span>
+                                    <span class="authordate"><?php
+                                        echo $item->studydate; ?></span>
                                 </small>
                                 <div class="mediafiles">
-                                    <?php echo $item->media; ?>
+                                    <?php
+                                    echo $item->media; ?>
                                 </div>
                             </div>
-					</article>
+                        </article>
                         <?php
-                //end foreach of $items
-                } ?>
-				</div>
+                        //end foreach of $items
+                    } ?>
+                </div>
 
-			</section>
-		</div>
-	</div>
+            </section>
+        </div>
+    </div>
 </div>
 <div class="row-fluid col-sm-12 pagination pagelinks" style="background-color: #A9A9A9;
-	margin: 0 -5px;
-	padding: 8px 8px;
-	border: 1px solid #C5C1BE;
-	position: relative;
-	-webkit-border-radius: 9px;">
-	<?php echo $this->pagination->getPageslinks();?>
+    margin: 0 -5px;
+    padding: 8px 8px;
+    border: 1px solid #C5C1BE;
+    position: relative;
+    -webkit-border-radius: 9px;">
+    <?php
+    echo $this->pagination->getPageslinks(); ?>
 </div>

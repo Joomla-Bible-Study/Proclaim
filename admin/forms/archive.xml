@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<fieldset>
-		<field name="timeframe" type="int" default=""
-		       label="JBS_ARCHIVE_TIMEFRAME_LABEL"
-		       description="JBS_ARCHIVE_TIMEFRAME_DESC" size="5" labelclass="control-label" class="span2"
-		       required="required">
-		</field>
-		<field name="swich" type="radio" default="year"
-		       label="JBS_ARCHIVE_SWICH_LABEL" description="JBS_ARCHIVE_SWICH_DESC"
-		       class="btn-group" labelclass="control-label">
-			<option value="year">JBS_CMN_YEARS</option>
-			<option value="month">JBS_CMN_MONTHS</option>
-			<option value="day">JBS_CMN_DAYS</option>
-		</field>
-	</fieldset>
+    <fieldset>
+        <field name="timeframe" type="int" default=""
+               label="JBS_ARCHIVE_TIMEFRAME_LABEL"
+               description="JBS_ARCHIVE_TIMEFRAME_DESC" size="5" labelclass="control-label" class="col-2"
+               required="required">
+        </field>
+        <field name="swich" type="radio" default="year"
+               label="JBS_ARCHIVE_SWICH_LABEL" description="JBS_ARCHIVE_SWICH_DESC"
+               class="btn-group" labelclass="control-label">
+            <option value="year">JBS_CMN_YEARS</option>
+            <option value="month">JBS_CMN_MONTHS</option>
+            <option value="day">JBS_CMN_DAYS</option>
+        </field>
+    </fieldset>
 </form>
