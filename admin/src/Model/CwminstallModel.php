@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
@@ -35,13 +36,13 @@ use Joomla\Filesystem\Folder;
  */
 class CwminstallModel extends ListModel
 {
-    /** @var integer Total numbers of Versions
+    /** @var int Total numbers of Versions
      *
      * @since 7.1
      */
     public $totalSteps = 0;
 
-    /** @var integer Numbers of Versions already processed
+    /** @var int Numbers of Versions already processed
      *
      * @since 7.1
      */
@@ -95,12 +96,12 @@ class CwminstallModel extends ListModel
      * @since 7.1
      */
     private array $allupdates = [];
-    /** @var ?string Version of Proclaim
+    /** @var string Version of Proclaim
      *
      * @since 7.1
      */
     private string $versionSwitch = '';
-    /** @var integer ID of Extinction Table
+    /** @var int ID of Extinction Table
      *
      * @since 7.1
      */
@@ -135,7 +136,7 @@ class CwminstallModel extends ListModel
      * @since 9.0.14
      */
     private array $start = [];
-    /** @var integer If was imported
+    /** @var int If was imported
      *
      * @since 7.1
      */
@@ -146,7 +147,7 @@ class CwminstallModel extends ListModel
      *
      * @param   array  $config  An optional associative array of configuration settings.
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.1
      */
     public function __construct($config = [])
@@ -160,11 +161,11 @@ class CwminstallModel extends ListModel
     }
 
     /**
-     * Start Looking though the Versions
+     * Start Looking through the Versions
      *
-     * @return boolean
+     * @return bool
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.1
      */
     public function startScanning(): bool
@@ -194,7 +195,7 @@ class CwminstallModel extends ListModel
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.1
      */
     private function resetStack(): void
@@ -245,11 +246,11 @@ class CwminstallModel extends ListModel
     }
 
     /**
-     * Get migrate versions of DB after import/copy has finished.
+     * Get to migrate versions of DB after import/copy has finished.
      *
      * @return void
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.1
      */
     private function getSteps(): void
@@ -354,12 +355,12 @@ class CwminstallModel extends ListModel
     /**
      * Set the schema version for an extension by looking at its latest update
      *
-     * @param   string   $version  Version number
-     * @param   integer  $eid      Extension ID
+     * @param   string  $version  Version number
+     * @param   int     $eid      Extension ID
      *
-     * @return  boolean
+     * @return  bool
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.1.0
      */
     private function setSchemaVersion(string $version, int $eid): bool
@@ -379,7 +380,7 @@ class CwminstallModel extends ListModel
                 $query->clear();
                 $query->insert($this->_db->quoteName('#__schemas'));
                 $query->columns(array($this->_db->quoteName('extension_id'), $this->_db->quoteName('version_id')));
-                $query->values($eid . ', ' . $this->_db->quote($version));
+                $query->values($eid . ', ' . $this->_db->quote(substr($version, 0, 20)));
                 $this->_db->setQuery($query);
 
                 if (!$this->_db->execute()) {
@@ -461,7 +462,7 @@ class CwminstallModel extends ListModel
     /**
      * Makes sure that no more than 5 seconds since the start of the timer have elapsed
      *
-     * @return boolean
+     * @return bool
      *
      * @since 7.1
      */
@@ -478,9 +479,9 @@ class CwminstallModel extends ListModel
      *
      * @param   bool  $resetTimer  If the time must be reset
      *
-     * @return boolean
+     * @return bool
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.1
      */
     public function run(bool $resetTimer = true): bool
@@ -564,9 +565,9 @@ class CwminstallModel extends ListModel
     /**
      * Start the Run through the Pre Versions then SQL files then After PHP functions.
      *
-     * @return boolean
+     * @return bool
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.1
      */
     private function realRun(): bool
@@ -836,9 +837,9 @@ class CwminstallModel extends ListModel
      *
      * @param   string  $value  The File name.
      *
-     * @return boolean
+     * @return bool
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.1.4
      */
     private function allUpdate(string $value): bool
@@ -902,9 +903,9 @@ class CwminstallModel extends ListModel
      *
      * @param   string  $string  String of SQL to process.
      *
-     * @return boolean
+     * @return bool
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.1
      */
     private function runUpdates(string $string): bool
@@ -943,7 +944,7 @@ class CwminstallModel extends ListModel
      *
      * @return void
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.1
      */
     private function finish(string $step): void
@@ -1064,7 +1065,7 @@ class CwminstallModel extends ListModel
     /**
      * Fix Menus
      *
-     * @return   boolean
+     * @return   bool
      * @since 7.1.0
      *
      */
@@ -1079,12 +1080,12 @@ class CwminstallModel extends ListModel
         $menus = $this->_db->loadObjectList();
 
         foreach ($menus as $menu) {
-            $menu->link = str_replace('teacherlist', 'teachers', $menu->link);
-            $menu->link = str_replace('teacherdisplay', 'teacher', $menu->link);
-            $menu->link = str_replace('studydetails', 'sermon', $menu->link);
-            $menu->link = str_replace('serieslist', 'seriesdisplays', $menu->link);
-            $menu->link = str_replace('seriesdetail', 'seriesdisplay', $menu->link);
-            $menu->link = str_replace('studieslist', 'sermons', $menu->link);
+            $menu->link = str_replace('teacherlist', 'cwmteachers', $menu->link);
+            $menu->link = str_replace('teacherdisplay', 'cwmteacher', $menu->link);
+            $menu->link = str_replace('studydetails', 'cwmsermon', $menu->link);
+            $menu->link = str_replace('serieslist', 'cwmseriesdisplays', $menu->link);
+            $menu->link = str_replace('seriesdetail', 'cwmseriesdisplay', $menu->link);
+            $menu->link = str_replace('studieslist', 'cwmsermons', $menu->link);
             $query      = $this->_db->getQuery(true);
             $query->update('#__menu')
                 ->set("link = " . $this->_db->q($menu->link))
@@ -1099,8 +1100,8 @@ class CwminstallModel extends ListModel
     /**
      * Function to Find empty access in the db and set them to Public
      *
-     * @return   boolean
-     * @throws \Exception
+     * @return   bool
+     * @throws Exception
      * @since 7.1.0
      *
      */
@@ -1141,7 +1142,7 @@ class CwminstallModel extends ListModel
     /**
      * Function to find empty language field and set them to "*"
      *
-     * @return   boolean
+     * @return   bool
      * @since 7.1.0
      *
      */
@@ -1178,7 +1179,7 @@ class CwminstallModel extends ListModel
      */
     public function rmoldurl()
     {
-        $urls = array(
+        return array(
             $this->_db->qn('name') . ' = ' .
             $this->_db->q('Proclaim Module'),
             $this->_db->qn('name') . ' = ' .
@@ -1192,16 +1193,14 @@ class CwminstallModel extends ListModel
             $this->_db->qn('name') . ' = ' .
             $this->_db->q('Proclaim')
         );
-
-        return $urls;
     }
 
     /**
      * Uninstall of CWM
      *
-     * @return boolean
+     * @return bool
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.1
      */
     public function uninstall(): bool
@@ -1316,7 +1315,7 @@ class CwminstallModel extends ListModel
      *
      * @return void
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.1
      */
     private function correctVersions(): void
