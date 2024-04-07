@@ -110,7 +110,7 @@ class ServerTypeField extends FormField
             $linkSerie  .= '&amp;forcedLanguage=' . $this->element['language'];
             $modalTitle = Text::_('JBS_CMN_SELECT_SERVERTYPE') . ' &#8212; ' . $this->element['label'];
         } else {
-            $modalTitle = Text::_('JBS_CMN_SELECT_STUDY');
+            $modalTitle = Text::_('JBS_CMN_SELECT_SERVERTYPE');
         }
 
         $urlSelect = $linkSeries . '&amp;function=jSelectType_' . $this->id;
