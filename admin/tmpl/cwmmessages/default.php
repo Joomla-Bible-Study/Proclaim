@@ -52,11 +52,11 @@ if ($workflow_enabled) :
     $workflow_featured = Factory::getApplication()->bootComponent('com_proclaim')->isFunctionalityUsed('core.featured', 'com_proclaim.messages');
 endif;
 
-if (strpos($listOrder, 'publish_up') !== false) {
+if (str_contains($listOrder, 'publish_up')) {
     $orderingColumn = 'publish_up';
-} elseif (strpos($listOrder, 'publish_down') !== false) {
+} elseif (str_contains($listOrder, 'publish_down')) {
     $orderingColumn = 'publish_down';
-} elseif (strpos($listOrder, 'modified') !== false) {
+} elseif (str_contains($listOrder, 'modified')) {
     $orderingColumn = 'modified';
 } else {
     $orderingColumn = 'created';
@@ -174,7 +174,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                                                     $listOrder
                                                                 ); ?>
                             </th>
-                            <th scope="col" class="w-3 d-none d-md-table-cell text-center">
+                            <th scope="col" class="w-10 d-none d-md-table-cell text-center">
                                 <?php
                                                                 echo Text::_('JBS_CPL_STATISTIC'); ?>
                             </th>
@@ -320,24 +320,15 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                     <?php
                                     echo $this->escape($item->series_text); ?>
                                 </td>
-                                <td class="small d-none d-md-table-cell text-center">
-                                    <button type="button" class="btn btn-sm btn-info" data-toggle="tooltip"
-                                            data-placement="top"
-                                            title="<?php
-                                    echo $this->escape($item->hits); ?>"><?php
-                                echo Text::_('JBS_CMN_HITS'); ?></button>
+                                <td class="d-none d-md-table-cell text-center">
+                                    <button type="button" class="btn btn-sm btn-info"><?php
+                                echo Text::sprintf('JBS_CMN_HITS', $this->escape($item->hits)); ?></button>
                                     <br/>
-                                    <button type="button" class="btn btn-sm btn-info" data-toggle="tooltip"
-                                            data-placement="top"
-                                            title="<?php
-                                    echo $this->escape($item->totalplays); ?>"><?php
-                                echo Text::_('JBS_CMN_PLAYS'); ?></button>
+                                    <button type="button" class="btn btn-sm btn-info"><?php
+                                echo Text::sprintf('JBS_CMN_PLAYS', $this->escape($item->totalplays)); ?></button>
                                     <br/>
-                                    <button type="button" class="btn btn-sm btn-info" data-toggle="tooltip"
-                                            data-placement="top"
-                                            title="<?php
-                                    echo $this->escape($item->totaldownloads); ?>"><?php
-                                echo Text::_('JBS_CMN_DOWNLOADS'); ?></button>
+                                    <button type="button" class="btn btn-sm btn-info"><?php
+                                echo Text::sprintf('JBS_CMN_DOWNLOADS', $this->escape($item->totaldownloads)); ?></button>
                                 </td>
                                 <?php
                                 if (Multilanguage::isEnabled()) : ?>
