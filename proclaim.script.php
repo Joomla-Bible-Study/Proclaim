@@ -10,6 +10,7 @@
  * @link           https://www.christianwebministries.org
  * */
 
+use CWM\Module\Proclaim\Site\Helper\ProclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\Filesystem\File;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
@@ -35,12 +36,12 @@ use Joomla\Database\DatabaseInterface;
 class com_proclaimInstallerScript extends InstallerScript
 {
     /**
-     * The version number of the extension.
+     * The version number of the extension. Max 20 characters
      *
      * @var    string
      * @since  3.6
      */
-    protected $release = '10.0.0-alpha.20240321';
+    protected $release = '10.0.0-alpha.240321';
 
     /**
      * @var   DatabaseDriver|DatabaseInterface|null
@@ -174,7 +175,7 @@ class com_proclaimInstallerScript extends InstallerScript
     public function uninstall($parent): bool
     {
         // Uninstall sub-extensions
-        $this->uninstallSubextensions($parent);
+        $this->uninstallSubextensions();
 
         // Show the post-uninstalling page
         $this->renderPostUninstallation($this->status, $parent);
@@ -199,36 +200,107 @@ class com_proclaimInstallerScript extends InstallerScript
         // Install subExtensions
         $this->installSubextensions($parent);
 
-        //Remove old com_biblestudy menu items on admin side
-        $this->removeOldMenuItems();
-
-        //Remove old com_biblestudy folders and files
-        $this->deleteFolders = ['components/com_biblestudy', 'administrator/components/com_biblestudy'];
-        $this->removefiles();
-
         // Show the post-installation page
         $this->renderPostInstallation($this->status, $parent);
+
+        //Remove old com_biblestudy menu items on admin side
+        $this->removeBibleStudyVersion();
+
+        if ($type === 'install') {
+            // A redirect to a new location after the installation is completed.
+            $controller = new CWM\Component\Proclaim\Administrator\Controller\CwmadminController();
+            $controller->setRedirect(
+                JUri::base() .
+                'index.php?option=com_proclaim&view=cwminstall&task=install.browse&scanstate=start&' .
+                JSession::getFormToken() . '=1'
+            );
+            $controller->redirect();
+        }
     }
 
     /**
-     * Remove old menu items prior to version 10
-     * @return bool
+     * Remove left overs do to upgrade from an older Proclaim version.
+     *
+     * @return void
      * @since 10.0.0
      */
-    public function removeOldMenuItems(): bool
+    private function removeBibleStudyVersion(): void
     {
-        $query = $this->dbo->getQuery(true);
+        $menuBibleStudyStatus = false;
+        $comBibleStudyStatus  = false;
 
+        // Remove old com_biblestudy folders and files as we can't uninstall them
+        $this->deleteFolders = ['components/com_biblestudy', 'administrator/components/com_biblestudy'];
+        $this->deleteFiles   = ['language/en-GB/en-GB.com_biblestudy.ini'];
+        $this->removefiles();
+
+        // Clean up Menus
+        $query      = $this->dbo->getQuery(true);
         $conditions = array(
             $this->dbo->quoteName('link') . ' LIKE %com_biblestudy% '
         );
-
         $query->delete($this->dbo->quoteName('#__menu'));
         $query->where($conditions);
-
         $this->dbo->setQuery($query);
 
-        return $this->dbo->execute();
+        try {
+            $menuBibleStudyStatus = $this->dbo->execute();
+        } catch (\RuntimeException $e) {
+            echo "Failed to execute menu removal";
+        }
+
+        // Delete Old stale com_biblestudy extinction.
+        $query      = $this->dbo->getQuery(true);
+        $conditions = [
+            $this->dbo->quoteName('element') . ' = com_biblestudy'
+        ];
+        $query->delete($this->dbo->quoteName('#__extensions'));
+        $query->where($conditions);
+        $this->dbo->setQuery($query);
+
+        try {
+            $comBibleStudyStatus = $this->dbo->execute();
+        } catch (\RuntimeException $e) {
+            echo "Failed to execute com_biblestudy removal";
+        }
+
+        // Reset Status info
+        $this->status          = new stdClass();
+        $this->status->modules = [];
+        $this->status->plugins = [];
+
+        // Update Install Actions to uninstall the BibleStudy components
+        self::$installActionQueue = [
+            // -- modules => { (folder) => { (module) => { (position), (published) } }* }*
+            'modules' => [
+                'administrator' => [],
+                'site'          => [
+                    'biblestudy'         => 0,
+                    'biblestudy_podcast' => 0,
+                ],
+            ],
+            // -- plugins => { (folder) => { (element) => (published) }* }*
+            'plugins' => [
+                'finder' => ['biblestudy' => 0],
+                'search' => ['biblestudysearch' => 0,],
+                'system' => [
+                    'jbspodcast' => 0,
+                    'jbsbackup'  => 0,
+                ],
+            ],
+        ];
+
+        // Remove old Components
+        $this->uninstallSubextensions();
+
+        if (
+            $menuBibleStudyStatus ||
+            $comBibleStudyStatus ||
+            count($this->status->modules) ||
+            count($this->status->plugins)
+        ) {
+            echo 'We have removed leftovers from Proclaim old version';
+        }
     }
 
     /**
@@ -427,7 +499,7 @@ class com_proclaimInstallerScript extends InstallerScript
                             echo ' ' . ($module['result'] ? Text::_('JBS_INS_REMOVED') : Text::_(
                                 'JBS_INS_NOT_REMOVED'
                             ));
-                            ?>
+                ?>
                         </strong>
                     </td>
                 </tr>
@@ -458,7 +530,7 @@ class com_proclaimInstallerScript extends InstallerScript
                         echo '' . ($plugin['result'] ? 'green' : 'red'); ?>;">
                             <?php
                             echo '' . ($plugin['result'] ? Text::_('JBS_INS_REMOVED') : Text::_('JBS_INS_NOT_REMOVED'));
-                            ?>
+                ?>
                         </strong>
                     </td>
                 </tr>
@@ -675,13 +747,11 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Uninstalls extensions (modules, plugins) bundled with the main extension
      *
-     * @param   InstallerAdapter  $parent  The class calling this method
-     *
      * @return void
      *
      * @since 9.0.18
      */
-    private function uninstallSubextensions($parent): void
+    private function uninstallSubextensions(): void
     {
         $this->status          = new stdClass();
         $this->status->modules = [];

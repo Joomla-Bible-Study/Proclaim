@@ -38,7 +38,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @since 4.1.0
      */
-    protected const TASKS_MAP = [
+    private const TASKS_MAP = [
         'proclaim.backup'  => [
             'langConstPrefix' => 'PLG_TASK_PROCLAIM_BACKUP',
             'form'            => 'backup',
@@ -74,23 +74,14 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     protected $autoloadLanguage = true;
 
     /**
-     * The root directory path
-     *
-     * @var    string
-     * @since  4.2.0
-     */
-    private string $rootDirectory;
-
-    /**
      * Constructor.
      *
      * @param   DispatcherInterface  $dispatcher     The dispatcher
      * @param   array                $config         An optional associative array of configuration settings
-     * @param   string               $rootDirectory  The root directory to look for images
      *
      * @since   4.2.0
      */
-    public function __construct(DispatcherInterface $dispatcher, array $config, string $rootDirectory)
+    public function __construct(DispatcherInterface $dispatcher, array $config)
     {
         parent::__construct($dispatcher, $config);
 
@@ -113,7 +104,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @throws \Exception
      * @since   1.5
      */
-    public function podcast(ExecuteTaskEvent $event): int
+    private function podcast(ExecuteTaskEvent $event): int
     {
         // Load the parameters.
         $forcedLanguage = $event->getArgument('params')->language_override ?? '';
@@ -150,7 +141,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @since 7.1.0
      */
-    public function backup(ExecuteTaskEvent $event): int
+    private function backup(ExecuteTaskEvent $event): int
     {
         // Load the parameters.
         $forcedLanguage = $event->getArgument('params')->language_override ?? '';

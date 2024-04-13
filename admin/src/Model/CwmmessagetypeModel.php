@@ -17,9 +17,10 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Table\CwmmessageTable;
+use Exception;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Input\Input;
+use Joomla\Input\Input;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 
@@ -35,7 +36,7 @@ class CwmmessagetypeModel extends AdminModel
      * Method to store a record
      *
      * @access    public
-     * @return    boolean    True on success
+     * @return    bool    True on success
      *
      * @since     7.0.0
      */
@@ -72,15 +73,15 @@ class CwmmessagetypeModel extends AdminModel
     /**
      * Abstract method for getting the form from the model.
      *
-     * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param   array  $data      Data for the form.
+     * @param   bool   $loadData  True if the form is to load its own data (default case), false if not.
      *
      * @return  mixed  A JForm object on success, false on failure
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = array(), $loadData = true): mixed
     {
         // Get the form.
         return $this->loadForm(
@@ -91,11 +92,11 @@ class CwmmessagetypeModel extends AdminModel
     }
 
     /**
-     * Method to check-out a row for editing.
+     * Method to check out a row for editing.
      *
-     * @param   integer  $pk  The numeric id of the primary key.
+     * @param   int  $pk  The numeric id of the primary key.
      *
-     * @return  boolean  False on failure or error, true otherwise.
+     * @return  bool  False on failure or error, true otherwise.
      *
      * @since   11.1
      */
@@ -113,7 +114,7 @@ class CwmmessagetypeModel extends AdminModel
      *
      * @return  Table  A Table object
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   3.0
      */
     public function getTable($name = 'Cwmmessagetype', $prefix = '', $options = array()): Table
@@ -126,10 +127,10 @@ class CwmmessagetypeModel extends AdminModel
      *
      * @return  mixed   The default data is an empty array.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   7.0
      */
-    protected function loadFormData()
+    protected function loadFormData(): mixed
     {
         $data = Factory::getApplication()->getUserState('com_proclaim.edit.messagetype.data', array());
 
@@ -141,7 +142,7 @@ class CwmmessagetypeModel extends AdminModel
     }
 
     /**
-     * Prepare and sanitise the table prior to saving.
+     * Prepare and sanitize the table prior to saving.
      *
      * @param   CwmmessageTable  $table  A reference to a JTable object.
      *
@@ -177,14 +178,14 @@ class CwmmessagetypeModel extends AdminModel
     /**
      * Custom clean the cache of com_proclaim and proclaim modules
      *
-     * @param   string   $group      The cache group
-     * @param   integer  $client_id  The ID of the client
+     * @param   string  $group      The cache group
+     * @param   int     $client_id  The ID of the client
      *
      * @return  void
      *
      * @since    1.6
      */
-    protected function cleanCache($group = null, $client_id = 0)
+    protected function cleanCache($group = null, int $client_id = 0): void
     {
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');

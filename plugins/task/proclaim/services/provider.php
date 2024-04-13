@@ -35,8 +35,7 @@ return new class () implements ServiceProviderInterface {
             function (Container $container) {
                 $plugin = new Proclaim(
                     $container->get(DispatcherInterface::class),
-                    (array) PluginHelper::getPlugin('task', 'proclaim'),
-                    JPATH_ROOT . '/media/com_proclaim/backup'
+                    (array) PluginHelper::getPlugin('task', 'proclaim')
                 );
                 $plugin->setApplication(Factory::getApplication());
 

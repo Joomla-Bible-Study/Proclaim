@@ -9,7 +9,7 @@
  * @link           https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMMessages;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmmessages;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -17,12 +17,15 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMMessages;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
+use Exception;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -40,10 +43,10 @@ class HtmlView extends BaseHtmlView
     /**
      * Filters of the Form
      *
-     * @var  \Joomla\CMS\Form\Form
+     * @var  Form
      * @since    7.0.0
      */
-    public $filterForm;
+    public Form $filterForm;
     /**
      * Items
      *
@@ -54,17 +57,17 @@ class HtmlView extends BaseHtmlView
     /**
      * Pagination
      *
-     * @var      \Joomla\CMS\Pagination\Pagination
+     * @var      Pagination
      * @since    7.0.0
      */
-    protected $pagination;
+    protected Pagination $pagination;
     /**
      * State
      *
-     * @var  \Joomla\CMS\Object\CMSObject
+     * @var  mixed
      * @since    7.0.0
      */
-    protected $state;
+    protected mixed $state;
     /**
      * Active Filters
      *
@@ -83,10 +86,10 @@ class HtmlView extends BaseHtmlView
     /**
      * Is this view an Empty State
      *
-     * @var   boolean
+     * @var   bool
      * @since 4.0.0
      */
-    private $isEmptyState = false;
+    private bool $isEmptyState = false;
 
     /**
      * Execute and display a template script.
@@ -95,7 +98,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void  A string if successful, otherwise a JError object.
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   11.1
      * @see     fetch()
      */
@@ -115,7 +118,7 @@ class HtmlView extends BaseHtmlView
         }
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors')) || $this->transitions === false) {
+        if ($this->transitions === false || \count($errors = $this->get('Errors'))) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
@@ -148,16 +151,14 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     protected function addToolbar(): void
     {
         $canDo = ContentHelper::getActions('com_proclaim');
         $user  = $this->getCurrentUser();
-
-        // Get the toolbar object instance
-        $toolbar = Toolbar::getInstance('toolbar');
+        $toolbar = Toolbar::getInstance();
 
         ToolbarHelper::title(Text::_('JBS_CMN_STUDIES'), 'book book');
 
@@ -205,7 +206,7 @@ class HtmlView extends BaseHtmlView
 
                 $childBar->checkin('cwmmessages.checkin')->listCheck(true);
 
-                if ($this->state->get('filter.published') != ProclaimComponent::CONDITION_TRASHED) {
+                if ($this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED) {
                     $childBar->trash('cwmmessages.trash')->listCheck(true);
                 }
             }
@@ -226,7 +227,7 @@ class HtmlView extends BaseHtmlView
         if (
             !$this->isEmptyState && $this->state->get(
                 'filter.published'
-            ) == ContentComponent::CONDITION_TRASHED && $canDo->get('core.delete')
+            ) === ContentComponent::CONDITION_TRASHED && $canDo->get('core.delete')
         ) {
             $toolbar->delete('cwmmessages.delete')
                 ->text('JTOOLBAR_EMPTY_TRASH')
