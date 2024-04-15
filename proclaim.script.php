@@ -237,10 +237,11 @@ class com_proclaimInstallerScript extends InstallerScript
         // Clean up Menus
         $query      = $this->dbo->getQuery(true);
         $conditions = array(
-            $this->dbo->quoteName('link') . ' LIKE %com_biblestudy% '
+            $this->dbo->quoteName('link') . 'LIKE "%com_biblestudy%"'
         );
         $query->delete($this->dbo->quoteName('#__menu'));
         $query->where($conditions);
+
         $this->dbo->setQuery($query);
 
         try {
@@ -249,7 +250,7 @@ class com_proclaimInstallerScript extends InstallerScript
             echo "Failed to execute menu removal";
         }
 
-        // Delete Old stale com_biblestudy extinction.
+        // Delete Old stale com_biblestudy extension.
         $query      = $this->dbo->getQuery(true);
         $conditions = [
             $this->dbo->quoteName('element') . ' = com_biblestudy'
