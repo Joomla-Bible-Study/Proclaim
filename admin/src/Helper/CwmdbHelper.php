@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Model\CwmadminModel;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Language\Text;
@@ -44,7 +45,7 @@ class CwmdbHelper
     /**
      * Install State
      *
-     * @var boolean
+     * @var bool
      *
      * @since 1.5
      */
@@ -55,7 +56,7 @@ class CwmdbHelper
      *
      * @param   string  $cktable  Table to check for exp:"#__bsms_admin
      *
-     * @return boolean  If table is there True else False if not.
+     * @return bool  If table is there True else False if not.
      *
      * @since 7.0
      */
@@ -80,15 +81,15 @@ class CwmdbHelper
      * Alters a table
      * command is only needed for MODIFY. Can be used to ADD, DROP, MODIFY, or CHANGE tables.
      *
-     * @param   array   $tables  Tables is an array of tables, fields, type of query and optional command line
-     * @param   string  $from    Where the query is coming from for msg
+     * @param   array        $tables  Tables is an array of tables, fields, type of query and optional command line
+     * @param   string|null  $from    Where the query is coming from for msg
      *
-     * @return boolean
+     * @return bool
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.0
      */
-    public static function alterDB($tables, $from = null): bool
+    public static function alterDB(array $tables, string $from = null): bool
     {
         $db = Factory::getContainer()->get('DatabaseDriver');
 
@@ -193,7 +194,7 @@ class CwmdbHelper
      * @param   string  $table  Is the table you are checking
      * @param   string  $field  Checking against.
      *
-     * @return boolean false equals field does not exist
+     * @return bool false equals field does not exist
      *
      * @since 7.0
      */
@@ -219,9 +220,9 @@ class CwmdbHelper
      * @param   string|null  $from   Where the source of the query comes from
      * @param   int|null     $limit  Set the Limit of the query
      *
-     * @return boolean true if success, or error string if failed
+     * @return bool true if success, or error string if failed
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.0
      */
     public static function performDB($query, string $from = null, int $limit = null): bool
@@ -255,7 +256,7 @@ class CwmdbHelper
      *
      * @return boolean
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     public static function checkDB($table, $field): bool
@@ -333,7 +334,7 @@ class CwmdbHelper
      *
      * @return bool
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.1.0
      */
     public static function fixupcss(string $filename, bool $parent, string $newcss, int $id = null)
@@ -424,7 +425,7 @@ class CwmdbHelper
      *
      * @return bool
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @since 7.0
      */
@@ -443,7 +444,7 @@ class CwmdbHelper
 
             // This is a Joomla bug for currentAssetId being missing in table.php. When fixed in Joomla should be removed
             @$table->store();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new \RuntimeException('Caught exception: ' . $e->getMessage(), 500);
         }
 
@@ -457,7 +458,7 @@ class CwmdbHelper
      *
      * @return bool|int
      *
-     * @throws \Exception
+     * @throws Exception
      * @since  7.0
      */
     public static function resetdb($install = false): bool|int
@@ -533,7 +534,7 @@ class CwmdbHelper
      *
      * @return  void
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   8.0.0
      *
      */

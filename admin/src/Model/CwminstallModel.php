@@ -284,7 +284,7 @@ class CwminstallModel extends ListModel
             ->order($this->_db->qn('id') . ' DESC');
         $this->_db->setQuery($query, 0, 1);
         $updates             = $this->_db->loadObject();
-        $version             = $updates->version;
+        $version             = (string) $updates->version;
         $this->versionSwitch = $version;
 
         $this->callstack['subversiontype_version'] = $version;
