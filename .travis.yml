@@ -1,7 +1,8 @@
 # Forces new Travis-CI Infrastructure
-sudo: false
-
 language: php
+
+# Allows use container-based infrastructure
+sudo: false
 
 env:
   global:
@@ -16,14 +17,30 @@ matrix:
   fast_finish: true
   include:
     - php: 8.1
+    - php: 8.2
+    - php: hhvm
       env: INSTALL_APCU="yes" INSTALL_MEMCACHE="no"
-
-services:
+  allow_failures:
+    - php: hhvm
 
 before_script:
   #- phpenv config-rm xdebug.ini
   # Make sure all dev dependencies are installed
-  - composer install
+  - composer self-update
+  - composer install --prefer-source --no-interaction --dev
+
+# Start mysql service
+#services:
+#  - mysql
+
+## Cache composer and apt downloads.
+cache:
+  apt: true
+  directories:
+    # Cache directory for older Composer versions.
+    - $HOME/.composer/cache/files
+    # Cache directory for more recent Composer versions.
+    - $HOME/.cache/composer/files
 
 script:
   # Run PHPCS.
