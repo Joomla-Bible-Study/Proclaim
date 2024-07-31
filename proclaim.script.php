@@ -10,18 +10,17 @@
  * @link           https://www.christianwebministries.org
  * */
 
-use CWM\Module\Proclaim\Site\Helper\ProclaimHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use Joomla\CMS\Factory;
-use Joomla\Filesystem\File;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
 use Joomla\CMS\Installer\Adapter\FileAdapter;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Installer\InstallerAdapter;
 use Joomla\CMS\Installer\InstallerScript;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Log\Log;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Filesystem\File;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -59,7 +58,7 @@ class com_proclaimInstallerScript extends InstallerScript
     protected $minimumPhp = '8.1.0';
 
     /**
-     * Minimum Joomla! version required to install the extension
+     * Minimum Joomla! Version required to install the extension
      *
      * @var    string
      * @since  3.6
@@ -144,21 +143,16 @@ class com_proclaimInstallerScript extends InstallerScript
      * @param   string            $type    The type of change (install, update or discover_install, not uninstall)
      * @param   ComponentAdapter  $parent  The class calling this method
      *
-     * @return bool
+     * @return  bool  True on success
      *
      * @throws \Exception
      * @since  1.5
      */
     public function preflight($type, $parent): bool
     {
-        if (!parent::preflight($type, $parent)) {
-            return false;
-        }
-
-        $this->checkRequirements();
         $this->setDboFromAdapter($parent);
 
-        return true;
+        return parent::preflight($type, $parent);
     }
 
 
@@ -211,7 +205,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $controller = new CWM\Component\Proclaim\Administrator\Controller\CwmadminController();
             $controller->setRedirect(
                 JUri::base() .
-                'index.php?option=com_proclaim&view=cwminstall&task=install.browse&scanstate=start&' .
+                'index.php?option=com_proclaim&view=cwminstall&task=cwminstall.browse&scanstate=start&' .
                 JSession::getFormToken() . '=1'
             );
             $controller->redirect();
@@ -230,8 +224,8 @@ class com_proclaimInstallerScript extends InstallerScript
         $comBibleStudyStatus  = false;
 
         // Remove old com_biblestudy folders and files as we can't uninstall them
-        $this->deleteFolders = ['components/com_biblestudy', 'administrator/components/com_biblestudy'];
-        $this->deleteFiles   = ['language/en-GB/en-GB.com_biblestudy.ini'];
+        $this->deleteFolders = ['/components/com_biblestudy', '/administrator/components/com_biblestudy'];
+        $this->deleteFiles   = ['/language/en-GB/en-GB.com_biblestudy.ini'];
         $this->removefiles();
 
         // Clean up Menus
@@ -253,7 +247,7 @@ class com_proclaimInstallerScript extends InstallerScript
         // Delete Old stale com_biblestudy extension.
         $query      = $this->dbo->getQuery(true);
         $conditions = [
-            $this->dbo->quoteName('element') . ' = com_biblestudy'
+            $this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_biblestudy')
         ];
         $query->delete($this->dbo->quoteName('#__extensions'));
         $query->where($conditions);
@@ -263,6 +257,21 @@ class com_proclaimInstallerScript extends InstallerScript
             $comBibleStudyStatus = $this->dbo->execute();
         } catch (\RuntimeException $e) {
             echo "Failed to execute com_biblestudy removal";
+        }
+
+        // Delete Old stale pkg_biblestudy_package extension.
+        $query      = $this->dbo->getQuery(true);
+        $conditions = [
+            $this->dbo->quoteName('element') . ' = ' . $this->dbo->q('pkg_biblestudy_package')
+        ];
+        $query->delete($this->dbo->quoteName('#__extensions'));
+        $query->where($conditions);
+        $this->dbo->setQuery($query);
+
+        try {
+            $comBibleStudyStatus = $this->dbo->execute();
+        } catch (\RuntimeException $e) {
+            echo "Failed to execute pkg_biblestudy_package removal";
         }
 
         // Reset Status info
@@ -302,55 +311,6 @@ class com_proclaimInstallerScript extends InstallerScript
         ) {
             echo 'We have removed leftovers from Proclaim old version';
         }
-    }
-
-    /**
-     * Check Requirements
-     *
-     * @param   string  $version  CWM version to check for.
-     *
-     * @return bool
-     *
-     * @throws Exception
-     * @since  7.1.0
-     */
-    public function checkRequirements(string $version = ''): bool
-    {
-        return $this->checkExtensions(self::$extensions);
-    }
-
-
-    /**
-     * Check PHP Extension Requirement
-     *
-     * @param   array  $extensions  Array of version to look for
-     *
-     * @return bool true is passing, false is failed php version.
-     *
-     * @throws Exception
-     * @since 7.1.0
-     */
-    protected function checkExtensions(array $extensions): bool
-    {
-        $app  = Factory::getApplication();
-        $pass = true;
-
-        foreach ($extensions as $name) {
-            if (!extension_loaded($name)) {
-                $pass = false;
-                $app->enqueueMessage(
-                    sprintf("Required PHP extension '%s' is missing. Please install it into your system.", $name),
-                    'notice'
-                );
-                Log::add(
-                    sprintf("Required PHP extension '%s' is missing. Please install it into your system.", $name),
-                    Log::NOTICE,
-                    $this->extension
-                );
-            }
-        }
-
-        return $pass;
     }
 
     /**
@@ -410,7 +370,9 @@ class com_proclaimInstallerScript extends InstallerScript
                 echo '<td class="key">' . ucfirst($module['client']) . '</td>';
                 echo '<td class="key">';
                 echo '<strong style="color: ' . ($module['result'] ? 'green' : 'red') . ';">';
-                echo ' ' . ($module['result'] ? Text::_('JBS_INS_INSTALLED') : Text::_('JBS_INS_NOT_INSTALLED')) . ' ';
+                echo ' ' . ($module['result'] ? Text::_('JBS_INS_INSTALLED') : Text::_(
+                    'JBS_INS_NOT_INSTALLED'
+                )) . ' ';
                 echo '</strong>';
                 echo '</td>';
                 echo '</tr>';
@@ -419,24 +381,26 @@ class com_proclaimInstallerScript extends InstallerScript
 
         if (count($status->plugins)) {
             ?>
-            <tr>
-                <th>Plugin</th>
-                <th>Group</th>
-                <th><?php
+                <tr>
+                    <th>Plugin</th>
+                    <th>Group</th>
+                    <th><?php
                     echo Text::_('JBS_INS_STATUS'); ?></th>
-            </tr>
-            <?php
-            foreach ($status->plugins as $plugin) {
-                echo '<tr>';
-                echo '<td class="key">' . ucfirst($plugin['name']) . '</td>';
-                echo '<td class="key">' . ucfirst($plugin['group']) . '</td>';
-                echo '<td>';
-                echo '<strong style="color: ' . ($plugin['result'] ? 'green' : 'red') . ';">';
-                echo ' ' . ($plugin['result'] ? Text::_('JBS_INS_INSTALLED') : Text::_('JBS_INS_NOT_INSTALLED')) . '';
-                echo '</strong>';
-                echo '</td>';
-                echo '</tr>';
-            }
+                </tr>
+                <?php
+                foreach ($status->plugins as $plugin) {
+                    echo '<tr>';
+                    echo '<td class="key">' . ucfirst($plugin['name']) . '</td>';
+                    echo '<td class="key">' . ucfirst($plugin['group']) . '</td>';
+                    echo '<td>';
+                    echo '<strong style="color: ' . ($plugin['result'] ? 'green' : 'red') . ';">';
+                    echo ' ' . ($plugin['result'] ? Text::_('JBS_INS_INSTALLED') : Text::_(
+                        'JBS_INS_NOT_INSTALLED'
+                    )) . '';
+                    echo '</strong>';
+                    echo '</td>';
+                    echo '</tr>';
+                }
         }//end if
 
         echo '</tbody></table>';
@@ -477,66 +441,68 @@ class com_proclaimInstallerScript extends InstallerScript
 
         if (count($status->modules)) {
             ?>
-            <tr>
-                <th><?php
+                <tr>
+                    <th><?php
                     echo Text::_('JBS_INS_MODULE'); ?></th>
-                <th><?php
+                    <th><?php
                     echo Text::_('JBS_INS_CLIENT'); ?></th>
-                <th></th>
-            </tr>
-            <?php
-            foreach ($status->modules as $module) {
-                ?>
-                <tr class="row<?php
-                echo $rows++; ?>">
-                    <td class="key"><?php
-                        echo $module['name']; ?></td>
-                    <td class="key"><?php
-                        echo ucfirst($module['client']); ?></td>
-                    <td>
-                        <strong style="color: <?php
-                        echo '' . ($module['result'] ? 'green' : 'red'); ?>">
-                            <?php
-                            echo ' ' . ($module['result'] ? Text::_('JBS_INS_REMOVED') : Text::_(
-                                'JBS_INS_NOT_REMOVED'
-                            ));
-                ?>
-                        </strong>
-                    </td>
+                    <th></th>
                 </tr>
                 <?php
-            }
+                foreach ($status->modules as $module) {
+                    ?>
+                    <tr class="row<?php
+                    echo $rows++; ?>">
+                        <td class="key"><?php
+                            echo $module['name']; ?></td>
+                        <td class="key"><?php
+                            echo ucfirst($module['client']); ?></td>
+                        <td>
+                            <strong style="color: <?php
+                            echo '' . ($module['result'] ? 'green' : 'red'); ?>">
+                                <?php
+                                echo ' ' . ($module['result'] ? Text::_('JBS_INS_REMOVED') : Text::_(
+                                    'JBS_INS_NOT_REMOVED'
+                                ));
+                    ?>
+                            </strong>
+                        </td>
+                    </tr>
+                    <?php
+                }
         }//end if
         ?>
         <?php
         if (count($status->plugins)) {
             ?>
-            <tr>
-                <th><?php
+                <tr>
+                    <th><?php
                     echo Text::_('Plugin'); ?></th>
-                <th><?php
+                    <th><?php
                     echo Text::_('Group'); ?></th>
-                <th></th>
-            </tr>
-            <?php
-            foreach ($status->plugins as $plugin) {
-                ?>
-                <tr class="row<?php
-                echo $rows++; ?>">
-                    <td class="key"><?php
-                        echo ucfirst($plugin['name']); ?></td>
-                    <td class="key"><?php
-                        echo ucfirst($plugin['group']); ?></td>
-                    <td><strong style="color: <?php
-                        echo '' . ($plugin['result'] ? 'green' : 'red'); ?>;">
-                            <?php
-                            echo '' . ($plugin['result'] ? Text::_('JBS_INS_REMOVED') : Text::_('JBS_INS_NOT_REMOVED'));
-                ?>
-                        </strong>
-                    </td>
+                    <th></th>
                 </tr>
                 <?php
-            }
+                foreach ($status->plugins as $plugin) {
+                    ?>
+                    <tr class="row<?php
+                    echo $rows++; ?>">
+                        <td class="key"><?php
+                            echo ucfirst($plugin['name']); ?></td>
+                        <td class="key"><?php
+                            echo ucfirst($plugin['group']); ?></td>
+                        <td><strong style="color: <?php
+                            echo '' . ($plugin['result'] ? 'green' : 'red'); ?>;">
+                                <?php
+                                echo '' . ($plugin['result'] ? Text::_('JBS_INS_REMOVED') : Text::_(
+                                    'JBS_INS_NOT_REMOVED'
+                                ));
+                    ?>
+                            </strong>
+                        </td>
+                    </tr>
+                    <?php
+                }
         }//end if
 
         echo '</tbody></table>';
