@@ -95,7 +95,7 @@
 	},
 	"scripts": {
 		"phpcs": "phpcs . --standard=./build/psr12/ruleset.xml",
-		"post-install-cmd": "\"libraries/vendor/bin/phpcs\" --config-set installed_paths libraries/vendor/squizlabs/php_codesniffer/CodeSniffer/Standards",
-		"post-update-cmd": "\"libraries/vendor/bin/phpcs\" --config-set installed_paths libraries/vendor/squizlabs/php_codesniffer/CodeSniffer/Standards"
+		"post-install-cmd": "\"libraries/vendor/bin/phpcs\" --config-set installed_paths /libraries/vendor/squizlabs/php_codesniffer/src/Standards",
+		"post-update-cmd": "\"libraries/vendor/bin/phpcs\" --config-set installed_paths /libraries/vendor/squizlabs/php_codesniffer/src/Standards"
 	}
 }

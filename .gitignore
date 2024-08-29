@@ -19,8 +19,8 @@ build/reports/jdepend.xml
 build/reports/phpcs-checkstyle.xml
 build/reports/project-size.txt
 /libraries/vendor/*
-/.php_cs.cache
 !/package-lock.json
 /.composer.phar.icloud
 /media/css/site/cwmcore.css
 /admin/proclaim.script.php
+!/.php_cs.cache
