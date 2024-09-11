@@ -244,6 +244,16 @@ class com_proclaimInstallerScript extends InstallerScript
             echo "Failed to execute menu removal";
         }
 
+        //Add field if missing Subtitle to series
+	    $query      = $this->dbo->getQuery(true);
+	    $query = "SHOW COLUMNS FROM #__bsms_series LIKE 'subtitle'";
+	    $this->dbo->setQuery($query);
+	    $db = $this->dbo->execute();
+	    if(empty(empty($db->num_rows))) {
+		    $alter = "ALTER TABLE #__bsms_series ADD subtitle TEXT";
+		    $this->dbo->setquery($alter);
+		    $this->dbo->execute();
+	    }
         // Delete Old stale com_biblestudy extension.
         $query      = $this->dbo->getQuery(true);
         $conditions = [
