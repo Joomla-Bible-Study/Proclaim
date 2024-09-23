@@ -680,7 +680,8 @@ class com_proclaimInstallerScript extends InstallerScript
                         $sql = $this->dbo->getQuery(true)
                             ->select('COUNT(*)')
                             ->from('#__modules')
-                            ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q('mod_' . $module));
+                            ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q('mod_' . $module))
+                            ;
                         $this->dbo->setQuery($sql);
                         $count                   = $this->dbo->loadResult();
                         $installer               = new Installer();
@@ -703,7 +704,8 @@ class com_proclaimInstallerScript extends InstallerScript
                             $sql = $this->dbo->getQuery(true)
                                 ->update($this->dbo->qn('#__modules'))
                                 ->set($this->dbo->qn('position') . ' = ' . $this->dbo->q($modulePosition))
-                                ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q('mod_' . $module));
+                                ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q('mod_' . $module))
+                                ;
 
                             if ($modulePublished) {
                                 $sql->set($this->dbo->qn('published') . ' = ' . $this->dbo->q('1'));
@@ -717,14 +719,16 @@ class com_proclaimInstallerScript extends InstallerScript
                                 $query = $this->dbo->getQuery(true);
                                 $query->select('MAX(' . $this->dbo->qn('ordering') . ')')
                                     ->from($this->dbo->qn('#__modules'))
-                                    ->where($this->dbo->qn('position') . '=' . $this->dbo->q($modulePosition));
+                                    ->where($this->dbo->qn('position') . '=' . $this->dbo->q($modulePosition))
+                                    ;
                                 $this->dbo->setQuery($query);
                                 $position = $this->dbo->loadResult();
                                 $position++;
                                 $query = $this->dbo->getQuery(true);
                                 $query->update($this->dbo->qn('#__modules'))
                                     ->set($this->dbo->qn('ordering') . ' = ' . $this->dbo->q($position))
-                                    ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q('mod_' . $module));
+                                    ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q('mod_' . $module))
+                                   ;
                                 $this->dbo->setQuery($query);
                                 $this->dbo->execute();
                             }
@@ -739,7 +743,8 @@ class com_proclaimInstallerScript extends InstallerScript
                             $query    = $this->dbo->getQuery(true);
                             $query->select('*')
                                 ->from($this->dbo->qn('#__modules_menu'))
-                                ->where($this->dbo->qn('moduleid') . ' = ' . $this->dbo->q($moduleid));
+                                ->where($this->dbo->qn('moduleid') . ' = ' . $this->dbo->q($moduleid))
+                                ;
                             $this->dbo->setQuery($query);
                             $assignments = $this->dbo->loadObjectList();
                             $isAssigned  = !empty($assignments);
@@ -785,7 +790,8 @@ class com_proclaimInstallerScript extends InstallerScript
                             ->select('COUNT(*)')
                             ->from($this->dbo->qn('#__extensions'))
                             ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
-                            ->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder));
+                            ->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder))
+                            ;
                         $this->dbo->setQuery($query);
                         $count                   = $this->dbo->loadResult();
                         $installer               = new JInstaller();
@@ -801,7 +807,8 @@ class com_proclaimInstallerScript extends InstallerScript
                                 ->update($this->dbo->qn('#__extensions'))
                                 ->set($this->dbo->qn('enabled') . ' = ' . $this->dbo->q('1'))
                                 ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
-                                ->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder));
+                                ->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder))
+                                ;
                             $this->dbo->setQuery($query);
                             $this->dbo->execute();
                         }
@@ -834,7 +841,8 @@ class com_proclaimInstallerScript extends InstallerScript
                             ->select($this->dbo->qn('extension_id'))
                             ->from($this->dbo->qn('#__extensions'))
                             ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q('mod_' . $module))
-                            ->where($this->dbo->qn('type') . ' = ' . $this->dbo->q('module'));
+                            ->where($this->dbo->qn('type') . ' = ' . $this->dbo->q('module'))
+                           ;
                         $this->dbo->setQuery($sql);
                         $id = $this->dbo->loadResult();
 
@@ -863,7 +871,8 @@ class com_proclaimInstallerScript extends InstallerScript
                             ->from($this->dbo->qn('#__extensions'))
                             ->where($this->dbo->qn('type') . ' = ' . $this->dbo->q('plugin'))
                             ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
-                            ->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder));
+                            ->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder))
+                            ;
                         $this->dbo->setQuery($sql);
 
                         $id = $this->dbo->loadResult();
@@ -911,7 +920,7 @@ class com_proclaimInstallerScript extends InstallerScript
                     return;
                 }
             } catch (Throwable $e) {
-                // If something breaks, we will fall through
+                // If something breaks we will fall through
             }
         }
 
