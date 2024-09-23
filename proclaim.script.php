@@ -155,10 +155,10 @@ class com_proclaimInstallerScript extends InstallerScript
         $results = (array) $this->dbo->setQuery('SHOW TABLES')->loadColumn();
         if (in_array("_bsms_series", $results, true)) {
             //Add field if missing Subtitle to series
-            $query = "SHOW COLUMNS FROM #__bsms_series LIKE 'subtitle'";
+            $query = "SHOW COLUMNS FROM " . $this->dbo->quoteName('#__bsms_series') . " LIKE " . $this->dbo->quote('subtitle');
             $this->dbo->setQuery($query);
-            $db = $this->dbo->execute();
-            if (empty(empty($db->num_rows))) {
+            $db = $this->dbo->loadResult();
+            if (empty($db)) {
                 $alter = "ALTER TABLE #__bsms_series ADD subtitle TEXT";
                 $this->dbo->setquery($alter);
                 $this->dbo->execute();
