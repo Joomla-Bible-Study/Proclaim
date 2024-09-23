@@ -23,7 +23,7 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -145,12 +145,25 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  bool  True on success
      *
-     * @throws \Exception
+     * @throws Exception
      * @since  1.5
      */
     public function preflight($type, $parent): bool
     {
         $this->setDboFromAdapter($parent);
+
+        $results = (array) $this->dbo->setQuery('SHOW TABLES')->loadColumn();
+        if (in_array("_bsms_series", $results, true)) {
+            //Add field if missing Subtitle to series
+            $query = "SHOW COLUMNS FROM #__bsms_series LIKE 'subtitle'";
+            $this->dbo->setQuery($query);
+            $db = $this->dbo->execute();
+            if (empty(empty($db->num_rows))) {
+                $alter = "ALTER TABLE #__bsms_series ADD subtitle TEXT";
+                $this->dbo->setquery($alter);
+                $this->dbo->execute();
+            }
+        }
 
         return parent::preflight($type, $parent);
     }
@@ -216,6 +229,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * Remove left overs do to upgrade from an older Proclaim version.
      *
      * @return void
+     * @throws Exception
      * @since 10.0.0
      */
     private function removeBibleStudyVersion(): void
@@ -223,77 +237,129 @@ class com_proclaimInstallerScript extends InstallerScript
         $menuBibleStudyStatus = false;
         $comBibleStudyStatus  = false;
 
-        // Remove old com_biblestudy folders and files as we can't uninstall them
-        $this->deleteFolders = ['/components/com_biblestudy', '/administrator/components/com_biblestudy'];
-        $this->deleteFiles   = ['/language/en-GB/en-GB.com_biblestudy.ini'];
-        $this->removefiles();
-
-        // Clean up Menus
+        // Get BibleStudy extension ID
         $query      = $this->dbo->getQuery(true);
-        $conditions = array(
-            $this->dbo->quoteName('link') . 'LIKE "%com_biblestudy%"'
-        );
-        $query->delete($this->dbo->quoteName('#__menu'));
-        $query->where($conditions);
-        $query->bind(':conditions', $conditions);
-
+        $query->select('id');
+        $query->from('#__extensions');
+        $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_biblestudy'));
         $this->dbo->setQuery($query);
+        $biblestudyID = (int) $this->dbo->loadResult();
 
-        try {
-            $menuBibleStudyStatus = $this->dbo->execute();
-        } catch (\RuntimeException $e) {
-            echo "Failed to execute menu removal";
-        }
+        if ($biblestudyID !== 0) {
+            // Get Proclaim extension ID
+            $query      = $this->dbo->getQuery(true);
+            $query->select('id');
+            $query->from('#__extensions');
+            $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_proclaim'));
+            $this->dbo->setQuery($query);
+            $proclaimID = (int) $this->dbo->loadResult();
 
-        //Add field if missing Subtitle to series
-	    $query      = $this->dbo->getQuery(true);
-	    $query = "SHOW COLUMNS FROM #__bsms_series LIKE 'subtitle'";
-	    $this->dbo->setQuery($query);
-	    $db = $this->dbo->execute();
-	    if(empty(empty($db->num_rows))) {
-		    $alter = "ALTER TABLE #__bsms_series ADD subtitle TEXT";
-		    $this->dbo->setquery($alter);
-		    $this->dbo->execute();
-	    }
-        // Delete Old stale com_biblestudy extension.
-        $query      = $this->dbo->getQuery(true);
-        $conditions = [
-            $this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_biblestudy')
-        ];
-        $query->delete($this->dbo->quoteName('#__extensions'));
-        $query->where($conditions);
-        $query->bind('conditions', $conditions);
-        $this->dbo->setQuery($query);
+            // Remove old com_biblestudy folders and files as we can't uninstall them
+            $this->deleteFolders = ['/components/com_biblestudy', '/administrator/components/com_biblestudy'];
+            $this->deleteFiles   = ['/language/en-GB/en-GB.com_biblestudy.ini'];
+            $this->removefiles();
 
-        try {
-            $comBibleStudyStatus = $this->dbo->execute();
-        } catch (\RuntimeException $e) {
-            echo "Failed to execute com_biblestudy removal";
-        }
+            // Clean up Admin Menus form old install
+            $query      = $this->dbo->getQuery(true);
+            $query->delete($this->dbo->quoteName('#__menu'));
+            $query->where($this->dbo->quoteName('link') . 'LIKE "%com_biblestudy%"');
 
-        // Delete Old stale pkg_biblestudy_package extension.
-        $query      = $this->dbo->getQuery(true);
-        $conditions = [
-            $this->dbo->quoteName('element') . ' = ' . $this->dbo->q('pkg_biblestudy_package')
-        ];
-        $query->delete($this->dbo->quoteName('#__extensions'));
-        $query->where($conditions);
-	    $query->bind('conditions', $conditions);
-        $this->dbo->setQuery($query);
+            // This check to make sure the menu items is from the Admin Main menu only
+            $query->where($this->dbo->quoteName('client_id') . ' = 1');
+            $query->where($this->dbo->quoteName('menutype') . ' = ' . $this->dbo->quote('main'));
+            $this->dbo->setQuery($query);
 
-        try {
-            $comBibleStudyStatus = $this->dbo->execute();
-        } catch (\RuntimeException $e) {
-            echo "Failed to execute pkg_biblestudy_package removal";
-        }
+            try {
+                $menuBibleStudyStatus = $this->dbo->execute();
+            } catch (RuntimeException $e) {
+                JFactory::getApplication()->enqueueMessage("Failed to execute Admin Menu removal", "error");
+            }
 
-        // Reset Status info
-        $this->status          = new stdClass();
-        $this->status->modules = [];
-        $this->status->plugins = [];
+            // Update Site Menus for BibleStudy to Proclaim
+            $query      = $this->dbo->getQuery(true);
+            $query->select('id, component_id');
+            $query->from($this->dbo->quoteName('#__menu'));
+            $query->where($this->dbo->quoteName('link') . 'LIKE "%com_biblestudy%"');
+            $query->where($this->dbo->quoteName('client_id') . ' = 0');
+            $this->dbo->setQuery($query);
+            $results = $this->dbo->loadObjectList();
 
-        // Update Install Actions to uninstall the BibleStudy components
-        self::$installActionQueue = [
+            foreach ($results as $result) {
+                $query      = $this->dbo->getQuery(true);
+
+                // Fields to update.
+                $fields = array(
+                    $this->dbo->quoteName('link') . ' = ' . $this->dbo->quote(str_replace("com_biblestudy", "com_proclaim", $result->link)),
+                    $this->dbo->quoteName('component_id') . ' = ' . $proclaimID,
+                );
+
+                // Conditions for which records should be updated.
+                $conditions = array(
+                    $this->dbo->quoteName('id') . ' = ' . $result->id,
+                );
+                $query->update($this->dbo->quoteName('#__menu'))->set($fields)->where($conditions);
+
+                $this->dbo->setQuery($query);
+                $menuBibleStudyStatus = $this->dbo->execute();
+            }
+
+            // Update Site Modules for BibleStudy to Proclaim
+            $query      = $this->dbo->getQuery(true);
+            $query->select('id, module');
+            $query->from($this->dbo->quoteName('#__modules'));
+            $query->where($this->dbo->quoteName('module') . 'LIKE "%mod_biblestudy%"');
+            $this->dbo->setQuery($query);
+            $results = $this->dbo->loadObjectList();
+
+            foreach ($results as $result) {
+                $query      = $this->dbo->getQuery(true);
+
+                // Fields to update.
+                $fields = array(
+                    $this->dbo->quoteName('module') . ' = ' . $this->dbo->quote(str_replace("mod_biblestudy", "mod_proclaim", $result->module)),
+                );
+
+                // Conditions for which records should be updated.
+                $conditions = array(
+                    $this->dbo->quoteName('id') . ' = ' . $result->id,
+                );
+                $query->update($this->dbo->quoteName('#__menu'))->set($fields)->where($conditions);
+
+                $this->dbo->setQuery($query);
+                $menuBibleStudyStatus = $this->dbo->execute();
+            }
+
+            // Delete Old stale com_biblestudy extension.
+            $query      = $this->dbo->getQuery(true);
+            $query->delete($this->dbo->quoteName('#__extensions'));
+            $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_biblestudy'));
+            $this->dbo->setQuery($query);
+
+            try {
+                $comBibleStudyStatus = $this->dbo->execute();
+            } catch (RuntimeException $e) {
+                JFactory::getApplication()->enqueueMessage("Failed to execute com_biblestudy removal", "error");
+            }
+
+            // Delete Old stale pkg_biblestudy_package extension.
+            $query      = $this->dbo->getQuery(true);
+            $query->delete($this->dbo->quoteName('#__extensions'));
+            $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('pkg_biblestudy_package'));
+            $this->dbo->setQuery($query);
+
+            try {
+                $comBibleStudyStatus = $this->dbo->execute();
+            } catch (RuntimeException $e) {
+                JFactory::getApplication()->enqueueMessage("Failed to execute pkg_biblestudy_package removal", "error");
+            }
+
+            // Reset Status info
+            $this->status          = new stdClass();
+            $this->status->modules = [];
+            $this->status->plugins = [];
+
+            // Update Install Actions to uninstall the BibleStudy components
+            self::$installActionQueue = [
             // -- modules => { (folder) => { (module) => { (position), (published) } }* }*
             'modules' => [
                 'administrator' => [],
@@ -311,18 +377,19 @@ class com_proclaimInstallerScript extends InstallerScript
                     'jbsbackup'  => 0,
                 ],
             ],
-        ];
+            ];
 
-        // Remove old Components
-        $this->uninstallSubextensions();
+            // Remove old Components
+            $this->uninstallSubextensions();
 
-        if (
-            $menuBibleStudyStatus ||
-            $comBibleStudyStatus ||
-            count($this->status->modules) ||
-            count($this->status->plugins)
-        ) {
-            echo 'We have removed leftovers from Proclaim old version';
+            if (
+                $menuBibleStudyStatus ||
+                $comBibleStudyStatus ||
+                count($this->status->modules) ||
+                count($this->status->plugins)
+            ) {
+                JFactory::getApplication()->enqueueMessage("We have removed leftovers from Proclaim old version", "notice");
+            }
         }
     }
 
@@ -341,7 +408,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $language = Factory::getApplication()->getLanguage();
             $language->load('com_proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim', 'en-GB', true);
             $language->load('com_proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim', null, true);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return;
         }
 
@@ -477,7 +544,7 @@ class com_proclaimInstallerScript extends InstallerScript
                                 echo ' ' . ($module['result'] ? Text::_('JBS_INS_REMOVED') : Text::_(
                                     'JBS_INS_NOT_REMOVED'
                                 ));
-                    ?>
+                                ?>
                             </strong>
                         </td>
                     </tr>
@@ -510,7 +577,7 @@ class com_proclaimInstallerScript extends InstallerScript
                                 echo '' . ($plugin['result'] ? Text::_('JBS_INS_REMOVED') : Text::_(
                                     'JBS_INS_NOT_REMOVED'
                                 ));
-                    ?>
+                                ?>
                             </strong>
                         </td>
                     </tr>
@@ -594,7 +661,7 @@ class com_proclaimInstallerScript extends InstallerScript
                             ->select('COUNT(*)')
                             ->from('#__modules')
                             ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q('mod_' . $module))
-	                        ->bind(':module', $module);
+                            ->bind(':module', $module);
                         $this->dbo->setQuery($sql);
                         $count                   = $this->dbo->loadResult();
                         $installer               = new Installer();
@@ -618,8 +685,8 @@ class com_proclaimInstallerScript extends InstallerScript
                                 ->update($this->dbo->qn('#__modules'))
                                 ->set($this->dbo->qn('position') . ' = ' . $this->dbo->q($modulePosition))
                                 ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q('mod_' . $module))
-	                            ->bind(':module', $module)
-	                            ->bind(':modulePosition', $modulePosition);
+                                ->bind(':module', $module)
+                                ->bind(':modulePosition', $modulePosition);
 
                             if ($modulePublished) {
                                 $sql->set($this->dbo->qn('published') . ' = ' . $this->dbo->q('1'));
@@ -707,7 +774,7 @@ class com_proclaimInstallerScript extends InstallerScript
                             ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
                             ->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder))
                             ->bind(':plugin', $plugin)
-                            ->bind(':folder',$folder);
+                            ->bind(':folder', $folder);
                         $this->dbo->setQuery($query);
                         $count                   = $this->dbo->loadResult();
                         $installer               = new JInstaller();
@@ -724,8 +791,8 @@ class com_proclaimInstallerScript extends InstallerScript
                                 ->set($this->dbo->qn('enabled') . ' = ' . $this->dbo->q('1'))
                                 ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
                                 ->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder))
-	                            ->bind(':plugin', $plugin)
-	                            ->bind(':folder',$folder);
+                                ->bind(':plugin', $plugin)
+                                ->bind(':folder', $folder);
                             $this->dbo->setQuery($query);
                             $this->dbo->execute();
                         }
@@ -789,8 +856,8 @@ class com_proclaimInstallerScript extends InstallerScript
                             ->where($this->dbo->qn('type') . ' = ' . $this->dbo->q('plugin'))
                             ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
                             ->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder))
-	                        ->bind(':plugin', $plugin)
-	                        ->bind(':folder',$folder);
+                            ->bind(':plugin', $plugin)
+                            ->bind(':folder', $folder);
                         $this->dbo->setQuery($sql);
 
                         $id = $this->dbo->loadResult();
