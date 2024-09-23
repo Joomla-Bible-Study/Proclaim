@@ -18,6 +18,8 @@ use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Installer\InstallerAdapter;
 use Joomla\CMS\Installer\InstallerScript;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
@@ -235,13 +237,11 @@ class com_proclaimInstallerScript extends InstallerScript
 
         if ($type === 'install') {
             // A redirect to a new location after the installation is completed.
-            $controller = new CWM\Component\Proclaim\Administrator\Controller\CwmadminController();
-            $controller->setRedirect(
-                JUri::base() .
+            $parent->getParent()->setRedirectURL(
+                Uri::base() .
                 'index.php?option=com_proclaim&view=cwminstall&task=cwminstall.browse&scanstate=start&' .
-                JSession::getFormToken() . '=1'
+                Session::getFormToken() . '=1'
             );
-            $controller->redirect();
         }
     }
 
