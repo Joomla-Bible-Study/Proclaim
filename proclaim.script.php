@@ -166,7 +166,7 @@ class com_proclaimInstallerScript extends InstallerScript
             // Loop through each item and check for a match.
             foreach ($array as $string) {
                 // If found somewhere inside the string, add.
-                if (str_contains($string, 'bsms_series')) {
+                if (str_contains($string, 'bsms_podcast')) {
                     $found[] = $string;
                 }
             }
@@ -176,11 +176,11 @@ class com_proclaimInstallerScript extends InstallerScript
         $results = $this->dbo->setQuery('SHOW TABLES')->loadColumn();
         if (!empty(array_partial_search($results))) {
             // Add field if missing Subtitle to series
-            $query = "SHOW COLUMNS FROM " . $this->dbo->quoteName('#__bsms_series') . " LIKE " . $this->dbo->quote('subtitle');
+            $query = "SHOW COLUMNS FROM " . $this->dbo->quoteName('#__bsms_podcast') . " LIKE " . $this->dbo->quote('subtitle');
             $this->dbo->setQuery($query);
             $db = $this->dbo->loadResult();
             if (empty($db)) {
-                $alter = "ALTER TABLE #__bsms_series ADD subtitle TEXT";
+                $alter = "ALTER TABLE #__bsms_podcast ADD subtitle TEXT";
                 $this->dbo->setquery($alter);
                 $this->dbo->execute();
             }
