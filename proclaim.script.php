@@ -259,7 +259,7 @@ class com_proclaimInstallerScript extends InstallerScript
 
         // Get BibleStudy extension ID
         $query      = $this->dbo->getQuery(true);
-        $query->select('id');
+        $query->select('extension_id');
         $query->from('#__extensions');
         $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_biblestudy'));
         $this->dbo->setQuery($query);
@@ -268,7 +268,7 @@ class com_proclaimInstallerScript extends InstallerScript
         if ($biblestudyID !== 0) {
             // Get Proclaim extension ID
             $query      = $this->dbo->getQuery(true);
-            $query->select('id');
+            $query->select('extension_id');
             $query->from('#__extensions');
             $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_proclaim'));
             $this->dbo->setQuery($query);
@@ -764,7 +764,7 @@ class com_proclaimInstallerScript extends InstallerScript
             }//end foreach
         }//end if
 
-        // Plugins installation
+        // Plugin's installation
         if (count(self::$installActionQueue['plugins'])) {
             foreach (self::$installActionQueue['plugins'] as $folder => $plugins) {
                 if (count($plugins) !== 0) {
