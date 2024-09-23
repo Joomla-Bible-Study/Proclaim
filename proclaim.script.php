@@ -343,7 +343,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 $conditions = array(
                     $this->dbo->quoteName('id') . ' = ' . $result->id,
                 );
-                $query->update($this->dbo->quoteName('#__menu'))->set($fields)->where($conditions);
+                $query->update($this->dbo->quoteName('#__modules'))->set($fields)->where($conditions);
 
                 $this->dbo->setQuery($query);
                 $menuBibleStudyStatus = $this->dbo->execute();
