@@ -152,9 +152,30 @@ class com_proclaimInstallerScript extends InstallerScript
     {
         $this->setDboFromAdapter($parent);
 
-        $results = (array) $this->dbo->setQuery('SHOW TABLES')->loadColumn();
-        if (in_array("_bsms_series", $results, true)) {
-            //Add field if missing Subtitle to series
+        /**
+         * Find a partial string in the array
+         * @param   array  $array
+         *
+         * @return array
+         *
+         * @since 10.0
+         */
+        function array_partial_search(array $array): array
+        {
+            $found = [];
+            // Loop through each item and check for a match.
+            foreach ($array as $string) {
+                // If found somewhere inside the string, add.
+                if (str_contains($string, 'bsms_seriesz')) {
+                    $found[] = $string;
+                }
+            }
+            return $found;
+        }
+
+        $results = $this->dbo->setQuery('SHOW TABLES')->loadColumn();
+        if (!empty(array_partial_search($results))) {
+            // Add field if missing Subtitle to series
             $query = "SHOW COLUMNS FROM " . $this->dbo->quoteName('#__bsms_series') . " LIKE " . $this->dbo->quote('subtitle');
             $this->dbo->setQuery($query);
             $db = $this->dbo->loadResult();
@@ -167,7 +188,6 @@ class com_proclaimInstallerScript extends InstallerScript
 
         return parent::preflight($type, $parent);
     }
-
 
     /**
      * Uninstall rout
