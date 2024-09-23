@@ -166,7 +166,7 @@ class com_proclaimInstallerScript extends InstallerScript
             // Loop through each item and check for a match.
             foreach ($array as $string) {
                 // If found somewhere inside the string, add.
-                if (str_contains($string, 'bsms_seriesz')) {
+                if (str_contains($string, 'bsms_series')) {
                     $found[] = $string;
                 }
             }
