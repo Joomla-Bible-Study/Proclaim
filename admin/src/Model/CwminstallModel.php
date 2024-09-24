@@ -3,10 +3,10 @@
 /**
  * Part of Proclaim Package
  *
- * @package    Proclaim.Admin
+ * @package        Proclaim.Admin
  * @copyright  (C) 2007 CWM Team All rights reserved
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
- * @link       https://www.christianwebministries.org
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
+ * @link           https://www.christianwebministries.org
  * */
 
 namespace CWM\Component\Proclaim\Administrator\Model;
@@ -284,7 +284,7 @@ class CwminstallModel extends ListModel
             ->order($this->_db->qn('id') . ' DESC');
         $this->_db->setQuery($query, 0, 1);
         $updates             = $this->_db->loadObject();
-        $version             = (string) $updates->version;
+        $version             = (string)$updates->version;
         $this->versionSwitch = $version;
 
         $this->callstack['subversiontype_version'] = $version;
@@ -706,8 +706,8 @@ class CwminstallModel extends ListModel
                                         substr($queryString, 0, 80)
                                     );
                                     $queryString = ' ID:' . $queryString . ' Query count: ' . count(
-                                        $this->subQuery[$this->version][$step]
-                                    );
+                                            $this->subQuery[$this->version][$step]
+                                        );
                                 }
 
                                 Log::add(
@@ -956,7 +956,7 @@ class CwminstallModel extends ListModel
                 $update = $this->getUpdateVersion();
 
                 // Set new Schema Version
-                $run           = $this->setSchemaVersion($update, $this->biblestudyEid);
+                $this->setSchemaVersion($update, $this->biblestudyEid);
                 $this->running = 'Update Version';
                 break;
             case 'fixassets':
@@ -1058,8 +1058,13 @@ class CwminstallModel extends ListModel
             ->from('#__bsms_update');
         $this->_db->setQuery($query);
         $updates = $this->_db->loadObjectList();
+        $return  = end($updates)->version;
 
-        return end($updates)->version;
+        if (empty($return)) {
+            $return = BIBLESTUDY_VERSION;
+        }
+
+        return $return;
     }
 
     /**
