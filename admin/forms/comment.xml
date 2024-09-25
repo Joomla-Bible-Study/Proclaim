@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-        <field
-                name="published"
-                type="list"
-                class="col-12 small"
-                id="published"
-                label="JSTATUS"
-                description="JFIELD_PUBLISHED_DESC"
-                size="1"
-                default="1"
-                filter="integer">
-            <option
-                    value="1">
+        <field name="published"
+               type="list"
+               class="col-12 small"
+               id="published"
+               label="JSTATUS"
+               description="JFIELD_PUBLISHED_DESC"
+               size="1"
+               default="1"
+               filter="integer">
+            <option value="1">
                 JPUBLISHED
             </option>
-            <option
-                    value="0">
+            <option value="0">
                 JUNPUBLISHED
             </option>
-
-            <option
-                    value="-2">
+            <option value="-2">
                 JTRASHED
             </option>
         </field>

@@ -17,10 +17,12 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
+use Exception;
 use Joomla\CMS\Cache\CacheControllerFactoryInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
+use stdClass;
 
 /**
  * Core Bible Study Helper
@@ -44,14 +46,14 @@ class Cwmhelper
      *
      * @param   object     $row       JTable
      * @param   Registry   $params    Item Params
-     * @param   \stdClass  $template  Template Table
+     * @param   stdClass  $template  Template Table
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      * @since  9.0.0
      */
-    public static function getTooltip(object $row, Registry $params, \stdClass $template): string
+    public static function getTooltip(object $row, Registry $params, stdClass $template): string
     {
         $JBSMElements = new Cwmlisting();
 
@@ -103,7 +105,7 @@ class Cwmhelper
      *
      * @param   string  $url  URL
      *
-     * @return  integer  Return size or false read.
+     * @return  int  Return size or false read.
      *
      * @since 9.0.0
      */
@@ -130,7 +132,7 @@ class Cwmhelper
 
         try {
             $headers = @get_headers($url, true);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return 0;
         }
 
@@ -179,7 +181,7 @@ class Cwmhelper
         $reg->loadString($media->params);
         $reg->set('size', $size);
 
-        $update         = new \stdClass();
+        $update         = new stdClass();
         $update->id     = $id;
         $update->params = $reg->toString();
 
@@ -269,7 +271,7 @@ class Cwmhelper
      * @param   string  $state  Where to clean the cache from. Site or Admin.
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      * @since 9.0.4
      */
     public static function clearcache(string $state = 'site'): void
@@ -327,14 +329,14 @@ class Cwmhelper
      *
      * @param   Registry|null  $params  AdminTable + parameters
      *
-     * @return  \stdClass
+     * @return  stdClass
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.1.6
      */
-    public static function getSimpleView(?Registry $params = null): \stdClass
+    public static function getSimpleView(?Registry $params = null): stdClass
     {
-        $simple = new \stdClass();
+        $simple = new stdClass();
 
         if ($params === null) {
             $params = Cwmparams::getAdmin()->params;

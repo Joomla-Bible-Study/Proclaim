@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
+use Exception;
 use JApplicationSite;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
@@ -41,7 +42,7 @@ class CwmsermonModel extends FormModel
      *
      * @since 7.0
      */
-    protected $context = 'com_proclaim.sermon';
+    protected string $context = 'com_proclaim.sermon';
 
     /**
      * Method to increment the hit counter for the study
@@ -49,7 +50,7 @@ class CwmsermonModel extends FormModel
      * @param   int|null  $pk  ID
      *
      * @access    public
-     * @return    boolean    True on success
+     * @return    bool    True on success
      *
      * @todo      this look like it could be moved to a helper.
      * @since     1.5
@@ -71,13 +72,12 @@ class CwmsermonModel extends FormModel
      *
      * @param   int|null  $pk  The id of the study.
      *
-     * @return    mixed    Menu item data object on success, false on failure.
+     * @return    mixed    Returns the Sermon Record, false on failure.
      *
-     * @throws \Exception
-     * @todo  this look like it is not needed. bcc
+     * @throws Exception
      * @since 7.1.0
      */
-    public function &getItem(?int $pk = null)
+    public function getItem($pk = null): mixed
     {
         /** @var User $user */
         $user = Factory::getApplication()->getIdentity();
@@ -185,16 +185,13 @@ class CwmsermonModel extends FormModel
                     ))) && (($data->published != $published) && ($data->published != $archived))
                 ) {
                     Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_ITEM_NOT_PUBLISHED'), 'error');
-                    $data = null;
-
-                    return $data;
+                    return null;
                 }
 
                 // Concat topic_text and concat topic_params do not fit, so translate individually
                 $topic_text       = Cwmtranslated::getTopicItemTranslated($data);
                 $data->id         = $pk;
                 $data->topic_text = $topic_text;
-                $data->bookname   = Text::_($data->bookname);
 
                 $registry = new Registry();
                 $registry->loadString($data->params);
@@ -240,7 +237,7 @@ class CwmsermonModel extends FormModel
                 }
 
                 $this->_item[$pk] = $data;
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 if ((int) $e->getCode() === 404) {
                     // Need to go through the error handler to allow Redirect to work.
                     Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
@@ -258,9 +255,9 @@ class CwmsermonModel extends FormModel
      * Method to retrieve comments for a study
      *
      * @access  public
-     * @return    mixed    data object on success, false on failure.
+     * @return  mixed    data object on success, false on failure.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   7.0
      */
     public function getComments(): array
@@ -286,9 +283,9 @@ class CwmsermonModel extends FormModel
      * Method to store a record
      *
      * @access    public
-     * @return    boolean    True on success
+     * @return    bool    True on success
      *
-     * @throws \Exception
+     * @throws Exception
      * @since     7.0
      */
     public function storecomment(): bool
@@ -316,18 +313,25 @@ class CwmsermonModel extends FormModel
     /**
      * Method for getting a form.
      *
-     * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param   array  $data      Data for the form.
+     * @param   bool   $loadData  True if the form is to load its own data (default case), false if not.
      *
-     * @return  Form
+     * @return  bool|Form  Will load form if found or return false
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   4.0.0
      *
      */
-    public function getForm($data = array(), $loadData = true): Form
+    public function getForm($data = array(), $loadData = true): bool|Form
     {
-        return $this->loadForm('com_proclaim.comment', 'comment', array('control' => 'jform', 'load_data' => true));
+        // Get the form.
+        $form = $this->loadForm('com_proclaim.comment', 'comment', array('control' => 'jform', 'load_data' => $loadData));
+
+        if (empty($form)) {
+            return false;
+        }
+
+        return $form;
     }
 
     /**
@@ -337,7 +341,7 @@ class CwmsermonModel extends FormModel
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since    1.6
      */
     protected function populateState(): void

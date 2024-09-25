@@ -29,7 +29,6 @@
     ],
     "comments": false,
     "ignore": [
-      "component/media/js/*.min.js"
     ]
   },
   "dependencies": {
