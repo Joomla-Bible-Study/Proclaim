@@ -297,7 +297,7 @@ class com_proclaimInstallerScript extends InstallerScript
 
             // Update Site Menus for BibleStudy to Proclaim
             $query      = $this->dbo->getQuery(true);
-            $query->select('id, component_id');
+            $query->select('id, component_id, link');
             $query->from($this->dbo->quoteName('#__menu'));
             $query->where($this->dbo->quoteName('link') . 'LIKE "%com_biblestudy%"');
             $query->where($this->dbo->quoteName('client_id') . ' = 0');
@@ -306,13 +306,11 @@ class com_proclaimInstallerScript extends InstallerScript
 
             foreach ($results as $result) {
                 $query      = $this->dbo->getQuery(true);
-
                 // Fields to update.
                 $fields = array(
-                    $this->dbo->quoteName('link') . ' = ' . $this->dbo->quote(str_replace("com_biblestudy", "com_proclaim", $result->link)),
+                    $this->dbo->quoteName('link') . ' = ' . $this->dbo->quote(str_replace("com_biblestudy&view=", "com_proclaim&view=cwm", $result->link)),
                     $this->dbo->quoteName('component_id') . ' = ' . $proclaimID,
                 );
-
                 // Conditions for which records should be updated.
                 $conditions = array(
                     $this->dbo->quoteName('id') . ' = ' . $result->id,
