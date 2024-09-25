@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
@@ -39,16 +40,15 @@ class Cwmlanding
      *
      * @return string
      *
-     * @throws   \Exception
+     * @throws   Exception
      * @since    8.0.0
      */
     public function getLocationsLandingPage(Registry $params, int $id = 0): string
     {
         $mainframe = Factory::getApplication();
-        $user      = Factory::getApplication()->getSession()->get('user');
+        $user      = $mainframe->getSession()->get('user');
         $db        = Factory::getContainer()->get('DatabaseDriver');
         $location  = null;
-        $teacherid = null;
         $template  = $params->get('studieslisttemplateid', 1);
         $limit     = $params->get('landinglocationslimit');
         $order     = 'ASC';
@@ -64,7 +64,6 @@ class Cwmlanding
 
         if (isset($params)) {
             $registry->loadString($params);
-            $m_params   = $registry;
             $language   = $db->quote($item->language) . ',' . $db->quote('*');
             $menu_order = $params->get('locations_order');
         } else {
@@ -72,9 +71,9 @@ class Cwmlanding
             $menu_order = null;
         }
 
-        if ($language == '*' || !$language) {
+        if ($language === '*' || !$language) {
             $langlink = '';
-        } elseif ($language != '*' && isset($item->language)) {
+        } elseif (isset($item->language)) {
             $langlink = '&amp;filter.languages=' . $item->language;
         }
 
@@ -87,12 +86,8 @@ class Cwmlanding
                     $order = 'DESC';
                     break;
                 case 0:
-                    $order = null;
+                    $order = $params->get('landing_default_order', 'ASC');
             }
-        }
-
-        if (!$order) {
-            $order = $params->get('landing_default_order', 'ASC');
         }
 
         // Compute view access permissions.
@@ -124,13 +119,11 @@ class Cwmlanding
                     $showdiv = 0;
 
                     foreach ($tresult as $b) {
-                        if ($t >= $limit) {
-                            if ($showdiv < 1) {
-                                $location .= "\n\t" . '<div id="showhidelocations" style="display:none;"> <!-- start show/hide locations div-->';
+                        if (($t >= $limit) && $showdiv < 1) {
+                            $location .= "\n\t" . '<div id="showhidelocations" style="display:none;"> <!-- start show/hide locations div-->';
 
-                                $i       = 0;
-                                $showdiv = 1;
-                            }
+                            $i       = 0;
+                            $showdiv = 1;
                         }
 
                         $location .= '<div class="col-4 style="display: inline-block; margin-right:7px"">';
@@ -145,16 +138,15 @@ class Cwmlanding
                         $i++;
                         $t++;
 
-                        if ($i == 3 && $t != $limit && $t != $count) {
+                        if ($i === 3 && $t !== $limit && $t !== $count) {
                             $i = 0;
-                        } elseif ($i == 3 || $t == $count || $t == $limit) {
+                        } elseif ($i === 3 || $t === $count || $t === $limit) {
                             $i = 0;
                         }
                     }
 
-                    if ($showdiv == 1) {
+                    if ($showdiv === 1) {
                         $location .= "\n\t" . '</div> <!-- close show/hide locations div-->';
-                        $showdiv  = 2;
                     }
 
                     $location .= '<div class="landing_separator"></div>';
@@ -213,18 +205,17 @@ class Cwmlanding
      *
      * @return string
      *
-     * @throws   \Exception
+     * @throws   Exception
      * @since    8.0.0
      */
     public function getTeacherLandingPage(Registry $params, int $id = 0): string
     {
         $mainframe = Factory::getApplication();
         $db        = Factory::getContainer()->get('DatabaseDriver');
-        $user      = $user = Factory::getApplication()->getSession()->get('user');
+        $user      = $mainframe->getSession()->get('user');
         $langlink  = Multilanguage::isEnabled();
         $order     = null;
         $teacher   = null;
-        $teacherid = null;
 
         $template        = $params->get('teachertemplateid', 1);
         $limit           = $params->get('landingteacherslimit', 10000);
@@ -235,7 +226,6 @@ class Cwmlanding
 
         if (isset($params)) {
             $registry->loadString($params);
-            $m_params   = $registry;
             $language   = $db->quote($item->language) . ',' . $db->quote('*');
             $menu_order = $params->get('teachers_order');
         } else {
@@ -243,9 +233,9 @@ class Cwmlanding
             $menu_order = null;
         }
 
-        if ($language == '*' || !$language) {
+        if ($language === '*' || !$language) {
             $langlink = '';
-        } elseif ($language != '*' && isset($item->language)) {
+        } elseif (isset($item->language)) {
             $langlink = '&amp;filter.languages=' . $item->language;
         }
 
@@ -293,24 +283,21 @@ class Cwmlanding
             switch ($teacheruselimit) {
                 case 0:
                     foreach ($tresult as $b) {
-                        if ($t >= $limit) {
-                            if ($showdiv < 1) {
-                                $teacher .= "\n\t" . '<div id="showhideteachers" style="display:none;"> <!-- start show/hide teacher div-->';
+                        if (($t >= $limit) && $showdiv < 1) {
+                            $teacher .= "\n\t" . '<div id="showhideteachers" style="display:none;"> <!-- start show/hide teacher div-->';
 
-                                $i       = 0;
-                                $showdiv = 1;
-                            }
+                            $i       = 0;
+                            $showdiv = 1;
                         }
 
+                        $teacher .= '<div class="col-4" style="display: inline-block; margin-right:7px">';
                         if ($params->get('linkto') == 0) {
-                            $teacher .= '<div class="col-4" style="display: inline-block; margin-right:7px">';
                             $teacher .= '<a href="' . Route::_(
                                 'index.php?option=com_proclaim&amp;view=Cwmsermons&amp;t=' . $template
                             )
                                 . '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
                                 . $langlink . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
                         } else {
-                            $teacher .= '<div class="col-4" style="display: inline-block; margin-right:7px">';
                             $teacher .= '<a href="' . Route::_(
                                 'index.php?option=com_proclaim&amp;view=cwmteacher&id=' . $b->id . $langlink . '&t=' . $template
                             ) . '">';
@@ -323,16 +310,15 @@ class Cwmlanding
                         $i++;
                         $t++;
 
-                        if ($i == 3 && $t != $limit && $t != $count) {
+                        if ($i === 3 && $t !== $limit && $t !== $count) {
                             $i = 0;
-                        } elseif ($i == 3 || $t == $count || $t == $limit) {
+                        } elseif ($i === 3 || $t === $count || $t === $limit) {
                             $i = 0;
                         }
                     }
 
-                    if ($showdiv == 1) {
+                    if ($showdiv === 1) {
                         $teacher .= "\n\t" . '</div> <!-- close show/hide teacher div-->';
-                        $showdiv = 2;
                     }
 
                     $teacher .= '<div class="landing_separator"></div>';
@@ -401,7 +387,7 @@ class Cwmlanding
      *
      * @return string
      *
-     * @throws   \Exception
+     * @throws   Exception
      * @since    8.0.0
      */
     public function getSeriesLandingPage(Registry $params, int $id = 0): string
@@ -411,7 +397,6 @@ class Cwmlanding
         $db        = Factory::getContainer()->get('DatabaseDriver');
         $order     = 'ASC';
         $series    = null;
-        $seriesid  = null;
         $numRows   = null;
 
         $template = $params->get('serieslisttemplateid', 1);
@@ -444,12 +429,8 @@ class Cwmlanding
                     $order = 'DESC';
                     break;
                 case 0:
-                    $order = null;
+                    $order = $params->get('landing_default_order', 'ASC');
             }
-        }
-
-        if (!$order) {
-            $order = $params->get('landing_default_order', 'ASC');
         }
 
         // Compute view access permissions.
@@ -470,7 +451,7 @@ class Cwmlanding
         $items = $db->loadObjectList();
         $count = count($items);
 
-        if ($count != 0) {
+        if ($count !== 0) {
             switch ($seriesuselimit) {
                 // Use landing page limit
                 case 0:
@@ -491,7 +472,7 @@ class Cwmlanding
                         }
 
                         if ($params->get('series_linkto') === '0') {
-                            $series .= '<div class="col-4">';
+                            $series .= '<div class="col-4" style="display: inline-block; margin-right:7px">';
                             $series .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_series=' . $b->id
                                 . '&amp;sendingview=landing&amp;filter_book=0&amp;filter_teacher=0'
                                 . '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
@@ -510,16 +491,15 @@ class Cwmlanding
                         $i++;
                         $t++;
 
-                        if ($i == 3 && $t != $limit && $t != $count) {
+                        if ($i === 3 && $t !== $limit && $t !== $count) {
                             $i = 0;
-                        } elseif ($i == 3 || $t == $count || $t == $limit) {
+                        } elseif ($i === 3 || $t === $count || $t === $limit) {
                             $i = 0;
                         }
                     }
 
                     if ($showdiv == 1) {
                         $series  .= "\n\t" . '</div> <!-- close show/hide series div-->';
-                        $showdiv = 2;
                     }
 
                     $series .= '<div class="landing_separator"></div>';
@@ -584,7 +564,7 @@ class Cwmlanding
             $series = '<div class="landing_separator"></div>';
         }
 
-        $series .= '<div style="clear:both;">';
+        $series .= '<div style="clear:both;"></div>';
 
         return $series;
     }
@@ -597,7 +577,7 @@ class Cwmlanding
      *
      * @return string
      *
-     * @throws   \Exception
+     * @throws   Exception
      * @since    8.0.0
      */
     public function getYearsLandingPage(Registry $params, int $id = 0): string
@@ -606,8 +586,6 @@ class Cwmlanding
         $db        = Factory::getContainer()->get('DatabaseDriver');
         $user      = $user = Factory::getApplication()->getSession()->get('user');
         $order     = 'ASC';
-        $year      = null;
-        $teacherid = null;
         $template  = $params->get('studieslisttemplateid');
         $limit     = $params->get('landingyearslimit');
 
@@ -621,7 +599,6 @@ class Cwmlanding
 
         if (isset($params)) {
             $registry->loadString($params);
-            $m_params   = $registry;
             $language   = $db->quote($item->language) . ',' . $db->quote('*');
             $menu_order = $params->get('years_order');
         } else {
@@ -638,12 +615,8 @@ class Cwmlanding
                     $order = 'DESC';
                     break;
                 case 0:
-                    $order = null;
+                    $order = $params->get('landing_default_order', 'ASC');
             }
-        }
-
-        if (!$order) {
-            $order = $params->get('landing_default_order', 'ASC');
         }
 
         // Compute view access permissions.
@@ -691,16 +664,15 @@ class Cwmlanding
                 $i++;
                 $t++;
 
-                if ($i == 3 && $t != $limit && $t != $count) {
+                if ($i === 3 && $t !== $limit && $t !== $count) {
                     $i = 0;
-                } elseif ($i == 3 || $t == $count || $t == $limit) {
+                } elseif ($i === 3 || $t === $count || $t === $limit) {
                     $i = 0;
                 }
             }
 
-            if ($showdiv == 1) {
+            if ($showdiv === 1) {
                 $year    .= "\n\t" . '</div> <!-- close show/hide years div-->';
-                $showdiv = 2;
             }
 
             $year .= '<div class="landing_separator"></div>';
@@ -720,18 +692,16 @@ class Cwmlanding
      *
      * @return string
      *
-     * @throws   \Exception
+     * @throws   Exception
      * @since    8.0.0
      */
     public function getTopicsLandingPage(Registry $params, int $id = 0): string
     {
-        $mainframe = Factory::getApplication();
-        $user      = $user = Factory::getApplication()->getSession()->get('user');
+        $app       = Factory::getApplication();
+        $user      = $app->getSession()->get('user');
         $db        = Factory::getContainer()->get('DatabaseDriver');
-        $input     = Factory::getApplication();
         $order     = 'ASC';
         $topic     = null;
-        $teacherid = null;
         $template  = $params->get('studieslisttemplateid');
         $limit     = $params->get('landingtopicslimit');
 
@@ -739,13 +709,12 @@ class Cwmlanding
             $limit = 10000;
         }
 
-        $menu     = Factory::getApplication()->getMenu();
+        $menu     = $app->getMenu();
         $item     = $menu->getActive();
         $registry = new Registry();
 
         if (isset($params)) {
             $registry->loadString($params);
-            $m_params   = $registry;
             $language   = $db->quote($item->language) . ',' . $db->quote('*');
             $menu_order = $params->get('topics_order');
         } else {
@@ -762,12 +731,8 @@ class Cwmlanding
                     $order = 'DESC';
                     break;
                 case 0:
-                    $order = null;
+                    $order = $params->get('landing_default_order', 'ASC');
             }
-        }
-
-        if (!$order) {
-            $order = $params->get('landing_default_order', 'ASC');
         }
 
         // Compute view access permissions.
@@ -794,47 +759,44 @@ class Cwmlanding
         $i       = 0;
 
         if ($count > 0) {
-            $topic   = '';
             $showdiv = 0;
 
             foreach ($tresult as $b) {
-                if ($t >= $limit) {
-                    if ($showdiv < 1) {
-                        $topic .= "\n\t" . '<div id="showhidetopics" style="display:none;"> <!-- start show/hide topics div-->';
+                if (($t >= $limit) && $showdiv < 1) {
+                    $topic .= "\n\t" . '<div id="showhidetopics" style="display:none;"> <!-- start show/hide topics div-->';
 
-                        $i       = 0;
-                        $showdiv = 1;
-                    }
+                    $i       = 0;
+                    $showdiv = 1;
                 }
 
                 $topic .= '<div class="col-2" style="display: inline-block; margin-right:7px">';
                 $topic .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_topic=' .
                     $b->id . '&amp;sendingview=cwmlanding&amp;filter_teacher=0'
                     . '&amp;filter_series=0&amp;filter_location=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
-                $trans = new Cwmtranslated();
-                $topic .= $trans::getTopicItemTranslated($b);
+                $topic .= Cwmtranslated::getTopicItemTranslated($b);
 
                 $topic .= '</a>';
                 $topic .= '</div>';
                 $i++;
                 $t++;
 
-                if ($i == 3 && $t != $limit && $t != $count) {
+                if ($i === 3 && $t !== $limit && $t !== $count) {
                     $i = 0;
-                } elseif ($i == 3 || $t == $count || $t == $limit) {
+                } elseif ($i === 3 || $t === $count || $t === $limit) {
                     $i = 0;
                 }
             }
 
-            if ($showdiv == 1) {
+            if ($showdiv === 1) {
                 $topic   .= "\n\t" . '</div> <!-- close show/hide topics div-->';
-                $showdiv = 2;
             }
 
-            $topic .= '<div style="clear:both;"></div>';
+            $topic .= '<div class="landing_separator"></div>';
         } else {
-            $topic = '<div style="clear:both;"></div>';
+            $topic = '<div class="landing_separator"></div>';
         }
+
+        $topic .= '<div style="clear:both;"></div>';
 
         return $topic;
     }
@@ -847,7 +809,7 @@ class Cwmlanding
      *
      * @return string
      *
-     * @throws   \Exception
+     * @throws   Exception
      * @since    8.0.0
      */
     public function getMessageTypesLandingPage(Registry $params, int $id = 0): string
@@ -939,7 +901,7 @@ class Cwmlanding
                             }
                         }
 
-                        $messagetype .= '<div class="col-2 style="display: inline-block; margin-right:7px"">';
+                        $messagetype .= '<div class="col-2 style="display: inline-block; margin-right:7px">';
                         $messagetype .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_messagetype=' .
                             $b->id . '&amp;sendingview=cwmlanding&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0' .
                             '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t=' . $template . '">';
@@ -952,9 +914,9 @@ class Cwmlanding
                         $i++;
                         $t++;
 
-                        if ($i == 3 && $t != $limit && $t != $count) {
+                        if ($i === 3 && $t !== $limit && $t !== $count) {
                             $i = 0;
-                        } elseif ($i == 3 || $t == $count || $t == $limit) {
+                        } elseif ($i === 3 || $t === $count || $t === $limit) {
                             $i = 0;
                         }
                     }
@@ -1020,7 +982,7 @@ class Cwmlanding
      *
      * @return string
      *
-     * @throws   \Exception
+     * @throws   Exception
      * @since    8.0.0
      */
     public function getBooksLandingPage(Registry $params, int $id = 0): string
@@ -1043,7 +1005,6 @@ class Cwmlanding
 
         if (isset($params)) {
             $registry->loadString($params);
-            $m_params   = $registry;
             $language   = $db->quote($item->language) . ',' . $db->quote('*');
             $menu_order = $params->get('books_order');
         } else {
@@ -1066,12 +1027,8 @@ class Cwmlanding
                     $order = 'DESC';
                     break;
                 case 0:
-                    $order = null;
+                    $order = $params->get('landing_default_order', 'ASC');
             }
-        }
-
-        if (!$order) {
-            $order = $params->get('landing_default_order', 'ASC');
         }
 
         // Compute view access permissions.
@@ -1120,9 +1077,9 @@ class Cwmlanding
                 $i++;
                 $t++;
 
-                if ($i == 3 && $t != $limit && $t != $count) {
+                if ($i === 3 && $t !== $limit && $t !== $count) {
                     $i = 0;
-                } elseif ($i == 3 || $t == $count || $t == $limit) {
+                } elseif ($i === 3 || $t === $count || $t === $limit) {
                     $i = 0;
                 }
             }
@@ -1132,11 +1089,10 @@ class Cwmlanding
             }
 
             $book .= '<div class="landing_separator"></div>';
+            $book .= '<div style="clear:both;"></div>';
         } else {
             $book = '<div class="landing_separator"></div>';
         }
-
-        $book .= '<div style="clear:both;"></div>';
 
         return $book;
     }

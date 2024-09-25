@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmlandingpage;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
+use Exception;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\State;
@@ -37,7 +38,7 @@ class HtmlView extends BaseHtmlView
      *
      * @since 7.0
      */
-    public $request_url;
+    public string $request_url;
 
     /**
      * Params
@@ -51,13 +52,13 @@ class HtmlView extends BaseHtmlView
     /**
      * Params
      *
-     * @var State|CMSObject  State of the page
+     * @var CMSObject  State of the page
      *
      * @since 7.0
      */
-    public State|CMSObject $state;
+    public CMSObject $state;
 
-    public $main;
+    public object $main;
 
     /**
      * Execute and display a template script.
@@ -66,10 +67,10 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
-    public function display($tpl = null)
+    public function display($tpl = null): void
     {
         $document = Factory::getApplication()->getDocument();
 
@@ -106,13 +107,13 @@ class HtmlView extends BaseHtmlView
     /**
      * Parse through the Show hid buttons/links
      *
-     * @param   string   $showIt         Name of Show
-     * @param   string   $showIt_phrase  Name of the
-     * @param   integer  $i              Number of Show
+     * @param   string  $showIt         Name of Show
+     * @param   string  $showIt_phrase  Name of the
+     * @param   int     $i              Number of Show
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.2.4
      */
     public function getShowHide($showIt, $showIt_phrase, $i)
@@ -175,5 +176,7 @@ class HtmlView extends BaseHtmlView
 
             return $showhideall;
         }
+
+        return '';
     }
 }

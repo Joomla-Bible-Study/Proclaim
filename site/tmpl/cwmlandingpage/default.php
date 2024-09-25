@@ -25,32 +25,24 @@ $params     = $this->params;
 <div id="proclaim_landing" class="container"> <!-- This div is the container for the whole page -->
     <div id="bsms_header">
         <h1 class="componentheading">
-            <?php
-            if ($this->params->get('landing_show_page_image') > 0) {
-                if (isset($this->main->path)) {
-                    ?>
-                    <img src="<?php
-                    echo Uri::base() . $this->main->path; ?>"
-                         alt="<?php
-                            echo $this->params->get('landing_page_title'); ?>"
-                         width="<?php
-                            echo $this->main->width; ?>"
-                         height="<?php
-                            echo $this->main->height; ?>"/>
-                    <?php
-                    // End of column for logo
-                }
+            <?php if (isset($this->main->path) && ($this->params->get('landing_show_page_image') > 0)) {
+                ?>
+                <img src="<?php echo Uri::base() . $this->main->path; ?>" alt="<?php echo $this->params->get('landing_page_title'); ?>" width="<?php echo $this->main->width; ?>" height="<?php echo $this->main->height; ?>"/>
+                <?php
+                // End of column for logo
             }
 
             if ($this->params->get('landing_show_page_title') > 0) {
-                echo $this->params->get('landing_page_title');
+                //echo $this->params->get('landing_page_title');
             }
             ?>
         </h1>
         <?php
-        if ($this->params->get('landing_intro_show') > 0) {
-            echo $this->params->get('landing_intro');
-        }
+        if ($this->params->get('landing_intro_show') > 0) { ?>
+            <div id="proclaim_landing_intro">
+                <?php echo $this->params->get('landing_intro'); ?>
+            </div>
+        <?php }
         ?>
     </div>
     <!-- End div id="bsms_header" -->
@@ -111,15 +103,15 @@ $params     = $this->params;
             }
             ?>
             <!-- Wrap each in a DIV... -->
-            <div class="landing_item ">
+            <div class="landing_item">
                 <div class="landing_title">
                     <?php
                     echo $params->get($showIt . 'label');
-                    echo "\n";
                     ?>
                 </div>
                 <!-- end div id="landing_title" -->
-                <div class="landinglist" style="display: inline-block;">
+                <div class="landinglist container">
+                    <div class="row">
                     <?php
                     if (isset($showhideall)) {
                         echo $showhideall;
@@ -129,6 +121,7 @@ $params     = $this->params;
                         echo $heading;
                     }
                     ?>
+                    </div>
                 </div>
                 <!-- end div class="landinglist" -->
             </div><!-- end div class="landing_item" -->
