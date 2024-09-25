@@ -67,7 +67,7 @@ class Cwmlanding
             $language   = $db->quote($item->language) . ',' . $db->quote('*');
             $menu_order = $params->get('locations_order');
         } else {
-            $language   = $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*');
+            $language   = $db->quote($mainframe->getLanguage()->getTag()) . ',' . $db->quote('*');
             $menu_order = null;
         }
 
@@ -229,7 +229,7 @@ class Cwmlanding
             $language   = $db->quote($item->language) . ',' . $db->quote('*');
             $menu_order = $params->get('teachers_order');
         } else {
-            $language   = $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*');
+            $language   = $db->quote($mainframe->getLanguage()->getTag()) . ',' . $db->quote('*');
             $menu_order = null;
         }
 
@@ -393,7 +393,7 @@ class Cwmlanding
     public function getSeriesLandingPage(Registry $params, int $id = 0): string
     {
         $mainframe = Factory::getApplication();
-        $user      = $user = Factory::getApplication()->getSession()->get('user');
+        $user      = $mainframe->getSession()->get('user');
         $db        = Factory::getContainer()->get('DatabaseDriver');
         $order     = 'ASC';
         $series    = null;
@@ -416,7 +416,7 @@ class Cwmlanding
             $language   = $db->quote($item->language) . ',' . $db->quote('*');
             $menu_order = $params->get('series_order');
         } else {
-            $language   = $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*');
+            $language   = $db->quote($mainframe->getLanguage()->getTag()) . ',' . $db->quote('*');
             $menu_order = null;
         }
 
@@ -584,7 +584,7 @@ class Cwmlanding
     {
         $mainframe = Factory::getApplication();
         $db        = Factory::getContainer()->get('DatabaseDriver');
-        $user      = $user = Factory::getApplication()->getSession()->get('user');
+        $user      = $mainframe->getSession()->get('user');
         $order     = 'ASC';
         $template  = $params->get('studieslisttemplateid');
         $limit     = $params->get('landingyearslimit');
@@ -602,7 +602,7 @@ class Cwmlanding
             $language   = $db->quote($item->language) . ',' . $db->quote('*');
             $menu_order = $params->get('years_order');
         } else {
-            $language   = $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*');
+            $language   = $db->quote($mainframe->getLanguage()->getTag()) . ',' . $db->quote('*');
             $menu_order = null;
         }
 
@@ -718,7 +718,7 @@ class Cwmlanding
             $language   = $db->quote($item->language) . ',' . $db->quote('*');
             $menu_order = $params->get('topics_order');
         } else {
-            $language   = $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*');
+            $language   = $db->quote($app->getLanguage()->getTag()) . ',' . $db->quote('*');
             $menu_order = null;
         }
 
@@ -816,10 +816,9 @@ class Cwmlanding
     {
         $mainframe   = Factory::getApplication();
         $db          = Factory::getContainer()->get('DatabaseDriver');
-        $user        = $user = Factory::getApplication()->getSession()->get('user');
+        $user        = $mainframe->getSession()->get('user');
         $messagetype = null;
         $order       = 'ASC';
-        $teacherid   = null;
         $template    = $params->get('studieslisttemplateid', 1);
         $limit       = $params->get('landingmessagetypeslimit');
 
@@ -834,17 +833,16 @@ class Cwmlanding
 
         if (isset($params)) {
             $registry->loadString($params);
-            $m_params   = $registry;
             $language   = $db->quote($item->language) . ',' . $db->quote('*');
             $menu_order = $params->get('messagetypes_order');
         } else {
-            $language   = $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*');
+            $language   = $db->quote($mainframe->getLanguage()->getTag()) . ',' . $db->quote('*');
             $menu_order = null;
         }
 
-        if ($language == '*' || !$language) {
+        if ($language === '*' || !$language) {
             $langlink = '';
-        } elseif ($language != '*' && isset($item->language)) {
+        } elseif (isset($item->language)) {
             $langlink = '&amp;filter.languages=' . $item->language;
         }
 
@@ -987,7 +985,8 @@ class Cwmlanding
      */
     public function getBooksLandingPage(Registry $params, int $id = 0): string
     {
-        $user     = $user = Factory::getApplication()->getSession()->get('user');
+        $app      = Factory::getApplication();
+        $user     = $app->getSession()->get('user');
         $db       = Factory::getContainer()->get('DatabaseDriver');
         $order    = 'ASC';
         $book     = null;
@@ -998,7 +997,6 @@ class Cwmlanding
             $limit = 10000;
         }
 
-        $app      = Factory::getApplication();
         $menu     = $app->getMenu();
         $item     = $menu->getActive();
         $registry = new Registry();
@@ -1008,13 +1006,13 @@ class Cwmlanding
             $language   = $db->quote($item->language) . ',' . $db->quote('*');
             $menu_order = $params->get('books_order');
         } else {
-            $language   = $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*');
+            $language   = $db->quote($app->getLanguage()->getTag()) . ',' . $db->quote('*');
             $menu_order = null;
         }
 
-        if ($language == '*' || !$language) {
+        if ($language === '*' || !$language) {
             $langlink = '';
-        } elseif ($language != '*' && isset($item->language)) {
+        } elseif ($language !== '*' && isset($item->language)) {
             $langlink = '&amp;filter.languages=' . $item->language;
         }
 
@@ -1084,7 +1082,7 @@ class Cwmlanding
                 }
             }
 
-            if ($showdiv == 1) {
+            if ($showdiv === 1) {
                 $book .= "\n\t" . '</div> <!-- close show/hide books div-->';
             }
 

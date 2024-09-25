@@ -255,7 +255,7 @@ class CwmteacherModel extends AdminModel
             }
         }
 
-        return Factory::getUser()->authorise('core.edit.state', $this->option);
+        return Factory::getApplication()->getIdentity()->authorise('core.edit.state', $this->option);
     }
 
     /**
