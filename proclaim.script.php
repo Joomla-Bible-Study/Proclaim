@@ -308,8 +308,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 $query      = $this->dbo->getQuery(true);
                 // Fields to update.
                 $fields = array(
-                    $this->dbo->quoteName('link') . ' = ' . $this->dbo->quote(str_replace("com_biblestudy", "com_proclaim", $result->link)),
-	                $this->dbo->quoteName('link') . ' = ' . $this->dbo->quote(str_replace("view=", "view=cwm", $result->link)),
+                    $this->dbo->quoteName('link') . ' = ' . $this->dbo->quote(str_replace("com_biblestudy&view=", "com_proclaim&view=cwm", $result->link)),
                     $this->dbo->quoteName('component_id') . ' = ' . $proclaimID,
                 );
                 // Conditions for which records should be updated.
