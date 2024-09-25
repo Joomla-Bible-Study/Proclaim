@@ -20,25 +20,9 @@ use Joomla\CMS\Language\Text;
 
 HtmlHelper::_('behavior.keepalive');
 ?>
-<script type="text/javascript">
-    function HideContent(d) {
-        document.getElementById(d).style.display = "none";
-    }
 
-    function ShowContent(d) {
-        document.getElementById(d).style.display = "block";
-    }
-
-    function ReverseDisplay(d) {
-        if (document.getElementById(d).style.display === "none") {
-            document.getElementById(d).style.display = "block";
-        } else {
-            document.getElementById(d).style.display = "none";
-        }
-    }
-</script>
 <?php
-$commentjava = "javascript:ReverseDisplay('jbscomments')";
+$commentjava = "javascript:ReverseDisplay2('JBScomments')";
 
 switch ($this->item->params->get('link_comments', 0)) {
     case 0:
