@@ -20,7 +20,6 @@ use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use Exception;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\MVC\Model\State;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Uri\Uri;
@@ -52,11 +51,11 @@ class HtmlView extends BaseHtmlView
     /**
      * Params
      *
-     * @var CMSObject  State of the page
+     * @var mixed  State of the page
      *
      * @since 7.0
      */
-    public CMSObject $state;
+    public mixed $state;
 
     public object $main;
 
@@ -79,7 +78,7 @@ class HtmlView extends BaseHtmlView
 
         $itemparams = ComponentHelper::getParams('com_proclaim');
 
-        // Prepare meta information (under development)
+        // Prepare meta-information (under development)
         if ($itemparams->get('metakey')) {
             $document->setMetaData('keywords', $itemparams->get('metakey'));
         } elseif (!$itemparams->get('metakey')) {

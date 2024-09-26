@@ -22,6 +22,7 @@ use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
 use Joomla\Registry\Registry;
+use stdClass;
 
 /**
  * Proclaim images class
@@ -89,7 +90,7 @@ class Cwmimages
      */
     public static function getImagePath(string $path): object
     {
-        $tmp         = new \stdClass();
+        $tmp         = new stdClass();
         $tmp->path   = null;
         $tmp->size   = null;
         $tmp->width  = 0;
@@ -212,25 +213,7 @@ class Cwmimages
     {
         $folder = self::getTeacherImageFolder();
 
-        if ($image1 === null && $image2 === null) {
-            return self::getImagePath('');
-        }
-
-        if (!$image1 || $image1 === '0' || strncmp($image1, '- ', 2) === 0) {
-            $path = $image2;
-
-            if (!substr_count($path, '/')) {
-                $path = $folder . '/' . $image2;
-            }
-        } else {
-            $path = $folder . '/' . $image1;
-
-            if (substr_count($image1, '/') > 0) {
-                $path = $image1;
-            }
-        }
-
-        return self::getImagePath($path);
+        return self::extracted($image1, $image2, $folder);
     }
 
     /**
@@ -261,6 +244,8 @@ class Cwmimages
      *           }
      *
      * @since    7.0
+     *
+     * @todo This looks like it need a rework.
      */
     public static function getTeacherImage(string $image1 = null, string $image2 = null): object
     {
@@ -274,13 +259,13 @@ class Cwmimages
         if ($image2 && (!$image1 || strncmp($image1, '- ', 2) === 0)) {
             $path = $image2;
 
-            if (!substr_count($path, '/')) {
+            if (!substr_count((string) $path, '/')) {
                 $path = $folder . '/' . $image2;
             }
         } else {
             $path = $folder . '/' . $image1;
 
-            if (substr_count($image1, '/') > 0) {
+            if (substr_count((string) $image1, '/') > 0) {
                 $path = $image1;
             }
         }
@@ -309,25 +294,7 @@ class Cwmimages
     {
         $folder = self::getMediaImageFolder();
 
-        if ($media1 === null && $media2 === null) {
-            return self::getImagePath('');
-        }
-
-        if (!$media1 || strncmp($media1, '- ', 2) === 0) {
-            $path = $media2;
-
-            if (!substr_count($path, '/')) {
-                $path = $folder . '/' . $media2;
-            }
-        } else {
-            $path = $folder . '/' . $media1;
-
-            if (substr_count($media1, '/') > 0) {
-                $path = $media1;
-            }
-        }
-
-        return self::getImagePath($path);
+        return self::extracted($media1, $media2, $folder);
     }
 
     /**
@@ -365,6 +332,38 @@ class Cwmimages
             $path = 'media/com_proclaim/images/showhide.gif';
         } else {
             $path = $admin->params->get('default_showHide_image');
+        }
+
+        return self::getImagePath($path);
+    }
+
+    /**
+     * @param   string|null  $image1
+     * @param   string|null  $image2
+     * @param   string       $folder
+     *
+     * @return object
+     *
+     * @since version
+     */
+    public static function extracted(?string $image1, ?string $image2, string $folder): object
+    {
+        if ($image1 === null && $image2 === null) {
+            return self::getImagePath('');
+        }
+
+        if (!$image1 || strncmp($image1, '- ', 2) === 0) {
+            $path = $image2;
+
+            if (!substr_count((string) $path, '/')) {
+                $path = $folder . '/' . $image2;
+            }
+        } else {
+            $path = $folder . '/' . $image1;
+
+            if (substr_count($image1, '/') > 0) {
+                $path = $image1;
+            }
         }
 
         return self::getImagePath($path);
