@@ -277,14 +277,8 @@ class CwminstallModel extends ListModel
          */
         $this->callstack['versionttype'] = 1;
 
-        // Find the Last updated Version in Update table
-        $query = $this->_db->getQuery(true);
-        $query->select('version')
-            ->from('#__bsms_update')
-            ->order($this->_db->qn('id') . ' DESC');
-        $this->_db->setQuery($query, 0, 1);
-        $updates             = $this->_db->loadObject();
-        $version             = (string)$updates->version;
+        $version = $this->getUpdateVersion();
+
         $this->versionSwitch = $version;
 
         $this->callstack['subversiontype_version'] = $version;
@@ -1050,18 +1044,19 @@ class CwminstallModel extends ListModel
      */
     private function getUpdateVersion(): string
     {
-        // Find Last updated Version in Update table
+        // Default Version Pull
+        $return = BIBLESTUDY_VERSION;
 
+        // Find Last updated Version in Update table
         $query = $this->_db->getQuery(true);
         $query
             ->select('version')
             ->from('#__bsms_update');
         $this->_db->setQuery($query);
         $updates = $this->_db->loadObjectList();
-        $return  = end($updates)->version;
 
-        if (empty($return)) {
-            $return = BIBLESTUDY_VERSION;
+        if (isset(end($updates)->version)) {
+            $return  = end($updates)->version;
         }
 
         return $return;
@@ -1312,41 +1307,6 @@ class CwminstallModel extends ListModel
 
         if ($this->_db->insertObject('#__postinstall_messages', $message) !== true) {
             exit('Bad install');
-        }
-    }
-
-    /**
-     * Correct problem in update table under 7.0.2 systems
-     *
-     * @return void
-     *
-     * @throws  Exception
-     * @since   7.1
-     */
-    private function correctVersions(): void
-    {
-        // Find the Last updated Version in Update table
-        $query = $this->_db->getQuery(true);
-        $query->select('*')
-            ->from('#__bsms_update');
-        $this->_db->setQuery($query);
-        $updates = $this->_db->loadObjectList();
-
-        foreach ($updates as $value) {
-            // Check to see if a Bad version is in key 3
-
-            if (($value->id === '3') && ($value->version !== '7.0.1.1')) {
-                // Find the Last updated Version in Update table
-                $query = "INSERT INTO `#__bsms_update` (id,version) VALUES (3,'7.0.1.1')
-                            ON DUPLICATE KEY UPDATE version= '7.0.1.1';";
-                $this->_db->setQuery($query);
-
-                if (!$this->_db->execute()) {
-                    Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_OPERATION_FAILED'), 'error');
-
-                    return;
-                }
-            }
         }
     }
 }
