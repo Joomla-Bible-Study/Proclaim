@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Table\CwmadminTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Exception;
@@ -228,7 +229,7 @@ class CwmadminModel extends AdminModel
     /**
      * Gets the ChangeSet object
      *
-     * @return ChangeSet|boolean|null JSchema  ChangeSet
+     * @return ChangeSet|bool|null JSchema  ChangeSet
      *
      * @throws Exception
      * @since 7.0
@@ -452,24 +453,22 @@ class CwmadminModel extends AdminModel
      *
      * @return  Registry  default text filters (if any)
      *
+     * @throws Exception
      * @since 7.0
      */
     public function getDefaultTextFilters(): Registry
     {
-        $table = Table::getInstance('Extension');
-        $table->load($table->find(array('name' => 'com_proclaim')));
-
-        return $table->params;
+        return Cwmparams::getAdmin()->params;
     }
 
     /**
      * Check for SermonSpeaker and PreachIt
      *
-     * @return object
+     * @return mixed The return value or null if the query failed.
      *
      * @since 7.0
      */
-    public function getSSorPI(): object
+    public function getSSorPI(): mixed
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
