@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CwmteacherTable;
 use Exception;
@@ -110,7 +109,7 @@ class CwmteacherModel extends AdminModel
         // Check for existing article.
         // Modify the form based on Edit State access controls.
         if (
-            ($id !== 0 && (!$user->authorise('core.edit.state', 'com_proclaim.teacher.' . (int)$id)))
+            ($id !== 0 && (!$user->authorise('core.edit.state', 'com_proclaim.teacher.' . (int) $id)))
             || ($id === 0 && !$user->authorise('core.edit.state', 'com_proclaim'))
         ) {
             // Disable fields for display.
@@ -196,13 +195,13 @@ class CwmteacherModel extends AdminModel
 
         // Check for duplicates on new teachers
         if (
-            (!isset($data['id']) || (int)$data['id'] === 0) && $data['alias'] === null &&
+            (!isset($data['id']) || (int) $data['id'] === 0) && $data['alias'] === null &&
             in_array(
                 $input->get('task'),
                 ['apply', 'save', 'save2new']
             )
         ) {
-            if ((int)$app->get('unicodeslugs') === 1) {
+            if ((int) $app->get('unicodeslugs') === 1) {
                 $data['alias'] = OutputFilter::stringUrlUnicodeSlug($data['teachername']);
             } else {
                 $data['alias'] = OutputFilter::stringURLSafe($data['teachername']);
@@ -230,10 +229,10 @@ class CwmteacherModel extends AdminModel
      * @throws Exception
      * @since   1.6
      */
-    protected function canEditState($record)
+    protected function canEditState($record): bool
     {
-        $db         = Factory::getContainer()->get('DatabaseDriver');
-        $text       = '';
+        $db   = Factory::getContainer()->get('DatabaseDriver');
+        $text = '';
 
         if (!empty($record) && $this->getState('task') === 'trash') {
             $query = $db->getQuery(true);
@@ -241,7 +240,7 @@ class CwmteacherModel extends AdminModel
                 ->from('#__bsms_studies')
                 ->where('teacher_id = ' . $record->id)
                 ->where('published != ' . $db->q('-2'));
-            $db->setQuery($query);
+            $db->setQuery($query, 10);
             $studies = $db->loadObjectList();
 
             if ($studies) {
@@ -249,7 +248,7 @@ class CwmteacherModel extends AdminModel
                     $text .= ' ' . $studie->id . '-"' . $studie->studytitle . '",';
                 }
 
-                Factory::getApplication()->enqueueMessage(Text::_('JBS_TCH_CAN_NOT_DELETE') . $text);
+                Factory::getApplication()->enqueueMessage(Text::_('JBS_TCH_CAN_NOT_DELETE') . $text, 'warning');
 
                 return false;
             }
@@ -283,7 +282,7 @@ class CwmteacherModel extends AdminModel
                 // Modify model data if no image is set.
                 $data['teacher_image']     = "";
                 $data['teacher_thumbnail'] = "";
-            } elseif (!CwmproclaimHelper::startsWith(basename($data['image']), $prefix)) {
+            } elseif (!str_starts_with(basename($data['image']), $prefix)) {
                 // Modify the image and model data
                 Cwmthumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size', 100));
                 $data['teacher_image']     = $data['image'];
@@ -305,49 +304,57 @@ class CwmteacherModel extends AdminModel
             }
         }
 
-        $db         = Factory::getContainer()->get('DatabaseDriver');
-        $user       = Factory::getApplication()->getSession()->get('user');
-        $canDoState = $user->authorise('core.edit.state', $this->option);
-        $text       = '';
+        // Set contact to be an Int to work with Database
+        $data['contact'] = (int) $data['contact'];
 
-        if (!empty($data)) {
-            $query = $db->getQuery(true);
-            $query->select('id, studytitle')
-                ->from('#__bsms_studies')
-                ->where('teacher_id = ' . $data['id'])
-                ->where('published != ' . $db->q('-2'));
-            $db->setQuery($query);
-            $studies = $db->loadObjectList();
-
-            if (!$studies && $canDoState) {
-                return true;
-            }
-
-            if ($data['published'] == '-2' || $data['published'] == '0') {
-                foreach ($studies as $studie) {
-                    $text .= ' ' . $studie->id . '-"' . $studie->studytitle . '",';
-                }
-
-                Factory::getApplication()->enqueueMessage(Text::_('JBS_TCH_CAN_NOT_DELETE') . $text);
-            }
-
-            return false;
-        }
-
-        // Set contact to be a Int to work with Database
-        $data['contact'] = (int)$data['contact'];
-
-        // Fix Save of update file to match paths.
+        // Fix Save of an update file to match paths.
         if ($data['teacher_image'] !== $data['image']) {
             $data['teacher_thumbnail'] = $data['image'];
             $data['teacher_image']     = $data['image'];
         }
 
-        if (parent::save($data)) {
+        return parent::save($data);
+    }
+
+    /**
+     * Method to test whether a record can be deleted.
+     *
+     * @param   object  $record  A record object.
+     *
+     * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
+     *
+     * @throws Exception
+     * @since   1.6
+     */
+    protected function canDelete($record): bool
+    {
+        $app        = Factory::getApplication();
+        $db         = Factory::getContainer()->get('DatabaseDriver');
+        $user       = $app->getIdentity();
+        $canDoState = $user->authorise('core.edit.state', $this->option);
+        $text       = '';
+
+        // Iterate the items to delete each one.
+        $query = $db->getQuery(true);
+        $query->select('id, studytitle')
+            ->from('#__bsms_studies')
+            ->where('teacher_id = ' . $record->id);
+        $db->setQuery($query);
+        $studies = $db->loadObjectList();
+
+        if (!$studies && $canDoState) {
             return true;
         }
 
-        return false;
+        if ($record->published == '-2' || $record->published == '0') {
+            foreach ($studies as $studie) {
+                $text .= ' ' . $studie->id . '-"' . $studie->studytitle . '",';
+            }
+
+            $app->enqueueMessage(Text::_('JBS_TCH_CAN_NOT_DELETE') . $text);
+        }
+
+        return $this->getCurrentUser()->authorise('core.delete', $this->option);
     }
 
     /**
