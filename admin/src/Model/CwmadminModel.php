@@ -77,8 +77,8 @@ class CwmadminModel extends AdminModel
     /**
      * Gets the form from the XML file.
      *
-     * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param   array  $data      Data for the form.
+     * @param   bool   $loadData  True if the form is to load its own data (default case), false if not.
      *
      * @return  mixed  A JForm object on success, false on failure
      *
@@ -123,7 +123,7 @@ class CwmadminModel extends AdminModel
      *
      * @param   array  $data  The form data.
      *
-     * @return    boolean    True on success.
+     * @return    bool    True on success.
      *
      * @since    1.6
      */
@@ -163,7 +163,7 @@ class CwmadminModel extends AdminModel
      *
      * @param   null  $pk  The numeric id of the primary key.
      *
-     * @return boolean|integer|null False on failure or error, true otherwise.
+     * @return bool|int|null False on failure or error, true otherwise.
      *
      * @since   11.1
      */
@@ -202,7 +202,7 @@ class CwmadminModel extends AdminModel
     /**
      * Fixes database problems
      *
-     * @return boolean
+     * @return bool
      *
      * @throws Exception
      * @since 7.0
@@ -216,7 +216,6 @@ class CwmadminModel extends AdminModel
         $changeSet->fix();
         $this->fixSchemaVersion($changeSet);
         $this->fixUpdateVersion();
-        $this->fixUpdateJBSMVersion();
         $installer = new CwminstallModel();
         $installer->fixMenus();
         $installer->fixemptyaccess();
@@ -315,7 +314,7 @@ class CwmadminModel extends AdminModel
         $result = $db->loadResult();
 
         if (!$result) {
-            throw new Exception('Database error - getExtentionId');
+            throw new \RuntimeException('Database error - getExtentionId');
         }
 
         return $result;
@@ -391,45 +390,6 @@ class CwmadminModel extends AdminModel
     }
 
     /**
-     * Fix Joomla version in #__bsms_updae table if wrong (doesn't equal JVersion short version).
-     *
-     * @return   mixed  string update version if success, false if fail.
-     *
-     * @since 9.0.14
-     */
-    public function fixUpdateJBSMVersion(): mixed
-    {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query->select('id, version')
-            ->from('#__bsms_update')
-            ->order('id DESC');
-        $db->setQuery($query, 0, 1);
-
-        $results = $db->loadObject();
-
-        if ($results->version === $this->getCompVersion()) {
-            return $results->version;
-        }
-
-        $newid = $results->id + 1;
-
-        $query->clear()
-            ->insert($db->qn('#__bsms_update'))
-            ->columns($db->qn('id') . ',' . $db->qn('version'))
-            ->values($db->q($newid) . ', ' . $db->q($this->getCompVersion()));
-        $db->setQuery($query);
-
-        try {
-            $db->execute();
-        } catch (Exception $e) {
-            return false;
-        }
-
-        return $results->version;
-    }
-
-    /**
      * Check if com_proclaim parameters are blank. If so, populate with com_content text filters.
      *
      * @return  mixed  boolean true if params are updated, null otherwise
@@ -460,28 +420,9 @@ class CwmadminModel extends AdminModel
     }
 
     /**
-     * Get current version from #__bsms_update table.
-     *
-     * @return  mixed   version if successful, false if fail.
-     *
-     * @since 9.0.14
-     */
-    public function getUpdateJBSMVersion(): mixed
-    {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query->select('version')
-            ->from('#__bsms_update')
-            ->order('id DESC');
-        $db->setQuery($query, 0, 1);
-
-        return $db->loadResult();
-    }
-
-    /**
      * Get Pagination state but is hard coded to be true right now.
      *
-     * @return boolean
+     * @return bool
      *
      * @since 7.0
      */
@@ -498,7 +439,7 @@ class CwmadminModel extends AdminModel
      * @throws Exception
      * @since 7.0
      */
-    public function getUpdateVersion()
+    public function getUpdateVersion(): mixed
     {
         $table = Table::getInstance('Extension');
         $table->load($this->getExtentionId());
@@ -509,11 +450,11 @@ class CwmadminModel extends AdminModel
     /**
      * Check if com_proclaim parameters are blank.
      *
-     * @return  string  default text filters (if any)
+     * @return  Registry  default text filters (if any)
      *
      * @since 7.0
      */
-    public function getDefaultTextFilters()
+    public function getDefaultTextFilters(): Registry
     {
         $table = Table::getInstance('Extension');
         $table->load($table->find(array('name' => 'com_proclaim')));
@@ -528,7 +469,7 @@ class CwmadminModel extends AdminModel
      *
      * @since 7.0
      */
-    public function getSSorPI()
+    public function getSSorPI(): object
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
@@ -545,7 +486,7 @@ class CwmadminModel extends AdminModel
      *
      * @since 9.0.12
      */
-    public function playerByMediaType()
+    public function playerByMediaType(): string
     {
         // Check for request forgeries.
         Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
@@ -639,7 +580,7 @@ class CwmadminModel extends AdminModel
      *
      * @param   object  $record  A record object.
      *
-     * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
+     * @return  bool  True if allowed to delete the record. Defaults to the permission set in the component.
      *
      * @throws Exception
      * @since   1.6
@@ -679,15 +620,15 @@ class CwmadminModel extends AdminModel
      *
      * Note. Calling getState in this method will result in recursion.
      *
-     * @param   string  $ordering   ?
-     * @param   string  $direction  ?
+     * @param   string|null  $ordering   ?
+     * @param   string|null  $direction  ?
      *
      * @return  void
      *
      * @throws Exception
      * @since    1.7.2
      */
-    protected function populateState($ordering = null, $direction = null)
+    protected function populateState(string $ordering = null, string $direction = null): void
     {
         $app = Factory::getApplication();
         $this->setState('message', $app->getUserState('com_proclaim.message'));
@@ -706,7 +647,7 @@ class CwmadminModel extends AdminModel
      *
      * @since    1.6
      */
-    protected function prepareTable($table)
+    protected function prepareTable($table): void
     {
         // Reorder the articles within the category so the new article is first
         if (empty($table->id)) {
@@ -722,7 +663,7 @@ class CwmadminModel extends AdminModel
      * @throws Exception
      * @since 7.0
      */
-    protected function loadFormData()
+    protected function loadFormData(): object
     {
         $data = Factory::getApplication()->getUserState('com_proclaim.edit.cwmadmin.data', array());
 
@@ -736,14 +677,13 @@ class CwmadminModel extends AdminModel
     /**
      * Custom clean the cache of com_proclaim and proclaim modules
      *
-     * @param   string   $group      The cache group
-     * @param   integer  $client_id  The ID of the client
+     * @param   string  $group      The cache group
      *
      * @return  void
      *
      * @since    1.6
      */
-    protected function cleanCache($group = null, $client_id = 0)
+    protected function cleanCache($group = null): void
     {
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');
