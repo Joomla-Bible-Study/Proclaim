@@ -156,7 +156,7 @@ class Cwmlanding
                     $location = '<div class="landingtable" style="display:inline-block;">';
 
                     foreach ($tresult as $b) {
-                        if ($b->landing_show == 1) {
+                        if ((int) $b->landing_show === 1) {
                             $location .= '<div class="landingrow">';
                             $location .= '<div class="landingcell">
 							<a class="landinglink" href="index.php?option=com_proclaim&amp;sendingview=Cwmlanding&amp;view=Cwmsermons&amp;filter_location='
@@ -172,7 +172,7 @@ class Cwmlanding
                     $location .= '<div id="showhidelocations" style="display:none;">';
 
                     foreach ($tresult as $b) {
-                        if ($b->landing_show == 2) {
+                        if ((int) $b->landing_show === 2) {
                             $location .= '<div class="landingrow">';
                             $location .= '<div class="landingcell">
 							<a class="landinglink" href="index.php?option=com_proclaim&amp;sendingview=cwmlanding&amp;view=Cwmsermons&amp;filter_location='
@@ -291,16 +291,16 @@ class Cwmlanding
                         }
 
                         $teacher .= '<div class="col-4" style="display: inline-block; margin-right:7px">';
-                        if ($params->get('linkto') == 0) {
+                        if ((int) $params->get('linkto') === 0) {
                             $teacher .= '<a href="' . Route::_(
-                                'index.php?option=com_proclaim&amp;view=Cwmsermons&amp;t=' . $template
-                            )
+                                    'index.php?option=com_proclaim&amp;view=Cwmsermons&amp;t=' . $template
+                                )
                                 . '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
                                 . $langlink . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
                         } else {
                             $teacher .= '<a href="' . Route::_(
-                                'index.php?option=com_proclaim&amp;view=cwmteacher&id=' . $b->id . $langlink . '&t=' . $template
-                            ) . '">';
+                                    'index.php?option=com_proclaim&amp;view=cwmteacher&id=' . $b->id . $langlink . '&t=' . $template
+                                ) . '">';
                         }
 
                         $teacher .= $b->teachername;
@@ -326,8 +326,8 @@ class Cwmlanding
 
                 case 1:
                     foreach ($tresult as $b) {
-                        if ($b->landing_show == 1) {
-                            if ($params->get('linkto') == 0) {
+                        if ($b->landing_show === 1) {
+                            if ((int) $params->get('linkto') === 0) {
                                 $teacher .= '<div class="col-4" style="display: inline-block; margin-right:7px"> <a '
                                     . Route::_('index.php?option=com_proclaim&amp;view=Cwmsermons&amp;t=' . $template)
                                     . '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
@@ -347,8 +347,8 @@ class Cwmlanding
                     $teacher .= '<div id="showhideteachers" style="display:none;">';
 
                     foreach ($tresult as $b) {
-                        if ($b->landing_show == 2) {
-                            if ($params->get('linkto') == 0) {
+                        if ($b->landing_show === 2) {
+                            if ((int) $params->get('linkto') === 0) {
                                 $teacher .= '<div class="col-4"><a href="'
                                     . Route::_('index.php?option=com_proclaim&amp;view=Cwmsermons&amp;t=' . $template)
                                     . '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
@@ -471,7 +471,7 @@ class Cwmlanding
                             }
                         }
 
-                        if ($params->get('series_linkto') === '0') {
+                        if ((int) $params->get('series_linkto') === 0) {
                             $series .= '<div class="col-4" style="display: inline-block; margin-right:7px">';
                             $series .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_series=' . $b->id
                                 . '&amp;sendingview=landing&amp;filter_book=0&amp;filter_teacher=0'
@@ -498,7 +498,7 @@ class Cwmlanding
                         }
                     }
 
-                    if ($showdiv == 1) {
+                    if ($showdiv === 1) {
                         $series  .= "\n\t" . '</div> <!-- close show/hide series div-->';
                     }
 
@@ -511,10 +511,10 @@ class Cwmlanding
                     $series = '<div class="landingtable" style="display:inline;">';
 
                     foreach ($items as $b) {
-                        if ($b->landing_show == 1) {
+                        if ((int) $b->landing_show === 1) {
                             $series .= '<div class="landingrow">';
 
-                            if ($params->get('series_linkto') == '0') {
+                            if ((int) $params->get('series_linkto') === '0') {
                                 $series .= '<div class="landingcell">
 									<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_series='
                                     . $b->id . '&amp;sendingview=cwmlanding&amp;filter_book=0&amp;filter_teacher=0'
@@ -535,10 +535,10 @@ class Cwmlanding
                     $series .= '<div id="showhideseries" style="display:none;">';
 
                     foreach ($items as $b) {
-                        if ($b->landing_show == 2) {
+                        if ((int) $b->landing_show === 2) {
                             $series .= '<div class="landingrow">';
 
-                            if ($params->get('series_linkto') == '0') {
+                            if ((int) $params->get('series_linkto') === 0) {
                                 $series .= '<div class="landingcell">
 									<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_series='
                                     . $b->id . '&amp;sendingview=cwmlanding&amp;filter_book=0&amp;filter_teacher=0'
@@ -642,13 +642,12 @@ class Cwmlanding
             $showdiv = 0;
 
             foreach ($tresult as $b) {
-                if ($t >= $limit) {
-                    if ($showdiv < 1) {
-                        $year .= "\n\t" . '<div id="showhideyears" style="display:none;"> <!-- start show/hide years div-->';
+                if (($t >= $limit) && $showdiv < 1)
+                {
+                    $year .= "\n\t" . '<div id="showhideyears" style="display:none;"> <!-- start show/hide years div-->';
 
-                        $i       = 0;
-                        $showdiv = 1;
-                    }
+                    $i       = 0;
+                    $showdiv = 1;
                 }
 
                 $year .= '<div class="col-2" style="display: inline-block; margin-right:7px">';
@@ -890,13 +889,12 @@ class Cwmlanding
                     $showdiv = 0;
 
                     foreach ($tresult as $b) {
-                        if ($t >= $limit) {
-                            if ($showdiv < 1) {
-                                $messagetype .= "\n\t" . '<div id="showhidemessagetypes" style="display:none;"> <!-- start show/hide messagetype div-->';
+                        if (($t >= $limit) && $showdiv < 1)
+                        {
+                            $messagetype .= "\n\t" . '<div id="showhidemessagetypes" style="display:none;"> <!-- start show/hide messagetype div-->';
 
-                                $i       = 0;
-                                $showdiv = 1;
-                            }
+                            $i       = 0;
+                            $showdiv = 1;
                         }
 
                         $messagetype .= '<div class="col-2 style="display: inline-block; margin-right:7px">';
@@ -919,7 +917,7 @@ class Cwmlanding
                         }
                     }
 
-                    if ($showdiv == 1) {
+                    if ($showdiv === 1) {
                         $messagetype .= "\n\t" . '</div> <!-- close show/hide messagetype div-->';
                         $showdiv     = 2;
                     }
@@ -931,7 +929,7 @@ class Cwmlanding
                     $messagetype = '<div class="landingtable" style="display:inline;">';
 
                     foreach ($tresult as $b) {
-                        if ($b->landing_show == 1) {
+                        if ((int) $b->landing_show === 1) {
                             $messagetype .= '<div class="landingrow">';
                             $messagetype .= '<div class="landingcell">
 							<a class="landinglink" href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_messagetype='
@@ -947,7 +945,7 @@ class Cwmlanding
                     $messagetype .= '<div id="showhidemessagetypes" style="display:none;">';
 
                     foreach ($tresult as $b) {
-                        if ($b->landing_show == 2) {
+                        if ((int) $b->landing_show === 2) {
                             $messagetype .= '<div class="landingrow">';
                             $messagetype .= '<div class="landingcell">
 							<a class="landinglink" href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_messagetype=' . $b->id
@@ -1054,13 +1052,12 @@ class Cwmlanding
             $showdiv = 0;
 
             foreach ($tresult as $b) {
-                if ($t >= $limit) {
-                    if ($showdiv < 1) {
-                        $book .= "\n\t" . '<div id="showhidebooks" style="display:none;"> <!-- start show/hide book div-->';
+                if (($t >= $limit) && $showdiv < 1)
+                {
+                    $book .= "\n\t" . '<div id="showhidebooks" style="display:none;"> <!-- start show/hide book div-->';
 
-                        $i       = 0;
-                        $showdiv = 1;
-                    }
+                    $i       = 0;
+                    $showdiv = 1;
                 }
 
                 $book .= '<div class="col-2" style="display: inline-block; margin-right:7px">';
