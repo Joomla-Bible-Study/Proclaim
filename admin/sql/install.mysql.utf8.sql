@@ -737,7 +737,7 @@ VALUES (1, '', '', 'Billy Sunday', X'62696C6C792D73756E646179', 'Pastor', '555-5
         'media/com_proclaim/images/billy_sunday11.jpg', '276', '197', 'media/com_proclaim/images/images.jpg', '101',
         '141', 'Billy Sunday: 1862-1935', 0, 1, 1, 1, 7489, 1, '*', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL,
-        NULL, '', NULL, '');
+        NULL, '', 1, '');
 
 -- Dump of table #__bsms_templatatecode
 
