@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Filesystem\File;
@@ -63,10 +64,10 @@ class Cwmbackup
      *
      * @return bool
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.0.0
      */
-    public function exportdb($run): bool
+    public function exportdb(int $run): bool
     {
         $date             = date('Y_F_j');
         $site             = Uri::root();
@@ -227,7 +228,7 @@ class Cwmbackup
      *
      * @return bool TRUE if saving to the file succeeded
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.0.0
      */
     protected function writeline(&$fileData): bool
@@ -304,7 +305,6 @@ class Cwmbackup
         $name = rawurldecode($name);
 
         // Test for protocol and set the appropriate headers
-        jimport('joomla.environment.uri');
         $_tmp_uri      = Uri::getInstance(Uri::current());
         $_tmp_protocol = $_tmp_uri->getScheme();
 
