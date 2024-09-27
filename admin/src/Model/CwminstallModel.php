@@ -700,8 +700,8 @@ class CwminstallModel extends ListModel
                                         substr($queryString, 0, 80)
                                     );
                                     $queryString = ' ID:' . $queryString . ' Query count: ' . count(
-                                            $this->subQuery[$this->version][$step]
-                                        );
+                                        $this->subQuery[$this->version][$step]
+                                    );
                                 }
 
                                 Log::add(
@@ -1251,7 +1251,8 @@ class CwminstallModel extends ListModel
 
                 // Graceful exit and rollback if read not successful
                 if ($buffer === false) {
-                    die('no uninstall-dbtables.sql');
+                    Factory::getApplication()->enqueueMessage('no uninstall-dbtables.sql', 'error');
+                    return false;
                 }
 
                 $queries = DatabaseDriver::splitSql($buffer);
@@ -1287,26 +1288,37 @@ class CwminstallModel extends ListModel
      * Update messages
      *
      * @param   object  $message  Install object
+     *                            $message = new \stdClass();
+     *                            $message->title_key = ''; // Language string
+     *                            $message->description_key = ''; // Language string
+     *                            $message->action_key = ''; // (for action only) Language string
+     *                            $message->type = ''; // message | action
+     *                            $message->action_file = ''; // (for action only) site://path/to/php | admin://path/to/php
+     *                            $message->action = ''; // (for action only) = Function to call
+     *                            $message->condition_file = ''; // (for action only) = site://path/to/php | admin://path/to/php
+     *                            $message->condition_method = ''; // (for action only) = Function to call
+     *                            $message->version_introduced = '10.0.0';
      *
      * @return void
      *
      * @since 7.1
      */
-    public function postinstallMessages($message)
+    public function postInstallMessages(object $message): void
     {
-        // Find Extension ID of component
+        // Find Extension ID of a component
         $query = $this->_db->getQuery(true);
         $query
             ->select('extension_id')
             ->from('#__extensions')
             ->where($this->_db->qn('name') . ' = ' . $this->_db->q('com_proclaim'));
         $this->_db->setQuery($query);
-        $eid                   = $this->_db->loadResult();
-        $this->biblestudyEid   = $eid;
-        $message->extension_id = $this->biblestudyEid;
+        $this->biblestudyEid         = $this->_db->loadResult();
+        $message->extension_id       = $this->biblestudyEid;
+        $message->language_extension = 'com_proclaim';
+        $message->language_client_id = 1;
 
         if ($this->_db->insertObject('#__postinstall_messages', $message) !== true) {
-            exit('Bad install');
+            log::add('Bad error for PostInstall Message',);
         }
     }
 }

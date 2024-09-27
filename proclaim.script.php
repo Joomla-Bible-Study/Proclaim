@@ -10,7 +10,6 @@
  * @link           https://www.christianwebministries.org
  * */
 
-use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
 use Joomla\CMS\Installer\Adapter\FileAdapter;
@@ -37,60 +36,17 @@ defined('_JEXEC') or die;
 class com_proclaimInstallerScript extends InstallerScript
 {
     /**
-     * The version number of the extension. Max 20 characters
+     * @var array $extensions test
      *
-     * @var    string
-     * @since  3.6
+     * @since 9.0.18
      */
-    protected $release = '10.0.0-alpha.240321';
-
-    /**
-     * @var   DatabaseDriver|DatabaseInterface|null
-     *
-     * @since 7.2.0
-     */
-    protected DatabaseDriver|null|DatabaseInterface $dbo;
-
-    /**
-     * Minimum PHP version required to install the extension
-     *
-     * @var    string
-     * @since  3.6
-     */
-    protected $minimumPhp = '8.1.0';
-
-    /**
-     * Minimum Joomla! Version required to install the extension
-     *
-     * @var    string
-     * @since  3.6
-     */
-    protected $minimumJoomla = '4.2.0';
-
-    /**
-     * @var   string The component's name
-     * @since 1.5
-     */
-    protected $extension = 'com_proclaim';
-
-    /**
-     * @var   string
-     * @since 1.5
-     */
-    protected $xml;
-
-    /**
-     * @var   object
-     * @since 1.5
-     */
-    protected object $status;
-
-    /**
-     * @var   string Path to Mysql files
-     * @since 1.5
-     */
-    public string $filePath = '/components/com_proclaim/install/sql/updates/mysql';
-
+    protected static array $extensions = [
+        'dom',
+        'gd',
+        'json',
+        'pcre',
+        'SimpleXML',
+    ];
     /**
      * The list of extra modules and plugins to install
      *
@@ -115,20 +71,53 @@ class com_proclaimInstallerScript extends InstallerScript
             ],
         ],
     ];
-
     /**
-     * @var array $extensions test
-     *
-     * @since 9.0.18
+     * @var   string Path to Mysql files
+     * @since 1.5
      */
-    protected static array $extensions = [
-        'dom',
-        'gd',
-        'json',
-        'pcre',
-        'SimpleXML',
-    ];
-
+    public string $filePath = '/components/com_proclaim/install/sql/updates/mysql';
+    /**
+     * The version number of the extension. Max 20 characters
+     *
+     * @var    string
+     * @since  3.6
+     */
+    protected $release = '10.0.0-alpha.240321';
+    /**
+     * @var   DatabaseDriver|DatabaseInterface|null
+     *
+     * @since 7.2.0
+     */
+    protected DatabaseDriver|null|DatabaseInterface $dbo;
+    /**
+     * Minimum PHP version required to install the extension
+     *
+     * @var    string
+     * @since  3.6
+     */
+    protected $minimumPhp = '8.1.0';
+    /**
+     * Minimum Joomla! Version required to install the extension
+     *
+     * @var    string
+     * @since  3.6
+     */
+    protected $minimumJoomla = '4.2.0';
+    /**
+     * @var   string The component's name
+     * @since 1.5
+     */
+    protected $extension = 'com_proclaim';
+    /**
+     * @var   string
+     * @since 1.5
+     */
+    protected $xml;
+    /**
+     * @var   object
+     * @since 1.5
+     */
+    protected object $status;
     /**
      * Allow downgrades of your extension
      *
@@ -192,6 +181,41 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
+     * Set the database object from the installation adapter, if possible
+     *
+     * @param   InstallerAdapter|mixed  $adapter  The class calling this method
+     *
+     * @return  void
+     * @since   7.2.0
+     */
+    private function setDboFromAdapter(mixed $adapter): void
+    {
+        $this->dbo = null;
+
+        if (class_exists(InstallerAdapter::class) && ($adapter instanceof InstallerAdapter)) {
+            /**
+             * If this is Joomla 4.2+ the adapter has a protected getDatabase() method which we can access with the
+             * magic property $adapter->db. On Joomla 4.1 and lower this is not available. So, we have to first figure
+             * out if we can actually use the magic property...
+             */
+
+            try {
+                $refObj = new ReflectionObject($adapter);
+
+                if ($refObj->hasMethod('getDatabase')) {
+                    $this->dbo = $adapter->db;
+
+                    return;
+                }
+            } catch (Throwable $e) {
+                // If something breaks we will fall through
+            }
+        }
+
+        $this->dbo = Factory::getContainer()->get('DatabaseDriver');
+    }
+
+    /**
      * Uninstall rout
      *
      * @param   FileAdapter  $parent  The class calling this method
@@ -212,298 +236,77 @@ class com_proclaimInstallerScript extends InstallerScript
         return true;
     }
 
-
     /**
-     * Post Flight
-     *
-     * @param   string            $type    The type of change (install, update or discover_install, not uninstall)
-     * @param   ComponentAdapter  $parent  The class calling this method
+     * Uninstalls extensions (modules, plugins) bundled with the main extension
      *
      * @return void
      *
-     * @throws Exception
-     * @since 1.5
+     * @since 9.0.18
      */
-    public function postflight(string $type, ComponentAdapter $parent): void
+    private function uninstallSubextensions(): void
     {
-        // Install subExtensions
-        $this->installSubextensions($parent);
+        $this->status          = new stdClass();
+        $this->status->modules = [];
+        $this->status->plugins = [];
 
-        // Show the post-installation page
-        $this->renderPostInstallation($this->status, $parent);
+        // Modules uninstalling
+        if (count(self::$installActionQueue['modules'])) {
+            foreach (self::$installActionQueue['modules'] as $folder => $modules) {
+                if (count($modules)) {
+                    foreach ($modules as $module => $modulePreferences) {
+                        // Find the module ID
+                        $sql = $this->dbo->getQuery(true)
+                            ->select($this->dbo->qn('extension_id'))
+                            ->from($this->dbo->qn('#__extensions'))
+                            ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q('mod_' . $module))
+                            ->where($this->dbo->qn('type') . ' = ' . $this->dbo->q('module'));
+                        $this->dbo->setQuery($sql);
+                        $id = $this->dbo->loadResult();
 
-        //Remove old com_biblestudy menu items on admin side
-        $this->removeBibleStudyVersion();
-
-        if ($type === 'install') {
-            // A redirect to a new location after the installation is completed.
-            $parent->getParent()->setRedirectURL(
-                Uri::base() .
-                'index.php?option=com_proclaim&view=cwminstall&task=cwminstall.browse&scanstate=start&' .
-                Session::getFormToken() . '=1'
-            );
-        }
-    }
-
-    /**
-     * Remove left overs do to upgrade from an older Proclaim version.
-     *
-     * @return void
-     * @throws Exception
-     * @since 10.0.0
-     */
-    private function removeBibleStudyVersion(): void
-    {
-        $menuBibleStudyStatus = false;
-        $comBibleStudyStatus  = false;
-
-        // Get BibleStudy extension ID
-        $query      = $this->dbo->getQuery(true);
-        $query->select('extension_id');
-        $query->from('#__extensions');
-        $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_biblestudy'));
-        $this->dbo->setQuery($query);
-        $biblestudyID = (int) $this->dbo->loadResult();
-
-        if ($biblestudyID !== 0) {
-            // Get Proclaim extension ID
-            $query      = $this->dbo->getQuery(true);
-            $query->select('extension_id');
-            $query->from('#__extensions');
-            $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_proclaim'));
-            $this->dbo->setQuery($query);
-            $proclaimID = (int) $this->dbo->loadResult();
-
-            // Remove old com_biblestudy folders and files as we can't uninstall them
-            $this->deleteFolders = ['/components/com_biblestudy', '/administrator/components/com_biblestudy'];
-            $this->deleteFiles   = ['/language/en-GB/en-GB.com_biblestudy.ini'];
-            $this->removefiles();
-
-            // Clean up Admin Menus form old install
-            $query      = $this->dbo->getQuery(true);
-            $query->delete($this->dbo->quoteName('#__menu'));
-            $query->where($this->dbo->quoteName('link') . 'LIKE "%com_biblestudy%"');
-
-            // This check to make sure the menu items is from the Admin Main menu only
-            $query->where($this->dbo->quoteName('client_id') . ' = 1');
-            $query->where($this->dbo->quoteName('menutype') . ' = ' . $this->dbo->quote('main'));
-            $this->dbo->setQuery($query);
-
-            try {
-                $menuBibleStudyStatus = $this->dbo->execute();
-            } catch (RuntimeException $e) {
-                JFactory::getApplication()->enqueueMessage("Failed to execute Admin Menu removal", "error");
-            }
-
-            // Update Site Menus for BibleStudy to Proclaim
-            $query      = $this->dbo->getQuery(true);
-            $query->select('id, component_id, link');
-            $query->from($this->dbo->quoteName('#__menu'));
-            $query->where($this->dbo->quoteName('link') . 'LIKE "%com_biblestudy%"');
-            $query->where($this->dbo->quoteName('client_id') . ' = 0');
-            $this->dbo->setQuery($query);
-            $results = $this->dbo->loadObjectList();
-
-            foreach ($results as $result) {
-                $query      = $this->dbo->getQuery(true);
-                // Fields to update.
-                $fields = array(
-                    $this->dbo->quoteName('link') . ' = ' . $this->dbo->quote(str_replace("com_biblestudy&view=", "com_proclaim&view=cwm", $result->link)),
-                    $this->dbo->quoteName('component_id') . ' = ' . $proclaimID,
-                );
-                // Conditions for which records should be updated.
-                $conditions = array(
-                    $this->dbo->quoteName('id') . ' = ' . $result->id,
-                );
-                $query->update($this->dbo->quoteName('#__menu'))->set($fields)->where($conditions);
-
-                $this->dbo->setQuery($query);
-                $menuBibleStudyStatus = $this->dbo->execute();
-            }
-
-            // Update Site Modules for BibleStudy to Proclaim
-            $query      = $this->dbo->getQuery(true);
-            $query->select('id, module');
-            $query->from($this->dbo->quoteName('#__modules'));
-            $query->where($this->dbo->quoteName('module') . 'LIKE "%mod_biblestudy%"');
-            $this->dbo->setQuery($query);
-            $results = $this->dbo->loadObjectList();
-
-            foreach ($results as $result) {
-                $query      = $this->dbo->getQuery(true);
-
-                // Fields to update.
-                $fields = array(
-                    $this->dbo->quoteName('module') . ' = ' . $this->dbo->quote(str_replace("mod_biblestudy", "mod_proclaim", $result->module)),
-                );
-
-                // Conditions for which records should be updated.
-                $conditions = array(
-                    $this->dbo->quoteName('id') . ' = ' . $result->id,
-                );
-                $query->update($this->dbo->quoteName('#__modules'))->set($fields)->where($conditions);
-
-                $this->dbo->setQuery($query);
-                $menuBibleStudyStatus = $this->dbo->execute();
-            }
-
-            // Delete Old stale com_biblestudy extension.
-            $query      = $this->dbo->getQuery(true);
-            $query->delete($this->dbo->quoteName('#__extensions'));
-            $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_biblestudy'));
-            $this->dbo->setQuery($query);
-
-            try {
-                $comBibleStudyStatus = $this->dbo->execute();
-            } catch (RuntimeException $e) {
-                JFactory::getApplication()->enqueueMessage("Failed to execute com_biblestudy removal", "error");
-            }
-
-            // Delete Old stale pkg_biblestudy_package extension.
-            $query      = $this->dbo->getQuery(true);
-            $query->delete($this->dbo->quoteName('#__extensions'));
-            $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('pkg_biblestudy_package'));
-            $this->dbo->setQuery($query);
-
-            try {
-                $comBibleStudyStatus = $this->dbo->execute();
-            } catch (RuntimeException $e) {
-                JFactory::getApplication()->enqueueMessage("Failed to execute pkg_biblestudy_package removal", "error");
-            }
-
-            // Reset Status info
-            $this->status          = new stdClass();
-            $this->status->modules = [];
-            $this->status->plugins = [];
-
-            // Update Install Actions to uninstall the BibleStudy components
-            self::$installActionQueue = [
-            // -- modules => { (folder) => { (module) => { (position), (published) } }* }*
-            'modules' => [
-                'administrator' => [],
-                'site'          => [
-                    'biblestudy'         => 0,
-                    'biblestudy_podcast' => 0,
-                ],
-            ],
-            // -- plugins => { (folder) => { (element) => (published) }* }*
-            'plugins' => [
-                'finder' => ['biblestudy' => 0],
-                'search' => ['biblestudysearch' => 0,],
-                'system' => [
-                    'jbspodcast' => 0,
-                    'jbsbackup'  => 0,
-                ],
-            ],
-            ];
-
-            // Remove old Components
-            $this->uninstallSubextensions();
-
-            if (
-                $menuBibleStudyStatus ||
-                $comBibleStudyStatus ||
-                count($this->status->modules) ||
-                count($this->status->plugins)
-            ) {
-                JFactory::getApplication()->enqueueMessage("We have removed leftovers from Proclaim old version", "notice");
-            }
-        }
-    }
-
-    /**
-     * Renders the post-installation message
-     *
-     * @param   object            $status  Object of things to install
-     * @param   InstallerAdapter  $parent  The class calling this method
-     *
-     * @return void
-     * @since  1.7.0
-     */
-    private function renderPostInstallation($status, $parent): void
-    {
-        try {
-            $language = Factory::getApplication()->getLanguage();
-            $language->load('com_proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim', 'en-GB', true);
-            $language->load('com_proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim', null, true);
-        } catch (Exception $e) {
-            return;
-        }
-
-        echo '<img src="../media/com_proclaim/images/proclaim.jpg" width="48" height="48"
-             alt="Proclaim"/>
-
-        <h2>Welcome to CWM Proclaim System</h2>
-
-        <table class="adminlist table" style="width: 300px;">
-            <thead>
-            <tr>
-                <th class="title">Extension</th>
-                <th class="title">Client</th>
-                <th class="title">' . Text::_('JBS_INS_STATUS') . '</th>
-            </tr>
-            </thead>
-            <tfoot>
-            <tr>
-                <td colspan="3"></td>
-            </tr>
-            </tfoot>
-            <tbody>
-            <tr>
-                <td class="key">' . Text::_('JBS_CMN_com_proclaim') . '</td>
-                <td class="key">Site</td>
-                <td><strong style="color: green;">' . Text::_('JBS_INS_INSTALLED') . '</strong></td>
-            </tr>';
-
-        if (count($status->modules)) {
-            echo "<tr>
-                <th>Module</th>
-                <th>Client</th>
-                <th><?php echo Text::_('JBS_INS_STATUS'); ?></th>
-            </tr>";
-
-            foreach ($status->modules as $module) {
-                echo '<tr>';
-                echo '<td class="key">' . $module['name'] . '</td>';
-                echo '<td class="key">' . ucfirst($module['client']) . '</td>';
-                echo '<td class="key">';
-                echo '<strong style="color: ' . ($module['result'] ? 'green' : 'red') . ';">';
-                echo ' ' . ($module['result'] ? Text::_('JBS_INS_INSTALLED') : Text::_(
-                    'JBS_INS_NOT_INSTALLED'
-                )) . ' ';
-                echo '</strong>';
-                echo '</td>';
-                echo '</tr>';
-            }
-        }
-
-        if (count($status->plugins)) {
-            ?>
-                <tr>
-                    <th>Plugin</th>
-                    <th>Group</th>
-                    <th><?php
-                    echo Text::_('JBS_INS_STATUS'); ?></th>
-                </tr>
-                <?php
-                foreach ($status->plugins as $plugin) {
-                    echo '<tr>';
-                    echo '<td class="key">' . ucfirst($plugin['name']) . '</td>';
-                    echo '<td class="key">' . ucfirst($plugin['group']) . '</td>';
-                    echo '<td>';
-                    echo '<strong style="color: ' . ($plugin['result'] ? 'green' : 'red') . ';">';
-                    echo ' ' . ($plugin['result'] ? Text::_('JBS_INS_INSTALLED') : Text::_(
-                        'JBS_INS_NOT_INSTALLED'
-                    )) . '';
-                    echo '</strong>';
-                    echo '</td>';
-                    echo '</tr>';
-                }
+                        // Uninstall the module
+                        if ($id !== null) {
+                            $installer               = new Installer();
+                            $result                  = $installer->uninstall('module', $id, 1);
+                            $this->status->modules[] = [
+                                'name'   => 'mod_' . $module,
+                                'client' => $folder,
+                                'result' => $result,
+                            ];
+                        }
+                    }//end foreach
+                }//end if
+            }//end foreach
         }//end if
 
-        echo '</tbody></table>';
-    }
+        // Plugins uninstalling
+        if (count(self::$installActionQueue['plugins'])) {
+            foreach (self::$installActionQueue['plugins'] as $folder => $plugins) {
+                if (count($plugins)) {
+                    foreach ($plugins as $plugin => $published) {
+                        $sql = $this->dbo->getQuery(true)
+                            ->select($this->dbo->qn('extension_id'))
+                            ->from($this->dbo->qn('#__extensions'))
+                            ->where($this->dbo->qn('type') . ' = ' . $this->dbo->q('plugin'))
+                            ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
+                            ->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder));
+                        $this->dbo->setQuery($sql);
 
+                        $id = $this->dbo->loadResult();
+
+                        if ($id !== null) {
+                            $installer               = new Installer();
+                            $result                  = $installer->uninstall('plugin', $id, 1);
+                            $this->status->plugins[] = [
+                                'name'   => 'plg_' . $plugin,
+                                'group'  => $folder,
+                                'result' => $result,
+                            ];
+                        }
+                    }//end foreach
+                }//end if
+            }//end foreach
+        }//end if
+    }
 
     /**
      * Render Post Uninstalling
@@ -606,6 +409,37 @@ class com_proclaimInstallerScript extends InstallerScript
         echo '</tbody></table>';
     }
 
+    /**
+     * Post Flight
+     *
+     * @param   string            $type    The type of change (install, update or discover_install, not uninstall)
+     * @param   ComponentAdapter  $parent  The class calling this method
+     *
+     * @return void
+     *
+     * @throws Exception
+     * @since 1.5
+     */
+    public function postflight(string $type, ComponentAdapter $parent): void
+    {
+        // Install subExtensions
+        $this->installSubextensions($parent);
+
+        // Show the post-installation page
+        $this->renderPostInstallation($this->status, $parent);
+
+        //Remove old com_biblestudy menu items on admin side
+        $this->removeBibleStudyVersion();
+
+        if ($type === 'install') {
+            // A redirect to a new location after the installation is completed.
+            $parent->getParent()->setRedirectURL(
+                Uri::base() .
+                'index.php?option=com_proclaim&view=cwminstall&task=cwminstall.browse&scanstate=start&' .
+                Session::getFormToken() . '=1'
+            );
+        }
+    }
 
     /**
      * Installs extensions (modules, plugins) bundled with the main extension
@@ -810,109 +644,277 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
-     * Uninstalls extensions (modules, plugins) bundled with the main extension
+     * Renders the post-installation message
+     *
+     * @param   object            $status  Object of things to install
+     * @param   InstallerAdapter  $parent  The class calling this method
      *
      * @return void
-     *
-     * @since 9.0.18
+     * @since  1.7.0
      */
-    private function uninstallSubextensions(): void
+    private function renderPostInstallation($status, $parent): void
     {
-        $this->status          = new stdClass();
-        $this->status->modules = [];
-        $this->status->plugins = [];
+        try {
+            $language = Factory::getApplication()->getLanguage();
+            $language->load('com_proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim', 'en-GB', true);
+            $language->load('com_proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim', null, true);
+        } catch (Exception $e) {
+            return;
+        }
 
-        // Modules uninstalling
-        if (count(self::$installActionQueue['modules'])) {
-            foreach (self::$installActionQueue['modules'] as $folder => $modules) {
-                if (count($modules)) {
-                    foreach ($modules as $module => $modulePreferences) {
-                        // Find the module ID
-                        $sql = $this->dbo->getQuery(true)
-                            ->select($this->dbo->qn('extension_id'))
-                            ->from($this->dbo->qn('#__extensions'))
-                            ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q('mod_' . $module))
-                            ->where($this->dbo->qn('type') . ' = ' . $this->dbo->q('module'));
-                        $this->dbo->setQuery($sql);
-                        $id = $this->dbo->loadResult();
+        echo '<img src="../media/com_proclaim/images/proclaim.jpg" width="48" height="48"
+             alt="Proclaim"/>
 
-                        // Uninstall the module
-                        if ($id !== null) {
-                            $installer               = new Installer();
-                            $result                  = $installer->uninstall('module', $id, 1);
-                            $this->status->modules[] = [
-                                'name'   => 'mod_' . $module,
-                                'client' => $folder,
-                                'result' => $result,
-                            ];
-                        }
-                    }//end foreach
-                }//end if
-            }//end foreach
-        }//end if
+        <h2>Welcome to CWM Proclaim System</h2>
 
-        // Plugins uninstalling
-        if (count(self::$installActionQueue['plugins'])) {
-            foreach (self::$installActionQueue['plugins'] as $folder => $plugins) {
-                if (count($plugins)) {
-                    foreach ($plugins as $plugin => $published) {
-                        $sql = $this->dbo->getQuery(true)
-                            ->select($this->dbo->qn('extension_id'))
-                            ->from($this->dbo->qn('#__extensions'))
-                            ->where($this->dbo->qn('type') . ' = ' . $this->dbo->q('plugin'))
-                            ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
-                            ->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder));
-                        $this->dbo->setQuery($sql);
+        <table class="adminlist table" style="width: 300px;">
+            <thead>
+            <tr>
+                <th class="title">Extension</th>
+                <th class="title">Client</th>
+                <th class="title">' . Text::_('JBS_INS_STATUS') . '</th>
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+                <td colspan="3"></td>
+            </tr>
+            </tfoot>
+            <tbody>
+            <tr>
+                <td class="key">' . Text::_('JBS_CMN_com_proclaim') . '</td>
+                <td class="key">Site</td>
+                <td><strong style="color: green;">' . Text::_('JBS_INS_INSTALLED') . '</strong></td>
+            </tr>';
 
-                        $id = $this->dbo->loadResult();
+        if (count($status->modules)) {
+            echo "<tr>
+                <th>Module</th>
+                <th>Client</th>
+                <th><?php echo Text::_('JBS_INS_STATUS'); ?></th>
+            </tr>";
 
-                        if ($id !== null) {
-                            $installer               = new Installer();
-                            $result                  = $installer->uninstall('plugin', $id, 1);
-                            $this->status->plugins[] = [
-                                'name'   => 'plg_' . $plugin,
-                                'group'  => $folder,
-                                'result' => $result,
-                            ];
-                        }
-                    }//end foreach
-                }//end if
-            }//end foreach
-        }//end if
-    }
-
-    /**
-     * Set the database object from the installation adapter, if possible
-     *
-     * @param   InstallerAdapter|mixed  $adapter  The class calling this method
-     *
-     * @return  void
-     * @since   7.2.0
-     */
-    private function setDboFromAdapter(mixed $adapter): void
-    {
-        $this->dbo = null;
-
-        if (class_exists(InstallerAdapter::class) && ($adapter instanceof InstallerAdapter)) {
-            /**
-             * If this is Joomla 4.2+ the adapter has a protected getDatabase() method which we can access with the
-             * magic property $adapter->db. On Joomla 4.1 and lower this is not available. So, we have to first figure
-             * out if we can actually use the magic property...
-             */
-
-            try {
-                $refObj = new ReflectionObject($adapter);
-
-                if ($refObj->hasMethod('getDatabase')) {
-                    $this->dbo = $adapter->db;
-
-                    return;
-                }
-            } catch (Throwable $e) {
-                // If something breaks we will fall through
+            foreach ($status->modules as $module) {
+                echo '<tr>';
+                echo '<td class="key">' . $module['name'] . '</td>';
+                echo '<td class="key">' . ucfirst($module['client']) . '</td>';
+                echo '<td class="key">';
+                echo '<strong style="color: ' . ($module['result'] ? 'green' : 'red') . ';">';
+                echo ' ' . ($module['result'] ? Text::_('JBS_INS_INSTALLED') : Text::_(
+                    'JBS_INS_NOT_INSTALLED'
+                )) . ' ';
+                echo '</strong>';
+                echo '</td>';
+                echo '</tr>';
             }
         }
 
-        $this->dbo = Factory::getContainer()->get('DatabaseDriver');
+        if (count($status->plugins)) {
+            ?>
+                <tr>
+                    <th>Plugin</th>
+                    <th>Group</th>
+                    <th><?php
+                    echo Text::_('JBS_INS_STATUS'); ?></th>
+                </tr>
+                <?php
+                foreach ($status->plugins as $plugin) {
+                    echo '<tr>';
+                    echo '<td class="key">' . ucfirst($plugin['name']) . '</td>';
+                    echo '<td class="key">' . ucfirst($plugin['group']) . '</td>';
+                    echo '<td>';
+                    echo '<strong style="color: ' . ($plugin['result'] ? 'green' : 'red') . ';">';
+                    echo ' ' . ($plugin['result'] ? Text::_('JBS_INS_INSTALLED') : Text::_(
+                        'JBS_INS_NOT_INSTALLED'
+                    )) . '';
+                    echo '</strong>';
+                    echo '</td>';
+                    echo '</tr>';
+                }
+        }//end if
+
+        echo '</tbody></table>';
+    }
+
+    /**
+     * Remove left overs do to upgrade from an older Proclaim version.
+     *
+     * @return void
+     * @throws Exception
+     * @since 10.0.0
+     */
+    private function removeBibleStudyVersion(): void
+    {
+        $menuBibleStudyStatus = false;
+        $comBibleStudyStatus  = false;
+
+        // Get BibleStudy extension ID
+        $query      = $this->dbo->getQuery(true);
+        $query->select('extension_id');
+        $query->from('#__extensions');
+        $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_biblestudy'));
+        $this->dbo->setQuery($query);
+        $biblestudyID = (int) $this->dbo->loadResult();
+
+        if ($biblestudyID !== 0) {
+            // Get Proclaim extension ID
+            $query      = $this->dbo->getQuery(true);
+            $query->select('extension_id');
+            $query->from('#__extensions');
+            $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_proclaim'));
+            $this->dbo->setQuery($query);
+            $proclaimID = (int) $this->dbo->loadResult();
+
+            // Remove old com_biblestudy folders and files as we can't uninstall them
+            $this->deleteFolders = ['/components/com_biblestudy', '/administrator/components/com_biblestudy'];
+            $this->deleteFiles   = ['/language/en-GB/en-GB.com_biblestudy.ini'];
+            $this->removefiles();
+
+            // Clean up Admin Menus form old install
+            $query      = $this->dbo->getQuery(true);
+            $query->delete($this->dbo->quoteName('#__menu'));
+            $query->where($this->dbo->quoteName('link') . 'LIKE "%com_biblestudy%"');
+
+            // This check to make sure the menu items is from the Admin Main menu only
+            $query->where($this->dbo->quoteName('client_id') . ' = 1');
+            $query->where($this->dbo->quoteName('menutype') . ' = ' . $this->dbo->quote('main'));
+            $this->dbo->setQuery($query);
+
+            try {
+                $menuBibleStudyStatus = $this->dbo->execute();
+            } catch (RuntimeException $e) {
+                Factory::getApplication()->enqueueMessage("Failed to execute Admin Menu removal", "error");
+            }
+
+            // Update Site Menus for BibleStudy to Proclaim
+            $query      = $this->dbo->getQuery(true);
+            $query->select('id, component_id, link');
+            $query->from($this->dbo->quoteName('#__menu'));
+            $query->where($this->dbo->quoteName('link') . 'LIKE "%com_biblestudy%"');
+            $query->where($this->dbo->quoteName('client_id') . ' = 0');
+            $this->dbo->setQuery($query);
+            $results = $this->dbo->loadObjectList();
+
+            foreach ($results as $result) {
+                $query      = $this->dbo->getQuery(true);
+                // Fields to update.
+                $fields = array(
+                    $this->dbo->quoteName('link') . ' = ' . $this->dbo->quote(str_replace("com_biblestudy&view=", "com_proclaim&view=cwm", $result->link)),
+                    $this->dbo->quoteName('component_id') . ' = ' . $proclaimID,
+                );
+                // Conditions for which records should be updated.
+                $conditions = array(
+                    $this->dbo->quoteName('id') . ' = ' . $result->id,
+                );
+                $query->update($this->dbo->quoteName('#__menu'))->set($fields)->where($conditions);
+
+                $this->dbo->setQuery($query);
+                $menuBibleStudyStatus = $this->dbo->execute();
+            }
+
+            // Update Site Modules for BibleStudy to Proclaim
+            $query      = $this->dbo->getQuery(true);
+            $query->select('id, module');
+            $query->from($this->dbo->quoteName('#__modules'));
+            $query->where($this->dbo->quoteName('module') . 'LIKE "%mod_biblestudy%"');
+            $this->dbo->setQuery($query);
+            $results = $this->dbo->loadObjectList();
+
+            foreach ($results as $result) {
+                $query      = $this->dbo->getQuery(true);
+
+                // Fields to update.
+                $fields = array(
+                    $this->dbo->quoteName('module') . ' = ' . $this->dbo->quote(str_replace("mod_biblestudy", "mod_proclaim", $result->module)),
+                );
+
+                // Conditions for which records should be updated.
+                $conditions = array(
+                    $this->dbo->quoteName('id') . ' = ' . $result->id,
+                );
+                $query->update($this->dbo->quoteName('#__modules'))->set($fields)->where($conditions);
+
+                $this->dbo->setQuery($query);
+                $menuBibleStudyStatus = $this->dbo->execute();
+            }
+
+            // Migrate Plugin Podcast to Tasks
+            $message = new \stdClass();
+            $message->title_key = 'New Scheduled Task for Podcast RSS Rile Creation'; // Language string
+            $message->description_key = 'You may now what to setup Podcast RSS Task to replace your old system. We could not migrate your old podcast plugin schedule'; // Language string
+            $message->type = 'message'; // message | action
+            $message->version_introduced = '10.0.0';
+            (new CWM\Component\Proclaim\Administrator\Model\CwminstallModel())->postInstallMessages($message);
+
+            // Migrate Plugin Backup to Tasks
+            $message = new \stdClass();
+            $message->title_key = 'New Scheduled Task for Backups'; // Language string
+            $message->description_key = 'You may now what to setup backups to replace your old system. We could not migrate your old backup plugin schedule'; // Language string
+            $message->type = 'message'; // message | action
+            $message->version_introduced = '10.0.0';
+            (new CWM\Component\Proclaim\Administrator\Model\CwminstallModel())->postInstallMessages($message);
+
+            // Delete Old stale com_biblestudy extension.
+            $query      = $this->dbo->getQuery(true);
+            $query->delete($this->dbo->quoteName('#__extensions'));
+            $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_biblestudy'));
+            $this->dbo->setQuery($query);
+
+            try {
+                $comBibleStudyStatus = $this->dbo->execute();
+            } catch (RuntimeException $e) {
+                Factory::getApplication()->enqueueMessage("Failed to execute com_biblestudy removal", "error");
+            }
+
+            // Delete Old stale pkg_biblestudy_package extension.
+            $query      = $this->dbo->getQuery(true);
+            $query->delete($this->dbo->quoteName('#__extensions'));
+            $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('pkg_biblestudy_package'));
+            $this->dbo->setQuery($query);
+
+            try {
+                $comBibleStudyStatus = $this->dbo->execute();
+            } catch (RuntimeException $e) {
+                Factory::getApplication()->enqueueMessage("Failed to execute pkg_biblestudy_package removal", "error");
+            }
+
+            // Reset Status info
+            $this->status          = new stdClass();
+            $this->status->modules = [];
+            $this->status->plugins = [];
+
+            // Update Install Actions to uninstall the BibleStudy components
+            self::$installActionQueue = [
+            // -- modules => { (folder) => { (module) => { (position), (published) } }* }*
+            'modules' => [
+                'administrator' => [],
+                'site'          => [
+                    'biblestudy'         => 0,
+                    'biblestudy_podcast' => 0,
+                ],
+            ],
+            // -- plugins => { (folder) => { (element) => (published) }* }*
+            'plugins' => [
+                'finder' => ['biblestudy' => 0],
+                'search' => ['biblestudysearch' => 0,],
+                'system' => [
+                    'jbspodcast' => 0,
+                    'jbsbackup'  => 0,
+                ],
+            ],
+            ];
+
+            // Remove old Components
+            $this->uninstallSubextensions();
+
+            if (
+                $menuBibleStudyStatus ||
+                $comBibleStudyStatus ||
+                count($this->status->modules) ||
+                count($this->status->plugins)
+            ) {
+                Factory::getApplication()->enqueueMessage("We have removed leftovers from Proclaim old version", "notice");
+            }
+        }
     }
 }
