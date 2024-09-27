@@ -35,11 +35,11 @@ class CwmproclaimHelper
     /**
      * Admin Prams
      *
-     * @var object
+     * @var ?object
      *
      * @since 1.5
      */
-    public static $admin_params = null;
+    public static ?object $admin_params = null;
 
     /**
      * Set extension
@@ -239,7 +239,7 @@ class CwmproclaimHelper
                     // No HTML filtering.
                     $unfiltered = true;
                 } else {
-                    // Black or white list.
+                    // Black or whitelist.
                     // Prepossess the tags and attributes.
                     $tags           = explode(',', $filterData->filter_tags);
                     $attributes     = explode(',', $filterData->filter_attributes);
@@ -286,27 +286,24 @@ class CwmproclaimHelper
         // Unfiltered assumes first priority.
         if ($unfiltered) {
             $filter = InputFilter::getInstance(array(), array(), 1, 1, 0);
+        } elseif ($blackList) {
+            // Remove the white-listed attributes from the black-list.
+            $filter = InputFilter::getInstance(
+            // Blacklisted tags
+                array_diff($blackListTags, $whiteListTags),
+                // Blacklisted attributes
+                array_diff($blackListAttributes, $whiteListAttributes),
+                // Blacklist tags
+                1,
+                // Blacklist attributes
+                1
+            );
+        } elseif ($whiteList) {
+            // Turn off xss auto clean
+            $filter = InputFilter::getInstance($whiteListTags, $whiteListAttributes, 0, 0, 0);
         } else {
-            // Black lists take second precedence.
-            if ($blackList) {
-                // Remove the white-listed attributes from the black-list.
-                $filter = InputFilter::getInstance(
-                // Blacklisted tags
-                    array_diff($blackListTags, $whiteListTags),
-                    // Blacklisted attributes
-                    array_diff($blackListAttributes, $whiteListAttributes),
-                    // Blacklist tags
-                    1,
-                    // Blacklist attributes
-                    1
-                );
-            } elseif ($whiteList) {
-                // Turn off xss auto clean
-                $filter = InputFilter::getInstance($whiteListTags, $whiteListAttributes, 0, 0, 0);
-            } else {
-                // No HTML takes last place.
-                $filter = InputFilter::getInstance();
-            }
+            // No HTML takes last place.
+            $filter = InputFilter::getInstance();
         }
 
         return $filter->clean($text, 'html');
