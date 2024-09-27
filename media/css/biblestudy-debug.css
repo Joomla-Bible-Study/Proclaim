@@ -4,38 +4,38 @@ a[title]:after {
 }
 
 a[title]:hover:after {
-	/*Shows the generated content*/
-	content: attr(title) " (" attr(href) ")";
-	visibility: visible;
+    /*Shows the generated content*/
+    content: attr(title) " (" attr(href) ")";
+    visibility: visible;
 }
 
 .bsmall {
-	border: solid 0;
-	color: #000000;
-	font-size: 0.85em;
-	margin: 0 0 20px;
+    border: solid 0;
+    color: #000000;
+    font-size: 0.85em;
+    margin: 0 0 20px;
 }
 
 .bsmallbold {
-	border: solid 0;
-	color: #000000;
-	font-size: 0.85em;
-	margin: 0 0 20px;
-	font-weight: bold;
+    border: solid 0;
+    color: #000000;
+    font-size: 0.85em;
+    margin: 0 0 20px;
+    font-weight: bold;
 }
 
 .bsmallitalic {
-	border: solid 0;
-	color: #000000;
-	font-size: 0.85em;
-	margin: 0 0 20px;
-	font-style: italic;
+    border: solid 0;
+    color: #000000;
+    font-size: 0.85em;
+    margin: 0 0 20px;
+    font-style: italic;
 }
 
 small.bold {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .italic {
-	font-style: italic;
+    font-style: italic;
 }

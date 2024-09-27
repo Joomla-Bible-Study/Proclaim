@@ -66,7 +66,7 @@ div.current .panelform {
 #pb4-perc,
 #pb5-perc,
 #pb6-perc {
-  background: url('/media/com_proclaim/images/progress-bar.gif') no-repeat scroll right center transparent;
+  background: url('/media/images/progress-bar.gif') no-repeat scroll right center transparent;
   height: 19px;
   float: left;
 }
@@ -309,5 +309,11 @@ table.fbstat .col2 {
 }
 #dashboard-icons > .btn + .btn {
   float: left;
+}
+.sermon-list-separator {
+  border: 0;
+  height: 4px;
+  background-color: white;
+  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0));
 }
 /*# sourceMappingURL=general.css.map */

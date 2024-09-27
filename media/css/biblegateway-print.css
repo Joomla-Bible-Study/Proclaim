@@ -1,145 +1,145 @@
 /* Passage CSS for BibleGateway */
 .passage {
-	padding-top: 10px;
-	padding-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .scripture, #a9g-leader, #passage_heading, #embed, #delivery-options, #purchase-bible, .symtio-ads {
-	display: none;
+    display: none;
 }
 
 .scripture, #a9g-skyscraper {
-	display: none;
+    display: none;
 }
 
 .scripture, #plans_links {
-	display: none;
+    display: none;
 }
 
 .scripture, #rp-header {
-	display: none;
+    display: none;
 }
 
 .scripture, #sig {
-	display: none;
+    display: none;
 }
 
 .scripture, #passage-options {
-	display: none;
+    display: none;
 }
 
 .scripture, .spacer {
-	display: none;
+    display: none;
 }
 
 .scripture, #site-options {
-	display: none;
+    display: none;
 }
 
 .scripture, #page-options {
-	display: none;
+    display: none;
 }
 
 .scripture, #navigation {
-	display: none;
+    display: none;
 }
 
 .scripture, #intersite {
-	display: none;
+    display: none;
 }
 
 .scripture, #brand {
-	background: none repeat scroll 0 0 transparent !important;
+    background: none repeat scroll 0 0 transparent !important;
 }
 
 .scripture, #brand img {
-	display: inline;
-	height: 52px;
-	text-decoration: none;
-	width: 300px;
+    display: inline;
+    height: 52px;
+    text-decoration: none;
+    width: 300px;
 }
 
 .scripture, #betasitenotice {
-	display: none;
+    display: none;
 }
 
 .scripture, #sig table {
-	display: none;
+    display: none;
 }
 
 .scripture, #sponshoutout {
-	display: none;
+    display: none;
 }
 
 .scripture, #rotate-link {
-	display: none;
+    display: none;
 }
 
 .scripture, .store-ads {
-	display: none;
+    display: none;
 }
 
 .scripture, #home_picks {
-	display: none;
+    display: none;
 }
 
 .scripture, #updateresultsform {
-	display: none;
+    display: none;
 }
 
 .scripture, #letterindex {
-	display: none;
+    display: none;
 }
 
 .scripture, #othersearches {
-	display: none;
+    display: none;
 }
 
 .scripture, #updatedisplayform {
-	display: none;
+    display: none;
 }
 
 .scripture, #main ul, .result-options1 ul li {
-	display: none;
+    display: none;
 }
 
 .scripture, .result-options {
-	display: none;
+    display: none;
 }
 
 .scripture, #result-options-info {
-	display: none;
+    display: none;
 }
 
 .scripture, #result-options-info2 {
-	display: none;
+    display: none;
 }
 
 .scripture, .keywordresultextras {
-	display: none;
+    display: none;
 }
 
 .scripture, #content {
-	left: 0;
-	margin-top: 10px;
+    left: 0;
+    margin-top: 10px;
 }
 
 .scripture, body, td, th, input, select, option {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 .scripture, body #spacer {
-	display: none;
+    display: none;
 }
 
 .scripture, th, td {
-	vertical-align: top;
+    vertical-align: top;
 }
 
 .scripture, .sup {
-	font-size: 0.65em;
-	font-weight: bold;
-	vertical-align: text-top;
+    font-size: 0.65em;
+    font-weight: bold;
+    vertical-align: text-top;
 }
 
 .scripture, .result-text-style-normal {
@@ -149,14 +149,14 @@
 }
 
 .scripture, .result-text-style-rtl {
-	direction: rtl;
+    direction: rtl;
 }
 
 .scripture, .result-text-style-rtl-serif {
-	direction: rtl;
-	font-family: serif;
+    direction: rtl;
+    font-family: serif;
 }
 
 .scripture, .result-text-style-normal, .result-text-style-serif, .result-text-style-rtl, .result-text-style-rtl-serif {
-	font-family: "Charis SIL", charis, Verdana, Arial, Helvetica, sans-serif;
+    font-family: "Charis SIL", charis, Verdana, Arial, Helvetica, sans-serif;
 }
