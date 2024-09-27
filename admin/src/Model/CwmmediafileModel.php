@@ -61,13 +61,29 @@ class CwmmediafileModel extends AdminModel
      */
     private object $data;
 
+
+    /**
+     * Allowed batch commands
+     *
+     * @var array
+     * @since 10.0.0
+     */
+    protected $batch_commands = [
+        'assetgroup_id' => 'batchAccess',
+        'player'        => 'batchPlayer',
+        'linkType'      => 'batchLinkType',
+        'mimetype'      => 'batchMimetype',
+        'mediaType'     => 'batchMediatype',
+        'popup'         => 'popup',
+    ];
+
     /**
      * Method to move a mediafile listing
      *
      * @param   string  $direction  ?
      *
      * @access    public
-     * @return    boolean    True on success
+     * @return    bool    True on success
      *
      * @throws \Exception
      * @since     1.5
@@ -385,83 +401,6 @@ class CwmmediafileModel extends AdminModel
         }
 
         return $form;
-    }
-
-    /**
-     * Method to perform batch operations on an item or a set of items.
-     *
-     * @param   array  $commands  An array of commands to perform.
-     * @param   array  $pks       An array of item ids.
-     * @param   array  $contexts  An array of item contexts.
-     *
-     * @return    boolean     Returns true on success, false on failure.
-     *
-     * @throws \Exception
-     * @since    2.5
-     */
-    public function batch($commands, $pks, $contexts)
-    {
-        // Sanitize user ids.
-        $pks = array_unique($pks);
-        ArrayHelper::toInteger($pks);
-
-        // Remove any values of zero.
-        if (in_array(0, $pks, true)) {
-            unset($pks[array_search(0, $pks, true)]);
-        }
-
-        if (empty($pks)) {
-            $this->setError(Text::_('JGLOBAL_NO_ITEM_SELECTED'));
-
-            return false;
-        }
-
-        $done = false;
-
-        if ($commands['player'] !== '') {
-            if (!$this->batchPlayer($commands['player'], $pks, $contexts)) {
-                return false;
-            }
-
-            $done = true;
-        }
-
-        if ($commands['linkType'] !== '') {
-            if (!$this->batchLinkType($commands['linkType'], $pks, $contexts)) {
-                return false;
-            }
-
-            $done = true;
-        }
-
-        if ($commands['mimetype'] !== '') {
-            if (!$this->batchMimetype($commands['mimetype'], $pks, $contexts)) {
-                return false;
-            }
-
-            $done = true;
-        }
-
-        if ($commands['mediaType'] !== '') {
-            if (!$this->batchMediatype($commands['mediaType'], $pks, $contexts)) {
-                return false;
-            }
-
-            $done = true;
-        }
-
-        if ($commands['popup'] !== '') {
-            if (!$this->batchPopup($commands['popup'], $pks, $contexts)) {
-                return false;
-            }
-
-            $done = true;
-        }
-
-        // Clear the cache
-        $this->cleanCache();
-
-        return $done;
     }
 
     /**

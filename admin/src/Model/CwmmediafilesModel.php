@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseQuery;
@@ -63,7 +64,7 @@ class CwmmediafilesModel extends ListModel
      *
      * @param   array  $config  An optional associative array of configuration settings.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     public function __construct($config = array())
@@ -93,10 +94,10 @@ class CwmmediafilesModel extends ListModel
      *
      * @return mixed  Array  Media files array
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.0.0
      */
-    public function getItems()
+    public function getItems(): mixed
     {
         // Get a storage key.
         $store = $this->getStoreId();
@@ -114,16 +115,6 @@ class CwmmediafilesModel extends ListModel
 
             if (!$items) {
                 return false;
-            }
-
-            $user   = Factory::getApplication()->getIdentity();
-            $groups = $user->getAuthorisedViewLevels();
-
-            foreach ($items as $x => $xValue) {
-                // Check the access level. Remove articles the user shouldn't see
-                if (!in_array($xValue->access, $groups, true)) {
-                    unset($items[$x]);
-                }
             }
 
             foreach ($items as $item) {
@@ -208,7 +199,7 @@ class CwmmediafilesModel extends ListModel
      *
      * @return  void
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.0
      */
     protected function populateState($ordering = 'mediafile.createdate', $direction = 'desc'): void
@@ -270,14 +261,14 @@ class CwmmediafilesModel extends ListModel
      *
      * @return DatabaseQuery
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   7.0
      */
     protected function getListQuery(): DatabaseQuery
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $user  = Factory::getApplication()->getSession()->get('user');
+        $user  = Factory::getApplication()->getIdentity();
 
         $query->select(
             $this->getState(
@@ -318,16 +309,13 @@ class CwmmediafilesModel extends ListModel
         }
 
         // Filter by access level.
-        $access = $this->getState('filter.access');
-
-        if ($access) {
+        if ($access = $this->getState('filter.access')) {
             $query->where('mediafile.access = ' . (int)$access);
         }
 
         // Implement View Level Access
         if (!$user->authorise('core.cwmadmin')) {
-            $groups = implode(',', $user->getAuthorisedViewLevels());
-            $query->where('mediafile.access IN (' . $groups . ')');
+            $query->whereIn($db->quoteName('mediafile.access'), $user->getAuthorisedViewLevels());
         }
 
         // Filter by study title

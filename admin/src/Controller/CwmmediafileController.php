@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel;
 use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
@@ -55,7 +56,7 @@ class CwmmediafileController extends FormController
      *
      * @return  bool  True, if the record can be added, a error object if not.
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   12.2
      */
     public function add(): bool
@@ -81,7 +82,7 @@ class CwmmediafileController extends FormController
      *
      * @return  boolean
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   9.0.0
      */
     public function edit($key = null, $urlVar = null): bool
@@ -103,7 +104,7 @@ class CwmmediafileController extends FormController
      *
      * @return void
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   9.0.0
      */
     public function xhr(): void
@@ -132,7 +133,7 @@ class CwmmediafileController extends FormController
      *
      * @param   CwmmediafileModel  $model  The model.
      *
-     * @return  boolean     True if successful, false otherwise and internal error is set.
+     * @return  bool     True if successful, false otherwise and internal error is set.
      *
      * @since   1.6
      */
@@ -140,9 +141,9 @@ class CwmmediafileController extends FormController
     {
         $this->checkToken();
 
-        // Set the model
-        /** @var CwmmediafileModel $model */
-        $model = $this->getModel('Cwmmediafile', 'Administrator', []);
+        if (!$model) {
+            $model = new CwmmediafileModel();
+        }
 
         // Preset the redirect
         $this->setRedirect(
@@ -159,7 +160,7 @@ class CwmmediafileController extends FormController
      *
      * @return  boolean  True if access level checks pass, false otherwise.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   12.2
      */
     public function cancel($key = null): bool
@@ -257,7 +258,7 @@ class CwmmediafileController extends FormController
      *
      * @return  void
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   9.0.0
      */
     public function setServer(): void
@@ -292,7 +293,7 @@ class CwmmediafileController extends FormController
      *
      * @return    void
      *
-     * @throws   \Exception
+     * @throws   Exception
      * @since    3.1
      */
     protected function postSaveHook($model, $validData = array()): void
