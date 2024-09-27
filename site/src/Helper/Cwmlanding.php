@@ -90,9 +90,6 @@ class Cwmlanding
             }
         }
 
-        // Compute view access permissions.
-        $groups = implode(',', $user->getAuthorisedViewLevels());
-
         $query = $db->getQuery(true);
         $query->select('distinct a.*')
             ->from('#__bsms_locations a')
@@ -101,8 +98,8 @@ class Cwmlanding
             ->where('b.location_id > 0')
             ->where('a.published = 1')
             ->where('b.published = 1')
-            ->where('b.language in (' . $language . ')')
-            ->where('b.access IN (' . $groups . ')')
+            ->whereIn($db->q('b.language'), $language)
+            ->whereIn($db->q('b.access'), $user->getAuthorisedViewLevels())
             ->where('a.landing_show > 0')
             ->group('a.id')
             ->order('a.location_text ' . $order);
@@ -248,25 +245,18 @@ class Cwmlanding
                     $order = 'DESC';
                     break;
                 case 0:
-                    $order = null;
+                    $order = $params->get('landing_default_order', 'ASC');
             }
         }
-
-        if (!$order) {
-            $order = $params->get('landing_default_order', 'ASC');
-        }
-
-        // Compute view access permissions.
-        $groups = implode(',', $user->getAuthorisedViewLevels());
 
         $query = $db->getQuery(true);
         $query->select('distinct a.*')
             ->from('#__bsms_teachers a')
             ->select('b.access')
             ->innerJoin('#__bsms_studies b on a.id = b.teacher_id')
-            ->where('b.language in (' . $language . ')')
+            ->where($db->q('b.language'), $language)
             ->where('a.published = 1')
-            ->where('b.access IN (' . $groups . ')')
+            ->whereIn($db->q('b.access'), $user->getAuthorisedViewLevels())
             ->where('a.landing_show > 0')
             ->group('a.id')
             ->order('a.teachername ' . $order);
@@ -293,14 +283,14 @@ class Cwmlanding
                         $teacher .= '<div class="col-4" style="display: inline-block; margin-right:7px">';
                         if ((int) $params->get('linkto') === 0) {
                             $teacher .= '<a href="' . Route::_(
-                                    'index.php?option=com_proclaim&amp;view=Cwmsermons&amp;t=' . $template
-                                )
+                                'index.php?option=com_proclaim&amp;view=Cwmsermons&amp;t=' . $template
+                            )
                                 . '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
                                 . $langlink . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
                         } else {
                             $teacher .= '<a href="' . Route::_(
-                                    'index.php?option=com_proclaim&amp;view=cwmteacher&id=' . $b->id . $langlink . '&t=' . $template
-                                ) . '">';
+                                'index.php?option=com_proclaim&amp;view=cwmteacher&id=' . $b->id . $langlink . '&t=' . $template
+                            ) . '">';
                         }
 
                         $teacher .= $b->teachername;
@@ -433,16 +423,13 @@ class Cwmlanding
             }
         }
 
-        // Compute view access permissions.
-        $groups = implode(',', $user->getAuthorisedViewLevels());
-
         $query = $db->getQuery(true);
         $query->select('distinct a.*')
             ->from('#__bsms_series a')
             ->select('b.access')
             ->innerJoin('#__bsms_studies b on a.id = b.series_id')
-            ->where('a.language in (' . $language . ')')
-            ->where('b.access IN (' . $groups . ')')
+            ->whereIn($db->q('a.language'), $language)
+            ->whereIn($db->q('b.access'), $user->getAuthorisedViewLevels())
             ->where('b.published = 1')
             ->group('a.id')
             ->order('a.series_text ' . $order);
@@ -619,14 +606,11 @@ class Cwmlanding
             }
         }
 
-        // Compute view access permissions.
-        $groups = implode(',', $user->getAuthorisedViewLevels());
-
         $query = $db->getQuery(true);
         $query->select('distinct year(studydate) as theYear')
             ->from('#__bsms_studies')
-            ->where('language in (' . $language . ')')
-            ->where('access IN (' . $groups . ')')
+            ->whereIn($db->q('language'), $language)
+            ->whereIn($db->q('access'), $user->getAuthorisedViewLevels())
             ->where('published = 1')
             ->group('year(studydate)')
             ->order('year(studydate) ' . $order);
@@ -642,8 +626,7 @@ class Cwmlanding
             $showdiv = 0;
 
             foreach ($tresult as $b) {
-                if (($t >= $limit) && $showdiv < 1)
-                {
+                if (($t >= $limit) && $showdiv < 1) {
                     $year .= "\n\t" . '<div id="showhideyears" style="display:none;"> <!-- start show/hide years div-->';
 
                     $i       = 0;
@@ -734,9 +717,6 @@ class Cwmlanding
             }
         }
 
-        // Compute view access permissions.
-        $groups = implode(',', $user->getAuthorisedViewLevels());
-
         $query = $db->getQuery('true');
         $query->select(
             'DISTINCT #__bsms_studies.access as access, #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params'
@@ -748,8 +728,8 @@ class Cwmlanding
             ->where('#__bsms_studies.published = 1')
             ->order('#__bsms_topics.topic_text ' . $order)
             ->group('id')
-            ->where('#__bsms_studies.language in (' . $language . ')')
-            ->where('#__bsms_studies.access IN (' . $groups . ')');
+            ->whereIn($db->q('#__bsms_studies.language'), $language)
+            ->whereIn($db->q('#__bsms_studies.access'), $user->getAuthorisedViewLevels());
         $db->setQuery($query);
 
         $tresult = $db->loadObjectList();
@@ -854,24 +834,17 @@ class Cwmlanding
                     $order = 'DESC';
                     break;
                 case 0:
-                    $order = null;
+                    $order = $params->get('landing_default_order', 'ASC');
             }
         }
-
-        if (!$order) {
-            $order = $params->get('landing_default_order', 'ASC');
-        }
-
-        // Compute view access permissions.
-        $groups = implode(',', $user->getAuthorisedViewLevels());
 
         $query = $db->getQuery(true);
         $query->select('distinct a.*')
             ->from('#__bsms_message_type a')
             ->select('b.access AS study_access')
             ->innerJoin('#__bsms_studies b on a.id = b.messagetype')
-            ->where('b.language in (' . $language . ')')
-            ->where('b.access IN (' . $groups . ')')
+            ->whereIn($db->q('b.language'), $language)
+	        ->whereIn($db->q('b.access'), $user->getAuthorisedViewLevels())
             ->where('b.published = 1')
             ->where('a.landing_show > 0')
             ->group('a.id')
@@ -889,8 +862,7 @@ class Cwmlanding
                     $showdiv = 0;
 
                     foreach ($tresult as $b) {
-                        if (($t >= $limit) && $showdiv < 1)
-                        {
+                        if (($t >= $limit) && $showdiv < 1) {
                             $messagetype .= "\n\t" . '<div id="showhidemessagetypes" style="display:none;"> <!-- start show/hide messagetype div-->';
 
                             $i       = 0;
@@ -1036,8 +1008,8 @@ class Cwmlanding
             ->from('#__bsms_books a')
             ->select('b.access AS access')
             ->innerJoin('#__bsms_studies b on a.booknumber = b.booknumber')
-            ->where('b.language in (' . $language . ')')
-            ->where('b.access IN (' . $groups . ')')
+	        ->whereIn($db->q('b.language'), $language)
+	        ->whereIn($db->q('b.access'), $user->getAuthorisedViewLevels())
             ->where('b.published = 1')
             ->order('a.booknumber ' . $order)
             ->group('a.bookname');
@@ -1052,8 +1024,7 @@ class Cwmlanding
             $showdiv = 0;
 
             foreach ($tresult as $b) {
-                if (($t >= $limit) && $showdiv < 1)
-                {
+                if (($t >= $limit) && $showdiv < 1) {
                     $book .= "\n\t" . '<div id="showhidebooks" style="display:none;"> <!-- start show/hide book div-->';
 
                     $i       = 0;
