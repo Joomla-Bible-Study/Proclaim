@@ -350,7 +350,7 @@ foreach ($iterator as $file) {
         $continue = true;
 
         foreach ($directoryLoopExcludeDirectories as $excludeDirectory) {
-            if (preg_match('#^' . preg_quote($excludeDirectory) . '#', $relativePath)) {
+            if (preg_match('#^' . preg_quote($excludeDirectory, null) . '#', $relativePath)) {
                 $continue = false;
                 break;
             }
