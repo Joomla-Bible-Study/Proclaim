@@ -18,7 +18,6 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 
 $params = ComponentHelper::getParams('com_proclaim');
@@ -46,24 +45,26 @@ $user = Factory::getApplication()->getSession()->get('user');
             </div>
         </div>
     </div>
-    <div class="form-group col-md-4">
-        <div class="controls">
-            <?php
-            echo HTMLHelper::_('Proclaim.teacher'); ?>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <div class="controls">
+                <?php
+                echo HTMLHelper::_('Proclaim.teacher'); ?>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <div class="controls">
+                <?php
+                echo HTMLHelper::_('Proclaim.series'); ?>
+            </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="form-group col-md-6">
-        <div class="controls">
-            <?php
-            echo HTMLHelper::_('Proclaim.series'); ?>
-        </div>
-    </div>
-    <div class="form-group col-md-4">
-        <div class="controls">
-            <?php
-            echo HTMLHelper::_('Proclaim.messageType'); ?>
+    <div class="row">
+        <div class="form-group col-md-12">
+            <div class="controls">
+                <?php
+                echo HTMLHelper::_('Proclaim.messageType'); ?>
+            </div>
         </div>
     </div>
 </div>

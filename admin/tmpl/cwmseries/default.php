@@ -228,7 +228,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post"
                             'bootstrap.renderModal',
                             'collapseModal',
                             array(
-                                'title'  => Text::_('COM_CONTENT_BATCH_OPTIONS'),
+                                'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
                                 'footer' => $this->loadTemplate('batch_footer'),
                             ),
                             $this->loadTemplate('batch_body')

@@ -21,8 +21,10 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use CWM\Component\Proclaim\Administrator\Table\CwmmessageTable;
+use Exception;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
@@ -54,23 +56,37 @@ class CwmmessageModel extends AdminModel
     protected $text_prefix = 'com_proclaim';
 
     /**
+     * Allowed batch commands
+     *
+     * @var array
+     * @since 10.0.0
+     */
+    protected $batch_commands = [
+        'assetgroup_id' => 'batchAccess',
+        'language_id'   => 'batchLanguage',
+        'teacher'       => 'batchTeacher',
+        'series'        => 'batchSeries',
+        'messageType'   => 'batchMessagetype',
+    ];
+
+    /**
      * Duplicate Check
      *
      * @param   int  $study_id  Study ID
      * @param   int  $topic_id  Topic ID
      *
-     * @return boolean
+     * @return bool
      *
      * @since 7.0
      */
-    public function isDuplicate($study_id, $topic_id)
+    public function isDuplicate(int $study_id, int $topic_id): bool
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query->select('*')
             ->from('#__bsms_studytopics')
-            ->where('study_id = ' . (int)$study_id)
-            ->where('topic_id = ' . (int)$topic_id);
+            ->where('study_id = ' . $study_id)
+            ->where('topic_id = ' . $topic_id);
         $db->setQuery($query);
         $tresult = $db->loadObject();
 
@@ -86,10 +102,10 @@ class CwmmessageModel extends AdminModel
      *
      * @return string JSON Object containing the topics
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0.1
      */
-    public function getTopics()
+    public function getTopics(): string
     {
         // Do search in case of present study only, suppress otherwise
         $input          = new Input();
@@ -132,7 +148,7 @@ class CwmmessageModel extends AdminModel
      *
      * @return string JSON Object containing the topics
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0.1
      */
     public function getAlltopics()
@@ -164,7 +180,7 @@ class CwmmessageModel extends AdminModel
      * Returns a list of media files associated with this study
      *
      * @return object
-     * @throws \Exception
+     * @throws Exception
      * @since   7.0
      */
     public function getMediaFiles()
@@ -201,19 +217,19 @@ class CwmmessageModel extends AdminModel
      *
      * @return  mixed
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   9.0.0
      */
     public function getItem($pk = null): mixed
     {
-        $jinput = Factory::getApplication()->getInput();
+        $input = Factory::getApplication()->getInput();
 
-        // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
-        if ($jinput->get('a_id')) {
-            $pk = $jinput->get('a_id', 0);
+        // The front end calls this model and uses a_id to avoid id clashes, so we need to check for that first.
+        if ($input->get('a_id')) {
+            $pk = $input->get('a_id', 0);
         } else {
             // The back end uses id so we use that the rest of the time and set it to 0 by default.
-            $pk = $jinput->get('id', 0);
+            $pk = $input->get('id', 0);
         }
 
         if (!empty($this->data)) {
@@ -226,16 +242,16 @@ class CwmmessageModel extends AdminModel
     }
 
     /**
-     * Overrides the JModelAdmin save routine to save the topics(tags)
+     * Overrides the AdminModule save routine to save the topics(tags)
      *
      * @param   array  $data  The form data.
      *
-     * @return boolean
+     * @return bool
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0.1
      */
-    public function save($data)
+    public function save($data): bool
     {
         /** @var Registry $params */
         $app           = Factory::getApplication();
@@ -274,14 +290,13 @@ class CwmmessageModel extends AdminModel
     /**
      * Custom clean the cache of com_proclaim and proclaim modules
      *
-     * @param   string   $group      The cache group
-     * @param   integer  $client_id  The ID of the client
+     * @param   string  $group      The cache group
      *
      * @return  void
      *
      * @since    1.6
      */
-    protected function cleanCache($group = null, $client_id = 0)
+    protected function cleanCache($group = null): void
     {
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');
@@ -290,15 +305,15 @@ class CwmmessageModel extends AdminModel
     /**
      * Get the form data
      *
-     * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param   array  $data      Data for the form.
+     * @param   bool   $loadData  True if the form is to load its own data (default case), false if not.
      *
-     * @return boolean|\Joomla\CMS\Form\Form
+     * @return bool|Form
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = array(), $loadData = true): bool|Form
     {
         $app = Factory::getApplication();
 
@@ -326,7 +341,7 @@ class CwmmessageModel extends AdminModel
 
         $record->id = $id;
 
-        // Check for existing message.
+        // Check for an existing message.
         // Modify the form based on Edit State access controls.
         if (!$this->canEditState($record)) {
             // Disable fields for display.
@@ -355,13 +370,13 @@ class CwmmessageModel extends AdminModel
     /**
      * Method to check-out a row for editing.
      *
-     * @param   integer  $pk  The numeric id of the primary key.
+     * @param   int  $pk  The numeric id of the primary key.
      *
-     * @return  boolean  False on failure or error, true otherwise.
+     * @return  bool  False on failure or error, true otherwise.
      *
      * @since   11.1
      */
-    public function checkout($pk = null)
+    public function checkout($pk = null): bool
     {
         return true;
     }
@@ -369,15 +384,15 @@ class CwmmessageModel extends AdminModel
     /**
      * Saves the manually set order of records.
      *
-     * @param   array    $pks    An array of primary key ids.
-     * @param   integer  $order  +1 or -1
+     * @param   array  $pks    An array of primary key ids.
+     * @param   int    $order  +1 or -1
      *
      * @return  mixed
      *
-     * @throws \Exception
+     * @throws Exception
      * @since    11.1
      */
-    public function saveorder($pks = null, $order = null)
+    public function saveorder($pks = null, $order = null): mixed
     {
         $db         = Factory::getContainer()->get('DatabaseDriver');
         $row        = new CwmmessageTable($db);
@@ -430,81 +445,21 @@ class CwmmessageModel extends AdminModel
     }
 
     /**
-     * Method to perform batch operations on an item or a set of items.
-     *
-     * @param   array  $commands  An array of commands to perform.
-     * @param   array  $pks       An array of item ids.
-     * @param   array  $contexts  An array of item contexts.
-     *
-     * @return    boolean     Returns true on success, false on failure.
-     *
-     * @since    2.5
-     */
-    public function batch($commands, $pks, $contexts)
-    {
-        // Sanitize user ids.
-        $pks = array_unique($pks);
-        ArrayHelper::toInteger($pks);
-
-        // Remove any values of zero.
-        if (in_array(0, $pks, true)) {
-            unset($pks[array_search(0, $pks, true)]);
-        }
-
-        if (empty($pks)) {
-            $this->setError(Text::_('JGLOBAL_NO_ITEM_SELECTED'));
-
-            return false;
-        }
-
-        $done = false;
-
-        if ($commands['teacher'] != '') {
-            if (!$this->batchTeacher($commands['teacher'], $pks, $contexts)) {
-                return false;
-            }
-
-            $done = true;
-        }
-
-        if ($commands['series'] != '') {
-            if (!$this->batchSeries($commands['series'], $pks, $contexts)) {
-                return false;
-            }
-
-            $done = true;
-        }
-
-        if ($commands['messagetype'] != '') {
-            if (!$this->batchMessagetype($commands['messagetype'], $pks, $contexts)) {
-                return false;
-            }
-
-            $done = true;
-        }
-
-        // Clear the cache
-        $this->cleanCache();
-
-        return $done;
-    }
-
-    /**
      * Batch popup changes for a group of media files.
      *
      * @param   string  $value     The new value matching a client.
      * @param   array   $pks       An array of row IDs.
      * @param   array   $contexts  An array of item contexts.
      *
-     * @return  boolean  True if successful, false otherwise and internal error is set.
+     * @return  bool  True if successful, false otherwise and internal error is set.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   2.5
      */
-    protected function batchTeacher($value, $pks, $contexts)
+    protected function batchTeacher($value, $pks, $contexts): bool
     {
         // Set the variables
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
         /** @var CwmmessageTable $table */
         $table = $this->getTable();
 
@@ -541,7 +496,7 @@ class CwmmessageModel extends AdminModel
      *
      * @return  Table  A Table object
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   3.0
      */
     public function getTable($name = 'Cwmmessage', $prefix = '', $options = array()): Table
@@ -558,13 +513,13 @@ class CwmmessageModel extends AdminModel
      *
      * @return  boolean  True if successful, false otherwise and internal error is set.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   2.5
      */
-    protected function batchSeries($value, $pks, $contexts)
+    protected function batchSeries($value, $pks, $contexts): bool
     {
         // Set the variables
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
         /** @var CwmmessageTable $table */
         $table = $this->getTable();
 
@@ -599,15 +554,15 @@ class CwmmessageModel extends AdminModel
      * @param   array   $pks       An array of row IDs.
      * @param   array   $contexts  An array of item contexts.
      *
-     * @return  boolean  True if successful, false otherwise and internal error is set.
+     * @return  bool  True if successful, false otherwise and internal error is set.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   2.5
      */
-    protected function batchMessagetype($value, $pks, $contexts)
+    protected function batchMessageType(string $value, array $pks, array $contexts): bool
     {
         // Set the variables
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
         /** @var CwmmessageTable $table */
         $table = $this->getTable();
 
@@ -638,12 +593,12 @@ class CwmmessageModel extends AdminModel
     /**
      * Method to get the data that should be injected in the form.
      *
-     * @return  array    The default data is an empty array.
+     * @return  mixed    The default data is an empty array.
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.0
      */
-    protected function loadFormData()
+    protected function loadFormData(): mixed
     {
         $data = Factory::getApplication()->getUserState('com_proclaim.edit.message.data', array());
 
@@ -661,12 +616,13 @@ class CwmmessageModel extends AdminModel
      *
      * @return    void
      *
+     * @throws Exception
      * @since    1.6
      */
-    protected function prepareTable($table)
+    protected function prepareTable($table): void
     {
         $date = Factory::getDate();
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
         // Set the publishing date to now
         if ($table->published === Workflow::CONDITION_PUBLISHED && (int)$table->publish_up === 0) {

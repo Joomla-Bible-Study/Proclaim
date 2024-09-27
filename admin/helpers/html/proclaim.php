@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Part of Proclaim Package
  *
@@ -17,7 +16,7 @@ defined('JPATH_BASE') or die;
 
 
 /**
- * Biblestudy HTML class.
+ * Proclaim HTML class.
  *
  * @package    Proclaim.Admin
  * @since      7.0.0
@@ -30,30 +29,6 @@ abstract class JHtmlProclaim
      * @since  9.0.0
      */
     protected static array $loaded = array();
-
-    /**
-     * Display a batch widget for the player selector.
-     *
-     * @return  string  The necessary HTML for the widget.
-     *
-     * @since   2.5
-     */
-    public static function players(): string
-    {
-        // Create the batch selector to change the player on a selection list.
-        $lines = array(
-            '<label id="batch-client-lbl" for="batch-player" class="hasTip" title="' . Text::_('JBS_MED_PLAYER')
-            . '::' . Text::_('JBS_MED_PLAYER_DESC') . '">',
-            Text::_('JBS_MED_PLAYER'),
-            '</label>',
-            '<select name="batch[player]" class="inputbox" id="batch-player">',
-            '<option value="">' . Text::_('JBS_BAT_PLAYER_NOCHANGE') . '</option>',
-            HTMLHelper::_('select.options', self::playerlist(), 'value', 'text'),
-            '</select>'
-        );
-
-        return implode("\n", $lines);
-    }
 
     /**
      * Method to get the field options.
@@ -97,7 +72,7 @@ abstract class JHtmlProclaim
             . '::' . Text::_('JBS_MED_SHOW_DOWNLOAD_ICON_DESC') . '">',
             Text::_('JBS_MED_SHOW_DOWNLOAD_ICON'),
             '</label>',
-            '<select name="batch[linkType]" class="inputbox" id="batch-linkType">',
+            '<select name="batch[linkType]" class="form-select" id="batch-linkType">',
             '<option value="">' . Text::_('JBS_BAT_DOWNLOAD_NOCHANGE') . '</option>',
             HTMLHelper::_('select.options', self::linkTypeList(), 'value', 'text'),
             '</select>'
@@ -145,7 +120,7 @@ abstract class JHtmlProclaim
             . '::' . Text::_('JBS_MED_INTERNAL_POPUP_DESC') . '">',
             Text::_('JBS_MED_POPUP'),
             '</label>',
-            '<select name="batch[popup]" class="inputbox" id="batch-popup">',
+            '<select name="batch[popup]" class="form-select" id="batch-popup">',
             '<option value="">' . Text::_('JBS_BAT_POPUP_NOCHANGE') . '</option>',
             HTMLHelper::_('select.options', self::popuplist(), 'value', 'text'),
             '</select>'
@@ -192,7 +167,7 @@ abstract class JHtmlProclaim
             . '::' . Text::_('JBS_MED_IMAGE_DESC') . '">',
             Text::_('JBS_MED_SELECT_MEDIA_TYPE'),
             '</label>',
-            '<select name="batch[mediaType]" class="inputbox" id="batch-mediaType">',
+            '<select name="batch[mediaType]" class="form-select" id="batch-mediaType">',
             '<option value="">' . Text::_('JBS_BAT_MEDIATYPE_NOCHANGE') . '</option>',
             '</select>'
         );
@@ -216,7 +191,7 @@ abstract class JHtmlProclaim
             Text::_('JBS_CMN_TEACHER') . '::' . Text::_('JBS_BAT_TEACHER_DESC') . '">',
             Text::_('JBS_CMN_TEACHER'),
             '</label>',
-            '<select name="batch[teacher]" class="inputbox" id="batch-teacher">',
+            '<select name="batch[teacher]" class="form-select" id="batch-teacher">',
             '<option value="">' . Text::_('JBS_BAT_TEACHER_NOCHANGE') . '</option>',
             HTMLHelper::_('select.options', self::Teacherlist(), 'value', 'text'),
             '</select>'
@@ -271,7 +246,7 @@ abstract class JHtmlProclaim
             Text::_('JBS_CMN_MESSAGETYPE') . '::' . Text::_('JBS_BAT_MESSAGETYPE_DESC') . '">',
             Text::_('JBS_CMN_MESSAGETYPE'),
             '</label>',
-            '<select name="batch[messageType]" class="inputbox" id="batch-messageType">',
+            '<select name="batch[messageType]" class="form-select" id="batch-messageType">',
             '<option value="">' . Text::_('JBS_BAT_MESSAGETYPE_NOCHANGE') . '</option>',
             HTMLHelper::_('select.options', self::Messagetypelist(), 'value', 'text'),
             '</select>'
@@ -326,7 +301,7 @@ abstract class JHtmlProclaim
             Text::_('JBS_CMN_SERIES') . '::' . Text::_('JBS_BAT_SERIES_DESC') . '">',
             Text::_('JBS_CMN_SERIES'),
             '</label>',
-            '<select name="batch[series]" class="inputbox" id="batch-series">',
+            '<select name="batch[series]" class="form-select" id="batch-series">',
             '<option value="">' . Text::_('JBS_BAT_SERIES_NOCHANGE') . '</option>',
             HTMLHelper::_('select.options', self::Serieslist(), 'value', 'text'),
             '</select>'

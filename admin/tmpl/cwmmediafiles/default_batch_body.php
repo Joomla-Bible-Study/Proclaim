@@ -50,7 +50,7 @@ $user = Factory::getApplication()->getSession()->get('user');
         <div class="form-group col-md-4">
             <div class="controls">
                 <?php
-                echo HTMLHelper::_('proclaim.players'); ?>
+                echo LayoutHelper::render('html.batch.players'); ?>
             </div>
         </div>
         <div class="form-group col-md-4">
