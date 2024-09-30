@@ -38,11 +38,11 @@ defined('_JEXEC') or die;
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var CMSObject CanDo function
+    /** @var CMSObject|Registry CanDo function
      *
      * @since 9.0.0
      */
-    public CMSObject $canDo;
+    public CMSObject|Registry $canDo;
 
     /** @var string Temp Destination
      *
