@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
@@ -158,7 +159,7 @@ class Cwmrestore
      *
      * @return bool|array
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.0.0
      */
     public function importdb($parent): bool|array
@@ -213,7 +214,7 @@ class Cwmrestore
 
             $result = self::installdb($tmp_src, $parent);
 
-            // Cleanup the install files.
+            // Cleanup the installation files.
             if (!is_file($uploadresults['packagefile'])) {
                 $config                 = Factory::getApplication()->getConfig();
                 $package['packagefile'] = $config->get('tmp_path') . '/' . $uploadresults['packagefile'];
@@ -238,7 +239,7 @@ class Cwmrestore
      *
      * @return bool See if the restore worked.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.0.0
      */
     public static function restoreDB($backuprestore)
@@ -295,7 +296,7 @@ class Cwmrestore
      *
      * @return array|bool
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.0.0
      */
     private static function getPackageFromFolder(): bool|array
@@ -324,7 +325,7 @@ class Cwmrestore
      *
      * @return bool|array
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.0.0
      */
     public function getPackageFromUpload(): bool|array
@@ -393,10 +394,9 @@ class Cwmrestore
         $tmp_src  = $userfile['tmp_name'];
 
         // Move uploaded file.
-        jimport('joomla.filesystem.file');
         File::upload($tmp_src, $tmp_dest, false, true);
 
-        if (!CwmproclaimHelper::endsWith($tmp_dest, 'sql')) {
+        if (!str_ends_with($tmp_dest, 'sql') && str_ends_with($tmp_dest, 'sql.zip')) {
             // Unpack the downloaded package file.
             $package         = InstallerHelper::unpack($tmp_dest, true);
             $package['type'] = 'dir';
@@ -418,7 +418,7 @@ class Cwmrestore
      *
      * @return bool if db installed correctly.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.0.0
      */
     protected static function installdb($tmp_src, $parent = true)
