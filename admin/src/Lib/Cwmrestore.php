@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use Exception;
+use http\Exception\RuntimeException;
 use Joomla\CMS\Factory;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
@@ -242,7 +243,7 @@ class Cwmrestore
      * @throws Exception
      * @since 9.0.0
      */
-    public static function restoreDB($backuprestore)
+    public static function restoreDB($backuprestore): bool
     {
         $app = Factory::getApplication();
         $db  = Factory::getContainer()->get('DatabaseDriver');
@@ -309,7 +310,7 @@ class Cwmrestore
 
         // Did you give us a valid directory?
         if (!is_dir($p_dir)) {
-            throw new \RuntimeException(Text::_('COM_INSTALLER_MSG_INSTALL_PLEASE_ENTER_A_PACKAGE_DIRECTORY'), '502');
+            throw new RuntimeException(Text::_('COM_INSTALLER_MSG_INSTALL_PLEASE_ENTER_A_PACKAGE_DIRECTORY'), '502');
         }
 
         $package['packagefile'] = null;
@@ -393,12 +394,15 @@ class Cwmrestore
         $tmp_dest = $config->get('tmp_path') . '/' . $userfile['name'];
         $tmp_src  = $userfile['tmp_name'];
 
-        // Move uploaded file.
+        // Move an uploaded file.
         File::upload($tmp_src, $tmp_dest, false, true);
 
         if (!str_ends_with($tmp_dest, 'sql') && str_ends_with($tmp_dest, 'sql.zip')) {
             // Unpack the downloaded package file.
             $package         = InstallerHelper::unpack($tmp_dest, true);
+            if (!isset($package['dir'])) {
+                throw new RuntimeException('Compressed file did not extract.', 'error');
+            }
             $package['type'] = 'dir';
         } else {
             $package['packagefile'] = null;
@@ -413,15 +417,15 @@ class Cwmrestore
     /**
      * Install DB
      *
-     * @param   string   $tmp_src  Temp info
-     * @param bool $parent   To tell if coming from migration
+     * @param   string  $tmp_src  Temp info
+     * @param   bool      $parent   To tell if coming from migration
      *
      * @return bool if db installed correctly.
      *
      * @throws Exception
      * @since 9.0.0
      */
-    protected static function installdb($tmp_src, $parent = true)
+    protected static function installdb(string $tmp_src, bool $parent = true): bool
     {
         /**
          * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
@@ -460,25 +464,25 @@ class Cwmrestore
         }
 
         if (($iscernt === 0) && ($parent !== true)) {
-            // Way to check to see if file came from restore and is current.
+            // Way to check to see if a file came from restore and is current.
             $app->enqueueMessage(Text::_('JBS_IBM_NOT_CURENT_DB'), 'warning');
 
             return false;
         }
 
-        // First we need to drop the existing JBS tables
+        // First, we need to drop the existing JBS tables
         $objects = self::getObjects();
 
         foreach ($objects as $object) {
-            $dropquery = 'DROP TABLE IF EXISTS ' . $object['name'] . ';';
-            $db->setQuery($dropquery);
+            $dropper = 'DROP TABLE IF EXISTS ' . $object['name'] . ';';
+            $db->setQuery($dropper);
             $db->execute();
         }
 
-        // Create an array of queries from the sql file
+        // Create an array of queries from the SQL file
         $queries = $db->splitSql($query);
 
-        if (count($queries) == 0) {
+        if (count($queries) === 0) {
             // No queries to process
             return false;
         }
