@@ -46,7 +46,7 @@ class Cwmlanding
     public function getLocationsLandingPage(Registry $params, int $id = 0): string
     {
         $mainframe = Factory::getApplication();
-        $user      = $mainframe->getSession()->get('user');
+        $user      = $mainframe->getIdentity();
         $db        = Factory::getContainer()->get('DatabaseDriver');
         $location  = null;
         $template  = $params->get('studieslisttemplateid', 1);
@@ -98,9 +98,11 @@ class Cwmlanding
             ->where('b.location_id > 0')
             ->where('a.published = 1')
             ->where('b.published = 1')
-            ->whereIn($db->q('b.language'), $language)
-            ->whereIn($db->q('b.access'), $user->getAuthorisedViewLevels())
-            ->where('a.landing_show > 0')
+            ->where('b.language in (' . $language . ')');
+        if ($groups = $user->getAuthorisedViewLevels()) {
+            $query->whereIn($db->quoteName('b.access'), $groups);
+        }
+        $query->where('a.landing_show > 0')
             ->group('a.id')
             ->order('a.location_text ' . $order);
         $db->setQuery($query);
@@ -183,13 +185,12 @@ class Cwmlanding
 
                     $location .= '</div>';
                     $location .= '<div class="landing_separator"></div>';
+                    $location .= '<div style="clear:both;"></div>';
                     break;
             }
         } else {
-            $location = '<div class="landing_separator"></div>';
+            $location = '';
         }
-
-        $location .= '<div style="clear:both;"></div>';
 
         return $location;
     }
@@ -209,7 +210,7 @@ class Cwmlanding
     {
         $mainframe = Factory::getApplication();
         $db        = Factory::getContainer()->get('DatabaseDriver');
-        $user      = $mainframe->getSession()->get('user');
+        $user      = $mainframe->getIdentity();
         $langlink  = Multilanguage::isEnabled();
         $order     = null;
         $teacher   = null;
@@ -254,10 +255,12 @@ class Cwmlanding
             ->from('#__bsms_teachers a')
             ->select('b.access')
             ->innerJoin('#__bsms_studies b on a.id = b.teacher_id')
-            ->where($db->q('b.language'), $language)
-            ->where('a.published = 1')
-            ->whereIn($db->q('b.access'), $user->getAuthorisedViewLevels())
-            ->where('a.landing_show > 0')
+            ->where('b.language in (' . $language . ')')
+            ->where('a.published = 1');
+        if ($groups = $user->getAuthorisedViewLevels()) {
+            $query->whereIn($db->quoteName('b.access'), $groups);
+        }
+        $query->where('a.landing_show > 0')
             ->group('a.id')
             ->order('a.teachername ' . $order);
         $db->setQuery($query);
@@ -358,13 +361,12 @@ class Cwmlanding
 
                     $teacher .= '</div>';
                     $teacher .= '<div class="landing_separator"></div>';
+                    $teacher .= '<div style="clear:both;"></div>';
                     break;
             }
         } else {
-            $teacher = '<div class="landing_separator"></div>';
+            $teacher = '';
         }
-
-        $teacher .= '<div style="clear:both;"></div>';
 
         return $teacher;
     }
@@ -383,7 +385,7 @@ class Cwmlanding
     public function getSeriesLandingPage(Registry $params, int $id = 0): string
     {
         $mainframe = Factory::getApplication();
-        $user      = $mainframe->getSession()->get('user');
+        $user      = $mainframe->getIdentity();
         $db        = Factory::getContainer()->get('DatabaseDriver');
         $order     = 'ASC';
         $series    = null;
@@ -428,9 +430,11 @@ class Cwmlanding
             ->from('#__bsms_series a')
             ->select('b.access')
             ->innerJoin('#__bsms_studies b on a.id = b.series_id')
-            ->whereIn($db->q('a.language'), $language)
-            ->whereIn($db->q('b.access'), $user->getAuthorisedViewLevels())
-            ->where('b.published = 1')
+            ->where('b.language in (' . $language . ')');
+        if ($groups = $user->getAuthorisedViewLevels()) {
+            $query->whereIn($db->quoteName('b.access'), $groups);
+        }
+        $query->where('b.published = 1')
             ->group('a.id')
             ->order('a.series_text ' . $order);
         $db->setQuery($query);
@@ -438,7 +442,7 @@ class Cwmlanding
         $items = $db->loadObjectList();
         $count = count($items);
 
-        if ($count !== 0) {
+        if ($count > 0) {
             switch ($seriesuselimit) {
                 // Use landing page limit
                 case 0:
@@ -545,13 +549,12 @@ class Cwmlanding
 
                     $series .= '</div>';
                     $series .= '<div class="landing_separator"></div>';
+                    $series .= '<div style="clear:both;"></div>';
                     break;
             }
         } else {
-            $series = '<div class="landing_separator"></div>';
+            $series = '';
         }
-
-        $series .= '<div style="clear:both;"></div>';
 
         return $series;
     }
@@ -571,7 +574,7 @@ class Cwmlanding
     {
         $mainframe = Factory::getApplication();
         $db        = Factory::getContainer()->get('DatabaseDriver');
-        $user      = $mainframe->getSession()->get('user');
+        $user      = $mainframe->getIdentity();
         $order     = 'ASC';
         $template  = $params->get('studieslisttemplateid');
         $limit     = $params->get('landingyearslimit');
@@ -609,9 +612,11 @@ class Cwmlanding
         $query = $db->getQuery(true);
         $query->select('distinct year(studydate) as theYear')
             ->from('#__bsms_studies')
-            ->whereIn($db->q('language'), $language)
-            ->whereIn($db->q('access'), $user->getAuthorisedViewLevels())
-            ->where('published = 1')
+            ->where('language in (' . $language . ')');
+        if ($groups = $user->getAuthorisedViewLevels()) {
+            $query->whereIn($db->quoteName('access'), $groups);
+        }
+        $query->where('published = 1')
             ->group('year(studydate)')
             ->order('year(studydate) ' . $order);
         $db->setQuery($query);
@@ -728,8 +733,10 @@ class Cwmlanding
             ->where('#__bsms_studies.published = 1')
             ->order('#__bsms_topics.topic_text ' . $order)
             ->group('id')
-            ->whereIn($db->q('#__bsms_studies.language'), $language)
-            ->whereIn($db->q('#__bsms_studies.access'), $user->getAuthorisedViewLevels());
+            ->where('#__bsms_studies.language in (' . $language . ')');
+        if ($groups = $user->getAuthorisedViewLevels()) {
+            $query->whereIn($db->quoteName('#__bsms_studies.access'), $groups);
+        }
         $db->setQuery($query);
 
         $tresult = $db->loadObjectList();
@@ -771,11 +778,10 @@ class Cwmlanding
             }
 
             $topic .= '<div class="landing_separator"></div>';
+            $topic .= '<div style="clear:both;"></div>';
         } else {
-            $topic = '<div class="landing_separator"></div>';
+            $topic = '';
         }
-
-        $topic .= '<div style="clear:both;"></div>';
 
         return $topic;
     }
@@ -795,7 +801,7 @@ class Cwmlanding
     {
         $mainframe   = Factory::getApplication();
         $db          = Factory::getContainer()->get('DatabaseDriver');
-        $user        = $mainframe->getSession()->get('user');
+        $user        = $mainframe->getIdentity();
         $messagetype = null;
         $order       = 'ASC';
         $template    = $params->get('studieslisttemplateid', 1);
@@ -843,9 +849,11 @@ class Cwmlanding
             ->from('#__bsms_message_type a')
             ->select('b.access AS study_access')
             ->innerJoin('#__bsms_studies b on a.id = b.messagetype')
-            ->whereIn($db->q('b.language'), $language)
-	        ->whereIn($db->q('b.access'), $user->getAuthorisedViewLevels())
-            ->where('b.published = 1')
+            ->where('b.language in (' . $language . ')');
+        if ($groups = $user->getAuthorisedViewLevels()) {
+            $query->whereIn($db->quoteName('b.access'), $groups);
+        }
+        $query->where('b.published = 1')
             ->where('a.landing_show > 0')
             ->group('a.id')
             ->order('a.message_type ' . $order);
@@ -931,13 +939,12 @@ class Cwmlanding
 
                     $messagetype .= '</div>';
                     $messagetype .= '<div class="landing_separator"></div>';
+                    $messagetype .= '<div style="clear:both;"></div>';
                     break;
             }
         } else {
-            $messagetype = '<div class="landing_separator"></div>';
+            $messagetype = '';
         }
-
-        $messagetype .= '<div style="clear:both;"></div>';
 
         return $messagetype;
     }
@@ -1008,9 +1015,11 @@ class Cwmlanding
             ->from('#__bsms_books a')
             ->select('b.access AS access')
             ->innerJoin('#__bsms_studies b on a.booknumber = b.booknumber')
-	        ->whereIn($db->q('b.language'), $language)
-	        ->whereIn($db->q('b.access'), $user->getAuthorisedViewLevels())
-            ->where('b.published = 1')
+            ->where('b.language in (' . $language . ')');
+        if ($groups = $user->getAuthorisedViewLevels()) {
+            $query->whereIn($db->quoteName('b.access'), $groups);
+        }
+        $query->where('b.published = 1')
             ->order('a.booknumber ' . $order)
             ->group('a.bookname');
         $db->setQuery($query);
@@ -1057,7 +1066,7 @@ class Cwmlanding
             $book .= '<div class="landing_separator"></div>';
             $book .= '<div style="clear:both;"></div>';
         } else {
-            $book = '<div class="landing_separator"></div>';
+            $book = '';
         }
 
         return $book;
