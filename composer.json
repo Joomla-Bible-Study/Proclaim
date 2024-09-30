@@ -70,7 +70,7 @@
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
 		"phan/phan": "^5.4.2",
 		"roave/security-advisories": "dev-latest",
-		"phing/phing": "2.*",
+		"phing/phing": "*",
 		"pdepend/pdepend": "2.*",
 		"phpmd/phpmd": "^2.4",
 		"pear/versioncontrol_git": "dev-master",

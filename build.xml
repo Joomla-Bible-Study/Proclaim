@@ -48,11 +48,11 @@
 <!--	</target>-->
 
 	<!-- Measure the size of the project -->
-	<target name="size" description="Measures the size of the project">
-		<phploc countTests="true" reportType="txt" reportName="project-size" reportDirectory="${basedir}/build/reports">
-			<fileset refid="distributed_files"/>
-		</phploc>
-	</target>
+<!--	<target name="size" description="Measures the size of the project">-->
+<!--		<phploc countTests="true" reportType="txt" reportName="project-size" reportDirectory="${basedir}/build/reports">-->
+<!--			<fileset refid="distributed_files"/>-->
+<!--		</phploc>-->
+<!--	</target>-->
 
 	<!-- Detect violations in coding standards -->
 	<target name="phpcs" depends="init" description="Generate checkstyle.xml using PHP_CodeSniffer">
@@ -84,8 +84,7 @@
 
 	<!-- Create com_proclaim-x.x.x.zip -->
 	<target name="component" depends="init,dev.clean" description="Builds the component">
-		<propertyprompt propertyName="version" defaultValue="10.0.x"
-		                promptText="Enter the version you are building."/>
+		<input message="Enter the version you are building." propertyName="version" defaultValue="10.0.x" />
 		<delete file="${basedir}/build/com_proclaim-${version}.zip"/>
 		<zip destfile="${basedir}/build/com_proclaim-${version}.zip" basedir="${basedir}">
 			<fileset defaultexcludes="true" dir=".">
@@ -107,21 +106,17 @@
 
 	<!-- Setup config file for running the Selenium Webdriver tests -->
 	<target name="test.setup">
-		<propertyprompt propertyName="server_root" defaultValue="/Applications/MAMP/htdocs"
-		                promptText="Enter the path to your Joomla! root directory"/>
-		<propertyprompt propertyName="host" defaultValue="http://localhost" promptText="Enter the sever host"/>
-		<propertyprompt propertyName="db_host" defaultValue="localhost" promptText="Enter database host"/>
-		<propertyprompt propertyName="db_user" defaultValue="root" promptText="Enter Database username"/>
-		<propertyprompt propertyName="db_pass" defaultValue="root" promptText="Enter database password"/>
-		<propertyprompt propertyName="db_name" defaultValue="joomla-dev" promptText="Enter Database name"/>
-		<propertyprompt propertyName="joomla_username" defaultValue="admin"
-		                promptText="Enter an initial Joomla username"/>
-		<propertyprompt propertyName="joomla_password" defaultValue="password"
-		                promptText="Enter an initial Joomla password"/>
-		<propertyprompt propertyName="joomla_email" defaultValue="example@example.com"
-		                promptText="Enter an initial Joomla email"/>
+		<input message="Enter the path to your Joomla! root directory" propertyName="server_root" defaultValue="/Applications/MAMP/htdocs" />
+		<input message="Enter the sever host" propertyName="host" defaultValue="localhost" />
+		<input message="Enter database host" propertyName="db_host" defaultValue="localhost" />
+		<input message="Enter Database username" propertyName="db_user" defaultValue="root" />
+		<input message="Enter database password" propertyName="db_pass" defaultValue="root" />
+		<input message="Enter Database name" propertyName="db_name" defaultValue="joomla-dev" />
+		<input message="Enter an initial Joomla username" propertyName="joomla_username" defaultValue="admin" />
+		<input message="Enter an initial Joomla password" propertyName="joomla_password" defaultValue="password" />
+		<input message="Enter an initial Joomla email" propertyName="joomla_email" defaultValue="example@example.com" />
 
-		<copy file="${config_path}/configdef.php.dist" tofile="${config_path}/configdef.php" overwrite="true">
+		<copy file="${config_path}/configuration.php.dist" tofile="${config_path}/configuration.php" overwrite="true">
 			<filterchain>
 				<replacetokens begintoken="##" endtoken="##">
 					<token key="SERVER_ROOT" value="${server_root}"/>
@@ -163,10 +158,9 @@
 
 	<!-- Set the default joomla path and create symbolic links -->
 	<target name="dev.setup">
-		<propertyprompt propertyName="joomla_path" defaultValue="/Applications/MAMP/htdocs/"
-		                promptText="Enter the path to your Joomla! root directory"/>
-		<propertyprompt propertyName="joomla_dir" defaultValue="joomla-dev" promptText="Set Joomla folder name"/>
-		<propertyprompt propertyName="stage_joomla" defaultValue="n" promptText="Stage Joomla?"/>
+		<input message="Enter the path to your Joomla! root directory" propertyName="joomla_path" defaultValue="/Applications/MAMP/htdocs/" />
+		<input message="Enter Joomla folder name" propertyName="joomla_dir" defaultValue="joomla-dev" />
+		<input message="Stage Joomla?" propertyName="stage_joomla" defaultValue="n" />
 		<if>
 			<equals arg1="${stage_joomla}" arg2="y"/>
 			<then>
