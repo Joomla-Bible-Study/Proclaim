@@ -19,6 +19,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
@@ -37,11 +38,11 @@ defined('_JEXEC') or die;
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var Registry CanDo function
+    /** @var CMSObject CanDo function
      *
      * @since 9.0.0
      */
-    public Registry $canDo;
+    public CMSObject $canDo;
 
     /** @var string Temp Destination
      *
