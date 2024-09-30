@@ -106,7 +106,9 @@ $params     = $this->params;
             <div class="landing_item">
                 <div class="landing_title">
                     <?php
-                    echo $params->get($showIt . 'label');
+                    if (isset($heading) && !empty($heading)) {
+                        echo $params->get($showIt . 'label');
+                    }
                     ?>
                 </div>
                 <!-- end div id="landing_title" -->
