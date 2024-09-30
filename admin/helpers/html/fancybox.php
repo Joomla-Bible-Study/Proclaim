@@ -31,15 +31,15 @@ abstract class JHtmlFancybox
      *
      * If debugging mode is on an uncompressed version of jQuery is included for easier debugging.
      *
-     * @param   boolean  $option     Optional looks [optional]
-     * @param   boolean  $mouseweel  To add mouse Well to display [optional]
+     * @param   bool  $option     Optional looks [optional]
+     * @param   bool  $mouseweel  To add mouse Well to display [optional]
      *
      * @return  void
      *
      * @since      9.0.0
      * @deprecated 10.0.0
      */
-    public static function framework($option = false, $mouseweel = false)
+    public static function framework(bool $option = false, bool $mouseweel = false): void
     {
         // Only load once
         if (!empty(self::$loaded[__METHOD__])) {
@@ -63,14 +63,14 @@ abstract class JHtmlFancybox
     /**
      * Loads CSS files needed by Bootstrap
      *
-     * @param   boolean  $option  Optional add helpers - button, thumbnail and/or media
+     * @param   bool  $option  Optional add helpers - button, thumbnail and/or media
      *
      * @return  void
      *
      * @since      3.0
      * @deprecated 10.0.0
      */
-    public static function loadCss($option = false)
+    public static function loadCss(bool $option = false): void
     {
         HTMLHelper::stylesheet('media/com_proclaim/fancybox/jquery.fancybox.min.css');
         HTMLHelper::stylesheet('media/com_proclaim/css/bsms.fancybox.min.css');

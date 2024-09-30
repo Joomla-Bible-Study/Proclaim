@@ -152,4 +152,39 @@ class CWMAddonYoutube extends CWMAddon
 
         return $html;
     }
+
+    /**
+     * Youtube url to embed.
+     *
+     * @param   string  $url  YouTube url to transform.
+     *
+     * @return array|string|null
+     *
+     * @since 10.0.0
+     */
+    public function convertYoutube(string $url = ''): array|string|null
+    {
+        $string = $url;
+
+        if (preg_match('/\s*[a-zA-Z\/\/:\.]*youtu(be.com\/watch\?v=|.be\/)([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i', $url)) {
+            $string = preg_replace(
+                "/\s*[a-zA-Z\/\/:\.]*youtu(be.com\/watch\?v=|.be\/)([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i",
+                "//www.youtube.com/embed/$2",
+                $url
+            );
+        }
+
+        if (preg_match('/https?:\/\/www\.youtube\.com\/live\//', $url)) {
+            // Find the position of the last "/"
+            $lastSlashPosition = strrpos($url, '/');
+
+            // Extract the part after the last "/"
+            if ($lastSlashPosition !== false) {
+                $videoID = substr($url, $lastSlashPosition + 1);
+                $string = "//www.youtube.com/embed/$videoID";
+            }
+        }
+
+        return $string;
+    }
 }

@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use JHtmlJwplayer;
@@ -438,6 +439,7 @@ class Cwmmedia
 
         $input    = new Input();
         $template = $input->getInt('t', '1');
+        $youtube  = new CWMAddonYoutube();
 
         // Here we get more information about the particular media file
         $filesize = $this->getFluidFilesize($media, $params);
@@ -498,7 +500,7 @@ class Cwmmedia
 
                         if (preg_match('(youtube.com|youtu.be)', $path) === 1) {
                             $playercode = '<iframe class="playhit" data-id="' . $media->id . '" width="' . $player->playerwidth . '" height="' .
-                                $player->playerheight . '" src="' . $this->convertYoutube($path) .
+                                $player->playerheight . '" src="' . $youtube->convertYoutube($path) .
                                 '" allow="autoplay; encrypted-media" allowfullscreen style="border: none"></iframe>';
                         } elseif (preg_match('(vimeo.com)', $path) === 1) {
                             $playercode = '<iframe class="playhit" data-id="' . $media->id . '" src="' . $this->convertVimeo(
@@ -704,6 +706,7 @@ class Cwmmedia
         }
 
         if (preg_match('(youtube.com|youtu.be|vimeo.com)', $path) === 1) {
+            $path = (new CWMAddonYoutube())->convertYoutube($path);
             return '<a data-fancybox class="playhit" data-id="' . $media->id . '" data-options=\'{"src" : "' . $path . '", "autoplay" : "' .
                 (int)$params->get('autostart', false) . '", "controls" : "' . (int)$params->get('controls') .
                 '", "caption" : "' . $media->studytitle . ' - ' .
@@ -723,33 +726,15 @@ class Cwmmedia
     }
 
     /**
-     * Youtube url to embed.
-     *
-     * @param   string  $string  YouTube url to transform.
-     *
-     * @return null|string|string[]
-     *
-     * @since 9.1.3
-     */
-    public function convertYoutube(string $string)
-    {
-        return preg_replace(
-            "/\s*[a-zA-Z\/\/:\.]*youtu(be.com\/watch\?v=|.be\/)([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i",
-            "//www.youtube.com/embed/$2",
-            $string
-        );
-    }
-
-    /**
      * Vimeo url to embed.
      *
      * @param   string  $string  Vimeo url to transform.
      *
-     * @return null|string|string[]
+     * @return array|string|null
      *
      * @since 9.1.3
      */
-    public function convertVimeo(string $string)
+    public function convertVimeo(string $string): array|string|null
     {
         return preg_replace(
             "/\s*[a-zA-Z\/\/:\.]*viemo.com\/([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i",
@@ -827,6 +812,8 @@ class Cwmmedia
         return '<a href="index.php?option=com_content&amp;view=article&amp;id=' . $media->article_id . '"
 		target="' . $media->special . '">' . $image . '</a>';
     }
+    
+    
 
     /**
      * Set up Virtumart if Vertumart is installed.
@@ -1248,5 +1235,17 @@ class Cwmmedia
             'JBS_MED_VIMEO'     => 'fab fa-vimeo',
             'JBS_MED_CUSTOM'    => '1'
         ];
+    }
+
+    /**
+     * @param   string  $path
+     *
+     * @return string
+     *
+     * @since 10.0.0
+     */
+    public function convertYoutube(string $path): string
+    {
+        return (new CWMAddonYoutube())->convertYoutube($path);
     }
 }
