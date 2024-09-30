@@ -24,6 +24,8 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
+use RuntimeException;
+use ZipArchive;
 
 /**
  * JBS Export class
@@ -43,19 +45,19 @@ class Cwmbackup
      *
      * @since 9.0.0
      */
-    protected $dumpFile = '';
+    protected string $dumpFile = '';
 
     /** @var string Data cache, used to cache data before being written to disk
      *
      * @since 9.0.0
      */
-    protected $data_cache = '';
+    protected string $data_cache = '';
 
     /** @var string Relative path of how the file should be saved in the archive
      *
      * @since 9.0.0
      */
-    protected $saveAsName = '';
+    protected string $saveAsName = '';
 
     /**
      * Export DB//
@@ -87,7 +89,7 @@ class Cwmbackup
             case 1:
                 $this->dumpFile = $path;
 
-                if (!$this->writeline($this->data_cache)) {
+                if (!$this->writeln($this->data_cache)) {
                     return false;
                 }
 
@@ -95,44 +97,24 @@ class Cwmbackup
 
                 if (Factory::getApplication()->input->getInt('jbs_compress', 1)) {
                     $mime_type = 'application/zip';
-                    $files     = (array)$this->dumpFile;
-                    $path1     = $path . '.zip';
-                    $zip       = new \ZipArchive();
-                    $zip->open($path1, \ZipArchive::CREATE);
-
-                    foreach ($files as $file) {
-                        $zip->addFile($file, basename($file));
-                    }
-
-                    $zip->close();
-                    File::delete($path);
+                    $path = $this->compress();
                 }
 
-                $this->outputFile($path1, basename($path1), $mime_type);
+                $this->outputFile($path, basename($path), $mime_type);
 
                 break;
             case 2:
                 $this->dumpFile = JPATH_SITE . '/media/com_proclaim/backup/' . $this->saveAsName;
 
-                if (!$this->writeline($this->data_cache)) {
+                if (!$this->writeln($this->data_cache)) {
                     return false;
                 }
 
                 if (Factory::getApplication()->input->getInt('jbs_compress', 1)) {
-                    $files = (array)$this->dumpFile;
-                    $path1 = $this->dumpFile . '.zip';
-                    $zip   = new \ZipArchive();
-                    $zip->open($path1, \ZipArchive::CREATE);
-
-                    foreach ($files as $file) {
-                        $zip->addFile($file, basename($file));
-                    }
-
-                    $zip->close();
-                    File::delete($this->dumpFile);
+                    $path = $this->compress();
                 }
 
-                Factory::getApplication()->enqueueMessage('Backup File Stored at: ' . $path1, 'notice');
+                Factory::getApplication()->enqueueMessage('Backup File Stored at: ' . $path, 'notice');
 
                 break;
         }
@@ -141,6 +123,33 @@ class Cwmbackup
         $this->updatefiles(Cwmparams::getAdmin()->params);
 
         return true;
+    }
+
+    /**
+     * Function to compress a backup file.
+     *
+     * @return string Zip File Path
+     * @since 10.0.0
+     */
+    private function compress(): string
+    {
+        $files = (array)$this->dumpFile;
+        $path1 = $this->dumpFile . '.zip';
+        $zip   = new \ZipArchive();
+
+        //create the file and throw the error if unsuccessful
+        if ($zip->open($path1, ZipArchive::CREATE) !== true) {
+            throw new RuntimeException("cannot open <$path1>\n", 'error');
+        }
+
+        foreach ($files as $file) {
+            $zip->addFile($file, basename($file));
+        }
+
+        $zip->close();
+        File::delete($this->dumpFile);
+
+        return $path1;
     }
 
     /**
@@ -161,7 +170,9 @@ class Cwmbackup
         /**
          * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
          */
-        set_time_limit(3000);
+        if (\function_exists('set_time_limit')) {
+            set_time_limit(ini_get('max_execution_time'));
+        }
 
         $db = Factory::getContainer()->get('DatabaseDriver');
 
@@ -175,7 +186,7 @@ class Cwmbackup
         // Drop the existing table
         $export .= 'DROP TABLE IF EXISTS ' . $db->qn($table) . ";\n";
 
-        // Create a new table defintion based on the incoming database
+        // Create a new table definition based on the incoming database
         $query = 'SHOW CREATE TABLE ' . $db->qn($table);
         $db->setQuery($query);
         $table_def = $db->loadObject();
@@ -224,14 +235,14 @@ class Cwmbackup
     /**
      * Saves the string in $fileData to the file.
      *
-     * @param   string  &$fileData  Data to write. Set to null to close the file handle.
+     * @param   string  $fileData  Data to write. Set to null to close the file handle.
      *
      * @return bool TRUE if saving to the file succeeded
      *
      * @throws Exception
      * @since 9.0.0
      */
-    protected function writeline(&$fileData): bool
+    protected function writeln(string $fileData): bool
     {
         if (file_put_contents($this->dumpFile, $fileData, FILE_APPEND)) {
             return true;
@@ -244,35 +255,89 @@ class Cwmbackup
      * File output
      *
      * @param   string  $file       File Name
-     * @param   string  $name       Name output
+     * @param   string  $name       Name of File
      * @param   string  $mime_type  Meme_Type
      *
-     * @return void
+     * @return bool
      *
+     * @throws Exception
      * @since 9.0.0
      */
-    public function outputFile($file, $name, $mime_type = ''): void
+    public function outputFile(string $file, string $name, string $mime_type = ''): bool
     {
+        if (!is_readable($file)) {
+            throw new RuntimeException('File not found or inaccessible!');
+        }
+
         // Clears file status cache
         clearstatcache();
 
         // Turn off output buffering to decrease cpu usage
         @ob_end_clean();
 
+        // Verify MimeType or Extract the MimeType
+        $mime_type = $this->verifyMimeType($mime_type, $file);
+
         /**
          * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
          */
-        set_time_limit(3000);
-
-        // Required for IE, otherwise Content-Disposition may be ignored
-        if (ini_get('zlib.output_compression')) {
-            ini_set('zlib.output_compression', 'Off');
+        if (\function_exists('set_time_limit')) {
+            set_time_limit(ini_get('max_execution_time'));
         }
+        // Decode URL-encoded strings
+        $name = rawurldecode($name);
 
-        if (!is_readable($file)) {
-            die('File not found or inaccessible!');
+        header("Cache-Control: public, must-revalidate");
+        header('Cache-Control: pre-check=0, post-check=0, max-age=0');
+        header('Pragma: no-cache');
+        header("Expires: 0");
+        header('Content-Transfer-Encoding: none');
+        header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+        header("Accept-Ranges:  bytes");
+
+        // Set File Size Header
+        $this->fileSizeHeader($file);
+
+        header('Content-Type: ' . $mime_type);
+        header('Content-Disposition: attachment; filename="' . $name . '"');
+        header('Content-Transfer-Encoding: binary\n');
+
+        ob_end_flush();
+        $fp = fopen($file, 'rb');
+
+        ob_start();
+        $chunkSize = 1024 * 1024;
+
+        if ($fp !== false) {
+            while (!feof($fp)) {
+                $buffer = fread($fp, $chunkSize);
+                // Now will push to the browser the church of data using the buffer.
+                echo $buffer;
+                ob_flush();
+                flush();
+            }
+            fclose($fp);
+        } else {
+            @readfile($file);
+            ob_flush();
+            flush();
         }
+        return true;
+    }
 
+    /**
+     * Verify MimeType
+     *
+     * @param   string  $mime_type  MimeType (optional)
+     * @param   string  $file       File with a full path
+     *
+     * @return string Return correct MimeType (ex. application/zip)
+     *
+     * @since 10.0.0
+     * @todo may need to move this out into a helper file.
+     */
+    private function verifyMimeType(string $mime_type = '', string $file = ''): string
+    {
         /* Figure out the MIME type (if not specified) */
         $known_mime_types = array(
             "pdf"  => "application/pdf",
@@ -296,31 +361,25 @@ class Cwmbackup
             $file_extension = strtolower(substr(strrchr($file, "."), 1));
 
             if (array_key_exists($file_extension, $known_mime_types)) {
-                $mime_type = $known_mime_types[$file_extension];
-            } else {
-                $mime_type = "application/force-download";
+                return $known_mime_types[$file_extension];
             }
+
+            return "application/force-download";
         }
 
-        $name = rawurldecode($name);
+        return $mime_type;
+    }
 
-        // Test for protocol and set the appropriate headers
-        $_tmp_uri      = Uri::getInstance(Uri::current());
-        $_tmp_protocol = $_tmp_uri->getScheme();
-
-        if ($_tmp_protocol === "https") {
-            // SSL Support
-            header('Cache-Control:  private, max-age=0, must-revalidate, no-store');
-        } else {
-            header("Cache-Control: public, must-revalidate");
-            header('Cache-Control: pre-check=0, post-check=0, max-age=0');
-            header('Pragma: no-cache');
-            header("Expires: 0");
-        } /* end if protocol https */
-        header('Content-Transfer-Encoding: none');
-        header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
-        header("Accept-Ranges:  bytes");
-
+    /**
+     * Build File Size Header
+     *
+     * @param $file string File with full Path
+     *
+     * @since 10.0.0
+     */
+    private function fileSizeHeader(string $file): void
+    {
+        // Get File Size
         $size = filesize($file);
 
         // Modified by Rene
@@ -328,7 +387,7 @@ class Cwmbackup
         $newFileSize = $size - 1;
 
         // Default values! Will be overridden if a valid range header field was detected!
-        $resultLenght = (string)$size;
+        $resultLength = (string)$size;
         $resultRange  = "0-" . $newFileSize;
 
         // Workaround for int overflow
@@ -337,20 +396,21 @@ class Cwmbackup
         }
 
         /* We support requests for a single range only.
-                 * So we check if we have a range field. If yes ensure that it is a valid one.
-                 * If it is not valid we ignore it and sending the whole file.
+                 * So we check if we have a range field.
+                 * If yes, ensure that it is valid.
+                 * If it is not valid, we ignore it and send the whole file.
                  * */
         if (isset($_SERVER['HTTP_RANGE']) && preg_match('%^bytes=\d*\-\d*$%', $_SERVER['HTTP_RANGE'])) {
             // Let's take the right side
-            list($a, $httpRange) = explode('=', $_SERVER['HTTP_RANGE']);
+            [$a, $httpRange] = explode('=', $_SERVER['HTTP_RANGE']);
 
             // And get the two values (as strings!)
             $httpRange = explode('-', $httpRange);
 
-            // Check if we have values! If not we have nothing to do!
+            // Check if we have values! If not, we have nothing to do!
             if (!empty($httpRange[0]) || !empty($httpRange[1])) {
                 // We need the new content length ...
-                $resultLenght = $size - $httpRange[0] - $httpRange[1];
+                $resultLength = $size - $httpRange[0] - $httpRange[1];
 
                 // ... and we can add the 206 Status.
                 header("HTTP/1.1 206 Partial Content");
@@ -358,7 +418,7 @@ class Cwmbackup
                 // Now we need the content-range, so we have to build it depending on the given range!
                 // ex.: -500 -> the last 500 bytes
                 if (empty($httpRange[0])) {
-                    $resultRange = $resultLenght . '-' . $size;
+                    $resultRange = $resultLength . '-' . $size;
                 } elseif (empty($httpRange[1])) {
                     // Ex.: 500- -> from 500 bytes to file size
                     $resultRange = $httpRange[0] . '-' . $size;
@@ -369,28 +429,8 @@ class Cwmbackup
             }
         }
 
-        header('Content-Length: ' . $resultLenght);
+        header('Content-Length: ' . $resultLength);
         header('Content-Range: bytes ' . $resultRange . '/' . $size);
-
-        header('Content-Type: ' . $mime_type);
-        header('Content-Disposition: attachment; filename="' . $name . '"');
-        header('Content-Transfer-Encoding: binary\n');
-
-        // Try to deliver in chunks
-        @set_time_limit(0);
-        $fp = @fopen($file, 'rb');
-
-        if ($fp !== false) {
-            while (!feof($fp)) {
-                echo fread($fp, 8192);
-            }
-
-            fclose($fp);
-        } else {
-            @readfile($file);
-        }
-
-        flush();
     }
 
     /**
