@@ -158,11 +158,11 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @param   string  $url  YouTube url to transform.
      *
-     * @return array|string|null
+     * @return string
      *
      * @since 10.0.0
      */
-    public function convertYoutube(string $url = ''): array|string|null
+    public function convertYoutube(string $url = ''): string
     {
         $string = $url;
 
@@ -185,6 +185,6 @@ class CWMAddonYoutube extends CWMAddon
             }
         }
 
-        return $string;
+        return (string) $string;
     }
 }
