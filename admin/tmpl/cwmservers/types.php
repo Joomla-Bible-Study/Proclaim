@@ -113,7 +113,7 @@ if (!empty($editor)) {
                 foreach ($this->types as $i => $item) : ?>
                     <tr class="row<?php
                     echo $i % 2; ?>">
-                        <td class="nowrap small hidden-phone">
+                        <td class="nowrap small d-none d-md-table-cell">
                             <img class="pull-left" style="padding: 5px;" src="<?php
                             echo $item->image_url; ?>"
                                  alt="<?php
@@ -137,7 +137,7 @@ if (!empty($editor)) {
                                 echo $this->escape($item->title); ?>
                             </a>
                         </th>
-                        <td class="small hidden-phone">
+                        <td class="small d-none d-md-table-cell">
                             <?php
                             echo $this->escape($item->description); ?>
                         </td>

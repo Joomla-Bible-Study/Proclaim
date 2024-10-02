@@ -85,7 +85,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                     </div>
                 <?php
                 else : ?>
-                    <table class="table itemList" id="messagesList">
+                    <table class="table" id="messagesList">
                         <caption class="visually-hidden">
                             <?php
                             echo Text::_('JBS_STY_TABLE_CAPTION'); ?>,
@@ -96,7 +96,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                         </caption>
                         <thead>
                         <tr>
-                            <th class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center">
                                 <?php
                                 echo HTMLHelper::_('grid.checkall'); ?>
                             </th>
@@ -113,6 +113,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                     'JGRID_HEADING_ORDERING',
                                     'icon-menu-2'
                                 ); ?>
+                                blank
                             </th>
                             <th scope="col" class="w-1 text-center">
                                 <?php
@@ -144,7 +145,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                                                     $listOrder
                                                                 ); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                                                 echo HTMLHelper::_(
                                                                     'searchtools.sort',
@@ -154,7 +155,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                                                     $listOrder
                                                                 ); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                                                 echo HTMLHelper::_(
                                                                     'searchtools.sort',
@@ -164,7 +165,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                                                     $listOrder
                                                                 ); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                                                 echo HTMLHelper::_(
                                                                     'searchtools.sort',
@@ -260,7 +261,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                     <?php
                             endif; ?>
                                 </td>
-                                <td class="text-center d-none d-md-table-cell">
+                                <td class="text-center">
                                     <?php
                             $options = [
                                 'task_prefix' => 'cwmmessages.',

@@ -199,19 +199,19 @@ if (!empty($editor)) {
                             echo $this->escape($item->studytitle); ?>
 
                         </th>
-                        <td class="nowrap small hidden-phone">
+                        <td class="nowrap small d-none d-md-table-cell">
                             <?php
                             echo HTMLHelper::_('date', $item->studydate, Text::_('DATE_FORMAT_LC4')); ?>
                         </td>
-                        <td class="small hidden-phone">
+                        <td class="small d-none d-md-table-cell">
                             <?php
                             echo $this->escape($item->teachername); ?>
                         </td>
-                        <td class="small hidden-phone">
+                        <td class="small d-none d-md-table-cell">
                             <?php
                             echo $this->escape($item->messageType); ?>
                         </td>
-                        <td class="small hidden-phone">
+                        <td class="small d-none d-md-table-cell">
                             <?php
                             echo $this->escape($item->series_text); ?>
                         </td>

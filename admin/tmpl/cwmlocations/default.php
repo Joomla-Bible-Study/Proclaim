@@ -73,7 +73,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmlocations'); ?>" method="po
                 <table class="table table-striped adminlist" id="locationsList">
                     <thead>
                     <tr>
-                        <th width="1%" class="hidden-phone">
+                        <th width="1%" class="d-none d-md-table-cell">
                             <?php
                             echo HTMLHelper::_('grid.checkall'); ?>
                         </th>
@@ -97,7 +97,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmlocations'); ?>" method="po
                                 $listOrder
                             ); ?>
                         </th>
-                        <th width="10%" class="nowrap hidden-phone">
+                        <th width="10%" class="nowrap d-none d-md-table-cell">
                             <?php
                             echo HTMLHelper::_(
                                 'searchtools.sort',
@@ -107,7 +107,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmlocations'); ?>" method="po
                                 $listOrder
                             ); ?>
                         </th>
-                        <th width="1%" class="nowrap center hidden-phone">
+                        <th width="1%" class="nowrap center d-none d-md-table-cell">
                             <?php
                             echo HTMLHelper::_(
                                 'searchtools.sort',
@@ -139,7 +139,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmlocations'); ?>" method="po
                         <tr class="row<?php
                         echo $i % 2; ?>" data-draggable-group="<?php
                         echo '1' ?>">
-                            <td class="center hidden-phone">
+                            <td class="center d-none d-md-table-cell">
                                 <?php
                                 echo HTMLHelper::_('grid.id', $i, $item->id); ?>
                             </td>
@@ -178,11 +178,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmlocations'); ?>" method="po
                                     endif; ?>
                                 </div>
                             </td>
-                            <td class="small hidden-phone">
+                            <td class="small d-none d-md-table-cell">
                                 <?php
                                 echo $this->escape($item->access_level); ?>
                             </td>
-                            <td class="center hidden-phone">
+                            <td class="center d-none d-md-table-cell">
                                 <?php
                                 echo (int)$item->id; ?>
                             </td>

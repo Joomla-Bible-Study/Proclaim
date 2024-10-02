@@ -171,7 +171,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmpodcasts'); ?>" method="pos
                                         endif; ?>
                                     </div>
                                 </td>
-                                <td class="center nowrap hidden-phone">
+                                <td class="center nowrap d-none d-md-table-cell">
                                     <a href="<?php
                                     echo Route::_(Uri::root() . $this->escape($item->filename)); ?>"
                                        target="_blank">

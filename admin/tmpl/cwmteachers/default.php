@@ -200,7 +200,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
 									</span>
                                     </div>
                                 </td>
-                                <td class="small hidden-phone">
+                                <td class="small d-none d-md-table-cell">
                                     <?php
                                     echo $this->escape($item->access_level); ?>
                                 </td>

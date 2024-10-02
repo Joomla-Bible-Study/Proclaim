@@ -112,7 +112,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtopics'); ?>" method="post"
                             ?>
                             <tr class="row<?php
                             echo $i % 2; ?>">
-                                <td class="center hidden-phone">
+                                <td class="center d-none d-md-table-cell">
                                     <?php
                                     echo HTMLHelper::_('grid.id', $i, $item->id); ?>
                                 </td>

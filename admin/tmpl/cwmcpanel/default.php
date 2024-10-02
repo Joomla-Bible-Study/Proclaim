@@ -251,7 +251,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
         </div>
         <div class="clearfix" style="margin:10px;"></div>
         <!-- BEGIN: STATS -->
-        <div class="fbstatscover hidden-phone">
+        <div class="fbstatscover d-none d-md-block">
             <table class="fbstat table table-striped table-responsive">
 
                 <col class="col1">

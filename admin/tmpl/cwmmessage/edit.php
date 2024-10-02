@@ -76,8 +76,8 @@ $wa->useScript('keepalive')
 '
     );
 
-// In case of modal
-$isModal = $input->get('layout') === 'modal' ? true : false;
+// In the case of modal
+$isModal = $input->get('layout') === 'modal';
 $layout  = $isModal ? 'modal' : 'edit';
 $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=component' : '';
 ?>
@@ -91,19 +91,19 @@ echo Route::_(
     <?php
     echo LayoutHelper::render('edit.studytitle_alias', $this); ?>
     <div class="form-inline form-inline-header">
-        <div class="row-fluid" id="media">
+        <div class="table-responsive" id="media">
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th class="center"><?php
+                    <th  scope="col" class="center"><?php
                         echo Text::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>
-                    <th class="center"><?php
+                    <th  scope="col" class="center"><?php
                         echo Text::_('JSTATUS'); ?></th>
-                    <th class="center"><?php
+                    <th  scope="col" class="center"><?php
                         echo Text::_('JBS_CMN_MEDIA_CREATE_DATE'); ?></th>
-                    <th class="center hidden-phone">Language</th>
-                    <th class="center hidden-phone">Access</th>
-                    <th class="center hidden-phone">ID</th>
+                    <th  scope="col" class="text-center d-none d-md-table-cell">Language</th>
+                    <th  scope="col" class="text-center d-none d-md-table-cell">Access</th>
+                    <th  scope="col" class="text-center d-none d-md-table-cell">ID</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -121,13 +121,13 @@ echo Route::_(
                                 <a class="btn btn-primary" href="<?php
                                 echo $link; ?>"
                                    title="<?php
-                                    echo $this->escape($item->params->get('filename'))
-                                       ? $this->escape($item->params->get('filename'))
-                                       : $this->escape($item->params->get('media_image_name')); ?>">
+                                    echo $this->escape($item->params->get('filename')) ?: $this->escape(
+                                        $item->params->get('media_image_name')
+                                          ); ?>">
                                     <?php
-                                    echo($this->escape($item->params->get('filename'))
-                                        ? $this->escape($item->params->get('filename'))
-                                        : $this->escape($item->params->get('media_image_name'))); ?>
+                                    echo($this->escape($item->params->get('filename')) ?: $this->escape(
+                                        $item->params->get('media_image_name')
+                                    )); ?>
                                 </a>
                             </td>
                             <td class="center">
@@ -147,15 +147,15 @@ echo Route::_(
                                 <?php
                                 echo HTMLHelper::_('date', $item->createdate, Text::_('DATE_FORMAT_LC4')); ?>
                             </td>
-                            <td class="center hidden-phone">
+                            <td class="text-center d-none d-md-table-cell">
                                 <?php
                                 echo $item->language; ?>
                             </td>
-                            <td class="center hidden-phone">
+                            <td class="text-center d-none d-md-table-cell">
                                 <?php
                                 echo $item->access_level; ?>
                             </td>
-                            <td class="center hidden-phone">
+                            <td class="text-center d-none d-md-table-cell">
                                 <?php
                                 echo $item->id; ?>
                             </td>

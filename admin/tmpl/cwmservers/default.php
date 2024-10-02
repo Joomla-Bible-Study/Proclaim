@@ -156,7 +156,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                             ?>
                             <tr class="row<?php
                             echo $i % 2; ?>">
-                                <td class="center hidden-phone">
+                                <td class="center d-none d-md-table-cell">
                                     <?php
                                     echo HTMLHelper::_('grid.id', $i, $item->id); ?>
                                 </td>
@@ -197,7 +197,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                                         endif; ?>
                                     </div>
                                 </td>
-                                <td class="center hidden-phone">
+                                <td class="center d-none d-md-table-cell">
                                     <?php
                                     echo (int)$item->id; ?>
                                 </td>
