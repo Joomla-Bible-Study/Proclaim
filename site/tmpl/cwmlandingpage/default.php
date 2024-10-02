@@ -33,7 +33,7 @@ $params     = $this->params;
             }
 
             if ($this->params->get('landing_show_page_title') > 0) {
-                //echo $this->params->get('landing_page_title');
+                echo $this->params->get('landing_page_title');
             }
             ?>
         </h1>

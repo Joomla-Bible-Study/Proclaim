@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use Exception;
+use http\Exception\RuntimeException;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
@@ -45,7 +46,12 @@ class Cwmlanding
      */
     public function getLocationsLandingPage(Registry $params, int $id = 0): string
     {
-        $mainframe = Factory::getApplication();
+        try {
+            $mainframe = Factory::getApplication();
+        } catch (Exception $e) {
+            throw new RuntimeException('Unable to load Application' . $e->getMessage());
+        }
+
         $user      = $mainframe->getIdentity();
         $db        = Factory::getContainer()->get('DatabaseDriver');
         $location  = null;
@@ -125,7 +131,7 @@ class Cwmlanding
                             $showdiv = 1;
                         }
 
-                        $location .= '<div class="col-4 style="display: inline-block; margin-right:7px"">';
+                        $location .= '<div class="col" style="margin-right:7px"">';
                         $location .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_location=' . $b->id . '&amp;sendingview=cwmlanding' .
                             '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
                             . $template . '">';
@@ -139,6 +145,7 @@ class Cwmlanding
 
                         if ($i === 3 && $t !== $limit && $t !== $count) {
                             $i = 0;
+                            $location .= '<div class="w-100"></div>';
                         } elseif ($i === 3 || $t === $count || $t === $limit) {
                             $i = 0;
                         }
@@ -203,12 +210,16 @@ class Cwmlanding
      *
      * @return string
      *
-     * @throws   Exception
      * @since    8.0.0
      */
     public function getTeacherLandingPage(Registry $params, int $id = 0): string
     {
-        $mainframe = Factory::getApplication();
+        try {
+            $mainframe   = Factory::getApplication();
+        } catch (Exception $e) {
+            throw new RuntimeException('Unable to load Application' . $e->getMessage());
+        }
+
         $db        = Factory::getContainer()->get('DatabaseDriver');
         $user      = $mainframe->getIdentity();
         $langlink  = Multilanguage::isEnabled();
@@ -283,7 +294,7 @@ class Cwmlanding
                             $showdiv = 1;
                         }
 
-                        $teacher .= '<div class="col-4" style="display: inline-block; margin-right:7px">';
+                        $teacher .= '<div class="col" style="margin-right:7px">';
                         if ((int) $params->get('linkto') === 0) {
                             $teacher .= '<a href="' . Route::_(
                                 'index.php?option=com_proclaim&amp;view=Cwmsermons&amp;t=' . $template
@@ -305,6 +316,7 @@ class Cwmlanding
 
                         if ($i === 3 && $t !== $limit && $t !== $count) {
                             $i = 0;
+                            $teacher .= '<div class="w-100"></div>';
                         } elseif ($i === 3 || $t === $count || $t === $limit) {
                             $i = 0;
                         }
@@ -321,7 +333,7 @@ class Cwmlanding
                     foreach ($tresult as $b) {
                         if ($b->landing_show === 1) {
                             if ((int) $params->get('linkto') === 0) {
-                                $teacher .= '<div class="col-4" style="display: inline-block; margin-right:7px"> <a '
+                                $teacher .= '<div class="col-4" style="margin-right:7px"> <a '
                                     . Route::_('index.php?option=com_proclaim&amp;view=Cwmsermons&amp;t=' . $template)
                                     . '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
                                     . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
@@ -379,12 +391,16 @@ class Cwmlanding
      *
      * @return string
      *
-     * @throws   Exception
      * @since    8.0.0
      */
     public function getSeriesLandingPage(Registry $params, int $id = 0): string
     {
-        $mainframe = Factory::getApplication();
+        try {
+            $mainframe   = Factory::getApplication();
+        } catch (Exception $e) {
+            throw new RuntimeException('Unable to load Application' . $e->getMessage());
+        }
+
         $user      = $mainframe->getIdentity();
         $db        = Factory::getContainer()->get('DatabaseDriver');
         $order     = 'ASC';
@@ -463,13 +479,13 @@ class Cwmlanding
                         }
 
                         if ((int) $params->get('series_linkto') === 0) {
-                            $series .= '<div class="col-4" style="display: inline-block; margin-right:7px">';
+                            $series .= '<div class="col" style="margin-right:7px">';
                             $series .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_series=' . $b->id
                                 . '&amp;sendingview=landing&amp;filter_book=0&amp;filter_teacher=0'
                                 . '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
                                 . $template . '">';
                         } else {
-                            $series .= '<div class="col-4" style="display: inline-block; margin-right:7px">';
+                            $series .= '<div class="col" style="margin-right:7px">';
                             $series .= '<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=cwmseriesdisplay&amp;id=' .
                                 $b->id . '&amp;t=' . $template . '">';
                         }
@@ -484,6 +500,7 @@ class Cwmlanding
 
                         if ($i === 3 && $t !== $limit && $t !== $count) {
                             $i = 0;
+                            $series .= '<div class="w-100"></div>';
                         } elseif ($i === 3 || $t === $count || $t === $limit) {
                             $i = 0;
                         }
@@ -567,12 +584,16 @@ class Cwmlanding
      *
      * @return string
      *
-     * @throws   Exception
      * @since    8.0.0
      */
     public function getYearsLandingPage(Registry $params, int $id = 0): string
     {
-        $mainframe = Factory::getApplication();
+        try {
+            $mainframe   = Factory::getApplication();
+        } catch (Exception $e) {
+            throw new RuntimeException('Unable to load Application' . $e->getMessage());
+        }
+
         $db        = Factory::getContainer()->get('DatabaseDriver');
         $user      = $mainframe->getIdentity();
         $order     = 'ASC';
@@ -638,7 +659,7 @@ class Cwmlanding
                     $showdiv = 1;
                 }
 
-                $year .= '<div class="col-2" style="display: inline-block; margin-right:7px">';
+                $year .= '<div class="col" style="margin-right:7px">';
                 $year .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_year='
                     . $b->theYear . '&amp;sendingview=cwmlanding&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;'
                     . 'filter_book=0&amp;filter_messagetype=0&amp;t='
@@ -653,6 +674,7 @@ class Cwmlanding
 
                 if ($i === 3 && $t !== $limit && $t !== $count) {
                     $i = 0;
+                    $year .= '<div class="w-100"></div>';
                 } elseif ($i === 3 || $t === $count || $t === $limit) {
                     $i = 0;
                 }
@@ -679,12 +701,16 @@ class Cwmlanding
      *
      * @return string
      *
-     * @throws   Exception
      * @since    8.0.0
      */
     public function getTopicsLandingPage(Registry $params, int $id = 0): string
     {
-        $app       = Factory::getApplication();
+        try {
+            $app   = Factory::getApplication();
+        } catch (Exception $e) {
+            throw new RuntimeException('Unable to load Application' . $e->getMessage());
+        }
+
         $user      = $app->getSession()->get('user');
         $db        = Factory::getContainer()->get('DatabaseDriver');
         $order     = 'ASC';
@@ -755,7 +781,7 @@ class Cwmlanding
                     $showdiv = 1;
                 }
 
-                $topic .= '<div class="col-2" style="display: inline-block; margin-right:7px">';
+                $topic .= '<div class="col" style="margin-right:7px">';
                 $topic .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_topic=' .
                     $b->id . '&amp;sendingview=cwmlanding&amp;filter_teacher=0'
                     . '&amp;filter_series=0&amp;filter_location=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
@@ -768,6 +794,7 @@ class Cwmlanding
 
                 if ($i === 3 && $t !== $limit && $t !== $count) {
                     $i = 0;
+                    $topic .= '<div class="w-100"></div>';
                 } elseif ($i === 3 || $t === $count || $t === $limit) {
                     $i = 0;
                 }
@@ -794,12 +821,16 @@ class Cwmlanding
      *
      * @return string
      *
-     * @throws   Exception
      * @since    8.0.0
      */
     public function getMessageTypesLandingPage(Registry $params, int $id = 0): string
     {
-        $mainframe   = Factory::getApplication();
+        try {
+            $mainframe   = Factory::getApplication();
+        } catch (Exception $e) {
+            throw new RuntimeException('Unable to load Application' . $e->getMessage());
+        }
+
         $db          = Factory::getContainer()->get('DatabaseDriver');
         $user        = $mainframe->getIdentity();
         $messagetype = null;
@@ -877,7 +908,7 @@ class Cwmlanding
                             $showdiv = 1;
                         }
 
-                        $messagetype .= '<div class="col-2 style="display: inline-block; margin-right:7px">';
+                        $messagetype .= '<div class="col" style="margin-right:7px">';
                         $messagetype .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_messagetype=' .
                             $b->id . '&amp;sendingview=cwmlanding&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0' .
                             '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t=' . $template . '">';
@@ -892,6 +923,7 @@ class Cwmlanding
 
                         if ($i === 3 && $t !== $limit && $t !== $count) {
                             $i = 0;
+                            $messagetype .= '<div class="w-100"></div>';
                         } elseif ($i === 3 || $t === $count || $t === $limit) {
                             $i = 0;
                         }
@@ -956,13 +988,16 @@ class Cwmlanding
      * @param   int       $id      ID
      *
      * @return string
-     *
-     * @throws   Exception
      * @since    8.0.0
      */
     public function getBooksLandingPage(Registry $params, int $id = 0): string
     {
-        $app      = Factory::getApplication();
+        try {
+            $app      = Factory::getApplication();
+        } catch (Exception $e) {
+            throw new RuntimeException('Unable to load Application' . $e->getMessage());
+        }
+
         $user     = $app->getSession()->get('user');
         $db       = Factory::getContainer()->get('DatabaseDriver');
         $order    = 'ASC';
@@ -989,7 +1024,7 @@ class Cwmlanding
 
         if ($language === '*' || !$language) {
             $langlink = '';
-        } elseif ($language !== '*' && isset($item->language)) {
+        } elseif (isset($item->language)) {
             $langlink = '&amp;filter.languages=' . $item->language;
         }
 
@@ -1040,7 +1075,7 @@ class Cwmlanding
                     $showdiv = 1;
                 }
 
-                $book .= '<div class="col-2" style="display: inline-block; margin-right:7px">';
+                $book .= '<div class="col" style="margin-right:7px">';
                 $book .= '<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=Cwmsermons&amp;filter_book=' . $b->booknumber
                     . '&amp;sendingview=cwmlanding&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0' .
                     '&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
@@ -1054,6 +1089,7 @@ class Cwmlanding
 
                 if ($i === 3 && $t !== $limit && $t !== $count) {
                     $i = 0;
+                    $book .= '<div class="w-100"></div>';
                 } elseif ($i === 3 || $t === $count || $t === $limit) {
                     $i = 0;
                 }
