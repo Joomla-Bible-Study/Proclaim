@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Site\Controller;
 
+use Exception;
 use Joomla\CMS\MVC\Controller\BaseController;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -36,15 +37,15 @@ class CwmseriesdisplayController extends BaseController
     /**
      * Typical view method for MVC based architecture
      *
-     * This function is provide as a default implementation, in most cases
+     * This function is provided as a default implementation, in most cases
      * you will need to override it in your own controllers.
      *
-     * @param   boolean  $cachable   If true, the view output will be cached
-     * @param   array    $urlparams  An array of safe url parameters and their variable types, for valid values see {@link InputFilter::clean()}.
+     * @param   bool   $cachable   If true, the view output will be cached
+     * @param   array  $urlparams  An array of safe url parameters and their variable types, for valid values see {@link InputFilter::clean()}.
      *
-     * @return  static  A \JControllerLegacy object to support chaining.
+     * @return  static  A \CwmseriesdisplayController object to support chaining.
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   3.0
      */
     public function display($cachable = false, $urlparams = array()): CwmseriesdisplayController

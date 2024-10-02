@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
+use Exception;
 use JHtmlJwplayer;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -83,7 +84,7 @@ class Cwmmedia
      *
      * @return string|null
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.0.0
      */
     public function getFluidMedia(object $media, Registry $params, $template): ?string
@@ -165,7 +166,7 @@ class Cwmmedia
                 Cwmhelper::setFileSize($media->id, $file_size);
             }
 
-            $file_size = $this->convertFileSize((int)$file_size, $params, $media);
+            $file_size = $this->convertFileSize($file_size, $params, $media);
 
             $filesize = '<span class="JBSMFilesize" style="font-size: 0.6em;display:inline;padding-left: 5px;">' .
                 $file_size . '</span>';
@@ -197,7 +198,7 @@ class Cwmmedia
     }
 
     /**
-     * Used to obtain the button and/or icon for the image
+     * Used to get the button and/or icon for the image
      *
      * @param   Registry  $imageparams  ?
      * @param   Registry  $params       ?
@@ -308,7 +309,7 @@ class Cwmmedia
 
         try {
             $return = Image::getImageFileProperties($path);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $alt;
         }
 
@@ -428,7 +429,7 @@ class Cwmmedia
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.0.0
      */
     public function getPlayerCode(Registry $params, object $player, string $image, object $media): string
@@ -568,29 +569,29 @@ class Cwmmedia
 
         return false;
     }
-
+    
     /**
      * return $table
      *
      * @param   Object    $media   Media info
      * @param   Registry  $params  Params
      *
-     * @return null|string
+     * @return string file size with format
      *
      * @since 9.0.0
      */
-    public function getFluidFilesize(object $media, Registry $params)
+    public function getFluidFilesize(object $media, Registry $params): string
     {
         $filesize = 0;
 
         // Check to see if we need to look up file size or not. By looking at if download like is set.
         if ($media->params->get('link_type') === '0') {
-            $this->fsize = (int)$filesize;
+            $this->fsize = $filesize;
 
             return $this->fsize;
         }
 
-        $file_size = (int)$media->params->get('size', '0');
+        $file_size = (int) $media->params->get('size', '0');
 
         if ($file_size === 0) {
             $file_size = Cwmhelper::getRemoteFileSize(
@@ -605,10 +606,10 @@ class Cwmmedia
         }
 
         if ($file_size !== 0) {
-            $file_size = $this->convertFileSize((int)$file_size, $params, $media);
+            $file_size = $this->convertFileSize($file_size, $params, $media);
         }
 
-        return $file_size;
+        return (string) $file_size;
     }
 
     /**
@@ -730,13 +731,13 @@ class Cwmmedia
      *
      * @param   string  $string  Vimeo url to transform.
      *
-     * @return array|string|null
+     * @return string
      *
      * @since 9.1.3
      */
-    public function convertVimeo(string $string): array|string|null
+    public function convertVimeo(string $string): string
     {
-        return preg_replace(
+        return (string) preg_replace(
             "/\s*[a-zA-Z\/\/:\.]*viemo.com\/([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i",
             "//player.vimeo.com/video/$2",
             $string
@@ -787,7 +788,7 @@ class Cwmmedia
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.0.0
      */
     public function getDocman(object $media, string $image): string
@@ -812,8 +813,6 @@ class Cwmmedia
         return '<a href="index.php?option=com_content&amp;view=article&amp;id=' . $media->article_id . '"
 		target="' . $media->special . '">' . $image . '</a>';
     }
-    
-    
 
     /**
      * Set up Virtumart if Vertumart is installed.
@@ -842,7 +841,7 @@ class Cwmmedia
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.0.0
      */
     public function getFluidDownloadLink(object $media, Registry $params, $template): string
@@ -952,7 +951,7 @@ class Cwmmedia
     }
 
     /**
-     * Used to obtain the button and/or icon for the image
+     * Used to get the button and/or icon for the image
      *
      * @param   Registry  $download  ?
      *
@@ -1009,26 +1008,11 @@ class Cwmmedia
     }
 
     /**
-     * Get duration
-     *
-     * @param   Object    $row     Table Row info
-     * @param   Registry  $params  Params
-     *
-     * @return void
-     *
-     * @since     9.0.0
-     * @deprecate 9.2.7
-     */
-    public function getFluidDuration(object $row, Registry $params): void
-    {
-    }
-
-    /**
      * Update Hit count for plays.
      *
      * @param   int  $id  ID to apply the hit to.
      *
-     * @return boolean
+     * @return bool
      *
      * @since 9.0.0
      */
@@ -1053,11 +1037,11 @@ class Cwmmedia
      *
      * @param   int  $id  ID of Row
      *
-     * @return object|boolean
+     * @return object|bool
      *
      * @since 9.0.0
      */
-    public function getMediaRows2(int $id)
+    public function getMediaRows2(int $id): object|bool
     {
         // We use this for the popup view because it relies on the media file's id rather than the study_id field above
         $db    = Factory::getContainer()->get('DatabaseDriver');
@@ -1207,7 +1191,7 @@ class Cwmmedia
             // WordPerfect formats
             'wp|wpd'                       => 'application/wordperfect',
 
-            // IWork formats
+            // Apple formats
             'key'                          => 'application/vnd.apple.keynote',
             'numbers'                      => 'application/vnd.apple.numbers',
             'pages'                        => 'application/vnd.apple.pages',

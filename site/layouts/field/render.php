@@ -25,7 +25,7 @@ $class      = $field->params->get('render_class');
 $showLabel  = $field->params->get('showlabel');
 $labelClass = $field->params->get('label_render_class');
 
-if ($field->context == 'com_contact.mail') {
+if ($field->context === 'com_contact.mail') {
     // Prepare the value for the contact form mail
     $value = html_entity_decode($value);
 

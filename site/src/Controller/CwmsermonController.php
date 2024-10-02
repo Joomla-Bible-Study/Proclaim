@@ -21,6 +21,7 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
+use PHPMailer\PHPMailer\Exception;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -146,10 +147,9 @@ class CwmsermonController extends FormController
     /**
      * Comment
      *
-     * @return void|null
+     * @return void
      *
-     * @throws \PHPMailer\PHPMailer\Exception
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     public function comment(): void
@@ -227,8 +227,7 @@ class CwmsermonController extends FormController
      *
      * @return void
      *
-     * @throws \PHPMailer\PHPMailer\Exception
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     public function commentsEmail($params): void
@@ -282,7 +281,7 @@ class CwmsermonController extends FormController
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception|\Exception
      * @since 7.0
      */
     public function download(): void
@@ -302,11 +301,11 @@ class CwmsermonController extends FormController
      *
      * @param   array  $data  An array of input data.
      *
-     * @return    boolean
+     * @return    bool
      *
      * @since    1.6
      */
-    protected function allowAdd($data = array())
+    protected function allowAdd($data = array()): bool
     {
         $allow = null;
 
@@ -324,11 +323,11 @@ class CwmsermonController extends FormController
      * @param   array   $data  An array of input data.
      * @param   string  $key   The name of the key for the primary key.
      *
-     * @return  boolean
+     * @return  bool
      *
      * @since    1.6
      */
-    protected function allowEdit($data = array(), $key = 'id')
+    protected function allowEdit($data = array(), $key = 'id'): bool
     {
         return true;
     }
@@ -344,7 +343,7 @@ class CwmsermonController extends FormController
      * @throws \Exception
      * @since    1.6
      */
-    protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id')
+    protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id'): string
     {
         $this->input = Factory::getApplication()->input;
 
@@ -362,14 +361,7 @@ class CwmsermonController extends FormController
         if ($recordId) {
             $append .= '&' . $urlVar . '=' . $recordId;
         }
-
-        //      $itemId = $this->input->getInt('Itemid');
         $return = $this->getReturnPage();
-
-        //      if ($itemId)
-        //      {
-        //          $append .= '&Itemid=' . $itemId;
-        //      }
 
         if ($return) {
             $append .= '&return=' . base64_encode($return);

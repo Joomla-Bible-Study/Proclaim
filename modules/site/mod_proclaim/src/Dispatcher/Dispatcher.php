@@ -12,6 +12,7 @@ namespace CWM\Module\Proclaim\Site\Dispatcher;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
+use Exception;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
 use Joomla\CMS\Helper\HelperFactoryAwareInterface;
 use Joomla\CMS\Helper\HelperFactoryAwareTrait;
@@ -44,7 +45,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
      *
      * @return  array
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   4.2.0
      */
     protected function getLayoutData(): array
@@ -57,7 +58,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
 
         try {
             $data['cwmtemplate'] = Cwmparams::getTemplateparams($templatemenuid);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->app->enqueueMessage($e, 'error');
         }
 
@@ -81,7 +82,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             foreach ($data['list'] as $item) {
                 try {
                     $pelements = $pagebuilder->buildPage($item, $data['params'], $data['cwmtemplate']);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $this->app->enqueueMessage($e, 'error');
                 }
 

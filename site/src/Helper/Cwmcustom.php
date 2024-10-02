@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
+use Exception;
 use Joomla\Registry\Registry;
 
 /**
@@ -39,7 +40,7 @@ class Cwmcustom
      *
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      * @since    8.0.0
      */
     public function getCustom($rowid, $custom, $row, $params, $template)

@@ -61,7 +61,8 @@
     "ext-zlib": "*",
     "ext-curl": "*",
     "ext-gd": "*",
-    "composer/ca-bundle": "^1.3.7"
+    "composer/ca-bundle": "^1.3.7",
+    "ext-http": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.6.11",

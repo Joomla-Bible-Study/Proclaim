@@ -16,6 +16,8 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Exception;
+use http\Exception\RuntimeException;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -44,7 +46,6 @@ class Cwmtranslated
      *
      * @return  array  list of topicItems containing translated strings in topic_text
      *
-     * @throws \Exception
      * @since    7.0.0
      */
     public static function getTopicItemsTranslated(array $topicItems = array()): array
@@ -61,17 +62,22 @@ class Cwmtranslated
     }
 
     /**
-     * Translate a topicItem to clear text
+     * Translate a topicItem to a clear text
      *
      * @param   object  $topicItem  stdClass containing topic_text and topic_params
      *
-     * @return string|NULL  translated string or null if topicItem is not initialised
+     * @return string|NULL  translated string or null if topicItem is not initialized
      *
-     * @throws \Exception
      * @since    7.0.0
      */
     public static function getTopicItemTranslated(object $topicItem): ?string
     {
+        try {
+            $app   = Factory::getApplication();
+        } catch (Exception $e) {
+            throw new RuntimeException('Unable to load Application' . $e->getMessage());
+        }
+
         // If there is no topic to translate, just return
         if ($topicItem) {
             // First choice: evaluate language strings
@@ -83,7 +89,7 @@ class Cwmtranslated
             }
 
             $itemparams->loadString($topicItem->topic_params);
-            $currentLanguage = Factory::getApplication()->getLanguage()->getTag();
+            $currentLanguage = $app->getLanguage()->getTag();
 
             // First choice: string in current language
             if ($currentLanguage) {
@@ -102,10 +108,8 @@ class Cwmtranslated
                 // Third choice: string in default language selected for site
                 $defaultLanguage = ComponentHelper::getParams('com_languages')->get('site');
 
-                if ($defaultLanguage) {
-                    if ($itemparams->get($defaultLanguage)) {
-                        return ($itemparams->get($defaultLanguage));
-                    }
+                if ($defaultLanguage && $itemparams->get($defaultLanguage)) {
+                    return ($itemparams->get($defaultLanguage));
                 }
             }
 
@@ -121,9 +125,8 @@ class Cwmtranslated
      *
      * @param   object  $topicItem  stdClass containing the studies id and tp_id (i.e. concatenated topic ids)
      *
-     * @return string:null  translated string with format '<text>[, <text>[, <text>]]' or null if topicItem is not initialised
+     * @return string|null :null  translated string with format '<text>[, <text>[, <text>]]' or null if topicItem is not initialised
      *
-     * @throws \Exception
      * @since    7.0.0
      */
     public static function getConcatTopicItemTranslated(object $topicItem): ?string

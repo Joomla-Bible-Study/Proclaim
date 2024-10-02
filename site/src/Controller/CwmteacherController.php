@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Site\Controller;
 
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 
@@ -31,7 +32,7 @@ class CwmteacherController extends BaseController
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     public function view(): void

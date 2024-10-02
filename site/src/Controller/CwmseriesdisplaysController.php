@@ -33,7 +33,7 @@ class CwmseriesdisplaysController extends BaseController
      * @param   string  $prefix  The prefix for the PHP class name
      * @param   array   $config  Set ignore request
      *
-     * @return BaseDatabaseModel|boolean
+     * @return BaseDatabaseModel|bool
      *
      * @since 7.0
      */

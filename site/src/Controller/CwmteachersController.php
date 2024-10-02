@@ -34,7 +34,7 @@ class CwmteachersController extends BaseController
      * @param   string  $prefix  The prefix for the PHP class name
      * @param   array   $config  Set ignore request
      *
-     * @return boolean|BaseDatabaseModel|CurrentUserInterface $model
+     * @return bool|BaseDatabaseModel|CurrentUserInterface $model
      *
      * @since 7.0
      */

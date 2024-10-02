@@ -14,8 +14,10 @@ namespace CWM\Component\Proclaim\Site\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Exception;
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Input\Input;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 
@@ -32,9 +34,9 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
      *                                                  'view_path' (this list is not meant to be comprehensive).
      * @param   MVCFactoryInterface|null      $factory  The factory.
      * @param   CMSApplication|null           $app      The Application for the dispatcher
-     * @param   \Joomla\CMS\Input\Input|null  $input    The Input object for the request
+     * @param   Input|null  $input    The Input object for the request
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   3.0
      */
     public function __construct($config = array(), MVCFactoryInterface $factory = null, $app = null, $input = null)
@@ -54,12 +56,12 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
     /**
      * Method to display a view.
      *
-     * @param   boolean  $cachable   If true, the view output will be cached
-     * @param   array    $urlparams  An array of safe URL parameters and their variable types, for valid values see {@link \JFilterInput::clean()}.
+     * @param   bool   $cachable   If true, the view output will be cached
+     * @param   array  $urlparams  An array of safe URL parameters and their variable types, for valid values see {@link \JFilterInput::clean()}.
      *
      * @return  static  This object to support chaining.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   1.5
      */
     public function display($cachable = true, $urlparams = array()): DisplayController
@@ -106,7 +108,7 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
             'Itemid'           => 'INT'
         );
 
-        // Check for edit form.
+        // Check for an edit form.
         if ($vName === 'form' && !$this->checkEditId('com_proclaim.edit.message', $id)) {
             // Somehow the person just went to the form - we don't allow that.
             throw new \RuntimeException(Text::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 403);

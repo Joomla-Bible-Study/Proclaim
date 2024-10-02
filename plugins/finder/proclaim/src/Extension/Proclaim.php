@@ -18,6 +18,7 @@ namespace CWM\Plugin\Finder\Proclaim\Extension;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Helper\Cwmhelperroute;
+use Exception;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Table\Table;
 use Joomla\Component\Finder\Administrator\Indexer\Adapter;
@@ -83,7 +84,7 @@ final class Proclaim extends Adapter
     /**
      * Load the language file on instantiation.
      *
-     * @var    boolean
+     * @var    bool
      * @since  3.1
      */
     protected $autoloadLanguage = true;
@@ -96,7 +97,7 @@ final class Proclaim extends Adapter
      *
      * @return  void
      *
-     * @throws  \Exception on database error.
+     * @throws  Exception on database error.
      * @since   2.5
      */
     public function onFinderAfterDelete($context, $table): void
@@ -116,13 +117,13 @@ final class Proclaim extends Adapter
     /**
      * Method to determine if the access level of an item changed.
      *
-     * @param   string   $context  The context of the content passed to the plugin.
-     * @param   Table    $row      A JTable object
-     * @param   boolean  $isNew    If the content has just been created
+     * @param   string  $context  The context of the content passed to the plugin.
+     * @param   Table   $row      A JTable object
+     * @param   bool    $isNew    If the content has just been created
      *
      * @return  void
      *
-     * @throws  \Exception on database error.
+     * @throws  Exception on database error.
      * @since   7.1.0
      */
     public function onFinderAfterSave($context, $row, $isNew): void
@@ -144,13 +145,13 @@ final class Proclaim extends Adapter
      * This event is fired before the data is actually saved so we are going
      * to queue the item to be indexed later.
      *
-     * @param   string   $context  The context of the content passed to the plugin.
-     * @param   Table    $row      A JTable object
-     * @param   boolean  $isNew    If the content is just about to be created
+     * @param   string  $context  The context of the content passed to the plugin.
+     * @param   Table   $row      A JTable object
+     * @param   bool    $isNew    If the content is just about to be created
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
-     * @throws  \Exception on database error.
+     * @throws  Exception on database error.
      * @since   7.1.0
      */
     public function onFinderBeforeSave($context, $row, $isNew): bool
@@ -203,6 +204,7 @@ final class Proclaim extends Adapter
      *
      * @return  void
      *
+     * @throws Exception
      * @since   2.5
      */
     public function onFinderSeriesChangeState($extension, $pks, $value)
@@ -214,14 +216,14 @@ final class Proclaim extends Adapter
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      * @since 10.0.0
      */
-    private function seriesStateChange(array $pks, int $value)
+    private function seriesStateChange(array $pks, int $value): void
     {
         /*
          * The item's published state is tied to the category
-         * published state so we need to look up all published states
+         * published state, so we need to look up all published states
          * before we change anything.
          */
         foreach ($pks as $pk) {
@@ -250,7 +252,7 @@ final class Proclaim extends Adapter
      *
      * @return  void
      *
-     * @throws  \Exception on database error.
+     * @throws  Exception on database error.
      * @since   7.1.0
      */
     protected function index(Result $item): void
@@ -324,9 +326,9 @@ final class Proclaim extends Adapter
     }
 
     /**
-     * Method to setup the indexer to be run.
+     * Method to set up the indexer to be run.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @since   2.5
      */
