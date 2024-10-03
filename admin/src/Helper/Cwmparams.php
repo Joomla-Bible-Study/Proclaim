@@ -50,7 +50,7 @@ class Cwmparams
      */
     public static object $templateTable;
 
-    /** @var integer Default template id and used to check if changed form from last query
+    /** @var int Default template id and used to check if changed form from last query
      *
      * @since 1.5
      */
@@ -61,13 +61,16 @@ class Cwmparams
      *
      * @return object Return Admin table
      *
-     * @throws \Exception
      * @since 7.0
      */
     public static function getAdmin(): object
     {
         if (!isset(self::$admin)) {
-            $app   = Factory::getApplication();
+            try {
+                $app   = Factory::getApplication();
+            } catch (\Exception $e) {
+                return self::$admin;
+            }
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
             $query->select('*')
