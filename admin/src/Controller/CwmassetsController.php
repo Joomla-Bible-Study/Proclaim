@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Model\CwmassetsModel;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
@@ -55,7 +56,7 @@ class CwmassetsController extends BaseController
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 1.5
      */
     public function execute($task): void
@@ -72,7 +73,7 @@ class CwmassetsController extends BaseController
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 8.0.0
      */
     public function checkassets(): void
@@ -95,7 +96,7 @@ class CwmassetsController extends BaseController
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 8.0.0
      */
     public function browse(): void
@@ -108,8 +109,7 @@ class CwmassetsController extends BaseController
         $stack   = $session->get('asset_stack', '', 'CWM');
 
         if (empty($stack) || !is_array($stack)) {
-            Cwmhelper::clearcache('site');
-            Cwmhelper::clearcache('administrator');
+            Cwmhelper::clearCache();
             $session->set('asset_stack', '', 'CWM');
 
             $model = new CwmassetsModel();
@@ -128,7 +128,7 @@ class CwmassetsController extends BaseController
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 8.0.0
      */
     public function run(): void
@@ -150,7 +150,7 @@ class CwmassetsController extends BaseController
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.0.2
      */
     public function clear(): void
@@ -158,8 +158,7 @@ class CwmassetsController extends BaseController
         // Check for request forgeries.
         (Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
 
-        Cwmhelper::clearcache('administrator');
-        Cwmhelper::clearcache('site');
+        Cwmhelper::clearCache();
         $session = Factory::getApplication()->getSession();
         $session->set('assat_stack', '', 'CWM');
         $app = Factory::getApplication();
