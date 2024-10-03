@@ -73,11 +73,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmlocations'); ?>" method="po
                 <table class="table table-striped adminlist" id="locationsList">
                     <thead>
                     <tr>
-                        <th width="1%" class="d-none d-md-table-cell">
+                        <th class="w-1 d-none d-md-table-cell">
                             <?php
                             echo HTMLHelper::_('grid.checkall'); ?>
                         </th>
-                        <th width="1%" style="min-width:55px;" class="nowrap center">
+                        <th style="min-width:55px;" class="w-1 nowrap center d-none d-md-table-cell">
                             <?php
                             echo HTMLHelper::_(
                                 'searchtools.sort',
@@ -97,7 +97,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmlocations'); ?>" method="po
                                 $listOrder
                             ); ?>
                         </th>
-                        <th width="10%" class="nowrap d-none d-md-table-cell">
+                        <th width="10%" class="w-10 nowrap d-none d-md-table-cell">
                             <?php
                             echo HTMLHelper::_(
                                 'searchtools.sort',
@@ -107,7 +107,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmlocations'); ?>" method="po
                                 $listOrder
                             ); ?>
                         </th>
-                        <th width="1%" class="nowrap center d-none d-md-table-cell">
+                        <th class="w-1 nowrap center d-none d-md-table-cell">
                             <?php
                             echo HTMLHelper::_(
                                 'searchtools.sort',

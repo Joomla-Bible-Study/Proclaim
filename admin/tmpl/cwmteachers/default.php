@@ -78,7 +78,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                                 <?php
                                 echo HTMLHelper::_('grid.checkall'); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo HtmlHelper::_(
                                     'searchtools.sort',
@@ -98,7 +98,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                                                                     $listOrder
                                                                 ); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                                                 echo HtmlHelper::_(
                                                                     'searchtools.sort',
@@ -122,15 +122,15 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                                 </th>
                             <?php
                             endif; ?>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo Text::_('JBS_TCH_SHOW_LIST'); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo Text::_('JBS_TCH_SHOW_LANDING_PAGE'); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-lg-table-cell">
                                 <?php
                                 echo HtmlHelper::_(
                                     'searchtools.sort',

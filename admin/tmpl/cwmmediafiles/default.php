@@ -71,7 +71,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmediafiles'); ?>" method="p
                         </caption>
                         <thead>
                         <tr>
-                            <th class="w-1 text-center">
+                            <th class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo HTMLHelper::_('grid.checkall'); ?>
                             </th>
@@ -89,7 +89,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmediafiles'); ?>" method="p
                                     'icon-menu-2'
                                 ); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
@@ -99,7 +99,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmediafiles'); ?>" method="p
                                     $listOrder
                                 ); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo Text::_('JBS_MED_RESOURCE_NAME'); ?>
                             </th>
@@ -113,7 +113,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmediafiles'); ?>" method="p
                                     $listOrder
                                 ); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo Text::_('JBS_MED_MEDIA_TYPE'); ?>
                             </th>
@@ -127,7 +127,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmediafiles'); ?>" method="p
                                     $listOrder
                                 ); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
@@ -137,7 +137,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmediafiles'); ?>" method="p
                                     $listOrder
                                 ); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo Text::_('JBS_MED_MEDIA_FILES_STATS'); ?>
                             </th>
@@ -169,7 +169,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmediafiles'); ?>" method="p
                             <tr class="row<?php
                             echo $i % 2; ?>" data-draggable-group="<?php
                             echo $item->study_id ?>">
-                                <td class="text-center">
+                                <td class="text-center d-none d-md-table-cell">
                                     <?php
                                     echo HTMLHelper::_('grid.id', $i, $item->id); ?>
                                 </td>

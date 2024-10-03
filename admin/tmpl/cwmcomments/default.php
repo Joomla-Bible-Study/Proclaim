@@ -92,11 +92,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                         </caption>
                         <thead>
                         <tr>
-                            <th class="w-1 text-center">
+                            <th class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo HTMLHelper::_('grid.checkall'); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
@@ -116,7 +116,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                                     $listOrder
                                 ); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
@@ -126,7 +126,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                                     $listOrder
                                 ); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
@@ -136,11 +136,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                                     $listOrder
                                 ); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo Text::_('JBS_CMT_TEXT'); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
@@ -200,7 +200,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                             <tr class="row<?php
                             echo $i % 2; ?>" data-draggable-group="<?php
                             echo '1' ?>">
-                                <td class="text-center">
+                                <td class="text-center d-none d-md-table-cell">
                                     <?php
                                     echo HTMLHelper::_('grid.id', $i, $item->id); ?>
                                 </td>

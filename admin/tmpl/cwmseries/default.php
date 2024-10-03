@@ -65,11 +65,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post"
                     <table class="table itemList" id="seriesList">
                         <thead>
                         <tr>
-                            <th class="w-1 text-center">
+                            <th class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo HTMLHelper::_('grid.checkall'); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
@@ -89,7 +89,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post"
                                     $listOrder
                                 ); ?>
                             </th>
-                            <th scope="col" class="w-5 text-center">
+                            <th scope="col" class="w-5 text-center d-none d-md-table-cell">
                                 <?php
                                 echo HTMLHelper::_(
                                     'searchtools.sort',

@@ -102,11 +102,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                         </caption>
                         <thead>
                         <tr>
-                            <th class="w-1 text-center">
+                            <th class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo HTMLHelper::_('grid.checkall'); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo HTMLHelper::_(
                                     'searchtools.sort',

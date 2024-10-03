@@ -64,7 +64,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplatecodes'); ?>" method
                                 <?php
                                 echo HTMLHelper::_('grid.checkall'); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
@@ -78,11 +78,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplatecodes'); ?>" method
                                 <?php
                                 echo Text::_('JBS_TPLCODE_FILENAME'); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
                                 echo Text::_('JBS_TPLCODE_TYPE'); ?>
                             </th>
-                            <th scope="col" class="w-1 text-center">
+                            <th scope="col" class="w-1 text-center d-none d-lg-table-cell">
                                 <?php
                                 echo Text::_('JGRID_HEADING_ID'); ?>
                             </th>
