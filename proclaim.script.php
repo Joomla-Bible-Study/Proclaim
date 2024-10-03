@@ -57,7 +57,9 @@ class com_proclaimInstallerScript extends InstallerScript
     private static array $installActionQueue = [
         // -- modules => { (folder) => { (module) => { (position), (published) } }* }*
         'modules' => [
-            'administrator' => [],
+            'administrator' => [
+                    'proclaimicon' => 0,
+            ],
             'site'          => [
                 'proclaim'         => 0,
                 'proclaim_podcast' => 0,

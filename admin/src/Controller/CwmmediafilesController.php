@@ -18,9 +18,11 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel;
 use CWM\Component\Proclaim\Administrator\Model\CwmmediafilesModel;
+use CWM\Component\Proclaim\Administrator\Model\CwmmessagesModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\Response\JsonResponse;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\Utilities\ArrayHelper;
@@ -120,5 +122,30 @@ class CwmmediafilesController extends AdminController
     public function getModel($name = 'Cwmmediafile', $prefix = 'Administrator', $config = ['ignore_request' => true]): \Joomla\CMS\MVC\Model\BaseDatabaseModel
     {
         return parent::getModel($name, $prefix, $config);
+    }
+
+    /**
+     * Method to get the JSON-encoded number of published Media Files
+     *
+     * @return  void
+     *
+     * @since   10.0.0
+     */
+    public function getQuickIconMediaFiles(): void
+    {
+        /** @var CwmmediafilesModel $model */
+        $model = $this->getModel('cwmmediafiles');
+
+        $model->setState('filter.published', 1);
+
+        $amount = (int) $model->getTotal();
+
+        $result = [];
+
+        $result['amount'] = $amount;
+        $result['sronly'] = Text::plural('COM_PROCLAIM_N_QUICKICON_MEDIAFILES_SRONLY', $amount);
+        $result['name']   = Text::plural('COM_PROCLAIM_N_QUICKICON_MEDIAFILES', $amount);
+
+        echo new JsonResponse($result);
     }
 }
