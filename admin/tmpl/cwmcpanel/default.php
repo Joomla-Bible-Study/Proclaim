@@ -14,14 +14,14 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
-use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\Router\Route;
-use Joomla\Input\Input;
+    use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+    use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
+    use Joomla\CMS\HTML\HTMLHelper;
+    use Joomla\CMS\Language\Text;
+    use Joomla\CMS\Router\Route;
+    use Joomla\Input\Input;
 
-// Load the tooltip behavior.
+    // Load the tooltip behavior.
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('multiselect');
@@ -143,108 +143,133 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             </h2>
             <div class="container">
                 <div class="row">
-                    <div class="well well-small">
-                        <div id="dashboard-icons" class="col">
+                    <div class="col">
+                        <a href="<?php
+                        echo Route::_('index.php?option=com_proclaim&amp;task=cwmadmin.edit&amp;id=1'); ?>"
+                           title="<?php
+                            echo Text::_('JBS_CMN_ADMINISTRATION'); ?>" class="btn"> <i
+                                    class="icon-big icon-options fa-3x"> </i>
+                            <span><?php
+                                echo Text::_('JBS_CMN_ADMINISTRATION'); ?></span></a>
+                    </div>
+                    <div class="col">
+                        <a href="<?php
+                        echo Route::_('index.php?option=com_proclaim&amp;view=cwmmessages'); ?>"
+                           title="<?php
+                            echo Text::_('JBS_CMN_STUDIES'); ?>" class="btn"> <i
+                                    class="icon-big icon-book fa-3x"></i>
+                            <span><?php
+                                echo Text::_('JBS_CMN_STUDIES'); ?></span></a>
+                    </div>
+                    <div class="col">
+                        <a href="<?php
+                        echo Route::_('index.php?option=com_proclaim&amp;view=cwmmediafiles'); ?>"
+                           title="<?php
+                            echo Text::_('JBS_CMN_MEDIA_FILES'); ?>" class="btn"> <i
+                                    class="icon-big icon-video fa-3x"></i>
+                            <span><?php
+                                echo Text::_('JBS_CMN_MEDIA_FILES'); ?> </span></a>
+                    </div>
+                    <div class="col">
+                        <a href="<?php
+                        echo Route::_('index.php?option=com_proclaim&amp;view=cwmteachers'); ?>"
+                           title="<?php
+                            echo Text::_('JBS_CMN_TEACHERS'); ?>" class="btn"> <i
+                                    class="icon-user icon-big fa-3x"></i>
+                            <span><?php
+                                echo Text::_('JBS_CMN_TEACHERS'); ?></span></a>
+                    </div>
+                    <div class="col">
+                        <a href="<?php
+                        echo Route::_('index.php?option=com_proclaim&amp;view=cwmseries'); ?>"
+                           title="<?php
+                            echo Text::_('JBS_CMN_SERIES'); ?>" class="btn"> <i
+                                    class="icon-big icon-tree-2 fa-3x"></i>
+                            <span><?php
+                                echo Text::_('JBS_CMN_SERIES'); ?></span></a>
+                    </div>
+                    <div class="col">
+                        <?php
+                        if (!$simple->mode) : ?>
                             <a href="<?php
-                            echo Route::_('index.php?option=com_proclaim&amp;task=cwmadmin.edit&amp;id=1'); ?>"
+                            echo Route::_('index.php?option=com_proclaim&amp;view=cwmmessagetypes'); ?>"
                                title="<?php
-                                echo Text::_('JBS_CMN_ADMINISTRATION'); ?>" class="btn"> <i
-                                        class="icon-big icon-options  fa-3x"> </i>
+                                echo Text::_('JBS_CMN_MESSAGETYPES'); ?>" class="btn"> <i
+                                        class="icon-big icon-list-2 fa-3x"></i>
                                 <span><?php
-                                    echo Text::_('JBS_CMN_ADMINISTRATION'); ?></span></a>
+                                    echo Text::_('JBS_CMN_MESSAGETYPES'); ?></span></a>
+                    </div>
+                    <div class="w-100"></div>
+                    <div class="col">
                             <a href="<?php
-                            echo Route::_('index.php?option=com_proclaim&amp;view=cwmmessages'); ?>"
+                            echo Route::_('index.php?option=com_proclaim&amp;view=cwmlocations'); ?>"
                                title="<?php
-                                echo Text::_('JBS_CMN_STUDIES'); ?>" class="btn"> <i
-                                        class="icon-big icon-book  fa-3x"></i>
+                                echo Text::_('JBS_CMN_LOCATIONS'); ?>" class="btn"> <i
+                                        class="icon-big icon-home fa-3x"></i>
                                 <span><?php
-                                    echo Text::_('JBS_CMN_STUDIES'); ?></span></a>
+                                    echo Text::_('JBS_CMN_LOCATIONS'); ?></span></a>
+                    </div>
+                    <div class="col">
                             <a href="<?php
-                            echo Route::_('index.php?option=com_proclaim&amp;view=cwmmediafiles'); ?>"
+                            echo Route::_('index.php?option=com_proclaim&amp;view=cwmtopics'); ?>"
                                title="<?php
-                                echo Text::_('JBS_CMN_MEDIA_FILES'); ?>" class="btn"> <i
-                                        class="icon-big icon-video  fa-3x"></i>
+                                echo Text::_('JBS_CMN_TOPICS'); ?>" class="btn"> <i
+                                        class="icon-big icon-tags fa-3x"></i>
                                 <span><?php
-                                    echo Text::_('JBS_CMN_MEDIA_FILES'); ?> </span></a>
+                                    echo Text::_('JBS_CMN_TOPICS'); ?></span></a>
+                    </div>
+                    <div class="col">
                             <a href="<?php
-                            echo Route::_('index.php?option=com_proclaim&amp;view=cwmteachers'); ?>"
+                            echo Route::_('index.php?option=com_proclaim&amp;view=cwmcomments'); ?>"
                                title="<?php
-                                echo Text::_('JBS_CMN_TEACHERS'); ?>" class="btn"> <i
-                                        class="icon-user icon-big  fa-3x"></i>
+                                echo Text::_('JBS_CMN_COMMENTS'); ?>" class="btn"><i
+                                        class="icon-big icon-comments-2 fa-3x"></i>
                                 <span><?php
-                                    echo Text::_('JBS_CMN_TEACHERS'); ?></span></a>
-                            <a href="<?php
-                            echo Route::_('index.php?option=com_proclaim&amp;view=cwmseries'); ?>"
-                               title="<?php
-                                echo Text::_('JBS_CMN_SERIES'); ?>" class="btn"> <i
-                                        class="icon-big icon-tree-2  fa-3x"></i>
-                                <span><?php
-                                    echo Text::_('JBS_CMN_SERIES'); ?></span></a>
+                                    echo Text::_('JBS_CMN_COMMENTS'); ?></span></a>
+                    </div>
+                    <div class="col">
                             <?php
-                            if (!$simple->mode) : ?>
-                                <a href="<?php
-                                echo Route::_('index.php?option=com_proclaim&amp;view=cwmmessagetypes'); ?>"
-                                   title="<?php
-                                    echo Text::_('JBS_CMN_MESSAGETYPES'); ?>" class="btn"> <i
-                                            class="icon-big icon-list-2  fa-3x"></i>
-                                    <span><?php
-                                        echo Text::_('JBS_CMN_MESSAGETYPES'); ?></span></a>
-                                <a href="<?php
-                                echo Route::_('index.php?option=com_proclaim&amp;view=cwmlocations'); ?>"
-                                   title="<?php
-                                    echo Text::_('JBS_CMN_LOCATIONS'); ?>" class="btn"> <i
-                                            class="icon-big icon-home  fa-3x"></i>
-                                    <span><?php
-                                        echo Text::_('JBS_CMN_LOCATIONS'); ?></span></a>
-                                <a href="<?php
-                                echo Route::_('index.php?option=com_proclaim&amp;view=cwmtopics'); ?>"
-                                   title="<?php
-                                    echo Text::_('JBS_CMN_TOPICS'); ?>" class="btn"> <i
-                                            class="icon-big icon-tags  fa-3x"></i>
-                                    <span><?php
-                                        echo Text::_('JBS_CMN_TOPICS'); ?></span></a>
-                                <a href="<?php
-                                echo Route::_('index.php?option=com_proclaim&amp;view=cwmcomments'); ?>"
-                                   title="<?php
-                                    echo Text::_('JBS_CMN_COMMENTS'); ?>" class="btn"><i
-                                            class="icon-big icon-comments-2  fa-3x"></i>
-                                    <span><?php
-                                        echo Text::_('JBS_CMN_COMMENTS'); ?></span></a>
-                                <?php
-                            endif; ?>
+                        endif; ?>
+                        <a href="<?php
+                        echo Route::_('index.php?option=com_proclaim&amp;view=cwmservers'); ?>"
+                           title="<?php
+                            echo Text::_('JBS_CMN_SERVERS'); ?>" class="btn"><i
+                                    class="icon-big icon-database fa-3x"></i>
+                            <span><?php
+                                echo Text::_('JBS_CMN_SERVERS'); ?></span></a>
+                    </div>
+                    <div class="col">
+                        <a href="<?php
+                        echo Route::_('index.php?option=com_proclaim&amp;view=cwmpodcasts'); ?>"
+                           title="<?php
+                            echo Text::_('JBS_CMN_PODCASTS'); ?>" class="btn"><i
+                                    class="icon-big fa-solid fa-podcast fa-3x"></i>
+                            <span><?php
+                                echo Text::_('JBS_CMN_PODCASTS'); ?></span></a>
+                    </div>
+                    <div class="col">
+                        <?php
+                        if (!$simple->mode) : ?>
                             <a href="<?php
-                            echo Route::_('index.php?option=com_proclaim&amp;view=cwmservers'); ?>"
+                            echo Route::_('index.php?option=com_proclaim&amp;view=cwmtemplates'); ?>"
                                title="<?php
-                                echo Text::_('JBS_CMN_SERVERS'); ?>" class="btn"><i
-                                        class="icon-big icon-database  fa-3x"></i>
+                                echo Text::_('JBS_CMN_TEMPLATES'); ?>" class="btn"><i
+                                        class="icon-big icon-grid fa-3x"></i>
                                 <span><?php
-                                    echo Text::_('JBS_CMN_SERVERS'); ?></span></a>
+                                    echo Text::_('JBS_CMN_TEMPLATES'); ?></span></a>
+                    </div>
+                    <div class="w-100"></div>
+                    <div class="col">
                             <a href="<?php
-                            echo Route::_('index.php?option=com_proclaim&amp;view=cwmpodcasts'); ?>"
+                            echo Route::_('index.php?option=com_proclaim&amp;view=cwmtemplatecodes'); ?>"
                                title="<?php
-                                echo Text::_('JBS_CMN_PODCASTS'); ?>" class="btn"><i
-                                        class="icon-big fa-solid fa-podcast  fa-3x"></i>
+                                echo Text::_('JBS_CMN_TEMPLATECODE'); ?>" class="btn"> <i
+                                        class="icon-big fa-solid fa-file-code fa-3x"></i>
                                 <span><?php
-                                    echo Text::_('JBS_CMN_PODCASTS'); ?></span></a>
+                                    echo Text::_('JBS_CMN_TEMPLATECODE'); ?></span></a>
+                    </div>
                             <?php
-                            if (!$simple->mode) : ?>
-                                <a href="<?php
-                                echo Route::_('index.php?option=com_proclaim&amp;view=cwmtemplates'); ?>"
-                                   title="<?php
-                                    echo Text::_('JBS_CMN_TEMPLATES'); ?>" class="btn"><i
-                                            class="icon-big icon-grid  fa-3x"></i>
-                                    <span><?php
-                                        echo Text::_('JBS_CMN_TEMPLATES'); ?></span></a>
-                                <a href="<?php
-                                echo Route::_('index.php?option=com_proclaim&amp;view=cwmtemplatecodes'); ?>"
-                                   title="<?php
-                                    echo Text::_('JBS_CMN_TEMPLATECODE'); ?>" class="btn"> <i
-                                            class="icon-big fa-solid fa-file-code  fa-3x"></i>
-                                    <span><?php
-                                        echo Text::_('JBS_CMN_TEMPLATECODE'); ?></span></a>
-                                <?php
-                            endif; ?>
-                        </div>
+                        endif; ?>
                     </div>
                 </div>
             </div>

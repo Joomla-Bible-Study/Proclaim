@@ -66,7 +66,7 @@ div.current .panelform {
 #pb4-perc,
 #pb5-perc,
 #pb6-perc {
-  background: url('/media/images/progress-bar.gif') no-repeat scroll right center transparent;
+  background: url('/media/com_proclaim/images/progress-bar.gif') no-repeat scroll right center transparent;
   height: 19px;
   float: left;
 }
@@ -306,9 +306,6 @@ table.fbstat .col2 {
 #cpanel span {
   display: block;
   text-align: center;
-}
-#dashboard-icons > .btn + .btn {
-  float: left;
 }
 .sermon-list-separator {
   border: 0;
