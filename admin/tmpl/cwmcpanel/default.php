@@ -24,7 +24,8 @@
     // Load the tooltip behavior.
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
-$wa->useScript('multiselect');
+$wa->useScript('core')
+    ->useScript('bootstrap.dropdown');
 
 $msg   = '';
 $input = new Input();
