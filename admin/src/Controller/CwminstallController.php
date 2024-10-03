@@ -90,8 +90,8 @@ class CwminstallController extends BaseController
         $stack   = $session->get('migration_stack', '', 'CWM');
 
         if (empty($stack) || !is_array($stack)) {
-            Cwmhelper::clearcache('site');
-            Cwmhelper::clearcache('administrator');
+            Cwmhelper::clearCache('site');
+            Cwmhelper::clearCache('administrator');
             $session->set('migration_stack', '', 'CWM');
 
             $model = new CwminstallModel();
@@ -140,8 +140,8 @@ class CwminstallController extends BaseController
         // Check for request forgeries.
         (Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
 
-        Cwmhelper::clearcache('site');
-        Cwmhelper::clearcache('administrator');
+        Cwmhelper::clearCache('site');
+        Cwmhelper::clearCache('administrator');
         $session = Factory::getApplication()->getSession();
         $session->set('migration_stack', '', 'CWM');
         $app = Factory::getApplication();

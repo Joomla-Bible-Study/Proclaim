@@ -268,38 +268,36 @@ class Cwmhelper
     /**
      * Clear Cache of Proclaim
      *
-     * @param   string  $state  Where to clean the cache from. Site or Admin.
-     *
      * @return void
-     * @throws Exception
      * @since 9.0.4
      */
-    public static function clearcache(string $state = 'site'): void
+    public static function clearCache(): void
     {
-        $conf    = Factory::getApplication()->getConfig();
+        try {
+            $app = Factory::getApplication();
+        } catch (Exception $e) {
+            return;
+        }
         $options = array();
 
-        if ($state === 'administrator') {
-            $options = array(
-                'defaultgroup' => 'com_proclaim',
-                'storage'      => $conf->get('cache_handler', ''),
-                'caching'      => true,
-                'cachebase'    => $conf->get('cache_path', JPATH_ADMINISTRATOR . '/cache')
-            );
-        } elseif ($state === 'site') {
-            $options = array(
-                'defaultgroup' => 'com_proclaim',
-                'storage'      => $conf->get('cache_handler', ''),
-                'caching'      => true,
-                'cachebase'    => $conf->get('cache_path', JPATH_SITE . '/cache')
-            );
-        }
+        $options[1] = [
+            'defaultgroup' => 'com_proclaim',
+            'cachebase'    => $app->get('cache_path', JPATH_CACHE),
+            'result'       => true
+        ];
+        $options[2] = [
+            'defaultgroup' => 'mod_proclaim',
+            'cachebase'    => $app->get('cache_path', JPATH_CACHE),
+            'result'       => true
+        ];
 
-        $cache = Factory::getContainer()->get(CacheControllerFactoryInterface::class)->createCacheController(
-            '',
-            $options
-        );
-        $cache->clean();
+        foreach ($options as $option) {
+            $cache = Factory::getContainer()->get(CacheControllerFactoryInterface::class)->createCacheController(
+                'callback',
+                $option
+            );
+            $cache->clean();
+        }
     }
 
     /**
@@ -325,13 +323,12 @@ class Cwmhelper
     }
 
     /**
-     * Get Simple View Sate
+     * Get a Simple View Sate
      *
      * @param   Registry|null  $params  AdminTable + parameters
      *
      * @return  stdClass
      *
-     * @throws Exception
      * @since 9.1.6
      */
     public static function getSimpleView(?Registry $params = null): stdClass
