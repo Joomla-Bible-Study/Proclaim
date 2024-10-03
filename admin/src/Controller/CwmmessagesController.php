@@ -16,8 +16,11 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwmmessagesModel;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\Response\JsonResponse;
 use Joomla\Utilities\ArrayHelper;
 
 /**
@@ -73,5 +76,30 @@ class CwmmessagesController extends AdminController
     public function getModel($name = 'Cwmmessage', $prefix = 'Administrator', $config = ['ignore_request' => true]): \Joomla\CMS\MVC\Model\BaseDatabaseModel
     {
         return parent::getModel($name, $prefix, $config);
+    }
+
+    /**
+     * Method to get the JSON-encoded number of published Messages
+     *
+     * @return  void
+     *
+     * @since   10.0.0
+     */
+    public function getQuickIconMessage(): void
+    {
+        /** @var CwmmessagesModel $model */
+        $model = $this->getModel('cwmmessages');
+
+        $model->setState('filter.published', 1);
+
+        $amount = (int) $model->getTotal();
+
+        $result = [];
+
+        $result['amount'] = $amount;
+        $result['sronly'] = Text::plural('COM_PROCLAIM_N_QUICKICON_MESSAGES_SRONLY', $amount);
+        $result['name']   = Text::plural('COM_PROCLAIM_N_QUICKICON_MESSAGES', $amount);
+
+        echo new JsonResponse($result);
     }
 }

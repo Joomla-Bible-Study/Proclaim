@@ -331,7 +331,6 @@ class Cwmhelper
      *
      * @return  stdClass
      *
-     * @throws Exception
      * @since 9.1.6
      */
     public static function getSimpleView(?Registry $params = null): stdClass

@@ -16,8 +16,10 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use http\Exception\RuntimeException;
 use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
+use PHPUnit\Runner\Exception;
 
 /**
  * This is for Retrieving Admin and Template db
@@ -61,13 +63,16 @@ class Cwmparams
      *
      * @return object Return Admin table
      *
-     * @throws \Exception
      * @since 7.0
      */
     public static function getAdmin(): object
     {
         if (!isset(self::$admin)) {
-            $app   = Factory::getApplication();
+            try {
+                $app = Factory::getApplication();
+            } catch (\Exception $e) {
+                echo $e->getMessage();
+            }
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
             $query->select('*')
