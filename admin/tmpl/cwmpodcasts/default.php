@@ -13,6 +13,7 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use Joomla\CMS\Button\PublishedButton;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -45,6 +46,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmpodcasts'); ?>" method="pos
             <div id="j-main-container" class="j-main-container">
                 <?php
                 echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+                <?php echo Cwmstats::getPodcastTaskState(); ?>
                 <?php
                 if (empty($this->items)) : ?>
                     <div class="alert alert-info">

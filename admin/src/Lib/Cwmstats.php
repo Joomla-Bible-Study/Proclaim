@@ -3,10 +3,10 @@
 /**
  * Part of Proclaim Package
  *
- * @package    Proclaim.Admin
+ * @package        Proclaim.Admin
  * @copyright  (C) 2007 CWM Team All rights reserved
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
- * @link       https://www.christianwebministries.org
+ * @license        GNU General Public License version 2 or later; see LICENSE.txt
+ * @link           https://www.christianwebministries.org
  * */
 
 namespace CWM\Component\Proclaim\Administrator\Lib;
@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -51,7 +52,7 @@ class Cwmstats
     /**
      * Total plays of media files per study
      *
-     * @param   int  $id  Id number of study
+     * @param   int  $id  ID number of study
      *
      * @return int Total plays form the media
      *
@@ -74,8 +75,8 @@ class Cwmstats
     /**
      * Total messages in Bible Study
      *
-     * @param   string  $start  ?
-     * @param   string  $end    ?
+     * @param   string  $start  Start Time/Date of Study
+     * @param   string  $end    End Time/Date of Study
      *
      * @return int Total Messages
      *
@@ -83,7 +84,7 @@ class Cwmstats
      */
     public static function getTotalMessages(string $start = '', string $end = ''): int
     {
-        if ($start != self::$total_messages_start || $end != self::$total_messages_end || !self::$total_messages) {
+        if ($start !== self::$total_messages_start || $end !== self::$total_messages_end || !self::$total_messages) {
             self::$total_messages_start = $start;
             self::$total_messages_end   = $end;
 
@@ -118,8 +119,8 @@ class Cwmstats
     /**
      * Total topics in Bible Study
      *
-     * @param   string  $start  ?
-     * @param   string  $end    ?
+     * @param   string  $start  Start Time/Date of Study
+     * @param   string  $end    End Time/Date of Study
      *
      * @return int  Total Topics
      *
@@ -152,7 +153,7 @@ class Cwmstats
     /**
      * Get top studies
      *
-     * @return string
+     * @return string HTML Format
      *
      * @since 9.0.0
      */
@@ -202,7 +203,7 @@ class Cwmstats
     /**
      * Get top thirty days
      *
-     * @return string
+     * @return string HTML Format
      *
      * @since 9.0.0
      */
@@ -239,7 +240,7 @@ class Cwmstats
     /**
      * Get Total Media Files
      *
-     * @return int Number of Records under MediaFiles that are published.
+     * @return int Number of Records under Media Files that are published.
      *
      * @since 9.0.0
      */
@@ -259,7 +260,7 @@ class Cwmstats
     /**
      * Get Top Downloads
      *
-     * @return string List of links to the downloads
+     * @return string HTML List of links to the downloads
      *
      * @since 9.0.0
      */
@@ -295,7 +296,7 @@ class Cwmstats
     /**
      * Get Downloads Last three Months
      *
-     * @return  string list of download links
+     * @return  string HTML list of download links
      *
      * @since 9.0.0
      */
@@ -336,7 +337,7 @@ class Cwmstats
     /**
      * Total Downloads
      *
-     * @return  int Number of Mediafiles Published and have downloads
+     * @return  int Number of Media Files Downloaded in Published state
      *
      * @since 9.0.0
      */
@@ -355,11 +356,11 @@ class Cwmstats
     }
 
     /**
-     * Top Score ???
+     * Top Score Media File Plays
      *
-     * @return string number of scores
+     * @return string Number of scores
      *
-     * @throws \Exception
+     * @throws Exception
      * @var   Registry $admin_params Admin Prams
      *
      * @since 9.0.0
@@ -420,11 +421,11 @@ class Cwmstats
     /**
      * Returns a System of Player
      *
-     * @return string|null
+     * @return string HTML Format or Empty
      *
      * @since 9.0.0
      */
-    public static function getPlayers(): ?string
+    public static function getPlayers(): string
     {
         $count_no_player       = 0;
         $count_global_player   = 0;
@@ -442,7 +443,7 @@ class Cwmstats
         $params = $db->loadObjectList();
 
         $registry      = new Registry();
-        $media_players = null;
+        $media_players = '';
 
         if ($params) {
             $total_players = count($params);
@@ -488,7 +489,7 @@ class Cwmstats
     /**
      * Popups for media files
      *
-     * @return string
+     * @return string HTML Format
      *
      * @since 9.0.0
      */
@@ -545,11 +546,72 @@ class Cwmstats
     }
 
     /**
+     * Get the Podcast Task State in HTML format
+     *
+     * @return string HTML Formatted Button with Status info
+     *
+     * @since 10.0.0
+     */
+    public static function getPodcastTaskState(): string
+    {
+        $states = new \stdClass();
+
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
+        $query
+            ->select('id, state, title')
+            ->from('#__scheduler_tasks')
+            ->where('type = ' . $db->q('proclaim.podcast'))
+            ->order('state DESC');
+        $db->setQuery($query);
+
+        if (!$PodcastTask = $db->loadObject()) {
+            $PodcastTask        = $states;
+            $PodcastTask->state = '';
+        }
+
+        switch ($PodcastTask->state) {
+            case 1:
+                $states->state       = 'ENABLED';
+                $states->buttonstate = ' btn-success';
+                break;
+            case 0:
+                $states->state       = 'DISABLED';
+                $states->buttonstate = ' btn-warning';
+                break;
+            case -2:
+                $states->state       = 'TRASHED';
+                $states->buttonstate = ' btn-light';
+                break;
+            default:
+                $states->state       = 'JBS_CMN_TASK_NOT_CREATED';
+                $states->buttonstate = ' btn-warning';
+                break;
+        }
+
+        $return = "<div style='float: left; padding: 10px;'>";
+        if ($states->state !== 'JBS_CMN_TASK_NOT_CREATED') {
+            $return .= "<a href=\"" . Route::_('index.php?option=com_scheduler&amp;task=task.edit&id=' . $PodcastTask->id) . "\" target=\"_blank\">";
+        } else {
+            $return .= "<a href=\"" . Route::_('index.php?option=com_scheduler&amp;view=tasks') . "\" target=\"_blank\">";
+        }
+
+        $return .= "<button type='button' class='btn" . $states->buttonstate . "'><i class='icon-clock' title='Clock showing time'></i>" .
+            Text::_('JBS_CMN_PODCAST_TASK_STATUS') . "<strong>" . Text::_($states->state) . "</strong></button>";
+
+        $return .= "</a>";
+
+        $return .= "</div>";
+
+        return $return;
+    }
+
+    /**
      * Top Score Site
      *
      * @return bool|string
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.0.0
      */
     public function getTopScoreSite(): bool|string
