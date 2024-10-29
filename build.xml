@@ -47,13 +47,6 @@
     <!--		</phpunit>-->
     <!--	</target>-->
 
-    <!-- Measure the size of the project -->
-    <!--	<target name="size" description="Measures the size of the project">-->
-    <!--		<phploc countTests="true" reportType="txt" reportName="project-size" reportDirectory="${basedir}/build/reports">-->
-    <!--			<fileset refid="distributed_files"/>-->
-    <!--		</phploc>-->
-    <!--	</target>-->
-
     <!-- Detect violations in coding standards -->
     <target name="phpcs" depends="init" description="Generate checkstyle.xml using PHP_CodeSniffer">
         <phpcodesniffer standard="PEAR" format="summary" showSniffs="true" showWarnings="true" haltonerror="true">
@@ -84,7 +77,7 @@
 
     <!-- Create com_proclaim-x.x.x.zip -->
     <target name="component" depends="init,dev.clean" description="Builds the component">
-        <input message="Enter the version you are building." propertyName="version" defaultValue="10.0.x"/>
+        <input message="Enter the version you are building. ex. 10.0.0" propertyName="version" defaultValue="10.0.x"/>
         <delete file="${basedir}/build/com_proclaim-${version}.zip"/>
         <zip destfile="${basedir}/build/com_proclaim-${version}.zip">
             <fileset defaultexcludes="true" dir=".">
@@ -204,9 +197,8 @@
     <target name="dev.setup_Symbolic_Links">
         <input message="Enter the path to your Joomla! root directory" propertyName="joomla_path"
                defaultValue="/Applications/MAMP/htdocs/"/>
-        <input message="Stage Joomla?" propertyName="joomla_dir" defaultValue="n"/>
-        <propertyprompt propertyName="joomla_dir" defaultValue="joomla-dev" promptText="Set Joomla folder name"/>
-
+        <input message="Stage Joomla?" propertyName="joomla_dir" defaultValue=""/>
+        
         <echo message="Joomla path set to: ${joomla_path}${joomla_dir}"/>
 
         <echo message="Linking component, modules, and plugins to Joomla!"/>
@@ -219,6 +211,8 @@
                  overwrite="true"/>
         <symlink target="${basedir}/modules/site/mod_proclaim"
                  link="${joomla_path}${joomla_dir}/modules/mod_proclaim" overwrite="true"/>
+        <symlink target="${basedir}/modules/admin/mod_proclaimicon"
+                 link="${joomla_path}${joomla_dir}/administrator/modules/mod_proclaimicon" overwrite="true"/>
         <symlink target="${basedir}/modules/site/mod_proclaim_podcast"
                  link="${joomla_path}${joomla_dir}/modules/mod_proclaim_podcast" overwrite="true"/>
         <symlink target="${basedir}/plugins/finder/proclaim"
