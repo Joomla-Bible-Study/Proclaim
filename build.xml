@@ -5,9 +5,17 @@
 
     <property name="basedir" value="${project.basedir}"/>
     <property name="project.name" value="Proclaim"/>
-
-    <!-- Joomla version to run the unit tests against -->
-    <property name="joomla.version" value="4.2.4"/>
+    <if>
+        <available file="build.properties" property="test_txt_exists" type="file"/>
+        <then>
+            <property file="build.properties"/>
+        </then>
+        <else>
+            <fail>-
+                Missing 'build.properties' file in the project root folder
+            </fail>
+        </else>
+    </if>
 
     <property name="config_path" value="${basedir}/tests/system/servers"/>
 
@@ -152,9 +160,6 @@
 
     <!-- Set the default joomla path and create symbolic links -->
     <target name="dev.setup">
-        <input message="Enter the path to your Joomla! root directory" propertyName="joomla_path"
-               defaultValue="/Applications/MAMP/htdocs/"/>
-        <input message="Enter Joomla folder name" propertyName="joomla_dir" defaultValue="joomla-dev"/>
         <input message="Stage Joomla?" propertyName="stage_joomla" defaultValue="n"/>
         <if>
             <equals arg1="${stage_joomla}" arg2="y"/>
@@ -165,60 +170,57 @@
                     <property name="force" value="${stage_joomla"/>
                 </phingcall>
                 <!--Link Joomla to the webserver's root directory  -->
-                <symlink target="${basedir}/.joomla-dev" link="${joomla_path}/${joomla_dir}" overwrite="true"/>
+                <symlink target="${basedir}/.joomla-dev" link="${builder.joomla_path}/${builder.joomla_dir}" overwrite="true"/>
             </then>
         </if>
 
-        <echo message="Joomla path set to: ${joomla_path}${joomla_dir}"/>
+        <echo message="Joomla path set to: ${builder.joomla_path}${builder.joomla_dir}"/>
 
         <echo message="Linking component to Joomla!"/>
 
-        <!-- Create symbolic links for component in the Joomla directory -->
-        <symlink target="${basedir}/media" link="${joomla_path}${joomla_dir}/media/com_proclaim" overwrite="true"/>
-        <symlink target="${basedir}/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_proclaim"
+        <!-- Create symbolic links for a component in the Joomla directory -->
+        <symlink target="${basedir}/media" link="${builder.joomla_path}${builder.joomla_dir}/media/com_proclaim" overwrite="true"/>
+        <symlink target="${basedir}/admin" link="${builder.joomla_path}${builder.joomla_dir}/administrator/components/com_proclaim"
                  overwrite="true"/>
-        <symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_proclaim"
+        <symlink target="${basedir}/site" link="${builder.joomla_path}${builder.joomla_dir}/components/com_proclaim"
                  overwrite="true"/>
         <symlink target="${basedir}/modules/site/mod_proclaim"
-                 link="${joomla_path}${joomla_dir}/modules/mod_proclaim" overwrite="true"/>
+                 link="${builder.joomla_path}${builder.joomla_dir}/modules/mod_proclaim" overwrite="true"/>
         <symlink target="${basedir}/modules/site/mod_proclaim_podcast"
-                 link="${joomla_path}${joomla_dir}/modules/proclaim_podcast" overwrite="true"/>
+                 link="${builder.joomla_path}${builder.joomla_dir}/modules/proclaim_podcast" overwrite="true"/>
         <symlink target="${basedir}/plugins/system/proclaimbackup"
-                 link="${joomla_path}${joomla_dir}/plugins/system/proclaimbackup" overwrite="true"/>
+                 link="${builder.joomla_path}${builder.joomla_dir}/plugins/system/proclaimbackup" overwrite="true"/>
         <symlink target="${basedir}/plugins/finder/proclaim"
-                 link="${joomla_path}${joomla_dir}/plugins/finder/proclaim" overwrite="true"/>
+                 link="${builder.joomla_path}${builder.joomla_dir}/plugins/finder/proclaim" overwrite="true"/>
         <symlink target="${basedir}/plugins/system/proclaimpodcast"
-                 link="${joomla_path}${joomla_dir}/plugins/system/proclaimpodcast" overwrite="true"/>
+                 link="${builder.joomla_path}${builder.joomla_dir}/plugins/system/proclaimpodcast" overwrite="true"/>
 
         <phingcall target="dev.init"/>
     </target>
 
     <!-- Set the default joomla path and create symbolic links -->
     <target name="dev.setup_Symbolic_Links">
-        <input message="Enter the path to your Joomla! root directory" propertyName="joomla_path"
-               defaultValue="/Applications/MAMP/htdocs/"/>
-        <input message="Stage Joomla?" propertyName="joomla_dir" defaultValue=""/>
         
-        <echo message="Joomla path set to: ${joomla_path}${joomla_dir}"/>
+        <echo message="Joomla path set to: ${builder.joomla_path}${builder.joomla_dir}"/>
 
         <echo message="Linking component, modules, and plugins to Joomla!"/>
 
         <!-- Create symbolic links for component in the Joomla directory -->
-        <symlink target="${basedir}/media" link="${joomla_path}${joomla_dir}/media/com_proclaim" overwrite="true"/>
-        <symlink target="${basedir}/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_proclaim"
+        <symlink target="${basedir}/media" link="${builder.joomla_path}${builder.joomla_dir}/media/com_proclaim" overwrite="true"/>
+        <symlink target="${basedir}/admin" link="${builder.joomla_path}${builder.joomla_dir}/administrator/components/com_proclaim"
                  overwrite="true"/>
-        <symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_proclaim"
+        <symlink target="${basedir}/site" link="${builder.joomla_path}${builder.joomla_dir}/components/com_proclaim"
                  overwrite="true"/>
         <symlink target="${basedir}/modules/site/mod_proclaim"
-                 link="${joomla_path}${joomla_dir}/modules/mod_proclaim" overwrite="true"/>
+                 link="${builder.joomla_path}${builder.joomla_dir}/modules/mod_proclaim" overwrite="true"/>
         <symlink target="${basedir}/modules/admin/mod_proclaimicon"
-                 link="${joomla_path}${joomla_dir}/administrator/modules/mod_proclaimicon" overwrite="true"/>
+                 link="${builder.joomla_path}${builder.joomla_dir}/administrator/modules/mod_proclaimicon" overwrite="true"/>
         <symlink target="${basedir}/modules/site/mod_proclaim_podcast"
-                 link="${joomla_path}${joomla_dir}/modules/mod_proclaim_podcast" overwrite="true"/>
+                 link="${builder.joomla_path}${builder.joomla_dir}/modules/mod_proclaim_podcast" overwrite="true"/>
         <symlink target="${basedir}/plugins/finder/proclaim"
-                 link="${joomla_path}${joomla_dir}/plugins/finder/proclaim" overwrite="true"/>
+                 link="${builder.joomla_path}${builder.joomla_dir}/plugins/finder/proclaim" overwrite="true"/>
         <symlink target="${basedir}/plugins/task/proclaim"
-                 link="${joomla_path}${joomla_dir}/plugins/task/proclaim" overwrite="true"/>
+                 link="${builder.joomla_path}${builder.joomla_dir}/plugins/task/proclaim" overwrite="true"/>
 
         <phingcall target="dev.init"/>
     </target>
