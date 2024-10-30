@@ -213,7 +213,7 @@
 
     <!-- Create symbolic links for the development state -->
     <target name="dev.init">
-        <echo message="Initializing a development state"/>
+        <echo message="Initializing a symbolic links in development state"/>
         <symlink target="${basedir}/proclaim.xml" link="${basedir}/admin/proclaim.xml" overwrite="true"/>
         <symlink target="${basedir}/proclaim.script.php" link="${basedir}/admin/proclaim.script.php"
                  overwrite="true"/>
@@ -224,7 +224,7 @@
 
     <!-- Clean up symbolic links from the development state -->
     <target name="dev.clean">
-        <echo message="Cleaning up development state"/>
+        <echo message="Cleaning up symbolic links in development state"/>
         <delete file="${basedir}/admin/proclaim.xml"/>
         <delete file="${basedir}/admin/proclaim.script.php"/>
         <delete file="${basedir}/media/css/site/cwmcore.css"/>
