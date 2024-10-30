@@ -9,4 +9,3 @@
 
 ## Reporting a Vulnerability
 
-Info coming soon.
