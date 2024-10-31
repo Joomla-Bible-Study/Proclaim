@@ -32,7 +32,7 @@
                         type="text"
                         label="MOD_PROCLAIMICON_HEADER_ICON_LABEL"
                         hint="icon-crosshairs"
-                        default=""
+                        default="fas fa-bible"
                 />
                 <field
                         name="show_messages"
