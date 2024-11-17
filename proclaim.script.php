@@ -57,8 +57,8 @@ class com_proclaimInstallerScript extends InstallerScript
     private static array $installActionQueue = [
         // -- modules => { (folder) => { (module) => { (position), (published) } }* }*
         'modules' => [
-            'administrator' => [
-                    'proclaimicon' => 0,
+            'admin' => [
+                    'proclaimicon' => ["icon",1],
             ],
             'site'          => [
                 'proclaim'         => 0,
@@ -452,7 +452,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @since 1.7.0
      */
-    private function installSubextensions($parent): void
+    private function installSubextensions(InstallerAdapter $parent): void
     {
         $src                   = $parent->getParent()->getPath('source');
         $this->status          = new stdClass();
@@ -510,13 +510,6 @@ class com_proclaimInstallerScript extends InstallerScript
                             continue;
                         }
 
-                        // Was the module already installed?
-                        $sql = $this->dbo->getQuery(true)
-                            ->select('COUNT(*)')
-                            ->from('#__modules')
-                            ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q('mod_' . $module));
-                        $this->dbo->setQuery($sql);
-                        $count                   = $this->dbo->loadResult();
                         $installer               = new Installer();
                         $result                  = $installer->install($path);
                         $this->status->modules[] = [
@@ -526,13 +519,9 @@ class com_proclaimInstallerScript extends InstallerScript
                         ];
 
                         // Modify where it's published and its published state
-                        if (!$count) {
+                        if ($parent->route === "install") {
                             // A. Position and state
-                            list($modulePosition, $modulePublished) = $modulePreferences;
-
-                            if ($modulePosition === 'cwmcpanel') {
-                                $modulePosition = 'icon';
-                            }
+                            [$modulePosition, $modulePublished] = $modulePreferences;
 
                             $sql = $this->dbo->getQuery(true)
                                 ->update($this->dbo->qn('#__modules'))
@@ -540,14 +529,19 @@ class com_proclaimInstallerScript extends InstallerScript
                                 ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q('mod_' . $module));
 
                             if ($modulePublished) {
-                                $sql->set($this->dbo->qn('published') . ' = ' . $this->dbo->q('1'));
+                                $sql->set($this->dbo->qn('published') . ' = ' . $this->dbo->q($modulePublished));
+                            }
+
+                            if ($module === "proclaimicon") {
+                                $params = '{"context":"mod_proclaimicon","header_icon":"fas fa-bible","show_messages":"1","show_mediafiles":"0","show_teachers":"1","show_series":"0","show_messagetypes":"0","show_locations":"0","show_topics":"0","show_comments":"0","show_servers":"0","show_podcasts":"0","show_templates":"0","show_templatecode":"0","show_admin":"0","module_tag":"div","bootstrap_size":"0","header_tag":"h3","header_class":"","style":"0"}';
+                                $sql->set($this->dbo->qn('params') . ' = ' . $this->dbo->q($params));
                             }
 
                             $this->dbo->setQuery($sql);
                             $this->dbo->execute();
 
                             // B. Change the ordering of back-end modules to 1 + max ordering
-                            if ($folder === 'administrator') {
+                            if ($folder === 'admin') {
                                 $query = $this->dbo->getQuery(true);
                                 $query->select('MAX(' . $this->dbo->qn('ordering') . ')')
                                     ->from($this->dbo->qn('#__modules'))
