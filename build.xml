@@ -6,8 +6,18 @@
     <property name="basedir" value="${project.basedir}"/>
     <property name="project.name" value="Proclaim"/>
 
-    <!-- Joomla version to run the unit tests against -->
-    <property name="joomla.version" value="4.2.4"/>
+    <!-- We try and verify that the build.properties file is created from the build.dist.properties -->
+    <if>
+        <available file="build.properties" property="build_properties_exists" type="file"/>
+        <then>
+            <property file="build.properties"/>
+        </then>
+        <else>
+            <fail>-
+                Missing 'build.properties' file in the project root folder
+            </fail>
+        </else>
+    </if>
 
     <property name="config_path" value="${basedir}/tests/system/servers"/>
 
@@ -35,24 +45,6 @@
             <fileset refid="distributed_files"/>
         </phplint>
     </target>
-
-    <!--	<target name="phpunit" depends="init"-->
-    <!--	        description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">-->
-    <!--		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/unit/bootstrap.php">-->
-    <!--			&lt;!&ndash; We can only use one formatter at a time &ndash;&gt;-->
-    <!--			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>-->
-    <!--			<batchtest>-->
-    <!--				<fileset dir="${basedir}/tests/unit/suites/" includes="**/*.php"/>-->
-    <!--			</batchtest>-->
-    <!--		</phpunit>-->
-    <!--	</target>-->
-
-    <!-- Measure the size of the project -->
-    <!--	<target name="size" description="Measures the size of the project">-->
-    <!--		<phploc countTests="true" reportType="txt" reportName="project-size" reportDirectory="${basedir}/build/reports">-->
-    <!--			<fileset refid="distributed_files"/>-->
-    <!--		</phploc>-->
-    <!--	</target>-->
 
     <!-- Detect violations in coding standards -->
     <target name="phpcs" depends="init" description="Generate checkstyle.xml using PHP_CodeSniffer">
@@ -84,7 +76,7 @@
 
     <!-- Create com_proclaim-x.x.x.zip -->
     <target name="component" depends="init,dev.clean" description="Builds the component">
-        <input message="Enter the version you are building." propertyName="version" defaultValue="10.0.x"/>
+        <input message="Enter the version you are building. ex. 10.0.0" propertyName="version" defaultValue="10.0.x"/>
         <delete file="${basedir}/build/com_proclaim-${version}.zip"/>
         <zip destfile="${basedir}/build/com_proclaim-${version}.zip">
             <fileset defaultexcludes="true" dir=".">
@@ -146,22 +138,8 @@
         <delete dir="${basedir}/tests/.joomla-dev" includeemptydirs="true"/>
     </target>
 
-    <!--	<target name="test.system" depends="init"-->
-    <!--	        description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">-->
-    <!--		<phpunit haltonfailure="true" haltonerror="true" bootstrap="${basedir}/tests/system/servers/configdef.php">-->
-    <!--			&lt;!&ndash; We can only use one formatter at a time &ndash;&gt;-->
-    <!--			<formatter todir="${basedir}/build/reports" type="plain" outfile="test-brief.txt"/>-->
-    <!--			<batchtest>-->
-    <!--				<fileset dir="${basedir}/tests/system/tests/installation" includes="**/*.php"/>-->
-    <!--			</batchtest>-->
-    <!--		</phpunit>-->
-    <!--	</target>-->
-
     <!-- Set the default joomla path and create symbolic links -->
     <target name="dev.setup">
-        <input message="Enter the path to your Joomla! root directory" propertyName="joomla_path"
-               defaultValue="/Applications/MAMP/htdocs/"/>
-        <input message="Enter Joomla folder name" propertyName="joomla_dir" defaultValue="joomla-dev"/>
         <input message="Stage Joomla?" propertyName="stage_joomla" defaultValue="n"/>
         <if>
             <equals arg1="${stage_joomla}" arg2="y"/>
@@ -172,66 +150,70 @@
                     <property name="force" value="${stage_joomla"/>
                 </phingcall>
                 <!--Link Joomla to the webserver's root directory  -->
-                <symlink target="${basedir}/.joomla-dev" link="${joomla_path}/${joomla_dir}" overwrite="true"/>
+                <symlink target="${basedir}/.joomla-dev" link="${builder.joomla_path}/${builder.joomla_dir}"
+                         overwrite="true"/>
             </then>
         </if>
 
-        <echo message="Joomla path set to: ${joomla_path}${joomla_dir}"/>
+        <echo message="Joomla path set to: ${builder.joomla_path}${builder.joomla_dir}"/>
 
         <echo message="Linking component to Joomla!"/>
 
-        <!-- Create symbolic links for component in the Joomla directory -->
-        <symlink target="${basedir}/media" link="${joomla_path}${joomla_dir}/media/com_proclaim" overwrite="true"/>
-        <symlink target="${basedir}/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_proclaim"
+        <!-- Create symbolic links for a component in the Joomla directory -->
+        <symlink target="${basedir}/media" link="${builder.joomla_path}${builder.joomla_dir}/media/com_proclaim"
                  overwrite="true"/>
-        <symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_proclaim"
+        <symlink target="${basedir}/admin"
+                 link="${builder.joomla_path}${builder.joomla_dir}/administrator/components/com_proclaim"
+                 overwrite="true"/>
+        <symlink target="${basedir}/site" link="${builder.joomla_path}${builder.joomla_dir}/components/com_proclaim"
                  overwrite="true"/>
         <symlink target="${basedir}/modules/site/mod_proclaim"
-                 link="${joomla_path}${joomla_dir}/modules/mod_proclaim" overwrite="true"/>
+                 link="${builder.joomla_path}${builder.joomla_dir}/modules/mod_proclaim" overwrite="true"/>
         <symlink target="${basedir}/modules/site/mod_proclaim_podcast"
-                 link="${joomla_path}${joomla_dir}/modules/proclaim_podcast" overwrite="true"/>
+                 link="${builder.joomla_path}${builder.joomla_dir}/modules/proclaim_podcast" overwrite="true"/>
         <symlink target="${basedir}/plugins/system/proclaimbackup"
-                 link="${joomla_path}${joomla_dir}/plugins/system/proclaimbackup" overwrite="true"/>
+                 link="${builder.joomla_path}${builder.joomla_dir}/plugins/system/proclaimbackup" overwrite="true"/>
         <symlink target="${basedir}/plugins/finder/proclaim"
-                 link="${joomla_path}${joomla_dir}/plugins/finder/proclaim" overwrite="true"/>
+                 link="${builder.joomla_path}${builder.joomla_dir}/plugins/finder/proclaim" overwrite="true"/>
         <symlink target="${basedir}/plugins/system/proclaimpodcast"
-                 link="${joomla_path}${joomla_dir}/plugins/system/proclaimpodcast" overwrite="true"/>
+                 link="${builder.joomla_path}${builder.joomla_dir}/plugins/system/proclaimpodcast" overwrite="true"/>
 
         <phingcall target="dev.init"/>
     </target>
 
     <!-- Set the default joomla path and create symbolic links -->
     <target name="dev.setup_Symbolic_Links">
-        <input message="Enter the path to your Joomla! root directory" propertyName="joomla_path"
-               defaultValue="/Applications/MAMP/htdocs/"/>
-        <input message="Stage Joomla?" propertyName="joomla_dir" defaultValue="n"/>
-        <propertyprompt propertyName="joomla_dir" defaultValue="joomla-dev" promptText="Set Joomla folder name"/>
 
-        <echo message="Joomla path set to: ${joomla_path}${joomla_dir}"/>
+        <echo message="Joomla path set to: ${builder.joomla_path}${builder.joomla_dir}"/>
 
         <echo message="Linking component, modules, and plugins to Joomla!"/>
 
         <!-- Create symbolic links for component in the Joomla directory -->
-        <symlink target="${basedir}/media" link="${joomla_path}${joomla_dir}/media/com_proclaim" overwrite="true"/>
-        <symlink target="${basedir}/admin" link="${joomla_path}${joomla_dir}/administrator/components/com_proclaim"
+        <symlink target="${basedir}/media" link="${builder.joomla_path}${builder.joomla_dir}/media/com_proclaim"
                  overwrite="true"/>
-        <symlink target="${basedir}/site" link="${joomla_path}${joomla_dir}/components/com_proclaim"
+        <symlink target="${basedir}/admin"
+                 link="${builder.joomla_path}${builder.joomla_dir}/administrator/components/com_proclaim"
+                 overwrite="true"/>
+        <symlink target="${basedir}/site" link="${builder.joomla_path}${builder.joomla_dir}/components/com_proclaim"
                  overwrite="true"/>
         <symlink target="${basedir}/modules/site/mod_proclaim"
-                 link="${joomla_path}${joomla_dir}/modules/mod_proclaim" overwrite="true"/>
+                 link="${builder.joomla_path}${builder.joomla_dir}/modules/mod_proclaim" overwrite="true"/>
+        <symlink target="${basedir}/modules/admin/mod_proclaimicon"
+                 link="${builder.joomla_path}${builder.joomla_dir}/administrator/modules/mod_proclaimicon"
+                 overwrite="true"/>
         <symlink target="${basedir}/modules/site/mod_proclaim_podcast"
-                 link="${joomla_path}${joomla_dir}/modules/mod_proclaim_podcast" overwrite="true"/>
+                 link="${builder.joomla_path}${builder.joomla_dir}/modules/mod_proclaim_podcast" overwrite="true"/>
         <symlink target="${basedir}/plugins/finder/proclaim"
-                 link="${joomla_path}${joomla_dir}/plugins/finder/proclaim" overwrite="true"/>
+                 link="${builder.joomla_path}${builder.joomla_dir}/plugins/finder/proclaim" overwrite="true"/>
         <symlink target="${basedir}/plugins/task/proclaim"
-                 link="${joomla_path}${joomla_dir}/plugins/task/proclaim" overwrite="true"/>
+                 link="${builder.joomla_path}${builder.joomla_dir}/plugins/task/proclaim" overwrite="true"/>
 
         <phingcall target="dev.init"/>
     </target>
 
     <!-- Create symbolic links for the development state -->
     <target name="dev.init">
-        <echo message="Initializing a development state"/>
+        <echo message="Initializing a symbolic links in development state"/>
         <symlink target="${basedir}/proclaim.xml" link="${basedir}/admin/proclaim.xml" overwrite="true"/>
         <symlink target="${basedir}/proclaim.script.php" link="${basedir}/admin/proclaim.script.php"
                  overwrite="true"/>
@@ -242,7 +224,7 @@
 
     <!-- Clean up symbolic links from the development state -->
     <target name="dev.clean">
-        <echo message="Cleaning up development state"/>
+        <echo message="Cleaning up symbolic links in development state"/>
         <delete file="${basedir}/admin/proclaim.xml"/>
         <delete file="${basedir}/admin/proclaim.script.php"/>
         <delete file="${basedir}/media/css/site/cwmcore.css"/>
