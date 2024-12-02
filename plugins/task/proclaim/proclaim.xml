@@ -2,12 +2,12 @@
 <extension type="plugin" group="task" method="upgrade">
 	<name>plg_task_proclaim</name>
 	<author>CWM Team</author>
-	<creationDate>Feb 15, 2024</creationDate>
+	<creationDate>Dec 10, 2024</creationDate>
 	<copyright>(C) 2007 Proclaim All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>info@christianwebministries.org</authorEmail>
 	<authorUrl>www.christianwebministries.org</authorUrl>
-	<version>10.0.0-alpha.240321</version>
+	<version>10.0.0-beta1</version>
 	<description>PLG_TASK_PROCLAIM_XML_DESCRIPTION</description>
 	<namespace path="src">CWM\Plugin\Task\Proclaim</namespace>
 	<files>
