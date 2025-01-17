@@ -43,7 +43,7 @@ $wa->addInlineScript(
         }
         ?>
         <div class="progress">
-            <div class="progress-bar" role="progressbar" style="width: <?php echo $this->percentage; ?>%" aria-valuenow="<?php echo $this->percentage; ?>" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: <?php echo $this->percentage; ?>%" aria-valuenow="<?php echo $this->percentage; ?>" aria-valuemin="0" aria-valuemax="100">
             <?php echo $this->percentage; ?>%
         </div>
         <form action="<?php
