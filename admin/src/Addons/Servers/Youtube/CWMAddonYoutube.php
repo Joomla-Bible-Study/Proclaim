@@ -11,14 +11,19 @@
 
 namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube;
 
+require_once __DIR__ . '/vendor/autoload.php';
+
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use Google\Service\Exception;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Google;
+use Google\Service\YouTube;
 
 /**
  * Class JBSMAddonYouTube
@@ -185,5 +190,63 @@ class CWMAddonYoutube extends CWMAddon
         }
 
         return (string) $string;
+    }
+
+    /**
+     * @param $key
+     * @param $playlistID
+     * @param $pageToken
+     * @param $maxResults
+     *
+     *
+     * @throws Exception
+     * @since version
+     */
+    public function buildPlaylistList($key, $playlistID = 'UULyz8iEvzxyhKEBzOTs6bJQ', $pageToken = 'EAAaI1BUOkNESWlFREUzUVRSQ09EQkdSVUV6UWprM09EVW9BVkFC', $maxResults = 50)
+    {
+        $client = new Google\Client();
+        $client->setApplicationName("Client_Library_Examples");
+        $client->setDeveloperKey("$key");
+
+        $service = new YouTube($client);
+        try {
+            $response = $service->playlistItems->listPlaylistItems(
+                'snippet',
+                [
+                    'playlistId' => $playlistID,
+                    'pageToken' => $pageToken,
+                    'maxResults' => $maxResults
+                ]
+            );
+        } catch (Exception $e) {
+            throw new Exception($e);
+        }
+
+        # Extract data we need from the response
+        $prevPageToken = $response->prevPageToken ?? null;
+        $nextPageToken = $response->nextPageToken ?? null;
+        $totalResults = $response->pageInfo->totalResults;
+        $videos = $response->items;
+        if ($prevPageToken) {
+            echo "<a href='/?pageToken=<?php echo $prevPageToken?>'>Previous page</a>";
+        }
+
+        if ($nextPageToken) {
+            echo "<a href='/?pageToken=<?php echo $nextPageToken?>'>Next page</a>";
+        }
+        foreach ($videos as $video) {
+            echo "<div style='margin:10px 0'>
+        <img
+            style='width:150px'
+            src='" . $video->snippet->thumbnails->high->url . "'
+            alt='Thumbnail for the video " . $video->snippet->title . "'><br>
+
+        <strong>Title:</strong>
+        " . $video->snippet->title . "
+        <br>
+        <strong>Video ID:</strong>
+        " . $video->snippet->resourceId->videoId . "
+    </div>";
+        }
     }
 }
