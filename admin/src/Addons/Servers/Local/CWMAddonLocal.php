@@ -18,8 +18,8 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Local;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmuploadscript;
+use Exception;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Input\Input;
 use Joomla\CMS\Language\Text;
 
 /**
@@ -49,14 +49,14 @@ class CWMAddonLocal extends CWMAddon
     /**
      * Upload
      *
-     * @param array|Input $data  Data to upload
+     * @param ?array $data  Data to upload
      *
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.0.0
      */
-    public function upload(\Joomla\Input\Input|array $data): array
+    public function upload(?array $data): array
     {
         return (new Cwmuploadscript())->upload($data);
     }
@@ -64,8 +64,8 @@ class CWMAddonLocal extends CWMAddon
     /**
      * Render Fields for general view.
      *
-     * @param   object  $media_form  Medea files form
-     * @param bool $new         If media is new
+     * @param object  $media_form  Medea files form
+     * @param bool    $new         If media is new
      *
      * @return string
      *
@@ -105,8 +105,8 @@ class CWMAddonLocal extends CWMAddon
     /**
      * Render Layout and fields
      *
-     * @param   object  $media_form  Medea files form
-     * @param bool $new         If media is new
+     * @param object  $media_form  Medea files form
+     * @param bool    $new         If media is new
      *
      * @return string
      *

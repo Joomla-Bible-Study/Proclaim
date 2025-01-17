@@ -197,11 +197,11 @@ abstract class CWMAddon
     /**
      * Upload
      *
-     * @param Input|array $data Data to upload
+     * @param ?array $data Data to upload
      *
      * @return mixed
      *
      * @since 9.0.0
      */
-    abstract protected function upload(Input|array $data): mixed;
+    abstract protected function upload(?array $data): mixed;
 }
