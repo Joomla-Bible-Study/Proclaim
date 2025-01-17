@@ -81,15 +81,15 @@ class CwmdbHelper
      * Alters a table
      * command is only needed for MODIFY. Can be used to ADD, DROP, MODIFY, or CHANGE tables.
      *
-     * @param   array        $tables  Tables is an array of tables, fields, type of query and optional command line
-     * @param   string|null  $from    Where the query is coming from for msg
+     * @param   array    $tables  Tables is an array of tables, fields, type of query and optional command line
+     * @param   ?string  $from    Where the query is coming from for msg
      *
      * @return bool
      *
      * @throws  Exception
      * @since   7.0
      */
-    public static function alterDB(array $tables, string $from = null): bool
+    public static function alterDB(array $tables, ?string $from = null): bool
     {
         $db = Factory::getContainer()->get('DatabaseDriver');
 
@@ -216,16 +216,16 @@ class CwmdbHelper
     /**
      * performs a database query
      *
-     * @param   string       $query  Is a Joomla ready query
-     * @param   string|null  $from   Where the source of the query comes from
-     * @param   int|null     $limit  Set the Limit of the query
+     * @param   string   $query  Is a Joomla ready query
+     * @param   ?string  $from   Where the source of the query comes from
+     * @param   ?int     $limit  Set the Limit of the query
      *
      * @return bool true if success, or error string if failed
      *
      * @throws  Exception
      * @since   7.0
      */
-    public static function performDB($query, string $from = null, int $limit = null): bool
+    public static function performDB($query, ?string $from = null, ?int $limit = null): bool
     {
         if (!$query) {
             return false;
@@ -330,14 +330,14 @@ class CwmdbHelper
      * @param   string    $filename  Name of css file
      * @param   bool      $parent    if coming form the update script
      * @param   string    $newcss    New css style
-     * @param   int|null  $id        this is the id of record to be fixed
+     * @param   ?int      $id        this is the id of record to be fixed
      *
      * @return bool
      *
      * @throws  Exception
      * @since   7.1.0
      */
-    public static function fixupcss(string $filename, bool $parent, string $newcss, int $id = null)
+    public static function fixupcss(string $filename, bool $parent, string $newcss, ?int $id = null)
     {
         $app = Factory::getApplication();
 

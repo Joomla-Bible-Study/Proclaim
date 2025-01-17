@@ -305,7 +305,7 @@ class CwmmediafileTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetParentId(Table $table = null, $id = null): int
+    protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID
         return Cwmassets::parentId();

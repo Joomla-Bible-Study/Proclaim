@@ -108,14 +108,14 @@ class Cwmparams
     /**
      * Get Template Params
      *
-     * @param   int|null  $pk  Id of Template to look for
+     * @param   ?int  $pk  Id of Template to look for
      *
      * @return object Return active template info
      *
      * @throws \Exception
      * @since 7.0
      */
-    public static function getTemplateparams(int $pk = null): object
+    public static function getTemplateparams(?int $pk = null): object
     {
         $db = Factory::getContainer()->get('DatabaseDriver');
 
