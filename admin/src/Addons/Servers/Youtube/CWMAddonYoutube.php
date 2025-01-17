@@ -21,7 +21,6 @@ require_once __DIR__ . '/vendor/autoload.php';
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use Google\Service\Exception;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Input\Input;
 use Joomla\CMS\Language\Text;
 use Google;
 use Google\Service\YouTube;
