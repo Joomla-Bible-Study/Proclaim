@@ -18,7 +18,6 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Input\Input;
 use Joomla\CMS\Language\Text;
 
 /**
@@ -48,13 +47,13 @@ class CWMAddonYoutube extends CWMAddon
     /**
      * Upload
      *
-     * @param array|Input $data  Data to upload
+     * @param ?array $data  Data to upload
      *
      * @return array
      *
      * @since 9.0.0
      */
-    public function upload(\Joomla\Input\Input|array $data): mixed
+    public function upload(?array $data): mixed
     {
         // Holds for nothing
         return $data;
@@ -63,8 +62,8 @@ class CWMAddonYoutube extends CWMAddon
     /**
      * Render Fields for general view.
      *
-     * @param   object  $media_form  Medea files form
-     * @param bool $new         If media is new
+     * @param object  $media_form  Medea files form
+     * @param bool    $new         If media is new
      *
      * @return string
      *
@@ -104,8 +103,8 @@ class CWMAddonYoutube extends CWMAddon
     /**
      * Render Layout and fields
      *
-     * @param   object  $media_form  Medea files form
-     * @param bool $new         If media is new
+     * @param object  $media_form  Medea files form
+     * @param bool    $new         If media is new
      *
      * @return string
      *
@@ -156,7 +155,7 @@ class CWMAddonYoutube extends CWMAddon
     /**
      * Youtube url to embed.
      *
-     * @param   string  $url  YouTube url to transform.
+     * @param  string  $url  YouTube url to transform.
      *
      * @return string
      *

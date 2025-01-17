@@ -21,7 +21,6 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmuploadscript;
 use Exception;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\Input\Input;
 
 /**
  * Class CWMAddonLegacy
