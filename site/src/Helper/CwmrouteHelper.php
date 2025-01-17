@@ -26,15 +26,15 @@ abstract class CwmrouteHelper
     /**
      * Get the sermon route.
      *
-     * @param   integer      $id        The route of the content item.
-     * @param   string|int   $language  The language code.
-     * @param   string|null  $layout    The layout value.
+     * @param   integer     $id        The route of the content item.
+     * @param   int|string  $language  The language code.
+     * @param   ?string     $layout    The layout value.
      *
      * @return  string  The sermon route.
      *
      * @since   1.5
      */
-    public static function getMessageRoute(int $id, $language = '*', string $layout = null): string
+    public static function getMessageRoute(int $id, int|string $language = '*', ?string $layout = null): string
     {
         // Create the link
         $link = 'index.php?option=com_proclaim&view=cwmsermon&id=' . $id;
@@ -53,15 +53,15 @@ abstract class CwmrouteHelper
     /**
      * Get the Series route.
      *
-     * @param   integer      $seriesid  The Series ID.
-     * @param   string|int   $language  The language code.
-     * @param   string|null  $layout    The layout value.
+     * @param   integer     $seriesid  The Series ID.
+     * @param   int|string  $language  The language code.
+     * @param   ?string     $layout    The layout value.
      *
      * @return  string  The article route.
      *
      * @since   1.5
      */
-    public static function getSeriesRoute(int $seriesid, $language = '*', string $layout = null): string
+    public static function getSeriesRoute(int $seriesid, int|string $language = '*', ?string $layout = null): string
     {
         if ($seriesid < 1) {
             return '';
@@ -83,15 +83,15 @@ abstract class CwmrouteHelper
     /**
      * Get the Series route.
      *
-     * @param   integer      $seriesid  The Series ID.
-     * @param   string|int   $language  The language code.
-     * @param   string|null  $layout    The layout value.
+     * @param   integer     $seriesid  The Series ID.
+     * @param   int|string  $language  The language code.
+     * @param   ?string     $layout    The layout value.
      *
      * @return  string  The article route.
      *
      * @since   1.5
      */
-    public static function getLocationsRoute(int $seriesid, $language = '*', string $layout = null): string
+    public static function getLocationsRoute(int $seriesid, int|string $language = '*', ?string $layout = null): string
     {
         if ($seriesid < 1) {
             return '';
@@ -113,15 +113,15 @@ abstract class CwmrouteHelper
     /**
      * Get the Teacher route.
      *
-     * @param   int          $id        ID of the Teacher record
-     * @param   string|int   $language  The language code.
-     * @param   string|null  $layout    The layout value.
+     * @param   int         $id        ID of the Teacher record
+     * @param   int|string  $language  The language code.
+     * @param   ?string     $layout    The layout value.
      *
      * @return  string  The article route.
      *
      * @since   1.5
      */
-    public static function getTeachersRoute(int $id, $language = '*', string $layout = null): string
+    public static function getTeachersRoute(int $id, int|string $language = '*', ?string $layout = null): string
     {
         if ($id < 1) {
             return '';
@@ -157,15 +157,15 @@ abstract class CwmrouteHelper
     /**
      * Get the Teacher route.
      *
-     * @param   string       $type      Type of server offered
-     * @param   string|int   $language  The language code.
-     * @param   string|null  $layout    The layout value.
+     * @param   string      $type      Type of server offered
+     * @param   int|string  $language  The language code.
+     * @param   ?string     $layout    The layout value.
      *
      * @return  string  The article route.
      *
      * @since   1.5
      */
-    public static function getTypeRoute(string $type, $language = '*', string $layout = null): string
+    public static function getTypeRoute(string $type, int|string $language = '*', ?string $layout = null): string
     {
         if (!empty($type)) {
             return '';

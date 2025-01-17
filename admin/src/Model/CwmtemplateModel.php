@@ -17,10 +17,12 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
 
 /**
@@ -38,7 +40,7 @@ class CwmtemplateModel extends AdminModel
      *
      * @return  boolean  True on success, False on error.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   12.2
      */
     public function save($data)
@@ -67,7 +69,7 @@ class CwmtemplateModel extends AdminModel
      *
      * @return boolean
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     public function copy($cid)
@@ -93,15 +95,15 @@ class CwmtemplateModel extends AdminModel
     /**
      * Method to change the published state of one or more records.
      *
-     * @param   array    $pks    A list of the primary keys to change.
-     * @param   integer  $value  The value of the published state.
+     * @param   array  $pks    A list of the primary keys to change.
+     * @param   int    $value  The value of the published state.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   12.2
      */
-    public function publish(&$pks, $value = 1)
+    public function publish(&$pks, $value = 1): bool
     {
         foreach ($pks as $i => $pk) {
             if ($pk == 1 && $value != 1) {
@@ -116,15 +118,15 @@ class CwmtemplateModel extends AdminModel
     /**
      * Get the form data
      *
-     * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param   array  $data      Data for the form.
+     * @param   bool   $loadData  True if the form is to load its own data (default case), false if not.
      *
      * @return  mixed  A JForm object on success, false on failure
      *
-     * @throws \Exception
+     * @throws Exception
      * @since  7.0
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = array(), $loadData = true): mixed
     {
         // Get the form.
         $form = $this->loadForm(
@@ -139,13 +141,13 @@ class CwmtemplateModel extends AdminModel
     /**
      * Method to check out a row for editing.
      *
-     * @param   integer  $pk  The numeric id of the primary key.
+     * @param   int  $pk  The numeric id of the primary key.
      *
-     * @return  integer|null  False on failure or error, true otherwise.
+     * @return  ?int  False on failure or error, true otherwise.
      *
      * @since   11.1
      */
-    public function checkout($pk = null)
+    public function checkout($pk = null): ?int
     {
         return $pk;
     }
@@ -159,7 +161,7 @@ class CwmtemplateModel extends AdminModel
      *
      * @return  Table  A Table object
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   3.0
      */
     public function getTable($name = 'Cwmtemplate', $prefix = '', $options = array()): Table
@@ -170,12 +172,12 @@ class CwmtemplateModel extends AdminModel
     /**
      * Load Form Date
      *
-     * @return  array    The default data is an empty array.
+     * @return  array|CMSObject    The default data is an empty array.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   7.0
      */
-    protected function loadFormData()
+    protected function loadFormData(): array|CMSObject
     {
         $data = Factory::getApplication()->getUserState('com_proclaim.edit.template.data', array());
 
@@ -189,14 +191,14 @@ class CwmtemplateModel extends AdminModel
     /**
      * Custom clean the cache of COM_Proclaim and Proclaim modules
      *
-     * @param   string   $group      The cache group
-     * @param   integer  $client_id  The ID of the client
+     * @param   string  $group      The cache group
+     * @param   int     $client_id  The ID of the client
      *
      * @return  void
      *
      * @since    1.6
      */
-    protected function cleanCache($group = null, $client_id = 0)
+    protected function cleanCache($group = null, $client_id = 0): void
     {
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');

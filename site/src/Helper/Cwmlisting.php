@@ -1848,12 +1848,12 @@ class Cwmlisting
      * @param   \stdClass  $template  Template Data
      * @param   String     $type      Type of element
      *
-     * @return mixed|null|string
+     * @return mixed
      *
      * @throws \Exception
      * @since 7.0
      */
-    public function getElement(string $custom, object $row, Registry $params, $template, string $type)
+    public function getElement(string $custom, object $row, Registry $params, $template, string $type): mixed
     {
         $element = null;
 

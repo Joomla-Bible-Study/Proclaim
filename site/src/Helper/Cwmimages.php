@@ -155,7 +155,7 @@ class Cwmimages
     /**
      * Get Series Thumbnail
      *
-     * @param   string|null  $image  Image file
+     * @param   ?string  $image  Image file
      *
      * @return object
      * @example  {
@@ -195,8 +195,8 @@ class Cwmimages
     /**
      * Get Teacher Thumbnail
      *
-     * @param   string|null  $image1  ?
-     * @param   string|null  $image2  ?
+     * @param   ?string  $image1  ?
+     * @param   ?string  $image2  ?
      *
      * @return object
      * @example  {
@@ -338,9 +338,9 @@ class Cwmimages
     }
 
     /**
-     * @param   string|null  $image1
-     * @param   string|null  $image2
-     * @param   string       $folder
+     * @param   ?string  $image1
+     * @param   ?string  $image2
+     * @param   string   $folder
      *
      * @return object
      *

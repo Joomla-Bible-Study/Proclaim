@@ -115,7 +115,7 @@ class ProclaimComponent extends MVCComponent implements
      * @param   string  $section  The section to get the mapping for
      * @param   object  $item     The item
      *
-     * @return  string|null  The new section
+     * @return  ?string  The new section
      *
      * @throws Exception
      * @since   4.0.0

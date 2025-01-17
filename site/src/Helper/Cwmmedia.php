@@ -82,7 +82,7 @@ class Cwmmedia
      * @param   Registry                 $params    Params
      * @param   CwmtemplateTable|Object  $template  Template Table
      *
-     * @return string|null
+     * @return string
      *
      * @throws Exception
      * @since 9.0.0
@@ -204,7 +204,7 @@ class Cwmmedia
      * @param   Registry  $params       ?
      * @param   object    $media        Media Object
      *
-     * @return string|null
+     * @return ?string
      *
      * @since 9.0.0
      */
@@ -955,7 +955,7 @@ class Cwmmedia
      *
      * @param   Registry  $download  ?
      *
-     * @return string|null
+     * @return ?string
      *
      * @since 9.0.0
      */
