@@ -238,7 +238,7 @@ class CwmserieModel extends AdminModel
      * @param   array    $pks       An array of row IDs.
      * @param   array    $contexts  An array of item contexts.
      *
-     * @return  mixed  An array of new IDs on success, boolean false on failure.
+     * @return  array|false  An array of new IDs on success, boolean false on failure.
      *
      * @since    11.1
      */

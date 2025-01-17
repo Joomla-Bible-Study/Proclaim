@@ -48,6 +48,13 @@ class Dispatcher extends ComponentDispatcher
         $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
         if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
+            // Check the minimum PHP version
+            if (!version_compare(PHP_VERSION, "8.1.0", 'ge')) {
+                throw new \RuntimeException(
+                    "You need PHP 8.1.0 or later to run this package",
+                    502
+                );
+            }
             require_once $api;
         }
 

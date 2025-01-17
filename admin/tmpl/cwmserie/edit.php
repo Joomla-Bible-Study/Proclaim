@@ -150,9 +150,11 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         if ($this->canDo->get('core.admin')) : ?>
             <?php
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_CMN_FIELDSET_RULES')); ?>
-            <fieldset>
+            <fieldset id="fieldset-rules" class="options-form">
+                <div>
                 <?php
                 echo $this->form->getInput('rules'); ?>
+                </div>
             </fieldset>
             <?php
             echo HTMLHelper::_('uitab.endTab'); ?>

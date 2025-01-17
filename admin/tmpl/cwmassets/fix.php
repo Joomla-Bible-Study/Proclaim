@@ -42,24 +42,20 @@ $wa->addInlineScript(
             <?php
         }
         ?>
-        <div class="progress progress-striped active">
-            <div class="bar" style="width: <?php
-            echo $this->percentage ?>%;"></div> <?php
-            echo $this->percentage; ?>%
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: <?php echo $this->percentage; ?>%" aria-valuenow="<?php echo $this->percentage; ?>" aria-valuemin="0" aria-valuemax="100">
+            <?php echo $this->percentage; ?>%
         </div>
-
         <form action="<?php
         Route::_('index.php?option=com_proclaim&view=cwmassets'); ?>" name="adminForm"
               id="adminForm" class="form-inline">
-            <?php
-            if ($this->state === 'start') { ?>
+            <?php if ($this->state === 'start') { ?>
                 <input type="hidden" name="task" value="cwmassets.browse"/>
                 <?php
             } elseif ($this->more === true) { ?>
                 <input type="hidden" name="task" value="cwmassets.run"/>
                 <?php
             } ?>
-
             <?php
             if (!$this->more) : ?>
                 <div class="alert alert-info">
@@ -73,10 +69,8 @@ $wa->addInlineScript(
                             ); ?></p>
                     <input type="hidden" name="task" value="cwmassets.checkassets"/>
                 </div>
-                <?php
-            endif; ?>
-            <?php
-            echo HTMLHelper::_('form.token'); ?>
+            <?php endif; ?>
+            <?php echo HTMLHelper::_('form.token'); ?>
             <input type="hidden" name="tooltype" value=""/>
             <input type="hidden" name="option" value="com_proclaim"/>
         </form>

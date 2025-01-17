@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMAssets;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -29,13 +30,13 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var integer Total numbers of Steps
+    /** @var int Total numbers of Steps
      *
      * @since 9.0.0
      */
     public $totalSteps = 0;
 
-    /** @var integer Numbers of Steps already processed
+    /** @var int Numbers of Steps already processed
      *
      * @since 9.0.0
      */
@@ -52,26 +53,31 @@ class HtmlView extends BaseHtmlView
     public $step;
 
     public $assets;
+
     /** @var object Start of install
      *
      * @since 9.0.0
      */
     public $state;
+
     /** @var object Status
      *
      * @since 9.0.0
      */
     public $status;
-    /** @var boolean More
+
+    /** @var bool More
      *
      * @since 9.0.0
      */
     protected bool $more = false;
+
     /** @var  string Percentage
      *
      * @since 9.0.0
      */
-    protected $percentage;
+    protected string $percentage;
+
     /** @var array The pre versions to process
      *
      * @since 9.0.0
@@ -85,11 +91,11 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void  A string if successful, otherwise a JError object.
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   11.1
      * @see     fetch()
      */
-    public function display($tpl = null)
+    public function display($tpl = null): void
     {
         $app             = Factory::getApplication();
         $this->scanstate = $app->input->get('scanstate', false);
@@ -149,7 +155,7 @@ class HtmlView extends BaseHtmlView
                 ->addInlineScript(
                     "setTimeout(function(){
                                     jQuery('#adminForm').submit()
-								}, 3000);"
+								}, 1000);"
                 );
         }
 
@@ -173,10 +179,10 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0.0
      */
-    protected function addToolbar()
+    protected function addToolbar(): void
     {
         Factory::getApplication()->input->set('hidemainmenu', true);
 
@@ -185,7 +191,7 @@ class HtmlView extends BaseHtmlView
 
         ToolbarHelper::custom('cwmassets.checkassets', 'refresh', 'refresh', 'JBS_ADM_CHECK_ASSETS', false);
 
-        ToolbarHelper::custom('cwmassets.browse', 'fix', 'fix', 'JBS_ADM_FIX', false);
+        ToolbarHelper::custom('cwmassets.browse', 'heart', 'fix', 'JBS_ADM_FIX', false);
 
         ToolbarHelper::help('proclaim', true);
     }

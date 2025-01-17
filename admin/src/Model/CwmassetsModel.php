@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\ListModel;
@@ -83,9 +84,9 @@ class CwmassetsModel extends ListModel
      * Constructor.
      *
      * @param   array                                             $config   An optional associative array of configuration settings.
-     * @param   \Joomla\CMS\MVC\Factory\MVCFactoryInterface|null  $factory  The factory.
+     * @param   MVCFactoryInterface|null  $factory  The factory.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     public function __construct($config = array(), MVCFactoryInterface $factory = null)
@@ -100,7 +101,7 @@ class CwmassetsModel extends ListModel
      *
      * @return boolean
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     public function startScanning(): bool
@@ -129,7 +130,7 @@ class CwmassetsModel extends ListModel
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     private function resetStack(): void
@@ -191,7 +192,7 @@ class CwmassetsModel extends ListModel
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     private function saveStack(): void
@@ -221,7 +222,7 @@ class CwmassetsModel extends ListModel
     /**
      * Makes sure that no more than 5 seconds since the start of the timer have elapsed
      *
-     * @return boolean
+     * @return bool
      *
      * @since 7.0
      */
@@ -238,9 +239,9 @@ class CwmassetsModel extends ListModel
      *
      * @param   bool  $resetTimer  If the time must be reset
      *
-     * @return boolean
+     * @return bool
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     public function run(bool $resetTimer = true): bool
@@ -267,7 +268,7 @@ class CwmassetsModel extends ListModel
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     private function loadStack(): void
@@ -309,7 +310,7 @@ class CwmassetsModel extends ListModel
      *
      * @return bool
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     private function realRun(): bool
