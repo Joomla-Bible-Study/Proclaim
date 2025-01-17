@@ -35,6 +35,16 @@
                         default="fas fa-bible"
                 />
                 <field
+                        name="show_home"
+                        type="list"
+                        label="MOD_PROCLAIMICON_SHOW_HOME_LABEL"
+                        default="1"
+                        validate="options"
+                >
+                    <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
+                </field>
+                <field
                         name="show_messages"
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_MESSAGES_LABEL"

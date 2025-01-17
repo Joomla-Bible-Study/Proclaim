@@ -43,14 +43,14 @@ class ProclaimIconHelper
      * This method returns the array by reference so it can be
      * used to add custom buttons or remove default ones.
      *
-     * @param   Registry         $params       The module parameters
-     * @param   ?CMSApplication  $application  The application
+     * @param   Registry                  $params       The module parameters
+     * @param   ?CMSApplicationInterface  $application  The application
      *
      * @return  array  An array of buttons
      *
      * @since   10.0.0
      */
-    public function getButtons(Registry $params, CMSApplicationInterface $application = null)
+    public function getButtons(Registry $params, ?CMSApplicationInterface $application = null): array
     {
         if ($application === null) {
             try {
@@ -69,6 +69,18 @@ class ProclaimIconHelper
 
             $this->buttons[$key] = [];
 
+            if ($params->get('show_home')) {
+                $tmp = [
+                    'image'   => 'icon-big icon-star fa-3x',
+                    'link'    => Route::_('index.php?option=com_proclaim&amp;view=cwmcpanel'),
+                    'name'    => 'JBS_MNU_CONTROL_PANEL',
+                    'access'  => ['core.manage', 'com_proclaim', 'core.create', 'com_proclaim'],
+                    'group'   => 'MOD_PROCLAIMICON_SITE',
+                ];
+
+                $this->buttons[$key][] = $tmp;
+            }
+
             if ($params->get('show_messages')) {
                 $tmp = [
                     'image'   => 'icon-big icon-book fa-3x',
@@ -76,7 +88,7 @@ class ProclaimIconHelper
                     'linkadd' => Route::_('index.php?option=com_proclaim&amp;task=cwmmessage.add'),
                     'name'    => 'JBS_CMN_STUDIES',
                     'access'  => ['core.manage', 'com_proclaim', 'core.create', 'com_proclaim'],
-                    'group'   => 'MOD_QUICKICON_SITE',
+                    'group'   => 'MOD_PROCLAIMICON_SITE',
                 ];
 
                 if ((int) $params->get('show_messages') === 2) {
@@ -93,7 +105,7 @@ class ProclaimIconHelper
                     'linkadd' => Route::_('index.php?option=com_proclaim&amp;task=cwmmediafile.add'),
                     'name'    => 'JBS_CMN_MEDIA_FILES',
                     'access'  => ['core.manage', 'com_proclaim', 'core.create', 'com_proclaim'],
-                    'group'   => 'MOD_QUICKICON_SITE',
+                    'group'   => 'MOD_PROCLAIMICON_SITE',
                 ];
 
                 if ((int) $params->get('show_mediafiles') === 2) {
@@ -110,7 +122,7 @@ class ProclaimIconHelper
                     'linkadd' => Route::_('index.php?option=com_proclaim&amp;task=cwmteacher.add'),
                     'name'    => 'JBS_CMN_TEACHERS',
                     'access'  => ['core.manage', 'com_proclaim', 'core.create', 'com_proclaim'],
-                    'group'   => 'MOD_QUICKICON_SITE',
+                    'group'   => 'MOD_PROCLAIMICON_SITE',
                 ];
 
                 if ((int) $params->get('show_teachers') === 2) {
@@ -127,7 +139,7 @@ class ProclaimIconHelper
                     'linkadd' => Route::_('index.php?option=com_proclaim&amp;task=cwmserie.add'),
                     'name'    => 'JBS_CMN_SERIES',
                     'access'  => ['core.manage', 'com_proclaim', 'core.create', 'com_proclaim'],
-                    'group'   => 'MOD_QUICKICON_SITE',
+                    'group'   => 'MOD_PROCLAIMICON_SITE',
                 ];
 
                 if ((int) $params->get('show_series') === 2) {
@@ -144,7 +156,7 @@ class ProclaimIconHelper
                     'linkadd' => Route::_('index.php?option=com_proclaim&amp;task=cwmmessagetype.add'),
                     'name'    => 'JBS_CMN_MESSAGETYPES',
                     'access'  => ['core.manage', 'com_proclaim', 'core.create', 'com_proclaim'],
-                    'group'   => 'MOD_QUICKICON_SITE',
+                    'group'   => 'MOD_PROCLAIMICON_SITE',
                 ];
 
                 if ((int) $params->get('show_messagetypes') === 2) {
@@ -161,7 +173,7 @@ class ProclaimIconHelper
                     'linkadd' => Route::_('index.php?option=com_proclaim&amp;task=cwmlocation.add'),
                     'name'    => 'JBS_CMN_LOCATIONS',
                     'access'  => ['core.manage', 'com_proclaim', 'core.create', 'com_proclaim'],
-                    'group'   => 'MOD_QUICKICON_SITE',
+                    'group'   => 'MOD_PROCLAIMICON_SITE',
                 ];
 
                 if ((int) $params->get('show_locations') === 2) {
@@ -178,7 +190,7 @@ class ProclaimIconHelper
                     'linkadd' => Route::_('index.php?option=com_proclaim&amp;task=cwmtopic.add'),
                     'name'    => 'JBS_CMN_TOPICS',
                     'access'  => ['core.manage', 'com_proclaim', 'core.create', 'com_proclaim'],
-                    'group'   => 'MOD_QUICKICON_SITE',
+                    'group'   => 'MOD_PROCLAIMICON_SITE',
                 ];
 
                 if ((int) $params->get('show_topics') === 2) {
@@ -195,7 +207,7 @@ class ProclaimIconHelper
                     'linkadd' => Route::_('index.php?option=com_proclaim&amp;task=cwmcomment.add'),
                     'name'    => 'JBS_CMN_COMMENTS',
                     'access'  => ['core.manage', 'com_proclaim', 'core.create', 'com_proclaim'],
-                    'group'   => 'MOD_QUICKICON_SITE',
+                    'group'   => 'MOD_PROCLAIMICON_SITE',
                 ];
 
                 if ((int) $params->get('show_comments') === 2) {
@@ -212,7 +224,7 @@ class ProclaimIconHelper
                     'linkadd' => Route::_('index.php?option=com_proclaim&amp;task=cwmserver.add'),
                     'name'    => 'JBS_CMN_SERVERS',
                     'access'  => ['core.manage', 'com_proclaim', 'core.create', 'com_proclaim'],
-                    'group'   => 'MOD_QUICKICON_SITE',
+                    'group'   => 'MOD_PROCLAIMICON_SITE',
                 ];
 
                 if ((int) $params->get('show_servers') === 2) {
@@ -229,7 +241,7 @@ class ProclaimIconHelper
                     'linkadd' => Route::_('index.php?option=com_proclaim&amp;task=cwmpodcast.add'),
                     'name'    => 'JBS_CMN_PODCASTS',
                     'access'  => ['core.manage', 'com_proclaim', 'core.create', 'com_proclaim'],
-                    'group'   => 'MOD_QUICKICON_SITE',
+                    'group'   => 'MOD_PROCLAIMICON_SITE',
                 ];
 
                 if ((int) $params->get('show_podcasts') === 2) {
@@ -246,7 +258,7 @@ class ProclaimIconHelper
                     'linkadd' => Route::_('index.php?option=com_proclaim&amp;task=cwmtemplate.add'),
                     'name'    => 'JBS_CMN_TEMPLATES',
                     'access'  => ['core.manage', 'com_proclaim', 'core.create', 'com_proclaim'],
-                    'group'   => 'MOD_QUICKICON_SITE',
+                    'group'   => 'MOD_PROCLAIMICON_SITE',
                 ];
 
                 if ((int) $params->get('show_templates') === 2) {
@@ -263,7 +275,7 @@ class ProclaimIconHelper
                     'linkadd' => Route::_('index.php?option=com_proclaim&amp;task=cwmtemplatecode.add'),
                     'name'    => 'JBS_CMN_TEMPLATECODES',
                     'access'  => ['core.manage', 'com_proclaim', 'core.create', 'com_proclaim'],
-                    'group'   => 'MOD_QUICKICON_SITE',
+                    'group'   => 'MOD_PROCLAIMICON_SITE',
                 ];
 
                 if ((int) $params->get('show_templatecodes') === 2) {
@@ -279,7 +291,7 @@ class ProclaimIconHelper
                     'link'    => Route::_('index.php?option=com_proclaim&amp;task=cwmadmin.edit&amp;id=1'),
                     'name'    => 'JBS_CMN_ADMINISTRATION',
                     'access'  => ['core.manage', 'com_proclaim', 'core.create', 'com_proclaim'],
-                    'group'   => 'MOD_QUICKICON_SITE',
+                    'group'   => 'MOD_PROCLAIMICON_SITE',
                 ];
 
                 $this->buttons[$key][] = $tmp;
