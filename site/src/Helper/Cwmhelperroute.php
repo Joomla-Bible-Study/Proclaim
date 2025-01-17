@@ -40,14 +40,14 @@ abstract class Cwmhelperroute
     /**
      * Get Article Rout
      *
-     * @param   string       $id        ID or ID:Alias for the route to build
-     * @param   string|null  $language  The state of language
+     * @param   string   $id        ID or ID:Alias for the route to build
+     * @param   ?string  $language  The state of language
      *
      * @return string
      *
      * @since    7.2
      */
-    public static function getArticleRoute(string $id, string $language = null): string
+    public static function getArticleRoute(string $id, ?string $language = null): string
     {
         // Create the link
         $link = 'index.php?option=com_proclaim&view=Cwmsermon&id=' . $id;

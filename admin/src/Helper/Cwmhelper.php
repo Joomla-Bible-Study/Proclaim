@@ -325,7 +325,7 @@ class Cwmhelper
     /**
      * Get a Simple View Sate
      *
-     * @param   Registry|null  $params  AdminTable + parameters
+     * @param   ?Registry  $params  AdminTable + parameters
      *
      * @return  stdClass
      *

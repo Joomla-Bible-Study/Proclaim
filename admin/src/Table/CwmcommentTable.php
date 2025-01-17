@@ -171,14 +171,14 @@ class CwmcommentTable extends Table
      * The extended class can define a table and id to lookup.  If the
      * asset does not exist it will be created.
      *
-     * @param   \Joomla\CMS\Table\Table|null  $table  A Table object for the asset parent.
+     * @param   ?Table  $table  A Table object for the asset parent.
      * @param   null                          $id     Id to look up
      *
      * @return  integer
      *
      * @since       1.6
      */
-    protected function _getAssetParentId(Table $table = null, $id = null): int
+    protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID
         return Cwmassets::parentId();

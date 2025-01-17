@@ -97,7 +97,7 @@ class CwmtemplatecodeModel extends AdminModel
     /**
      * Get Type Language String
      *
-     * @return string|Null
+     * @return ?string
      *
      * @since 7.0
      */

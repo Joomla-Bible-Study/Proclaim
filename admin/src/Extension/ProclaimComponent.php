@@ -15,6 +15,7 @@ namespace CWM\Component\Proclaim\Administrator\Extension;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Service\HTML\CWMAdministratorService;
+use Exception;
 use Joomla\CMS\Component\Router\RouterServiceInterface;
 use Joomla\CMS\Component\Router\RouterServiceTrait;
 use Joomla\CMS\Extension\BootableExtensionInterface;
@@ -116,10 +117,10 @@ class ProclaimComponent extends MVCComponent implements
      *
      * @return  string|null  The new section
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   4.0.0
      */
-    public function validateSection($section, $item = null)
+    public function validateSection($section, $item = null): ?string
     {
         if (Factory::getApplication()->isClient('site')) {
             // On the front end we need to map some sections
@@ -142,7 +143,7 @@ class ProclaimComponent extends MVCComponent implements
      *
      * @return  array
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   4.0.0
      */
     public function getContexts(): array
@@ -173,7 +174,7 @@ class ProclaimComponent extends MVCComponent implements
     /**
      * Returns a table name for the state association
      *
-     * @param   string|null  $section  An optional section to separate different areas in the component
+     * @param   ?string  $section  An optional section to separate different areas in the component
      *
      * @return  string
      *
@@ -187,11 +188,11 @@ class ProclaimComponent extends MVCComponent implements
     /**
      * Returns the workflow context based on the given category section
      *
-     * @param   string|null  $section  The section
+     * @param   ?string  $section  The section
      *
-     * @return  string|null
+     * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   4.0.0
      */
     public function getCategoryWorkflowContext(?string $section = null): string
@@ -206,7 +207,7 @@ class ProclaimComponent extends MVCComponent implements
      *
      * @return  array
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   4.0.0
      */
     public function getWorkflowContexts(): array

@@ -91,14 +91,14 @@ class Cwmthumbnail
     /**
      * Check an image path
      *
-     * @param string $path  Path to file
-     * @param string|null $file  file to check
+     * @param string  $path  Path to file
+     * @param ?string $file  file to check
      *
      * @return bool
      *
      * @since 9.0
      */
-    public static function check(string $path, string $file = null): bool
+    public static function check(string $path, ?string $file = null): bool
     {
         if (!is_dir($path)) {
             return false;

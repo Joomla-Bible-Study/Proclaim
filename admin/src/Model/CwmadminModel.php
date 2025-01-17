@@ -619,15 +619,15 @@ class CwmadminModel extends AdminModel
      *
      * Note. Calling getState in this method will result in recursion.
      *
-     * @param   string|null  $ordering   ?
-     * @param   string|null  $direction  ?
+     * @param   ?string  $ordering   ?
+     * @param   ?string  $direction  ?
      *
      * @return  void
      *
      * @throws Exception
      * @since    1.7.2
      */
-    protected function populateState(string $ordering = null, string $direction = null): void
+    protected function populateState(?string $ordering = null, ?string $direction = null): void
     {
         $app = Factory::getApplication();
         $this->setState('message', $app->getUserState('com_proclaim.message'));

@@ -436,7 +436,7 @@ class Cwmbackup
     /**
      * Update files
      *
-     * @param   Registry|null  $params  Proclaim Params
+     * @param  ?Registry  $params  Proclaim Params
      *
      * @return void
      *

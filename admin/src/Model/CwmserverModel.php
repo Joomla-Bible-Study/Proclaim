@@ -24,6 +24,8 @@ use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
+use SimpleXMLElement;
+use stdClass;
 
 /**
  * Server administrator model
@@ -97,10 +99,10 @@ class CwmserverModel extends AdminModel
     /**
      * Method to get a server item.
      *
-     * @param   int|null  $pk   An optional id of the object to get
-     * @param   bool      $ext  If coming from external
+     * @param   int   $pk   An optional id of the object to get
+     * @param   bool  $ext  If coming from external
      *
-     * @return mixed Server data object, false on failure
+     * @return false|object|stdClass Server data object, false on failure
      *
      * @since 9.0.0
      */
@@ -143,11 +145,11 @@ class CwmserverModel extends AdminModel
      *
      * @param   string  $addon  Type of server
      *
-     * @return \|false|\SimpleXMLElement
+     * @return SimpleXMLElement
      *
      * @since   9.0.0
      */
-    public function getConfig(string $addon)
+    public function getConfig(string $addon): SimpleXMLElement|bool
     {
         $path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst(
             $addon

@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMComment;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
@@ -70,11 +71,11 @@ class HtmlView extends BaseHtmlView
     /**
      * Display the view
      *
-     * @param   string|null  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
      *
      * @return  void  A string if successful, otherwise a Error object.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since  9.0.0
      */
     public function display($tpl = null): void
@@ -106,7 +107,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since  7.0
      */
     protected function addToolbar(): void

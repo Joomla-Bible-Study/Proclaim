@@ -33,7 +33,7 @@ class Cwmpodcastsubscribe
     /**
      * Build Subscribe Table
      *
-     * @param   string|null  $introtext  Intro Text
+     * @param   ?string  $introtext  Intro Text
      *
      * @return string
      *
@@ -151,8 +151,8 @@ class Cwmpodcastsubscribe
     /**
      * Build Podcast Image
      *
-     * @param   string|null  $podcastimagefromdb  Podcast image
-     * @param   string|null  $words               Alt podcast image text
+     * @param   ?string  $podcastimagefromdb  Podcast image
+     * @param   ?string  $words               Alt podcast image text
      *
      * @return string
      *

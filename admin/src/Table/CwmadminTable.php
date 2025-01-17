@@ -33,31 +33,31 @@ class CwmadminTable extends Table
     /**
      * Primary Key
      *
-     * @var integer
+     * @var int
      * @since    7.0.0
      */
-    public $id = null;
+    public int $id = 0;
 
     /**
      * Drop Tables
      *
-     * @var integer
+     * @var int
      * @since    7.0.0
      */
-    public $drop_tables = 0;
+    public int $drop_tables = 0;
 
     /**
      * Params
      *
-     * @var string
+     * @var ?string
      * @since    7.0.0
      */
-    public $params = null;
+    public ?string $params = null;
 
     /**
      * Asset ID
      *
-     * @var integer
+     * @var int
      * @since    7.0.0
      */
     public $asset_id = 0;
@@ -65,7 +65,7 @@ class CwmadminTable extends Table
     /**
      * Access Level
      *
-     * @var integer
+     * @var int
      * @since    7.0.0
      */
     public $access = 0;
@@ -73,18 +73,18 @@ class CwmadminTable extends Table
     /**
      * Install State
      *
-     * @var string
+     * @var ?string
      * @since    7.0.0
      */
-    public $installstate = null;
+    public ?string $installstate = null;
 
     /**
      * Debug settings
      *
-     * @var integer
+     * @var ?int
      * @since    7.0.0
      */
-    public $debug = null;
+    public ?int $debug = null;
 
     /**
      * Constructor
@@ -106,12 +106,12 @@ class CwmadminTable extends Table
      * @param   mixed  $array   An associative array or object to bind to the Table instance.
      * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
-    public function bind($array, $ignore = '')
+    public function bind($array, $ignore = ''): bool
     {
         $params = [];
 
@@ -191,14 +191,14 @@ class CwmadminTable extends Table
      * a new row will be inserted into the database with the properties from the
      * Table instance.
      *
-     * @param   boolean  $updateNulls  True to update fields even if they are null.
+     * @param   bool  $updateNulls  True to update fields even if they are null.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
-    public function store($updateNulls = false)
+    public function store($updateNulls = false): bool
     {
         if (!$this->_rules) {
             $this->setRules(
@@ -243,14 +243,14 @@ class CwmadminTable extends Table
      * The extended class can define a table and id to lookup.  If the
      * asset does not exist it will be created.
      *
-     * @param   \Joomla\CMS\Table\Table|null  $table  A Table object for the asset parent.
-     * @param   null                          $id     Id to look up
+     * @param   ?Table  $table  A Table object for the asset parent.
+     * @param   null    $id     Id to look up
      *
-     * @return  integer
+     * @return  int
      *
      * @since   11.1
      */
-    protected function _getAssetParentId(Table $table = null, $id = null): int
+    protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID
         return Cwmassets::parentId();

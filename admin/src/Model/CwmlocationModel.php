@@ -16,7 +16,9 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Exception;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\Input\Input;
@@ -33,9 +35,9 @@ class CwmlocationModel extends AdminModel
      * Method to store a record
      *
      * @access    public
-     * @return    boolean    True on success
+     * @return    bool    True on success
      *
-     * @throws \Exception
+     * @throws Exception
      * @since     7.0
      */
     public function store()
@@ -77,7 +79,7 @@ class CwmlocationModel extends AdminModel
      *
      * @return  Table  A Table object
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   3.0
      */
     public function getTable($name = 'Cwmlocation', $prefix = '', $options = array()): Table
@@ -88,10 +90,10 @@ class CwmlocationModel extends AdminModel
     /**
      * Get the form data
      *
-     * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param   array  $data      Data for the form.
+     * @param   bool   $loadData  True if the form is to load its own data (default case), false if not.
      *
-     * @return  false|\Joomla\CMS\Form\Form  A JForm object on success, false on failure
+     * @return  false|Form  A JForm object on success, false on failure
      *
      * @since  7.0
      */
@@ -110,13 +112,13 @@ class CwmlocationModel extends AdminModel
     /**
      * Method to check-out a row for editing.
      *
-     * @param   integer  $pk  The numeric id of the primary key.
+     * @param   ?int  $pk  The numeric id of the primary key.
      *
-     * @return  integer|null  False on failure or error, true otherwise.
+     * @return  ?int  False on failure or error, true otherwise.
      *
      * @since   11.1
      */
-    public function checkout($pk = null)
+    public function checkout(?int $pk = null): ?int
     {
         return $pk;
     }
@@ -126,7 +128,7 @@ class CwmlocationModel extends AdminModel
      *
      * @return  array    The default data is an empty array.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   7.0
      */
     protected function loadFormData()
@@ -143,14 +145,14 @@ class CwmlocationModel extends AdminModel
     /**
      * Custom clean the cache of com_proclaim and proclaim modules
      *
-     * @param   string   $group      The cache group
-     * @param   integer  $client_id  The ID of the client
+     * @param   string  $group      The cache group
+     * @param   int     $client_id  The ID of the client
      *
      * @return  void
      *
      * @since    1.6
      */
-    protected function cleanCache($group = null, $client_id = 0)
+    protected function cleanCache($group = null, int $client_id = 0)
     {
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');

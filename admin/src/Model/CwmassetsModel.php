@@ -83,13 +83,13 @@ class CwmassetsModel extends ListModel
     /**
      * Constructor.
      *
-     * @param   array                                             $config   An optional associative array of configuration settings.
-     * @param   MVCFactoryInterface|null  $factory  The factory.
+     * @param   array                 $config   An optional associative array of configuration settings.
+     * @param   ?MVCFactoryInterface  $factory  The factory.
      *
      * @throws Exception
      * @since 7.0
      */
-    public function __construct($config = array(), MVCFactoryInterface $factory = null)
+    public function __construct($config = array(), ?MVCFactoryInterface $factory = null)
     {
         parent::__construct($config, $factory);
 

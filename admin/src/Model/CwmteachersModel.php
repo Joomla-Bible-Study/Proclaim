@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\ListModel;
@@ -31,13 +32,13 @@ class CwmteachersModel extends ListModel
     /**
      * Constructor.
      *
-     * @param   array                                             $config   An optional associative array of configuration settings.
-     * @param   \Joomla\CMS\MVC\Factory\MVCFactoryInterface|null  $factory  Factory
+     * @param   array                 $config   An optional associative array of configuration settings.
+     * @param   ?MVCFactoryInterface  $factory  Factory
      *
-     * @throws \Exception
+     * @throws Exception
      * @since      1.7.0
      */
-    public function __construct($config = array(), MVCFactoryInterface $factory = null)
+    public function __construct($config = array(), ?MVCFactoryInterface $factory = null)
     {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
@@ -83,7 +84,7 @@ class CwmteachersModel extends ListModel
      *
      * @return  void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   7.0
      */
     protected function populateState($ordering = 'teacher.teachername', $direction = 'asc')

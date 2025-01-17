@@ -819,15 +819,15 @@ class CwmadminController extends FormController
     /**
      * Submit function
      *
-     * @param   int|null     $key     ID
-     * @param   string|null  $urlVar  URL variable
+     * @param   ?int     $key     ID
+     * @param   ?string  $urlVar  URL variable
      *
      * @return bool
      *
      * @throws Exception
      * @since version
      */
-    public function submit(int $key = null, string $urlVar = null): bool
+    public function submit(?int $key = null, ?string $urlVar = null): bool
     {
         $this->checkToken();
 

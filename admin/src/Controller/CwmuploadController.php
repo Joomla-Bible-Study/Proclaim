@@ -21,6 +21,7 @@ use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Input\Input;
+use JsonException;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -40,7 +41,7 @@ class CwmuploadController extends AdminController
      *
      * @return void JSON response
      *
-     * @throws \JsonException
+     * @throws JsonException
      * @since 9.0
      */
     public function upload(): void
@@ -227,16 +228,16 @@ class CwmuploadController extends AdminController
     /**
      * Set the JSON response and exists script
      *
-     * @param   int          $code   Error Code
-     * @param   string|null  $msg    Error Message
-     * @param   bool         $error  ?
+     * @param   int      $code   Error Code
+     * @param   ?string  $msg    Error Message
+     * @param   ?bool    $error  ?
      *
      * @return void
      *
-     * @throws \JsonException
+     * @throws JsonException
      * @since 9.0
      */
-    #[NoReturn] private function setResponse(int $code, string $msg = null, bool $error = true): void
+    #[NoReturn] private function setResponse(int $code, ?string $msg = null, ?bool $error = true): void
     {
         if ($error) {
             $jsonrpc = array(

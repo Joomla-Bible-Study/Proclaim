@@ -1111,12 +1111,12 @@ class Cwmlisting
     /**
      * Use JImage Class
      *
-     * @param   String       $path    Path to File
-     * @param   string|null  $alt     Alternate Text
-     * @param   null         $id      CSS ID for the image
-     * @param   null         $width   Width
-     * @param   null         $height  Height
-     * @param   null         $class   CSS Class
+     * @param   string   $path    Path to File
+     * @param   ?string  $alt     Alternate Text
+     * @param   ?string  $id      CSS ID for the image
+     * @param   ?string  $width   Width
+     * @param   ?string  $height  Height
+     * @param   ?string  $class   CSS Class
      *
      * @return boolean|string
      *
@@ -1124,12 +1124,12 @@ class Cwmlisting
      */
     public function useJImage(
         string $path,
-        string $alt = null,
-        $id = null,
-        $width = null,
-        $height = null,
-        $class = null
-    ) {
+        ?string $alt = null,
+        ?string $id = null,
+        ?string $width = null,
+        ?string $height = null,
+        ?string $class = null
+    ): bool|string {
         $path = HTMLHelper::_('cleanImageURL', $path);
 
         try {
@@ -1181,7 +1181,7 @@ class Cwmlisting
         object $item,
         object $row,
         Registry $params,
-        $template,
+        \stdClass $template,
         int $header,
         string $type
     ): string {

@@ -47,7 +47,7 @@ class CwmsermonModel extends FormModel
     /**
      * Method to increment the hit counter for the study
      *
-     * @param   int|null  $pk  ID
+     * @param   ?int  $pk  ID
      *
      * @access    public
      * @return    bool    True on success
@@ -55,7 +55,7 @@ class CwmsermonModel extends FormModel
      * @todo      this look like it could be moved to a helper.
      * @since     1.5
      */
-    public function hit(int $pk = null): bool
+    public function hit(?int $pk = null): bool
     {
         $pk    = $pk ?? (int)$this->getState('study.id');
         $db    = Factory::getContainer()->get('DatabaseDriver');
@@ -70,14 +70,14 @@ class CwmsermonModel extends FormModel
     /**
      * Method to get study data.
      *
-     * @param   int|null  $pk  The id of the study.
+     * @param   ?int  $pk  The id of the study.
      *
      * @return    mixed    Returns the Sermon Record, false on failure.
      *
      * @throws Exception
      * @since 7.1.0
      */
-    public function getItem($pk = null): mixed
+    public function getItem(?int $pk = null): mixed
     {
         /** @var User $user */
         $user = Factory::getApplication()->getIdentity();

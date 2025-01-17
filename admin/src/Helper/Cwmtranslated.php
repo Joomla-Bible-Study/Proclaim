@@ -66,7 +66,7 @@ class Cwmtranslated
      *
      * @param   object  $topicItem  stdClass containing topic_text and topic_params
      *
-     * @return string|NULL  translated string or null if topicItem is not initialized
+     * @return ?string  translated string or null if topicItem is not initialized
      *
      * @since    7.0.0
      */
@@ -125,7 +125,7 @@ class Cwmtranslated
      *
      * @param   object  $topicItem  stdClass containing the studies id and tp_id (i.e. concatenated topic ids)
      *
-     * @return string|null :null  translated string with format '<text>[, <text>[, <text>]]' or null if topicItem is not initialised
+     * @return  ?string :null  translated string with format '<text>[, <text>[, <text>]]' or null if topicItem is not initialised
      *
      * @since    7.0.0
      */

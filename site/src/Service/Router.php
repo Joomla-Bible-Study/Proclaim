@@ -61,18 +61,18 @@ class Router extends RouterView
     /**
      * Proclaim Component router constructor
      *
-     * @param   SiteApplication                $app              The application object
-     * @param   AbstractMenu                   $menu             The menu object to work with
-     * @param   CategoryFactoryInterface|null  $categoryFactory  The category object
-     * @param   DatabaseInterface|null         $db               The database object
+     * @param   SiteApplication            $app              The application object
+     * @param   AbstractMenu               $menu             The menu object to work with
+     * @param   ?CategoryFactoryInterface  $categoryFactory  The category object
+     * @param   ?DatabaseInterface         $db               The database object
      *
      * @since 10.0.0
      */
     public function __construct(
         SiteApplication $app,
         AbstractMenu $menu,
-        CategoryFactoryInterface $categoryFactory = null,
-        DatabaseInterface $db = null
+        ?CategoryFactoryInterface $categoryFactory = null,
+        ?DatabaseInterface $db = null
     ) {
         $this->db = $db;
 
@@ -179,7 +179,7 @@ class Router extends RouterView
      * @return  array  The segments of this item
      * @since 10.0.0
      */
-    public function getCWMSermonSegment($id, array $query): array
+    public function getCWMSermonSegment(int|string $id, array $query): array
     {
         if ((int)$this->cacheiddata !== (int)$id && !strpos($id, ':')) {
             $id      = (int)$id;
@@ -250,13 +250,13 @@ class Router extends RouterView
     /**
      * Method to get the segment(s) for a teacher
      *
-     * @param   integer|string  $id     ID of the article to retrieve the segments for
-     * @param   array           $query  The request that is built right now
+     * @param   int|string  $id     ID of the article to retrieve the segments for
+     * @param   array       $query  The request that is built right now
      *
      * @return  array  The segments of this item
      * @since 10.0.0
      */
-    public function getCWMTeacherSegment($id, array $query): array
+    public function getCWMTeacherSegment(int|string $id, array $query): array
     {
         if ((int)$this->cacheiddata !== (int)$id && !strpos($id, ':')) {
             $id      = (int)$id;
@@ -294,7 +294,7 @@ class Router extends RouterView
      * @return  mixed   The id of this item or false
      * @since  10.0.0
      */
-    public function getCWMSermonsId($segment, $query)
+    public function getCWMSermonsId(string $segment, array $query)
     {
         return $this->getCWMSermonId($segment, $query);
     }
@@ -308,7 +308,7 @@ class Router extends RouterView
      * @return  mixed   The id of this item or false
      * @since   10.0.0
      */
-    public function getCWMSermonId($segment, $query)
+    public function getCWMSermonId(string $segment, array $query): mixed
     {
         if ($this->noIDs) {
             $dbquery = $this->db->getQuery(true);
@@ -339,7 +339,7 @@ class Router extends RouterView
      * @return  mixed   The id of this item or false
      * @since  10.0.0
      */
-    public function getCWMTeachersId($segment, $query)
+    public function getCWMTeachersId(string $segment, array $query): mixed
     {
         return $this->getCWMTeacherId($segment, $query);
     }
@@ -350,10 +350,10 @@ class Router extends RouterView
      * @param   string  $segment  Segment of the article to retrieve the ID for
      * @param   array   $query    The request that is parsed right now
      *
-     * @return  mixed   The id of this item or false
+     * @return  int   The id of this item or false
      * @since   10.0.0
      */
-    public function getCWMTeacherId($segment, $query)
+    public function getCWMTeacherId(string $segment, array $query): int
     {
         if ($this->noIDs) {
             $dbquery = $this->db->getQuery(true);
@@ -385,7 +385,7 @@ class Router extends RouterView
      *
      * @since   3.7.3
      */
-    public function getCWMSeriesDisplaysSegment($id, $query)
+    public function getCWMSeriesDisplaysSegment(string $id, array $query): array
     {
         return $this->getCWMSeriesDisplaySegment($id, $query);
     }
@@ -393,13 +393,13 @@ class Router extends RouterView
     /**
      * Method to get the segment(s) for a series
      *
-     * @param   integer  $id     ID of the article to retrieve the segments for
-     * @param   array    $query  The request that is built right now
+     * @param   int    $id     ID of the article to retrieve the segments for
+     * @param   array  $query  The request that is built right now
      *
      * @return  array  The segments of this item
      * @since 10.0.0
      */
-    public function getCWMSeriesDisplaySegment($id, array $query)
+    public function getCWMSeriesDisplaySegment(int $id, array $query): array
     {
         if (!strpos($id, ':')) {
             $id      = (int)$id;
@@ -431,7 +431,7 @@ class Router extends RouterView
      * @return  mixed   The id of this item or false
      * @since  10.0.0
      */
-    public function getCWMSeriesDisplaysId($segment, $query)
+    public function getCWMSeriesDisplaysId(string $segment, array $query): mixed
     {
         return $this->getCWMSeriesDisplayId($segment, $query);
     }
@@ -442,10 +442,10 @@ class Router extends RouterView
      * @param   string  $segment  Segment of the article to retrieve the ID for
      * @param   array   $query    The request that is parsed right now
      *
-     * @return  mixed   The id of this item or false
+     * @return  int   The id of this item or false
      * @since   10.0.0
      */
-    public function getCWMSeriesDisplayId($segment, $query)
+    public function getCWMSeriesDisplayId(string $segment, array $query): int
     {
         if ($this->noIDs) {
             $dbquery = $this->db->getQuery(true);
@@ -474,10 +474,10 @@ class Router extends RouterView
      * @param   string  $segment  Segment of the article to retrieve the ID for
      * @param   array   $query    The request that is parsed right now
      *
-     * @return  mixed   The id of this item or false
+     * @return  int   The id of this item or false
      * @since   10.0.0
      */
-    public function getCWMLatestId($segment, $query)
+    public function getCWMLatestId(string $segment, array $query): int
     {
         if ($this->noIDs) {
             $dbquery = $this->db->getQuery(true);

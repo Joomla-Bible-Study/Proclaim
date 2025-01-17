@@ -33,9 +33,9 @@ class Cwmserieslist extends Cwmlisting
     /**
      * Get Series ElementNumber
      *
-     * @param   string|null  $subcustom  ?
+     * @param  ?string  $subcustom  ?
      *
-     * @return integer
+     * @return int
      *
      * @since    8.0
      */

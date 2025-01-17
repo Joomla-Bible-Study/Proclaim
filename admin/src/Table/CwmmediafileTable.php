@@ -298,10 +298,10 @@ class CwmmediafileTable extends Table
      * The extended class can define a table and id to lookup.  If the
      * asset does not exist it will be created.
      *
-     * @param   Table|null  $table  A Table object for the asset parent.
-     * @param   null        $id     Id to look up
+     * @param   ?Table  $table  A Table object for the asset parent.
+     * @param   null    $id     Id to look up
      *
-     * @return  integer
+     * @return  int
      *
      * @since       1.6
      */

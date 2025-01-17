@@ -35,7 +35,7 @@ class Cwmimages
     /**
      * Main Study Image
      *
-     * @param   Registry|null  $params  Sermon Params
+     * @param   ?Registry  $params  Sermon Params
      *
      * @return object
      * @example  {
@@ -48,7 +48,7 @@ class Cwmimages
      *
      * @since    7.0
      */
-    public static function mainStudyImage(Registry $params = null): object
+    public static function mainStudyImage(?Registry $params = null): object
     {
         if ($params === null) {
             $database = Factory::getContainer()->get('DatabaseDriver');
@@ -231,8 +231,8 @@ class Cwmimages
     /**
      * Get Teacher Image
      *
-     * @param   string|null  $image1  ?
-     * @param   string|null  $image2  ?
+     * @param   ?string  $image1  ?
+     * @param   ?string  $image2  ?
      *
      * @return object
      * @example  {
@@ -247,7 +247,7 @@ class Cwmimages
      *
      * @todo This looks like it need a rework.
      */
-    public static function getTeacherImage(string $image1 = null, string $image2 = null): object
+    public static function getTeacherImage(?string $image1 = null, ?string $image2 = null): object
     {
         $folder = self::getTeacherImageFolder();
         $path   = '';
