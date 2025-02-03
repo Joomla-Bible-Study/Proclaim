@@ -89,11 +89,6 @@ class HtmlView extends BaseHtmlView
         parent::display($tpl);
 
         $isNew = ($this->item->id < 1);
-        $this->setDocumentTitle(
-            $isNew ?
-                Text::_('JBS_TITLE_LOCATIONS_CREATING') :
-                Text::sprintf('JBS_TITLE_LOCATIONS_EDITING', $this->item->location_text)
-        );
     }
 
     /**

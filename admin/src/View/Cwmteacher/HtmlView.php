@@ -105,12 +105,6 @@ class HtmlView extends BaseHtmlView
         }
 
         $isNew = ($this->item->id < 1);
-        $this->setDocumentTitle(
-            $isNew ? Text::_('JBS_TITLE_TEACHER_CREATING') : Text::sprintf(
-                'JBS_TITLE_TEACHER_EDITING',
-                $this->item->teachername
-            )
-        );
 
         // Display the template
         parent::display($tpl);

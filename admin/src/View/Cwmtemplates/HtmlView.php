@@ -119,8 +119,6 @@ class HtmlView extends BaseHtmlView
             $this->addToolbar();
         }
 
-        $this->setDocumentTitle(Text::_('JBS_TITLE_TEMPLATES'));
-
         // Display the template
         parent::display($tpl);
     }

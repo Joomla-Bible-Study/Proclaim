@@ -102,10 +102,6 @@ class HtmlView extends BaseHtmlView
         parent::display($tpl);
 
         $isNew = ($this->item->id < 1);
-        $this->setDocumentTitle(
-            $isNew ? Text::_('JBS_TITLE_MESSAGETYPES_CREATING')
-                : Text::sprintf('JBS_TITLE_MESSAGETYPES_EDITING', $this->item->message_type)
-        );
     }
 
     /**

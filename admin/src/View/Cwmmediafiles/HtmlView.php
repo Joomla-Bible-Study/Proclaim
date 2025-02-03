@@ -12,6 +12,7 @@
 namespace CWM\Component\Proclaim\Administrator\View\CWMMediaFiles;
 
 // No Direct Access
+use Exception;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
@@ -103,7 +104,7 @@ class HtmlView extends BaseHtmlView
     /**
      * Is this view an Empty State
      *
-     * @var   boolean
+     * @var   bool
      * @since 4.0.0
      */
     private bool $isEmptyState = false;
@@ -115,7 +116,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void  A string if successful, otherwise a JError object.
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   11.1
      * @see     fetch()
      */
@@ -160,8 +161,6 @@ class HtmlView extends BaseHtmlView
             unset($this->activeFilters['language']);
         }
 
-        $this->setDocumentTitle(Text::_('JBS_TITLE_MEDIA_FILES'));
-
         // Display the template
         parent::display($tpl);
     }
@@ -171,7 +170,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     protected function addToolbar(): void

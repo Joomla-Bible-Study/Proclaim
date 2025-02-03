@@ -108,8 +108,6 @@ class HtmlView extends BaseHtmlView
             $this->addToolbar();
         }
 
-        $this->setDocumentTitle(Text::_('JBS_TITLE_LOCATIONS'));
-
         // Display the template
         parent::display($tpl);
     }

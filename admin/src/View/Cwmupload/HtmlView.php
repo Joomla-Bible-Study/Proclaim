@@ -89,8 +89,6 @@ class HtmlView extends BaseHtmlView
         $this->runtime    = $runtime;
         $this->currentDir = '/media';
 
-        $this->setDocumentTitle(Text::_('JBS_TITLE_UPLOAD_FORM'));
-
         // Set the toolbar
         $this->addToolbar();
 

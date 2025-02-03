@@ -102,8 +102,6 @@ class HtmlView extends BaseHtmlView
 
         // Display the template
         parent::display($tpl);
-
-        $this->setDocumentTitle(Text::_('JBS_TITLE_PODCASTS'));
     }
 
     /**

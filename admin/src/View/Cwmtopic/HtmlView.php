@@ -99,12 +99,6 @@ class HtmlView extends BaseHtmlView
         $this->addToolbar();
 
         $isNew = ($this->item->id < 1);
-        $this->setDocumentTitle(
-            $isNew ? Text::_('JBS_TITLE_TOPICS_CREATING') : Text::sprintf(
-                'JBS_TITLE_TOPICS_EDITING',
-                $this->item->topic_text
-            )
-        );
 
         // Display the template
         parent::display($tpl);

@@ -162,8 +162,6 @@ class HtmlView extends BaseHtmlView
 
         $this->addToolbar();
 
-        $this->setDocumentTitle(Text::sprintf('JBS_TITLE_INSTALL', $this->percentage . '%', $this->running));
-
         // Display the template
         parent::display($tpl);
     }

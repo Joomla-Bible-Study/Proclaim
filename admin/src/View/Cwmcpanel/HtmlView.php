@@ -56,7 +56,7 @@ class HtmlView extends BaseHtmlView
     /**
      * Post Installation Messages
      *
-     * @var    boolean
+     * @var    bool
      * @since  7.0.0
      */
     protected bool $hasPostInstallationMessages;
@@ -64,7 +64,7 @@ class HtmlView extends BaseHtmlView
     /**
      * Extension ID
      *
-     * @var    integer
+     * @var    int
      * @since  7.0.0
      */
     protected int $extension_id;
@@ -93,9 +93,6 @@ class HtmlView extends BaseHtmlView
 
         $this->hasPostInstallationMessages = $model->hasPostInstallMessages();
         $this->extension_id                = (int)$this->state->get('extension_id', 0, 'int');
-
-        // Set the document
-        $this->setDocumentTitle(Text::_('JBS_TITLE_CONTROL_PANEL'));
 
         // Display the template
         parent::display($tpl);
