@@ -40,9 +40,9 @@ $Listing = new Cwmlisting();
     <div class="row-fluid">
         <div class="col-12">
             <?php
-            /** @var \stdClass $list */
+            /** @var stdClass $list */
 
-            /** @var \stdClass $cwmtemplate */
+            /** @var stdClass $cwmtemplate */
             try {
                 echo $Listing->getFluidListing($list, $params, $cwmtemplate, $type = "sermons");
             } catch (Exception $e) {
