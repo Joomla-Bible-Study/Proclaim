@@ -2188,7 +2188,10 @@ class Cwmlisting
     {
         $med = new Cwmmedia();
 
-        $mediarow = '<div class="bsms_media_container row" style="float:left;"  >';
+        $mediarow = '<div class="bsms_media_container row" style="float: left;
+                      position: relative;
+                      left: 50%;
+                      transform: translateX(-50%);"  >';
 
         foreach ($item->mediafiles as $media) {
             $mediarow .= '<div id="bsms_media_file' . $media->id . '" class="col bsms_media_file" >' .
@@ -2556,19 +2559,25 @@ class Cwmlisting
      */
     public function getShare($link, $row, $params): ?string
     {
-        $shareit = '<div class="row">';
+        $shareit = '<div class="row float-right">';
 
-        $shareit .= '<div class="pull-right">
-						<!-- AddThis Button BEGIN -->
-						<a class="addthis_button" href="//www.addthis.com/bookmark.php?v=250">
-						<img src="//s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Share" />
-						</a>
-						<script type="text/javascript">var addthis_config = {"data_track_clickback":true};</script>
-						<script type="text/javascript" src="//s7.addthis.com/js/250/addthis_widget.js"></script>
+        $shareit .= '<!-- AddThis Button BEGIN -->
+						<div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+                            <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+                        </div>
+						<script type="text/javascript" src="https://static.addtoany.com/menu/page.js"></script>
 						<!-- AddThis Button END -->
-						</div>';
+						';
+        $doc     = Factory::getApplication()->getDocument();
+        $doc->addScriptDeclaration(
+            'a2a_config.thanks = {
+                                    postShare: true,
+                                    ad: false,
+                                };'
+        );
 
         $shareit .= '</div>';
+
 
         return $shareit;
     }
