@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Html\HtmlHelper;
 use Joomla\CMS\Image\Image;
@@ -24,6 +25,8 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
+use JsonException;
+use stdClass;
 
 /**
  * Proclaim listing class
@@ -42,15 +45,15 @@ class Cwmlisting
      *
      * @param   mixed      $items     Items
      * @param   Registry   $params    Page Params
-     * @param   \stdClass  $template  Template name
+     * @param   stdClass  $template  Template name
      * @param   String     $type      Type of Listing
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
-    public function getFluidListing($items, Registry $params, \stdClass $template, string $type): string
+    public function getFluidListing($items, Registry $params, stdClass $template, string $type): string
     {
         $list         = null;
         $row          = array();
@@ -567,7 +570,7 @@ class Cwmlisting
      *
      * @return mixed
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     public function getMediaFiles(array $medias)
@@ -615,13 +618,13 @@ class Cwmlisting
      *
      * @param   string  $paramtext  Param Text
      *
-     * @return \stdClass
+     * @return stdClass
      *
      * @since 7.0
      */
-    public function getListParamsArray(string $paramtext): \stdClass
+    public function getListParamsArray(string $paramtext): stdClass
     {
-        $l = new \stdClass();
+        $l = new stdClass();
 
         if ($paramtext === 'tdteacherimage') {
             if ($this->params->get($paramtext . 'rrow')) {
@@ -721,14 +724,14 @@ class Cwmlisting
      * @param   array      $listsorts  ?
      * @param   Object     $item       ?
      * @param   Registry   $params     Item Params
-     * @param   \stdClass  $template   Template info
+     * @param   stdClass  $template   Template info
      * @param   string     $oddeven    ?
      * @param   integer    $header     ?
      * @param   string     $type       ?
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     public function getFluidRow(
@@ -1134,7 +1137,7 @@ class Cwmlisting
 
         try {
             $image = Image::getImageFileProperties(JPATH_ROOT . DIRECTORY_SEPARATOR . $path->url);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
 
@@ -1168,20 +1171,20 @@ class Cwmlisting
      * @param   Object     $item      Study item
      * @param   Object     $row       Row Setup data
      * @param   Registry   $params    Parameters for the study
-     * @param   \stdClass  $template  Template table
+     * @param   stdClass  $template  Template table
      * @param   int        $header    Header will display if 1, Do not display if 0
      * @param   string     $type      Type of Fluid Data
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     public function getFluidData(
         object $item,
         object $row,
         Registry $params,
-        \stdClass $template,
+        stdClass $template,
         int $header,
         string $type
     ): string {
@@ -1765,20 +1768,17 @@ class Cwmlisting
             $tdadd = 'colspan="' . $row->colspan . '"';
         }
 
+        if ($customclass) {
+            $tdadd .= ' class="' . $customclass . '"';
+        }
+
         if ($header === 0) {
             $frow = '<td scope="col"' . $tdadd . '>';
         }
 
-        // If ($header === 1) {$frow = '<th>';}
         if ($header === 1) {
             $frow = '';
         }
-
-        if ($customclass) {
-            $frow .= ' ' . $customclass;
-        }
-
-        // $frow .= '" about="' . $row->name . '">' . $classopen;
 
         if ($link) {
             $frow .= $link;
@@ -1814,7 +1814,7 @@ class Cwmlisting
      * @param   String     $custom    Custom String
      * @param   Object     $item      Study Item
      * @param   Registry   $params    Params
-     * @param   \stdClass  $template  Template Table Data
+     * @param   stdClass  $template  Template Table Data
      * @param   String     $type      Type of data
      *
      * @return mixed
@@ -1845,12 +1845,12 @@ class Cwmlisting
      * @param   String     $custom    Custom String
      * @param   Object     $row       Row Data
      * @param   Registry   $params    Params
-     * @param   \stdClass  $template  Template Data
+     * @param   stdClass  $template  Template Data
      * @param   String     $type      Type of element
      *
      * @return mixed
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     public function getElement(string $custom, object $row, Registry $params, $template, string $type): mixed
@@ -2177,11 +2177,11 @@ class Cwmlisting
      *
      * @param   Object     $item      Study item
      * @param   Registry   $params    Params
-     * @param   \stdClass  $template  Template return
+     * @param   stdClass  $template  Template return
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.0.0
      */
     public function getFluidMediaFiles(object $item, Registry $params, $template): string
@@ -2249,13 +2249,13 @@ class Cwmlisting
                         $date = HtmlHelper::_('date', $studydate, "n/j", null);
                         break;
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 return $studydate;
             }
         } else {
             try {
                 $date = HtmlHelper::_('date', $studydate, $customDate);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 return $studydate;
             }
         }
@@ -2311,13 +2311,13 @@ class Cwmlisting
      * @param   string     $id3       Id3 data
      * @param   int        $tid       Template ID
      * @param   Registry   $params    Params
-     * @param   \stdClass  $row       Row data
-     * @param   \stdClass  $template  Template Table Data
+     * @param   stdClass  $row       Row data
+     * @param   stdClass  $template  Template Table Data
      * @param   string     $type      Type for Series display
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     private function getLink(
@@ -2325,7 +2325,7 @@ class Cwmlisting
         string $id3,
         int $tid,
         Registry $params,
-        \stdClass $row,
+        stdClass $row,
         $template,
         string $type
     ): string {
@@ -2394,7 +2394,7 @@ class Cwmlisting
     /**
      * Get Other Links
      *
-     * @param   int       $id3     Study ID ID
+     * @param   int       $id3     Study ID
      * @param   string    $islink  Is a Link
      * @param   Registry  $params  Item Params
      *
@@ -2402,7 +2402,7 @@ class Cwmlisting
      *
      * @since 7.0
      */
-    public function getOtherlinks($id3, $islink, $params)
+    public function getOtherlinks($id3, $islink, $params): string
     {
         $link  = '';
         $db    = Factory::getContainer()->get('DatabaseDriver');
@@ -2454,7 +2454,7 @@ class Cwmlisting
      *
      * @return object
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     public function getListingExp($row, $params, $template)
@@ -2554,7 +2554,7 @@ class Cwmlisting
      *
      * @since 7.0
      */
-    public function getShare($link, $row, $params)
+    public function getShare($link, $row, $params): ?string
     {
         $shareit = '<div class="row">';
 
@@ -2584,10 +2584,10 @@ class Cwmlisting
      *
      * @return string
      *
-     * @throws \JsonException
+     * @throws JsonException
      * @since 7.0
      */
-    private function makeBitlyUrl($url, $login, $appkey, $format = 'xml', $version = '2.0.1')
+    private function makeBitlyUrl($url, $login, $appkey, string $format = 'xml', string $version = '2.0.1')
     {
         // Create the URL
         $bitly = 'http://api.bit.ly/shorten?version=' . $version . '&longUrl=' . urlencode($url) . '&login='
