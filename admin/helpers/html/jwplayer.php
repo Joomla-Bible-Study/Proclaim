@@ -205,7 +205,7 @@ abstract class JHtmlJwplayer
             $player->playerwidth  = $player->playerwidth + 20;
             $player->playerheight = $player->playerheight + $popupmarg;
             $render               .= "<a href=\"#\" onclick=\"window.open('index.php?option=com_proclaim&amp;player=" . $player->player
-                . "&amp;view=popup&amp;t=" . $t . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
+                . "&amp;view=cwmpopup&amp;t=" . $t . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
                 . $player->playerwidth . ",height=" .
                 $player->playerheight . "'); return false\">" . $popouttext . "</a>";
         }

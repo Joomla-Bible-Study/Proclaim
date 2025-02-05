@@ -356,7 +356,7 @@ class Cwmpodcast
                             $episodedetailtemp .= '<link>' . $protocol . $path . '</link>';
                         } elseif ($podinfo->linktype == '2') {
                             $episodedetailtemp .= '<link>' . $protocol . $podinfo->website
-                                . '/index.php?option=com_proclaim&amp;view=popup&amp;player=1&amp;id=' .
+                                . '/index.php?option=com_proclaim&amp;view=cwmpopup&amp;player=1&amp;id=' .
                                 $episode->slug . '&amp;t=' . $detailstemplateid . '</link>';
                         } else {
                             $episodedetailtemp .= '<link>' . $protocol . $podinfo->website

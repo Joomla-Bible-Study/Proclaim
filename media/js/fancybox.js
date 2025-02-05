@@ -52,7 +52,7 @@
 						})
 					},
 					caption: '<button data-fancybox-close onclick="window.open(\'index.php?option=com_proclaim&amp;player=' +
-						ptype + '&amp;view=popup&amp;mediaid=' + contentPanelId +
+						ptype + '&amp;view=cwmpopup&amp;mediaid=' + contentPanelId +
 						'&amp;tmpl=component\',\'_blank\',\'resizable=yes\')">' + potext +
 						'</button>',
 				},
