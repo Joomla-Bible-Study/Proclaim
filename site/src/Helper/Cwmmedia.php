@@ -479,7 +479,8 @@ class Cwmmedia
 
             case 7:
             case 1: // Internal
-                $playercode = '';
+
+	        $playercode = '';
 
                 switch ($player->type) {
                     case 3: // Squeezebox view
@@ -487,6 +488,7 @@ class Cwmmedia
                         break;
 
                     case 2: // Inline
+
                         HtmlHelper::_('Jwplayer.framework', true, true);
 
                         if ($player->player == 7) {
@@ -517,6 +519,7 @@ class Cwmmedia
 
                     case 1: // Popup
                         // Add space for popup window
+
                         $diff                 = $params->get('player_width') - $params->get('playerwidth');
                         $player->playerwidth  += abs($diff) + 10;
                         $player->playerheight += $params->get('popupmargin', '50');
@@ -528,7 +531,7 @@ class Cwmmedia
                             $player->playerheight . "'); return false\" class=\"jbsmplayerlink\">" . $image . "</a>";
                         break;
                 }
-
+	        //var_dump($playercode);
                 return $playercode;
 
             case 2: // All Videos Reloaded
@@ -714,7 +717,7 @@ class Cwmmedia
                 $media->teachername . '"}\'  href="javascript:;">' . $image . '</a>';
         }
 
-        return '<a data-src="' . $path . '" data-id="' . $media->id . '" id="linkmedia' . $media->id . '" title="' . $params->get(
+        return '<a data-src="' . $path . '" data-id="' . $media->id . '" id="' . $media->id . '" title="' . $params->get(
             'filename'
         ) .
             '" class="fancybox fancybox_jwplayer hitplay" potext="' . $popout . '" ptype="' . $player->player .
