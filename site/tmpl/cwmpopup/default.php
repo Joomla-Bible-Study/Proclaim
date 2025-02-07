@@ -55,6 +55,7 @@ $CWMedia = new Cwmmedia();
             $this->params->get('filename'),
             $this->params,
             true
+
         );
 
         if (preg_match('(youtube.com|youtu.be)', $path) === 1) {
