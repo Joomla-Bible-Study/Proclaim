@@ -49,7 +49,7 @@ $CWMedia = new Cwmmedia();
     if ($this->params->get('player') === "1" || $this->player === 1 || $this->player === 7) {
         $player = new stdClass();
         $player->mp3 = $this->player === 7;
-        HtmlHelper::_('jwplayer.framework');
+        //HtmlHelper::_('jwplayer.framework');
         $path = Cwmhelper::mediaBuildUrl(
             $this->media->sparams->get('path'),
             $this->params->get('filename'),
@@ -57,7 +57,7 @@ $CWMedia = new Cwmmedia();
             true
 
         );
-
+	    echo '<audio controls autoplay><source src="' . $path . '" type="audio/mp3"></audio>';
         if (preg_match('(youtube.com|youtu.be)', $path) === 1) {
             echo '<iframe width="' . $this->params->get('player_width') . '" height="' . $this->params->get(
                 'player_height'
