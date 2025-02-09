@@ -50,6 +50,7 @@ class TeacherListField extends ListField
         $query = $db->getQuery(true);
         $query->select('id,teachername');
         $query->from('#__bsms_teachers');
+        $query->order('teachername');
         $db->setQuery((string)$query);
         $teachers = $db->loadObjectList();
         $options  = array();

@@ -50,6 +50,7 @@ class LocationsField extends ListField
         $query = $db->getQuery(true);
         $query->select('id,location_text');
         $query->from('#__bsms_locations');
+        $query->order('location_text');
         $db->setQuery((string)$query);
         $messages = $db->loadObjectList();
         $options  = array();
