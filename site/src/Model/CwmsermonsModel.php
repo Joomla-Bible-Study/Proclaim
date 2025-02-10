@@ -13,11 +13,13 @@ namespace CWM\Component\Proclaim\Site\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseQuery;
+use Joomla\Database\ParameterType;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
@@ -50,7 +52,7 @@ class CwmsermonsModel extends ListModel
      *
      * @param   array  $config  An optional associative array of configuration settings.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   11.1
      * @see     JController
      */
@@ -110,7 +112,7 @@ class CwmsermonsModel extends ListModel
      *
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     public function getTranslated($items = array()): array
@@ -310,7 +312,7 @@ class CwmsermonsModel extends ListModel
      *
      * @return  void
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   11.1
      */
     protected function populateState($ordering = null, $direction = null): void
@@ -402,7 +404,7 @@ class CwmsermonsModel extends ListModel
 
         $messageType = $this->getUserStateFromRequest($this->context . '.filter.messageType', 'filter_messagetype');
 
-        if ($landing == 1 && $messageType !== 0) {
+        if ($landing === 1 && $messageType !== 0) {
             $messageType = $this->getUserStateFromRequest(
                 $this->context . '.filter.landingmessagetype',
                 'filter_messagetype_landing'
@@ -503,7 +505,7 @@ class CwmsermonsModel extends ListModel
      *
      * @return  DatabaseQuery
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   7.0
      */
     protected function getListQuery(): DatabaseQuery
@@ -617,7 +619,7 @@ class CwmsermonsModel extends ListModel
 
         // Teacher ID for podcast display
         if (
-            !is_null($params->get('mteacher_id')) && $params->get('mteacher_id')[0] !== '-1' && empty(
+            $params->get('mteacher_id') !== null && $params->get('mteacher_id')[0] !== '-1' && empty(
                 $this->getState(
                     'filter.teacher'
                 )
@@ -625,7 +627,7 @@ class CwmsermonsModel extends ListModel
         ) {
             $filters_group[] = ['study.teacher_id' => $params->get('mteacher_id')];
         } elseif (
-            !is_null($params->get('mteacher_id')) && $params->get(
+            $params->get('mteacher_id') !== null && $params->get(
                 'mteacher_id'
             )[0] !== '-1' && !empty($this->getState('filter.teacher'))
         ) {
@@ -637,7 +639,7 @@ class CwmsermonsModel extends ListModel
 
         // Teacher ID from template
         if (
-            !is_null($params->get('lteacher_id')) && $params->get('lteacher_id')[0] !== '-1' && empty(
+            $params->get('lteacher_id') !== null && $params->get('lteacher_id')[0] !== '-1' && empty(
                 $this->getState(
                     'filter.teacher'
                 )
@@ -645,7 +647,7 @@ class CwmsermonsModel extends ListModel
         ) {
             $filters_group[] = ['study.teacher_id' => $params->get('lteacher_id')];
         } elseif (
-            !is_null($params->get('lteacher_id')) && $params->get(
+            $params->get('lteacher_id') !== null && $params->get(
                 'lteacher_id'
             )[0] !== '-1' && !empty($this->getState('filter.teacher'))
         ) {
@@ -657,7 +659,7 @@ class CwmsermonsModel extends ListModel
 
         // Location ID
         if (
-            !is_null($params->get('mlocations')) && $params->get('mlocations')[0] !== '-1' && empty(
+            $params->get('mlocations') !== null && $params->get('mlocations')[0] !== '-1' && empty(
                 $this->getState(
                     'filter.location'
                 )
@@ -665,7 +667,7 @@ class CwmsermonsModel extends ListModel
         ) {
             $filters_group[] = ['study.location_id' => $params->get('mlocations')];
         } elseif (
-            !is_null($params->get('mlocations')) && $params->get(
+            $params->get('mlocations') !== null && $params->get(
                 'mlocations'
             )[0] !== '-1' && !empty($this->getState('filter.location'))
         ) {
@@ -677,7 +679,7 @@ class CwmsermonsModel extends ListModel
 
         // Location ID from template
         if (
-            !is_null($params->get('llocations')) && $params->get('llocations')[0] !== '-1' && empty(
+            $params->get('llocations') !== null && $params->get('llocations')[0] !== '-1' && empty(
                 $this->getState(
                     'filter.location'
                 )
@@ -685,7 +687,7 @@ class CwmsermonsModel extends ListModel
         ) {
             $filters_group[] = ['study.location_id' => $params->get('llocations')];
         } elseif (
-            !is_null($params->get('llocations')) && $params->get(
+            $params->get('llocations') !== null && $params->get(
                 'llocations'
             )[0] !== '-1' && !empty($this->getState('filter.location'))
         ) {
@@ -697,7 +699,7 @@ class CwmsermonsModel extends ListModel
 
         // Book Number ID
         if (
-            !is_null($params->get('mbooknumber')) && $params->get('mbooknumber')[0] !== '-1' && empty(
+            $params->get('mbooknumber') !== null && $params->get('mbooknumber')[0] !== '-1' && empty(
                 $this->getState(
                     'filter.book'
                 )
@@ -705,7 +707,7 @@ class CwmsermonsModel extends ListModel
         ) {
             $filters_group[] = ['study.booknumber' => $params->get('mbooknumber')];
         } elseif (
-            !is_null($params->get('mbooknumber')) && $params->get(
+            $params->get('mbooknumber') !== null && $params->get(
                 'mbooknumber'
             )[0] !== '-1' && !empty($this->getState('filter.book'))
         ) {
@@ -717,7 +719,7 @@ class CwmsermonsModel extends ListModel
 
         // Book Number ID from template
         if (
-            !is_null($params->get('lbooknumber')) && $params->get('lbooknumber')[0] !== '-1' && empty(
+            $params->get('lbooknumber') !== null && $params->get('lbooknumber')[0] !== '-1' && empty(
                 $this->getState(
                     'filter.book'
                 )
@@ -725,7 +727,7 @@ class CwmsermonsModel extends ListModel
         ) {
             $filters_group[] = ['study.booknumber' => $params->get('lbooknumber')];
         } elseif (
-            !is_null($params->get('lbooknumber')) && $params->get(
+            $params->get('lbooknumber') !== null && $params->get(
                 'lbooknumber'
             )[0] !== '-1' && !empty($this->getState('filter.book'))
         ) {
@@ -737,7 +739,7 @@ class CwmsermonsModel extends ListModel
 
         // Series ID
         if (
-            !is_null($params->get('mseries_id')) && $params->get('mseries_id')[0] !== '-1' && empty(
+            $params->get('mseries_id') !== null && $params->get('mseries_id')[0] !== '-1' && empty(
                 $this->getState(
                     'filter.series'
                 )
@@ -745,7 +747,7 @@ class CwmsermonsModel extends ListModel
         ) {
             $filters_group[] = ['study.series_id' => $params->get('mseries_id')];
         } elseif (
-            !is_null($params->get('mseries_id')) && $params->get(
+            $params->get('mseries_id') !== null && $params->get(
                 'mseries_id'
             )[0] !== '-1' && !empty($this->getState('filter.series'))
         ) {
@@ -757,7 +759,7 @@ class CwmsermonsModel extends ListModel
 
         // Series ID from template
         if (
-            !is_null($params->get('lseries_id')) && $params->get('lseries_id')[0] !== '-1' && empty(
+            $params->get('lseries_id') !== null && $params->get('lseries_id')[0] !== '-1' && empty(
                 $this->getState(
                     'filter.series'
                 )
@@ -765,7 +767,7 @@ class CwmsermonsModel extends ListModel
         ) {
             $filters_group[] = ['study.series_id' => $params->get('lseries_id')];
         } elseif (
-            !is_null($params->get('lseries_id')) && $params->get(
+            $params->get('lseries_id') !== null && $params->get(
                 'lseries_id'
             )[0] !== '-1' && !empty($this->getState('filter.series'))
         ) {
@@ -785,7 +787,7 @@ class CwmsermonsModel extends ListModel
         ) {
             $filters_group[] = ['st.topic_id' => $params->get('mtopic_id')];
         } elseif (
-            !is_null($params->get('mtopic_id')) && $params->get(
+            $params->get('mtopic_id') !== null && $params->get(
                 'mtopic_id'
             )[0] !== '-1' && !empty($this->getState('filter.topic'))
         ) {
@@ -797,7 +799,7 @@ class CwmsermonsModel extends ListModel
 
         // Topic ID from template
         if (
-            !is_null($params->get('ltopic_id')) && $params->get('ltopic_id')[0] !== '-1' && empty(
+            $params->get('ltopic_id') !== null && $params->get('ltopic_id')[0] !== '-1' && empty(
                 $this->getState(
                     'filter.topic'
                 )
@@ -805,7 +807,7 @@ class CwmsermonsModel extends ListModel
         ) {
             $filters_group[] = ['st.topic_id' => $params->get('ltopic_id')];
         } elseif (
-            !is_null($params->get('ltopic_id')) && $params->get(
+            $params->get('ltopic_id') !== null && $params->get(
                 'ltopic_id'
             )[0] !== '-1' && !empty($this->getState('filter.topic'))
         ) {
@@ -817,7 +819,7 @@ class CwmsermonsModel extends ListModel
 
         // Message Type ID
         if (
-            !is_null($params->get('mmessagetype')) && $params->get('mmessagetype')[0] !== '-1' && empty(
+            $params->get('mmessagetype') !== null && $params->get('mmessagetype')[0] !== '-1' && empty(
                 $this->getState(
                     'filter.messagetype'
                 )
@@ -825,7 +827,7 @@ class CwmsermonsModel extends ListModel
         ) {
             $filters_group[] = ['study.messagetype' => $params->get('mmessagetype')];
         } elseif (
-            !is_null($params->get('mmessagetype'))
+            $params->get('mmessagetype') !== null
             && $params->get('mmessagetype')[0] !== '-1'
             && !empty($this->getState('filter.messagetype'))
         ) {
@@ -837,7 +839,7 @@ class CwmsermonsModel extends ListModel
 
         // Message Type ID from template
         if (
-            !is_null($params->get('lmessagetype')) && $params->get('lmessagetype')[0] !== '-1' && empty(
+            $params->get('lmessagetype') !== null && $params->get('lmessagetype')[0] !== '-1' && empty(
                 $this->getState(
                     'filter.messagetype'
                 )
@@ -845,7 +847,7 @@ class CwmsermonsModel extends ListModel
         ) {
             $filters_group[] = ['study.messagetype' => $params->get('lmessagetype')];
         } elseif (
-            !is_null($params->get('lmessagetype'))
+            $params->get('lmessagetype') !== null
             && $params->get('lmessagetype')[0] !== '-1'
             && !empty($this->getState('filter.messagetype'))
         ) {
@@ -857,7 +859,7 @@ class CwmsermonsModel extends ListModel
 
         // Year ID
         if (
-            !is_null($params->get('years')) && $params->get('years')[0] !== '-1' && empty(
+            $params->get('years') !== null && $params->get('years')[0] !== '-1' && empty(
                 $this->getState(
                     'filter.year'
                 )
@@ -865,7 +867,7 @@ class CwmsermonsModel extends ListModel
         ) {
             $filters_group[] = ['YEAR(study.studydate)' => $params->get('years')];
         } elseif (
-            !is_null($params->get('years')) && $params->get('years')[0] !== '-1' && !empty(
+            $params->get('years') !== null && $params->get('years')[0] !== '-1' && !empty(
                 $this->getState(
                     'filter.year'
                 )
@@ -879,7 +881,7 @@ class CwmsermonsModel extends ListModel
 
         // Year ID from template
         if (
-            !is_null($params->get('lyears')) && $params->get('lyears')[0] !== '-1' && empty(
+            $params->get('lyears') !== null && $params->get('lyears')[0] !== '-1' && empty(
                 $this->getState(
                     'filter.year'
                 )
@@ -887,7 +889,7 @@ class CwmsermonsModel extends ListModel
         ) {
             $filters_group[] = ['YEAR(study.studydate)' => $params->get('lyears')];
         } elseif (
-            !is_null($params->get('lyears')) && $params->get('lyears')[0] !== '-1' && !empty(
+            $params->get('lyears') !== null && $params->get('lyears')[0] !== '-1' && !empty(
                 $this->getState(
                     'filter.year'
                 )
@@ -919,7 +921,7 @@ class CwmsermonsModel extends ListModel
                     } else {
                         foreach ($filtervalue as $filterid) {
                             if ((int)$filterid >= 1 && $filter !== 'study.booknumber') {
-                                if ((int)$this->landing === 1) {
+                                if ($this->landing === 1) {
                                     $$filterid = $this->getState($filter);
                                 }
 
@@ -938,24 +940,20 @@ class CwmsermonsModel extends ListModel
                                         ' AND study.chapter_end <= ' . (int)$che . ')' .
                                         'OR study.booknumber2 = ' . (int)$book
                                     );
+                                } elseif ($chb) {
+                                    $query->where(
+                                        '(study.booknumber = ' . (int)$book . ' AND study.chapter_begin > = ' .
+                                        (int)$chb . ') OR study.booknumber2 = ' . (int)$book
+                                    );
+                                } elseif ($che) {
+                                    $query->where(
+                                        '(study.booknumber = ' . (int)$book . ' AND study.chapter_end <= ' .
+                                        $che . ') OR study.booknumber2 = ' . (int)$book
+                                    );
                                 } else {
-                                    if ($chb) {
-                                        $query->where(
-                                            '(study.booknumber = ' . (int)$book . ' AND study.chapter_begin > = ' .
-                                            (int)$chb . ') OR study.booknumber2 = ' . (int)$book
-                                        );
-                                    } else {
-                                        if ($che) {
-                                            $query->where(
-                                                '(study.booknumber = ' . (int)$book . ' AND study.chapter_end <= ' .
-                                                $che . ') OR study.booknumber2 = ' . (int)$book
-                                            );
-                                        } else {
-                                            $query->where(
-                                                '(study.booknumber = ' . (int)$book . ' OR study.booknumber2 = ' . (int)$book . ')'
-                                            );
-                                        }
-                                    }
+                                    $query->where(
+                                        '(study.booknumber = ' . (int)$book . ' OR study.booknumber2 = ' . (int)$book . ')'
+                                    );
                                 }
                             }
                         }
@@ -967,14 +965,8 @@ class CwmsermonsModel extends ListModel
         // Filter by language
         $language = $params->get('language', '*');
 
-        if ($this->getState('filter.languages')) {
-            $query->where(
-                'study.language in (' . $db->quote($this->getState('filter.languages')) . ',' . $db->quote('*') . ')'
-            );
-        } elseif ($language !== '*' || $this->getState('filter.language')) {
-            $query->where(
-                'study.language in (' . $db->quote($app->getLanguage()->getTag()) . ',' . $db->quote('*') . ')'
-            );
+        if ($language !== '*' || $this->getState('filter.language')) {
+            $query->whereIn($db->quoteName('study.language'), [Factory::getApplication()->getLanguage()->getTag(), '*'], ParameterType::STRING);
         }
 
         // Adding in search strings
@@ -982,7 +974,7 @@ class CwmsermonsModel extends ListModel
         $search = $this->getState('filter.search');
 
         if (!empty($search)) {
-            $like = $db->quote('%' . $search . '%');
+            $like = $db->quote('%' . trim($search) . '%');
             $query->where(
                 'study.studytitle LIKE ' . $like . ' OR study.studytext LIKE ' . $like . ' OR study.studyintro LIKE ' .
                 $like . ' OR series.series_text LIKE ' . $like . ' OR series.description LIKE ' . $like . ' OR t.topic_text LIKE ' . $like
@@ -997,7 +989,7 @@ class CwmsermonsModel extends ListModel
             $orderCol = $this->getState('list.ordering', 'study.studydate');
             $this->setState('list.direction', $params->get('default_order'));
 
-            // Set order by menu if set. New Default is blank as of 9.2.5
+            // Set order by menu if set. The New Default is blank as of 9.2.5
             if ($params->get('order') === '2') {
                 $this->setState('list.direction', 'ASC');
             } elseif ($params->get('order') === '1') {

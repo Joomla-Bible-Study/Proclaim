@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
@@ -183,6 +184,8 @@ class CWMAddonYoutube extends CWMAddon
                 $string = "//www.youtube.com/embed/$videoID";
             }
         }
+
+        $string = (new Cwmmedia())->ensureHttpJoomla($string);
 
         return (string) $string;
     }

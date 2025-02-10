@@ -16,9 +16,11 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Exception;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\QueryInterface;
 
 /**
  * Message model class
@@ -33,7 +35,7 @@ class CwmmessagesModel extends ListModel
      *
      * @param   array  $config  An optional associative array of configuration settings.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   11.1
      * @see     Controller
      */
@@ -91,7 +93,7 @@ class CwmmessagesModel extends ListModel
      *
      * @since   7.1.0
      */
-    protected function getStoreId($id = '')
+    protected function getStoreId($id = ''): string
     {
         // Compile the store id.
         $id .= ':' . $this->getState('filter.published');
@@ -117,7 +119,7 @@ class CwmmessagesModel extends ListModel
      *
      * @return    void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.1.0
      */
     protected function populateState($ordering = 'study.studydate', $direction = 'desc')
@@ -193,9 +195,9 @@ class CwmmessagesModel extends ListModel
     /**
      * Build an SQL query to load the list data
      *
-     * @return  \Joomla\Database\QueryInterface
+     * @return  QueryInterface|string
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   7.0
      */
     protected function getListQuery()
@@ -295,8 +297,11 @@ class CwmmessagesModel extends ListModel
             if (stripos($search, 'id:') === 0) {
                 $query->where('study.id = ' . (int)substr($search, 3));
             } else {
-                $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where('(study.studytitle LIKE ' . $search . ' OR study.alias LIKE ' . $search . ')');
+                $search = '%' . str_replace(' ', '%', trim($search)) . '%';
+                $query->where(
+                    '(' . $db->quoteName('study.studytitle') . ' LIKE :search1 OR ' . $db->quoteName('study.alias') . ' LIKE :search2)'
+                )
+                    ->bind([':search1', ':search2'], $search);
             }
         }
 

@@ -213,7 +213,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'list', Text::_('JBS_TPL_STUDY_LIST_VIEW')); ?>
+        echo HTMLHelper::_('uitab.addTab', 'myTab', 'list', Text::_('JBS_TPL_MESSAGES_LIST_VIEW')); ?>
         <div class="row">
             <div class="accordion" id="accordionlist">
                 <div class="accordion-item">
