@@ -24,4 +24,4 @@ build/reports/project-size.txt
 /media/css/site/cwmcore.css
 /admin/proclaim.script.php
 !/.php_cs.cache
-!/build.properties
+/build.properties

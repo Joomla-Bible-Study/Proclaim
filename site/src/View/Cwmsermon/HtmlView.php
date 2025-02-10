@@ -23,6 +23,7 @@ use CWM\Component\Proclaim\Site\Helper\Cwmpodcastsubscribe;
 use CWM\Component\Proclaim\Site\Helper\Cwmrelatedstudies;
 use CWM\Component\Proclaim\Site\Helper\Cwmshowscripture;
 use CWM\Component\Proclaim\Site\Model\CwmsermonModel;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -134,7 +135,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void
      *
-     * @throws \Exception
+     * @throws Exception
      * @todo  Need to clean up the display function as there is stuff needed to change up.
      *
      * @since 7.0
@@ -441,7 +442,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     protected function displayPageBrake(string $tpl): void
@@ -455,7 +456,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     protected function prepareDocument(): void

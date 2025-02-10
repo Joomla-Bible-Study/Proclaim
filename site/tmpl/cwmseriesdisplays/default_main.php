@@ -26,7 +26,6 @@ $document      = Factory::getApplication();
 $mainframe     = Factory::getApplication();
 $input         = Factory::getApplication();
 $option        = $input->get('option', '', 'cmd');
-$JViewLegacy   = new HtmlView;
 $CWMSerieslist = new Cwmserieslist;
 $series_menu   = $this->params->get('series_id', 1);
 

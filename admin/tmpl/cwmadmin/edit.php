@@ -762,15 +762,6 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
         echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'jwplayer', Text::_('JBS_ADM_JWPLAYER')); ?>
-        <div class="row" id="jwplayer">
-            <?php
-            echo $this->loadTemplate('jwplayer'); ?>
-        </div>
-        <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
-
-        <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'convert', Text::_('JBS_IBM_CONVERT')); ?>
         <div class="row" id="convert">
             <h4><?php

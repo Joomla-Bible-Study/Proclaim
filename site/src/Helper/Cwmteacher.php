@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Router\Route;
@@ -38,7 +39,7 @@ class Cwmteacher extends Cwmlisting
      *
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      * @since    8.0.0
      */
     public function getTeachersFluid($params): array
@@ -100,15 +101,15 @@ class Cwmteacher extends Cwmlisting
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      * @todo     need to redo to bootstrap
      * @since    8.0.0
      */
     public function getTeacher($params, $id): string
     {
         $input       = Factory::getApplication()->input;
-        $JViewLegacy = new HtmlView();
-        $JViewLegacy->loadHelper('image');
+        $htmlView = new HtmlView();
+        $htmlView->loadHelper('image');
         $teacherids = new \stdClass();
         $t          = (int)$params->get('teachertemplateid');
 
@@ -194,8 +195,8 @@ class Cwmteacher extends Cwmlisting
      */
     public function getTeacherListExp($row, $params, $oddeven, $template)
     {
-        $JViewLegacy = new HtmlView();
-        $JViewLegacy->loadHelper('image');
+        $htmlView = new HtmlView();
+        $htmlView->loadHelper('image');
         $imagelarge = Cwmimages::getTeacherThumbnail($row->teacher_image, $row->image);
 
         $imagesmall = Cwmimages::getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
@@ -242,8 +243,8 @@ class Cwmteacher extends Cwmlisting
      */
     public function getTeacherDetailsExp($row, $params)
     {
-        $JViewLegacy = new HtmlView();
-        $JViewLegacy->loadHelper('image');
+        $htmlView = new HtmlView();
+        $htmlView->loadHelper('image');
 
         // Get the image folders and images
         $imagelarge = Cwmimages::getTeacherThumbnail($row->teacher_image, $row->image);
@@ -280,7 +281,7 @@ class Cwmteacher extends Cwmlisting
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      * @since    8.0.0
      */
     public function getTeacherStudiesExp($id, $params): string

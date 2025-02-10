@@ -16,6 +16,7 @@
 
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\View\HtmlView;
 
 // Create shortcuts to some parameters.
 /** @type Joomla\Registry\Registry $params */
@@ -23,10 +24,8 @@ $params  = $this->item->params;
 $user    = Factory::getApplication()->getSession()->get('user');
 $canEdit = $params->get('access-edit');
 
-$JViewLegacy = new JViewLegacy();
-
-$JViewLegacy->loadHelper('title');
-$JViewLegacy->loadHelper('teacher');
+$this->loadHelper('title');
+$this->loadHelper('teacher');
 $row = $this->item;
 ?>
 
