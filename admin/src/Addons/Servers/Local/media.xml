@@ -73,7 +73,7 @@
                    label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
                    class="inputbox col-6">
             </field>
-            <field name="media_use_button_icon" label="JBS_ADDON_LOCAL_MEDIA_USE_BUTTON"
+            <field name="media_use_button_icon" type="list" label="JBS_ADDON_LOCAL_MEDIA_USE_BUTTON"
                    description="JBS_ADDON_MEDIA_USE_BUTTON_DESC"
                    class="form-select-color-state"
                    size="1"
