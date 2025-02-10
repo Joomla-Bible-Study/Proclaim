@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\Html\HtmlHelper;
@@ -44,7 +45,7 @@ class TopicsListField extends ListField
      *
      * @return  array  An array of JHtmlHelper options.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.0.0
      */
     protected function getOptions(): array

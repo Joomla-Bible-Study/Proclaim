@@ -18,6 +18,8 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Administrator\Service\HTML\CWMFancyBox;
+use CWM\Component\Proclaim\Administrator\Service\HTML\CWMHtml5Inline;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Exception;
 use JHtmlJwplayer;
@@ -122,17 +124,17 @@ class Cwmmedia
         ) {
             $image = $this->mediaButton($imageparams, $params, $media->params);
         } else {
-            $mediaimage = (string)$imageparams->get('media_image');
+            $mediaImage = (string)$imageparams->get('media_image');
             $image      = $this->useJImage(
-                $mediaimage,
+                $mediaImage,
                 $media->params->get('media_button_text', $params->get('download_button_text', 'Audio'))
             );
         }
 
         // New Podcast Playlist cast Player code override option.
         $player       = $this->getPlayerAttributes($params, $media);
-        $playercode   = $this->getPlayerCode($params, $player, $image, $media);
-        $downloadlink = $this->getFluidDownloadLink($media, $params, $template);
+        $playerCode   = $this->getPlayerCode($params, $player, $image, $media);
+        $downloadLink = $this->getFluidDownloadLink($media, $params, $template);
 
         $link_type = 0;
 
@@ -166,31 +168,32 @@ class Cwmmedia
                 Cwmhelper::setFileSize($media->id, $file_size);
             }
 
-            $file_size = $this->convertFileSize($file_size, $params, $media);
-
-            $filesize = '<span class="JBSMFilesize" style="font-size: 0.6em;display:inline;padding-left: 5px;">' .
+            if ($file_size > 1) {
+                $file_size = $this->convertFileSize($file_size, $params, $media);
+                $filesize = '<span class="JBSMFilesize" style="font-size: 0.6em;display:inline;padding-left: 5px;">' .
                 $file_size . '</span>';
+            }
         }
 
         switch ($link_type) {
             case 0:
-                $mediafile = $playercode;
+                $mediafile = $playerCode;
                 break;
 
             case 1:
-                if ($downloadlink) {
-                    $mediafile = $playercode . '<div class="col">' . $downloadlink . $filesize . '</div>';
+                if ($downloadLink) {
+                    $mediafile = $playerCode . '<div class="col">' . $downloadLink . $filesize . '</div>';
                 } else {
-                    $mediafile = $playercode;
+                    $mediafile = $playerCode;
                 }
                 break;
 
             case 2:
-                $mediafile = $downloadlink;
+                $mediafile = $downloadLink;
                 break;
 
             case 3:
-                $mediafile = $playercode . $downloadlink;
+                $mediafile = $playerCode . $downloadLink;
                 break;
         }
 
@@ -462,8 +465,7 @@ class Cwmmedia
                         break;
 
                     case 3: // Squeezebox view
-                        return $this->rendersb($media, $params, $player, $image, $path, true);
-                        break;
+                        return $this->renderSB($media, $params, $player, $image, $path, true);
 
                     case 1: // Popup window
                         $playercode = "<a style='color: #5F5A58;' href=\"javascript:;\"" .
@@ -479,19 +481,16 @@ class Cwmmedia
 
             case 7:
             case 1: // Internal
-
-	        $playercode = '';
+                $playercode = '';
 
                 switch ($player->type) {
                     case 3: // Squeezebox view
-                        return $this->rendersb($media, $params, $player, $image, $path);
-                        break;
+                        return $this->renderSB($media, $params, $player, $image, $path);
 
                     case 2: // Inline
+                        CWMFancyBox::framework();
 
-                        HtmlHelper::_('Jwplayer.framework', true, true);
-
-                        if ($player->player == 7) {
+                        if ($player->player === 7) {
                             $player->playerheight    = '40';
                             $player->boxplayerheight = '40';
                             $player->mp3             = true;
@@ -512,13 +511,13 @@ class Cwmmedia
                                 '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
                                 '" webkitallowfullscreen mozallowfullscreen allowfullscreen style="border: none"></iframe>';
                         } else {
-                            $playercode = JHtmlJwplayer::render($media, $params, false, $player, $template);
+                            $playercode = CWMHtml5Inline::render($media, $params, $player, false, $template);
                         }
 
                         break;
 
                     case 1: // Popup
-                        // Add space for popup window
+                        // Add space for a popup window
 
                         $diff                 = $params->get('player_width') - $params->get('playerwidth');
                         $player->playerwidth  += abs($diff) + 10;
@@ -531,7 +530,7 @@ class Cwmmedia
                             $player->playerheight . "'); return false\" class=\"jbsmplayerlink\">" . $image . "</a>";
                         break;
                 }
-	        //var_dump($playercode);
+
                 return $playercode;
 
             case 2: // All Videos Reloaded
@@ -572,7 +571,7 @@ class Cwmmedia
 
         return false;
     }
-    
+
     /**
      * return $table
      *
@@ -608,7 +607,7 @@ class Cwmmedia
             Cwmhelper::setFileSize($media->id, $file_size);
         }
 
-        if ($file_size !== 0) {
+        if ($file_size > 1) {
             $file_size = $this->convertFileSize($file_size, $params, $media);
         }
 
@@ -628,38 +627,15 @@ class Cwmmedia
      */
     public function convertFileSize(int $file_size, Registry $params, object $media): string
     {
-        $file_size_results = '';
+        $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
 
-        switch ($file_size) {
-            case $file_size = 0:
-                $file_size_results = '0 Bytes';
-                break;
-            case $file_size < 1024:
-                $this->fsize       = $file_size;
-                $file_size_results .= $file_size . ' Bytes';
-                break;
-            case $file_size < 1048576:
-                $file_size         /= 1024;
-                $file_size_results = number_format($file_size, 0);
-                $this->fsize       = $file_size_results;
-                $file_size_results .= ' KB';
-                break;
-            case $file_size < 1073741824:
-                $file_size         /= 1024;
-                $file_size         /= 1024;
-                $file_size_results = number_format($file_size, 1);
-                $this->fsize       = $file_size_results;
-                $file_size_results .= ' MB';
-                break;
-            case $file_size > 1073741824:
-                $file_size         /= 1024;
-                $file_size         /= 1024;
-                $file_size         /= 1024;
-                $file_size_results = number_format($file_size, 1);
-                $this->fsize       = $file_size_results;
-                $file_size_results .= ' GB';
-                break;
-        }
+        $file_size = max($file_size, 0);
+        $pow = $file_size > 0 ? floor(log($file_size, 1024)) : 0;
+        $pow = min($pow, count($units) - 1);
+
+        $file_size /= 1024 ** $pow;
+
+        $file_size_results = round($file_size, 2) . ' ' . $units[$pow];
 
         switch ($params->get('show_filesize')) {
             case 2:
@@ -689,7 +665,7 @@ class Cwmmedia
      *
      * @since 9.1.2
      */
-    public function rendersb(
+    public function renderSB(
         object $media,
         Registry $params,
         object $player,
@@ -697,7 +673,7 @@ class Cwmmedia
         string $path,
         bool $direct = false
     ): string {
-        HtmlHelper::_('fancybox.framework', true, true);
+        CWMFancyBox::framework();
 
         if ($player->player === '7' && !$direct) {
             $player->playerheight = '40';
@@ -711,16 +687,17 @@ class Cwmmedia
 
         if (preg_match('(youtube.com|youtu.be|vimeo.com)', $path) === 1) {
             $path = (new CWMAddonYoutube())->convertYoutube($path);
-            return '<a data-fancybox class="playhit" data-id="' . $media->id . '" data-options=\'{"src" : "' . $path . '", "autoplay" : "' .
+            $data = '<a data-fancybox="video-gallery" class="fancybox_player playhit" data-id="' . $media->id . '" aria-hidden="false" data-src="' . $path . '" data-options=\'{"autoplay" : "' .
                 (int)$params->get('autostart', false) . '", "controls" : "' . (int)$params->get('controls') .
                 '", "caption" : "' . $media->studytitle . ' - ' .
                 $media->teachername . '"}\'  href="javascript:;">' . $image . '</a>';
+            return $data;
         }
 
         return '<a data-src="' . $path . '" data-id="' . $media->id . '" id="' . $media->id . '" title="' . $params->get(
             'filename'
         ) .
-            '" class="fancybox fancybox_jwplayer hitplay" potext="' . $popout . '" ptype="' . $player->player .
+            '" data-fancybox class="fancybox_player hitplay" potext="' . $popout . '" ptype="' . $player->player .
             '" pwidth="' . $player->playerwidth . '" pheight="' .
             $player->playerheight . '" autostart="' . $params->get('autostart', false) . '" controls="' .
             $params->get('controls') . '"" data-image="' . $params->get('jwplayer_image') . '" data-mute="' .
@@ -857,15 +834,7 @@ class Cwmmedia
             return '';
         }
 
-        $downloadlink = '';
-
-        if (
-            $params->get('download_use_button_icon') >= 2 && $params->get('simple_mode') === '0' && $params->get(
-                'sermonstemplate'
-            ) !== 'easy'
-        ) {
-            $download_image = $this->downloadButton($params);
-        }
+        $downloadLink = '';
 
         if (
             $params->get('download_use_button_icon') >= 2 && ($params->get('simple_mode') === '1' || $params->get(
@@ -888,8 +857,6 @@ class Cwmmedia
         if (
             ($params->get('download_show')
                 && (!$media->params->get('link_type')))
-            // || $params->get('simple_mode') === '1'
-            // || $params->get('sermonstemplate') === 'easy'
         ) {
             $link_type = 2;
         }
@@ -898,7 +865,7 @@ class Cwmmedia
             $compat_mode = (int)$params->get('compat_mode');
 
             if ($compat_mode === 0) {
-                $downloadlink = '<a style="color: #5F5A58;" href="index.php?option=com_proclaim&amp;view=Cwmsermon&amp;id=' .
+                $downloadLink = '<a style="color: #5F5A58;" href="index.php?option=com_proclaim&amp;view=Cwmsermon&amp;id=' .
                     $media->study_id . '&amp;mid=' . $media->id . '&amp;task=Cwmsermon.download">' . $download_image . '</a>';
             } else {
                 $url = Cwmhelper::mediaBuildUrl(
@@ -917,7 +884,7 @@ class Cwmmedia
 
                 $url = Cwmhelper::removeHttp($url);
 
-                $downloadlink = '<a style="color: #5F5A58;" href="https://christianwebministries.org/router.php?file=' .
+                $downloadLink = '<a style="color: #5F5A58;" href="https://christianwebministries.org/router.php?file=' .
                     $url . '&amp;size=' . $size . '">';
             }
 
@@ -927,7 +894,7 @@ class Cwmmedia
             $opt   = $input->get('option');
 
             if (($opt === 'com_proclaim') && $params->get('useterms') > 0) {
-                $downloadlink = '<a style="color: #5F5A58;" href="#modal-test-modal" data-bs-toggle="modal"' .
+                $downloadLink = '<a style="color: #5F5A58;" href="#modal-test-modal" data-bs-toggle="modal"' .
                     'class="btn btn-default btn-small btn-sm">' . $download_image . '</a>';
                 $modalParams  = array(
                     'title'       => Text::_('JBS_TERMS_TITLE'),
@@ -946,11 +913,11 @@ class Cwmmedia
                     $media->study_id . '&mid=' . $media->id . '">'
                     . Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a></div>';
 
-                $downloadlink .= HTMLHelper::_('bootstrap.renderModal', 'modal-test-modal', $modalParams, $modalBody);
+                $downloadLink .= HTMLHelper::_('bootstrap.renderModal', 'modal-test-modal', $modalParams, $modalBody);
             }
         }
 
-        return $downloadlink;
+        return $downloadLink;
     }
 
     /**
@@ -964,10 +931,10 @@ class Cwmmedia
      */
     public function downloadButton(Registry $download): ?string
     {
-        $downloadimage = null;
+        $downloadImage = null;
         $button        = $download->get('download_button_type', 'btn-link');
-        $buttontext    = $download->get('download_button_text', 'Audio');
-        $textsize      = $download->get('download_icon_text_size', '24');
+        $buttonText    = $download->get('download_button_text', 'Audio');
+        $textSize      = $download->get('download_icon_text_size', '24');
 
         if ($download->get('download_button_color')) {
             $color = 'style="background-color:' . $download->get('download_button_color') . ';"';
@@ -978,7 +945,7 @@ class Cwmmedia
         switch ($download->get('download_use_button_icon')) {
             case 2:
                 // Button only
-                $downloadimage = '<div type="button" class="btn ' . $button . ' title="' . $buttontext . '" ' . $color . '>' . $buttontext . '</div>';
+                $downloadImage = '<button class="btn ' . $button . ' title="' . $buttonText . '" ' . $color . '>' . $buttonText . '</button>';
                 break;
             case 3:
                 // Button and icon
@@ -988,8 +955,8 @@ class Cwmmedia
                     $icon = $download->get('download_icon_type', 'icon-play');
                 }
 
-                $downloadimage = '<div type="button" class="btn ' . $button . '" title="' . $buttontext . '" ' . $color . '><span class="' .
-                    $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span></div>';
+                $downloadImage = '<button class="btn ' . $button . '" title="' . $buttonText . '" ' . $color . '><span class="' .
+                    $icon . '" title="' . $buttonText . '" style="font-size:' . $textSize . 'px;"></span></button>';
                 break;
             case 4:
                 // Icon only
@@ -999,15 +966,15 @@ class Cwmmedia
                     $icon = $download->get('download_icon_type', 'icon-play');
                 }
 
-                $downloadimage = '<span class="' . $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span>';
+                $downloadImage = '<span class="' . $icon . '" title="' . $buttonText . '" style="font-size:' . $textSize . 'px;"></span>';
                 break;
         }
 
         if ($download->get('simple_mode') === '1' || $download->get('sermonstemplate') === 'easy') {
-            $downloadimage = '<span class="fas fa-chevron-circle-down" title="download" style="font-size: 24px;"></span>';
+            $downloadImage = '<span class="fas fa-chevron-circle-down" title="download" style="font-size: 24px;"></span>';
         }
 
-        return $downloadimage;
+        return $downloadImage;
     }
 
     /**
@@ -1097,7 +1064,7 @@ class Cwmmedia
      */
     public function getMimetypes(): array
     {
-        $mimetype = array(
+        return array(
             // Image formats
             'jpg|jpeg|jpe'                 => 'image/jpeg',
             'gif'                          => 'image/gif',
@@ -1199,8 +1166,6 @@ class Cwmmedia
             'numbers'                      => 'application/vnd.apple.numbers',
             'pages'                        => 'application/vnd.apple.pages',
         );
-
-        return $mimetype;
     }
 
     /**
@@ -1233,6 +1198,15 @@ class Cwmmedia
      */
     public function convertYoutube(string $path): string
     {
-        return (new CWMAddonYoutube())->convertYoutube($path);
+        return $this->ensureHttpJoomla((new CWMAddonYoutube())->convertYoutube($path));
+    }
+
+    public function ensureHttpJoomla($url)
+    {
+        $uri = new Uri($url);
+        if (!$uri->getScheme()) {
+            $url = "https:" . $url; // Default to HTTPS
+        }
+        return $url;
     }
 }

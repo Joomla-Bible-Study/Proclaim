@@ -17,9 +17,11 @@ namespace CWM\Component\Proclaim\Site\View\Cwmpopup;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Html\HTMLHelper;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -36,11 +38,11 @@ use Joomla\Registry\Registry;
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var  string Player
+    /** @var  int Player
      *
      * @since 7.0
      */
-    public $player;
+    public int $player;
 
     /** @var  string Media
      *
@@ -58,7 +60,7 @@ class HtmlView extends BaseHtmlView
      *
      * @since 7.0
      */
-    public $scripture;
+    public string $scripture;
 
     /** @var  string Date
      *
@@ -168,7 +170,7 @@ class HtmlView extends BaseHtmlView
      */
     protected $extraparams;
 
-    /** @var  TableTemplate Template
+    /** @var  CwmtemplateTable Template
      *
      * @since 7.0
      */
@@ -181,9 +183,10 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void
      *
+     * @throws Exception
      * @since 7.0
      */
-    public function display($tpl = null)
+    public function display($tpl = null): void
     {
         $input = Factory::getApplication()->input;
         $input->get('tmpl', 'component', 'string');
@@ -192,9 +195,9 @@ class HtmlView extends BaseHtmlView
         $this->player = $input->get('player', '1', 'int');
 
         /*
-         *  If this is a direct new window then all we need to do is perform hitPlay and close this window
+         *  If this is a direct new window, then all we need to do is perform hitPlay and close this window
          */
-        if ($close == 1) {
+        if ($close === 1) {
             echo HtmlHelper::_(
                 'content.prepare',
                 '<script language="javascript" type="text/javascript">window.close();</script>'
@@ -224,23 +227,25 @@ class HtmlView extends BaseHtmlView
         $saveid          = $this->media->id;
         $this->media->id = $this->media->study_id;
         $JBSMListing     = new Cwmlisting();
-        $this->scripture = $JBSMListing->getScripture($this->params, $this->media, $esv = '0', $scripturerow = '1');
+        $this->scripture = $JBSMListing->getScripture($this->params, $this->media, 0, 1);
         $this->media->id = $saveid;
         $this->date      = $JBSMListing->getStudyDate($this->params, $this->media->studydate);
 
         /*
-         *  The popup window call the counter function
+         *  The popup window calls the counter function
          */
         $this->getMedia->hitPlay((int)$mediaid);
 
-        $seriesimage            = Cwmimages::getSeriesThumbnail($this->media->series_thumbnail);
-        $this->series_thumbnail = '<img src="' . Uri::base(
-        ) . $seriesimage->path . '" width="' . $seriesimage->width . '" height="'
-            . $seriesimage->height . '" alt="' . $this->media->series_text . '" />';
+        $seriesImage            = Cwmimages::getSeriesThumbnail($this->media->series_thumbnail);
+        if ($seriesImage->path) {
+            $this->series_thumbnail = '<img src="' . Uri::base() . $seriesImage->path . '" width="' . $seriesImage->width . '" height="'
+                . $seriesImage->height . '" alt="' . $this->media->series_text . '" />';
+        }
         $image                  = Cwmimages::getTeacherThumbnail($this->media->teacher_thumbnail, $this->media->thumb);
-        $this->teacherimage     = '<img src="' . Uri::base(
-        ) . $image->path . '" width="' . $image->width . '" height="' . $image->height
-            . '" alt="' . $this->media->teachername . '" />';
+        if ($image->path) {
+            $this->teacherimage = '<img src="' . Uri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
+                . '" alt="' . $this->media->teachername . '" />';
+        }
 
         $this->path1 = Cwmhelper::mediaBuildUrl(
             $this->media->spath,
@@ -270,8 +275,8 @@ class HtmlView extends BaseHtmlView
             $this->flashvars = $this->params->get('altflashvars');
         }
 
-        if ($this->player == '100') {
-            $this->player = $this->template->params->get('player', 0);
+        if ($this->player === 100) {
+            $this->player = (int) $this->template->params->get('player', "0");
         }
 
         $this->backcolor   = $this->params->get('backcolor', '0x287585');
@@ -279,7 +284,7 @@ class HtmlView extends BaseHtmlView
         $this->lightcolor  = $this->params->get('lightcolor', '0x000000');
         $this->screencolor = $this->params->get('screencolor', '0xFFFFFF');
 
-        if ($this->params->get('autostart', 1) == 1) {
+        if ($this->params->get('autostart', "1") === "1") {
             $this->autostart = 'true';
         } else {
             $this->autostart = 'false';
@@ -291,9 +296,9 @@ class HtmlView extends BaseHtmlView
             $this->playeridlehide = 'false';
         }
 
-        if ($this->params->get('autostart') == 1) {
+        if ($this->params->get('autostart') === "1") {
             $this->autostart = 'true';
-        } elseif ($this->params->get('autostart') == 2) {
+        } elseif ($this->params->get('autostart') === "2") {
             $this->autostart = 'false';
         }
 
@@ -340,19 +345,19 @@ class HtmlView extends BaseHtmlView
      * @param   string  $scripture  scripture
      * @param   string  $date       Date
      *
-     * @return object
+     * @return string
      *
      * @since 7.0
      */
-    private function titles($text, $media, $scripture, $date)
+    private function titles(string $text, object $media, string $scripture, string $date): string
     {
         if (isset($media->teachername)) {
             $text = str_replace('{{teacher}}', $media->teachername, $text);
         }
 
-        if (isset($date)) {
-            $text = str_replace('{{studydate}}', $date, $text);
-        }
+
+        $text = str_replace('{{studydate}}', $date, $text);
+
 
         if ($this->params->get('filename')) {
             $text = str_replace('{{filename}}', $this->params->get('filename'), $text);
