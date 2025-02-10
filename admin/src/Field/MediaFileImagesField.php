@@ -190,7 +190,7 @@ class MediaFileImagesField extends ListField
      *
      * @since 7.0
      */
-    public function getButton($media)
+    public function getButton(object $media): ?string
     {
         $button = null;
 
@@ -231,7 +231,7 @@ class MediaFileImagesField extends ListField
      *
      * @since 7.0
      */
-    public function getIcon($media)
+    public function getIcon(object $media): string
     {
         $MediaHelper = new Cwmmedia();
         $mimetypes   = $MediaHelper->getIcons();

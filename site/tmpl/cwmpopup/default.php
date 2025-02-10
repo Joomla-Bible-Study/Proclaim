@@ -22,12 +22,14 @@ use Joomla\CMS\Router\Route;
 
 $style = 'body { background-color:' . $this->params->get('popupbackground', 'black') . ' !important; padding:0 !important;}
 	#all{background-color:' . $this->params->get('popupbackground', 'black') . ' !important;}';
-$app   = Factory::getApplication();
+try {
+    $app = Factory::getApplication();
+} catch (Exception $e) {
+    die();
+}
 $doc   = $app->getDocument();
 $doc->addStyleDeclaration($style);
 $CWMedia = new Cwmmedia();
-
-// @todo need to move some of the is build process into the media helper. BCC
 
 ?>
 <div id="popupwindow" class="popupwindow">
@@ -38,23 +40,18 @@ $CWMedia = new Cwmmedia();
     <?php
     // Here is where we choose whether to use the Internal Viewer or All Videos
     if (
-        $this->params->get('player') === "3" || $this->player === 3 || $this->params->get(
-            'player'
-        ) === "2" || $this->player === 2
+        $this->player === 2 || $this->player === 3 || $this->params->get('player') === "3" || $this->params->get('player') === "2"
     ) {
-        $mediacode = $this->getMedia->getAVmediacode($this->media->mediacode, $this->media);
-        echo HtmlHelper::_('content.prepare', $mediacode);
+        $mediaCode = $this->getMedia->getAVmediacode($this->media->mediacode, $this->media);
+        echo HtmlHelper::_('content.prepare', $mediaCode);
     }
-    //We now use html audio player for playing mp3 files.
-    if ($this->params->get('player') === "1" || $this->player === 1 || $this->player === 7) {
-        $player = new stdClass();
-        $player->mp3 = $this->player === 7;
+    //We now use HTML audio player for playing mp3 files.
+    if ($this->player === 1 || $this->player === 7 || $this->params->get('player') === "1") {
         $path = Cwmhelper::mediaBuildUrl(
             $this->media->sparams->get('path'),
             $this->params->get('filename'),
             $this->params,
             true
-
         );
 
         if (preg_match('(youtube.com|youtu.be)', $path) === 1) {
@@ -72,15 +69,13 @@ $CWMedia = new Cwmmedia();
                     'player_height'
                 ) . '" style="border:0;" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
         } else {
-	        echo '<audio controls autoplay><source src="' . $path . '" type="audio/mp3"></audio>';
+            echo '<audio controls autoplay><source src="' . $path . '" type="audio/mp3"></audio>';
         }
     }
 
     if ($this->player === 8) {
         echo stripslashes($this->params->get('mediacode'));
-    }
-
-    if ($this->player === 0) {
+    } elseif ($this->player === 0) {
         $app->redirect(Route::_($this->path1));
     }
     ?>

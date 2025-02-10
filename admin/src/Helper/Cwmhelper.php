@@ -124,9 +124,9 @@ class Cwmhelper
 
         if (!substr_count($url, 'http://') && !substr_count($url, 'https://')) {
             if (substr_count($url, '//')) {
-                $url = 'http:' . $url;
-            } elseif (!substr_count($url, '//')) {
-                $url = 'http://' . $url;
+                $url = 'https:' . $url;
+            } else {
+                $url = 'https://' . $url;
             }
         }
 
