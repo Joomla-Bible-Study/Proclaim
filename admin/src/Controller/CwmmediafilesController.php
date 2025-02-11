@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 use CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel;
 use CWM\Component\Proclaim\Administrator\Model\CwmmediafilesModel;
 use CWM\Component\Proclaim\Administrator\Model\CwmmessagesModel;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
@@ -40,7 +41,7 @@ class CwmmediafilesController extends AdminController
      *
      * @return  bool  True on success
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   12.2
      */
     public function checkin(): bool
@@ -74,38 +75,6 @@ class CwmmediafilesController extends AdminController
         );
 
         return true;
-    }
-
-    /**
-     * Method to save the submitted ordering values for records via AJAX.
-     *
-     * @return    void
-     *
-     * @throws \Exception
-     * @since   3.0
-     */
-    public function saveOrderAjax()
-    {
-        // Get the input
-        $pks   = $this->input->post->get('cid', array(), 'array');
-        $order = $this->input->post->get('order', array(), 'array');
-
-        // Sanitize the input
-        ArrayHelper::toInteger($pks);
-        ArrayHelper::toInteger($order);
-
-        // Get the model
-        $model = $this->getModel();
-
-        // Save the ordering
-        $return = $model->saveorder($pks, $order);
-
-        if ($return) {
-            echo "1";
-        }
-
-        // Close the application
-        Factory::getApplication()->close();
     }
 
     /**

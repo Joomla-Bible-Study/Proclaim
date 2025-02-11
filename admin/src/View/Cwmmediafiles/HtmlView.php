@@ -20,6 +20,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Toolbar\Button\DropdownButton;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Component\Content\Administrator\Extension\ContentComponent;
@@ -175,11 +176,10 @@ class HtmlView extends BaseHtmlView
      */
     protected function addToolbar(): void
     {
-        $canDo = ContentHelper::getActions('com_proclaim');
-        $user  = Factory::getApplication()->getIdentity();
-
-        // Get the toolbar object instance
-        $toolbar = Toolbar::getInstance('toolbar');
+        $canDo   = ContentHelper::getActions('com_proclaim');
+        $user    = Factory::getApplication()->getIdentity();
+        /** @var Toolbar $toolbar **/
+        $toolbar = $this->getDocument()->getToolbar();
 
         ToolbarHelper::title(Text::_('JBS_CMN_MEDIA_FILES'), 'video video');
 
@@ -187,7 +187,8 @@ class HtmlView extends BaseHtmlView
             $toolbar->addNew('cwmmediafile.add');
         }
 
-        if (!$this->isEmptyState && ($canDo->get('core.edit.state') || \count($this->transitions))) {
+        if (!$this->isEmptyState && ($canDo->get('core.edit.state'))) {
+            /** @var  DropdownButton $dropdown */
             $dropdown = $toolbar->dropdownButton('status-group')
                 ->text('JTOOLBAR_CHANGE_STATUS')
                 ->toggleSplit(false)
@@ -232,7 +233,7 @@ class HtmlView extends BaseHtmlView
                 ->listCheck(true);
         }
 
-        $toolbar->help('JHELP_CONTENT_ARTICLE_MANAGER');
+        $toolbar->help('proclaim', true, $url = null, 'com_proclaim');
     }
 
     /**
@@ -247,7 +248,6 @@ class HtmlView extends BaseHtmlView
         return array(
             'study.studytitle'     => Text::_('JBS_CMN_STUDY_TITLE'),
             'mediatype.media_text' => Text::_('JBS_MED_MEDIA_TYPE'),
-            'mediafile.filename'   => Text::_('JBS_MED_FILENAME'),
             'mediafile.ordering'   => Text::_('JGRID_HEADING_ORDERING'),
             'mediafile.published'  => Text::_('JSTATUS'),
             'mediafile.id'         => Text::_('JGRID_HEADING_ID')
