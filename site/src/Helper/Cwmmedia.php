@@ -846,8 +846,7 @@ class Cwmmedia
             $d_image        = $params->get('default_download_image');
             $download_image = $this->useJImage($d_image, Text::_('JBS_MED_DOWNLOAD'));
         } else {
-            $d_image        = 'media/com_proclaim/images/download.png';
-            $download_image = $this->useJImage($d_image, Text::_('JBS_MED_DOWNLOAD'));
+	        $download_image = $this->downloadButton($params);
         }
 
         if ($media->params->get('link_type')) {
@@ -931,8 +930,9 @@ class Cwmmedia
      */
     public function downloadButton(Registry $download): ?string
     {
-        $downloadImage = null;
-        $button        = $download->get('download_button_type', 'btn-link');
+
+		$downloadImage = null;
+        $button        = $download->get('download_button_type', 'btn-outline-primary');
         $buttonText    = $download->get('download_button_text', 'Audio');
         $textSize      = $download->get('download_icon_text_size', '24');
 
@@ -945,7 +945,7 @@ class Cwmmedia
         switch ($download->get('download_use_button_icon')) {
             case 2:
                 // Button only
-                $downloadImage = '<button class="btn ' . $button . ' title="' . $buttonText . '" ' . $color . '>' . $buttonText . '</button>';
+                $downloadImage = '<button class="btn ' . $button . '" title="' . $buttonText . '" ' . $color . '>' . $buttonText . '</button>';
                 break;
             case 3:
                 // Button and icon
