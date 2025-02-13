@@ -25,3 +25,5 @@ build/reports/project-size.txt
 /admin/proclaim.script.php
 !/.php_cs.cache
 /build.properties
+/build/reports/phpcs.log
+/build/reports/phpcs-error.log
