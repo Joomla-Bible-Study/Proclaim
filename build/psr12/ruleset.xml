@@ -39,18 +39,28 @@
         </properties>
     </rule>
 
-    <rule ref="PSR2.Classes.PropertyDeclaration.Underscore">
+    <rule ref="PSR2.Methods.MethodDeclaration.Underscore">
         <exclude-pattern type="relative">admin/src/Table/</exclude-pattern>
+        <exclude-pattern type="relative">tests/</exclude-pattern>
     </rule>
 
     <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
     </rule>
 
     <rule ref="PSR2.Methods.MethodDeclaration.Underscore">
-        <exclude-pattern type="relative">admin/src/Table/</exclude-pattern>
-        <exclude-pattern type="relative">tests/</exclude-pattern>
+        <exclude-pattern type="relative">site/src/Model/CwmlandingpageModel\.php</exclude-pattern>
+        <exclude-pattern type="relative">site/src/Model/CwmpodcastdisplayModel\.php</exclude-pattern>
+        <exclude-pattern type="relative">site/src/Model/CwmpodcastlistModel\.php</exclude-pattern>
+        <exclude-pattern type="relative">site/src/Model/CwmpopupModel\.php</exclude-pattern>
+        <exclude-pattern type="relative">site/src/Model/CwmseriesdisplayModel\.php</exclude-pattern>
+        <exclude-pattern type="relative">site/src/Model/CwmseriesdisplaysModel\.php</exclude-pattern>
+        <exclude-pattern type="relative">site/src/Model/CwmsermonModel\.php</exclude-pattern>
+        <exclude-pattern type="relative">site/src/Model/CwmsermonsModel\.php</exclude-pattern>
+        <exclude-pattern type="relative">site/src/Model/CwmserverslistModel\.php</exclude-pattern>
+        <exclude-pattern type="relative">site/src/Model/CwmteacherModel\.php</exclude-pattern>
+        <exclude-pattern type="relative">site/src/Model/CwmteachersModel\.php</exclude-pattern>
     </rule>
-
+    
     <rule ref="PSR1.Classes.ClassDeclaration.MultipleClasses">
     </rule>
 
