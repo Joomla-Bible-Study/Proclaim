@@ -17,5 +17,5 @@
 <input name="option" value="com_proclaim" type="hidden"/>
 <input name="task" value="" type="hidden"/>
 <input name="boxchecked" value="0" type="hidden"/>
-<input name="controller" value="CWMSermons" type="hidden"/>
+<input name="controller" value="cwmsermons" type="hidden"/>
 </form>
