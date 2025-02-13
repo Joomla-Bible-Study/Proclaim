@@ -11,6 +11,7 @@
 namespace CWM\Module\ProclaimPodcast\Site\Dispatcher;
 
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcastsubscribe;
+use Exception;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
 use Joomla\CMS\Helper\HelperFactoryAwareInterface;
@@ -32,7 +33,7 @@ class Dispatcher extends AbstractModuleDispatcher
      *
      * @return  array
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   4.2.0
      */
     protected function getLayoutData(): array
@@ -41,18 +42,18 @@ class Dispatcher extends AbstractModuleDispatcher
 
 
         // Always load Proclaim API if it exists.
-        $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
-
         if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
-            require_once $api;
+            require_once JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
         }
 
         if (!ComponentHelper::isEnabled('com_proclaim')) {
-            throw new \Exception("Extension Proclaim not present or enabled");
+            throw new \RuntimeException("Extension Proclaim not present or enabled");
         }
 
         $podcast   = new Cwmpodcastsubscribe();
-        $data['list'] = $podcast->buildSubscribeTable($data['params']->get('subscribeintro', 'Our Podcasts'));
+        if ($data) {
+            $data['list'] = $podcast->buildSubscribeTable($data['params']->get('subscribeintro', 'Our Podcasts'));
+        }
 
         // Display the module
         return $data;

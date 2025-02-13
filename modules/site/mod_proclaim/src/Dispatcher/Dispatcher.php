@@ -21,20 +21,12 @@ use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
-
-$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
-
-if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
-    require_once $api;
-}
 // phpcs:enable PSR1.Files.SideEffects
 
-// Always load Proclaim API if it exists.
-
 /**
- * Dispatcher class for mod_articles_latest
+ * Dispatcher class for mod_proclaim
  *
- * @since  4.2.0
+ * @since  10.0.0
  */
 class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareInterface
 {
@@ -46,10 +38,14 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
      * @return  array
      *
      * @throws Exception
-     * @since   4.2.0
+     * @since   10.0.0
      */
     protected function getLayoutData(): array
     {
+        if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
+            require_once JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
+        }
+
         /** @var array $data */
         $data = parent::getLayoutData();
 
@@ -72,7 +68,9 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $data['params'] = $admin_params;
 
 
-        $data['list'] = $this->getHelperFactory()->getHelper('ProclaimHelper')->getLatest($data['params'], $this->getApplication());
+        $data['list'] = $this->getHelperFactory()
+            ->getHelper('ProclaimHelper')
+            ->getLatest($data['params'], $this->getApplication());
 
         if (
             $data['params']->get('useexpert_module') > 0 || is_string(
