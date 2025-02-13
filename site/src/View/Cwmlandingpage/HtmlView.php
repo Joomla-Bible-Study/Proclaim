@@ -123,14 +123,17 @@ class HtmlView extends BaseHtmlView
 
             $showhideall = "<div id='showhide" . $i . "'>";
 
-            $buttonlink = "\n\t" . '<a class="showhideheadingbutton" href="javascript:ReverseDisplay2(' . "'showhide" . $showIt . "'" . ')">';
-            $labellink  = "\n\t" . '<a class="showhideheadinglabel" href="javascript:ReverseDisplay2(' . "'showhide" . $showIt . "'" . ')">';
+            $buttonlink = "\n\t" . '<a class="showhideheadingbutton" href="javascript:ReverseDisplay2(' . "'showhide"
+                . $showIt . "'" . ')">';
+            $labellink  = "\n\t" . '<a class="showhideheadinglabel" href="javascript:ReverseDisplay2(' . "'showhide"
+                . $showIt . "'" . ')">';
 
             switch ($this->params->get('landing_hide', 0)) {
                 case 0: // Image only
                     $showhideall .= $buttonlink;
 
-                    // $showhideall .= "\n\t\t" . '<img src="' . Uri::base() . $showhide_tmp->path . '" alt="' . Text::_('JBS_CMN_SHOW_HIDE_ALL');
+                    // $showhideall .= "\n\t\t" . '<img src="' . Uri::base() . $showhide_tmp->path . '" alt="'
+                    // . Text::_('JBS_CMN_SHOW_HIDE_ALL');
                     // $showhideall .= ' ' . $showIt_phrase . '" title="' . Text::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' .
                     //  $showIt_phrase . '" border="0" width="';
                     // $showhideall .= $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
