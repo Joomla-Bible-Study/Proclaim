@@ -48,7 +48,7 @@ class CWMHtml5Inline
         bool $popup = false,
         int $t = null
     ): string {
-        $popupmarg = 0;
+        $popupMarg = 0;
 
         // Used to set for MP3 and audio player look
         if (isset($player->mp3) && $player->mp3 === true) {
@@ -149,31 +149,32 @@ class CWMHtml5Inline
         if ($popup) {
             if ($params->get('playerresponsive') !== 0) {
                 $media->playerwidth = '100%';
-                $render             .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:100%;\">";
+                $render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:100%;\">";
             } else {
                 $render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:"
                     . $media->playerwidth . "px; height:" . $height . "px;\">";
             }
 
-            $popupmarg = $params->get('popupmargin', '50');
+            $popupMarg = $params->get('popupmargin', '50');
         }
 
         if ($params->get('media_popout_yes', true)) {
-            $popouttext = $params->get('media_popout_text', Text::_('JBS_CMN_POPOUT'));
+            $popoutText = $params->get('media_popout_text', Text::_('JBS_CMN_POPOUT'));
         } else {
-            $popouttext = '';
+            $popoutText = '';
         }
 
         if ($popup || $params->get('pcplaylist')) {
             $render .= "</div>";
-        } elseif ($popouttext) {
+        } elseif ($popoutText) {
             // Add space for a popup window
-            $player->playerwidth  = $player->playerwidth + 20;
-            $player->playerheight = $player->playerheight + $popupmarg;
-            $render               .= "<a href=\"#\" onclick=\"window.open('index.php?option=com_proclaim&amp;player=" . $player->player
-                . "&amp;view=cwmpopup&amp;t=" . $t . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
+            $player->playerwidth  += 20;
+            $player->playerheight += $popupMarg;
+            $render               .= "<a href=\"#\" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
+                . $player->player . "&amp;view=cwmpopup&amp;t=" . $t . "&amp;mediaid=" . $media->id
+                . "&amp;tmpl=component', 'newwindow', 'width="
                 . $player->playerwidth . ",height=" .
-                $player->playerheight . "'); return false\">" . $popouttext . "</a>";
+                $player->playerheight . "'); return false\">" . $popoutText . "</a>";
         }
 
         if (isset($media->headertext)) {
@@ -185,35 +186,6 @@ class CWMHtml5Inline
             $header = str_replace('{{title}}', $media->studytitle, $header);
         }
 
-//        $render .= "'width': '" . $media->playerwidth . "',
-//                      'logo': {
-//                          file: '" . $params->get('jwplayer_logo') . "',
-//                          link: '" . $params->get('jwplayer_logolink', Uri::base()) . "',
-//                       },
-//                      'title': '" . htmlspecialchars($header, ENT_XML1 | ENT_QUOTES, 'UTF-8') . "',
-//                      'image': '" . $params->get('popupimage', 'images/biblestudy/speaker24.png') . "',
-//                      'abouttext': 'Direct Link',
-//                      'aboutlink': '" . $media->path1 . "',
-//                      'autostart': '" . $params->get('autostart') . "',
-//                      'backcolor': '" . $media->backcolor . "',
-//                      'frontcolor': '" . $media->frontcolor . "',
-//                      'lightcolor': '" . $media->lightcolor . "',
-//                      'screencolor': '" . $media->screencolor . "',
-//                      'controlbar.position': '" . $params->get('playerposition') . "',
-//                      'controlbar.idlehide': '" . $params->get('playeridlehide') . "'
-//                  });";
-//
-//        $render .= "</script>";
-//
-//        $render .= "<script>
-//                function loadVideo(myFile,myImage) {
-//                  playerInstance" . $media->id . ".load([{
-//                    file: myFile,
-//                    image: myImage
-//                  }]);
-//                  playerInstance" . $media->id . ".play();
-//                }
-//              </script>";
         $render .= "<div class=\"media\">";
 
         # If MP3 media
@@ -238,15 +210,15 @@ class CWMHtml5Inline
 
     /**
      * Search through Mime Type and see if it's allowed
-     * 
-     * @param string $mimeType Mime Type like: 'audio/mp3'
-     * @param array $mimeArray Array of Mime Types like ['mp3' => 'audio/mp3']
+     *
+     * @param   string  $mimeType   Mime Type like: 'audio/mp3'
+     * @param   array   $mimeArray  Array of Mime Types like ['mp3' => 'audio/mp3']
      *
      * @return bool
      *
      * @since 10.0.0
      */
-    private static function isMimeTypeAllowed($mimeType, $mimeArray): bool
+    private static function isMimeTypeAllowed(string $mimeType, array $mimeArray): bool
     {
         return in_array($mimeType, $mimeArray, true);
     }
