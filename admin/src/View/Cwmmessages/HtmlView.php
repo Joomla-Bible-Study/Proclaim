@@ -239,7 +239,7 @@ class HtmlView extends BaseHtmlView
         if ($user->authorise('core.admin', 'com_proclaim') || $user->authorise('core.options', 'com_proclaim')) {
             $toolbar->preferences('com_proclaim');
         }
-
-        $toolbar->help('Messages', true);
+		$help_url='https://www.christianwebministries.org/documentation/8-proclaim/19-proclaim-10-x.html';
+        $toolbar->help('Messages', false, $help_url);
     }
 }

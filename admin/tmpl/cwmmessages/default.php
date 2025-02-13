@@ -25,8 +25,8 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 
 $app       = Factory::getApplication();
-$user      = $app->getIdentity();
-$userId    = $user->get('id');
+$user      = $this->getCurrentUser();
+$userId    = $user->id;
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $archived  = $this->state->get('filter.published') == 2 ? true : false;
