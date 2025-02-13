@@ -18,13 +18,13 @@ use CWM\Component\Proclaim\Site\Helper\Cwmserieslist;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Html\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
 $document      = Factory::getApplication();
-$mainframe     = Factory::getApplication();
-$input         = Factory::getApplication();
+$input         = $document->getInput();
 $option        = $input->get('option', '', 'cmd');
 $CWMSerieslist = new Cwmserieslist;
 $series_menu   = $this->params->get('series_id', 1);
