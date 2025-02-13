@@ -40,20 +40,30 @@ abstract class Cwmhelperroute
     /**
      * Get Article Rout
      *
-     * @param   string   $id        ID or ID:Alias for the route to build
-     * @param   ?string  $language  The state of language
+     * @param   string   $id         ID or ID:Alias for the route to build
+     * @param   ?integer  $series_id  The category ID.
+     * @param   ?string  $language   The state of language
+     * @param   string   $layout     The layout value.
      *
      * @return string
      *
      * @since    7.2
      */
-    public static function getArticleRoute(string $id, ?string $language = null): string
+    public static function getArticleRoute(string $id, ?int $series_id = 0, ?string $language = null, $layout = null): string
     {
         // Create the link
-        $link = 'index.php?option=com_proclaim&view=Cwmsermon&id=' . $id;
+        $link = 'index.php?option=com_proclaim&view=cwmsermon&id=' . $id;
+
+        if ((int) $series_id > 1) {
+            $link .= '&series_id=' . $series_id;
+        }
 
         if (!empty($language) && $language !== '*' && Multilanguage::isEnabled()) {
             $link .= '&lang=' . $language;
+        }
+
+        if ($layout) {
+            $link .= '&layout=' . $layout;
         }
 
         return $link;
