@@ -233,8 +233,6 @@
             <option value="x">JBS_ADM_SELECT_NEW_PLAYER</option>
             <option value="0">JBS_CMN_DIRECT_LINK</option>
             <option value="1">JBS_CMN_INTERNAL_PLAYER</option>
-            <option value="3">JBS_CMN_AVPLUGIN</option>
-            <option value="7">JBS_CMN_LEGACY_PLAYER</option>
             <option value="8">JBS_CMN_EMBED_CODE</option>
             <option value="100">JBS_CMN_USE_GLOBAL</option>
         </field>
@@ -262,8 +260,6 @@
             <option value="x">JBS_ADM_SELECT_NEW_PLAYER</option>
             <option value="0">JBS_CMN_DIRECT_LINK</option>
             <option value="1">JBS_CMN_INTERNAL_PLAYER</option>
-            <option value="3">JBS_CMN_AVPLUGIN</option>
-            <option value="7">JBS_CMN_LEGACY_PLAYER</option>
             <option value="8">JBS_CMN_EMBED_CODE</option>
             <option value="100">JBS_CMN_USE_GLOBAL</option>
         </field>
