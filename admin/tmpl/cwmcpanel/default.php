@@ -96,7 +96,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                 </p>
                 <a href="<?php
                 echo Route::_('index.php?option=com_proclaim&task=cwmadmin.edit&id=1'); ?>"
-                   class="btn btn-primary btn-large">
+                   class="btn btn-primary btn-large" style="color: #FFFFFF">
                     <?php
                     echo Text::_('JBS_CPANEL_SIMPLE_MODE_LINK'); ?>
                 </a>

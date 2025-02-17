@@ -337,8 +337,8 @@ class HtmlView extends BaseHtmlView
         $toolbar->divider();
 
         ToolbarHelper::inlinehelp();
-
-        $toolbar->help('Proclaim', true);
+		$help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=30:administration-help-screen&catid=20&Itemid=315&tmpl=component';
+        $toolbar->help('Proclaim', false, $help_url);
     }
 
     /**
