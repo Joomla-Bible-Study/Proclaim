@@ -82,7 +82,7 @@ class CwmarchiveModel extends AdminModel
         $timeframe = (int)$data['timeframe'];
 
         // Use this to field (year, month, day)
-        $swich = $data['swich'];
+        $switch = $data['switch'];
 
         // Fields to update.
         $fields = array(
@@ -91,7 +91,7 @@ class CwmarchiveModel extends AdminModel
 
         // Conditions for which records should be updated.
         $conditions = array(
-            $db->qn('studydate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($swich) . ' YEAR'
+            $db->qn('studydate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($switch)
         );
 
         $query->update($db->quoteName('#__bsms_studies'))->set($fields)->where($conditions);
@@ -106,7 +106,7 @@ class CwmarchiveModel extends AdminModel
 
         // Conditions for which records should be updated.
         $conditions = array(
-            $db->qn('createdate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($swich) . ' YEAR'
+            $db->qn('createdate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($switch)
         );
 
         $query->update($db->quoteName('#__bsms_mediafiles'))->set($fields)->where($conditions);
@@ -117,7 +117,7 @@ class CwmarchiveModel extends AdminModel
             $mediafiles = $db->getAffectedRows();
         }
 
-        $frame = $timeframe . ' ' . $swich . 's';
+        $frame = $timeframe . ' ' . $switch . 's';
 
         return Text::sprintf('JBS_ARCHIVE_DB_CHANGE', $studies, $mediafiles, $frame);
     }

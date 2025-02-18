@@ -48,10 +48,16 @@ echo Route::_('index.php?option=com_proclaim&view=cwmarchive'); ?>" enctype="mul
                     echo $this->form->getLabel('timeframe'); ?>
                 </div>
                 <div class="controls">
-                    <?php
-                    echo $this->form->getInput('timeframe'); ?>
-                    <?php
-                    echo $this->form->getInput('switch'); ?>
+                    <?php echo $this->form->getInput('timeframe'); ?>
+                    <br />
+                    <?php echo Text::_('JBS_ARCHIVE_TIMEFRAME_DESC'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+	            <?php
+	            echo $this->form->getLabel('switch'); ?>
+                <div class="controls">
+	                <?php echo $this->form->getInput('switch'); ?>
                 </div>
             </div>
             <div class="control-group">
