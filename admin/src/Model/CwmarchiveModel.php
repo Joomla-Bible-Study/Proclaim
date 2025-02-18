@@ -86,12 +86,12 @@ class CwmarchiveModel extends AdminModel
 
         // Fields to update.
         $fields = array(
-            $db->qn('published') . ' =' . $db->q('2')
+            $db->qn('published') . ' = ' . $db->q('2')
         );
 
         // Conditions for which records should be updated.
         $conditions = array(
-            $db->qn('studydate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($swich)
+            $db->qn('studydate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($swich) . ' YEAR'
         );
 
         $query->update($db->quoteName('#__bsms_studies'))->set($fields)->where($conditions);
@@ -106,7 +106,7 @@ class CwmarchiveModel extends AdminModel
 
         // Conditions for which records should be updated.
         $conditions = array(
-            $db->qn('createdate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($swich)
+            $db->qn('createdate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($swich) . ' YEAR'
         );
 
         $query->update($db->quoteName('#__bsms_mediafiles'))->set($fields)->where($conditions);
