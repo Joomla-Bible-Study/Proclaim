@@ -114,14 +114,14 @@ class CwmlocationModel extends AdminModel
      *
      * @param   ?int  $pk  The numeric id of the primary key.
      *
-     * @return  ?int  False on failure or error, true otherwise.
+     * @return  bool  False on failure or error, true otherwise.
      *
      * @since   11.1
      */
-    public function checkout(?int $pk = null): ?int
-    {
-        return $pk;
-    }
+	public function checkout($pk = null): bool
+	{
+		return true;
+	}
 
     /**
      * Method to get the data that should be injected in the form.
