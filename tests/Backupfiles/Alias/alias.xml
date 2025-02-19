@@ -21,8 +21,6 @@
                 <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="0">JBS_CMN_DIRECT_LINK</option>
                 <option value="1">JBS_CMN_USE_INTERNAL_PLAYER</option>
-                <option value="3">JBS_CMN_USE_AV</option>
-                <option value="7">JBS_CMN_USE_MP3_PLAYER</option>
                 <option value="8">JBS_CMN_USE_EMBED_CODE</option>
             </field>
             <field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"

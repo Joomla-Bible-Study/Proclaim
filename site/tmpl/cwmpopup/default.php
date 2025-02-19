@@ -16,6 +16,7 @@
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
+use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Html\HTMLHelper;
 use Joomla\CMS\Router\Route;
@@ -30,7 +31,7 @@ try {
 $doc   = $app->getDocument();
 $doc->addStyleDeclaration($style);
 $CWMedia = new Cwmmedia();
-
+$Cwmlisting = new Cwmlisting();
 ?>
 <div id="popupwindow" class="popupwindow">
     <div class="popuptitle"><p class="popuptitle"><?php
@@ -80,9 +81,15 @@ $CWMedia = new Cwmmedia();
     }
     ?>
     <div class="popupfooter">
+	    <?php
+	    // Social Networking begins here
+	    if ($this->params->get('embedshare') != 'FALSE') {
+	    echo $Cwmlisting->getShare($this->path1, $this->item, $this->params);
+	    }
+	    // End Social Networking ?>
         <p class="popupfooter">
-            <?php
-            echo $this->footertext; ?>
+
+           <?php echo $this->footertext; ?>
         </p>
     </div>
 </div>

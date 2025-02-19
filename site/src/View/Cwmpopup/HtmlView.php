@@ -223,7 +223,6 @@ class HtmlView extends BaseHtmlView
         $registry             = new Registry();
         $registry->loadString($this->media->params);
         $this->params->merge($registry);
-
         $saveid          = $this->media->id;
         $this->media->id = $this->media->study_id;
         $JBSMListing     = new Cwmlisting();

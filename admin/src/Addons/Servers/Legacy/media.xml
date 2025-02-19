@@ -73,9 +73,6 @@
             </field>
         </fieldset>
         <fieldset name="files_linker" label="JBD_ADDON_LEGACY_FILE_LINKER">
-            <field name="docMan_id" type="docman" extension="com_proclaim"
-                   label="JBS_MED_USE_DOCMAN" description="JBS_MED_USE_DOCMAN_DESC"
-                   class="inputbox"/>
             <field addfieldprefix="Joomla\Component\Content\Administrator\Field"
                    name="article_id"
                    type="modal_article"
@@ -87,10 +84,6 @@
                    clear="true"
                    filter="integer"
                    showon="privacy_type:article"/>
-            <field name="virtueMart_id" type="virtuemart" label="JBS_MED_VIRTUEMART_ITEM"
-                   description="JBS_MED_VIRTUEMART_ITEM_DESC" default="0">
-                <option value="-1">JBS_MED_SELECT_VM_ITEM</option>
-            </field>
         </fieldset>
         <fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE"
                   addfieldpath="/administrator/components/com_proclaim/medels/fields">

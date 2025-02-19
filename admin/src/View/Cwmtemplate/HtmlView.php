@@ -152,6 +152,8 @@ class HtmlView extends BaseHtmlView
         }
 
         ToolbarHelper::divider();
-        ToolbarHelper::help('proclaim', true);
+	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=34:teacher-entry-help&catid=20&Itemid=315&tmpl=component';
+	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
+
     }
 }
