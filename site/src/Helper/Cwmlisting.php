@@ -1886,7 +1886,7 @@ class Cwmlisting
                 if (isset($row->teachertitle) && isset($row->teachername)) {
                     $element = $row->teachertitle . ' ' . $row->teachername;
                 } else {
-                    $element = '';
+                    $element = $row->teachername;
                 }
                 break;
             case 'studynumber':
