@@ -52,6 +52,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div class="controls">
                         <?php
                         echo $this->form->getInput('title'); ?>
+                        <br /> <?php echo Text::_($this->form->description); ?>
                     </div>
                 </div>
                 <div class="control-group">
@@ -62,6 +63,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div class="controls">
                         <?php
                         echo $this->form->getInput('text'); ?>
+                        <br /> <?php echo Text::_($this->form->description); ?>
                     </div>
                 </div>
             </div>
@@ -117,6 +119,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div class="controls">
                         <?php
                         echo $field->input; ?>
+                        <br /> <?php echo Text::_($field->description); ?>
                     </div>
                 </div>
                 <?php
@@ -138,6 +141,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div class="controls">
                         <?php
                         echo $field->input; ?>
+                        <br /> <?php echo Text::_($field->description); ?>
                     </div>
                 </div>
                 <?php
@@ -167,6 +171,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div class="controls">
                         <?php
                         echo $field->input; ?>
+                        <br /> <?php echo Text::_($field->description); ?>
                     </div>
                 </div>
                 <?php
@@ -200,6 +205,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div class="controls">
                         <?php
                         echo $field->input; ?>
+                        <br /> <?php echo Text::_($field->description); ?>
                     </div>
                 </div>
                 <?php
@@ -237,6 +243,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
                                 <?php
@@ -265,6 +272,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
                                 <?php
@@ -293,6 +301,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
                                 <?php
@@ -321,6 +330,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
                                 <?php
@@ -349,6 +359,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
 
@@ -378,6 +389,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
 
@@ -408,6 +420,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
 
@@ -437,6 +450,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
 
@@ -467,6 +481,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
 
@@ -497,6 +512,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
 
@@ -535,6 +551,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
 
@@ -564,6 +581,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
 
@@ -593,6 +611,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
 
@@ -622,6 +641,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
 
@@ -651,6 +671,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
 
@@ -680,6 +701,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
 
@@ -710,6 +732,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
 
@@ -748,6 +771,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
 
@@ -777,6 +801,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
 
@@ -806,6 +831,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
 
@@ -835,6 +861,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
 
@@ -873,6 +900,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
                                 <?php
@@ -901,6 +929,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
                                 <?php
@@ -929,6 +958,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
                                 <?php
@@ -957,6 +987,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                     <div class="controls">
                                         <?php
                                         echo $field->input; ?>
+                                        <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
                                 <?php
