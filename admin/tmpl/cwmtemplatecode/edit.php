@@ -76,7 +76,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     </div>
                     <div class="controls">
                         <?php
-                        if ($this->item->id === 0) {
+                        if ($this->item->id == 0) {
                             echo $this->form->getInput('type');
                         } else {
                             ?><label id="jform_type-lbl" for="jform_type"
