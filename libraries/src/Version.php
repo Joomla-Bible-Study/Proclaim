@@ -5,7 +5,7 @@
  *
  * @package    Proclaim.Admin
  * @subpackage Libraries
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -118,7 +118,7 @@ final class Version
      * @var    string
      * @since  3.5
      */
-    public const COPYRIGHT = '(C) 2007 CWM Team All rights reserved<https://www.christianwebministries.org>';
+    public const COPYRIGHT = '(C) 2025 CWM Team All rights reserved<https://www.christianwebministries.org>';
 
     /**
      * Link text.
