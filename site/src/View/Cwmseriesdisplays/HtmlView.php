@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmseriesdisplays;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use JObject;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Router\Route;
@@ -110,7 +111,10 @@ class HtmlView extends BaseHtmlView
         $uri         = new Uri();
         $pagebuilder = new Cwmpagebuilder();
         $items       = $this->get('Items');
+	    $this->activeFilters   = $this->get('ActiveFilters');
 
+	    // Get a filter form.
+	    $this->filterForm = $this->get('FilterForm');
         // Adjust the slug if there is no alias in the row
         foreach ($items as $item) {
             $item->slug  = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
@@ -168,4 +172,52 @@ class HtmlView extends BaseHtmlView
 
         parent::display($tpl);
     }
+	/**
+	 * Update Filters per landing page call and Hide filters per the template settings.
+	 *
+	 * @return  void
+	 *
+	 * @throws Exception
+	 * @since 9.1.6
+	 */
+	private function updateFilters(): void
+	{
+		$input   = Factory::getApplication()->input;
+		$filters = ['search', 'teacher', 'series', 'language'];
+		$lists   = ['fullordering', 'limit'];
+
+		// Fix language filter
+		$lang = $this->params->get('listlanguage', 'NO');
+
+		if ($lang !== 'NO') {
+			$this->params->set('show_language_search', (int)$lang);
+		}
+
+		foreach ($filters as $filter) {
+			$set  = $input->getInt('filter_' . $filter);
+			$from = $this->filterForm->getValue($filter, 'filter');
+
+			// Update value from landing page call.
+			if ($set !== 0 && $set !== null) {
+				$this->filterForm->setValue($filter, 'filter', $set);
+			}
+
+			// Catch active filters and update them.
+			if ($from !== null || $set !== null) {
+				$this->activeFilters[] = $filter;
+			}
+
+			// Remove from view if set to hid in template.
+			if ((int)$this->params->get('show_' . $filter . '_search', 1) === 0 && $filter !== 'language') {
+				$this->filterForm->removeField($filter, 'filter');
+			}
+		}
+
+		foreach ($lists as $list) {
+			// Remove from view if set to hid in template.
+			if ((int)$this->params->get('show_' . $list . '_search', 1) === 0) {
+				$this->filterForm->removeField($list, 'list');
+			}
+		}
+	}
 }

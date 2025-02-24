@@ -38,7 +38,7 @@ $classelement = $listing->createelement($this->params->get('series_element'));
 if ($url) {
     HtmlHelper::_('stylesheet', $url);
 }
-//echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 ?>
 <div class="container-fluid">
     <form action="<?php

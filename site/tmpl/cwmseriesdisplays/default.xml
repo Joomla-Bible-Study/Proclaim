@@ -40,6 +40,34 @@
                    rows="4"
                    label="JBS_STY_METADESCRIPTION"
                    description="JBS_STY_METADESCRIPTION_DESC"/>
+            <field name="order"
+                   type="list"
+                   label="JBS_CMN_ORDERING"
+                   description="JBS_CMN_ORDERING_DESC"
+                   default="">
+                <option value="">JBS_CMN_USE_GLOBAL</option>
+                <option value="1">JBS_CMN_DESCENDING</option>
+                <option value="2">JBS_CMN_ASCENDING</option>
+            </field>
+            <field name="years"
+                   type="sql"
+                   default="-1"
+                   label="JBS_CMN_FILTERS_YEARS"
+                   description="JBS_CMN_FILTERS_DESC"
+                   multiple="true"
+                   query="SELECT DISTINCT(YEAR(studydate)) as date FROM #__bsms_studies ORDER BY studydate DESC"
+                   key_field="date" value_field="date">
+                <option value="-1">JBS_CMN_SHOW_ALL</option>
+            </field>
+            <field name="se.tid"
+                   type="TeacherList"
+                   label="JBS_CMN_FILTERS_TEACHER"
+                   description="JBS_CMN_FILTERS_DESC"
+                   multiple="true"
+                   default="-1"
+            >
+                <option value="-1">JBS_CMN_SHOW_ALL</option>
+            </field>
         </fieldset>
     </fields>
 </metadata>

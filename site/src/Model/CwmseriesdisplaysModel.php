@@ -11,11 +11,6 @@
 
 namespace CWM\Component\Proclaim\Site\Model;
 
-// phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
-
-// phpcs:enable PSR1.Files.SideEffects
-
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use JApplicationSite;
 use Joomla\CMS\Component\ComponentHelper;
@@ -23,6 +18,10 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseQuery;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
  * Model class for SeriesDisplays
@@ -32,6 +31,51 @@ use Joomla\Database\DatabaseQuery;
  */
 class CwmseriesdisplaysModel extends ListModel
 {
+/**
+ * Constructor.
+ *
+ * @param   array  $config  An optional associative array of configuration settings.
+ *
+ * @throws Exception
+ * @since   11.1
+ * @see     JController
+ */
+public function __construct($config = array())
+{
+	if (empty($config['filter_fields'])) {
+		$config['filter_fields'] = array(
+			'id',
+			'se.id',
+			'published',
+			'se.published',
+			's.studydate',
+			's.studytitle',
+			's.studytitle',
+			'ordering',
+			's.ordering',
+			'bookname',
+			'book.bookname',
+			't.teachername',
+			'series_text',
+			's.seriesid',
+			's.series_id',
+			's.hits',
+			'access',
+			'access_level',
+			'language',
+			's.language',
+			'search'
+
+		);
+	}
+
+	$this->input = Factory::getApplication();
+
+	parent::__construct($config);
+}
+
+
+
     /**
      * Get a list of teachers associated with series
      *
