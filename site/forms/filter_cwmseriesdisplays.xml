@@ -8,15 +8,7 @@
                     label="JBS_CMN_FILTER_SEARCH_DESC"
                     hint="JSEARCH_FILTER"
             />
-            <field name="order"
-                   type="list"
-                   label="JBS_CMN_ORDERING"
-                   description="JBS_CMN_ORDERING_DESC"
-                   default="">
-                <option value="">JBS_CMN_USE_GLOBAL</option>
-                <option value="1">JBS_CMN_DESCENDING</option>
-                <option value="2">JBS_CMN_ASCENDING</option>
-            </field>
+
             <field name="se.tid"
                    type="TeacherList"
                    label="JBS_CMN_FILTERS_TEACHER"
@@ -39,6 +31,15 @@
         </fields>
     </fieldset>
     <fields name="list">
+        <field name="order"
+               type="list"
+               label="JBS_CMN_ORDERING"
+               description="JBS_CMN_ORDERING_DESC"
+               default="">
+            <option value="">JBS_CMN_USE_GLOBAL</option>
+            <option value="1">JBS_CMN_DESCENDING</option>
+            <option value="2">JBS_CMN_ASCENDING</option>
+        </field>
         <field
                 name="limit"
                 type="limitbox"

@@ -229,6 +229,22 @@ public function __construct($config = array())
         } else {
             $this->setState('filter.access', false);
         }
+	    $orderCol = $app->input->get('filter_order');
+
+	    if (!empty($orderCol) && !in_array($orderCol, $this->filter_fields, true)) {
+		    $orderCol = 'se.id';
+	    }
+
+	    $this->setState('list.ordering', $orderCol);
+
+	    // From landing page filter passing
+	    $listOrder = $app->input->get('filter_order_Dir');
+
+	    if (!empty($listOrder) && !in_array(strtoupper($listOrder), array('ASC', 'DESC', ''))) {
+		    $direction = 'DESC';
+	    }
+
+	    $this->setState('list.direction', $direction);
 
         $this->setState('layout', $input->get('layout', '', 'cmd'));
         parent::populateState('se.id', 'ASC');
