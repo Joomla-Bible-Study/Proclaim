@@ -277,6 +277,12 @@ public function __construct($config = array())
         // Filter by language
         $language = $params->get('language', '*');
 
+	    $search = $this->getState('filter.search');
+	    if (!empty($search))
+	    {
+		    $like = $db->quote('%' . $search . '%');
+		    $query->where('se.description LIKE ' . $like);
+	    }
         if ($this->getState('filter.language') || $language !== '*') {
             $query->where('se.language in (' . $db->quote($app->getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
         }
