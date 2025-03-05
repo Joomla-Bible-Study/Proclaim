@@ -31,14 +31,18 @@
         </fields>
     </fieldset>
     <fields name="list">
-        <field name="order"
-               type="list"
-               label="JBS_CMN_ORDERING"
-               description="JBS_CMN_ORDERING_DESC"
-               default="">
-            <option value="">JBS_CMN_USE_GLOBAL</option>
-            <option value="1">JBS_CMN_DESCENDING</option>
-            <option value="2">JBS_CMN_ASCENDING</option>
+        <field
+                name="fullordering"
+                type="list"
+                label="JBSM_CMN_LIST_FULL_ORDERING"
+                description="JBSM_CMN_LIST_FULL_ORDERING_DESC"
+                onchange="this.form.submit();"
+                default="se.text ASC"
+                validate="options"
+        >
+            <option value="">JBSM_GRID_SORT_BY</option>
+            <option value="se.text ASC">JBS_SER_SERIES_NAME_ASC</option>
+            <option value="se.text DESC">JBS_SER_SERIES_NAME_DESC</option>
         </field>
         <field
                 name="limit"
