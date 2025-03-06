@@ -220,9 +220,6 @@ public function __construct($config = array())
         $teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher', '');
         $this->setState('filter.teacher', $teacher);
 
-        $year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year', '');
-        $this->setState('filter.year', $year);
-
         // Process show_noauth parameter
         if (!$params->get('show_noauth')) {
             $this->setState('filter.access', true);
@@ -232,7 +229,7 @@ public function __construct($config = array())
 	    $orderCol = $app->input->get('filter_order');
 
 	    if (!empty($orderCol) && !in_array($orderCol, $this->filter_fields, true)) {
-		    $orderCol = 'se.id';
+		    $orderCol = 'se.series_text';
 	    }
 
 	    $this->setState('list.ordering', $orderCol);
@@ -299,15 +296,34 @@ public function __construct($config = array())
 		    $like = $db->quote('%' . $search . '%');
 		    $query->where('se.description LIKE ' . $like);
 	    }
+
+
         if ($this->getState('filter.language') || $language !== '*') {
             $query->where('se.language in (' . $db->quote($app->getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
         }
 
-        $orderDir = $t_params->get('series_list_order', 'DESC');
-        $orderCol = $t_params->get('series_order_field', 'series_text');
-        $query->order($orderCol . ' ' . $orderDir);
+	    // Add the list ordering clause.
+	    $orderCol  = $this->getState('list.fullordering');
+	    $orderDirn = '';
 
-        return $query;
+	    if (empty($orderCol) || $orderCol === " ") {
+		    $orderCol = $this->getState('list.ordering', 'se.series_text');
+		    $this->setState('list.direction', $params->get('default_order'));
+
+		    // Set order by menu if set. The New Default is blank as of 9.2.5
+		    if ($params->get('order') === '2') {
+			    $this->setState('list.direction', 'ASC');
+		    } elseif ($params->get('order') === '1') {
+			    $this->setState('list.direction', 'DESC');
+		    }
+
+		    $orderDirn = $this->getState('list.direction', 'DESC');
+	    }
+
+	    $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+
+
+	    return $query;
     }
 
     /**
