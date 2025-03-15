@@ -186,14 +186,13 @@ class Cwmteacher extends Cwmlisting
      *
      * @param   object            $row       Table info
      * @param   object            $params    Item Params
-     * @param   string            $oddeven   Odd Even
      * @param   CwmtemplateTable  $template  Template
      *
      * @return array|string|string[]
      *
      * @since    8.0.0
      */
-    public function getTeacherListExp($row, $params, $oddeven, $template)
+    public function getTeacherListExp($row, $params, $template)
     {
         $htmlView = new HtmlView();
         $htmlView->loadHelper('image');

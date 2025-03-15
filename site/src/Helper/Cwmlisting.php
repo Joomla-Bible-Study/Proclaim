@@ -339,7 +339,7 @@ class Cwmlisting
         $listsorts[] = $row5sorted;
         $listsorts[] = $row6sorted;
 
-        $oddeven = 1;
+
 
         // Start the table for the entire list
         $list .= '<div class="table-responsive" about="' . $type . '"><table class="table w-auto table-borderless">';
@@ -347,14 +347,14 @@ class Cwmlisting
         if (($type === 'sermons') && $params->get('use_headers_list') > 0) {
             // Start the header
             $list .= '<thead class="' . $params->get('listheadertype') . '">';
-            $list .= $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 1, $type);
+            $list .= $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $header = 1, $type);
             $list .= '</thead>';
         }
 
         if (($type === 'sermon') && $params->get('use_headers_view') > 0) {
             // Start the header
             $list .= '<thead class="' . $params->get('listheadertype') . '">';
-            $list .= $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 1, $type);
+            $list .= $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $header = 1, $type);
             $list .= '</thead>';
         }
 
@@ -367,7 +367,6 @@ class Cwmlisting
                 $items[0],
                 $params,
                 $template,
-                $oddeven,
                 $header = 1,
                 $type
             );
@@ -376,7 +375,6 @@ class Cwmlisting
 
         if ($type === 'seriesdisplay') {
             if ($params->get('use_header_seriesdisplay') > 0) {
-                $oddeven = $params->get('seriesdisplay_color', 'black');
 
                 // Start the header
                 $list .= '<thead class="' . $params->get('listheadertype') . '">';
@@ -386,7 +384,6 @@ class Cwmlisting
                     $items[0],
                     $params,
                     $template,
-                    $oddeven,
                     $header = 1,
                     $type
                 );
@@ -399,7 +396,6 @@ class Cwmlisting
                 $items[0],
                 $params,
                 $template,
-                $oddeven,
                 $header = 0,
                 $type
             );
@@ -407,7 +403,6 @@ class Cwmlisting
 
         if ($type === 'teacher') {
             if ($params->get('use_headers_teacher_details') > 0) {
-                $oddeven = $params->get('teacherdisplay_color', 'white');
 
                 // Start the header
                 $list .= '<thead class="' . $params->get('listheadertype') . '">';
@@ -417,7 +412,6 @@ class Cwmlisting
                     $items[0],
                     $params,
                     $template,
-                    $oddeven,
                     $header = 1,
                     $type
                 );
@@ -430,7 +424,6 @@ class Cwmlisting
                 $items[0],
                 $params,
                 $template,
-                $oddeven,
                 $header = 0,
                 $type
             );
@@ -445,7 +438,6 @@ class Cwmlisting
                 $items[0],
                 $params,
                 $template,
-                $oddeven,
                 $header = 1,
                 $type
             );
@@ -475,7 +467,6 @@ class Cwmlisting
                     $item,
                     $params,
                     $template,
-                    $oddeven,
                     $header = 0,
                     $type
                 );
@@ -498,7 +489,7 @@ class Cwmlisting
                 $item->mediafiles = $studymedia;
             }
 
-            $row[] = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $oddeven, $header = 0, $type);
+            $row[] = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $header = 0, $type);
         }
 
         if ($type === 'seriesdisplays') {
@@ -509,7 +500,6 @@ class Cwmlisting
                     $item,
                     $params,
                     $template,
-                    $oddeven,
                     $header = 0,
                     $type
                 );
@@ -525,7 +515,6 @@ class Cwmlisting
                     $item,
                     $params,
                     $template,
-                    $oddeven,
                     $header = 0,
                     $type
                 );
@@ -725,7 +714,6 @@ class Cwmlisting
      * @param   Object     $item       ?
      * @param   Registry   $params     Item Params
      * @param   stdClass  $template   Template info
-     * @param   string     $oddeven    ?
      * @param   integer    $header     ?
      * @param   string     $type       ?
      *
@@ -740,7 +728,6 @@ class Cwmlisting
         object $item,
         Registry $params,
         $template,
-        string $oddeven,
         int $header,
         string $type
     ): string {
