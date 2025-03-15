@@ -376,11 +376,11 @@ class Cwmlisting
 
         if ($type === 'seriesdisplay') {
             if ($params->get('use_header_seriesdisplay') > 0) {
-                $oddeven = $params->get('seriesdisplay_color');
+                $oddeven = $params->get('seriesdisplay_color', 'black');
 
                 // Start the header
                 $list .= '<thead class="' . $params->get('listheadertype') . '">';
-                $list .= $this->getFluidRow(
+				$list .= $this->getFluidRow(
                     $listrows,
                     $listsorts,
                     $items[0],

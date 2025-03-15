@@ -19,6 +19,15 @@
                 <option value="">JBS_CMN_SELECT_TEACHER</option>
             </field>
             <field
+                name="year"
+                type="YearList"
+                label="JBS_CMN_SELECT_YEAR"
+                description="JBS_CMN_SELECT_YEAR"
+                onchange="this.form.submit();"
+                >
+                    <option value="">JBS_CMN_SELECT_YEAR</option>
+            </field>
+            <field
                     name="language"
                     type="contentlanguage"
                     label="JOPTION_FILTER_LANGUAGE"
