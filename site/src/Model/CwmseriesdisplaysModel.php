@@ -12,12 +12,17 @@
 namespace CWM\Component\Proclaim\Site\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use Exception;
 use JApplicationSite;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\LanguageHelper;
+use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Component\Content\Administrator\Extension\ContentComponent;
 use Joomla\Database\DatabaseQuery;
+use Joomla\Database\ParameterType;
+use Joomla\Database\QueryInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -40,39 +45,39 @@ class CwmseriesdisplaysModel extends ListModel
  * @since   11.1
  * @see     JController
  */
-public function __construct($config = array())
-{
-	if (empty($config['filter_fields'])) {
-		$config['filter_fields'] = array(
-			'id',
-			'se.id',
-			'published',
-			'se.published',
-			's.studydate',
-			's.studytitle',
-			's.studytitle',
-			'ordering',
-			's.ordering',
-			'bookname',
-			'book.bookname',
-			't.teachername',
-			'series_text',
-			's.seriesid',
-			's.series_id',
-			's.hits',
-			'access',
-			'access_level',
-			'language',
-			's.language',
-			'search'
+    public function __construct($config = array())
+    {
+        if (empty($config['filter_fields'])) {
+            $config['filter_fields'] = array(
+            'id',
+            'se.id',
+            'published',
+            'se.published',
+            's.studydate',
+            's.studytitle',
+            's.studytitle',
+            'ordering',
+            's.ordering',
+            'bookname',
+            'book.bookname',
+            't.teachername',
+            'series_text',
+            's.seriesid',
+            's.series_id',
+            's.hits',
+            'access',
+            'access_level',
+            'language',
+            's.language',
+            'search'
 
-		);
-	}
+            );
+        }
 
-	$this->input = Factory::getApplication();
+        $this->input = Factory::getApplication();
 
-	parent::__construct($config);
-}
+        parent::__construct($config);
+    }
 
 
 
@@ -175,13 +180,15 @@ public function __construct($config = array())
      * @throws \Exception
      * @since   11.1
      */
-    protected function populateState($ordering = null, $direction = null): void
+    protected function populateState($ordering = 'series_text', $direction = 'DESC'): void
     {
         /** @type JApplicationSite $app */
         $app = Factory::getApplication();
 
+        $forcedLanguage = $app->getInput()->get('forcedLanguage', '', 'cmd');
+
         // Adjust the context to support modal layouts.
-        $input  = Factory::getApplication()->input;
+        $input  = $app->getInput();
         $layout = $input->get('layout');
 
         if ($layout) {
@@ -209,6 +216,13 @@ public function __construct($config = array())
         $this->setState('template', $template);
         $this->setState('administrator', $admin);
 
+        // List state information
+        $value = $input->get('limit', $app->get('list_limit', 0), 'uint');
+        $this->setState('list.limit', $value);
+
+        $value = $input->get('limitstart', 0, 'uint');
+        $this->setState('list.start', $value);
+
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
 
@@ -217,7 +231,7 @@ public function __construct($config = array())
 
         $this->setState('filter.language', LanguageHelper::getLanguages());
 
-        $teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher', '');
+        $teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher');
         $this->setState('filter.teacher', $teacher);
 
         // Process show_noauth parameter
@@ -226,55 +240,90 @@ public function __construct($config = array())
         } else {
             $this->setState('filter.access', false);
         }
-	    $orderCol = $app->input->get('filter_order');
+        $orderCol = $input->get('filter_order');
 
-	    if (!empty($orderCol) && !in_array($orderCol, $this->filter_fields, true)) {
-		    $orderCol = 'se.series_text';
-	    }
+        if (!\in_array($orderCol, $this->filter_fields, true)) {
+            $orderCol = 'se.series_text';
+        }
 
-	    $this->setState('list.ordering', $orderCol);
+        $this->setState('list.ordering', $orderCol);
 
-	    // From landing page filter passing
-	    $listOrder = $app->input->get('filter_order_Dir');
+        // From landing page filter passing
+        $listOrder = $input->get('filter_order_Dir', 'DESC');
 
-	    if (!empty($listOrder) && !in_array(strtoupper($listOrder), array('ASC', 'DESC', ''))) {
-		    $direction = 'DESC';
-	    }
+        if (!\in_array(strtoupper($listOrder), ['ASC', 'DESC', ''])) {
+            $direction = 'DESC';
+        }
 
-	    $this->setState('list.direction', $direction);
+        $this->setState('list.direction', $direction);
+
+        $user = $this->getCurrentUser();
+
+        if ((!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise('core.edit', 'com_proclaim'))) {
+            // Filter on published for those who do not have edit or edit.state rights.
+            $this->setState('filter.published', ContentComponent::CONDITION_PUBLISHED);
+        }
+
+        $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
+        $this->setState('filter.language', $language);
 
         $this->setState('layout', $input->get('layout', '', 'cmd'));
-        parent::populateState('se.id', 'ASC');
-        $value = $input->get('start', '', 'int');
-        $this->setState('list.start', $value);
+        parent::populateState($ordering, $direction);
+
+        // Force a language
+        if (!empty($forcedLanguage)) {
+            $this->setState('filter.language', $forcedLanguage);
+            $this->setState('filter.forcedLanguage', $forcedLanguage);
+        }
+    }
+
+    /**
+     * Method to get a store id based on model configuration state.
+     *
+     * This is necessary because the model is used by the component and
+     * different modules that might need different sets of data or different
+     * ordering requirements.
+     *
+     * @param   string  $id  A prefix for the store id.
+     *
+     * @return  string  A store id.
+     *
+     * @since   1.6
+     */
+    protected function getStoreId($id = '')
+    {
+        // Compile the store id.
+        $id .= ':' . serialize($this->getState('filter.published'));
+        $id .= ':' . $this->getState('filter.access');
+        $id .= ':' . $this->getState('filter.language');
+        $id .= ':' . serialize($this->getState('filter.teacher'));
+
+        return parent::getStoreId($id);
     }
 
     /**
      * Build an SQL query to load the list data
      *
-     * @return  DatabaseQuery  A DatabaseQuery object to retrieve the data set.
+     * @return  QueryInterface  A DatabaseQuery object to retrieve the data set.
      *
-     * @throws \Exception
+     * @throws Exception
      * @since   7.0
      */
-    protected function getListQuery(): DatabaseQuery
+    protected function getListQuery(): QueryInterface
     {
-        $db              = Factory::getContainer()->get('DatabaseDriver');
-        $template_params = Cwmparams::getTemplateparams();
-        $t_params        = $template_params->params;
-        $app             = Factory::getApplication();
-        $params          = ComponentHelper::getParams('com_proclaim');
+        $user = $this->getCurrentUser();
 
-        $sitemenu  = $app->getMenu();
-        $menuitems = $sitemenu->getItems(array(), array());
-
-        foreach ($menuitems as $menuitem) {
-            $menuparams = $menuitem->getParams();
-        }
+        // Create a new query object.
+        $db = $this->getDatabase();
 
         $query = $db->getQuery(true);
+        $params          = ComponentHelper::getParams('com_proclaim');
+
         $query->select(
-            'se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END as slug'
+            $this->getState(
+                'list.select',
+                'se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END as slug'
+            )
         );
         $query->from('#__bsms_series as se');
         $query->select(
@@ -287,43 +336,69 @@ public function __construct($config = array())
         $where = $this->buildContentWhere();
         $query->where($where);
 
-        // Filter by language
-        $language = $params->get('language', '*');
-
-	    $search = $this->getState('filter.search');
-	    if (!empty($search))
-	    {
-		    $like = $db->quote('%' . $search . '%');
-		    $query->where('se.description LIKE ' . $like);
-	    }
-
-
-        if ($this->getState('filter.language') || $language !== '*') {
-            $query->where('se.language in (' . $db->quote($app->getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
+        // Filter by access level.
+        if ($this->getState('filter.access', true)) {
+            $groups = $this->getState('filter.viewlevels', $user->getAuthorisedViewLevels());
+            $query->whereIn($db->quoteName('se.access'), $groups);
         }
 
-	    // Add the list ordering clause.
-	    $orderCol  = $this->getState('list.fullordering');
-	    $orderDirn = '';
+        $search = $this->getState('filter.search');
+        if (!empty($search)) {
+            $like = $db->quote('%' . $search . '%');
+            $query->where('se.description LIKE ' . $like);
+        }
 
-	    if (empty($orderCol) || $orderCol === " ") {
-		    $orderCol = $this->getState('list.ordering', 'se.series_text');
-		    $this->setState('list.direction', $params->get('default_order'));
+        // Filter by language
+        if ($this->getState('filter.language')) {
+            $query->whereIn($db->quoteName('se.language'), [$this->getState('filter.language')], ParameterType::STRING);
+        } elseif (Multilanguage::isEnabled()) {
+            $query->whereIn($db->quoteName('se.language'), [Factory::getApplication()->getLanguage()->getTag(), '*'], ParameterType::STRING);
+        }
 
-		    // Set order by menu if set. The New Default is blank as of 9.2.5
-		    if ($params->get('order') === '2') {
-			    $this->setState('list.direction', 'ASC');
-		    } elseif ($params->get('order') === '1') {
-			    $this->setState('list.direction', 'DESC');
-		    }
+        // Filter by a single Teacher
+        $teacher = $this->getState('filter.teacher');
 
-		    $orderDirn = $this->getState('list.direction', 'DESC');
-	    }
+        if (is_numeric($teacher)) {
+            $teacher = (int) $teacher;
+            $type      = $this->getState('filter.teacher.include', true) ? ' = ' : ' <> ';
+            $query->where($db->quoteName('se.teacher') . $type . ':teacher')
+                ->bind(':teacher', $teacher, ParameterType::INTEGER);
+        }
 
-	    $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+        // Add the list ordering clause.
+        $orderCol  = $this->getState('list.fullordering');
+        $orderDirn = '';
+
+        if (empty($orderCol) || $orderCol === " ") {
+            $orderCol = $this->getState('list.ordering', 'se.series_text');
+            $this->setState('list.direction', $params->get('default_order'));
+
+            // Set order by menu if set. The New Default is blank as of 9.2.5
+            if ($params->get('order') === '2') {
+                $this->setState('list.direction', 'ASC');
+            } elseif ($params->get('order') === '1') {
+                $this->setState('list.direction', 'DESC');
+            }
+
+            $orderDirn = $this->getState('list.direction', 'DESC');
+        }
+
+        $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
 
 
-	    return $query;
+        return $query;
+    }
+
+    /**
+     * Method to get the starting number of items for the data set.
+     *
+     * @return  int  The starting number of items available in the data set.
+     *
+     * @since   3.0.1
+     */
+    public function getStart(): int
+    {
+        return (int) $this->getState('list.start');
     }
 
     /**
@@ -331,13 +406,13 @@ public function __construct($config = array())
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     public function buildContentWhere(): string
     {
         $mainframe      = Factory::getApplication();
-        $input          = $mainframe->input;
+        $input          = $mainframe->getInput();
         $option         = $input->get('option', '', 'cmd');
         $params         = ComponentHelper::getParams($option);
         $filter_series  = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');

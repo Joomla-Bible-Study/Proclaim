@@ -17,6 +17,7 @@
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmteacher;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
@@ -120,7 +121,6 @@ $itemid = $app->input->get('Itemid');
             // Search tools bar
             echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
             ?>
-
             <?php
             // Add pagination links ?>
             <?php
@@ -152,6 +152,8 @@ $itemid = $app->input->get('Itemid');
             <?php
             if ($this->items) {
                 echo $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'sermons');
+            } else {
+                echo "<h4>" . Text::_("JBS_CMN_STUDY_NOT_FOUND") . "</h4><br />";
             }
             ?>
             <?php

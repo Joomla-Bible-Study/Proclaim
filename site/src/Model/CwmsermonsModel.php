@@ -20,6 +20,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseQuery;
 use Joomla\Database\ParameterType;
+use Joomla\Database\QueryInterface;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
@@ -319,7 +320,7 @@ class CwmsermonsModel extends ListModel
     {
         $app = Factory::getApplication();
 
-        $forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
+        $forcedLanguage = $app->getInput()->get('forcedLanguage', '', 'cmd');
 
         // Load the parameters.
         $params = $app->getParams();
@@ -367,7 +368,8 @@ class CwmsermonsModel extends ListModel
         $this->setState('template', $template);
         $this->setState('administrator', $admin);
 
-        $this->setState('filter.language', Multilanguage::isEnabled());
+        $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
+        $this->setState('filter.language', $language);
 
         $level = $this->getUserStateFromRequest($this->context . '.filter.level', 'filter_level');
         $this->setState('filter.level', $level);
@@ -503,12 +505,12 @@ class CwmsermonsModel extends ListModel
     /**
      * Build an SQL query to load the list data
      *
-     * @return  DatabaseQuery
+     * @return  QueryInterface|string
      *
      * @throws  Exception
      * @since   7.0
      */
-    protected function getListQuery(): DatabaseQuery
+    protected function getListQuery(): QueryInterface|string
     {
         $user   = Factory::getApplication()->getIdentity();
         $groups = implode(',', $user->getAuthorisedViewLevels());
@@ -962,10 +964,9 @@ class CwmsermonsModel extends ListModel
             }
         }
 
-        // Filter by language
-        $language = $params->get('language', '*');
-
-        if ($language !== '*' || $this->getState('filter.language')) {
+        if ($this->getState('filter.language')) {
+            $query->whereIn($db->quoteName('study.language'), [$this->getState('filter.language')], ParameterType::STRING);
+        } elseif (Multilanguage::isEnabled()) {
             $query->whereIn($db->quoteName('study.language'), [Factory::getApplication()->getLanguage()->getTag(), '*'], ParameterType::STRING);
         }
 
