@@ -131,7 +131,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplates'); ?>" method="po
                                     ?>
                                 </td>
                                 <td class="nowrap has-context">
-                                    <div class="pull-left">
+                                    <div class="float-left">
 
                                         <?php
                                         if ($canEdit || $canEditOwn) : ?>

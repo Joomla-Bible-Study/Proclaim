@@ -215,7 +215,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                                     ?>
                                 </td>
                                 <td class="nowrap has-context" style="width:10%;">
-                                    <div class="pull-left">
+                                    <div class="float-left">
                                         <?php
                                         if ($canEdit || $canEditOwn) : ?>
                                             <a href="<?php

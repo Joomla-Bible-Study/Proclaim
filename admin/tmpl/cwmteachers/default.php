@@ -176,7 +176,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                                 </td>
                                 </td>
                                 <td class="nowrap has-context">
-                                    <div class="pull-left">
+                                    <div class="float-left">
                                         <?php
                                 if ($canEdit || $canEditOwn) : ?>
                                             <a href="<?php
@@ -213,7 +213,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                                 <?php
                                 endif; ?>
                                 <td class="small d-none d-md-table-cell">
-                                    <div class="pull-left">
+                                    <div class="float-left">
                                         <?php
                                         if (!$item->list_show) {
                                             echo Text::_('JNO');
@@ -224,7 +224,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                                     </div>
                                 </td>
                                 <td class="small d-none d-md-table-cell">
-                                    <div class="pull-left">
+                                    <div class="float-left">
                                         <?php
                             if (!$item->landing_show) {
                                 echo Text::_('JNO');

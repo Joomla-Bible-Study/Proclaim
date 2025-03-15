@@ -114,7 +114,7 @@ if (!empty($editor)) {
                     <tr class="row<?php
                     echo $i % 2; ?>">
                         <td class="nowrap small d-none d-md-table-cell">
-                            <img class="pull-left" style="padding: 5px;" src="<?php
+                            <img class="float-left" style="padding: 5px;" src="<?php
                             echo $item->image_url; ?>"
                                  alt="<?php
                                  echo $item->title; ?>"

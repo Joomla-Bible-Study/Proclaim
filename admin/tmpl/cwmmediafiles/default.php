@@ -197,7 +197,7 @@ if ($saveOrder && !empty($this->items)) {
                                     ?>
                                 </td>
                                 <td class="nowrap has-context">
-                                    <div class="pull-left">
+                                    <div class="float-left">
                                         <?php
                                         if ($item->checked_out) : ?>
                                             <?php
@@ -229,7 +229,7 @@ if ($saveOrder && !empty($this->items)) {
                                             echo Route::_(
                                                 'index.php?option=com_proclaim&task=cwmmediafile.edit&id=' . (int)$item->id
                                             ); ?>">
-                                                <span class="label pull-left"><?php
+                                                <span class="label float-left"><?php
                                                     echo $this->escape($label); ?></span>
                                             </a>
                                         <?php
@@ -247,7 +247,7 @@ if ($saveOrder && !empty($this->items)) {
                                         endif; ?>
                                     </div>
                                     <div class="clearfix"></div>
-                                    <div class="pull-left">
+                                    <div class="float-left">
                                         <a href="<?php
                                         echo Route::_(
                                             'index.php?option=com_proclaim&task=cwmmediafile.edit&id=' . (int)$item->id

@@ -124,7 +124,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplatecodes'); ?>" method
                                     ?>
                                 </td>
                                 <td class="nowrap has-context">
-                                    <div class="pull-left">
+                                    <div class="float-left">
                                         <?php
                                         if ($canEdit || $canEditOwn) : ?>
                                             <a href="<?php
@@ -139,7 +139,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplatecodes'); ?>" method
                                     </div>
                                 </td>
                                 <td class="small d-none d-md-table-cell text-center">
-                                    <div class="pull-left">
+                                    <div class="float-left">
                                         <?php
                                         echo $item->typetext; ?>
                                     </div>
