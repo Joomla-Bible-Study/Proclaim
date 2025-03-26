@@ -333,8 +333,6 @@ class CwmseriesdisplaysModel extends ListModel
         $query->select('s.id as sid, s.series_id, s.studydate');
         $query->join('INNER', '#__bsms_studies as s on s.series_id = se.id');
         $query->group('se.id');
-        $where = $this->buildContentWhere();
-        $query->where($where);
 
         // Filter by access level.
         if ($this->getState('filter.access', true)) {
@@ -365,7 +363,15 @@ class CwmseriesdisplaysModel extends ListModel
                 ->bind(':teacher', $teacher, ParameterType::INTEGER);
         }
 
-        // Add the list ordering clause.
+		//Filter by year
+	   /* $year = $this->getState('filter.year');
+		if (is_numeric($year)) {
+			$year = (int) $year;
+			$type      = $this->getState('filter.year.include', true) ? ' = ' : ' <> ';
+			$query->having($db->quoteName('YEAR(s.studydate)') . $type . ':year')
+				->bind(':year', $year, ParameterType::INTEGER);
+		} */
+	    // Add the list ordering clause.
         $orderCol  = $this->getState('list.fullordering');
         $orderDirn = '';
 
@@ -401,74 +407,5 @@ class CwmseriesdisplaysModel extends ListModel
         return (int) $this->getState('list.start');
     }
 
-    /**
-     * Build Content of series
-     *
-     * @return string
-     *
-     * @throws Exception
-     * @since 7.0
-     */
-    public function buildContentWhere(): string
-    {
-        $mainframe      = Factory::getApplication();
-        $input          = $mainframe->getInput();
-        $option         = $input->get('option', '', 'cmd');
-        $params         = ComponentHelper::getParams($option);
-        $filter_series  = $mainframe->getUserStateFromRequest($option . 'filter_series', 'filter_series', 0, 'int');
-        $filter_teacher = $mainframe->getUserStateFromRequest($option . 'filter_teacher', 'filter_teacher', 0, 'int');
-        $filter_year    = $mainframe->getUserStateFromRequest($option . 'filter_year', 'filter_year', 0, 'int');
-        $where          = array();
-        $where[]        = ' se.published = 1';
 
-        if ($filter_series > 0) {
-            $where[] = ' se.id = ' . (int)$filter_series;
-        }
-
-        if ($filter_teacher > 0) {
-            $where[] = ' se.teacher = ' . (int)$filter_teacher;
-        }
-
-        if ($filter_year > 0) {
-            $where[] = ' YEAR(s.studydate) = ' . (int)$filter_year;
-        }
-
-        $where = (count($where) ? implode(' AND ', $where) : '');
-
-        $where2   = array();
-        $continue = 0;
-
-        if ($params->get('series_id') && !$filter_series) {
-            $filters = $params->get('series_id');
-
-            switch ($filters) {
-                case is_array($filters):
-                    foreach ($filters as $filter) {
-                        if ($filter === '-1') {
-                            break;
-                        }
-
-                        $continue = 1;
-                        $where2[] = 'se.id = ' . (int)$filter;
-                    }
-                    break;
-
-                case '-1':
-                    break;
-
-                default:
-                    $continue = 1;
-                    $where2[] = 'se.id = ' . (int)$filters;
-                    break;
-            }
-        }
-
-        $where2 = (count($where2) ? ' ' . implode(' OR ', $where2) : '');
-
-        if ($continue > 0) {
-            $where .= ' AND ( ' . $where2 . ')';
-        }
-
-        return $where;
-    }
 }
