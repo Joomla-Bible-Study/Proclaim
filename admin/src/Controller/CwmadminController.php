@@ -621,7 +621,7 @@ class CwmadminController extends FormController
             $alt    = '&cwmalt=1';
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1' . $alt);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmbackup' . $alt);
     }
 
     /**
