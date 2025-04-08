@@ -47,6 +47,7 @@ class com_proclaimInstallerScript extends InstallerScript
         'pcre',
         'SimpleXML',
     ];
+    
     /**
      * The list of extra modules and plugins to install
      *
@@ -73,24 +74,28 @@ class com_proclaimInstallerScript extends InstallerScript
             ],
         ],
     ];
+   
     /**
      * @var   string Path to Mysql files
      * @since 1.5
      */
     public string $filePath = '/components/com_proclaim/install/sql/updates/mysql';
+  
     /**
      * The version number of the extension. Max 20 characters
      *
      * @var    string
      * @since  3.6
      */
-    protected $release = '10.0.0-beta1';
+    protected $release = '10.0.0-beta.2';
+  
     /**
      * @var   DatabaseDriver|DatabaseInterface|null
      *
      * @since 7.2.0
      */
     protected DatabaseDriver|null|DatabaseInterface $dbo;
+  
     /**
      * Minimum PHP version required to install the extension
      *
@@ -98,6 +103,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * @since  3.6
      */
     protected $minimumPhp = '8.1.0';
+ 
     /**
      * Minimum Joomla! Version required to install the extension
      *
@@ -105,21 +111,25 @@ class com_proclaimInstallerScript extends InstallerScript
      * @since  3.6
      */
     protected $minimumJoomla = '4.2.0';
+ 
     /**
      * @var   string The component's name
      * @since 1.5
      */
     protected $extension = 'com_proclaim';
+ 
     /**
      * @var   string
      * @since 1.5
      */
     protected $xml;
+  
     /**
      * @var   object
      * @since 1.5
      */
     protected object $status;
+ 
     /**
      * Allow downgrades of your extension
      *
@@ -129,6 +139,24 @@ class com_proclaimInstallerScript extends InstallerScript
      * @since  3.6
      */
     protected $allowDowngrades = true;
+
+    /**
+     * A list of files to be deleted
+     *
+     * @var    array
+     * @since  3.6
+     */
+    protected $deleteFiles = [];
+
+    /**
+     * A list of folders to be deleted
+     *
+     * @var    array
+     * @since  3.6
+     */
+    protected $deleteFolders = [
+        'media/com_proclaim/player',
+    ];
 
     /**
      * Function called before extension installation/update/removal procedure commences
