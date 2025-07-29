@@ -24,3 +24,6 @@ build/reports/project-size.txt
 !/package-lock.json
 media/css/site/biblestudy.css
 /.composer.phar.icloud
+/admin/proclaim.xml
+/admin/proclaim.script.php
+/media/css/site/cwmcore.css

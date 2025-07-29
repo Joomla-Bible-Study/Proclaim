@@ -7,7 +7,7 @@
 	<property name="project.name" value="Proclaim"/>
 
 	<!-- Joomla version to run the unit tests against -->
-	<property name="joomla.version" value="3.9.24"/>
+	<property name="joomla.version" value="5.3.2"/>
 
 	<property name="config_path" value="${basedir}/tests/system/servers"/>
 
@@ -30,7 +30,7 @@
 	</fileset>
 
 	<!-- Validate syntax -->
-	<target name="lint" description="Perform syntax check of sourcecode files">
+	<target name="lint" description="Perform syntax check of source code files">
 		<phplint haltonfailure="true">
 			<fileset refid="distributed_files"/>
 		</phplint>
@@ -99,7 +99,7 @@
 
 	<!-- Create com_proclaim-x.x.x.zip -->
 	<target name="component" depends="init,dev.clean" description="Builds the component">
-		<propertyprompt propertyName="version" defaultValue="9.2.x"
+		<propertyprompt propertyName="version" defaultValue="10.0.x"
 		                promptText="Enter the version you are building."/>
 		<delete file="${basedir}/build/com_proclaim-${version}.zip"/>
 		<zip destfile="${basedir}/build/com_proclaim-${version}.zip" basedir="${basedir}">
