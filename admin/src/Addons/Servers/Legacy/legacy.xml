@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<server type="storage" supports="*.*">
+    <name>Legacy</name>
+    <description>Adapter for legacy JBS servers and mediafiles configurations.</description>
+    <config>
+        <media_resource>filename</media_resource>
+    </config>
+    <fields name="params">
+        <fieldset name="Server" label="JBS_ADDON_LEGACY_DETAILS">
+            <field name="path" type="text" label="JBS_MED_PATH" description="JBS_MED_PATH_DESC" class="inputbox"
+                   size="35"/>
+            <field name="protocol" type="list" label="JBS_ADDON_LEGACY_PROTOCOL"
+                   description="JBS_ADDON_LEGACY_PROTOCOL_DESC" class="inputbox" default="">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="http://">http://</option>
+                <option value="https://">https://</option>
+            </field>
+            <field name="uploadpath" type="text" default="/images/biblestudy/media/" label="JBS_ADM_UPLOAD_PATH"
+                   description="JBS_ADM_UPLOAD_PATH_DESC"
+                   class="inputbox" size="35"/>
+        </fieldset>
+    </fields>
+    <fields name="media">
+        <fieldset name="details" label="JBS_ADDON_LEGACY_MEDIA_TYPE_DEF">
+            <field name="link_type" type="list" extension="com_proclaim"
+                   label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
+                   class="inputbox" default="">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">JBS_MED_NO_DOWNLOAD_ICON</option>
+                <option value="1">JBS_MED_SHOW_DOWNLOAD_ICON</option>
+                <option value="2">JBS_MED_SHOW_ONLY_DOWNLOAD_ICON</option>
+            </field>
+        </fieldset>
+        <fieldset name="files_settings" label="JBS_ADDON_LEGACY_FILE_SETTINGS">
+            <field name="player" type="list" label="JBS_MED_PLAYER"
+                   description="JBS_MED_PLAYER_DESC" class="inputbox" default="">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">JBS_CMN_DIRECT_LINK</option>
+                <option value="1">JBS_CMN_USE_INTERNAL_PLAYER</option>
+                <option value="8">JBS_CMN_USE_EMBED_CODE</option>
+            </field>
+            <field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
+                   description="JBS_MED_INTERNAL_POPUP_DESC" class="inputbox"
+                   default="">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="1">JBS_CMN_POPUP</option>
+                <option value="2">JBS_CMN_INLINE</option>
+                <option value="3">JBS_CMN_SQUEEZEBOX</option>
+            </field>
+            <field name="mediacode" type="textarea" label="JBS_CMN_AVR"
+                   description="JBS_MED_AVRELOADED_DESC" class="inputbox" cols="64" rows="5"
+                   filter="raw"/>
+        </fieldset>
+        <fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE">
+            <field name="media_image" type="media" directory="biblestudy"
+                   label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
+                   class="inputbox"/>
+            <field name="media_use_button_icon" label="JBS_ADDON_LEGACY_MEDIA_USE_BUTTON"
+                   description="JBS_ADDON_LEGACY_MEDIA_USE_BUTTON_DESC" class="inputbox" type="list" default="">
+                <option value="-1">JGLOBAL_USE_GLOBAL</option>
+                <option value="">JBS_MED_NONE</option>
+                <option value="1">JBS_MED_BUTTON_ONLY</option>
+                <option value="2">JBS_MED_BUTTON_AND_ICON</option>
+                <option value="3">JBS_MED_ICON_ONLY</option>
+            </field>
+            <field name="media_button_text" type="text" default="Audio" label="JBS_ADDON_LEGACY_BUTTON_TEXT"
+                   description="JBS_ADDON_LEGACY_BUTTON_TEXT_DESC"/>
+            <field name="media_button_type" type="list" class="inputbox" default="" label="JBS_ADDON_LEGACY_BUTTON_TYPE"
+                   description="JBS_ADDON_LEGACY_BUTTON_TYPE_DESC">
+                <option value="btn-link">JBS_MED_NO_COLOR</option>
+                <option value="btn-primary">JBS_MED_PRIMARY</option>
+                <option value="btn-success">JBS_MED_SUCCESS</option>
+                <option value="btn-info">JBS_MED_INFO</option>
+                <option value="btn-warning">JBS_MED_WARNING</option>
+                <option value="btn-danger">JBS_MED_DANGER</option>
+            </field>
+            <field name="media_button_color" type="color" description="JBS_ADDON_LEGACY_BUTTON_COLOR_DESC"
+                   label="JBS_ADDON_LEGACY_BUTTON_COLOR"/>
+            <field name="media_icon_type" type="IconType" class="inputbox" default="" label="JBS_ADDON_LEGACY_ICON_TYPE"
+                   description="JBS_ADDON_LEGACY_ICON_TYPE_DESC">
+            </field>
+            <field name="media_custom_icon" type="text" default="" label="JBS_ADDON_LEGACY_CUSTOM_ICON"
+                   description="JBS_ADDON_LEGACY_CUSTOM_ICON_DESC"/>
+            <field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_LEGACY_FONT_SIZE"
+                   description="JBS_ADDON_LEGACY_FONT_SIZE_DESC"/>
+            <field name="mime_type" type="MimeType" extension="com_proclaim"
+                   label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
+                   class="inputbox" default="">
+            </field>
+            <field name="mime_type" type="MimeType" extension="com_proclaim"
+                   label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
+                   class="inputbox"/>
+        </fieldset>
+        <fieldset name="parameters" label="JBS_ADDON_LEGACY_PARAMETERS">
+            <field name="autostart" type="list"
+                   label="JBS_CMN_MEDIA_AUTOSTART" description="JBS_CMN_MEDIA_AUTOSTART_DESC" default="">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="1">JYES</option>
+                <option value="2">JNO</option>
+            </field>
+        </fieldset>
+    </fields>
+</server>

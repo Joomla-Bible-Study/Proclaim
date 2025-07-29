@@ -3,10 +3,10 @@ CWM Proclaim
 
 Status
 -----------
-|                                                                          Code                                                                          |   Branch    | Version | Release Date | Joomla Version |
-|--------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|---------|--------------|----------------|
-| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=development)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim) | Development | 9.3.0   | TBD          | 3.8+           |
-| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=master)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim) | Master      | 9.2.8   | Jun 02, 2021 | 3.8+           |
+| Code                                                                                                                                                   | Branch      | Version      | Release Date  | Joomla Version | PHP Minimum |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|--------------|---------------|----------------|-------------|
+| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=development)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim) | Development | 10.0.0-beta.2 | March 8, 2025  | 4+             | 8.1         |
+| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=master)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim)      | Master      | 9.2.8        | April 6, 2021 | 3.x            | 7.4         |
 
 *NOTE:* The master branch will always reflect the current, released stable version. Only bug fixes and minor updates should be applied to the master branch. New features are to be introduced into the development branch only.
 
@@ -14,7 +14,7 @@ Overview
 --------
 Proclaim is a Joomla!® component written by a team of web servants to further the teaching of God's Word. The component displays information about your church's Bible Studies or sermons in a wide variety of ways. Proclaim is flexible, customizable, and powerful. Easy to configure templates give you the maximum amount of choices. Show only what you want in whatever way you want.
 
-Embed YouTube videos, play audio, show study notes - even create your own html display pages. You can have multiple locations, series, podcasting, and sharing with social media sites. Please see the example pages for just some of what Bible Study can do for your church - and the best part is the component is completely free. Support is top notch, and also free. Bottom line: we want to help you spread the gospel.
+Embed YouTube videos, play audio, show study notes - even create your own html display pages. You can have multiple locations, series, podcasting, and sharing with social media sites. Please see the example pages for just some of what Bible Study can do for your church - and the best part is the component is completely free. Support is top-notch, and also free. Bottom line: we want to help you spread the gospel.
 
 Contributing
 ------------
@@ -36,20 +36,20 @@ We appreciate contributions in various capacities, below are some ways that you 
 8. Push your changes: `git push`
 9. [Submit a pull request][pr]
 
-Please **make sure to make specific contributions** when submitting pull requests. For example, if fixing bugs across multiple features of the component, create a branch for each fix, and submit a separate pull request for each fix separately, instead of fixing everything in `master`, and then just trying to pull your `master` branch into `Joomla-Bible-Study:master`.
+Please **make sure to make specific contributions** when submitting pull requests. For example, if fixing bugs across multiple features of the component, create a branch for each fix, and submit a separate pull request for each fix separately, instead of fixing everything in `main`, and then just trying to pull your `main` branch into `Joomla-Bible-Study:main`.
 
 
 ### Translation 
 The language files periodically need to be updated as the component matures. To submit changes ot add new languages, follow the same procedures as above in order to submit a [pull][pr] request.
 
 ### Testing
-For every major release, we prefer to have an approximate 2 week testing window. If you would like to help in testing and giving us feedback on the most recent versions of the component, let us know
+For every major release, we prefer to have an approximate 2-week testing window. If you would like to help in testing and giving us feedback on the most recent versions of the component, let us know
 
 [fork]: http://help.github.com/fork-a-repo/
 [branch]: http://learn.github.com/p/branching.html
 [pr]: http://help.github.com/send-pull-requests/
 [phing]: http://www.phing.info/
-[setup]: https://github.com/Joomla-Bible-Study/Joomla-Bible-Study/wiki/Setting-up-your-development-environment
+[setup]: https://github.com/Joomla-Bible-Study/Proclaim/wiki/Setting-up-your-development-environment
 <!-- @IGNORE PREVIOUS: link -->
 [composer]: https://getcomposer.org/download/
 
