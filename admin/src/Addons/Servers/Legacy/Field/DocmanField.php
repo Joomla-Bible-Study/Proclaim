@@ -12,17 +12,14 @@
 namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Legacy\Field;
 
 // phpcs:disable PSR1.Files.SideEffects
-defined('_JEXEC') or die;
+\defined('_JEXEC') or die;
 
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-
-use function defined;
 
 /**
  * Virtuemart Category List Form Field class for the Proclaim component
@@ -51,7 +48,7 @@ class DocmanField extends ListField
     protected function getOptions(): array
     {
         if (
-            !Folder::exists(JPATH_ADMINISTRATOR . '/components/com_docman')
+            !is_dir(JPATH_ADMINISTRATOR . '/components/com_docman')
         ) {
             return [Text::_('JBS_CMN_DOCMAN_NOT_INSTALLED')];
         }
@@ -63,7 +60,7 @@ class DocmanField extends ListField
         $query->order('dm.docman_document_id DESC');
         $db->setQuery((string)$query);
         $docs    = $db->loadObjectList();
-        $options = array();
+        $options = [];
 
         if ($docs) {
             $options[] = HTMLHelper::_('select.option', '-1', Text::_('JBS_MED_DOCMAN_SELECT'));

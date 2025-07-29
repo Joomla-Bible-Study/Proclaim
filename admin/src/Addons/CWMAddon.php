@@ -16,10 +16,8 @@ namespace CWM\Component\Proclaim\Administrator\Addons;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\Input\Input;
 use Joomla\CMS\Language\Text;
 use Joomla\Filesystem\Path;
-use SimpleXMLElement;
 
 /**
  * Abstract Server class
@@ -39,10 +37,10 @@ abstract class CWMAddon
     /**
      * Addon configuration
      *
-     * @var     bool|null|SimpleXMLElement
+     * @var     bool|null|\SimpleXMLElement
      * @since   9.0.0
      */
-    protected bool|null|SimpleXMLElement $xml = null;
+    protected bool|null|\SimpleXMLElement $xml = null;
 
     /**
      * Name of Add-on
@@ -85,7 +83,7 @@ abstract class CWMAddon
      *
      * @since 9.0.0
      */
-    public function __construct(array $config = array())
+    public function __construct(array $config = [])
     {
         if (empty($this->type)) {
             if (array_key_exists('type', $config)) {
@@ -99,9 +97,9 @@ abstract class CWMAddon
             $this->xml = $this->getXml();
 
             if ($this->xml) {
-                $this->name = $this->xml->name->__toString();
+                $this->name        = $this->xml->name->__toString();
                 $this->description = $this->xml->description->__toString();
-                $this->config = $this->xml->config;
+                $this->config      = $this->xml->config;
             }
         }
     }
@@ -130,14 +128,14 @@ abstract class CWMAddon
     }
 
     /**
-     * Loads the addon configuration from the xml file
+     * Loads the addon configuration from the XML file
      *
-     * @return  bool|SimpleXMLElement
+     * @return  bool|\SimpleXMLElement
      *
      * @throws  \Exception
      * @since   9.0.0
      */
-    public function getXml(): SimpleXMLElement|bool
+    public function getXml(): \SimpleXMLElement|bool
     {
         $path = Path::find(BIBLESTUDY_PATH_ADMIN . '/src/Addons/Servers/' . ucfirst($this->type), $this->type . '.xml');
 
@@ -151,7 +149,7 @@ abstract class CWMAddon
     }
 
     /**
-     * Returns a Addon object, always creating it
+     * Returns an Addon object, always creating it
      *
      * @param string $type ?
      * @param array $config ?
@@ -160,9 +158,9 @@ abstract class CWMAddon
      *
      * @since   9.0.0
      */
-    public static function getInstance(string $type, array $config = array()): mixed
+    public static function getInstance(string $type, array $config = []): mixed
     {
-        $type = ucfirst(preg_replace('/[^A-Z0-9_\.-]/i', '', $type));
+        $type  = ucfirst(preg_replace('/[^A-Z0-9_\.-]/i', '', $type));
         $class = "CWM\Component\Proclaim\Administrator\Addons\Servers\\" . ucfirst($type) . "\CWMAddon" . ucfirst(
             $type
         );
@@ -171,7 +169,7 @@ abstract class CWMAddon
     }
 
     /**
-     * Render Fields for general view.
+     * Render Fields for a general view.
      *
      * @param object $media_form Media files form
      * @param bool $new If media is new
