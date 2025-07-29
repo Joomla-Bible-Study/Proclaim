@@ -55,7 +55,7 @@ div.current .panelform {
 #pb4-box,
 #pb5-box,
 #pb6-box {
-  background: url('/media/com_biblestudy/images/progress-bar-back.gif') no-repeat scroll right center transparent;
+  background: url('/media/com_proclaim/images/progress-bar-back.gif') no-repeat scroll right center transparent;
   width: 200px;
   height: 19px;
 }
@@ -66,7 +66,7 @@ div.current .panelform {
 #pb4-perc,
 #pb5-perc,
 #pb6-perc {
-  background: url('/media/com_biblestudy/images/progress-bar.gif') no-repeat scroll right center transparent;
+  background: url('/media/com_proclaim/images/progress-bar.gif') no-repeat scroll right center transparent;
   height: 19px;
   float: left;
 }
@@ -127,7 +127,6 @@ img.imgcenter {
   border-bottom: 1px solid #ccc;
 }
 .fbmainmenu {
-  background: #FBFBFB;
   padding: 5px;
 }
 .fbactivemenu {
@@ -308,7 +307,10 @@ table.fbstat .col2 {
   display: block;
   text-align: center;
 }
-#dashboard-icons > .btn + .btn {
-  float: left;
+.sermon-list-separator {
+  border: 0;
+  height: 4px;
+  background-color: white;
+  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0));
 }
 /*# sourceMappingURL=general.css.map */

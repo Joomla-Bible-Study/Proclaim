@@ -1,116 +1,88 @@
 <?php
+
 /**
- * Core Admin BibleStudy file
+ * Core Admin Proclaim file
  *
  * @package    Proclaim.Admin
- * @copyright  2007 - 2019 (C) CWM Team All rights reserved
- * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @copyright  (C) 2025 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
+
 // No Direct Access
-defined('_JEXEC') or die;
+use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Log\Log;
 
-if (defined('JBSM_LOADED'))
-{
-	return;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+try {
+    $app = Factory::getApplication();
+} catch (Exception $e) {
+    return;
 }
-
-// Manually enable code profiling by setting value to 1
-define('JBSM_PROFILER', 0);
-
-// Version information
-define('BIBLESTUDY_VERSION', '9.2.8');
-define('BIBLESTUDY_VERSION_UPDATEFILE', 'JBS Version ' . BIBLESTUDY_VERSION);
-
-// Default values
-define('BIBLESTUDY_COMPONENT_NAME', 'com_biblestudy');
-define('BIBLESTUDY_LANGUAGE_DEFAULT', 'english');
-define('BIBLESTUDY_TEMPLATE_DEFAULT', 'default');
-
-// File system paths
-define('BIBLESTUDY_COMPONENT_RELPATH', 'components' . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_NAME);
-
-// Root system paths
-define('BIBLESTUDY_ROOT_PATH', JPATH_ROOT);
-define('BIBLESTUDY_ROOT_PATH_ADMIN', JPATH_ADMINISTRATOR);
-define('BIBLESTUDY_MEDIA_PATH', JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_biblestudy');
-define('BIBLESTUDY_PATH_IMAGES', BIBLESTUDY_MEDIA_PATH . DIRECTORY_SEPARATOR . 'images');
-
-// Site Component paths
-define('BIBLESTUDY_PATH', JPATH_SITE . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_RELPATH);
-define('BIBLESTUDY_PATH_LIB', BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'lib');
-define('BIBLESTUDY_PATH_TEMPLATE', BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'template');
-define('BIBLESTUDY_PATH_TEMPLATE_DEFAULT', BIBLESTUDY_PATH_TEMPLATE . DIRECTORY_SEPARATOR . BIBLESTUDY_TEMPLATE_DEFAULT);
-define('BIBLESTUDY_PATH_HELPERS', BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'helpers');
-define('BIBLESTUDY_PATH_MODELS', BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'models');
-define('BIBLESTUDY_PATH_TABLES', BIBLESTUDY_PATH . DIRECTORY_SEPARATOR . 'tables');
-
-// Admin Component paths
-define('BIBLESTUDY_PATH_ADMIN', BIBLESTUDY_ROOT_PATH_ADMIN . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_RELPATH);
-define('BIBLESTUDY_PATH_ADMIN_LIB', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'lib');
-define('BIBLESTUDY_PATH_ADMIN_HELPERS', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'helpers');
-define('BIBLESTUDY_PATH_ADMIN_LANGUAGE', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'language');
-define('BIBLESTUDY_PATH_ADMIN_INSTALL', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'install');
-define('BIBLESTUDY_PATH_ADMIN_IMAGES', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'images');
-define('BIBLESTUDY_PATH_ADMIN_MODELS', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'models');
-define('BIBLESTUDY_PATH_ADMIN_TABLES', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'tables');
-
-// Addons paths
-define('BIBLESTUDY_PATH_ADMIN_ADDON', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'addons');
-
-define('BIBLESTUDY_FILE_INSTALL', BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'biblestudy.xml');
-
-// Mod Biblestudy
-define('BIBLESTUDY_PATH_MOD', BIBLESTUDY_ROOT_PATH . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'mod_biblestudy');
-
-// Minimum version requirements
-define('BIBLESTUDY_MIN_PHP', '7.4.1');
-define('BIBLESTUDY_MIN_MYSQL', '5.1');
-
-// Time related
-define('BIBLESTUDY_SECONDS_IN_HOUR', 3600);
-define('BIBLESTUDY_SECONDS_IN_YEAR', 31536000);
-
-// Database defines
-define('BIBLESTUDY_DB_MISSING_COLUMN', 1054);
-
-// Load JBSM Class
-JLoader::discover('JBSM', BIBLESTUDY_PATH_LIB, 'true', 'true');
-JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_LIB, 'true', 'true');
-JLoader::discover('JBSM', BIBLESTUDY_PATH_HELPERS, 'false', 'true');
-JLoader::discover('Table', BIBLESTUDY_PATH_TABLES, 'false', 'true');
-JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_HELPERS, 'false', 'true');
-JLoader::discover('JBSM', BIBLESTUDY_PATH_ADMIN_ADDON, 'false', 'true');
-JLoader::discover('Table', BIBLESTUDY_PATH_ADMIN_TABLES, 'false', 'true');
-JHtml::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html/');
-
-// Fixes Router overrider.
-JLoader::register('JBSMHelperRoute', BIBLESTUDY_PATH_HELPERS . '/route.php', true);
-
-// If phrase is not found in specific language file, load english language file:
-$language = JFactory::getLanguage();
-$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
-$language->load('com_biblestudy', BIBLESTUDY_PATH_ADMIN, null, true);
 
 // Component debugging
-if (JBSMBibleStudyHelper::debug() === '1' || JFactory::getApplication()->input->getInt('jbsmdbg', '0') === '1')
-{
-	define('JBSMDEBUG', 1);
+try {
+    if (CwmproclaimHelper::debug() === 1 || $app->input->getInt('jbsmdbg', '0') === 1) {
+        \define('JBSMDEBUG', 1);
+    } else {
+        \define('JBSMDEBUG', 0);
+    }
+} catch (\RuntimeException $e) {
+    throw new \RuntimeException("Could not find Debug setting.");
 }
-else
-{
-	define('JBSMDEBUG', 0);
+// phpcs:enable PSR1.Files.SideEffects
+
+// Version information
+const BIBLESTUDY_VERSION            = '10.0.0';
+const BIBLESTUDY_VERSION_UPDATEFILE = 'JBS Version ' . BIBLESTUDY_VERSION;
+
+// Default values
+const BIBLESTUDY_COMPONENT_NAME = 'com_proclaim';
+
+// File system paths
+const BIBLESTUDY_COMPONENT_RELPATH = 'components' . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_NAME;
+
+// Root system paths
+const BIBLESTUDY_ROOT_PATH       = JPATH_ROOT;
+const BIBLESTUDY_ROOT_PATH_ADMIN = JPATH_ADMINISTRATOR;
+const BIBLESTUDY_MEDIA_PATH      = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_proclaim';
+
+// Admin Component paths
+const BIBLESTUDY_PATH_ADMIN         = BIBLESTUDY_ROOT_PATH_ADMIN . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_RELPATH;
+const BIBLESTUDY_PATH_ADMIN_HELPERS = BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'helpers';
+
+HTMLHelper::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html');
+
+// If a phrase is not found in a specific language file, load the English language file:
+$language = $app->getLanguage();
+$language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
+$language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, null, true);
+
+if (is_dir(JPATH_ROOT . 'modules/mod_proclaim/')) {
+    $language->load('mod_proclaim', JPATH_ROOT . '/modules/mod_proclaim/', 'en-GB', true);
+    $language->load('moc_proclaim', JPATH_ROOT . '/modules/mod_proclaim/', null, true);
 }
+
+// Add to the API to load the core CSS and JS for the component to function properly.
+/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $app->getDocument()->getWebAssetManager();
+
+// We register the extension registry because in  modules and plugins, the registry is not automatically loaded
+$wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
+$wa->useStyle('com_proclaim.cwmcore')
+    ->useScript('com_proclaim.cwmcorejs');
 
 // Include the JLog class.
-jimport('joomla.log.log');
-JLog::addLogger(
-	array(
-		'text_file' => 'com_biblestudy.errors.php'
-	),
-	JLog::ALL,
-	'com_biblestudy'
+Log::addLogger(
+    [
+        'text_file' => 'com_proclaim.errors.php',
+    ],
+    Log::ALL,
+    'com_proclaim'
 );
 
-// JBSM has been initialized
-define('JBSM_LOADED', 1);
+// CWM has been initialized
+const CWM_LOADED = 1;

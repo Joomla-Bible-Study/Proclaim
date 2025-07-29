@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: default.xml tf 12-11-2007 $ -->
+<metadata>
+    <layout title="JBS_MNU_TEACHERS_LIST_LAYOUT">
+        <message>
+            <![CDATA[JBS_MNU_TEACHERS_LIST_LAYOUT_DESC]]>
+        </message>
+    </layout>
+    <fields name="request" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+        <fieldset name="request">
+            <field name="t" type="sql"
+                   description="JBS_MNU_SELECT_TEMPLATE_DESC"
+                   label="JBS_MNU_SELECT_TEMPLATE"
+                   default="1"
+                   query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
+                   key_field="id"
+                   value_field="title"
+                   required="true"
+            />
+        </fieldset>
+    </fields>
+    <fields name="params">
+        <fieldset name="basic"
+                  label="JBS_MNU_TEACHERS_LIST_LAYOUT"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+
+            <field name="metakey"
+                   type="text"
+                   class="inputbox"
+                   size="50"
+                   label="JBS_STY_METAKEYWORDS"
+                   description="JBS_STY_METAKEYWORDS_DESC"/>
+
+            <field name="metadesc"
+                   type="textarea"
+                   class="inputbox"
+                   cols="50"
+                   rows="4"
+                   label="JBS_STY_METADESCRIPTION"
+                   description="JBS_STY_METADESCRIPTION_DESC"/>
+        </fieldset>
+    </fields>
+</metadata>

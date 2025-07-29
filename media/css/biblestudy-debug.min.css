@@ -1,0 +1,1 @@
+@charset "utf-8";a[title]:hover:after{content:attr(title) " (" attr(href) ")";visibility:visible}.bsmall{border:solid 0;color:#000;font-size:.85em;margin:0 0 20px}.bsmallbold{font-weight:700}.bsmallbold,.bsmallitalic{border:solid 0;color:#000;font-size:.85em;margin:0 0 20px}small.bold{font-weight:700}.bsmallitalic,.italic{font-style:italic}

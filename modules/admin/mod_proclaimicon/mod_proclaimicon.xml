@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="module" client="administrator" method="upgrade">
+    <name>mod_proclaimicon</name>
+    <author>CWM Team</author>
+    <creationDate>July 29, 2025</creationDate>
+    <copyright>(C) 2007 Proclaim All rights reserved.</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <authorEmail>info@christianwebministries.org</authorEmail>
+    <authorUrl>www.christianwebministries.org</authorUrl>
+    <version>10.0.0</version>
+    <description>MOD_PROCLAIMICON_XML_DESCRIPTION</description>
+    <namespace path="src">CWM\Module\Proclaimicon</namespace>
+    <files>
+        <folder module="mod_proclaimicon">services</folder>
+        <folder>src</folder>
+        <folder>tmpl</folder>
+        <folder>language</folder>
+    </files>
+    <help key="Admin_Modules:_Proclaim_Icons"/>
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field
+                        name="context"
+                        type="text"
+                        label="MOD_PROCLAIMICON_GROUP_LABEL"
+                        description="MOD_PROCLAIMICON_GROUP_DESC"
+                        default="mod_proclaimicon"
+                />
+                <field
+                        name="header_icon"
+                        type="text"
+                        label="MOD_PROCLAIMICON_HEADER_ICON_LABEL"
+                        hint="icon-crosshairs"
+                        default="fas fa-bible"
+                />
+                <field
+                        name="show_home"
+                        type="list"
+                        label="MOD_PROCLAIMICON_SHOW_HOME_LABEL"
+                        default="1"
+                        validate="options"
+                >
+                    <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
+                </field>
+                <field
+                        name="show_messages"
+                        type="list"
+                        label="MOD_PROCLAIMICON_SHOW_MESSAGES_LABEL"
+                        default="1"
+                        validate="options"
+                >
+                    <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
+                </field>
+                <field
+                        name="show_mediafiles"
+                        type="list"
+                        label="MOD_PROCLAIMICON_SHOW_MEDIAFILES_LABEL"
+                        default="0"
+                        validate="options"
+                >
+                    <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
+                </field>
+                <field
+                        name="show_teachers"
+                        type="list"
+                        label="MOD_PROCLAIMICON_SHOW_TEACHERS_LABEL"
+                        default="1"
+                        validate="options"
+                >
+                    <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
+                </field>
+                <field
+                        name="show_series"
+                        type="list"
+                        label="MOD_PROCLAIMICON_SHOW_SERIES_LABEL"
+                        default="0"
+                        validate="options"
+                >
+                    <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
+                </field>
+                <field
+                        name="show_messagetypes"
+                        type="list"
+                        label="MOD_PROCLAIMICON_SHOW_MESSAGETYPES_LABEL"
+                        default="0"
+                        validate="options"
+                >
+                    <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
+                </field>
+                <field
+                        name="show_locations"
+                        type="list"
+                        label="MOD_PROCLAIMICON_SHOW_LOCATIONS_LABEL"
+                        default="0"
+                        validate="options"
+                >
+                    <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
+                </field>
+                <field
+                        name="show_topics"
+                        type="list"
+                        label="MOD_PROCLAIMICON_SHOW_TOPICS_LABEL"
+                        default="0"
+                        validate="options"
+                >
+                    <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
+                </field>
+                <field
+                        name="show_comments"
+                        type="list"
+                        label="MOD_PROCLAIMICON_SHOW_COMMENTS_LABEL"
+                        default="0"
+                        validate="options"
+                >
+                    <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
+                </field>
+                <field
+                        name="show_servers"
+                        type="list"
+                        label="MOD_PROCLAIMICON_SHOW_SERVERS_LABEL"
+                        default="0"
+                        validate="options"
+                >
+                    <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
+                </field>
+                <field
+                        name="show_podcasts"
+                        type="list"
+                        label="MOD_PROCLAIMICON_SHOW_PODCASTS_LABEL"
+                        default="0"
+                        validate="options"
+                >
+                    <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
+                </field>
+                <field
+                        name="show_templates"
+                        type="list"
+                        label="MOD_PROCLAIMICON_SHOW_TEMPLATES_LABEL"
+                        default="0"
+                        validate="options"
+                >
+                    <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
+                </field>
+                <field
+                        name="show_templatecode"
+                        type="list"
+                        label="MOD_PROCLAIMICON_SHOW_TEMPLATECODE_LABEL"
+                        default="0"
+                        validate="options"
+                >
+                    <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
+                </field>
+                <field
+                        name="show_admin"
+                        type="list"
+                        label="MOD_PROCLAIMICON_SHOW_ADMIN_LABEL"
+                        default="0"
+                        validate="options"
+                >
+                    <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
+                </field>
+            </fieldset>
+        </fields>
+    </config>
+</extension>

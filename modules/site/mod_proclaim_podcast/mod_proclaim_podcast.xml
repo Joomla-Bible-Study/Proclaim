@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" client="site" method="upgrade">
+    <name>mod_proclaim_podcast</name>
+    <author>CWM Team</author>
+    <creationDate>July 29, 2025</creationDate>
+    <copyright>(C) 2007 Christian Web Ministries All rights reserved.</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <authorEmail>info@christianwebministries.org</authorEmail>
+    <authorUrl>www.christianwebministries.org</authorUrl>
+    <version>10.0.0</version>
+    <description>MOD_PROCLAIM_PODCAST_XML_DESCRIPTION</description>
+    <namespace path="src">CWM\Module\ProclaimPodcast</namespace>
+    <files>
+        <folder module="mod_proclaim_podcast">services</folder>
+        <folder>language</folder>
+        <folder>src</folder>
+        <folder>tmpl</folder>
+    </files>
+    <help key="Site_Modules:_Proclaim_-_Podcast"/>
+    <config>
+        <fields name="params">
+            <fieldset name="basic"
+                      addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+                <field name="dummy" type="LoadLanguageFile" default=""/>   <!-- load common language file -->
+                <field name="t" type="sql" default="1"
+                       label="JBS_MDL_SELECT_TEMPLATE" description="JBS_MDL_SELECT_TEMPLATE_DESC"
+                       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
+                       key_field="id" value_field="title" required="true"/>
+
+                <field name="subscribeintro" type="text" default="Our Podcasts" size="50"
+                       label="JBS_MDL_HEADER_TEXT" description="JBS_MDL_HEADER_TEXT_DESC"/>
+            </fieldset>
+            <fieldset name="advanced">
+                <field name="layout"
+                       type="modulelayout"
+                       label="JFIELD_ALT_LAYOUT_LABEL"
+                       description="JFIELD_ALT_MODULE_LAYOUT_DESC"/>
+                <field name="cache"
+                       type="list"
+                       default="1"
+                       label="COM_MODULES_FIELD_CACHING_LABEL"
+                       description="COM_MODULES_FIELD_CACHING_LABEL">
+                    <option
+                            value="1">JGLOBAL_USE_GLOBAL
+                    </option>
+                    <option
+                            value="0">COM_MODULES_FIELD_VALUE_NOCACHING
+                    </option>
+                </field>
+                <field name="cache_time"
+                       type="text"
+                       default="900"
+                       label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
+                       description="COM_MODULES_FIELD_CACHE_TIME_LABEL"/>
+            </fieldset>
+        </fields>
+    </config>
+</extension>
