@@ -3,10 +3,10 @@ CWM Proclaim
 
 Status
 -----------
-| Code                                                                                                                                                   | Branch      | Version      | Release Date  | Joomla Version | PHP Minimum |
-|--------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|--------------|---------------|----------------|-------------|
-| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=development)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim) | Development | 10.0.0-beta.2 | March 8, 2025  | 4+             | 8.1         |
-| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=master)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim)      | Master      | 9.2.8        | April 6, 2021 | 3.x            | 7.4         |
+| Code                                                                                                                                                   | Branch      | Version | Release Date | Joomla Version | PHP Minimum |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|---------|--------------|----------------|-------------|
+| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=development)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim) | Development | 10.0.1  |              | 4+             | 8.1         |
+| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=master)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim)      | Master      | 10.0.0  | July 29, 2025 | 4+             | 8.1         |
 
 *NOTE:* The master branch will always reflect the current, released stable version. Only bug fixes and minor updates should be applied to the master branch. New features are to be introduced into the development branch only.
 
