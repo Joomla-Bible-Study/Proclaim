@@ -3,22 +3,22 @@ CWM Proclaim
 
 Status
 -----------
-| Code                                                                                                                                                   | Branch      | Version      | Release Date  | Joomla Version | PHP Minimum |
-|--------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|--------------|---------------|----------------|-------------|
-| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=development)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim) | Development | 10.0.0-beta.2 | March 8, 2025  | 4+             | 8.1         |
-| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=master)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim)      | Master      | 9.2.8        | April 6, 2021 | 3.x            | 7.4         |
+| Code                                                                                                                                                   | Branch      | Version | Release Date  | Joomla Version | PHP Minimum |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|---------|---------------|----------------|-------------|
+| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=development)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim) | Development | 10.0.x  |   | 4+             | 8.1         |
+| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=master)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim)      | Master      | 10.0.0  | July 29, 2025 | 4+             | 8.1         |
 
 *NOTE:* The master branch will always reflect the current, released stable version. Only bug fixes and minor updates should be applied to the master branch. New features are to be introduced into the development branch only.
 
 Overview
 --------
-Proclaim is a Joomla!® component written by a team of web servants to further the teaching of God's Word. The component displays information about your church's Bible Studies or sermons in a wide variety of ways. Proclaim is flexible, customizable, and powerful. Easy to configure templates give you the maximum amount of choices. Show only what you want in whatever way you want.
+Proclaim is a Joomla!® component written by a team of web servants to further the teaching of God's Word. The component displays information about your church's Bible Studies or sermons in a wide variety of ways. Proclaim is flexible, customizable, and powerful. Easy-to-configure templates give you the maximum amount of choices. Show only what you want in whatever way you want.
 
-Embed YouTube videos, play audio, show study notes - even create your own html display pages. You can have multiple locations, series, podcasting, and sharing with social media sites. Please see the example pages for just some of what Bible Study can do for your church - and the best part is the component is completely free. Support is top-notch, and also free. Bottom line: we want to help you spread the gospel.
+Embed YouTube videos, play audio, show study notes—even create your own HTML display pages. You can have multiple locations, series, podcasting, and sharing with social media sites. Please see the example pages to discover just some of what Bible Study can do for your church - and the best part is that the component is completely free. Support is top-notch and also free. Bottom line: we want to help you spread the gospel.
 
 Contributing
 ------------
-We appreciate contributions in various capacities, below are some ways that you can contribute to this project
+We appreciate contributions in various capacities. Below are some ways that you can contribute to this project.
 
 ### Setup
 1. [Fork this repository.][fork]
@@ -28,10 +28,10 @@ We appreciate contributions in various capacities, below are some ways that you 
 ### Development
 1. [Create a topic branch.][branch]
 2. Implement your feature or bug fix.
-3. If you implemented a new feature or added an extra functionality, create/update unit tests for that feature
+3. If you implemented a new feature or added extra functionality, create/update unit tests for that feature
 4. Run `bin/phing build`
 5. If not building successfully, go back to step **1**
-6. Add your files to repository: `git add .`
+6. Add your files to the repository: `git add .`
 7. Commit your files: `git commit -m "Implemented feature [x]"`
 8. Push your changes: `git push`
 9. [Submit a pull request][pr]
@@ -40,7 +40,7 @@ Please **make sure to make specific contributions** when submitting pull request
 
 
 ### Translation 
-The language files periodically need to be updated as the component matures. To submit changes ot add new languages, follow the same procedures as above in order to submit a [pull][pr] request.
+The language files periodically need to be updated as the component matures. To submit changes ot add new languages, follow the same procedures as above to submit a [pull][pr] request.
 
 ### Testing
 For every major release, we prefer to have an approximate 2-week testing window. If you would like to help in testing and giving us feedback on the most recent versions of the component, let us know
@@ -53,6 +53,6 @@ For every major release, we prefer to have an approximate 2-week testing window.
 <!-- @IGNORE PREVIOUS: link -->
 [composer]: https://getcomposer.org/download/
 
-Reporting Issues and requesting features
+Reporting Issues and Requesting Features
 ----------------------------------------
-Use the **Issues** section for reporting bugs, or requesting features. Please make sure that when bugs are reported, you include steps to reproduce them.
+Use the **Issues** section for reporting bugs or requesting features. Please make sure that when bugs are reported, you include steps to reproduce them.
