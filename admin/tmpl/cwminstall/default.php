@@ -51,7 +51,7 @@ $wa->addInlineScript(
                 <div class="status"><?php
                     echo $pre . ' ' . Text::_('JBS_MIG_PROCESSING') . ' ' . $this->running; ?></div>
             </div>
-            <div class="progress" role="progressbar" aria-label="Install Progress" aria-valuenow="<?php echo $this->percentage ?>" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress progress-bar-animated" role="progressbar" aria-label="Install Progress" aria-valuenow="<?php echo $this->percentage ?>" aria-valuemin="0" aria-valuemax="100">
                 <div class="progress-bar" style="width: <?php
                 echo $this->percentage ?>%;"><?php
                     echo $this->percentage; ?>%</div>
