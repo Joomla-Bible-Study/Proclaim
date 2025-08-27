@@ -10,10 +10,9 @@
 namespace CWM\Component\Proclaim\Administrator\Service\HTML;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
-use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
-use Joomla\CMS\Language\Text;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -60,25 +59,25 @@ class CWMHtml5Inline
         $media->path1 = Cwmhelper::mediaBuildUrl($media->sparams->get('path'), $params->get('filename'), $params, true);
 
         // Fall back check to see if player can play the media. If not will try and return a link to the file.
-        $videoFormats = array(
+        $videoFormats = [
             // Video formats
-            'mp4|m4v'                      => 'video/mp4',
-            'ogv'                          => 'video/ogg',
-            'webm'                         => 'video/webm',
-        );
+            'mp4|m4v' => 'video/mp4',
+            'ogv'     => 'video/ogg',
+            'webm'    => 'video/webm',
+        ];
 
-        $audioFormats = array(
+        $audioFormats = [
             // Audio formats
-            'acc'                          => 'audio/acc',
-            'flc'                          => 'audio/flac',
-            'm4a|m4b'                      => 'audio/mpeg',
-            'mp3'                          => 'audio/mp3',
-            'wav'                          => 'audio/wav',
-            'wav-xpn'                      => 'audio/x-pn-wav',
-            'ogg|oga'                      => 'audio/ogg',
-            'mid|midi'                     => 'audio/midi',
-            'mka'                          => 'audio/x-matroska',
-        );
+            'acc'      => 'audio/acc',
+            'flc'      => 'audio/flac',
+            'm4a|m4b'  => 'audio/mpeg',
+            'mp3'      => 'audio/mp3',
+            'wav'      => 'audio/wav',
+            'wav-xpn'  => 'audio/x-pn-wav',
+            'ogg|oga'  => 'audio/ogg',
+            'mid|midi' => 'audio/midi',
+            'mka'      => 'audio/x-matroska',
+        ];
 
         $acceptedFormats = array_merge($videoFormats, $audioFormats);
 
@@ -168,9 +167,9 @@ class CWMHtml5Inline
             $render .= "</div>";
         } elseif ($popoutText) {
             // Add space for a popup window
-            $player->playerwidth  += 20;
+            $player->playerwidth += 20;
             $player->playerheight += $popupMarg;
-            $render               .= "<a href=\"#\" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
+            $render .= "<a href=\"#\" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
                 . $player->player . "&amp;view=cwmpopup&amp;t=" . $t . "&amp;mediaid=" . $media->id
                 . "&amp;tmpl=component', 'newwindow', 'width="
                 . $player->playerwidth . ",height=" .
@@ -198,8 +197,8 @@ class CWMHtml5Inline
 
         if (self::isMimeTypeAllowed($media->params->get('mime_type'), $videoFormats)) {
             $render .= '<video width="' . $media->playerwidth . '" height="' . $height . '" controls>';
-                $render .= '<source src="' . $media->path1 . '" type="' . $media->params->get('mime_type') . '">';
-                $render .= 'Your browser does not support the video tag.';
+            $render .= '<source src="' . $media->path1 . '" type="' . $media->params->get('mime_type') . '">';
+            $render .= 'Your browser does not support the video tag.';
             $render .= '</video>';
         }
 

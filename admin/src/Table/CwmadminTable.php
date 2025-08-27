@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
-use JAccessRules;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Registry\Registry;
@@ -131,7 +130,7 @@ class CwmadminTable extends Table
         }
 
         // If simple mode, check and rename some files to hide menus
-        $views   = array();
+        $views   = [];
         $views[] = 'landingpage';
         $views[] = 'podcastdisplay';
         $views[] = 'podcastlist';
@@ -177,7 +176,7 @@ class CwmadminTable extends Table
 
         // Bind the rules.
         if (isset($array['rules']) && is_array($array['rules'])) {
-            $rules = new JAccessRules($array['rules']);
+            $rules = new \JAccessRules($array['rules']);
             $this->setRules($rules);
         }
 

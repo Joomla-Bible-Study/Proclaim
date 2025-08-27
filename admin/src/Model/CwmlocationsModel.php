@@ -45,10 +45,10 @@ class CwmlocationsModel extends ListModel
      * @throws \Exception
      * @since 7.0.0
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array(
+            $config['filter_fields'] = [
                 'id',
                 'location.id',
                 'published',
@@ -59,8 +59,8 @@ class CwmlocationsModel extends ListModel
                 'location.ordering',
                 'access',
                 'location.access',
-                'access_level'
-            );
+                'access_level',
+            ];
         }
 
         parent::__construct($config);

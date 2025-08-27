@@ -35,7 +35,7 @@ class CwmserversModel extends ListModel
      * @var     array
      * @since   9.0.0
      */
-    protected array $rlu_id = array();
+    protected array $rlu_id = [];
 
     /**
      * A reverse lookup of the Endpoint type to Endpoint name
@@ -43,7 +43,7 @@ class CwmserversModel extends ListModel
      * @var     array
      * @since    9.0.0
      */
-    protected array $rlu_type = array();
+    protected array $rlu_type = [];
 
     /**
      * Method to get the reverse lookup of the server_id to server_name
@@ -55,13 +55,13 @@ class CwmserversModel extends ListModel
     public function getIdToNameReverseLookup()
     {
         if (empty($this->rlu_id)) {
-            $_rlu = array();
+            $_rlu = [];
 
             foreach ($this->getItems() as $server) {
-                $_rlu[$server->id] = array(
+                $_rlu[$server->id] = [
                     'name' => $server->server_name,
-                    'type' => $server->type
-                );
+                    'type' => $server->type,
+                ];
             }
 
             $this->rlu_id = $_rlu;
@@ -95,7 +95,7 @@ class CwmserversModel extends ListModel
      */
     public function getServerOptions()
     {
-        $options = array();
+        $options = [];
 
         // Path to endpoints
         $path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers';
@@ -186,7 +186,7 @@ class CwmserversModel extends ListModel
         // Filter by published state
         $published = $this->getState('filter.published');
 
-        if (Factory::getApplication()->input->get('layout') == 'modal' && $published === '') {
+        if (Factory::getApplication()->input->get('layout') === 'modal' && $published === '') {
             $published = 1;
         }
 

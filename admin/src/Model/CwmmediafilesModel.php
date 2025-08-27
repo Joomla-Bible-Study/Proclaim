@@ -16,11 +16,9 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Exception;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
-use Joomla\Database\DatabaseQuery;
 use Joomla\Database\ParameterType;
 use Joomla\Database\QueryInterface;
 use Joomla\Registry\Registry;
@@ -39,7 +37,7 @@ class CwmmediafilesModel extends ListModel
      *
      * @param   array  $config  An optional associative array of configuration settings.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function __construct($config = [])
@@ -54,7 +52,7 @@ class CwmmediafilesModel extends ListModel
                 'language', 'mediafile.language',
                 'access', 'mediafile.access', 'access_level',
                 'language', 'mediafile.language',
-                'published', 'mediafile.published'
+                'published', 'mediafile.published',
             ];
         }
 
@@ -66,7 +64,7 @@ class CwmmediafilesModel extends ListModel
      *
      * @return mixed  Array  Media files array
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     public function getItems(): mixed
@@ -171,7 +169,7 @@ class CwmmediafilesModel extends ListModel
      *
      * @return  void
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.0
      */
     protected function populateState($ordering = 'mediafile.createdate', $direction = 'desc'): void
@@ -237,7 +235,7 @@ class CwmmediafilesModel extends ListModel
      *
      * @return QueryInterface|string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   7.0
      */
     protected function getListQuery(): QueryInterface|string
@@ -296,17 +294,17 @@ class CwmmediafilesModel extends ListModel
             $query->whereIn($db->quoteName('mediafile.access'), $access);
         }
 
-//        // Implement View Level Access
-//        if (!$user->authorise('core.cwmadmin')) {
-//            $query->whereIn($db->quoteName('mediafile.access'), $user->getAuthorisedViewLevels());
-//        }
+        //        // Implement View Level Access
+        //        if (!$user->authorise('core.cwmadmin')) {
+        //            $query->whereIn($db->quoteName('mediafile.access'), $user->getAuthorisedViewLevels());
+        //        }
 
         // Filter by study title
-//        $study = $this->getState('filter.study_id');
-//
-//        if (!empty($study)) {
-//            $query->where('mediafile.study_id LIKE "%' . $study . '%"');
-//        }
+        //        $study = $this->getState('filter.study_id');
+        //
+        //        if (!empty($study)) {
+        //            $query->where('mediafile.study_id LIKE "%' . $study . '%"');
+        //        }
 
         // Filter by media years
         $mediaYears = $this->getState('filter.mediaYears');

@@ -18,14 +18,11 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
-use RuntimeException;
-use ZipArchive;
 
 /**
  * JBS Export class
@@ -66,7 +63,7 @@ class Cwmbackup
      *
      * @return bool
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     public function exportdb(int $run): bool
@@ -97,7 +94,7 @@ class Cwmbackup
 
                 if (Factory::getApplication()->input->getInt('jbs_compress', 1)) {
                     $mime_type = 'application/zip';
-                    $path = $this->compress();
+                    $path      = $this->compress();
                 }
 
                 $this->outputFile($path, basename($path), $mime_type);
@@ -138,8 +135,8 @@ class Cwmbackup
         $zip   = new \ZipArchive();
 
         //create the file and throw the error if unsuccessful
-        if ($zip->open($path1, ZipArchive::CREATE) !== true) {
-            throw new RuntimeException("cannot open <$path1>\n", 'error');
+        if ($zip->open($path1, \ZipArchive::CREATE) !== true) {
+            throw new \RuntimeException("cannot open <$path1>\n", 'error');
         }
 
         foreach ($files as $file) {
@@ -209,14 +206,14 @@ class Cwmbackup
 
         if ($results) {
             foreach ($results as $result) {
-                $data   = array();
+                $data   = [];
                 $export .= 'INSERT INTO ' . $db->qn($table) . ' SET ';
 
                 foreach ($result as $key => $value) {
                     if ($value === null) {
                         $data[] = $db->qn($key) . "=NULL";
                     } else {
-                        $data[] = $db->qn($key) . "=" . $db->q(trim(str_replace(array("\r\n", "\r"), "\n", $value)));
+                        $data[] = $db->qn($key) . "=" . $db->q(trim(str_replace(["\r\n", "\r"], "\n", $value)));
                     }
                 }
 
@@ -239,7 +236,7 @@ class Cwmbackup
      *
      * @return bool TRUE if saving to the file succeeded
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     protected function writeln(string $fileData): bool
@@ -260,13 +257,13 @@ class Cwmbackup
      *
      * @return bool
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     public function outputFile(string $file, string $name, string $mime_type = ''): bool
     {
         if (!is_readable($file)) {
-            throw new RuntimeException('File not found or inaccessible!');
+            throw new \RuntimeException('File not found or inaccessible!');
         }
 
         // Clears file status cache
@@ -339,7 +336,7 @@ class Cwmbackup
     private function verifyMimeType(string $mime_type = '', string $file = ''): string
     {
         /* Figure out the MIME type (if not specified) */
-        $known_mime_types = array(
+        $known_mime_types = [
             "pdf"  => "application/pdf",
             "txt"  => "text/plain",
             "html" => "text/html",
@@ -354,8 +351,8 @@ class Cwmbackup
             "jpeg" => "image/jpg",
             "jpg"  => "image/jpg",
             "php"  => "text/plain",
-            "sql"  => "text/x-sql"
-        );
+            "sql"  => "text/x-sql",
+        ];
 
         if ($mime_type === '') {
             $file_extension = strtolower(substr(strrchr($file, "."), 1));
@@ -450,11 +447,11 @@ class Cwmbackup
             Folder::create($path);
         }
 
-        $exclude       = array('.git', '.svn', 'CVS', '.DS_Store', '__MACOSX', '.html');
-        $excludefilter = array('^\..*', '.*~');
+        $exclude       = ['.git', '.svn', 'CVS', '.DS_Store', '__MACOSX', '.html'];
+        $excludefilter = ['^\..*', '.*~'];
         $files         = Folder::files($path, '.', 'false', 'true', $exclude, $excludefilter);
         arsort($files, SORT_STRING);
-        $parts       = array();
+        $parts       = [];
         $numfiles    = count($files);
         $totalnumber = $params->get('filestokeep', '5');
 

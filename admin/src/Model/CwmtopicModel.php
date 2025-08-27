@@ -39,10 +39,10 @@ class CwmtopicModel extends AdminModel
      * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = [], $loadData = true)
     {
         // Get the form.
-        $form = $this->loadForm('com_proclaim.topic', 'topic', array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm('com_proclaim.topic', 'topic', ['control' => 'jform', 'load_data' => $loadData]);
 
         if ($form === null) {
             return false;
@@ -89,7 +89,7 @@ class CwmtopicModel extends AdminModel
      * @throws  \Exception
      * @since   3.0
      */
-    public function getTable($name = 'Cwmtopic', $prefix = '', $options = array()): Table
+    public function getTable($name = 'Cwmtopic', $prefix = '', $options = []): Table
     {
         return parent::getTable($name, $prefix, $options);
     }
@@ -104,7 +104,7 @@ class CwmtopicModel extends AdminModel
      */
     protected function loadFormData()
     {
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.topic.data', array());
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.topic.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();

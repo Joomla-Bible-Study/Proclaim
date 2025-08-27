@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\Model\AdminModel;
@@ -37,7 +36,7 @@ class CwmlocationModel extends AdminModel
      * @access    public
      * @return    bool    True on success
      *
-     * @throws Exception
+     * @throws \Exception
      * @since     7.0
      */
     public function store()
@@ -79,10 +78,10 @@ class CwmlocationModel extends AdminModel
      *
      * @return  Table  A Table object
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   3.0
      */
-    public function getTable($name = 'Cwmlocation', $prefix = '', $options = array()): Table
+    public function getTable($name = 'Cwmlocation', $prefix = '', $options = []): Table
     {
         return parent::getTable($name, $prefix, $options);
     }
@@ -97,13 +96,13 @@ class CwmlocationModel extends AdminModel
      *
      * @since  7.0
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = [], $loadData = true)
     {
         // Get the form.
         $form = $this->loadForm(
             'com_proclaim.location',
             'location',
-            array('control' => 'jform', 'load_data' => $loadData)
+            ['control' => 'jform', 'load_data' => $loadData]
         );
 
         return $form ?? false;
@@ -118,22 +117,22 @@ class CwmlocationModel extends AdminModel
      *
      * @since   11.1
      */
-	public function checkout($pk = null): bool
-	{
-		return true;
-	}
+    public function checkout($pk = null): bool
+    {
+        return true;
+    }
 
     /**
      * Method to get the data that should be injected in the form.
      *
      * @return  array    The default data is an empty array.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   7.0
      */
     protected function loadFormData()
     {
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.location.data', array());
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.location.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();

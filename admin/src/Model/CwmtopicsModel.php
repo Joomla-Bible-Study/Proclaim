@@ -37,10 +37,10 @@ class CwmtopicsModel extends ListModel
      * @throws \Exception
      * @since 7.0.0
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array(
+            $config['filter_fields'] = [
                 'id',
                 'topic.id',
                 'published',
@@ -49,7 +49,7 @@ class CwmtopicsModel extends ListModel
                 'topic.topic_text',
                 'params',
                 'topic.params',
-            );
+            ];
         }
 
         parent::__construct($config);

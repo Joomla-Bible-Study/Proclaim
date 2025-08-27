@@ -18,7 +18,6 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Local;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmuploadscript;
-use Exception;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
@@ -53,7 +52,7 @@ class CWMAddonLocal extends CWMAddon
      *
      * @return array
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     public function upload(?array $data): array

@@ -159,9 +159,9 @@ class com_proclaimInstallerScript extends InstallerScript
     ];
 
     /**
-     * Function called before extension installation/update/removal procedure commences
+     * Function called before the extension installation/update/removal procedure commences
      *
-     * @param   string            $type    The type of change (install, update or discover_install, not uninstall)
+     * @param   string            $type    The type of change (install, update, or discover_install, not uninstall)
      * @param   ComponentAdapter  $parent  The class calling this method
      *
      * @return  bool  True on success
@@ -761,7 +761,7 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
-     * Remove left overs do to upgrade from an older Proclaim version.
+     * Remove leftovers due to upgrading from an older Proclaim version.
      *
      * @return void
      * @throws Exception
@@ -794,7 +794,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $this->deleteFiles   = ['/language/en-GB/en-GB.com_biblestudy.ini'];
             $this->removefiles();
 
-            // Clean up Admin Menus form old install
+            // Clean up Admin Menus from old install
             $query      = $this->dbo->getQuery(true);
             $query->delete($this->dbo->quoteName('#__menu'));
             $query->where($this->dbo->quoteName('link') . 'LIKE "%com_biblestudy%"');

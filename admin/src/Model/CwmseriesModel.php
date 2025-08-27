@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\QueryInterface;
@@ -34,13 +33,13 @@ class CwmseriesModel extends ListModel
      *
      * @param   array  $config  An optional associative array of configuration settings.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array(
+            $config['filter_fields'] = [
                 'id',
                 'series.id',
                 'series_text',
@@ -55,8 +54,8 @@ class CwmseriesModel extends ListModel
                 'series.access',
                 'access_level',
                 'language',
-                'series.language'
-            );
+                'series.language',
+            ];
         }
 
         parent::__construct($config);
@@ -68,7 +67,7 @@ class CwmseriesModel extends ListModel
      *
      * @return    mixed    An array of data items on success, false on failure.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since    1.6.1
      */
     public function getItems(): mixed
@@ -102,7 +101,7 @@ class CwmseriesModel extends ListModel
      *
      * @return  void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   7.0
      */
     protected function populateState($ordering = 'series.series_text', $direction = 'asc'): void
@@ -188,7 +187,7 @@ class CwmseriesModel extends ListModel
      *
      * @return  QueryInterface|string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   7.1.0
      */
     protected function getListQuery(): QueryInterface|string

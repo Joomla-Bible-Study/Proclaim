@@ -32,7 +32,7 @@ class CWMAdministratorService
     /**
      * Render the list of associated items
      *
-     * @param   integer  $messageid  The message item id
+     * @param   int  $messageid  The message item id
      *
      * @return  string  The language HTML
      *

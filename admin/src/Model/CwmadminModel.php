@@ -19,7 +19,6 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Table\CwmadminTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
-use Exception;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -83,17 +82,17 @@ class CwmadminModel extends AdminModel
      *
      * @return  mixed  A JForm object on success, false on failure
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = array(), $loadData = true): mixed
+    public function getForm($data = [], $loadData = true): mixed
     {
         if (empty($data)) {
             $this->getItem();
         }
 
         // Get the form.
-        $form = $this->loadForm('com_proclaim.admin', 'admin', array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm('com_proclaim.admin', 'admin', ['control' => 'jform', 'load_data' => $loadData]);
 
         if ($form === null) {
             return false;
@@ -111,10 +110,10 @@ class CwmadminModel extends AdminModel
      *
      * @return  Table  A Table object
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   3.0
      */
-    public function getTable($name = 'Cwmadmin', $prefix = '', $options = array()): Table
+    public function getTable($name = 'Cwmadmin', $prefix = '', $options = []): Table
     {
         return parent::getTable($name, $prefix, $options);
     }
@@ -205,7 +204,7 @@ class CwmadminModel extends AdminModel
      *
      * @return bool
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function fix(): bool
@@ -231,7 +230,7 @@ class CwmadminModel extends AdminModel
      *
      * @return ChangeSet|bool|null JSchema  ChangeSet
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function getItems(): ChangeSet|bool|null
@@ -260,7 +259,7 @@ class CwmadminModel extends AdminModel
      *
      * @return   mixed  string schema version of success, false if fail
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function fixSchemaVersion(ChangeSet $changeSet): mixed
@@ -290,7 +289,7 @@ class CwmadminModel extends AdminModel
 
         try {
             $db->execute();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
 
@@ -302,7 +301,7 @@ class CwmadminModel extends AdminModel
      *
      * @return string extension_id
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.1.0
      */
     public function getExtentionId(): string
@@ -326,7 +325,7 @@ class CwmadminModel extends AdminModel
      *
      * @return  mixed  the return value from the query, or null if the query fails
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function getSchemaVersion(): mixed
@@ -346,7 +345,7 @@ class CwmadminModel extends AdminModel
      *
      * @return   mixed  string update version if success, false if fail
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function fixUpdateVersion(): mixed
@@ -400,7 +399,7 @@ class CwmadminModel extends AdminModel
     public function fixDefaultTextFilters(): mixed
     {
         $table = Table::getInstance('Extension');
-        $table->load($table->find(array('name' => 'com_proclaim')));
+        $table->load($table->find(['name' => 'com_proclaim']));
 
         // Check for empty $config and non-empty content filters
         if (!$table->params) {
@@ -437,7 +436,7 @@ class CwmadminModel extends AdminModel
      *
      * @return  mixed   version if successful, false if fail
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function getUpdateVersion(): mixed
@@ -453,7 +452,7 @@ class CwmadminModel extends AdminModel
      *
      * @return  Registry  default text filters (if any)
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function getDefaultTextFilters(): Registry
@@ -581,7 +580,7 @@ class CwmadminModel extends AdminModel
      *
      * @return  bool  True if allowed to delete the record. Defaults to the permission set in the component.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   1.6
      */
     protected function canDelete($record): bool
@@ -600,7 +599,7 @@ class CwmadminModel extends AdminModel
      *
      * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   1.6
      */
     protected function canEditState($record): bool
@@ -624,7 +623,7 @@ class CwmadminModel extends AdminModel
      *
      * @return  void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since    1.7.2
      */
     protected function populateState(?string $ordering = null, ?string $direction = null): void
@@ -659,12 +658,12 @@ class CwmadminModel extends AdminModel
      *
      * @return object
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     protected function loadFormData(): object
     {
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.cwmadmin.data', array());
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.cwmadmin.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();

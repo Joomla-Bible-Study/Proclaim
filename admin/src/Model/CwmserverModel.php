@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
@@ -24,8 +23,6 @@ use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
-use SimpleXMLElement;
-use stdClass;
 
 /**
  * Server administrator model
@@ -69,10 +66,10 @@ class CwmserverModel extends AdminModel
      *
      * @param   array  $config  An array of configuration options (name, state, dbo, table_path, ignore_request).
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   12.2
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         parent::__construct($config);
 
@@ -102,7 +99,7 @@ class CwmserverModel extends AdminModel
      * @param   int   $pk   An optional id of the object to get
      * @param   bool  $ext  If coming from external
      *
-     * @return false|object|stdClass Server data object, false on failure
+     * @return false|object|\stdClass Server data object, false on failure
      *
      * @since 9.0.0
      */
@@ -145,11 +142,11 @@ class CwmserverModel extends AdminModel
      *
      * @param   string  $addon  Type of server
      *
-     * @return SimpleXMLElement
+     * @return \SimpleXMLElement
      *
      * @since   9.0.0
      */
-    public function getConfig(string $addon): SimpleXMLElement|bool
+    public function getConfig(string $addon): \SimpleXMLElement|bool
     {
         $path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst(
             $addon
@@ -220,7 +217,7 @@ class CwmserverModel extends AdminModel
      *
      * @return \Joomla\CMS\Form\Form|string
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @since   9.0.0
      */
@@ -246,7 +243,7 @@ class CwmserverModel extends AdminModel
         return $this->loadForm(
             'com_proclaim.server.' . $type,
             $type,
-            array('control' => 'jform', 'load_data' => true),
+            ['control' => 'jform', 'load_data' => true],
             true,
             "/server"
         );
@@ -260,10 +257,10 @@ class CwmserverModel extends AdminModel
      *
      * @return  mixed  A JForm object on success, false on failure
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = [], $loadData = true)
     {
         if (empty($data)) {
             $this->getItem();
@@ -273,7 +270,7 @@ class CwmserverModel extends AdminModel
         $form = $this->loadForm(
             'com_proclaim.cwmserver',
             'server',
-            array('control' => 'jform', 'load_data' => $loadData)
+            ['control' => 'jform', 'load_data' => $loadData]
         );
 
         return $form ?? false;
@@ -288,10 +285,10 @@ class CwmserverModel extends AdminModel
      *
      * @return  Table  A Table object
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   3.0
      */
-    public function getTable($name = 'Cwmserver', $prefix = '', $options = array()): Table
+    public function getTable($name = 'Cwmserver', $prefix = '', $options = []): Table
     {
         return parent::getTable($name, $prefix, $options);
     }
@@ -303,7 +300,7 @@ class CwmserverModel extends AdminModel
      *
      * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since    1.6
      */
     protected function canDelete($record): bool
@@ -322,7 +319,7 @@ class CwmserverModel extends AdminModel
      * @return   bool  True if allowed to change the state of the record. Defaults to the permission set in the
      *                    component.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since    1.6
      */
     protected function canEditState($record)
@@ -345,13 +342,13 @@ class CwmserverModel extends AdminModel
      *
      * @return  array|object    The default data is an empty array.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   9.0.0
      */
     protected function loadFormData(): array|object
     {
         // If the current state has data, use it instead of data from db
-        $session = Factory::getApplication()->getUserState('com_proclaim.edit.cwmserver.data', array());
+        $session = Factory::getApplication()->getUserState('com_proclaim.edit.cwmserver.data', []);
 
         return empty($session) ? $this->data : $session;
     }
@@ -377,7 +374,7 @@ class CwmserverModel extends AdminModel
      *
      * @return  void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   9.0.0
      */
     protected function populateState()

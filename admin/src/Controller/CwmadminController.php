@@ -617,10 +617,9 @@ class CwmadminController extends FormController
         } else {
             $import = new Cwmrestore();
             $import->importdb($parent);
-            $alt    = '&cwmalt=1';
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmbackup' . $alt);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel');
     }
 
     /**

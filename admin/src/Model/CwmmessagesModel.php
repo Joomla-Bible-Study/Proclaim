@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Exception;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
@@ -35,14 +34,14 @@ class CwmmessagesModel extends ListModel
      *
      * @param   array  $config  An optional associative array of configuration settings.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   11.1
      * @see     Controller
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array(
+            $config['filter_fields'] = [
                 'id',
                 'study.id',
                 'publish_up',
@@ -73,8 +72,8 @@ class CwmmessagesModel extends ListModel
                 'access_level',
                 'location',
                 'location.location_text',
-                'language'
-            );
+                'language',
+            ];
         }
 
         parent::__construct($config);
@@ -119,7 +118,7 @@ class CwmmessagesModel extends ListModel
      *
      * @return    void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.1.0
      */
     protected function populateState($ordering = 'study.studydate', $direction = 'desc')
@@ -197,7 +196,7 @@ class CwmmessagesModel extends ListModel
      *
      * @return  QueryInterface|string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   7.0
      */
     protected function getListQuery()

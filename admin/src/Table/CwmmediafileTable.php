@@ -33,7 +33,7 @@ class CwmmediafileTable extends Table
     /**
      * Primary Key
      *
-     * @var integer
+     * @var int
      * @since    7.0.0
      */
     public $id = null;
@@ -41,7 +41,7 @@ class CwmmediafileTable extends Table
     /**
      * Study id
      *
-     * @var integer
+     * @var int
      * @since    7.0.0
      */
     public $study_id = null;
@@ -49,7 +49,7 @@ class CwmmediafileTable extends Table
     /**
      * Server id
      *
-     * @var integer
+     * @var int
      * @since    7.0.0
      */
     public $server_id = null;

@@ -41,8 +41,8 @@ class CwmseriesController extends AdminController
      */
     public function saveOrderAjax(): void
     {
-        $pks   = $this->input->post->get('cid', array(), 'array');
-        $order = $this->input->post->get('ordering', array(), 'array');
+        $pks   = $this->input->post->get('cid', [], 'array');
+        $order = $this->input->post->get('ordering', [], 'array');
 
         // Sanitize the input
         ArrayHelper::toInteger($pks);
