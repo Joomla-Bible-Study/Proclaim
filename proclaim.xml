@@ -5,9 +5,9 @@
     <author>CWM Team</author>
     <authorEmail>info@christianwebministries.org</authorEmail>
     <authorUrl>www.christianwebministries.org</authorUrl>
-    <copyright>(C) 2007 Proclaim All rights reserved.</copyright>
-    <version>10.0.0</version>
-    <creationDate>July 29, 2025</creationDate>
+    <copyright>(C) 2025 Proclaim All rights reserved.</copyright>
+    <version>10.0.1</version>
+    <creationDate>Aug 26, 2025</creationDate>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <description>JBS_INS_XML_DESCRIPTION</description>
     <namespace path="src">CWM\Component\Proclaim</namespace>
