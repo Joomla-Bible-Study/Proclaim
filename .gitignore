@@ -27,3 +27,5 @@ build/reports/project-size.txt
 /build.properties
 /build/reports/phpcs.log
 /build/reports/phpcs-error.log
+/media/css/site/biblestudy.css
+*.zip
