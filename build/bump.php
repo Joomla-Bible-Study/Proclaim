@@ -85,7 +85,7 @@ $directoryLoopExcludeDirectories = [
 
 $directoryLoopExcludeFiles = [];
 
-// Check arguments (exit if incorrect cli arguments).
+// Check arguments (exit if incorrect CLI arguments).
 $opts = getopt("v:c:d:");
 
 if (empty($opts['v'])) {
@@ -191,7 +191,7 @@ echo PHP_EOL;
 
 $rootPath = \dirname(__DIR__);
 
-// Updates the version in version class.
+// Updates the version in the version class.
 if (file_exists($rootPath . $versionFile)) {
     $fileContents = file_get_contents($rootPath . $versionFile);
     $fileContents = preg_replace("#MAJOR_VERSION\s*=\s*[^;]*#", "MAJOR_VERSION = " . $version['major'], $fileContents);
@@ -229,7 +229,7 @@ if (file_exists($rootPath . $versionFile)) {
     file_put_contents($rootPath . $versionFile, $fileContents);
 }
 
-// Updates the version and creation date in core xml files.
+// Updates the version and creation date in core XML files.
 foreach ($coreXmlFiles as $coreXmlFile) {
     if (file_exists($rootPath . $coreXmlFile)) {
         $fileContents = file_get_contents($rootPath . $coreXmlFile);
@@ -247,7 +247,7 @@ foreach ($coreXmlFiles as $coreXmlFile) {
     }
 }
 
-// Updates the version and creation date in language xml files.
+// Updates the version and creation date in language XML files.
 foreach ($languageXmlFiles as $languageXmlFile) {
     if (file_exists($rootPath . $languageXmlFile)) {
         $fileContents = file_get_contents($rootPath . $languageXmlFile);
@@ -308,7 +308,7 @@ if (file_exists($rootPath . $packageJsonFile)) {
     );
 }
 
-// Updates the version in readme files.
+// Updates the version in the readme files.
 foreach ($readMeFiles as $readMeFile) {
     if (file_exists($rootPath . $readMeFile)) {
         $fileContents = file_get_contents($rootPath . $readMeFile);

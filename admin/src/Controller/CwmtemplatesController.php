@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -20,11 +20,11 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplatecodeTable;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Factory;
-use Joomla\Filesystem\File;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\Session\Session;
 use Joomla\Database\DatabaseDriver;
+use Joomla\Filesystem\File;
 use Joomla\Input\Files;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
@@ -51,20 +51,20 @@ class CwmtemplatesController extends AdminController
         Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
         // Set Variables.
-        $sermonstemplate = null;
-        $sermontemplate = null;
-        $teacherstemplate = null;
-        $teachertemplate = null;
+        $sermonstemplate        = null;
+        $sermontemplate         = null;
+        $teacherstemplate       = null;
+        $teachertemplate        = null;
         $seriesdisplaystemplate = null;
-        $seriesdisplaytemplate = null;
-        $moduletemplate = null;
+        $seriesdisplaytemplate  = null;
+        $moduletemplate         = null;
 
         set_time_limit(300);
 
-        $input = new Files();
+        $input    = new Files();
         $userfile = $input->get('template_import');
-        $app = Factory::getApplication();
-        $tc = 0;
+        $app      = Factory::getApplication();
+        $tc       = 0;
 
         // Make sure that file uploads are enabled in php
         if (!(bool)ini_get('file_uploads')) {
@@ -94,7 +94,7 @@ class CwmtemplatesController extends AdminController
 
         $db = Factory::getContainer()->get('DatabaseDriver');
 
-        $query = file_get_contents(JPATH_SITE . '/tmp/' . $userfile['name']);
+        $query   = file_get_contents(JPATH_SITE . '/tmp/' . $userfile['name']);
         $queries = DatabaseDriver::splitSql($query);
 
         if (count($queries) === 0) {
@@ -118,7 +118,7 @@ class CwmtemplatesController extends AdminController
                             ->from('#__bsms_templatecode')
                             ->order($db->q('id') . ' DESC');
                         $db->setQuery($query, 0, 1);
-                        $data = $db->loadObject();
+                        $data  = $db->loadObject();
                         $query = $db->getQuery(true);
                         $query->update('#__bsms_styles')
                             ->set($db->qn('filename') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
@@ -146,7 +146,7 @@ class CwmtemplatesController extends AdminController
                             ->from('#__bsms_templates')
                             ->order($db->q('id') . ' DESC');
                         $db->setQuery($query, 0, 1);
-                        $data = $db->loadObject();
+                        $data  = $db->loadObject();
                         $query = $db->getQuery(true);
                         $query->update('#__bsms_templates')
                             ->set($db->qn('title') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
@@ -268,8 +268,8 @@ class CwmtemplatesController extends AdminController
         // Check for request forgeries.
         Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-        $input = new Input();
-        $data = $input->get('template_export');
+        $input          = new Input();
+        $data           = $input->get('template_export');
         $exporttemplate = $data;
 
         if (!$exporttemplate) {
@@ -277,17 +277,17 @@ class CwmtemplatesController extends AdminController
             $this->setRedirect('index.php?option=com_proclaim&view=templates', $message);
         }
 
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query->select('t.id, t.type, t.params, t.title, t.text');
         $query->from('#__bsms_templates as t');
         $query->where('t.id = ' . $exporttemplate);
         $db->setQuery($query);
-        $result = $db->loadObject();
-        $objects[] = $this->getExportSetting($result);
+        $result       = $db->loadObject();
+        $objects[]    = $this->getExportSetting($result);
         $filecontents = implode(' ', $objects);
-        $filename = $result->title . '.sql';
-        $filepath = JPATH_ROOT . '/tmp/' . $filename;
+        $filename     = $result->title . '.sql';
+        $filepath     = JPATH_ROOT . '/tmp/' . $filename;
 
         if (!File::write($filepath, $filecontents)) {
             return false;
@@ -315,15 +315,15 @@ class CwmtemplatesController extends AdminController
         // Export must be in this order: css, template files, template.
         $registry = new Registry();
         $registry->loadString($result->params);
-        $params = $registry;
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $params  = $registry;
+        $db      = Factory::getContainer()->get('DatabaseDriver');
         $objects = '';
-        $css = $params->get('css');
-        $css = substr($css, 0, -4);
+        $css     = $params->get('css');
+        $css     = substr($css, 0, -4);
 
         if ($css) {
             $objects = "--\n-- CSS Style Code\n--\n";
-            $query2 = $db->getQuery(true);
+            $query2  = $db->getQuery(true);
             $query2->select('style.*');
             $query2->from('#__bsms_styles AS style');
             $query2->where('style.filename = "' . $css . '"');
@@ -403,7 +403,7 @@ class CwmtemplatesController extends AdminController
      */
     public function getTemplate($template): bool|string
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query->select('tc.id, tc.templatecode,tc.type,tc.filename');
         $query->from('#__bsms_templatecode as tc');

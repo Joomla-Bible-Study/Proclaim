@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\QueryInterface;
 
 /**
  * Series model class
@@ -35,10 +36,10 @@ class CwmseriesModel extends ListModel
      * @throws \Exception
      * @since 7.0
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array(
+            $config['filter_fields'] = [
                 'id',
                 'series.id',
                 'series_text',
@@ -53,8 +54,8 @@ class CwmseriesModel extends ListModel
                 'series.access',
                 'access_level',
                 'language',
-                'series.language'
-            );
+                'series.language',
+            ];
         }
 
         parent::__construct($config);
@@ -66,9 +67,10 @@ class CwmseriesModel extends ListModel
      *
      * @return    mixed    An array of data items on success, false on failure.
      *
+     * @throws \Exception
      * @since    1.6.1
      */
-    public function getItems()
+    public function getItems(): mixed
     {
         $items = parent::getItems();
 
@@ -183,12 +185,12 @@ class CwmseriesModel extends ListModel
     /**
      * Build and SQL query to load the list data
      *
-     * @return  \Joomla\Database\QueryInterface
+     * @return  QueryInterface|string
      *
      * @throws \Exception
      * @since   7.1.0
      */
-    protected function getListQuery()
+    protected function getListQuery(): QueryInterface|string
     {
         // Create a new query object.
         $db    = Factory::getContainer()->get('DatabaseDriver');

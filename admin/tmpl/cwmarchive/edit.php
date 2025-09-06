@@ -4,7 +4,7 @@
  * Form sub Archive
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * @since      7.1.0
@@ -48,10 +48,16 @@ echo Route::_('index.php?option=com_proclaim&view=cwmarchive'); ?>" enctype="mul
                     echo $this->form->getLabel('timeframe'); ?>
                 </div>
                 <div class="controls">
-                    <?php
-                    echo $this->form->getInput('timeframe'); ?>
-                    <?php
-                    echo $this->form->getInput('switch'); ?>
+                    <?php echo $this->form->getInput('timeframe'); ?>
+                    <br />
+                    <?php echo Text::_('JBS_ARCHIVE_TIMEFRAME_DESC'); ?>
+                </div>
+            </div>
+            <div class="control-group">
+	            <?php
+	            echo $this->form->getLabel('switch'); ?>
+                <div class="controls">
+	                <?php echo $this->form->getInput('switch'); ?>
                 </div>
             </div>
             <div class="control-group">

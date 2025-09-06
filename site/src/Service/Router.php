@@ -2,7 +2,7 @@
 
 /**
  * @package        Proclaim.Site
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  */
@@ -393,13 +393,13 @@ class Router extends RouterView
     /**
      * Method to get the segment(s) for a series
      *
-     * @param   int    $id     ID of the article to retrieve the segments for
+     * @param   mixed  $id     ID of the article to retrieve the segments for
      * @param   array  $query  The request that is built right now
      *
      * @return  array  The segments of this item
      * @since 10.0.0
      */
-    public function getCWMSeriesDisplaySegment(int $id, array $query): array
+    public function getCWMSeriesDisplaySegment(mixed $id, array $query): array
     {
         if (!strpos($id, ':')) {
             $id      = (int)$id;

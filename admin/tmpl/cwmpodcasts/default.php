@@ -3,7 +3,7 @@
  * Default
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -152,7 +152,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmpodcasts'); ?>" method="pos
                                     ?>
                                 </td>
                                 <td class="nowrap has-context">
-                                    <div class="pull-left">
+                                    <div class="float-left">
 
                                         <?php
                                         if ($canEdit || $canEditOwn) : ?>
@@ -182,7 +182,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmpodcasts'); ?>" method="pos
                                     </a>
                                 </td>
                                 <td class="nowrap has-context d-none d-md-table-cell">
-                                    <div class="pull-left">
+                                    <div class="float-left">
                                         <?php
                                         if ($item->language === '*'): ?>
                                             <?php

@@ -4,7 +4,7 @@
  * Default
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -48,8 +48,6 @@ $params     = $this->params;
     <!-- End div id="bsms_header" -->
 
     <?php
-    $i = 1;
-
     for ($i = 1; $i <= 7; $i++) {
         $showIt = $params->get('headingorder_' . $i);
 
@@ -106,7 +104,7 @@ $params     = $this->params;
             <div class="landing_item">
                 <div class="landing_title">
                     <?php
-                    if (isset($heading) && !empty($heading)) {
+                    if (!empty($heading)) {
                         echo $params->get($showIt . 'label');
                     }
                     ?>

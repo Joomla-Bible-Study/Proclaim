@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -45,10 +45,10 @@ class CwmlocationsModel extends ListModel
      * @throws \Exception
      * @since 7.0.0
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array(
+            $config['filter_fields'] = [
                 'id',
                 'location.id',
                 'published',
@@ -59,8 +59,8 @@ class CwmlocationsModel extends ListModel
                 'location.ordering',
                 'access',
                 'location.access',
-                'access_level'
-            );
+                'access_level',
+            ];
         }
 
         parent::__construct($config);

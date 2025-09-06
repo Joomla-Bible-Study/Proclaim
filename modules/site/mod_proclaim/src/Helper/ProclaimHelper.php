@@ -5,7 +5,7 @@
  *
  * @package     Proclaim
  * @subpackage  mod.proclaim
- * @copyright   (C) 2007 CWM Team All rights reserved
+ * @copyright   (C) 2025 CWM Team All rights reserved
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  * @link        https://www.christianwebministries.org
  * */
@@ -94,9 +94,11 @@ class ProclaimHelper implements DatabaseAwareInterface
             ) . ' THEN study.studydate ELSE study.publish_up END as publish_up,' .
             'study.publish_down,
 		                study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
-		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
-		                study.verse_end2, study.verse_begin2, ' . $query->length('study.studytext') . ' AS readmore,'
-            . ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug '
+		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2,
+		                study.chapter_end2, study.verse_end2, study.verse_begin2, '
+            . $query->length('study.studytext') . ' AS readmore,'
+            . ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias)
+             ELSE study.id END as slug '
         );
         $query->from('#__bsms_studies AS study');
 
@@ -134,7 +136,8 @@ class ProclaimHelper implements DatabaseAwareInterface
         $query->select('GROUP_CONCAT(DISTINCT st.topic_id)');
         $query->join('LEFT', '#__bsms_studytopics AS st ON study.id = st.study_id');
         $query->select(
-            'GROUP_CONCAT(DISTINCT t.id), GROUP_CONCAT(DISTINCT t.topic_text) as topics_text, GROUP_CONCAT(DISTINCT t.params)'
+            'GROUP_CONCAT(DISTINCT t.id), GROUP_CONCAT(DISTINCT t.topic_text) as topics_text,'
+            . 'GROUP_CONCAT(DISTINCT t.params)'
         );
         $query->join('LEFT', '#__bsms_topics AS t ON t.id = st.topic_id');
 
@@ -192,7 +195,7 @@ class ProclaimHelper implements DatabaseAwareInterface
             }
 
             foreach ($filters as $filter) {
-                if ($filter != -1 && $filter != 0 && $filter > 0) {
+                if ($filter !== -1 && $filter !== 0 && $filter > 0) {
                     $query->where('study.teacher_id = ' . (int)$filter, $condition);
                 }
             }
@@ -221,7 +224,7 @@ class ProclaimHelper implements DatabaseAwareInterface
             }
 
             foreach ($filters as $filter) {
-                if ($filter != -1 && $filter != 0 && $filter > 0) {
+                if ($filter !== -1 && $filter !== 0 && $filter > 0) {
                     $query->where('study.location_id = ' . (int)$filter, $condition);
                 }
             }
@@ -250,7 +253,7 @@ class ProclaimHelper implements DatabaseAwareInterface
             }
 
             foreach ($filters as $filter) {
-                if ($filter != -1 && $filter != 0 && $filter > 0) {
+                if ($filter !== -1 && $filter !== 0 && $filter > 0) {
                     $query->where('study.booknumber = ' . (int)$filter, $condition);
                 }
             }
@@ -278,7 +281,7 @@ class ProclaimHelper implements DatabaseAwareInterface
             }
 
             foreach ($filters as $filter) {
-                if ($filter != -1 && $filter != 0 && $filter > 0) {
+                if ($filter !== -1 && $filter !== 0 && $filter > 0) {
                     $query->where('study.series_id = ' . (int)$filter, $condition);
                 }
             }
@@ -305,7 +308,7 @@ class ProclaimHelper implements DatabaseAwareInterface
             }
 
             foreach ($filters as $filter) {
-                if ($filter != -1 && $filter != 0 && $filter > 0) {
+                if ($filter !== -1 && $filter !== 0 && $filter > 0) {
                     $query->where('st.topic_id = ' . (int)$filter, $condition);
                 }
             }
@@ -314,7 +317,7 @@ class ProclaimHelper implements DatabaseAwareInterface
         // Filter by language
         $lang = Factory::getLanguage();
 
-        if ($lang || $language != '*') {
+        if ($lang || $language !== '*') {
             $query->where(
                 'study.language in (' . $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')'
             );
@@ -342,7 +345,7 @@ class ProclaimHelper implements DatabaseAwareInterface
             }
 
             foreach ($filters as $filter) {
-                if ($filter != -1 && $filter != 0) {
+                if ($filter !== -1 && $filter !== 0) {
                     if ($filter > 0) {
                         $query->where('study.messagetype = ' . (int)$filter, $condition);
                     }

@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\ListModel;
@@ -58,7 +57,7 @@ class CwmassetsModel extends ListModel
      * @var array
      * @since 7.0
      */
-    public array $assets = array();
+    public array $assets = [];
 
     /** @var float The time the process started
      * @since 7.0
@@ -68,12 +67,12 @@ class CwmassetsModel extends ListModel
     /** @var array The pre versions to process
      * @since 7.0
      */
-    private array $versionStack = array();
+    private array $versionStack = [];
 
     /** @var array The pre versions sub sql array to process
      * @since 7.0
      */
-    private array $allupdates = array();
+    private array $allupdates = [];
 
     /** @var string Version of Proclaim
      * @since 7.0
@@ -86,10 +85,10 @@ class CwmassetsModel extends ListModel
      * @param   array                 $config   An optional associative array of configuration settings.
      * @param   ?MVCFactoryInterface  $factory  The factory.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
-    public function __construct($config = array(), ?MVCFactoryInterface $factory = null)
+    public function __construct($config = [], ?MVCFactoryInterface $factory = null)
     {
         parent::__construct($config, $factory);
 
@@ -101,7 +100,7 @@ class CwmassetsModel extends ListModel
      *
      * @return boolean
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function startScanning(): bool
@@ -111,7 +110,7 @@ class CwmassetsModel extends ListModel
         $this->getSteps();
 
         if (empty($this->versionStack)) {
-            $this->versionStack = array();
+            $this->versionStack = [];
         }
 
         ksort($this->versionStack);
@@ -130,16 +129,16 @@ class CwmassetsModel extends ListModel
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     private function resetStack(): void
     {
         $session = Factory::getApplication()->getSession();
         $session->set('asset_stack', '', 'CWM');
-        $this->versionStack  = array();
+        $this->versionStack  = [];
         $this->versionSwitch = '';
-        $this->allupdates    = array();
+        $this->allupdates    = [];
         $this->step          = '';
         $this->totalSteps    = 0;
         $this->doneSteps     = 0;
@@ -192,19 +191,19 @@ class CwmassetsModel extends ListModel
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     private function saveStack(): void
     {
-        $stack = array(
+        $stack = [
             'version'    => $this->versionStack,
             'step'       => $this->step,
             'switch'     => $this->versionSwitch,
             'allupdates' => $this->allupdates,
             'total'      => $this->totalSteps,
             'done'       => $this->doneSteps,
-        );
+        ];
         $stack = json_encode($stack, JSON_THROW_ON_ERROR);
 
         if (function_exists('base64_encode') && function_exists('base64_decode')) {
@@ -241,7 +240,7 @@ class CwmassetsModel extends ListModel
      *
      * @return bool
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function run(bool $resetTimer = true): bool
@@ -268,7 +267,7 @@ class CwmassetsModel extends ListModel
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     private function loadStack(): void
@@ -277,9 +276,9 @@ class CwmassetsModel extends ListModel
         $stack   = $session->get('asset_stack', '', 'CWM');
 
         if (empty($stack)) {
-            $this->versionStack  = array();
+            $this->versionStack  = [];
             $this->versionSwitch = '';
-            $this->allupdates    = array();
+            $this->allupdates    = [];
             $this->step          = '';
             $this->totalSteps    = 0;
             $this->doneSteps     = 0;
@@ -310,7 +309,7 @@ class CwmassetsModel extends ListModel
      *
      * @return bool
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     private function realRun(): bool
@@ -402,7 +401,7 @@ class CwmassetsModel extends ListModel
                 }
             }
 
-            $return[] = array(
+            $return[] = [
                 'realname'         => $object['realname'],
                 'numrows'          => $numrows,
                 'nullrows'         => $nullrows,
@@ -412,8 +411,8 @@ class CwmassetsModel extends ListModel
                 'parent_id'        => $this->parent_id,
                 'result_parent_id' => $result->parent_id,
                 'id'               => $result->jid,
-                'assetid'          => $result->jasset_id
-            );
+                'assetid'          => $result->jasset_id,
+            ];
         }
 
         return $return;

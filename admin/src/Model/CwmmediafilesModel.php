@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,11 +16,13 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Exception;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
-use Joomla\Database\DatabaseQuery;
+use Joomla\Database\ParameterType;
+use Joomla\Database\QueryInterface;
 use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * MediaFiles model class
@@ -31,59 +33,27 @@ use Joomla\Registry\Registry;
 class CwmmediafilesModel extends ListModel
 {
     /**
-     * Model context string.
-     *
-     * @var        string
-     *
-     * @since 7.0
-     */
-    public $context = 'com_proclaim.cwmmediafiles';
-    /**
-     * The type alias for this content type (for example, 'com_content.article').
-     *
-     * @var      string
-     * @since    3.2
-     */
-    public $typeAlias = 'com_proclaim.cwmmediafiles';
-    /**
-     * @var    string  The prefix to use with controller messages.
-     * @since  1.6
-     */
-    protected $text_prefix = 'com_proclaim';
-    /**
-     * Number of Deletions
-     *
-     * @var array
-     *
-     * @since 7.0
-     */
-    private array $deletes;
-
-    /**
      * Constructor.
      *
      * @param   array  $config  An optional associative array of configuration settings.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array(
-                'id',
-                'mediafile.id',
-                'published',
-                'mediafile.published',
-                'ordering',
-                'mediafile.ordering',
-                'studytitle',
-                'study.studytitle',
-                'createdate',
-                'mediafile.createdate',
-                'language',
-                'mediafile.language'
-            );
+            $config['filter_fields'] = [
+                'id', 'mediafile.id',
+                'published', 'mediafile.published',
+                'ordering', 'mediafile.ordering',
+                'studytitle', 'study.studytitle',
+                'createdate', 'mediafile.createdate',
+                'language', 'mediafile.language',
+                'access', 'mediafile.access', 'access_level',
+                'language', 'mediafile.language',
+                'published', 'mediafile.published',
+            ];
         }
 
         parent::__construct($config);
@@ -94,7 +64,7 @@ class CwmmediafilesModel extends ListModel
      *
      * @return mixed  Array  Media files array
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     public function getItems(): mixed
@@ -199,7 +169,7 @@ class CwmmediafilesModel extends ListModel
      *
      * @return  void
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.0
      */
     protected function populateState($ordering = 'mediafile.createdate', $direction = 'desc'): void
@@ -219,7 +189,11 @@ class CwmmediafilesModel extends ListModel
             $this->context .= '.' . $forcedLanguage;
         }
 
-        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
+        // Load the parameters.
+        $params = ComponentHelper::getParams('com_proclaim');
+        $this->setState('params', $params);
+
+        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'int');
         $this->setState('filter.access', $access);
 
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
@@ -259,14 +233,14 @@ class CwmmediafilesModel extends ListModel
     /**
      * Build an SQL query to load the list data
      *
-     * @return DatabaseQuery
+     * @return QueryInterface|string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   7.0
      */
-    protected function getListQuery(): DatabaseQuery
+    protected function getListQuery(): QueryInterface|string
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = $this->getDatabase();
         $query = $db->getQuery(true);
         $user  = Factory::getApplication()->getIdentity();
 
@@ -300,30 +274,37 @@ class CwmmediafilesModel extends ListModel
             ->join('LEFT', '#__users AS uc ON uc.id=mediafile.checked_out');
 
         // Filter by published state
-        $published = $this->getState('filter.published');
+        $published = (string) $this->getState('filter.published');
 
-        if (is_numeric($published)) {
-            $query->where('mediafile.published = ' . (int)$published);
-        } elseif ($published === '') {
-            $query->where('(mediafile.published = 0 OR mediafile.published = 1)');
+        if (($published !== '*') && is_numeric($published)) {
+            $state = (int) $published;
+            $query->where($db->quoteName('mediafile.published') . ' = :state')
+                ->bind(':state', $state, ParameterType::INTEGER);
         }
 
         // Filter by access level.
-        if ($access = $this->getState('filter.access')) {
-            $query->where('mediafile.access = ' . (int)$access);
+        $access = $this->getState('filter.access');
+
+        if (is_numeric($access)) {
+            $access = (int) $access;
+            $query->where($db->quoteName('mediafile.access') . ' = :access')
+                ->bind(':access', $access, ParameterType::INTEGER);
+        } elseif (\is_array($access)) {
+            $access = ArrayHelper::toInteger($access);
+            $query->whereIn($db->quoteName('mediafile.access'), $access);
         }
 
-        // Implement View Level Access
-        if (!$user->authorise('core.cwmadmin')) {
-            $query->whereIn($db->quoteName('mediafile.access'), $user->getAuthorisedViewLevels());
-        }
+        //        // Implement View Level Access
+        //        if (!$user->authorise('core.cwmadmin')) {
+        //            $query->whereIn($db->quoteName('mediafile.access'), $user->getAuthorisedViewLevels());
+        //        }
 
         // Filter by study title
-        $study = $this->getState('filter.study_id');
-
-        if (!empty($study)) {
-            $query->where('mediafile.study_id LIKE "%' . $study . '%"');
-        }
+        //        $study = $this->getState('filter.study_id');
+        //
+        //        if (!empty($study)) {
+        //            $query->where('mediafile.study_id LIKE "%' . $study . '%"');
+        //        }
 
         // Filter by media years
         $mediaYears = $this->getState('filter.mediaYears');
@@ -337,23 +318,27 @@ class CwmmediafilesModel extends ListModel
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where('mediafile.id = ' . (int)substr($search, 3));
+                $search = (int) substr($search, 3);
+                $query->where($db->quoteName('mediafile.id') . ' = :search')
+                    ->bind(':search', $search, ParameterType::INTEGER);
             } else {
-                $search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
-                $query->where('study.studytitle LIKE ' . $search . ' OR study.alias LIKE ' . $search);
+                $search = '%' . str_replace(' ', '%', trim($search)) . '%';
+                $query->where(
+                    '(' . $db->quoteName('study.studytitle') . ' LIKE :search1 OR ' . $db->quoteName('study.alias') . ' LIKE :search2)'
+                )
+                    ->bind([':search1', ':search2'], $search);
             }
         }
 
         // Filter on the language.
-        $language = $this->getState('filter.language');
-
-        if ($language) {
-            $query->where('mediafile.language = ' . $db->quote($language));
+        if ($language = $this->getState('filter.language')) {
+            $query->where($db->quoteName('mediafile.language') . ' = :language')
+                ->bind(':language', $language);
         }
 
         // Add the list ordering clause
         $orderCol  = $this->state->get('list.ordering', 'mediafile.createdate');
-        $orderDirn = $this->state->get('list.direction', 'desc');
+        $orderDirn = $this->state->get('list.direction', 'DESC');
 
         // Sqlsrv change
         if ($orderCol === 'study_id') {

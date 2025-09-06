@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -19,7 +19,6 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CwmteacherTable;
-use Exception;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\OutputFilter;
@@ -74,10 +73,10 @@ class CwmteacherModel extends AdminModel
      *
      * @return  mixed  A JForm object on success, false on failure
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = array(), $loadData = true): mixed
+    public function getForm($data = [], $loadData = true): mixed
     {
         if (empty($data)) {
             $this->getItem();
@@ -87,7 +86,7 @@ class CwmteacherModel extends AdminModel
         $form = $this->loadForm(
             'com_proclaim.' . $this->formName,
             $this->formName,
-            array('control' => 'jform', 'load_data' => $loadData)
+            ['control' => 'jform', 'load_data' => $loadData]
         );
 
         if ($form === null) {
@@ -132,7 +131,7 @@ class CwmteacherModel extends AdminModel
      *
      * @return    mixed    Object on success, false on failure.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since    1.7.0
      */
     public function getItem($pk = null): mixed
@@ -179,7 +178,7 @@ class CwmteacherModel extends AdminModel
      *
      * @return  array|bool  Array of filtered data if valid, false otherwise.
      *
-     * @throws Exception
+     * @throws \Exception
      * @see     JFilterInput
      * @since   3.7.0
      * @see     \Joomla\CMS\Form\FormRule
@@ -226,7 +225,7 @@ class CwmteacherModel extends AdminModel
      *
      * @return  bool  True if allowed to change the state of the record. Defaults to the permission for the component.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   1.6
      */
     protected function canEditState($record): bool
@@ -264,7 +263,7 @@ class CwmteacherModel extends AdminModel
      *
      * @return bool
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     public function save($data): bool
@@ -323,7 +322,7 @@ class CwmteacherModel extends AdminModel
      *
      * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   1.6
      */
     protected function canDelete($record): bool
@@ -362,13 +361,13 @@ class CwmteacherModel extends AdminModel
      *
      * @return    mixed    The data for the form.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   7.0
      */
     protected function loadFormData(): mixed
     {
         // Check the session for previously entered form data.
-        $session = Factory::getApplication()->getUserState('com_proclaim.edit.teacher.data', array());
+        $session = Factory::getApplication()->getUserState('com_proclaim.edit.teacher.data', []);
 
         return empty($session) ? $this->data : $session;
     }

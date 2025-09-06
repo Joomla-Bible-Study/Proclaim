@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -14,10 +14,10 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // No direct access
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseModel;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Filesystem\Path;
-use Joomla\CMS\Uri\Uri;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -42,7 +42,7 @@ class CwmdirModel extends BaseModel
      */
     public function getBreadcrumbs(): array
     {
-        $bc         = array();
+        $bc         = [];
         $currentDir = $this->getCurrentDir();
 
         $parts = explode('/', $currentDir);
@@ -52,7 +52,7 @@ class CwmdirModel extends BaseModel
         // Fill bc array with objects
         foreach ($parts as $part) {
             if ($part !== '' && $part !== ' ') {
-                $link         .= '/' . $part;
+                $link .= '/' . $part;
                 $bc[$i]       = new \stdClass();
                 $bc[$i]->name = $part;
                 $bc[$i]->link = $link;
@@ -87,8 +87,8 @@ class CwmdirModel extends BaseModel
 
         // Filter GET variable
         $directoryVarFromReq = Factory::getApplication()->input->get('dir', $separator);
-        $directoryVarReplSep = str_replace(array("/", "\\"), $separator, $directoryVarFromReq);
-        $directoryVarWODots  = preg_replace(array("/\.\./", "/\./"), '', $directoryVarReplSep);
+        $directoryVarReplSep = str_replace(["/", "\\"], $separator, $directoryVarFromReq);
+        $directoryVarWODots  = preg_replace(["/\.\./", "/\./"], '', $directoryVarReplSep);
         $directoryVar        = $directoryVarWODots;
 
         // Make filtered full directory path
@@ -172,7 +172,7 @@ class CwmdirModel extends BaseModel
      */
     private function setFolderInfo($folderPaths): array
     {
-        $OFolders = array();
+        $OFolders = [];
 
         for ($i = 0, $iMax = count($folderPaths); $i < $iMax; $i++) {
             $path                         = Path::clean($folderPaths[$i]);
@@ -182,7 +182,7 @@ class CwmdirModel extends BaseModel
             $OFolders[$i]->parentFullPath = dirname($path) . '/';
             $OFolders[$i]->parentBasename = basename(dirname($path) . '/');
             $OFolders[$i]->folderCount    = count(Folder::folders($path, '.', false, false));
-            $OFolders[$i]->fileCount      = count(Folder::files($path, '.', false, false, array("index.html")));
+            $OFolders[$i]->fileCount      = count(Folder::files($path, '.', false, false, ["index.html"]));
 
             // Make parent short path for go-up directory
             if ($path === BIBLESTUDY_ROOT_PATH . '/' . basename($path)) {
@@ -210,7 +210,7 @@ class CwmdirModel extends BaseModel
         $currentDir = $this->getCurrentDir(true);
 
         // Get all files
-        $files = Folder::files($currentDir, '.', false, true, array('index.html'));
+        $files = Folder::files($currentDir, '.', false, true, ['index.html']);
 
         return $this->setFileInfo($files);
     }
@@ -226,7 +226,7 @@ class CwmdirModel extends BaseModel
      */
     private function setFileInfo($filePaths): array
     {
-        $OFiles = array();
+        $OFiles = [];
 
         for ($i = 0, $iMax = count($filePaths); $i < $iMax; $i++) {
             $path                 = Path::clean($filePaths[$i]);

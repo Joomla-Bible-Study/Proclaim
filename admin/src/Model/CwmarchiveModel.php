@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -82,16 +82,16 @@ class CwmarchiveModel extends AdminModel
         $timeframe = (int)$data['timeframe'];
 
         // Use this to field (year, month, day)
-        $swich = $data['swich'];
+        $switch = $data['switch'];
 
         // Fields to update.
         $fields = array(
-            $db->qn('published') . ' =' . $db->q('2')
+            $db->qn('published') . ' = ' . $db->q('2')
         );
 
         // Conditions for which records should be updated.
         $conditions = array(
-            $db->qn('studydate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($swich)
+            $db->qn('studydate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($switch)
         );
 
         $query->update($db->quoteName('#__bsms_studies'))->set($fields)->where($conditions);
@@ -106,7 +106,7 @@ class CwmarchiveModel extends AdminModel
 
         // Conditions for which records should be updated.
         $conditions = array(
-            $db->qn('createdate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($swich)
+            $db->qn('createdate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($switch)
         );
 
         $query->update($db->quoteName('#__bsms_mediafiles'))->set($fields)->where($conditions);
@@ -117,7 +117,7 @@ class CwmarchiveModel extends AdminModel
             $mediafiles = $db->getAffectedRows();
         }
 
-        $frame = $timeframe . ' ' . $swich . 's';
+        $frame = $timeframe . ' ' . $switch . 's';
 
         return Text::sprintf('JBS_ARCHIVE_DB_CHANGE', $studies, $mediafiles, $frame);
     }

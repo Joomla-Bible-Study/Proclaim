@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -12,18 +12,15 @@
 namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Legacy\Field;
 
 // phpcs:disable PSR1.Files.SideEffects
-defined('_JEXEC') or die;
+\defined('_JEXEC') or die;
 
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
-
-use function defined;
 
 /**
  * Class JFormFieldPlupload
@@ -47,7 +44,7 @@ class PluploadField extends FormField
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 1.5
      */
     protected function getInput(): string

@@ -5,9 +5,9 @@
     <author>CWM Team</author>
     <authorEmail>info@christianwebministries.org</authorEmail>
     <authorUrl>www.christianwebministries.org</authorUrl>
-    <copyright>(C) 2007 Proclaim All rights reserved.</copyright>
-    <version>10.0.0-beta1</version>
-    <creationDate>Dec 10, 2024</creationDate>
+    <copyright>(C) 2025 Proclaim All rights reserved.</copyright>
+    <version>10.0.1</version>
+    <creationDate>Aug 26, 2025</creationDate>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <description>JBS_INS_XML_DESCRIPTION</description>
     <namespace path="src">CWM\Component\Proclaim</namespace>
@@ -52,12 +52,13 @@
         <filename>joomla.asset.json</filename>
         <filename>index.html</filename>
         <folder>backup</folder>
+        <folder>carousel</folder>
         <folder>css</folder>
         <folder>fancybox</folder>
         <folder>images</folder>
         <folder>js</folder>
         <folder>less</folder>
-        <folder>player</folder>
+        <folder>panzoom</folder>
     </media>
 
     <administration>
@@ -148,6 +149,7 @@
             <folder>language</folder>
             <folder>layouts</folder>
             <folder>postinstall</folder>
+            <folder>presets</folder>
             <folder>services</folder>
             <folder>sql</folder>
             <folder>src</folder>

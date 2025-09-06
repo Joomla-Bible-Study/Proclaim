@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -33,7 +33,7 @@ class CwmlocationTable extends Table
     /**
      * Primary Key
      *
-     * @var integer
+     * @var int
      * @since    7.0.0
      */
     public $id = null;
@@ -41,7 +41,7 @@ class CwmlocationTable extends Table
     /**
      * Published
      *
-     * @var integer
+     * @var int
      * @since    7.0.0
      */
     public $published = 1;

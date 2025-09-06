@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -64,13 +64,13 @@ class CwmtemplatecodeModel extends AdminModel
      * @throws \Exception
      * @since    2.5
      */
-    public function getForm($data = array(), $loadData = true): mixed
+    public function getForm($data = [], $loadData = true): mixed
     {
         // Get the form.
         $form = $this->loadForm(
             'com_proclaim.' . $this->formName,
             $this->formName,
-            array('control' => 'jform', 'load_data' => $loadData)
+            ['control' => 'jform', 'load_data' => $loadData]
         );
 
         if (empty($form)) {
@@ -196,7 +196,7 @@ class CwmtemplatecodeModel extends AdminModel
      * @throws  \Exception
      * @since   3.0
      */
-    public function getTable($name = 'Cwmtemplatecode', $prefix = '', $options = array()): Table
+    public function getTable($name = 'Cwmtemplatecode', $prefix = '', $options = []): Table
     {
         return parent::getTable($name, $prefix, $options);
     }
@@ -212,7 +212,7 @@ class CwmtemplatecodeModel extends AdminModel
     protected function loadFormData(): mixed
     {
         // Check the session for previously entered form data.
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.templatecode.data', array());
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.templatecode.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();

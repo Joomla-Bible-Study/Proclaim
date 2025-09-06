@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -19,7 +19,6 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel;
 use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
@@ -56,7 +55,7 @@ class CwmmediafileController extends FormController
      *
      * @return  bool  True, if the record can be added, a error object if not.
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   12.2
      */
     public function add(): bool
@@ -82,7 +81,7 @@ class CwmmediafileController extends FormController
      *
      * @return  boolean
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   9.0.0
      */
     public function edit($key = null, $urlVar = null): bool
@@ -104,7 +103,7 @@ class CwmmediafileController extends FormController
      *
      * @return void
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   9.0.0
      */
     public function xhr(): void
@@ -160,7 +159,7 @@ class CwmmediafileController extends FormController
      *
      * @return  boolean  True if access level checks pass, false otherwise.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   12.2
      */
     public function cancel($key = null): bool
@@ -258,7 +257,7 @@ class CwmmediafileController extends FormController
      *
      * @return  void
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   9.0.0
      */
     public function setServer(): void
@@ -269,7 +268,7 @@ class CwmmediafileController extends FormController
         $app   = Factory::getApplication();
         $input = $app->input;
 
-        $data      = $input->get('jform', array(), 'post', 'array');
+        $data      = $input->get('jform', [], 'post', 'array');
         $cdate     = $data['createdate'];
         $study_id  = $data['study_id'];
         $server_id = $data['server_id'];
@@ -293,10 +292,10 @@ class CwmmediafileController extends FormController
      *
      * @return    void
      *
-     * @throws   Exception
+     * @throws   \Exception
      * @since    3.1
      */
-    protected function postSaveHook($model, $validData = array()): void
+    protected function postSaveHook($model, $validData = []): void
     {
         $return = $this->input->getCmd('return');
         $task   = $this->input->get('task');

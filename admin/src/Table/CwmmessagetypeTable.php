@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -33,7 +33,7 @@ class CwmmessagetypeTable extends Table
     /**
      * Primary Key
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -51,7 +51,7 @@ class CwmmessagetypeTable extends Table
     /**
      * Published
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -98,7 +98,7 @@ class CwmmessagetypeTable extends Table
      * @param   mixed  $array   An associative array or object to bind to the Table instance.
      * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1

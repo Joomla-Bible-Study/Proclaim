@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -25,8 +25,8 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 
 $app       = Factory::getApplication();
-$user      = $app->getIdentity();
-$userId    = $user->get('id');
+$user      = $this->getCurrentUser();
+$userId    = $user->id;
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $archived  = $this->state->get('filter.published') == 2 ? true : false;
@@ -286,7 +286,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                             ); ?>
                                 </td>
                                 <td class="nowrap has-context">
-                                    <div class="pull-left">
+                                    <div class="float-left">
                                         <?php
                                 if ($canEdit || $canEditOwn) : ?>
                                             <a href="<?php

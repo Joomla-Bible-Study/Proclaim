@@ -2,7 +2,7 @@
 
 /**
  * @package        Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  */
@@ -14,7 +14,6 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
@@ -79,7 +78,7 @@ class DisplayController extends BaseController
      * @throws \Exception
      * @since   1.5
      */
-    public function display($cachable = false, $urlparams = array()): BaseController|bool
+    public function display($cachable = false, $urlparams = []): BaseController|bool
     {
         // Get the document object.
         $document = $this->app->getDocument();
@@ -102,7 +101,7 @@ class DisplayController extends BaseController
             return false;
         }
 
-        $safeurlparams = array(
+        $safeurlparams = [
             'catid'            => 'INT',
             'id'               => 'INT',
             'cid'              => 'ARRAY',
@@ -117,18 +116,18 @@ class DisplayController extends BaseController
             'filter_order_Dir' => 'CMD',
             'filter-search'    => 'STRING',
             'print'            => 'BOOLEAN',
-            'lang'             => 'CMD'
-        );
-//
-//      // Get and render the view.
-//      if ($view = $this->getView($vName, $vFormat))
-//      {
-//          // Get the model for the view.
-//          $model = $this->getModel($vName, 'Administrator', ['name' => $vName . '.' . substr($this->extension, 4)]);
-//
-//          // Push the model into the view (as default).
-//          $view->setModel($model, true);
-//      }
+            'lang'             => 'CMD',
+        ];
+        //
+        //      // Get and render the view.
+        //      if ($view = $this->getView($vName, $vFormat))
+        //      {
+        //          // Get the model for the view.
+        //          $model = $this->getModel($vName, 'Administrator', ['name' => $vName . '.' . substr($this->extension, 4)]);
+        //
+        //          // Push the model into the view (as default).
+        //          $view->setModel($model, true);
+        //      }
 
         return parent::display($cachable, $safeurlparams);
     }

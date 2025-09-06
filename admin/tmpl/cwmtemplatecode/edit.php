@@ -4,7 +4,7 @@
  * Form
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -76,7 +76,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     </div>
                     <div class="controls">
                         <?php
-                        if ($this->item->id === 0) {
+                        if ($this->item->id == 0) {
                             echo $this->form->getInput('type');
                         } else {
                             ?><label id="jform_type-lbl" for="jform_type"

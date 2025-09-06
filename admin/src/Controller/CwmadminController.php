@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -24,13 +24,12 @@ use CWM\Component\Proclaim\Administrator\Lib\CwmpIconvert;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmrestore;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmssconvert;
 use CWM\Component\Proclaim\Administrator\Model\CwmarchiveModel;
-use Exception;
 use Joomla\CMS\Factory;
-use Joomla\Filesystem\Folder;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
+use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
 
 /**
@@ -50,11 +49,11 @@ class CwmadminController extends FormController
     protected $view_list = 'cwmcpanel';
 
     /**
-     * Tools to change player or popup
+     * Tools to change player or pop-up
      *
      * @return void
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.0.0
      */
     public function tools(): void
@@ -99,7 +98,7 @@ class CwmadminController extends FormController
         $from = $reg->get('from', 'x');
         $to   = $reg->get('to', 'x');
 
-        if ($from != 'x' && $to != 'x') {
+        if ($from !== 'x' && $to !== 'x') {
             $query = $db->getQuery(true);
             $query->select('id, params')
                 ->from('#__bsms_mediafiles');
@@ -125,7 +124,7 @@ class CwmadminController extends FormController
                 }
             }
         } else {
-            $msg = Text::_('JBS_ADM_ERROR_OCCURED') . ': Missed setting the From or Two';
+            $msg = Text::_('JBS_ADM_ERROR_OCCURED') . ': Missed setting the From or To';
         }
 
         $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
@@ -191,7 +190,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0.0
      */
     public function mediaimages(): void
@@ -526,7 +525,7 @@ class CwmadminController extends FormController
     }
 
     /**
-     * Convert PreachIt to BibleStudy
+     * Convert PreachIt to Proclaim
      *
      * @return void
      *
@@ -543,11 +542,11 @@ class CwmadminController extends FormController
     }
 
     /**
-     * Reset Db to install
+     * Reset the DB to install
      *
      * @return void
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.1.0
      */
     public function dbReset(): void
@@ -593,7 +592,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.0.0
      */
     public function doimport(bool $parent = true): void
@@ -618,10 +617,9 @@ class CwmadminController extends FormController
         } else {
             $import = new Cwmrestore();
             $import->importdb($parent);
-            $alt    = '&cwmalt=1';
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwminstall&scanstate=start&cwmimport=1' . $alt);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel');
     }
 
     /**
@@ -631,7 +629,7 @@ class CwmadminController extends FormController
      *
      * @return bool
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.0.0
      */
     public function copyTables(string $oldprefix): bool
@@ -680,7 +678,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.1.0
      */
     public function import(): void
@@ -708,7 +706,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0.0
      */
     public function export(): void
@@ -739,7 +737,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @since 9.0.0
      */
@@ -748,7 +746,7 @@ class CwmadminController extends FormController
         $app          = Factory::getApplication();
         $document     = $app->getDocument();
         $input        = $app->getInput();
-        $images_paths = array();
+        $images_paths = [];
 
         $document->setMimeEncoding('application/json');
 
@@ -762,10 +760,10 @@ class CwmadminController extends FormController
                 $count += count($images);
             }
 
-            $images_paths[] = array(array('type' => $image_type, 'images' => $images));
+            $images_paths[] = [['type' => $image_type, 'images' => $images]];
         }
 
-        echo json_encode(array('total' => $count, 'paths' => $images_paths), JSON_THROW_ON_ERROR);
+        echo json_encode(['total' => $count, 'paths' => $images_paths], JSON_THROW_ON_ERROR);
 
         $app->close();
     }
@@ -775,7 +773,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @since 9.0.0
      */
@@ -810,7 +808,7 @@ class CwmadminController extends FormController
         $model = new CwmarchiveModel();
         try {
             $msg = $model->doArchive();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new \RuntimeException($e);
         }
         $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', $msg);
@@ -824,7 +822,7 @@ class CwmadminController extends FormController
      *
      * @return bool
      *
-     * @throws Exception
+     * @throws \Exception
      * @since version
      */
     public function submit(?int $key = null, ?string $urlVar = null): bool
@@ -842,7 +840,7 @@ class CwmadminController extends FormController
         }
 
         // Name of an array 'jform' must match 'control' => 'jform' line in the model code
-        $data = $this->input->post->get('jform', array(), 'array');
+        $data = $this->input->post->get('jform', [], 'array');
 
         // This is validate() from the FormModel class, not the Form class
         // FormModel::validate() calls both Form::filter() and Form::validate() methods
@@ -852,7 +850,7 @@ class CwmadminController extends FormController
             $errors = $model->getErrors();
 
             foreach ($errors as $error) {
-                if ($error instanceof Exception) {
+                if ($error instanceof \Exception) {
                     $app->enqueueMessage($error->getMessage(), 'warning');
                 } else {
                     $app->enqueueMessage($error, 'warning');

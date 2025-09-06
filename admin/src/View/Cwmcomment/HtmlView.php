@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -117,7 +117,7 @@ class HtmlView extends BaseHtmlView
             'comment comment'
         );
 
-        if ($isNew && $this->canDo->get('core.create', 'com_proclaim')) {
+	    if ($isNew && $this->canDo->get('core.create', 'com_proclaim')) {
             ToolbarHelper::apply('cwmcomment.apply');
             ToolbarHelper::save('cwmcomment.save');
             ToolbarHelper::save2new('cwmcomment.save2new');
@@ -132,6 +132,9 @@ class HtmlView extends BaseHtmlView
         }
 
         ToolbarHelper::divider();
-        ToolbarHelper::help('proclaim', true);
+       
+	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=31:comment-editing-help&catid=20&Itemid=315&tmpl=component';
+	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
+
     }
 }

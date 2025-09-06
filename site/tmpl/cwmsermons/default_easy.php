@@ -4,7 +4,7 @@
  * Helper for Template Code
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -56,13 +56,10 @@ $columns   = 12;
     echo $this->page->books;
     echo $this->page->teachers;
     echo $this->page->series;
-    $oddeven = '';
-    $class1  = '#d3d3d3';
-    $class2  = ''; ?>
+    ?>
 </div>
 <?php
 foreach ($this->items as $study) {
-    $oddeven = ($oddeven == $class1) ? $class2 : $class1;
     ?>
     <div style="width:100%;">
         <div class="col-lg-3">

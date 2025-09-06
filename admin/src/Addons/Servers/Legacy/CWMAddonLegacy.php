@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -18,7 +18,6 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Legacy;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmuploadscript;
-use Exception;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
@@ -53,7 +52,7 @@ class CWMAddonLegacy extends CWMAddon
      *
      * @return array
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     public function upload(?array $data): array
@@ -62,7 +61,7 @@ class CWMAddonLegacy extends CWMAddon
     }
 
     /**
-     * Render Fields for general view.
+     * Render Fields for the general view.
      *
      * @param object  $media_form  Media files form
      * @param bool    $new         If media is new
@@ -103,7 +102,7 @@ class CWMAddonLegacy extends CWMAddon
      * Render Layout and fields
      *
      * @param object  $media_form  Media files form
-     * @param bool    $new         If media is new
+     * @param bool    $new         If the media is new
      *
      * @return string
      *

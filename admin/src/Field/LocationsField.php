@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -50,6 +50,7 @@ class LocationsField extends ListField
         $query = $db->getQuery(true);
         $query->select('id,location_text');
         $query->from('#__bsms_locations');
+        $query->order('location_text');
         $db->setQuery((string)$query);
         $messages = $db->loadObjectList();
         $options  = array();

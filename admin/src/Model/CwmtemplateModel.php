@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -38,9 +37,9 @@ class CwmtemplateModel extends AdminModel
      *
      * @param   array  $data  The form data.
      *
-     * @return  boolean  True on success, False on error.
+     * @return  bool  True on success, False on error.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   12.2
      */
     public function save($data)
@@ -67,9 +66,9 @@ class CwmtemplateModel extends AdminModel
      *
      * @param   array  $cid  ID of template
      *
-     * @return boolean
+     * @return bool
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function copy($cid)
@@ -100,7 +99,7 @@ class CwmtemplateModel extends AdminModel
      *
      * @return  bool  True on success.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   12.2
      */
     public function publish(&$pks, $value = 1): bool
@@ -123,16 +122,16 @@ class CwmtemplateModel extends AdminModel
      *
      * @return  mixed  A JForm object on success, false on failure
      *
-     * @throws Exception
+     * @throws \Exception
      * @since  7.0
      */
-    public function getForm($data = array(), $loadData = true): mixed
+    public function getForm($data = [], $loadData = true): mixed
     {
         // Get the form.
         $form = $this->loadForm(
             'com_proclaim.template',
             'template',
-            array('control' => 'jform', 'load_data' => $loadData)
+            ['control' => 'jform', 'load_data' => $loadData]
         );
 
         return $form ?? false;
@@ -161,10 +160,10 @@ class CwmtemplateModel extends AdminModel
      *
      * @return  Table  A Table object
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   3.0
      */
-    public function getTable($name = 'Cwmtemplate', $prefix = '', $options = array()): Table
+    public function getTable($name = 'Cwmtemplate', $prefix = '', $options = []): Table
     {
         return parent::getTable($name, $prefix, $options);
     }
@@ -174,12 +173,12 @@ class CwmtemplateModel extends AdminModel
      *
      * @return  array|CMSObject    The default data is an empty array.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   7.0
      */
     protected function loadFormData(): array|CMSObject
     {
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.template.data', array());
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.template.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();

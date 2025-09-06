@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,16 +16,16 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
-use Exception;
+use CWM\Component\Proclaim\Administrator\Controller\DisplayController;
 use http\Exception\RuntimeException;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Installer\InstallerHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
+use Joomla\Component\Installer\Administrator\Model\DatabaseModel;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Filesystem\Path;
-use Joomla\CMS\Installer\InstallerHelper;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\MVC\Controller\BaseController;
 
 /**
  * Restore class
@@ -95,12 +95,12 @@ class Cwmrestore
         $prefix    = $db->getPrefix();
         $prelength = strlen($prefix);
         $bsms      = 'bsms_';
-        $objects   = array();
+        $objects   = [];
 
         foreach ($tables as $table) {
             if (substr_count($table, $bsms)) {
                 $table     = substr_replace($table, '#__', 0, $prelength);
-                $objects[] = array('name' => $table);
+                $objects[] = ['name' => $table];
             }
         }
 
@@ -160,31 +160,25 @@ class Cwmrestore
      *
      * @return bool|array
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     public function importdb($parent): bool|array
     {
-        jimport('joomla.filesystem.file');
-
-        /**
-         * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
-         */
-        set_time_limit(3000);
-
-        $input         = Factory::getApplication()->input;
+        $input         = Factory::getApplication()->getInput();
         $installtype   = $input->getPath('install_directory');
         $backuprestore = $input->getWord('backuprestore', '');
+        $controlser    = new DisplayController();
+        $this->dbo     = Factory::getContainer()->get('DatabaseDriver');
 
         // Restore form prior backup files located on the server.
         if (substr_count($backuprestore, '.sql')) {
-            $restored = self::restoreDB($backuprestore);
+            $restored      = self::restoreDB($backuprestore);
 
             if ($restored) {
-                $result = true;
-
-                return $result;
+                return true;
             }
+            return false;
         }
 
         // Start finding how to restore files.
@@ -194,11 +188,10 @@ class Cwmrestore
             ) . '/'
         ) {
             $uploadresults = self::getPackageFromFolder();
-            $result        = $uploadresults;
         } else {
             $uploadresults = $this->getPackageFromUpload();
-            $result        = $uploadresults;
         }
+        $result = $uploadresults;
 
         if ($result) {
             switch ($result['type']) {
@@ -215,32 +208,51 @@ class Cwmrestore
 
             $result = self::installdb($tmp_src, $parent);
 
-            // Cleanup the installation files.
+            // Get Proclaim extension ID
+            $query      = $this->dbo->getQuery(true);
+            $query->select('extension_id');
+            $query->from('#__extensions');
+            $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_proclaim'));
+            $this->dbo->setQuery($query);
+            $cid           = (int) $this->dbo->loadResult();
+
+            // Fix the Proclaim Database after restore
+            $DatabaseModel = new DatabaseModel();
+            $DatabaseModel->fix([$cid]);
+
+            /** @var \Joomla\Component\Joomlaupdate\Administrator\Model\UpdateModel $updateModel */
+            $updateModel = Factory::getApplication()->bootComponent('com_joomlaupdate')
+                ->getMVCFactory()->createModel('Update', 'Administrator', ['ignore_request' => true]);
+            $updateModel->purge();
+
+            // Refresh versionable assets cache
+            Factory::getApplication()->flushAssets();
+
+            // Clean up the installation files.
             if (!is_file($uploadresults['packagefile'])) {
-                $config                 = Factory::getApplication()->getConfig();
-                $package['packagefile'] = $config->get('tmp_path') . '/' . $uploadresults['packagefile'];
+                $config                       = Factory::getApplication()->getConfig();
+                $uploadresults['packagefile'] = $config->get('tmp_path') . '/' . $uploadresults['packagefile'];
             }
 
             InstallerHelper::cleanupInstall($uploadresults['packagefile'], $uploadresults['extractdir']);
 
-            if (($parent !== true) && $result) {
-                $controlser = BaseController::getInstance('Proclaim');
-                $controlser->setRedirect('index.php?option=com_proclaim&task=cwmadmin.fixasset');
-                $controlser->redirect();
-            }
+            // Redirect to the fixassets after restore
+            $controlser->setRedirect('index.php?option=com_proclaim&task=cwmassets.browse&' . Session::getFormToken(
+            ) . '=1');
+            $controlser->redirect();
         }
 
         return $result;
     }
 
     /**
-     * Restore DB for exerting Proclaim
+     * Restore DB for Proclaim
      *
      * @param   string  $backuprestore  file name to restore
      *
      * @return bool See if the restore worked.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     public static function restoreDB($backuprestore): bool
@@ -248,13 +260,13 @@ class Cwmrestore
         $app = Factory::getApplication();
         $db  = Factory::getContainer()->get('DatabaseDriver');
         /**
-         * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
+         * Attempt to increase the maximum execution time for PHP scripts with a check for safe_mode.
          */
         set_time_limit(3000);
 
         $query = file_get_contents(JPATH_SITE . '/media/com_proclaim/backup/' . $backuprestore);
 
-        // Check to see if this is a backup from an old db and not a migration
+        // Check to see if this is a backup from an old DB and not a migration
         $isold   = substr_count($query, '#__bsms_admin_genesis');
         $isnot   = substr_count($query, '#__bsms_studies');
         $iscernt = substr_count($query, BIBLESTUDY_VERSION_UPDATEFILE);
@@ -297,7 +309,7 @@ class Cwmrestore
      *
      * @return array|bool
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     private static function getPackageFromFolder(): bool|array
@@ -326,7 +338,7 @@ class Cwmrestore
      *
      * @return bool|array
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     public function getPackageFromUpload(): bool|array
@@ -337,14 +349,14 @@ class Cwmrestore
         // Get the uploaded file information
         $userfile = $input->files->get('importdb', null, 'raw');
 
-        // Make sure that file uploads are enabled in php
+        // Make sure that file uploads are enabled in PHP
         if (!(bool)ini_get('file_uploads')) {
             $app->enqueueMessage(Text::_('JBS_IBM_ERROR_PHP_UPLOAD_NOT_ENABLED'), 'warning');
 
             return false;
         }
 
-        // Make sure that zlib is loaded so that the package can be unpacked.
+        // Ensure that zlib is loaded so that the package can be unpacked.
         if (!extension_loaded('zlib')) {
             $app->enqueueMessage(Text::_('JBS_IBM_ERROR_UPLOAD_FAILED_ZLIB'), 'error');
 
@@ -418,28 +430,21 @@ class Cwmrestore
      * Install DB
      *
      * @param   string  $tmp_src  Temp info
-     * @param   bool      $parent   To tell if coming from migration
+     * @param   bool    $parent   To tell if coming from migration
      *
      * @return bool if db installed correctly.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     protected static function installdb(string $tmp_src, bool $parent = true): bool
     {
-        /**
-         * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
-         */
-        if (!ini_get('safe_mode')) {
-            set_time_limit(3000);
-        }
-
         $app = Factory::getApplication();
         $db  = Factory::getContainer()->get('DatabaseDriver');
 
         $query = file_get_contents($tmp_src);
 
-        // Graceful exit and rollback if read not successful
+        // Graceful exit and rollback if read is not successful
         if ($query === false) {
             $app->enqueueMessage(Text::_('JBS_INS_ERROR_SQL_READBUFFER'), 'error');
 
@@ -464,7 +469,7 @@ class Cwmrestore
         }
 
         if (($iscernt === 0) && ($parent !== true)) {
-            // Way to check to see if a file came from restore and is current.
+            // Way to check if a file came from a restore and is current.
             $app->enqueueMessage(Text::_('JBS_IBM_NOT_CURENT_DB'), 'warning');
 
             return false;
@@ -487,7 +492,7 @@ class Cwmrestore
             return false;
         }
 
-        // Process each query in the $queries array (split out of sql file).
+        // Process each query in the $queries array (split out of the SQL file).
         foreach ($queries as $query) {
             $query = trim($query);
 

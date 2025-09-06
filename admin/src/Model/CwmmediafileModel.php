@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -30,7 +30,6 @@ use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
-use Joomla\Utilities\ArrayHelper;
 
 /**
  * MediaFile model class
@@ -115,7 +114,7 @@ class CwmmediafileModel extends AdminModel
      * @throws  \Exception
      * @since   3.0
      */
-    public function getTable($name = 'Cwmmediafile', $prefix = '', $options = array()): Table
+    public function getTable($name = 'Cwmmediafile', $prefix = '', $options = []): Table
     {
         return parent::getTable($name, $prefix, $options);
     }
@@ -269,7 +268,7 @@ class CwmmediafileModel extends AdminModel
             $form = $this->loadForm(
                 'com_proclaim.mediafile.media',
                 "media",
-                array('control' => 'jform', 'load_data' => true),
+                ['control' => 'jform', 'load_data' => true],
                 true,
                 "/media"
             );
@@ -354,7 +353,7 @@ class CwmmediafileModel extends AdminModel
      * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = [], $loadData = true)
     {
         if (empty($data)) {
             $this->getItem();
@@ -365,7 +364,7 @@ class CwmmediafileModel extends AdminModel
         $form = $this->loadForm(
             'com_proclaim.mediafile',
             'mediafile',
-            array('control' => 'jform', 'load_data' => $loadData)
+            ['control' => 'jform', 'load_data' => $loadData]
         );
 
         if ($form === null) {
@@ -656,14 +655,14 @@ class CwmmediafileModel extends AdminModel
      * @throws \Exception
      * @since   12.2
      */
-    public function checkin($pks = array())
+    public function checkin($pks = [])
     {
         $pks   = (array)$pks;
         $table = $this->getTable();
         $count = 0;
 
         if (empty($pks)) {
-            $pks = array((int)$this->getState('mediafile.id'));
+            $pks = [(int)$this->getState('mediafile.id')];
         }
 
         // Check in all items.
@@ -722,7 +721,7 @@ class CwmmediafileModel extends AdminModel
      */
     protected function loadFormData(): object
     {
-        $session = Factory::getApplication()->getUserState('com_proclaim.mediafile.edit.data', array());
+        $session = Factory::getApplication()->getUserState('com_proclaim.mediafile.edit.data', []);
 
         return empty($session) ? $this->data : $session;
     }
@@ -770,7 +769,7 @@ class CwmmediafileModel extends AdminModel
      */
     protected function getReorderConditions($table): array
     {
-        $condition   = array();
+        $condition   = [];
         $condition[] = 'study_id = ' . (int)$table->study_id;
 
         return $condition;

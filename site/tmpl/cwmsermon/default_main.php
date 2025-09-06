@@ -4,7 +4,7 @@
  * Default Main
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,6 +16,7 @@
 
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\View\HtmlView;
 
 // Create shortcuts to some parameters.
 /** @type Joomla\Registry\Registry $params */
@@ -23,10 +24,8 @@ $params  = $this->item->params;
 $user    = Factory::getApplication()->getSession()->get('user');
 $canEdit = $params->get('access-edit');
 
-$JViewLegacy = new JViewLegacy();
-
-$JViewLegacy->loadHelper('title');
-$JViewLegacy->loadHelper('teacher');
+$this->loadHelper('title');
+$this->loadHelper('teacher');
 $row = $this->item;
 ?>
 

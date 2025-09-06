@@ -4,7 +4,7 @@
  * Default Custom
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -70,5 +70,5 @@ echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="admi
     <input name="option" value="com_proclaim" type="hidden">
     <input name="task" value="" type="hidden">
     <input name="boxchecked" value="0" type="hidden">
-    <input name="controller" value="CWMSeriesDisplay" type="hidden">
+    <input name="controller" value="cwmseriesdisplay" type="hidden">
 </form>

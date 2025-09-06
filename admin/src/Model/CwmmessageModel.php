@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -21,7 +21,6 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use CWM\Component\Proclaim\Administrator\Table\CwmmessageTable;
-use Exception;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
@@ -32,7 +31,6 @@ use Joomla\CMS\Table\Table;
 use Joomla\CMS\Workflow\Workflow;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
-use Joomla\Utilities\ArrayHelper;
 
 /**
  * Message model class
@@ -102,14 +100,14 @@ class CwmmessageModel extends AdminModel
      *
      * @return string JSON Object containing the topics
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0.1
      */
     public function getTopics(): string
     {
         // Do search in case of present study only, suppress otherwise
         $input          = new Input();
-        $translatedList = array();
+        $translatedList = [];
         $id             = $input->get('a_id', 0, 'int');
 
         if (!$id) {
@@ -132,10 +130,10 @@ class CwmmessageModel extends AdminModel
             if ($topics) {
                 foreach ($topics as $topic) {
                     $text             = Cwmtranslated::getTopicItemTranslated($topic);
-                    $translatedList[] = array(
+                    $translatedList[] = [
                         'id'   => $topic->id,
-                        'name' => $text
-                    );
+                        'name' => $text,
+                    ];
                 }
             }
         }
@@ -148,7 +146,7 @@ class CwmmessageModel extends AdminModel
      *
      * @return string JSON Object containing the topics
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0.1
      */
     public function getAlltopics()
@@ -161,15 +159,15 @@ class CwmmessageModel extends AdminModel
 
         $db->setQuery($query->__toString());
         $topics         = $db->loadObjectList();
-        $translatedList = array();
+        $translatedList = [];
 
         if ($topics) {
             foreach ($topics as $topic) {
                 $text             = Cwmtranslated::getTopicItemTranslated($topic);
-                $translatedList[] = array(
+                $translatedList[] = [
                     'id'   => $topic->id,
-                    'name' => $text
-                );
+                    'name' => $text,
+                ];
             }
         }
 
@@ -180,7 +178,7 @@ class CwmmessageModel extends AdminModel
      * Returns a list of media files associated with this study
      *
      * @return object
-     * @throws Exception
+     * @throws \Exception
      * @since   7.0
      */
     public function getMediaFiles()
@@ -217,7 +215,7 @@ class CwmmessageModel extends AdminModel
      *
      * @return  mixed
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   9.0.0
      */
     public function getItem($pk = null): mixed
@@ -248,7 +246,7 @@ class CwmmessageModel extends AdminModel
      *
      * @return bool
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0.1
      */
     public function save($data): bool
@@ -310,10 +308,10 @@ class CwmmessageModel extends AdminModel
      *
      * @return bool|Form
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = array(), $loadData = true): bool|Form
+    public function getForm($data = [], $loadData = true): bool|Form
     {
         $app = Factory::getApplication();
 
@@ -321,7 +319,7 @@ class CwmmessageModel extends AdminModel
         $form = $this->loadForm(
             'com_proclaim.cwmmessage',
             'message',
-            array('control' => 'jform', 'load_data' => $loadData)
+            ['control' => 'jform', 'load_data' => $loadData]
         );
 
         if ($form === null) {
@@ -389,14 +387,14 @@ class CwmmessageModel extends AdminModel
      *
      * @return  mixed
      *
-     * @throws Exception
+     * @throws \Exception
      * @since    11.1
      */
     public function saveorder($pks = null, $order = null): mixed
     {
         $db         = Factory::getContainer()->get('DatabaseDriver');
         $row        = new CwmmessageTable($db);
-        $conditions = array();
+        $conditions = [];
 
         // Update ordering values
         foreach ($pks as $i => $pk) {
@@ -427,7 +425,7 @@ class CwmmessageModel extends AdminModel
 
                 if (!$found) {
                     $key          = $row->getKeyName();
-                    $conditions[] = array($row->$key, $condition);
+                    $conditions[] = [$row->$key, $condition];
                 }
             }
         }
@@ -453,7 +451,7 @@ class CwmmessageModel extends AdminModel
      *
      * @return  bool  True if successful, false otherwise and internal error is set.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   2.5
      */
     protected function batchTeacher($value, $pks, $contexts): bool
@@ -496,10 +494,10 @@ class CwmmessageModel extends AdminModel
      *
      * @return  Table  A Table object
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   3.0
      */
-    public function getTable($name = 'Cwmmessage', $prefix = '', $options = array()): Table
+    public function getTable($name = 'Cwmmessage', $prefix = '', $options = []): Table
     {
         return parent::getTable($name, $prefix, $options);
     }
@@ -513,7 +511,7 @@ class CwmmessageModel extends AdminModel
      *
      * @return  boolean  True if successful, false otherwise and internal error is set.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   2.5
      */
     protected function batchSeries($value, $pks, $contexts): bool
@@ -556,7 +554,7 @@ class CwmmessageModel extends AdminModel
      *
      * @return  bool  True if successful, false otherwise and internal error is set.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   2.5
      */
     protected function batchMessageType(string $value, array $pks, array $contexts): bool
@@ -595,12 +593,12 @@ class CwmmessageModel extends AdminModel
      *
      * @return  mixed    The default data is an empty array.
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.0
      */
     protected function loadFormData(): mixed
     {
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.message.data', array());
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.message.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();
@@ -616,7 +614,7 @@ class CwmmessageModel extends AdminModel
      *
      * @return    void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since    1.6
      */
     protected function prepareTable($table): void

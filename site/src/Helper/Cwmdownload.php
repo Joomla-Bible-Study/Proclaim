@@ -4,7 +4,7 @@
  * Proclaim Download Class
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -92,9 +92,9 @@ class Cwmdownload
         $download_file = Cwmhelper::mediaBuildUrl($media->spath, $params->get('filename'), $params, true);
 
         if ((int)$params->get('size', 0) === 0) {
-            $getsize = Cwmhelper::getRemoteFileSize($download_file);
+            $getSize = Cwmhelper::getRemoteFileSize($download_file);
         } else {
-            $getsize = $params->get('size', 0);
+            $getSize = $params->get('size', 0);
         }
 
         @set_time_limit(0);
@@ -127,7 +127,7 @@ class Cwmdownload
         header("Cache-Control: private", false);
         header('Pragma: public');
         header("Content-Transfer-Encoding: binary");
-        header('Content-Length: ' . $getsize);
+        header('Content-Length: ' . $getSize);
 
         // Repeat reading until EOF
         while (!feof($fh)) {

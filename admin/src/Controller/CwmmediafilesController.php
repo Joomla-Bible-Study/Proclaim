@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -18,14 +18,12 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel;
 use CWM\Component\Proclaim\Administrator\Model\CwmmediafilesModel;
-use CWM\Component\Proclaim\Administrator\Model\CwmmessagesModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\Response\JsonResponse;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
-use Joomla\Utilities\ArrayHelper;
 
 /**
  * MediaFiles list controller class
@@ -48,7 +46,7 @@ class CwmmediafilesController extends AdminController
         // Check for request forgeries.
         Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-        $ids = Factory::getApplication()->input->post->get('cid', array(), 'array');
+        $ids = Factory::getApplication()->input->post->get('cid', [], 'array');
 
         /** @var CwmmediafileModel $model */
         $model  = $this->getModel($name = 'Cwmmediafile', $prefix = 'Administrator', $config = ['ignore_request' => true]);
@@ -74,38 +72,6 @@ class CwmmediafilesController extends AdminController
         );
 
         return true;
-    }
-
-    /**
-     * Method to save the submitted ordering values for records via AJAX.
-     *
-     * @return    void
-     *
-     * @throws \Exception
-     * @since   3.0
-     */
-    public function saveOrderAjax()
-    {
-        // Get the input
-        $pks   = $this->input->post->get('cid', array(), 'array');
-        $order = $this->input->post->get('order', array(), 'array');
-
-        // Sanitize the input
-        ArrayHelper::toInteger($pks);
-        ArrayHelper::toInteger($order);
-
-        // Get the model
-        $model = $this->getModel();
-
-        // Save the ordering
-        $return = $model->saveorder($pks, $order);
-
-        if ($return) {
-            echo "1";
-        }
-
-        // Close the application
-        Factory::getApplication()->close();
     }
 
     /**

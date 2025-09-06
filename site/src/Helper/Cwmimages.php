@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -168,8 +169,12 @@ class Cwmimages
      *
      * @since    7.0
      */
-    public static function getSeriesThumbnail(?string $image = 'openbible.png'): object
+    public static function getSeriesThumbnail(?string $image): object
     {
+        if ($image === null) {
+            return self::getImagePath('');
+        }
+
         $folder = self::getSeriesImageFolder();
         $path   = $folder . '/' . $image;
 
@@ -313,7 +318,7 @@ class Cwmimages
      * Get Show Hide
      *
      * @return object
-     * @throws \Exception
+     * @throws Exception
      * @example  {
      *             path: 'string',
      *             width: integer,

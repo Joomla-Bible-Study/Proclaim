@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -124,6 +124,8 @@ class HtmlView extends BaseHtmlView
     {
         $canDo = ContentHelper::getActions('com_proclaim');
         ToolbarHelper::title(Text::_('JBS_CMN_SERVERS'), 'database database');
+	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
+	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
 
         if ($canDo->get('core.create')) {
             ToolbarHelper::addNew('cwmserver.add');

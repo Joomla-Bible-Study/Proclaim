@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -190,7 +190,7 @@ class MediaFileImagesField extends ListField
      *
      * @since 7.0
      */
-    public function getButton($media)
+    public function getButton(object $media): ?string
     {
         $button = null;
 
@@ -231,7 +231,7 @@ class MediaFileImagesField extends ListField
      *
      * @since 7.0
      */
-    public function getIcon($media)
+    public function getIcon(object $media): string
     {
         $MediaHelper = new Cwmmedia();
         $mimetypes   = $MediaHelper->getIcons();

@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\QueryInterface;
 
 /**
  * Message model class
@@ -37,10 +38,10 @@ class CwmmessagesModel extends ListModel
      * @since   11.1
      * @see     Controller
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array(
+            $config['filter_fields'] = [
                 'id',
                 'study.id',
                 'publish_up',
@@ -71,8 +72,8 @@ class CwmmessagesModel extends ListModel
                 'access_level',
                 'location',
                 'location.location_text',
-                'language'
-            );
+                'language',
+            ];
         }
 
         parent::__construct($config);
@@ -91,7 +92,7 @@ class CwmmessagesModel extends ListModel
      *
      * @since   7.1.0
      */
-    protected function getStoreId($id = '')
+    protected function getStoreId($id = ''): string
     {
         // Compile the store id.
         $id .= ':' . $this->getState('filter.published');
@@ -193,7 +194,7 @@ class CwmmessagesModel extends ListModel
     /**
      * Build an SQL query to load the list data
      *
-     * @return  \Joomla\Database\QueryInterface
+     * @return  QueryInterface|string
      *
      * @throws \Exception
      * @since   7.0
@@ -295,8 +296,11 @@ class CwmmessagesModel extends ListModel
             if (stripos($search, 'id:') === 0) {
                 $query->where('study.id = ' . (int)substr($search, 3));
             } else {
-                $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where('(study.studytitle LIKE ' . $search . ' OR study.alias LIKE ' . $search . ')');
+                $search = '%' . str_replace(' ', '%', trim($search)) . '%';
+                $query->where(
+                    '(' . $db->quoteName('study.studytitle') . ' LIKE :search1 OR ' . $db->quoteName('study.alias') . ' LIKE :search2)'
+                )
+                    ->bind([':search1', ':search2'], $search);
             }
         }
 

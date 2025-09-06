@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -30,7 +30,7 @@ class CwmmessagetypesModel extends ListModel
     /**
      * Number of Deletions
      *
-     * @var integer
+     * @var int
      * @since 7.0.0
      */
     private $deletes;
@@ -43,10 +43,10 @@ class CwmmessagetypesModel extends ListModel
      * @throws \Exception
      * @since 7.0.0
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array(
+            $config['filter_fields'] = [
                 'id',
                 'messagetype.id',
                 'published',
@@ -57,8 +57,8 @@ class CwmmessagetypesModel extends ListModel
                 'messagetype.ordering',
                 'access',
                 'messagetype.access',
-                'access_level'
-            );
+                'access_level',
+            ];
         }
 
         parent::__construct($config);
@@ -67,7 +67,7 @@ class CwmmessagetypesModel extends ListModel
     /**
      * Get Deletes
      *
-     * @return integer|object[]
+     * @return int|object[]
      *
      * @since 7.0.0
      */

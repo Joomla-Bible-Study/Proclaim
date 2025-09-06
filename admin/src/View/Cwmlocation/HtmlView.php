@@ -4,7 +4,7 @@
  * View html
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -134,6 +134,8 @@ class HtmlView extends BaseHtmlView
         }
 
         ToolbarHelper::divider();
-        ToolbarHelper::help('proclaim', true);
+	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=32:location-edit-screen-help&catid=20&Itemid=315&tmpl=component';
+	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
+
     }
 }

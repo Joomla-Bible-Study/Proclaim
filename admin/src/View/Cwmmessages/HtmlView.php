@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -239,7 +239,7 @@ class HtmlView extends BaseHtmlView
         if ($user->authorise('core.admin', 'com_proclaim') || $user->authorise('core.options', 'com_proclaim')) {
             $toolbar->preferences('com_proclaim');
         }
-
-        $toolbar->help('Messages', true);
+		$help_url='https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=19&Itemid=315&tmpl=component';
+        $toolbar->help('Messages', false, $help_url);
     }
 }

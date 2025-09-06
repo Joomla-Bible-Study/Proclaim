@@ -4,7 +4,7 @@
  * Default
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -215,7 +215,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                                     ?>
                                 </td>
                                 <td class="nowrap has-context" style="width:10%;">
-                                    <div class="pull-left">
+                                    <div class="float-left">
                                         <?php
                                         if ($canEdit || $canEditOwn) : ?>
                                             <a href="<?php

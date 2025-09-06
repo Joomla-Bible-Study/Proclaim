@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -42,8 +42,8 @@ class CwmmessagesController extends AdminController
     public function saveOrderAjax(): void
     {
         // Get the input
-        $pks   = $this->input->post->get('cid', array(), 'array');
-        $order = $this->input->post->get('order', array(), 'array');
+        $pks   = $this->input->post->get('cid', [], 'array');
+        $order = $this->input->post->get('order', [], 'array');
 
         // Sanitize the input
         ArrayHelper::toInteger($pks);

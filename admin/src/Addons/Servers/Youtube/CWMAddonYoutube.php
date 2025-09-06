@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -158,9 +158,9 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
-     * Youtube url to embed.
+     * YouTube URL to embed.
      *
-     * @param  string  $url  YouTube url to transform.
+     * @param  string  $url  YouTube URL to transform.
      *
      * @return string
      *
@@ -185,9 +185,11 @@ class CWMAddonYoutube extends CWMAddon
             // Extract the part after the last "/"
             if ($lastSlashPosition !== false) {
                 $videoID = substr($url, $lastSlashPosition + 1);
-                $string = "//www.youtube.com/embed/$videoID";
+                $string  = "//www.youtube.com/embed/$videoID";
             }
         }
+
+        $string = (new Cwmmedia())->ensureHttpJoomla($string);
 
         return (string) $string;
     }

@@ -4,7 +4,7 @@
  * Admin Form
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -757,15 +757,6 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                     </button>
                 </div>
             </div>
-        </div>
-        <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
-
-        <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'jwplayer', Text::_('JBS_ADM_JWPLAYER')); ?>
-        <div class="row" id="jwplayer">
-            <?php
-            echo $this->loadTemplate('jwplayer'); ?>
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>

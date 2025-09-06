@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -57,7 +57,7 @@ class Cwmhelper
     {
         $JBSMElements = new Cwmlisting();
 
-        $linktext = '<span class="hasTip" title="<strong>' . $params->get('tip_title') . '  :: ';
+        $linktext = '<span class="hasTip" title="' . $params->get('tip_title') . '  :: ';
 
         $tip1 = $JBSMElements->getElement($params->get('tip_item1'), $row, $params, $template, $type = 0);
         $tip2 = $JBSMElements->getElement($params->get('tip_item2'), $row, $params, $template, $type = 0);
@@ -65,11 +65,11 @@ class Cwmhelper
         $tip4 = $JBSMElements->getElement($params->get('tip_item4'), $row, $params, $template, $type = 0);
         $tip5 = $JBSMElements->getElement($params->get('tip_item5'), $row, $params, $template, $type = 0);
 
-        $linktext .= '<strong>' . $params->get('tip_item1_title') . '</strong>: ' . $tip1 . '<br />';
-        $linktext .= '<strong>' . $params->get('tip_item2_title') . '</strong>: ' . $tip2 . '<br />';
-        $linktext .= '<strong>' . $params->get('tip_item3_title') . '</strong>: ' . $tip3 . '<br />';
-        $linktext .= '<strong>' . $params->get('tip_item4_title') . '</strong>: ' . $tip4 . '<br />';
-        $linktext .= '<strong>' . $params->get('tip_item5_title') . '</strong>: ' . $tip5;
+        $linktext .=  $params->get('tip_item1_title') .': ' . $tip1 . ' - ';
+        $linktext .=  $params->get('tip_item2_title') .': ' . $tip2 . ' - ';
+        $linktext .=  $params->get('tip_item3_title') .': ' . $tip3 . ' - ';
+        $linktext .=  $params->get('tip_item4_title') .': ' . $tip4 . ' - ';
+        $linktext .=  $params->get('tip_item5_title') .': ' . $tip5 . ' - ';
         $linktext .= '">';
 
         return $linktext;
@@ -124,9 +124,9 @@ class Cwmhelper
 
         if (!substr_count($url, 'http://') && !substr_count($url, 'https://')) {
             if (substr_count($url, '//')) {
-                $url = 'http:' . $url;
-            } elseif (!substr_count($url, '//')) {
-                $url = 'http://' . $url;
+                $url = 'https:' . $url;
+            } else {
+                $url = 'https://' . $url;
             }
         }
 

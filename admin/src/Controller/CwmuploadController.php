@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -14,14 +14,13 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 use JetBrains\PhpStorm\NoReturn;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\Filesystem\File;
-use Joomla\Filesystem\Path;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Path;
 use Joomla\Input\Input;
-use JsonException;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -41,7 +40,7 @@ class CwmuploadController extends AdminController
      *
      * @return void JSON response
      *
-     * @throws JsonException
+     * @throws \JsonException
      * @since 9.0
      */
     public function upload(): void
@@ -54,7 +53,7 @@ class CwmuploadController extends AdminController
         // 5 minutes execution time
         @set_time_limit(5 * 60);
 
-        // Enable valid json response when debugging is disabled
+        // Enable a valid json response when debugging is disabled
         if (!JBSMDEBUG) {
             error_reporting(0);
         }
@@ -121,7 +120,7 @@ class CwmuploadController extends AdminController
             $this->setResponse(100, Text::_('JBS_ERROR_UPLOAD_INVALID_FILE_EXTENSION'));
         }
 
-        // Make sure the fileName is unique but only if chunk is disabled
+        // Make sure the fileName is unique, but only if chunk is disabled
         if ($chunks < 2 && file_exists($targetDir . '/' . $fileName)) {
             $ext        = strrpos($fileName, '.');
             $fileName_a = substr($fileName, 0, $ext);
@@ -157,7 +156,7 @@ class CwmuploadController extends AdminController
             $this->setResponse(100, 'Failed to open temp directory.');
         }
 
-        // Look for the content type header
+        // Look for the content-type header
         if (isset($_SERVER["HTTP_CONTENT_TYPE"])) {
             $contentType = $_SERVER["HTTP_CONTENT_TYPE"];
         }
@@ -166,14 +165,14 @@ class CwmuploadController extends AdminController
             $contentType = $_SERVER["CONTENT_TYPE"];
         }
 
-        // Handle non multipart uploads older WebKit versions didn't support multipart in HTML5
+        // Handle non-multipart uploads. Older WebKit versions didn't support multipart in HTML5
         if (str_contains($contentType, "multipart")) {
             if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
                 // Open temp file
                 $out = fopen("{$filePath}.part", $chunk == 0 ? "wb" : "ab");
 
                 if ($out) {
-                    // Read binary input stream and append it to temp file
+                    // Read binary input stream and append it to the temp file
                     $in = fopen($_FILES['file']['tmp_name'], "rb");
 
                     if ($in) {
@@ -226,7 +225,7 @@ class CwmuploadController extends AdminController
     }
 
     /**
-     * Set the JSON response and exists script
+     * Set the JSON response and the exists script
      *
      * @param   int      $code   Error Code
      * @param   ?string  $msg    Error Message
@@ -234,23 +233,23 @@ class CwmuploadController extends AdminController
      *
      * @return void
      *
-     * @throws JsonException
+     * @throws \JsonException
      * @since 9.0
      */
     #[NoReturn] private function setResponse(int $code, ?string $msg = null, ?bool $error = true): void
     {
         if ($error) {
-            $jsonrpc = array(
+            $jsonrpc = [
                 "error" => 1,
                 "code"  => $code,
-                "msg"   => $msg
-            );
+                "msg"   => $msg,
+            ];
         } else {
-            $jsonrpc = array(
+            $jsonrpc = [
                 "error" => 0,
                 "code"  => $code,
-                "msg"   => "File uploaded!"
-            );
+                "msg"   => "File uploaded!",
+            ];
         }
 
         die(json_encode($jsonrpc, JSON_THROW_ON_ERROR));

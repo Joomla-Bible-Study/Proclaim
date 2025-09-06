@@ -2,7 +2,7 @@
 
 /**
  * @@package        Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  */
@@ -15,7 +15,6 @@ namespace CWM\Component\Proclaim\Administrator\Extension;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Service\HTML\CWMAdministratorService;
-use Exception;
 use Joomla\CMS\Component\Router\RouterServiceInterface;
 use Joomla\CMS\Component\Router\RouterServiceTrait;
 use Joomla\CMS\Extension\BootableExtensionInterface;
@@ -117,7 +116,7 @@ class ProclaimComponent extends MVCComponent implements
      *
      * @return  ?string  The new section
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   4.0.0
      */
     public function validateSection($section, $item = null): ?string
@@ -143,17 +142,17 @@ class ProclaimComponent extends MVCComponent implements
      *
      * @return  array
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   4.0.0
      */
     public function getContexts(): array
     {
         Factory::getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
-        return array(
+        return [
             'com_proclaim.cwmcpanel' => Text::_('com_proclaim'),
-            'com_proclaim.cwmadmin'  => Text::_('JCATEGORY')
-        );
+            'com_proclaim.cwmadmin'  => Text::_('JCATEGORY'),
+        ];
     }
 
     /**
@@ -192,7 +191,7 @@ class ProclaimComponent extends MVCComponent implements
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   4.0.0
      */
     public function getCategoryWorkflowContext(?string $section = null): string
@@ -207,15 +206,15 @@ class ProclaimComponent extends MVCComponent implements
      *
      * @return  array
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   4.0.0
      */
     public function getWorkflowContexts(): array
     {
         Factory::getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
-        return array(
-            'com_proclaim.cwmadmin' => Text::_('COM_PROCLAIM')
-        );
+        return [
+            'com_proclaim.cwmadmin' => Text::_('COM_PROCLAIM'),
+        ];
     }
 }

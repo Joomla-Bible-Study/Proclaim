@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -32,7 +32,7 @@ class Cwmassets
      * @var array
      * @since 7.0.4
      */
-    public static array $query = array();
+    public static array $query = [];
 
     /**
      * @var integer
@@ -46,7 +46,7 @@ class Cwmassets
      * @param   string   $key     Asset name to affect
      * @param   ?object  $result  Assets to look at.
      *
-     * @return boolean
+     * @return bool
      *
      * @since 9.0.0
      */
@@ -77,7 +77,7 @@ class Cwmassets
     /**
      * Set Parent ID
      *
-     * @return integer Parent ID
+     * @return int Parent ID
      *
      * @since 9.0.0
      */
@@ -86,7 +86,7 @@ class Cwmassets
         if (!self::$parent_id) {
             $db = Factory::getContainer()->get('DatabaseDriver');
 
-            // First get the new parent_id
+            // First, get the new parent_id
             $query = $db->getQuery(true);
             $query->select('id')
                 ->from('#__assets')
@@ -117,7 +117,7 @@ class Cwmassets
         if ($data->id) {
             try {
                 if ($assetName === 'MediaFile') {
-                    $columns = array(
+                    $columns = [
                         'media_image',
                         'special',
                         'filename',
@@ -132,8 +132,8 @@ class Cwmassets
                         'popup',
                         'server',
                         'internal_viewer',
-                        'path'
-                    );
+                        'path',
+                    ];
 
                     foreach ($columns as $col) {
                         unset($table->$col);
@@ -156,7 +156,7 @@ class Cwmassets
      *
      * @param   object  $data  Data
      *
-     * @return boolean
+     * @return bool
      *
      * @since 9.0.0
      */
@@ -204,7 +204,7 @@ class Cwmassets
             $db->setQuery($query);
             $results     = $db->loadObjectList();
             self::$count += count($results);
-            self::$query = array_merge((array)self::$query, array($object['assetname'] => $results));
+            self::$query = array_merge((array)self::$query, [$object['assetname'] => $results]);
         }
 
         Log::add('Build fixAsset', Log::INFO, 'com_proclaim');
@@ -225,85 +225,85 @@ class Cwmassets
      */
     public static function getAssetObjects(): array
     {
-        return array(
-            array(
+        return [
+            [
                 'name'       => '#__bsms_servers',
                 'titlefield' => 'server_name',
                 'assetname'  => 'server',
-                'realname'   => 'JBS_CMN_SERVERS'
-            ),
-            array(
+                'realname'   => 'JBS_CMN_SERVERS',
+            ],
+            [
                 'name'       => '#__bsms_studies',
                 'titlefield' => 'studytitle',
                 'assetname'  => 'message',
-                'realname'   => 'JBS_CMN_STUDIES'
-            ),
-            array(
+                'realname'   => 'JBS_CMN_STUDIES',
+            ],
+            [
                 'name'       => '#__bsms_comments',
                 'titlefield' => 'comment_date',
                 'assetname'  => 'comment',
-                'realname'   => 'JBS_CMN_COMMENTS'
-            ),
-            array(
+                'realname'   => 'JBS_CMN_COMMENTS',
+            ],
+            [
                 'name'       => '#__bsms_locations',
                 'titlefield' => 'location_text',
                 'assetname'  => 'location',
-                'realname'   => 'JBS_CMN_LOCATIONS'
-            ),
-            array(
+                'realname'   => 'JBS_CMN_LOCATIONS',
+            ],
+            [
                 'name'       => '#__bsms_mediafiles',
                 'titlefield' => 'filename',
                 'assetname'  => 'mediafile',
-                'realname'   => 'JBS_CMN_MEDIA_FILES'
-            ),
-            array(
+                'realname'   => 'JBS_CMN_MEDIA_FILES',
+            ],
+            [
                 'name'       => '#__bsms_message_type',
                 'titlefield' => 'message_type',
                 'assetname'  => 'messagetype',
-                'realname'   => 'JBS_CMN_MESSAGETYPES'
-            ),
-            array(
+                'realname'   => 'JBS_CMN_MESSAGETYPES',
+            ],
+            [
                 'name'       => '#__bsms_podcast',
                 'titlefield' => 'title',
                 'assetname'  => 'podcast',
-                'realname'   => 'JBS_CMN_PODCASTS'
-            ),
-            array(
+                'realname'   => 'JBS_CMN_PODCASTS',
+            ],
+            [
                 'name'       => '#__bsms_series',
                 'titlefield' => 'series_text',
                 'assetname'  => 'serie',
-                'realname'   => 'JBS_CMN_SERIES'
-            ),
-            array(
+                'realname'   => 'JBS_CMN_SERIES',
+            ],
+            [
                 'name'       => '#__bsms_teachers',
                 'titlefield' => 'teachername',
                 'assetname'  => 'teacher',
-                'realname'   => 'JBS_CMN_TEACHERS'
-            ),
-            array(
+                'realname'   => 'JBS_CMN_TEACHERS',
+            ],
+            [
                 'name'       => '#__bsms_templates',
                 'titlefield' => 'title',
                 'assetname'  => 'template',
-                'realname'   => 'JBS_CMN_TEMPLATES'
-            ),
-            array(
+                'realname'   => 'JBS_CMN_TEMPLATES',
+            ],
+            [
                 'name'       => '#__bsms_topics',
                 'titlefield' => 'topic_text',
                 'assetname'  => 'topic',
-                'realname'   => 'JBS_CMN_TOPICS'
-            ),
-            array(
+                'realname'   => 'JBS_CMN_TOPICS',
+            ],
+            [
                 'name'       => '#__bsms_templatecode',
                 'titlefield' => 'filename',
                 'assetname'  => 'templatecode',
-                'realname'   => 'JBS_CMN_TEMPLATECODE'
-            ),
-            array(
+                'realname'   => 'JBS_CMN_TEMPLATECODE',
+            ],
+            [
                 'name'       => '#__bsms_admin',
                 'titlefield' => 'id',
                 'assetname'  => 'admin',
-                'realname'   => 'JBS_CMN_ADMINISTRATION'
-            )
-        );
+                'realname'   => 'JBS_CMN_ADMINISTRATION',
+            ],
+        ];
     }
 }

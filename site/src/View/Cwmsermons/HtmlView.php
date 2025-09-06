@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2025 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmsermons;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcastsubscribe;
+use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
@@ -154,13 +155,6 @@ class HtmlView extends BaseHtmlView
      * @since 7.0
      */
     protected $request_url;
-    /**
-     * The sidebar markup
-     *
-     * @var  string
-     * @since 9.1.4
-     */
-    protected $sidebar;
 
     /**
      * Execute and display a template script.
@@ -169,7 +163,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void  A string if successful, otherwise a JError object.
      *
-     * @throws  \Exception
+     * @throws  Exception
      * @since   11.1
      * @see     fetch()
      */
@@ -186,7 +180,7 @@ class HtmlView extends BaseHtmlView
         $this->page->counter   = $pagination->getPagesCounter();
         $this->activeFilters   = $this->get('ActiveFilters');
 
-        // Get filter form.
+        // Get a filter form.
         $this->filterForm = $this->get('FilterForm');
         $mainframe        = Factory::getApplication();
         $this->admin      = $this->state->get('administrator');
@@ -287,7 +281,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 9.1.6
      */
     private function updateFilters(): void
@@ -336,7 +330,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      * @since 7.0
      */
     protected function prepareDocument(): void

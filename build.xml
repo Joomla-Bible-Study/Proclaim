@@ -1,26 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <project name="proclaim" default="build" basedir=".">
+    <property file="build.properties" override="false"/>
     <autoloader autoloaderpath="${project.basedir}/libraries/vendor/autoload.php"/>
 
     <property name="basedir" value="${project.basedir}"/>
     <property name="project.name" value="Proclaim"/>
 
-    <!-- We try and verify that the build.properties file is created from the build.dist.properties -->
-    <if>
-        <available file="build.properties" property="build_properties_exists" type="file"/>
-        <then>
-            <property file="build.properties"/>
-        </then>
-        <else>
-            <fail>-
-                Missing 'build.properties' file in the project root folder
-            </fail>
-        </else>
-    </if>
-
     <property name="config_path" value="${basedir}/tests/system/servers"/>
-
     <property name="src.test" value="${basedir}/tests/test"/>
     <property name="dest.test" value="${basedir}/admin/views/test"/>
 
@@ -29,8 +15,7 @@
         <mkdir dir="${basedir}/docs"/>
     </target>
 
-    <!-- List of all files that are packaged and distributed -->
-    <fileset dir="${basedir}" id="distributed_files">
+    <fileset dir="${basedir}" id="distributed_files" errorOnMissingDir="false">
         <include name="admin/**/*.php"/>
         <include name="media/**/*.php"/>
         <include name="modules/**/*.php"/>
@@ -39,47 +24,24 @@
         <exclude name=".git"/>
     </fileset>
 
-    <!-- Validate syntax -->
-    <target name="lint" description="Perform syntax check of sourcecode files">
+    <target name="lint" description="Perform syntax check of source code">
         <phplint haltonfailure="true">
-            <fileset refid="distributed_files"/>
+            <fileset refid="distributed_files" errorOnMissingDir="false"/>
         </phplint>
     </target>
 
-    <!-- Detect violations in coding standards -->
     <target name="phpcs" depends="init" description="Generate checkstyle.xml using PHP_CodeSniffer">
-        <phpcodesniffer standard="PEAR" format="summary" showSniffs="true" showWarnings="true" haltonerror="true">
-            <fileset refid="distributed_files"/>
-            <formatter type="checkstyle" outfile="${basedir}/build/reports/phpcs-checkstyle.xml"/>
-        </phpcodesniffer>
+        <exec executable="/Applications/MAMP/bin/php/php8.3.15/bin/php" checkreturn="true"
+              output="${basedir}/build/reports/phpcs.log" error="${basedir}/build/reports/phpcs-error.log">
+            <arg line="${basedir}/libraries/vendor/bin/phpcs --standard=${basedir}/build/psr12/ruleset.xml -d memory_limit=2G --report=checkstyle --report-file=${basedir}/build/reports/phpcs-checkstyle.xml --ignore=*/tests/*,*/vendor/*,*/node_modules/*,*/tmpl/* ${basedir}"/>
+        </exec>
     </target>
 
-    <!-- Code analyzer and metric tool -->
-    <target name="pdepend" depends="init"
-            description="Generate jdepend.xml and software metrics charts using PHP_Depend">
-        <phpdepend haltonerror="true">
-            <fileset refid="distributed_files"/>
-            <logger type="jdepend-xml" outfile="${basedir}/build/reports/jdepend.xml"/>
-            <logger type="jdepend-chart" outfile="${basedir}/build/reports/jdepend-dependencies.svg"/>
-            <logger type="overview-pyramid" outfile="${basedir}/build/reports/jdepend-pyramid.svg"/>
-            <analyzer type="coderank-mode" value="method"/>
-        </phpdepend>
-    </target>
-
-    <!-- PHP Mess Detector -->
-    <target name="pmd" depends="init" description="Detect messy code, and generate report">
-        <phpmd rulesets="${basedir}/build/phpmd.xml">
-            <fileset refid="distributed_files"/>
-            <formatter type="html" outfile="${basedir}/build/reports/pmd.html"/>
-        </phpmd>
-    </target>
-
-    <!-- Create com_proclaim-x.x.x.zip -->
-    <target name="component" depends="init,dev.clean" description="Builds the component">
+    <target name="component" depends="init" description="Build component">
         <input message="Enter the version you are building. ex. 10.0.0" propertyName="version" defaultValue="10.0.x"/>
         <delete file="${basedir}/build/com_proclaim-${version}.zip"/>
         <zip destfile="${basedir}/build/com_proclaim-${version}.zip">
-            <fileset defaultexcludes="true" dir=".">
+            <fileset defaultexcludes="true" dir="." errorOnMissingDir="false">
                 <include name="admin/**"/>
                 <include name="media/**"/>
                 <include name="modules/**"/>
@@ -92,103 +54,33 @@
                 <include name="*.md"/>
             </fileset>
         </zip>
-        <!--Reset back to a development state-->
         <phingcall target="dev.init"/>
     </target>
 
-    <!-- Setup config file for running the Selenium Webdriver tests -->
-    <target name="test.setup">
-        <input message="Enter the path to your Joomla! root directory" propertyName="server_root"
-               defaultValue="/Applications/MAMP/htdocs"/>
-        <input message="Enter the sever host" propertyName="host" defaultValue="localhost"/>
-        <input message="Enter database host" propertyName="db_host" defaultValue="localhost"/>
-        <input message="Enter Database username" propertyName="db_user" defaultValue="root"/>
-        <input message="Enter database password" propertyName="db_pass" defaultValue="root"/>
-        <input message="Enter Database name" propertyName="db_name" defaultValue="joomla-dev"/>
-        <input message="Enter an initial Joomla username" propertyName="joomla_username" defaultValue="admin"/>
-        <input message="Enter an initial Joomla password" propertyName="joomla_password" defaultValue="password"/>
-        <input message="Enter an initial Joomla email" propertyName="joomla_email" defaultValue="example@example.com"/>
-
-        <copy file="${config_path}/configuration.php.dist" tofile="${config_path}/configuration.php" overwrite="true">
-            <filterchain>
-                <replacetokens begintoken="##" endtoken="##">
-                    <token key="SERVER_ROOT" value="${server_root}"/>
-                    <token key="HOST" value="${host}"/>
-                    <token key="DB_HOST" value="${db_host}"/>
-                    <token key="DB_USER" value="${db_user}"/>
-                    <token key="DB_PASS" value="${db_pass}"/>
-                    <token key="DB_NAME" value="${db_name}"/>
-                    <token key="JOOMLA_USERNAME" value="${joomla_username}"/>
-                    <token key="JOOMLA_PASSWORD" value="${joomla_password}"/>
-                    <token key="JOOMLA_EMAIL" value="${joomla_email}"/>
-                </replacetokens>
-            </filterchain>
-        </copy>
-
-        <!-- Setup the joomla test environment -->
-        <phingcall target="stage_joomla">
-            <property name="joomla-stage-dir" value="tests/.joomla-dev-test"/>
-        </phingcall>
-
-        <!-- Link Joomla to the webserver's root directory  -->
-        <symlink target="${basedir}/tests/.joomla-dev" link="${server_root}/joomla-dev-test" overwrite="true"/>
+    <target name="dev.init">
+        <echo message="Initializing development state"/>
+        <symlink target="${basedir}/proclaim.xml" link="${basedir}/admin/proclaim.xml" overwrite="true"/>
+        <symlink target="${basedir}/proclaim.script.php" link="${basedir}/admin/proclaim.script.php" overwrite="true"/>
+        <mkdir dir="${basedir}/media/css/site"/>
+        <symlink target="${basedir}/media/css/cwmcore.css" link="${basedir}/media/css/site/cwmcore.css"
+                 overwrite="true"/>
     </target>
 
-    <target name="test.clean">
-        <delete dir="${basedir}/tests/.joomla-dev" includeemptydirs="true"/>
+    <target name="dev.clean">
+        <echo message="Cleaning up development state"/>
+        <delete file="${basedir}/admin/proclaim.xml"/>
+        <delete file="${basedir}/admin/proclaim.script.php"/>
+        <delete file="${basedir}/media/css/site/cwmcore.css"/>
     </target>
 
     <!-- Set the default joomla path and create symbolic links -->
-    <target name="dev.setup">
-        <input message="Stage Joomla?" propertyName="stage_joomla" defaultValue="n"/>
-        <if>
-            <equals arg1="${stage_joomla}" arg2="y"/>
-            <then>
-                <phingcall target="stage_joomla">
-                    <property name="joomla-stage-dir" value=".joomla-dev"/>
-                    <!-- Force a stage if its already staged -->
-                    <property name="force" value="${stage_joomla"/>
-                </phingcall>
-                <!--Link Joomla to the webserver's root directory  -->
-                <symlink target="${basedir}/.joomla-dev" link="${builder.joomla_path}/${builder.joomla_dir}"
-                         overwrite="true"/>
-            </then>
-        </if>
-
-        <echo message="Joomla path set to: ${builder.joomla_path}${builder.joomla_dir}"/>
-
-        <echo message="Linking component to Joomla!"/>
-
-        <!-- Create symbolic links for a component in the Joomla directory -->
-        <symlink target="${basedir}/media" link="${builder.joomla_path}${builder.joomla_dir}/media/com_proclaim"
-                 overwrite="true"/>
-        <symlink target="${basedir}/admin"
-                 link="${builder.joomla_path}${builder.joomla_dir}/administrator/components/com_proclaim"
-                 overwrite="true"/>
-        <symlink target="${basedir}/site" link="${builder.joomla_path}${builder.joomla_dir}/components/com_proclaim"
-                 overwrite="true"/>
-        <symlink target="${basedir}/modules/site/mod_proclaim"
-                 link="${builder.joomla_path}${builder.joomla_dir}/modules/mod_proclaim" overwrite="true"/>
-        <symlink target="${basedir}/modules/site/mod_proclaim_podcast"
-                 link="${builder.joomla_path}${builder.joomla_dir}/modules/proclaim_podcast" overwrite="true"/>
-        <symlink target="${basedir}/plugins/system/proclaimbackup"
-                 link="${builder.joomla_path}${builder.joomla_dir}/plugins/system/proclaimbackup" overwrite="true"/>
-        <symlink target="${basedir}/plugins/finder/proclaim"
-                 link="${builder.joomla_path}${builder.joomla_dir}/plugins/finder/proclaim" overwrite="true"/>
-        <symlink target="${basedir}/plugins/system/proclaimpodcast"
-                 link="${builder.joomla_path}${builder.joomla_dir}/plugins/system/proclaimpodcast" overwrite="true"/>
-
-        <phingcall target="dev.init"/>
-    </target>
-
-    <!-- Set the default joomla path and create symbolic links -->
-    <target name="dev.setup_Symbolic_Links">
+    <target name="dev.Setup_Symbolic_Links">
 
         <echo message="Joomla path set to: ${builder.joomla_path}${builder.joomla_dir}"/>
 
         <echo message="Linking component, modules, and plugins to Joomla!"/>
 
-        <!-- Create symbolic links for component in the Joomla directory -->
+        <!-- Create symbolic links for a component in the Joomla directory -->
         <symlink target="${basedir}/media" link="${builder.joomla_path}${builder.joomla_dir}/media/com_proclaim"
                  overwrite="true"/>
         <symlink target="${basedir}/admin"
@@ -211,63 +103,5 @@
         <phingcall target="dev.init"/>
     </target>
 
-    <!-- Create symbolic links for the development state -->
-    <target name="dev.init">
-        <echo message="Initializing a symbolic links in development state"/>
-        <symlink target="${basedir}/proclaim.xml" link="${basedir}/admin/proclaim.xml" overwrite="true"/>
-        <symlink target="${basedir}/proclaim.script.php" link="${basedir}/admin/proclaim.script.php"
-                 overwrite="true"/>
-        <mkdir dir="${basedir}/media/css/site"/>
-        <symlink target="${basedir}/media/css/cwmcore.css" link="${basedir}/media/css/site/cwmcore.css"
-                 overwrite="true"/>
-    </target>
-
-    <!-- Clean up symbolic links from the development state -->
-    <target name="dev.clean">
-        <echo message="Cleaning up symbolic links in development state"/>
-        <delete file="${basedir}/admin/proclaim.xml"/>
-        <delete file="${basedir}/admin/proclaim.script.php"/>
-        <delete file="${basedir}/media/css/site/cwmcore.css"/>
-    </target>
-
-    <!-- Stage Joomla for bootstrapping unit tests -->
-    <target name="stage_joomla" description="Stage Joomla in specified path">
-        <!-- Only stage it if its not already staged -->
-        <available file="${joomla-stage-dir}" type="dir" property="joomla-staged"/>
-
-        <!-- Possible conditions for staging-->
-        <condition property="staged_but_not_forced">
-            <and>
-                <istrue value="${joomla-stage-dir}"/>
-                <equals arg1="${force}" arg2="n"/>
-            </and>
-        </condition>
-        <condition property="staged_but_forced">
-            <and>
-                <istrue value="${joomla-stage-dir}"/>
-                <equals arg1="${force}" arg2="y"/>
-            </and>
-        </condition>
-        <if>
-            <or>
-                <isfalse value="${joomla-stage-dir}"/>
-                <isfalse value="#{staged_but__not_forced}"/>
-                <istrue value="#{staged_but_forced}"/>
-            </or>
-            <then>
-                <delete dir="${joomla-stage-dir}" includeemptydirs="true" verbose="true"/>
-                <echo message="Staging Joomla ${joomla.version}. This will take a few minutes"/>
-                <gitclone repository="https://github.com/joomla/joomla-cms.git" targetPath="${joomla-stage-dir}"
-                          branch="staging"/>
-                <!-- Switch to the Joomla version that we want to test on -->
-                <gitcheckout repository="${joomla-stage-dir}" branchname="${joomla.version}" create="false"/>
-            </then>
-            <else>
-                <echo message="Joomla ${joomla.version} is already staged"/>
-            </else>
-        </if>
-    </target>
-
-    <!-- This target should exit gracefully in order for a pull request is approved. -->
     <target name="build" depends="init,lint,component"/>
 </project>
