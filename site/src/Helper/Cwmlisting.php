@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Html\HtmlHelper;
 use Joomla\CMS\Image\Image;
@@ -25,8 +24,6 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
-use JsonException;
-use stdClass;
 
 /**
  * Proclaim listing class
@@ -45,18 +42,18 @@ class Cwmlisting
      *
      * @param   mixed      $items     Items
      * @param   Registry   $params    Page Params
-     * @param   stdClass  $template  Template name
+     * @param   \stdClass  $template  Template name
      * @param   String     $type      Type of Listing
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
-    public function getFluidListing($items, Registry $params, stdClass $template, string $type): string
+    public function getFluidListing($items, Registry $params, \stdClass $template, string $type): string
     {
         $list         = null;
-        $row          = array();
+        $row          = [];
         $this->params = $params;
         $item         = '';
 
@@ -112,7 +109,7 @@ class Cwmlisting
                 break;
         }
 
-        $listparams = array();
+        $listparams = [];
 
         if ($params->get($extra . 'scripture1row') > 0) {
             $listparams[] = $this->getListParamsArray($extra . 'scripture1');
@@ -266,18 +263,18 @@ class Cwmlisting
             $listparams[] = $this->getListParamsArray($extra . 'custom');
         }
 
-        $row1       = array();
-        $row2       = array();
-        $row3       = array();
-        $row4       = array();
-        $row5       = array();
-        $row6       = array();
-        $row1sorted = array();
-        $row2sorted = array();
-        $row3sorted = array();
-        $row4sorted = array();
-        $row5sorted = array();
-        $row6sorted = array();
+        $row1       = [];
+        $row2       = [];
+        $row3       = [];
+        $row4       = [];
+        $row5       = [];
+        $row6       = [];
+        $row1sorted = [];
+        $row2sorted = [];
+        $row3sorted = [];
+        $row4sorted = [];
+        $row5sorted = [];
+        $row6sorted = [];
 
         // Create an array sorted by row and then by column
         foreach ($listparams as $listing) {
@@ -331,7 +328,7 @@ class Cwmlisting
         }
 
         $listrows    = array_merge($row1sorted, $row2sorted, $row3sorted, $row4sorted, $row5sorted, $row6sorted);
-        $listsorts   = array();
+        $listsorts   = [];
         $listsorts[] = $row1sorted;
         $listsorts[] = $row2sorted;
         $listsorts[] = $row3sorted;
@@ -378,7 +375,7 @@ class Cwmlisting
 
                 // Start the header
                 $list .= '<thead class="' . $params->get('listheadertype') . '">';
-				$list .= $this->getFluidRow(
+                $list .= $this->getFluidRow(
                     $listrows,
                     $listsorts,
                     $items[0],
@@ -445,9 +442,9 @@ class Cwmlisting
         }
 
         // Go through and attach the media files as an array to their study
-        if ($type === 'sermons') {
+        if (($type === 'sermons') && is_array($items)) {
             foreach ($items as $item) {
-                $studymedia = array();
+                $studymedia = [];
 
                 if (isset($mediafiles)) {
                     foreach ($mediafiles as $mediafile) {
@@ -475,7 +472,7 @@ class Cwmlisting
         }
 
         if ($type === 'sermon') {
-            $studymedia = array();
+            $studymedia = [];
 
             if (isset($mediafiles)) {
                 foreach ($mediafiles as $mediafile) {
@@ -542,7 +539,7 @@ class Cwmlisting
      */
     public function getFluidMediaids($item): array
     {
-        $medias    = array();
+        $medias    = [];
         $mediatemp = explode(',', $item->mids);
 
         foreach ($mediatemp as $mtemp) {
@@ -559,7 +556,7 @@ class Cwmlisting
      *
      * @return mixed
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function getMediaFiles(array $medias)
@@ -575,7 +572,7 @@ class Cwmlisting
         $query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)');
         $query->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)');
         $query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
-        $where2   = array();
+        $where2   = [];
         $subquery = '(';
 
         foreach ($medias as $media) {
@@ -607,13 +604,13 @@ class Cwmlisting
      *
      * @param   string  $paramtext  Param Text
      *
-     * @return stdClass
+     * @return \stdClass
      *
      * @since 7.0
      */
-    public function getListParamsArray(string $paramtext): stdClass
+    public function getListParamsArray(string $paramtext): \stdClass
     {
-        $l = new stdClass();
+        $l = new \stdClass();
 
         if ($paramtext === 'tdteacherimage') {
             if ($this->params->get($paramtext . 'rrow')) {
@@ -713,13 +710,13 @@ class Cwmlisting
      * @param   array      $listsorts  ?
      * @param   Object     $item       ?
      * @param   Registry   $params     Item Params
-     * @param   stdClass  $template   Template info
+     * @param   \stdClass  $template   Template info
      * @param   integer    $header     ?
      * @param   string     $type       ?
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function getFluidRow(
@@ -791,7 +788,7 @@ class Cwmlisting
                 }
                 break;
 
-            // Study Thumbnail
+                // Study Thumbnail
             case 2:
                 if (isset($item->thumbnailm)) {
                     $span = $this->useJImage(
@@ -817,7 +814,7 @@ class Cwmlisting
 
                 break;
 
-            // Series Thumbnail
+                // Series Thumbnail
             case 3:
                 if (!empty($item->series_thumbnail)) {
                     $span = $this->useJImage(
@@ -831,7 +828,7 @@ class Cwmlisting
                 }
                 break;
 
-            // Teacher Large image
+                // Teacher Large image
             case 4:
                 if (!empty($item->teacher_image)) {
                     $span = $this->useJImage(
@@ -1124,7 +1121,7 @@ class Cwmlisting
 
         try {
             $image = Image::getImageFileProperties(JPATH_ROOT . DIRECTORY_SEPARATOR . $path->url);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
 
@@ -1158,20 +1155,20 @@ class Cwmlisting
      * @param   Object     $item      Study item
      * @param   Object     $row       Row Setup data
      * @param   Registry   $params    Parameters for the study
-     * @param   stdClass  $template  Template table
+     * @param   \stdClass  $template  Template table
      * @param   int        $header    Header will display if 1, Do not display if 0
      * @param   string     $type      Type of Fluid Data
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function getFluidData(
         object $item,
         object $row,
         Registry $params,
-        stdClass $template,
+        \stdClass $template,
         int $header,
         string $type
     ): string {
@@ -1373,7 +1370,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_EMAIL');
                 } else {
-                    ($item->email ? $data = '<a href="mailto:' . $item->email . '">
+                    ($item->email ? $data                                                     = '<a href="mailto:' . $item->email . '">
 					<span class="fas fa-envelope" style="font-size:20px;" title="Email"></span></a>' : $data = '');
                 }
                 break;
@@ -1801,12 +1798,12 @@ class Cwmlisting
      * @param   String     $custom    Custom String
      * @param   Object     $item      Study Item
      * @param   Registry   $params    Params
-     * @param   stdClass  $template  Template Table Data
+     * @param   \stdClass  $template  Template Table Data
      * @param   String     $type      Type of data
      *
      * @return mixed
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function getFluidCustom(string $custom, object $item, Registry $params, $template, string $type)
@@ -1832,12 +1829,12 @@ class Cwmlisting
      * @param   String     $custom    Custom String
      * @param   Object     $row       Row Data
      * @param   Registry   $params    Params
-     * @param   stdClass  $template  Template Data
+     * @param   \stdClass  $template  Template Data
      * @param   String     $type      Type of element
      *
      * @return mixed
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function getElement(string $custom, object $row, Registry $params, $template, string $type): mixed
@@ -2164,11 +2161,11 @@ class Cwmlisting
      *
      * @param   Object     $item      Study item
      * @param   Registry   $params    Params
-     * @param   stdClass  $template  Template return
+     * @param   \stdClass  $template  Template return
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     public function getFluidMediaFiles(object $item, Registry $params, $template): string
@@ -2239,13 +2236,13 @@ class Cwmlisting
                         $date = HtmlHelper::_('date', $studydate, "n/j", null);
                         break;
                 }
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 return $studydate;
             }
         } else {
             try {
                 $date = HtmlHelper::_('date', $studydate, $customDate);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 return $studydate;
             }
         }
@@ -2301,13 +2298,13 @@ class Cwmlisting
      * @param   string     $id3       Id3 data
      * @param   int        $tid       Template ID
      * @param   Registry   $params    Params
-     * @param   stdClass  $row       Row data
-     * @param   stdClass  $template  Template Table Data
+     * @param   \stdClass  $row       Row data
+     * @param   \stdClass  $template  Template Table Data
      * @param   string     $type      Type for Series display
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     private function getLink(
@@ -2315,7 +2312,7 @@ class Cwmlisting
         string $id3,
         int $tid,
         Registry $params,
-        stdClass $row,
+        \stdClass $row,
         $template,
         string $type
     ): string {
@@ -2444,7 +2441,7 @@ class Cwmlisting
      *
      * @return object
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function getListingExp($row, $params, $template)
@@ -2580,7 +2577,7 @@ class Cwmlisting
      *
      * @return string
      *
-     * @throws JsonException
+     * @throws \JsonException
      * @since 7.0
      */
     private function makeBitlyUrl($url, $login, $appkey, string $format = 'xml', string $version = '2.0.1')
