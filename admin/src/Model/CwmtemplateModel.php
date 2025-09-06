@@ -71,7 +71,7 @@ class CwmtemplateModel extends AdminModel
      * @throws \Exception
      * @since 7.0
      */
-    public function copy($cid)
+    public function copy(array $cid): bool
     {
         foreach ($cid as $id) {
             $db       = Factory::getContainer()->get('DatabaseDriver');
@@ -171,17 +171,17 @@ class CwmtemplateModel extends AdminModel
     /**
      * Load Form Date
      *
-     * @return  array|CMSObject    The default data is an empty array.
+     * @return  array    The default data is an empty array.
      *
      * @throws \Exception
      * @since   7.0
      */
-    protected function loadFormData(): array|CMSObject
+    protected function loadFormData(): array
     {
         $data = Factory::getApplication()->getUserState('com_proclaim.edit.template.data', []);
 
         if (empty($data)) {
-            $data = $this->getItem();
+            $data = [$this->getItem()];
         }
 
         return $data;

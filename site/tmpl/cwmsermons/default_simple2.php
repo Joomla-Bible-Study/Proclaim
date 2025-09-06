@@ -16,11 +16,11 @@
 
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Html\HtmlHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
 
 HtmlHelper::_('dropdown.init');
@@ -172,8 +172,8 @@ $count     = count($folder);
             <div id="filters">
                 <?php
                 // Search tools bar
-                echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
-                ?>
+                echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
+?>
             </div>
             <section class="media__container">
                 <div id="media__items__list"
@@ -182,68 +182,68 @@ $count     = count($folder);
     grid-template-columns: repeat(4, 1fr);
     gap: 15px;">
                     <?php
-                    foreach ($this->items as $item) {
-                        $itemparams = new Registry();
-                        $params     = $itemparams->loadString($item->params);
-                        $studyimage = $params->get('studyimage');
-                        if (!empty($item->thumbnailm)) {
-                            $image = $item->thumbnailm;
-                        }
-                        if ($params->get('studyimage') !== -1) {
-                            //clean up extra data in the image
-                            $hash = str_contains($params->get('studyimage'), '#');
-                            if ($hash == 1) {
-                                $imageparam   = $params->get('studyimage');
-                                $hashlocation = strpos($imageparam, '#');
-                                $image        = substr($imageparam, 0, $hashlocation);
-                            } else {
-                                $image = 'media/com_proclaim/images/stockimages/' . $params->get('studyimage');
-                            }
-                        }
-                        if ($studyimage === null || (empty($item->thumbnailm) && ($params->get('studyimage') == -1))) {
-                            $random = random_int(0, $count);
-                            if (array_key_exists($random, $folder)) {
-                                $image = 'media/com_proclaim/images/rotating/' . $folder[$random];
-                            }
-                            if ($image == 'media/com_proclaim/images/stockimages/') {
-                                $image = 'media/com_proclaim/images/rotating/bible01.jpg';
-                            }
-                            if ($image == 'media/com_proclaim/images/stockimages/-1') {
-                                $image = 'media/com_proclaim/images/rotating/bible01.jpg';
-                            }
-                        }
-                        if (
-                            $this->params->get('simplegridtextoverlay') == 1 || $params->get(
-                                'nooverlaysimplemode'
-                            ) == 'yes'
-                        ) {
-                            $overlaytext = '<h5 class="card-title text-uppercase overlay-text -webkit-text-stroke" style="text-shadow: 2px 2px #000000;">' . $item->studytitle . '</h5>';
-                        }
-                        if ($params->get('nooverlaysimplemode') == 'no') {
-                            $overlaytext = '';
-                        }
-                        ?>
+    foreach ($this->items as $item) {
+        $itemparams = new Registry();
+        $params     = $itemparams->loadString($item->params);
+        $studyimage = $params->get('studyimage');
+        if (!empty($item->thumbnailm)) {
+            $image = $item->thumbnailm;
+        }
+        if ($params->get('studyimage') !== -1) {
+            //clean up extra data in the image
+            $hash = str_contains($params->get('studyimage'), '#');
+            if ($hash == 1) {
+                $imageparam   = $params->get('studyimage');
+                $hashlocation = strpos($imageparam, '#');
+                $image        = substr($imageparam, 0, $hashlocation);
+            } else {
+                $image = 'media/com_proclaim/images/stockimages/' . $params->get('studyimage');
+            }
+        }
+        if ($studyimage === null || (empty($item->thumbnailm) && ($params->get('studyimage') == -1))) {
+            $random = random_int(0, $count);
+            if (array_key_exists($random, $folder)) {
+                $image = 'media/com_proclaim/images/rotating/' . $folder[$random];
+            }
+            if ($image == 'media/com_proclaim/images/stockimages/') {
+                $image = 'media/com_proclaim/images/rotating/bible01.jpg';
+            }
+            if ($image == 'media/com_proclaim/images/stockimages/-1') {
+                $image = 'media/com_proclaim/images/rotating/bible01.jpg';
+            }
+        }
+        if (
+            $this->params->get('simplegridtextoverlay') == 1 || $params->get(
+                'nooverlaysimplemode'
+            ) == 'yes'
+        ) {
+            $overlaytext = '<h5 class="card-title text-uppercase overlay-text -webkit-text-stroke" style="text-shadow: 2px 2px #000000;">' . $item->studytitle . '</h5>';
+        }
+        if ($params->get('nooverlaysimplemode') == 'no') {
+            $overlaytext = '';
+        }
+        ?>
                         <article class="media__item__wrapper">
                             <div class="thumbnail text-center">
                                 <div class="card overflow-hidden border-0 rounded-0 text-center text-white">
                                     <img src="<?php
-                                    echo $image; ?>" class="card-img rounded-0" alt="...">
+                    echo $image; ?>" class="card-img rounded-0" alt="...">
                                     <div class="card-img-overlay d-flex flex-column justify-content-center">
                                         <?php
-                                        echo $overlaytext; ?>
+                        echo $overlaytext; ?>
                                     </div>
                                 </div>
                             </div>
                             <div class="media__item__info">
                                 <h4 class="title"><?php
-                                    echo $item->studytitle; ?></h4>
+                    echo $item->studytitle; ?></h4>
                                 <small class="media__item__details">
                                     <span class="authordate" data-prefix="by"><?php
-                                        echo Text::_('CWM_BY');
-                                        echo $item->teachername; ?></span>
+                        echo Text::_('CWM_BY');
+        echo $item->teachername; ?></span>
                                     <span class="media__item__details__divider">|</span>
                                     <span class="authordate"><?php
-                                        echo $item->studydate; ?></span>
+        echo $item->studydate; ?></span>
                                 </small>
                                 <div class="mediafiles">
                                     <?php
@@ -253,7 +253,7 @@ $count     = count($folder);
                         </article>
                         <?php
                         //end foreach of $items
-                    } ?>
+    } ?>
                 </div>
 
             </section>

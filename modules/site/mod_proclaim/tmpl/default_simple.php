@@ -32,6 +32,7 @@ $Listing = new Cwmlisting(); ?>
 </div>
 
 <?php
+/** @var stdClass $list */
 foreach ($list as $study) {
     ?>
     <div class="page-header">

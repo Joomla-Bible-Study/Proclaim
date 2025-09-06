@@ -12,7 +12,6 @@ namespace CWM\Module\Proclaim\Site\Dispatcher;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
-use Exception;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
 use Joomla\CMS\Helper\HelperFactoryAwareInterface;
 use Joomla\CMS\Helper\HelperFactoryAwareTrait;
@@ -37,7 +36,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
      *
      * @return  array
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   10.0.0
      */
     protected function getLayoutData(): array
@@ -50,15 +49,15 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $data = parent::getLayoutData();
 
 
-        $templatemenuid = $data['params']->get('t');
+        $templateID = $data['params']->get('t');
 
         try {
-            $data['cwmtemplate'] = Cwmparams::getTemplateparams($templatemenuid);
-        } catch (Exception $e) {
+            $data['cwmtemplate'] = Cwmparams::getTemplateparams($templateID);
+        } catch (\Exception $e) {
             $this->app->enqueueMessage($e, 'error');
         }
 
-        $pagebuilder = new Cwmpagebuilder();
+        $pageBuilder = new Cwmpagebuilder();
 
         $admin = Cwmparams::getAdmin();
         /** @var Registry $admin_params */
@@ -66,7 +65,6 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $admin_params->merge($data['cwmtemplate']->params);
         $admin_params->merge($data['params']);
         $data['params'] = $admin_params;
-
 
         $data['list'] = $this->getHelperFactory()
             ->getHelper('ProclaimHelper')
@@ -79,42 +77,42 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         ) {
             foreach ($data['list'] as $item) {
                 try {
-                    $pelements = $pagebuilder->buildPage($item, $data['params'], $data['cwmtemplate']);
-                } catch (Exception $e) {
+                    $renderedPage = $pageBuilder->buildPage($item, $data['params'], $data['cwmtemplate']);
+                } catch (\Exception $e) {
                     $this->app->enqueueMessage($e, 'error');
                 }
 
-                $item->scripture1 = $pelements->scripture1;
-                $item->scripture2 = $pelements->scripture2;
-                $item->media      = $pelements->media;
+                $item->scripture1 = $renderedPage->scripture1;
+                $item->scripture2 = $renderedPage->scripture2;
+                $item->media      = $renderedPage->media;
 
-                if (isset($pelements->duration)) {
-                    $item->duration = $pelements->duration;
+                if (isset($renderedPage->duration)) {
+                    $item->duration = $renderedPage->duration;
                 } else {
                     $item->duration = null;
                 }
 
-                if (isset($pelements->studydate)) {
-                    $item->studydate = $pelements->studydate;
+                if (isset($renderedPage->studydate)) {
+                    $item->studydate = $renderedPage->studydate;
                 } else {
                     $item->studydate = null;
                 }
 
-                $item->topics = $pelements->topics;
+                $item->topics = $renderedPage->topics;
 
-                if (isset($pelements->study_thumbnail)) {
-                    $item->study_thumbnail = $pelements->study_thumbnail;
+                if (isset($renderedPage->study_thumbnail)) {
+                    $item->study_thumbnail = $renderedPage->study_thumbnail;
                 } else {
                     $item->study_thumbnail = null;
                 }
 
-                if (isset($pelements->series_thumbnail)) {
-                    $item->series_thumbnail = $pelements->series_thumbnail;
+                if (isset($renderedPage->series_thumbnail)) {
+                    $item->series_thumbnail = $renderedPage->series_thumbnail;
                 } else {
                     $item->series_thumbnail = null;
                 }
 
-                $item->detailslink = $pelements->detailslink;
+                $item->detailslink = $renderedPage->detailslink;
             }
         }
 
@@ -122,12 +120,12 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
 
         $input = $this->input;
 
-        if (!$templatemenuid) {
-            $templatemenuid = $input->getInt('templatemenuid', 1);
+        if (!$templateID) {
+            $templateID = $input->getInt('templateID', 1);
         }
 
-        $linkurl      = Route::_('index.php?option=com_proclaim&view=cwmsermons&t=' . $templatemenuid);
-        $data['link'] = '<a href="' . $linkurl . '"><button class="btn btn-primary">' . $link_text . '</button></a>';
+        $routeUrl      = Route::_('index.php?option=com_proclaim&view=cwmsermons&t=' . $templateID);
+        $data['link']  = '<a href="' . $routeUrl . '"><button class="btn btn-primary">' . $link_text . '</button></a>';
 
         $wa = $this->app->getDocument()->getWebAssetManager();
         $wa->useStyle('com_proclaim.cwmcore');

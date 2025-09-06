@@ -67,7 +67,7 @@ class ProclaimHelper implements DatabaseAwareInterface
         $orderparam       = $params->get('order', '1');
         $language         = $params->get('language', '*');
 
-        if ($orderparam == 2) {
+        if ($orderparam === '2') {
             $order = 'ASC';
         } else {
             $order = 'DESC';
@@ -176,7 +176,7 @@ class ProclaimHelper implements DatabaseAwareInterface
         $filters = $teacher;
 
         if (count($filters) > 1) {
-            $where2   = array();
+            $where2   = [];
             $subquery = '(';
 
             foreach ($filters as $filter) {
@@ -191,7 +191,7 @@ class ProclaimHelper implements DatabaseAwareInterface
             $query->where($subquery);
         } else {
             if (!is_array($filters)) {
-                $filters = array($filters);
+                $filters = [$filters];
             }
 
             foreach ($filters as $filter) {
@@ -205,7 +205,7 @@ class ProclaimHelper implements DatabaseAwareInterface
         $filters = $locations;
 
         if (count($filters) > 1) {
-            $where2   = array();
+            $where2   = [];
             $subquery = '(';
 
             foreach ($filters as $filter) {
@@ -220,7 +220,7 @@ class ProclaimHelper implements DatabaseAwareInterface
             $query->where($subquery);
         } else {
             if (!is_array($filters)) {
-                $filters = array($filters);
+                $filters = [$filters];
             }
 
             foreach ($filters as $filter) {
@@ -234,7 +234,7 @@ class ProclaimHelper implements DatabaseAwareInterface
         $filters = $book;
 
         if (count($filters) > 1) {
-            $where2   = array();
+            $where2   = [];
             $subquery = '(';
 
             foreach ($filters as $filter) {
@@ -249,7 +249,7 @@ class ProclaimHelper implements DatabaseAwareInterface
             $query->where($subquery);
         } else {
             if (!is_array($filters)) {
-                $filters = array($filters);
+                $filters = [$filters];
             }
 
             foreach ($filters as $filter) {
@@ -262,7 +262,7 @@ class ProclaimHelper implements DatabaseAwareInterface
         $filters = $series;
 
         if (count($filters) > 1) {
-            $where2   = array();
+            $where2   = [];
             $subquery = '(';
 
             foreach ($filters as $filter) {
@@ -277,7 +277,7 @@ class ProclaimHelper implements DatabaseAwareInterface
             $query->where($subquery);
         } else {
             if (!is_array($filters)) {
-                $filters = array($filters);
+                $filters = [$filters];
             }
 
             foreach ($filters as $filter) {
@@ -290,7 +290,7 @@ class ProclaimHelper implements DatabaseAwareInterface
         $filters = $topic;
 
         if (count($filters) > 1) {
-            $where2   = array();
+            $where2   = [];
             $subquery = '(';
 
             foreach ($filters as $filter) {
@@ -304,7 +304,7 @@ class ProclaimHelper implements DatabaseAwareInterface
             $query->where($subquery);
         } else {
             if (!is_array($filters)) {
-                $filters = array($filters);
+                $filters = [$filters];
             }
 
             foreach ($filters as $filter) {
@@ -315,18 +315,18 @@ class ProclaimHelper implements DatabaseAwareInterface
         }
 
         // Filter by language
-        $lang = Factory::getLanguage();
+        $lang = Factory::getApplication()->getLanguage();
 
         if ($lang || $language !== '*') {
             $query->where(
-                'study.language in (' . $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')'
+                'study.language in (' . $db->quote($lang->getTag()) . ',' . $db->quote('*') . ')'
             );
         }
 
         $filters = $messagetype_menu;
 
         if (count($filters) > 1) {
-            $where2   = array();
+            $where2   = [];
             $subquery = '(';
 
             foreach ($filters as $filter) {
@@ -341,7 +341,7 @@ class ProclaimHelper implements DatabaseAwareInterface
             $query->where($subquery);
         } else {
             if (!is_array($filters)) {
-                $filters = array($filters);
+                $filters = [$filters];
             }
 
             foreach ($filters as $filter) {
@@ -356,7 +356,7 @@ class ProclaimHelper implements DatabaseAwareInterface
         $filters = $year;
 
         if (count($filters) > 1) {
-            $where2   = array();
+            $where2   = [];
             $subquery = '(';
 
             foreach ($filters as $filter) {
@@ -371,7 +371,7 @@ class ProclaimHelper implements DatabaseAwareInterface
             $query->where($subquery);
         } else {
             if (!is_array($filters)) {
-                $filters = array($filters);
+                $filters = [$filters];
             }
 
             if ($filters !== null) {
