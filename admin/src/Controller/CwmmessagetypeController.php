@@ -32,7 +32,7 @@ class CwmmessagetypeController extends FormController
      *
      * @param   object  $model  The model.
      *
-     * @return  boolean     True if successful, false otherwise and internal error is set.
+     * @return  bool     True if successful, false otherwise and internal error is set.
      *
      * @since   1.6
      */
@@ -43,6 +43,6 @@ class CwmmessagetypeController extends FormController
             Route::_('index.php?option=com_proclaim&view=cwmmessagetypes' . $this->getRedirectToListAppend(), false)
         );
 
-        return parent::batch($this->getModel('Cwmmessagetype', '', array()));
+        return parent::batch($this->getModel('Cwmmessagetype', '', []));
     }
 }

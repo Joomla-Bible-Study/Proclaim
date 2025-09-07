@@ -32,7 +32,7 @@ class TemplateListField extends ListField
      *
      * @since 9.0.13
      */
-    public static array $templates = array();
+    public static array $templates = [];
     /**
      * The field type.
      *

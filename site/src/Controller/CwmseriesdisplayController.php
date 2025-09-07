@@ -11,7 +11,6 @@
 
 namespace CWM\Component\Proclaim\Site\Controller;
 
-use Exception;
 use Joomla\CMS\MVC\Controller\BaseController;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -45,10 +44,10 @@ class CwmseriesdisplayController extends BaseController
      *
      * @return  static  A \CwmseriesdisplayController object to support chaining.
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   3.0
      */
-    public function display($cachable = false, $urlparams = array()): CwmseriesdisplayController
+    public function display($cachable = false, $urlparams = []): CwmseriesdisplayController
     {
         return parent::display();
     }

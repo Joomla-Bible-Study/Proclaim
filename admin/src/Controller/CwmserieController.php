@@ -52,7 +52,7 @@ class CwmserieController extends FormController
             Route::_('index.php?option=com_proclaim&view=cwmseries' . $this->getRedirectToListAppend(), false)
         );
 
-        return parent::batch($this->getModel('Cwmserie', '', array()));
+        return parent::batch($this->getModel('Cwmserie', '', []));
     }
 
     /**
@@ -64,7 +64,7 @@ class CwmserieController extends FormController
      *
      * @since   1.6
      */
-    protected function allowAdd($data = array()): bool
+    protected function allowAdd($data = []): bool
     {
         $allow = null;
 
@@ -82,7 +82,7 @@ class CwmserieController extends FormController
      * @throws \Exception
      * @since   1.6
      */
-    protected function allowEdit($data = array(), $key = 'id'): bool
+    protected function allowEdit($data = [], $key = 'id'): bool
     {
         $recordId = (int)isset($data[$key]) ? $data[$key] : 0;
         $user     = Factory::getApplication()->getIdentity();

@@ -17,11 +17,9 @@ namespace CWM\Component\Proclaim\Site\View\Cwmlandingpage;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
-use Exception;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
@@ -66,7 +64,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function display($tpl = null): void
@@ -112,7 +110,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.2.4
      */
     public function getShowHide($showIt, $showIt_phrase, $i)

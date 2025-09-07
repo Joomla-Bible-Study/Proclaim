@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Site\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use JApplicationSite;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ItemModel;
@@ -34,7 +33,7 @@ class CwmpodcastdisplayModel extends ItemModel
     /**
      * Model context string.
      *
-     * @var        string
+     * @var  string
      *
      * @since 7.0
      */
@@ -43,14 +42,14 @@ class CwmpodcastdisplayModel extends ItemModel
     /**
      * Method to get study data.
      *
-     * @param   int  $pk  The id of the study.
+     * @param   int  $pk  The ID of the study.
      *
      * @return    mixed    Menu item data object on success, false on failure.
      *
      * @throws \Exception
      *
      * @since 7.1.0
-     * @todo  look are removing this may not used. bcc
+     * @todo  look at removing this, as it may not be used. bcc
      */
     public function getItem($pk = null)
     {
@@ -99,7 +98,7 @@ class CwmpodcastdisplayModel extends ItemModel
      */
     public function getStudies(): array
     {
-        /** @type JApplicationSite $app */
+        /** @type \JApplicationSite $app */
         $app = Factory::getApplication('site');
         $sid = $app->getUserState('sid');
 
@@ -225,7 +224,7 @@ class CwmpodcastdisplayModel extends ItemModel
      */
     protected function populateState(): void
     {
-        /** @type JApplicationSite $app */
+        /** @type \JApplicationSite $app */
         $app = Factory::getApplication('site');
 
         // Load state from the request.

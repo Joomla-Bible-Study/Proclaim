@@ -372,7 +372,6 @@ class Cwmlisting
 
         if ($type === 'seriesdisplay') {
             if ($params->get('use_header_seriesdisplay') > 0) {
-
                 // Start the header
                 $list .= '<thead class="' . $params->get('listheadertype') . '">';
                 $list .= $this->getFluidRow(
@@ -400,7 +399,6 @@ class Cwmlisting
 
         if ($type === 'teacher') {
             if ($params->get('use_headers_teacher_details') > 0) {
-
                 // Start the header
                 $list .= '<thead class="' . $params->get('listheadertype') . '">';
                 $list .= $this->getFluidRow(

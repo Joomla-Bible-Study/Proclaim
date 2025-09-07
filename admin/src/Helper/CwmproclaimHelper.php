@@ -16,13 +16,11 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Exception;
 use Joomla\CMS\Access\Access;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Language\Text;
-use stdClass;
 
 /**
  * Proclaim Helper class
@@ -33,7 +31,7 @@ use stdClass;
 class CwmproclaimHelper
 {
     /**
-     * Admin Prams
+     * Admin Params
      *
      * @var ?object
      *
@@ -56,7 +54,7 @@ class CwmproclaimHelper
      * @param   string  $defaultController  Default Controller
      *
      * @return void
-     * @throws Exception
+     * @throws \Exception
      * @since    10.0.0
      */
     public static function applyViewAndController(string $defaultController): void
@@ -90,7 +88,7 @@ class CwmproclaimHelper
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since    1.6
      */
     public static function addSubmenu(string $vName): void
@@ -193,14 +191,14 @@ class CwmproclaimHelper
     }
 
     /**
-     * Applies the content tag filters to arbitrary text as per settings for current user group
-     * This may show not to be used but is in the XML files.
+     * Applies the content tag filters to arbitrary text as per settings for the current user group
+     * This may not be used, but is in the XML files.
      *
      * @param   string  $text  The string to filter
      *
      * @return string The filtered string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 1.5
      */
     public static function filterText(string $text): string
@@ -212,20 +210,20 @@ class CwmproclaimHelper
 
         $filters = $config->get('filters');
 
-        $blackListTags       = array();
-        $blackListAttributes = array();
+        $blackListTags       = [];
+        $blackListAttributes = [];
 
-        $whiteListTags       = array();
-        $whiteListAttributes = array();
+        $whiteListTags       = [];
+        $whiteListAttributes = [];
 
         $whiteList  = false;
         $blackList  = false;
         $unfiltered = false;
 
         // Cycle through each of the user groups the user is in.
-        // Remember they are include in the Public group as well.
+        // Remember, they are included in the Public group as well.
         foreach ($userGroups as $groupId) {
-            // May have added a group by not saved the filters.
+            // May have added a group by not saving the filters.
             if (!isset($filters->$groupId)) {
                 continue;
             }
@@ -243,8 +241,8 @@ class CwmproclaimHelper
                     // Prepossess the tags and attributes.
                     $tags           = explode(',', $filterData->filter_tags);
                     $attributes     = explode(',', $filterData->filter_attributes);
-                    $tempTags       = array();
-                    $tempAttributes = array();
+                    $tempTags       = [];
+                    $tempAttributes = [];
 
                     foreach ($tags as $tag) {
                         $tag = trim($tag);
@@ -285,11 +283,11 @@ class CwmproclaimHelper
 
         // Unfiltered assumes first priority.
         if ($unfiltered) {
-            $filter = InputFilter::getInstance(array(), array(), 1, 1, 0);
+            $filter = InputFilter::getInstance([], [], 1, 1, 0);
         } elseif ($blackList) {
             // Remove the white-listed attributes from the black-list.
             $filter = InputFilter::getInstance(
-            // Blacklisted tags
+                // Blacklisted tags
                 array_diff($blackListTags, $whiteListTags),
                 // Blacklisted attributes
                 array_diff($blackListAttributes, $whiteListAttributes),
@@ -299,7 +297,7 @@ class CwmproclaimHelper
                 1
             );
         } elseif ($whiteList) {
-            // Turn off xss auto clean
+            // Turn off XSS auto clean
             $filter = InputFilter::getInstance($whiteListTags, $whiteListAttributes, 0, 0, 0);
         } else {
             // No HTML takes last place.
@@ -310,9 +308,9 @@ class CwmproclaimHelper
     }
 
     /**
-     * Debug switch state form Admin Settings page
+     * Debug switch state from the Admin Settings page
      *
-     * @return int '1' is on '0' is off
+     * @return int '1' is on, '0' is off
      *
      * @since 7.1.0
      */
@@ -321,12 +319,12 @@ class CwmproclaimHelper
         if (!CwmdbHelper::getInstallState()) {
             try {
                 self::$admin_params = Cwmparams::getAdmin();
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 return 0;
             }
 
             if (!isset(self::$admin_params->debug)) {
-                self::$admin_params        = new stdClass();
+                self::$admin_params        = new \stdClass();
                 self::$admin_params->debug = 1;
             }
 
@@ -339,14 +337,14 @@ class CwmproclaimHelper
     /**
      * Media Years
      *
-     * @return array        Returns array of years from media files based on creation date
+     * @return array  Returns an array of years from media files based on creation date
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 8.0.0
      */
     public static function getMediaYears(): array
     {
-        $options = array();
+        $options = [];
         $db      = Factory::getContainer()->get('DatabaseDriver');
 
         // $db      = $driver->getDriver();
@@ -371,14 +369,14 @@ class CwmproclaimHelper
     /**
      * Message Types
      *
-     * @return array  Returns list of message types
+     * @return array  Returns a list of message types
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 8.0.0
      */
     public static function getMessageTypes(): array
     {
-        $options = array();
+        $options = [];
         $db      = Factory::getContainer()->get('DatabaseDriver');
 
         // $db      = $driver->getDriver();
@@ -405,14 +403,14 @@ class CwmproclaimHelper
     /**
      * Study Years
      *
-     * @return array Returns array of years from studies based on study date
+     * @return array Returns an array of years from studies based on the study date
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 8.0.0
      */
     public static function getStudyYears(): array
     {
-        $options = array();
+        $options = [];
         $db      = Factory::getContainer()->get('DatabaseDriver');
 
         // $db      = $driver->getDriver();
@@ -437,14 +435,14 @@ class CwmproclaimHelper
     /**
      * Teachers
      *
-     * @return array       Returns array of Teachers
+     * @return array  Returns an array of Teachers
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 8.0.0
      */
     public static function getTeachers(): array
     {
-        $options = array();
+        $options = [];
         $driver  = Factory::getContainer()->get('DatabaseDriver');
         $db      = $driver->getDriver();
         $query   = $db->getQuery(true);
@@ -470,14 +468,14 @@ class CwmproclaimHelper
     /**
      * Study Books
      *
-     * @return array Returns array of books
+     * @return array  Returns an array of books
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 8.0.0
      */
     public static function getStudyBooks(): array
     {
-        $options = array();
+        $options = [];
         $db      = Factory::getContainer()->get('DatabaseDriver');
 
         // $db      = $driver->getDriver();
@@ -508,14 +506,14 @@ class CwmproclaimHelper
     /**
      * Study Media Types
      *
-     * @return array       Returns array of books
+     * @return array  Returns an array of books
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 8.0.0
      */
     public static function getStudyMediaTypes(): array
     {
-        $options = array();
+        $options = [];
         $db      = Factory::getContainer()->get('DatabaseDriver');
 
         // $db      = $driver->getDriver();
@@ -542,14 +540,14 @@ class CwmproclaimHelper
     /**
      * Study Locations
      *
-     * @return array       Returns array of books
+     * @return array  Returns an array of books
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 8.0.0
      */
     public static function getStudyLocations(): array
     {
-        $options = array();
+        $options = [];
         $db      = Factory::getContainer()->get('DatabaseDriver');
 
         // $db      = $driver->getDriver();
@@ -572,7 +570,7 @@ class CwmproclaimHelper
     }
 
     /**
-     * Sorting the array a Column
+     * Sorting the array by Column
      *
      * @param   array   $arr  Array to sort
      * @param   string  $col  Sort column
@@ -584,7 +582,7 @@ class CwmproclaimHelper
      */
     public static function arraySortByColumn(array &$arr, string $col, int $dir = SORT_ASC): void
     {
-        $sort_col = array();
+        $sort_col = [];
 
         foreach ($arr as $key => $row) {
             $sort_col[$key] = $row[$col];
@@ -600,7 +598,7 @@ class CwmproclaimHelper
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @since 1.5
      */
@@ -661,7 +659,7 @@ class CwmproclaimHelper
     {
         $count = count($array);
 
-        $return        = new stdClass();
+        $return        = new \stdClass();
         $return->half  = floor($count / 2);
         $return->count = $count;
 

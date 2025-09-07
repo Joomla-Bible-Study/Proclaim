@@ -22,7 +22,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 /**
- * Class JBSMAddonYouTube
+ * Class CWMAddonYoutube
  *
  * @package  Proclaim.Admin
  * @since    9.0.0

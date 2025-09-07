@@ -20,7 +20,6 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
-use Joomla\Filesystem\File;
 use Joomla\Registry\Registry;
 
 /**

@@ -63,7 +63,7 @@ class CwmtemplateController extends FormController
      * @throws \Exception
      * @since 7.0
      */
-    public function makeDefault()
+    public function makeDefault(): void
     {
         $app   = Factory::getApplication();
         $input = $app->input;

@@ -13,12 +13,10 @@ namespace CWM\Component\Proclaim\Site\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ListModel;
-use Joomla\Database\DatabaseQuery;
 use Joomla\Database\ParameterType;
 use Joomla\Database\QueryInterface;
 use Joomla\Input\Input;
@@ -53,14 +51,14 @@ class CwmsermonsModel extends ListModel
      *
      * @param   array  $config  An optional associative array of configuration settings.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   11.1
      * @see     JController
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array(
+            $config['filter_fields'] = [
                 'id',
                 'study.id',
                 'published',
@@ -97,8 +95,8 @@ class CwmsermonsModel extends ListModel
                 'search',
                 'messagetype',
                 'series',
-                'topic'
-            );
+                'topic',
+            ];
         }
 
         $this->input = Factory::getApplication();
@@ -113,10 +111,10 @@ class CwmsermonsModel extends ListModel
      *
      * @return array
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
-    public function getTranslated($items = array()): array
+    public function getTranslated($items = []): array
     {
         foreach ($items as $item) {
             $item->bookname   = Text::_($item->bookname);
@@ -246,6 +244,7 @@ class CwmsermonsModel extends ListModel
      * Get a list of all used series
      *
      * @return object
+     * @throws \Exception
      * @since 7.0
      */
     public function getSeries()
@@ -313,7 +312,7 @@ class CwmsermonsModel extends ListModel
      *
      * @return  void
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   11.1
      */
     protected function populateState($ordering = null, $direction = null): void
@@ -454,7 +453,7 @@ class CwmsermonsModel extends ListModel
         // From landing page filter passing
         $listOrder = $app->input->get('filter_order_Dir');
 
-        if (!empty($listOrder) && !in_array(strtoupper($listOrder), array('ASC', 'DESC', ''))) {
+        if (!empty($listOrder) && !in_array(strtoupper($listOrder), ['ASC', 'DESC', ''])) {
             $direction = 'DESC';
         }
 
@@ -507,7 +506,7 @@ class CwmsermonsModel extends ListModel
      *
      * @return  QueryInterface|string
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.0
      */
     protected function getListQuery(): QueryInterface|string
@@ -909,7 +908,7 @@ class CwmsermonsModel extends ListModel
                 // Work through the menu filters or search filters
                 foreach ($filters as $filter => $filtervalue) {
                     if (count($filtervalue) > 1) {
-                        $where2   = array();
+                        $where2   = [];
                         $subquery = '(';
 
                         foreach ($filtervalue as $filterid) {

@@ -54,10 +54,10 @@ class LocationField extends FormField
         $allowSelect    = ((string)$this->element['select'] != 'false');
         $allowPropagate = ((string)$this->element['propagate'] == 'true');
 
-        $languages = LanguageHelper::getContentLanguages(array(0, 1), false);
+        $languages = LanguageHelper::getContentLanguages([0, 1], false);
 
         // Load language
-        Factory::getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
+        Factory::getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
         // The active article id field.
         $value = (int)$this->value ?: '';
@@ -76,7 +76,7 @@ class LocationField extends FormField
             static $scriptSelect = null;
 
             if (is_null($scriptSelect)) {
-                $scriptSelect = array();
+                $scriptSelect = [];
             }
 
             if (!isset($scriptSelect[$this->id])) {
@@ -103,7 +103,7 @@ class LocationField extends FormField
 
         if (isset($this->element['language'])) {
             $linkArticles .= '&amp;forcedLanguage=' . $this->element['language'];
-            $linkArticle  .= '&amp;forcedLanguage=' . $this->element['language'];
+            $linkArticle .= '&amp;forcedLanguage=' . $this->element['language'];
             $modalTitle   = Text::_('COM_CONTENT_SELECT_AN_ARTICLE') . ' &#8212; ' . $this->element['label'];
         } else {
             $modalTitle = Text::_('JBS_CMN_SELECT_LOCATION');
@@ -214,7 +214,7 @@ class LocationField extends FormField
             $html .= HTMLHelper::_(
                 'bootstrap.renderModal',
                 'ModalSelect' . $modalId,
-                array(
+                [
                     'title'      => $modalTitle,
                     'url'        => $urlSelect,
                     'height'     => '400px',
@@ -223,7 +223,7 @@ class LocationField extends FormField
                     'modalWidth' => 80,
                     'footer'     => '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
                         . Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>',
-                )
+                ]
             );
         }
 
@@ -232,7 +232,7 @@ class LocationField extends FormField
             $html .= HTMLHelper::_(
                 'bootstrap.renderModal',
                 'ModalNew' . $modalId,
-                array(
+                [
                     'title'       => Text::_('COM_CONTENT_NEW_ARTICLE'),
                     'backdrop'    => 'static',
                     'keyboard'    => false,
@@ -251,7 +251,7 @@ class LocationField extends FormField
                         . '<button type="button" class="btn btn-success"'
                         . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'article\', \'apply\', \'item-form\'); return false;">'
                         . Text::_('JAPPLY') . '</button>',
-                )
+                ]
             );
         }
 
@@ -260,7 +260,7 @@ class LocationField extends FormField
             $html .= HTMLHelper::_(
                 'bootstrap.renderModal',
                 'ModalEdit' . $modalId,
-                array(
+                [
                     'title'       => Text::_('COM_CONTENT_EDIT_ARTICLE'),
                     'backdrop'    => 'static',
                     'keyboard'    => false,
@@ -279,7 +279,7 @@ class LocationField extends FormField
                         . '<button type="button" class="btn btn-success"'
                         . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'article\', \'apply\', \'item-form\'); return false;">'
                         . Text::_('JAPPLY') . '</button>',
-                )
+                ]
             );
         }
 

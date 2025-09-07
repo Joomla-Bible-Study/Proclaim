@@ -59,7 +59,7 @@ class MediaFileField extends ListField
             $messages = null;
         }
 
-        $options = array();
+        $options = [];
 
         if ($messages) {
             foreach ($messages as $message) {

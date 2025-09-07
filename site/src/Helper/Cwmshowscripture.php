@@ -39,7 +39,7 @@ class Cwmshowscripture
      * @param   object    $row     Item Info
      * @param   Registry  $params  Item Params
      *
-     * @return string|boolean
+     * @return string|bool
      *
      * @since    7.1
      */
@@ -98,7 +98,7 @@ class Cwmshowscripture
     {
         $book      = Text::_($row->bookname);
         $book      = str_replace(' ', '+', $book);
-        $book      .= '+';
+        $book .= '+';
         $reference = $book . $row->chapter_begin;
 
         if ($row->verse_begin) {
@@ -143,13 +143,13 @@ class Cwmshowscripture
     {
         $contents = '<iframe id="scripture" src="' . $this->link . '" width="100%" height="400px;"></iframe>';
         $passage  = '<div class = "fluid-row"><div class="col-12"></div>';
-        $passage  .= '<a class="heading" href="javascript:ReverseDisplay(\'scripture\')">>>' . Text::_(
+        $passage .= '<a class="heading" href="javascript:ReverseDisplay(\'scripture\')">>>' . Text::_(
             'JBS_CMN_SHOW_HIDE_SCRIPTURE'
         ) . '<<</a>';
-        $passage  .= '<div id="scripture" style="display: none;">';
-        $passage  .= $contents;
-        $passage  .= '</div>';
-        $passage  .= '</div>';
+        $passage .= '<div id="scripture" style="display: none;">';
+        $passage .= $contents;
+        $passage .= '</div>';
+        $passage .= '</div>';
 
         return $passage;
     }

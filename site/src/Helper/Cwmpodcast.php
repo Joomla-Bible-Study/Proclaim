@@ -21,10 +21,10 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Client\ClientHelper;
 use Joomla\CMS\Factory;
-use Joomla\Filesystem\File;
-use Joomla\Filesystem\Path;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 
 /**
@@ -63,7 +63,7 @@ class Cwmpodcast
      */
     public function makePodcasts(): string
     {
-        $msg  = array();
+        $msg  = [];
         $db   = Factory::getContainer()->get('DatabaseDriver');
         $year = '(' . date('Y') . ')';
         $date = date('r');
@@ -167,8 +167,8 @@ class Cwmpodcast
                 		<itunes:email>' . $podinfo->editor_email . '</itunes:email>
                 	</itunes:owner>
                 	<itunes:image href="' . $protocol . $podinfo->website . '/' . Cwmimages::getImagePath(
-                            $podinfo->podcastimage
-                        )->path . '" />
+                        $podinfo->podcastimage
+                    )->path . '" />
                 	<itunes:category text="Religion &amp; Spirituality">
                 		<itunes:category text="Christianity" />
                 	</itunes:category>
@@ -434,7 +434,7 @@ class Cwmpodcast
                         $episodedetailtemp .= '
                         		<itunes:explicit>no</itunes:explicit>
                         	       </item>';
-                        $episodedetail     .= $episodedetailtemp;
+                        $episodedetail .= $episodedetailtemp;
                     }
 
                     // End of foreach for episode details
@@ -526,7 +526,7 @@ class Cwmpodcast
         $episodes = $db->loadObjectList();
 
         // Go through each and remove the -1 strings and retest
-        $epis = array();
+        $epis = [];
 
         foreach ($episodes as $e) {
             $registry = new Registry();
@@ -591,7 +591,7 @@ class Cwmpodcast
 
         $fileIt = File::write($file, $filecontent);
 
-        // Try to make the template file un-writeable so other applications can't update it
+        // Try to make the template file unwriteable so other applications can't update it
         if (!$fileIt || (!$ftp['enabled'] && !Path::setPermissions($file, '0555'))) {
             Factory::getApplication()
                 ->enqueueMessage('Could not make the file un-writable', 'notice');
@@ -726,35 +726,35 @@ class Cwmpodcast
      */
     public function parseFrameHeader(string $fourbytes): array
     {
-        static $versions = array(
+        static $versions = [
             0x0 => '2.5',
             0x1 => 'x',
             0x2 => '2',
-            0x3 => '1'
-        );
-        static $layers = array(
+            0x3 => '1',
+        ];
+        static $layers = [
             0x0 => 'x',
             0x1 => '3',
             0x2 => '2',
-            0x3 => '1'
-        );
-        static $bitrates = array(
-            'V1L1' => array(0, 32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384, 416, 448),
-            'V1L2' => array(0, 32, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 384),
-            'V1L3' => array(0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320),
-            'V2L1' => array(0, 32, 48, 56, 64, 80, 96, 112, 128, 144, 160, 176, 192, 224, 256),
-            'V2L2' => array(0, 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160),
-            'V2L3' => array(0, 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160),
-        );
-        static $sample_rates = array(
-            '1'   => array(44100, 48000, 32000),
-            '2'   => array(22050, 24000, 16000),
-            '2.5' => array(11025, 12000, 8000),
-        );
-        static $samples = array(
-            1 => array(1 => 384, 2 => 1152, 3 => 1152,),
-            2 => array(1 => 384, 2 => 1152, 3 => 576,),
-        );
+            0x3 => '1',
+        ];
+        static $bitrates = [
+            'V1L1' => [0, 32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384, 416, 448],
+            'V1L2' => [0, 32, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 384],
+            'V1L3' => [0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320],
+            'V2L1' => [0, 32, 48, 56, 64, 80, 96, 112, 128, 144, 160, 176, 192, 224, 256],
+            'V2L2' => [0, 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160],
+            'V2L3' => [0, 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160],
+        ];
+        static $sample_rates = [
+            '1'   => [44100, 48000, 32000],
+            '2'   => [22050, 24000, 16000],
+            '2.5' => [11025, 12000, 8000],
+        ];
+        static $samples = [
+            1 => [1 => 384, 2 => 1152, 3 => 1152,],
+            2 => [1 => 384, 2 => 1152, 3 => 576,],
+        ];
 
         $b1 = ord($fourbytes[1]);
         $b2 = ord($fourbytes[2]);
@@ -782,7 +782,7 @@ class Cwmpodcast
         $original_bit        = ($b3 & 0x04) >> 2;
         $emphasis            = ($b3 & 0x03);
 
-        $info                  = array();
+        $info                  = [];
         $info['Version']       = $version;
         $info['Layer']         = $layer;
         $info['Bitrate']       = $bitrate;
@@ -826,7 +826,7 @@ class Cwmpodcast
      */
     public function removeHttp(string $url): string
     {
-        $disallowed = array('http://', 'https://');
+        $disallowed = ['http://', 'https://'];
 
         foreach ($disallowed as $d) {
             if (str_starts_with($url, $d)) {
