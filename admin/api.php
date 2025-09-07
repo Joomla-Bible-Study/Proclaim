@@ -36,7 +36,7 @@ try {
 // phpcs:enable PSR1.Files.SideEffects
 
 // Version information
-const BIBLESTUDY_VERSION            = '10.0.0';
+const BIBLESTUDY_VERSION            = '10.0.1';
 const BIBLESTUDY_VERSION_UPDATEFILE = 'JBS Version ' . BIBLESTUDY_VERSION;
 
 // Default values

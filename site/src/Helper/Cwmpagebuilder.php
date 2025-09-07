@@ -54,7 +54,7 @@ class Cwmpagebuilder
      * @throws \Exception
      * @since 7.0
      */
-    public function buildPage($item, $params, $template)
+    public function buildPage($item, $params, $template): object
     {
         $item->tp_id = '1';
 
@@ -219,7 +219,7 @@ class Cwmpagebuilder
      * @throws \Exception
      * @since 7.0
      */
-    private function mediaBuilder($mediaids, $params, $template, $item)
+    private function mediaBuilder($mediaids, $params, $template, $item): string
     {
         $listing          = new Cwmlisting();
         $mediaIDs         = $listing->getFluidMediaids($item);
@@ -241,9 +241,9 @@ class Cwmpagebuilder
      * @throws \Exception
      * @since 7.0
      */
-    public function runContentPlugins($item, $params)
+    public function runContentPlugins($item, $params): object
     {
-        // We don't need offset but it is a required argument for the plugin dispatcher
+        // We don't need offset, but it is a required argument for the plugin dispatcher
         $offset = 0;
         PluginHelper::importPlugin('content');
 
@@ -293,7 +293,7 @@ class Cwmpagebuilder
         $limit = 10,
         $order = 'DESC',
         $template = null
-    ) {
+    ): array {
         $db = Factory::getContainer()->get('DatabaseDriver');
 
         $orderparam = $params->get('order', '1');
