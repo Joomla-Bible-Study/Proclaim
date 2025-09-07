@@ -72,7 +72,8 @@ foreach ($list as $study) {
     <div class="col-12">
         <?php
         if ($params->get('show_link') > 0) {
-            echo '<span class="fas fa-bible" aria-hidden="true"></span>' . $link;
+            /** @var string $link */
+            echo $link;
         }
         ?>
     </div>
