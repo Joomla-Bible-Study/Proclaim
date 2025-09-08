@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmteacher;
 
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
+use Joomla\CMS\Document\Document;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -31,7 +32,7 @@ use Joomla\Registry\Registry;
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var  JDocument Print
+    /** @var  Document Print
      *
      * @since 7.0
      */

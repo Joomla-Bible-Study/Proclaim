@@ -12,7 +12,6 @@
 namespace CWM\Module\Proclaimicon\Administrator\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
-use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
@@ -71,11 +70,11 @@ class ProclaimIconHelper
 
             if ($params->get('show_home')) {
                 $tmp = [
-                    'image'   => 'icon-big icon-star fa-3x',
-                    'link'    => Route::_('index.php?option=com_proclaim&amp;view=cwmcpanel'),
-                    'name'    => 'JBS_MNU_CONTROL_PANEL',
-                    'access'  => ['core.manage', 'com_proclaim', 'core.create', 'com_proclaim'],
-                    'group'   => 'MOD_PROCLAIMICON_SITE',
+                    'image'  => 'icon-big icon-star fa-3x',
+                    'link'   => Route::_('index.php?option=com_proclaim&amp;view=cwmcpanel'),
+                    'name'   => 'JBS_MNU_CONTROL_PANEL',
+                    'access' => ['core.manage', 'com_proclaim', 'core.create', 'com_proclaim'],
+                    'group'  => 'MOD_PROCLAIMICON_SITE',
                 ];
 
                 $this->buttons[$key][] = $tmp;
@@ -287,11 +286,11 @@ class ProclaimIconHelper
 
             if ($params->get('show_admin')) {
                 $tmp = [
-                    'image'   => 'icon-big icon-options fa-3x',
-                    'link'    => Route::_('index.php?option=com_proclaim&amp;task=cwmadmin.edit&amp;id=1'),
-                    'name'    => 'JBS_CMN_ADMINISTRATION',
-                    'access'  => ['core.manage', 'com_proclaim', 'core.create', 'com_proclaim'],
-                    'group'   => 'MOD_PROCLAIMICON_SITE',
+                    'image'  => 'icon-big icon-options fa-3x',
+                    'link'   => Route::_('index.php?option=com_proclaim&amp;task=cwmadmin.edit&amp;id=1'),
+                    'name'   => 'JBS_CMN_ADMINISTRATION',
+                    'access' => ['core.manage', 'com_proclaim', 'core.create', 'com_proclaim'],
+                    'group'  => 'MOD_PROCLAIMICON_SITE',
                 ];
 
                 $this->buttons[$key][] = $tmp;

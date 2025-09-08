@@ -36,7 +36,7 @@ class Router extends RouterView
     /**
      * Flag to remove IDs
      *
-     * @var    boolean
+     * @var    bool
      * @since  10.0.0
      */
     protected $noIDs = false;
@@ -202,10 +202,10 @@ class Router extends RouterView
         if ($this->noIDs) {
             [$void, $segment] = explode(':', $id, 2);
 
-            return array($void => $segment);
+            return [$void => $segment];
         }
 
-        return array((int)$id => $id);
+        return [(int)$id => $id];
     }
 
     /**
@@ -416,10 +416,10 @@ class Router extends RouterView
         if ($this->noIDs) {
             [$void, $segment] = explode(':', $id, 2);
 
-            return array($void => $segment);
+            return [$void => $segment];
         }
 
-        return array((int)$id => $id);
+        return [(int)$id => $id];
     }
 
     /**

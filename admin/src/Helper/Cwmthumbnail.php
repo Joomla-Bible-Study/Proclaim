@@ -64,7 +64,7 @@ class Cwmthumbnail
     /**
      * Resize image
      *
-     * @param string $path      Path to file
+     * @param string $path  Path to file
      * @param int $new_size  New image size
      *
      * @return void

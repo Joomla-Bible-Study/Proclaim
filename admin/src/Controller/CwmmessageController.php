@@ -50,7 +50,7 @@ class CwmmessageController extends FormController
      *
      * @since 1.5
      */
-    public function resetHits()
+    public function resetHits(): void
     {
         // Check for request forgeries.
         Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));

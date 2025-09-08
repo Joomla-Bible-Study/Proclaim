@@ -19,7 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 use CWM\Component\Proclaim\Administrator\Model\CwmadminModel;
 use Exception;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Folder;
+use JoomlaFilesystem\Folder;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;

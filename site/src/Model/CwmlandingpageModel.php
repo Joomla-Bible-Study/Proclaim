@@ -39,15 +39,15 @@ class CwmlandingpageModel extends ListModel
      * @since      1.6
      * @see        JController
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array(
+            $config['filter_fields'] = [
                 'id',
                 's.id',
                 'language',
                 's.language',
-            );
+            ];
         }
 
         parent::__construct($config);

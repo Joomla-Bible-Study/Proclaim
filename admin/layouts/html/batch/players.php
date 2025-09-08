@@ -11,6 +11,7 @@
 
 defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmhtml;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
@@ -20,5 +21,5 @@ use Joomla\CMS\Language\Text;
 </label>
 <select name="batch[player]" class="form-select" id="batch-player">
     <option value=""><?php echo Text::_('JBS_BAT_PLAYER_NOCHANGE'); ?></option>
-    <?php echo HTMLHelper::_('select.options', HTMLHelper::_('proclaim.playerlist', true, true), 'value', 'text'); ?>
+    <?php echo HTMLHelper::_('select.options', Cwmhtml::playerlist(), 'value', 'text'); ?>
 </select>

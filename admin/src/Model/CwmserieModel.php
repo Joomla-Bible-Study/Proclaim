@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CwmserieTable;
 use Joomla\CMS\Application\ApplicationHelper;
@@ -76,14 +75,14 @@ class CwmserieModel extends AdminModel
      *
      * @since 7.0
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = [], $loadData = true)
     {
         if (empty($data)) {
             $this->getItem();
         }
 
         // Get the form.
-        $form = $this->loadForm('com_proclaim.serie', 'serie', array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm('com_proclaim.serie', 'serie', ['control' => 'jform', 'load_data' => $loadData]);
 
         if ($form === null) {
             return false;
@@ -180,8 +179,8 @@ class CwmserieModel extends AdminModel
         // Alter the title for save as copy
         if ($app->input->get('task') == 'save2copy') {
             list($title, $alias) = $this->generateNewTitle('0', $data['alias'], $data['title']);
-            $data['title'] = $title;
-            $data['alias'] = $alias;
+            $data['title']       = $title;
+            $data['alias']       = $alias;
         }
 
         // If no image uploaded, just save data as usual
@@ -189,7 +188,7 @@ class CwmserieModel extends AdminModel
             if (empty($data['image'])) {
                 // Modify model data if no image is set.
                 $data['series_thumbnail'] = "";
-            } elseif (!CwmproclaimHelper::startsWith(basename($data['image']), $prefix)) {
+            } elseif (!str_starts_with(basename($data['image']), $prefix)) {
                 // Modify model data
                 $data['series_thumbnail'] = $path . '/thumb_' . basename($data['image']);
             } elseif (substr_count(basename($data['image']), $prefix) > 1) {
@@ -218,28 +217,29 @@ class CwmserieModel extends AdminModel
     }
 
     /**
-     * Method to check-out a row for editing.
+     * Method to check out a row for editing.
      *
-     * @param   integer  $pk  The numeric id of the primary key.
+     * @param   int  $pk  The numeric ID of the primary key.
      *
-     * @return  boolean  False on failure or error, true otherwise.
+     * @return  bool  False on failure or error, true otherwise.
      *
      * @since   11.1
      */
     public function checkout($pk = null)
     {
-        return $pk;
+        return true;
     }
 
     /**
-     * Batch copy items to a new category or current.
+     * Batch copy items to a new category or the current one.
      *
-     * @param   integer  $value     The new category.
-     * @param   array    $pks       An array of row IDs.
-     * @param   array    $contexts  An array of item contexts.
+     * @param   int    $value     The new category.
+     * @param   array  $pks       An array of row IDs.
+     * @param   array  $contexts  An array of item contexts.
      *
-     * @return  array|false  An array of new IDs on success, boolean false on failure.
+     * @return  array|false  IDs on success, false on failure.
      *
+     * @throws \Exception
      * @since    11.1
      */
     protected function batchCopy($value, $pks, $contexts)
@@ -248,7 +248,7 @@ class CwmserieModel extends AdminModel
         /** @type CwmserieTable $table */
         $table  = $this->getTable();
         $i      = 0;
-        $newIds = array();
+        $newIds = [];
 
         // Check that the user has create permission for the component
         $extension = $app->input->get('option', '');
@@ -260,7 +260,7 @@ class CwmserieModel extends AdminModel
             return false;
         }
 
-        // Parent exists so we let's proceed
+        // Parent exists, so we let's proceed
         while (!empty($pks)) {
             // Pop the first ID off the stack
             $pk = array_shift($pks);
@@ -329,16 +329,16 @@ class CwmserieModel extends AdminModel
      * @throws  \Exception
      * @since   3.0
      */
-    public function getTable($name = 'Cwmserie', $prefix = '', $options = array()): Table
+    public function getTable($name = 'Cwmserie', $prefix = '', $options = []): Table
     {
         return parent::getTable($name, $prefix, $options);
     }
 
     /**
-     * Custom clean the cache of com_proclaim and proclaim modules
+     * Custom cleans the cache of the com_proclaim and proclaim modules
      *
-     * @param   string   $group      The cache group
-     * @param   integer  $client_id  The ID of the client
+     * @param   string  $group      The cache group
+     * @param   int     $client_id  The ID of the client
      *
      * @return  void
      *
@@ -356,7 +356,7 @@ class CwmserieModel extends AdminModel
      *
      * @param   object  $record  A record object.
      *
-     * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
+     * @return  bool  True if allowed to delete the record. Defaults to the permission for the component.
      *
      * @since   12.2
      */
@@ -381,8 +381,9 @@ class CwmserieModel extends AdminModel
      *
      * @param   object  $record  A record object.
      *
-     * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
+     * @return  bool  True if allowed to change the state of the record. Defaults to the permission for the component.
      *
+     * @throws \Exception
      * @since    1.6
      */
     protected function canEditState($record)
@@ -394,12 +395,12 @@ class CwmserieModel extends AdminModel
             return $user->authorise('core.edit.state', 'com_proclaim.serie.' . (int)$record->id);
         }
 
-        // Default to component settings if serie known.
+        // Default to component settings if series known.
         return parent::canEditState($record);
     }
 
     /**
-     * Prepare and sanitise the table data prior to saving.
+     * Prepare and sanitize the table data before saving.
      *
      * @param   CwmserieTable  $table  A reference to a JTable object.
      *
@@ -438,17 +439,18 @@ class CwmserieModel extends AdminModel
     }
 
     /**
-     * Method to get the data that should be injected in the form.
+     * Method to get the data that should be injected into the form.
      *
      * @return  array    The default data is an empty array.
      *
+     * @throws \Exception
      * @since   7.0
      */
     protected function loadFormData()
     {
         // Check the session for previously entered form data.
         $app  = Factory::getApplication();
-        $data = $app->getUserState('com_proclaim.edit.serie.data', array());
+        $data = $app->getUserState('com_proclaim.edit.serie.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();
@@ -468,6 +470,6 @@ class CwmserieModel extends AdminModel
      */
     protected function getReorderConditions($table)
     {
-        return array();
+        return [];
     }
 }

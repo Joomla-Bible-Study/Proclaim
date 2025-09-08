@@ -52,7 +52,7 @@ class Cwmparams
      */
     public static object $templateTable;
 
-    /** @var integer Default template id and used to check if changed form from last query
+    /** @var int Default template id and used to check if changed form from last query
      *
      * @since 1.5
      */

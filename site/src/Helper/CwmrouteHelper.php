@@ -26,7 +26,7 @@ abstract class CwmrouteHelper
     /**
      * Get the sermon route.
      *
-     * @param   integer     $id        The route of the content item.
+     * @param   int         $id        The route of the content item.
      * @param   int|string  $language  The language code.
      * @param   ?string     $layout    The layout value.
      *
@@ -53,7 +53,7 @@ abstract class CwmrouteHelper
     /**
      * Get the Series route.
      *
-     * @param   integer     $seriesid  The Series ID.
+     * @param   int         $seriesid  The Series ID.
      * @param   int|string  $language  The language code.
      * @param   ?string     $layout    The layout value.
      *
@@ -83,7 +83,7 @@ abstract class CwmrouteHelper
     /**
      * Get the Series route.
      *
-     * @param   integer     $seriesid  The Series ID.
+     * @param   int         $seriesid  The Series ID.
      * @param   int|string  $language  The language code.
      * @param   ?string     $layout    The layout value.
      *
@@ -143,7 +143,7 @@ abstract class CwmrouteHelper
     /**
      * Get the form route.
      *
-     * @param   integer  $id  The form ID.
+     * @param   int  $id  The form ID.
      *
      * @return  string  The article route.
      *

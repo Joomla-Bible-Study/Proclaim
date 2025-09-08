@@ -76,7 +76,7 @@ class com_proclaimInstallerScript extends InstallerScript
     ];
 
     /**
-     * @var   string Path to Mysql files
+     * @var   string Path to MySQL files
      * @since 1.5
      */
     public string $filePath = '/components/com_proclaim/install/sql/updates/mysql';
@@ -87,7 +87,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * @var    string
      * @since  3.6
      */
-    protected $release = '10.0.0-beta.2';
+    protected $release = '10.0.1';
 
     /**
      * @var   DatabaseDriver|DatabaseInterface|null
@@ -133,7 +133,7 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Allow downgrades of your extension
      *
-     * Use at your own risk as if there is a change in functionality people may wish to downgrade.
+     * Use at your own risk, as if there is a change in functionality, people may wish to downgrade.
      *
      * @var    bool
      * @since  3.6

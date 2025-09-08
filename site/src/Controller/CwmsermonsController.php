@@ -13,7 +13,6 @@ namespace CWM\Component\Proclaim\Site\Controller;
 
 use CWM\Component\Proclaim\Site\Helper\Cwmdownload;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 
@@ -42,7 +41,7 @@ class CwmsermonsController extends BaseController
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function download(): void
@@ -62,7 +61,7 @@ class CwmsermonsController extends BaseController
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since      7.0
      * @deprecated 10.0.0
      */
@@ -81,7 +80,7 @@ class CwmsermonsController extends BaseController
      *
      * @return  void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function playHit(): void

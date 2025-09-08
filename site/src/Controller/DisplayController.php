@@ -14,7 +14,6 @@ namespace CWM\Component\Proclaim\Site\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Exception;
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Input\Input;
@@ -36,10 +35,10 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
      * @param   ?CMSApplication       $app      The Application for the dispatcher
      * @param   ?Input                $input    The Input object for the request
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   3.0
      */
-    public function __construct($config = array(), ?MVCFactoryInterface $factory = null, $app = null, $input = null)
+    public function __construct($config = [], ?MVCFactoryInterface $factory = null, $app = null, $input = null)
     {
         // Contact frontpage Editor contacts proxying.
         $this->input = Factory::getApplication()->input;
@@ -61,10 +60,10 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
      *
      * @return  static  This object to support chaining.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   1.5
      */
-    public function display($cachable = true, $urlparams = array()): DisplayController
+    public function display($cachable = true, $urlparams = []): DisplayController
     {
         /*
         Set the default view name and format from the Request.
@@ -91,7 +90,7 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
 
         $this->input->set('t', $t);
 
-        $safeurlparams = array(
+        $safeurlparams = [
             'id'               => 'INT',
             'year'             => 'INT',
             'month'            => 'INT',
@@ -105,8 +104,8 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
             'filter-search'    => 'STRING',
             'print'            => 'BOOLEAN',
             'lang'             => 'CMD',
-            'Itemid'           => 'INT'
-        );
+            'Itemid'           => 'INT',
+        ];
 
         // Check for an edit form.
         if ($vName === 'form' && !$this->checkEditId('com_proclaim.edit.message', $id)) {

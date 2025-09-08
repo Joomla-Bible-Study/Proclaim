@@ -20,7 +20,6 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMAdmin;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper as JHtml;
 use Joomla\CMS\Installer\Installer;
@@ -29,6 +28,7 @@ use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Filesystem\Folder;
 
 /**
  * View class for Admin
@@ -232,15 +232,15 @@ class HtmlView extends BaseHtmlView
         // Get the list of backup files
         $path = JPATH_SITE . '/media/com_proclaim/backup';
 
-        if (Folder::exists($path)) {
+        if (file_exists($path)) {
             if (!$files = Folder::files($path, '.sql')) {
                 $this->lists['backedupfiles'] = Text::_('JBS_CMN_NO_FILES_TO_DISPLAY');
             } else {
                 asort($files, SORT_STRING);
-                $filelist = array();
+                $filelist = [];
 
                 foreach ($files as $value) {
-                    $filelisttemp = array('value' => $value, 'text' => $value);
+                    $filelisttemp = ['value' => $value, 'text' => $value];
                     $filelist[]   = $filelisttemp;
                 }
 
@@ -337,7 +337,7 @@ class HtmlView extends BaseHtmlView
         $toolbar->divider();
 
         ToolbarHelper::inlinehelp();
-		$help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=30:administration-help-screen&catid=20&Itemid=315&tmpl=component';
+        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=30:administration-help-screen&catid=20&Itemid=315&tmpl=component';
         $toolbar->help('Proclaim', false, $help_url);
     }
 

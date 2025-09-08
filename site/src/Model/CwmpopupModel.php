@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Site\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use JApplicationSite;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Registry\Registry;
@@ -45,7 +44,7 @@ class CwmpopupModel extends ListModel
      */
     protected function populateState($ordering = null, $direction = null): void
     {
-        /** @type JApplicationSite $app */
+        /** @type \JApplicationSite $app */
         $app = Factory::getApplication();
 
         // Load the parameters

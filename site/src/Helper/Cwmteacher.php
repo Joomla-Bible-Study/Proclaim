@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Router\Route;
@@ -39,14 +38,14 @@ class Cwmteacher extends Cwmlisting
      *
      * @return array
      *
-     * @throws Exception
+     * @throws \Exception
      * @since    8.0.0
      */
     public function getTeachersFluid($params): array
     {
         $input      = Factory::getApplication()->input;
         $id         = $input->get('id', '', 'int');
-        $teachers   = array();
+        $teachers   = [];
         $teacherIDs = [];
         $t          = $params->get('teachertemplateid');
 
@@ -87,7 +86,7 @@ class Cwmteacher extends Cwmlisting
                 $teachername = $result->teachername;
             }
 
-            $teachers[] = array('name' => $teachername, 'image' => $image, 't' => $t, 'id' => $result->id);
+            $teachers[] = ['name' => $teachername, 'image' => $image, 't' => $t, 'id' => $result->id];
         }
 
         return $teachers;
@@ -101,14 +100,14 @@ class Cwmteacher extends Cwmlisting
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      * @todo     need to redo to bootstrap
      * @since    8.0.0
      */
     public function getTeacher($params, $id): string
     {
         $input       = Factory::getApplication()->input;
-        $htmlView = new HtmlView();
+        $htmlView    = new HtmlView();
         $htmlView->loadHelper('image');
         $teacherids = new \stdClass();
         $t          = (int)$params->get('teachertemplateid');
@@ -280,7 +279,7 @@ class Cwmteacher extends Cwmlisting
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since    8.0.0
      */
     public function getTeacherStudiesExp($id, $params): string

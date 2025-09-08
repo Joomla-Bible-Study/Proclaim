@@ -44,7 +44,7 @@ class Cwmrelatedstudies
      * @param   object    $row     JTable
      * @param   Registry  $params  Item Params
      *
-     * @return string|boolean
+     * @return string|bool
      *
      * @throws \Exception
      * @since    7.2
@@ -173,7 +173,7 @@ class Cwmrelatedstudies
      * @param   string  $compare  String to compare
      * @param   int     $id       ID of study
      *
-     * @return boolean
+     * @return bool
      *
      * @since    7.2
      */
@@ -277,7 +277,7 @@ class Cwmrelatedstudies
      */
     public function removeCommonWords(string $input): array
     {
-        $commonWords = array(
+        $commonWords = [
             'a',
             'able',
             'about',
@@ -935,8 +935,8 @@ class Cwmrelatedstudies
             'yourselves',
             'you\'ve',
             'z',
-            'zero'
-        );
+            'zero',
+        ];
         $content     = strip_tags($input);
         $content     = strtolower($content);
         $content     = preg_replace("/[^a-zA-Z 0-9]+/", " ", $content);

@@ -269,7 +269,7 @@ class CwmmessageModel extends AdminModel
             if (empty($data['image'])) {
                 // Modify model data if no image is set.
                 $data['thumbnailm'] = "";
-            } elseif (!CwmproclaimHelper::startsWith(basename($data['image']), 'thumb_')) {
+            } elseif (!str_starts_with(basename($data['image']), 'thumb_')) {
                 // Modify model data
                 $data['thumbnailm'] = $path . '/thumb_' . basename($data['image']);
             }

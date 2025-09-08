@@ -53,7 +53,7 @@ class TeacherListField extends ListField
         $query->order('teachername');
         $db->setQuery((string)$query);
         $teachers = $db->loadObjectList();
-        $options  = array();
+        $options  = [];
 
         if ($teachers) {
             foreach ($teachers as $teacher) {

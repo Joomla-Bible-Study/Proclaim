@@ -17,13 +17,10 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use Exception;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
 use Joomla\Registry\Registry;
-use stdClass;
 
 /**
  * Proclaim images class
@@ -91,16 +88,17 @@ class Cwmimages
      */
     public static function getImagePath(string $path): object
     {
-        $tmp         = new stdClass();
+        $tmp         = new \stdClass();
         $tmp->path   = null;
         $tmp->size   = null;
         $tmp->width  = 0;
         $tmp->height = 0;
 
         $path       = HTMLHelper::_('cleanImageURL', $path);
-        $FileExists = File::exists(JPATH_ROOT . DIRECTORY_SEPARATOR . $path->url);
+        $FileExists = file_exists(JPATH_ROOT . DIRECTORY_SEPARATOR . $path->url);
+        $IsFile     = is_file(JPATH_ROOT . DIRECTORY_SEPARATOR . $path->url);
 
-        if ($path->attributes['width'] === 0 && $FileExists) {
+        if ($path->attributes['width'] === 0 && $IsFile) {
             $tmp       = Image::getImageFileProperties(JPATH_ROOT . DIRECTORY_SEPARATOR . $path->url);
             $tmp->path = $path->url;
         } elseif ($FileExists) {
@@ -250,7 +248,7 @@ class Cwmimages
      *
      * @since    7.0
      *
-     * @todo This looks like it need a rework.
+     * @todo This looks like it needs a rework.
      */
     public static function getTeacherImage(?string $image1 = null, ?string $image2 = null): object
     {
@@ -318,7 +316,7 @@ class Cwmimages
      * Get Show Hide
      *
      * @return object
-     * @throws Exception
+     * @throws \Exception
      * @example  {
      *             path: 'string',
      *             width: integer,

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of Proclaim Package
  *
@@ -7,6 +8,8 @@
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
+
+namespace CWM\Component\Proclaim\Administrator\Helper;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -19,16 +22,15 @@ defined('JPATH_BASE') or die;
  * Proclaim HTML class.
  *
  * @package    Proclaim.Admin
- * @since      7.0.0
- * @deprecated 10.0.0
+ * @since      10.0.0
  */
-abstract class JHtmlProclaim
+class Cwmhtml
 {
     /**
      * @var    array  Array containing information for loaded files
      * @since  9.0.0
      */
-    protected static array $loaded = array();
+    protected static array $loaded = [];
 
     /**
      * Method to get the field options.
@@ -39,13 +41,13 @@ abstract class JHtmlProclaim
      */
     public static function playerList(): object
     {
-        $options   = array();
-        $options[] = array('value' => '', 'text' => Text::_('JBS_CMN_USE_GLOBAL'));
-        $options[] = array('value' => 0, 'text' => Text::_('JBS_CMN_DIRECT_LINK'));
-        $options[] = array('value' => 1, 'text' => Text::_('JBS_CMN_USE_INTERNAL_PLAYER'));
-        $options[] = array('value' => 3, 'text' => Text::_('JBS_CMN_USE_AV'));
-        $options[] = array('value' => 7, 'text' => Text::_('JBS_CMN_USE_MP3_PLAYER'));
-        $options[] = array('value' => 8, 'text' => Text::_('JBS_CMN_USE_EMBED_CODE'));
+        $options   = [];
+        $options[] = ['value' => '', 'text' => Text::_('JBS_CMN_USE_GLOBAL')];
+        $options[] = ['value' => 0, 'text' => Text::_('JBS_CMN_DIRECT_LINK')];
+        $options[] = ['value' => 1, 'text' => Text::_('JBS_CMN_USE_INTERNAL_PLAYER')];
+        $options[] = ['value' => 3, 'text' => Text::_('JBS_CMN_USE_AV')];
+        $options[] = ['value' => 7, 'text' => Text::_('JBS_CMN_USE_MP3_PLAYER')];
+        $options[] = ['value' => 8, 'text' => Text::_('JBS_CMN_USE_EMBED_CODE')];
         $object    = new \stdClass();
 
         foreach ($options as $key => $value) {
@@ -65,7 +67,7 @@ abstract class JHtmlProclaim
     public static function linkType(): string
     {
         // Create the batch selector to change the player on a selection list.
-        $lines = array(
+        $lines = [
             '<label id="batch-client-lbl" for="batch-linkType" class="hasTip" title="' . Text::_(
                 'JBS_MED_SHOW_DOWNLOAD_ICON'
             )
@@ -75,8 +77,8 @@ abstract class JHtmlProclaim
             '<select name="batch[linkType]" class="form-select" id="batch-linkType">',
             '<option value="">' . Text::_('JBS_BAT_DOWNLOAD_NOCHANGE') . '</option>',
             HTMLHelper::_('select.options', self::linkTypeList(), 'value', 'text'),
-            '</select>'
-        );
+            '</select>',
+        ];
 
         return implode("\n", $lines);
     }
@@ -90,11 +92,11 @@ abstract class JHtmlProclaim
      */
     public static function linkTypeList(): object
     {
-        $options = array();
+        $options = [];
 
-        $options[] = array('value' => 0, 'text' => Text::_('JBS_MED_NO_DOWNLOAD_ICON'));
-        $options[] = array('value' => 1, 'text' => Text::_('JBS_MED_SHOW_DOWNLOAD_ICON'));
-        $options[] = array('value' => 2, 'text' => Text::_('JBS_MED_SHOW_ONLY_DOWNLOAD_ICON'));
+        $options[] = ['value' => 0, 'text' => Text::_('JBS_MED_NO_DOWNLOAD_ICON')];
+        $options[] = ['value' => 1, 'text' => Text::_('JBS_MED_SHOW_DOWNLOAD_ICON')];
+        $options[] = ['value' => 2, 'text' => Text::_('JBS_MED_SHOW_ONLY_DOWNLOAD_ICON')];
 
         $object = new \stdClass();
 
@@ -115,7 +117,7 @@ abstract class JHtmlProclaim
     public static function popup(): string
     {
         // Create the batch selector to change the popup on a selection list.
-        $lines = array(
+        $lines = [
             '<label id="batch-client-lbl" for="batch-popup" class="hasTip" title="' . Text::_('JBS_MED_INTERNAL_POPUP')
             . '::' . Text::_('JBS_MED_INTERNAL_POPUP_DESC') . '">',
             Text::_('JBS_MED_POPUP'),
@@ -123,8 +125,8 @@ abstract class JHtmlProclaim
             '<select name="batch[popup]" class="form-select" id="batch-popup">',
             '<option value="">' . Text::_('JBS_BAT_POPUP_NOCHANGE') . '</option>',
             HTMLHelper::_('select.options', self::popuplist(), 'value', 'text'),
-            '</select>'
-        );
+            '</select>',
+        ];
 
         return implode("\n", $lines);
     }
@@ -138,10 +140,10 @@ abstract class JHtmlProclaim
      */
     public static function popupList(): object
     {
-        $options   = array();
-        $options[] = array('value' => 3, 'text' => Text::_('JBS_CMN_USE_GLOBAL'));
-        $options[] = array('value' => 2, 'text' => Text::_('JBS_CMN_INLINE'));
-        $options[] = array('value' => 1, 'text' => Text::_('JBS_CMN_POPUP'));
+        $options   = [];
+        $options[] = ['value' => 3, 'text' => Text::_('JBS_CMN_USE_GLOBAL')];
+        $options[] = ['value' => 2, 'text' => Text::_('JBS_CMN_INLINE')];
+        $options[] = ['value' => 1, 'text' => Text::_('JBS_CMN_POPUP')];
 
         $object = new \stdClass();
 
@@ -162,15 +164,15 @@ abstract class JHtmlProclaim
     public static function mediaType(): string
     {
         // Create the batch selector to change the mediaType on a selection list.
-        $lines = array(
+        $lines = [
             '<label id="batch-client-lbl" for="batch-mediaType" class="hasTip" title="' . Text::_('JBS_CMN_IMAGE')
             . '::' . Text::_('JBS_MED_IMAGE_DESC') . '">',
             Text::_('JBS_MED_SELECT_MEDIA_TYPE'),
             '</label>',
             '<select name="batch[mediaType]" class="form-select" id="batch-mediaType">',
             '<option value="">' . Text::_('JBS_BAT_MEDIATYPE_NOCHANGE') . '</option>',
-            '</select>'
-        );
+            '</select>',
+        ];
 
         return implode("\n", $lines);
     }
@@ -180,13 +182,12 @@ abstract class JHtmlProclaim
      *
      * @return  string  The necessary HTML for the widget.
      *
-     * @throws  Exception
      * @since   2.5
      */
     public static function teacher(): string
     {
         // Create the batch selector to change the teacher on a selection list.
-        $lines = array(
+        $lines = [
             '<label id="batch-client-lbl" for="batch-teacher" class="hasTip" title="' .
             Text::_('JBS_CMN_TEACHER') . '::' . Text::_('JBS_BAT_TEACHER_DESC') . '">',
             Text::_('JBS_CMN_TEACHER'),
@@ -194,8 +195,8 @@ abstract class JHtmlProclaim
             '<select name="batch[teacher]" class="form-select" id="batch-teacher">',
             '<option value="">' . Text::_('JBS_BAT_TEACHER_NOCHANGE') . '</option>',
             HTMLHelper::_('select.options', self::Teacherlist(), 'value', 'text'),
-            '</select>'
-        );
+            '</select>',
+        ];
 
         return implode("\n", $lines);
     }
@@ -205,7 +206,6 @@ abstract class JHtmlProclaim
      *
      * @return ?array The field option objects.
      *
-     * @throws Exception
      * @since    1.6
      */
     public static function teacherList(): ?array
@@ -223,8 +223,12 @@ abstract class JHtmlProclaim
 
         try {
             $options = $db->loadObjectList();
-        } catch (RuntimeException $e) {
-            Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+        } catch (\Exception $e) {
+            try {
+                Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+            } catch (\Exception $e) {
+                return [];
+            }
         }
 
         return $options;
@@ -235,13 +239,12 @@ abstract class JHtmlProclaim
      *
      * @return  string  The necessary HTML for the widget.
      *
-     * @throws  Exception
      * @since   2.5
      */
     public static function messageType(): string
     {
         // Create the batch selector to change the message type on a selection list.
-        $lines = array(
+        $lines = [
             '<label id="batch-client-lbl" for="batch-messageType" class="hasTip" title="' .
             Text::_('JBS_CMN_MESSAGETYPE') . '::' . Text::_('JBS_BAT_MESSAGETYPE_DESC') . '">',
             Text::_('JBS_CMN_MESSAGETYPE'),
@@ -249,8 +252,8 @@ abstract class JHtmlProclaim
             '<select name="batch[messageType]" class="form-select" id="batch-messageType">',
             '<option value="">' . Text::_('JBS_BAT_MESSAGETYPE_NOCHANGE') . '</option>',
             HTMLHelper::_('select.options', self::Messagetypelist(), 'value', 'text'),
-            '</select>'
-        );
+            '</select>',
+        ];
 
         return implode("\n", $lines);
     }
@@ -260,7 +263,6 @@ abstract class JHtmlProclaim
      *
      * @return ?array The field option objects.
      *
-     * @throws Exception
      * @since    1.6
      */
     public static function messageTypeList(): ?array
@@ -278,8 +280,12 @@ abstract class JHtmlProclaim
 
         try {
             $options = $db->loadObjectList();
-        } catch (RuntimeException $e) {
-            Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+        } catch (\Exception $e) {
+            try {
+                Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+            } catch (\Exception $e) {
+                return [];
+            }
         }
 
         return $options;
@@ -290,13 +296,12 @@ abstract class JHtmlProclaim
      *
      * @return  string  The necessary HTML for the widget.
      *
-     * @throws  Exception
      * @since   2.5
      */
     public static function series(): string
     {
         // Create the batch selector to change the series on a selection list.
-        $lines = array(
+        $lines = [
             '<label id="batch-client-lbl" for="batch-series" class="hasTip" title="' .
             Text::_('JBS_CMN_SERIES') . '::' . Text::_('JBS_BAT_SERIES_DESC') . '">',
             Text::_('JBS_CMN_SERIES'),
@@ -304,8 +309,8 @@ abstract class JHtmlProclaim
             '<select name="batch[series]" class="form-select" id="batch-series">',
             '<option value="">' . Text::_('JBS_BAT_SERIES_NOCHANGE') . '</option>',
             HTMLHelper::_('select.options', self::Serieslist(), 'value', 'text'),
-            '</select>'
-        );
+            '</select>',
+        ];
 
         return implode("\n", $lines);
     }
@@ -315,7 +320,6 @@ abstract class JHtmlProclaim
      *
      * @return ?array The field option objects.
      *
-     * @throws Exception
      * @since    1.6
      */
     public static function seriesList(): ?array
@@ -333,8 +337,12 @@ abstract class JHtmlProclaim
 
         try {
             $options = $db->loadObjectList();
-        } catch (RuntimeException $e) {
-            Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+        } catch (\Exception $e) {
+            try {
+                Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+            } catch (\Exception $e) {
+                return [];
+            }
         }
 
         return $options;

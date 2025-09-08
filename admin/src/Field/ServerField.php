@@ -39,7 +39,7 @@ class ServerField extends FormField
     protected $type = 'Modal_Server';
 
     /**
-     * Get input form form
+     * Get input form
      *
      * @return string
      *
@@ -54,7 +54,7 @@ class ServerField extends FormField
         $allowSelect    = ((string)$this->element['select'] != 'false');
         $allowPropagate = ((string)$this->element['propagate'] == 'true');
 
-        $languages = LanguageHelper::getContentLanguages(array(0, 1), false);
+        $languages = LanguageHelper::getContentLanguages([0, 1], false);
 
         // The active Server id field.
         $value = (int)$this->value ?: '';
@@ -73,7 +73,7 @@ class ServerField extends FormField
             static $scriptSelect = null;
 
             if (is_null($scriptSelect)) {
-                $scriptSelect = array();
+                $scriptSelect = [];
             }
 
             if (!isset($scriptSelect[$this->id])) {
@@ -111,7 +111,7 @@ class ServerField extends FormField
         $urlNew    = $linkServer . '&amp;task=cwmserver.add';
 
         if ($value) {
-            // Get a reverse lookup of the server id to server name
+            // Get a reverse lookup of the server ID to server name
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery('true');
             $query->select($db->quoteName('server_name'))
@@ -220,7 +220,7 @@ class ServerField extends FormField
             $html .= HTMLHelper::_(
                 'bootstrap.renderModal',
                 'ModalSelect' . $modalId,
-                array(
+                [
                     'title'      => $modalTitle,
                     'url'        => $urlSelect,
                     'height'     => '400px',
@@ -229,7 +229,7 @@ class ServerField extends FormField
                     'modalWidth' => 80,
                     'footer'     => '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
                         . Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>',
-                )
+                ]
             );
         }
 
@@ -238,7 +238,7 @@ class ServerField extends FormField
             $html .= HTMLHelper::_(
                 'bootstrap.renderModal',
                 'ModalNew' . $modalId,
-                array(
+                [
                     'title'       => Text::_('COM_PROCLAIM_NEW_SERVER'),
                     'backdrop'    => 'static',
                     'keyboard'    => false,
@@ -257,7 +257,7 @@ class ServerField extends FormField
                         . '<button type="button" class="btn btn-success"'
                         . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'server\', \'apply\', \'item-form\'); return false;">'
                         . Text::_('JAPPLY') . '</button>',
-                )
+                ]
             );
         }
 
@@ -266,7 +266,7 @@ class ServerField extends FormField
             $html .= HTMLHelper::_(
                 'bootstrap.renderModal',
                 'ModalEdit' . $modalId,
-                array(
+                [
                     'title'       => Text::_('COM_PROCLAIM_EDIT_SERVER'),
                     'backdrop'    => 'static',
                     'keyboard'    => false,
@@ -285,7 +285,7 @@ class ServerField extends FormField
                         . '<button type="button" class="btn btn-success"'
                         . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'server\', \'apply\', \'item-form\'); return false;">'
                         . Text::_('JAPPLY') . '</button>',
-                )
+                ]
             );
         }
 
@@ -309,7 +309,7 @@ class ServerField extends FormField
      *
      * @since   3.4
      */
-    protected function getLabel()
+    protected function getLabel(): string
     {
         return str_replace($this->id, $this->id . '_name', parent::getLabel());
     }

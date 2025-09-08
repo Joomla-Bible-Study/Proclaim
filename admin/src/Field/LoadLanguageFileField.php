@@ -25,10 +25,8 @@ if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 
-
-
 /**
- * This is a dummy form element to load the components language file
+ * This is a dummy form element to load the components' language file
  *
  * @package  Proclaim.Admin
  * @since    9.0.0
@@ -52,7 +50,7 @@ class LoadLanguageFileField extends ListField
     protected $hidden = true;
 
     /**
-     * Get Lable
+     * Get Label
      *
      * @return string;
      * @since 9.0.0
@@ -64,7 +62,7 @@ class LoadLanguageFileField extends ListField
     }
 
     /**
-     * Method to load the laguage file; nothing to display.
+     * Method to load the language file; nothing to display.
      *
      * @return  string  The field input markup.
      * @since 9.0.0
@@ -72,7 +70,7 @@ class LoadLanguageFileField extends ListField
     protected function getInput(): string
     {
         // Get language file; english language as fallback
-        $language = Factory::getLanguage();
+        $language = Factory::getApplication()->getLanguage();
         $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
         $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, null, true);
 

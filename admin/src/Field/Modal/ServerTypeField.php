@@ -80,7 +80,7 @@ class ServerTypeField extends FormField
             static $scriptSelect = null;
 
             if (is_null($scriptSelect)) {
-                $scriptSelect = array();
+                $scriptSelect = [];
             }
 
             if (!isset($scriptSelect[$this->id])) {
@@ -107,7 +107,7 @@ class ServerTypeField extends FormField
 
         if (isset($this->element['language'])) {
             $linkSeries .= '&amp;forcedLanguage=' . $this->element['language'];
-            $linkSerie  .= '&amp;forcedLanguage=' . $this->element['language'];
+            $linkSerie .= '&amp;forcedLanguage=' . $this->element['language'];
             $modalTitle = Text::_('JBS_CMN_SELECT_SERVERTYPE') . ' &#8212; ' . $this->element['label'];
         } else {
             $modalTitle = Text::_('JBS_CMN_SELECT_SERVERTYPE');
@@ -188,7 +188,7 @@ class ServerTypeField extends FormField
             $html .= HTMLHelper::_(
                 'bootstrap.renderModal',
                 'ModalSelect' . $modalId,
-                array(
+                [
                     'title'      => $modalTitle,
                     'url'        => $urlSelect,
                     'height'     => '400px',
@@ -197,7 +197,7 @@ class ServerTypeField extends FormField
                     'modalWidth' => 80,
                     'footer'     => '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
                         . Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>',
-                )
+                ]
             );
         }
 
@@ -206,7 +206,7 @@ class ServerTypeField extends FormField
             $html .= HTMLHelper::_(
                 'bootstrap.renderModal',
                 'ModalNew' . $modalId,
-                array(
+                [
                     'title'       => Text::_('JBS_STY_NEW_SERVERTYPE'),
                     'backdrop'    => 'static',
                     'keyboard'    => false,
@@ -225,7 +225,7 @@ class ServerTypeField extends FormField
                         . '<button type="button" class="btn btn-success"'
                         . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'cwmmessage\', \'apply\', \'item-form\'); return false;">'
                         . Text::_('JAPPLY') . '</button>',
-                )
+                ]
             );
         }
 
@@ -234,7 +234,7 @@ class ServerTypeField extends FormField
             $html .= HTMLHelper::_(
                 'bootstrap.renderModal',
                 'ModalEdit' . $modalId,
-                array(
+                [
                     'title'       => Text::_('JBS_STY_EDIT_SERVERTYPE'),
                     'backdrop'    => 'static',
                     'keyboard'    => false,
@@ -253,7 +253,7 @@ class ServerTypeField extends FormField
                         . '<button type="button" class="btn btn-success"'
                         . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'cwmmessage\', \'apply\', \'item-form\'); return false;">'
                         . Text::_('JAPPLY') . '</button>',
-                )
+                ]
             );
         }
 
