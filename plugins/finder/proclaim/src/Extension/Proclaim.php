@@ -17,10 +17,9 @@ namespace CWM\Plugin\Finder\Proclaim\Extension;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Exception;
+use CWM\Component\Proclaim\Site\Helper\Cwmhelperroute;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Event\Finder as FinderEvent;
-use CWM\Component\Proclaim\Site\Helper\Cwmhelperroute;
 use Joomla\CMS\Table\Table;
 use Joomla\Component\Finder\Administrator\Indexer\Adapter;
 use Joomla\Component\Finder\Administrator\Indexer\Helper;
@@ -30,7 +29,6 @@ use Joomla\Database\DatabaseAwareTrait;
 use Joomla\Database\QueryInterface;
 use Joomla\Event\SubscriberInterface;
 use Joomla\Registry\Registry;
-
 
 /**
  * Finder adapter for com_proclaim.
@@ -132,7 +130,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
      *
      * @return  void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   2.5
      */
     public function onFinderSeriesChangeState(FinderEvent\AfterSeriesChangeStateEvent $event): void
@@ -150,7 +148,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
      *
      * @return  void
      *
-     * @throws  Exception on database error.
+     * @throws  \Exception on database error.
      *@since   2.5
      */
     public function onFinderAfterDelete(FinderEvent\AfterDeleteEvent $event): void
@@ -180,7 +178,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
      *
      * @return  void
      *
-     * @throws  Exception on database error.
+     * @throws  \Exception on database error.
      *@since   2.5
      */
     public function onFinderAfterSave(FinderEvent\AfterSaveEvent $event): void
@@ -218,7 +216,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
      *
      * @return  void
      *
-     * @throws  Exception on database error.
+     * @throws  \Exception on database error.
      * @since   2.5
      */
     public function onFinderBeforeSave(FinderEvent\BeforeSaveEvent $event): void
@@ -300,7 +298,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
      *
      * @return  void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   2.5
      */
     protected function seriesAccessChange(Table $row): void
@@ -330,7 +328,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
      *
      * @return  void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   2.5
      */
     protected function seriesStateChange(array $pks, int $value): void
@@ -392,7 +390,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
      *
      * @return  void
      *
-     * @throws  Exception on database error.
+     * @throws  \Exception on database error.
      * @since   7.1.0
      */
     protected function index(Result $item): void
@@ -512,7 +510,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
         $case_when_item_alias .= $query->charLength('a.alias', '!=', '0');
         $case_when_item_alias .= ' THEN ';
         $a_id                 = $query->castAsChar('a.id');
-        $case_when_item_alias .= $query->concatenate(array($a_id, 'a.alias'), ':');
+        $case_when_item_alias .= $query->concatenate([$a_id, 'a.alias'], ':');
         $case_when_item_alias .= ' ELSE ';
         $case_when_item_alias .= $a_id . ' END as slug';
         $query->select($case_when_item_alias);

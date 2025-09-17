@@ -12,7 +12,6 @@
 namespace CWM\Component\Proclaim\Site\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use JApplicationSite;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseQuery;
@@ -109,7 +108,7 @@ class CwmteachersModel extends ListModel
      */
     protected function populateState($ordering = 'teachers.ordering', $direction = 'asc'): void
     {
-        /** @type JApplicationSite $app */
+        /** @type \JApplicationSite $app */
         $app = Factory::getApplication();
 
         // Load state from the request.

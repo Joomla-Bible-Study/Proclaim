@@ -17,8 +17,6 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
-use Exception;
-use http\Exception\RuntimeException;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
@@ -41,15 +39,15 @@ class Cwmlanding
      *
      * @return string
      *
-     * @throws   Exception
+     * @throws   \Exception
      * @since    8.0.0
      */
     public function getLocationsLandingPage(Registry $params, int $id = 0): string
     {
         try {
             $mainframe = Factory::getApplication();
-        } catch (Exception $e) {
-            throw new RuntimeException('Unable to load Application' . $e->getMessage());
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Unable to load Application' . $e->getMessage());
         }
 
         $user      = $mainframe->getIdentity();
@@ -203,7 +201,7 @@ class Cwmlanding
     }
 
     /**
-     * Get Teacher for LandingPage
+     * Get a Teacher for the LandingPage
      *
      * @param   Registry  $params  Item Params
      * @param   int       $id      Item ID
@@ -216,8 +214,8 @@ class Cwmlanding
     {
         try {
             $mainframe   = Factory::getApplication();
-        } catch (Exception $e) {
-            throw new RuntimeException('Unable to load Application' . $e->getMessage());
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Unable to load Application' . $e->getMessage());
         }
 
         $db        = Factory::getContainer()->get('DatabaseDriver');
@@ -397,8 +395,8 @@ class Cwmlanding
     {
         try {
             $mainframe   = Factory::getApplication();
-        } catch (Exception $e) {
-            throw new RuntimeException('Unable to load Application' . $e->getMessage());
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Unable to load Application' . $e->getMessage());
         }
 
         $user      = $mainframe->getIdentity();
@@ -507,7 +505,7 @@ class Cwmlanding
                     }
 
                     if ($showdiv === 1) {
-                        $series  .= "\n\t" . '</div> <!-- close show/hide series div-->';
+                        $series .= "\n\t" . '</div> <!-- close show/hide series div-->';
                     }
 
                     $series .= '<div class="landing_separator"></div>';
@@ -590,8 +588,8 @@ class Cwmlanding
     {
         try {
             $mainframe   = Factory::getApplication();
-        } catch (Exception $e) {
-            throw new RuntimeException('Unable to load Application' . $e->getMessage());
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Unable to load Application' . $e->getMessage());
         }
 
         $db        = Factory::getContainer()->get('DatabaseDriver');
@@ -681,7 +679,7 @@ class Cwmlanding
             }
 
             if ($showdiv === 1) {
-                $year    .= "\n\t" . '</div> <!-- close show/hide years div-->';
+                $year .= "\n\t" . '</div> <!-- close show/hide years div-->';
             }
 
             $year .= '<div class="landing_separator"></div>';
@@ -707,8 +705,8 @@ class Cwmlanding
     {
         try {
             $app   = Factory::getApplication();
-        } catch (Exception $e) {
-            throw new RuntimeException('Unable to load Application' . $e->getMessage());
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Unable to load Application' . $e->getMessage());
         }
 
         $user      = $app->getSession()->get('user');
@@ -801,7 +799,7 @@ class Cwmlanding
             }
 
             if ($showdiv === 1) {
-                $topic   .= "\n\t" . '</div> <!-- close show/hide topics div-->';
+                $topic .= "\n\t" . '</div> <!-- close show/hide topics div-->';
             }
 
             $topic .= '<div class="landing_separator"></div>';
@@ -827,8 +825,8 @@ class Cwmlanding
     {
         try {
             $mainframe   = Factory::getApplication();
-        } catch (Exception $e) {
-            throw new RuntimeException('Unable to load Application' . $e->getMessage());
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Unable to load Application' . $e->getMessage());
         }
 
         $db          = Factory::getContainer()->get('DatabaseDriver');
@@ -994,8 +992,8 @@ class Cwmlanding
     {
         try {
             $app      = Factory::getApplication();
-        } catch (Exception $e) {
-            throw new RuntimeException('Unable to load Application' . $e->getMessage());
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Unable to load Application' . $e->getMessage());
         }
 
         $user     = $app->getSession()->get('user');

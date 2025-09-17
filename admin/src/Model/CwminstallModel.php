@@ -35,13 +35,13 @@ use Joomla\Filesystem\Folder;
  */
 class CwminstallModel extends ListModel
 {
-    /** @var int Total numbers of Versions
+    /** @var int Total number of Versions
      *
      * @since 7.1
      */
     public $totalSteps = 0;
 
-    /** @var int Numbers of Versions already processed
+    /** @var int Number of Versions already processed
      *
      * @since 7.1
      */
@@ -70,7 +70,7 @@ class CwminstallModel extends ListModel
      */
     public array $installQuery = [];
 
-    /** @var string Path to Mysql files
+    /** @var string Path to MySQL files
      *
      * @since 7.1
      */
@@ -125,7 +125,7 @@ class CwminstallModel extends ListModel
      * @since 7.1
      */
     private array $subQuery = [];
-    /** @var array list of php files to work through
+    /** @var array list of PHP files to work through
      *
      * @since 7.1
      */
@@ -395,7 +395,7 @@ class CwminstallModel extends ListModel
     }
 
     /**
-     * Cleanup postInstall before migration
+     * Clean up postInstall before migration
      *
      * @return void
      *
@@ -653,9 +653,9 @@ class CwminstallModel extends ListModel
 
                             if (!isset($this->subQuery[$this->version][$step]) && !empty($this->subSteps[$this->version])) {
                                 $step = $this->versionSwitch = array_shift($this->subSteps[$this->version]);
-                                Log::add('Change step : ' . $step, Log::INFO, 'com_proclaim');
+                                Log::add('Change step: ' . $step, Log::INFO, 'com_proclaim');
                             } elseif (empty($this->subSteps[$this->version])) {
-                                Log::add('Unset Last Step : ' . $step, Log::INFO, 'com_proclaim');
+                                Log::add('Unset Last Step: ' . $step, Log::INFO, 'com_proclaim');
 
                                 $step = $this->versionSwitch = null;
                                 unset($this->subSteps[$this->version], $this->subQuery[$this->version], $this->allupdates[$this->version]);
@@ -672,7 +672,7 @@ class CwminstallModel extends ListModel
                                 unset($this->subQuery[$this->version][$step]);
                                 $this->versionSwitch = null;
                                 Log::add(
-                                    'UnSet Sub Query if empty : ' . $step . ' ' . $this->version,
+                                    'UnSet Sub Query if empty: ' . $step . ' ' . $this->version,
                                     Log::INFO,
                                     'com_proclaim'
                                 );
@@ -680,7 +680,7 @@ class CwminstallModel extends ListModel
 
                             if (empty($step) && empty($query)) {
                                 unset($this->subFiles[$this->version], $this->subSteps[$this->version]);
-                                Log::add('UnSet Version in All updates : ' . $this->version, Log::INFO, 'com_proclaim');
+                                Log::add('UnSet Version in All updates: ' . $this->version, Log::INFO, 'com_proclaim');
                             } else {
                                 $this->running = 'PHP Sub Process: ' . $this->version . ' - ' . $step;
                                 $migration->$step(Factory::getDbo(), $query);
@@ -716,7 +716,7 @@ class CwminstallModel extends ListModel
                     }
                 } else {
                     unset($this->allupdates[$this->version]);
-                    Log::add('UnSet Version if no steps : ' . $this->version, Log::INFO, 'com_proclaim');
+                    Log::add('UnSet Version if no steps: ' . $this->version, Log::INFO, 'com_proclaim');
                 }
 
                 if ($run === false) {
@@ -827,7 +827,7 @@ class CwminstallModel extends ListModel
     }
 
     /**
-     * Function to update using the version number for sql files
+     * Function to update using the version number for SQL files
      *
      * @param   string  $value  The File name.
      *
@@ -859,7 +859,7 @@ class CwminstallModel extends ListModel
 
         $this->allupdates = array_merge($this->allupdates, [$value => $queries]);
 
-        // Build php steps now.
+        // Build PHP steps now.
         $migrationFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/install/updates/' . $value . '.php';
 
         if (file_exists($migrationFile)) {
@@ -904,7 +904,7 @@ class CwminstallModel extends ListModel
      */
     private function runUpdates(string $string): bool
     {
-        // Process each query in the $queries array (split out of sql file).
+        // Process each query in the $queries array (split out of the SQL file).
         $string = trim($string);
 
         if ($string !== '' && $string[0] !== '#') {
@@ -954,7 +954,7 @@ class CwminstallModel extends ListModel
                 $this->running = 'Update Version';
                 break;
             case 'fixassets':
-                // Final step is to fix assets by building what need to be fixed.
+                // Final step is to fix assets by building what needs to be fixed.
                 $assets             = new Cwmassets();
                 $string             = $assets->build();
                 $this->installQuery = $string->query;
@@ -1166,7 +1166,7 @@ class CwminstallModel extends ListModel
     }
 
     /**
-     * Function to find empty language field and set them to "*"
+     * Function to find empty language fields and set them to "*"
      *
      * @return   bool
      * @since 7.1.0
@@ -1203,7 +1203,7 @@ class CwminstallModel extends ListModel
      *
      * @since 7.1
      */
-    public function rmoldurl()
+    public function rmoldurl(): array
     {
         return [
             $this->_db->qn('name') . ' = ' .
@@ -1275,7 +1275,7 @@ class CwminstallModel extends ListModel
                     JPATH_ADMINISTRATOR . '/components/com_proclaim/install/sql/uninstall-dbtables.sql'
                 );
 
-                // Graceful exit and rollback if read not successful
+                // Graceful exit and rollback if read is not successful
                 if ($buffer === false) {
                     Factory::getApplication()->enqueueMessage('no uninstall-dbtables.sql', 'error');
                     return false;
@@ -1344,7 +1344,7 @@ class CwminstallModel extends ListModel
         $message->language_client_id = 1;
 
         if ($this->_db->insertObject('#__postinstall_messages', $message) !== true) {
-            log::add('Bad error for PostInstall Message', );
+            log::add('Bad error for PostInstall Message', Log::NOTICE, 'com_proclaim');
         }
     }
 }

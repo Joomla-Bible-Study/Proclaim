@@ -18,8 +18,6 @@ namespace CWM\Component\Proclaim\Site\View\Cwmseriesdisplays;
 
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
-use Exception;
-use JObject;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -41,19 +39,19 @@ class HtmlView extends BaseHtmlView
      */
     protected $admin;
 
-    /** @var  JObject Items
+    /** @var  \JObject Items
      *
      * @since 7.0
      */
     protected $items;
 
-    /** @var  JObject Template
+    /** @var  \JObject Template
      *
      * @since 7.0
      */
     protected $template;
 
-    /** @var  JObject Pagination
+    /** @var  \JObject Pagination
      *
      * @since 7.0
      */
@@ -109,9 +107,9 @@ class HtmlView extends BaseHtmlView
         $this->params   = $params;
         $this->template = $this->state->get('template');
 
-        $uri         = new Uri();
-        $pagebuilder = new Cwmpagebuilder();
-        $items       = $this->get('Items');
+        $uri                   = new Uri();
+        $pagebuilder           = new Cwmpagebuilder();
+        $items                 = $this->get('Items');
         $this->activeFilters   = $this->get('ActiveFilters');
 
         // Get a filter form.
@@ -181,7 +179,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.1.6
      */
     private function updateFilters(): void

@@ -49,7 +49,7 @@ class Dispatcher extends ComponentDispatcher
 
         if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
             // Check the minimum PHP version
-            if (!PHP_VERSION_ID >= 80100) {
+            if ((!PHP_VERSION_ID) >= 80100) {
                 throw new \RuntimeException(
                     "You need PHP 8.1.0 or later to run this package",
                     502

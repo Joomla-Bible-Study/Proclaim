@@ -50,7 +50,7 @@ class CwmcommentController extends FormController
     {
         // Set the model
         if ($model === null) {
-            $model = $this->getModel('Comment', '', array());
+            $model = $this->getModel('Comment', '', []);
         }
 
         // Preset the redirect
@@ -70,7 +70,7 @@ class CwmcommentController extends FormController
      *
      * @since   1.6
      */
-    protected function allowAdd($data = array())
+    protected function allowAdd($data = [])
     {
         // In the absence of better information, revert to the component permissions.
         return parent::allowAdd();
@@ -86,7 +86,7 @@ class CwmcommentController extends FormController
      *
      * @since   1.6
      */
-    protected function allowEdit($data = array(), $key = 'id')
+    protected function allowEdit($data = [], $key = 'id')
     {
         $recordId = (int)isset($data[$key]) ? $data[$key] : 0;
         $user     = Factory::getApplication()->getIdentity();

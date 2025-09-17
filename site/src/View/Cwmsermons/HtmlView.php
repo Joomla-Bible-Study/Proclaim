@@ -19,7 +19,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmsermons;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcastsubscribe;
-use Exception;
+use CWM\Component\Proclaim\Site\Model\CwmsermonsModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
@@ -163,31 +163,33 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void  A string if successful, otherwise a JError object.
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   11.1
      * @see     fetch()
      */
     public function display($tpl = null): void
     {
-        $this->state = $this->get('State');
+        /** @var CwmsermonsModel $module */
+        $module      = $this->getModel();
+        $this->state = $module->getState();
 
         $this->template = $this->state->get('template');
 
-        $items                 = $this->get('Items');
-        $pagination            = $this->get('Pagination');
-        $this->page            = new \stdClass();
-        $this->page->pagelinks = $pagination->getPagesLinks();
-        $this->page->counter   = $pagination->getPagesCounter();
-        $this->activeFilters   = $this->get('ActiveFilters');
+        $items                       = $module->getItems();
+        $pagination                  = $module->getPagination();
+        $this->page                  = new \stdClass();
+        $this->page->pagelinks       = $pagination->getPagesLinks();
+        $this->page->counter         = $pagination->getPagesCounter();
+        $this->activeFilters         = $module->getActiveFilters();
 
         // Get a filter form.
-        $this->filterForm = $this->get('FilterForm');
+        $this->filterForm = $module->getFilterForm();
         $mainframe        = Factory::getApplication();
         $this->admin      = $this->state->get('administrator');
 
         $params = $this->state->params;
 
-        // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
+        // Check permissions for this view by running through the records and removing those that the user doesn't have permission to see
         $user            = $mainframe->getIdentity();
         $groups          = $user->getAuthorisedViewLevels();
         $this->main      = Cwmimages::mainStudyImage($params);
@@ -277,16 +279,16 @@ class HtmlView extends BaseHtmlView
     }
 
     /**
-     * Update Filters per landing page call and Hide filters per the template settings.
+     * Update Filters per landing page call and hide filters per the template settings.
      *
      * @return  void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.1.6
      */
     private function updateFilters(): void
     {
-        $input   = Factory::getApplication()->input;
+        $input   = Factory::getApplication()->getInput();
         $filters = ['search', 'book', 'teacher', 'series', 'messagetype', 'year', 'topic', 'location', 'language'];
         $lists   = ['fullordering', 'limit'];
 
@@ -311,14 +313,14 @@ class HtmlView extends BaseHtmlView
                 $this->activeFilters[] = $filter;
             }
 
-            // Remove from view if set to hid in template.
+            // Remove from view if set to hide in template.
             if ((int)$this->params->get('show_' . $filter . '_search', 1) === 0 && $filter !== 'language') {
                 $this->filterForm->removeField($filter, 'filter');
             }
         }
 
         foreach ($lists as $list) {
-            // Remove from view if set to hid in template.
+            // Remove from view if set to hide in template.
             if ((int)$this->params->get('show_' . $list . '_search', 1) === 0) {
                 $this->filterForm->removeField($list, 'list');
             }
@@ -330,7 +332,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     protected function prepareDocument(): void
@@ -339,7 +341,7 @@ class HtmlView extends BaseHtmlView
         $menus = $app->getMenu();
 
         // Because the application sets a default page title,
-        // we need to get it from the menu item itself
+        // We need to get it from the menu item itself
         $menu = $menus->getActive();
 
         if ($menu) {

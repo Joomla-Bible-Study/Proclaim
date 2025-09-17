@@ -12,8 +12,6 @@
 namespace CWM\Component\Proclaim\Site\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use Exception;
-use JApplicationSite;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\LanguageHelper;
@@ -36,19 +34,19 @@ use Joomla\Database\QueryInterface;
  */
 class CwmseriesdisplaysModel extends ListModel
 {
-/**
- * Constructor.
- *
- * @param   array  $config  An optional associative array of configuration settings.
- *
- * @throws Exception
- * @since   11.1
- * @see     JController
- */
-    public function __construct($config = array())
+    /**
+     * Constructor.
+     *
+     * @param   array  $config  An optional associative array of configuration settings.
+     *
+     * @throws \Exception
+     * @since   11.1
+     * @see     JController
+     */
+    public function __construct($config = [])
     {
         if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array(
+            $config['filter_fields'] = [
             'id',
             'se.id',
             'published',
@@ -69,9 +67,9 @@ class CwmseriesdisplaysModel extends ListModel
             'access_level',
             'language',
             's.language',
-            'search'
+            'search',
 
-            );
+            ];
         }
 
         $this->input = Factory::getApplication();
@@ -182,7 +180,7 @@ class CwmseriesdisplaysModel extends ListModel
      */
     protected function populateState($ordering = 'series_text', $direction = 'DESC'): void
     {
-        /** @type JApplicationSite $app */
+        /** @type \JApplicationSite $app */
         $app = Factory::getApplication();
 
         $forcedLanguage = $app->getInput()->get('forcedLanguage', '', 'cmd');
@@ -306,7 +304,7 @@ class CwmseriesdisplaysModel extends ListModel
      *
      * @return  QueryInterface  A DatabaseQuery object to retrieve the data set.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   7.0
      */
     protected function getListQuery(): QueryInterface
@@ -316,7 +314,7 @@ class CwmseriesdisplaysModel extends ListModel
         // Create a new query object.
         $db = $this->getDatabase();
 
-        $query = $db->getQuery(true);
+        $query           = $db->getQuery(true);
         $params          = ComponentHelper::getParams('com_proclaim');
 
         $query->select(
@@ -357,21 +355,21 @@ class CwmseriesdisplaysModel extends ListModel
         $teacher = $this->getState('filter.teacher');
 
         if (is_numeric($teacher)) {
-            $teacher = (int) $teacher;
+            $teacher   = (int) $teacher;
             $type      = $this->getState('filter.teacher.include', true) ? ' = ' : ' <> ';
             $query->where($db->quoteName('se.teacher') . $type . ':teacher')
                 ->bind(':teacher', $teacher, ParameterType::INTEGER);
         }
 
-		//Filter by year
-	   /* $year = $this->getState('filter.year');
-		if (is_numeric($year)) {
-			$year = (int) $year;
-			$type      = $this->getState('filter.year.include', true) ? ' = ' : ' <> ';
-			$query->having($db->quoteName('YEAR(s.studydate)') . $type . ':year')
-				->bind(':year', $year, ParameterType::INTEGER);
-		} */
-	    // Add the list ordering clause.
+        //Filter by year
+        /* $year = $this->getState('filter.year');
+         if (is_numeric($year)) {
+             $year = (int) $year;
+             $type      = $this->getState('filter.year.include', true) ? ' = ' : ' <> ';
+             $query->having($db->quoteName('YEAR(s.studydate)') . $type . ':year')
+                 ->bind(':year', $year, ParameterType::INTEGER);
+         } */
+        // Add the list ordering clause.
         $orderCol  = $this->getState('list.fullordering');
         $orderDirn = '';
 

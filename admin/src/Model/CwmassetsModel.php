@@ -32,17 +32,17 @@ class CwmassetsModel extends ListModel
     /**
      * Parent ID
      *
-     * @var integer Parent ID of asset
+     * @var int Parent ID of asset
      * @since 7.0
      */
     public int $parent_id = 0;
 
-    /** @var integer Total numbers of Versions
+    /** @var int Total numbers of Versions
      * @since 7.0
      */
     public int $totalSteps = 0;
 
-    /** @var integer Numbers of Versions already processed
+    /** @var int Numbers of Versions already processed
      * @since 7.0
      */
     public int $doneSteps = 0;
@@ -98,7 +98,7 @@ class CwmassetsModel extends ListModel
     /**
      * Start Looking though the Versions
      *
-     * @return boolean
+     * @return bool
      *
      * @throws \Exception
      * @since 7.0

@@ -30,7 +30,7 @@ class CwmserverController extends FormController
     /**
      * Method to add a new record.
      *
-     * @return  boolean  True if the record can be added, a error object if not.
+     * @return  bool  True if the record can be added, a error object if not.
      *
      * @throws \Exception
      * @since   12.2
@@ -55,7 +55,7 @@ class CwmserverController extends FormController
      * @param   int     $key     ?
      * @param   string  $urlVar  ?
      *
-     * @return  boolean
+     * @return  bool
      *
      * @throws \Exception
      * @since   9.0.0
@@ -86,7 +86,7 @@ class CwmserverController extends FormController
         $app   = Factory::getApplication();
         $input = $app->input;
 
-        $data  = $input->get('jform', array(), 'post');
+        $data  = $input->get('jform', [], 'post');
         $sname = $data['server_name'];
         $type  = json_decode(base64_decode($data['type']), true, 512, JSON_THROW_ON_ERROR);
 

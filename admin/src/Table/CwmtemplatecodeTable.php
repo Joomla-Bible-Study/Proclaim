@@ -19,8 +19,9 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rule;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseInterface;
+use Joomla\Filesystem\File;
 
 /**
  * TemplateCode table class
@@ -33,34 +34,34 @@ class CwmtemplatecodeTable extends Table
     /**
      * File Name
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $filename;
+    public ?string $filename = null;
 
     /**
      * Type
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $type;
+    public ?string $type = null;
 
     /**
      * Template Code
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $templatecode;
+    public ?string $templatecode = null;
 
     /**
      * Constructor
      *
-     * @param     $db  \JDatabaseDriver connector object
+     * @param     $db  DatabaseInterface connector object
      *
      * @since 9.0.0
      */
@@ -74,56 +75,54 @@ class CwmtemplatecodeTable extends Table
      * method only binds properties that are publicly accessible and optionally
      * takes an array of properties to ignore when binding.
      *
-     * @param   mixed  $array   An associative array or object to bind to the Table instance.
-     * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
+     * @param   array|object  $src     An associative array or object to bind to the Table instance.
+     * @param   array|string  $ignore  An optional array or space separated list of properties to ignore while binding.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
-    public function bind($array, $ignore = '')
+    public function bind($src, $ignore = ''): bool
     {
         // Bind the rules.
-        if (isset($array['rules']) && is_array($array['rules'])) {
-            $rules = new Rule($array['rules']);
+        if (isset($src['rules']) && is_array($src['rules'])) {
+            $rules = new Rule($src['rules']);
             $this->setRules($rules);
         }
 
-        return parent::bind($array, $ignore);
+        return parent::bind($src, $ignore);
     }
 
     /**
-     * Overriden Table::store to set modified data and user id.
+     * Overridden Table::store to set modified data and user id.
      *
-     * @param   boolean  $updateNulls  True to update fields even if they are null.
+     * @param   bool  $updateNulls  True to update fields even if they are null.
      *
-     * @return    boolean    True on success.
+     * @return  bool  True on success.
      *
+     * @throws \Exception
      * @since    1.6
      */
-    public function store($updateNulls = false)
+    public function store($updateNulls = false): bool
     {
         if (
-            $this->filename === 'main'
-            || $this->filename === 'simple'
-            || $this->filename === 'custom'
-            || $this->filename === 'formheader'
-            || $this->filename === 'formfooter'
+            $this->filename === 'main' ||
+            $this->filename === 'simple' ||
+            $this->filename === 'custom' ||
+            $this->filename === 'formheader' ||
+            $this->filename === 'formfooter'
         ) {
-            Factory::getApplication()->enqueueMessage('JBS_STYLE_RESTRICED_FILE_NAME', 'error');
+            Factory::getApplication()->enqueueMessage('JBS_STYLE_RESTRICTED_FILE_NAME', 'error');
 
             return false;
         }
 
         // Write the file
-        jimport('joomla.client.helper');
-        jimport('joomla.filesystem.file');
-        $templatetype = $this->type;
+        $templateType = $this->type;
         $filename     = 'default_' . $this->filename . '.php';
-        $file         = null;
 
-        switch ($templatetype) {
+        switch ($templateType) {
             case 1:
                 // Sermons
                 $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/Cwmsermons' . DIRECTORY_SEPARATOR . $filename;
@@ -152,19 +151,22 @@ class CwmtemplatecodeTable extends Table
                 // Module's Display
                 $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'modules/mod_proclaim/tmpl' . DIRECTORY_SEPARATOR . $filename;
                 break;
+            default:
+                $file = null;
+                break;
         }
 
-        $filecontent = $this->templatecode;
+        $templateCodeContent = $this->templatecode;
 
         // Check to see if there is the required code in the file
-        $requiredtext = "defined('_JEXEC') or die;";
-        $required     = substr_count($filecontent, $requiredtext);
+        $templateCheckString = "defined('_JEXEC') or die;";
+        $required            = substr_count($templateCodeContent, $templateCheckString);
 
         if (!$required) {
-            $filecontent = $requiredtext . $filecontent;
+            $templateCodeContent = $templateCheckString . $templateCodeContent;
         }
 
-        if (!$return = File::write($file, $filecontent)) {
+        if (!File::write($file, $templateCodeContent)) {
             Factory::getApplication()->enqueueMessage('JBS_STYLE_FILENAME_NOT_UNIQUE', 'error');
 
             return false;
@@ -184,18 +186,18 @@ class CwmtemplatecodeTable extends Table
      *
      * @param   mixed  $pk  An optional primary key value to delete.  If not set the instance property value is used.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
-     * @link    http://docs.joomla.org/Table/delete
+     * @throws \Exception
      * @since   11.1
+     * @link    http://docs.joomla.org/Table/delete
      */
-    public function delete($pk = null)
+    public function delete($pk = null): bool
     {
         $filename     = 'default_' . $this->filename . '.php';
-        $templatetype = $this->type;
-        $file         = null;
+        $templateType = $this->type;
 
-        switch ($templatetype) {
+        switch ($templateType) {
             case 1:
                 // Sermons
                 $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/Cwmsermons' . DIRECTORY_SEPARATOR . $filename;
@@ -224,14 +226,15 @@ class CwmtemplatecodeTable extends Table
                 // Module's Display
                 $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'modules/mod_proclaim/tmpl' . DIRECTORY_SEPARATOR . $filename;
                 break;
+            default:
+                $file = null;
+                break;
         }
 
-        if (File::exists($file)) {
-            if (!File::delete($file)) {
-                Factory::getApplication()->enqueueMessage('JBS_STYLE_FILENAME_NOT_DELETED', 'error');
+        if (file_exists($file) && !File::delete($file)) {
+            Factory::getApplication()->enqueueMessage('JBS_STYLE_FILENAME_NOT_DELETED', 'error');
 
-                return false;
-            }
+            return false;
         }
 
         return parent::delete($pk);
@@ -280,7 +283,7 @@ class CwmtemplatecodeTable extends Table
      */
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
-        // Get Proclaim Root ID
+        // Get to Proclaim Root ID
         return Cwmassets::parentId();
     }
 }

@@ -41,7 +41,7 @@ class Cwmtags
      * @param   int  $study_id  ?
      * @param   int  $topic_id  ?
      *
-     * @return boolean
+     * @return bool
      *
      * @since 7.0
      */

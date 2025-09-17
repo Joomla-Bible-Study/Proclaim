@@ -18,8 +18,6 @@ namespace CWM\Component\Proclaim\Site\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
-use Exception;
-use JApplicationSite;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
@@ -52,7 +50,7 @@ class CwmsermonModel extends FormModel
      * @access    public
      * @return    bool    True on success
      *
-     * @todo      this look like it could be moved to a helper.
+     * @todo      this looks like it could be moved to a helper.
      * @since     1.5
      */
     public function hit(?int $pk = null): bool
@@ -70,11 +68,11 @@ class CwmsermonModel extends FormModel
     /**
      * Method to get study data.
      *
-     * @param   ?int  $pk  The id of the study.
+     * @param   ?int  $pk  The ID of the study.
      *
      * @return    mixed    Returns the Sermon Record, false on failure.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.1.0
      */
     public function getItem(?int $pk = null): mixed
@@ -237,7 +235,7 @@ class CwmsermonModel extends FormModel
                 }
 
                 $this->_item[$pk] = $data;
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 if ((int) $e->getCode() === 404) {
                     // Need to go through the error handler to allow Redirect to work.
                     Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
@@ -255,9 +253,9 @@ class CwmsermonModel extends FormModel
      * Method to retrieve comments for a study
      *
      * @access  public
-     * @return  mixed    data object on success, false on failure.
+     * @return  mixed  data object on success, false on failure.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   7.0
      */
     public function getComments(): array
@@ -285,7 +283,7 @@ class CwmsermonModel extends FormModel
      * @access    public
      * @return    bool    True on success
      *
-     * @throws Exception
+     * @throws \Exception
      * @since     7.0
      */
     public function storecomment(): bool
@@ -318,14 +316,14 @@ class CwmsermonModel extends FormModel
      *
      * @return  bool|Form  Will load form if found or return false
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   4.0.0
      *
      */
-    public function getForm($data = array(), $loadData = true): bool|Form
+    public function getForm($data = [], $loadData = true): bool|Form
     {
         // Get the form.
-        $form = $this->loadForm('com_proclaim.comment', 'comment', array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm('com_proclaim.comment', 'comment', ['control' => 'jform', 'load_data' => $loadData]);
 
         if (empty($form)) {
             return false;
@@ -341,12 +339,11 @@ class CwmsermonModel extends FormModel
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since    1.6
      */
     protected function populateState(): void
     {
-        /** @type JApplicationSite $app */
         $app = Factory::getApplication('site');
 
         // Load state from the request.

@@ -21,7 +21,6 @@ use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Html\HTMLHelper;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -183,7 +182,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function display($tpl = null): void

@@ -53,7 +53,7 @@ class SeriesField extends ListField
         $query->order('series_text');
         $db->setQuery((string)$query);
         $messages = $db->loadObjectList();
-        $options  = array();
+        $options  = [];
 
         if ($messages) {
             foreach ($messages as $message) {

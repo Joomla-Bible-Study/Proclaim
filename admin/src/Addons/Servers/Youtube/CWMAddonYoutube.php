@@ -26,7 +26,7 @@ use Google;
 use Google\Service\YouTube;
 
 /**
- * Class JBSMAddonYouTube
+ * Class CWMAddonYoutube
  *
  * @package  Proclaim.Admin
  * @since    9.0.0

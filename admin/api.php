@@ -36,7 +36,7 @@ try {
 // phpcs:enable PSR1.Files.SideEffects
 
 // Version information
-const BIBLESTUDY_VERSION            = '10.0.0';
+const BIBLESTUDY_VERSION            = '10.0.1';
 const BIBLESTUDY_VERSION_UPDATEFILE = 'JBS Version ' . BIBLESTUDY_VERSION;
 
 // Default values
@@ -53,8 +53,6 @@ const BIBLESTUDY_MEDIA_PATH      = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . 
 // Admin Component paths
 const BIBLESTUDY_PATH_ADMIN         = BIBLESTUDY_ROOT_PATH_ADMIN . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_RELPATH;
 const BIBLESTUDY_PATH_ADMIN_HELPERS = BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'helpers';
-
-HTMLHelper::addIncludePath(BIBLESTUDY_PATH_ADMIN_HELPERS . '/html');
 
 // If a phrase is not found in a specific language file, load the English language file:
 $language = $app->getLanguage();

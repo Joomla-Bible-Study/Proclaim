@@ -34,7 +34,7 @@ class TeacherDisplayField extends FormField
     /**
      * The form field type.
      *
-     * @var        string
+     * @var  string
      * @since    1.6
      */
     protected $type = 'Modal_TeacherDisplay';
@@ -42,7 +42,7 @@ class TeacherDisplayField extends FormField
     /**
      * Method to get the field input markup.
      *
-     * @return    string    The field input markup.
+     * @return  string  The field input markup.
      *
      * @throws \Exception
      * @since    1.6
@@ -58,10 +58,10 @@ class TeacherDisplayField extends FormField
         // Load language
         Factory::getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
-        // The active article id field.
+        // The active article ID field.
         $value = (int)$this->value ?: '';
 
-        // Create the modal id.
+        // Create the modal ID.
         $modalId = 'Teacher_' . $this->id;
 
         /** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
@@ -75,7 +75,7 @@ class TeacherDisplayField extends FormField
             static $scriptSelect = null;
 
             if (is_null($scriptSelect)) {
-                $scriptSelect = array();
+                $scriptSelect = [];
             }
 
             if (!isset($scriptSelect[$this->id])) {
@@ -102,7 +102,7 @@ class TeacherDisplayField extends FormField
 
         if (isset($this->element['language'])) {
             $linkSeries .= '&amp;forcedLanguage=' . $this->element['language'];
-            $linkSerie  .= '&amp;forcedLanguage=' . $this->element['language'];
+            $linkSerie .= '&amp;forcedLanguage=' . $this->element['language'];
             $modalTitle = Text::_('JBS_CMN_SELECT_TEACHER') . ' &#8212; ' . $this->element['label'];
         } else {
             $modalTitle = Text::_('JBS_CMN_SELECT_TEACHER');
@@ -195,7 +195,7 @@ class TeacherDisplayField extends FormField
             $html .= HTMLHelper::_(
                 'bootstrap.renderModal',
                 'ModalSelect' . $modalId,
-                array(
+                [
                     'title'      => $modalTitle,
                     'url'        => $urlSelect,
                     'height'     => '400px',
@@ -204,7 +204,7 @@ class TeacherDisplayField extends FormField
                     'modalWidth' => 80,
                     'footer'     => '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
                         . Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>',
-                )
+                ]
             );
         }
 
@@ -213,7 +213,7 @@ class TeacherDisplayField extends FormField
             $html .= HTMLHelper::_(
                 'bootstrap.renderModal',
                 'ModalNew' . $modalId,
-                array(
+                [
                     'title'       => Text::_('JBS_NEW_MESSAGE'),
                     'backdrop'    => 'static',
                     'keyboard'    => false,
@@ -232,7 +232,7 @@ class TeacherDisplayField extends FormField
                         . '<button type="button" class="btn btn-success"'
                         . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'cwmteacher\', \'apply\', \'item-form\'); return false;">'
                         . Text::_('JAPPLY') . '</button>',
-                )
+                ]
             );
         }
 
@@ -241,7 +241,7 @@ class TeacherDisplayField extends FormField
             $html .= HTMLHelper::_(
                 'bootstrap.renderModal',
                 'ModalEdit' . $modalId,
-                array(
+                [
                     'title'       => Text::_('JBS_NEW_MESSAGE'),
                     'backdrop'    => 'static',
                     'keyboard'    => false,
@@ -260,7 +260,7 @@ class TeacherDisplayField extends FormField
                         . '<button type="button" class="btn btn-success"'
                         . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'cwmteacher\', \'apply\', \'item-form\'); return false;">'
                         . Text::_('JAPPLY') . '</button>',
-                )
+                ]
             );
         }
 

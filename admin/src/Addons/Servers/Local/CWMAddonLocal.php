@@ -22,7 +22,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 /**
- * Class JBSMAddonLocal
+ * Class CWMAddonLocal
  *
  * @package  Proclaim.Admin
  * @since    9.0.0

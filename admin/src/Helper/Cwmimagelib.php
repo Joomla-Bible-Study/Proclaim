@@ -43,7 +43,7 @@ class Cwmimagelib
      * @throws \Exception
      * @since 9.0.18
      */
-    public static function getSeriesPodcast(string $img)
+    public static function getSeriesPodcast(string $img): string
     {
         // Prep files
         $img_base    = pathinfo($img);
@@ -112,7 +112,7 @@ class Cwmimagelib
                 throw new \RuntimeException('Unknown image type.');
         }
 
-        $img = $image_create_func($originalFile);
+        $img              = $image_create_func($originalFile);
         [$width, $height] = getimagesize($originalFile);
 
         $newHeight = ($height / $width) * $newWidth;
