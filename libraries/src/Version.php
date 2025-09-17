@@ -23,7 +23,7 @@ use Joomla\CMS\Factory;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Version information class for the Joomla CMS.
+ * Version information class for the Proclaim Component.
  *
  * @since  1.0
  */
@@ -59,13 +59,13 @@ final class Version
      * @var    int
      * @since  3.8.0
      */
-    public const PATCH_VERSION = 0;
+    public const PATCH_VERSION = 1;
 
     /**
      * Extra release version info.
      *
-     * This constant when not empty adds an additional identifier to the version string to reflect the development state.
-     * For example, for 3.8.0 when this is set to 'dev' the version string will be `3.8.0-dev`.
+     * This constant, when not empty, adds an identifier to the version string to reflect the development state.
+     * For example, for 3.8.0, when this is set to 'dev', the version string will be `3.8.0-dev`.
      *
      * @var    string
      * @since  3.8.0
@@ -149,11 +149,11 @@ final class Version
     }
 
     /**
-     * Compares two a "PHP standardized" version number against the current Joomla version.
+     * Compares two "PHP standardized" version numbers against the current Joomla version.
      *
      * @param   string  $minimum  The minimum version of the Joomla which is compatible.
      *
-     * @return  boolean True if the version is compatible.
+     * @return  bool True if the version is compatible.
      *
      * @link    https://www.php.net/version_compare
      * @since   1.0
@@ -228,13 +228,13 @@ final class Version
             $suffix .= '/' . self::MAJOR_VERSION . '.' . self::MINOR_VERSION;
         }
 
-        // If masked pretend to look like Mozilla 5.0 but still identify ourselves.
+        // If masked, pretend to look like Mozilla 5.0 but still identify ourselves.
         return ($mask ? 'Mozilla/5.0 ' : '') . self::PRODUCT . '/' . $this->getShortVersion() . ($suffix ? ' ' . $suffix : '');
     }
 
     /**
      * Generate a media version string for assets
-     * Public to allow third party developers to use it
+     * Public to allow third-party developers to use it
      *
      * @return  string
      *
