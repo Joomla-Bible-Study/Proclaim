@@ -23,7 +23,6 @@ use CWM\Component\Proclaim\Site\Helper\Cwmpodcastsubscribe;
 use CWM\Component\Proclaim\Site\Helper\Cwmrelatedstudies;
 use CWM\Component\Proclaim\Site\Helper\Cwmshowscripture;
 use CWM\Component\Proclaim\Site\Model\CwmsermonModel;
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -135,7 +134,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void
      *
-     * @throws Exception
+     * @throws \Exception
      * @todo  Need to clean up the display function as there is stuff needed to change up.
      *
      * @since 7.0
@@ -322,25 +321,25 @@ class HtmlView extends BaseHtmlView
         $article->text = $this->item->scripture1;
         $app->triggerEvent(
             'onContentPrepare',
-            array('com_proclaim.sermons', & $article, & $this->item->params, null)
+            ['com_proclaim.sermons', & $article, & $this->item->params, null]
         );
         $this->item->scripture1 = $article->text;
         $article->text          = $this->item->scripture2;
         $app->triggerEvent(
             'onContentPrepare',
-            array('com_proclaim.sermons', & $article, & $this->item->params, null)
+            ['com_proclaim.sermons', & $article, & $this->item->params, null]
         );
         $this->item->scripture2 = $article->text;
         $article->text          = $this->item->studyintro;
         $app->triggerEvent(
             'onContentPrepare',
-            array('com_proclaim.sermons', & $article, & $this->item->params, null)
+            ['com_proclaim.sermons', & $article, & $this->item->params, null]
         );
         $this->item->studyintro = $article->text;
         $article->text          = $this->item->secondary_reference;
         $app->triggerEvent(
             'onContentPrepare',
-            array('com_proclaim.sermons', & $article, & $this->item->params, null)
+            ['com_proclaim.sermons', & $article, & $this->item->params, null]
         );
         $this->item->secondary_reference = $article->text;
         $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
@@ -401,7 +400,7 @@ class HtmlView extends BaseHtmlView
             $limitstart = (int)$app->input->get('limitstart', 'int');
             $app->triggerEvent(
                 'onContentPrepare',
-                array('com_proclaim.sermon', & $article, & $this->item->params, $limitstart)
+                ['com_proclaim.sermon', & $article, & $this->item->params, $limitstart]
             );
             $article->studytext    = $article->text;
             $this->item->studytext = $article->text;
@@ -442,7 +441,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     protected function displayPageBrake(string $tpl): void
@@ -456,7 +455,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     protected function prepareDocument(): void
@@ -491,7 +490,7 @@ class HtmlView extends BaseHtmlView
                 $title = $this->item->studytitle;
             }
 
-            $path = array(array('studytitle' => $this->item->studytitle, 'link' => ''));
+            $path = [['studytitle' => $this->item->studytitle, 'link' => '']];
 
             $path = array_reverse($path);
 

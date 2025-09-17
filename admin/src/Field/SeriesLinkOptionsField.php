@@ -31,7 +31,7 @@ class SeriesLinkOptionsField extends ListField
     /**
      * The field type.
      *
-     * @var         string
+     * @var  string
      *
      * @since    7.0.4
      */
@@ -40,7 +40,7 @@ class SeriesLinkOptionsField extends ListField
     /**
      * Method to get a list of options for a list input.
      *
-     * @return      array           An array of JHtml options.
+     * @return  array  An array of JHtml options.
      *
      * @since    7.0.4
      */

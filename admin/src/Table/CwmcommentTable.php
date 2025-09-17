@@ -31,7 +31,7 @@ class CwmcommentTable extends Table
     /**
      * Primary Key
      *
-     * @var integer
+     * @var int
      * @since    7.0.0
      */
     public $id = null;

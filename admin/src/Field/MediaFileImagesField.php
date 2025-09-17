@@ -55,7 +55,7 @@ class MediaFileImagesField extends ListField
         $query->from('#__bsms_mediafiles');
         $db->setQuery((string)$query);
         $mediafiles = $db->loadObjectList();
-        $options    = array();
+        $options    = [];
 
         if ($mediafiles) {
             foreach ($mediafiles as $media) {
@@ -151,7 +151,7 @@ class MediaFileImagesField extends ListField
             }
         }
 
-        $tmp = array();
+        $tmp = [];
 
         foreach ($options as $k => $v) {
             $tmp[$k] = $v->text;
@@ -186,7 +186,7 @@ class MediaFileImagesField extends ListField
      *
      * @param   Object  $media  Media table.
      *
-     * @return string
+     * @return string|null
      *
      * @since 7.0
      */
@@ -238,7 +238,7 @@ class MediaFileImagesField extends ListField
 
         if (
             $media->params->get('media_icon_type') !== '1'
-            && substr($media->params->get('media_icon_type'), 0, 2) !== 'fa'
+            && !str_starts_with($media->params->get('media_icon_type'), 'fa')
             && !empty($media->params->get('media_icon_type'))
         ) {
             return Text::_($mimetypes[$media->params->get('media_icon_type')]) ?? "";

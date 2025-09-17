@@ -11,11 +11,8 @@
 namespace CWM\Module\ProclaimPodcast\Site\Dispatcher;
 
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcastsubscribe;
-use Exception;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
-use Joomla\CMS\Helper\HelperFactoryAwareInterface;
-use Joomla\CMS\Helper\HelperFactoryAwareTrait;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -33,7 +30,7 @@ class Dispatcher extends AbstractModuleDispatcher
      *
      * @return  array
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   4.2.0
      */
     protected function getLayoutData(): array

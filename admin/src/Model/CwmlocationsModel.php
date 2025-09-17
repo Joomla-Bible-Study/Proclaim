@@ -31,7 +31,7 @@ class CwmlocationsModel extends ListModel
     /**
      * Number of Deletes
      *
-     * @var integer
+     * @var int
      *
      * @since 7.0
      */
@@ -45,10 +45,10 @@ class CwmlocationsModel extends ListModel
      * @throws \Exception
      * @since 7.0.0
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array(
+            $config['filter_fields'] = [
                 'id',
                 'location.id',
                 'published',
@@ -59,8 +59,8 @@ class CwmlocationsModel extends ListModel
                 'location.ordering',
                 'access',
                 'location.access',
-                'access_level'
-            );
+                'access_level',
+            ];
         }
 
         parent::__construct($config);
@@ -69,7 +69,7 @@ class CwmlocationsModel extends ListModel
     /**
      * Get Deletes
      *
-     * @return integer|object[]
+     * @return int|object[]
      *
      * @since 7.0
      */
@@ -86,21 +86,21 @@ class CwmlocationsModel extends ListModel
     }
 
     /**
-     * Method to get a store id based on model configuration state.
+     * Method to get a store ID based on the model configuration state.
      *
      * This is necessary because the model is used by the component and
      * different modules that might need different sets of data or different
      * ordering requirements.
      *
-     * @param   string  $id  A prefix for the store id.
+     * @param   string  $id  A prefix for the store ID.
      *
-     * @return  string  A store id.
+     * @return  string  A store ID.
      *
      * @since   7.1.0
      */
     protected function getStoreId($id = '')
     {
-        // Compile the store id.
+        // Compile the store ID.
         $id .= ':' . $this->getState('filter.published');
         $id .= ':' . $this->getState('filter.access');
         $id .= ':' . $this->getState('filter.search');
@@ -113,7 +113,7 @@ class CwmlocationsModel extends ListModel
      *
      * This method should only be called once per instantiation and is designed
      * to be called on the first call to the getState() method unless the model
-     * configuration flag to ignore the request is set.
+     * The configuration flag to ignore the request is set.
      *
      * Note. Calling getState in this method will result in recursion.
      *

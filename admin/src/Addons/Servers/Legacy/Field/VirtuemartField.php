@@ -33,7 +33,7 @@ class VirtuemartField extends ListField
     /**
      * The field type.
      *
-     * @var         string
+     * @var  string
      *
      * @since 7.0.4
      */

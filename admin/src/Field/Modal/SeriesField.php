@@ -34,7 +34,7 @@ class SeriesField extends FormField
     /**
      * The form field type.
      *
-     * @var        string
+     * @var  string
      * @since    1.6
      */
     protected $type = 'Modal_Series';
@@ -42,7 +42,7 @@ class SeriesField extends FormField
     /**
      * Method to get the field input markup.
      *
-     * @return    string  The field input markup.
+     * @return  string  The field input markup.
      *
      * @throws \Exception
      * @since    1.6
@@ -58,10 +58,10 @@ class SeriesField extends FormField
         // Load language
         Factory::getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
-        // The active article id field.
+        // The active article ID field.
         $value = (int)$this->value ?: '';
 
-        // Create the modal id.
+        // Create the modal ID.
         $modalId = 'Series_' . $this->id;
 
         /** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
@@ -75,7 +75,7 @@ class SeriesField extends FormField
             static $scriptSelect = null;
 
             if (is_null($scriptSelect)) {
-                $scriptSelect = array();
+                $scriptSelect = [];
             }
 
             if (!isset($scriptSelect[$this->id])) {
@@ -102,7 +102,7 @@ class SeriesField extends FormField
 
         if (isset($this->element['language'])) {
             $linkSeries .= '&amp;forcedLanguage=' . $this->element['language'];
-            $linkSerie  .= '&amp;forcedLanguage=' . $this->element['language'];
+            $linkSerie .= '&amp;forcedLanguage=' . $this->element['language'];
             $modalTitle = Text::_('JBS_CMN_SELECT_SERIES') . ' &#8212; ' . $this->element['label'];
         } else {
             $modalTitle = Text::_('JBS_CMN_SELECT_SERIES');
@@ -195,7 +195,7 @@ class SeriesField extends FormField
             $html .= HTMLHelper::_(
                 'bootstrap.renderModal',
                 'ModalSelect' . $modalId,
-                array(
+                [
                     'title'      => $modalTitle,
                     'url'        => $urlSelect,
                     'height'     => '400px',
@@ -204,7 +204,7 @@ class SeriesField extends FormField
                     'modalWidth' => 80,
                     'footer'     => '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
                         . Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>',
-                )
+                ]
             );
         }
 
@@ -213,7 +213,7 @@ class SeriesField extends FormField
             $html .= HTMLHelper::_(
                 'bootstrap.renderModal',
                 'ModalNew' . $modalId,
-                array(
+                [
                     'title'       => Text::_('COM_CONTENT_NEW_ARTICLE'),
                     'backdrop'    => 'static',
                     'keyboard'    => false,
@@ -232,7 +232,7 @@ class SeriesField extends FormField
                         . '<button type="button" class="btn btn-success"'
                         . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'cwmserie\', \'apply\', \'item-form\'); return false;">'
                         . Text::_('JAPPLY') . '</button>',
-                )
+                ]
             );
         }
 
@@ -241,7 +241,7 @@ class SeriesField extends FormField
             $html .= HTMLHelper::_(
                 'bootstrap.renderModal',
                 'ModalEdit' . $modalId,
-                array(
+                [
                     'title'       => Text::_('COM_CONTENT_EDIT_ARTICLE'),
                     'backdrop'    => 'static',
                     'keyboard'    => false,
@@ -260,11 +260,11 @@ class SeriesField extends FormField
                         . '<button type="button" class="btn btn-success"'
                         . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'cwmserie\', \'apply\', \'item-form\'); return false;">'
                         . Text::_('JAPPLY') . '</button>',
-                )
+                ]
             );
         }
 
-        // Note: class='required' for client side validation.
+        // Note: class='required' for client-side validation.
         $class = $this->required ? ' class="required modal-value"' : '';
 
         $html .= '<input type="hidden" id="' . $this->id . '_id"' . $class . ' data-required="' . (int)$this->required . '" name="' . $this->name

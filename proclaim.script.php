@@ -47,7 +47,7 @@ class com_proclaimInstallerScript extends InstallerScript
         'pcre',
         'SimpleXML',
     ];
-    
+
     /**
      * The list of extra modules and plugins to install
      *
@@ -61,7 +61,7 @@ class com_proclaimInstallerScript extends InstallerScript
             'admin' => [
                     'proclaimicon' => ["icon",1],
             ],
-            'site'          => [
+            'site' => [
                 'proclaim'         => 0,
                 'proclaim_podcast' => 0,
             ],
@@ -74,28 +74,28 @@ class com_proclaimInstallerScript extends InstallerScript
             ],
         ],
     ];
-   
+
     /**
-     * @var   string Path to Mysql files
+     * @var   string Path to MySQL files
      * @since 1.5
      */
     public string $filePath = '/components/com_proclaim/install/sql/updates/mysql';
-  
+
     /**
      * The version number of the extension. Max 20 characters
      *
      * @var    string
      * @since  3.6
      */
-    protected $release = '10.0.0-beta.2';
-  
+    protected $release = '10.0.1';
+
     /**
      * @var   DatabaseDriver|DatabaseInterface|null
      *
      * @since 7.2.0
      */
     protected DatabaseDriver|null|DatabaseInterface $dbo;
-  
+
     /**
      * Minimum PHP version required to install the extension
      *
@@ -103,7 +103,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * @since  3.6
      */
     protected $minimumPhp = '8.1.0';
- 
+
     /**
      * Minimum Joomla! Version required to install the extension
      *
@@ -111,29 +111,29 @@ class com_proclaimInstallerScript extends InstallerScript
      * @since  3.6
      */
     protected $minimumJoomla = '4.2.0';
- 
+
     /**
      * @var   string The component's name
      * @since 1.5
      */
     protected $extension = 'com_proclaim';
- 
+
     /**
      * @var   string
      * @since 1.5
      */
     protected $xml;
-  
+
     /**
      * @var   object
      * @since 1.5
      */
     protected object $status;
- 
+
     /**
      * Allow downgrades of your extension
      *
-     * Use at your own risk as if there is a change in functionality people may wish to downgrade.
+     * Use at your own risk, as if there is a change in functionality, people may wish to downgrade.
      *
      * @var    bool
      * @since  3.6
@@ -159,9 +159,9 @@ class com_proclaimInstallerScript extends InstallerScript
     ];
 
     /**
-     * Function called before extension installation/update/removal procedure commences
+     * Function called before the extension installation/update/removal procedure commences
      *
-     * @param   string            $type    The type of change (install, update or discover_install, not uninstall)
+     * @param   string            $type    The type of change (install, update, or discover_install, not uninstall)
      * @param   ComponentAdapter  $parent  The class calling this method
      *
      * @return  bool  True on success
@@ -395,7 +395,7 @@ class com_proclaimInstallerScript extends InstallerScript
                                 echo ' ' . ($module['result'] ? Text::_('JBS_INS_REMOVED') : Text::_(
                                     'JBS_INS_NOT_REMOVED'
                                 ));
-                                ?>
+                    ?>
                             </strong>
                         </td>
                     </tr>
@@ -428,7 +428,7 @@ class com_proclaimInstallerScript extends InstallerScript
                                 echo '' . ($plugin['result'] ? Text::_('JBS_INS_REMOVED') : Text::_(
                                     'JBS_INS_NOT_REMOVED'
                                 ));
-                                ?>
+                    ?>
                             </strong>
                         </td>
                     </tr>
@@ -498,7 +498,7 @@ class com_proclaimInstallerScript extends InstallerScript
             "en-GB.plg_proclaim.ini",
             "en-GB.plg_proclaim.sys.ini",
             "en-GB.plg_finder_proclaim.ini",
-            "en-GB.plg_finder_proclaim.sys.ini"
+            "en-GB.plg_finder_proclaim.sys.ini",
         ];
 
         foreach ($languages as $language) {
@@ -644,7 +644,7 @@ class com_proclaimInstallerScript extends InstallerScript
                             ->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder));
                         $this->dbo->setQuery($query);
                         $count                   = $this->dbo->loadResult();
-                        $installer               = new JInstaller();
+                        $installer               = new Installer();
                         $result                  = $installer->install($path);
                         $this->status->plugins[] = [
                             'name'   => 'plg_' . $plugin,
@@ -761,7 +761,7 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
-     * Remove left overs do to upgrade from an older Proclaim version.
+     * Remove leftovers due to upgrading from an older Proclaim version.
      *
      * @return void
      * @throws Exception
@@ -794,7 +794,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $this->deleteFiles   = ['/language/en-GB/en-GB.com_biblestudy.ini'];
             $this->removefiles();
 
-            // Clean up Admin Menus form old install
+            // Clean up Admin Menus from old install
             $query      = $this->dbo->getQuery(true);
             $query->delete($this->dbo->quoteName('#__menu'));
             $query->where($this->dbo->quoteName('link') . 'LIKE "%com_biblestudy%"');
@@ -822,14 +822,14 @@ class com_proclaimInstallerScript extends InstallerScript
             foreach ($results as $result) {
                 $query      = $this->dbo->getQuery(true);
                 // Fields to update.
-                $fields = array(
+                $fields = [
                     $this->dbo->quoteName('link') . ' = ' . $this->dbo->quote(str_replace("com_biblestudy&view=", "com_proclaim&view=cwm", $result->link)),
                     $this->dbo->quoteName('component_id') . ' = ' . $proclaimID,
-                );
+                ];
                 // Conditions for which records should be updated.
-                $conditions = array(
+                $conditions = [
                     $this->dbo->quoteName('id') . ' = ' . $result->id,
-                );
+                ];
                 $query->update($this->dbo->quoteName('#__menu'))->set($fields)->where($conditions);
 
                 $this->dbo->setQuery($query);
@@ -848,14 +848,14 @@ class com_proclaimInstallerScript extends InstallerScript
                 $query      = $this->dbo->getQuery(true);
 
                 // Fields to update.
-                $fields = array(
+                $fields = [
                     $this->dbo->quoteName('module') . ' = ' . $this->dbo->quote(str_replace("mod_biblestudy", "mod_proclaim", $result->module)),
-                );
+                ];
 
                 // Conditions for which records should be updated.
-                $conditions = array(
+                $conditions = [
                     $this->dbo->quoteName('id') . ' = ' . $result->id,
-                );
+                ];
                 $query->update($this->dbo->quoteName('#__modules'))->set($fields)->where($conditions);
 
                 $this->dbo->setQuery($query);
@@ -863,18 +863,18 @@ class com_proclaimInstallerScript extends InstallerScript
             }
 
             // Migrate Plugin Podcast to Tasks
-            $message = new \stdClass();
-            $message->title_key = 'New Scheduled Task for Podcast RSS Rile Creation'; // Language string
-            $message->description_key = 'You may now what to setup Podcast RSS Task to replace your old system. We could not migrate your old podcast plugin schedule'; // Language string
-            $message->type = 'message'; // message | action
+            $message                     = new \stdClass();
+            $message->title_key          = 'New Scheduled Task for Podcast RSS Rile Creation'; // Language string
+            $message->description_key    = 'You may now what to setup Podcast RSS Task to replace your old system. We could not migrate your old podcast plugin schedule'; // Language string
+            $message->type               = 'message'; // message | action
             $message->version_introduced = '10.0.0';
             (new CWM\Component\Proclaim\Administrator\Model\CwminstallModel())->postInstallMessages($message);
 
             // Migrate Plugin Backup to Tasks
-            $message = new \stdClass();
-            $message->title_key = 'New Scheduled Task for Backups'; // Language string
-            $message->description_key = 'You may now what to setup backups to replace your old system. We could not migrate your old backup plugin schedule'; // Language string
-            $message->type = 'message'; // message | action
+            $message                     = new \stdClass();
+            $message->title_key          = 'New Scheduled Task for Backups'; // Language string
+            $message->description_key    = 'You may now what to setup backups to replace your old system. We could not migrate your old backup plugin schedule'; // Language string
+            $message->type               = 'message'; // message | action
             $message->version_introduced = '10.0.0';
             (new CWM\Component\Proclaim\Administrator\Model\CwminstallModel())->postInstallMessages($message);
 

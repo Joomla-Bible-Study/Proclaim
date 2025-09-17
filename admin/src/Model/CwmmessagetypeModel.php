@@ -60,7 +60,7 @@ class CwmmessagetypeModel extends AdminModel
             return false;
         }
 
-        // Store the table to the database
+        // Store the table in the database
         if (!$row->store()) {
             $this->setError($this->_db->getErrorMsg());
 

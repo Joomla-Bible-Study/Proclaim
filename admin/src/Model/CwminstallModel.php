@@ -19,7 +19,6 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
@@ -36,13 +35,13 @@ use Joomla\Filesystem\Folder;
  */
 class CwminstallModel extends ListModel
 {
-    /** @var int Total numbers of Versions
+    /** @var int Total number of Versions
      *
      * @since 7.1
      */
     public $totalSteps = 0;
 
-    /** @var int Numbers of Versions already processed
+    /** @var int Number of Versions already processed
      *
      * @since 7.1
      */
@@ -71,7 +70,7 @@ class CwminstallModel extends ListModel
      */
     public array $installQuery = [];
 
-    /** @var string Path to Mysql files
+    /** @var string Path to MySQL files
      *
      * @since 7.1
      */
@@ -126,7 +125,7 @@ class CwminstallModel extends ListModel
      * @since 7.1
      */
     private array $subQuery = [];
-    /** @var array list of php files to work through
+    /** @var array list of PHP files to work through
      *
      * @since 7.1
      */
@@ -147,7 +146,7 @@ class CwminstallModel extends ListModel
      *
      * @param   array  $config  An optional associative array of configuration settings.
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.1
      */
     public function __construct($config = [])
@@ -165,7 +164,7 @@ class CwminstallModel extends ListModel
      *
      * @return bool
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.1
      */
     public function startScanning(): bool
@@ -195,7 +194,7 @@ class CwminstallModel extends ListModel
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.1
      */
     private function resetStack(): void
@@ -250,7 +249,7 @@ class CwminstallModel extends ListModel
      *
      * @return void
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.1
      */
     private function getSteps(): void
@@ -258,7 +257,7 @@ class CwminstallModel extends ListModel
         $app = Factory::getApplication();
 
         // Set Finishing Steps
-        $this->finish     = array(
+        $this->finish     = [
             'updateversion',
             'fixassets',
             'fixmenus',
@@ -266,12 +265,13 @@ class CwminstallModel extends ListModel
             'fixemptylanguage',
             'rmoldurl',
             'setupdateurl',
-            'finish'
-        );
+            'podcastlinkmissing',
+            'finish',
+        ];
         $this->totalSteps += count($this->finish);
 
         /**
-         * First, we check to see if there is a current version database installed. This will have a #__bsms_version
+         * First, we check to see if there is a current version of the database installed. This will have a #__bsms_version
          * table, so we check for its existence.
          * Check to be sure a really early version is not installed $versiontype: 1 = current version type 2 = older version type 3 = no version
          */
@@ -313,13 +313,13 @@ class CwminstallModel extends ListModel
                     // Set new Schema Version
                     $this->setSchemaVersion($update, $eid);
                 } else {
-                    $value = '9.0.0';
+                    $value = '10.0.0';
                 }
 
                 if (version_compare($value, $update) <= 0) {
                     unset($files[$i]);
                 } elseif ($files) {
-                    $this->totalSteps   += count($files);
+                    $this->totalSteps += count($files);
                     $this->versionStack = (array)$files;
                 } else {
                     $app->enqueueMessage(Text::_('JBS_INS_NO_UPDATE_SQL_FILES'), 'warning');
@@ -354,7 +354,7 @@ class CwminstallModel extends ListModel
      *
      * @return  bool
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.1.0
      */
     private function setSchemaVersion(string $version, int $eid): bool
@@ -373,7 +373,7 @@ class CwminstallModel extends ListModel
             if ($this->_db->execute()) {
                 $query->clear();
                 $query->insert($this->_db->quoteName('#__schemas'));
-                $query->columns(array($this->_db->quoteName('extension_id'), $this->_db->quoteName('version_id')));
+                $query->columns([$this->_db->quoteName('extension_id'), $this->_db->quoteName('version_id')]);
                 $query->values($eid . ', ' . $this->_db->quote(substr($version, 0, 20)));
                 $this->_db->setQuery($query);
 
@@ -395,7 +395,7 @@ class CwminstallModel extends ListModel
     }
 
     /**
-     * Cleanup postInstall before migration
+     * Clean up postInstall before migration
      *
      * @return void
      *
@@ -422,7 +422,7 @@ class CwminstallModel extends ListModel
      */
     private function saveStack(): void
     {
-        $stack = array(
+        $stack = [
             'aversion'   => $this->version,
             'version'    => $this->versionStack,
             'switch'     => $this->versionSwitch,
@@ -438,7 +438,7 @@ class CwminstallModel extends ListModel
             'done'       => $this->doneSteps,
             'run'        => $this->running,
             'query'      => $this->installQuery,
-        );
+        ];
         $stack = json_encode($stack, JSON_THROW_ON_ERROR);
 
         if (function_exists('base64_encode') && function_exists('base64_decode')) {
@@ -454,7 +454,7 @@ class CwminstallModel extends ListModel
     }
 
     /**
-     * Makes sure that no more than 5 seconds since the start of the timer have elapsed
+     * Makes sure that no more than 5 seconds have elapsed since the start of the timer
      *
      * @return bool
      *
@@ -469,13 +469,13 @@ class CwminstallModel extends ListModel
     }
 
     /**
-     *  Run the Migration will there is time.
+     *  Run the Migration if there is time.
      *
      * @param   bool  $resetTimer  If the time must be reset
      *
      * @return bool
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.1
      */
     public function run(bool $resetTimer = true): bool
@@ -557,11 +557,11 @@ class CwminstallModel extends ListModel
     }
 
     /**
-     * Start the Run through the Pre Versions then SQL files then After PHP functions.
+     * Start the Run through the pre-versions, then SQL files, then after PHP functions.
      *
      * @return bool
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.1
      */
     private function realRun(): bool
@@ -618,7 +618,7 @@ class CwminstallModel extends ListModel
 
                     // Used for Install array.
                     if (!is_array($this->allupdates[$this->version])) {
-                        $this->allupdates[$this->version] = array($this->allupdates[$this->version]);
+                        $this->allupdates[$this->version] = [$this->allupdates[$this->version]];
                     }
 
                     $string = array_shift($this->allupdates[$this->version]);
@@ -653,9 +653,9 @@ class CwminstallModel extends ListModel
 
                             if (!isset($this->subQuery[$this->version][$step]) && !empty($this->subSteps[$this->version])) {
                                 $step = $this->versionSwitch = array_shift($this->subSteps[$this->version]);
-                                Log::add('Change step : ' . $step, Log::INFO, 'com_proclaim');
+                                Log::add('Change step: ' . $step, Log::INFO, 'com_proclaim');
                             } elseif (empty($this->subSteps[$this->version])) {
-                                Log::add('Unset Last Step : ' . $step, Log::INFO, 'com_proclaim');
+                                Log::add('Unset Last Step: ' . $step, Log::INFO, 'com_proclaim');
 
                                 $step = $this->versionSwitch = null;
                                 unset($this->subSteps[$this->version], $this->subQuery[$this->version], $this->allupdates[$this->version]);
@@ -672,7 +672,7 @@ class CwminstallModel extends ListModel
                                 unset($this->subQuery[$this->version][$step]);
                                 $this->versionSwitch = null;
                                 Log::add(
-                                    'UnSet Sub Query if empty : ' . $step . ' ' . $this->version,
+                                    'UnSet Sub Query if empty: ' . $step . ' ' . $this->version,
                                     Log::INFO,
                                     'com_proclaim'
                                 );
@@ -680,7 +680,7 @@ class CwminstallModel extends ListModel
 
                             if (empty($step) && empty($query)) {
                                 unset($this->subFiles[$this->version], $this->subSteps[$this->version]);
-                                Log::add('UnSet Version in All updates : ' . $this->version, Log::INFO, 'com_proclaim');
+                                Log::add('UnSet Version in All updates: ' . $this->version, Log::INFO, 'com_proclaim');
                             } else {
                                 $this->running = 'PHP Sub Process: ' . $this->version . ' - ' . $step;
                                 $migration->$step(Factory::getDbo(), $query);
@@ -695,8 +695,8 @@ class CwminstallModel extends ListModel
                                 if (!empty($query) && is_array($query)) {
                                     $queryString = (string)$query['id'];
                                     $queryString = str_replace(
-                                        array("\r", "\n"),
-                                        array('', ' '),
+                                        ["\r", "\n"],
+                                        ['', ' '],
                                         substr($queryString, 0, 80)
                                     );
                                     $queryString = ' ID:' . $queryString . ' Query count: ' . count(
@@ -716,7 +716,7 @@ class CwminstallModel extends ListModel
                     }
                 } else {
                     unset($this->allupdates[$this->version]);
-                    Log::add('UnSet Version if no steps : ' . $this->version, Log::INFO, 'com_proclaim');
+                    Log::add('UnSet Version if no steps: ' . $this->version, Log::INFO, 'com_proclaim');
                 }
 
                 if ($run === false) {
@@ -738,7 +738,7 @@ class CwminstallModel extends ListModel
             }
         }
 
-        /** We are going to walk thought the assets that need to be fixed that were found form the finish lookup. */
+        /** We are going to walk through the assets that need to be fixed that were found from the finish lookup. */
         if (
             !empty($this->installQuery)
             && empty($this->finish)
@@ -819,7 +819,7 @@ class CwminstallModel extends ListModel
                     }
 
                     if ($set) {
-                        $this->_db->updateObject($table['name'], $row, array('id'));
+                        $this->_db->updateObject($table['name'], $row, ['id']);
                     }
                 }
             }
@@ -827,20 +827,20 @@ class CwminstallModel extends ListModel
     }
 
     /**
-     * Function to update using the version number for sql files
+     * Function to update using the version number for SQL files
      *
      * @param   string  $value  The File name.
      *
      * @return bool
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.1.4
      */
     private function allUpdate(string $value): bool
     {
         $buffer = file_get_contents(JPATH_ADMINISTRATOR . $this->filePath . $value . '.sql');
 
-        // Graceful exit and rollback if read not successful
+        // Graceful exit and rollback if read is not successful
         if ($buffer === false) {
             Factory::getApplication()->enqueueMessage(Text::sprintf('JBS_INS_ERROR_SQL_READBUFFER'), 'WARNING');
             Log::add(Text::sprintf('JBS_INS_ERROR_SQL_READBUFFER'), Log::WARNING, 'com_proclaim');
@@ -857,9 +857,9 @@ class CwminstallModel extends ListModel
 
         $this->totalSteps += count($queries);
 
-        $this->allupdates = array_merge($this->allupdates, array($value => $queries));
+        $this->allupdates = array_merge($this->allupdates, [$value => $queries]);
 
-        // Build php steps now.
+        // Build PHP steps now.
         $migrationFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/install/updates/' . $value . '.php';
 
         if (file_exists($migrationFile)) {
@@ -880,10 +880,10 @@ class CwminstallModel extends ListModel
                         $this->totalSteps += (int)$migration->count;
                     }
 
-                    $this->subSteps = array_merge($this->subSteps, array($value => $steps));
-                    $this->subQuery = array_merge($this->subQuery, array($value => $migration->query));
+                    $this->subSteps = array_merge($this->subSteps, [$value => $steps]);
+                    $this->subQuery = array_merge($this->subQuery, [$value => $migration->query]);
                 } else {
-                    $this->subSteps = array_merge($this->subSteps, array($value => array('up')));
+                    $this->subSteps = array_merge($this->subSteps, [$value => ['up']]);
                     ++$this->totalSteps;
                 }
             }
@@ -899,12 +899,12 @@ class CwminstallModel extends ListModel
      *
      * @return bool
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.1
      */
     private function runUpdates(string $string): bool
     {
-        // Process each query in the $queries array (split out of sql file).
+        // Process each query in the $queries array (split out of the SQL file).
         $string = trim($string);
 
         if ($string !== '' && $string[0] !== '#') {
@@ -920,7 +920,7 @@ class CwminstallModel extends ListModel
             }
 
             $queryString = (string)$string;
-            $queryString = str_replace(array("\r", "\n"), array('', ' '), substr($queryString, 0, 80));
+            $queryString = str_replace(["\r", "\n"], ['', ' '], substr($queryString, 0, 80));
             Log::add(
                 Text::sprintf('JLIBINSTALLER_UPDATE_LOG_QUERY', $this->running, $queryString),
                 Log::INFO,
@@ -938,7 +938,7 @@ class CwminstallModel extends ListModel
      *
      * @return void
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.1
      */
     private function finish(string $step): void
@@ -954,11 +954,11 @@ class CwminstallModel extends ListModel
                 $this->running = 'Update Version';
                 break;
             case 'fixassets':
-                // Final step is to fix assets by building what need to be fixed.
+                // Final step is to fix assets by building what needs to be fixed.
                 $assets             = new Cwmassets();
                 $string             = $assets->build();
                 $this->installQuery = $string->query;
-                $this->totalSteps   += $string->count;
+                $this->totalSteps += $string->count;
                 break;
             case 'fixmenus':
                 $run           = $this->fixMenus();
@@ -992,20 +992,20 @@ class CwminstallModel extends ListModel
                 $this->_db->setQuery($query);
                 $eid = $this->_db->loadResult();
 
-                $conditions = array(
+                $conditions = [
                     $this->_db->qn('name') . ' = ' .
                     $this->_db->q('Proclaim Package'),
-                );
+                ];
                 $query      = $this->_db->getQuery(true);
                 $query->delete($this->_db->qn('#__update_sites'));
                 $query->where($conditions, $glue = 'OR');
                 $this->_db->setQuery($query);
                 $this->_db->execute();
 
-                $conditions = array(
+                $conditions = [
                     $this->_db->qn('extension_id') . ' = ' .
                     $this->_db->q($eid),
-                );
+                ];
                 $query      = $this->_db->getQuery(true);
                 $query->delete($this->_db->qn('#__update_sites_extensions'));
                 $query->where($conditions, $glue = 'OR');
@@ -1025,6 +1025,32 @@ class CwminstallModel extends ListModel
                 $this->_db->insertObject('#__update_sites_extensions', $updateurl1);
                 $this->running = 'Set New Update URL';
                 break;
+            case 'podcastlinkmissing':
+                // Define the table and column names
+                $tableName  = '#__bsms_podcast';
+                $columnName = 'podcastlink';
+
+                // Get the list of columns for the specified table
+                $tableColumns = $this->_db->getTableColumns($tableName);
+
+                // Check if the 'podcastlink' column does not exist
+                if (!isset($tableColumns[$columnName])) {
+                    // Prepare the ALTER TABLE query to add the new column
+                    // You can customize the column definition (e.g., VARCHAR(255) NULL) as needed
+                    $query = $this->_db->getQuery(true)
+                        ->setQuery('ALTER TABLE ' . $this->_db->quoteName($tableName) . ' ADD ' . $this->_db->quoteName($columnName) . ' VARCHAR(255) NULL');
+
+                    // Set the query and execute it
+                    $this->_db->setQuery($query);
+
+                    try {
+                        $this->_db->execute();
+                        log::add('Added podcastlink column to bsms_podcast table', Log::INFO, 'com_proclaim');
+                    } catch (\Exception $e) {
+                        log::add('Error adding podcastlink column to bsms_podcast table: Could already exist ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
+                    }
+                }
+                // No break
             default:
                 $app->enqueueMessage(
                     '' . Text::_('JBS_CMN_OPERATION_SUCCESSFUL') .
@@ -1098,31 +1124,31 @@ class CwminstallModel extends ListModel
     }
 
     /**
-     * Function to Find empty access in the db and set them to Public
+     * Function to find empty access in the DB and set them to Public
      *
      * @return   bool
-     * @throws Exception
+     * @throws \Exception
      * @since 7.1.0
      *
      */
     public function fixemptyaccess(): bool
     {
         // Tables to fix
-        $tables = array(
-            array('table' => '#__bsms_admin'),
-            array('table' => '#__bsms_mediafiles'),
-            array('table' => '#__bsms_message_type'),
-            array('table' => '#__bsms_podcast'),
-            array('table' => '#__bsms_series'),
-            array('table' => '#__bsms_servers'),
-            array('table' => '#__bsms_studies'),
-            array('table' => '#__bsms_studytopics'),
-            array('table' => '#__bsms_teachers'),
-            array('table' => '#__bsms_templates'),
-            array('table' => '#__bsms_topics'),
-        );
+        $tables = [
+            ['table' => '#__bsms_admin'],
+            ['table' => '#__bsms_mediafiles'],
+            ['table' => '#__bsms_message_type'],
+            ['table' => '#__bsms_podcast'],
+            ['table' => '#__bsms_series'],
+            ['table' => '#__bsms_servers'],
+            ['table' => '#__bsms_studies'],
+            ['table' => '#__bsms_studytopics'],
+            ['table' => '#__bsms_teachers'],
+            ['table' => '#__bsms_templates'],
+            ['table' => '#__bsms_topics'],
+        ];
 
-        // Get Public id
+        // Get Public ID
         $id = Factory::getApplication()->getConfig()->get('access', 1);
 
         // Correct blank or not set records
@@ -1140,7 +1166,7 @@ class CwminstallModel extends ListModel
     }
 
     /**
-     * Function to find empty language field and set them to "*"
+     * Function to find empty language fields and set them to "*"
      *
      * @return   bool
      * @since 7.1.0
@@ -1149,13 +1175,13 @@ class CwminstallModel extends ListModel
     public function fixemptylanguage(): bool
     {
         // Tables to fix
-        $tables = array(
-            array('table' => '#__bsms_comments'),
-            array('table' => '#__bsms_mediafiles'),
-            array('table' => '#__bsms_series'),
-            array('table' => '#__bsms_studies'),
-            array('table' => '#__bsms_teachers'),
-        );
+        $tables = [
+            ['table' => '#__bsms_comments'],
+            ['table' => '#__bsms_mediafiles'],
+            ['table' => '#__bsms_series'],
+            ['table' => '#__bsms_studies'],
+            ['table' => '#__bsms_teachers'],
+        ];
 
         // Correct blank records
         foreach ($tables as $table) {
@@ -1177,9 +1203,9 @@ class CwminstallModel extends ListModel
      *
      * @since 7.1
      */
-    public function rmoldurl()
+    public function rmoldurl(): array
     {
-        return array(
+        return [
             $this->_db->qn('name') . ' = ' .
             $this->_db->q('Proclaim Module'),
             $this->_db->qn('name') . ' = ' .
@@ -1191,8 +1217,8 @@ class CwminstallModel extends ListModel
             $this->_db->qn('name') . ' = ' .
             $this->_db->q('Proclaim Podcast Plg'),
             $this->_db->qn('name') . ' = ' .
-            $this->_db->q('Proclaim')
-        );
+            $this->_db->q('Proclaim'),
+        ];
     }
 
     /**
@@ -1200,12 +1226,12 @@ class CwminstallModel extends ListModel
      *
      * @return bool
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.1
      */
     public function uninstall(): bool
     {
-        // Check if CWM can be found from the database
+        // Check if CWM can be found in the database
         $table = $this->_db->getPrefix() . 'bsms_admin';
         $this->_db->setQuery("SHOW TABLES LIKE {$this->_db->quote($table)}");
         $drop_result = '';
@@ -1249,7 +1275,7 @@ class CwminstallModel extends ListModel
                     JPATH_ADMINISTRATOR . '/components/com_proclaim/install/sql/uninstall-dbtables.sql'
                 );
 
-                // Graceful exit and rollback if read not successful
+                // Graceful exit and rollback if read is not successful
                 if ($buffer === false) {
                     Factory::getApplication()->enqueueMessage('no uninstall-dbtables.sql', 'error');
                     return false;
@@ -1318,7 +1344,7 @@ class CwminstallModel extends ListModel
         $message->language_client_id = 1;
 
         if ($this->_db->insertObject('#__postinstall_messages', $message) !== true) {
-            log::add('Bad error for PostInstall Message',);
+            log::add('Bad error for PostInstall Message', Log::NOTICE, 'com_proclaim');
         }
     }
 }

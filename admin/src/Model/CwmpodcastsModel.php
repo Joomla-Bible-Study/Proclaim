@@ -35,10 +35,10 @@ class CwmpodcastsModel extends ListModel
      * @throws \Exception
      * @since 7.0
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array(
+            $config['filter_fields'] = [
                 'id',
                 'podcast.id',
                 'filename',
@@ -48,8 +48,8 @@ class CwmpodcastsModel extends ListModel
                 'ordering',
                 'podcast.ordering',
                 'language',
-                'podcast.language'
-            );
+                'podcast.language',
+            ];
         }
 
         parent::__construct($config);

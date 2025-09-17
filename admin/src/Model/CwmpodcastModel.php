@@ -49,18 +49,18 @@ class CwmpodcastModel extends AdminModel
      * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = array(), $loadData = true): Form
+    public function getForm($data = [], $loadData = true): Form
     {
         // Get the form.
-        return $this->loadForm('com_proclaim.podcast', 'podcast', array('control' => 'jform', 'load_data' => $loadData));
+        return $this->loadForm('com_proclaim.podcast', 'podcast', ['control' => 'jform', 'load_data' => $loadData]);
     }
 
     /**
-     * Method to check-out a row for editing.
+     * Method to check out a row for editing.
      *
-     * @param   integer  $pk  The numeric id of the primary key.
+     * @param   null  $pk  The numeric ID of the primary key.
      *
-     * @return  integer  False on failure or error, true otherwise.
+     * @return int|null False on failure or error, true otherwise.
      *
      * @since   11.1
      */
@@ -81,13 +81,13 @@ class CwmpodcastModel extends AdminModel
      * @throws  \Exception
      * @since   3.0
      */
-    public function getTable($name = 'Cwmpodcast', $prefix = '', $options = array()): Table
+    public function getTable($name = 'Cwmpodcast', $prefix = '', $options = []): Table
     {
         return parent::getTable($name, $prefix, $options);
     }
 
     /**
-     * Method to get the data that should be injected in the form.
+     * Method to get the data that should be injected into the form.
      *
      * @return  CMSObject|array   The default data is an empty array.
      *
@@ -96,7 +96,7 @@ class CwmpodcastModel extends AdminModel
      */
     protected function loadFormData()
     {
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.podcast.data', array());
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.podcast.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();
@@ -108,8 +108,8 @@ class CwmpodcastModel extends AdminModel
     /**
      * Custom clean the cache of com_proclaim and proclaim modules
      *
-     * @param   string   $group      The cache group
-     * @param   integer  $client_id  The ID of the client
+     * @param   string  $group      The cache group
+     * @param   int     $client_id  The ID of the client
      *
      * @return  void
      *

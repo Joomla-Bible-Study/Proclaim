@@ -53,7 +53,7 @@ class LocationListField extends ListField
         $query->order('location_text');
         $db->setQuery((string)$query);
         $messages = $db->loadObjectList();
-        $options  = array();
+        $options  = [];
 
         if ($messages) {
             foreach ($messages as $message) {

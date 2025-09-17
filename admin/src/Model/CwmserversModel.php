@@ -17,9 +17,10 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\QueryInterface;
+use Joomla\Filesystem\Folder;
 
 /**
  * Servers model class
@@ -30,12 +31,12 @@ use Joomla\CMS\Uri\Uri;
 class CwmserversModel extends ListModel
 {
     /**
-     * A reverse lookup of the Endpoint id to Endpoint name
+     * A reverse lookup of the Endpoint ID to the Endpoint name
      *
      * @var     array
      * @since   9.0.0
      */
-    protected array $rlu_id = array();
+    protected array $rlu_id = [];
 
     /**
      * A reverse lookup of the Endpoint type to Endpoint name
@@ -43,7 +44,7 @@ class CwmserversModel extends ListModel
      * @var     array
      * @since    9.0.0
      */
-    protected array $rlu_type = array();
+    protected array $rlu_type = [];
 
     /**
      * Method to get the reverse lookup of the server_id to server_name
@@ -52,16 +53,16 @@ class CwmserversModel extends ListModel
      *
      * @since   9.0.0
      */
-    public function getIdToNameReverseLookup()
+    public function getIdToNameReverseLookup(): array
     {
         if (empty($this->rlu_id)) {
-            $_rlu = array();
+            $_rlu = [];
 
             foreach ($this->getItems() as $server) {
-                $_rlu[$server->id] = array(
+                $_rlu[$server->id] = [
                     'name' => $server->server_name,
-                    'type' => $server->type
-                );
+                    'type' => $server->type,
+                ];
             }
 
             $this->rlu_id = $_rlu;
@@ -77,7 +78,7 @@ class CwmserversModel extends ListModel
      *
      * @since   9.0.0
      */
-    public function getTypeReverseLookup()
+    public function getTypeReverseLookup(): array
     {
         if (empty($this->rlu_type)) {
             $this->getServerOptions();
@@ -89,18 +90,18 @@ class CwmserversModel extends ListModel
     /**
      * Get a list of available endpoints
      *
-     * @return  array|boolean   Array of available endpoints options grouped by type or false if there aren't any
+     * @return  array|bool   Array of available endpoints options grouped by type or false if there aren't any
      *
      * @since   9.0.0
      */
-    public function getServerOptions()
+    public function getServerOptions(): bool|array
     {
-        $options = array();
+        $options = [];
 
         // Path to endpoints
         $path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers';
 
-        if (Folder::exists($path)) {
+        if (file_exists($path)) {
             $servers = Folder::folders($path);
         } else {
             return false;
@@ -169,12 +170,12 @@ class CwmserversModel extends ListModel
     /**
      * Method to get a JDatabaseQuery object for retrieving the data set from a database.
      *
-     * @return  \Joomla\Database\QueryInterface   A JDatabaseQuery object to retrieve the data set.
+     * @return  QueryInterface|string   A JDatabaseQuery object to retrieve the data set.
      *
      * @throws  \Exception
      * @since   7.0.0
      */
-    protected function getListQuery()
+    protected function getListQuery(): QueryInterface|string
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
@@ -186,7 +187,7 @@ class CwmserversModel extends ListModel
         // Filter by published state
         $published = $this->getState('filter.published');
 
-        if (Factory::getApplication()->input->get('layout') == 'modal' && $published === '') {
+        if (Factory::getApplication()->input->get('layout') === 'modal' && $published === '') {
             $published = 1;
         }
 

@@ -10,6 +10,7 @@
  * */
 
 // No Direct Access
+
 namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -18,7 +19,6 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
-use Exception;
 use Joomla\Registry\Registry;
 
 /**
@@ -40,7 +40,7 @@ class Cwmcustom
      *
      * @return array
      *
-     * @throws Exception
+     * @throws \Exception
      * @since    8.0.0
      */
     public function getCustom($rowid, $custom, $row, $params, $template)
@@ -74,7 +74,7 @@ class Cwmcustom
      *
      * @param   string  $row  Row ID
      *
-     * @return integer
+     * @return int
      *
      * @since    8.0.0
      */

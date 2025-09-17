@@ -33,7 +33,7 @@ class CwmlocationTable extends Table
     /**
      * Primary Key
      *
-     * @var integer
+     * @var int
      * @since    7.0.0
      */
     public $id = null;
@@ -41,7 +41,7 @@ class CwmlocationTable extends Table
     /**
      * Published
      *
-     * @var integer
+     * @var int
      * @since    7.0.0
      */
     public $published = 1;

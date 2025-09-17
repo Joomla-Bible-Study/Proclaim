@@ -18,15 +18,12 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel;
 use CWM\Component\Proclaim\Administrator\Model\CwmmediafilesModel;
-use CWM\Component\Proclaim\Administrator\Model\CwmmessagesModel;
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\Response\JsonResponse;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
-use Joomla\Utilities\ArrayHelper;
 
 /**
  * MediaFiles list controller class
@@ -41,7 +38,7 @@ class CwmmediafilesController extends AdminController
      *
      * @return  bool  True on success
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   12.2
      */
     public function checkin(): bool
@@ -49,7 +46,7 @@ class CwmmediafilesController extends AdminController
         // Check for request forgeries.
         Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-        $ids = Factory::getApplication()->input->post->get('cid', array(), 'array');
+        $ids = Factory::getApplication()->input->post->get('cid', [], 'array');
 
         /** @var CwmmediafileModel $model */
         $model  = $this->getModel($name = 'Cwmmediafile', $prefix = 'Administrator', $config = ['ignore_request' => true]);

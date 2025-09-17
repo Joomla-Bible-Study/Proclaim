@@ -19,14 +19,13 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 use CWM\Component\Proclaim\Administrator\Model\CwmmessagesModel;
 use CWM\Component\Proclaim\Administrator\Model\CwmtopicModel;
 use CWM\Component\Proclaim\Administrator\Table\CwmstudytopicsTable;
-use JetBrains\PhpStorm\NoReturn;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Input\Input;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
+use Joomla\Input\Input;
 
 /**
  * Controller for Message
@@ -37,7 +36,7 @@ use Joomla\CMS\Session\Session;
 class CwmmessageController extends FormController
 {
     /**
-     * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
+     * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanism from kicking in
      *
      * @var   string
      * @since 7.0
@@ -51,7 +50,7 @@ class CwmmessageController extends FormController
      *
      * @since 1.5
      */
-    public function resetHits()
+    public function resetHits(): void
     {
         // Check for request forgeries.
         Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
@@ -87,7 +86,7 @@ class CwmmessageController extends FormController
      *
      * @param   BaseDatabaseModel  $model  The model.
      *
-     * @return  bool     True if successful, false otherwise and internal error is set.
+     * @return  bool     True if successful, false otherwise, and an internal error is set.
      *
      * @throws \Exception
      * @since   1.6
@@ -112,7 +111,7 @@ class CwmmessageController extends FormController
      * @param   string  $key     The name of the primary key of the URL variable.
      * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
      *
-     * @return  boolean  True if successful, false otherwise.
+     * @return  bool  True if successful, false otherwise.
      *
      * @throws \Exception
      * @since 1.5
@@ -124,7 +123,7 @@ class CwmmessageController extends FormController
 
         $model = new CwmtopicModel();
         $app   = Factory::getApplication();
-        $data  = $this->input->post->get('jform', array(), 'array');
+        $data  = $this->input->post->get('jform', [], 'array');
 
         // Get Tags
         $vTags = $data['topics'];
@@ -158,7 +157,7 @@ class CwmmessageController extends FormController
             } else {
                 // It's a new tag.  Gotta insert it into the Topics table.
                 if ($aTag != "") {
-                    $model->save(array('topic_text' => $aTag, 'language' => $data['language']));
+                    $model->save(['topic_text' => $aTag, 'language' => $data['language']]);
 
                     // Gotta somehow make sure this isn't a duplicate...
                     $tagRow           = new CwmstudytopicsTable($db);
@@ -183,12 +182,12 @@ class CwmmessageController extends FormController
      * @param   array   $data  An array of input data.
      * @param   string  $key   The name of the key for the primary key.
      *
-     * @return  boolean
+     * @return  bool
      *
      * @throws \Exception
      * @since   1.6
      */
-    protected function allowEdit($data = array(), $key = 'id')
+    protected function allowEdit($data = [], $key = 'id')
     {
         $recordId = (int)isset($data[$key]) ? $data[$key] : 0;
         $user     = Factory::getApplication()->getIdentity();

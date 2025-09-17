@@ -35,10 +35,10 @@ class CwmtemplatecodesModel extends ListModel
      * @throws \Exception
      * @since 7.1
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array(
+            $config['filter_fields'] = [
                 'id',
                 'templatecode.id',
                 'published',
@@ -47,7 +47,7 @@ class CwmtemplatecodesModel extends ListModel
                 'templatecode.type',
                 'access',
                 'templatecode.access',
-            );
+            ];
         }
 
         parent::__construct($config);

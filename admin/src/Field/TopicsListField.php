@@ -17,13 +17,12 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\Html\HtmlHelper;
 
 /**
- * Topics List Form Field class for the Proclaim component
+ * Topic List Form Field class for the Proclaim component
  * Displays a topics list of ALL published topics
  *
  * @package  Proclaim.Admin
@@ -45,7 +44,7 @@ class TopicsListField extends ListField
      *
      * @return  array  An array of JHtmlHelper options.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     protected function getOptions(): array
@@ -60,7 +59,7 @@ class TopicsListField extends ListField
             ->order('#__bsms_topics.topic_text ASC');
         $db->setQuery($query);
         $topics  = $db->loadObjectList();
-        $options = array();
+        $options = [];
 
         if ($topics) {
             foreach ($topics as $topic) {
@@ -70,7 +69,7 @@ class TopicsListField extends ListField
         }
 
         // Sort the Topics after Translation to Alphabetically
-        usort($options, array($this, "orderNew"));
+        usort($options, [$this, "orderNew"]);
 
         return array_merge(parent::getOptions(), $options);
     }
@@ -81,7 +80,7 @@ class TopicsListField extends ListField
      * @param   object  $a  Start.
      * @param   object  $b  End.
      *
-     * @return int Used to place in new sort.
+     * @return int Used to place in the new sort.
      *
      * @since 7.0
      */

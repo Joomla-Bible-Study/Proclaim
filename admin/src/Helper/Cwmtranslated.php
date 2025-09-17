@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Exception;
 use http\Exception\RuntimeException;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
@@ -48,9 +47,9 @@ class Cwmtranslated
      *
      * @since    7.0.0
      */
-    public static function getTopicItemsTranslated(array $topicItems = array()): array
+    public static function getTopicItemsTranslated(array $topicItems = []): array
     {
-        $output = array();
+        $output = [];
 
         foreach ($topicItems as $topicItem) {
             $text                  = self::getTopicItemTranslated($topicItem);
@@ -74,7 +73,7 @@ class Cwmtranslated
     {
         try {
             $app   = Factory::getApplication();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new RuntimeException('Unable to load Application' . $e->getMessage());
         }
 

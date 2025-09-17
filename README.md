@@ -3,10 +3,10 @@ CWM Proclaim
 
 Status
 -----------
-| Code                                                                                                                                                   | Branch      | Version | Release Date  | Joomla Version | PHP Minimum |
-|--------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|---------|---------------|----------------|-------------|
-| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=development)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim) | Development | 10.0.x  |   | 4+             | 8.1         |
-| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=master)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim)      | Master      | 10.0.0  | July 29, 2025 | 4+             | 8.1         |
+| Code                                                                                                                                                   | Branch      | Version | Release Date | Joomla Version | PHP Minimum |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|---------|--------------|----------------|-------------|
+| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=development)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim) | Development | 10.0.x  |              | 4+             | 8.1         |
+| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=master)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim)      | Master      | 10.0.1  | Sep 10, 2025 | 4+             | 8.1         |
 
 *NOTE:* The master branch will always reflect the current, released stable version. Only bug fixes and minor updates should be applied to the master branch. New features are to be introduced into the development branch only.
 
@@ -39,7 +39,7 @@ We appreciate contributions in various capacities. Below are some ways that you 
 Please **make sure to make specific contributions** when submitting pull requests. For example, if fixing bugs across multiple features of the component, create a branch for each fix, and submit a separate pull request for each fix separately, instead of fixing everything in `main`, and then just trying to pull your `main` branch into `Joomla-Bible-Study:main`.
 
 
-### Translation 
+### Translation
 The language files periodically need to be updated as the component matures. To submit changes ot add new languages, follow the same procedures as above to submit a [pull][pr] request.
 
 ### Testing

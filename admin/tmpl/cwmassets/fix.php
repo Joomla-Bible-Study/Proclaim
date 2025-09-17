@@ -41,13 +41,14 @@ $wa->addInlineScript(
                 echo Text::_('JBS_FIXASSETS_DONE'); ?></h1>
             <?php
         }
-        ?>
-        <div class="progress">
-            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: <?php echo $this->percentage; ?>%" aria-valuenow="<?php echo $this->percentage; ?>" aria-valuemin="0" aria-valuemax="100">
-            <?php echo $this->percentage; ?>%
+?>
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: <?php echo $this->percentage; ?>%" aria-valuenow="<?php echo $this->percentage; ?>" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar" style="width: <?php
+                echo $this->percentage ?>%;"><?php
+                echo $this->percentage; ?>%</div>
         </div>
         <form action="<?php
-        Route::_('index.php?option=com_proclaim&view=cwmassets'); ?>" name="adminForm"
+Route::_('index.php?option=com_proclaim&view=cwmassets'); ?>" name="adminForm"
               id="adminForm" class="form-inline">
             <?php if ($this->state === 'start') { ?>
                 <input type="hidden" name="task" value="cwmassets.browse"/>
@@ -61,12 +62,12 @@ $wa->addInlineScript(
                 <div class="alert alert-info">
                     <p><?php
                         echo Text::_('Will refresh go back to Assets check in 3 seconds. If not press back button.');
-                        $wa->useScript('form.validate')
-                            ->addInlineScript(
-                                "setTimeout(function(){
+                $wa->useScript('form.validate')
+                    ->addInlineScript(
+                        "setTimeout(function(){
                                     jQuery('#adminForm').submit()
 								}, 3000);"
-                            ); ?></p>
+                    ); ?></p>
                     <input type="hidden" name="task" value="cwmassets.checkassets"/>
                 </div>
             <?php endif; ?>

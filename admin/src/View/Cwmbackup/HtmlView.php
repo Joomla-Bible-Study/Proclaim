@@ -24,10 +24,8 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
 
-use function defined;
-
 // phpcs:disable PSR1.Files.SideEffects
-defined('_JEXEC') or die;
+\defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -91,8 +89,8 @@ class HtmlView extends BaseHtmlView
         $this->setModel($model, true);
 
         // Get data from the model
-        $this->form = $this->get("Form");
-        $this->item = $this->get("Item");
+        $this->form  = $this->get("Form");
+        $this->item  = $this->get("Item");
         $this->state = $this->get("State");
         $this->canDo = ContentHelper::getActions('com_proclaim');
 
@@ -107,7 +105,7 @@ class HtmlView extends BaseHtmlView
                 $fileList = [];
 
                 foreach ($files as $value) {
-                    $fileListTemp = array('value' => $value, 'text' => $value);
+                    $fileListTemp = ['value' => $value, 'text' => $value];
                     $fileList[]   = $fileListTemp;
                 }
 

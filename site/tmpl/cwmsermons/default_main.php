@@ -162,28 +162,23 @@ $itemid = $app->input->get('Itemid');
             if (!empty($this->items)) : ?>
                 <?php
                 if (
-                    ($this->pagination->pagesTotal > 1) &&
-                    ($this->params->def('show_pagination', 2) === '2' || ($this->params->get(
-                        'show_pagination'
-                    ) === '2'))
-                ) : ?>
-                    <div class="pagination">
-                        <?php
-                        if ($this->params->def('show_pagination_results', 1)) : ?>
-                            <p class="counter float-right">
+                        ($this->pagination->pagesTotal > 1) &&
+                        ($this->params->def('show_pagination', 2) === '2' || ($this->params->get(
+                                                'show_pagination'
+                                        ) === '2'))) : ?>
+                    <nav class="pagination__wrapper" aria-label="Pagination">
+                        <?php if ($this->params->def('show_pagination_results', 1)) : ?>
+                            <div class="text-end me-3">
                                 <?php
                                 echo $this->pagination->getPagesCounter(); ?>
-                            </p>
-                            <?php
-                        endif; ?>
-
-                        <?php
-                        echo $this->pagination->getPagesLinks(); ?>
+                            </div>
+                        <?php endif; ?>
+                    </nav>
+                    <div class="pagination" style="display: flex; justify-content: center;">
+                        <?php echo $this->pagination->getPagesLinks(); ?>
                     </div>
-                    <?php
-                endif; ?>
-                <?php
-            endif; ?>
+                <?php endif; ?>
+            <?php endif; ?>
             <?php
             if ($this->params->get('showpodcastsubscribelist') === '2') {
                 echo $this->subscribe;

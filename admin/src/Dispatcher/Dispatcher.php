@@ -49,7 +49,7 @@ class Dispatcher extends ComponentDispatcher
 
         if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
             // Check the minimum PHP version
-            if (!version_compare(PHP_VERSION, "8.1.0", 'ge')) {
+            if ((!PHP_VERSION_ID) >= 80100) {
                 throw new \RuntimeException(
                     "You need PHP 8.1.0 or later to run this package",
                     502
@@ -94,7 +94,7 @@ class Dispatcher extends ComponentDispatcher
     }
 
     /**
-     * Override checkAccess to allow users edit profile without having to have core.manager permission
+     * Override checkAccess to allow users to edit their profiles without having to have "core.manager" permission
      *
      * @return  void
      *
@@ -107,8 +107,8 @@ class Dispatcher extends ComponentDispatcher
         $layout       = $this->input->getCmd('layout');
         $allowedTasks = ['user.edit', 'user.apply', 'user.save', 'user.cancel'];
 
-        // Allow users to edit their own account
-        if (in_array($task, $allowedTasks, true) || ($view === 'user' && $layout === 'edit')) {
+        // Allow users to edit their own accounts
+        if (($view === 'user' && $layout === 'edit') || in_array($task, $allowedTasks, true)) {
             $user = $this->app->getIdentity();
             $id   = $this->input->getInt('id');
 

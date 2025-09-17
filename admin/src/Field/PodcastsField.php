@@ -33,7 +33,7 @@ class PodcastsField extends ListField
     /**
      * Flag to work with nested tag field
      *
-     * @var    boolean
+     * @var    bool
      * @since  3.1
      */
     public $isNested = null;
@@ -100,9 +100,6 @@ class PodcastsField extends ListField
 
     /**
      * Returns an array of tags.
-     *
-     * @param   array  $config  An array of configuration options. By default, only
-     *                          published and unpublished categories are returned.
      *
      * @return  array
      *

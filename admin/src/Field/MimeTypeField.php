@@ -49,7 +49,7 @@ class MimeTypeField extends ListField
         $MediaHelper = new Cwmmedia();
         $mimetypes   = $MediaHelper->getMimetypes();
 
-        $options = array();
+        $options = [];
 
         foreach ($mimetypes as $key => $message) {
             $options[] = HTMLHelper::_('select.option', $message, $key);

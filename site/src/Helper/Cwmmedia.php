@@ -21,8 +21,6 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Service\HTML\CWMFancyBox;
 use CWM\Component\Proclaim\Administrator\Service\HTML\CWMHtml5Inline;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
-use Exception;
-use JHtmlJwplayer;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
@@ -86,7 +84,7 @@ class Cwmmedia
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     public function getFluidMedia(object $media, Registry $params, $template): ?string
@@ -170,7 +168,7 @@ class Cwmmedia
 
             if ($file_size > 1) {
                 $file_size = $this->convertFileSize($file_size, $params, $media);
-                $filesize = '<span class="JBSMFilesize" style="display:inline;padding-left: 5px;">' .
+                $filesize  = '<span class="JBSMFilesize" style="display:inline;padding-left: 5px;">' .
                 $file_size . '</span>';
             }
         }
@@ -182,9 +180,11 @@ class Cwmmedia
 
             case 1:
                 if ($downloadLink) {
-					if ($filesize > 0)
-					{$mediafile = $playerCode . '<div class="col">' . $downloadLink . $filesize . '</div>';}
-					else {$mediafile = $playerCode . '<div class="col">' . $downloadLink .  '</div>';}
+                    if ($filesize > 0) {
+                        $mediafile = $playerCode . '<div class="col">' . $downloadLink . $filesize . '</div>';
+                    } else {
+                        $mediafile = $playerCode . '<div class="col">' . $downloadLink .  '</div>';
+                    }
                 } else {
                     $mediafile = $playerCode;
                 }
@@ -314,7 +314,7 @@ class Cwmmedia
 
         try {
             $return = Image::getImageFileProperties($path);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return $alt;
         }
 
@@ -434,7 +434,7 @@ class Cwmmedia
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     public function getPlayerCode(Registry $params, object $player, string $image, object $media): string
@@ -522,7 +522,7 @@ class Cwmmedia
                         // Add space for a popup window
 
                         $diff                 = $params->get('player_width') - $params->get('playerwidth');
-                        $player->playerwidth  += abs($diff) + 10;
+                        $player->playerwidth += abs($diff) + 10;
                         $player->playerheight += $params->get('popupmargin', '50');
                         $playercode           = "<a style='color: #5F5A58;' href=\"javascript:;\"" .
                             " onclick=\"window.open('index.php?option=com_proclaim&amp;player="
@@ -632,8 +632,8 @@ class Cwmmedia
         $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
 
         $file_size = max($file_size, 0);
-        $pow = $file_size > 0 ? floor(log($file_size, 1024)) : 0;
-        $pow = min($pow, count($units) - 1);
+        $pow       = $file_size > 0 ? floor(log($file_size, 1024)) : 0;
+        $pow       = min($pow, count($units) - 1);
 
         $file_size /= 1024 ** $pow;
 
@@ -770,7 +770,7 @@ class Cwmmedia
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     public function getDocman(object $media, string $image): string
@@ -823,7 +823,7 @@ class Cwmmedia
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     public function getFluidDownloadLink(object $media, Registry $params, $template): string
@@ -848,7 +848,7 @@ class Cwmmedia
             $d_image        = $params->get('default_download_image');
             $download_image = $this->useJImage($d_image, Text::_('JBS_MED_DOWNLOAD'));
         } else {
-	        $download_image = $this->downloadButton($params);
+            $download_image = $this->downloadButton($params);
         }
 
         if ($media->params->get('link_type')) {
@@ -897,7 +897,7 @@ class Cwmmedia
             if (($opt === 'com_proclaim') && $params->get('useterms') > 0) {
                 $downloadLink = '<a style="color: #5F5A58;" href="#modal-test-modal" data-bs-toggle="modal"' .
                     'class="btn btn-default btn-small btn-sm">' . $download_image . '</a>';
-                $modalParams  = array(
+                $modalParams  = [
                     'title'       => Text::_('JBS_TERMS_TITLE'),
                     'closeButton' => true,
                     'height'      => '300px',
@@ -906,8 +906,8 @@ class Cwmmedia
                     'keyboard'    => true,
                     'modalWidth'  => 30,
                     'bodyHeight'  => 30,
-                    'footer'      => '<div class="alert alert-info">' . Text::_('JBS_TERMS_FOOTER') . '</div>'
-                );
+                    'footer'      => '<div class="alert alert-info">' . Text::_('JBS_TERMS_FOOTER') . '</div>',
+                ];
 
                 $modalBody = '<div class="alert alert-success">' . $params->get('terms') .
                     '<a style="color: #5F5A58;" href="index.php?option=com_proclaim&task=Cwmsermons.download&id=' .
@@ -933,7 +933,7 @@ class Cwmmedia
     public function downloadButton(Registry $download): ?string
     {
 
-		$downloadImage = null;
+        $downloadImage = null;
         $button        = $download->get('download_button_type', 'btn-outline-primary');
         $buttonText    = $download->get('download_button_text', 'Audio');
         $textSize      = $download->get('download_icon_text_size', '24');
@@ -1066,62 +1066,62 @@ class Cwmmedia
      */
     public function getMimetypes(): array
     {
-        return array(
+        return [
             // Image formats
-            'jpg|jpeg|jpe'                 => 'image/jpeg',
-            'gif'                          => 'image/gif',
-            'png'                          => 'image/png',
-            'bmp'                          => 'image/bmp',
-            'tif|tiff'                     => 'image/tiff',
-            'ico'                          => 'image/x-icon',
+            'jpg|jpeg|jpe' => 'image/jpeg',
+            'gif'          => 'image/gif',
+            'png'          => 'image/png',
+            'bmp'          => 'image/bmp',
+            'tif|tiff'     => 'image/tiff',
+            'ico'          => 'image/x-icon',
 
             // Video formats
-            'asf|asx'                      => 'video/x-ms-asf',
-            'wmv'                          => 'video/x-ms-wmv',
-            'wmx'                          => 'video/x-ms-wmx',
-            'wm'                           => 'video/x-ms-wm',
-            'avi'                          => 'video/avi',
-            'divx'                         => 'video/divx',
-            'flv'                          => 'video/x-flv',
-            'mov|qt'                       => 'video/quicktime',
-            'mpeg|mpg|mpe'                 => 'video/mpeg',
-            'mp4|m4v'                      => 'video/mp4',
-            'ogv'                          => 'video/ogg',
-            'webm'                         => 'video/webm',
-            'mkv'                          => 'video/x-matroska',
+            'asf|asx'      => 'video/x-ms-asf',
+            'wmv'          => 'video/x-ms-wmv',
+            'wmx'          => 'video/x-ms-wmx',
+            'wm'           => 'video/x-ms-wm',
+            'avi'          => 'video/avi',
+            'divx'         => 'video/divx',
+            'flv'          => 'video/x-flv',
+            'mov|qt'       => 'video/quicktime',
+            'mpeg|mpg|mpe' => 'video/mpeg',
+            'mp4|m4v'      => 'video/mp4',
+            'ogv'          => 'video/ogg',
+            'webm'         => 'video/webm',
+            'mkv'          => 'video/x-matroska',
 
             // Text formats
-            'txt|asc|c|cc|h'               => 'text/plain',
-            'csv'                          => 'text/csv',
-            'tsv'                          => 'text/tab-separated-values',
-            'ics'                          => 'text/calendar',
-            'rtx'                          => 'text/richtext',
-            'css'                          => 'text/css',
-            'htm|html'                     => 'text/html',
+            'txt|asc|c|cc|h' => 'text/plain',
+            'csv'            => 'text/csv',
+            'tsv'            => 'text/tab-separated-values',
+            'ics'            => 'text/calendar',
+            'rtx'            => 'text/richtext',
+            'css'            => 'text/css',
+            'htm|html'       => 'text/html',
 
             // Audio formats
-            'm4a|m4b'                      => 'audio/mpeg',
-            'mp3'                          => 'audio/mp3',
-            'ra|ram'                       => 'audio/x-realaudio',
-            'wav'                          => 'audio/wav',
-            'ogg|oga'                      => 'audio/ogg',
-            'mid|midi'                     => 'audio/midi',
-            'wma'                          => 'audio/x-ms-wma',
-            'wax'                          => 'audio/x-ms-wax',
-            'mka'                          => 'audio/x-matroska',
+            'm4a|m4b'  => 'audio/mpeg',
+            'mp3'      => 'audio/mp3',
+            'ra|ram'   => 'audio/x-realaudio',
+            'wav'      => 'audio/wav',
+            'ogg|oga'  => 'audio/ogg',
+            'mid|midi' => 'audio/midi',
+            'wma'      => 'audio/x-ms-wma',
+            'wax'      => 'audio/x-ms-wax',
+            'mka'      => 'audio/x-matroska',
 
             // Misc application formats
-            'rtf'                          => 'application/rtf',
-            'js'                           => 'application/javascript',
-            'pdf'                          => 'application/pdf',
-            'swf'                          => 'application/x-shockwave-flash',
-            'class'                        => 'application/java',
-            'tar'                          => 'application/x-tar',
-            'zip'                          => 'application/zip',
-            'gz|gzip'                      => 'application/x-gzip',
-            'rar'                          => 'application/rar',
-            '7z'                           => 'application/x-7z-compressed',
-            'exe'                          => 'application/x-msdownload',
+            'rtf'     => 'application/rtf',
+            'js'      => 'application/javascript',
+            'pdf'     => 'application/pdf',
+            'swf'     => 'application/x-shockwave-flash',
+            'class'   => 'application/java',
+            'tar'     => 'application/x-tar',
+            'zip'     => 'application/zip',
+            'gz|gzip' => 'application/x-gzip',
+            'rar'     => 'application/rar',
+            '7z'      => 'application/x-7z-compressed',
+            'exe'     => 'application/x-msdownload',
 
             // MS Office formats
             'doc'                          => 'application/msword',
@@ -1152,22 +1152,22 @@ class Cwmmedia
             'onetoc|onetoc2|onetmp|onepkg' => 'application/onenote',
 
             // OpenOffice formats
-            'odt'                          => 'application/vnd.oasis.opendocument.text',
-            'odp'                          => 'application/vnd.oasis.opendocument.presentation',
-            'ods'                          => 'application/vnd.oasis.opendocument.spreadsheet',
-            'odg'                          => 'application/vnd.oasis.opendocument.graphics',
-            'odc'                          => 'application/vnd.oasis.opendocument.chart',
-            'odb'                          => 'application/vnd.oasis.opendocument.database',
-            'odf'                          => 'application/vnd.oasis.opendocument.formula',
+            'odt' => 'application/vnd.oasis.opendocument.text',
+            'odp' => 'application/vnd.oasis.opendocument.presentation',
+            'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+            'odg' => 'application/vnd.oasis.opendocument.graphics',
+            'odc' => 'application/vnd.oasis.opendocument.chart',
+            'odb' => 'application/vnd.oasis.opendocument.database',
+            'odf' => 'application/vnd.oasis.opendocument.formula',
 
             // WordPerfect formats
-            'wp|wpd'                       => 'application/wordperfect',
+            'wp|wpd' => 'application/wordperfect',
 
             // Apple formats
-            'key'                          => 'application/vnd.apple.keynote',
-            'numbers'                      => 'application/vnd.apple.numbers',
-            'pages'                        => 'application/vnd.apple.pages',
-        );
+            'key'     => 'application/vnd.apple.keynote',
+            'numbers' => 'application/vnd.apple.numbers',
+            'pages'   => 'application/vnd.apple.pages',
+        ];
     }
 
     /**
@@ -1187,7 +1187,7 @@ class Cwmmedia
             'JBS_MED_FILE'      => 'fas fa-file',
             'JBS_MED_FILE_PDF'  => 'fas fa-file-pdf',
             'JBS_MED_VIMEO'     => 'fab fa-vimeo',
-            'JBS_MED_CUSTOM'    => '1'
+            'JBS_MED_CUSTOM'    => '1',
         ];
     }
 

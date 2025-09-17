@@ -21,7 +21,6 @@ if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
-use Exception;
 use Joomla\CMS\Dispatcher\ComponentDispatcher;
 use Joomla\CMS\Language\Text;
 
@@ -43,7 +42,7 @@ class Dispatcher extends ComponentDispatcher
      *
      * @return  void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   4.0.0
      */
     public function dispatch(): void

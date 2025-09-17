@@ -18,7 +18,6 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\AdminController;
-use Joomla\CMS\Router\Route;
 use Joomla\Utilities\ArrayHelper;
 
 /**
@@ -39,8 +38,8 @@ class CwmteachersController extends AdminController
      */
     public function saveOrderAjax(): void
     {
-        $pks   = $this->input->post->get('cid', array(), 'array');
-        $order = $this->input->post->get('order', array(), 'array');
+        $pks   = $this->input->post->get('cid', [], 'array');
+        $order = $this->input->post->get('order', [], 'array');
 
         // Sanitize the input
         ArrayHelper::toInteger($pks);

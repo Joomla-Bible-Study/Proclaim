@@ -12,7 +12,6 @@ namespace CWM\Plugin\Task\Proclaim\Extension;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
-use Exception;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\Component\Scheduler\Administrator\Event\ExecuteTaskEvent;
 use Joomla\Component\Scheduler\Administrator\Task\Status;
@@ -26,7 +25,7 @@ use Joomla\Event\SubscriberInterface;
 
 /**
  * Task plugin with routines that offer checks on files.
- * At the moment, offers a single routine to check and resize image files in a directory.
+ * At the moment, it offers a single routine to check and resize image files in a directory.
  *
  * @since  4.1.0
  */
@@ -40,7 +39,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @since 4.1.0
      */
     private const TASKS_MAP = [
-        'proclaim.backup'  => [
+        'proclaim.backup' => [
             'langConstPrefix' => 'PLG_TASK_PROCLAIM_BACKUP',
             'form'            => 'backup',
             'method'          => 'backup',
@@ -102,7 +101,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @return int
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   1.5
      */
     private function podcast(ExecuteTaskEvent $event): int
@@ -121,10 +120,10 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
         try {
             (new Cwmpodcast())->makePodcasts();
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             try {
                 $this->logTask($jLanguage->_($exception->getMessage()));
-            } catch (Exception $exception) {
+            } catch (\Exception $exception) {
                 return Status::KNOCKOUT;
             }
         }
@@ -158,10 +157,10 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
         try {
             (new Cwmbackup())->exportdb(2);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             try {
                 $this->logTask($jLanguage->_($e->getMessage()));
-            } catch (Exception $exception) {
+            } catch (\Exception $exception) {
                 return Status::KNOCKOUT;
             }
         }

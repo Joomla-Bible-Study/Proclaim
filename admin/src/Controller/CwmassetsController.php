@@ -18,7 +18,6 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Model\CwmassetsModel;
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
@@ -56,7 +55,7 @@ class CwmassetsController extends BaseController
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 1.5
      */
     public function execute($task): void
@@ -73,7 +72,7 @@ class CwmassetsController extends BaseController
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 8.0.0
      */
     public function checkassets(): void
@@ -96,7 +95,7 @@ class CwmassetsController extends BaseController
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 8.0.0
      */
     public function browse(): void
@@ -128,7 +127,7 @@ class CwmassetsController extends BaseController
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 8.0.0
      */
     public function run(): void
@@ -146,11 +145,11 @@ class CwmassetsController extends BaseController
     }
 
     /**
-     * Clear and start of installer display hook.
+     * Clear and start the installer display hook.
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.2
      */
     public function clear(): void

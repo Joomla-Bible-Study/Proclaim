@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -89,7 +88,7 @@ class Cwmstats
             self::$total_messages_end   = $end;
 
             $db    = Factory::getContainer()->get('DatabaseDriver');
-            $where = array();
+            $where = [];
 
             if (!empty($start)) {
                 $where[] = 'time > UNIX_TIMESTAMP(\'' . $start . '\')';
@@ -360,7 +359,7 @@ class Cwmstats
      *
      * @return string Number of scores
      *
-     * @throws Exception
+     * @throws \Exception
      * @var   Registry $admin_params Admin Prams
      *
      * @since 9.0.0
@@ -403,7 +402,7 @@ class Cwmstats
 
                 $link    = ' <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . $hits->id . '">' .
                     $hits->studytitle . '</a> ' . date('Y-m-d', strtotime($hits->studydate)) . '<br>';
-                $final2  = array('total' => $total, 'link' => $link);
+                $final2  = ['total' => $total, 'link' => $link];
                 $final[] = $final2;
             }
         }
@@ -611,7 +610,7 @@ class Cwmstats
      *
      * @return bool|string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 9.0.0
      */
     public function getTopScoreSite(): bool|string
@@ -623,7 +622,7 @@ class Cwmstats
         $limit = $admin->params->get('popular_limit', '25');
         $top   = '<select onchange="goTo()" id="urlList" class="form-select chzn-color-state valid form-control-success" size="1" aria-invalid="false"><option value="">' .
             Text::_('JBS_CMN_SELECT_POPULAR_STUDY') . '</option>';
-        $final = array();
+        $final = [];
 
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
@@ -679,11 +678,11 @@ class Cwmstats
 
             $selectvalue   = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $hits->slug . '&t=' . $t);
             $selectdisplay = $name . ' - ' . Text::_('JBS_CMN_SCORE') . ': ' . $total;
-            $final2        = array(
+            $final2        = [
                 'score'   => $total,
                 'select'  => $selectvalue,
-                'display' => $selectdisplay
-            );
+                'display' => $selectdisplay,
+            ];
             $final[]       = $final2;
         }
 
