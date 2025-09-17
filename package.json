@@ -28,8 +28,7 @@
       ]
     ],
     "comments": false,
-    "ignore": [
-    ]
+    "ignore": []
   },
   "dependencies": {
     "core-js": "^3.9.1",
