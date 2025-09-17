@@ -70,8 +70,8 @@ class DisplayController extends BaseController
     /**
      * Method to display a view.
      *
-     * @param   boolean  $cachable   If true, the view output will be cached
-     * @param   array    $urlparams  An array of safe URL parameters and their variable types, for valid values see {@link \JFilterInput::clean()}.
+     * @param   bool   $cachable   If true, the view output will be cached
+     * @param   array  $urlparams  An array of safe URL parameters and their variable types, for valid values see {@link FilterInput::clean()}.
      *
      * @return  BaseController|boolean  This object to support chaining.
      *
@@ -85,7 +85,6 @@ class DisplayController extends BaseController
 
         // Set the default view name and format from the Request.
         $vName   = $this->input->get('view', 'cwmcpanel');
-        $vFormat = $document->getType();
         $lName   = $this->input->get('layout', 'default', 'string');
         $id      = $this->input->getInt('id');
 
@@ -118,16 +117,6 @@ class DisplayController extends BaseController
             'print'            => 'BOOLEAN',
             'lang'             => 'CMD',
         ];
-        //
-        //      // Get and render the view.
-        //      if ($view = $this->getView($vName, $vFormat))
-        //      {
-        //          // Get the model for the view.
-        //          $model = $this->getModel($vName, 'Administrator', ['name' => $vName . '.' . substr($this->extension, 4)]);
-        //
-        //          // Push the model into the view (as default).
-        //          $view->setModel($model, true);
-        //      }
 
         return parent::display($cachable, $safeurlparams);
     }

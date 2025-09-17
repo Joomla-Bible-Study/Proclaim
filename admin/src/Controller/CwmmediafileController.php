@@ -79,7 +79,7 @@ class CwmmediafileController extends FormController
      * @param   int     $key     ?
      * @param   string  $urlVar  ?
      *
-     * @return  boolean
+     * @return  bool
      *
      * @throws  \Exception
      * @since   9.0.0
@@ -134,6 +134,7 @@ class CwmmediafileController extends FormController
      *
      * @return  bool     True if successful, false otherwise and internal error is set.
      *
+     * @throws \Exception
      * @since   1.6
      */
     public function batch($model = null): bool
@@ -157,7 +158,7 @@ class CwmmediafileController extends FormController
      *
      * @param   string  $key  The name of the primary key of the URL variable.
      *
-     * @return  boolean  True if access level checks pass, false otherwise.
+     * @return  bool  True if access level checks pass, false otherwise.
      *
      * @throws \Exception
      * @since   12.2
@@ -213,8 +214,8 @@ class CwmmediafileController extends FormController
     /**
      * Gets the URL arguments to append to an item redirect.
      *
-     * @param   integer  $recordId  The primary key id for the item.
-     * @param   string   $urlVar    The name of the URL variable for the id.
+     * @param   int     $recordId  The primary key ID for the item.
+     * @param   string  $urlVar    The name of the URL variable for the ID.
      *
      * @return  string  The arguments to append to the redirect URL.
      *

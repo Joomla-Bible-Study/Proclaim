@@ -66,11 +66,11 @@ class CwmcommentController extends FormController
      *
      * @param   array  $data  An array of input data.
      *
-     * @return  boolean
+     * @return  bool
      *
      * @since   1.6
      */
-    protected function allowAdd($data = [])
+    protected function allowAdd($data = []): bool
     {
         // In the absence of better information, revert to the component permissions.
         return parent::allowAdd();
@@ -82,11 +82,12 @@ class CwmcommentController extends FormController
      * @param   array   $data  An array of input data.
      * @param   string  $key   The name of the key for the primary key.
      *
-     * @return  boolean
+     * @return  bool
      *
+     * @throws \Exception
      * @since   1.6
      */
-    protected function allowEdit($data = [], $key = 'id')
+    protected function allowEdit($data = [], $key = 'id'): bool
     {
         $recordId = (int)isset($data[$key]) ? $data[$key] : 0;
         $user     = Factory::getApplication()->getIdentity();

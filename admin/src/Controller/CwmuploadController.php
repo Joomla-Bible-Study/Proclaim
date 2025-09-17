@@ -53,7 +53,7 @@ class CwmuploadController extends AdminController
         // 5 minutes execution time
         @set_time_limit(5 * 60);
 
-        // Enable a valid json response when debugging is disabled
+        // Enable a valid JSON response when debugging is disabled
         if (!JBSMDEBUG) {
             error_reporting(0);
         }

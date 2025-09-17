@@ -56,18 +56,20 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
      * Method to display a view.
      *
      * @param   bool   $cachable   If true, the view output will be cached
-     * @param   array  $urlparams  An array of safe URL parameters and their variable types, for valid values see {@link \JFilterInput::clean()}.
+     * @param   array  $urlparams  An array of safe URL parameters and their variable types.
      *
      * @return  static  This object to support chaining.
      *
      * @throws \Exception
-     * @since   1.5
+     * @see    \Joomla\CMS\Filter\InputFilter::clean() for valid values.
+     *
+     * @since   3.0
      */
     public function display($cachable = true, $urlparams = []): DisplayController
     {
         /*
         Set the default view name and format from the Request.
-        Note we are using a_id to avoid collisions with the router and the return page.
+        Note, we are using a_id to avoid collisions with the router and the return page.
         Frontend is a bit messier than the backend.
         */
         $id    = $this->input->getInt('a_id');
@@ -77,15 +79,15 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
         $user = $this->app->getIdentity();
 
         if (
-            $user->get('id')
+            $vName === 'cwmpopup'
+            || $user->get('id')
             || ($this->input->getMethod() === 'POST'
-                && strpos($vName, 'form') !== false)
-            || $vName === 'cwmpopup'
+                && str_contains($vName, 'form'))
         ) {
             $cachable = false;
         }
 
-        // Attempt to change mysql for error in large select
+        // Attempt to change MySQL for an error in a large select
         $t = $this->input->get('t', '1', 'int');
 
         $this->input->set('t', $t);
