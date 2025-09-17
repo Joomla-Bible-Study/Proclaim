@@ -3,12 +3,12 @@ CWM Proclaim
 
 Status
 -----------
-| Code                                                                                                                                                   | Branch      | Version | Release Date | Joomla Version | PHP Minimum |
-|--------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|---------|--------------|----------------|-------------|
-| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=development)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim) | Development | 10.0.x  |              | 4+             | 8.1         |
-| [![Build Status](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim.svg?branch=master)](https://app.travis-ci.com/Joomla-Bible-Study/Proclaim)      | Master      | 10.0.1  | Sep 10, 2025 | 4+             | 8.1         |
+| Branch      | Version | Release Date | Joomla Version | PHP Minimum                                                                    |
+|-------------|---------|--------------|----------------|--------------------------------------------------------------------------------|
+| Development | 10.0.x  |              | 4+             | [![PHP](https://img.shields.io/badge/PHP-V8.1.0-green)](https://www.php.net/)  |
+| Main        | 10.0.1  | Sep 10, 2025 | 4+             | [![PHP](https://img.shields.io/badge/PHP-V8.1.0-green)](https://www.php.net/)  |
 
-*NOTE:* The master branch will always reflect the current, released stable version. Only bug fixes and minor updates should be applied to the master branch. New features are to be introduced into the development branch only.
+*NOTE:* The main branch will always reflect the current, released stable version. Only bug fixes and minor updates should be applied to the main branch. New features are to be introduced into the development branch only.
 
 Overview
 --------
