@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rule;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 
 /**
@@ -33,34 +34,34 @@ class CwmtemplatecodeTable extends Table
     /**
      * File Name
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public string $filename;
+    public ?string $filename = null;
 
     /**
      * Type
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public string $type;
+    public ?string $type = null;
 
     /**
      * Template Code
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public string $templatecode;
+    public ?string $templatecode = null;
 
     /**
      * Constructor
      *
-     * @param     $db  \JDatabaseDriver connector object
+     * @param     $db  DatabaseInterface connector object
      *
      * @since 9.0.0
      */
@@ -106,13 +107,13 @@ class CwmtemplatecodeTable extends Table
     public function store($updateNulls = false): bool
     {
         if (
-            $this->filename === 'main'
-            || $this->filename === 'simple'
-            || $this->filename === 'custom'
-            || $this->filename === 'formheader'
-            || $this->filename === 'formfooter'
+            $this->filename === 'main' ||
+            $this->filename === 'simple' ||
+            $this->filename === 'custom' ||
+            $this->filename === 'formheader' ||
+            $this->filename === 'formfooter'
         ) {
-            Factory::getApplication()->enqueueMessage('JBS_STYLE_RESTRICED_FILE_NAME', 'error');
+            Factory::getApplication()->enqueueMessage('JBS_STYLE_RESTRICTED_FILE_NAME', 'error');
 
             return false;
         }
