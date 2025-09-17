@@ -33,29 +33,29 @@ class CwmteacherTable extends Table
     /**
      * Teacher Name
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $teachername;
+    public ?string $teachername = null;
 
     /** @var string Alias
      *
      * @since 9.0.0
      */
-    public $alias;
+    public string $alias;
 
     /** @var string Ordering
      *
      * @since 9.0.0
      */
-    public $ordering;
+    public string $ordering;
 
     /**
-     * @var integer
+     * @var int
      * @since 9.0.0
      */
-    public $id;
+    public int $id = 0;
 
     /**
      * Constructor
@@ -74,29 +74,29 @@ class CwmteacherTable extends Table
      * method only binds properties that are publicly accessible and optionally
      * takes an array of properties to ignore when binding.
      *
-     * @param   mixed  $array  An associative array or object to bind to the Table instance.
-     * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
+     * @param   array|object  $src  An associative array or object to bind to the Table instance.
+     * @param   array|string  $ignore  An optional array or space separated list of properties to ignore while binding.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
-    public function bind($array, $ignore = '')
+    public function bind($src, $ignore = ''): bool
     {
-        if (array_key_exists('params', $array) && is_array($array['params'])) {
+        if (array_key_exists('params', $src) && is_array($src['params'])) {
             $registry = new Registry();
-            $registry->loadArray($array['params']);
-            $array['params'] = (string)$registry;
+            $registry->loadArray($src['params']);
+            $src['params'] = (string)$registry;
         }
 
         // Bind the rules.
-        if (isset($array['rules']) && is_array($array['rules'])) {
-            $rules = new Rules($array['rules']);
+        if (isset($src['rules']) && is_array($src['rules'])) {
+            $rules = new Rules($src['rules']);
             $this->setRules($rules);
         }
 
-        return parent::bind($array, $ignore);
+        return parent::bind($src, $ignore);
     }
 
     /**
@@ -106,14 +106,14 @@ class CwmteacherTable extends Table
      * a new row will be inserted into the database with the properties from the
      * Table instance.
      *
-     * @param   boolean  $updateNulls  True to update fields even if they are null.
+     * @param   bool  $updateNulls  True to update fields even if they are null.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
-    public function store($updateNulls = false)
+    public function store($updateNulls = false): bool
     {
         if (!$this->_rules) {
             $this->setRules(
@@ -133,7 +133,7 @@ class CwmteacherTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetName()
+    protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
 
@@ -159,15 +159,15 @@ class CwmteacherTable extends Table
      * asset does not exist it will be created.
      *
      * @param   ?Table  $table  A Table object for the asset parent.
-     * @param   null    $id     Id to look up
+     * @param   ?int    $id     Id to look up
      *
-     * @return  integer
+     * @return  int
      *
      * @since   11.1
      */
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
-        // Get Proclaim Root ID
+        // Get to Proclaim Root ID
         return Cwmassets::parentId();
     }
 }

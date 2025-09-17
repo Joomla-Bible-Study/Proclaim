@@ -75,23 +75,23 @@ class CwmtemplatecodeTable extends Table
      * method only binds properties that are publicly accessible and optionally
      * takes an array of properties to ignore when binding.
      *
-     * @param   mixed  $array   An associative array or object to bind to the Table instance.
-     * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
+     * @param   array|object  $src     An associative array or object to bind to the Table instance.
+     * @param   array|string  $ignore  An optional array or space separated list of properties to ignore while binding.
      *
      * @return  bool  True on success.
      *
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
-    public function bind($array, $ignore = ''): bool
+    public function bind($src, $ignore = ''): bool
     {
         // Bind the rules.
-        if (isset($array['rules']) && is_array($array['rules'])) {
-            $rules = new Rule($array['rules']);
+        if (isset($src['rules']) && is_array($src['rules'])) {
+            $rules = new Rule($src['rules']);
             $this->setRules($rules);
         }
 
-        return parent::bind($array, $ignore);
+        return parent::bind($src, $ignore);
     }
 
     /**
@@ -156,17 +156,17 @@ class CwmtemplatecodeTable extends Table
                 break;
         }
 
-        $filecontent = $this->templatecode;
+        $templateCodeContent = $this->templatecode;
 
         // Check to see if there is the required code in the file
-        $requiredtext = "defined('_JEXEC') or die;";
-        $required     = substr_count($filecontent, $requiredtext);
+        $templateCheckString = "defined('_JEXEC') or die;";
+        $required            = substr_count($templateCodeContent, $templateCheckString);
 
         if (!$required) {
-            $filecontent = $requiredtext . $filecontent;
+            $templateCodeContent = $templateCheckString . $templateCodeContent;
         }
 
-        if (!File::write($file, $filecontent)) {
+        if (!File::write($file, $templateCodeContent)) {
             Factory::getApplication()->enqueueMessage('JBS_STYLE_FILENAME_NOT_UNIQUE', 'error');
 
             return false;
