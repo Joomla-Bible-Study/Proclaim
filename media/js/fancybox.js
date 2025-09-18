@@ -6,9 +6,9 @@
  *   reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
-document.addEventListener("DOMContentLoaded", function() {
-    document.querySelectorAll(".fancybox_player").forEach(function(element) {
-        element.addEventListener("click", function() {
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".fancybox_player").forEach(function (element) {
+        element.addEventListener("click", function () {
             const myVideo = this.getAttribute('data-src')
             const title = this.getAttribute('title')
             const height = this.getAttribute('pheight')
@@ -36,4 +36,4 @@ document.addEventListener("DOMContentLoaded", function() {
             ])
         });
     });
-}); 
+});
