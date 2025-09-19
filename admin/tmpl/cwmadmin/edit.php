@@ -661,7 +661,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'playersettings', Text::_('JBS_ADM_PLAYER_SETTINGS')); ?>
         <div class="row" id="playersettings">
-            <div class="col-4" style="border: ridge; padding: 3px">
+            <div class="col-4" style="border: ridge; padding: 10px">
                 <h3 class="tab-description"><?php
                     echo Text::_('JBS_CMN_MEDIA_FILES'); ?></h3>
 
@@ -696,7 +696,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                     </button>
                 </div>
             </div>
-            <div class="col-4" style="border: ridge; padding: 3px">
+            <div class="col-4" style="border: ridge; padding: 10px">
                 <h3 class="tab-description"><?php
                     echo Text::_('JBS_ADM_POPUP_OPTIONS'); ?></h3>
 
@@ -731,7 +731,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                     </button>
                 </div>
             </div>
-            <div class="col-4" style="border: ridge; padding: 3px">
+            <div class="col-4" style="border: ridge; padding: 10px">
                 <h3 class="tab-description"><?php
                     echo Text::_('JBS_ADM_MEDIATYPES_OPTIONS'); ?></h3>
                 <div class="control-group">
