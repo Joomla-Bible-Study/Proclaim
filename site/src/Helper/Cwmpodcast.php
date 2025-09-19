@@ -68,7 +68,7 @@ class Cwmpodcast
         $year = '(' . date('Y') . ')';
         $date = date('r');
 
-        // Get english language file as fallback
+        // Get English language file as fallback
         $language = Factory::getApplication()->getLanguage();
         $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 
@@ -490,12 +490,12 @@ class Cwmpodcast
         preg_match_all('!\d+!', $limit, $set_limit);
         $set_limit = (int)implode(' ', $set_limit[0]);
 
-        // This is set do to the hard limit of Apple max episodes.
+        // This is set due to the hard limit of Apple's max episodes.
         if ($set_limit >= 301) {
             $set_limit = 300;
         }
 
-        // Here's where we look at each mediafile to see if they are connected to this podcast
+        // Here's where we look at each media file to see if they are connected to this podcast
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query->select(
@@ -548,7 +548,7 @@ class Cwmpodcast
     }
 
     /**
-     * Escape Html to XML
+     * Escape HTML to XML
      *
      * @param   null|string  $string  HTML string to make safe
      *
@@ -603,7 +603,7 @@ class Cwmpodcast
     }
 
     /**
-     * Brake out time from seconds to (Array of hours, minutes, seconds).
+     * Break out time from seconds to (Array of hours, minutes, seconds).
      *
      * @param   int  $duration  Time in seconds as hh:mm:ss
      *
@@ -629,7 +629,7 @@ class Cwmpodcast
     }
 
     /**
-     * Read entire file, frame by frame... ie: Variable Bit Rate (VBR)
+     * Read the entire file, frame by frame... i.e., Variable Bit Rate (VBR)
      *
      * @param   string  $filename  File name of media.
      *
@@ -682,7 +682,7 @@ class Cwmpodcast
      *
      * @param   array|string  $block  ID3 info block
      *
-     * @return integer
+     * @return int
      *
      * @since 9.2.4
      */
@@ -716,7 +716,7 @@ class Cwmpodcast
     }
 
     /**
-     * Get Frame Header of the ID3 file
+     * Get the Frame Header of the ID3 file
      *
      * @param   string  $fourbytes  array with four bytes
      *
