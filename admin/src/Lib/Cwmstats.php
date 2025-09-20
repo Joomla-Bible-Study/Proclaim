@@ -498,7 +498,7 @@ class Cwmstats
         $pop_count    = 0;
         $sq_count     = 0;
         $inline_count = 0;
-        $global_count = 0;
+        $return       = '';
         $db           = Factory::getContainer()->get('DatabaseDriver');
         $query        = $db->getQuery(true);
         $query
@@ -534,14 +534,14 @@ class Cwmstats
                 }
             }
 
-            $popups = '<br /><strong>' . Text::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $total_media_files . '</strong>' .
+            $return = '<br /><strong>' . Text::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $total_media_files . '</strong>' .
                 '<br /><strong>' . Text::_('JBS_CMN_INLINE') . ': </strong>' . $inline_count . '<br /><strong>' .
                 Text::_('JBS_CMN_POPUP') . ': </strong>' . $pop_count . '<br /><strong>' .
                 Text::_('JBS_CMN_SQUEEZEBOX') . ': </strong>' . $sq_count . '<br /><strong>' .
                 Text::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL') . ': </strong>' . $no_player;
         }
 
-        return $popups;
+        return $return;
     }
 
     /**
@@ -615,7 +615,7 @@ class Cwmstats
      */
     public function getTopScoreSite(): bool|string
     {
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
         $t     = $input->get('t', 1, 'int');
 
         $admin = Cwmparams::getAdmin();

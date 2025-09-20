@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMAssets;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -34,19 +33,19 @@ class HtmlView extends BaseHtmlView
      *
      * @since 9.0.0
      */
-    public $totalSteps = 0;
+    public int $totalSteps = 0;
 
     /** @var int Numbers of Steps already processed
      *
      * @since 9.0.0
      */
-    public $doneSteps = 0;
+    public int $doneSteps = 0;
 
     /** @var array Call stack for the Visioning System.
      *
      * @since 9.0.0
      */
-    public $callstack = array();
+    public array $callstack = [];
 
     public $version;
 
@@ -54,7 +53,7 @@ class HtmlView extends BaseHtmlView
 
     public $assets;
 
-    /** @var object Start of install
+    /** @var object Start of installation
      *
      * @since 9.0.0
      */
@@ -78,11 +77,11 @@ class HtmlView extends BaseHtmlView
      */
     protected string $percentage;
 
-    /** @var array The pre versions to process
+    /** @var array The pre-versions to process
      *
      * @since 9.0.0
      */
-    private $versionStack = array();
+    private array $versionStack = [];
 
     /**
      * Execute and display a template script.
@@ -91,7 +90,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void  A string if successful, otherwise a JError object.
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   11.1
      * @see     fetch()
      */
@@ -99,6 +98,7 @@ class HtmlView extends BaseHtmlView
     {
         $app             = Factory::getApplication();
         $this->scanstate = $app->input->get('scanstate', false);
+
         // Get data from the model
         $this->state = $this->get("State");
         $layout      = $app->input->get('layout', 'edit');
@@ -109,7 +109,7 @@ class HtmlView extends BaseHtmlView
         $stack        = $session->get('asset_stack', '', 'CWM');
 
         if (empty($stack)) {
-            $this->versionStack = array();
+            $this->versionStack = [];
             $this->step         = null;
             $this->totalSteps   = 0;
             $this->doneSteps    = 0;
@@ -177,12 +177,12 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0.0
      */
     protected function addToolbar(): void
     {
-        Factory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->getInput()->set('hidemainmenu', true);
 
         ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'administration');
         ToolbarHelper::custom('cwmadmin.back', 'home', 'home', 'JTOOLBAR_BACK', false);

@@ -22,7 +22,7 @@ use Joomla\CMS\Router\Route;
 HtmlHelper::_('behavior.framework', true);
 HtmlHelper::_('formbehavior.chosen', 'select');
 
-$input     = Factory::getApplication()->input;
+$input     = Factory::getApplication()->getInput();
 $function  = $input->getCmd('function', 'jSelectServer');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));

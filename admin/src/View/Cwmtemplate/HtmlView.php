@@ -89,7 +89,7 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
-    public function display($tpl = null)
+    public function display($tpl = null): void
     {
         $this->item = $this->get('Item');
         $this->pagination = $this->get('Pagination');
@@ -119,7 +119,7 @@ class HtmlView extends BaseHtmlView
      */
     protected function addToolbar(): void
     {
-        Factory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->getInput()->set('hidemainmenu', true);
         $isNew = ($this->item->id === 0);
         $title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
         ToolbarHelper::title(
@@ -152,8 +152,7 @@ class HtmlView extends BaseHtmlView
         }
 
         ToolbarHelper::divider();
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=35:template-display-settings-help&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
-
+        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=35:template-display-settings-help&catid=20&Itemid=315&tmpl=component';
+        ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
     }
 }

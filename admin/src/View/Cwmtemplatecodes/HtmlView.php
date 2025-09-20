@@ -61,7 +61,7 @@ class HtmlView extends BaseHtmlView
     /**
      * Is this view an Empty State
      *
-     * @var   boolean
+     * @var   bool
      * @since 4.0.0
      */
     private $isEmptyState = false;
@@ -141,8 +141,8 @@ class HtmlView extends BaseHtmlView
         $toolbar = Toolbar::getInstance('toolbar');
 
         ToolbarHelper::title(Text::_('JBS_TPLCODE_TPLCODES'), 'stack stack');
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
+        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
+        ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
 
         if ($canDo->get('core.create')) {
             $toolbar->addNew('cwmtemplatecode.add');
@@ -172,7 +172,7 @@ class HtmlView extends BaseHtmlView
         if (
             !$this->isEmptyState && $this->state->get(
                 'filter.published'
-            ) == ContentComponent::CONDITION_TRASHED && $canDo->get('core.delete')
+            ) === ContentComponent::CONDITION_TRASHED && $canDo->get('core.delete')
         ) {
             $toolbar->delete('cwmtemplatecodes.delete')
                 ->text('JTOOLBAR_EMPTY_TRASH')

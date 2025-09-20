@@ -92,7 +92,7 @@ class Cwmbackup
 
                 $mime_type = 'text/x-sql';
 
-                if (Factory::getApplication()->input->getInt('jbs_compress', 1)) {
+                if (Factory::getApplication()->getInput()->getInt('jbs_compress', 1)) {
                     $mime_type = 'application/zip';
                     $path      = $this->compress();
                 }
@@ -107,7 +107,7 @@ class Cwmbackup
                     return false;
                 }
 
-                if (Factory::getApplication()->input->getInt('jbs_compress', 1)) {
+                if (Factory::getApplication()->getInput()->getInt('jbs_compress', 1)) {
                     $path = $this->compress();
                 }
 

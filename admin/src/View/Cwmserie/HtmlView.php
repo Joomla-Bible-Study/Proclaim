@@ -75,7 +75,7 @@ class HtmlView extends BaseHtmlView
      * @throws  \Exception
      * @since   7.0.0
      */
-    public function display($tpl = null)
+    public function display($tpl = null): void
     {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
@@ -107,10 +107,10 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since  7.0.0
      */
-    protected function addToolbar()
+    protected function addToolbar(): void
     {
-        Factory::getApplication()->input->set('hidemainmenu', true);
-        $isNew = ($this->item->id == 0);
+        Factory::getApplication()->getInput()->set('hidemainmenu', true);
+        $isNew = ($this->item->id === 0);
         $title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
         ToolbarHelper::title(
             Text::_('JBS_CMN_SERIES') . ': <small><small>[' . $title . ']</small></small>',
@@ -131,8 +131,7 @@ class HtmlView extends BaseHtmlView
         }
 
         ToolbarHelper::divider();
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=37:series-entry-screen-help&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
-
+        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=37:series-entry-screen-help&catid=20&Itemid=315&tmpl=component';
+        ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
     }
 }

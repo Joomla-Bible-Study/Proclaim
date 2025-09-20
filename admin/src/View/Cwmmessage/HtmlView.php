@@ -148,7 +148,7 @@ class HtmlView extends BaseHtmlView
             });
              ";
 
-        $wa = $this->document->getWebAssetManager();
+        $wa = $this->getDocument()->getWebAssetManager();
         $wa->addInlineScript($script);
 
         HTMLHelper::script('media/com_proclaim/js/plugins/jquery.tokeninput.min.js');
@@ -168,9 +168,9 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0.0
      */
-    protected function addToolbar()
+    protected function addToolbar(): void
     {
-        Factory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->getInput()->set('hidemainmenu', true);
         $isNew = ($this->item->id === 0);
         $title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
         ToolbarHelper::title(
@@ -208,7 +208,7 @@ class HtmlView extends BaseHtmlView
         }
 
         ToolbarHelper::divider();
-		$help_url='https://www.christianwebministries.org/index.php?option=com_content&view=article&id=29:message-edit-help-screen&catid=20&Itemid=315&tmpl=component';
+        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=29:message-edit-help-screen&catid=20&Itemid=315&tmpl=component';
         ToolbarHelper::help('Message', false, $help_url);
     }
 }

@@ -106,7 +106,7 @@ class HtmlView extends BaseHtmlView
      */
     protected function addToolbar(): void
     {
-        Factory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->getInput()->set('hidemainmenu', true);
         $isNew = ((int)$this->item->id === 0);
         $title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
         ToolbarHelper::title(
@@ -139,7 +139,7 @@ class HtmlView extends BaseHtmlView
         }
 
         ToolbarHelper::divider();
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=41:podcast-entry-screen-help&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
+        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=41:podcast-entry-screen-help&catid=20&Itemid=315&tmpl=component';
+        ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
     }
 }

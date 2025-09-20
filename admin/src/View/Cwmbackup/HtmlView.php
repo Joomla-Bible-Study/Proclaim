@@ -145,7 +145,7 @@ class HtmlView extends BaseHtmlView
      */
     protected function addToolbar(): void
     {
-        Factory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->getInput()->set('hidemainmenu', true);
 
         ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'administration');
         ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
@@ -158,9 +158,10 @@ class HtmlView extends BaseHtmlView
      *
      * @param   string  $component  The Component it is coming from
      *
-     * @return boolean
+     * @return bool
      *
      * @since 7.1.0
+     * @deprecated 10.0.2 Code isn't used.
      */
     protected function versionXML(string $component): bool
     {

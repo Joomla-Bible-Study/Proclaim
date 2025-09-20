@@ -92,6 +92,7 @@
   },
   "scripts": {
     "phpcs": "phpcs . --standard=./build/psr12/ruleset.xml",
+    "php-cs-fixer": "php-cs-fixer --config=.php-cs-fixer.dist.php",
     "post-install-cmd": "\"libraries/vendor/bin/phpcs\" --config-set installed_paths /libraries/vendor/squizlabs/php_codesniffer/src/Standards",
     "post-update-cmd": "\"libraries/vendor/bin/phpcs\" --config-set installed_paths /libraries/vendor/squizlabs/php_codesniffer/src/Standards"
   }

@@ -122,9 +122,9 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0.0
      */
-    protected function addToolbar()
+    protected function addToolbar(): void
     {
-        Factory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->getInput()->set('hidemainmenu', true);
         $isNew = ($this->item->id < 1);
         $canDo = ContentHelper::getActions('com_proclaim');
         $title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
@@ -158,7 +158,7 @@ class HtmlView extends BaseHtmlView
         }
 
         ToolbarHelper::divider();
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=40:server-entry-screen-help&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
+        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=40:server-entry-screen-help&catid=20&Itemid=315&tmpl=component';
+        ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
     }
 }

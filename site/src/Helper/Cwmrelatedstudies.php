@@ -240,7 +240,7 @@ class Cwmrelatedstudies
 
         $related = '<select onchange="goTo()" id="urlList" class="form-select chzn-color-state valid form-control-success"><option value="">' .
             Text::_('JBS_CMN_SELECT_RELATED_STUDY') . '</option>';
-        $input   = Factory::getApplication()->input;
+        $input   = Factory::getApplication()->getInput();
 
         foreach ($studyrecords as $studyrecord) {
             $related .= '<option value="'

@@ -41,7 +41,7 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
     public function __construct($config = [], ?MVCFactoryInterface $factory = null, $app = null, $input = null)
     {
         // Contact frontpage Editor contacts proxying.
-        $this->input = Factory::getApplication()->input;
+        $this->input = Factory::getApplication()->getInput();
 
         if ($this->input->get('view') === 'cwmlandingpage' && $this->input->get('layout') === 'modal') {
             $config['base_path'] = JPATH_ADMINISTRATOR . '/components';

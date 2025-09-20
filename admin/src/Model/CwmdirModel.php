@@ -86,7 +86,7 @@ class CwmdirModel extends BaseModel
         $defaultDirPath = BIBLESTUDY_ROOT_PATH;
 
         // Filter GET variable
-        $directoryVarFromReq = Factory::getApplication()->input->get('dir', $separator);
+        $directoryVarFromReq = Factory::getApplication()->getInput()->get('dir', $separator);
         $directoryVarReplSep = str_replace(["/", "\\"], $separator, $directoryVarFromReq);
         $directoryVarWODots  = preg_replace(["/\.\./", "/\./"], '', $directoryVarReplSep);
         $directoryVar        = $directoryVarWODots;

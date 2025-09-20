@@ -132,7 +132,7 @@ class HtmlView extends BaseHtmlView
                 unset($this->activeFilters['language']);
                 $this->filterForm->removeField('language', 'filter');
             }
-        } elseif ($forcedLanguage = Factory::getApplication()->input->get('forcedLanguage', '', 'CMD')) {
+        } elseif ($forcedLanguage = Factory::getApplication()->getInput()->get('forcedLanguage', '', 'CMD')) {
             // If the language is forced we can't allow to select the language, so transform the language selector filter into a hidden field.
             $languageXml = new \SimpleXMLElement(
                 '<field name="language" type="hidden" default="' . $forcedLanguage . '" />'
@@ -239,7 +239,7 @@ class HtmlView extends BaseHtmlView
         if ($user->authorise('core.admin', 'com_proclaim') || $user->authorise('core.options', 'com_proclaim')) {
             $toolbar->preferences('com_proclaim');
         }
-		$help_url='https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=19&Itemid=315&tmpl=component';
+        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=19&Itemid=315&tmpl=component';
         $toolbar->help('Messages', false, $help_url);
     }
 }

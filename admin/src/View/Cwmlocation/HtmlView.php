@@ -73,7 +73,7 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
-    public function display($tpl = null)
+    public function display($tpl = null): void
     {
         $this->form = $this->get("Form");
         $this->item = $this->get("Item");
@@ -99,9 +99,9 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0.0
      */
-    protected function addToolbar()
+    protected function addToolbar(): void
     {
-        Factory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->getInput()->set('hidemainmenu', true);
         $isNew = ((int)$this->item->id === 0);
         $title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
         ToolbarHelper::title(
@@ -134,8 +134,7 @@ class HtmlView extends BaseHtmlView
         }
 
         ToolbarHelper::divider();
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=32:location-edit-screen-help&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
-
+        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=32:location-edit-screen-help&catid=20&Itemid=315&tmpl=component';
+        ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
     }
 }

@@ -120,7 +120,7 @@ class Cwmparams
         $db = Factory::getContainer()->get('DatabaseDriver');
 
         if (!$pk) {
-            $pk = Factory::getApplication()->input->getInt('t', '1');
+            $pk = Factory::getApplication()->getInput()->getInt('t', '1');
         }
 
         if (self::$templateId !== $pk || !isset(self::$templateTable)) {

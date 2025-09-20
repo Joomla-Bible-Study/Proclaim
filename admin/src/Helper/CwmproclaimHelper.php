@@ -59,7 +59,7 @@ class CwmproclaimHelper
      */
     public static function applyViewAndController(string $defaultController): void
     {
-        $input      = Factory::getApplication()->input;
+        $input      = Factory::getApplication()->getInput();
         $controller = $input->getCmd('controller');
         $view       = $input->getCmd('view');
         $task       = $input->getCmd('task', 'display');

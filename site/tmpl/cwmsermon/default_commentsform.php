@@ -51,7 +51,7 @@ switch ($this->item->params->get('link_comments', 0)) {
             </div>
 
             <?php
-            $input = Factory::getApplication()->input;
+            $input = Factory::getApplication()->getInput();
 
             if (!$this->item->id) {
                 $this->item->id = $input->get('id', '', 'int');
@@ -214,7 +214,7 @@ switch ($this->item->params->get('link_comments', 0)) {
                             endforeach; ?>
 
                             <?php
-                            $input = Factory::getApplication()->input;
+                            $input = Factory::getApplication()->getInput();
                             $t     = $input->get('t'); ?>
                             <input type="hidden" name="study_id" id="study_id" value="<?php
                             echo $this->item->id ?>"/>

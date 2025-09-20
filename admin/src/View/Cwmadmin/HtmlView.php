@@ -20,8 +20,9 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMAdmin;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\Helper\ContentHelper;
-use Joomla\CMS\HTML\HTMLHelper as JHtml;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -177,7 +178,7 @@ class HtmlView extends BaseHtmlView
     /**
      * Form
      *
-     * @var \Joomla\CMS\Form\Form
+     * @var Form
      * @since    7.0.0
      */
     protected $form;
@@ -221,13 +222,12 @@ class HtmlView extends BaseHtmlView
         $this->state = $this->get("State");
         $this->canDo = ContentHelper::getActions('com_proclaim', 'cwmadmin', (int)$this->item->id);
 
-        // End for database
+        // End for a database
         $this->tmp_dest = $app->get('tmp_path');
 
         $this->playerstats = Cwmstats::getPlayers();
         $this->assets      = $app->input->get('checkassets', null, 'get');
-        $popups            = Cwmstats::getPopups();
-        $this->popups      = $popups;
+        $this->popups      = Cwmstats::getPopups();
 
         // Get the list of backup files
         $path = JPATH_SITE . '/media/com_proclaim/backup';
@@ -244,9 +244,9 @@ class HtmlView extends BaseHtmlView
                     $filelist[]   = $filelisttemp;
                 }
 
-                $types[]                      = JHtml::_('select.option', '0', Text::_('JBS_IBM_SELECT_DB'));
+                $types[]                      = HTMLHelper::_('select.option', '0', Text::_('JBS_IBM_SELECT_DB'));
                 $types                        = array_merge($types, $filelist);
-                $this->lists['backedupfiles'] = JHTML::_(
+                $this->lists['backedupfiles'] = HTMLHelper::_(
                     'select.genericlist',
                     $types,
                     'backuprestore',
@@ -282,7 +282,7 @@ class HtmlView extends BaseHtmlView
         $jbsversion = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml');
 
         foreach ($jbsversion as $key => $value) {
-            if ($key == 'version') {
+            if ($key === 'version') {
                 $version = $value;
             }
         }
@@ -306,16 +306,11 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0.0
      */
-    protected function addToolbar()
+    protected function addToolbar(): void
     {
-        Factory::getApplication()->input->set('hidemainmenu', true);
-        $user   = $this->getCurrentUser();
-        $userId = $user->id;
+        Factory::getApplication()->getInput()->set('hidemainmenu', true);
 
-        // Built the actions for new and existing records.
-        $canDo = $this->canDo;
-
-        $toolbar = Toolbar::getInstance();
+        $toolbar    = $this->getDocument()->getToolbar();
 
         ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'options');
         $toolbar->preferences('com_proclaim', 'JBS_ADM_PERMISSIONS');
@@ -339,43 +334,5 @@ class HtmlView extends BaseHtmlView
         ToolbarHelper::inlinehelp();
         $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=30:administration-help-screen&catid=20&Itemid=315&tmpl=component';
         $toolbar->help('Proclaim', false, $help_url);
-    }
-
-    /**
-     * Added for SermonSpeaker and PreachIt.
-     *
-     * @param   string  $component  Component it is coming from
-     *
-     * @return boolean
-     *
-     * @since 7.1.0
-     */
-    protected function versionXML($component)
-    {
-        switch ($component) {
-            case 'sermonspeaker':
-                $data = Installer::parseXMLInstallFile(
-                    JPATH_ADMINISTRATOR . '/components/com_sermonspeaker/sermonspeaker.xml'
-                );
-
-                if ($data) {
-                    return $data['version'];
-                }
-
-                return false;
-                break;
-
-            case 'preachit':
-                $data = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_preachit/preachit.xml');
-
-                if ($data) {
-                    return $data['version'];
-                }
-
-                return false;
-                break;
-        }
-
-        return false;
     }
 }

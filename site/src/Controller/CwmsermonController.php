@@ -79,7 +79,7 @@ class CwmsermonController extends FormController
      */
     protected function getReturnPage(): string
     {
-        $return = Factory::getApplication()->input->get('return', null, 'base64');
+        $return = Factory::getApplication()->getInput()->get('return', null, 'base64');
 
         if (empty($return) || !Uri::isInternal(base64_decode($return))) {
             return Uri::base() . 'index.php?option=com_proclaim&view=cwmsermon';
@@ -154,7 +154,7 @@ class CwmsermonController extends FormController
      */
     public function comment(): void
     {
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
         /** @var CwmsermonModel $model */
         $model = $this->getModel('sermon');
         $t     = $input->get('t', '1');
@@ -232,7 +232,7 @@ class CwmsermonController extends FormController
      */
     public function commentsEmail($params): void
     {
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
 
         $comment_author    = $input->get('full_name', 'Anonymous', 'string');
         $comment_study_id  = $input->get('study_detail_id', 0, 'int');
@@ -286,7 +286,7 @@ class CwmsermonController extends FormController
      */
     public function download(): void
     {
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
         $task  = $input->get('task');
         $mid   = $input->getInt('mid');
 
@@ -345,7 +345,7 @@ class CwmsermonController extends FormController
      */
     protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id'): string
     {
-        $this->input = Factory::getApplication()->input;
+        $this->input = Factory::getApplication()->getInput();
 
         // Need to override the parent method completely.
         $tmpl   = $this->input->get('tmpl');

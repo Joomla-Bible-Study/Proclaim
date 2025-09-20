@@ -25,7 +25,7 @@ use Joomla\CMS\Session\Session;
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('com_proclaim.cwmadmin-servers-modal');
 
-$input     = Factory::getApplication()->input;
+$input     = Factory::getApplication()->getInput();
 $function  = $input->getCmd('function', 'jSelectServer');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));

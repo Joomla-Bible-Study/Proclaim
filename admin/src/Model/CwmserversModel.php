@@ -187,7 +187,7 @@ class CwmserversModel extends ListModel
         // Filter by published state
         $published = $this->getState('filter.published');
 
-        if (Factory::getApplication()->input->get('layout') === 'modal' && $published === '') {
+        if (Factory::getApplication()->getInput()->get('layout') === 'modal' && $published === '') {
             $published = 1;
         }
 

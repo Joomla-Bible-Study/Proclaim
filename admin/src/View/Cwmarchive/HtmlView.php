@@ -42,7 +42,7 @@ class HtmlView extends BaseHtmlView
      * @since  11.1
      * @see    ViewLegacy::loadTemplate()
      */
-    public function display($tpl = null)
+    public function display($tpl = null): void
     {
         $this->form = $this->get("Form");
 
@@ -63,9 +63,9 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since  7.0.0
      */
-    protected function addToolbar()
+    protected function addToolbar(): void
     {
-        Factory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->getInput()->set('hidemainmenu', true);
 
         ToolbarHelper::title(Text::_('JBS_CMN_ARCHIVE'), 'archive');
         ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');

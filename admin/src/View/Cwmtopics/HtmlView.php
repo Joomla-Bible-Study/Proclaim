@@ -130,8 +130,8 @@ class HtmlView extends BaseHtmlView
         $toolbar = Toolbar::getInstance('toolbar');
 
         ToolbarHelper::title(Text::_('JBS_CMN_TOPICS'), 'tags');
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
+        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
+        ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
 
         if ($this->canDo->get('core.create')) {
             $toolbar->addNew('cwmtopic.add');

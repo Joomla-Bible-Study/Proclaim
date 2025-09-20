@@ -13,9 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMCpanel;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use CWM\Component\Proclaim\Administrator\Model\CwmcpanelModel;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use SimpleXMLElement;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -32,7 +30,7 @@ class HtmlView extends BaseHtmlView
     /**
      * Data from Model
      *
-     * @var SimpleXMLElement|false
+     * @var \SimpleXMLElement|false
      * @since    7.0.0
      */
     public $xml;

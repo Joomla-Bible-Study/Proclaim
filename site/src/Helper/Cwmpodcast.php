@@ -441,7 +441,7 @@ class Cwmpodcast
                     $podfoot     = '
                         </channel>
                         </rss>';
-                    $input       = Factory::getApplication()->input;
+                    $input       = Factory::getApplication()->getInput();
                     $client      = ApplicationHelper::getClientInfo($input->get('client', '0', 'int'));
                     $file_path   = $client->path . '/' . $podinfo->filename;
                     $filecontent = $podhead . $episodedetail . $podfoot;

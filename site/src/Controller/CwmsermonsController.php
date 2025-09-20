@@ -46,7 +46,7 @@ class CwmsermonsController extends BaseController
      */
     public function download(): void
     {
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
         $task  = $input->get('task');
         $mid   = $input->getInt('id');
 
@@ -67,7 +67,7 @@ class CwmsermonsController extends BaseController
      */
     public function avplayer(): void
     {
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
         $task  = $input->get('task');
 
         if ($task === 'avplayer') {

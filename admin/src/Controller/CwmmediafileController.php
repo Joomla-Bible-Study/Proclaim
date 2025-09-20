@@ -109,7 +109,7 @@ class CwmmediafileController extends FormController
     public function xhr(): void
     {
         Session::checkToken('get') or die('Invalid Token');
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
 
         $addonType = $input->get('type', 'Legacy', 'string');
         $handler   = $input->get('handler');

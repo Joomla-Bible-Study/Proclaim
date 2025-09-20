@@ -123,8 +123,8 @@ class HtmlView extends BaseHtmlView
         $toolbar = Toolbar::getInstance('toolbar');
 
         ToolbarHelper::title(Text::_('JBS_CMN_MESSAGETYPES'), 'list-2 list-2');
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-	    $toolbar->help('proclaim', false, $url = $help_url, 'com_proclaim');
+        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
+        $toolbar->help('proclaim', false, $url = $help_url, 'com_proclaim');
 
         if ($canDo->get('core.create')) {
             $toolbar->addNew('cwmmessagetype.add');

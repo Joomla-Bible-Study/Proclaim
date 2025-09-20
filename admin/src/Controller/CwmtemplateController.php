@@ -39,7 +39,7 @@ class CwmtemplateController extends FormController
      */
     public function copy(): void
     {
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
         $cid   = $input->get('cid', '', 'array');
         ArrayHelper::toInteger($cid);
 

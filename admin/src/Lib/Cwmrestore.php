@@ -314,7 +314,7 @@ class Cwmrestore
      */
     private static function getPackageFromFolder(): bool|array
     {
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
 
         // Get the path to the package to install.
         $p_dir = $input->getString('install_directory');

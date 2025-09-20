@@ -47,7 +47,7 @@ class CwmmediafilesController extends AdminController
         // Check for request forgeries.
         Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-        $ids = Factory::getApplication()->input->post->get('cid', [], 'array');
+        $ids = Factory::getApplication()->getInput()->post->get('cid', [], 'array');
 
         /** @var CwmmediafileModel $model */
         $model  = $this->getModel($name = 'Cwmmediafile', $prefix = 'Administrator', $config = ['ignore_request' => true]);

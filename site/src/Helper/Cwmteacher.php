@@ -43,7 +43,7 @@ class Cwmteacher extends Cwmlisting
      */
     public function getTeachersFluid($params): array
     {
-        $input      = Factory::getApplication()->input;
+        $input      = Factory::getApplication()->getInput();
         $id         = $input->get('id', '', 'int');
         $teachers   = [];
         $teacherIDs = [];
@@ -106,7 +106,7 @@ class Cwmteacher extends Cwmlisting
      */
     public function getTeacher($params, $id): string
     {
-        $input       = Factory::getApplication()->input;
+        $input       = Factory::getApplication()->getInput();
         $htmlView    = new HtmlView();
         $htmlView->loadHelper('image');
         $teacherids = new \stdClass();
@@ -285,7 +285,7 @@ class Cwmteacher extends Cwmlisting
     public function getTeacherStudiesExp($id, $params): string
     {
         $limit   = '';
-        $input   = Factory::getApplication()->input;
+        $input   = Factory::getApplication()->getInput();
         $nolimit = $input->get('nolimit', '', 'int');
 
         if ($params->get('series_detail_limit')) {
