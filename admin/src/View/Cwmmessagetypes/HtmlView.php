@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMMessageTypes;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmmessagetypes;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;

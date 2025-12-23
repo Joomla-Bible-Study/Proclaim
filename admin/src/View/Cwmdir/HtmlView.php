@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMDir;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmdir;
 
 // No direct access
 use Joomla\CMS\Factory;

@@ -9,7 +9,7 @@
  * @link           https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Site\View\CWMPodcastDisplay;
+namespace CWM\Component\Proclaim\Site\View\Cwmpodcastdisplay;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;

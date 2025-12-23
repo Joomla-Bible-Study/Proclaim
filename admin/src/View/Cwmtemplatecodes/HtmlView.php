@@ -10,7 +10,7 @@
  * @since          7.1.0
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMTemplateCodes;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmtemplatecodes;
 
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;

@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMArchive;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmarchive;
 
 // Check to ensure this file is included in Joomla!
 use Joomla\CMS\Factory;

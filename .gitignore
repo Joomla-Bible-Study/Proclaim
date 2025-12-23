@@ -30,3 +30,5 @@ build/reports/project-size.txt
 /media/css/site/biblestudy.css
 *.zip
 !/build.properties
+!/.phpunit.cache/
+!/.phpunit.cache/test-results

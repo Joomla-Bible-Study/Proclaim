@@ -11,7 +11,7 @@
 
 // Check to ensure this file is included in Joomla!
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMAdmin;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmadmin;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;

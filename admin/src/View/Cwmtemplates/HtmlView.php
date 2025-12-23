@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMTemplates;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmtemplates;
 
 // No Direct Access
 use Joomla\CMS\Factory;

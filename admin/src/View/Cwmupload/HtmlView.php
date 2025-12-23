@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMMessageTypes;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmupload;
 
 // No direct access
 use CWM\Component\Proclaim\Administrator\Helper\Cwmuploadscript;

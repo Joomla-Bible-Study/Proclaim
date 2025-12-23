@@ -182,7 +182,7 @@ class CwmserversModel extends ListModel
         $user  = Factory::getApplication()->getSession()->get('user');
 
         $query->select($this->getState('list.select', 'server.id, server.published, server.server_name, server.type'));
-        $query->from('#__bsms_servers AS server');
+        $query->from($db->quoteName('#__bsms_servers', 'server'));
 
         // Filter by published state
         $published = $this->getState('filter.published');
@@ -192,21 +192,33 @@ class CwmserversModel extends ListModel
         }
 
         if (is_numeric($published)) {
-            $query->where('server.published = ' . (int)$published);
+            $publishedValue = (int) $published;
+            $query->where($db->quoteName('server.published') . ' = :published')
+                ->bind(':published', $publishedValue, \Joomla\Database\ParameterType::INTEGER);
         } elseif ($published === '') {
-            $query->where('(server.published = 0 OR server.published = 1)');
+            $query->where($db->quoteName('server.published') . ' IN (0, 1)');
         }
 
         // Implement View Level Access
         if (!$user->authorise('core.cwmadmin')) {
-            $groups = implode(',', $user->getAuthorisedViewLevels());
-            $query->where('server.access IN (' . $groups . ')');
+            $groups = $user->getAuthorisedViewLevels();
+            $query->whereIn($db->quoteName('server.access'), $groups);
         }
 
-        // Add the list ordering clause
+        // Add the list ordering clause with whitelist validation
         $orderCol  = $this->state->get('list.ordering', 'server.server_name');
         $orderDirn = $this->state->get('list.direction', 'DESC');
-        $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+
+        // Validate ordering column against whitelist
+        $allowedColumns = ['server.id', 'server.server_name', 'server.published', 'server.type'];
+        if (!in_array($orderCol, $allowedColumns, true)) {
+            $orderCol = 'server.server_name';
+        }
+
+        // Validate direction
+        $orderDirn = strtoupper($orderDirn) === 'ASC' ? 'ASC' : 'DESC';
+
+        $query->order($db->quoteName($orderCol) . ' ' . $orderDirn);
 
         return $query;
     }

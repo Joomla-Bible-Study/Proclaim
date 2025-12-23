@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMLocation;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmlocation;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
