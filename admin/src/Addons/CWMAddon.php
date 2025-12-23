@@ -27,14 +27,6 @@ use Joomla\Filesystem\Path;
 abstract class CWMAddon
 {
     /**
-     * Path for the class to load
-     *
-     * @var bool|string
-     * @since 10.0.0
-     */
-    private static string|bool $path;
-
-    /**
      * Addon configuration
      *
      * @var     bool|null|\SimpleXMLElement
@@ -130,19 +122,29 @@ abstract class CWMAddon
     /**
      * Loads the addon configuration from the XML file
      *
-     * @return  bool|\SimpleXMLElement
+     * @return  \SimpleXMLElement  The parsed XML configuration
      *
-     * @throws  \Exception
+     * @throws  \RuntimeException  If the configuration file cannot be found or parsed
      * @since   9.0.0
      */
-    public function getXml(): \SimpleXMLElement|bool
+    public function getXml(): \SimpleXMLElement
     {
         $path = Path::find(BIBLESTUDY_PATH_ADMIN . '/src/Addons/Servers/' . ucfirst($this->type), $this->type . '.xml');
 
-        if ($path) {
-            $xml = simplexml_load_string(file_get_contents($path));
-        } else {
+        if (!$path) {
             throw new \RuntimeException(Text::_('JBS_CMN_COULD_NOT_LOAD_ADDON_CONFIGURATION'), 404);
+        }
+
+        $contents = file_get_contents($path);
+
+        if ($contents === false) {
+            throw new \RuntimeException(Text::sprintf('JBS_CMN_COULD_NOT_READ_ADDON_FILE', $path), 500);
+        }
+
+        $xml = simplexml_load_string($contents);
+
+        if ($xml === false) {
+            throw new \RuntimeException(Text::sprintf('JBS_CMN_COULD_NOT_PARSE_ADDON_XML', $path), 500);
         }
 
         return $xml;
@@ -151,19 +153,24 @@ abstract class CWMAddon
     /**
      * Returns an Addon object, always creating it
      *
-     * @param string $type ?
-     * @param array $config ?
+     * @param   string  $type    The addon type to instantiate
+     * @param   array   $config  Configuration options for the addon
      *
-     * @return mixed
+     * @return  static  The addon instance
      *
+     * @throws  \RuntimeException  If the addon class does not exist
      * @since   9.0.0
      */
-    public static function getInstance(string $type, array $config = []): mixed
+    public static function getInstance(string $type, array $config = []): static
     {
         $type  = ucfirst(preg_replace('/[^A-Z0-9_\.-]/i', '', $type));
-        $class = "CWM\Component\Proclaim\Administrator\Addons\Servers\\" . ucfirst($type) . "\CWMAddon" . ucfirst(
+        $class = "CWM\\Component\\Proclaim\\Administrator\\Addons\\Servers\\" . ucfirst($type) . "\\CWMAddon" . ucfirst(
             $type
         );
+
+        if (!class_exists($class)) {
+            throw new \RuntimeException(Text::sprintf('JBS_CMN_ADDON_CLASS_NOT_FOUND', $type), 404);
+        }
 
         return new $class($config);
     }
