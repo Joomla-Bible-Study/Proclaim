@@ -51,24 +51,29 @@ class TemplateListField extends ListField
      */
     protected function getOptions(): array
     {
-        $options = [];
-
-        if (!self::$templates) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
-            $query = $db->getQuery(true);
-            $query->select('id,title');
-            $query->from('#__bsms_templates');
-            $query->where('published = 1');
-            $query->order('text ASC');
-            $db->setQuery((string)$query);
-            $messages = $db->loadObjectList();
-
-            foreach ($messages as $message) {
-                $options[] = HTMLHelper::_('select.option', $message->id, $message->title);
-            }
-
-            self::$templates = array_merge(parent::getOptions(), $options);
+        if (self::$templates) {
+            return self::$templates;
         }
+
+        $options = [];
+        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $query   = $db->getQuery(true);
+
+        $query->select($db->quoteName(['id', 'title']))
+            ->from($db->quoteName('#__bsms_templates'))
+            ->where($db->quoteName('published') . ' = 1')
+            ->order($db->quoteName('title') . ' ASC');
+
+        $db->setQuery($query);
+        $templates = $db->loadObjectList();
+
+        if ($templates) {
+            foreach ($templates as $template) {
+                $options[] = HTMLHelper::_('select.option', $template->id, $template->title);
+            }
+        }
+
+        self::$templates = array_merge(parent::getOptions(), $options);
 
         return self::$templates;
     }
