@@ -50,41 +50,31 @@
             <field name="detailstemplateid" type="TemplateList" default=""
                    label="JBS_TPL_TEMPLATE_STUDY_DETAIL" description="JBS_TPL_TEMPLATE_STUDY_DETAIL_DESC"
                    required="true"/>
-            <field name="sermontemplate" type="sql" label="JBS_TPL_SERMON_TEMPLATE"
-                   description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true"
-                   query="SELECT id, type, filename FROM #__bsms_templatecode WHERE type=2 AND published =1 ORDER BY filename ASC"
-                   key_field="filename" value_field="filename">
+            <field name="sermontemplate" type="TemplateCode" templateType="2"
+                   label="JBS_TPL_SERMON_TEMPLATE" description="JBS_TPL_SERMONS_TEMPLATE_DESC">
                 <option value="0">JBS_CMN_USE_DEFAULT</option>
             </field>
             <field name="teachertemplateid" type="TemplateList" default=""
                    label="JBS_TPL_TEMPLATE_TEACHER" description="JBS_TPL_TEMPLATE_TEACHER_DESC" required="true"/>
-            <field name="teachertemplate" type="sql" label="JBS_TPL_TEACHER_TEMPLATE"
-                   description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true"
-                   query="SELECT id, type, filename FROM #__bsms_templatecode WHERE type=4 AND published =1 ORDER BY filename ASC"
-                   key_field="filename" value_field="filename">
+            <field name="teachertemplate" type="TemplateCode" templateType="4"
+                   label="JBS_TPL_TEACHER_TEMPLATE" description="JBS_TPL_SERMONS_TEMPLATE_DESC">
                 <option value="0">JBS_CMN_USE_DEFAULT</option>
             </field>
-            <field name="teacherstemplate" type="sql" label="JBS_TPL_TEACHER_LIST_TEMPLATE"
-                   description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true"
-                   query="SELECT id, type, filename FROM #__bsms_templatecode WHERE type=3 AND published =1 ORDER BY filename ASC"
-                   key_field="filename" value_field="filename">
+            <field name="teacherstemplate" type="TemplateCode" templateType="3"
+                   label="JBS_TPL_TEACHER_LIST_TEMPLATE" description="JBS_TPL_SERMONS_TEMPLATE_DESC">
                 <option value="0">JBS_CMN_USE_DEFAULT</option>
             </field>
             <field name="serieslisttemplateid" type="TemplateList" default=""
                    label="JBS_TPL_TEMPLATE_SERIES_LIST" description="JBS_TPL_TEMPLATE_SERIES_LIST_DESC"
                    required="true"/>
-            <field name="seriesdisplaystemplate" type="sql" label="JBS_TPL_SERIES_LIST_TEMPLATE"
-                   description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true"
-                   query="SELECT id, type, filename FROM #__bsms_templatecode WHERE type=5 AND published =1 ORDER BY filename ASC"
-                   key_field="filename" value_field="filename">
+            <field name="seriesdisplaystemplate" type="TemplateCode" templateType="5"
+                   label="JBS_TPL_SERIES_LIST_TEMPLATE" description="JBS_TPL_SERMONS_TEMPLATE_DESC">
                 <option value="0">JBS_CMN_USE_DEFAULT</option>
             </field>
             <field name="seriesdetailtemplateid" type="TemplateList" default=""
                    label="JBS_TPL_TEMPLATE_SERIES_DETAIL" description="JBS_TPL_SERMONS_TEMPLATE_DESC" required="true"/>
-            <field name="seriesdisplaytemplate" type="sql" label="JBS_TPL_SERIES_TEMPLATE"
-                   description="JBS_TPL_SERMONS_TEMPLATE_DESC" hide_none="true"
-                   query="SELECT id, type, filename FROM #__bsms_templatecode WHERE type=6 AND published =1 ORDER BY filename ASC"
-                   key_field="filename" value_field="filename">
+            <field name="seriesdisplaytemplate" type="TemplateCode" templateType="6"
+                   label="JBS_TPL_SERIES_TEMPLATE" description="JBS_TPL_SERMONS_TEMPLATE_DESC">
                 <option value="0">JBS_CMN_USE_DEFAULT</option>
             </field>
             <field name="offset" type="radio" class="btn-group" size="10" default="false"
@@ -99,23 +89,16 @@
             </field>
         </fieldset>
         <fieldset name="FILTERS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-            <field name="lteacher_id" type="sql"
-                   query="SELECT * FROM #__bsms_teachers WHERE published = 1"
-                   key_field="id" value_field="teachername" default="-1" multiple="true"
+            <field name="lteacher_id" type="TeacherList" default="-1" multiple="true"
                    size="10" label="JBS_CMN_FILTERS_TEACHER" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-            <field name="lseries_id" type="sql"
-                   query="SELECT #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_series.published AS srpub, #__bsms_studies.series_id, #__bsms_studies.published AS spub FROM #__bsms_series LEFT JOIN #__bsms_studies ON ( #__bsms_studies.id = #__bsms_series.id ) WHERE #__bsms_series.published = 1"
-                   key_field="sid" value_field="series_text" default="-1" multiple="true"
+            <field name="lseries_id" type="Series" default="-1" multiple="true"
                    size="10" label="JBS_CMN_FILTERS_SERIES" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-            <field name="lbooknumber" type="sql"
-                   query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
-                   key_field="booknumber" value_field="bookname" default="-1" multiple="true"
-                   size="10" translate="true" label="JBS_CMN_FILTERS_BOOKS"
-                   description="JBS_CMN_FILTERS_DESC">
+            <field name="lbooknumber" type="BookList" default="-1" multiple="true"
+                   size="10" label="JBS_CMN_FILTERS_BOOKS" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="ltopic_id" type="TopicsList" default="-1" multiple="true"
@@ -123,21 +106,15 @@
                    class="inputbox">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-            <field name="lmessagetype" type="sql"
-                   query="SELECT * FROM #__bsms_message_type WHERE published = 1"
-                   key_field="id" value_field="message_type" default="-1" multiple="true"
+            <field name="lmessagetype" type="MessageTypeList" default="-1" multiple="true"
                    size="5" label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-            <field name="llocations" type="sql"
-                   query="SELECT * FROM #__bsms_locations WHERE published = 1"
-                   key_field="id" value_field="location_text" default="-1" multiple="true"
+            <field name="llocations" type="LocationList" default="-1" multiple="true"
                    size="5" label="JBS_CMN_FILTERS_LOCATIONS" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
-            <field name="lyears" type="sql"
-                   query="SELECT DISTINCT YEAR(studydate) FROM #__bsms_studies WHERE published = 1 ORDER BY YEAR(studydate) DESC"
-                   key_field="YEAR(studydate)" value_field="YEAR(studydate)" default="-1" multiple="true"
+            <field name="lyears" type="YearList" default="-1" multiple="true"
                    size="5" label="JBS_CMN_FILTERS_YEARS" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
@@ -316,9 +293,7 @@
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
-            <field name="listteachers" type="sql"
-                   query="SELECT * FROM #__bsms_teachers WHERE published = 1"
-                   key_field="id" value_field="teachername" default="-1" multiple="true"
+            <field name="listteachers" type="TeacherList" default="-1" multiple="true"
                    size="10" label="JBS_TPL_LISTITEMS_LISTTEACHERS" description="JBS_TPL_LISTITEMS_LISTTEACHERS_DESC">
             </field>
             <field name="teacherlink" type="list" default="1"
