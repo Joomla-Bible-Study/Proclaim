@@ -129,6 +129,21 @@
 
             this.init();
 
+            // Get study title for auto-search
+            var studyTitleField = document.getElementById('jform_study_id_name');
+            var studyTitle = '';
+            if (studyTitleField && studyTitleField.value) {
+                studyTitle = studyTitleField.value;
+                // Skip if it's the placeholder text
+                if (studyTitle.indexOf('Select') === -1 && studyTitle.indexOf('select') === -1) {
+                    this.searchQuery = studyTitle;
+                    var searchInput = document.getElementById('youtubeSearchInput');
+                    if (searchInput) {
+                        searchInput.value = studyTitle;
+                    }
+                }
+            }
+
             var modalEl = document.getElementById('youtubeBrowserModal');
             if (modalEl && typeof bootstrap !== 'undefined') {
                 this.modal = new bootstrap.Modal(modalEl);
