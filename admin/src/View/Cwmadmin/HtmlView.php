@@ -11,7 +11,7 @@
 
 // Check to ensure this file is included in Joomla!
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMAdmin;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmadmin;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -39,6 +39,14 @@ use Joomla\Filesystem\Folder;
  */
 class HtmlView extends BaseHtmlView
 {
+    /**
+     * Cached component version
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    private static ?string $cachedVersion = null;
+
     /**
      * Version
      *
@@ -260,34 +268,26 @@ class HtmlView extends BaseHtmlView
             $this->lists['backedupfiles'] = Text::_('JBS_CMN_NO_FILES_TO_DISPLAY');
         }
 
-        // Check for SermonSpeaker and PreachIt
+        // Check for SermonSpeaker and PreachIt - defaults first
+        $this->ss = Text::_('JBS_IBM_NO_SERMON_SPEAKER_FOUND');
+        $this->pi = Text::_('JBS_IBM_NO_PREACHIT_FOUND');
+
         $extensions = $this->get('SSorPI');
 
         foreach ($extensions as $extension) {
             if ($extension->element === 'com_sermonspeaker') {
                 $this->ss = '<a href="index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1&task=cwmadmin.convertSermonSpeaker">'
                     . Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER') . '</a>';
-            } else {
-                $this->ss = Text::_('JBS_IBM_NO_SERMON_SPEAKER_FOUND');
             }
 
             if ($extension->element === 'com_preachit') {
                 $this->pi = '<a href="index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1&task=cwmadmin.convertPreachIt">'
                     . Text::_('JBS_IBM_CONVERT_PREACH_IT') . '</a>';
-            } else {
-                $this->pi = Text::_('JBS_IBM_NO_PREACHIT_FOUND');
             }
         }
 
-        $jbsversion = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml');
-
-        foreach ($jbsversion as $key => $value) {
-            if ($key === 'version') {
-                $version = $value;
-            }
-        }
-
-        $this->version = $version;
+        // Get cached version to avoid parsing XML on every request
+        $this->version = self::getComponentVersion();
 
         $this->setLayout('edit');
 
@@ -334,5 +334,31 @@ class HtmlView extends BaseHtmlView
         ToolbarHelper::inlinehelp();
         $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=30:administration-help-screen&catid=20&Itemid=315&tmpl=component';
         $toolbar->help('Proclaim', false, $help_url);
+    }
+
+    /**
+     * Get the component version with caching to avoid repeated XML parsing
+     *
+     * @return string The component version
+     *
+     * @since 9.0.0
+     */
+    private static function getComponentVersion(): string
+    {
+        if (self::$cachedVersion !== null) {
+            return self::$cachedVersion;
+        }
+
+        $xmlFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
+
+        if (!is_file($xmlFile)) {
+            self::$cachedVersion = '';
+            return self::$cachedVersion;
+        }
+
+        $jbsversion = Installer::parseXMLInstallFile($xmlFile);
+        self::$cachedVersion = $jbsversion['version'] ?? '';
+
+        return self::$cachedVersion;
     }
 }

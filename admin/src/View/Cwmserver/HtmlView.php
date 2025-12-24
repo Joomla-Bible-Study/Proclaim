@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMServer;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmserver;
 
 // No Direct Access
 use Joomla\CMS\Factory;
@@ -107,8 +107,6 @@ class HtmlView extends BaseHtmlView
 
         // Set the toolbar
         $this->addToolbar();
-
-        $isNew = ($this->item->id < 1);
 
         // Display the template
         parent::display($tpl);

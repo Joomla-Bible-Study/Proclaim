@@ -46,8 +46,8 @@ class CwmserversController extends AdminController
         $result = [];
 
         $result['amount'] = $amount;
-        $result['sronly'] = Text::plural('COM_CONTENT_N_QUICKICON_SRONLY', $amount);
-        $result['name']   = Text::plural('COM_CONTENT_N_QUICKICON', $amount);
+        $result['sronly'] = Text::plural('COM_PROCLAIM_N_SERVERS_SRONLY', $amount);
+        $result['name']   = Text::plural('COM_PROCLAIM_N_SERVERS', $amount);
 
         echo new JsonResponse($result);
     }

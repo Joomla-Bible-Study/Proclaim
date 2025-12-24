@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMBackup;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmbackup;
 
 // Check to ensure this file is included in Joomla!
 use CWM\Component\Proclaim\Administrator\Model\CwmadminModel;

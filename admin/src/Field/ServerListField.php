@@ -21,12 +21,12 @@ use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 
 /**
- * Podcasts List Form Field class for the Proclaim component
+ * Server List Form Field class for the Proclaim component
  *
  * @package  Proclaim.Admin
  * @since    10.0.0
  */
-class PodcastsField extends ListField
+class ServerListField extends ListField
 {
     /**
      * The field type.
@@ -35,7 +35,7 @@ class PodcastsField extends ListField
      *
      * @since 10.0.0
      */
-    protected $type = 'Podcasts';
+    protected $type = 'ServerList';
 
     /**
      * Method to get a list of options for a list input.
@@ -48,17 +48,17 @@ class PodcastsField extends ListField
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select($db->quoteName(['id', 'title']))
-            ->from($db->quoteName('#__bsms_podcast'))
+        $query->select($db->quoteName(['id', 'server_name']))
+            ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('published') . ' = 1')
-            ->order($db->quoteName('title') . ' ASC');
+            ->order($db->quoteName('server_name') . ' ASC');
         $db->setQuery($query);
-        $podcasts = $db->loadObjectList();
-        $options  = [];
+        $servers = $db->loadObjectList();
+        $options = [];
 
-        if ($podcasts) {
-            foreach ($podcasts as $podcast) {
-                $options[] = HTMLHelper::_('select.option', $podcast->id, $podcast->title);
+        if ($servers) {
+            foreach ($servers as $server) {
+                $options[] = HTMLHelper::_('select.option', $server->id, $server->server_name);
             }
         }
 

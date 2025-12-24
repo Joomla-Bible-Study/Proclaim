@@ -9,7 +9,7 @@
  * @link           https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMMediaFiles;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmmediafiles;
 
 // No Direct Access
 use Exception;

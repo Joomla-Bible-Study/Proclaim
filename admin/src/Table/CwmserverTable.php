@@ -64,7 +64,7 @@ class CwmserverTable extends Table
      *
      * @since 9.0.0
      */
-    public $assset_id = null;
+    public $asset_id = null;
 
     public int $access;
 

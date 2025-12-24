@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMMessageType;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmmessagetype;
 
 // No Direct Access
 use Joomla\CMS\Factory;

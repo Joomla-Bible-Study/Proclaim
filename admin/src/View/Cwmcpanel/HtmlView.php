@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMCpanel;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmcpanel;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use CWM\Component\Proclaim\Administrator\Model\CwmcpanelModel;

@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMServers;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmservers;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -68,16 +68,6 @@ class HtmlView extends BaseHtmlView
      */
     protected $canDo;
 
-    /** @var  array Filter Levels
-     * @since    7.0.0
-     */
-    protected $f_levels;
-
-    /** @var  object Side Bar
-     * @since    7.0.0
-     */
-    protected $sidebar;
-
     /**
      * Execute and display a template script.
      *
@@ -124,8 +114,8 @@ class HtmlView extends BaseHtmlView
     {
         $canDo = ContentHelper::getActions('com_proclaim');
         ToolbarHelper::title(Text::_('JBS_CMN_SERVERS'), 'database database');
-        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-        ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
+        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=40:server-entry-screen-help&catid=20&Itemid=315&tmpl=component';
+        ToolbarHelper::help('proclaim', false, $help_url, 'com_proclaim');
 
         if ($canDo->get('core.create')) {
             ToolbarHelper::addNew('cwmserver.add');

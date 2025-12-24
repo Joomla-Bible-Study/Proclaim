@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-        <field name="server" type="sql" extension="com_proclaim" label="JBS_CMN_SERVER"
-               description="JBS_MED_SERVER_DESC" class="inputbox" default="-1"
-               query="SELECT id, server_name FROM #__bsms_servers WHERE published=1 ORDER BY server_name ASC"
-               key_field="id" value_field="server_name">
+        <field name="server" type="ServerList" label="JBS_CMN_SERVER"
+               description="JBS_MED_SERVER_DESC" class="inputbox" default="-1">
             <option value="-1">JBS_CMN_SELECT_SERVER</option>
         </field>
         <field name="id" type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
@@ -70,9 +68,7 @@
         <field name="studynumber" type="text" class="inputbox" size="15" label="JBS_CMN_STUDYNUMBER"/>
 
         <fieldset name="scripture" label="COM_CONTENT_FIELD_IMAGE_OPTIONS">
-            <field name="booknumber" type="SQL" class="inputbox" label="JBS_CMN_BOOK" translate="true"
-                   query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
-                   key_field="booknumber" value_field="bookname">
+            <field name="booknumber" type="BookList" class="inputbox" label="JBS_CMN_BOOK">
                 <option value="-1">JBS_CMN_SELECT_BOOK</option>
             </field>
 
@@ -81,9 +77,7 @@
             <field name="chapter_end" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_END"/>
             <field name="verse_end" type="text" class="inputbox" size="5" label="JBS_STY_VERSE_END"/>
 
-            <field name="booknumber2" type="SQL" class="inputbox" label="JBS_STY_BOOK2" translate="true"
-                   query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
-                   key_field="booknumber" value_field="bookname">
+            <field name="booknumber2" type="BookList" class="inputbox" label="JBS_STY_BOOK2">
                 <option value="-1">JBS_CMN_SELECT_BOOK</option>
             </field>
             <field name="chapter_begin2" type="text" class="inputbox" size="5" label="JBS_STY_CHAPTER_BEGIN2"/>
@@ -96,35 +90,23 @@
                    description="JBS_STY_SECONDARY_REFERENCES_DESC"/>
         </fieldset>
 
-        <field name="teacher_id" type="sql" extension="com_proclaim" label="JBS_CMN_TEACHER"
-               class="inputbox"
-               query="SELECT id, teachername FROM #__bsms_teachers WHERE published = 1 ORDER by teachername ASC"
-               key_field="id" value_field="teachername">
+        <field name="teacher_id" type="TeacherList" label="JBS_CMN_TEACHER" class="inputbox">
             <option value="-1">JBS_CMN_SELECT_TEACHER</option>
         </field>
 
-        <field name="location_id" type="sql" extension="com_proclaim" label="JBS_CMN_LOCATION"
-               class="inputbox"
-               query="SELECT id, location_text FROM #__bsms_locations WHERE published = 1 ORDER by location_text ASC"
-               key_field="id" value_field="location_text">
+        <field name="location_id" type="LocationList" label="JBS_CMN_LOCATION" class="inputbox">
             <option value="-1">JBS_CMN_SELECT_LOCATION</option>
         </field>
 
-        <field name="series_id" type="sql" extension="com_proclaim" label="JBS_CMN_SERIES"
-               class="inputbox"
-               query="SELECT id, series_text FROM #__bsms_series WHERE published = 1 ORDER by series_text ASC"
-               key_field="id" value_field="series_text">
+        <field name="series_id" type="Series" label="JBS_CMN_SERIES" class="inputbox">
             <option value="-1">JBS_CMN_SELECT_SERIES</option>
         </field>
 
         <field name="topics" type="TopicsForm" class="inputbox" label="JBS_CMN_TOPIC_TAG"
                description="JBS_CMN_TOPIC_TAG_DESC" filter="row"/>
 
-        <field name="messagetype" type="sql" extension="com_proclaim"
-               label="JBS_CMN_MESSAGETYPE" description="JBS_STY_MESSAGETYPE_DESC"
-               class="inputbox"
-               query="SELECT id, message_type FROM #__bsms_message_type WHERE published = 1 ORDER by message_type ASC"
-               key_field="id" value_field="message_type">
+        <field name="messagetype" type="MessageTypeList" label="JBS_CMN_MESSAGETYPE"
+               description="JBS_STY_MESSAGETYPE_DESC" class="inputbox">
             <option value="-1">JBS_CMN_SELECT_MESSAGETYPE</option>
         </field>
         <field name="thumbnailm" type="hidden"/>

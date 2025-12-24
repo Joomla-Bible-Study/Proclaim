@@ -70,7 +70,7 @@ class CwmserverController extends FormController
             $app->setUserState('com_proclaim.edit.cwmserver.type', null);
         }
 
-        return true;
+        return $result;
     }
 
     /**
@@ -87,13 +87,13 @@ class CwmserverController extends FormController
         $input = $app->input;
 
         $data  = $input->get('jform', [], 'post');
-        $sname = $data['server_name'];
-        $type  = json_decode(base64_decode($data['type']), true, 512, JSON_THROW_ON_ERROR);
+        $sname = $data['server_name'] ?? '';
+        $type  = json_decode(base64_decode($data['type'] ?? ''), true, 512, JSON_THROW_ON_ERROR);
 
-        $recordId = $type->id ?? 0;
+        $recordId = $type['id'] ?? 0;
 
         // Save the endpoint in the session
-        $app->setUserState('com_proclaim.edit.cwmserver.type', $type['name']);
+        $app->setUserState('com_proclaim.edit.cwmserver.type', $type['name'] ?? '');
         $app->setUserState('com_proclaim.edit.cwmserver.server_name', $sname);
 
         $this->setRedirect(

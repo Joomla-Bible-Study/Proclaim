@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMPodcasts;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmpodcasts;
 
 // No Direct Access
 use Joomla\CMS\Helper\ContentHelper;
