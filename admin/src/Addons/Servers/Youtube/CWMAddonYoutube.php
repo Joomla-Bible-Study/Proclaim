@@ -19,6 +19,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Google;
 use Google\Service\Exception;
 use Google\Service\YouTube;
