@@ -468,4 +468,219 @@ class CWMAddonYoutube extends CWMAddon
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
+
+    /**
+     * Fetch channel playlists (XHR handler)
+     *
+     * @param   Input  $input  Request input
+     *
+     * @return  array  Response data
+     *
+     * @since   10.0.0
+     */
+    public function fetchChannelPlaylists(Input $input): array
+    {
+        $this->loadLanguage();
+
+        $serverId = $input->getInt('server_id', 0);
+
+        if (!$serverId) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_SERVER_ID')];
+        }
+
+        $config    = $this->getServerConfig($serverId);
+        $apiKey    = $config['api_key'] ?? '';
+        $channelId = $config['channel_id'] ?? '';
+
+        if (empty($apiKey)) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_API_KEY')];
+        }
+
+        if (empty($channelId)) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_CHANNEL_ID')];
+        }
+
+        try {
+            $client = new Google\Client();
+            $client->setApplicationName('Proclaim');
+            $client->setDeveloperKey($apiKey);
+
+            $youtube = new YouTube($client);
+
+            $response = $youtube->playlists->listPlaylists('snippet', [
+                'channelId'  => $channelId,
+                'maxResults' => 50,
+            ]);
+
+            $playlists = [];
+
+            foreach ($response->items as $item) {
+                $playlists[] = [
+                    'playlistId' => $item->id,
+                    'title'      => $item->snippet->title,
+                    'thumbnail'  => $item->snippet->thumbnails->medium->url ?? $item->snippet->thumbnails->default->url,
+                ];
+            }
+
+            return [
+                'success'   => true,
+                'playlists' => $playlists,
+            ];
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Fetch videos from a specific playlist (XHR handler)
+     *
+     * @param   Input  $input  Request input
+     *
+     * @return  array  Response data
+     *
+     * @since   10.0.0
+     */
+    public function fetchPlaylistVideos(Input $input): array
+    {
+        $this->loadLanguage();
+
+        $serverId   = $input->getInt('server_id', 0);
+        $playlistId = $input->getString('playlist_id', '');
+        $pageToken  = $input->getString('page_token', '');
+        $maxResults = $input->getInt('max_results', 12);
+
+        if (!$serverId) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_SERVER_ID')];
+        }
+
+        if (empty($playlistId)) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_PLAYLIST_ID')];
+        }
+
+        $config = $this->getServerConfig($serverId);
+        $apiKey = $config['api_key'] ?? '';
+
+        if (empty($apiKey)) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_API_KEY')];
+        }
+
+        try {
+            $client = new Google\Client();
+            $client->setApplicationName('Proclaim');
+            $client->setDeveloperKey($apiKey);
+
+            $youtube = new YouTube($client);
+
+            $params = [
+                'playlistId' => $playlistId,
+                'maxResults' => $maxResults,
+            ];
+
+            if (!empty($pageToken)) {
+                $params['pageToken'] = $pageToken;
+            }
+
+            $response = $youtube->playlistItems->listPlaylistItems('snippet', $params);
+
+            $videos = [];
+
+            foreach ($response->items as $item) {
+                $videos[] = [
+                    'videoId'     => $item->snippet->resourceId->videoId,
+                    'title'       => $item->snippet->title,
+                    'description' => $item->snippet->description,
+                    'thumbnail'   => $item->snippet->thumbnails->medium->url ?? $item->snippet->thumbnails->default->url,
+                    'publishedAt' => $item->snippet->publishedAt,
+                ];
+            }
+
+            return [
+                'success'       => true,
+                'videos'        => $videos,
+                'nextPageToken' => $response->nextPageToken ?? null,
+                'prevPageToken' => $response->prevPageToken ?? null,
+                'totalResults'  => $response->pageInfo->totalResults ?? 0,
+            ];
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Fetch live videos from channel (XHR handler)
+     *
+     * @param   Input  $input  Request input
+     *
+     * @return  array  Response data
+     *
+     * @since   10.0.0
+     */
+    public function fetchLiveVideos(Input $input): array
+    {
+        $this->loadLanguage();
+
+        $serverId   = $input->getInt('server_id', 0);
+        $pageToken  = $input->getString('page_token', '');
+        $maxResults = $input->getInt('max_results', 12);
+        $eventType  = $input->getString('event_type', 'completed'); // live, upcoming, completed
+
+        if (!$serverId) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_SERVER_ID')];
+        }
+
+        $config    = $this->getServerConfig($serverId);
+        $apiKey    = $config['api_key'] ?? '';
+        $channelId = $config['channel_id'] ?? '';
+
+        if (empty($apiKey)) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_API_KEY')];
+        }
+
+        try {
+            $client = new Google\Client();
+            $client->setApplicationName('Proclaim');
+            $client->setDeveloperKey($apiKey);
+
+            $youtube = new YouTube($client);
+
+            $params = [
+                'type'       => 'video',
+                'eventType'  => $eventType,
+                'maxResults' => $maxResults,
+            ];
+
+            if (!empty($channelId)) {
+                $params['channelId'] = $channelId;
+            }
+
+            if (!empty($pageToken)) {
+                $params['pageToken'] = $pageToken;
+            }
+
+            $response = $youtube->search->listSearch('snippet', $params);
+
+            $videos = [];
+
+            foreach ($response->items as $item) {
+                $videos[] = [
+                    'videoId'     => $item->id->videoId,
+                    'title'       => $item->snippet->title,
+                    'description' => $item->snippet->description,
+                    'thumbnail'   => $item->snippet->thumbnails->medium->url ?? $item->snippet->thumbnails->default->url,
+                    'publishedAt' => $item->snippet->publishedAt,
+                    'liveBadge'   => $eventType === 'live' ? 'LIVE' : ($eventType === 'upcoming' ? 'UPCOMING' : ''),
+                ];
+            }
+
+            return [
+                'success'       => true,
+                'videos'        => $videos,
+                'nextPageToken' => $response->nextPageToken ?? null,
+                'prevPageToken' => $response->prevPageToken ?? null,
+                'totalResults'  => $response->pageInfo->totalResults ?? 0,
+            ];
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
 }

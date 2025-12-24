@@ -13,6 +13,9 @@
         serverId: null,
         currentPageToken: '',
         searchQuery: '',
+        selectedPlaylist: '',
+        filterType: 'all', // all, live, upcoming, completed
+        playlists: [],
 
         init: function() {
             this.createModal();
@@ -32,11 +35,30 @@
                 '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
                 '</div>' +
                 '<div class="modal-body">' +
-                '<div class="youtube-search-container mb-3">' +
+                '<div class="youtube-filters-container mb-3">' +
+                '<div class="row g-2">' +
+                '<div class="col-md-4">' +
+                '<select id="youtubeFilterType" class="form-select">' +
+                '<option value="all">All Videos</option>' +
+                '<option value="live">Live Now</option>' +
+                '<option value="upcoming">Upcoming Live</option>' +
+                '<option value="completed">Past Live Streams</option>' +
+                '</select>' +
+                '</div>' +
+                '<div class="col-md-4">' +
+                '<select id="youtubePlaylistSelect" class="form-select">' +
+                '<option value="">All Uploads</option>' +
+                '</select>' +
+                '</div>' +
+                '<div class="col-md-4">' +
                 '<div class="input-group">' +
                 '<input type="text" id="youtubeSearchInput" class="form-control" placeholder="Search videos..." aria-label="Search videos">' +
-                '<button class="btn btn-outline-secondary" type="button" id="youtubeSearchBtn"><span class="icon-search"></span> Search</button>' +
-                '<button class="btn btn-outline-secondary" type="button" id="youtubeResetBtn"><span class="icon-refresh"></span> Reset</button>' +
+                '<button class="btn btn-outline-secondary" type="button" id="youtubeSearchBtn"><span class="icon-search"></span></button>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '<div class="mt-2">' +
+                '<button class="btn btn-sm btn-outline-secondary" type="button" id="youtubeResetBtn"><span class="icon-refresh"></span> Reset Filters</button>' +
                 '</div>' +
                 '</div>' +
                 '<div id="youtubeVideoGrid" class="row row-cols-1 row-cols-md-3 g-4"></div>' +
@@ -85,11 +107,35 @@
                 });
             }
 
+            // Filter type change
+            var filterType = document.getElementById('youtubeFilterType');
+            if (filterType) {
+                filterType.addEventListener('change', function() {
+                    self.filterType = this.value;
+                    self.currentPageToken = '';
+                    self.loadVideos();
+                });
+            }
+
+            // Playlist selection change
+            var playlistSelect = document.getElementById('youtubePlaylistSelect');
+            if (playlistSelect) {
+                playlistSelect.addEventListener('change', function() {
+                    self.selectedPlaylist = this.value;
+                    self.currentPageToken = '';
+                    self.loadVideos();
+                });
+            }
+
             var resetBtn = document.getElementById('youtubeResetBtn');
             if (resetBtn) {
                 resetBtn.addEventListener('click', function() {
                     document.getElementById('youtubeSearchInput').value = '';
+                    document.getElementById('youtubeFilterType').value = 'all';
+                    document.getElementById('youtubePlaylistSelect').value = '';
                     self.searchQuery = '';
+                    self.filterType = 'all';
+                    self.selectedPlaylist = '';
                     self.currentPageToken = '';
                     self.loadVideos();
                 });
@@ -148,8 +194,44 @@
             if (modalEl && typeof bootstrap !== 'undefined') {
                 this.modal = new bootstrap.Modal(modalEl);
                 this.modal.show();
+                this.loadPlaylists();
                 this.loadVideos();
             }
+        },
+
+        loadPlaylists: function() {
+            var self = this;
+            var playlistSelect = document.getElementById('youtubePlaylistSelect');
+
+            if (!playlistSelect) {
+                return;
+            }
+
+            var url = 'index.php?option=com_proclaim&task=cwmmediafile.xhr&type=youtube&handler=fetchChannelPlaylists';
+            url += '&server_id=' + this.serverId;
+            url += '&' + Joomla.getOptions('csrf.token') + '=1';
+
+            fetch(url)
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    if (data.success && data.playlists) {
+                        self.playlists = data.playlists;
+                        // Clear existing options except first
+                        while (playlistSelect.options.length > 1) {
+                            playlistSelect.remove(1);
+                        }
+                        // Add playlist options
+                        data.playlists.forEach(function(playlist) {
+                            var option = document.createElement('option');
+                            option.value = playlist.playlistId;
+                            option.textContent = playlist.title;
+                            playlistSelect.appendChild(option);
+                        });
+                    }
+                })
+                .catch(function(err) {
+                    console.error('Failed to load playlists:', err);
+                });
         },
 
         loadVideos: function() {
@@ -166,7 +248,18 @@
             error.style.display = 'none';
             noResults.style.display = 'none';
 
-            var handler = this.searchQuery ? 'searchChannelVideos' : 'fetchChannelVideos';
+            // Determine which handler to use based on filters
+            var handler;
+            if (this.searchQuery) {
+                handler = 'searchChannelVideos';
+            } else if (this.filterType !== 'all') {
+                handler = 'fetchLiveVideos';
+            } else if (this.selectedPlaylist) {
+                handler = 'fetchPlaylistVideos';
+            } else {
+                handler = 'fetchChannelVideos';
+            }
+
             var url = 'index.php?option=com_proclaim&task=cwmmediafile.xhr&type=youtube&handler=' + handler;
             url += '&server_id=' + this.serverId;
             url += '&' + Joomla.getOptions('csrf.token') + '=1';
@@ -177,6 +270,16 @@
 
             if (this.searchQuery) {
                 url += '&query=' + encodeURIComponent(this.searchQuery);
+            }
+
+            // Add filter type for live videos
+            if (this.filterType !== 'all') {
+                url += '&event_type=' + encodeURIComponent(this.filterType);
+            }
+
+            // Add playlist ID if selected
+            if (this.selectedPlaylist && handler === 'fetchPlaylistVideos') {
+                url += '&playlist_id=' + encodeURIComponent(this.selectedPlaylist);
             }
 
             fetch(url)
@@ -216,8 +319,19 @@
             videos.forEach(function(video) {
                 var card = document.createElement('div');
                 card.className = 'col';
+
+                // Build live badge HTML if present
+                var badgeHtml = '';
+                if (video.liveBadge) {
+                    var badgeClass = video.liveBadge === 'LIVE' ? 'bg-danger' : 'bg-warning text-dark';
+                    badgeHtml = '<span class="position-absolute top-0 start-0 badge ' + badgeClass + ' m-2">' + video.liveBadge + '</span>';
+                }
+
                 card.innerHTML = '<div class="card h-100 youtube-video-card" data-video-id="' + video.videoId + '" data-title="' + self.escapeHtml(video.title) + '" data-thumbnail="' + video.thumbnail + '">' +
+                    '<div class="position-relative">' +
                     '<img src="' + video.thumbnail + '" class="card-img-top" alt="' + self.escapeHtml(video.title) + '">' +
+                    badgeHtml +
+                    '</div>' +
                     '<div class="card-body">' +
                     '<h6 class="card-title">' + self.escapeHtml(video.title) + '</h6>' +
                     '<p class="card-text small text-muted">' + self.formatDate(video.publishedAt) + '</p>' +
