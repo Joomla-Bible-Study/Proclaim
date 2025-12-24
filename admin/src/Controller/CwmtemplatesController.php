@@ -22,6 +22,7 @@ use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Session\Session;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Filesystem\File;
@@ -431,11 +432,11 @@ class CwmtemplatesController extends AdminController
      * @param   string  $prefix  The class prefix. Optional.
      * @param   array   $config  The array of possible config values. Optional.
      *
-     * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel
+     * @return  BaseDatabaseModel
      *
      * @since   1.6
      */
-    public function getModel($name = 'Cwmtemplate', $prefix = 'Administrator', $config = ['ignore_request' => true]): \Joomla\CMS\MVC\Model\BaseDatabaseModel
+    public function getModel($name = 'Cwmtemplate', $prefix = 'Administrator', $config = ['ignore_request' => true]): BaseDatabaseModel
     {
         return parent::getModel($name, $prefix, $config);
     }

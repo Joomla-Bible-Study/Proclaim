@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
@@ -74,7 +75,7 @@ class CwmserverModel extends AdminModel
         parent::__construct($config);
 
         if (isset($config['event_after_upload'])) {
-            $this->event_after_upload = isset($config['event_after_upload']);
+            $this->event_after_upload = $config['event_after_upload'];
         }
     }
 
@@ -142,7 +143,7 @@ class CwmserverModel extends AdminModel
      *
      * @param   string  $addon  Type of server
      *
-     * @return \SimpleXMLElement
+     * @return \SimpleXMLElement|false  SimpleXMLElement on success, false on failure
      *
      * @since   9.0.0
      */
@@ -152,7 +153,17 @@ class CwmserverModel extends AdminModel
             $addon
         ) . '/' . strtolower($addon) . '.xml';
 
-        return simplexml_load_string(file_get_contents($path));
+        if (!is_file($path)) {
+            return false;
+        }
+
+        $contents = file_get_contents($path);
+
+        if ($contents === false) {
+            return false;
+        }
+
+        return simplexml_load_string($contents);
     }
 
     /**
@@ -169,10 +180,23 @@ class CwmserverModel extends AdminModel
         $db         = Factory::getContainer()->get('DatabaseDriver');
         $text       = '';
 
-        if (strpos($data['server_name'], '"onmouseover="prompt(1)"') !== false) {
-            $this->setError('"Illegal character use in Server Name field"');
+        // Sanitize server_name to prevent XSS attacks
+        if (isset($data['server_name'])) {
+            $filter = InputFilter::getInstance();
+            $cleanName = $filter->clean($data['server_name'], 'STRING');
 
-            return false;
+            // Check if the name was altered (indicating potentially malicious content)
+            if ($cleanName !== $data['server_name']) {
+                // Use the sanitized version
+                $data['server_name'] = $cleanName;
+            }
+
+            // Additional check for HTML/script injection attempts
+            if (preg_match('/<[^>]*>|javascript:|on\w+\s*=/i', $data['server_name'])) {
+                $this->setError(Text::_('JBS_SVR_ILLEGAL_CHARACTERS'));
+
+                return false;
+            }
         }
 
         if (isset($data['params']['path'])) {
@@ -183,11 +207,12 @@ class CwmserverModel extends AdminModel
             }
         }
 
-        if (!empty($data)) {
+        if (!empty($data) && !empty($data['id'])) {
             $query = $db->getQuery(true);
             $query->select('id, params')
                 ->from('#__bsms_mediafiles')
-                ->where('server_id = ' . $data['id']);
+                ->where($db->quoteName('server_id') . ' = :serverId')
+                ->bind(':serverId', $data['id'], \Joomla\Database\ParameterType::INTEGER);
             $db->setQuery($query);
             $studies = $db->loadObjectList();
 
@@ -215,20 +240,19 @@ class CwmserverModel extends AdminModel
     /**
      * Get the server form
      *
-     * @return \Joomla\CMS\Form\Form|string
+     * @return \Joomla\CMS\Form\Form|null  Form object on success, null if no server type selected
      *
      * @throws \Exception
      *
      * @since   9.0.0
      */
-    public function getAddonServerForm()
+    public function getAddonServerForm(): ?Form
     {
-        // If user hasn't selected a server type yet, just return an empty form
-        $type = $this->data->type;
+        // If user hasn't selected a server type yet, return null
+        $type = $this->data->type ?? null;
 
         if (empty($type)) {
-            // @TODO This may not be optimal, seems like a hack
-            return "no-data-type";
+            return null;
         }
 
         $path = Path::clean(JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($type));
@@ -324,12 +348,9 @@ class CwmserverModel extends AdminModel
      */
     protected function canEditState($record)
     {
-        $tmp        = (array)$record;
-        $db         = Factory::getContainer()->get('DatabaseDriver');
-        $user       = Factory::getApplication()->getSession()->get('user');
-        $canDoState = $user->authorise('core.edit.state', $this->option);
+        $user = Factory::getApplication()->getSession()->get('user');
 
-        // Check for existing article.
+        // Check for existing server record
         if (!empty($record->id)) {
             return $user->authorise('core.edit.state', 'com_proclaim.cwmserver.' . (int)$record->id);
         }

@@ -116,7 +116,7 @@ class CwmmessageController extends FormController
      * @throws \Exception
      * @since 1.5
      */
-    public function save($key = null, $urlVar = null)
+    public function save($key = null, $urlVar = null): bool
     {
         // Check for request forgeries.
         Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
@@ -187,7 +187,7 @@ class CwmmessageController extends FormController
      * @throws \Exception
      * @since   1.6
      */
-    protected function allowEdit($data = [], $key = 'id')
+    protected function allowEdit($data = [], $key = 'id'): bool
     {
         $recordId = (int)isset($data[$key]) ? $data[$key] : 0;
         $user     = Factory::getApplication()->getIdentity();

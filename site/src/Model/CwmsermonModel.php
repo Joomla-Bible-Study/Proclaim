@@ -290,7 +290,7 @@ class CwmsermonModel extends FormModel
     {
         $row                  = $this->getTable('comment');
         $data                 = $_POST;
-        $data['comment_text'] = Factory::getApplication()->input->get('comment_text', '', 'string');
+        $data['comment_text'] = Factory::getApplication()->getInput()->get('comment_text', '', 'string');
 
         // Bind the form fields to the table
         $row->bind($data);

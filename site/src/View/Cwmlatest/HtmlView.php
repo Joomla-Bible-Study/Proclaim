@@ -48,7 +48,7 @@ class HtmlView extends BaseHtmlView
             ->order('studydate DESC LIMIT 1');
         $db->setQuery($query);
         $id    = $db->loadResult();
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
         $t     = $input->get('t', '1');
 
         // @todo move to slug asap, this will require a new query to load both alias and ID.

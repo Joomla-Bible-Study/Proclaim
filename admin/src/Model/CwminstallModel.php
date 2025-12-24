@@ -342,7 +342,7 @@ class CwminstallModel extends ListModel
             }
         }
 
-        $this->isimport = Factory::getApplication()->input->getInt('cwmalt', 0);
+        $this->isimport = Factory::getApplication()->getInput()->getInt('cwmalt', 0);
         ++$this->totalSteps;
     }
 

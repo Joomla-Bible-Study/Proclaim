@@ -95,7 +95,7 @@ class CwmcommentModel extends AdminModel
             return false;
         }
 
-        $jinput = Factory::getApplication()->input;
+        $jinput = Factory::getApplication()->getInput();
 
         // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
         if ($jinput->get('a_id')) {
@@ -148,7 +148,7 @@ class CwmcommentModel extends AdminModel
         $i     = 0;
 
         // Check that the user has create permission for the component
-        $extension = Factory::getApplication()->input->get('option', '');
+        $extension = Factory::getApplication()->getInput()->get('option', '');
         $user      = $user = Factory::getApplication()->getSession()->get('user');
 
         if (!$user->authorise('core.create', $extension)) {

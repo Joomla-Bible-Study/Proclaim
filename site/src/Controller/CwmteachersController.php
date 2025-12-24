@@ -38,7 +38,7 @@ class CwmteachersController extends BaseController
      *
      * @since 7.0
      */
-    public function &getModel($name = 'Cwmteacher', $prefix = '', $config = array('ignore_request' => true))
+    public function &getModel($name = 'Cwmteacher', $prefix = '', $config = ['ignore_request' => true]): CurrentUserInterface|BaseDatabaseModel|bool
     {
         $model = parent::getModel($name, $prefix, $config);
 

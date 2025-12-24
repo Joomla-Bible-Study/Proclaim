@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Response\JsonResponse;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -34,7 +35,7 @@ class CwmserversController extends AdminController
      *
      * @since   4.0.0
      */
-    public function getQuickiconContent()
+    public function getQuickiconContent(): void
     {
         $model = $this->getModel('cwmservers');
 
@@ -45,8 +46,8 @@ class CwmserversController extends AdminController
         $result = [];
 
         $result['amount'] = $amount;
-        $result['sronly'] = Text::plural('COM_CONTENT_N_QUICKICON_SRONLY', $amount);
-        $result['name']   = Text::plural('COM_CONTENT_N_QUICKICON', $amount);
+        $result['sronly'] = Text::plural('COM_PROCLAIM_N_SERVERS_SRONLY', $amount);
+        $result['name']   = Text::plural('COM_PROCLAIM_N_SERVERS', $amount);
 
         echo new JsonResponse($result);
     }
@@ -58,11 +59,11 @@ class CwmserversController extends AdminController
      * @param   string  $prefix  The class prefix. Optional.
      * @param   array   $config  The array of possible config values. Optional.
      *
-     * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel
+     * @return  BaseDatabaseModel
      *
      * @since   1.6
      */
-    public function getModel($name = 'Cwmserver', $prefix = 'Administrator', $config = ['ignore_request' => true]): \Joomla\CMS\MVC\Model\BaseDatabaseModel
+    public function getModel($name = 'Cwmserver', $prefix = 'Administrator', $config = ['ignore_request' => true]): BaseDatabaseModel
     {
         return parent::getModel($name, $prefix, $config);
     }

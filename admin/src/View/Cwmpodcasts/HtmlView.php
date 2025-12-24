@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMPodcasts;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmpodcasts;
 
 // No Direct Access
 use Joomla\CMS\Helper\ContentHelper;
@@ -114,8 +114,8 @@ class HtmlView extends BaseHtmlView
     protected function addToolbar(): void
     {
         ToolbarHelper::title(Text::_('JBS_CMN_PODCASTS'), 'feed feed');
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
+        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
+        ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
 
         if ($this->canDo->get('core.create')) {
             ToolbarHelper::addNew('cwmpodcast.add');

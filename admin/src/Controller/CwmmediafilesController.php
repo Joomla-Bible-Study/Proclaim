@@ -21,6 +21,7 @@ use CWM\Component\Proclaim\Administrator\Model\CwmmediafilesModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Response\JsonResponse;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
@@ -46,7 +47,7 @@ class CwmmediafilesController extends AdminController
         // Check for request forgeries.
         Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-        $ids = Factory::getApplication()->input->post->get('cid', [], 'array');
+        $ids = Factory::getApplication()->getInput()->post->get('cid', [], 'array');
 
         /** @var CwmmediafileModel $model */
         $model  = $this->getModel($name = 'Cwmmediafile', $prefix = 'Administrator', $config = ['ignore_request' => true]);
@@ -81,11 +82,11 @@ class CwmmediafilesController extends AdminController
      * @param   string  $prefix  The class prefix. Optional.
      * @param   array   $config  The array of possible config values. Optional.
      *
-     * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel
+     * @return  BaseDatabaseModel
      *
      * @since   1.6
      */
-    public function getModel($name = 'Cwmmediafile', $prefix = 'Administrator', $config = ['ignore_request' => true]): \Joomla\CMS\MVC\Model\BaseDatabaseModel
+    public function getModel($name = 'Cwmmediafile', $prefix = 'Administrator', $config = ['ignore_request' => true]): BaseDatabaseModel
     {
         return parent::getModel($name, $prefix, $config);
     }

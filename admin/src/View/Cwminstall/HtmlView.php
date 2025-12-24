@@ -9,7 +9,7 @@
  * @link           https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMInstall;
+namespace CWM\Component\Proclaim\Administrator\View\Cwminstall;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -341,7 +341,7 @@ class HtmlView extends BaseHtmlView
     protected function addToolbar(): void
     {
         if ($this->more) {
-            Factory::getApplication()->input->set('hidemainmenu', true);
+            Factory::getApplication()->getInput()->set('hidemainmenu', true);
         }
 
         ToolbarHelper::help('proclaim', true);

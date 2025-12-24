@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMTeachers;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmteachers;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -132,8 +132,8 @@ class HtmlView extends BaseHtmlView
         $toolbar = Toolbar::getInstance('toolbar');
 
         ToolbarHelper::title(Text::_('JBS_CMN_TEACHERS'), 'users users');
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
+        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
+        ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
 
         if ($canDo->get('core.create')) {
             $toolbar->addNew('cwmteacher.add');

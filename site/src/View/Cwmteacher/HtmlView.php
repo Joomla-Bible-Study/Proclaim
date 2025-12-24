@@ -98,7 +98,7 @@ class HtmlView extends BaseHtmlView
         /** @var Registry $params */
         $params = $this->state->template->params;
 
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
         $item  = $this->get('Item');
 
         // Add the slug

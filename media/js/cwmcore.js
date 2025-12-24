@@ -116,6 +116,17 @@ $(function () {
     // Removed unused functions tmplListItem, tmplSingleItem, tmplModuleList, tmplModuleItem, tmplPopup
 });
 
+/**
+ * Returns true if the URL is a relative path (does not begin with scheme or '//')
+ */
+function isSafeRelativeUrl(url) {
+    // Only allow URLs that do not start with a scheme or '//'
+    return typeof url === 'string' &&
+        url.trim().length > 0 &&
+        !/^[a-z][a-z0-9+.-]*:/.test(url) && // No scheme like http:, https:, javascript:, data:, etc.
+        !/^\/\//.test(url); // Not protocol-relative
+}
+
 function goTo()
 {
     let sE = null, url;
@@ -128,11 +139,11 @@ function goTo()
     }
 
     if (sE && (url = sE.options[sE.selectedIndex].value)) {
-        try {
-            new URL(url);
+        if (isSafeRelativeUrl(url)) {
             location.href = url;
-        } catch (e) {
-            console.error('Invalid URL:', url);
+        } else {
+            alert('Navigation to external or potentially unsafe URL is not allowed.');
+            console.error('Unsafe navigation attempt:', url);
         }
     }
 }

@@ -21,7 +21,7 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 
-$input = Factory::getApplication()->input;
+$input = Factory::getApplication()->getInput();
 ?>
 <form action="<?php
 echo Route::_('index.php?option=com_proclaim&view=cwmsermons&t=' . $input->get('t', '1', 'int')); ?>"

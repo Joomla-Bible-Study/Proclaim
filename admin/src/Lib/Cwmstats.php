@@ -418,6 +418,164 @@ class Cwmstats
     }
 
     /**
+     * Cached media stats to avoid duplicate queries
+     *
+     * @var array|null
+     * @since 9.0.0
+     */
+    private static ?array $mediaStats = null;
+
+    /**
+     * Get combined media stats (players and popups) in a single query
+     *
+     * @return array Stats array with player and popup counts
+     *
+     * @since 9.0.0
+     */
+    private static function getMediaStats(): array
+    {
+        if (self::$mediaStats !== null) {
+            return self::$mediaStats;
+        }
+
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
+
+        // Use SQL to extract and count player/popup values directly from JSON params
+        // This avoids loading all records into PHP memory
+        $query->select([
+            'COUNT(*) as total',
+            // Player counts using JSON_EXTRACT (MySQL 5.7+)
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.player")) IN ("0", "null") OR JSON_EXTRACT(params, "$.player") IS NULL THEN 1 ELSE 0 END) as player_none',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.player")) = "100" THEN 1 ELSE 0 END) as player_global',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.player")) = "1" THEN 1 ELSE 0 END) as player_internal',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.player")) = "3" THEN 1 ELSE 0 END) as player_av',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.player")) = "7" THEN 1 ELSE 0 END) as player_legacy',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.player")) = "8" THEN 1 ELSE 0 END) as player_embed',
+            // Popup counts
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.popup")) IN ("0", "100", "null") OR JSON_EXTRACT(params, "$.popup") IS NULL THEN 1 ELSE 0 END) as popup_none',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.popup")) = "1" THEN 1 ELSE 0 END) as popup_popup',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.popup")) = "2" THEN 1 ELSE 0 END) as popup_inline',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.popup")) = "3" THEN 1 ELSE 0 END) as popup_squeezebox',
+        ])
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('published') . ' = 1');
+
+        $db->setQuery($query);
+
+        try {
+            $result = $db->loadAssoc();
+        } catch (\Exception $e) {
+            // Fallback to PHP processing if JSON functions not available
+            $result = self::getMediaStatsFallback();
+        }
+
+        self::$mediaStats = $result ?: [
+            'total' => 0,
+            'player_none' => 0,
+            'player_global' => 0,
+            'player_internal' => 0,
+            'player_av' => 0,
+            'player_legacy' => 0,
+            'player_embed' => 0,
+            'popup_none' => 0,
+            'popup_popup' => 0,
+            'popup_inline' => 0,
+            'popup_squeezebox' => 0,
+        ];
+
+        return self::$mediaStats;
+    }
+
+    /**
+     * Fallback method for databases without JSON support
+     *
+     * @return array Stats array
+     *
+     * @since 9.0.0
+     */
+    private static function getMediaStatsFallback(): array
+    {
+        $stats = [
+            'total' => 0,
+            'player_none' => 0,
+            'player_global' => 0,
+            'player_internal' => 0,
+            'player_av' => 0,
+            'player_legacy' => 0,
+            'player_embed' => 0,
+            'popup_none' => 0,
+            'popup_popup' => 0,
+            'popup_inline' => 0,
+            'popup_squeezebox' => 0,
+        ];
+
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
+        $query->select($db->quoteName('params'))
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('published') . ' = 1');
+        $db->setQuery($query);
+        $rows = $db->loadColumn();
+
+        if (!$rows) {
+            return $stats;
+        }
+
+        $stats['total'] = count($rows);
+        $registry = new Registry();
+
+        foreach ($rows as $params) {
+            $registry->loadString($params);
+
+            // Count players
+            $player = $registry->get('player', 0);
+            switch ($player) {
+                case 0:
+                case null:
+                    $stats['player_none']++;
+                    break;
+                case '100':
+                    $stats['player_global']++;
+                    break;
+                case '1':
+                    $stats['player_internal']++;
+                    break;
+                case '3':
+                    $stats['player_av']++;
+                    break;
+                case '7':
+                    $stats['player_legacy']++;
+                    break;
+                case '8':
+                    $stats['player_embed']++;
+                    break;
+            }
+
+            // Count popups
+            $popup = $registry->get('popup', null);
+            switch ($popup) {
+                case null:
+                case 100:
+                case 0:
+                    $stats['popup_none']++;
+                    break;
+                case 1:
+                    $stats['popup_popup']++;
+                    break;
+                case 2:
+                    $stats['popup_inline']++;
+                    break;
+                case 3:
+                    $stats['popup_squeezebox']++;
+                    break;
+            }
+        }
+
+        return $stats;
+    }
+
+    /**
      * Returns a System of Player
      *
      * @return string HTML Format or Empty
@@ -426,63 +584,20 @@ class Cwmstats
      */
     public static function getPlayers(): string
     {
-        $count_no_player       = 0;
-        $count_global_player   = 0;
-        $count_internal_player = 0;
-        $count_av_player       = 0;
-        $count_legacy_player   = 0;
-        $count_embed_code      = 0;
-        $db                    = Factory::getContainer()->get('DatabaseDriver');
-        $query                 = $db->getQuery(true);
-        $query
-            ->select('params')
-            ->from('#__bsms_mediafiles')
-            ->where('published = ' . $db->q('1'));
-        $db->setQuery($query);
-        $params = $db->loadObjectList();
+        $stats = self::getMediaStats();
 
-        $registry      = new Registry();
-        $media_players = '';
-
-        if ($params) {
-            $total_players = count($params);
-
-            foreach ($params as $param) {
-                $registry->loadString($param->params);
-
-                switch ($registry->get('player', 0)) {
-                    case 0:
-                        $count_no_player++;
-                        break;
-                    case '100':
-                        $count_global_player++;
-                        break;
-                    case '1':
-                        $count_internal_player++;
-                        break;
-                    case '3':
-                        $count_av_player++;
-                        break;
-                    case '7':
-                        $count_legacy_player++;
-                        break;
-                    case '8':
-                        $count_embed_code++;
-                        break;
-                }
-            }
-
-            $media_players = '<br /><strong>' . Text::_('JBS_CMN_TOTAL_PLAYERS') . ': ' . $total_players . '</strong>' .
-                '<br /><strong>' . Text::_('JBS_CMN_INTERNAL_PLAYER') . ': </strong>' . $count_internal_player .
-                '<br /><strong><a href="http://extensions.joomla.org/extensions/extension/multimedia/multimedia-players/allvideos" target="blank">' .
-                Text::_('JBS_CMN_AVPLUGIN') . '</a>: </strong>' . $count_av_player . '<br /><strong>' .
-                Text::_('JBS_CMN_LEGACY_PLAYER') . ': </strong>' . $count_legacy_player . '<br /><strong>' .
-                Text::_('JBS_CMN_NO_PLAYER_TREATED_DIRECT') . ': </strong>' . $count_no_player . '<br /><strong>' .
-                Text::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . $count_global_player . '<br /><strong>' .
-                Text::_('JBS_CMN_EMBED_CODE') . ': </strong>' . $count_embed_code;
+        if ($stats['total'] === 0) {
+            return '';
         }
 
-        return $media_players;
+        return '<br /><strong>' . Text::_('JBS_CMN_TOTAL_PLAYERS') . ': ' . $stats['total'] . '</strong>' .
+            '<br /><strong>' . Text::_('JBS_CMN_INTERNAL_PLAYER') . ': </strong>' . (int)$stats['player_internal'] .
+            '<br /><strong><a href="http://extensions.joomla.org/extensions/extension/multimedia/multimedia-players/allvideos" target="blank">' .
+            Text::_('JBS_CMN_AVPLUGIN') . '</a>: </strong>' . (int)$stats['player_av'] . '<br /><strong>' .
+            Text::_('JBS_CMN_LEGACY_PLAYER') . ': </strong>' . (int)$stats['player_legacy'] . '<br /><strong>' .
+            Text::_('JBS_CMN_NO_PLAYER_TREATED_DIRECT') . ': </strong>' . (int)$stats['player_none'] . '<br /><strong>' .
+            Text::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . (int)$stats['player_global'] . '<br /><strong>' .
+            Text::_('JBS_CMN_EMBED_CODE') . ': </strong>' . (int)$stats['player_embed'];
     }
 
     /**
@@ -494,54 +609,17 @@ class Cwmstats
      */
     public static function getPopups(): string
     {
-        $no_player    = 0;
-        $pop_count    = 0;
-        $sq_count     = 0;
-        $inline_count = 0;
-        $global_count = 0;
-        $db           = Factory::getContainer()->get('DatabaseDriver');
-        $query        = $db->getQuery(true);
-        $query
-            ->select('params')
-            ->from('#__bsms_mediafiles')
-            ->where('published = ' . 1);
-        $db->setQuery($query);
-        $popups = $db->loadObjectList();
+        $stats = self::getMediaStats();
 
-        if ($popups) {
-            $total_media_files = count($popups);
-
-            foreach ($popups as $popup) {
-                $registry = new Registry();
-                $registry->loadString($popup->params);
-                $popup = $registry->get('popup', null);
-
-                switch ($popup) {
-                    case null:
-                    case 100:
-                    case 0:
-                        $no_player++;
-                        break;
-                    case 1:
-                        $pop_count++;
-                        break;
-                    case 2:
-                        $inline_count++;
-                        break;
-                    case 3:
-                        $sq_count++;
-                        break;
-                }
-            }
-
-            $popups = '<br /><strong>' . Text::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $total_media_files . '</strong>' .
-                '<br /><strong>' . Text::_('JBS_CMN_INLINE') . ': </strong>' . $inline_count . '<br /><strong>' .
-                Text::_('JBS_CMN_POPUP') . ': </strong>' . $pop_count . '<br /><strong>' .
-                Text::_('JBS_CMN_SQUEEZEBOX') . ': </strong>' . $sq_count . '<br /><strong>' .
-                Text::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL') . ': </strong>' . $no_player;
+        if ($stats['total'] === 0) {
+            return '';
         }
 
-        return $popups;
+        return '<br /><strong>' . Text::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $stats['total'] . '</strong>' .
+            '<br /><strong>' . Text::_('JBS_CMN_INLINE') . ': </strong>' . (int)$stats['popup_inline'] . '<br /><strong>' .
+            Text::_('JBS_CMN_POPUP') . ': </strong>' . (int)$stats['popup_popup'] . '<br /><strong>' .
+            Text::_('JBS_CMN_SQUEEZEBOX') . ': </strong>' . (int)$stats['popup_squeezebox'] . '<br /><strong>' .
+            Text::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL') . ': </strong>' . (int)$stats['popup_none'];
     }
 
     /**
@@ -615,7 +693,7 @@ class Cwmstats
      */
     public function getTopScoreSite(): bool|string
     {
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
         $t     = $input->get('t', 1, 'int');
 
         $admin = Cwmparams::getAdmin();

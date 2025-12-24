@@ -1,86 +1,116 @@
 <?php
 
 /**
- * Prepares a minimalist framework for unit testing.
- *
- * Joomla is assumed to include the /unittest/ directory.
- * eg, /path/to/joomla/unittest/
+ * PHPUnit Bootstrap for Proclaim Component Unit Tests
  *
  * @package    Proclaim.UnitTest
- *
- * @copyright  Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE
- * @link       http://www.phpunit.de/manual/current/en/installation.html
+ * @copyright  (C) 2025 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @link       https://www.christianwebministries.org
  */
 
+// Define _JEXEC to prevent "restricted access" errors
 define('_JEXEC', 1);
 
-
-// Fix magic quotes.
-ini_set('magic_quotes_runtime', 0);
-
-// Maximise error reporting.
-ini_set('zend.ze1_compatibility_mode', '0');
-error_reporting(E_ALL & ~E_STRICT);
+// Error reporting
+error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-/*.joomla-dev/libraries
- * Ensure that required path constants are defined.  These can be overridden within the phpunit.xml file
- * if you chose to create a custom version of that file.
- */
-if (!defined('JPATH_TESTS')) {
-    define('JPATH_TESTS', realpath(__DIR__));
-}
-if (!defined('JPATH_PLATFORM')) {
-    define('JPATH_PLATFORM', realpath(dirname(dirname(dirname(__FILE__))) . '/.joomla-dev/libraries'));
-}
-if (!defined('JPATH_LIBRARIES')) {
-    define('JPATH_LIBRARIES', realpath(dirname(dirname(dirname(__FILE__))) . '/.joomla-dev/libraries'));
-}
+// Define Joomla path constants for testing
 if (!defined('JPATH_BASE')) {
-    define('JPATH_BASE', realpath(dirname(dirname(dirname(__FILE__))) . '/.joomla-dev'));
+    define('JPATH_BASE', dirname(__DIR__, 2));
 }
+
 if (!defined('JPATH_ROOT')) {
-    define('JPATH_ROOT', realpath(JPATH_BASE));
+    define('JPATH_ROOT', JPATH_BASE);
 }
-if (!defined('JPATH_CACHE')) {
-    define('JPATH_CACHE', JPATH_BASE . '/cache');
-}
-if (!defined('JPATH_CONFIGURATION')) {
-    define('JPATH_CONFIGURATION', JPATH_BASE);
-}
+
 if (!defined('JPATH_SITE')) {
     define('JPATH_SITE', JPATH_ROOT);
 }
+
 if (!defined('JPATH_ADMINISTRATOR')) {
     define('JPATH_ADMINISTRATOR', JPATH_ROOT . '/administrator');
 }
-if (!defined('JPATH_INSTALLATION')) {
-    define('JPATH_INSTALLATION', JPATH_ROOT . '/installation');
+
+if (!defined('JPATH_TESTS')) {
+    define('JPATH_TESTS', dirname(__DIR__));
 }
-if (!defined('JPATH_MANIFESTS')) {
-    define('JPATH_MANIFESTS', JPATH_ADMINISTRATOR . '/manifests');
+
+if (!defined('JPATH_LIBRARIES')) {
+    define('JPATH_LIBRARIES', JPATH_ROOT . '/libraries');
 }
+
+if (!defined('JPATH_CACHE')) {
+    define('JPATH_CACHE', JPATH_BASE . '/cache');
+}
+
+if (!defined('JPATH_CONFIGURATION')) {
+    define('JPATH_CONFIGURATION', JPATH_BASE);
+}
+
 if (!defined('JPATH_PLUGINS')) {
     define('JPATH_PLUGINS', JPATH_BASE . '/plugins');
 }
+
 if (!defined('JPATH_THEMES')) {
     define('JPATH_THEMES', JPATH_BASE . '/templates');
 }
+
 if (!defined('JDEBUG')) {
     define('JDEBUG', false);
 }
 
-// Import the platform in legacy mode.
-require_once JPATH_PLATFORM . '/import.legacy.php';
+// Load Composer autoloader
+$composerAutoload = JPATH_ROOT . '/libraries/vendor/autoload.php';
+if (file_exists($composerAutoload)) {
+    require_once $composerAutoload;
+}
 
+// Register PSR-4 autoloader for the Proclaim component
+spl_autoload_register(function ($class) {
+    $prefix = 'CWM\\Component\\Proclaim\\Administrator\\';
+    $baseDir = JPATH_ROOT . '/admin/src/';
 
-// Force library to be in JError legacy mode
-Error::setErrorHandling(E_NOTICE, 'message');
-Error::setErrorHandling(E_WARNING, 'message');
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) === 0) {
+        $relativeClass = substr($class, $len);
+        $file = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
+        if (file_exists($file)) {
+            require $file;
+            return true;
+        }
+    }
 
-// Bootstrap the CMS libraries.
-require_once JPATH_LIBRARIES . '/cms.php';
+    $prefix = 'CWM\\Component\\Proclaim\\Site\\';
+    $baseDir = JPATH_ROOT . '/site/src/';
 
-// Register the core Joomla test classes.
-Loader::registerPrefix('Test', __DIR__ . '/core');
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) === 0) {
+        $relativeClass = substr($class, $len);
+        $file = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
+        if (file_exists($file)) {
+            require $file;
+            return true;
+        }
+    }
+
+    // Autoload test classes
+    $prefix = 'CWM\\Component\\Proclaim\\Tests\\';
+    $baseDir = JPATH_ROOT . '/tests/unit/';
+
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) === 0) {
+        $relativeClass = substr($class, $len);
+        $file = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
+        if (file_exists($file)) {
+            require $file;
+            return true;
+        }
+    }
+
+    return false;
+});
+
+// Load the base test case
+require_once __DIR__ . '/ProclaimTestCase.php';

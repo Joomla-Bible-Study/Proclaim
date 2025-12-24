@@ -90,7 +90,7 @@ if (!empty($editor)) {
                 <tr>
                     <th scope="col" class="w-1 text-center">
                         <?php
-                        echo Text::_('JBS_CMN_TITLE'); ?>
+                        echo Text::_('JBS_CMN_ICON'); ?>
                     </th>
                     <th scope="col" class="title">
                         <?php

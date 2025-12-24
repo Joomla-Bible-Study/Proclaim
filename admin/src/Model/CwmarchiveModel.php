@@ -76,7 +76,7 @@ class CwmarchiveModel extends AdminModel
         $studies    = 0;
         $mediafiles = 0;
 
-        $data = Factory::getApplication()->input->get('jform', array(), 'array');
+        $data = Factory::getApplication()->getInput()->get('jform', array(), 'array');
 
         // Used this field to show how long back to archive.
         $timeframe = (int)$data['timeframe'];

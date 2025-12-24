@@ -41,12 +41,12 @@ class CwmlocationController extends FormController
      *
      * @param   CwmlocationModel  $model  The model.
      *
-     * @return  boolean     True if successful, false otherwise and internal error is set.
+     * @return  bool     True if successful, false otherwise and internal error is set.
      *
      * @throws \Exception
      * @since   1.6
      */
-    public function batch($model = null)
+    public function batch($model = null): bool
     {
         $this->checkToken();
 

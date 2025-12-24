@@ -300,7 +300,7 @@ class CwmmediafileModel extends AdminModel
      */
     public function getItem($pk = null): mixed
     {
-        $jinput = Factory::getApplication()->input;
+        $jinput = Factory::getApplication()->getInput();
 
         // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
         if ($jinput->get('a_id')) {
@@ -371,7 +371,7 @@ class CwmmediafileModel extends AdminModel
             return false;
         }
 
-        $jinput = Factory::getApplication()->input;
+        $jinput = Factory::getApplication()->getInput();
 
         // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
         if ($jinput->get('a_id')) {

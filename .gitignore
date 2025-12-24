@@ -1,32 +1,33 @@
-# Created by .ignore support plugin (hsz.mobi)
-# IntelliJ project files
-.idea
-.github
+# IDE and Editor
+.idea/
 *.icloud
-out
-gen
-bin/
-build/reports/pmd.html
-com_proclaim/media/css/site/
-composer.phar
+
+# OS Files
 .DS_Store
+
+# Dependencies
+/libraries/vendor/
 node_modules/
-/admin/proclaim.xml
-build/reports/cpd-code.xml
-build/reports/jdepend-dependencies.svg
-build/reports/jdepend-pyramid.svg
-build/reports/jdepend.xml
-build/reports/phpcs-checkstyle.xml
-build/reports/project-size.txt
-/libraries/vendor/*
-!/package-lock.json
-/.composer.phar.icloud
-/media/css/site/cwmcore.css
-/admin/proclaim.script.php
-!/.php_cs.cache
-/build.properties
-/build/reports/phpcs.log
-/build/reports/phpcs-error.log
-/media/css/site/biblestudy.css
+composer.phar
+
+# Build outputs
 *.zip
-!/build.properties
+bin/
+out/
+gen/
+
+# Build reports
+build/reports/
+
+# Generated files
+/admin/proclaim.xml
+/admin/proclaim.script.php
+/media/css/site/cwmcore.css
+/media/css/site/biblestudy.css
+com_proclaim/media/css/site/
+
+# Local configuration
+/build.properties
+
+# Test cache
+.phpunit.cache/

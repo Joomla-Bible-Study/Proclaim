@@ -103,7 +103,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
         <?php
-        if ($this->server_form !== "no-data-type") : ?>
+        if ($this->server_form !== null) : ?>
             <?php
             if ($this->server_form->getFieldsets('params')) : ?>
                 <?php

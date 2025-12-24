@@ -58,7 +58,7 @@ class CwmadminController extends FormController
      */
     public function tools(): void
     {
-        $tool = Factory::getApplication()->input->get('tooltype', '', 'post');
+        $tool = Factory::getApplication()->getInput()->get('tooltype', '', 'post');
 
         $model = $this->getModel();
 

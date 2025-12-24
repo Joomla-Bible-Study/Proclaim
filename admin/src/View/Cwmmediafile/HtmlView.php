@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMMediaFile;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmmediafile;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -213,8 +213,7 @@ class HtmlView extends BaseHtmlView
         $toolbar->cancel('cwmmediafile.cancel');
 
         ToolbarHelper::divider();
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=33:media-file-entry-help&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
-
+        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=33:media-file-entry-help&catid=20&Itemid=315&tmpl=component';
+        ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
     }
 }

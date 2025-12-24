@@ -22,6 +22,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
+use Joomla\CMS\WebAsset\WebAssetManager;
 use Joomla\Database\ParameterType;
 
 /**
@@ -65,7 +66,7 @@ class LocationField extends FormField
         // Create the modal id.
         $modalId = 'Article_' . $this->id;
 
-        /** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
+        /** @var WebAssetManager $wa */
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
 
         // Add the modal field script to the document head.

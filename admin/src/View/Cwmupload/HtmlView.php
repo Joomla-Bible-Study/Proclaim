@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMMessageTypes;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmupload;
 
 // No direct access
 use CWM\Component\Proclaim\Administrator\Helper\Cwmuploadscript;
@@ -58,7 +58,7 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0
      */
-    public function display($tpl = null)
+    public function display($tpl = null): void
     {
         $this->form = $this->get("Form");
         HTMLHelper::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html/');

@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\Utilities\ArrayHelper;
 
 /**
@@ -36,7 +37,7 @@ class CwmlocationsController extends AdminController
      * @throws \Exception
      * @since   3.0
      */
-    public function saveOrderAjax()
+    public function saveOrderAjax(): void
     {
         // Get the input
         $pks   = $this->input->post->get('cid', [], 'array');
@@ -66,11 +67,11 @@ class CwmlocationsController extends AdminController
      * @param   string  $prefix  The class prefix. Optional.
      * @param   array   $config  The array of possible config values. Optional.
      *
-     * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel
+     * @return  BaseDatabaseModel
      *
      * @since   1.6
      */
-    public function getModel($name = 'Cwmlocation', $prefix = 'Administrator', $config = ['ignore_request' => true]): \Joomla\CMS\MVC\Model\BaseDatabaseModel
+    public function getModel($name = 'Cwmlocation', $prefix = 'Administrator', $config = ['ignore_request' => true]): BaseDatabaseModel
     {
         return parent::getModel($name, $prefix, $config);
     }

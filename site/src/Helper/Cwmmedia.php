@@ -82,7 +82,7 @@ class Cwmmedia
      * @param   Registry                 $params    Params
      * @param   CwmtemplateTable|Object  $template  Template Table
      *
-     * @return string
+     * @return string|null
      *
      * @throws \Exception
      * @since 9.0.0
@@ -828,7 +828,7 @@ class Cwmmedia
      */
     public function getFluidDownloadLink(object $media, Registry $params, $template): string
     {
-        // Remove download form Youtube links.
+        // Remove download form YouTube links.
         $filename  = $media->params->get('filename');
         $link_type = 0;
 
@@ -926,7 +926,7 @@ class Cwmmedia
      *
      * @param   Registry  $download  ?
      *
-     * @return ?string
+     * @return string|null
      *
      * @since 9.0.0
      */

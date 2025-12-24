@@ -72,7 +72,7 @@ class HtmlView extends BaseHtmlView
      */
     public function display($tpl = null): void
     {
-        $input       = Factory::getApplication()->input;
+        $input       = Factory::getApplication()->getInput();
         $mid         = $input->get('mid', '', 'int');
         $compat_mode = $input->get('compat_mode', '0', 'int');
 

@@ -156,7 +156,7 @@ class Cwmserieslist extends Cwmlisting
      */
     public function getSeriesstudiesExp($id, $params, $template)
     {
-        $input   = Factory::getApplication()->input;
+        $input   = Factory::getApplication()->getInput();
         $limit   = '';
         $nolimit = $input->get('nolimit', '', 'int');
 

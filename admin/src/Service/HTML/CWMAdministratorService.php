@@ -39,7 +39,7 @@ class CWMAdministratorService
      * @throws  \Exception
      * @since 10.0.0
      */
-    public function association($messageid)
+    public function association(int $messageid): string
     {
         // Defaults
         $html = '';
@@ -89,7 +89,7 @@ class CWMAdministratorService
             }
 
             if ($items) {
-                $languages         = LanguageHelper::getContentLanguages(array(0, 1));
+                $languages         = LanguageHelper::getContentLanguages([0, 1]);
                 $content_languages = array_column($languages, 'lang_code');
 
                 foreach ($items as &$item) {
@@ -115,6 +115,7 @@ class CWMAdministratorService
                         );
                     }
                 }
+                unset($item);
             }
 
             $html = LayoutHelper::render('joomla.content.associations', $items);

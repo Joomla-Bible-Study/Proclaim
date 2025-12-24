@@ -184,7 +184,7 @@ class HtmlView extends BaseHtmlView
      */
     private function updateFilters(): void
     {
-        $input   = Factory::getApplication()->input;
+        $input   = Factory::getApplication()->getInput();
         $filters = ['search', 'book', 'teacher', 'series', 'messagetype', 'year', 'topic', 'location', 'language'];
         $lists   = ['fullordering', 'limit'];
 

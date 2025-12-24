@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <field name="id" type="text" readonly="readonly" class="inputbox hidden"/>
-    <fields name="params">
+    <fields name="params" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
         <field name="simple_mode" type="radio" class="form-select-color" default="1" label="JBS_ADM_SIMPLE_MODE"
                description="JBS_ADM_SIMPLE_MODE_DESC" labelclass="control-label"
                layout="joomla.form.field.radio.switcher">
@@ -153,39 +153,24 @@
         <field name="thumbnail_study_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_STUDY_SIZE"
                description="JBS_ADM_THUMBNAIL_STUDY_SIZE_DESC" labelclass="control-label" class="col-2"/>
 
-        <field name="location_id" type="sql" extension="com_proclaim" label="JBS_CMN_LOCATION"
-               description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox"
-               query="SELECT id, location_text FROM #__bsms_locations WHERE published = 1 ORDER BY location_text ASC"
-               key_field="id"
-               value_field="location_text" labelclass="control-label">
+        <field name="location_id" type="LocationList" label="JBS_CMN_LOCATION"
+               description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox" labelclass="control-label">
             <option value="-1">JBS_CMN_SELECT_LOCATION</option>
         </field>
-        <field name="teacher_id" type="sql" class="inputbox" default="-1" label="JBS_CMN_TEACHER_NAME"
-               description="JBS_ADM_FILLIN_STUDY_DESC"
-               query="SELECT id, teachername FROM #__bsms_teachers WHERE published = 1 ORDER BY teachername ASC"
-               key_field="id"
-               value_field="teachername" labelclass="control-label">
+        <field name="teacher_id" type="TeacherList" class="inputbox" default="-1"
+               label="JBS_CMN_TEACHER_NAME" description="JBS_ADM_FILLIN_STUDY_DESC" labelclass="control-label">
             <option value="-1">JBS_CMN_SELECT_TEACHER</option>
         </field>
-        <field name="series_id" type="sql" default="-1" label="JBS_CMN_SERIES"
-               description="JBS_ADM_FILLIN_STUDY_DESC" class="intputbox"
-               query="SELECT id, series_text FROM #__bsms_series WHERE published = 1"
-               key_field="id"
-               value_field="series_text" labelclass="control-label">
+        <field name="series_id" type="Series" default="-1" label="JBS_CMN_SERIES"
+               description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox" labelclass="control-label">
             <option value="-1">JBS_CMN_SELECT_SERIES</option>
         </field>
-        <field name="booknumber" type="sql" default="-1" label="JBS_CMN_BOOK" translate="true"
-               description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox"
-               query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
-               key_field="booknumber"
-               value_field="bookname" labelclass="control-label">
+        <field name="booknumber" type="BookList" default="-1" label="JBS_CMN_BOOK"
+               description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox" labelclass="control-label">
             <option value="-1">JBS_CMN_SELECT_BOOK</option>
         </field>
-        <field name="messagetype" type="sql"
-               query="SELECT * FROM #__bsms_message_type WHERE published = 1"
-               class="inputbox"
-               key_field="id" value_field="message_type" default="-1" labelclass="control-label"
-               label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC">
+        <field name="messagetype" type="MessageTypeList" class="inputbox" default="-1"
+               labelclass="control-label" label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC">
             <option value="-1">JBS_CMN_SHOW_ALL</option>
         </field>
         <field name="default_study_image" type="media" size="50" directory="biblestudy"
@@ -206,18 +191,12 @@
             <option value="_parent">JBS_ADM_PARENT_WINDOW</option>
             <option value="_top">JBS_ADM_FULL_WINDOW</option>
         </field>
-        <field name="server" type="sql" class="inputbox" label="JBS_CMN_SERVER"
-               description="JBS_ADM_FILLIN_MEDIAFILE_DESC" default="-1"
-               query="SELECT id, server_name FROM #__bsms_servers WHERE published = 1 ORDER BY server_name ASC"
-               key_field="id"
-               value_field="server_name" labelclass="control-label">
+        <field name="server" type="ServerList" class="inputbox" default="-1"
+               label="JBS_CMN_SERVER" description="JBS_ADM_FILLIN_MEDIAFILE_DESC" labelclass="control-label">
             <option value="-1">JBS_CMN_SELECT_SERVER</option>
         </field>
-        <field name="podcast" type="sql" class="inputbox" multiple="true" label="JBS_CMN_PODCAST"
-               description="JBS_ADM_FILLIN_MEDIAFILE_PODCAST_DESC" default="-1"
-               query="SELECT id, title FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC"
-               key_field="id"
-               value_field="title" labelclass="control-label">
+        <field name="podcast" type="Podcasts" class="inputbox" multiple="true" default="-1"
+               label="JBS_CMN_PODCAST" description="JBS_ADM_FILLIN_MEDIAFILE_PODCAST_DESC" labelclass="control-label">
             <option value="-1">JBS_ADM_NO_PODCAST</option>
         </field>
         <field name="from" type="list" label="JBS_ADM_CHANGE_PLAYERS" labelclass="control-label">
