@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<form>
+<form addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
     <field
             name="published"
             type="list"
@@ -44,11 +44,8 @@
            description="JBS_CMN_SELECT_LANGUAGE_DESC" class="inputbox">
         <option value="*">JALL</option>
     </field>
-    <field name="detailstemplateid" type="sql"
-           label="JBS_PDC_TEMPLATE_FOR_DETAILS_VIEW_LINK"
-           query="SELECT id, title FROM #__bsms_templates ORDER BY title ASC"
-           key_field="id"
-           value_field="title" labelclass="control-label">
+    <field name="detailstemplateid" type="TemplateList"
+           label="JBS_PDC_TEMPLATE_FOR_DETAILS_VIEW_LINK" labelclass="control-label">
         <option value="-1">JBS_CMN_SELECT_USER</option>
     </field>
     <field name="image" type="media" label="JBS_PDC_IMAGE" directory="biblestudy"
