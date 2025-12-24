@@ -19,11 +19,14 @@ require_once __DIR__ . '/vendor/autoload.php';
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use Google;
 use Google\Service\Exception;
+use Google\Service\YouTube;
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Google;
-use Google\Service\YouTube;
+use Joomla\Input\Input;
+use Joomla\Registry\Registry;
 
 /**
  * Class CWMAddonYoutube
@@ -76,6 +79,9 @@ class CWMAddonYoutube extends CWMAddon
      */
     public function renderGeneral($media_form, bool $new): string
     {
+        // Load YouTube browser JavaScript
+        HTMLHelper::_('script', 'media/com_proclaim/js/addon-youtube-browser.js', ['version' => 'auto']);
+
         $html   = '';
         $fields = $media_form->getFieldset('general');
 
@@ -216,8 +222,8 @@ class CWMAddonYoutube extends CWMAddon
                 'snippet',
                 [
                     'playlistId' => $playlistID,
-                    'pageToken' => $pageToken,
-                    'maxResults' => $maxResults
+                    'pageToken'  => $pageToken,
+                    'maxResults' => $maxResults,
                 ]
             );
         } catch (Exception $e) {
@@ -227,8 +233,8 @@ class CWMAddonYoutube extends CWMAddon
         # Extract data we need from the response
         $prevPageToken = $response->prevPageToken ?? null;
         $nextPageToken = $response->nextPageToken ?? null;
-        $totalResults = $response->pageInfo->totalResults;
-        $videos = $response->items;
+        $totalResults  = $response->pageInfo->totalResults;
+        $videos        = $response->items;
         if ($prevPageToken) {
             echo "<a href='/?pageToken=<?php echo $prevPageToken?>'>Previous page</a>";
         }
@@ -249,6 +255,199 @@ class CWMAddonYoutube extends CWMAddon
         <strong>Video ID:</strong>
         " . $video->snippet->resourceId->videoId . "
     </div>";
+        }
+    }
+
+    /**
+     * Get server configuration by ID
+     *
+     * @param   int  $serverId  Server ID
+     *
+     * @return  array  Server params
+     *
+     * @since   10.0.0
+     */
+    protected function getServerConfig(int $serverId): array
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('params'))
+            ->from($db->quoteName('#__bsms_servers'))
+            ->where($db->quoteName('id') . ' = ' . (int) $serverId);
+
+        $db->setQuery($query);
+        $result = $db->loadResult();
+
+        if ($result) {
+            $registry = new Registry($result);
+
+            return $registry->toArray();
+        }
+
+        return [];
+    }
+
+    /**
+     * Fetch videos from YouTube channel (XHR handler)
+     *
+     * @param   Input  $input  Request input
+     *
+     * @return  array  Response data
+     *
+     * @since   10.0.0
+     */
+    public function fetchChannelVideos(Input $input): array
+    {
+        $serverId   = $input->getInt('server_id', 0);
+        $pageToken  = $input->getString('page_token', '');
+        $maxResults = $input->getInt('max_results', 12);
+
+        if (!$serverId) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_SERVER_ID')];
+        }
+
+        $config    = $this->getServerConfig($serverId);
+        $apiKey    = $config['api_key'] ?? '';
+        $channelId = $config['channel_id'] ?? '';
+
+        if (empty($apiKey)) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_API_KEY')];
+        }
+
+        if (empty($channelId)) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_CHANNEL_ID')];
+        }
+
+        try {
+            $client = new Google\Client();
+            $client->setApplicationName('Proclaim');
+            $client->setDeveloperKey($apiKey);
+
+            $youtube = new YouTube($client);
+
+            // Get channel's uploads playlist ID
+            $channelResponse = $youtube->channels->listChannels('contentDetails', [
+                'id' => $channelId,
+            ]);
+
+            if (empty($channelResponse->items)) {
+                return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_CHANNEL_NOT_FOUND')];
+            }
+
+            $uploadsPlaylistId = $channelResponse->items[0]->contentDetails->relatedPlaylists->uploads;
+
+            // Get videos from uploads playlist
+            $params = [
+                'playlistId' => $uploadsPlaylistId,
+                'maxResults' => $maxResults,
+            ];
+
+            if (!empty($pageToken)) {
+                $params['pageToken'] = $pageToken;
+            }
+
+            $response = $youtube->playlistItems->listPlaylistItems('snippet', $params);
+
+            $videos = [];
+
+            foreach ($response->items as $item) {
+                $videos[] = [
+                    'videoId'     => $item->snippet->resourceId->videoId,
+                    'title'       => $item->snippet->title,
+                    'description' => $item->snippet->description,
+                    'thumbnail'   => $item->snippet->thumbnails->medium->url ?? $item->snippet->thumbnails->default->url,
+                    'publishedAt' => $item->snippet->publishedAt,
+                ];
+            }
+
+            return [
+                'success'       => true,
+                'videos'        => $videos,
+                'nextPageToken' => $response->nextPageToken ?? null,
+                'prevPageToken' => $response->prevPageToken ?? null,
+                'totalResults'  => $response->pageInfo->totalResults ?? 0,
+            ];
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Search videos in YouTube channel (XHR handler)
+     *
+     * @param   Input  $input  Request input
+     *
+     * @return  array  Response data
+     *
+     * @since   10.0.0
+     */
+    public function searchChannelVideos(Input $input): array
+    {
+        $serverId   = $input->getInt('server_id', 0);
+        $query      = $input->getString('query', '');
+        $pageToken  = $input->getString('page_token', '');
+        $maxResults = $input->getInt('max_results', 12);
+
+        if (!$serverId) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_SERVER_ID')];
+        }
+
+        if (empty($query)) {
+            return $this->fetchChannelVideos($input);
+        }
+
+        $config    = $this->getServerConfig($serverId);
+        $apiKey    = $config['api_key'] ?? '';
+        $channelId = $config['channel_id'] ?? '';
+
+        if (empty($apiKey)) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_API_KEY')];
+        }
+
+        try {
+            $client = new Google\Client();
+            $client->setApplicationName('Proclaim');
+            $client->setDeveloperKey($apiKey);
+
+            $youtube = new YouTube($client);
+
+            $params = [
+                'q'          => $query,
+                'type'       => 'video',
+                'maxResults' => $maxResults,
+            ];
+
+            if (!empty($channelId)) {
+                $params['channelId'] = $channelId;
+            }
+
+            if (!empty($pageToken)) {
+                $params['pageToken'] = $pageToken;
+            }
+
+            $response = $youtube->search->listSearch('snippet', $params);
+
+            $videos = [];
+
+            foreach ($response->items as $item) {
+                $videos[] = [
+                    'videoId'     => $item->id->videoId,
+                    'title'       => $item->snippet->title,
+                    'description' => $item->snippet->description,
+                    'thumbnail'   => $item->snippet->thumbnails->medium->url ?? $item->snippet->thumbnails->default->url,
+                    'publishedAt' => $item->snippet->publishedAt,
+                ];
+            }
+
+            return [
+                'success'       => true,
+                'videos'        => $videos,
+                'nextPageToken' => $response->nextPageToken ?? null,
+                'prevPageToken' => $response->prevPageToken ?? null,
+                'totalResults'  => $response->pageInfo->totalResults ?? 0,
+            ];
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 }
