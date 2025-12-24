@@ -288,6 +288,20 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
+     * Load addon language file
+     *
+     * @return  void
+     *
+     * @since   10.0.0
+     */
+    protected function loadLanguage(): void
+    {
+        $lang = Factory::getApplication()->getLanguage();
+        $path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/Youtube';
+        $lang->load('jbs_addon_youtube', $path);
+    }
+
+    /**
      * Fetch videos from YouTube channel (XHR handler)
      *
      * @param   Input  $input  Request input
@@ -298,6 +312,8 @@ class CWMAddonYoutube extends CWMAddon
      */
     public function fetchChannelVideos(Input $input): array
     {
+        $this->loadLanguage();
+
         $serverId   = $input->getInt('server_id', 0);
         $pageToken  = $input->getString('page_token', '');
         $maxResults = $input->getInt('max_results', 12);
@@ -383,6 +399,8 @@ class CWMAddonYoutube extends CWMAddon
      */
     public function searchChannelVideos(Input $input): array
     {
+        $this->loadLanguage();
+
         $serverId   = $input->getInt('server_id', 0);
         $query      = $input->getString('query', '');
         $pageToken  = $input->getString('page_token', '');
