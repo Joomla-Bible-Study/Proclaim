@@ -1,11 +1,21 @@
 {
   "name": "cwmproclaim",
-  "description": "CWM Proclaim",
+  "version": "1.0.0",
+  "description": "CWM Proclaim - A Joomla! Extension for Church Media Management",
+  "license": "GPL-2.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Joomla-Bible-Study/Proclaim.git"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.1.0"
+  },
   "devDependencies": {
-    "@babel/cli": "^7.11.6",
-    "@babel/core": "^7.11.6",
-    "@babel/preset-env": "^7.11.5",
-    "babel-preset-minify": "^0.5.1"
+    "@babel/cli": "^7.25.2",
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.2",
+    "terser": "^5.27.0"
   },
   "babel": {
     "presets": [
@@ -14,27 +24,24 @@
         {
           "useBuiltIns": "entry",
           "corejs": {
-            "version": "3.9",
+            "version": "3.38",
             "proposals": true
           }
-        }
-      ],
-      [
-        "minify",
-        {
-          "builtIns": false,
-          "removeConsole": false
         }
       ]
     ],
     "comments": false,
     "ignore": []
   },
+  "browserslist": [
+    "last 2 major versions",
+    "not IE < 11"
+  ],
   "dependencies": {
-    "core-js": "^3.9.1",
-    "@hapi/cryptiles": ">=5.1.0",
-    "csso": "^5.0.2",
-    "@hapi/hoek": "<=9.2.1",
-    "less": "^4.1.2"
+    "core-js": "^3.38.1",
+    "@hapi/cryptiles": "^6.0.1",
+    "@hapi/hoek": "^11.0.4",
+    "csso": "^5.0.5",
+    "less": "^4.2.0"
   }
 }
