@@ -69,11 +69,41 @@ class ProclaimNomenuRules implements RulesInterface
      */
     public function parse(&$segments, &$vars): void
     {
+        if (empty($segments)) {
+            return;
+        }
+
         $views = $this->router->getViews();
 
         if (isset($views[$segments[0]])) {
-            $vars['view'] = array_shift($segments);
-            $view         = $views[$vars['view']];
+            $viewName = array_shift($segments);
+            $view     = $views[$viewName];
+
+            // Check if this is a parent view and the next segment could be a child item
+            if (!empty($segments[0]) && !$view->key) {
+                $childView = $this->findChildViewForSegment($views, $viewName, $segments[0]);
+
+                if ($childView) {
+                    $vars['view'] = $childView->name;
+                    $segment      = array_shift($segments);
+
+                    if (\is_callable([$this->router, 'get' . ucfirst($childView->name) . 'Id'])) {
+                        $result = \call_user_func(
+                            [$this->router, 'get' . ucfirst($childView->name) . 'Id'],
+                            $segment,
+                            $vars
+                        );
+                        $vars[$childView->key] = preg_replace('/-/', ':', $result, 1);
+                    } else {
+                        $vars[$childView->key] = preg_replace('/-/', ':', $segment, 1);
+                    }
+
+                    return;
+                }
+            }
+
+            // Standard view processing
+            $vars['view'] = $viewName;
 
             if (isset($view->key) && isset($segments[0])) {
                 if (\is_callable([$this->router, 'get' . ucfirst($view->name) . 'Id'])) {
@@ -89,7 +119,7 @@ class ProclaimNomenuRules implements RulesInterface
 
                         while ($segments) {
                             $segment = array_shift($segments);
-                            $result  = call_user_func(
+                            $result  = \call_user_func(
                                 [$this->router, 'get' . ucfirst($view->name) . 'Id'],
                                 $segment,
                                 $vars
@@ -104,7 +134,7 @@ class ProclaimNomenuRules implements RulesInterface
                         }
                     } else {
                         $segment = array_shift($segments);
-                        $result  = call_user_func(
+                        $result  = \call_user_func(
                             [$this->router, 'get' . ucfirst($view->name) . 'Id'],
                             $segment,
                             $vars
@@ -117,6 +147,40 @@ class ProclaimNomenuRules implements RulesInterface
                 }
             }
         }
+    }
+
+    /**
+     * Find a child view that can handle the given segment
+     *
+     * @param   array   $views       All registered views
+     * @param   string  $parentName  The parent view name
+     * @param   string  $segment     The URL segment to check
+     *
+     * @return  object|null  The child view configuration or null
+     *
+     * @since   10.0.0
+     */
+    private function findChildViewForSegment(array $views, string $parentName, string $segment): ?object
+    {
+        foreach ($views as $view) {
+            // Check if this view has the specified parent
+            if (isset($view->parent) && $view->parent->name === $parentName && $view->key) {
+                // Try to resolve the segment using this child view's ID method
+                if (\is_callable([$this->router, 'get' . ucfirst($view->name) . 'Id'])) {
+                    $result = \call_user_func(
+                        [$this->router, 'get' . ucfirst($view->name) . 'Id'],
+                        $segment,
+                        []
+                    );
+
+                    if ($result) {
+                        return $view;
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -135,12 +199,19 @@ class ProclaimNomenuRules implements RulesInterface
             $views = $this->router->getViews();
 
             if (isset($views[$query['view']])) {
-                $view       = $views[$query['view']];
-                $segments[] = $query['view'];
+                $view = $views[$query['view']];
+
+                // Use parent view name if available for cleaner URLs
+                // e.g., /cwmsermons/sermon-alias instead of /cwmsermon/sermon-alias
+                if (isset($view->parent) && isset($view->parent->name)) {
+                    $segments[] = $view->parent->name;
+                } else {
+                    $segments[] = $query['view'];
+                }
 
                 if ($view->key && isset($query[$view->key])) {
                     if (\is_callable([$this->router, 'get' . ucfirst($view->name) . 'Segment'])) {
-                        $result = call_user_func(
+                        $result = \call_user_func(
                             [$this->router, 'get' . ucfirst($view->name) . 'Segment'],
                             $query[$view->key],
                             $query
