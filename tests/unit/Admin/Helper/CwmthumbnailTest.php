@@ -13,11 +13,12 @@ namespace CWM\Component\Proclaim\Tests\Admin\Helper;
 
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Test class for Cwmthumbnail helper
  *
- * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail
+ *#[CoversClass(Cwmthumbnail::class)]
  * @since  10.0.0
  */
 class CwmthumbnailTest extends ProclaimTestCase
@@ -26,7 +27,7 @@ class CwmthumbnailTest extends ProclaimTestCase
      * Test that the SCALE_INSIDE constant is defined correctly
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail::SCALE_INSIDE
+     *#[CoversClass(Cwmthumbnail::class)]::SCALE_INSIDE
      */
     public function testScaleInsideConstant(): void
     {
@@ -37,7 +38,7 @@ class CwmthumbnailTest extends ProclaimTestCase
      * Test check method returns false for non-existent directory
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail::check
+     *#[CoversClass(Cwmthumbnail::class)]::check
      */
     public function testCheckReturnsFalseForNonExistentDirectory(): void
     {
@@ -50,7 +51,7 @@ class CwmthumbnailTest extends ProclaimTestCase
      * Test check method returns true for existing directory
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail::check
+     *#[CoversClass(Cwmthumbnail::class)]::check
      */
     public function testCheckReturnsTrueForExistingDirectory(): void
     {
@@ -63,7 +64,7 @@ class CwmthumbnailTest extends ProclaimTestCase
      * Test check method with file parameter returns false for non-existent file
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail::check
+     *#[CoversClass(Cwmthumbnail::class)]::check
      */
     public function testCheckReturnsFalseForNonExistentFile(): void
     {

@@ -13,20 +13,21 @@ namespace CWM\Component\Proclaim\Tests\Admin\Helper;
 
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversFunction;
 
 /**
  * Test class for Cwmalias helper
  *
- * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmalias
  * @since  10.0.0
  */
+#[CoversClass(Cwmalias::class)]
 class CwmaliasTest extends ProclaimTestCase
 {
     /**
      * Test extension name constant
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmalias::$extension
      */
     public function testExtensionNameIsCorrect(): void
     {
@@ -37,7 +38,6 @@ class CwmaliasTest extends ProclaimTestCase
      * Test getObjects method returns expected table structure
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmalias
      */
     public function testGetObjectsReturnsExpectedStructure(): void
     {
@@ -59,7 +59,6 @@ class CwmaliasTest extends ProclaimTestCase
      * Test getObjects method includes series table
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmalias
      */
     public function testGetObjectsIncludesSeriesTable(): void
     {
@@ -74,7 +73,6 @@ class CwmaliasTest extends ProclaimTestCase
      * Test getObjects method includes studies table
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmalias
      */
     public function testGetObjectsIncludesStudiesTable(): void
     {
@@ -89,7 +87,6 @@ class CwmaliasTest extends ProclaimTestCase
      * Test getObjects method includes teachers table
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmalias
      */
     public function testGetObjectsIncludesTeachersTable(): void
     {
@@ -104,7 +101,6 @@ class CwmaliasTest extends ProclaimTestCase
      * Test getObjects method includes message_type table
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmalias
      */
     public function testGetObjectsIncludesMessageTypeTable(): void
     {
@@ -119,7 +115,6 @@ class CwmaliasTest extends ProclaimTestCase
      * Test getTableQuery returns false for empty table name
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmalias
      */
     public function testGetTableQueryReturnsFalseForEmptyTable(): void
     {

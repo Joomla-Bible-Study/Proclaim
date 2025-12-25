@@ -16,7 +16,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 /**
  * Test class for CwmteacherTable
  *
- * @covers \CWM\Component\Proclaim\Administrator\Table\CwmteacherTable
+ *#[CoversClass(CwmteacherTable::class)]
  * @since  10.0.0
  */
 class CwmteacherTableTest extends ProclaimTestCase
@@ -57,7 +57,7 @@ class CwmteacherTableTest extends ProclaimTestCase
      * Test table class file exists
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Table\CwmteacherTable
+     *#[CoversClass(CwmteacherTable::class)]
      */
     public function testTableClassFileExists(): void
     {
@@ -70,7 +70,7 @@ class CwmteacherTableTest extends ProclaimTestCase
      * Test table class uses correct namespace
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Table\CwmteacherTable
+     *#[CoversClass(CwmteacherTable::class)]
      */
     public function testTableClassHasCorrectNamespace(): void
     {
@@ -87,7 +87,7 @@ class CwmteacherTableTest extends ProclaimTestCase
      * Test table class extends Joomla Table
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Table\CwmteacherTable
+     *#[CoversClass(CwmteacherTable::class)]
      */
     public function testTableClassExtendsJoomlaTable(): void
     {
@@ -102,7 +102,7 @@ class CwmteacherTableTest extends ProclaimTestCase
      * Test table has bind method
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Table\CwmteacherTable
+     *#[CoversClass(CwmteacherTable::class)]
      */
     public function testTableHasBindMethod(): void
     {
@@ -116,7 +116,7 @@ class CwmteacherTableTest extends ProclaimTestCase
      * Test table has store method
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Table\CwmteacherTable
+     *#[CoversClass(CwmteacherTable::class)]
      */
     public function testTableHasStoreMethod(): void
     {
@@ -130,7 +130,7 @@ class CwmteacherTableTest extends ProclaimTestCase
      * Test table defines teachername property
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Table\CwmteacherTable
+     *#[CoversClass(CwmteacherTable::class)]
      */
     public function testTableDefinesTeachernameProperty(): void
     {
@@ -144,7 +144,7 @@ class CwmteacherTableTest extends ProclaimTestCase
      * Test table defines alias property
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Table\CwmteacherTable
+     *#[CoversClass(CwmteacherTable::class)]
      */
     public function testTableDefinesAliasProperty(): void
     {
@@ -158,7 +158,7 @@ class CwmteacherTableTest extends ProclaimTestCase
      * Test table uses teachers database table
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Table\CwmteacherTable
+     *#[CoversClass(CwmteacherTable::class)]
      */
     public function testTableUsesCorrectDatabaseTable(): void
     {
@@ -172,7 +172,7 @@ class CwmteacherTableTest extends ProclaimTestCase
      * Test table has _getAssetName method
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Table\CwmteacherTable
+     *#[CoversClass(CwmteacherTable::class)]
      */
     public function testTableHasGetAssetNameMethod(): void
     {
@@ -187,7 +187,7 @@ class CwmteacherTableTest extends ProclaimTestCase
      * Test table has _getAssetTitle method
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Table\CwmteacherTable
+     *#[CoversClass(CwmteacherTable::class)]
      */
     public function testTableHasGetAssetTitleMethod(): void
     {
@@ -202,7 +202,7 @@ class CwmteacherTableTest extends ProclaimTestCase
      * Test table processes params as Registry
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Table\CwmteacherTable
+     *#[CoversClass(CwmteacherTable::class)]
      */
     public function testTableProcessesParamsAsRegistry(): void
     {

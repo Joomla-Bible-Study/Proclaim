@@ -13,11 +13,12 @@ namespace CWM\Component\Proclaim\Tests\Admin\Helper;
 
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Test class for Cwmparams helper
  *
- * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmparams
+ *#[CoversClass(Cwmparams::class)]
  * @since  10.0.0
  */
 class CwmparamsTest extends ProclaimTestCase
@@ -45,7 +46,7 @@ class CwmparamsTest extends ProclaimTestCase
      * Test extension name constant
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmparams::$extension
+     *#[CoversClass(Cwmparams::class)]::$extension
      */
     public function testExtensionNameIsCorrect(): void
     {
@@ -56,7 +57,7 @@ class CwmparamsTest extends ProclaimTestCase
      * Test default template ID
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmparams::$templateId
+     *#[CoversClass(Cwmparams::class)]::$templateId
      */
     public function testDefaultTemplateIdIsOne(): void
     {
@@ -67,7 +68,7 @@ class CwmparamsTest extends ProclaimTestCase
      * Test setCompParams method signature accepts array
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmparams::setCompParams
+     *#[CoversClass(Cwmparams::class)]::setCompParams
      */
     public function testSetCompParamsAcceptsArrayParameter(): void
     {
@@ -83,7 +84,7 @@ class CwmparamsTest extends ProclaimTestCase
      * Test getTemplateparams method signature
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmparams::getTemplateparams
+     *#[CoversClass(Cwmparams::class)]::getTemplateparams
      */
     public function testGetTemplateparamsMethodSignature(): void
     {
@@ -100,7 +101,7 @@ class CwmparamsTest extends ProclaimTestCase
      * Test getAdmin method signature
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmparams::getAdmin
+     *#[CoversClass(Cwmparams::class)]::getAdmin
      */
     public function testGetAdminMethodSignature(): void
     {
@@ -115,7 +116,7 @@ class CwmparamsTest extends ProclaimTestCase
      * Test setCompParams is a void method
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmparams::setCompParams
+     *#[CoversClass(Cwmparams::class)]::setCompParams
      */
     public function testSetCompParamsReturnsVoid(): void
     {
@@ -130,7 +131,7 @@ class CwmparamsTest extends ProclaimTestCase
      * Test getTemplateparams returns object
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Administrator\Helper\Cwmparams::getTemplateparams
+     *#[CoversClass(Cwmparams::class)]::getTemplateparams
      */
     public function testGetTemplateparamsReturnsObject(): void
     {

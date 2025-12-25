@@ -1,52 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd"
-         bootstrap="tests/unit/bootstrap.php"
-         cacheResultFile=".phpunit.cache/test-results"
-         executionOrder="depends,defects"
-         forceCoversAnnotation="true"
-         beStrictAboutCoversAnnotation="true"
-         beStrictAboutOutputDuringTests="true"
-         beStrictAboutTodoAnnotatedTests="true"
-         convertDeprecationsToExceptions="true"
-         failOnRisky="true"
-         failOnWarning="true"
-         verbose="true"
-         colors="true">
-
-    <testsuites>
-        <testsuite name="Proclaim Unit Tests">
-            <directory suffix="Test.php">tests/unit</directory>
-        </testsuite>
-        <testsuite name="Admin Helper Tests">
-            <directory suffix="Test.php">tests/unit/Admin/Helper</directory>
-        </testsuite>
-        <testsuite name="Site Helper Tests">
-            <directory suffix="Test.php">tests/unit/Site/Helper</directory>
-        </testsuite>
-        <testsuite name="Admin Table Tests">
-            <directory suffix="Test.php">tests/unit/Admin/Table</directory>
-        </testsuite>
-        <testsuite name="Site Model Tests">
-            <directory suffix="Test.php">tests/unit/Site/Model</directory>
-        </testsuite>
-    </testsuites>
-
-    <coverage cacheDirectory=".phpunit.cache/code-coverage"
-              processUncoveredFiles="true">
-        <include>
-            <directory suffix=".php">admin/src</directory>
-            <directory suffix=".php">site/src</directory>
-        </include>
-        <exclude>
-            <directory suffix=".php">admin/src/View</directory>
-            <directory suffix=".php">site/src/View</directory>
-            <directory suffix=".php">admin/src/Field</directory>
-        </exclude>
-    </coverage>
-
-    <php>
-        <const name="JPATH_BASE" value="."/>
-        <const name="JPATH_ROOT" value="."/>
-    </php>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd" bootstrap="tests/unit/bootstrap.php" executionOrder="depends,defects" beStrictAboutOutputDuringTests="true" failOnRisky="true" failOnWarning="true" colors="true" cacheDirectory=".phpunit.cache" requireCoverageMetadata="true" beStrictAboutCoverageMetadata="true">
+  <testsuites>
+    <testsuite name="Proclaim Unit Tests">
+      <directory suffix="Test.php">tests/unit</directory>
+    </testsuite>
+  </testsuites>
+  <php>
+    <const name="JPATH_BASE" value="."/>
+    <const name="JPATH_ROOT" value="."/>
+  </php>
+  <source>
+    <include>
+      <directory suffix=".php">admin/src</directory>
+      <directory suffix=".php">site/src</directory>
+    </include>
+    <exclude>
+      <directory suffix=".php">admin/src/View</directory>
+      <directory suffix=".php">site/src/View</directory>
+      <directory suffix=".php">admin/src/Field</directory>
+    </exclude>
+  </source>
 </phpunit>

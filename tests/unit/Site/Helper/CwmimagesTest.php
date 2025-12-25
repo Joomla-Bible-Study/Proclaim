@@ -16,7 +16,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 /**
  * Test class for Cwmimages helper
  *
- * @covers \CWM\Component\Proclaim\Site\Helper\Cwmimages
+ *#[CoversClass(Cwmimages::class)]
  * @since  10.0.0
  */
 class CwmimagesTest extends ProclaimTestCase
@@ -48,7 +48,7 @@ class CwmimagesTest extends ProclaimTestCase
      * Test class file exists
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Helper\Cwmimages
+     *#[CoversClass(Cwmimages::class)]
      */
     public function testClassFileExists(): void
     {
@@ -59,7 +59,7 @@ class CwmimagesTest extends ProclaimTestCase
      * Test class has correct namespace
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Helper\Cwmimages
+     *#[CoversClass(Cwmimages::class)]
      */
     public function testClassHasCorrectNamespace(): void
     {
@@ -73,7 +73,7 @@ class CwmimagesTest extends ProclaimTestCase
      * Test extracted method exists
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Helper\Cwmimages::extracted
+     *#[CoversClass(Cwmimages::class)]::extracted
      */
     public function testExtractedMethodExists(): void
     {
@@ -87,7 +87,7 @@ class CwmimagesTest extends ProclaimTestCase
      * Test extracted handles null images
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Helper\Cwmimages::extracted
+     *#[CoversClass(Cwmimages::class)]::extracted
      */
     public function testExtractedHandlesNullImages(): void
     {
@@ -102,7 +102,7 @@ class CwmimagesTest extends ProclaimTestCase
      * Test extracted handles dash prefix
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Helper\Cwmimages::extracted
+     *#[CoversClass(Cwmimages::class)]::extracted
      */
     public function testExtractedHandlesDashPrefix(): void
     {
@@ -117,7 +117,7 @@ class CwmimagesTest extends ProclaimTestCase
      * Test getImagePath method exists
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Helper\Cwmimages::getImagePath
+     *#[CoversClass(Cwmimages::class)]::getImagePath
      */
     public function testGetImagePathMethodExists(): void
     {
@@ -131,7 +131,7 @@ class CwmimagesTest extends ProclaimTestCase
      * Test getTeacherThumbnail method exists
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Helper\Cwmimages::getTeacherThumbnail
+     *#[CoversClass(Cwmimages::class)]::getTeacherThumbnail
      */
     public function testGetTeacherThumbnailMethodExists(): void
     {
@@ -145,7 +145,7 @@ class CwmimagesTest extends ProclaimTestCase
      * Test getTeacherImage method exists
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Helper\Cwmimages::getTeacherImage
+     *#[CoversClass(Cwmimages::class)]::getTeacherImage
      */
     public function testGetTeacherImageMethodExists(): void
     {
@@ -159,7 +159,7 @@ class CwmimagesTest extends ProclaimTestCase
      * Test getMediaImage method exists
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Helper\Cwmimages::getMediaImage
+     *#[CoversClass(Cwmimages::class)]::getMediaImage
      */
     public function testGetMediaImageMethodExists(): void
     {
@@ -173,7 +173,7 @@ class CwmimagesTest extends ProclaimTestCase
      * Test getSeriesThumbnail method exists
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Helper\Cwmimages::getSeriesThumbnail
+     *#[CoversClass(Cwmimages::class)]::getSeriesThumbnail
      */
     public function testGetSeriesThumbnailMethodExists(): void
     {
@@ -187,7 +187,7 @@ class CwmimagesTest extends ProclaimTestCase
      * Test getStudyThumbnail method exists with default
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Helper\Cwmimages::getStudyThumbnail
+     *#[CoversClass(Cwmimages::class)]::getStudyThumbnail
      */
     public function testGetStudyThumbnailMethodExistsWithDefault(): void
     {
@@ -201,7 +201,7 @@ class CwmimagesTest extends ProclaimTestCase
      * Test mainStudyImage method exists
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Helper\Cwmimages::mainStudyImage
+     *#[CoversClass(Cwmimages::class)]::mainStudyImage
      */
     public function testMainStudyImageMethodExists(): void
     {
@@ -215,7 +215,7 @@ class CwmimagesTest extends ProclaimTestCase
      * Test getShowHide method exists
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Helper\Cwmimages::getShowHide
+     *#[CoversClass(Cwmimages::class)]::getShowHide
      */
     public function testGetShowHideMethodExists(): void
     {
@@ -229,7 +229,7 @@ class CwmimagesTest extends ProclaimTestCase
      * Test class uses required Joomla classes
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Helper\Cwmimages
+     *#[CoversClass(Cwmimages::class)]
      */
     public function testClassUsesRequiredJoomlaClasses(): void
     {
@@ -243,7 +243,7 @@ class CwmimagesTest extends ProclaimTestCase
      * Test default image paths are defined
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Helper\Cwmimages
+     *#[CoversClass(Cwmimages::class)]
      */
     public function testDefaultImagePathsAreDefined(): void
     {

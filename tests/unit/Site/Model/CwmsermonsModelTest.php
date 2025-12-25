@@ -16,7 +16,7 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 /**
  * Test class for CwmsermonsModel
  *
- * @covers \CWM\Component\Proclaim\Site\Model\CwmsermonsModel
+ *#[CoversClass(CwmsermonsModel::class)]
  * @since  10.0.0
  */
 class CwmsermonsModelTest extends ProclaimTestCase
@@ -48,7 +48,7 @@ class CwmsermonsModelTest extends ProclaimTestCase
      * Test model class file exists
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Model\CwmsermonsModel
+     *#[CoversClass(CwmsermonsModel::class)]
      */
     public function testModelClassFileExists(): void
     {
@@ -59,7 +59,7 @@ class CwmsermonsModelTest extends ProclaimTestCase
      * Test model has correct namespace
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Model\CwmsermonsModel
+     *#[CoversClass(CwmsermonsModel::class)]
      */
     public function testModelHasCorrectNamespace(): void
     {
@@ -73,7 +73,7 @@ class CwmsermonsModelTest extends ProclaimTestCase
      * Test model extends ListModel
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Model\CwmsermonsModel
+     *#[CoversClass(CwmsermonsModel::class)]
      */
     public function testModelExtendsListModel(): void
     {
@@ -85,7 +85,7 @@ class CwmsermonsModelTest extends ProclaimTestCase
      * Test model has input property
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Model\CwmsermonsModel::$input
+     *#[CoversClass(CwmsermonsModel::class)]::$input
      */
     public function testModelHasInputProperty(): void
     {
@@ -96,7 +96,7 @@ class CwmsermonsModelTest extends ProclaimTestCase
      * Test model has context property with correct value
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Model\CwmsermonsModel::$context
+     *#[CoversClass(CwmsermonsModel::class)]::$context
      */
     public function testModelHasContextProperty(): void
     {
@@ -110,7 +110,7 @@ class CwmsermonsModelTest extends ProclaimTestCase
      * Test constructor defines filter_fields
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Model\CwmsermonsModel::__construct
+     *#[CoversClass(CwmsermonsModel::class)]::__construct
      */
     public function testConstructorDefinesFilterFields(): void
     {
@@ -121,7 +121,7 @@ class CwmsermonsModelTest extends ProclaimTestCase
      * Test filter fields include studydate
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Model\CwmsermonsModel::__construct
+     *#[CoversClass(CwmsermonsModel::class)]::__construct
      */
     public function testFilterFieldsIncludeStudydate(): void
     {
@@ -133,7 +133,7 @@ class CwmsermonsModelTest extends ProclaimTestCase
      * Test filter fields include studytitle
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Model\CwmsermonsModel::__construct
+     *#[CoversClass(CwmsermonsModel::class)]::__construct
      */
     public function testFilterFieldsIncludeStudytitle(): void
     {
@@ -145,7 +145,7 @@ class CwmsermonsModelTest extends ProclaimTestCase
      * Test filter fields include teachername
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Model\CwmsermonsModel::__construct
+     *#[CoversClass(CwmsermonsModel::class)]::__construct
      */
     public function testFilterFieldsIncludeTeachername(): void
     {
@@ -157,7 +157,7 @@ class CwmsermonsModelTest extends ProclaimTestCase
      * Test filter fields include bookname
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Model\CwmsermonsModel::__construct
+     *#[CoversClass(CwmsermonsModel::class)]::__construct
      */
     public function testFilterFieldsIncludeBookname(): void
     {
@@ -169,7 +169,7 @@ class CwmsermonsModelTest extends ProclaimTestCase
      * Test filter fields include series_text
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Model\CwmsermonsModel::__construct
+     *#[CoversClass(CwmsermonsModel::class)]::__construct
      */
     public function testFilterFieldsIncludeSeriesText(): void
     {
@@ -181,7 +181,7 @@ class CwmsermonsModelTest extends ProclaimTestCase
      * Test filter fields include language
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Model\CwmsermonsModel::__construct
+     *#[CoversClass(CwmsermonsModel::class)]::__construct
      */
     public function testFilterFieldsIncludeLanguage(): void
     {
@@ -193,7 +193,7 @@ class CwmsermonsModelTest extends ProclaimTestCase
      * Test model uses required Joomla classes
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Model\CwmsermonsModel
+     *#[CoversClass(CwmsermonsModel::class)]
      */
     public function testModelUsesRequiredJoomlaClasses(): void
     {
@@ -206,7 +206,7 @@ class CwmsermonsModelTest extends ProclaimTestCase
      * Test model uses Cwmparams helper
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Model\CwmsermonsModel
+     *#[CoversClass(CwmsermonsModel::class)]
      */
     public function testModelUsesCwmparamsHelper(): void
     {
@@ -220,7 +220,7 @@ class CwmsermonsModelTest extends ProclaimTestCase
      * Test model has getListQuery method
      *
      * @return void
-     * @covers \CWM\Component\Proclaim\Site\Model\CwmsermonsModel
+     *#[CoversClass(CwmsermonsModel::class)]
      */
     public function testModelHasGetListQueryMethod(): void
     {
