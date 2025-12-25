@@ -1,3 +1,20 @@
+/* CSS Custom Properties */
+:root {
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray-light: #cccccc;
+  --color-gray-medium: #666666;
+  --color-gray-dark: #536482;
+  --color-border: #ccc;
+  --color-background-light: #fafafa;
+  --color-background-alt: #eeeeee;
+  --color-background-row0: #F7F8F9;
+  --color-accent: #7F9DB9;
+  --color-link: #08c;
+  --color-install-border: #99CCFF;
+  --color-install-bg: #D9D9FF;
+}
+
 div.current .panelform {
   border: 1px solid #CCCCCC !important;
 }

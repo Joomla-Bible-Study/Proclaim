@@ -1,3 +1,20 @@
+/* CSS Custom Properties */
+:root {
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray-dark: #666666;
+  --color-gray-medium: #707070;
+  --color-gray-light: #999999;
+  --color-gray-border: #C5C1BE;
+  --color-off-white: #fffff0;
+  --color-background-light: #eeeeee;
+  --color-background-cell: #e3e2e2;
+  --color-scripture: #c02121;
+  --color-pagelinks-bg: #F2F2F2;
+  --color-dropdowns-bg: #A9A9A9;
+  --transition-default: all 0.5s;
+}
+
 #bsm_teachertable {
   margin: 0;
   border-collapse: separate;
