@@ -9,31 +9,22 @@
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".fancybox_player").forEach(function (element) {
         element.addEventListener("click", function () {
-            const myVideo = this.getAttribute('data-src')
-            const title = this.getAttribute('title')
-            const height = this.getAttribute('pheight')
-            const width = this.getAttribute('pwidth')
-            const ptype = this.getAttribute('ptype')
-            const potext = this.getAttribute('potext')
-            const autostart = this.getAttribute('autostart')
-            const controls = this.getAttribute('data-controls') || true
-            const logo = this.getAttribute('data-logo')
-            const logolink = this.getAttribute('data-logolink') || '#'
-            const image = this.getAttribute('data-image')
-            const mute = this.getAttribute('data-mute') || false
-            console.log("myVideo value:", myVideo);
+            const src = this.getAttribute('data-src');
+            const height = this.getAttribute('data-height') || this.getAttribute('pheight');
+            const width = this.getAttribute('data-width') || this.getAttribute('pwidth');
+            const image = this.getAttribute('data-image');
+            const autoplay = this.getAttribute('autostart') === 'true';
+
             Fancybox.show([
                 {
-                    src: myVideo,
+                    src: src,
                     width: width,
                     height: height,
+                    thumb: image,
                     preload: false,
-                    img: image,
-                    controls: 0,
-                    rel: 0,
-                    fs: 0
-                },
-            ])
+                    autoStart: autoplay
+                }
+            ]);
         });
     });
 });
