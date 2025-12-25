@@ -442,6 +442,11 @@ class Cwmlisting
         // Go through and attach the media files as an array to their study
         if (($type === 'sermons') && is_array($items)) {
             foreach ($items as $item) {
+                // Skip invalid items
+                if (!is_object($item)) {
+                    continue;
+                }
+
                 $studymedia = [];
 
                 if (isset($mediafiles)) {
@@ -452,9 +457,7 @@ class Cwmlisting
                     }
                 }
 
-                if (isset($studymedia)) {
-                    $item->mediafiles = $studymedia;
-                }
+                $item->mediafiles = $studymedia;
 
                 $row[] = $this->getFluidRow(
                     $listrows,
