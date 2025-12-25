@@ -16,6 +16,7 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
 
@@ -54,7 +55,7 @@ foreach ($list as $study) {
 
         <dd class="published">
             <span class="icon-calendar icon-fw" aria-hidden="true"></span>
-            <time datetime="2022-07-14T12:19:37-07:00" itemprop="datePublished">
+            <time datetime="<?php echo HTMLHelper::_('date', $study->studydate, 'c'); ?>" itemprop="datePublished">
                 <?php
                 echo $study->studydate; ?>    </time>
         </dd>

@@ -54,7 +54,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         try {
             $data['cwmtemplate'] = Cwmparams::getTemplateparams($templateID);
         } catch (\Exception $e) {
-            $this->app->enqueueMessage($e, 'error');
+            $this->app->enqueueMessage($e->getMessage(), 'error');
         }
 
         $pageBuilder = new Cwmpagebuilder();
@@ -70,49 +70,24 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             ->getHelper('ProclaimHelper')
             ->getLatest($data['params'], $this->getApplication());
 
-        if (
-            $data['params']->get('useexpert_module') > 0 || is_string(
-                $data['params']->get('moduletemplate')
-            ) === true
-        ) {
+        if ($data['params']->get('useexpert_module') > 0 || is_string($data['params']->get('moduletemplate'))) {
             foreach ($data['list'] as $item) {
                 try {
                     $renderedPage = $pageBuilder->buildPage($item, $data['params'], $data['cwmtemplate']);
                 } catch (\Exception $e) {
-                    $this->app->enqueueMessage($e, 'error');
+                    $this->app->enqueueMessage($e->getMessage(), 'error');
+                    continue;
                 }
 
-                $item->scripture1 = $renderedPage->scripture1;
-                $item->scripture2 = $renderedPage->scripture2;
-                $item->media      = $renderedPage->media;
-
-                if (isset($renderedPage->duration)) {
-                    $item->duration = $renderedPage->duration;
-                } else {
-                    $item->duration = null;
-                }
-
-                if (isset($renderedPage->studydate)) {
-                    $item->studydate = $renderedPage->studydate;
-                } else {
-                    $item->studydate = null;
-                }
-
-                $item->topics = $renderedPage->topics;
-
-                if (isset($renderedPage->study_thumbnail)) {
-                    $item->study_thumbnail = $renderedPage->study_thumbnail;
-                } else {
-                    $item->study_thumbnail = null;
-                }
-
-                if (isset($renderedPage->series_thumbnail)) {
-                    $item->series_thumbnail = $renderedPage->series_thumbnail;
-                } else {
-                    $item->series_thumbnail = null;
-                }
-
-                $item->detailslink = $renderedPage->detailslink;
+                $item->scripture1       = $renderedPage->scripture1;
+                $item->scripture2       = $renderedPage->scripture2;
+                $item->media            = $renderedPage->media;
+                $item->duration         = $renderedPage->duration ?? null;
+                $item->studydate        = $renderedPage->studydate ?? null;
+                $item->topics           = $renderedPage->topics;
+                $item->study_thumbnail  = $renderedPage->study_thumbnail ?? null;
+                $item->series_thumbnail = $renderedPage->series_thumbnail ?? null;
+                $item->detailslink      = $renderedPage->detailslink;
             }
         }
 

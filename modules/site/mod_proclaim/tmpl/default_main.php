@@ -31,7 +31,7 @@ $Listing = new Cwmlisting();
         <div class="row-fluid">
             <div class="col-12">
                 <?php
-                echo HtmlHelper::_('content.prepare', $params->get('pageheader'), '', 'com_proclaim.module'); ?>
+                echo HTMLHelper::_('content.prepare', $params->get('pageheader'), '', 'com_proclaim.module'); ?>
             </div>
         </div>
         <?php
