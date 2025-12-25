@@ -267,7 +267,7 @@ class ProclaimIconHelper
                 $this->buttons[$key][] = $tmp;
             }
 
-            if ($params->get('show_templatecodes') && !$simple->mode) {
+            if ($params->get('show_templatecode') && !$simple->mode) {
                 $tmp = [
                     'image'   => 'icon-big fa-solid fa-file-code fa-3x',
                     'link'    => Route::_('index.php?option=com_proclaim&amp;view=cwmtemplatecodes'),
@@ -277,7 +277,7 @@ class ProclaimIconHelper
                     'group'   => 'MOD_PROCLAIMICON_SITE',
                 ];
 
-                if ((int) $params->get('show_templatecodes') === 2) {
+                if ((int) $params->get('show_templatecode') === 2) {
                     $tmp['ajaxurl'] = 'index.php?option=com_proclaim&amp;task=cwmtemplatecodes.getQuickIconTemplateCodes&amp;format=json';
                 }
 
