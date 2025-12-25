@@ -242,7 +242,7 @@ class CwmadminModel extends AdminModel
         }
 
         try {
-            $this->changeSet = ChangeSet::getInstance(Factory::getDbo(), $folder);
+            $this->changeSet = ChangeSet::getInstance(Factory::getContainer()->get('DatabaseDriver'), $folder);
         } catch (\RuntimeException $e) {
             Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
 
