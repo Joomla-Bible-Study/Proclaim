@@ -24,7 +24,7 @@ HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('jquery.framework');
 HTMLHelper::_('formbehavior.chosen', 'select');
 
-Factory::getDocument()->addScriptDeclaration(
+Factory::getApplication()->getDocument()->addScriptDeclaration(
     "
 		Joomla.submitbutton = function(task)
 		{

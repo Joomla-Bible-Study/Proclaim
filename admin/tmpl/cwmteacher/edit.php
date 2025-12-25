@@ -17,6 +17,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
 
 $app = Factory::getApplication();
 $input = $app->input;
@@ -174,7 +175,7 @@ echo Route::_('index.php?option=com_proclaim&layout=' . $layout . $tmpl . '&id='
                         <?php
                         if ($this->item->teacher_thumbnail) : ?>
                             <img src="<?php
-                            echo JUri::root() . $this->item->teacher_thumbnail; ?>"
+                            echo Uri::root() . $this->item->teacher_thumbnail; ?>"
                                  alt="<?php
                                  echo $this->form->getValue('teachername'); ?>"
                                  class="thumbnail center"/>
