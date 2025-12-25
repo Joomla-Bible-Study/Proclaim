@@ -111,55 +111,7 @@
   height: 15px;
 }
 
-/* Podcast Subscribe */
-.podcastsubscribe {
-  clear: both;
-  display: table;
-  width: 100%;
-  background-color: var(--color-background-light);
-  border-radius: 15px;
-  border: 1px solid grey;
-  padding: 1em;
-}
-.podcastsubscribe .image {
-  float: left;
-  padding-right: 5px;
-  display: inline;
-}
-.podcastsubscribe .image .text {
-  display: inline;
-  position: relative;
-  right: 50px;
-  bottom: -10px;
-}
-.podcastsubscribe .prow {
-  display: table-row;
-  width: auto;
-  clear: both;
-}
-.podcastsubscribe .pcell {
-  display: table-cell;
-  float: left;
-  background-color: var(--color-background-cell);
-  border-radius: 15px;
-  border: 1px solid grey;
-  padding: 1em;
-  margin-right: 5px;
-  margin-left: 0 !important;
-}
-
 /* Listing Page */
-.podcastheader {
-  font-weight: bold;
-}
-.podcastheader h3 {
-  display: inline;
-  text-align: center;
-}
-.fltlft {
-  float: left;
-  padding-right: 5px;
-}
 div.listingfooter ul li {
   list-style: none outside none;
 }
