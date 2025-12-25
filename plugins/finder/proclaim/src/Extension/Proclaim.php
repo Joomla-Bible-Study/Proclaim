@@ -89,7 +89,13 @@ final class Proclaim extends Adapter implements SubscriberInterface
      */
     protected $autoloadLanguage = true;
 
-    protected int $old_seriesAccess;
+    /**
+     * The old series access level before saving.
+     *
+     * @var    int
+     * @since  7.1.0
+     */
+    protected int $old_seriesAccess = 0;
 
     /**
      * Returns an array of events this subscriber will listen to.
@@ -202,8 +208,8 @@ final class Proclaim extends Adapter implements SubscriberInterface
         // Check for access changes in the Series.
         if ($context === 'com_proclaim.series') {
             // Check if the access levels are different.
-            if (!$isNew && $this->old_seriesAccess !== $row->access) {
-                $this->SeriesAccessChange($row);
+            if (!$isNew && $this->old_seriesAccess !== (int) $row->access) {
+                $this->seriesAccessChange($row);
             }
         }
     }
@@ -288,7 +294,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
         $this->db->setQuery($query);
 
         // Store the access level to determine if it changes
-        $this->old_cataccess = $this->db->loadResult();
+        $this->old_seriesAccess = (int) $this->db->loadResult();
     }
 
     /**
@@ -375,8 +381,8 @@ final class Proclaim extends Adapter implements SubscriberInterface
         // Item and category published state
         $query->select('a.' . $this->state_field . ' AS state, s.published AS series_state');
 
-        // Item and category access levels
-        $query->select('a.access, c.access AS cat_access')
+        // Item and series access levels
+        $query->select('a.access, s.access AS series_access')
             ->from($this->table . ' AS a')
             ->join('LEFT', '#__bsms_series AS s ON s.id = a.series_id');
 
@@ -410,9 +416,6 @@ final class Proclaim extends Adapter implements SubscriberInterface
         $item->params->merge($registry);
 
         $item->metadata = new Registry($item->metadata);
-
-        // Get the menu title if it exists.
-        $title = $this->getItemMenuTitle($item->url);
 
         // Trigger the onContentPrepare event.
         $item->summary = Helper::prepareContent($item->summary, $item->params, $item);
@@ -469,11 +472,6 @@ final class Proclaim extends Adapter implements SubscriberInterface
             $item->addTaxonomy('Author', !empty($item->created_by_alias) ? $item->created_by_alias : $item->author, $item->state);
         }
 
-        // Add the language taxonomy data.
-        if (\in_array('language', $taxonomies, true)) {
-            $item->addTaxonomy('Language', $item->language);
-        }
-
         // Get content extras.
         Helper::getContentExtras($item);
         Helper::addCustomFields($item, 'com_proclaim.message');
@@ -498,12 +496,12 @@ final class Proclaim extends Adapter implements SubscriberInterface
         // Check if we can use the supplied SQL query.
         $query = $query instanceof QueryInterface ? $query : $db->getQuery(true)
             ->select('a.id, a.studytitle AS title, a.alias, a.studyintro AS summary, a.studytext as body')
-            ->select('a.thumbnailm')
+            ->select('a.thumbnailm, a.series_id')
             ->select('a.published AS state, a.studydate AS start_date, a.user_id')
-            ->select('a.language')
+            ->select('a.language, a.metadata')
             ->select('a.access, a.ordering, a.params')
             ->select('a.publish_up AS publish_start_date, a.publish_down AS publish_end_date')
-            ->select('s.series_text AS series, s.published AS s_state, s.access');
+            ->select('s.series_text AS series, s.published AS series_state, s.access AS series_access');
 
         // Handle the alias CASE WHEN portion of the query
         $case_when_item_alias = ' CASE WHEN ';
