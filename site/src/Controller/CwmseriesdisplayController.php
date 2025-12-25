@@ -40,7 +40,7 @@ class CwmseriesdisplayController extends BaseController
      * you will need to override it in your own controllers.
      *
      * @param   bool   $cachable   If true, the view output will be cached
-     * @param   array  $urlparams  An array of safe url parameters and their variable types, for valid values see {@link InputFilter::clean()}.
+     * @param   array  $urlparams  An array of safe URL parameters and their variable types, for valid values see {@link InputFilter::clean()}.
      *
      * @return  static  A \CwmseriesdisplayController object to support chaining.
      *

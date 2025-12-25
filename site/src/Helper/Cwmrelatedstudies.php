@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\Registry\Registry;
@@ -54,7 +55,6 @@ class Cwmrelatedstudies
         $this->score = [];
         $keywords    = (string) $params->get('metakey');
         $topics      = $row->tp_id ?? '';
-        $topicsList  = $this->getTopics();
 
         if (empty($keywords) && empty($topics) && empty($row->studyintro)) {
             return false;
@@ -83,8 +83,8 @@ class Cwmrelatedstudies
                 $this->parseKeys($keywords, $compare, (int) $study->id);
             }
 
-            if (!empty($topicsList) && !empty($study->tp_id)) {
-                $this->parseKeys($topicsList, (string) $study->tp_id, (int) $study->id);
+            if (!empty($topics) && !empty($study->tp_id)) {
+                $this->parseKeys((string) $topics, (string) $study->tp_id, (int) $study->id);
             }
         }
 
@@ -93,26 +93,6 @@ class Cwmrelatedstudies
         }
 
         return $this->getRelatedLinks((int) $row->id);
-    }
-
-    /**
-     * Get Topics for rendering.
-     *
-     * @return string
-     *
-     * @since    7.2
-     */
-    public function getTopics(): string
-    {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName('id'))
-            ->from($db->quoteName('#__bsms_topics'))
-            ->where($db->quoteName('published') . ' = 1');
-
-        $db->setQuery($query);
-
-        return implode(',', $db->loadColumn() ?: []);
     }
 
     /**
@@ -157,15 +137,11 @@ class Cwmrelatedstudies
      */
     public function parseKeys(string $source, string $compare, int $id): void
     {
-        $sourceArray  = array_map('trim', explode(',', $source));
-        $compareArray = array_map('trim', explode(',', $compare));
+        $sourceArray  = array_filter(array_map('trim', explode(',', $source)));
+        $compareArray = array_filter(array_map('trim', explode(',', $compare)));
 
-        foreach ($sourceArray as $sItem) {
-            if ($sItem !== '' && in_array($sItem, $compareArray, true)) {
-                $this->score[] = $id;
-
-                return;
-            }
+        if (array_intersect($sourceArray, $compareArray)) {
+            $this->score[] = $id;
         }
     }
 
@@ -181,9 +157,14 @@ class Cwmrelatedstudies
      */
     public function getRelatedLinks(int $id): string
     {
-        $db   = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get('DatabaseDriver');
         $this->score = array_unique($this->score);
-        $link = implode(', ', $this->score);
+
+        if (empty($this->score)) {
+            return '';
+        }
+
+        $link = implode(',', $this->score);
 
         $query = $db->getQuery(true);
         $query->select($db->quoteName(['s.studytitle', 's.alias', 's.id', 's.booknumber', 's.chapter_begin']))
@@ -200,10 +181,12 @@ class Cwmrelatedstudies
             return '';
         }
 
-        $related = '<select onchange="window.location.href=this.value" id="urlList" class="form-select chzn-color-state valid form-control-success"><option value="">' .
-            Text::_('JBS_CMN_SELECT_RELATED_STUDY') . '</option>';
-        $input   = Factory::getApplication()->getInput();
+        $input      = Factory::getApplication()->getInput();
         $templateId = $input->get('t', 1, 'int');
+
+        $options = [
+            HTMLHelper::_('select.option', '', Text::_('JBS_CMN_SELECT_RELATED_STUDY')),
+        ];
 
         foreach ($studyrecords as $studyrecord) {
             $url = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . (int) $studyrecord->id . '&t=' . $templateId);
@@ -213,11 +196,22 @@ class Cwmrelatedstudies
                 $title .= ' - ' . Text::_($studyrecord->bookname) . ' ' . $studyrecord->chapter_begin;
             }
 
-            $related .= '<option value="' . $url . '">' . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '</option>';
+            $options[] = HTMLHelper::_('select.option', $url, $title);
         }
 
-        $related .= '</select>';
+        $dropdown = HTMLHelper::_(
+            'select.genericlist',
+            $options,
+            'urlList',
+            [
+                'list.attr' => 'class="form-select chzn-color-state valid form-control-success" onchange="window.location.href=this.value"',
+                'list.select' => '',
+                'option.key' => 'value',
+                'option.text' => 'text',
+                'id' => 'urlList',
+            ]
+        );
 
-        return '<div class="related col-lg-4"><form action="#">' . $related . '</form></div>';
+        return '<div class="related col-lg-4">' . $dropdown . '</div>';
     }
 }
