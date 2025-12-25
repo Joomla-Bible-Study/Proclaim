@@ -570,22 +570,24 @@ class Cwmlisting
         $query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)');
         $query->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)');
         $query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
-        $where2   = [];
-        $subquery = '(';
+        
+        $ids = [];
 
         foreach ($medias as $media) {
             if (is_array($media)) {
                 foreach ($media as $m) {
-                    $where2[] = '#__bsms_mediafiles.id = ' . (int)$m;
+                    $ids[] = (int) $m;
                 }
             } else {
-                $where2[] = '#__bsms_mediafiles.id = ' . (int)$media;
+                $ids[] = (int) $media;
             }
         }
 
-        $subquery .= implode(' OR ', $where2);
-        $subquery .= ')';
-        $query->where($subquery);
+        if (empty($ids)) {
+            return [];
+        }
+
+        $query->where('#__bsms_mediafiles.id IN (' . implode(',', array_unique($ids)) . ')');
         $query->where('#__bsms_mediafiles.published = 1');
         $query->where(
             '#__bsms_mediafiles.language in ('
@@ -1170,12 +1172,6 @@ class Cwmlisting
         int $header,
         string $type
     ): string {
-        $registry = new Registry();
-
-        if (isset($item->params)) {
-            $registry->loadString($item->params);
-        }
-
         $data = '';
 
         // Match the data in $item to a row/col in $row->name
@@ -1682,7 +1678,7 @@ class Cwmlisting
                     if ($params->get('studyimage', '-1') !== '-1') {
                         $data = $this->useJImage(
                             'media/com_proclaim/images/stockimages/'
-                            . $registry->get('studyimage'),
+                            . $params->get('studyimage'),
                             Text::_('JBS_CMN_THUMBNAIL')
                         );
                     }
