@@ -47,7 +47,7 @@ class FiltersField extends FormField
         Text::script('COM_CONFIG_TEXT_FILTERS_NOTE');
 
         // Add Javascript
-        Factory::getDocument()->getWebAssetManager()->useScript('com_config.filters');
+        Factory::getApplication()->getDocument()->getWebAssetManager()->useScript('com_config.filters');
 
         // Get the available user groups.
         $groups = $this->getUserGroups();

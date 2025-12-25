@@ -36,7 +36,7 @@ $saveOrder = $listOrder === 'messagetype.ordering';
         <div class="filter-select fltrt">
             <select name="filter_published" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php
-                    echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
+                    echo Text::_('JOPTION_SELECT_PUBLISHED'); ?></option>
                 <?php
                 echo HtmlHelper::_(
                     'select.options',
