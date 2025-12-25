@@ -49,23 +49,10 @@ class Cwmimages
     public static function mainStudyImage(?Registry $params = null): object
     {
         if ($params === null) {
-            $database = Factory::getContainer()->get('DatabaseDriver');
-            $query    = $database->getQuery(true);
-            $query->select('*')->from('#__bsms_admin')->where('id = ' . 1);
-            $database->setQuery($query);
-            $params = $database->loadObject();
-
-            // Convert parameter fields to objects.
-            $registry = new Registry();
-            $registry->loadString($params->params);
-            $params = $registry;
+            $params = Cwmparams::getAdmin()->params;
         }
 
-        if (!$params->get('default_main_image')) {
-            $path = 'media/com_proclaim/images/openbible.png';
-        } else {
-            $path = $params->get('default_main_image');
-        }
+        $path = $params->get('default_main_image') ?: 'media/com_proclaim/images/openbible.png';
 
         return self::getImagePath($path);
     }
@@ -90,22 +77,26 @@ class Cwmimages
     {
         $tmp         = new \stdClass();
         $tmp->path   = null;
-        $tmp->size   = null;
+        $tmp->size   = 0;
         $tmp->width  = 0;
         $tmp->height = 0;
 
-        $path       = HTMLHelper::_('cleanImageURL', $path);
-        $FileExists = file_exists(JPATH_ROOT . DIRECTORY_SEPARATOR . $path->url);
-        $IsFile     = is_file(JPATH_ROOT . DIRECTORY_SEPARATOR . $path->url);
+        if (empty($path)) {
+            return $tmp;
+        }
 
-        if ($path->attributes['width'] === 0 && $IsFile) {
-            $tmp       = Image::getImageFileProperties(JPATH_ROOT . DIRECTORY_SEPARATOR . $path->url);
-            $tmp->path = $path->url;
-        } elseif ($FileExists) {
-            $tmp->path   = $path->url;
-            $tmp->size   = filesize(JPATH_ROOT . DIRECTORY_SEPARATOR . $tmp->path);
-            $tmp->width  = $path->attributes['width'];
-            $tmp->height = $path->attributes['height'];
+        $imagePath  = HTMLHelper::_('cleanImageURL', $path);
+        $fullPath   = JPATH_ROOT . DIRECTORY_SEPARATOR . $imagePath->url;
+        $fileExists = file_exists($fullPath) && is_file($fullPath);
+
+        if ($imagePath->attributes['width'] === 0 && $fileExists) {
+            $tmp       = Image::getImageFileProperties($fullPath);
+            $tmp->path = $imagePath->url;
+        } elseif ($fileExists) {
+            $tmp->path   = $imagePath->url;
+            $tmp->size   = filesize($fullPath);
+            $tmp->width  = (int) $imagePath->attributes['width'];
+            $tmp->height = (int) $imagePath->attributes['height'];
         }
 
         return $tmp;
@@ -129,11 +120,10 @@ class Cwmimages
      */
     public static function getStudyThumbnail(string $image = 'openbible.png'): object
     {
-        $folder = self::getStudiesImageFolder();
-        $path   = $folder . '/' . $image;
+        $path = $image;
 
-        if (substr_count($image, '/')) {
-            $path = $image;
+        if (!str_contains($image, '/')) {
+            $path = self::getStudiesImageFolder() . '/' . $image;
         }
 
         return self::getImagePath($path);
@@ -148,7 +138,7 @@ class Cwmimages
      */
     private static function getStudiesImageFolder(): string
     {
-        return 'images';
+        return Cwmparams::getAdmin()->params->get('image_folder', 'images');
     }
 
     /**
@@ -173,11 +163,10 @@ class Cwmimages
             return self::getImagePath('');
         }
 
-        $folder = self::getSeriesImageFolder();
-        $path   = $folder . '/' . $image;
+        $path = $image;
 
-        if (substr_count($image, '/')) {
-            $path = $image;
+        if (!str_contains($image, '/')) {
+            $path = self::getSeriesImageFolder() . '/' . $image;
         }
 
         return self::getImagePath($path);
@@ -192,7 +181,7 @@ class Cwmimages
      */
     private static function getSeriesImageFolder(): string
     {
-        return 'images';
+        return Cwmparams::getAdmin()->params->get('series_image_folder', 'images');
     }
 
     /**
@@ -228,7 +217,7 @@ class Cwmimages
      */
     private static function getTeacherImageFolder(): string
     {
-        return 'images';
+        return Cwmparams::getAdmin()->params->get('teacher_image_folder', 'images');
     }
 
     /**
@@ -252,24 +241,23 @@ class Cwmimages
      */
     public static function getTeacherImage(?string $image1 = null, ?string $image2 = null): object
     {
-        $folder = self::getTeacherImageFolder();
-        $path   = '';
+        $path = '';
 
         if ($image1 === null && $image2 === null) {
             return self::getImagePath($path);
         }
 
-        if ($image2 && (!$image1 || strncmp($image1, '- ', 2) === 0)) {
+        if ($image2 && (!$image1 || str_starts_with($image1, '- '))) {
             $path = $image2;
 
-            if (!substr_count((string) $path, '/')) {
-                $path = $folder . '/' . $image2;
+            if (!str_contains((string) $path, '/')) {
+                $path = self::getTeacherImageFolder() . '/' . $image2;
             }
         } else {
-            $path = $folder . '/' . $image1;
+            $path = (string) $image1;
 
-            if (substr_count((string) $image1, '/') > 0) {
-                $path = $image1;
+            if (!str_contains($path, '/')) {
+                $path = self::getTeacherImageFolder() . '/' . $image1;
             }
         }
 
@@ -355,17 +343,17 @@ class Cwmimages
             return self::getImagePath('');
         }
 
-        if (!$image1 || strncmp($image1, '- ', 2) === 0) {
-            $path = $image2;
+        if (!$image1 || str_starts_with($image1, '- ')) {
+            $path = (string) $image2;
 
-            if (!substr_count((string) $path, '/')) {
+            if (!str_contains($path, '/')) {
                 $path = $folder . '/' . $image2;
             }
         } else {
-            $path = $folder . '/' . $image1;
+            $path = $image1;
 
-            if (substr_count($image1, '/') > 0) {
-                $path = $image1;
+            if (!str_contains($image1, '/')) {
+                $path = $folder . '/' . $image1;
             }
         }
 
