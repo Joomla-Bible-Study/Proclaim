@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\Registry\Registry;
@@ -30,7 +31,7 @@ use Joomla\Registry\Registry;
  */
 class Cwmstats
 {
-    /** @var int used to store query of messages
+    /** @var int used to store the query of messages
      *
      * @since 9.0.0
      */
@@ -53,7 +54,7 @@ class Cwmstats
      *
      * @param   int  $id  ID number of study
      *
-     * @return int Total plays form the media
+     * @return int Total plays from the media
      *
      * @since 9.0.0
      */
@@ -62,13 +63,13 @@ class Cwmstats
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query
-            ->select('sum(m.plays), m.study_id, m.published, s.id FROM #__bsms_mediafiles AS m')
-            ->leftJoin('#__bsms_studies AS s ON (m.study_id = s.id)')
-            ->where('m.study_id = ' . $db->q($id));
+            ->select('SUM(' . $db->quoteName('m.plays') . ')')
+            ->from($db->quoteName('#__bsms_mediafiles', 'm'))
+            ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('m.study_id') . ' = ' . $db->quoteName('s.id'))
+            ->where($db->quoteName('m.study_id') . ' = ' . (int) $id);
         $db->setQuery($query);
-        $plays = $db->loadResult();
 
-        return (int)$plays;
+        return (int) $db->loadResult();
     }
 
     /**
@@ -88,28 +89,22 @@ class Cwmstats
             self::$total_messages_end   = $end;
 
             $db    = Factory::getContainer()->get('DatabaseDriver');
-            $where = [];
-
-            if (!empty($start)) {
-                $where[] = 'time > UNIX_TIMESTAMP(\'' . $start . '\')';
-            }
-
-            if (!empty($end)) {
-                $where[] = 'time < UNIX_TIMESTAMP(\'' . $end . '\')';
-            }
-
             $query = $db->getQuery(true);
             $query
                 ->select('COUNT(*)')
-                ->from('#__bsms_studies')
-                ->where('published =' . $db->q('1'));
+                ->from($db->quoteName('#__bsms_studies'))
+                ->where($db->quoteName('published') . ' = 1');
 
-            if (count($where) > 0) {
-                $query->where(implode(' AND ', $where));
+            if (!empty($start)) {
+                $query->where($db->quoteName('time') . ' > UNIX_TIMESTAMP(' . $db->quote($start) . ')');
+            }
+
+            if (!empty($end)) {
+                $query->where($db->quoteName('time') . ' < UNIX_TIMESTAMP(' . $db->quote($end) . ')');
             }
 
             $db->setQuery($query);
-            self::$total_messages = (int)$db->loadResult();
+            self::$total_messages = (int) $db->loadResult();
         }
 
         return self::$total_messages;
@@ -131,22 +126,22 @@ class Cwmstats
         $query = $db->getQuery(true);
         $query
             ->select('COUNT(*)')
-            ->from('#__bsms_studies')
-            ->leftJoin('#__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)')
-            ->leftJoin('#__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)')
-            ->where('#__bsms_topics.published = ' . $db->q('1'));
+            ->from($db->quoteName('#__bsms_studies', 's'))
+            ->leftJoin($db->quoteName('#__bsms_studytopics', 'st') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('st.study_id'))
+            ->leftJoin($db->quoteName('#__bsms_topics', 't') . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('st.topic_id'))
+            ->where($db->quoteName('t.published') . ' = 1');
 
         if (!empty($start)) {
-            $query->where('time > UNIX_TIMESTAMP(\'' . $start . '\')');
+            $query->where($db->quoteName('s.time') . ' > UNIX_TIMESTAMP(' . $db->quote($start) . ')');
         }
 
         if (!empty($end)) {
-            $query->where('time < UNIX_TIMESTAMP(\'' . $end . '\')');
+            $query->where($db->quoteName('s.time') . ' < UNIX_TIMESTAMP(' . $db->quote($end) . ')');
         }
 
         $db->setQuery($query);
 
-        return (int)$db->loadResult();
+        return (int) $db->loadResult();
     }
 
     /**
@@ -161,19 +156,19 @@ class Cwmstats
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query
-            ->select('id, studytitle, studydate, hits')
-            ->from('#__bsms_studies')
-            ->where('published = ' . $db->q('1'))
-            ->where('hits > ' . $db->q('0'))
-            ->order('hits desc');
-        $db->setQuery($query, 0, 1);
+            ->select($db->quoteName(['id', 'studytitle', 'studydate', 'hits']))
+            ->from($db->quoteName('#__bsms_studies'))
+            ->where($db->quoteName('published') . ' = 1')
+            ->where($db->quoteName('hits') . ' > 0')
+            ->order($db->quoteName('hits') . ' DESC');
+        $db->setQuery($query, 0, 5);
         $results     = $db->loadObjectList();
         $top_studies = '';
 
         foreach ($results as $result) {
-            $top_studies .= $result->hits . ' ' . Text::_('JBS_CMN_HITS') .
-                ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . $result->id . '">' .
-                $result->studytitle . '</a> - ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
+            $top_studies .= (int) $result->hits . ' ' . Text::_('JBS_CMN_HITS') .
+                ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . (int) $result->id . '">' .
+                htmlspecialchars($result->studytitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
         }
 
         return $top_studies;
@@ -192,11 +187,11 @@ class Cwmstats
         $query = $db->getQuery(true);
         $query
             ->select('COUNT(*)')
-            ->from('#__bsms_comments')
-            ->where('published = ' . $db->q('1'));
+            ->from($db->quoteName('#__bsms_comments'))
+            ->where($db->quoteName('published') . ' = 1');
         $db->setQuery($query);
 
-        return (int)$db->loadResult();
+        return (int) $db->loadResult();
     }
 
     /**
@@ -208,17 +203,17 @@ class Cwmstats
      */
     public static function getTopThirtyDays(): string
     {
-        $month      = mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"));
+        $month      = mktime(0, 0, 0, (int) date("m") - 1, (int) date("d"), (int) date("Y"));
         $last_month = date("Y-m-d 00:00:01", $month);
         $db         = Factory::getContainer()->get('DatabaseDriver');
         $query      = $db->getQuery(true);
         $query
-            ->select('id, studytitle, studydate, hits')
-            ->from('#__bsms_studies')
-            ->where('published = ' . $db->q('1'))
-            ->where('hits > ' . $db->q('0'))
-            ->where('UNIX_TIMESTAMP(studydate) > UNIX_TIMESTAMP( ' . $db->q($last_month) . ' )')
-            ->order('hits desc');
+            ->select($db->quoteName(['id', 'studytitle', 'studydate', 'hits']))
+            ->from($db->quoteName('#__bsms_studies'))
+            ->where($db->quoteName('published') . ' = 1')
+            ->where($db->quoteName('hits') . ' > 0')
+            ->where($db->quoteName('studydate') . ' > ' . $db->quote($last_month))
+            ->order($db->quoteName('hits') . ' DESC');
         $db->setQuery($query, 0, 5);
         $results     = $db->loadObjectList();
         $top_studies = '';
@@ -227,9 +222,9 @@ class Cwmstats
             $top_studies = Text::_('JBS_CPL_NO_INFORMATION');
         } else {
             foreach ($results as $result) {
-                $top_studies .= $result->hits . ' ' . Text::_('JBS_CMN_HITS') .
-                    ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . $result->id . '">' .
-                    $result->studytitle . '</a> - ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
+                $top_studies .= (int) $result->hits . ' ' . Text::_('JBS_CMN_HITS') .
+                    ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . (int) $result->id . '">' .
+                    htmlspecialchars($result->studytitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
             }
         }
 
@@ -249,11 +244,11 @@ class Cwmstats
         $query = $db->getQuery(true);
         $query
             ->select('COUNT(*)')
-            ->from('#__bsms_mediafiles')
-            ->where('published = ' . 1);
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('published') . ' = 1');
         $db->setQuery($query);
 
-        return (int)$db->loadResult();
+        return (int) $db->loadResult();
     }
 
     /**
@@ -268,15 +263,15 @@ class Cwmstats
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query
-            ->select(
-                '#__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished,' .
-                '#__bsms_studies.id AS sid, #__bsms_studies.studytitle AS stitle, #__bsms_studies.studydate AS sdate '
-            )
-            ->from('#__bsms_mediafiles')
-            ->leftJoin('#__bsms_studies ON (#__bsms_mediafiles.study_id = #__bsms_studies.id)')
-            ->where('#__bsms_mediafiles.published = 1 ')
-            ->where('downloads > 0')
-            ->order('downloads desc');
+            ->select($db->quoteName(['mf.downloads']))
+            ->select($db->quoteName('s.id', 'sid'))
+            ->select($db->quoteName('s.studytitle', 'stitle'))
+            ->select($db->quoteName('s.studydate', 'sdate'))
+            ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
+            ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('mf.study_id') . ' = ' . $db->quoteName('s.id'))
+            ->where($db->quoteName('mf.published') . ' = 1')
+            ->where($db->quoteName('mf.downloads') . ' > 0')
+            ->order($db->quoteName('mf.downloads') . ' DESC');
 
         $db->setQuery($query, 0, 5);
         $results     = $db->loadObjectList();
@@ -284,8 +279,8 @@ class Cwmstats
 
         foreach ($results as $result) {
             $top_studies .=
-                $result->downloads . ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;d=' .
-                $result->sid . '">' . $result->stitle . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) .
+                (int) $result->downloads . ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' .
+                (int) $result->sid . '">' . htmlspecialchars($result->stitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) .
                 '<br>';
         }
 
@@ -301,21 +296,22 @@ class Cwmstats
      */
     public static function getDownloadsLastThreeMonths(): string
     {
-        $month     = mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"));
+        $month     = mktime(0, 0, 0, (int) date("m") - 3, (int) date("d"), (int) date("Y"));
         $lastmonth = date("Y-m-d 00:00:01", $month);
         $db        = Factory::getContainer()->get('DatabaseDriver');
         $query     = $db->getQuery(true);
         $query
-            ->select(
-                '#__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished,' .
-                ' #__bsms_studies.id AS sid, #__bsms_studies.studytitle AS stitle, #__bsms_studies.studydate AS sdate '
-            )
-            ->from('#__bsms_mediafiles')
-            ->leftJoin('#__bsms_studies ON (#__bsms_mediafiles.study_id = #__bsms_studies.id)')
-            ->where('#__bsms_mediafiles.published = ' . $db->q('1'))
-            ->where('downloads > ' . (int)$db->q('0'))
-            ->where('UNIX_TIMESTAMP(createdate) > UNIX_TIMESTAMP( ' . $db->q($lastmonth) . ' )')
-            ->order('downloads DESC');
+            ->select($db->quoteName(['mf.downloads']))
+            ->select($db->quoteName('s.id', 'sid'))
+            ->select($db->quoteName('s.studytitle', 'stitle'))
+            ->select($db->quoteName('s.studydate', 'sdate'))
+            ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
+            ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('mf.study_id') . ' = ' . $db->quoteName('s.id'))
+            ->where($db->quoteName('mf.published') . ' = 1')
+            ->where($db->quoteName('mf.downloads') . ' > 0')
+            ->where($db->quoteName('mf.createdate') . ' > ' . $db->quote($lastmonth))
+            ->order($db->quoteName('mf.downloads') . ' DESC');
+
         $db->setQuery($query, 0, 5);
         $results     = $db->loadObjectList();
         $top_studies = '';
@@ -324,9 +320,9 @@ class Cwmstats
             $top_studies = Text::_('JBS_CPL_NO_INFORMATION');
         } else {
             foreach ($results as $result) {
-                $top_studies .= $result->downloads . ' ' . Text::_('JBS_CMN_HITS') .
-                    ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . $result->sid . '">' .
-                    $result->stitle . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) . '<br>';
+                $top_studies .= (int) $result->downloads . ' ' . Text::_('JBS_CMN_HITS') .
+                    ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . (int) $result->sid . '">' .
+                    htmlspecialchars($result->stitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) . '<br>';
             }
         }
 
@@ -345,13 +341,13 @@ class Cwmstats
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query
-            ->select('SUM(downloads)')
-            ->from('#__bsms_mediafiles')
-            ->where('published = ' . 1)
-            ->where('downloads > ' . 0);
+            ->select('SUM(' . $db->quoteName('downloads') . ')')
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('published') . ' = 1')
+            ->where($db->quoteName('downloads') . ' > 0');
         $db->setQuery($query);
 
-        return (int)$db->loadResult();
+        return (int) $db->loadResult();
     }
 
     /**
@@ -366,52 +362,43 @@ class Cwmstats
      */
     public static function getTopScore(): string
     {
-        $final           = [];
-        $top_score_table = '';
-        $format          = Cwmparams::getAdmin()->params->get('format_popular', '0');
-        $db              = Factory::getContainer()->get('DatabaseDriver');
-        $query           = $db->getQuery(true);
-        $query
-            ->select('study_id, sum(downloads + plays) as added ')
-            ->from('#__bsms_mediafiles')
-            ->where('published = ' . 1)
-            ->group('study_id')
+        $admin = Cwmparams::getAdmin();
+        $format = (int) $admin->params->get('format_popular', 0);
+        $db = Factory::getContainer()->get('DatabaseDriver');
+
+        $query = $db->getQuery(true);
+        $query->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits']))
+            ->select('SUM(' . $db->quoteName('mf.downloads') . ' + ' . $db->quoteName('mf.plays') . ') AS added')
+            ->from($db->quoteName('#__bsms_studies', 's'))
+            ->join('INNER', $db->quoteName('#__bsms_mediafiles', 'mf') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
+            ->where($db->quoteName('mf.published') . ' = 1')
+            ->group($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits']))
             ->order('added DESC');
-        $db->setQuery($query);
-        $results = $db->loadAssocList();
-        array_splice($results, 5);
 
-        foreach ($results as $key => $result) {
-            $query = $db->getQuery(true);
-            $query
-                ->select(
-                    '#__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.hits,' .
-                    '#__bsms_studies.id, #__bsms_mediafiles.study_id from #__bsms_studies'
-                )
-                ->leftJoin('#__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)')
-                ->where('#__bsms_mediafiles.study_id = ' . (int)$result['study_id']);
-            $db->setQuery($query);
-            $hits = $db->loadObject();
+        $db->setQuery($query, 0, 10); // Get more to account for re-sorting if hits are included
+        $results = $db->loadObjectList();
 
-            if ($hits) {
-                if ($format < 1) {
-                    $total = $result['added'] + $hits->hits;
-                } else {
-                    $total = $result->added;
-                }
+        $final = [];
 
-                $link    = ' <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . $hits->id . '">' .
-                    $hits->studytitle . '</a> ' . date('Y-m-d', strtotime($hits->studydate)) . '<br>';
-                $final2  = ['total' => $total, 'link' => $link];
-                $final[] = $final2;
-            }
+        foreach ($results as $result) {
+            $total = ($format < 1) ? ((int) $result->added + (int) $result->hits) : (int) $result->added;
+            $link = ' <a href="' . Route::_('index.php?option=com_proclaim&task=message.edit&id=' . (int) $result->id) . '">' .
+                htmlspecialchars($result->studytitle, ENT_QUOTES, 'UTF-8') . '</a> ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
+            $final[] = ['total' => $total, 'link' => $link];
         }
 
-        rsort($final);
-        array_splice($final, 5);
+        // Re-sort by total descending
+        usort($final, function ($a, $b) {
+            return $b['total'] <=> $a['total'];
+        });
 
-        foreach ($final as $value) {
-            $top_score_table = implode('', $value);
+        // Slice to top 5
+        $final = array_slice($final, 0, 5);
+
+        $top_score_table = '';
+
+        foreach ($final as $item) {
+            $top_score_table .= (string) $item['total'] . ' ' . $item['link'];
         }
 
         return $top_score_table;
@@ -446,17 +433,17 @@ class Cwmstats
         $query->select([
             'COUNT(*) as total',
             // Player counts using JSON_EXTRACT (MySQL 5.7+)
-            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.player")) IN ("0", "null") OR JSON_EXTRACT(params, "$.player") IS NULL THEN 1 ELSE 0 END) as player_none',
-            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.player")) = "100" THEN 1 ELSE 0 END) as player_global',
-            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.player")) = "1" THEN 1 ELSE 0 END) as player_internal',
-            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.player")) = "3" THEN 1 ELSE 0 END) as player_av',
-            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.player")) = "7" THEN 1 ELSE 0 END) as player_legacy',
-            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.player")) = "8" THEN 1 ELSE 0 END) as player_embed',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.player")) IN ("0", "null") OR JSON_EXTRACT(' . $db->quoteName('params') . ', "$.player") IS NULL THEN 1 ELSE 0 END) as player_none',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.player")) = "100" THEN 1 ELSE 0 END) as player_global',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.player")) = "1" THEN 1 ELSE 0 END) as player_internal',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.player")) = "3" THEN 1 ELSE 0 END) as player_av',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.player")) = "7" THEN 1 ELSE 0 END) as player_legacy',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.player")) = "8" THEN 1 ELSE 0 END) as player_embed',
             // Popup counts
-            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.popup")) IN ("0", "100", "null") OR JSON_EXTRACT(params, "$.popup") IS NULL THEN 1 ELSE 0 END) as popup_none',
-            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.popup")) = "1" THEN 1 ELSE 0 END) as popup_popup',
-            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.popup")) = "2" THEN 1 ELSE 0 END) as popup_inline',
-            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(params, "$.popup")) = "3" THEN 1 ELSE 0 END) as popup_squeezebox',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.popup")) IN ("0", "100", "null") OR JSON_EXTRACT(' . $db->quoteName('params') . ', "$.popup") IS NULL THEN 1 ELSE 0 END) as popup_none',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.popup")) = "1" THEN 1 ELSE 0 END) as popup_popup',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.popup")) = "2" THEN 1 ELSE 0 END) as popup_inline',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.popup")) = "3" THEN 1 ELSE 0 END) as popup_squeezebox',
         ])
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->where($db->quoteName('published') . ' = 1');
@@ -471,16 +458,16 @@ class Cwmstats
         }
 
         self::$mediaStats = $result ?: [
-            'total' => 0,
-            'player_none' => 0,
-            'player_global' => 0,
-            'player_internal' => 0,
-            'player_av' => 0,
-            'player_legacy' => 0,
-            'player_embed' => 0,
-            'popup_none' => 0,
-            'popup_popup' => 0,
-            'popup_inline' => 0,
+            'total'            => 0,
+            'player_none'      => 0,
+            'player_global'    => 0,
+            'player_internal'  => 0,
+            'player_av'        => 0,
+            'player_legacy'    => 0,
+            'player_embed'     => 0,
+            'popup_none'       => 0,
+            'popup_popup'      => 0,
+            'popup_inline'     => 0,
             'popup_squeezebox' => 0,
         ];
 
@@ -636,10 +623,10 @@ class Cwmstats
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query
-            ->select('id, state, title')
-            ->from('#__scheduler_tasks')
-            ->where('type = ' . $db->q('proclaim.podcast'))
-            ->order('state DESC');
+            ->select($db->quoteName(['id', 'state', 'title']))
+            ->from($db->quoteName('#__scheduler_tasks'))
+            ->where($db->quoteName('type') . ' = ' . $db->quote('proclaim.podcast'))
+            ->order($db->quoteName('state') . ' DESC');
         $db->setQuery($query);
 
         if (!$PodcastTask = $db->loadObject()) {
@@ -666,19 +653,19 @@ class Cwmstats
                 break;
         }
 
-        $return = "<div style='float: left; padding: 10px;'>";
+        $return = '<div style="float: left; padding: 10px;">';
+
         if ($states->state !== 'JBS_CMN_TASK_NOT_CREATED') {
-            $return .= "<a href=\"" . Route::_('index.php?option=com_scheduler&amp;task=task.edit&id=' . $PodcastTask->id) . "\" target=\"_blank\">";
+            $return .= '<a href="' . Route::_('index.php?option=com_scheduler&task=task.edit&id=' . (int) $PodcastTask->id) . '" target="_blank">';
         } else {
-            $return .= "<a href=\"" . Route::_('index.php?option=com_scheduler&amp;view=tasks') . "\" target=\"_blank\">";
+            $return .= '<a href="' . Route::_('index.php?option=com_scheduler&view=tasks') . '" target="_blank">';
         }
 
-        $return .= "<button type='button' class='btn" . $states->buttonstate . "'><i class='icon-clock' title='Clock showing time'></i>" .
-            Text::_('JBS_CMN_PODCAST_TASK_STATUS') . "<strong>" . Text::_($states->state) . "</strong></button>";
+        $return .= '<button type="button" class="btn' . $states->buttonstate . '"><i class="icon-clock" title="Clock showing time"></i>' .
+            Text::_('JBS_CMN_PODCAST_TASK_STATUS') . ' <strong>' . Text::_($states->state) . '</strong></button>';
 
-        $return .= "</a>";
-
-        $return .= "</div>";
+        $return .= '</a>';
+        $return .= '</div>';
 
         return $return;
     }
@@ -697,82 +684,77 @@ class Cwmstats
         $t     = $input->get('t', 1, 'int');
 
         $admin = Cwmparams::getAdmin();
-        $limit = $admin->params->get('popular_limit', '25');
-        $top   = '<select onchange="goTo()" id="urlList" class="form-select chzn-color-state valid form-control-success" size="1" aria-invalid="false"><option value="">' .
-            Text::_('JBS_CMN_SELECT_POPULAR_STUDY') . '</option>';
-        $final = [];
+        $limit = (int) $admin->params->get('popular_limit', 25);
+        $format = (int) $admin->params->get('format_popular', 0);
 
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select('m.study_id, s.access, s.published AS spub, sum(m.downloads + m.plays) as added')
-            ->from('#__bsms_mediafiles AS m')
-            ->leftJoin('#__bsms_studies AS s ON (m.study_id = s.id)')
-            ->where('m.published = 1 GROUP BY m.study_id');
-        $db->setQuery($query);
-        $format = $admin->params->get('format_popular', '0');
+        $query->select($db->quoteName(['s.id', 's.studytitle', 's.alias', 's.hits', 's.studydate', 's.access']))
+            ->select('SUM(' . $db->quoteName('m.downloads') . ' + ' . $db->quoteName('m.plays') . ') as added')
+            ->from($db->quoteName('#__bsms_mediafiles', 'm'))
+            ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('m.study_id') . ' = ' . $db->quoteName('s.id'))
+            ->where($db->quoteName('m.published') . ' = 1')
+            ->where($db->quoteName('s.published') . ' = 1')
+            ->group($db->quoteName(['s.id', 's.studytitle', 's.alias', 's.hits', 's.studydate', 's.access']));
 
-        $items = $db->loadObjectList();
+        $db->setQuery($query);
+        $items = $db->loadObjectList() ?: [];
 
         // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user   = Factory::getApplication()->getIdentity();
         $groups = $user->getAuthorisedViewLevels();
 
-        foreach ($items as $i => $iValue) {
-            if (($iValue->access > 1) && !in_array($iValue->access, $groups, true)) {
-                unset($items[$i]);
-            }
-        }
+        $final = [];
 
-        foreach ($items as $result) {
-            $query = $db->getQuery(true);
-            $query->select(
-                '#__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.alias,
-							#__bsms_studies.hits, #__bsms_studies.id, #__bsms_mediafiles.study_id'
-            )
-                ->from('#__bsms_studies')
-                ->leftJoin('#__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)')
-                ->where('#__bsms_mediafiles.study_id = ' . (int)$result->study_id);
-            $db->setQuery($query);
-            $hits = $db->loadObject();
-
-            if (!$hits) {
-                return false;
+        foreach ($items as $item) {
+            if (($item->access > 1) && !in_array($item->access, $groups, true)) {
+                continue;
             }
 
-            if (!$hits->studytitle) {
-                $name = $hits->id;
-            } else {
-                $name = $hits->studytitle;
-            }
+            $name  = $item->studytitle ?: $item->id;
+            $total = ($format < 1) ? ((int) $item->added + (int) $item->hits) : (int) $item->added;
+            $slug  = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
+                . str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
 
-            if ($format < 1) {
-                $total = $result->added + $hits->hits;
-            } else {
-                $total = $result->added;
-            }
-
-            $hits->slug = $hits->alias ? ($hits->id . ':' . $hits->alias) : $hits->id . ':'
-                . str_replace(' ', '-', htmlspecialchars_decode($hits->studytitle, ENT_QUOTES));
-
-            $selectvalue   = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $hits->slug . '&t=' . $t);
+            $selectvalue   = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $slug . '&t=' . $t);
             $selectdisplay = $name . ' - ' . Text::_('JBS_CMN_SCORE') . ': ' . $total;
-            $final2        = [
+
+            $final[] = [
                 'score'   => $total,
                 'select'  => $selectvalue,
                 'display' => $selectdisplay,
             ];
-            $final[]       = $final2;
         }
 
-        rsort($final);
-        array_splice($final, $limit);
+        // Sort by score descending
+        usort($final, function ($a, $b) {
+            return $b['score'] <=> $a['score'];
+        });
+
+        // Slice to limit
+        if ($limit > 0) {
+            $final = array_slice($final, 0, $limit);
+        }
+
+        $options = [
+            HTMLHelper::_('select.option', '', Text::_('JBS_CMN_SELECT_POPULAR_STUDY')),
+        ];
 
         foreach ($final as $topscore) {
-            $top .= '<option value="' . $topscore['select'] . '">' . $topscore['display'] . '</option>';
+            $options[] = HTMLHelper::_('select.option', $topscore['select'], $topscore['display']);
         }
 
-        $top .= '</select>';
-
-        return $top;
+        return HTMLHelper::_(
+            'select.genericlist',
+            $options,
+            'urlList',
+            [
+                'list.attr'   => 'class="form-select chzn-color-state valid form-control-success" onchange="window.location.href=this.value" size="1"',
+                'list.select' => '',
+                'option.key'  => 'value',
+                'option.text' => 'text',
+                'id'          => 'urlList',
+            ]
+        );
     }
 }

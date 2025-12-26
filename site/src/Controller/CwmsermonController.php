@@ -249,7 +249,7 @@ class CwmsermonController extends FormController
         $comment_details    = $db->loadObject();
         $comment_title      = $comment_details->studytitle;
         $comment_study_date = $comment_details->studydate;
-        $mail               = Factory::getMailer();
+        $mail               = Factory::getContainer()->get(\Joomla\CMS\Mail\MailerInterface::class);
         $ToEmail            = $params->get('recipient', '');
         $Subject            = $params->get('subject', 'Comments');
 

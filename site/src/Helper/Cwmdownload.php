@@ -145,7 +145,7 @@ class Cwmdownload
      *
      * @param   int  $mid  Media ID
      *
-     * @return  boolean True if hit makes it or False if failed to query
+     * @return  bool True if hit makes it or False if failed to query
      *
      * @since   7.0.0
      */

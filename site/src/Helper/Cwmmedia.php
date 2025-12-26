@@ -1032,9 +1032,7 @@ class Cwmmedia
             ->where('#__bsms_mediafiles.id = ' . (int)$id)
             ->where('#__bsms_mediafiles.published = ' . 1)
             ->where(
-                '#__bsms_mediafiles.language in (' . $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->q(
-                    '*'
-                ) . ')'
+                '#__bsms_mediafiles.language in (' . $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*') . ')'
             )
             ->order('ordering asc');
         $db->setQuery($query);
