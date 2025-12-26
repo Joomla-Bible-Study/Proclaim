@@ -14,17 +14,17 @@
  * @see https://mlocati.github.io/php-cs-fixer-configurator/#version:3.0
  *
  *
- * If you would like to run the automated clean up, then open a command line and type one of the commands below
+ * If you would like to run the automated cleanup, then open a command line and type one of the commands below
  *
  * To run a quick dry run to see the files that would be modified:
  *
  *        ./libraries/vendor/bin/php-cs-fixer fix --dry-run
  *
- * To run a full check, with automated fixing of each problem :
+ * To run a complete check, with automated fixing of each problem :
  *
  *        ./libraries/vendor/bin/php-cs-fixer fix
  *
- * You can run the clean up on a single file if you need to, this is faster
+ * You can run the cleanup on a single file if you need to; this is faster
  *
  *        ./libraries/vendor/bin/php-cs-fixer fix --dry-run administrator/index.php
  *        ./libraries/vendor/bin/php-cs-fixer fix administrator/index.php
@@ -66,7 +66,7 @@ $config
             'array_syntax'                                     => ['syntax' => 'short'],
             // List of values separated by a comma is contained on a single line should not have a trailing comma like [$foo, $bar,] = ...
             'no_trailing_comma_in_singleline'                  => true,
-            // Arrays on multiline should have a trailing comma
+            // Arrays on multiple lines should have a trailing comma
             'trailing_comma_in_multiline'                      => ['elements' => ['arrays']],
             // Align elements in multiline array and variable declarations on new lines below each other
             'binary_operator_spaces'                           => ['operators' => ['=>' => 'align_single_space_minimal', '=' => 'align', '??=' => 'align']],
@@ -82,7 +82,7 @@ $config
             'no_useless_else'                                  => true,
             // Native function invocation
             'native_function_invocation'                       => ['include' => ['@compiler_optimized']],
-            // Adds null to type declarations when parameter have a default null value
+            // Adds null to type declarations when parameters have a default null value
             'nullable_type_declaration_for_default_null_value' => true,
             // Removes unneeded parentheses around control statements
             'no_unneeded_control_parentheses'                  => true,
