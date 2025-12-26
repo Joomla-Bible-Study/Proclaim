@@ -212,7 +212,7 @@ class CwmseriesdisplayModel extends ItemModel
         $db->setQuery($query, 0, $t_params->get('series_detail_limit', 20));
         $studies = $db->loadObjectList();
 
-        if (count($studies) < 1) {
+        if (\count($studies) < 1) {
             return false;
         }
 

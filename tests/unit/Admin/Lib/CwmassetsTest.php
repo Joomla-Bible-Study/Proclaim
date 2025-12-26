@@ -11,8 +11,8 @@
 
 namespace CWM\Component\Proclaim\Tests\Admin\Lib;
 
-use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
+use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 
 /**
  * Test class for Cwmassets
@@ -139,7 +139,7 @@ class CwmassetsTest extends ProclaimTestCase
     public function testGetAssetObjectsIncludesServers(): void
     {
         $objects = Cwmassets::getAssetObjects();
-        $names = array_column($objects, 'name');
+        $names   = array_column($objects, 'name');
 
         $this->assertContains('#__bsms_servers', $names);
     }
@@ -152,7 +152,7 @@ class CwmassetsTest extends ProclaimTestCase
     public function testGetAssetObjectsIncludesStudies(): void
     {
         $objects = Cwmassets::getAssetObjects();
-        $names = array_column($objects, 'name');
+        $names   = array_column($objects, 'name');
 
         $this->assertContains('#__bsms_studies', $names);
     }
@@ -165,7 +165,7 @@ class CwmassetsTest extends ProclaimTestCase
     public function testGetAssetObjectsIncludesTeachers(): void
     {
         $objects = Cwmassets::getAssetObjects();
-        $names = array_column($objects, 'name');
+        $names   = array_column($objects, 'name');
 
         $this->assertContains('#__bsms_teachers', $names);
     }
@@ -178,7 +178,7 @@ class CwmassetsTest extends ProclaimTestCase
     public function testGetAssetObjectsIncludesSeries(): void
     {
         $objects = Cwmassets::getAssetObjects();
-        $names = array_column($objects, 'name');
+        $names   = array_column($objects, 'name');
 
         $this->assertContains('#__bsms_series', $names);
     }

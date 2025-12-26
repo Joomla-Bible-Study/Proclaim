@@ -11,8 +11,8 @@
 
 namespace CWM\Component\Proclaim\Tests\Admin\Lib;
 
-use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
+use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 
 /**
  * Test class for Cwmstats
@@ -40,7 +40,7 @@ class CwmstatsTest extends ProclaimTestCase
     public function testClassHasCorrectNamespace(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Lib/Cwmstats.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString(
             'namespace CWM\Component\Proclaim\Administrator\Lib;',

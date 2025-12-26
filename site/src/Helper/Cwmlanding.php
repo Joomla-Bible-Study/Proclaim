@@ -112,7 +112,7 @@ class Cwmlanding
         $db->setQuery($query);
 
         $tresult = $db->loadObjectList();
-        $count   = count($tresult);
+        $count   = \count($tresult);
 
         if ($count > 0) {
             switch ($locationuselimit) {
@@ -275,7 +275,7 @@ class Cwmlanding
         $db->setQuery($query);
 
         $tresult = $db->loadObjectList();
-        $count   = count($tresult);
+        $count   = \count($tresult);
         $t       = 0;
         $i       = 0;
 
@@ -454,7 +454,7 @@ class Cwmlanding
         $db->setQuery($query);
 
         $items = $db->loadObjectList();
-        $count = count($items);
+        $count = \count($items);
 
         if ($count > 0) {
             switch ($seriesuselimit) {
@@ -641,7 +641,7 @@ class Cwmlanding
         $db->setQuery($query);
 
         $tresult = $db->loadObjectList();
-        $count   = count($tresult);
+        $count   = \count($tresult);
         $t       = 0;
         $i       = 0;
 
@@ -764,7 +764,7 @@ class Cwmlanding
         $db->setQuery($query);
 
         $tresult = $db->loadObjectList();
-        $count   = count($tresult);
+        $count   = \count($tresult);
         $t       = 0;
         $i       = 0;
 
@@ -889,7 +889,7 @@ class Cwmlanding
         $db->setQuery($query);
 
         $tresult = $db->loadObjectList();
-        $count   = count($tresult);
+        $count   = \count($tresult);
         $t       = 0;
         $i       = 0;
 
@@ -1058,7 +1058,7 @@ class Cwmlanding
         $db->setQuery($query);
 
         $tresult = $db->loadObjectList();
-        $count   = count($tresult);
+        $count   = \count($tresult);
         $t       = 0;
         $i       = 0;
 

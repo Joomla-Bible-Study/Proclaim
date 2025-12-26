@@ -11,8 +11,8 @@
 
 namespace CWM\Component\Proclaim\Tests\Site\Helper;
 
-use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use CWM\Component\Proclaim\Site\Helper\Cwmdownload;
+use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 
 /**
  * Test class for Cwmdownload
@@ -40,7 +40,7 @@ class CwmdownloadTest extends ProclaimTestCase
     public function testClassHasCorrectNamespace(): void
     {
         $filePath = JPATH_ROOT . '/site/src/Helper/Cwmdownload.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString(
             'namespace CWM\Component\Proclaim\Site\Helper;',
@@ -71,7 +71,7 @@ class CwmdownloadTest extends ProclaimTestCase
         $this->assertEquals('void', $reflection->getReturnType()->getName());
 
         $params = $reflection->getParameters();
-        $this->assertGreaterThanOrEqual(1, count($params));
+        $this->assertGreaterThanOrEqual(1, \count($params));
         $this->assertEquals('mid', $params[0]->getName());
     }
 
@@ -106,7 +106,7 @@ class CwmdownloadTest extends ProclaimTestCase
     public function testClassUsesJoomlaFactory(): void
     {
         $filePath = JPATH_ROOT . '/site/src/Helper/Cwmdownload.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('use Joomla\CMS\Factory;', $content);
     }

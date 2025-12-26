@@ -57,7 +57,7 @@ class Cwmlisting
         $this->params = $params;
         $item         = '';
 
-        if (!is_array($items)) {
+        if (!\is_array($items)) {
             $subarray    = [];
             $subarray[0] = $items;
             $items       = $subarray;
@@ -303,27 +303,27 @@ class Cwmlisting
             }
         }
 
-        if (count($row1)) {
+        if (\count($row1)) {
             $row1sorted = $this->sortArrayofObjectByProperty($row1, 'col', $order = "ASC");
         }
 
-        if (count($row2)) {
+        if (\count($row2)) {
             $row2sorted = $this->sortArrayofObjectByProperty($row2, 'col', $order = "ASC");
         }
 
-        if (count($row3)) {
+        if (\count($row3)) {
             $row3sorted = $this->sortArrayofObjectByProperty($row3, 'col', $order = "ASC");
         }
 
-        if (count($row4)) {
+        if (\count($row4)) {
             $row4sorted = $this->sortArrayofObjectByProperty($row4, 'col', $order = "ASC");
         }
 
-        if (count($row5)) {
+        if (\count($row5)) {
             $row5sorted = $this->sortArrayofObjectByProperty($row5, 'col', $order = "ASC");
         }
 
-        if (count($row6)) {
+        if (\count($row6)) {
             $row6sorted = $this->sortArrayofObjectByProperty($row6, 'col', $order = "ASC");
         }
 
@@ -440,7 +440,7 @@ class Cwmlisting
         }
 
         // Go through and attach the media files as an array to their study
-        if (($type === 'sermons') && is_array($items)) {
+        if (($type === 'sermons') && \is_array($items)) {
             foreach ($items as $item) {
                 // Skip invalid items
                 if (!is_object($item)) {
@@ -577,7 +577,7 @@ class Cwmlisting
         $ids = [];
 
         foreach ($medias as $media) {
-            if (is_array($media)) {
+            if (\is_array($media)) {
                 foreach ($media as $m) {
                     $ids[] = (int) $m;
                 }
@@ -651,7 +651,7 @@ class Cwmlisting
     {
         $cur           = 1;
         $stack[1]['l'] = 0;
-        $stack[1]['r'] = count($array) - 1;
+        $stack[1]['r'] = \count($array) - 1;
 
         do {
             $l = $stack[$cur]['l'];
@@ -872,7 +872,7 @@ class Cwmlisting
         }
 
         foreach ($listsorts as $sort) {
-            if (count($sort)) {
+            if (\count($sort)) {
                 foreach ($sort as $s) {
                     if ($s->row === '1') {
                         $row1count++;
@@ -1864,7 +1864,7 @@ class Cwmlisting
                 break;
             case 'teacher':
                 // Teacher name and title
-                if (isset($row->teachertitle) && isset($row->teachername)) {
+                if (isset($row->teachertitle, $row->teachername)) {
                     $element = $row->teachertitle . ' ' . $row->teachername;
                 } else {
                     $element = $row->teachername;

@@ -105,7 +105,7 @@ class ProclaimNomenuRules implements RulesInterface
             // Standard view processing
             $vars['view'] = $viewName;
 
-            if (isset($view->key) && isset($segments[0])) {
+            if (isset($view->key, $segments[0])) {
                 if (\is_callable([$this->router, 'get' . ucfirst($view->name) . 'Id'])) {
                     $input = $this->router->app->getInput();
 

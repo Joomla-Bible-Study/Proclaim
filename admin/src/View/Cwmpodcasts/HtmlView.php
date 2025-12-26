@@ -154,11 +154,11 @@ class HtmlView extends BaseHtmlView
      */
     protected function getSortFields(): array
     {
-        return array(
+        return [
             'podcast.title'     => Text::_('JBS_CMN_PODCAST'),
             'podcast.published' => Text::_('JSTATUS'),
             'podcast.language'  => Text::_('JGRID_HEADING_LANGUAGE'),
-            'podcast.id'        => Text::_('JGRID_HEADING_ID')
-        );
+            'podcast.id'        => Text::_('JGRID_HEADING_ID'),
+        ];
     }
 }

@@ -183,10 +183,10 @@ class HtmlView extends BaseHtmlView
             return false;
         }
 
-        if (function_exists('base64_encode') && function_exists('base64_decode')) {
+        if (\function_exists('base64_encode') && \function_exists('base64_decode')) {
             $stack = base64_decode($stack);
 
-            if (function_exists('gzdeflate') && function_exists('gzinflate')) {
+            if (\function_exists('gzdeflate') && \function_exists('gzinflate')) {
                 $stack = gzinflate($stack);
             }
         }
@@ -224,36 +224,36 @@ class HtmlView extends BaseHtmlView
     {
         $language = Factory::getApplication()->getLanguage();
 
-        $installation_queue = array(
+        $installation_queue = [
             // Example: modules => { (folder) => { (module) => { (position), (published) } }* }*
-            'modules' => array(
-                'administrator' => array(),
-                'site'          => array(
+            'modules' => [
+                'administrator' => [],
+                'site'          => [
                     'proclaim'         => 0,
                     'proclaim_podcast' => 0,
-                )
-            ),
+                ],
+            ],
             // Example: plugins => { (folder) => { (element) => (published) }* }*
-            'plugins' => array(
-                'finder' => array(
+            'plugins' => [
+                'finder' => [
                     'proclaim' => 1,
-                ),
-                'task'   => array(
+                ],
+                'task' => [
                     'proclaim' => 1,
-                )
-            )
-        );
+                ],
+            ],
+        ];
 
         // -- General settings
         $db                       = Factory::getContainer()->get('DatabaseDriver');
         $this->status             = new \stdClass();
-        $this->status->cwmmodules = array();
-        $this->status->cwmplugins = array();
+        $this->status->cwmmodules = [];
+        $this->status->cwmplugins = [];
 
         // Modules installation
-        if (count($installation_queue['modules'])) {
+        if (\count($installation_queue['modules'])) {
             foreach ($installation_queue['modules'] as $folder => $modules) {
-                if (count($modules)) {
+                if (\count($modules)) {
                     foreach ($modules as $module => $modulePreferences) {
                         // Was the module already installed?
                         $sql = $db->getQuery(true);
@@ -262,11 +262,11 @@ class HtmlView extends BaseHtmlView
                         $result                     = $db->loadResult();
                         $this->status->cwmmodules[] = array_merge(
                             $this->status->cwmmodules,
-                            array(
+                            [
                                 'name'   => 'mod_' . $module,
                                 'client' => $folder,
-                                'result' => $result
-                            )
+                                'result' => $result,
+                            ]
                         );
 
                         if (is_dir(JPATH_ROOT . '/modules/mod_' . $module . '/')) {
@@ -289,9 +289,9 @@ class HtmlView extends BaseHtmlView
         }
 
         // Plugins installation
-        if (count($installation_queue['plugins'])) {
+        if (\count($installation_queue['plugins'])) {
             foreach ($installation_queue['plugins'] as $folder => $plugins) {
-                if (count($plugins)) {
+                if (\count($plugins)) {
                     foreach ($plugins as $plugin => $published) {
                         $query = $db->getQuery(true);
                         $query->select('COUNT(*)')
@@ -302,11 +302,11 @@ class HtmlView extends BaseHtmlView
                         $result                     = $db->loadResult();
                         $this->status->cwmplugins[] = array_merge(
                             $this->status->cwmplugins,
-                            array(
+                            [
                                 'name'   => 'plg_' . $folder . '_' . $plugin,
                                 'group'  => $folder,
-                                'result' => $result
-                            )
+                                'result' => $result,
+                            ]
                         );
 
                         if (is_dir(JPATH_ROOT . '/plugins/' . $folder . '/' . $plugin . '/')) {

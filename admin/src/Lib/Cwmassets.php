@@ -203,7 +203,7 @@ class Cwmassets
                 ->leftJoin('#__assets as a ON (a.id = j.asset_id)');
             $db->setQuery($query);
             $results     = $db->loadObjectList();
-            self::$count += count($results);
+            self::$count += \count($results);
             self::$query = array_merge((array)self::$query, [$object['assetname'] => $results]);
         }
 

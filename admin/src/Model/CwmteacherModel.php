@@ -195,7 +195,7 @@ class CwmteacherModel extends AdminModel
         // Check for duplicates on new teachers
         if (
             (!isset($data['id']) || (int) $data['id'] === 0) && $data['alias'] === null &&
-            in_array(
+            \in_array(
                 $input->get('task'),
                 ['apply', 'save', 'save2new']
             )
@@ -292,7 +292,7 @@ class CwmteacherModel extends AdminModel
 
                 while ($x > 1) {
                     if (str_starts_with(basename($data['image']), $prefix)) {
-                        $str                       = substr(basename($data['image']), strlen($prefix));
+                        $str                       = substr(basename($data['image']), \strlen($prefix));
                         $data['teacher_image']     = $path . '/' . $str;
                         $data['teacher_thumbnail'] = $path . '/' . $str;
                         $data['image']             = $path . '/' . $str;

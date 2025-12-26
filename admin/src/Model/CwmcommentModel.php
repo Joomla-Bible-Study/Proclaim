@@ -86,10 +86,10 @@ class CwmcommentModel extends AdminModel
      * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = [], $loadData = true)
     {
         // Get the form.
-        $form = $this->loadForm('com_proclaim.comment', 'comment', array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm('com_proclaim.comment', 'comment', ['control' => 'jform', 'load_data' => $loadData]);
 
         if (empty($form)) {
             return false;
@@ -141,7 +141,7 @@ class CwmcommentModel extends AdminModel
     protected function batchCopy($value, $pks, $contexts)
     {
         $categoryId = (int)'';
-        $newIds     = array();
+        $newIds     = [];
 
         /** @type CwmcommentTable $table */
         $table = $this->getTable();
@@ -224,7 +224,7 @@ class CwmcommentModel extends AdminModel
      * @throws  \Exception
      * @since   3.0
      */
-    public function getTable($name = 'Cwmcomment', $prefix = '', $options = array()): Table
+    public function getTable($name = 'Cwmcomment', $prefix = '', $options = []): Table
     {
         return parent::getTable($name, $prefix, $options);
     }
@@ -317,7 +317,7 @@ class CwmcommentModel extends AdminModel
      */
     protected function loadFormData(): object
     {
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.comment.data', array());
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.comment.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();

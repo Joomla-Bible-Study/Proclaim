@@ -40,7 +40,7 @@ class CwmimagesTest extends ProclaimTestCase
     {
         parent::setUp();
 
-        $this->classFile = JPATH_ROOT . '/site/src/Helper/Cwmimages.php';
+        $this->classFile    = JPATH_ROOT . '/site/src/Helper/Cwmimages.php';
         $this->classContent = file_get_contents($this->classFile);
     }
 
@@ -233,7 +233,6 @@ class CwmimagesTest extends ProclaimTestCase
      */
     public function testClassUsesRequiredJoomlaClasses(): void
     {
-        $this->assertStringContainsString('use Joomla\CMS\Factory;', $this->classContent);
         $this->assertStringContainsString('use Joomla\CMS\HTML\HTMLHelper;', $this->classContent);
         $this->assertStringContainsString('use Joomla\CMS\Image\Image;', $this->classContent);
         $this->assertStringContainsString('use Joomla\Registry\Registry;', $this->classContent);

@@ -126,7 +126,7 @@ class CwmtemplatecodeTable extends Table
     public function bind($src, $ignore = ''): bool
     {
         // Bind the rules.
-        if (isset($src['rules']) && is_array($src['rules'])) {
+        if (isset($src['rules']) && \is_array($src['rules'])) {
             $rules = new Rule($src['rules']);
             $this->setRules($rules);
         }

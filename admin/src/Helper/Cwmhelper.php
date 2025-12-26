@@ -17,12 +17,10 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
-use Exception;
 use Joomla\CMS\Cache\CacheControllerFactoryInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
-use stdClass;
 
 /**
  * Core Bible Study Helper
@@ -46,14 +44,14 @@ class Cwmhelper
      *
      * @param   object     $row       JTable
      * @param   Registry   $params    Item Params
-     * @param   stdClass  $template  Template Table
+     * @param   \stdClass  $template  Template Table
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      * @since  9.0.0
      */
-    public static function getTooltip(object $row, Registry $params, stdClass $template): string
+    public static function getTooltip(object $row, Registry $params, \stdClass $template): string
     {
         $JBSMElements = new Cwmlisting();
 
@@ -65,11 +63,11 @@ class Cwmhelper
         $tip4 = $JBSMElements->getElement($params->get('tip_item4'), $row, $params, $template, $type = 0);
         $tip5 = $JBSMElements->getElement($params->get('tip_item5'), $row, $params, $template, $type = 0);
 
-        $linktext .=  $params->get('tip_item1_title') . ': ' . $tip1 . ' - ';
-        $linktext .=  $params->get('tip_item2_title') . ': ' . $tip2 . ' - ';
-        $linktext .=  $params->get('tip_item3_title') . ': ' . $tip3 . ' - ';
-        $linktext .=  $params->get('tip_item4_title') . ': ' . $tip4 . ' - ';
-        $linktext .=  $params->get('tip_item5_title') . ': ' . $tip5 . ' - ';
+        $linktext .= $params->get('tip_item1_title') .': ' . $tip1 . ' - ';
+        $linktext .= $params->get('tip_item2_title') .': ' . $tip2 . ' - ';
+        $linktext .= $params->get('tip_item3_title') .': ' . $tip3 . ' - ';
+        $linktext .= $params->get('tip_item4_title') .': ' . $tip4 . ' - ';
+        $linktext .= $params->get('tip_item5_title') .': ' . $tip5 . ' - ';
         $linktext .= '">';
 
         return $linktext;
@@ -132,19 +130,19 @@ class Cwmhelper
 
         try {
             $headers = @get_headers($url, true);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return 0;
         }
 
-        if (is_array($headers)) {
+        if (\is_array($headers)) {
             $head = array_change_key_case($headers);
         } else {
             return 0;
         }
 
-        if (isset($head['content-length']) && is_array($head['content-length'])) {
-            if (count($head['content-length']) >= 1) {
-                $dif  = count($head['content-length']) - 1;
+        if (isset($head['content-length']) && \is_array($head['content-length'])) {
+            if (\count($head['content-length']) >= 1) {
+                $dif  = \count($head['content-length']) - 1;
                 $size = $head['content-length'][$dif];
             } else {
                 $size = $head['content-length'][0];
@@ -181,7 +179,7 @@ class Cwmhelper
         $reg->loadString($media->params);
         $reg->set('size', $size);
 
-        $update         = new stdClass();
+        $update         = new \stdClass();
         $update->id     = $id;
         $update->params = $reg->toString();
 
@@ -275,20 +273,20 @@ class Cwmhelper
     {
         try {
             $app = Factory::getApplication();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return;
         }
-        $options = array();
+        $options = [];
 
         $options[1] = [
             'defaultgroup' => 'com_proclaim',
             'cachebase'    => $app->get('cache_path', JPATH_CACHE),
-            'result'       => true
+            'result'       => true,
         ];
         $options[2] = [
             'defaultgroup' => 'mod_proclaim',
             'cachebase'    => $app->get('cache_path', JPATH_CACHE),
-            'result'       => true
+            'result'       => true,
         ];
 
         foreach ($options as $option) {
@@ -311,7 +309,7 @@ class Cwmhelper
      */
     public static function removeHttp(string $url): array|string
     {
-        $disallowed = array('http://', 'https://');
+        $disallowed = ['http://', 'https://'];
 
         foreach ($disallowed as $d) {
             if (str_starts_with($url, $d)) {
@@ -327,13 +325,13 @@ class Cwmhelper
      *
      * @param   ?Registry  $params  AdminTable + parameters
      *
-     * @return  stdClass
+     * @return  \stdClass
      *
      * @since 9.1.6
      */
-    public static function getSimpleView(?Registry $params = null): stdClass
+    public static function getSimpleView(?Registry $params = null): \stdClass
     {
-        $simple = new stdClass();
+        $simple = new \stdClass();
 
         if ($params === null) {
             $params = Cwmparams::getAdmin()->params;

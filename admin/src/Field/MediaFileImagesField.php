@@ -128,7 +128,7 @@ class MediaFileImagesField extends ListField
                     }
                 } else {
                     $image              = $media->params->get('media_image');
-                    $totalcount         = strlen($image);
+                    $totalcount         = \strlen($image);
                     $slash              = strrpos($image, '/');
                     $imagecount         = $totalcount - $slash;
                     $media->media_image = Text::_('JBS_MED_IMAGE') . ': ' . substr($image, $slash + 1, $imagecount);
@@ -164,7 +164,7 @@ class MediaFileImagesField extends ListField
 
         // Remove the duplicates from original array
         foreach ($options as $k => $v) {
-            if (!array_key_exists($k, $tmp)) {
+            if (!\array_key_exists($k, $tmp)) {
                 unset($options[$k]);
             }
         }

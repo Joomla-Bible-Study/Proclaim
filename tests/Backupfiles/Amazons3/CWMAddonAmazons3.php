@@ -10,6 +10,7 @@
  * */
 
 // phpcs:disable PSR1.Files.SideEffects
+
 namespace Backupfiles\CWMAddonAmazons3;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
