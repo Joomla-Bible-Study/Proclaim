@@ -122,6 +122,14 @@ class CwmmediafileTable extends Table
 
     public $language;
 
+    /**
+     * Created date
+     *
+     * @var string
+     * @since    10.0.0
+     */
+    public $created = null;
+
     public $created_by;
 
     public $created_by_alias;
