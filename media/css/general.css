@@ -1,16 +1,37 @@
-div.current .panelform {
-  border: 1px solid #CCCCCC !important;
+/* CSS Custom Properties */
+:root {
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray-light: #cccccc;
+  --color-gray-medium: #666666;
+  --color-gray-dark: #536482;
+  --color-border: #ccc;
+  --color-background-light: #fafafa;
+  --color-background-alt: #eeeeee;
+  --color-background-row0: #F7F8F9;
+  --color-accent: #7F9DB9;
+  --color-link: #08c;
+  --color-install-border: #99CCFF;
+  --color-install-bg: #D9D9FF;
 }
+
+/* Panel Form */
+div.current .panelform {
+  border: 1px solid var(--color-gray-light) !important;
+}
+
+/* Inline Fields */
 .inlineFields div {
   float: left;
 }
 .inlineFields label {
   min-width: 70px !important;
 }
+
+/* Loading Indicator */
 #loading {
-  -moz-border-radius: 7px 7px 7px 7px;
-  border-radius: 7px 7px 7px 7px;
-  background-color: #FFFFFF;
+  border-radius: 7px;
+  background-color: var(--color-white);
   border: 1px solid black;
   padding: 16px;
   position: fixed;
@@ -24,6 +45,8 @@ div.current .panelform {
 #loading span {
   font-weight: bold;
 }
+
+/* Inline Player */
 .inlinePlayer {
   border: 1px solid black;
   position: absolute;
@@ -31,8 +54,10 @@ div.current .panelform {
   margin-left: -293px;
   height: 24px;
   display: none;
-  background-color: #ffffff;
+  background-color: var(--color-white);
 }
+
+/* Install Steps */
 #checks,
 #download,
 #decompress,
@@ -43,11 +68,13 @@ div.current .panelform {
 #done {
   margin: 7px;
   border: 2px dotted #e3e1e1;
-  background-color: #fafafa;
+  background-color: var(--color-background-light);
   width: 450px;
   padding-bottom: 10px;
   height: 100px;
 }
+
+/* Progress Bars */
 #pb0-box,
 #pb1-box,
 #pb2-box,
@@ -70,43 +97,53 @@ div.current .panelform {
   height: 19px;
   float: left;
 }
+
+/* Install Footer */
 .jbs_install_footer {
-  border: 1px solid #99CCFF;
-  background: #D9D9FF;
+  border: 1px solid var(--color-install-border);
+  background: var(--color-install-bg);
   padding: 20px;
   margin: 20px;
   clear: both;
 }
-.finishbutton {
-  height: 150px;
-  width: 200px;
-  color: #fff;
-  outline: 1px solid #ddd;
-  border-top: 1px solid #fff;
-  padding: 10px 10px 40px 10px;
-  background: #f0f0f0;
-}
+
+/* Finish Button */
+.finishbutton,
 .finishbutton1:hover {
   height: 150px;
   width: 200px;
   outline: 1px solid #ddd;
   border-top: 1px solid #fff;
   padding: 10px 10px 40px 10px;
+}
+.finishbutton {
+  color: #fff;
+  background: #f0f0f0;
+}
+.finishbutton1:hover {
   background: #f0f088;
 }
+
+/* Image Center */
 img.imgcenter {
   display: block;
   margin-left: auto;
   margin-right: auto;
 }
+
+/* CSS Editor */
 .css-editor {
   width: 97%;
   border: none;
 }
+
+/* Blue Link */
 .blue {
-  color: #08c;
+  color: var(--color-link);
   text-decoration: none;
 }
+
+/* FB Admin Layout */
 #fbadmin {
   text-align: left;
 }
@@ -123,23 +160,23 @@ img.imgcenter {
 #fbmenu a {
   display: block;
   font-size: 11px;
-  border-left: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
+  border-left: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
 }
-.fbmainmenu {
-  padding: 5px;
-}
+.fbmainmenu,
 .fbactivemenu {
-  background: #fff;
   padding: 5px;
+}
+.fbactivemenu,
+.fbsubmenu,
+.fbright {
+  background: #fff;
 }
 .fbsubmenu {
-  background: #fff;
   padding: 5px 5px 5px 15px;
 }
 .fbright {
-  border: 1px solid #ccc;
-  background: #fff;
+  border: 1px solid var(--color-border);
   padding: 5px;
 }
 .fbfooter {
@@ -165,20 +202,16 @@ img.imgcenter {
   font-size: 14px;
   text-align: left;
   padding: 5px;
-  border-bottom: 3px solid #7F9DB9;
+  border-bottom: 3px solid var(--color-accent);
   font-weight: bold;
-  color: #7F9DB9;
-  margin: 10px 0 10px 0;
+  color: var(--color-accent);
+  margin: 10px 0;
 }
-.fbrow0 td {
-  padding: 8px 5px;
-  text-align: left;
-  border-bottom: 1px dotted #ccc;
-}
+.fbrow0 td,
 .fbrow1 td {
   padding: 8px 5px;
   text-align: left;
-  border-bottom: 1px dotted #ccc;
+  border-bottom: 1px dotted var(--color-border);
 }
 td.fbtdtitle {
   font-weight: bold;
@@ -196,7 +229,7 @@ td.fbtdtitle {
   margin-bottom: 10px;
   padding: 10px;
   font-size: 12px;
-  color: #536482;
+  color: var(--color-gray-dark);
   line-height: 140%;
   border: 1px solid #ddd;
 }
@@ -204,16 +237,18 @@ td.fbtdtitle {
   margin: 0;
   padding: 0;
 }
+
+/* Form Tables */
 table.thisform {
   width: 100%;
   padding: 10px;
   border-collapse: collapse;
 }
 table.thisform tr.row0 {
-  background-color: #F7F8F9;
+  background-color: var(--color-background-row0);
 }
 table.thisform tr.row1 {
-  background-color: #eeeeee;
+  background-color: var(--color-background-alt);
 }
 table.thisform th {
   font-size: 15px;
@@ -222,18 +257,20 @@ table.thisform th {
   padding: 6px 4px 2px 4px;
   text-align: left;
   height: 25px;
-  color: #666666;
+  color: var(--color-gray-medium);
   background-repeat: repeat;
 }
 table.thisform td {
   padding: 3px;
   text-align: left;
 }
+
+/* Stats Tables */
 .fbstatscover {
   padding: 0;
 }
 table.fbstat {
-  background-color: #FFFFFF;
+  background-color: var(--color-white);
   border: 1px solid #ddd;
   padding: 1px;
   width: 100%;
@@ -267,34 +304,29 @@ table.fbstat .col1 {
 table.fbstat .col2 {
   background-color: #FBFBFB;
 }
+
+/* PayPal */
 #jbspaypal {
   padding-top: 10px;
   padding-left: 10px;
 }
-#categoryItems {
+
+/* Hidden Containers */
+#categoryItems,
+#docManItemsContainer,
+#articlesCategoriesContainer,
+#articlesItemsContainer,
+#virtueMartItemsContainer {
   display: none;
 }
-#loading {
-  display: none;
-  position: absolute;
-  right: 50px;
-}
+
+/* Select Container */
 .selectContainer {
   float: left;
   margin-left: 5px;
 }
-#docManItemsContainer {
-  display: none;
-}
-#articlesCategoriesContainer {
-  display: none;
-}
-#articlesItemsContainer {
-  display: none;
-}
-#virtueMartItemsContainer {
-  display: none;
-}
+
+/* Control Panel */
 #cpanel a {
   float: left;
   min-width: 90px;
@@ -307,10 +339,11 @@ table.fbstat .col2 {
   display: block;
   text-align: center;
 }
+
+/* Sermon List Separator */
 .sermon-list-separator {
   border: 0;
   height: 4px;
   background-color: white;
-  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0));
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0));
 }
-/*# sourceMappingURL=general.css.map */
