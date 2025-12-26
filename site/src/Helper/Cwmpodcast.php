@@ -63,8 +63,8 @@ class Cwmpodcast
      */
     public function makePodcasts(): string
     {
-        $msg = [];
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $msg  = [];
+        $db   = Factory::getContainer()->get('DatabaseDriver');
         $year = '(' . date('Y') . ')';
         $date = date('r');
 
