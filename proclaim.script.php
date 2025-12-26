@@ -572,7 +572,7 @@ class com_proclaimInstallerScript extends InstallerScript
                         // Modify where it's published and its published state
                         if ($parent->route === "install") {
                             // A. Position and state
-                            [$modulePosition, $modulePublished] = $modulePreferences;
+                            [$modulePosition, $modulePublished] = (array) $modulePreferences;
 
                             $sql = $this->dbo->getQuery(true)
                                 ->update($this->dbo->qn('#__modules'))
@@ -876,7 +876,7 @@ class com_proclaimInstallerScript extends InstallerScript
             // Migrate Plugin Podcast to Tasks
             $message                     = new \stdClass();
             $message->title_key          = 'New Scheduled Task for Podcast RSS Rile Creation'; // Language string
-            $message->description_key    = 'You may now what to setup Podcast RSS Task to replace your old system. We could not migrate your old podcast plugin schedule'; // Language string
+            $message->description_key    = 'You may now want to set up Podcast RSS Task to replace your old system. We could not migrate your old podcast plugin schedule'; // Language string
             $message->type               = 'message'; // message | action
             $message->version_introduced = '10.0.0';
             (new CWM\Component\Proclaim\Administrator\Model\CwminstallModel())->postInstallMessages($message);
