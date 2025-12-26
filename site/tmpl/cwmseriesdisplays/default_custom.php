@@ -16,6 +16,7 @@
 
 use CWM\Component\Proclaim\Site\Helper\Cwmserieslist;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
 
 $mainframe   = Factory::getApplication();
 $input       = Factory::getApplication();
@@ -41,7 +42,7 @@ echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="admi
                 if ($this->params->get('show_page_image_series') > 0) {
                     ?>
                     <img src="<?php
-                    echo JUri::base() . $this->main->path; ?>"
+                    echo Uri::base() . $this->main->path; ?>"
                          alt="<?php
                             echo $this->params->get('series_title') ?>"
                          width="<?php

@@ -683,7 +683,7 @@ class CwminstallModel extends ListModel
                                 Log::add('UnSet Version in All updates: ' . $this->version, Log::INFO, 'com_proclaim');
                             } else {
                                 $this->running = 'PHP Sub Process: ' . $this->version . ' - ' . $step;
-                                $migration->$step(Factory::getDbo(), $query);
+                                $migration->$step(Factory::getContainer()->get('DatabaseDriver'), $query);
 
                                 // Pull back the Query form PHP file if any.
                                 if (isset($migration->query) && !empty($migration->query)) {

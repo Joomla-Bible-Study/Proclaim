@@ -409,7 +409,7 @@ class Cwmpagebuilder
             $query->where('study.language in (' . $db->quote($language) . ',' . $db->quote('*') . ')');
         } elseif ($language !== '*') {
             $query->where(
-                'study.language in (' . $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')'
+                'study.language in (' . $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*') . ')'
             );
         }
 
