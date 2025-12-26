@@ -239,9 +239,7 @@ class CwminstallModel extends ListModel
      */
     private function microtimeFloat(): float
     {
-        [$usec, $sec] = explode(" ", microtime());
-
-        return ((float)$usec + (float)$sec);
+        return microtime(true);
     }
 
     /**
@@ -441,13 +439,12 @@ class CwminstallModel extends ListModel
         ];
         $stack = json_encode($stack, JSON_THROW_ON_ERROR);
 
-        if (function_exists('base64_encode') && function_exists('base64_decode')) {
-            if (function_exists('gzdeflate') && function_exists('gzinflate')) {
-                $stack = gzdeflate($stack, 9);
-            }
-
-            $stack = base64_encode($stack);
+        // Compress and encode the stack for session storage
+        if (function_exists('gzdeflate')) {
+            $stack = gzdeflate($stack, 9);
         }
+
+        $stack = base64_encode($stack);
 
         $session = Factory::getApplication()->getSession();
         $session->set('migration_stack', $stack, 'CWM');
@@ -529,12 +526,11 @@ class CwminstallModel extends ListModel
             return;
         }
 
-        if (function_exists('base64_encode') && function_exists('base64_decode')) {
-            $stack = base64_decode($stack);
+        // Decode and decompress the stack from session storage
+        $stack = base64_decode($stack);
 
-            if (function_exists('gzdeflate') && function_exists('gzinflate')) {
-                $stack = gzinflate($stack);
-            }
+        if (function_exists('gzinflate')) {
+            $stack = gzinflate($stack);
         }
 
         $stack = json_decode($stack, true, 512, JSON_THROW_ON_ERROR);
@@ -851,7 +847,7 @@ class CwminstallModel extends ListModel
         // Create an array of queries from the sql file
         $queries = DatabaseDriver::splitSql($buffer);
 
-        if ((int)count($queries) === 0) {
+        if (count($queries) === 0) {
             return false;
         }
 
@@ -1081,8 +1077,10 @@ class CwminstallModel extends ListModel
         $this->_db->setQuery($query);
         $updates = $this->_db->loadObjectList();
 
-        if (isset(end($updates)->version)) {
-            $return  = end($updates)->version;
+        $lastUpdate = end($updates);
+
+        if (isset($lastUpdate->version)) {
+            $return = $lastUpdate->version;
         }
 
         return $return;
@@ -1283,11 +1281,11 @@ class CwminstallModel extends ListModel
 
                 $queries = DatabaseDriver::splitSql($buffer);
 
-                foreach ($queries as $querie) {
-                    $querie = trim($querie);
+                foreach ($queries as $singleQuery) {
+                    $singleQuery = trim($singleQuery);
 
-                    if ($querie !== '' && $querie[0] !== '#' && $querie !== '`') {
-                        $this->_db->setQuery($querie);
+                    if ($singleQuery !== '' && $singleQuery[0] !== '#' && $singleQuery !== '`') {
+                        $this->_db->setQuery($singleQuery);
                         $this->_db->execute();
                     }
                 }
