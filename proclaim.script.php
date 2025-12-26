@@ -60,11 +60,11 @@ class com_proclaimInstallerScript extends InstallerScript
         // -- modules => { (folder) => { (module) => { (position), (published) } }* }*
         'modules' => [
             'admin' => [
-                    'proclaimicon' => ["icon",1],
+                'proclaimicon' => ['icon', 1],
             ],
             'site' => [
-                'proclaim'         => 0,
-                'proclaim_podcast' => 0,
+                'proclaim'         => ['', 0],
+                'proclaim_podcast' => ['', 0],
             ],
         ],
         // -- plugins => { (folder) => { (element) => (published) }* }*
