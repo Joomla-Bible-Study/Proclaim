@@ -46,7 +46,7 @@
             </field>
             <field
                     name="messagetype"
-                    type="Messagetypelist"
+                    type="MessageTypeList"
                     label="JBS_CMN_SELECT_MESSAGETYPE"
                     description="JBS_CMN_SELECT_MESSAGETYPE_DESC"
                     onchange="this.form.submit();"
@@ -100,7 +100,6 @@
         <field
                 name="limit"
                 type="limitbox"
-                class="input-mini"
                 default="25"
                 label="COM_CONTENT_LIST_LIMIT"
                 description="COM_CONTENT_LIST_LIMIT_DESC"
