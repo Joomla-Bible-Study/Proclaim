@@ -6,53 +6,6 @@
   "license": "GPL-2.0-or-later",
   "assets": [
     {
-      "name": "com_proclaim.cwmadmin-message-pagebreak.es5",
-      "type": "script",
-      "uri": "com_proclaim/cwmadmin-message-pagebreak-es5.min.js",
-      "dependencies": [
-        "core"
-      ],
-      "attributes": {
-        "nomodule": true,
-        "defer": true
-      }
-    },
-    {
-      "name": "com_proclaim.administrator-message-pagebreak",
-      "type": "script",
-      "uri": "com_proclaim/administrator-message-pagebreak.min.js",
-      "dependencies": [
-        "com_proclaim.administrator-message-pagebreak.es5"
-      ],
-      "attributes": {
-        "type": "module",
-        "defer": true
-      }
-    },
-    {
-      "name": "com_proclaim.administrator-message-readmore.es5",
-      "type": "script",
-      "uri": "com_proclaim/administrator-message-readmore-es5.min.js",
-      "dependencies": [
-        "core"
-      ],
-      "attributes": {
-        "nomodule": true,
-        "defer": true
-      }
-    },
-    {
-      "name": "com_proclaim.administrator-message-readmore",
-      "type": "script",
-      "uri": "com_proclaim/administrator-message-readmore.min.js",
-      "dependencies": [
-        "com_proclaim.administrator-message-readmore.es5"
-      ],
-      "attributes": {
-        "type": "module"
-      }
-    },
-    {
       "name": "com_proclaim.cwmadmin-messages-batch.es5",
       "type": "script",
       "uri": "com_proclaim/cwmadmin-messages-default-batch-footer-es5.min.js",
@@ -99,72 +52,15 @@
       }
     },
     {
-      "name": "com_proclaim.administrator-teachers-batch.es5",
+      "name": "com_proclaim.cwmadmin-messages-modal.es5",
       "type": "script",
-      "uri": "com_proclaim/administrator-teachers-default-batch-footer-es5.min.js",
+      "uri": "com_proclaim/cwmadmin-messages-modal-es5.min.js",
       "dependencies": [
         "core"
       ],
       "attributes": {
         "nomodule": true,
         "defer": true
-      }
-    },
-    {
-      "name": "com_proclaim.administrator-teachers-batch",
-      "type": "script",
-      "uri": "com_proclaim/administrator-teachers-default-batch-footer.min.js",
-      "dependencies": [
-        "com_proclaim.administrator-teachers-batch.es5"
-      ],
-      "attributes": {
-        "type": "module"
-      }
-    },
-    {
-      "name": "com_proclaim.administrator-series-batch.es5",
-      "type": "script",
-      "uri": "com_proclaim/administrator-series-default-batch-footer-es5.min.js",
-      "dependencies": [
-        "core"
-      ],
-      "attributes": {
-        "nomodule": true,
-        "defer": true
-      }
-    },
-    {
-      "name": "com_proclaim.administrator-series-batch",
-      "type": "script",
-      "uri": "com_proclaim/administrator-series-default-batch-footer.min.js",
-      "dependencies": [
-        "com_proclaim.administrator-series-batch.es5"
-      ],
-      "attributes": {
-        "type": "module"
-      }
-    },
-    {
-      "name": "com_proclaim.cwmadmin-messages-stage.es5",
-      "type": "script",
-      "uri": "com_proclaim/cwmadmin-messages-default-stage-footer-es5.min.js",
-      "dependencies": [
-        "core"
-      ],
-      "attributes": {
-        "nomodule": true,
-        "defer": true
-      }
-    },
-    {
-      "name": "com_proclaim.cwmadmin-messages-stage",
-      "type": "script",
-      "uri": "com_proclaim/cwmadmin-messages-default-stage-footer.min.js",
-      "dependencies": [
-        "com_proclaim.cwmadmin-messages-stage.es5"
-      ],
-      "attributes": {
-        "type": "module"
       }
     },
     {
@@ -176,64 +72,6 @@
       ],
       "attributes": {
         "type": "module"
-      }
-    },
-    {
-      "name": "com_proclaim.cwmadmin-types-modal",
-      "type": "script",
-      "uri": "com_proclaim/cwmadmin-types-modal.min.js",
-      "dependencies": [
-        "com_proclaim.cwmadmin-types-modal.es5"
-      ],
-      "attributes": {
-        "type": "module"
-      }
-    },
-    {
-      "name": "com_proclaim.form-edit.es5",
-      "type": "script",
-      "uri": "com_proclaim/form-edit-es5.min.js",
-      "dependencies": [
-        "core"
-      ],
-      "attributes": {
-        "nomodule": true,
-        "defer": true
-      }
-    },
-    {
-      "name": "com_proclaim.form-edit",
-      "type": "script",
-      "uri": "com_proclaim/form-edit.min.js",
-      "dependencies": [
-        "com_proclaim.form-edit.es5"
-      ],
-      "attributes": {
-        "type": "module"
-      }
-    },
-    {
-      "name": "com_proclaim.cwmmessages-list.es5",
-      "type": "script",
-      "uri": "com_proclaim/cwmmessages-list-es5.min.js",
-      "dependencies": [
-        "core"
-      ],
-      "attributes": {
-        "nomodule": true,
-        "defer": true
-      }
-    },
-    {
-      "name": "com_proclaim.cwmadmin-messages-modal.es5",
-      "type": "script",
-      "uri": "com_proclaim/cwmadmin-messages-modal-es5.min.js",
-      "dependencies": [
-        "core"
-      ],
-      "attributes": {
-        "nomodule": true,
-        "defer": true
       }
     },
     {
@@ -249,11 +87,11 @@
       }
     },
     {
-      "name": "com_proclaim.cwmmessages-list",
+      "name": "com_proclaim.cwmadmin-types-modal",
       "type": "script",
-      "uri": "com_proclaim/cwmmessages-list.min.js",
+      "uri": "com_proclaim/cwmadmin-types-modal.min.js",
       "dependencies": [
-        "com_proclaim.cwmmessages-list.es5"
+        "com_proclaim.cwmadmin-types-modal.es5"
       ],
       "attributes": {
         "type": "module"
@@ -285,7 +123,7 @@
     {
       "name": "com_proclaim.cwmadmin-teachers-modal.es5",
       "type": "script",
-      "uri": "com_proclaim/cwmadmin-teachers-modal-es5.min.js",
+      "uri": "com_proclaim/cwmadmin-teachers-modal.es5.min.js",
       "dependencies": [
         "core"
       ],
@@ -308,7 +146,7 @@
     {
       "name": "com_proclaim.cwmadmin-locations-modal.es5",
       "type": "script",
-      "uri": "com_proclaim/cwmadmin-locations-modal-es5.min.js",
+      "uri": "com_proclaim/cwmadmin-locations-modal.es5.min.js",
       "dependencies": [
         "core"
       ],
@@ -359,7 +197,8 @@
         "core"
       ],
       "attributes": {
-        "type": "module"
+        "nomodule": true,
+        "defer": true
       }
     },
     {
@@ -370,8 +209,7 @@
         "com_proclaim.cwmadmin-locations-batch.es5"
       ],
       "attributes": {
-        "nomodule": true,
-        "defer": true
+        "type": "module"
       }
     },
     {
@@ -382,7 +220,8 @@
         "core"
       ],
       "attributes": {
-        "type": "module"
+        "nomodule": true,
+        "defer": true
       }
     },
     {
@@ -393,8 +232,7 @@
         "com_proclaim.cwmadmin-teachers-batch.es5"
       ],
       "attributes": {
-        "nomodule": true,
-        "defer": true
+        "type": "module"
       }
     },
     {
@@ -405,7 +243,8 @@
         "core"
       ],
       "attributes": {
-        "type": "module"
+        "nomodule": true,
+        "defer": true
       }
     },
     {
@@ -416,8 +255,7 @@
         "com_proclaim.cwmadmin-series-batch.es5"
       ],
       "attributes": {
-        "nomodule": true,
-        "defer": true
+        "type": "module"
       }
     },
     {
@@ -473,6 +311,14 @@
       "name": "com_proclaim.modernizr",
       "type": "script",
       "uri": "com_proclaim/modernizr.min.js",
+      "attributes": {
+        "defer": true
+      }
+    },
+    {
+      "name": "com_proclaim.fancybox",
+      "type": "script",
+      "uri": "com_proclaim/fancybox.min.js",
       "attributes": {
         "defer": true
       }
