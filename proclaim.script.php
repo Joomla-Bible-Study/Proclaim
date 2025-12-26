@@ -173,41 +173,76 @@ class com_proclaimInstallerScript extends InstallerScript
     {
         $this->setDboFromAdapter($parent);
 
-        /**
-         * Find a partial string in the array
-         * @param   array  $array
-         *
-         * @return array
-         *
-         * @since 10.0
-         */
-        function array_partial_search(array $array): array
-        {
-            $found = [];
-            // Loop through each item and check for a match.
-            foreach ($array as $string) {
-                // If found somewhere inside the string, add.
-                if (str_contains($string, 'bsms_podcast')) {
-                    $found[] = $string;
-                }
-            }
-            return $found;
-        }
-
-        $results = $this->dbo->setQuery('SHOW TABLES')->loadColumn();
-        if (!empty(array_partial_search($results))) {
+        // Check if podcast table exists using a targeted query
+        if ($this->tableExists('#__bsms_podcast')) {
             // Add field if missing Subtitle to series
             $query = "SHOW COLUMNS FROM " . $this->dbo->quoteName('#__bsms_podcast') . " LIKE " . $this->dbo->quote('subtitle');
             $this->dbo->setQuery($query);
             $db = $this->dbo->loadResult();
+
             if (empty($db)) {
                 $alter = "ALTER TABLE #__bsms_podcast ADD subtitle TEXT";
-                $this->dbo->setquery($alter);
+                $this->dbo->setQuery($alter);
                 $this->dbo->execute();
             }
         }
 
         return parent::preflight($type, $parent);
+    }
+
+    /**
+     * Check if a database table exists
+     *
+     * @param   string  $table  The table name (with #__ prefix)
+     *
+     * @return  bool  True if table exists
+     *
+     * @since   10.0.0
+     */
+    private function tableExists(string $table): bool
+    {
+        $table = str_replace('#__', $this->dbo->getPrefix(), $table);
+
+        try {
+            $tables = $this->dbo->getTableList();
+
+            return in_array($table, $tables, true);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Find the installation path for an extension
+     *
+     * @param   string  $src       The source directory
+     * @param   string  $type      The extension type ('module' or 'plugin')
+     * @param   string  $folder    The folder (client for modules, group for plugins)
+     * @param   string  $element   The extension element name
+     *
+     * @return  string|null  The path if found, null otherwise
+     *
+     * @since   10.0.0
+     */
+    private function findExtensionPath(string $src, string $type, string $folder, string $element): ?string
+    {
+        $prefix = $type === 'module' ? 'mod_' : 'plg_';
+        $subdir = $type === 'module' ? 'modules' : 'plugins';
+
+        $paths = [
+            "$src/$subdir/$folder/$element",
+            "$src/$subdir/$folder/{$prefix}$element",
+            "$src/$subdir/$element",
+            "$src/$subdir/{$prefix}$element",
+        ];
+
+        foreach ($paths as $path) {
+            if (is_dir($path)) {
+                return $path;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -280,9 +315,9 @@ class com_proclaimInstallerScript extends InstallerScript
         $this->status->plugins = [];
 
         // Modules uninstalling
-        if (count(self::$installActionQueue['modules'])) {
+        if (!empty(self::$installActionQueue['modules'])) {
             foreach (self::$installActionQueue['modules'] as $folder => $modules) {
-                if (count($modules)) {
+                if (!empty($modules)) {
                     foreach ($modules as $module => $modulePreferences) {
                         // Find the module ID
                         $sql = $this->dbo->getQuery(true)
@@ -309,9 +344,9 @@ class com_proclaimInstallerScript extends InstallerScript
         }//end if
 
         // Plugins uninstalling
-        if (count(self::$installActionQueue['plugins'])) {
+        if (!empty(self::$installActionQueue['plugins'])) {
             foreach (self::$installActionQueue['plugins'] as $folder => $plugins) {
-                if (count($plugins)) {
+                if (!empty($plugins)) {
                     foreach ($plugins as $plugin => $published) {
                         $sql = $this->dbo->getQuery(true)
                             ->select($this->dbo->qn('extension_id'))
@@ -370,7 +405,7 @@ class com_proclaimInstallerScript extends InstallerScript
 				<td><strong style="color: green;">' . Text::_('JBS_INS_REMOVED') . '</strong></td>
 			</tr>';
 
-        if (count($status->modules)) {
+        if (!empty($status->modules)) {
             ?>
                 <tr>
                     <th><?php
@@ -404,7 +439,7 @@ class com_proclaimInstallerScript extends InstallerScript
         }//end if
         ?>
         <?php
-        if (count($status->plugins)) {
+        if (!empty($status->plugins)) {
             ?>
                 <tr>
                     <th><?php
@@ -511,30 +546,18 @@ class com_proclaimInstallerScript extends InstallerScript
         }
 
         // Modules installation
-        if (count(self::$installActionQueue['modules'])) {
+        if (!empty(self::$installActionQueue['modules'])) {
             foreach (self::$installActionQueue['modules'] as $folder => $modules) {
-                if (count($modules)) {
+                if (!empty($modules)) {
                     foreach ($modules as $module => $modulePreferences) {
                         // Install the module
                         if (empty($folder)) {
                             $folder = 'site';
                         }
 
-                        $path = "$src/modules/$folder/$module";
+                        $path = $this->findExtensionPath($src, 'module', $folder, $module);
 
-                        if (!is_dir($path)) {
-                            $path = "$src/modules/$folder/mod_$module";
-                        }
-
-                        if (!is_dir($path)) {
-                            $path = "$src/modules/$module";
-                        }
-
-                        if (!is_dir($path)) {
-                            $path = "$src/modules/mod_$module";
-                        }
-
-                        if (!is_dir($path)) {
+                        if ($path === null) {
                             continue;
                         }
 
@@ -614,25 +637,13 @@ class com_proclaimInstallerScript extends InstallerScript
         }//end if
 
         // Plugin's installation
-        if (count(self::$installActionQueue['plugins'])) {
+        if (!empty(self::$installActionQueue['plugins'])) {
             foreach (self::$installActionQueue['plugins'] as $folder => $plugins) {
-                if (count($plugins) !== 0) {
+                if (!empty($plugins)) {
                     foreach ($plugins as $plugin => $published) {
-                        $path = "$src/plugins/$folder/$plugin";
+                        $path = $this->findExtensionPath($src, 'plugin', $folder, $plugin);
 
-                        if (!is_dir($path)) {
-                            $path = "$src/plugins/$folder/plg_$plugin";
-                        }
-
-                        if (!is_dir($path)) {
-                            $path = "$src/plugins/$plugin";
-                        }
-
-                        if (!is_dir($path)) {
-                            $path = "$src/plugins/plg_$plugin";
-                        }
-
-                        if (!is_dir($path)) {
+                        if ($path === null) {
                             continue;
                         }
 
@@ -711,7 +722,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 <td><strong style="color: green;">' . Text::_('JBS_INS_INSTALLED') . '</strong></td>
             </tr>';
 
-        if (count($status->modules)) {
+        if (!empty($status->modules)) {
             echo "<tr>
                 <th>Module</th>
                 <th>Client</th>
@@ -733,7 +744,7 @@ class com_proclaimInstallerScript extends InstallerScript
             }
         }
 
-        if (count($status->plugins)) {
+        if (!empty($status->plugins)) {
             ?>
                 <tr>
                     <th>Plugin</th>
@@ -934,8 +945,8 @@ class com_proclaimInstallerScript extends InstallerScript
             if (
                 $menuBibleStudyStatus ||
                 $comBibleStudyStatus ||
-                count($this->status->modules) ||
-                count($this->status->plugins)
+                !empty($this->status->modules) ||
+                !empty($this->status->plugins)
             ) {
                 Factory::getApplication()->enqueueMessage("We have removed leftovers from Proclaim old version", "notice");
             }
