@@ -47,7 +47,7 @@ class Cwmalias
         $done    = 0;
         $db      = Factory::getContainer()->get('DatabaseDriver');
         $objects = self::getObjects();
-        $results = array();
+        $results = [];
 
         foreach ($objects as $object) {
             $results[] = self::getTableQuery($table = $object['name'], $title = $object['titlefield']);
@@ -82,12 +82,12 @@ class Cwmalias
      */
     private static function getObjects()
     {
-        $objects = array(
-            array('name' => '#__bsms_series', 'titlefield' => 'series_text'),
-            array('name' => '#__bsms_studies', 'titlefield' => 'studytitle'),
-            array('name' => '#__bsms_message_type', 'titlefield' => 'message_type'),
-            array('name' => '#__bsms_teachers', 'titlefield' => 'teachername'),
-        );
+        $objects = [
+            ['name' => '#__bsms_series', 'titlefield' => 'series_text'],
+            ['name' => '#__bsms_studies', 'titlefield' => 'studytitle'],
+            ['name' => '#__bsms_message_type', 'titlefield' => 'message_type'],
+            ['name' => '#__bsms_teachers', 'titlefield' => 'teachername'],
+        ];
 
         return $objects;
     }
@@ -104,7 +104,7 @@ class Cwmalias
      */
     private static function getTableQuery($table, $title)
     {
-        $data = array();
+        $data = [];
 
         if (!$table) {
             return false;
@@ -119,12 +119,12 @@ class Cwmalias
 
         foreach ($results as $result) {
             if (!$result->alias) {
-                $temp   = array(
+                $temp   = [
                     'id'    => $result->id,
                     'title' => $result->$title,
                     'alias' => $result->alias,
-                    'table' => $table
-                );
+                    'table' => $table,
+                ];
                 $data[] = $temp;
             }
         }

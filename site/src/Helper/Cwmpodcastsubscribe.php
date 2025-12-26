@@ -21,7 +21,6 @@ use Joomla\CMS\Html\HtmlHelper;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 
-
 /**
  * A helper to return buttons for podcast subscriptions
  *

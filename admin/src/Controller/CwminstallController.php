@@ -89,7 +89,7 @@ class CwminstallController extends BaseController
         $session = $app->getSession();
         $stack   = $session->get('migration_stack', '', 'CWM');
 
-        if (empty($stack) || !is_array($stack)) {
+        if (empty($stack) || !\is_array($stack)) {
             Cwmhelper::clearCache('site');
             Cwmhelper::clearCache('administrator');
             $session->set('migration_stack', '', 'CWM');

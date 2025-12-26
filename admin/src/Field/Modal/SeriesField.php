@@ -74,7 +74,7 @@ class SeriesField extends FormField
         if ($allowSelect) {
             static $scriptSelect = null;
 
-            if (is_null($scriptSelect)) {
+            if (\is_null($scriptSelect)) {
                 $scriptSelect = [];
             }
 

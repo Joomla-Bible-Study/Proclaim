@@ -438,14 +438,14 @@ class CwmmessageTable extends Table
      */
     public function bind($array, $ignore = ''): bool
     {
-        if (array_key_exists('params', $array) && is_array($array['params'])) {
+        if (\array_key_exists('params', $array) && \is_array($array['params'])) {
             $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = $registry->toString();
         }
 
         // Bind the rules.
-        if (isset($array['rules']) && is_array($array['rules'])) {
+        if (isset($array['rules']) && \is_array($array['rules'])) {
             $rules = new Rules($array['rules']);
             $this->setRules($rules);
         }

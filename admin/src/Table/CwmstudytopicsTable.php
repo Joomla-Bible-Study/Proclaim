@@ -139,7 +139,7 @@ class CwmstudytopicsTable extends Table
      *
      * @since   11.1
      */
-    protected function _getAssetParentId(Table $table = null, $id = null): int
+    protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID
         return Cwmassets::parentId();

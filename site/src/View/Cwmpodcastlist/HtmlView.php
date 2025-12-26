@@ -56,9 +56,9 @@ class HtmlView extends BaseHtmlView
         $this->template = $this->state->template;
         $this->params   = $this->state->params;
 
-        $attribs = array(
-            'class' => "jbsmimg"
-        );
+        $attribs = [
+            'class' => "jbsmimg",
+        ];
 
         $this->attribs = $attribs;
 

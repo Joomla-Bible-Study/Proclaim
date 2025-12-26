@@ -196,13 +196,13 @@ class HtmlView extends BaseHtmlView
      */
     protected function getSortFields(): array
     {
-        return array(
+        return [
             'study.studytitle'     => Text::_('JBS_CMN_STUDY_TITLE'),
             'mediatype.media_text' => Text::_('JBS_MED_MEDIA_TYPE'),
             'mediafile.filename'   => Text::_('JBS_MED_FILENAME'),
             'mediafile.ordering'   => Text::_('JGRID_HEADING_ORDERING'),
             'mediafile.published'  => Text::_('JSTATUS'),
-            'mediafile.id'         => Text::_('JGRID_HEADING_ID')
-        );
+            'mediafile.id'         => Text::_('JGRID_HEADING_ID'),
+        ];
     }
 }

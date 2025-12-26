@@ -327,7 +327,7 @@ class Cwmteacher extends Cwmlisting
         $groups = $user->getAuthorisedViewLevels();
 
         foreach ($items as $i => $iValue) {
-            if (($iValue->access > 1) && !in_array($iValue->access, $groups, true)) {
+            if (($iValue->access > 1) && !\in_array($iValue->access, $groups, true)) {
                 unset($items[$i]);
             }
         }

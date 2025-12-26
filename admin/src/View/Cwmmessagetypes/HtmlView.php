@@ -177,10 +177,10 @@ class HtmlView extends BaseHtmlView
      */
     protected function getSortFields(): array
     {
-        return array(
+        return [
             'messagetypes.message_type' => Text::_('JGRID_HEADING_ORDERING'),
             'messagetypes.published'    => Text::_('JSTATUS'),
-            'messagetypes.id'           => Text::_('JGRID_HEADING_ID')
-        );
+            'messagetypes.id'           => Text::_('JGRID_HEADING_ID'),
+        ];
     }
 }

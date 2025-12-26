@@ -93,7 +93,7 @@ class CWMAdministratorService
                 $content_languages = array_column($languages, 'lang_code');
 
                 foreach ($items as &$item) {
-                    if (in_array($item->lang_code, $content_languages, true)) {
+                    if (\in_array($item->lang_code, $content_languages, true)) {
                         $text    = $item->lang_code;
                         $url     = Route::_('index.php?option=com_proclaim&task=cwmmessage.edit&id=' . (int)$item->id);
                         $tooltip = '<strong>' . htmlspecialchars(

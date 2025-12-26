@@ -317,14 +317,14 @@ class CwmpodcastTable extends Table
      */
     public function bind($array, $ignore = '')
     {
-        if (isset($array['params']) && is_array($array['params'])) {
+        if (isset($array['params']) && \is_array($array['params'])) {
             $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = (string)$registry;
         }
 
         // Bind the rules.
-        if (isset($array['rules']) && is_array($array['rules'])) {
+        if (isset($array['rules']) && \is_array($array['rules'])) {
             $rules = new Rules($array['rules']);
             $this->setRules($rules);
         }
@@ -398,7 +398,7 @@ class CwmpodcastTable extends Table
      *
      * @since   11.1
      */
-    protected function _getAssetParentId(Table $table = null, $id = null): int
+    protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID
         return Cwmassets::parentId();

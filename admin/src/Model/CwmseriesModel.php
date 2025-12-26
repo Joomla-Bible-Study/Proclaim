@@ -79,7 +79,7 @@ class CwmseriesModel extends ListModel
 
         foreach ($items as $x => $xValue) {
             // Check the access level. Remove articles the user shouldn't see
-            if (!in_array($xValue->access, $groups, true)) {
+            if (!\in_array($xValue->access, $groups, true)) {
                 unset($items[$x]);
             }
         }

@@ -93,7 +93,7 @@ class Cwmrestore
         $db        = Factory::getContainer()->get('DatabaseDriver');
         $tables    = $db->getTableList();
         $prefix    = $db->getPrefix();
-        $prelength = strlen($prefix);
+        $prelength = \strlen($prefix);
         $bsms      = 'bsms_';
         $objects   = [];
 
@@ -350,21 +350,21 @@ class Cwmrestore
         $userfile = $input->files->get('importdb', null, 'raw');
 
         // Make sure that file uploads are enabled in PHP
-        if (!(bool)ini_get('file_uploads')) {
+        if (!(bool)\ini_get('file_uploads')) {
             $app->enqueueMessage(Text::_('JBS_IBM_ERROR_PHP_UPLOAD_NOT_ENABLED'), 'warning');
 
             return false;
         }
 
         // Ensure that zlib is loaded so that the package can be unpacked.
-        if (!extension_loaded('zlib')) {
+        if (!\extension_loaded('zlib')) {
             $app->enqueueMessage(Text::_('JBS_IBM_ERROR_UPLOAD_FAILED_ZLIB'), 'error');
 
             return false;
         }
 
         // If there is no uploaded file, we have a problem...
-        if (!is_array($userfile)) {
+        if (!\is_array($userfile)) {
             $app->enqueueMessage(Text::_('JBS_CMN_NO_FILE_SELECTED'), 'warning');
 
             return false;
@@ -487,7 +487,7 @@ class Cwmrestore
         // Create an array of queries from the SQL file
         $queries = $db->splitSql($query);
 
-        if (count($queries) === 0) {
+        if (\count($queries) === 0) {
             // No queries to process
             return false;
         }

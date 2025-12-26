@@ -68,13 +68,13 @@ class CwmtemplatesController extends AdminController
         $tc       = 0;
 
         // Make sure that file uploads are enabled in php
-        if (!(bool)ini_get('file_uploads')) {
+        if (!(bool)\ini_get('file_uploads')) {
             $app->enqueueMessage(Text::_('JBS_CMN_UPLOADS_NOT_ENABLED'), 'warning');
             $this->setRedirect('index.php?option=com_proclaim&view=templates');
         }
 
         // If there is no uploaded file, we have a problem...
-        if (!is_array($userfile)) {
+        if (!\is_array($userfile)) {
             $app->enqueueMessage(Text::_('JBS_CMN_NO_FILE_SELECTED'), 'warning');
             $this->setRedirect('index.php?option=com_proclaim&view=templates');
         }
@@ -98,7 +98,7 @@ class CwmtemplatesController extends AdminController
         $query   = file_get_contents(JPATH_SITE . '/tmp/' . $userfile['name']);
         $queries = DatabaseDriver::splitSql($query);
 
-        if (count($queries) === 0) {
+        if (\count($queries) === 0) {
             // No queries to process
             return 0;
         }

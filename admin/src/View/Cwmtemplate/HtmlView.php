@@ -91,12 +91,12 @@ class HtmlView extends BaseHtmlView
      */
     public function display($tpl = null): void
     {
-        $this->item = $this->get('Item');
+        $this->item       = $this->get('Item');
         $this->pagination = $this->get('Pagination');
-        $this->state = $this->get('State');
-        $this->types = $this->get('Types');
-        $this->form = $this->get("Form");
-        $this->canDo = ContentHelper::getActions('com_proclaim', 'template', (int)$this->item->id);
+        $this->state      = $this->get('State');
+        $this->types      = $this->get('Types');
+        $this->form       = $this->get("Form");
+        $this->canDo      = ContentHelper::getActions('com_proclaim', 'template', (int)$this->item->id);
 
         $this->setLayout("edit");
 

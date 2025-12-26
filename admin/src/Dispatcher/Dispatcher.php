@@ -73,7 +73,7 @@ class Dispatcher extends ComponentDispatcher
     {
         if (!($this->app instanceof CMSWebApplicationInterface)) {
             throw new \Exception(
-                sprintf(
+                \sprintf(
                     'The %s method requires an instance of %s but instead %s was supplied',
                     __METHOD__,
                     CMSWebApplicationInterface::class,
@@ -108,7 +108,7 @@ class Dispatcher extends ComponentDispatcher
         $allowedTasks = ['user.edit', 'user.apply', 'user.save', 'user.cancel'];
 
         // Allow users to edit their own accounts
-        if (($view === 'user' && $layout === 'edit') || in_array($task, $allowedTasks, true)) {
+        if (($view === 'user' && $layout === 'edit') || \in_array($task, $allowedTasks, true)) {
             $user = $this->app->getIdentity();
             $id   = $this->input->getInt('id');
 
