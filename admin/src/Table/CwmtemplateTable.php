@@ -161,15 +161,7 @@ class CwmtemplateTable extends Table
      */
     public function store($updateNulls = false): bool
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
-
-        // Attempt to store the user data.
-        $oldrow = new CwmtemplateTable($db);
-
-        if (!$oldrow->load($this->id) && $oldrow->getError()) {
-            $this->setError($oldrow->getError());
-        }
-
+        // Set default rules if not already set
         if (!$this->_rules) {
             $this->setRules(
                 '{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}'
