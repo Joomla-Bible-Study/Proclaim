@@ -24,7 +24,8 @@
                 <field name="dummy" type="LoadLanguageFile" default=""/>   <!-- load common language file -->
                 <field name="t" type="sql" default="1"
                        label="JBS_MDL_SELECT_TEMPLATE" description="JBS_MDL_SELECT_TEMPLATE_DESC"
-                       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
+                       class="form-select"
+                       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY title ASC"
                        key_field="id" value_field="title" required="true"/>
 
                 <field name="subscribeintro" type="text" default="Our Podcasts" size="50"
@@ -33,11 +34,14 @@
             <fieldset name="advanced">
                 <field name="layout"
                        type="modulelayout"
+                       extension="mod_proclaim_podcast"
+                       class="form-select"
                        label="JFIELD_ALT_LAYOUT_LABEL"
                        description="JFIELD_ALT_MODULE_LAYOUT_DESC"/>
                 <field name="cache"
                        type="list"
                        default="1"
+                       class="form-select"
                        label="COM_MODULES_FIELD_CACHING_LABEL"
                        description="COM_MODULES_FIELD_CACHING_LABEL">
                     <option

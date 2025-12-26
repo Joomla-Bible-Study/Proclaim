@@ -31,7 +31,7 @@ class Dispatcher extends AbstractModuleDispatcher
      * @return  array
      *
      * @throws \Exception
-     * @since   4.2.0
+     * @since   10.0.0
      */
     protected function getLayoutData(): array
     {
@@ -40,16 +40,26 @@ class Dispatcher extends AbstractModuleDispatcher
 
         // Always load Proclaim API if it exists.
         if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
-            require_once JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
+            $apiPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
+
+            if (file_exists($apiPath)) {
+                require_once $apiPath;
+            }
         }
 
         if (!ComponentHelper::isEnabled('com_proclaim')) {
-            throw new \RuntimeException("Extension Proclaim not present or enabled");
+            $this->app->enqueueMessage("Extension Proclaim not present or enabled", 'error');
+
+            return $data;
         }
 
-        $podcast   = new Cwmpodcastsubscribe();
-        if ($data) {
+        $podcast = new Cwmpodcastsubscribe();
+
+        try {
             $data['list'] = $podcast->buildSubscribeTable($data['params']->get('subscribeintro', 'Our Podcasts'));
+        } catch (\Exception $e) {
+            $this->app->enqueueMessage($e->getMessage(), 'error');
+            $data['list'] = '';
         }
 
         // Display the module
