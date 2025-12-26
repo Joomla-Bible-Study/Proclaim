@@ -300,11 +300,29 @@ class CwmcommentModel extends AdminModel
      *
      * @return  void
      *
+     * @throws \Exception
      * @since    1.6
      */
-    protected function prepareTable($table)
+    protected function prepareTable($table): void
     {
-        // Holder.
+        $date = Factory::getDate();
+        $user = Factory::getApplication()->getIdentity();
+
+        // Always ensure created date is set (handles empty string from form)
+        if (empty($table->created) || $table->created === '') {
+            $table->created = $date->toSql();
+        }
+
+        if (empty($table->id)) {
+            // Set the values for a new record
+            if (empty($table->created_by)) {
+                $table->created_by = $user->get('id');
+            }
+        } else {
+            // Set the values for existing records
+            $table->modified    = $date->toSql();
+            $table->modified_by = $user->get('id');
+        }
     }
 
     /**
