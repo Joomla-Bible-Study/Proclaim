@@ -99,7 +99,7 @@ class HtmlView extends BaseHtmlView
         $this->server_form = $this->get('AddonServerForm');
 
         // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
+        if (\count($errors = $this->get('Errors'))) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 

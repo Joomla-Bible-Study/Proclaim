@@ -75,7 +75,7 @@ class ProclaimNomenuRules implements RulesInterface
             $vars['view'] = array_shift($segments);
             $view         = $views[$vars['view']];
 
-            if (isset($view->key) && isset($segments[0])) {
+            if (isset($view->key, $segments[0])) {
                 if (\is_callable([$this->router, 'get' . ucfirst($view->name) . 'Id'])) {
                     $input = $this->router->app->getInput();
 
@@ -89,7 +89,7 @@ class ProclaimNomenuRules implements RulesInterface
 
                         while ($segments) {
                             $segment = array_shift($segments);
-                            $result  = call_user_func(
+                            $result  = \call_user_func(
                                 [$this->router, 'get' . ucfirst($view->name) . 'Id'],
                                 $segment,
                                 $vars
@@ -104,7 +104,7 @@ class ProclaimNomenuRules implements RulesInterface
                         }
                     } else {
                         $segment = array_shift($segments);
-                        $result  = call_user_func(
+                        $result  = \call_user_func(
                             [$this->router, 'get' . ucfirst($view->name) . 'Id'],
                             $segment,
                             $vars
@@ -140,7 +140,7 @@ class ProclaimNomenuRules implements RulesInterface
 
                 if ($view->key && isset($query[$view->key])) {
                     if (\is_callable([$this->router, 'get' . ucfirst($view->name) . 'Segment'])) {
-                        $result = call_user_func(
+                        $result = \call_user_func(
                             [$this->router, 'get' . ucfirst($view->name) . 'Segment'],
                             $query[$view->key],
                             $query

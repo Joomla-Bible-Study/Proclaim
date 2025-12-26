@@ -254,7 +254,7 @@ class ProclaimHelper implements DatabaseAwareInterface
             return;
         }
 
-        if (!is_array($filters)) {
+        if (!\is_array($filters)) {
             $filters = [$filters];
         }
 
@@ -270,7 +270,7 @@ class ProclaimHelper implements DatabaseAwareInterface
             return;
         }
 
-        if (count($validFilters) > 1) {
+        if (\count($validFilters) > 1) {
             $where = [];
 
             foreach ($validFilters as $filter) {

@@ -44,17 +44,17 @@ class CwmtemplatesModel extends ListModel
      * @since   11.1
      * @see     JController
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array(
+            $config['filter_fields'] = [
                 'id',
                 'template.id',
                 'published',
                 'template.published',
                 'title',
-                'template.title'
-            );
+                'template.title',
+            ];
         }
 
         parent::__construct($config);

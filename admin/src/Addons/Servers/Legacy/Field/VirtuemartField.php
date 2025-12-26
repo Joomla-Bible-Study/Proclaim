@@ -53,7 +53,7 @@ class VirtuemartField extends ListField
         // Use default Joomla
         $siteLang = $params->get('site', 'en-GB');
         $lang     = strtolower(str_replace('-', '_', $siteLang));
-        define('VMLANG', $lang);
+        \define('VMLANG', $lang);
 
         // Check to see if component installed
         jimport('joomla.filesystem.folder');

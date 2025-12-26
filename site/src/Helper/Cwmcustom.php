@@ -49,7 +49,7 @@ class Cwmcustom
         $JBSMElements = new Cwmlisting();
 
         $custom = preg_replace_callback('/{([^}]+)}/', function ($matches) use ($rowid, $isCustom, $row, $params, $template, $JBSMElements) {
-            $subcustom = $matches[1];
+            $subcustom  = $matches[1];
             $localRowId = $rowid;
 
             if (!$localRowId || $isCustom) {

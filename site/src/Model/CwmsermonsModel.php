@@ -264,12 +264,12 @@ class CwmsermonsModel extends ListModel
         // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user   = Factory::getApplication()->getIdentity();
         $groups = $user->getAuthorisedViewLevels();
-        $count  = count($items);
+        $count  = \count($items);
 
         if ($count > 0) {
             foreach ($items as $i => $iValue) {
                 if ($iValue->access > 1) {
-                    if (!in_array($iValue->access, $groups, true)) {
+                    if (!\in_array($iValue->access, $groups, true)) {
                         unset($items[$i]);
                     }
                 }
@@ -444,7 +444,7 @@ class CwmsermonsModel extends ListModel
 
         $orderCol = $app->input->get('filter_order');
 
-        if (!empty($orderCol) && !in_array($orderCol, $this->filter_fields, true)) {
+        if (!empty($orderCol) && !\in_array($orderCol, $this->filter_fields, true)) {
             $orderCol = 'study.studydate';
         }
 
@@ -453,7 +453,7 @@ class CwmsermonsModel extends ListModel
         // From landing page filter passing
         $listOrder = $app->input->get('filter_order_Dir');
 
-        if (!empty($listOrder) && !in_array(strtoupper($listOrder), ['ASC', 'DESC', ''])) {
+        if (!empty($listOrder) && !\in_array(strtoupper($listOrder), ['ASC', 'DESC', ''])) {
             $direction = 'DESC';
         }
 
@@ -780,7 +780,7 @@ class CwmsermonsModel extends ListModel
 
         // Topic ID
         if (
-            !is_null($params->get('mtopic_id')) && $params->get('mtopic_id')[0] !== '-1' && empty(
+            !\is_null($params->get('mtopic_id')) && $params->get('mtopic_id')[0] !== '-1' && empty(
                 $this->getState(
                     'filter.topic'
                 )
@@ -904,10 +904,10 @@ class CwmsermonsModel extends ListModel
 
         // Work through each filter deceleration
         foreach ($filters_group as $filters) {
-            if (is_array($filters)) {
+            if (\is_array($filters)) {
                 // Work through the menu filters or search filters
                 foreach ($filters as $filter => $filtervalue) {
-                    if (count($filtervalue) > 1) {
+                    if (\count($filtervalue) > 1) {
                         $where2   = [];
                         $subquery = '(';
 

@@ -78,7 +78,7 @@ abstract class CWMAddon
     public function __construct(array $config = [])
     {
         if (empty($this->type)) {
-            if (array_key_exists('type', $config)) {
+            if (\array_key_exists('type', $config)) {
                 $this->type = $config['type'];
             } else {
                 $this->type = $this->getType();
@@ -109,7 +109,7 @@ abstract class CWMAddon
         if (empty($this->type)) {
             $r = null;
 
-            if (!preg_match('/CWMAddon(.*)/i', get_class($this), $r)) {
+            if (!preg_match('/CWMAddon(.*)/i', \get_class($this), $r)) {
                 throw new \RuntimeException(Text::sprintf('JBS_CMN_CANT_ADDON_CLASS_NAME', $this->type), 500);
             }
 

@@ -40,7 +40,7 @@ class CwmmediafileTableTest extends ProclaimTestCase
     public function testTableClassHasCorrectNamespace(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmmediafileTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString(
             'namespace CWM\Component\Proclaim\Administrator\Table;',
@@ -56,7 +56,7 @@ class CwmmediafileTableTest extends ProclaimTestCase
     public function testTableClassExtendsJoomlaTable(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmmediafileTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('extends Table', $content);
         $this->assertStringContainsString('use Joomla\CMS\Table\Table;', $content);
@@ -70,7 +70,7 @@ class CwmmediafileTableTest extends ProclaimTestCase
     public function testTableUsesCorrectDatabaseTable(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmmediafileTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('#__bsms_mediafiles', $content);
     }
@@ -83,7 +83,7 @@ class CwmmediafileTableTest extends ProclaimTestCase
     public function testTableDefinesServerIdProperty(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmmediafileTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('$server_id', $content);
     }
@@ -96,7 +96,7 @@ class CwmmediafileTableTest extends ProclaimTestCase
     public function testTableDefinesStudyIdProperty(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmmediafileTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('$study_id', $content);
     }
@@ -109,7 +109,7 @@ class CwmmediafileTableTest extends ProclaimTestCase
     public function testTableHasBindMethod(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmmediafileTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('function bind(', $content);
     }
@@ -122,7 +122,7 @@ class CwmmediafileTableTest extends ProclaimTestCase
     public function testTableHasStoreMethod(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmmediafileTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('function store(', $content);
     }
@@ -135,7 +135,7 @@ class CwmmediafileTableTest extends ProclaimTestCase
     public function testTableHasGetAssetNameMethod(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmmediafileTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('function _getAssetName()', $content);
         $this->assertStringContainsString('com_proclaim.mediafile.', $content);
@@ -149,7 +149,7 @@ class CwmmediafileTableTest extends ProclaimTestCase
     public function testTableProcessesParamsAsRegistry(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmmediafileTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('use Joomla\Registry\Registry;', $content);
     }

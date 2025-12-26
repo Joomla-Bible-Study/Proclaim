@@ -231,7 +231,7 @@ class CwmsermonModel extends FormModel
                     $user   = Factory::getApplication()->getIdentity();
                     $groups = $user->getAuthorisedViewLevels();
 
-                    $data->params->set('access-view', in_array($data->access, $groups, true));
+                    $data->params->set('access-view', \in_array($data->access, $groups, true));
                 }
 
                 $this->_item[$pk] = $data;

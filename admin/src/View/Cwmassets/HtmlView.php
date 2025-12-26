@@ -114,10 +114,10 @@ class HtmlView extends BaseHtmlView
             $this->totalSteps   = 0;
             $this->doneSteps    = 0;
         } else {
-            if (function_exists('base64_encode') && function_exists('base64_decode')) {
+            if (\function_exists('base64_encode') && \function_exists('base64_decode')) {
                 $stack = base64_decode($stack);
 
-                if (function_exists('gzdeflate') && function_exists('gzinflate')) {
+                if (\function_exists('gzdeflate') && \function_exists('gzinflate')) {
                     $stack = gzinflate($stack);
                 }
             }

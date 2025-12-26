@@ -127,7 +127,7 @@ class HtmlView extends BaseHtmlView
         $user   = Factory::getApplication()->getIdentity();
         $groups = $user->getAuthorisedViewLevels();
 
-        if (!in_array($item->access, $groups) && $item->access) {
+        if (!\in_array($item->access, $groups) && $item->access) {
             $mainframe->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
 
             return;
@@ -157,12 +157,12 @@ class HtmlView extends BaseHtmlView
      */
     private function endsWith(string $haystack, string $needle): bool
     {
-        $length = strlen($needle);
+        $length = \strlen($needle);
 
         if ($length === 0) {
             return true;
         }
 
-        return (substr($haystack, -$length) === $needle);
+        return substr($haystack, -$length) === $needle;
     }
 }

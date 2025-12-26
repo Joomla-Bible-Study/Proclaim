@@ -185,12 +185,12 @@ class HtmlView extends BaseHtmlView
      */
     protected function getSortFields(): array
     {
-        return array(
+        return [
             'series.ordering'  => Text::_('JGRID_HEADING_ORDERING'),
             'series.published' => Text::_('JSTATUS'),
             'access_level'     => Text::_('JGRID_HEADING_ACCESS'),
             'series.language'  => Text::_('JGRID_HEADING_LANGUAGE'),
-            'series.id'        => Text::_('JGRID_HEADING_ID')
-        );
+            'series.id'        => Text::_('JGRID_HEADING_ID'),
+        ];
     }
 }

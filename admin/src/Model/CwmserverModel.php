@@ -182,7 +182,7 @@ class CwmserverModel extends AdminModel
 
         // Sanitize server_name to prevent XSS attacks
         if (isset($data['server_name'])) {
-            $filter = InputFilter::getInstance();
+            $filter    = InputFilter::getInstance();
             $cleanName = $filter->clean($data['server_name'], 'STRING');
 
             // Check if the name was altered (indicating potentially malicious content)

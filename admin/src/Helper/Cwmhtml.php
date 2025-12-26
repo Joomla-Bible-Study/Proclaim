@@ -15,7 +15,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
-defined('JPATH_BASE') or die;
+\defined('JPATH_BASE') or die;
 
 
 /**

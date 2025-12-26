@@ -129,24 +129,24 @@ abstract class Cwmhelperroute
      * @throws \Exception
      * @since    7.2
      */
-    protected static function findItem(array $needles = array())
+    protected static function findItem(array $needles = [])
     {
         $app   = Factory::getApplication();
         $menus = $app->getMenu('site');
 
         // Prepare the reverse lookup array.
         if (self::$lookup === null) {
-            self::$lookup = array();
+            self::$lookup = [];
 
             $component = ComponentHelper::getComponent('com_proclaim');
             $items     = $menus->getItems('component_id', $component->id);
 
             foreach ($items as $item) {
-                if (isset($item->query) && isset($item->query['view'])) {
+                if (isset($item->query, $item->query['view'])) {
                     $view = $item->query['view'];
 
                     if (!isset(self::$lookup[$view])) {
-                        self::$lookup[$view] = array();
+                        self::$lookup[$view] = [];
                     }
 
                     if (isset($item->query['id'])) {

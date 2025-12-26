@@ -195,8 +195,8 @@ class CwmserieModel extends AdminModel
                 $x = substr_count(basename($data['image']), $prefix);
 
                 while ($x > 1) {
-                    if (substr(basename($data['image']), 0, strlen($prefix)) == $prefix) {
-                        $str                      = substr(basename($data['image']), strlen($prefix));
+                    if (substr(basename($data['image']), 0, \strlen($prefix)) == $prefix) {
+                        $str                      = substr(basename($data['image']), \strlen($prefix));
                         $data['series_thumbnail'] = $path . '/' . $str;
                         $data['image']            = $path . '/' . $str;
                     }

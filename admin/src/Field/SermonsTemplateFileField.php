@@ -75,7 +75,7 @@ class SermonsTemplateFileField extends ListField
             return array_merge(parent::getOptions(), self::$cachedOptions);
         }
 
-        self::$cachedOptions = [];
+        self::$cachedOptions   = [];
         self::$cachedOptions[] = HTMLHelper::_('select.option', '0', Text::_('JBS_CMN_USE_DEFAULT'));
 
         $path = JPATH_SITE . '/components/com_proclaim/tmpl/cwmsermons';
@@ -92,12 +92,12 @@ class SermonsTemplateFileField extends ListField
 
         // Filter and process files in a single pass
         foreach ($files as $file) {
-            if (in_array($file, self::EXCLUDED_FILES, true)) {
+            if (\in_array($file, self::EXCLUDED_FILES, true)) {
                 continue;
             }
 
             // Extract template name (remove .php and default_ prefix)
-            $name = str_replace(['.php', 'default_'], '', $file);
+            $name                  = str_replace(['.php', 'default_'], '', $file);
             self::$cachedOptions[] = HTMLHelper::_('select.option', $name, $name);
         }
 

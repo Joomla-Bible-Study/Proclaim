@@ -109,7 +109,7 @@ class CwmcpanelModel extends BaseModel
             $pimModel->setState('eid', $extension_id);
 
             $list   = $pimModel->getitems();
-            $result = count($list) >= 1;
+            $result = \count($list) >= 1;
         } catch (\Exception $e) {
             $result = true;
         }

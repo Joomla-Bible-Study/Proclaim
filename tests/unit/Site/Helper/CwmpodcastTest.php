@@ -11,8 +11,8 @@
 
 namespace CWM\Component\Proclaim\Tests\Site\Helper;
 
-use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
+use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 
 /**
  * Test class for Cwmpodcast
@@ -40,7 +40,7 @@ class CwmpodcastTest extends ProclaimTestCase
     public function testClassHasCorrectNamespace(): void
     {
         $filePath = JPATH_ROOT . '/site/src/Helper/Cwmpodcast.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString(
             'namespace CWM\Component\Proclaim\Site\Helper;',

@@ -248,7 +248,7 @@ class Cwmpagebuilder
         PluginHelper::importPlugin('content');
 
         // Run content plugins
-        $dispatcher = Factory::getApplication();
+        $dispatcher            = Factory::getApplication();
         $contentEventArguments = [
             'context' => 'com_proclaim.sermon',
             'subject' => &$item,
@@ -258,7 +258,7 @@ class Cwmpagebuilder
 
         $dispatcher->triggerEvent('onContentPrepare', $contentEventArguments);
 
-        $item->event = new \stdClass();
+        $item->event                    = new \stdClass();
         $results                        = $dispatcher->triggerEvent('onContentAfterTitle', $contentEventArguments);
         $item->event->afterDisplayTitle = trim(implode("\n", $results));
 
