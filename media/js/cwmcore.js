@@ -1,18 +1,22 @@
 $(function () {
+    'use strict';
+
     $('.btnPlay').on('click', function () {
-        const mediaId = $(this).attr('alt');
-        const mediaid = $('#media-' + mediaId);
+        const $this = $(this);
+        const mediaId = $this.attr('alt');
+        const $mediaid = $('#media-' + mediaId);
 
         $('.inlinePlayer:not(#media-' + mediaId + ')').hide();
         $('.inlinePlayer').html('');
-        mediaid.toggle();
-        mediaid.load(
-            'index.php?option=com_proclaim&view=cwmstudieslist&controller=cwmstudieslist&task=inlinePlayer&tmpl=component',
+        $mediaid.toggle();
+        $mediaid.load(
+            'index.php?option=com_proclaim&view=cwmstudieslist&controller=cwmstudieslist&task=inlinePlayer&tmpl=component'
         );
         return false;
     });
 
-    if (Modernizr.touch) {
+    // Check for Modernizr touch support safely
+    if (typeof Modernizr !== 'undefined' && Modernizr.touch) {
         const jbsmcloseoverlay = $('.jbsmclose-overlay');
 
         jbsmcloseoverlay.removeClass('hidden');
@@ -39,25 +43,25 @@ $(function () {
     }
 
     $('#addReference').on('click', function () {
-        const newReference = $('#reference').clone();
-        const deleteButton = '<a href="#" class="referenceDelete">Delete</a>';
-
-        $(newReference).children('#text').attr('value', '');
-        $(newReference).children('#scripture').selectOptions('0');
-
-        $(newReference).append(deleteButton);
-        $(newReference).appendTo('#references');
-
-        $('.referenceDelete').on('click', function () {
-            $(this).parent('#reference').remove();
-            return false;
+        const $newReference = $('#reference').clone();
+        const $deleteButton = $('<a>', {
+            href: '#',
+            'class': 'referenceDelete',
+            text: 'Delete'
         });
+
+        $newReference.children('#text').attr('value', '');
+        $newReference.children('#scripture').selectOptions('0');
+
+        $newReference.append($deleteButton);
+        $newReference.appendTo('#references');
         return false;
     });
 
-    $('.referenceDelete').on('click', function () {
+    // Use event delegation for dynamically added delete buttons
+    $('#references').on('click', '.referenceDelete', function (e) {
+        e.preventDefault();
         $(this).parent('#reference').remove();
-        return false;
     });
 
     $('.imgChoose').on('change', function () {
@@ -71,12 +75,23 @@ $(function () {
             targetImage.show();
         }
 
-        targetImage.attr('src', activeDir.join('/') + '/' + _.escape($(this).val()));
+        // Safely escape the value - use underscore if available, otherwise basic HTML escape
+        const escapeHtml = (str) => {
+            if (typeof _ !== 'undefined' && typeof _.escape === 'function') {
+                return _.escape(str);
+            }
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        };
+        targetImage.attr('src', activeDir.join('/') + '/' + escapeHtml($(this).val()));
     });
 
     $('#type').on('change', function () {
         const selectedFunction = $('#type').find('option:selected').attr('value');
-        if (typeof window[selectedFunction] === 'function') {
+        // Whitelist of allowed template functions to prevent arbitrary code execution
+        const allowedFunctions = ['tmplList'];
+        if (allowedFunctions.includes(selectedFunction) && typeof window[selectedFunction] === 'function') {
             window[selectedFunction]();
         }
     });
@@ -92,15 +107,14 @@ $(function () {
 
     function canvasItemControls(itemLabel)
     {
-        const itemOptions = '<div id="canvasItemOptions">&nbsp;</div>';
-        const moveItem = '<div id="canvasMoveItem">&nbsp;</div>';
-        const deleteItem = '<div id="canvasDeleteItem">&nbsp;</div>';
-        const canvasItem = $('.canvasItem');
+        const $canvasItem = $('.canvasItem');
 
-        canvasItem.append(itemOptions);
-        canvasItem.append(moveItem);
-        canvasItem.append(deleteItem);
-        canvasItem.append('<div class="canvasItemName">' + itemLabel + '</div>');
+        // Create elements safely to prevent XSS
+        $canvasItem.append($('<div>', { id: 'canvasItemOptions', html: '&nbsp;' }));
+        $canvasItem.append($('<div>', { id: 'canvasMoveItem', html: '&nbsp;' }));
+        $canvasItem.append($('<div>', { id: 'canvasDeleteItem', html: '&nbsp;' }));
+        // Use .text() to safely escape itemLabel and prevent XSS
+        $canvasItem.append($('<div>', { 'class': 'canvasItemName' }).text(itemLabel));
 
         canvasItemFunctions();
     }
