@@ -34,12 +34,12 @@
 $finder = PhpCsFixer\Finder::create()
     ->in(
         [
-            __DIR__ . './admin',
-            __DIR__ . './build',
-            __DIR__ . './site',
-            __DIR__ . './modules',
-            __DIR__ . './plugins',
-            __DIR__ . './tests',
+            __DIR__ . '/admin',
+            __DIR__ . '/build',
+            __DIR__ . '/site',
+            __DIR__ . '/modules',
+            __DIR__ . '/plugins',
+            __DIR__ . '/tests',
         ]
     )
     // Ignore template files as PHP CS fixer can't handle them properly

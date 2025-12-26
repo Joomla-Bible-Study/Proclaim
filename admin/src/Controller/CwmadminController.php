@@ -553,7 +553,7 @@ class CwmadminController extends FormController
     {
         $user = Factory::getApplication()->getSession()->get('user');
 
-        if (array_key_exists(8, $user->groups)) {
+        if (\array_key_exists(8, $user->groups)) {
             CwmdbHelper::resetdb();
             $this->setRedirect(
                 Route::_(
@@ -647,7 +647,7 @@ class CwmadminController extends FormController
             $isjbs = substr_count($table, $oldprefix . 'bsms');
 
             if ($isjbs) {
-                $oldlength       = strlen($oldprefix);
+                $oldlength       = \strlen($oldprefix);
                 $newsubtablename = substr($table, $oldlength);
                 $newtablename    = $prefix . $newsubtablename;
                 $query           = 'DROP TABLE IF EXISTS ' . $newtablename;
@@ -757,7 +757,7 @@ class CwmadminController extends FormController
             $images = Folder::files(JPATH_ROOT . '/images/biblestudy/' . $image_type, 'original_', true, true);
 
             if ($images) {
-                $count += count($images);
+                $count += \count($images);
             }
 
             $images_paths[] = [['type' => $image_type, 'images' => $images]];

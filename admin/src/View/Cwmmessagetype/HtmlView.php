@@ -84,14 +84,14 @@ class HtmlView extends BaseHtmlView
      */
     public function display($tpl = null): void
     {
-        $this->form = $this->get("Form");
-        $this->item = $this->get("Item");
+        $this->form  = $this->get("Form");
+        $this->item  = $this->get("Item");
         $this->state = $this->get("State");
         $this->canDo = ContentHelper::getActions('com_proclaim', 'messagetype', (int)$this->item->id);
         $this->setLayout("edit");
 
         // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
+        if (\count($errors = $this->get('Errors'))) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 

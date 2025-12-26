@@ -93,7 +93,7 @@ class Cwmtranslated
             // First choice: string in current language
             if ($currentLanguage) {
                 if ($itemparams->get($currentLanguage)) {
-                    return ($itemparams->get($currentLanguage));
+                    return $itemparams->get($currentLanguage);
                 }
             }
 
@@ -108,12 +108,12 @@ class Cwmtranslated
                 $defaultLanguage = ComponentHelper::getParams('com_languages')->get('site');
 
                 if ($defaultLanguage && $itemparams->get($defaultLanguage)) {
-                    return ($itemparams->get($defaultLanguage));
+                    return $itemparams->get($defaultLanguage);
                 }
             }
 
             // Fallback: second choice
-            return ($jtextString);
+            return $jtextString;
         }
 
         return null;

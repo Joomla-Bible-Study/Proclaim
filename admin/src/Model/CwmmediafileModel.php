@@ -186,7 +186,7 @@ class CwmmediafileModel extends AdminModel
                 $siteinfo = strpos($path_server, $nohttp);
 
                 if ($siteinfo) {
-                    $filename = substr($path_server, strlen($nohttp));
+                    $filename = substr($path_server, \strlen($nohttp));
                     $filename = JPATH_SITE . '/' . $filename;
                 } else {
                     $filename = $path_server;

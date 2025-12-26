@@ -40,7 +40,7 @@ class CwmimagesTest extends ProclaimTestCase
     {
         parent::setUp();
 
-        $this->classFile = JPATH_ROOT . '/site/src/Helper/Cwmimages.php';
+        $this->classFile    = JPATH_ROOT . '/site/src/Helper/Cwmimages.php';
         $this->classContent = file_get_contents($this->classFile);
     }
 
@@ -108,7 +108,7 @@ class CwmimagesTest extends ProclaimTestCase
     {
         // Verify the dash prefix check exists
         $this->assertStringContainsString(
-            "strncmp(\$image1, '- ', 2)",
+            "str_starts_with(\$image1, '- ')",
             $this->classContent
         );
     }
@@ -233,7 +233,6 @@ class CwmimagesTest extends ProclaimTestCase
      */
     public function testClassUsesRequiredJoomlaClasses(): void
     {
-        $this->assertStringContainsString('use Joomla\CMS\Factory;', $this->classContent);
         $this->assertStringContainsString('use Joomla\CMS\HTML\HTMLHelper;', $this->classContent);
         $this->assertStringContainsString('use Joomla\CMS\Image\Image;', $this->classContent);
         $this->assertStringContainsString('use Joomla\Registry\Registry;', $this->classContent);

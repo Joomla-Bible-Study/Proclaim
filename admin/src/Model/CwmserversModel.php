@@ -211,7 +211,7 @@ class CwmserversModel extends ListModel
 
         // Validate ordering column against whitelist
         $allowedColumns = ['server.id', 'server.server_name', 'server.published', 'server.type'];
-        if (!in_array($orderCol, $allowedColumns, true)) {
+        if (!\in_array($orderCol, $allowedColumns, true)) {
             $orderCol = 'server.server_name';
         }
 

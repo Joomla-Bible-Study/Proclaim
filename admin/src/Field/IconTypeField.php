@@ -57,7 +57,7 @@ class IconTypeField extends ListField
             'fa fa fa-television' => 'far fa-tv',
             'fa fa-file'          => 'fas fa-file',
             'fa fa-file-pdf'      => 'fas fa-file-pdf',
-            'fa fa-vimeo'         => 'fab fa-vimeo'
+            'fa fa-vimeo'         => 'fab fa-vimeo',
         ];
 
         if (isset($convert[$this->value])) {

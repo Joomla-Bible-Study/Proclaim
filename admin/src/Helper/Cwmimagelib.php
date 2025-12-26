@@ -53,7 +53,7 @@ class Cwmimagelib
         $img_sub     = JPATH_ROOT . '/' . $img;
 
         if (file_exists($img_sub) && !file_exists($new_sub)) {
-            if (function_exists('gd_info') && extension_loaded('gd')) {
+            if (\function_exists('gd_info') && \extension_loaded('gd')) {
                 self::resizeImage($new_sub, $img_sub);
 
                 return $NewfileName;

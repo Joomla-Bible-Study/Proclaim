@@ -173,7 +173,7 @@ class Cwmserieslist extends Cwmlisting
         $groups = $user->getAuthorisedViewLevels();
 
         foreach ($items as $i => $row) {
-            if (($row->access > 1) && !in_array($row->access, $groups)) {
+            if (($row->access > 1) && !\in_array($row->access, $groups)) {
                 unset($items[$i]);
                 continue;
             }

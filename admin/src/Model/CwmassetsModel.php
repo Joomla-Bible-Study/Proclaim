@@ -167,7 +167,7 @@ class CwmassetsModel extends ListModel
     {
         [$usec, $sec] = explode(" ", microtime());
 
-        return ((float)$usec + (float)$sec);
+        return (float)$usec + (float)$sec;
     }
 
     /**
@@ -206,8 +206,8 @@ class CwmassetsModel extends ListModel
         ];
         $stack = json_encode($stack, JSON_THROW_ON_ERROR);
 
-        if (function_exists('base64_encode') && function_exists('base64_decode')) {
-            if (function_exists('gzdeflate') && function_exists('gzinflate')) {
+        if (\function_exists('base64_encode') && \function_exists('base64_decode')) {
+            if (\function_exists('gzdeflate') && \function_exists('gzinflate')) {
                 $stack = gzdeflate($stack, 9);
             }
 
@@ -286,10 +286,10 @@ class CwmassetsModel extends ListModel
             return;
         }
 
-        if (function_exists('base64_encode') && function_exists('base64_decode')) {
+        if (\function_exists('base64_encode') && \function_exists('base64_decode')) {
             $stack = base64_decode($stack);
 
-            if (function_exists('gzdeflate') && function_exists('gzinflate')) {
+            if (\function_exists('gzdeflate') && \function_exists('gzinflate')) {
                 $stack = gzinflate($stack);
             }
         }
@@ -376,7 +376,7 @@ class CwmassetsModel extends ListModel
             $matchrows   = 0;
             $arulesrows  = 0;
             $nomatchrows = 0;
-            $numrows     = count($results);
+            $numrows     = \count($results);
 
             // Now go through each record to test it for asset id
             foreach ($results as $result) {

@@ -107,7 +107,7 @@ class CwmassetsController extends BaseController
         $session = $app->getSession();
         $stack   = $session->get('asset_stack', '', 'CWM');
 
-        if (empty($stack) || !is_array($stack)) {
+        if (empty($stack) || !\is_array($stack)) {
             Cwmhelper::clearCache();
             $session->set('asset_stack', '', 'CWM');
 

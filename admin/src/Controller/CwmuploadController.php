@@ -116,7 +116,7 @@ class CwmuploadController extends AdminController
         }
 
         // File type check
-        if (!in_array(File::getExt($fileName), $exts_arr, true)) {
+        if (!\in_array(File::getExt($fileName), $exts_arr, true)) {
             $this->setResponse(100, Text::_('JBS_ERROR_UPLOAD_INVALID_FILE_EXTENSION'));
         }
 

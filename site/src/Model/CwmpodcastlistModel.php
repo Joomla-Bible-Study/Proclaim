@@ -74,11 +74,11 @@ class CwmpodcastlistModel extends ListModel
                 // If the access filter has been set, we already have only the articles this user can view.
                 $item->params->set('access-view', true);
             } elseif ($item->catid == 0 || $item->category_access === null) {
-                $item->params->set('access-view', in_array($item->access, $groups));
+                $item->params->set('access-view', \in_array($item->access, $groups));
             } else {
                 $item->params->set(
                     'access-view',
-                    in_array($item->access, $groups) && in_array($item->category_access, $groups)
+                    \in_array($item->access, $groups) && \in_array($item->category_access, $groups)
                 );
             }
 
@@ -124,7 +124,7 @@ class CwmpodcastlistModel extends ListModel
 
         $orderCol = $app->input->get('filter_order', 'a.ordering');
 
-        if (!in_array($orderCol, $this->filter_fields, true)) {
+        if (!\in_array($orderCol, $this->filter_fields, true)) {
             $orderCol = 'a.id';
         }
 
@@ -132,7 +132,7 @@ class CwmpodcastlistModel extends ListModel
 
         $listOrder = $app->input->get('filter_order_Dir', 'ASC');
 
-        if (!in_array(strtoupper($listOrder), ['ASC', 'DESC', ''])) {
+        if (!\in_array(strtoupper($listOrder), ['ASC', 'DESC', ''])) {
             $listOrder = 'ASC';
         }
 

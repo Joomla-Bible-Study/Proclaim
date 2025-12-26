@@ -170,7 +170,7 @@ class HtmlView extends BaseHtmlView
             str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
             . ':' . $items->id;
 
-        if ($params->get('useexpert_list') > 0 || is_string($params->get('seriesdisplaytemplate')) == true) {
+        if ($params->get('useexpert_list') > 0 || \is_string($params->get('seriesdisplaytemplate')) == true) {
             // Get studies associated with the series
             $pagebuilder = new Cwmpagebuilder();
             $whereitem   = $items->id;
@@ -242,7 +242,7 @@ class HtmlView extends BaseHtmlView
         $user   = Factory::getApplication()->getIdentity();
         $groups = $user->getAuthorisedViewLevels();
 
-        if (!in_array($items->access, $groups) && $items->access) {
+        if (!\in_array($items->access, $groups) && $items->access) {
             $mainframe->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
 
             return;

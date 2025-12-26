@@ -69,7 +69,7 @@ class Cwmmedia
             }
 
             // Check if the url host is a subdomain
-            return strripos($components['host'], $root['host']) !== strlen($components['host']) - strlen($root['host']);
+            return strripos($components['host'], $root['host']) !== \strlen($components['host']) - \strlen($root['host']);
         }
 
         return false;
@@ -633,7 +633,7 @@ class Cwmmedia
 
         $file_size = max($file_size, 0);
         $pow       = $file_size > 0 ? floor(log($file_size, 1024)) : 0;
-        $pow       = min($pow, count($units) - 1);
+        $pow       = min($pow, \count($units) - 1);
 
         $file_size /= 1024 ** $pow;
 

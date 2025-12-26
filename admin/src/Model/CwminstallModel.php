@@ -241,7 +241,7 @@ class CwminstallModel extends ListModel
     {
         [$usec, $sec] = explode(" ", microtime());
 
-        return ((float)$usec + (float)$sec);
+        return (float)$usec + (float)$sec;
     }
 
     /**
@@ -268,7 +268,7 @@ class CwminstallModel extends ListModel
             'podcastlinkmissing',
             'finish',
         ];
-        $this->totalSteps += count($this->finish);
+        $this->totalSteps += \count($this->finish);
 
         /**
          * First, we check to see if there is a current version of the database installed. This will have a #__bsms_version
@@ -292,7 +292,7 @@ class CwminstallModel extends ListModel
                 $php = str_replace('.php', '', Folder::files(JPATH_ADMINISTRATOR . $this->phpPath, '\.php$'));
             }
 
-            if (is_array($files)) {
+            if (\is_array($files)) {
                 usort($files, 'version_compare');
             }
 
@@ -319,7 +319,7 @@ class CwminstallModel extends ListModel
                 if (version_compare($value, $update) <= 0) {
                     unset($files[$i]);
                 } elseif ($files) {
-                    $this->totalSteps += count($files);
+                    $this->totalSteps += \count($files);
                     $this->versionStack = (array)$files;
                 } else {
                     $app->enqueueMessage(Text::_('JBS_INS_NO_UPDATE_SQL_FILES'), 'warning');
@@ -328,14 +328,14 @@ class CwminstallModel extends ListModel
                 }
             }
 
-            if (is_array($php)) {
+            if (\is_array($php)) {
                 usort($php, 'version_compare');
 
                 foreach ($php as $i => $value) {
                     if (version_compare($value, $this->versionSwitch) <= 0) {
                         unset($php[$i]);
                     } elseif ($php) {
-                        $this->totalSteps += count($files);
+                        $this->totalSteps += \count($files);
                         $this->subFiles   = $php;
                     }
                 }
@@ -441,8 +441,8 @@ class CwminstallModel extends ListModel
         ];
         $stack = json_encode($stack, JSON_THROW_ON_ERROR);
 
-        if (function_exists('base64_encode') && function_exists('base64_decode')) {
-            if (function_exists('gzdeflate') && function_exists('gzinflate')) {
+        if (\function_exists('base64_encode') && \function_exists('base64_decode')) {
+            if (\function_exists('gzdeflate') && \function_exists('gzinflate')) {
                 $stack = gzdeflate($stack, 9);
             }
 
@@ -529,10 +529,10 @@ class CwminstallModel extends ListModel
             return;
         }
 
-        if (function_exists('base64_encode') && function_exists('base64_decode')) {
+        if (\function_exists('base64_encode') && \function_exists('base64_decode')) {
             $stack = base64_decode($stack);
 
-            if (function_exists('gzdeflate') && function_exists('gzinflate')) {
+            if (\function_exists('gzdeflate') && \function_exists('gzinflate')) {
                 $stack = gzinflate($stack);
             }
         }
@@ -613,11 +613,11 @@ class CwminstallModel extends ListModel
 
                 if (isset($this->allupdates[$this->version]) && @!empty($this->allupdates[$this->version])) {
                     if (strpos($this->running, $this->version)) {
-                        $this->totalSteps += count((array)$this->allupdates[$this->version]);
+                        $this->totalSteps += \count((array)$this->allupdates[$this->version]);
                     }
 
                     // Used for Install array.
-                    if (!is_array($this->allupdates[$this->version])) {
+                    if (!\is_array($this->allupdates[$this->version])) {
                         $this->allupdates[$this->version] = [$this->allupdates[$this->version]];
                     }
 
@@ -627,7 +627,7 @@ class CwminstallModel extends ListModel
                     $run           = $this->runUpdates($string);
                     $this->doneSteps++;
                 } elseif (
-                    in_array(
+                    \in_array(
                         $this->version,
                         $this->subFiles,
                         true
@@ -692,14 +692,14 @@ class CwminstallModel extends ListModel
 
                                 $queryString = null;
 
-                                if (!empty($query) && is_array($query)) {
+                                if (!empty($query) && \is_array($query)) {
                                     $queryString = (string)$query['id'];
                                     $queryString = str_replace(
                                         ["\r", "\n"],
                                         ['', ' '],
                                         substr($queryString, 0, 80)
                                     );
-                                    $queryString = ' ID:' . $queryString . ' Query count: ' . count(
+                                    $queryString = ' ID:' . $queryString . ' Query count: ' . \count(
                                         $this->subQuery[$this->version][$step]
                                     );
                                 }
@@ -851,11 +851,11 @@ class CwminstallModel extends ListModel
         // Create an array of queries from the sql file
         $queries = DatabaseDriver::splitSql($buffer);
 
-        if ((int)count($queries) === 0) {
+        if ((int)\count($queries) === 0) {
             return false;
         }
 
-        $this->totalSteps += count($queries);
+        $this->totalSteps += \count($queries);
 
         $this->allupdates = array_merge($this->allupdates, [$value => $queries]);
 
@@ -871,7 +871,7 @@ class CwminstallModel extends ListModel
 
                 if (isset($migration->postinstallMessages)) {
                     $steps            = $migration->steps;
-                    $this->totalSteps += count($steps);
+                    $this->totalSteps += \count($steps);
 
                     // If Steps build is mandatory.
                     $migration->build($this->_db);

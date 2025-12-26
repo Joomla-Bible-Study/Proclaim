@@ -11,8 +11,8 @@
 
 namespace CWM\Component\Proclaim\Tests\Site\Helper;
 
-use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use CWM\Component\Proclaim\Site\Helper\Cwmhelperroute;
+use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 
 /**
  * Test class for Cwmhelperroute
@@ -40,7 +40,7 @@ class CwmhelperrouteTest extends ProclaimTestCase
     public function testClassHasCorrectNamespace(): void
     {
         $filePath = JPATH_ROOT . '/site/src/Helper/Cwmhelperroute.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString(
             'namespace CWM\Component\Proclaim\Site\Helper;',
@@ -100,7 +100,7 @@ class CwmhelperrouteTest extends ProclaimTestCase
     public function testClassUsesJoomlaFactory(): void
     {
         $filePath = JPATH_ROOT . '/site/src/Helper/Cwmhelperroute.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('use Joomla\CMS\Factory;', $content);
     }

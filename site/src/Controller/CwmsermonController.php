@@ -215,7 +215,7 @@ class CwmsermonController extends FormController
     public function getModel(
         $name = 'Cwmsermon',
         $prefix = '',
-        $config = array('ignore_request' => true)
+        $config = ['ignore_request' => true]
     ): BaseDatabaseModel {
         return parent::getModel($name, $prefix, $config);
     }
@@ -305,7 +305,7 @@ class CwmsermonController extends FormController
      *
      * @since    1.6
      */
-    protected function allowAdd($data = array()): bool
+    protected function allowAdd($data = []): bool
     {
         $allow = null;
 
@@ -327,7 +327,7 @@ class CwmsermonController extends FormController
      *
      * @since    1.6
      */
-    protected function allowEdit($data = array(), $key = 'id'): bool
+    protected function allowEdit($data = [], $key = 'id'): bool
     {
         return true;
     }
