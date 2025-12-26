@@ -412,6 +412,9 @@ class CwmserieModel extends AdminModel
     {
         jimport('joomla.filter.output');
 
+        $date = Factory::getDate();
+        $user = Factory::getApplication()->getIdentity();
+
         $table->series_text = htmlspecialchars_decode($table->series_text, ENT_QUOTES);
         $table->alias       = ApplicationHelper::stringURLSafe($table->alias);
 
@@ -419,7 +422,17 @@ class CwmserieModel extends AdminModel
             $table->alias = ApplicationHelper::stringURLSafe($table->series_text);
         }
 
+        // Always ensure created date is set (handles empty string from form)
+        if (empty($table->created) || $table->created === '') {
+            $table->created = $date->toSql();
+        }
+
         if (empty($table->id)) {
+            // Set the values for a new record
+            if (empty($table->created_by)) {
+                $table->created_by = $user->get('id');
+            }
+
             // Set ordering to the last item if not set
             if (empty($table->ordering)) {
                 $db    = Factory::getContainer()->get('DatabaseDriver');
@@ -430,6 +443,10 @@ class CwmserieModel extends AdminModel
 
                 $table->ordering = $max + 1;
             }
+        } else {
+            // Set the values for existing records
+            $table->modified    = $date->toSql();
+            $table->modified_by = $user->get('id');
         }
 
         if ($table->ordering == 0) {
