@@ -57,7 +57,6 @@
         <folder>fancybox</folder>
         <folder>images</folder>
         <folder>js</folder>
-        <folder>less</folder>
         <folder>panzoom</folder>
     </media>
 
@@ -135,7 +134,7 @@
                   alt="Proclaim/TemplateCodes">
                 JBS_MNU_TEMPLATE_CODE_DISPLAY
             </menu>
-            <!-- Instead of link you can specify individual link attributes -->
+            <!-- Instead of a link you can specify individual link attributes -->
         </submenu>
 
         <!-- Administration Main File Copy Section -->
