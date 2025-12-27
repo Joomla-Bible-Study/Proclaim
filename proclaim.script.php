@@ -689,7 +689,7 @@ class com_proclaimInstallerScript extends InstallerScript
                         // Modify where it's published and its published state
                         if ($parent->route === "install") {
                             // A. Position and state
-                            [$modulePosition, $modulePublished] = $modulePreferences;
+                            [$modulePosition, $modulePublished] = (array) $modulePreferences;
 
                             $sql = $this->dbo->getQuery(true)
                                 ->update($this->dbo->qn('#__modules'))
