@@ -22,6 +22,7 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 
 // phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die;
@@ -141,21 +142,152 @@ class com_proclaimInstallerScript extends InstallerScript
     protected $allowDowngrades = true;
 
     /**
-     * A list of files to be deleted
+     * A list of files to be deleted since version 10.0.1
      *
      * @var    array
      * @since  3.6
      */
-    protected $deleteFiles = [];
+    protected $deleteFiles = [
+        // Media CSS files removed
+        '/media/com_proclaim/css/icons.css',
+        '/media/com_proclaim/css/icons.min.css',
+        '/media/com_proclaim/css/bsmImport.css',
+        '/media/com_proclaim/css/bsmImport.min.css',
+        '/media/com_proclaim/css/general.min.min.css',
+        '/media/com_proclaim/css/biblestudy.css.map',
+        // Media JS files removed
+        '/media/com_proclaim/js/bsmImport.js',
+        '/media/com_proclaim/js/bsmImport.min.js',
+        '/media/com_proclaim/js/noconflict.js',
+        '/media/com_proclaim/js/noconflict.min.js',
+        '/media/com_proclaim/js/videoswitch.js',
+        '/media/com_proclaim/js/videoswitch.min.js',
+        '/media/com_proclaim/js/jquery.mousewheel.pack.js',
+        '/media/com_proclaim/js/jquery.mousewheel.pack.min.js',
+        '/media/com_proclaim/js/cwmadmin-mediafiles-default-fileconvert-footer.js',
+        '/media/com_proclaim/js/cwmadmin-mediafiles-default-fileconvert-footer.min.js',
+        '/media/com_proclaim/js/assat.js',
+        '/media/com_proclaim/js/assat.min.js',
+        '/media/com_proclaim/js/assat.min.min.js',
+        '/media/com_proclaim/js/biblestudy-ui.js',
+        '/media/com_proclaim/js/biblestudy-ui.min.js',
+        '/media/com_proclaim/js/biblestudy.min.js',
+        '/media/com_proclaim/js/grunt-config.json',
+        '/media/com_proclaim/js/modernizr-config.json',
+        '/media/com_proclaim/js/modernizr.old.js',
+        '/media/com_proclaim/js/modernizr.old.min.js',
+        '/media/com_proclaim/js/modernizr.old.min.min.js',
+        // Fancybox old files
+        '/media/com_proclaim/fancybox/fancybox.umd.js',
+        '/media/com_proclaim/fancybox/fancybox.umd.min.js',
+        '/media/com_proclaim/fancybox/jquery.fancybox.min.css',
+        '/media/com_proclaim/fancybox/jquery.fancybox.min.js',
+        // Legacy site files
+        '/components/com_proclaim/controller.php',
+        '/components/com_proclaim/proclaim.php',
+        '/components/com_proclaim/proclaim.xml',
+        '/components/com_proclaim/proclaimbak.php',
+        '/components/com_proclaim/router.php',
+        // German language files for finder plugin
+        '/plugins/finder/proclaim/language/de-DE/de-DE.plg_finder_biblestudy.ini',
+        '/plugins/finder/proclaim/language/de-DE/de-DE.plg_finder_biblestudy.sys.ini',
+    ];
 
     /**
-     * A list of folders to be deleted
+     * A list of folders to be deleted since version 10.0.1
      *
      * @var    array
      * @since  3.6
      */
     protected $deleteFolders = [
-        'media/com_proclaim/player',
+        // Media folders
+        '/media/com_proclaim/player',
+        '/media/com_proclaim/less',
+        '/media/com_proclaim/backup',
+        '/media/com_proclaim/js/plugins',
+        '/media/com_proclaim/js/views',
+        '/media/com_proclaim/js/mediafile',
+        // Legacy site folders
+        '/components/com_proclaim/views',
+        '/components/com_proclaim/models',
+        '/components/com_proclaim/helpers',
+        '/components/com_proclaim/lib',
+        '/components/com_proclaim/old info',
+        '/components/com_proclaim/sef_ext',
+        // Old CWM prefixed View folders (renamed to Cwm prefix)
+        '/components/com_proclaim/src/View/CWMCommentList',
+        '/components/com_proclaim/src/View/CWMLandingPage',
+        '/components/com_proclaim/src/View/CWMLatest',
+        '/components/com_proclaim/src/View/CWMMediaFileForm',
+        '/components/com_proclaim/src/View/CWMMediaFileList',
+        '/components/com_proclaim/src/View/CWMMessageForm',
+        '/components/com_proclaim/src/View/CWMMessageList',
+        '/components/com_proclaim/src/View/CWMPodcastDisplay',
+        '/components/com_proclaim/src/View/CWMPodcastList',
+        '/components/com_proclaim/src/View/CWMPopUp',
+        '/components/com_proclaim/src/View/CWMSeriesDisplay',
+        '/components/com_proclaim/src/View/CWMSeriesDisplays',
+        '/components/com_proclaim/src/View/CWMSermon',
+        '/components/com_proclaim/src/View/CWMSermons',
+        '/components/com_proclaim/src/View/CWMServersList',
+        '/components/com_proclaim/src/View/CWMSqueezeBox',
+        '/components/com_proclaim/src/View/CWMTeacher',
+        '/components/com_proclaim/src/View/CWMTeachers',
+        '/components/com_proclaim/src/View/CWMTerms',
+        '/components/com_proclaim/src/View/CWMcommentform',
+        '/components/com_proclaim/src/View/Teacher',
+        // Old CWM prefixed tmpl folders
+        '/components/com_proclaim/tmpl/CWMCommentForm',
+        '/components/com_proclaim/tmpl/CWMCommentList',
+        '/components/com_proclaim/tmpl/CWMMediaFileForm',
+        '/components/com_proclaim/tmpl/CWMMediaFileList',
+        '/components/com_proclaim/tmpl/CWMMessageForm',
+        '/components/com_proclaim/tmpl/CWMMessageList',
+        '/components/com_proclaim/tmpl/Teacher',
+        // Removed plugins
+        '/plugins/search/biblestudysearch',
+        '/plugins/system/proclaimbackup',
+        '/plugins/system/proclaimpodcast',
+    ];
+
+    /**
+     * A list of folders to be renamed since version 10.0.1
+     * Format: ['old_path' => 'new_path']
+     *
+     * @var    array
+     * @since  10.0.2
+     */
+    protected array $renameFolders = [
+        // Site View folders - CWM prefix renamed to Cwm
+        '/components/com_proclaim/src/View/CWMCommentList' => '/components/com_proclaim/src/View/Cwmcommentlist',
+        '/components/com_proclaim/src/View/CWMLandingPage' => '/components/com_proclaim/src/View/Cwmlandingpage',
+        '/components/com_proclaim/src/View/CWMLatest' => '/components/com_proclaim/src/View/Cwmlatest',
+        '/components/com_proclaim/src/View/CWMMediaFileForm' => '/components/com_proclaim/src/View/Cwmmediafileform',
+        '/components/com_proclaim/src/View/CWMMediaFileList' => '/components/com_proclaim/src/View/Cwmmediafilelist',
+        '/components/com_proclaim/src/View/CWMMessageForm' => '/components/com_proclaim/src/View/Cwmmessageform',
+        '/components/com_proclaim/src/View/CWMMessageList' => '/components/com_proclaim/src/View/Cwmmessagelist',
+        '/components/com_proclaim/src/View/CWMPodcastDisplay' => '/components/com_proclaim/src/View/Cwmpodcastdisplay',
+        '/components/com_proclaim/src/View/CWMPodcastList' => '/components/com_proclaim/src/View/Cwmpodcastlist',
+        '/components/com_proclaim/src/View/CWMPopUp' => '/components/com_proclaim/src/View/Cwmpopup',
+        '/components/com_proclaim/src/View/CWMSeriesDisplay' => '/components/com_proclaim/src/View/Cwmseriesdisplay',
+        '/components/com_proclaim/src/View/CWMSeriesDisplays' => '/components/com_proclaim/src/View/Cwmseriesdisplays',
+        '/components/com_proclaim/src/View/CWMSermon' => '/components/com_proclaim/src/View/Cwmsermon',
+        '/components/com_proclaim/src/View/CWMSermons' => '/components/com_proclaim/src/View/Cwmsermons',
+        '/components/com_proclaim/src/View/CWMServersList' => '/components/com_proclaim/src/View/Cwmserverslist',
+        '/components/com_proclaim/src/View/CWMSqueezeBox' => '/components/com_proclaim/src/View/Cwmsqueezebox',
+        '/components/com_proclaim/src/View/CWMTeacher' => '/components/com_proclaim/src/View/Cwmteacher',
+        '/components/com_proclaim/src/View/CWMTeachers' => '/components/com_proclaim/src/View/Cwmteachers',
+        '/components/com_proclaim/src/View/CWMTerms' => '/components/com_proclaim/src/View/Cwmterms',
+        '/components/com_proclaim/src/View/CWMcommentform' => '/components/com_proclaim/src/View/Cwmcommentform',
+        '/components/com_proclaim/src/View/Teacher' => '/components/com_proclaim/src/View/Cwmteacher',
+        // Site tmpl folders - CWM prefix renamed to Cwm
+        '/components/com_proclaim/tmpl/CWMCommentForm' => '/components/com_proclaim/tmpl/Cwmcommentform',
+        '/components/com_proclaim/tmpl/CWMCommentList' => '/components/com_proclaim/tmpl/Cwmcommentlist',
+        '/components/com_proclaim/tmpl/CWMMediaFileForm' => '/components/com_proclaim/tmpl/Cwmmediafileform',
+        '/components/com_proclaim/tmpl/CWMMediaFileList' => '/components/com_proclaim/tmpl/Cwmmediafilelist',
+        '/components/com_proclaim/tmpl/CWMMessageForm' => '/components/com_proclaim/tmpl/Cwmmessageform',
+        '/components/com_proclaim/tmpl/CWMMessageList' => '/components/com_proclaim/tmpl/Cwmmessagelist',
+        '/components/com_proclaim/tmpl/Teacher' => '/components/com_proclaim/tmpl/Cwmteacher',
     ];
 
     /**
@@ -454,6 +586,11 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     public function postflight(string $type, ComponentAdapter $parent): void
     {
+        // Rename old folders before deletion (must happen before removeFiles is called)
+        if ($type === 'update') {
+            $this->renameLegacyFolders();
+        }
+
         // Install subExtensions
         $this->installSubextensions($parent);
 
@@ -942,6 +1079,27 @@ class com_proclaimInstallerScript extends InstallerScript
                 count($this->status->plugins)
             ) {
                 Factory::getApplication()->enqueueMessage("We have removed leftovers from Proclaim old version", "notice");
+            }
+        }
+    }
+
+    /**
+     * Rename legacy folders to new naming convention before deletion.
+     * This preserves any user customizations by renaming rather than deleting.
+     *
+     * @return void
+     *
+     * @since 10.0.2
+     */
+    private function renameLegacyFolders(): void
+    {
+        foreach ($this->renameFolders as $oldPath => $newPath) {
+            $oldFullPath = JPATH_ROOT . $oldPath;
+            $newFullPath = JPATH_ROOT . $newPath;
+
+            // Only rename if old folder exists and new folder doesn't
+            if (is_dir($oldFullPath) && !is_dir($newFullPath)) {
+                Folder::move($oldFullPath, $newFullPath);
             }
         }
     }
