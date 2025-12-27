@@ -295,8 +295,9 @@ class com_proclaimInstallerScript extends InstallerScript
 
                         // Uninstall the module
                         if ($id !== null) {
-                            $installer               = new Installer();
-                            $result                  = $installer->uninstall('module', $id, 1);
+                            $installer = new Installer();
+                            $installer->setDatabase($this->dbo);
+                            $result = $installer->uninstall('module', $id, 1);
                             $this->status->modules[] = [
                                 'name'   => 'mod_' . $module,
                                 'client' => $folder,
@@ -324,8 +325,9 @@ class com_proclaimInstallerScript extends InstallerScript
                         $id = $this->dbo->loadResult();
 
                         if ($id !== null) {
-                            $installer               = new Installer();
-                            $result                  = $installer->uninstall('plugin', $id, 1);
+                            $installer = new Installer();
+                            $installer->setDatabase($this->dbo);
+                            $result = $installer->uninstall('plugin', $id, 1);
                             $this->status->plugins[] = [
                                 'name'   => 'plg_' . $plugin,
                                 'group'  => $folder,
@@ -538,8 +540,9 @@ class com_proclaimInstallerScript extends InstallerScript
                             continue;
                         }
 
-                        $installer               = new Installer();
-                        $result                  = $installer->install($path);
+                        $installer = new Installer();
+                        $installer->setDatabase($this->dbo);
+                        $result = $installer->install($path);
                         $this->status->modules[] = [
                             'name'   => 'mod_' . $module,
                             'client' => $folder,
@@ -643,9 +646,10 @@ class com_proclaimInstallerScript extends InstallerScript
                             ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
                             ->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder));
                         $this->dbo->setQuery($query);
-                        $count                   = $this->dbo->loadResult();
-                        $installer               = new Installer();
-                        $result                  = $installer->install($path);
+                        $count = $this->dbo->loadResult();
+                        $installer = new Installer();
+                        $installer->setDatabase($this->dbo);
+                        $result = $installer->install($path);
                         $this->status->plugins[] = [
                             'name'   => 'plg_' . $plugin,
                             'group'  => $folder,
