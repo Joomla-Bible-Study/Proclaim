@@ -95,20 +95,20 @@ class HtmlView extends BaseHtmlView
         <div class="termstext">
             <?php
             echo $termstext;
-        ?>
+            ?>
         </div>
         <div class="termslink">
             <?php
-        if ((int)$compat_mode === 1) {
-            echo '<a href="https://www.christianwebministries.org/router.php?file=' .
+            if ((int)$compat_mode === 1) {
+                echo '<a href="https://www.christianwebministries.org/router.php?file=' .
                 Cwmhelper::mediaBuildUrl($this->media->spath, $this->media->filename, $this->params)
                 . '&size=' . $this->media->size . '">' . Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
-        } else {
-            echo '<a href="index.php?option=com_proclaim&task=cwmsermons.download&id=' . $this->media->study_id
+            } else {
+                echo '<a href="index.php?option=com_proclaim&task=cwmsermons.download&id=' . $this->media->study_id
                 . '&mid=' . $this->media->id . '">'
                 . Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
-        }
-        ?>
+            }
+            ?>
         </div>
         <?php
 

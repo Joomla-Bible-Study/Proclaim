@@ -404,6 +404,4 @@ class CwmseriesdisplaysModel extends ListModel
     {
         return (int) $this->getState('list.start');
     }
-
-
 }
