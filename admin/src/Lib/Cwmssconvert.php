@@ -230,7 +230,7 @@ class Cwmssconvert
      *
      * @since 9.0.0
      */
-    public function newStudies($sermon, $seriesspeakers)
+    public function newStudies($sermon, $seriesspeakers): void
     {
         $db   = Factory::getContainer()->get('DatabaseDriver');
         $data = new \stdClass();
@@ -310,7 +310,7 @@ class Cwmssconvert
      *
      * @since 9.0.0
      */
-    public function getVerses($sermon)
+    public function getVerses($sermon): \stdClass
     {
         $sermonscripture             = new \stdClass();
         $sermonscripture->booknumber = '101';

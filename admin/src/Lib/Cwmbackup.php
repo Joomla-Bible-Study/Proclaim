@@ -168,7 +168,7 @@ class Cwmbackup
          * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
          */
         if (\function_exists('set_time_limit')) {
-            set_time_limit(ini_get('max_execution_time'));
+            set_time_limit(\ini_get('max_execution_time'));
         }
 
         $db = Factory::getContainer()->get('DatabaseDriver');
@@ -279,7 +279,7 @@ class Cwmbackup
          * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
          */
         if (\function_exists('set_time_limit')) {
-            set_time_limit(ini_get('max_execution_time'));
+            set_time_limit(\ini_get('max_execution_time'));
         }
         // Decode URL-encoded strings
         $name = rawurldecode($name);
@@ -308,7 +308,7 @@ class Cwmbackup
         if ($fp !== false) {
             while (!feof($fp)) {
                 $buffer = fread($fp, $chunkSize);
-                // Now will push to the browser the church of data using the buffer.
+                // Now will push the church of data to the browser using the buffer.
                 echo $buffer;
                 ob_flush();
                 flush();
@@ -357,7 +357,7 @@ class Cwmbackup
         if ($mime_type === '') {
             $file_extension = strtolower(substr(strrchr($file, "."), 1));
 
-            if (array_key_exists($file_extension, $known_mime_types)) {
+            if (\array_key_exists($file_extension, $known_mime_types)) {
                 return $known_mime_types[$file_extension];
             }
 
@@ -452,7 +452,7 @@ class Cwmbackup
         $files         = Folder::files($path, '.', 'false', 'true', $exclude, $excludefilter);
         arsort($files, SORT_STRING);
         $parts       = [];
-        $numfiles    = count($files);
+        $numfiles    = \count($files);
         $totalnumber = $params->get('filestokeep', '5');
 
         for ($counter = $numfiles; $counter > $totalnumber; $counter--) {

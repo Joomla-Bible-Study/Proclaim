@@ -573,7 +573,7 @@ class Cwmlisting
         $query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)');
         $query->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)');
         $query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
-        
+
         $ids = [];
 
         foreach ($medias as $media) {

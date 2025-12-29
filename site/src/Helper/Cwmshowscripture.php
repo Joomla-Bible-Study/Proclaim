@@ -133,7 +133,7 @@ class Cwmshowscripture
     {
         $id = 'scripture_' . uniqid('', true);
         $passage = '<div class="fluid-row"><div class="col-12"></div>';
-        $passage .= '<a class="heading" href="#" onclick="var e = document.getElementById(\'' . $id . '\'); e.style.display = (e.style.display == \'none\' ? \'block\' : \'none\'); return false;">' 
+        $passage .= '<a class="heading" href="#" onclick="var e = document.getElementById(\'' . $id . '\'); e.style.display = (e.style.display == \'none\' ? \'block\' : \'none\'); return false;">'
             . Text::_('JBS_CMN_SHOW_HIDE_SCRIPTURE') . '</a>';
         $passage .= '<div id="' . $id . '" style="display: none;">';
         $passage .= '<iframe src="' . $this->link . '" width="100%" height="400" style="border:0;"></iframe>';
