@@ -50,3 +50,35 @@
     color: #cccccc;
     margin-top: 5px;
 }
+
+/* Proclaim Player Wrapper */
+.proclaim-player-wrapper {
+    position: relative;
+    background: #000;
+}
+
+.proclaim-player-wrapper video,
+.proclaim-player-wrapper audio {
+    display: block;
+}
+
+/* Logo Overlay - positioned in bottom right corner */
+.proclaim-fancybox-logo {
+    position: absolute;
+    bottom: 50px;
+    right: 10px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+}
+
+.proclaim-fancybox-logo:hover {
+    opacity: 1;
+}
+
+.proclaim-fancybox-logo img {
+    max-height: 40px;
+    max-width: 120px;
+    width: auto;
+    height: auto;
+}

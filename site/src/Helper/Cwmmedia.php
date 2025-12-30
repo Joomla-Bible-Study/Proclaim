@@ -701,6 +701,14 @@ class Cwmmedia
             return $data;
         }
 
+        // Player attributes - jwplayer_* params are deprecated, kept for backward compatibility
+        // These are now handled by the Fancybox player (see media/js/fancybox.js)
+        // @deprecated 10.0.0 - jwplayer_image, jwplayer_mute, jwplayer_logo, jwplayer_logolink
+        $posterImage = $params->get('jwplayer_image', $params->get('player_image', ''));
+        $muteOnStart = $params->get('jwplayer_mute', $params->get('player_mute', 'false'));
+        $logoImage   = $params->get('jwplayer_logo', $params->get('player_logo', ''));
+        $logoLink    = $params->get('jwplayer_logolink', $params->get('player_logolink', Uri::base()));
+
         return '<a data-src="' . $path . '" data-id="' . $media->id . '" id="' . $media->id . '" title="' . $params->get(
             'filename'
         ) .
@@ -708,9 +716,9 @@ class Cwmmedia
             '" pwidth="' . $player->playerwidth . '" pheight="' .
             $player->playerheight . '" autostart="' . $params->get('autostart', false) . '" controls="' .
             $params->get('controls') . '" data-header="' . $headerText . '" data-footer="' . $footerText .
-            '" data-image="' . $params->get('jwplayer_image') . '" data-mute="' .
-            $params->get('jwplayer_mute') . '" data-logo="' . $params->get('jwplayer_logo') . '" data-logolink="' .
-            $params->get('jwplayer_logolink', Uri::base()) . '">' .
+            '" data-image="' . $posterImage . '" data-mute="' .
+            $muteOnStart . '" data-logo="' . $logoImage . '" data-logolink="' .
+            $logoLink . '">' .
             $image . '</a>';
     }
 
