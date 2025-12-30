@@ -2565,43 +2565,6 @@ class Cwmlisting
     }
 
     /**
-     * make a URL small
-     *
-     * @param   string  $url      Url
-     * @param   string  $login    Login
-     * @param   string  $appkey   AppKey
-     * @param   string  $format   Format
-     * @param   string  $version  Version
-     *
-     * @return string
-     *
-     * @throws \JsonException
-     * @since 7.0
-     */
-    private function makeBitlyUrl($url, $login, $appkey, string $format = 'xml', string $version = '2.0.1')
-    {
-        // Create the URL
-        $bitly = 'http://api.bit.ly/shorten?version=' . $version . '&longUrl=' . urlencode($url) . '&login='
-            . $login . '&apiKey=' . $appkey . '&format=' . $format;
-
-        // Get the url
-        // Could also use cURL here
-        $response = file_get_contents($bitly);
-
-        // Parse depending on desired format
-        if (strtolower($format) === 'json') {
-            $json  = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
-            $short = $json['results'][$url]['shortUrl'];
-        } else {
-            // Xml
-            $xml   = simplexml_load_string($response);
-            $short = 'http://bit.ly/' . $xml->results->nodeKeyVal->hash;
-        }
-
-        return $short;
-    }
-
-    /**
      * Run Content Plugins on item text
      *
      * @param   object  $item    Item info with text property
