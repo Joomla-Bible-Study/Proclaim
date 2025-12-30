@@ -112,154 +112,33 @@ class Cwmlisting
 
         $listparams = [];
 
-        if ($params->get($extra . 'scripture1row') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'scripture1');
+        // Standard params that check {name}row > 0
+        $standardParams = [
+            'scripture1', 'scripture2', 'secondary', 'title', 'date', 'teacher', 'teacher-title',
+            'duration', 'studyintro', 'series', 'description', 'seriesthumbnail', 'submitted',
+            'hits', 'downloads', 'studynumber', 'topic', 'locations', 'jbsmedia', 'messagetype',
+            'thumbnail', 'teacheremail', 'teacherweb', 'teacherphone', 'teacherfb', 'teachertw',
+            'teacherblog', 'teachershort', 'teacherlong', 'teacheraddress', 'teacherlink1',
+            'teacherlink2', 'teacherlink3', 'teacherlargeimage', 'teacherallinone',
+        ];
+
+        foreach ($standardParams as $paramName) {
+            if ($params->get($extra . $paramName . 'row') > 0) {
+                $listparams[] = $this->getListParamsArray($extra . $paramName);
+            }
         }
 
-        if ($params->get($extra . 'scripture2row') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'scripture2');
-        }
-
-        if ($params->get($extra . 'secondaryrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'secondary');
-        }
-
-        if ($params->get($extra . 'titlerow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'title');
-        }
-
-        if ($params->get($extra . 'daterow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'date');
-        }
-
-        if ($params->get($extra . 'teacherrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacher');
-        }
-
-        if ($params->get($extra . 'teacher-titlerow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacher-title');
-        }
-
-        if ($params->get($extra . 'durationrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'duration');
-        }
-
-        if ($params->get($extra . 'studyintrorow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'studyintro');
-        }
-
-        if ($params->get($extra . 'seriesrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'series');
-        }
-
-        if ($params->get($extra . 'descriptionrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'description');
-        }
-
-        if ($params->get($extra . 'seriesthumbnailrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'seriesthumbnail');
-        }
-
-        if ($params->get($extra . 'submittedrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'submitted');
-        }
-
-        if ($params->get($extra . 'hitsrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'hits');
-        }
-
-        if ($params->get($extra . 'downloadsrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'downloads');
-        }
-
-        if ($params->get($extra . 'studynumberrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'studynumber');
-        }
-
-        if ($params->get($extra . 'topicrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'topic');
-        }
-
-        if ($params->get($extra . 'locationsrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'locations');
-        }
-
-        if ($params->get($extra . 'jbsmediarow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'jbsmedia');
-        }
-
-        if ($params->get($extra . 'messagetyperow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'messagetype');
-        }
-
-        if ($params->get($extra . 'thumbnailrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'thumbnail');
-        }
-
+        // Special case: teacherimage checks both teacherimagerow and teacherimagerrow
         if ($params->get($extra . 'teacherimagerow') > 0 || $params->get($extra . 'teacherimagerrow') > 0) {
             $listparams[] = $this->getListParamsArray($extra . 'teacherimage');
         }
 
+        // Special case: seriesdescription maps to description
         if ($params->get($extra . 'seriesdescriptionrow') > 0) {
             $listparams[] = $this->getListParamsArray($extra . 'description');
         }
 
-        if ($params->get($extra . 'teacheremailrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacheremail');
-        }
-
-        if ($params->get($extra . 'teacherwebrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherweb');
-        }
-
-        if ($params->get($extra . 'teacherphonerow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherphone');
-        }
-
-        if ($params->get($extra . 'teacherfbrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherfb');
-        }
-
-        if ($params->get($extra . 'teachertwrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teachertw');
-        }
-
-        if ($params->get($extra . 'teacherblogrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherblog');
-        }
-
-        if ($params->get($extra . 'teachershortrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teachershort');
-        }
-
-        if ($params->get($extra . 'teacherlongrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherlong');
-        }
-
-        if ($params->get($extra . 'teacheraddressrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacheraddress');
-        }
-
-        if ($params->get($extra . 'teacherlink1row') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherlink1');
-        }
-
-        if ($params->get($extra . 'teacherlink2row') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherlink2');
-        }
-
-        if ($params->get($extra . 'teacherlink3row') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherlink3');
-        }
-
-        if ($params->get($extra . 'teacherlargeimagerow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherlargeimage');
-        }
-
-        if ($params->get($extra . 'teacherallinonerow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherallinone');
-        }
-
+        // Special case: custom doesn't use > 0 comparison
         if ($params->get($extra . 'customrow')) {
             $listparams[] = $this->getListParamsArray($extra . 'custom');
         }
