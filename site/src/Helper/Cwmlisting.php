@@ -58,7 +58,7 @@ class Cwmlisting
         $this->params = $params;
         $item         = '';
 
-        if (!is_array($items)) {
+        if (!\is_array($items)) {
             $subarray    = [];
             $subarray[0] = $items;
             $items       = $subarray;
@@ -304,27 +304,27 @@ class Cwmlisting
             }
         }
 
-        if (count($row1)) {
+        if (\count($row1)) {
             $row1sorted = $this->sortArrayofObjectByProperty($row1, 'col', $order = "ASC");
         }
 
-        if (count($row2)) {
+        if (\count($row2)) {
             $row2sorted = $this->sortArrayofObjectByProperty($row2, 'col', $order = "ASC");
         }
 
-        if (count($row3)) {
+        if (\count($row3)) {
             $row3sorted = $this->sortArrayofObjectByProperty($row3, 'col', $order = "ASC");
         }
 
-        if (count($row4)) {
+        if (\count($row4)) {
             $row4sorted = $this->sortArrayofObjectByProperty($row4, 'col', $order = "ASC");
         }
 
-        if (count($row5)) {
+        if (\count($row5)) {
             $row5sorted = $this->sortArrayofObjectByProperty($row5, 'col', $order = "ASC");
         }
 
-        if (count($row6)) {
+        if (\count($row6)) {
             $row6sorted = $this->sortArrayofObjectByProperty($row6, 'col', $order = "ASC");
         }
 
@@ -441,10 +441,10 @@ class Cwmlisting
         }
 
         // Go through and attach the media files as an array to their study
-        if (($type === 'sermons') && is_array($items)) {
+        if (($type === 'sermons') && \is_array($items)) {
             foreach ($items as $item) {
                 // Skip invalid items
-                if (!is_object($item)) {
+                if (!\is_object($item)) {
                     continue;
                 }
 
@@ -578,7 +578,7 @@ class Cwmlisting
         $ids = [];
 
         foreach ($medias as $media) {
-            if (is_array($media)) {
+            if (\is_array($media)) {
                 foreach ($media as $m) {
                     $ids[] = (int) $m;
                 }
@@ -652,7 +652,7 @@ class Cwmlisting
     {
         $cur           = 1;
         $stack[1]['l'] = 0;
-        $stack[1]['r'] = count($array) - 1;
+        $stack[1]['r'] = \count($array) - 1;
 
         do {
             $l = $stack[$cur]['l'];
@@ -873,7 +873,7 @@ class Cwmlisting
         }
 
         foreach ($listsorts as $sort) {
-            if (count($sort)) {
+            if (\count($sort)) {
                 foreach ($sort as $s) {
                     if ($s->row === '1') {
                         $row1count++;
@@ -1217,92 +1217,35 @@ class Cwmlisting
 				<span class="fas fa-envelope" style="font-size:20px;" title="Website"></span></a>' : $data);
 
                         if ($item->website) {
-                            if (
-                                substr_count($item->website, 'https://', 0) || substr_count(
-                                    $item->website,
-                                    'http://',
-                                    0
-                                )
-                            ) {
-                                $data .= '<a href="' . $item->website . '" target="_blank">
+                            $data .= '<a href="' . $this->ensureScheme($item->website) . '" target="_blank">
 						<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
-                            } else {
-                                $data .= '<a href="https://' . $item->website . '" target="_blank">
-						<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
-                            }
                         }
 
                         if ($item->facebooklink) {
-                            if (
-                                substr_count($item->facebooklink, 'https://', 0) || substr_count(
-                                    $item->facebooklink,
-                                    'http://',
-                                    0
-                                )
-                            ) {
-                                $data .= '<a href="' . $item->facebooklink . '" target="_blank">
+                            $data .= '<a href="' . $this->ensureScheme($item->facebooklink) . '" target="_blank">
 						<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
-                            } else {
-                                $data .= '<a href="https://' . $item->facebooklink . '" target="_blank">
-						<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
-                            }
                         }
 
                         if ($item->twitterlink) {
-                            if (
-                                substr_count($item->twitterlink, 'https://', 0) || substr_count(
-                                    $item->twitterlink,
-                                    'http://',
-                                    0
-                                )
-                            ) {
-                                $data .= '<a href="' . $item->twitterlink . '" target="_blank">
+                            $data .= '<a href="' . $this->ensureScheme($item->twitterlink) . '" target="_blank">
 						<span class="fab fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
-                            } else {
-                                $data .= '<a href="https://' . $item->twitterlink . '" target="_blank">
-						<span class="fab fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
-                            }
                         }
 
                         if ($item->bloglink) {
-                            if (
-                                substr_count($item->bloglink, 'https://', 0, 7) || substr_count(
-                                    $item->bloglink,
-                                    'http://',
-                                    0,
-                                    7
-                                )
-                            ) {
-                                $data .= '<a href="' . $item->bloglink . '" target="_blank">
+                            $data .= '<a href="' . $this->ensureScheme($item->bloglink) . '" target="_blank">
 						<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
-                            } else {
-                                $data .= '<a href="https://' . $item->bloglink . '" target="_blank">
-						<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
-                            }
                         }
 
                         if ($item->link1) {
-                            if (substr_count($item->link1, 'https://', 0) || substr_count($item->link1, 'http://', 0)) {
-                                $data .= '<a href="' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
-                            } else {
-                                $data .= '<a href="https://' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
-                            }
+                            $data .= '<a href="' . $this->ensureScheme($item->link1) . '" target="_blank">' . $item->linklabel1 . '</a>';
                         }
 
                         if ($item->link2) {
-                            if (substr_count($item->link2, 'https://', 0) || substr_count($item->link2, 'http://', 0)) {
-                                $data .= '<a href="' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
-                            } else {
-                                $data .= '<a href="http://' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
-                            }
+                            $data .= '<a href="' . $this->ensureScheme($item->link2, 'http://') . '" target="_blank">' . $item->linklabel2 . '</a>';
                         }
 
                         if ($item->link3) {
-                            if (substr_count($item->link3, 'https://', 0) || substr_count($item->link3, 'http://', 0)) {
-                                $data .= '<a href="' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
-                            } else {
-                                $data .= '<a href="https://' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
-                            }
+                            $data .= '<a href="' . $this->ensureScheme($item->link3) . '" target="_blank">' . $item->link3label . '</a>';
                         }
                     }
                 }
@@ -1333,11 +1276,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_LINK1');
                 } elseif ($item->link1) {
-                    if (substr_count($item->link1, 'http://', 0)) {
-                        $data = '<a href="' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
-                    } else {
-                        $data = '<a href="http://' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
-                    }
+                    $data = '<a href="' . $this->ensureScheme($item->link1) . '" target="_blank">' . $item->linklabel1 . '</a>';
                 }
                 break;
 
@@ -1345,11 +1284,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_LINK2');
                 } elseif ($item->link2) {
-                    if (substr_count($item->link2, 'http://', 0)) {
-                        $data = '<a href="' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
-                    } else {
-                        $data = '<a href="http://' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
-                    }
+                    $data = '<a href="' . $this->ensureScheme($item->link2, 'http://') . '" target="_blank">' . $item->linklabel2 . '</a>';
                 }
                 break;
 
@@ -1357,11 +1292,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_LINK3');
                 } elseif ($item->link3) {
-                    if (substr_count($item->link3, 'http://', 0)) {
-                        $data = '<a href="' . $item->link3 . '" target="_blank">' . $item->linklabel3 . '</a>';
-                    } else {
-                        $data = '<a href="http://' . $item->link3 . '" target="_blank">' . $item->linklabel3 . '</a>';
-                    }
+                    $data = '<a href="' . $this->ensureScheme($item->link3) . '" target="_blank">' . $item->linklabel3 . '</a>';
                 }
                 break;
             case $extra . 'teacheremail':
@@ -1377,13 +1308,8 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_WEBSITE');
                 } elseif ($item->website) {
-                    if (substr_count($item->website, 'http://', 0)) {
-                        $data = '<a href="' . $item->website . '" target="_blank">
+                    $data = '<a href="' . $this->ensureScheme($item->website) . '" target="_blank">
                         <span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
-                    } else {
-                        $data = '<a href="http://' . $item->website . '" target="_blank">
-                        <span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
-                    }
                 }
                 break;
 
@@ -1398,51 +1324,28 @@ class Cwmlisting
             case $extra . 'teacherfb':
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_FACEBOOK');
-                } else {
-                    if ($item->facebooklink) {
-                        if (substr_count($item->facebooklink, 'http://', 0)) {
-                            $data = '<a href="' . $item->facebooklink . '" target="_blank">
+                } elseif ($item->facebooklink) {
+                    $data = '<a href="' . $this->ensureScheme($item->facebooklink) . '" target="_blank">
 							<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
-                        } else {
-                            $data = '<a href="http://' . $item->facebooklink . '" target="_blank">
-							<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
-                        }
-                    }
                 }
                 break;
 
             case $extra . 'teachertw':
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_TWITTER');
-                } else {
-                    if ($item->twitterlink) {
-                        if (substr_count($item->twitterlink, 'http://', 0)) {
-                            $data = '<a href="' . $item->twitterlink . '" target="_blank">
+                } elseif ($item->twitterlink) {
+                    $data = '<a href="' . $this->ensureScheme($item->twitterlink) . '" target="_blank">
 							<span class="fas fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
-                        } else {
-                            $data = '<a href="http://' . $item->twitterlink . '" target="_blank">
-							<span class="fas fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
-                        }
-                    }
                 }
-
                 break;
 
             case $extra . 'teacherblog':
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_BLOG');
-                } else {
-                    if ($item->bloglink) {
-                        if (substr_count($item->bloglink, 'http://', 0, 7)) {
-                            $data = '<a href="' . $item->bloglink . '" target="_blank">
+                } elseif ($item->bloglink) {
+                    $data = '<a href="' . $this->ensureScheme($item->bloglink) . '" target="_blank">
 							<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
-                        } else {
-                            $data = '<a href="http://' . $item->bloglink . '" target="_blank">
-							<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
-                        }
-                    }
                 }
-
                 break;
 
             case $extra . 'teachershort':
@@ -1865,7 +1768,7 @@ class Cwmlisting
                 break;
             case 'teacher':
                 // Teacher name and title
-                if (isset($row->teachertitle) && isset($row->teachername)) {
+                if (isset($row->teachertitle, $row->teachername)) {
                     $element = $row->teachertitle . ' ' . $row->teachername;
                 } else {
                     $element = $row->teachername;
@@ -2562,6 +2465,25 @@ class Cwmlisting
 
 
         return $shareit;
+    }
+
+    /**
+     * Ensure URL has a scheme (http:// or https://)
+     *
+     * @param   string  $url     URL to check
+     * @param   string  $scheme  Default scheme to add if missing
+     *
+     * @return string URL with scheme
+     *
+     * @since 10.0.0
+     */
+    private function ensureScheme(string $url, string $scheme = 'https://'): string
+    {
+        if (parse_url($url, PHP_URL_SCHEME) !== null) {
+            return $url;
+        }
+
+        return $scheme . $url;
     }
 
     /**
