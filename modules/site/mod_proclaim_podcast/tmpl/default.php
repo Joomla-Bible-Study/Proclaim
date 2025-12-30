@@ -14,11 +14,18 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-if (!$list) {
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+
+if (empty($list)) {
     return;
 }
 
+$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+$wa->useStyle('com_proclaim.general');
+
 ?>
 
-<?php
-echo $list; ?>
+<div class="mod_proclaim_podcast">
+    <?php echo $list; ?>
+</div>

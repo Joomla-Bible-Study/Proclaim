@@ -56,7 +56,7 @@ class TeacherDisplayField extends FormField
         $allowPropagate = ((string)$this->element['propagate'] == 'true');
 
         // Load language
-        Factory::getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
+        Factory::getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
         // The active article ID field.
         $value = (int)$this->value ?: '';

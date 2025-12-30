@@ -63,8 +63,8 @@ class Cwmpodcast
      */
     public function makePodcasts(): string
     {
-        $msg  = [];
-        $db   = Factory::getContainer()->get('DatabaseDriver');
+        $msg = [];
+        $db = Factory::getContainer()->get('DatabaseDriver');
         $year = '(' . date('Y') . ')';
         $date = date('r');
 
@@ -75,404 +75,317 @@ class Cwmpodcast
         // First, get all podcasts that are published
         $query = $db->getQuery(true);
         $query->select('*')
-            ->from('#__bsms_podcast')
-            ->where('#__bsms_podcast.published = ' . 1);
+            ->from($db->quoteName('#__bsms_podcast'))
+            ->where($db->quoteName('published') . ' = 1');
         $db->setQuery($query);
-        $podids     = $db->loadObjectList();
-        $CWMlisting = new Cwmlisting();
-        $title      = null;
+        $podcasts = $db->loadObjectList() ?: [];
 
         // Now iterate through the podcasts, and pick up the mediafiles
-        if ($podids) {
-            foreach ($podids as $podinfo) {
-                // Work Around all languages
-                if ($podinfo->language === '*') {
-                    $podlanguage = Factory::getApplication()->getConfig()->get('language');
-                } else {
-                    $podlanguage = $podinfo->language;
-                }
+        foreach ($podcasts as $podinfo) {
+            $podlanguage = $podinfo->language === '*' ? Factory::getApplication()->getConfig()->get('language') : $podinfo->language;
+            $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, $podlanguage, true);
 
-                // Load language file
-                $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, $podlanguage, true);
+            // Check if there's any media file associated
+            $query = $db->getQuery(true);
+            $query->select('id')
+                ->from($db->quoteName('#__bsms_mediafiles'))
+                ->where($db->quoteName('podcast_id') . ' LIKE ' . $db->q('%,' . $podinfo->id . ',%'))
+                ->where($db->quoteName('published') . ' = 1');
+            $db->setQuery($query, 0, 1);
 
-                // Check to see if there is a media file associated - if not, don't continue
-                $query = $db->getQuery(true);
-                $query->select('id')
-                    ->from('#__bsms_mediafiles')
-                    ->where('podcast_id LIKE  ' . $db->q('%' . $podinfo->id . '%'))
-                    ->where('published = ' . 1);
-                $db->setQuery($query);
-                $checkresult = $db->loadObjectList();
-
-                if ($checkresult) {
-                    // Now let's get the podcast episodes
-                    $limit = $podinfo->podcastlimit;
-
-                    if ($limit > 0) {
-                        $limit = 'LIMIT ' . $limit;
-                    } else {
-                        $limit = '';
-                    }
-
-                    $episodes = $this->getEpisodes((int)$podinfo->id, $limit);
-                    $registry = new Registry();
-                    $registry->loadString(Cwmparams::getAdmin()->params);
-                    $registry->merge(Cwmparams::getTemplateparams()->params);
-                    $params = $registry;
-                    $params->set('show_verses', '1');
-                    $protocol          = $params->get('protocol', 'http://');
-                    $detailstemplateid = $podinfo->detailstemplateid;
-
-                    if (!$detailstemplateid) {
-                        $detailstemplateid = 1;
-                    }
-
-                    if (empty($podinfo->podcastlink)) {
-                        $podinfo->podcastlink = $podinfo->website;
-                    }
-
-                    if (!isset($podinfo->subtitle)) {
-                        $podinfo->subtitle = $podinfo->title;
-                    }
-
-                    $podhead = '<?xml version="1.0" encoding="utf-8"?>
-                <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/"
-                 xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
-                <channel>
-                	<generator>Proclaim</generator>
-                	<title>' . $this->escapeHTML($podinfo->title) . '</title>
-                	<link>' . $protocol . $podinfo->podcastlink . '</link>
-                	<image>
-                	    <url>' . $protocol . $podinfo->website . '/' . Cwmimages::getImagePath(
-                        $podinfo->podcastimage
-                    )->path . '</url>
-                        <title>' . $this->escapeHTML($podinfo->title) . '</title>
-                        <link>' . $protocol . $podinfo->podcastlink . '</link>
-					</image>
-                	<description>
-                	    ' . $this->escapeHTML($podinfo->description) . '
-                	</description>
-                	<language>' . $podlanguage . '</language>
-                	<itunes:type>episodic</itunes:type>
-                	<copyright>© ' . $year . ' All rights reserved.</copyright>
-                	<atom:link href="' . $protocol . $podinfo->website . '/' . $podinfo->filename . '" rel="self" type="application/rss+xml" />
-                	<lastBuildDate>' . $date . '</lastBuildDate>
-                	<itunes:summary>
-                        ' . $this->escapeHTML($podinfo->description) . '
-                    </itunes:summary>
-                	<itunes:subtitle>' . $this->escapeHTML($podinfo->subtitle) . '</itunes:subtitle>
-                	<itunes:author>' . $this->escapeHTML($podinfo->editor_name) . '</itunes:author>
-                	<itunes:owner>
-                		<itunes:name>' . $this->escapeHTML($podinfo->editor_name) . '</itunes:name>
-                		<itunes:email>' . $podinfo->editor_email . '</itunes:email>
-                	</itunes:owner>
-                	<itunes:image href="' . $protocol . $podinfo->website . '/' . Cwmimages::getImagePath(
-                        $podinfo->podcastimage
-                    )->path . '" />
-                	<itunes:category text="Religion &amp; Spirituality">
-                		<itunes:category text="Christianity" />
-                	</itunes:category>
-                	<itunes:explicit>no</itunes:explicit>
-                	<managingEditor>' . $podinfo->editor_email . ' (' . $this->escapeHTML($podinfo->editor_name) . ')</managingEditor>
-                	<webMaster>' . $podinfo->editor_email . ' (' . $this->escapeHTML($podinfo->editor_name) . ')</webMaster>
-                    <itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>';
-
-
-                    if (!$episodes) {
-                        return false;
-                    }
-
-                    $episodedetail = '';
-                    $list          = new Cwmlisting();
-
-                    foreach ($episodes as $episode) {
-                        $episodedate = date("r", strtotime($episode->createdate));
-
-                        $esv          = 0;
-                        $scripturerow = 1;
-                        $episode->id  = $episode->study_id;
-                        $scripture    = $CWMlisting->getScripture($params, $episode, $esv, $scripturerow);
-                        $pod_title    = $podinfo->episodetitle;
-                        $pod_subtitle = $podinfo->episodesubtitle;
-
-                        if ($episode->params->get('size')) {
-                            $episode->size = $episode->params->get('size');
-                        } else {
-                            $episode->size = '30000000';
-                        }
-
-                        switch ($pod_title) {
-                            case 0:
-                                if ($scripture && $episode->studytitle) {
-                                    $title = $scripture . ' - ' . $episode->studytitle;
-                                } elseif (!$scripture) {
-                                    $title = $episode->studytitle;
-                                } elseif (!$episode->studytitle) {
-                                    $title = $scripture;
-                                }
-
-                                break;
-                            case 1:
-                                $title = $episode->studytitle;
-                                break;
-                            case 2:
-                                $title = $scripture;
-                                break;
-                            case 3:
-                                if ($scripture && $episode->studytitle) {
-                                    $title = $episode->studytitle . ' - ' . $scripture;
-                                } elseif (!$scripture) {
-                                    $title = $episode->studytitle;
-                                } elseif (!$episode->studytitle) {
-                                    $title = $scripture;
-                                }
-                                break;
-                            case 4:
-                                $title = $episodedate;
-
-                                if (!$episodedate) {
-                                    $title = $scripture;
-                                } else {
-                                    $title .= ' - ' . $scripture;
-                                }
-
-                                if ($episode->studytitle) {
-                                    $title .= ' - ' . $episode->studytitle;
-                                }
-                                break;
-                            case 5:
-                                if ($this->templateid !== $detailstemplateid || $this->template === null) {
-                                    $this->template   = Cwmparams::getTemplateparams($detailstemplateid);
-                                    $this->templateid = (int)$detailstemplateid;
-                                }
-
-                                $element = $list->getFluidCustom(
-                                    $podinfo->custom,
-                                    $episode,
-                                    $params,
-                                    $this->template,
-                                    $rowid = '24'
-                                );
-
-                                $title = $element;
-                                break;
-                            case 6:
-                                $query = $db->getQuery('true');
-                                $query->select(' * ');
-                                $query->from('#__bsms_books');
-                                $query->where('booknumber = ' . $episode->booknumber);
-                                $db->setQuery($query);
-                                $book     = $db->loadObject();
-                                $bookname = Text::_($book->bookname);
-                                $title    = $bookname . ' ' . $episode->chapter_begin;
-                                break;
-                        }
-
-                        $subtitle = null;
-
-                        switch ($pod_subtitle) {
-                            case 0:
-                                $subtitle = $episode->teachername;
-                                break;
-                            case 1:
-                                if ($scripture && $episode->teachername) {
-                                    $subtitle = $scripture . ' - ' . $episode->teachername;
-                                } elseif (!$scripture) {
-                                    $subtitle = $episode->teachername;
-                                } elseif (!$episode->teachername) {
-                                    $subtitle = $scripture;
-                                }
-                                break;
-                            case 2:
-                                $subtitle = $scripture;
-                                break;
-                            case 3:
-                                $subtitle = $episode->studytitle;
-                                break;
-                            case 4:
-                                $subtitle = $episodedate;
-
-                                if (!$episodedate) {
-                                    $subtitle = $scripture;
-                                } else {
-                                    $subtitle .= ' - ' . $scripture;
-                                }
-                                break;
-                            case 5:
-                                $subtitle = $scripture . ' - ' . $episode->studytitle;
-                                break;
-                            case 6:
-                                $query = $db->getQuery('true');
-                                $query->select('*');
-                                $query->from('#__bsms_books');
-                                $query->where('booknumber = ' . $episode->booknumber);
-                                $db->setQuery($query);
-                                $book     = $db->loadObject();
-                                $bookname = Text::_($book->bookname);
-                                $subtitle = $bookname . ' ' . $episode->chapter_begin;
-                                break;
-                            case 7:
-                                if ($this->templateid !== $detailstemplateid || is_null($this->template)) {
-                                    $this->template   = Cwmparams::getTemplateparams($detailstemplateid);
-                                    $this->templateid = (int)$detailstemplateid;
-                                }
-
-                                $element  = $list->getFluidCustom(
-                                    $podinfo->custom,
-                                    $episode,
-                                    $params,
-                                    $this->template,
-                                    'podcast'
-                                );
-                                $subtitle = $element;
-                                break;
-                        }
-
-                        $title = $this->escapeHTML($title);
-
-                        $episodedetailtemp = '
-                        	   <item>
-                        	   <itunes:episodeType>full</itunes:episodeType>
-                        		<title>' . $title . '</title>';
-                        $file              = str_replace(' ', "%20", $episode->params->get('filename'));
-                        $path              = Cwmhelper::mediaBuildUrl(
-                            $episode->srparams->get('path'),
-                            $file,
-                            $params,
-                            false,
-                            false,
-                            true
-                        );
-
-                        // Add router helpers.
-                        $episode->slug = $episode->alias ? ($episode->id . ':' . $episode->alias) : $episode->id;
-
-                        /*
-                         * Default is to episode
-                         * 1 = Direct Link.
-                         * 2 = Popup Player Window with default player as internal.
-                         */
-                        if ($podinfo->linktype == '1') {
-                            $episodedetailtemp .= '<link>' . $protocol . $path . '</link>';
-                        } elseif ($podinfo->linktype == '2') {
-                            $episodedetailtemp .= '<link>' . $protocol . $podinfo->website
-                                . '/index.php?option=com_proclaim&amp;view=cwmpopup&amp;player=1&amp;id=' .
-                                $episode->slug . '&amp;t=' . $detailstemplateid . '</link>';
-                        } else {
-                            $episodedetailtemp .= '<link>' . $protocol . $podinfo->website
-                                . '/index.php?option=com_proclaim&amp;view=cwmsermon&amp;id='
-                                . $episode->slug . '&amp;t=' . $detailstemplateid . '</link>';
-                        }
-
-                        // Make a duration build from Params of media.
-                        if (
-                            ($episode->params->toObject()->media_hours !== '00' && !empty(
-                                $episode->params->toObject()->media_hours
-                            ))
-                            || ($episode->params->toObject(
-                            )->media_minutes !== '00' && !empty($episode->params->toObject()->media_minutes))
-                            || ($episode->params->toObject(
-                            )->media_seconds !== '00' && !empty($episode->params->toObject()->media_seconds))
-                        ) {
-                            $duration = $episode->params->get('media_hours', '00') . ':' .
-                                $episode->params->get('media_minutes', '00') .
-                                ':' . $episode->params->get('media_seconds', '00');
-                        } else {
-                            $duration = '';
-                        }
-
-                        $episodedetailtemp .= '<comments>' . $protocol . $podinfo->website
-                            . '/index.php?option=com_proclaim&amp;view=cwmsermon&amp;id='
-                            . $episode->slug . '&amp;t=' . $detailstemplateid . '</comments>
-                        		<itunes:author>' . $this->escapeHTML($episode->teachername) . '</itunes:author>
-                        		<dc:creator>' . $this->escapeHTML($episode->teachername) . '</dc:creator>
-								<description>' . $this->escapeHTML($episode->studyintro) . '</description>
-                        		<content:encoded><![CDATA[' . $episode->studyintro . ']]></content:encoded>
-                        		<pubDate>' . $episodedate . '</pubDate>
-                        		<itunes:subtitle>' . $this->escapeHTML($subtitle) . '</itunes:subtitle>
-                        		<itunes:summary><![CDATA[' . $episode->studyintro . ']]></itunes:summary>
-                        		<itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
-                        		<itunes:duration>' . $duration . '</itunes:duration>';
-
-                        // Here is where we test to see if the link should be an article or docMan link, otherwise it is a mediafile
-                        if ($episode->params->get('article_id') > 1) {
-                            $episodedetailtemp .=
-                                '
-								<enclosure url="' . $protocol . $episode->srparams->get('path') .
-                                '/index.php?option=com_content&amp;view=article&amp;id=' .
-                                $episode->params->get('article_id') . '" length="' . $episode->params->get(
-                                    'size',
-                                    '100'
-                                ) . '" type="' .
-                                $episode->params->get('mime_type', 'application/octet-stream') . '" />
-                        			<guid>' . $protocol . $episode->srparams->get('path') .
-                                '/index.php?option=com_content&amp;view=article&amp;id=' .
-                                $episode->params->get('article_id') . '</guid>';
-                        }
-
-                        if ($episode->params->get('docMan_id') > 1) {
-                            $episodedetailtemp .=
-                                '
-								<enclosure url="' . $protocol . $episode->srparams->get('path') .
-                                '/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
-                                $episode->params->get('docMan_id') . '" length="' . $episode->params->get(
-                                    'size'
-                                ) . '" type="' .
-                                $episode->params->get('mime_type') . '" />
-                        			<guid>' . $protocol . $episode->srparams->get('path') .
-                                '/index.php?option=com_docman&amp;task=doc_download&amp;gid=' .
-                                $episode->params->get('docMan_id') . '</guid>';
-                        } else {
-                            $episodedetailtemp .=
-                                '
-								<enclosure url="' . $protocol . $path .
-                                '" length="' . $episode->params->get('size', '100') . '" type="'
-                                . $episode->params->get('mime_type', 'audio/mpeg3') . '" />
-                        			<guid>' . $protocol . $path . '</guid>';
-                        }
-
-                        $episodedetailtemp .= '
-                        		<itunes:explicit>no</itunes:explicit>
-                        	       </item>';
-                        $episodedetail .= $episodedetailtemp;
-                    }
-
-                    // End of foreach for episode details
-                    $podfoot     = '
-                        </channel>
-                        </rss>';
-                    $input       = Factory::getApplication()->getInput();
-                    $client      = ApplicationHelper::getClientInfo($input->get('client', '0', 'int'));
-                    $file_path   = $client->path . '/' . $podinfo->filename;
-                    $filecontent = $podhead . $episodedetail . $podfoot;
-                    $filewritten = $this->writeFile($file_path, $filecontent);
-
-                    $file = Uri::root() . $podinfo->filename;
-
-                    if (!$filewritten) {
-                        $msg[] = $file . ' - ' . Text::_('JBS_PDC_XML_FILES_ERROR');
-                    } else {
-                        $msg[] = $file . ' - ' . Text::_('JBS_PDC_XML_FILES_WRITTEN');
-                    }
-                    // End if $checkresult if positive
-                } else {
-                    $msg[] = Text::_('JBS_CMN_NO_MEDIA_FILES');
-                }
+            if (!$db->loadResult()) {
+                $msg[] = Text::_('JBS_CMN_NO_MEDIA_FILES') . ' (' . $podinfo->title . ')';
+                continue;
             }
-            // End foreach podids as podinfo
+
+            $limit = (int) $podinfo->podcastlimit;
+            $episodes = $this->getEpisodes((int) $podinfo->id, $limit > 0 ? 'LIMIT ' . $limit : '');
+
+            if (!$episodes) {
+                continue;
+            }
+
+            $registry = new Registry();
+            $registry->loadString(Cwmparams::getAdmin()->params);
+            $registry->merge(Cwmparams::getTemplateparams()->params);
+            $params = $registry;
+            $params->set('show_verses', '1');
+            $protocol = $params->get('protocol', 'http://');
+            $detailstemplateid = (int) ($podinfo->detailstemplateid ?: 1);
+
+            if (empty($podinfo->podcastlink)) {
+                $podinfo->podcastlink = $podinfo->website;
+            }
+
+            if (!isset($podinfo->subtitle)) {
+                $podinfo->subtitle = $podinfo->title;
+            }
+
+            $imagePath = $protocol . $podinfo->website . '/' . Cwmimages::getImagePath($podinfo->podcastimage)->path;
+
+            $podhead = '<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/"
+ xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+<channel>
+	<generator>Proclaim</generator>
+	<title>' . $this->escapeHTML($podinfo->title) . '</title>
+	<link>' . $protocol . $podinfo->podcastlink . '</link>
+	<image>
+	    <url>' . $imagePath . '</url>
+        <title>' . $this->escapeHTML($podinfo->title) . '</title>
+        <link>' . $protocol . $podinfo->podcastlink . '</link>
+	</image>
+	<description>' . $this->escapeHTML($podinfo->description) . '</description>
+	<language>' . $podlanguage . '</language>
+	<itunes:type>episodic</itunes:type>
+	<copyright>© ' . $year . ' All rights reserved.</copyright>
+	<atom:link href="' . $protocol . $podinfo->website . '/' . $podinfo->filename . '" rel="self" type="application/rss+xml" />
+	<lastBuildDate>' . $date . '</lastBuildDate>
+	<itunes:summary>' . $this->escapeHTML($podinfo->description) . '</itunes:summary>
+	<itunes:subtitle>' . $this->escapeHTML($podinfo->subtitle) . '</itunes:subtitle>
+	<itunes:author>' . $this->escapeHTML($podinfo->editor_name) . '</itunes:author>
+	<itunes:owner>
+		<itunes:name>' . $this->escapeHTML($podinfo->editor_name) . '</itunes:name>
+		<itunes:email>' . $podinfo->editor_email . '</itunes:email>
+	</itunes:owner>
+	<itunes:image href="' . $imagePath . '" />
+	<itunes:category text="Religion &amp; Spirituality">
+		<itunes:category text="Christianity" />
+	</itunes:category>
+	<itunes:explicit>no</itunes:explicit>
+	<managingEditor>' . $podinfo->editor_email . ' (' . $this->escapeHTML($podinfo->editor_name) . ')</managingEditor>
+	<webMaster>' . $podinfo->editor_email . ' (' . $this->escapeHTML($podinfo->editor_name) . ')</webMaster>
+    <itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>';
+
+            $episodedetail = '';
+            $CWMlisting = new Cwmlisting();
+
+            foreach ($episodes as $episode) {
+                $episodedate = date("r", strtotime($episode->createdate));
+                $scripture = $CWMlisting->getScripture($params, $episode, 0, 1);
+                $episode->size = $episode->params->get('size', '30000000');
+
+                $title = $this->getEpisodeTitle($podinfo, $episode, $scripture, $params, $detailstemplateid, $episodedate);
+                $subtitle = $this->getEpisodeSubtitle($podinfo, $episode, $scripture, $params, $detailstemplateid, $episodedate);
+
+                $title = $this->escapeHTML($title);
+                $subtitle = $this->escapeHTML($subtitle);
+
+                $file = str_replace(' ', "%20", $episode->params->get('filename'));
+                $path = Cwmhelper::mediaBuildUrl($episode->srparams->get('path'), $file, $params, false, false, true);
+                $episode->slug = $episode->alias ? ($episode->sid . ':' . $episode->alias) : $episode->sid;
+
+                $link = $this->getEpisodeLink($podinfo, $episode, $path, $protocol, $detailstemplateid);
+                $duration = $this->getEpisodeDuration($episode);
+
+                $episodedetail .= '
+	<item>
+		<itunes:episodeType>full</itunes:episodeType>
+		<title>' . $title . '</title>
+		<link>' . $link . '</link>
+		<comments>' . $link . '</comments>
+		<itunes:author>' . $this->escapeHTML($episode->teachername) . '</itunes:author>
+		<dc:creator>' . $this->escapeHTML($episode->teachername) . '</dc:creator>
+		<description>' . $this->escapeHTML($episode->studyintro) . '</description>
+		<content:encoded><![CDATA[' . $episode->studyintro . ']]></content:encoded>
+		<pubDate>' . $episodedate . '</pubDate>
+		<itunes:subtitle>' . $subtitle . '</itunes:subtitle>
+		<itunes:summary><![CDATA[' . $episode->studyintro . ']]></itunes:summary>
+		<itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
+		<itunes:duration>' . $duration . '</itunes:duration>';
+
+                $episodedetail .= $this->getEnclosureXml($episode, $protocol, $path);
+
+                $episodedetail .= '
+		<itunes:explicit>no</itunes:explicit>
+	</item>';
+            }
+
+            $podfoot = '
+</channel>
+</rss>';
+            $input = Factory::getApplication()->getInput();
+            $client = ApplicationHelper::getClientInfo($input->get('client', '0', 'int'));
+            $file_path = $client->path . '/' . $podinfo->filename;
+            $filecontent = $podhead . $episodedetail . $podfoot;
+            $filewritten = $this->writeFile($file_path, $filecontent);
+
+            $file_url = Uri::root() . $podinfo->filename;
+            $msg[] = $file_url . ' - ' . ($filewritten ? Text::_('JBS_PDC_XML_FILES_WRITTEN') : Text::_('JBS_PDC_XML_FILES_ERROR'));
         }
 
-        $message = '';
+        return implode('<br />', $msg) ?: 'No message';
+    }
 
-        foreach ($msg as $m) {
-            $message .= $m . '<br />';
+    /**
+     * Get Episode Title
+     *
+     * @param   object    $podinfo            Podcast Info
+     * @param   object    $episode            Episode Info
+     * @param   string    $scripture          Scripture Reference
+     * @param   Registry  $params             Params
+     * @param   int       $detailstemplateid  Template ID
+     * @param   string    $episodedate        Episode Date
+     *
+     * @return string
+     * @since  8.0.0
+     *
+     * @throws \Exception
+     */
+    private function getEpisodeTitle($podinfo, $episode, $scripture, $params, $detailstemplateid, $episodedate): string
+    {
+        $CWMlisting = new Cwmlisting();
+        switch ($podinfo->episodetitle) {
+            case 0:
+                if ($scripture && $episode->studytitle) {
+                    return $scripture . ' - ' . $episode->studytitle;
+                }
+                return $episode->studytitle ?: $scripture;
+            case 1:
+                return (string) $episode->studytitle;
+            case 2:
+                return (string) $scripture;
+            case 3:
+                if ($scripture && $episode->studytitle) {
+                    return $episode->studytitle . ' - ' . $scripture;
+                }
+                return $episode->studytitle ?: $scripture;
+            case 4:
+                $title = $episodedate ? $episodedate . ' - ' . $scripture : $scripture;
+                return $episode->studytitle ? $title . ' - ' . $episode->studytitle : $title;
+            case 5:
+                if ($this->templateid !== $detailstemplateid || $this->template === null) {
+                    $this->template = Cwmparams::getTemplateparams($detailstemplateid);
+                    $this->templateid = $detailstemplateid;
+                }
+                return (string) $CWMlisting->getFluidCustom($podinfo->custom, $episode, $params, $this->template, '24');
+            case 6:
+                return $episode->bookname . ' ' . $episode->chapter_begin;
+        }
+        return '';
+    }
+
+    /**
+     * Get Episode Subtitle
+     *
+     * @param   object    $podinfo            Podcast Info
+     * @param   object    $episode            Episode Info
+     * @param   string    $scripture          Scripture Reference
+     * @param   Registry  $params             Params
+     * @param   int       $detailstemplateid  Template ID
+     * @param   string    $episodedate        Episode Date
+     *
+     * @return string
+     * @since  8.0.0
+     *
+     * @throws \Exception
+     */
+    private function getEpisodeSubtitle($podinfo, $episode, $scripture, $params, $detailstemplateid, $episodedate): string
+    {
+        $CWMlisting = new Cwmlisting();
+        switch ($podinfo->episodesubtitle) {
+            case 0:
+                return (string) $episode->teachername;
+            case 1:
+                if ($scripture && $episode->teachername) {
+                    return $scripture . ' - ' . $episode->teachername;
+                }
+                return $episode->teachername ?: $scripture;
+            case 2:
+                return (string) $scripture;
+            case 3:
+                return (string) $episode->studytitle;
+            case 4:
+                return $episodedate ? $episodedate . ' - ' . $scripture : $scripture;
+            case 5:
+                return $scripture . ' - ' . $episode->studytitle;
+            case 6:
+                return $episode->bookname . ' ' . $episode->chapter_begin;
+            case 7:
+                if ($this->templateid !== $detailstemplateid || $this->template === null) {
+                    $this->template = Cwmparams::getTemplateparams($detailstemplateid);
+                    $this->templateid = $detailstemplateid;
+                }
+                return (string) $CWMlisting->getFluidCustom($podinfo->custom, $episode, $params, $this->template, 'podcast');
+        }
+        return '';
+    }
+
+    /**
+     * Get Episode Link
+     *
+     * @param   object  $podinfo            Podcast Info
+     * @param   object  $episode            Episode Info
+     * @param   string  $path               Media Path
+     * @param   string  $protocol           Protocol
+     * @param   int     $detailstemplateid  Template ID
+     *
+     * @return string
+     * @since  8.0.0
+     */
+    private function getEpisodeLink($podinfo, $episode, $path, $protocol, $detailstemplateid): string
+    {
+        if ($podinfo->linktype == '1') {
+            return $protocol . $path;
         }
 
-        if (!$message) {
-            $message = 'No message';
+        $view = $podinfo->linktype == '2' ? 'cwmpopup&amp;player=1' : 'cwmsermon';
+        return $protocol . $podinfo->website . '/index.php?option=com_proclaim&amp;view=' . $view . '&amp;id=' . $episode->slug . '&amp;t=' . $detailstemplateid;
+    }
+
+    /**
+     * Get Episode Duration
+     *
+     * @param   object  $episode  Episode Info
+     *
+     * @return string
+     * @since  8.0.0
+     */
+    private function getEpisodeDuration($episode): string
+    {
+        $hours = $episode->params->get('media_hours', '00');
+        $minutes = $episode->params->get('media_minutes', '00');
+        $seconds = $episode->params->get('media_seconds', '00');
+
+        if ($hours !== '00' || $minutes !== '00' || $seconds !== '00') {
+            return $hours . ':' . $minutes . ':' . $seconds;
         }
 
-        return $message;
+        return '';
+    }
+
+    /**
+     * Get Enclosure XML
+     *
+     * @param   object  $episode   Episode Info
+     * @param   string  $protocol  Protocol
+     * @param   string  $path      Media Path
+     *
+     * @return string
+     * @since  8.0.0
+     */
+    private function getEnclosureXml($episode, $protocol, $path): string
+    {
+        $articleId = (int) $episode->params->get('article_id');
+        $docmanId = (int) $episode->params->get('docMan_id');
+        $basePath = $protocol . $episode->srparams->get('path');
+        $mimeType = $episode->params->get('mime_type');
+        $size = $episode->params->get('size', '100');
+
+        if ($articleId > 1) {
+            $url = $basePath . '/index.php?option=com_content&amp;view=article&amp;id=' . $articleId;
+            $type = $mimeType ?: 'application/octet-stream';
+        } elseif ($docmanId > 1) {
+            $url = $basePath . '/index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $docmanId;
+            $type = $mimeType;
+        } else {
+            $url = $protocol . $path;
+            $type = $mimeType ?: 'audio/mpeg3';
+        }
+
+        return '
+		<enclosure url="' . $url . '" length="' . $size . '" type="' . $type . '" />
+		<guid>' . $url . '</guid>';
     }
 
     /**
@@ -487,64 +400,51 @@ class Cwmpodcast
      */
     public function getEpisodes(int $id, string $limit): array
     {
-        preg_match_all('!\d+!', $limit, $set_limit);
-        $set_limit = (int)implode(' ', $set_limit[0]);
+        preg_match('!\d+!', $limit, $matches);
+        $set_limit = (int) ($matches[0] ?? 0);
 
         // This is set due to the hard limit of Apple's max episodes.
-        if ($set_limit >= 301) {
+        if ($set_limit > 300 || $set_limit === 0) {
             $set_limit = 300;
         }
 
-        // Here's where we look at each media file to see if they are connected to this podcast
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query->select(
-            'p.id AS pid, p.podcastlimit,'
-            . ' mf.id AS mfid, mf.study_id, mf.server_id, mf.podcast_id,'
-            . ' mf.published AS mfpub, mf.createdate, mf.params,'
-            . ' s.id AS sid, s.alias AS alias, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.verse_begin,'
-            . ' s.chapter_end, s.verse_end, s.studytitle, s.studyintro, s.published AS spub,'
-            . ' se.series_text, se.published,'
-            . ' sr.id AS srid, sr.params as srparams,'
-            . ' t.id AS tid, t.teachername,'
-            . ' b.id AS bid, b.booknumber AS bnumber, b.bookname'
+            [
+                'p.id AS pid', 'p.podcastlimit',
+                'mf.id AS mfid', 'mf.study_id', 'mf.server_id', 'mf.podcast_id',
+                'mf.published AS mfpub', 'mf.createdate', 'mf.params',
+                's.id AS sid', 's.alias AS alias', 's.studydate', 's.teacher_id', 's.booknumber', 's.chapter_begin', 's.verse_begin',
+                's.chapter_end', 's.verse_end', 's.studytitle', 's.studyintro', 's.published AS spub',
+                'se.series_text', 'se.published',
+                'sr.id AS srid', 'sr.params as srparams',
+                't.id AS tid', 't.teachername',
+                'b.id AS bid', 'b.booknumber AS bnumber', 'b.bookname',
+            ]
         )
-            ->from('#__bsms_mediafiles AS mf')
-            ->leftJoin('#__bsms_studies AS s ON (s.id = mf.study_id)')
-            ->leftJoin('#__bsms_series AS se ON (se.id = s.series_id)')
-            ->leftJoin('#__bsms_servers AS sr ON (sr.id = mf.server_id)')
-            ->leftJoin('#__bsms_books AS b ON (b.booknumber = s.booknumber)')
-            ->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
-            ->leftJoin('#__bsms_podcast AS p ON (p.id = mf.podcast_id)')
-            ->where('mf.podcast_id LIKE ' . $db->q('%' . $id . '%'))
-            ->where('mf.published = ' . 1)
-            ->where('s.published = ' . 1)
-            ->where('(se.published = ' . 1 . ' OR s.series_id = ' . -1 . ')')
-            ->order('createdate desc');
+            ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
+            ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
+            ->leftJoin($db->quoteName('#__bsms_series', 'se') . ' ON ' . $db->quoteName('se.id') . ' = ' . $db->quoteName('s.series_id'))
+            ->leftJoin($db->quoteName('#__bsms_servers', 'sr') . ' ON ' . $db->quoteName('sr.id') . ' = ' . $db->quoteName('mf.server_id'))
+            ->leftJoin($db->quoteName('#__bsms_books', 'b') . ' ON ' . $db->quoteName('b.booknumber') . ' = ' . $db->quoteName('s.booknumber'))
+            ->leftJoin($db->quoteName('#__bsms_teachers', 't') . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('s.teacher_id'))
+            ->leftJoin($db->quoteName('#__bsms_podcast', 'p') . ' ON ' . $db->quoteName('p.id') . ' = ' . $db->quoteName('mf.podcast_id'))
+            ->where($db->quoteName('mf.podcast_id') . ' LIKE ' . $db->q('%,' . $id . ',%'))
+            ->where($db->quoteName('mf.published') . ' = 1')
+            ->where($db->quoteName('s.published') . ' = 1')
+            ->where('(' . $db->quoteName('se.published') . ' = 1 OR ' . $db->quoteName('s.series_id') . ' = -1)')
+            ->order($db->quoteName('createdate') . ' DESC');
 
         $db->setQuery($query, 0, $set_limit);
-        $episodes = $db->loadObjectList();
-
-        // Go through each and remove the -1 strings and retest
-        $epis = [];
+        $episodes = $db->loadObjectList() ?: [];
 
         foreach ($episodes as $e) {
-            $registry = new Registry();
-            $registry->loadString($e->params);
-            $e->params = $registry;
-
-            $registry = new Registry();
-            $registry->loadString($e->srparams);
-            $e->srparams = $registry;
-
-            $e->podcast_id = str_replace('-1', '', $e->podcast_id);
-
-            if (substr_count($e->podcast_id, $id)) {
-                $epis[] = $e;
-            }
+            $e->params = new Registry($e->params);
+            $e->srparams = new Registry($e->srparams);
         }
 
-        return $epis;
+        return $episodes;
     }
 
     /**
@@ -573,7 +473,7 @@ class Cwmpodcast
      * @param   string  $file         File Name
      * @param   string  $filecontent  File Content
      *
-     * @return boolean
+     * @return bool
      *
      * @throws \Exception
      * @since 7.0.0
@@ -816,7 +716,7 @@ class Cwmpodcast
     }
 
     /**
-     * Remove Http from url
+     * Remove Http from URL
      *
      * @param   string  $url  Url of website
      *

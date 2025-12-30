@@ -1,31 +1,31 @@
+/* CSS Custom Properties */
+:root {
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray-dark: #666666;
+  --color-gray-medium: #707070;
+  --color-gray-light: #999999;
+  --color-gray-border: #C5C1BE;
+  --color-off-white: #fffff0;
+  --color-background-light: #eeeeee;
+  --color-background-cell: #e3e2e2;
+  --color-scripture: #c02121;
+  --color-pagelinks-bg: #F2F2F2;
+  --color-dropdowns-bg: #A9A9A9;
+  --transition-default: all 0.5s;
+}
+
+/* Teacher Table */
 #bsm_teachertable {
   margin: 0;
   border-collapse: separate;
 }
 #bsm_teachertable .bsm_studiestitlerow {
-  background-color: #666666;
-}
-#bsm_teachertable .teacheraddress {
-  text-align: left;
-}
-#bsm_teachertable .teacherwebsite {
-  text-align: left;
-}
-#bsm_teachertable .teacherfacebook {
-  text-align: left;
-}
-#bsm_teachertable .bsm_teachertwitter {
-  text-align: left;
-}
-#bsm_teachertable .bsm_teacherblog {
-  text-align: left;
-}
-#bsm_teachertable .bsm_teacherlink1 {
-  text-align: left;
+  background-color: var(--color-gray-dark);
 }
 #bsm_teachertable td {
   text-align: left;
-  padding: 0 5px 0 5px;
+  padding: 0 5px;
   border: none;
 }
 #bsm_teachertable .titlerow {
@@ -34,26 +34,20 @@
 #bsm_teachertable .title {
   font-size: 18px;
   font-weight: bold;
-  border-bottom: 3px solid #999999;
+  border-bottom: 3px solid var(--color-gray-light);
   padding: 4px 0 4px 4px;
 }
 #bsm_teachertable .bsm_separator {
-  border-bottom: 1px solid #999999;
+  border-bottom: 1px solid var(--color-gray-light);
 }
 #bsm_teachertable .bsm_teachername {
   font-weight: bold;
   font-size: 14px;
-  color: #000000;
+  color: var(--color-black);
   white-space: nowrap;
 }
-#bsm_teachertable .bsm_teacheremail {
-  font-weight: normal;
-  font-size: 11px;
-}
-#bsm_teachertable .bsm_teacherwebsite {
-  font-weight: normal;
-  font-size: 11px;
-}
+#bsm_teachertable .bsm_teacheremail,
+#bsm_teachertable .bsm_teacherwebsite,
 #bsm_teachertable .bsm_teacherphone {
   font-weight: normal;
   font-size: 11px;
@@ -61,29 +55,23 @@
 #bsm_teachertable .bsm_short {
   padding: 8px 4px 4px;
 }
-#bsm_teachertable .bsm_titletitle {
-  font-weight: bold;
-  color: #ffffff;
-}
-#bsm_teachertable .bsm_titlescripture {
-  font-weight: bold;
-  color: #ffffff;
-}
+#bsm_teachertable .bsm_titletitle,
+#bsm_teachertable .bsm_titlescripture,
 #bsm_teachertable .bsm_titledate {
   font-weight: bold;
-  color: #ffffff;
+  color: var(--color-white);
 }
 #bsm_teachertable .bsm_teacherlong {
   padding: 8px 4px 4px;
-  border-bottom: 1px solid #999999;
+  border-bottom: 1px solid var(--color-gray-light);
 }
 #bsm_teachertable tr.bsodd {
-  background-color: #ffffff;
-  border-bottom: 1px solid #999999;
+  background-color: var(--color-white);
+  border-bottom: 1px solid var(--color-gray-light);
 }
 #bsm_teachertable tr.bseven {
-  background-color: #fffff0;
-  border-bottom: 1px solid #999999;
+  background-color: var(--color-off-white);
+  border-bottom: 1px solid var(--color-gray-light);
 }
 #bsm_teachertable .lastrow td {
   border-bottom: 1px solid grey;
@@ -91,10 +79,11 @@
   padding-top: 7px;
 }
 #bsm_teachertable .bsm_teacherfooter {
-  border-top: 1px solid #999999;
+  border-top: 1px solid var(--color-gray-light);
   padding: 4px 1px 1px 4px;
 }
-/* New Landing Page CSS */
+
+/* Landing Page */
 .landingtable {
   clear: both;
   width: auto;
@@ -110,53 +99,19 @@
 .landinglink a {
   display: inline;
 }
-.podcastsubscribe {
-  clear: both;
-  display: table;
-  width: 100%;
-  background-color: #eeeeee;
-  border-radius: 15px 15px 15px 15px;
-  border: 1px solid grey;
-  padding: 1em;
-}
-.podcastsubscribe .image {
-  float: left;
-  padding-right: 5px;
-  display: inline;
-}
-.podcastsubscribe .image .text {
-  display: inline;
-  position: relative;
-  right: 50px;
-  bottom: -10px;
-}
-.podcastsubscribe .prow {
-  display: table-row;
-  width: auto;
-  clear: both;
-}
-.podcastsubscribe .pcell {
-  display: table-cell;
-  float: left;
-  background-color: #e3e2e2;
-  border-radius: 15px 15px 15px 15px;
-  border: 1px solid grey;
-  padding: 1em;
-  margin-right: 5px;
-  margin-left: 0 !important;
-}
-/* Listing Page Items */
-.podcastheader {
+.landing_title {
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  font-size: 16px;
   font-weight: bold;
 }
-.podcastheader h3 {
-  display: inline;
-  text-align: center;
+#landing_td {
+  width: 33%;
 }
-.fltlft {
-  float: left;
-  padding-right: 5px;
+.landing_separator {
+  height: 15px;
 }
+
+/* Listing Page */
 div.listingfooter ul li {
   list-style: none outside none;
 }
@@ -173,6 +128,8 @@ div.listingfooter ul li {
 #bsdropdownmenu {
   margin-bottom: 10px;
 }
+
+/* Media Container */
 .bsms_media_contaner div.bsms_media_file:not(:first-child) {
   padding-left: 10px;
 }
@@ -181,289 +138,155 @@ div.listingfooter ul li {
   padding-right: 4px;
   background-image: none;
 }
-.bsms_media_contaner {
-  margin: 0;
-  border-collapse: separate;
-}
-.bsms_media_contaner .lastcol {
-  border-right: grey 2px solid;
-}
-.bsms_media_contaner .lastrow td {
-  border-bottom: 2px solid grey;
-  padding-bottom: 7px;
-}
-.bsms_media_contaner th {
-  background-color: #707070;
-  font-weight: bold;
-  color: white;
-}
-.bsms_media_contaner th.firstrow {
-  border-bottom: grey 2px solid;
-}
-.bsms_media_contaner tr.lastrow th {
-  border-bottom: 2px solid grey;
-  padding-bottom: 3px;
-}
-.bsms_media_contaner tr.bsodd td {
-  background-color: #ffffff;
-}
-.bsms_media_contaner tr.bseven td {
-  background-color: #fffff0;
-}
-.bsms_media_contaner .date {
-  white-space: nowrap;
-  font-size: 1.2em;
-  color: grey;
-  font-weight: bold;
-}
-.bsms_media_contaner .scripture1 {
-  white-space: nowrap;
-  color: #c02121;
-  font-weight: bold;
-}
-.bsms_media_contaner .scripture2 {
-  white-space: nowrap;
-  color: #c02121;
-  font-weight: bold;
-}
-.bsms_media_contaner .title {
-  font-size: 1.2em;
-  color: #707070;
-  font-weight: bold;
-}
-.bsms_media_contaner .series_text {
-  white-space: nowrap;
-  color: grey;
-}
-.bsms_media_contaner .duration {
-  white-space: nowrap;
-  font-style: italic;
-}
-.bsms_media_contaner .teacher {
-  white-space: nowrap;
-}
-.bsms_media_contaner .location_text {
-  white-space: nowrap;
-}
-.bsms_media_contaner .topic_text {
-  white-space: nowrap;
-}
-.bsms_media_contaner .message_type {
-  white-space: nowrap;
-}
-.bsms_media_contaner .jbsmedia {
-  white-space: nowrap;
-}
-.bsms_media_contaner .store {
-  white-space: nowrap;
-}
-.bsms_media_contaner .details-text {
-  white-space: nowrap;
-}
-.bsms_media_contaner .details-pdf {
-  white-space: nowrap;
-}
-.bsms_media_contaner .details-text-pdf {
-  white-space: nowrap;
-}
-.bsms_media_contaner .detailstable td {
-  border: none;
-  padding: 0 2px 0 0;
-}
-.bsms_media_contaner .secondary_reference {
-  white-space: nowrap;
-}
-.bsms_media_contaner .teacher-title-name {
-  white-space: nowrap;
-}
-.bsms_media_contaner .submitted {
-  white-space: nowrap;
-}
-.bsms_media_contaner .hits {
-  white-space: nowrap;
-}
-.bsms_media_contaner .studynumber {
-  white-space: nowrap;
-}
-.bsms_media_contaner .filesize {
-  white-space: nowrap;
-}
-.bsms_media_contaner .custom {
-  white-space: nowrap;
-}
-.bsms_media_contaner .commentshead {
-  font-size: 2em;
-  font-weight: bold;
-}
-.bsms_media_contaner .thumbnail {
-  white-space: nowrap;
-}
-.bsms_media_contaner .mediatable td {
-  border: none;
-  padding: 0 6px 0 0;
-}
-.bsms_media_contaner .mediatable span.bsfilesize {
-  font-size: 0.6em;
-  position: relative;
-  bottom: 7px;
-}
-.bslisttable th,
-.bslisttable td {
-  text-align: left;
-  padding: 0 5px 0 5px;
-  border: none;
-}
-.bslisttable .row1col1,
-.bslisttable .row2col1,
-.bslisttable .row3col1,
-.bslisttable .row4col1 {
-  border-left: grey 2px solid;
-}
-.bslisttable th.row1col1,
-.bslisttable th.row1col2,
-.bslisttable th.row1col3,
-.bslisttable th.row1col4 {
-  border-top: grey 2px solid;
-  padding-top: 3px;
-}
+.bsms_media_contaner,
 #bsmsmoduletable {
   margin: 0;
   border-collapse: separate;
 }
+.bsms_media_contaner .lastcol,
 #bsmsmoduletable .lastcol {
   border-right: grey 2px solid;
 }
+.bsms_media_contaner .lastrow td,
 #bsmsmoduletable .lastrow td {
   border-bottom: 2px solid grey;
   padding-bottom: 7px;
 }
+.bsms_media_contaner th,
 #bsmsmoduletable th {
-  background-color: #707070;
+  background-color: var(--color-gray-medium);
   font-weight: bold;
   color: white;
 }
+.bsms_media_contaner th.firstrow,
 #bsmsmoduletable th.firstrow {
   border-bottom: grey 2px solid;
 }
+.bsms_media_contaner tr.lastrow th,
 #bsmsmoduletable tr.lastrow th {
   border-bottom: 2px solid grey;
   padding-bottom: 3px;
 }
+.bsms_media_contaner tr.bsodd td,
 #bsmsmoduletable tr.bsodd td {
-  background-color: #ffffff;
+  background-color: var(--color-white);
 }
+.bsms_media_contaner tr.bseven td,
 #bsmsmoduletable tr.bseven td {
-  background-color: #fffff0;
+  background-color: var(--color-off-white);
 }
+.bsms_media_contaner .date,
 #bsmsmoduletable .date {
   white-space: nowrap;
   font-size: 1.2em;
   color: grey;
   font-weight: bold;
 }
-#bsmsmoduletable .scripture1 {
-  white-space: nowrap;
-  color: #c02121;
-  font-weight: bold;
-}
+.bsms_media_contaner .scripture1,
+.bsms_media_contaner .scripture2,
+#bsmsmoduletable .scripture1,
 #bsmsmoduletable .scripture2 {
   white-space: nowrap;
-  color: #c02121;
+  color: var(--color-scripture);
   font-weight: bold;
 }
+.bsms_media_contaner .title,
 #bsmsmoduletable .title {
   font-size: 1.2em;
-  color: #707070;
+  color: var(--color-gray-medium);
   font-weight: bold;
 }
+.bsms_media_contaner .series_text,
 #bsmsmoduletable .series_text {
   white-space: nowrap;
   color: grey;
 }
+.bsms_media_contaner .duration,
 #bsmsmoduletable .duration {
   white-space: nowrap;
   font-style: italic;
 }
-#bsmsmoduletable .teacher {
+.bsms_media_contaner .teacher,
+.bsms_media_contaner .location_text,
+.bsms_media_contaner .topic_text,
+.bsms_media_contaner .message_type,
+.bsms_media_contaner .jbsmedia,
+.bsms_media_contaner .store,
+.bsms_media_contaner .details-text,
+.bsms_media_contaner .details-pdf,
+.bsms_media_contaner .details-text-pdf,
+.bsms_media_contaner .secondary_reference,
+.bsms_media_contaner .teacher-title-name,
+.bsms_media_contaner .submitted,
+.bsms_media_contaner .hits,
+.bsms_media_contaner .studynumber,
+.bsms_media_contaner .filesize,
+.bsms_media_contaner .custom,
+.bsms_media_contaner .thumbnail,
+#bsmsmoduletable .teacher,
+#bsmsmoduletable .location_text,
+#bsmsmoduletable .topic_text,
+#bsmsmoduletable .message_type,
+#bsmsmoduletable .jbsmedia,
+#bsmsmoduletable .store,
+#bsmsmoduletable .details-text,
+#bsmsmoduletable .details-pdf,
+#bsmsmoduletable .details-text-pdf,
+#bsmsmoduletable .secondary_reference,
+#bsmsmoduletable .teacher-title-name,
+#bsmsmoduletable .submitted,
+#bsmsmoduletable .hits,
+#bsmsmoduletable .studynumber,
+#bsmsmoduletable .filesize,
+#bsmsmoduletable .custom,
+#bsmsmoduletable .thumbnail {
   white-space: nowrap;
 }
-#bsmsmoduletable .location_text {
-  white-space: nowrap;
-}
-#bsmsmoduletable .topic_text {
-  white-space: nowrap;
-}
-#bsmsmoduletable .message_type {
-  white-space: nowrap;
-}
-#bsmsmoduletable .jbsmedia {
-  white-space: nowrap;
-}
-#bsmsmoduletable .store {
-  white-space: nowrap;
-}
-#bsmsmoduletable .details-text {
-  white-space: nowrap;
-}
-#bsmsmoduletable .details-pdf {
-  white-space: nowrap;
-}
-#bsmsmoduletable .details-text-pdf {
-  white-space: nowrap;
-}
+.bsms_media_contaner .detailstable td,
 #bsmsmoduletable .detailstable td {
   border: none;
   padding: 0 2px 0 0;
 }
-#bsmsmoduletable .secondary_reference {
-  white-space: nowrap;
-}
-#bsmsmoduletable .teacher-title-name {
-  white-space: nowrap;
-}
-#bsmsmoduletable .submitted {
-  white-space: nowrap;
-}
-#bsmsmoduletable .hits {
-  white-space: nowrap;
-}
-#bsmsmoduletable .studynumber {
-  white-space: nowrap;
-}
-#bsmsmoduletable .filesize {
-  white-space: nowrap;
-}
-#bsmsmoduletable .custom {
-  white-space: nowrap;
-}
+.bsms_media_contaner .commentshead,
 #bsmsmoduletable .commentshead {
   font-size: 2em;
   font-weight: bold;
 }
-#bsmsmoduletable .thumbnail {
-  white-space: nowrap;
-}
+.bsms_media_contaner .mediatable td,
 #bsmsmoduletable .mediatable td {
   border: none;
   padding: 0 6px 0 0;
 }
+.bsms_media_contaner .mediatable span.bsfilesize,
 #bsmsmoduletable .mediatable span.bsfilesize {
   font-size: 0.6em;
   position: relative;
   bottom: 7px;
 }
+
+/* List Table */
+.bslisttable th,
+.bslisttable td,
 #bsmsmoduletable th,
 #bsmsmoduletable td {
   text-align: left;
-  padding: 0 5px 0 5px;
+  padding: 0 5px;
   border: none;
 }
+.bslisttable .row1col1,
+.bslisttable .row2col1,
+.bslisttable .row3col1,
+.bslisttable .row4col1,
 #bsmsmoduletable .row1col1,
 #bsmsmoduletable .row2col1,
 #bsmsmoduletable .row3col1,
 #bsmsmoduletable .row4col1 {
   border-left: grey 2px solid;
 }
+.bslisttable th.row1col1,
+.bslisttable th.row1col2,
+.bslisttable th.row1col3,
+.bslisttable th.row1col4,
 #bsmsmoduletable th.row1col1,
 #bsmsmoduletable th.row1col2,
 #bsmsmoduletable th.row1col3,
@@ -471,17 +294,8 @@ div.listingfooter ul li {
   border-top: grey 2px solid;
   padding-top: 3px;
 }
-.landing_title {
-  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
-  font-size: 16px;
-  font-weight: bold;
-}
-#landing_td {
-  width: 33%;
-}
-.landing_separator {
-  height: 15px;
-}
+
+/* Show/Hide */
 #showhide {
   font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
   font-size: 12px;
@@ -491,6 +305,8 @@ div.listingfooter ul li {
 #showhide .showhideheadingbutton img {
   vertical-align: bottom;
 }
+
+/* Popup */
 .popupwindow {
   margin: 5px;
   text-align: center;
@@ -507,6 +323,8 @@ p.popupfooter {
   font-weight: bold;
   color: grey;
 }
+
+/* JBSM Layout */
 .JBSM [class*="span"] {
   margin-left: 0;
   display: inline-table;
@@ -521,6 +339,14 @@ p.popupfooter {
 .jbsmimg img {
   border: none;
 }
+div.JBSM .img-rounded {
+  border-radius: 25px;
+}
+.black {
+  color: black;
+}
+
+/* Effects */
 .effects {
   padding-left: 15px;
 }
@@ -541,10 +367,7 @@ p.popupfooter {
   z-index: 20;
   background: rgba(0, 0, 0, 0.8);
   overflow: hidden;
-  -webkit-transition: all 0.5s;
-  -moz-transition: all 0.5s;
-  -o-transition: all 0.5s;
-  transition: all 0.5s;
+  transition: var(--transition-default);
 }
 a.jbsmclose-overlay {
   display: block;
@@ -556,10 +379,10 @@ a.jbsmclose-overlay {
   height: 45px;
   font-size: 20px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-white);
   line-height: 45px;
   text-align: center;
-  background-color: #000000;
+  background-color: var(--color-black);
   cursor: pointer;
 }
 a.jbsmclose-overlay.hidden {
@@ -571,14 +394,12 @@ a.expand {
   z-index: 100;
   width: 40px;
   height: 40px;
-  border: solid 5px #ffffff;
+  border: solid 5px var(--color-white);
   text-align: center;
-  color: #ffffff;
+  color: var(--color-white);
   line-height: 30px;
   font-weight: 500;
   font-size: 20px;
-  -webkit-border-radius: 30px;
-  -moz-border-radius: 30px;
   border-radius: 30px;
 }
 p.expand {
@@ -587,8 +408,10 @@ p.expand {
   z-index: 100;
   padding-left: 20px;
   text-align: center;
-  color: #ffffff;
+  color: var(--color-white);
 }
+
+/* Effect 1 - Bottom slide */
 #effect-1 .overlay {
   bottom: 0;
   left: 0;
@@ -605,6 +428,8 @@ p.expand {
 #effect-1 .jbsmimg.hover .overlay {
   height: 100%;
 }
+
+/* Effect 2 - Top slide */
 #effect-2 .overlay {
   top: 0;
   left: 0;
@@ -621,6 +446,8 @@ p.expand {
 #effect-2 .jbsmimg.hover .overlay {
   height: 100%;
 }
+
+/* Effect 3 - Left slide */
 #effect-3 .overlay {
   top: 0;
   bottom: 0;
@@ -637,6 +464,8 @@ p.expand {
 #effect-3 .jbsmimg.hover .overlay {
   width: 100%;
 }
+
+/* Effect 4 - Right slide */
 #effect-4 .overlay {
   top: 0;
   bottom: 0;
@@ -653,6 +482,8 @@ p.expand {
 #effect-4 .jbsmimg.hover .overlay {
   width: 100%;
 }
+
+/* Effect 5 - Fade with grow */
 #effect-5 .overlay {
   top: 0;
   bottom: 0;
@@ -668,13 +499,8 @@ p.expand {
   margin: auto;
   width: 100%;
   height: 100%;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
   border-radius: 0;
-  -webkit-transition: all 0.5s;
-  -moz-transition: all 0.5s;
-  -o-transition: all 0.5s;
-  transition: all 0.5s;
+  transition: var(--transition-default);
 }
 #effect-5 .jbsmimg.hover .overlay {
   opacity: 1;
@@ -682,10 +508,10 @@ p.expand {
 #effect-5 .jbsmimg.hover .overlay a.expand {
   width: 60px;
   height: 60px;
-  -webkit-border-radius: 30px;
-  -moz-border-radius: 30px;
   border-radius: 30px;
 }
+
+/* Effect 6 - Fade with drop */
 #effect-6 .overlay {
   top: 0;
   bottom: 0;
@@ -699,10 +525,7 @@ p.expand {
   top: 0;
   margin: 0 auto;
   opacity: 0;
-  -webkit-transition: all 0.5s;
-  -moz-transition: all 0.5s;
-  -o-transition: all 0.5s;
-  transition: all 0.5s;
+  transition: var(--transition-default);
 }
 #effect-6 .jbsmimg.hover .overlay {
   opacity: 1;
@@ -712,12 +535,8 @@ p.expand {
   margin-top: -30px;
   opacity: 1;
 }
-.black {
-  color: black;
-}
-div.JBSM .img-rounded {
-  border-radius: 25px;
-}
+
+/* Responsive */
 @media only screen and (max-width: 1100px) {
   .effects {
     padding-left: 5px;
@@ -725,39 +544,34 @@ div.JBSM .img-rounded {
   .effects .jbsmimg:first-child {
     margin-left: 0;
   }
-  .effects .jbsmimg:nth-child(2n) {
-    margin-right: 0;
-  }
+  .effects .jbsmimg:nth-child(2n),
   .effects .jbsmimg:last-child {
     margin-right: 0;
   }
 }
+
 @media only screen and (max-width: 520px) {
   .effects .jbsmimg {
     width: 100%;
   }
-  .effects .jbsmimg:nth-child(n) {
-    margin-right: 0;
-  }
-  .effects .jbsmimg:first-child {
-    margin-left: 0;
-  }
-  .effects .jbsmimg:nth-child(2n-1) {
-    margin-left: 0;
-  }
-  .effects .jbsmimg:nth-child(2n) {
-    margin-right: 0;
-  }
+  .effects .jbsmimg:nth-child(n),
+  .effects .jbsmimg:nth-child(2n),
   .effects .jbsmimg:last-child {
     margin-right: 0;
+  }
+  .effects .jbsmimg:first-child,
+  .effects .jbsmimg:nth-child(2n-1) {
+    margin-left: 0;
   }
   .effects .jbsmimg img {
     margin: 0 auto;
   }
 }
+
+/* Page Links & Dropdowns */
 #pagelinks {
-  background-color: #F2F2F2;
-  border: 1px solid #C5C1BE;
+  background-color: var(--color-pagelinks-bg);
+  border: 1px solid var(--color-gray-border);
   border-radius: 5px;
   font-size: 105%;
   margin: 13px 0 0;
@@ -766,11 +580,10 @@ div.JBSM .img-rounded {
   position: relative;
 }
 #dropdowns {
-  background-color: #A9A9A9;
+  background-color: var(--color-dropdowns-bg);
   margin: 0 -5px;
-  padding: 8px 8px;
-  border: 1px solid #C5C1BE;
+  padding: 8px;
+  border: 1px solid var(--color-gray-border);
   position: relative;
-  -webkit-border-radius: 9px;
+  border-radius: 9px;
 }
-/*# sourceMappingURL=cwmcore.css.map */

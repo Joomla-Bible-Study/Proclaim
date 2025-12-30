@@ -108,7 +108,7 @@ class CwmimagesTest extends ProclaimTestCase
     {
         // Verify the dash prefix check exists
         $this->assertStringContainsString(
-            "strncmp(\$image1, '- ', 2)",
+            "str_starts_with(\$image1, '- ')",
             $this->classContent
         );
     }

@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Html\HtmlHelper;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 
 
 /**
@@ -48,7 +49,7 @@ class Cwmpodcastsubscribe
 
         if ($podcasts) {
             $subscribe .= '<div class="podcastheader" ><h4>' . $introtext . '</h4></div>';
-            $subscribe .= '<div class="prow row-fluid">';
+            $subscribe .= '<div class="prow row">';
 
             foreach ($podcasts as $podcast) {
                 $podcastshow = $podcast->podcast_subscribe_show;
@@ -62,24 +63,24 @@ class Cwmpodcastsubscribe
                         break;
 
                     case 2:
-                        $subscribe .= '<div class="pcell col-6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title . '</h5>';
+                        $subscribe .= '<div class="pcell col-md-6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title . '</h5>';
                         $subscribe .= $this->buildStandardPodcast($podcast);
                         $subscribe .= '<hr /></div>';
                         break;
 
                     case 3:
-                        $subscribe .= '<div class="pcell col-6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title . '</h5>';
+                        $subscribe .= '<div class="pcell col-md-6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title . '</h5>';
                         $subscribe .= $this->buildAlternatePodcast($podcast);
                         $subscribe .= '<hr /></div>';
                         break;
 
                     case 4:
-                        $subscribe .= '<div class="pcell col-6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title
-                            . '</h5><div class="col-2">';
+                        $subscribe .= '<div class="pcell col-md-6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title
+                            . '</h5><div class="row"><div class="col-6">';
                         $subscribe .= $this->buildStandardPodcast($podcast);
-                        $subscribe .= '</div><div class="col-2">';
+                        $subscribe .= '</div><div class="col-6">';
                         $subscribe .= $this->buildAlternatePodcast($podcast);
-                        $subscribe .= '<hr /></div></div>';
+                        $subscribe .= '</div></div><hr /></div>';
                         break;
                 }
             }
@@ -104,14 +105,15 @@ class Cwmpodcastsubscribe
      */
     public function getPodcasts(): array
     {
-        $user   = Factory::getApplication()->getIdentity();
-        $groups = implode(',', $user->getAuthorisedViewLevels());
-        $db     = Factory::getContainer()->get('DatabaseDriver');
-        $query  = $db->getQuery('true');
+        $user  = Factory::getApplication()->getIdentity();
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+
         $query->select('*')
-            ->from('#__bsms_podcast as p')
-            ->where('p.published = 1')
-            ->where('p.access IN (' . $groups . ')');
+            ->from($db->quoteName('#__bsms_podcast', 'p'))
+            ->where($db->quoteName('p.published') . ' = 1')
+            ->where($db->quoteName('p.access') . ' IN (' . implode(',', $user->getAuthorisedViewLevels()) . ')');
+
         $db->setQuery($query);
 
         return $db->loadObjectList();
@@ -191,7 +193,7 @@ class Cwmpodcastsubscribe
 
         if (!empty($podcast->alternateimage)) {
             $image     = $this->buildPodcastImage($podcast->alternateimage, $podcast->alternatewords);
-            $link      = '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image . '</a></div><div class="clearfix"></div>';
+            $link      = '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image . '</a></div><div class="clr"></div>';
             $subscribe .= $link;
         }
 

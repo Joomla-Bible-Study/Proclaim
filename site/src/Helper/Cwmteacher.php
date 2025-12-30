@@ -57,36 +57,40 @@ class Cwmteacher extends Cwmlisting
             $teacherIDs = $params->get('listteachers');
         }
 
-        foreach ($teacherIDs as $teach) {
+        if (!empty($teacherIDs)) {
             $database = Factory::getContainer()->get('DatabaseDriver');
             $query    = $database->getQuery(true);
-            $query->select('*')->from('#__bsms_teachers')->where('id = ' . $teach);
+            $query->select('*')
+                ->from('#__bsms_teachers')
+                ->where('id IN (' . implode(',', array_map('intval', $teacherIDs)) . ')');
             $database->setQuery($query);
-            $result = $database->loadObject();
+            $results = $database->loadObjectList();
 
-            // Check to see if com_contact used instead
-            if ($result->contact) {
-                $contactmodel = new ContactModel();
-                $contact      = $contactmodel->getItem($pk = $result->contact);
+            foreach ($results as $result) {
+                // Check to see if com_contact used instead
+                if ($result->contact) {
+                    $contactmodel = new ContactModel();
+                    $contact      = $contactmodel->getItem($pk = $result->contact);
 
-                // Substitute contact info from com_contacts for duplicate fields
-                $result->title       = $contact->con_position;
-                $result->teachername = $contact->name;
+                    // Substitute contact info from com_contacts for duplicate fields
+                    $result->title       = $contact->con_position;
+                    $result->teachername = $contact->name;
+                }
+
+                if ($result->teacher_thumbnail) {
+                    $image = $result->teacher_thumbnail;
+                } else {
+                    $image = $result->thumb;
+                }
+
+                if ($result->title) {
+                    $teachername = $result->title . ' ' . $result->teachername;
+                } else {
+                    $teachername = $result->teachername;
+                }
+
+                $teachers[] = ['name' => $teachername, 'image' => $image, 't' => $t, 'id' => $result->id];
             }
-
-            if ($result->teacher_thumbnail) {
-                $image = $result->teacher_thumbnail;
-            } else {
-                $image = $result->thumb;
-            }
-
-            if ($result->title) {
-                $teachername = $result->title . ' ' . $result->teachername;
-            } else {
-                $teachername = $result->teachername;
-            }
-
-            $teachers[] = ['name' => $teachername, 'image' => $image, 't' => $t, 'id' => $result->id];
         }
 
         return $teachers;

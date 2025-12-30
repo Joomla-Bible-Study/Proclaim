@@ -38,35 +38,28 @@ class Cwmcustom
      * @param   Registry                 $params    Params for intro
      * @param   CwmtemplateTable|Object  $template  Template ID
      *
-     * @return array
+     * @return string
      *
      * @throws \Exception
      * @since    8.0.0
      */
-    public function getCustom($rowid, $custom, $row, $params, $template)
+    public function getCustom($rowid, $custom, $row, $params, $template): string
     {
         $isCustom     = $rowid === 24;
-        $countbraces  = substr_count($custom, '{');
         $JBSMElements = new Cwmlisting();
 
-        while ($countbraces > 0) {
-            $bracebegin = strpos($custom, '{');
-            $braceend   = strpos($custom, '}');
-            $subcustom  = substr($custom, ($bracebegin + 1), (($braceend - $bracebegin) - 1));
+        $custom = preg_replace_callback('/{([^}]+)}/', function ($matches) use ($rowid, $isCustom, $row, $params, $template, $JBSMElements) {
+            $subcustom = $matches[1];
+            $localRowId = $rowid;
 
-            if (!$rowid || $isCustom) {
-                $rowid = self::getElementnumber($subcustom);
+            if (!$localRowId || $isCustom) {
+                $localRowId = self::getElementnumber($subcustom);
             }
 
-            $elementid = $JBSMElements->getElement($rowid, $row, $params, $template, $type = 0);
-            $custom    = substr_replace($custom, $elementid, $bracebegin, (($braceend - $bracebegin) + 1));
-            $countbraces--;
-        }
+            return (string) $JBSMElements->getElement((string) $localRowId, $row, $params, $template, '0');
+        }, (string) $custom);
 
-        $elementid     = $custom;
-        $elementid->id = 'custom';
-
-        return $elementid;
+        return (string) $custom;
     }
 
     /**
@@ -80,95 +73,37 @@ class Cwmcustom
      */
     public static function getElementnumber($row): int
     {
-        $rowID = 0;
+        $lookup = [
+            'scripture1'         => 1,
+            'scripture2'         => 2,
+            'secondary'          => 3,
+            'duration'           => 4,
+            'studytitle'         => 5,
+            'studyintro'         => 6,
+            'teachername'        => 7,
+            'teacher-title-name' => 8,
+            'teacher-image'      => 30,
+            'series_text'        => 9,
+            'date'               => 10,
+            'submitted'          => 11,
+            'hits'               => 12,
+            'studynumber'        => 13,
+            'topic_text'         => 14,
+            'location_text'      => 15,
+            'message_type'       => 16,
+            'details-text'       => 17,
+            'details-text-pdf'   => 18,
+            'details-pdf'        => 19,
+            'media'              => 20,
+            'store'              => 22,
+            'filesize'           => 23,
+            'thumbnail'          => 25,
+            'series_thumbnail'   => 26,
+            'series_description' => 27,
+            'plays'              => 28,
+            'downloads'          => 29,
+        ];
 
-        switch ($row) {
-            case 'scripture1':
-                $rowID = 1;
-                break;
-            case 'scripture2':
-                $rowID = 2;
-                break;
-            case 'secondary':
-                $rowID = 3;
-                break;
-            case 'duration':
-                $rowID = 4;
-                break;
-            case 'studytitle':
-                $rowID = 5;
-                break;
-            case 'studyintro':
-                $rowID = 6;
-                break;
-            case 'teachername':
-                $rowID = 7;
-                break;
-            case 'teacher-title-name':
-                $rowID = 8;
-                break;
-            case 'teacher-image':
-                $rowID = 30;
-                break;
-            case 'series_text':
-                $rowID = 9;
-                break;
-            case 'date':
-                $rowID = 10;
-                break;
-            case 'submitted':
-                $rowID = 11;
-                break;
-            case 'hits':
-                $rowID = 12;
-                break;
-            case 'studynumber':
-                $rowID = 13;
-                break;
-            case 'topic_text':
-                $rowID = 14;
-                break;
-            case 'location_text':
-                $rowID = 15;
-                break;
-            case 'message_type':
-                $rowID = 16;
-                break;
-            case 'details-text':
-                $rowID = 17;
-                break;
-            case 'details-text-pdf':
-                $rowID = 18;
-                break;
-            case 'details-pdf':
-                $rowID = 19;
-                break;
-            case 'media':
-                $rowID = 20;
-                break;
-            case 'store':
-                $rowID = 22;
-                break;
-            case 'filesize':
-                $rowID = 23;
-                break;
-            case 'thumbnail':
-                $rowID = 25;
-                break;
-            case 'series_thumbnail':
-                $rowID = 26;
-                break;
-            case 'series_description':
-                $rowID = 27;
-                break;
-            case 'plays':
-                $rowID = 28;
-                break;
-            case 'downloads':
-                $rowID = 29;
-                break;
-        }
-
-        return $rowID;
+        return $lookup[$row] ?? 0;
     }
 }
