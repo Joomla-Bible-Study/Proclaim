@@ -42,7 +42,7 @@ class Cwmdownload
     public function download($mid): void
     {
         // Clears file status cache
-        \clearstatcache();
+        clearstatcache();
 
         $app        = Factory::getApplication();
         $input      = new Input();
@@ -143,7 +143,7 @@ class Cwmdownload
             @flush();
         }
 
-        \fclose($fh);
+        fclose($fh);
         $app->close();
     }
 
@@ -161,9 +161,9 @@ class Cwmdownload
     protected function sendError($app, int $code, string $message): never
     {
         $statusText = match ($code) {
-            400 => 'Bad Request',
-            404 => 'Not Found',
-            500 => 'Internal Server Error',
+            400     => 'Bad Request',
+            404     => 'Not Found',
+            500     => 'Internal Server Error',
             default => 'Error',
         };
 
