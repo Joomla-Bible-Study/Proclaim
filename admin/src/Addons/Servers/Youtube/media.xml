@@ -8,6 +8,10 @@
                    description="JBS_ADDON_YOUTUBE_URL_DISC"
                    class="inputbox"
                    required="true"/>
+            <field name="youtube_browse_btn"
+                   type="note"
+                   class="youtube-browse-container"
+                   description="&lt;button type='button' class='btn btn-secondary' id='youtube-browse-btn' onclick='Proclaim.YoutubeBrowser.open()'&gt;&lt;span class='icon-search'&gt;&lt;/span&gt; Browse YouTube&lt;/button&gt;"/>
             <field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
                    description="JBS_MED_INTERNAL_POPUP_DESC"
                    class="form-select-color-state"

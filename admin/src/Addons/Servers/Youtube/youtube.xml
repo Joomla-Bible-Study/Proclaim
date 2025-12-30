@@ -6,6 +6,12 @@
         <media_resource>filename</media_resource>
     </config>
     <fields name="params">
+        <fieldset name="youtube_api" label="JBS_ADDON_YOUTUBE_API_SETTINGS">
+            <field name="api_key" type="text" label="JBS_ADDON_YOUTUBE_API_KEY"
+                   description="JBS_ADDON_YOUTUBE_API_KEY_DESC" class="inputbox" size="60" />
+            <field name="channel_id" type="text" label="JBS_ADDON_YOUTUBE_CHANNEL_ID"
+                   description="JBS_ADDON_YOUTUBE_CHANNEL_ID_DESC" class="inputbox" size="40" />
+        </fieldset>
     </fields>
     <fields name="media">
         <fieldset name="files_settings" label="JBS_ADDON_YOUTUBE_FILE_SETTINGS">
