@@ -16,6 +16,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
@@ -360,5 +361,46 @@ class Cwmpagebuilder
         $db->setQuery($query, 0, $limit);
 
         return $db->loadObjectList();
+    }
+
+    /**
+     * Run content plugins on item text
+     *
+     * @param   object  $item    Item with text property to process
+     * @param   object  $params  Component params
+     *
+     * @return object The item with processed text and event properties
+     *
+     * @throws \Exception
+     * @since 10.0.0
+     */
+    public function runContentPlugins(object $item, object $params): object
+    {
+        // We don't need offset, but it is a required argument for the plugin dispatcher
+        $offset = 0;
+        PluginHelper::importPlugin('content');
+
+        // Run content plugins
+        $dispatcher            = Factory::getApplication();
+        $contentEventArguments = [
+            'context' => 'com_proclaim.sermon',
+            'subject' => &$item,
+            'params'  => &$params,
+            'page'    => $offset,
+        ];
+
+        $dispatcher->triggerEvent('onContentPrepare', $contentEventArguments);
+
+        $item->event                        = new \stdClass();
+        $results                            = $dispatcher->triggerEvent('onContentAfterTitle', $contentEventArguments);
+        $item->event->afterDisplayTitle     = trim(implode("\n", $results));
+
+        $results                            = $dispatcher->triggerEvent('onContentBeforeDisplay', $contentEventArguments);
+        $item->event->beforeDisplayContent  = trim(implode("\n", $results));
+
+        $results                            = $dispatcher->triggerEvent('onContentAfterDisplay', $contentEventArguments);
+        $item->event->afterDisplayContent   = trim(implode("\n", $results));
+
+        return $item;
     }
 }
