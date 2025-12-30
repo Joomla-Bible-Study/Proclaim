@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
@@ -35,6 +36,7 @@ class Cwmdownload
      * @param   int  $mid  ID of media
      *
      * @return void
+     * @throws \Exception
      * @since 6.1.2
      */
     public function download($mid): void
@@ -148,7 +150,7 @@ class Cwmdownload
     /**
      * Send an HTTP error response and terminate
      *
-     * @param   \Joomla\CMS\Application\CMSApplication  $app      The application
+     * @param   CMSApplication  $app      The application
      * @param   int                                     $code     HTTP status code
      * @param   string                                  $message  Error message
      *
