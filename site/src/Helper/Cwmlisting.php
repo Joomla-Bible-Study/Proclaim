@@ -421,7 +421,7 @@ class Cwmlisting
     public function getFluidMediaids($item): array
     {
         $medias    = [];
-        $mediatemp = explode(',', $item->mids);
+        $mediatemp = explode(',', $item->mids ?? '');
 
         foreach ($mediatemp as $mtemp) {
             $medias[] = $mtemp;
