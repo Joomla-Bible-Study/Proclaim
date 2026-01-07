@@ -64,7 +64,11 @@ class Cwmpagebuilder
         $CWMElements = new Cwmlisting();
 
         if ($mids) {
-            $page->media = $this->mediaBuilder($mids, $params, $template, $item);
+            // Build media files inline (was mediaBuilder)
+            $mediaIDs         = $CWMElements->getFluidMediaids($item);
+            $media            = $CWMElements->getMediaFiles($mediaIDs);
+            $item->mediafiles = $media;
+            $page->media      = $CWMElements->getFluidMediaFiles($item, $params, $template);
         } else {
             $page->media = '';
         }
@@ -169,106 +173,41 @@ class Cwmpagebuilder
         // Set the item for the plugin to $item->text //run content plugins
         if ($page->scripture1) {
             $item->text       = $page->scripture1;
-            $item             = $this->runContentPlugins($item, $params);
+            $item             = $CWMElements->runContentPlugins($item, $params);
             $page->scripture1 = $item->text;
         }
 
         if ($page->scripture2) {
             $item->text       = $page->scripture2;
-            $item             = $this->runContentPlugins($item, $params);
+            $item             = $CWMElements->runContentPlugins($item, $params);
             $page->scripture2 = $item->text;
         }
 
         if ($item->studyintro) {
             $item->text       = $item->studyintro;
-            $item             = $this->runContentPlugins($item, $params);
+            $item             = $CWMElements->runContentPlugins($item, $params);
             $page->studyintro = $item->text;
         }
 
         if ($item->studytext) {
             $item->text      = $item->studytext;
-            $item            = $this->runContentPlugins($item, $params);
+            $item            = $CWMElements->runContentPlugins($item, $params);
             $page->studytext = $item->text;
         }
 
         if ($item->secondary_reference) {
             $item->text                = $item->secondary_reference;
-            $item                      = $this->runContentPlugins($item, $params);
+            $item                      = $CWMElements->runContentPlugins($item, $params);
             $page->secondary_reference = $item->text;
         }
 
         if ($item->sdescription) {
             $item->text         = $item->sdescription;
-            $item               = $this->runContentPlugins($item, $params);
+            $item               = $CWMElements->runContentPlugins($item, $params);
             $page->sdescription = $item->text;
         }
 
         return $page;
-    }
-
-    /**
-     * Media Builder
-     *
-     * @param   array             $mediaids  ID of Media
-     * @param   Registry          $params    Item Params
-     * @param   CwmtemplateTable  $template  template date
-     * @param   object            $item      Item Params
-     *
-     * @return string
-     *
-     * @throws \Exception
-     * @since 7.0
-     */
-    private function mediaBuilder($mediaids, $params, $template, $item): string
-    {
-        $listing          = new Cwmlisting();
-        $mediaIDs         = $listing->getFluidMediaids($item);
-        $media            = $listing->getMediaFiles($mediaIDs);
-        $item->mediafiles = $media;
-
-        // Var_dump($media); die;
-        return $listing->getFluidMediaFiles($item, $params, $template);
-    }
-
-    /**
-     * Run Content Plugins
-     *
-     * @param   object  $item    Item info
-     * @param   object  $params  Item params
-     *
-     * @return object
-     *
-     * @throws \Exception
-     * @since 7.0
-     */
-    public function runContentPlugins($item, $params): object
-    {
-        // We don't need offset, but it is a required argument for the plugin dispatcher
-        $offset = 0;
-        PluginHelper::importPlugin('content');
-
-        // Run content plugins
-        $dispatcher            = Factory::getApplication();
-        $contentEventArguments = [
-            'context' => 'com_proclaim.sermon',
-            'subject' => &$item,
-            'params'  => &$params,
-            'page'    => $offset,
-        ];
-
-        $dispatcher->triggerEvent('onContentPrepare', $contentEventArguments);
-
-        $item->event                    = new \stdClass();
-        $results                        = $dispatcher->triggerEvent('onContentAfterTitle', $contentEventArguments);
-        $item->event->afterDisplayTitle = trim(implode("\n", $results));
-
-        $results                           = $dispatcher->triggerEvent('onContentBeforeDisplay', $contentEventArguments);
-        $item->event->beforeDisplayContent = trim(implode("\n", $results));
-
-        $results                          = $dispatcher->triggerEvent('onContentAfterDisplay', $contentEventArguments);
-        $item->event->afterDisplayContent = trim(implode("\n", $results));
-
-        return $item;
     }
 
     /**
@@ -422,5 +361,46 @@ class Cwmpagebuilder
         $db->setQuery($query, 0, $limit);
 
         return $db->loadObjectList();
+    }
+
+    /**
+     * Run content plugins on item text
+     *
+     * @param   object  $item    Item with text property to process
+     * @param   object  $params  Component params
+     *
+     * @return object The item with processed text and event properties
+     *
+     * @throws \Exception
+     * @since 10.0.0
+     */
+    public function runContentPlugins(object $item, object $params): object
+    {
+        // We don't need offset, but it is a required argument for the plugin dispatcher
+        $offset = 0;
+        PluginHelper::importPlugin('content');
+
+        // Run content plugins
+        $dispatcher            = Factory::getApplication();
+        $contentEventArguments = [
+            'context' => 'com_proclaim.sermon',
+            'subject' => &$item,
+            'params'  => &$params,
+            'page'    => $offset,
+        ];
+
+        $dispatcher->triggerEvent('onContentPrepare', $contentEventArguments);
+
+        $item->event                        = new \stdClass();
+        $results                            = $dispatcher->triggerEvent('onContentAfterTitle', $contentEventArguments);
+        $item->event->afterDisplayTitle     = trim(implode("\n", $results));
+
+        $results                            = $dispatcher->triggerEvent('onContentBeforeDisplay', $contentEventArguments);
+        $item->event->beforeDisplayContent  = trim(implode("\n", $results));
+
+        $results                            = $dispatcher->triggerEvent('onContentAfterDisplay', $contentEventArguments);
+        $item->event->afterDisplayContent   = trim(implode("\n", $results));
+
+        return $item;
     }
 }

@@ -21,6 +21,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Html\HtmlHelper;
 use Joomla\CMS\Image\Image;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
@@ -111,154 +112,33 @@ class Cwmlisting
 
         $listparams = [];
 
-        if ($params->get($extra . 'scripture1row') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'scripture1');
+        // Standard params that check {name}row > 0
+        $standardParams = [
+            'scripture1', 'scripture2', 'secondary', 'title', 'date', 'teacher', 'teacher-title',
+            'duration', 'studyintro', 'series', 'description', 'seriesthumbnail', 'submitted',
+            'hits', 'downloads', 'studynumber', 'topic', 'locations', 'jbsmedia', 'messagetype',
+            'thumbnail', 'teacheremail', 'teacherweb', 'teacherphone', 'teacherfb', 'teachertw',
+            'teacherblog', 'teachershort', 'teacherlong', 'teacheraddress', 'teacherlink1',
+            'teacherlink2', 'teacherlink3', 'teacherlargeimage', 'teacherallinone',
+        ];
+
+        foreach ($standardParams as $paramName) {
+            if ($params->get($extra . $paramName . 'row') > 0) {
+                $listparams[] = $this->getListParamsArray($extra . $paramName);
+            }
         }
 
-        if ($params->get($extra . 'scripture2row') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'scripture2');
-        }
-
-        if ($params->get($extra . 'secondaryrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'secondary');
-        }
-
-        if ($params->get($extra . 'titlerow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'title');
-        }
-
-        if ($params->get($extra . 'daterow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'date');
-        }
-
-        if ($params->get($extra . 'teacherrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacher');
-        }
-
-        if ($params->get($extra . 'teacher-titlerow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacher-title');
-        }
-
-        if ($params->get($extra . 'durationrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'duration');
-        }
-
-        if ($params->get($extra . 'studyintrorow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'studyintro');
-        }
-
-        if ($params->get($extra . 'seriesrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'series');
-        }
-
-        if ($params->get($extra . 'descriptionrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'description');
-        }
-
-        if ($params->get($extra . 'seriesthumbnailrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'seriesthumbnail');
-        }
-
-        if ($params->get($extra . 'submittedrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'submitted');
-        }
-
-        if ($params->get($extra . 'hitsrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'hits');
-        }
-
-        if ($params->get($extra . 'downloadsrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'downloads');
-        }
-
-        if ($params->get($extra . 'studynumberrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'studynumber');
-        }
-
-        if ($params->get($extra . 'topicrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'topic');
-        }
-
-        if ($params->get($extra . 'locationsrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'locations');
-        }
-
-        if ($params->get($extra . 'jbsmediarow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'jbsmedia');
-        }
-
-        if ($params->get($extra . 'messagetyperow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'messagetype');
-        }
-
-        if ($params->get($extra . 'thumbnailrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'thumbnail');
-        }
-
+        // Special case: teacherimage checks both teacherimagerow and teacherimagerrow
         if ($params->get($extra . 'teacherimagerow') > 0 || $params->get($extra . 'teacherimagerrow') > 0) {
             $listparams[] = $this->getListParamsArray($extra . 'teacherimage');
         }
 
+        // Special case: seriesdescription maps to description
         if ($params->get($extra . 'seriesdescriptionrow') > 0) {
             $listparams[] = $this->getListParamsArray($extra . 'description');
         }
 
-        if ($params->get($extra . 'teacheremailrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacheremail');
-        }
-
-        if ($params->get($extra . 'teacherwebrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherweb');
-        }
-
-        if ($params->get($extra . 'teacherphonerow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherphone');
-        }
-
-        if ($params->get($extra . 'teacherfbrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherfb');
-        }
-
-        if ($params->get($extra . 'teachertwrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teachertw');
-        }
-
-        if ($params->get($extra . 'teacherblogrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherblog');
-        }
-
-        if ($params->get($extra . 'teachershortrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teachershort');
-        }
-
-        if ($params->get($extra . 'teacherlongrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherlong');
-        }
-
-        if ($params->get($extra . 'teacheraddressrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacheraddress');
-        }
-
-        if ($params->get($extra . 'teacherlink1row') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherlink1');
-        }
-
-        if ($params->get($extra . 'teacherlink2row') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherlink2');
-        }
-
-        if ($params->get($extra . 'teacherlink3row') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherlink3');
-        }
-
-        if ($params->get($extra . 'teacherlargeimagerow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherlargeimage');
-        }
-
-        if ($params->get($extra . 'teacherallinonerow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherallinone');
-        }
-
+        // Special case: custom doesn't use > 0 comparison
         if ($params->get($extra . 'customrow')) {
             $listparams[] = $this->getListParamsArray($extra . 'custom');
         }
@@ -443,7 +323,7 @@ class Cwmlisting
         if (($type === 'sermons') && \is_array($items)) {
             foreach ($items as $item) {
                 // Skip invalid items
-                if (!is_object($item)) {
+                if (!\is_object($item)) {
                     continue;
                 }
 
@@ -1216,92 +1096,35 @@ class Cwmlisting
 				<span class="fas fa-envelope" style="font-size:20px;" title="Website"></span></a>' : $data);
 
                         if ($item->website) {
-                            if (
-                                substr_count($item->website, 'https://', 0) || substr_count(
-                                    $item->website,
-                                    'http://',
-                                    0
-                                )
-                            ) {
-                                $data .= '<a href="' . $item->website . '" target="_blank">
+                            $data .= '<a href="' . $this->ensureScheme($item->website) . '" target="_blank">
 						<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
-                            } else {
-                                $data .= '<a href="https://' . $item->website . '" target="_blank">
-						<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
-                            }
                         }
 
                         if ($item->facebooklink) {
-                            if (
-                                substr_count($item->facebooklink, 'https://', 0) || substr_count(
-                                    $item->facebooklink,
-                                    'http://',
-                                    0
-                                )
-                            ) {
-                                $data .= '<a href="' . $item->facebooklink . '" target="_blank">
+                            $data .= '<a href="' . $this->ensureScheme($item->facebooklink) . '" target="_blank">
 						<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
-                            } else {
-                                $data .= '<a href="https://' . $item->facebooklink . '" target="_blank">
-						<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
-                            }
                         }
 
                         if ($item->twitterlink) {
-                            if (
-                                substr_count($item->twitterlink, 'https://', 0) || substr_count(
-                                    $item->twitterlink,
-                                    'http://',
-                                    0
-                                )
-                            ) {
-                                $data .= '<a href="' . $item->twitterlink . '" target="_blank">
+                            $data .= '<a href="' . $this->ensureScheme($item->twitterlink) . '" target="_blank">
 						<span class="fab fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
-                            } else {
-                                $data .= '<a href="https://' . $item->twitterlink . '" target="_blank">
-						<span class="fab fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
-                            }
                         }
 
                         if ($item->bloglink) {
-                            if (
-                                substr_count($item->bloglink, 'https://', 0, 7) || substr_count(
-                                    $item->bloglink,
-                                    'http://',
-                                    0,
-                                    7
-                                )
-                            ) {
-                                $data .= '<a href="' . $item->bloglink . '" target="_blank">
+                            $data .= '<a href="' . $this->ensureScheme($item->bloglink) . '" target="_blank">
 						<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
-                            } else {
-                                $data .= '<a href="https://' . $item->bloglink . '" target="_blank">
-						<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
-                            }
                         }
 
                         if ($item->link1) {
-                            if (substr_count($item->link1, 'https://', 0) || substr_count($item->link1, 'http://', 0)) {
-                                $data .= '<a href="' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
-                            } else {
-                                $data .= '<a href="https://' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
-                            }
+                            $data .= '<a href="' . $this->ensureScheme($item->link1) . '" target="_blank">' . $item->linklabel1 . '</a>';
                         }
 
                         if ($item->link2) {
-                            if (substr_count($item->link2, 'https://', 0) || substr_count($item->link2, 'http://', 0)) {
-                                $data .= '<a href="' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
-                            } else {
-                                $data .= '<a href="http://' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
-                            }
+                            $data .= '<a href="' . $this->ensureScheme($item->link2, 'http://') . '" target="_blank">' . $item->linklabel2 . '</a>';
                         }
 
                         if ($item->link3) {
-                            if (substr_count($item->link3, 'https://', 0) || substr_count($item->link3, 'http://', 0)) {
-                                $data .= '<a href="' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
-                            } else {
-                                $data .= '<a href="https://' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
-                            }
+                            $data .= '<a href="' . $this->ensureScheme($item->link3) . '" target="_blank">' . $item->link3label . '</a>';
                         }
                     }
                 }
@@ -1332,11 +1155,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_LINK1');
                 } elseif ($item->link1) {
-                    if (substr_count($item->link1, 'http://', 0)) {
-                        $data = '<a href="' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
-                    } else {
-                        $data = '<a href="http://' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
-                    }
+                    $data = '<a href="' . $this->ensureScheme($item->link1) . '" target="_blank">' . $item->linklabel1 . '</a>';
                 }
                 break;
 
@@ -1344,11 +1163,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_LINK2');
                 } elseif ($item->link2) {
-                    if (substr_count($item->link2, 'http://', 0)) {
-                        $data = '<a href="' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
-                    } else {
-                        $data = '<a href="http://' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
-                    }
+                    $data = '<a href="' . $this->ensureScheme($item->link2, 'http://') . '" target="_blank">' . $item->linklabel2 . '</a>';
                 }
                 break;
 
@@ -1356,11 +1171,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_LINK3');
                 } elseif ($item->link3) {
-                    if (substr_count($item->link3, 'http://', 0)) {
-                        $data = '<a href="' . $item->link3 . '" target="_blank">' . $item->linklabel3 . '</a>';
-                    } else {
-                        $data = '<a href="http://' . $item->link3 . '" target="_blank">' . $item->linklabel3 . '</a>';
-                    }
+                    $data = '<a href="' . $this->ensureScheme($item->link3) . '" target="_blank">' . $item->linklabel3 . '</a>';
                 }
                 break;
             case $extra . 'teacheremail':
@@ -1376,13 +1187,8 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_WEBSITE');
                 } elseif ($item->website) {
-                    if (substr_count($item->website, 'http://', 0)) {
-                        $data = '<a href="' . $item->website . '" target="_blank">
+                    $data = '<a href="' . $this->ensureScheme($item->website) . '" target="_blank">
                         <span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
-                    } else {
-                        $data = '<a href="http://' . $item->website . '" target="_blank">
-                        <span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
-                    }
                 }
                 break;
 
@@ -1397,51 +1203,28 @@ class Cwmlisting
             case $extra . 'teacherfb':
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_FACEBOOK');
-                } else {
-                    if ($item->facebooklink) {
-                        if (substr_count($item->facebooklink, 'http://', 0)) {
-                            $data = '<a href="' . $item->facebooklink . '" target="_blank">
+                } elseif ($item->facebooklink) {
+                    $data = '<a href="' . $this->ensureScheme($item->facebooklink) . '" target="_blank">
 							<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
-                        } else {
-                            $data = '<a href="http://' . $item->facebooklink . '" target="_blank">
-							<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
-                        }
-                    }
                 }
                 break;
 
             case $extra . 'teachertw':
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_TWITTER');
-                } else {
-                    if ($item->twitterlink) {
-                        if (substr_count($item->twitterlink, 'http://', 0)) {
-                            $data = '<a href="' . $item->twitterlink . '" target="_blank">
+                } elseif ($item->twitterlink) {
+                    $data = '<a href="' . $this->ensureScheme($item->twitterlink) . '" target="_blank">
 							<span class="fas fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
-                        } else {
-                            $data = '<a href="http://' . $item->twitterlink . '" target="_blank">
-							<span class="fas fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
-                        }
-                    }
                 }
-
                 break;
 
             case $extra . 'teacherblog':
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_BLOG');
-                } else {
-                    if ($item->bloglink) {
-                        if (substr_count($item->bloglink, 'http://', 0, 7)) {
-                            $data = '<a href="' . $item->bloglink . '" target="_blank">
+                } elseif ($item->bloglink) {
+                    $data = '<a href="' . $this->ensureScheme($item->bloglink) . '" target="_blank">
 							<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
-                        } else {
-                            $data = '<a href="http://' . $item->bloglink . '" target="_blank">
-							<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
-                        }
-                    }
                 }
-
                 break;
 
             case $extra . 'teachershort':
@@ -2564,39 +2347,62 @@ class Cwmlisting
     }
 
     /**
-     * make a URL small
+     * Ensure URL has a scheme (http:// or https://)
      *
-     * @param   string  $url      Url
-     * @param   string  $login    Login
-     * @param   string  $appkey   AppKey
-     * @param   string  $format   Format
-     * @param   string  $version  Version
+     * @param   string  $url     URL to check
+     * @param   string  $scheme  Default scheme to add if missing
      *
-     * @return string
+     * @return string URL with scheme
      *
-     * @throws \JsonException
-     * @since 7.0
+     * @since 10.0.0
      */
-    private function makeBitlyUrl($url, $login, $appkey, string $format = 'xml', string $version = '2.0.1')
+    private function ensureScheme(string $url, string $scheme = 'https://'): string
     {
-        // Create the URL
-        $bitly = 'http://api.bit.ly/shorten?version=' . $version . '&longUrl=' . urlencode($url) . '&login='
-            . $login . '&apiKey=' . $appkey . '&format=' . $format;
-
-        // Get the url
-        // Could also use cURL here
-        $response = file_get_contents($bitly);
-
-        // Parse depending on desired format
-        if (strtolower($format) === 'json') {
-            $json  = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
-            $short = $json['results'][$url]['shortUrl'];
-        } else {
-            // Xml
-            $xml   = simplexml_load_string($response);
-            $short = 'http://bit.ly/' . $xml->results->nodeKeyVal->hash;
+        if (parse_url($url, PHP_URL_SCHEME) !== null) {
+            return $url;
         }
 
-        return $short;
+        return $scheme . $url;
+    }
+
+    /**
+     * Run Content Plugins on item text
+     *
+     * @param   object  $item    Item info with text property
+     * @param   object  $params  Item params
+     *
+     * @return object Item with processed text and event data
+     *
+     * @throws \Exception
+     * @since 10.0.0
+     */
+    public function runContentPlugins(object $item, object $params): object
+    {
+        // We don't need offset, but it is a required argument for the plugin dispatcher
+        $offset = 0;
+        PluginHelper::importPlugin('content');
+
+        // Run content plugins
+        $dispatcher            = Factory::getApplication();
+        $contentEventArguments = [
+            'context' => 'com_proclaim.sermon',
+            'subject' => &$item,
+            'params'  => &$params,
+            'page'    => $offset,
+        ];
+
+        $dispatcher->triggerEvent('onContentPrepare', $contentEventArguments);
+
+        $item->event                        = new \stdClass();
+        $results                            = $dispatcher->triggerEvent('onContentAfterTitle', $contentEventArguments);
+        $item->event->afterDisplayTitle     = trim(implode("\n", $results));
+
+        $results                            = $dispatcher->triggerEvent('onContentBeforeDisplay', $contentEventArguments);
+        $item->event->beforeDisplayContent  = trim(implode("\n", $results));
+
+        $results                            = $dispatcher->triggerEvent('onContentAfterDisplay', $contentEventArguments);
+        $item->event->afterDisplayContent   = trim(implode("\n", $results));
+
+        return $item;
     }
 }

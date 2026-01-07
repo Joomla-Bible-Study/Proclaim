@@ -18,7 +18,6 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Factory;
-use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Router\Route;
 use Joomla\Component\Contact\Site\Model\ContactModel;
 use Joomla\Registry\Registry;
@@ -110,38 +109,45 @@ class Cwmteacher extends Cwmlisting
      */
     public function getTeacher($params, $id): string
     {
-        $input       = Factory::getApplication()->getInput();
-        $htmlView    = new HtmlView();
-        $htmlView->loadHelper('image');
-        $teacherids = new \stdClass();
-        $t          = (int)$params->get('teachertemplateid');
+        $input = Factory::getApplication()->getInput();
+        $t     = (int)$params->get('teachertemplateid');
 
         if (!$t) {
             $t = $input->get('t', 1, 'int');
         }
 
-        $viewtype = $input->get('view');
+        $viewtype   = $input->get('view');
+        $teacherids = [];
 
         if ($viewtype === 'sermons') {
-            $teacherids = explode(",", $params->get('listteachers'));
-        }
-
-        if ($viewtype === 'sermon' && (int)$id !== 0) {
-            $teacherids->id = $id;
+            $listteachers = $params->get('listteachers');
+            if ($listteachers) {
+                $teacherids = array_map('intval', explode(",", $listteachers));
+            }
+        } elseif ($viewtype === 'sermon' && (int)$id !== 0) {
+            $teacherids = [(int)$id];
         }
 
         $teacher = '<table class="table" id="teacher"><tr>';
 
-        if (!isset($teacherids)) {
-            return $teacher;
+        if (empty($teacherids)) {
+            return $teacher . '</tr></table>';
         }
 
-        foreach ($teacherids as $teachers) {
-            $database = Factory::getContainer()->get('DatabaseDriver');
-            $query    = $database->getQuery(true);
-            $query->select('*')->from('#__bsms_teachers')->where('id = ' . $teachers);
-            $database->setQuery($query);
-            $tresult = $database->loadObject();
+        // Fetch all teachers in one query
+        $database = Factory::getContainer()->get('DatabaseDriver');
+        $query    = $database->getQuery(true);
+        $query->select('*')
+            ->from('#__bsms_teachers')
+            ->where('id IN (' . implode(',', $teacherids) . ')');
+        $database->setQuery($query);
+        $results = $database->loadObjectList('id');
+
+        foreach ($teacherids as $teacherId) {
+            if (!isset($results[$teacherId])) {
+                continue;
+            }
+            $tresult = $results[$teacherId];
 
             // Check to see if there is a teacher image, if not, skip this step
             $image = Cwmimages::getTeacherThumbnail($tresult->teacher_thumbnail, $tresult->thumb);
@@ -197,8 +203,6 @@ class Cwmteacher extends Cwmlisting
      */
     public function getTeacherListExp($row, $params, $template)
     {
-        $htmlView = new HtmlView();
-        $htmlView->loadHelper('image');
         $imagelarge = Cwmimages::getTeacherThumbnail($row->teacher_image, $row->image);
 
         $imagesmall = Cwmimages::getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
@@ -245,10 +249,6 @@ class Cwmteacher extends Cwmlisting
      */
     public function getTeacherDetailsExp($row, $params)
     {
-        $htmlView = new HtmlView();
-        $htmlView->loadHelper('image');
-
-        // Get the image folders and images
         $imagelarge = Cwmimages::getTeacherThumbnail($row->teacher_image, $row->image);
 
         $imagesmall = Cwmimages::getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
@@ -334,27 +334,12 @@ class Cwmteacher extends Cwmlisting
 
         $studieslimit = $params->get('studies', 10);
 
-        $studies = '';
+        $studies = $this->getWrapOpen($params->get('wrapcode'), 'bsms_studytable');
 
-        switch ($params->get('wrapcode')) {
-            case '0':
-                // Do Nothing
-                break;
-            case 'T':
-                // Table
-                $studies .= '<table class="table" id="bsms_studytable" width="100%">';
-                break;
-            case 'D':
-                // DIV
-                $studies .= '<div>';
-                break;
-        }
-
-        $params->get('headercode');
         $j = 0;
 
         foreach ($items as $row) {
-            if ($j > $studieslimit) {
+            if ($j >= $studieslimit) {
                 break;
             }
 
@@ -362,20 +347,45 @@ class Cwmteacher extends Cwmlisting
             $j++;
         }
 
-        switch ($params->get('wrapcode')) {
-            case '0':
-                // Do Nothing
-                break;
-            case 'T':
-                // Table
-                $studies .= '</table>';
-                break;
-            case 'D':
-                // DIV
-                $studies .= '</div>';
-                break;
-        }
+        $studies .= $this->getWrapClose($params->get('wrapcode'));
 
         return $studies;
+    }
+
+    /**
+     * Get opening wrapper HTML based on wrapcode
+     *
+     * @param   string  $wrapcode  Wrap code (0, T, or D)
+     * @param   string  $id        Optional ID for the element
+     *
+     * @return string Opening wrapper HTML
+     *
+     * @since 10.0.0
+     */
+    private function getWrapOpen(string $wrapcode, string $id = ''): string
+    {
+        return match ($wrapcode) {
+            'T'     => '<table class="table" id="' . $id . '" width="100%">',
+            'D'     => '<div>',
+            default => '',
+        };
+    }
+
+    /**
+     * Get closing wrapper HTML based on wrapcode
+     *
+     * @param   string  $wrapcode  Wrap code (0, T, or D)
+     *
+     * @return string Closing wrapper HTML
+     *
+     * @since 10.0.0
+     */
+    private function getWrapClose(string $wrapcode): string
+    {
+        return match ($wrapcode) {
+            'T'     => '</table>',
+            'D'     => '</div>',
+            default => '',
+        };
     }
 }
