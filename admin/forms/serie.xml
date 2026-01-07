@@ -50,7 +50,7 @@
                description="JGLOBAL_ACTION_PERMISSIONS_DESCRIPTION"
                type="spacer"/>
         <field name="description" type="editor" class="inputbox"
-               label="JBS_CMN_DESCRIPTION" filter="CwmproclaimHelper::filterText"
+               label="JBS_CMN_DESCRIPTION" filter="CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper::filterText"
                buttons="true"/>
         <field name="series_thumbnail" type="hidden"/>
         <field name="image" type="media" directory="biblestudy" label="JBS_CMN_SERIES_THUMBNAIL"

@@ -191,8 +191,8 @@ class CwmproclaimHelper
     }
 
     /**
-     * Applies the content tag filters to arbitrary text as per settings for the current user group
-     * This may not be used, but is in the XML files.
+     * Applies the content tag filters to arbitrary text as per settings for the current user group.
+     * If no Proclaim-specific filters are configured, falls back to Joomla's global text filtering.
      *
      * @param   string  $text  The string to filter
      *
@@ -203,12 +203,17 @@ class CwmproclaimHelper
      */
     public static function filterText(string $text): string
     {
-        // Filter settings
+        // Filter settings from com_proclaim
         $config     = ComponentHelper::getParams('com_proclaim');
         $user       = Factory::getApplication()->getIdentity();
         $userGroups = Access::getGroupsByUser($user->id);
 
         $filters = $config->get('filters');
+
+        // If no Proclaim-specific filters are configured, use Joomla's global text filtering
+        if (empty($filters)) {
+            return ComponentHelper::filterText($text);
+        }
 
         $blackListTags       = [];
         $blackListAttributes = [];
@@ -220,6 +225,9 @@ class CwmproclaimHelper
         $blackList  = false;
         $unfiltered = false;
 
+        // Track if any filter was found for user's groups
+        $hasFilterForUser = false;
+
         // Cycle through each of the user groups the user is in.
         // Remember, they are included in the Public group as well.
         foreach ($userGroups as $groupId) {
@@ -227,6 +235,8 @@ class CwmproclaimHelper
             if (!isset($filters->$groupId)) {
                 continue;
             }
+
+            $hasFilterForUser = true;
 
             // Each group the user is in could have different filtering properties.
             $filterData = $filters->$groupId;
@@ -275,6 +285,11 @@ class CwmproclaimHelper
             }
         }
 
+        // If no filter settings found for user's groups, fall back to Joomla's global filtering
+        if (!$hasFilterForUser) {
+            return ComponentHelper::filterText($text);
+        }
+
         // Remove duplicates before processing (because the black list uses both sets of arrays).
         $blackListTags       = array_unique($blackListTags);
         $blackListAttributes = array_unique($blackListAttributes);
@@ -300,8 +315,8 @@ class CwmproclaimHelper
             // Turn off XSS auto clean
             $filter = InputFilter::getInstance($whiteListTags, $whiteListAttributes, 0, 0, 0);
         } else {
-            // No HTML takes last place.
-            $filter = InputFilter::getInstance();
+            // Fall back to Joomla's global text filtering
+            return ComponentHelper::filterText($text);
         }
 
         return $filter->clean($text, 'html');
