@@ -206,7 +206,7 @@ class HtmlView extends BaseHtmlView
 
                 $childBar->checkin('cwmmessages.checkin')->listCheck(true);
 
-                if ($this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED) {
+                if ((int) $this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED) {
                     $childBar->trash('cwmmessages.trash')->listCheck(true);
                 }
             }

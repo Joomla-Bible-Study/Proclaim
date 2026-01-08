@@ -150,15 +150,14 @@ class HtmlView extends BaseHtmlView
             $childBar->unpublish('cwmtopics.unpublish');
             $childBar->archive('cwmtopics.archive', 'JTOOLBAR_ARCHIVE');
 
-            if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
+            if ((int) $this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
                 $childBar->trash('cwmtopics.trash')->listCheck(true);
             }
         }
 
         if (
-            $this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED && $this->canDo->get(
-                'core.delete'
-            )
+            (int) $this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED
+            && $this->canDo->get('core.delete')
         ) {
             $toolbar->delete('cwmtopics.delete')
                 ->text('JTOOLBAR_EMPTY_TRASH')

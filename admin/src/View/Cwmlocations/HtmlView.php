@@ -148,7 +148,7 @@ class HtmlView extends BaseHtmlView
             $childBar->unpublish('cwmlocations.unpublish');
             $childBar->archive('cwmlocations.archive');
 
-            if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
+            if ((int) $this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
                 $childBar->trash('cwmlocations.trash')->listCheck(true);
             }
 

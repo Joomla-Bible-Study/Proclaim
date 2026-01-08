@@ -202,7 +202,7 @@ class HtmlView extends BaseHtmlView
                 $childBar->unpublish('cwmmediafiles.unpublish');
                 $childBar->archive('cwmmediafiles.archive');
 
-                if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
+                if ((int) $this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
                     $childBar->trash('cwmmediafiles.trash')->listCheck(true);
                 }
             }
@@ -222,9 +222,8 @@ class HtmlView extends BaseHtmlView
 
         if (
             !$this->isEmptyState
-            && $this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED && $canDo->get(
-                'core.delete'
-            )
+            && (int) $this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED
+            && $canDo->get('core.delete')
         ) {
             $toolbar->delete('cwmmediafiles.delete')
                 ->text('JTOOLBAR_EMPTY_TRASH')

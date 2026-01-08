@@ -152,7 +152,7 @@ class HtmlView extends BaseHtmlView
             $childBar->unpublish('cwmteachers.unpublish');
             $childBar->archive('cwmteachers.archive');
 
-            if ($this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED) {
+            if ((int) $this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED) {
                 $childBar->trash('cwmteachers.trash')->listCheck(true);
             }
 
