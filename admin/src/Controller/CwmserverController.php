@@ -15,7 +15,6 @@ use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
-use Joomla\Input\Input;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -130,12 +129,6 @@ class CwmserverController extends FormController
         try {
             $serverId = $app->input->getInt('server_id', 0);
 
-            if (!$serverId) {
-                $this->outputJson(['success' => false, 'error' => 'No server ID provided']);
-
-                return;
-            }
-
             // Verify this is a YouTube server
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true)
@@ -146,39 +139,23 @@ class CwmserverController extends FormController
             $serverType = $db->loadResult();
 
             if (strtolower($serverType) !== 'youtube') {
-                $this->outputJson(['success' => false, 'error' => 'Selected server is not a YouTube server']);
+                CWMAddonYoutube::outputJson(['success' => false, 'error' => 'Selected server is not a YouTube server']);
 
                 return;
             }
 
-            // Fetch upcoming videos using the YouTube addon
             // Start buffering to capture any deprecation warnings from vendor code
             ob_start();
 
             $youtube = new CWMAddonYoutube();
-            $input   = new Input([
-                'server_id'   => $serverId,
-                'max_results' => 25,
-                'event_type'  => 'upcoming',
-            ]);
-
-            $result = @$youtube->fetchLiveVideos($input);
+            $result  = @$youtube->fetchUpcomingVideos($serverId);
 
             // Discard any output from vendor code (deprecation warnings, etc.)
             ob_end_clean();
 
-            if (!$result['success']) {
-                $this->outputJson(['success' => false, 'error' => $result['error'] ?? 'Failed to fetch videos']);
-
-                return;
-            }
-
-            $this->outputJson([
-                'success' => true,
-                'videos'  => $result['videos'] ?? [],
-            ]);
+            CWMAddonYoutube::outputJson($result);
         } catch (\Exception $e) {
-            $this->outputJson([
+            CWMAddonYoutube::outputJson([
                 'success' => false,
                 'error'   => $e->getMessage(),
             ]);
@@ -203,130 +180,27 @@ class CwmserverController extends FormController
             @ob_end_clean();
         }
 
-        $app     = Factory::getApplication();
-        $result  = ['success' => false, 'error' => 'Unknown error'];
+        $app = Factory::getApplication();
 
         try {
             $apiKey    = $app->input->getString('api_key', '');
             $channelId = $app->input->getString('channel_id', '');
 
-            if (empty($apiKey)) {
-                $result = ['success' => false, 'error' => 'API key is required'];
-                $this->outputJson($result);
-
-                return;
-            }
-
-            if (empty($channelId)) {
-                $result = ['success' => false, 'error' => 'Channel ID is required'];
-                $this->outputJson($result);
-
-                return;
-            }
-
-            // Load the YouTube addon autoloader
-            $autoloader = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/Youtube/vendor/autoload.php';
-
-            if (!file_exists($autoloader)) {
-                $result = ['success' => false, 'error' => 'YouTube addon not properly installed'];
-                $this->outputJson($result);
-
-                return;
-            }
-
-            require_once $autoloader;
-
-            // Test the API by fetching channel info
             // Start buffering to capture any deprecation warnings from vendor code
             ob_start();
 
-            $client = new \Google\Client();
-            $client->setApplicationName('Proclaim');
-            $client->setDeveloperKey($apiKey);
-
-            $youtube = new \Google\Service\YouTube($client);
-
-            // Try to get channel details (suppress warnings from cURL deprecation in PHP 8.5)
-            $response = @$youtube->channels->listChannels('snippet,statistics', [
-                'id' => $channelId,
-            ]);
+            $youtube = new CWMAddonYoutube();
+            $result  = @$youtube->testApiConnection($apiKey, $channelId);
 
             // Discard any output from vendor code (deprecation warnings, etc.)
             ob_end_clean();
 
-            if (empty($response->items)) {
-                $result = ['success' => false, 'error' => 'Channel not found. Please verify the Channel ID.'];
-                $this->outputJson($result);
-
-                return;
-            }
-
-            $channel = $response->items[0];
-
-            $result = [
-                'success' => true,
-                'message' => 'API connection successful!',
-                'channel' => [
-                    'title'           => $channel->snippet->title,
-                    'description'     => substr($channel->snippet->description ?? '', 0, 100),
-                    'subscriberCount' => $channel->statistics->subscriberCount ?? null,
-                    'videoCount'      => $channel->statistics->videoCount ?? null,
-                ],
-            ];
+            CWMAddonYoutube::outputJson($result);
         } catch (\Exception $e) {
-            $errorMessage = $e->getMessage();
-
-            // Try to parse Google API error
-            $decoded = json_decode($errorMessage, true);
-
-            if (isset($decoded['error']['message'])) {
-                $errorMessage = 'YouTube API Error: ' . $decoded['error']['message'];
-            }
-
-            $result = ['success' => false, 'error' => $errorMessage];
+            CWMAddonYoutube::outputJson([
+                'success' => false,
+                'error'   => $e->getMessage(),
+            ]);
         }
-
-        $this->outputJson($result);
-    }
-
-    /**
-     * Output JSON and terminate
-     *
-     * @param   array  $data  The data to encode as JSON
-     *
-     * @return  void
-     *
-     * @since   10.0.0
-     */
-    private function outputJson(array $data): void
-    {
-        // Clear all output buffers
-        while (@ob_get_level()) {
-            @ob_end_clean();
-        }
-
-        // Send headers before any output
-        if (!headers_sent()) {
-            header('Content-Type: application/json; charset=utf-8');
-            header('Cache-Control: no-cache, no-store, must-revalidate');
-            header('Pragma: no-cache');
-            header('Expires: 0');
-        }
-
-        // Encode and output JSON
-        $json = json_encode($data);
-
-        if ($json === false) {
-            $json = '{"success":false,"error":"JSON encoding failed"}';
-        }
-
-        echo $json;
-
-        // Force flush and terminate
-        if (\function_exists('fastcgi_finish_request')) {
-            fastcgi_finish_request();
-        }
-
-        exit;
     }
 }

@@ -684,4 +684,135 @@ class CWMAddonYoutube extends CWMAddon
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
+
+    /**
+     * Test YouTube API credentials
+     *
+     * @param   string  $apiKey     The YouTube API key
+     * @param   string  $channelId  The YouTube channel ID
+     *
+     * @return  array  Response data with success status
+     *
+     * @since   10.0.0
+     */
+    public function testApiConnection(string $apiKey, string $channelId): array
+    {
+        $this->loadLanguage();
+
+        if (empty($apiKey)) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_API_KEY')];
+        }
+
+        if (empty($channelId)) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_CHANNEL_ID')];
+        }
+
+        try {
+            $client = new Google\Client();
+            $client->setApplicationName('Proclaim');
+            $client->setDeveloperKey($apiKey);
+
+            $youtube = new YouTube($client);
+
+            // Try to get channel details (suppress warnings from cURL deprecation in PHP 8.5)
+            $response = @$youtube->channels->listChannels('snippet,statistics', [
+                'id' => $channelId,
+            ]);
+
+            if (empty($response->items)) {
+                return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_CHANNEL_NOT_FOUND')];
+            }
+
+            $channel = $response->items[0];
+
+            return [
+                'success' => true,
+                'message' => Text::_('JBS_ADDON_YOUTUBE_API_SUCCESS'),
+                'channel' => [
+                    'title'           => $channel->snippet->title,
+                    'description'     => substr($channel->snippet->description ?? '', 0, 100),
+                    'subscriberCount' => $channel->statistics->subscriberCount ?? null,
+                    'videoCount'      => $channel->statistics->videoCount ?? null,
+                ],
+            ];
+        } catch (Exception $e) {
+            $errorMessage = $e->getMessage();
+
+            // Try to parse Google API error
+            $decoded = json_decode($errorMessage, true);
+
+            if (isset($decoded['error']['message'])) {
+                $errorMessage = Text::_('JBS_ADDON_YOUTUBE_API_ERROR') . ': ' . $decoded['error']['message'];
+            }
+
+            return ['success' => false, 'error' => $errorMessage];
+        }
+    }
+
+    /**
+     * Fetch upcoming videos for exclusion list (AJAX handler)
+     *
+     * @param   int  $serverId  The server ID
+     *
+     * @return  array  Response data with videos
+     *
+     * @since   10.0.0
+     */
+    public function fetchUpcomingVideos(int $serverId): array
+    {
+        $this->loadLanguage();
+
+        if (!$serverId) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_SERVER_ID')];
+        }
+
+        $input = new Input([
+            'server_id'   => $serverId,
+            'max_results' => 25,
+            'event_type'  => 'upcoming',
+        ]);
+
+        return $this->fetchLiveVideos($input);
+    }
+
+    /**
+     * Output JSON response and terminate
+     *
+     * @param   array  $data  The data to encode as JSON
+     *
+     * @return  void
+     *
+     * @since   10.0.0
+     */
+    public static function outputJson(array $data): void
+    {
+        // Clear all output buffers
+        while (@ob_get_level()) {
+            @ob_end_clean();
+        }
+
+        // Send headers before any output
+        if (!headers_sent()) {
+            header('Content-Type: application/json; charset=utf-8');
+            header('Cache-Control: no-cache, no-store, must-revalidate');
+            header('Pragma: no-cache');
+            header('Expires: 0');
+        }
+
+        // Encode and output JSON
+        $json = json_encode($data);
+
+        if ($json === false) {
+            $json = '{"success":false,"error":"JSON encoding failed"}';
+        }
+
+        echo $json;
+
+        // Force flush and terminate
+        if (\function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
+
+        exit;
+    }
 }
