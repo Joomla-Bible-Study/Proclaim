@@ -95,6 +95,8 @@
                  overwrite="true"/>
         <symlink target="${basedir}/modules/site/mod_proclaim_podcast"
                  link="${builder.joomla_path}${builder.joomla_dir}/modules/mod_proclaim_podcast" overwrite="true"/>
+        <symlink target="${basedir}/modules/site/mod_proclaim_youtube"
+                 link="${builder.joomla_path}${builder.joomla_dir}/modules/mod_proclaim_youtube" overwrite="true"/>
         <symlink target="${basedir}/plugins/finder/proclaim"
                  link="${builder.joomla_path}${builder.joomla_dir}/plugins/finder/proclaim" overwrite="true"/>
         <symlink target="${basedir}/plugins/task/proclaim"

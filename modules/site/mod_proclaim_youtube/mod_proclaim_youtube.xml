@@ -48,6 +48,24 @@
                     <option value="latest_only">MOD_PROCLAIM_YOUTUBE_LATEST_ONLY</option>
                     <option value="live_only">MOD_PROCLAIM_YOUTUBE_LIVE_ONLY</option>
                 </field>
+
+                <field name="show_upcoming"
+                       type="radio"
+                       class="btn-group btn-group-yesno"
+                       default="1"
+                       label="MOD_PROCLAIM_YOUTUBE_SHOW_UPCOMING"
+                       description="MOD_PROCLAIM_YOUTUBE_SHOW_UPCOMING_DESC"
+                       showon="priority_mode!:latest_only">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
+                <field name="exclude_videos"
+                       type="YoutubeExclude"
+                       label="MOD_PROCLAIM_YOUTUBE_EXCLUDE_VIDEOS"
+                       description="MOD_PROCLAIM_YOUTUBE_EXCLUDE_VIDEOS_DESC"
+                       server_field="server_id"
+                       showon="priority_mode!:latest_only"/>
             </fieldset>
 
             <fieldset name="display" label="MOD_PROCLAIM_YOUTUBE_DISPLAY_OPTIONS">

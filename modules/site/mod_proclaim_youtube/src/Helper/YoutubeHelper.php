@@ -47,16 +47,19 @@ class YoutubeHelper implements DatabaseAwareInterface
      */
     public function getVideo(Registry $params, SiteApplication $app): ?array
     {
-        $serverId     = (int) $params->get('server_id', 0);
-        $priorityMode = $params->get('priority_mode', 'live_first');
+        $serverId      = (int) $params->get('server_id', 0);
+        $priorityMode  = $params->get('priority_mode', 'live_first');
+        $showUpcoming  = (bool) $params->get('show_upcoming', 1);
+        $excludeVideos = $this->parseExcludedIds($params->get('exclude_videos', ''));
 
         if (!$serverId) {
             return null;
         }
 
-        // Check cache first
-        $cacheKey  = 'mod_proclaim_youtube_' . $serverId . '_' . $priorityMode;
-        $cacheTime = (int) $params->get('cache_time', 300);
+        // Check cache first (include show_upcoming and excludes in cache key)
+        $excludeHash = md5(implode(',', $excludeVideos));
+        $cacheKey    = 'mod_proclaim_youtube_' . $serverId . '_' . $priorityMode . '_' . ($showUpcoming ? '1' : '0') . '_' . $excludeHash;
+        $cacheTime   = (int) $params->get('cache_time', 300);
 
         try {
             $cache = Factory::getCache('mod_proclaim_youtube', 'output');
@@ -82,7 +85,7 @@ class YoutubeHelper implements DatabaseAwareInterface
         switch ($priorityMode) {
             case 'live_first':
                 // First check for live videos
-                $video = $this->fetchLiveVideo($youtube, $serverId);
+                $video = $this->fetchLiveVideo($youtube, $serverId, $showUpcoming, $excludeVideos);
 
                 // If no live video, get latest uploaded
                 if (!$video) {
@@ -92,7 +95,7 @@ class YoutubeHelper implements DatabaseAwareInterface
 
             case 'live_only':
                 // Only get live videos
-                $video = $this->fetchLiveVideo($youtube, $serverId);
+                $video = $this->fetchLiveVideo($youtube, $serverId, $showUpcoming, $excludeVideos);
                 break;
 
             case 'latest_only':
@@ -119,25 +122,28 @@ class YoutubeHelper implements DatabaseAwareInterface
     /**
      * Fetch currently live or upcoming video
      *
-     * @param   CWMAddonYoutube  $youtube   YouTube addon instance
-     * @param   int              $serverId  Server ID
+     * @param   CWMAddonYoutube  $youtube        YouTube addon instance
+     * @param   int              $serverId       Server ID
+     * @param   bool             $showUpcoming   Whether to include upcoming streams
+     * @param   array            $excludeVideos  Video IDs to exclude (unless live)
      *
      * @return  array|null  Video data or null
      *
      * @since   10.0.0
      */
-    private function fetchLiveVideo(CWMAddonYoutube $youtube, int $serverId): ?array
+    private function fetchLiveVideo(CWMAddonYoutube $youtube, int $serverId, bool $showUpcoming = true, array $excludeVideos = []): ?array
     {
-        // Check for currently live
+        // Check for currently live - never exclude live videos
         $input = new Input([
             'server_id'   => $serverId,
-            'max_results' => 1,
+            'max_results' => 10,
             'event_type'  => 'live',
         ]);
 
         $result = $youtube->fetchLiveVideos($input);
 
         if ($result['success'] && !empty($result['videos'])) {
+            // Live videos are never excluded - return the first one
             $video               = $result['videos'][0];
             $video['isLive']     = true;
             $video['isUpcoming'] = false;
@@ -145,19 +151,48 @@ class YoutubeHelper implements DatabaseAwareInterface
             return $video;
         }
 
-        // Check for upcoming
-        $input->set('event_type', 'upcoming');
-        $result = $youtube->fetchLiveVideos($input);
+        // Check for upcoming only if enabled
+        if ($showUpcoming) {
+            $input->set('event_type', 'upcoming');
+            $input->set('max_results', 10);
+            $result = $youtube->fetchLiveVideos($input);
 
-        if ($result['success'] && !empty($result['videos'])) {
-            $video               = $result['videos'][0];
-            $video['isLive']     = false;
-            $video['isUpcoming'] = true;
+            if ($result['success'] && !empty($result['videos'])) {
+                // Filter out excluded videos for upcoming streams
+                foreach ($result['videos'] as $video) {
+                    if (!empty($video['videoId']) && !\in_array($video['videoId'], $excludeVideos, true)) {
+                        $video['isLive']     = false;
+                        $video['isUpcoming'] = true;
 
-            return $video;
+                        return $video;
+                    }
+                }
+            }
         }
 
         return null;
+    }
+
+    /**
+     * Parse excluded video IDs from comma-separated string
+     *
+     * @param   string  $excludeString  Comma-separated video IDs
+     *
+     * @return  array  Array of video IDs
+     *
+     * @since   10.0.0
+     */
+    private function parseExcludedIds(string $excludeString): array
+    {
+        if (empty($excludeString)) {
+            return [];
+        }
+
+        $ids = explode(',', $excludeString);
+        $ids = array_map('trim', $ids);
+        $ids = array_filter($ids);
+
+        return $ids;
     }
 
     /**

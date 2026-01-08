@@ -11,9 +11,12 @@
 
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
+use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Response\JsonResponse;
 use Joomla\CMS\Router\Route;
+use Joomla\Input\Input;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -103,5 +106,65 @@ class CwmserverController extends FormController
                 false
             )
         );
+    }
+
+    /**
+     * Fetch upcoming videos from a YouTube server (AJAX handler)
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   10.0.0
+     */
+    public function fetchUpcoming(): void
+    {
+        $app = Factory::getApplication();
+
+        try {
+            $serverId = $app->input->getInt('server_id', 0);
+
+            if (!$serverId) {
+                throw new \RuntimeException('No server ID provided');
+            }
+
+            // Verify this is a YouTube server
+            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('type'))
+                ->from($db->quoteName('#__bsms_servers'))
+                ->where($db->quoteName('id') . ' = ' . $serverId);
+            $db->setQuery($query);
+            $serverType = $db->loadResult();
+
+            if (strtolower($serverType) !== 'youtube') {
+                throw new \RuntimeException('Selected server is not a YouTube server');
+            }
+
+            // Fetch upcoming videos using the YouTube addon
+            $youtube = new CWMAddonYoutube();
+            $input   = new Input([
+                'server_id'   => $serverId,
+                'max_results' => 25,
+                'event_type'  => 'upcoming',
+            ]);
+
+            $result = $youtube->fetchLiveVideos($input);
+
+            if (!$result['success']) {
+                throw new \RuntimeException($result['error'] ?? 'Failed to fetch videos');
+            }
+
+            echo new JsonResponse([
+                'success' => true,
+                'videos'  => $result['videos'] ?? [],
+            ]);
+        } catch (\Exception $e) {
+            echo new JsonResponse([
+                'success' => false,
+                'error'   => $e->getMessage(),
+            ]);
+        }
+
+        $app->close();
     }
 }
