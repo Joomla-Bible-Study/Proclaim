@@ -17,8 +17,7 @@
 
 namespace Google\Service\Drive\Resource;
 
-use Google\Service\Drive\ListOperationsResponse;
-use Google\Service\Drive\Operation as OperationModel;
+use Google\Service\Drive\Operation;
 
 /**
  * The "operations" collection of methods.
@@ -37,34 +36,14 @@ class Operations extends \Google\Service\Resource
    *
    * @param string $name The name of the operation resource.
    * @param array $optParams Optional parameters.
-   * @return OperationModel
+   * @return Operation
    * @throws \Google\Service\Exception
    */
   public function get($name, $optParams = [])
   {
     $params = ['name' => $name];
     $params = array_merge($params, $optParams);
-    return $this->call('get', [$params], OperationModel::class);
-  }
-  /**
-   * Lists operations that match the specified filter in the request. If the
-   * server doesn't support this method, it returns `UNIMPLEMENTED`.
-   * (operations.listOperations)
-   *
-   * @param array $optParams Optional parameters.
-   *
-   * @opt_param string filter The standard list filter.
-   * @opt_param string name The name of the operation's parent resource.
-   * @opt_param int pageSize The standard list page size.
-   * @opt_param string pageToken The standard list page token.
-   * @return ListOperationsResponse
-   * @throws \Google\Service\Exception
-   */
-  public function listOperations($optParams = [])
-  {
-    $params = [];
-    $params = array_merge($params, $optParams);
-    return $this->call('list', [$params], ListOperationsResponse::class);
+    return $this->call('get', [$params], Operation::class);
   }
 }
 
