@@ -16,10 +16,6 @@
         <folder>language</folder>
         <folder>src</folder>
     </files>
-    <languages folder="language">
-        <language tag="en-GB">en-GB/en-GB.mod_proclaim_youtube.ini</language>
-        <language tag="en-GB">en-GB/en-GB.mod_proclaim_youtube.sys.ini</language>
-    </languages>
     <config>
         <fields name="params" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <fieldset name="basic" label="JGLOBAL_FIELDSET_BASIC">
