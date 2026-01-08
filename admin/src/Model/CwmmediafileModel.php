@@ -240,11 +240,24 @@ class CwmmediafileModel extends AdminModel
         $s_item      = $model->getItem($server_id);
         $server_type = $s_item->type;
 
+        // Load server params (stored as JSON string in database)
         $reg = new Registry();
-        $reg->loadArray($s_item->params);
 
+        if (\is_string($s_item->params)) {
+            $reg->loadString($s_item->params);
+        } elseif (\is_array($s_item->params)) {
+            $reg->loadArray($s_item->params);
+        }
+
+        // Load server media defaults (already converted to array by CwmserverModel::getItem)
         $reg1 = new Registry();
-        $reg1->loadArray($s_item->media);
+
+        if (\is_array($s_item->media)) {
+            $reg1->loadArray($s_item->media);
+        } elseif (\is_string($s_item->media)) {
+            $reg1->loadString($s_item->media);
+        }
+
         $reg1->merge($reg);
 
         if ($server_type) {
