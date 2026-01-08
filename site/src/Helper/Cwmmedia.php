@@ -687,14 +687,27 @@ class Cwmmedia
             $popout = '';
         }
 
+        // Get popup header and footer text
+        $headerText = htmlspecialchars($this->getPopupHeader($media, $params), ENT_QUOTES, 'UTF-8');
+        $footerText = htmlspecialchars($this->getPopupFooter($media, $params), ENT_QUOTES, 'UTF-8');
+
         if (preg_match('(youtube.com|youtu.be|vimeo.com)', $path) === 1) {
             $path = (new CWMAddonYoutube())->convertYoutube($path);
-            $data = '<a data-fancybox="video-gallery" class="fancybox_player playhit" data-id="' . $media->id . '" aria-hidden="false" data-src="' . $path . '" data-options=\'{"autoplay" : "' .
-                (int)$params->get('autostart', false) . '", "controls" : "' . (int)$params->get('controls') .
-                '", "caption" : "' . $media->studytitle . ' - ' .
-                $media->teachername . '"}\'  href="javascript:;">' . $image . '</a>';
+            $data = '<a data-fancybox="video-gallery" class="fancybox_player playhit" data-id="' . $media->id .
+                '" aria-hidden="false" data-src="' . $path .
+                '" data-header="' . $headerText . '" data-footer="' . $footerText .
+                '" data-options=\'{"autoplay" : "' . (int)$params->get('autostart', false) .
+                '", "controls" : "' . (int)$params->get('controls') . '"}\'  href="javascript:;">' . $image . '</a>';
             return $data;
         }
+
+        // Player attributes - jwplayer_* params are deprecated, kept for backward compatibility
+        // These are now handled by the Fancybox player (see media/js/fancybox.js)
+        // @deprecated 10.0.0 - jwplayer_image, jwplayer_mute, jwplayer_logo, jwplayer_logolink
+        $posterImage = $params->get('jwplayer_image', $params->get('player_image', ''));
+        $muteOnStart = $params->get('jwplayer_mute', $params->get('player_mute', 'false'));
+        $logoImage   = $params->get('jwplayer_logo', $params->get('player_logo', ''));
+        $logoLink    = $params->get('jwplayer_logolink', $params->get('player_logolink', Uri::base()));
 
         return '<a data-src="' . $path . '" data-id="' . $media->id . '" id="' . $media->id . '" title="' . $params->get(
             'filename'
@@ -702,9 +715,10 @@ class Cwmmedia
             '" data-fancybox class="fancybox_player hitplay" potext="' . $popout . '" ptype="' . $player->player .
             '" pwidth="' . $player->playerwidth . '" pheight="' .
             $player->playerheight . '" autostart="' . $params->get('autostart', false) . '" controls="' .
-            $params->get('controls') . '"" data-image="' . $params->get('jwplayer_image') . '" data-mute="' .
-            $params->get('jwplayer_mute') . '" data-logo="' . $params->get('jwplayer_logo') . '" data-logolink="' .
-            $params->get('jwplayer_logolink', Uri::base()) . '">' .
+            $params->get('controls') . '" data-header="' . $headerText . '" data-footer="' . $footerText .
+            '" data-image="' . $posterImage . '" data-mute="' .
+            $muteOnStart . '" data-logo="' . $logoImage . '" data-logolink="' .
+            $logoLink . '">' .
             $image . '</a>';
     }
 
@@ -1208,5 +1222,89 @@ class Cwmmedia
             $url = "https:" . $url; // Default to HTTPS
         }
         return $url;
+    }
+
+    /**
+     * Process popup text template with placeholders
+     *
+     * Replaces template placeholders like {{title}}, {{teacher}}, {{scripture}}, etc.
+     * with actual values from the media object.
+     *
+     * @param   string    $text    Template text with placeholders
+     * @param   object    $media   Media object with study data
+     * @param   Registry  $params  Template parameters
+     *
+     * @return string Processed text with placeholders replaced
+     *
+     * @since 10.0.0
+     */
+    public function processPopupText(string $text, object $media, Registry $params): string
+    {
+        if (empty($text)) {
+            return '';
+        }
+
+        // Get scripture reference
+        $listing   = new Cwmlisting();
+        $scripture = '';
+        if (isset($media->booknumber) && $media->booknumber > 0) {
+            $savedId   = $media->id ?? null;
+            $media->id = $media->study_id ?? $media->id;
+            $scripture = $listing->getScripture($params, $media, 0, 1);
+            if ($savedId !== null) {
+                $media->id = $savedId;
+            }
+        }
+
+        // Get formatted date
+        $date = '';
+        if (isset($media->studydate)) {
+            $date = $listing->getStudyDate($params, $media->studydate);
+        }
+
+        // Replace placeholders
+        $replacements = [
+            '{{title}}'       => $media->studytitle ?? '',
+            '{{teacher}}'     => $media->teachername ?? '',
+            '{{scripture}}'   => $scripture,
+            '{{studydate}}'   => $date,
+            '{{series}}'      => $media->series_text ?? '',
+            '{{description}}' => $media->studyintro ?? '',
+            '{{filename}}'    => $params->get('filename', ''),
+        ];
+
+        return str_replace(array_keys($replacements), array_values($replacements), $text);
+    }
+
+    /**
+     * Get popup header text from params
+     *
+     * @param   object    $media   Media object
+     * @param   Registry  $params  Template parameters
+     *
+     * @return string Processed header text
+     *
+     * @since 10.0.0
+     */
+    public function getPopupHeader(object $media, Registry $params): string
+    {
+        $template = $params->get('popuptitle', '{{title}}');
+        return $this->processPopupText($template, $media, $params);
+    }
+
+    /**
+     * Get popup footer text from params
+     *
+     * @param   object    $media   Media object
+     * @param   Registry  $params  Template parameters
+     *
+     * @return string Processed footer text
+     *
+     * @since 10.0.0
+     */
+    public function getPopupFooter(object $media, Registry $params): string
+    {
+        $template = $params->get('popupfooter', '{{filename}}');
+        return $this->processPopupText($template, $media, $params);
     }
 }
