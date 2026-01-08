@@ -45,6 +45,7 @@ class Cwmmedia
     private int $fsize = 0;
 
     /**
+     *
      * @param   string  $url  url to process
      *
      * @return bool
@@ -53,7 +54,7 @@ class Cwmmedia
      */
     public static function isExternal(string $url): bool
     {
-        // Check if the url has a website string as some time it's just a path to a local file.
+        // Check if the URL contains a website string, since it may just be a path to a local file.
         if (strpos($url, "http") || strpos($url, "https") || strpos($url, "//")) {
             $components = parse_url($url);
             $root       = parse_url(Uri::root());
@@ -68,7 +69,7 @@ class Cwmmedia
                 return false;
             }
 
-            // Check if the url host is a subdomain
+            // Check if the URL host is a subdomain
             return strripos($components['host'], $root['host']) !== \strlen($components['host']) - \strlen($root['host']);
         }
 
@@ -146,7 +147,7 @@ class Cwmmedia
             $link_type = 3;
         }
 
-        // Used to override everything if used for use of the Podcast playlist system..
+        // Used to override everything if used for the use of the Podcast playlist system.
         if ($params->get('pcplaylist')) {
             $link_type = 0;
         }
@@ -238,7 +239,7 @@ class Cwmmedia
                 } else {
                     $icon = $imageparams->get('media_icon_type', 'fas fa-play');
 
-                    // Check for fa youtube tag, change to fab
+                    // Check for far YouTube tag, change to fab
                     $icon = str_replace('fa fa-youtube', 'fab fa-youtube', $icon);
                 }
 
@@ -589,7 +590,7 @@ class Cwmmedia
     {
         $filesize = 0;
 
-        // Check to see if we need to look up file size or not. By looking at if download like is set.
+        // Check whether we need to look up the file size. By looking at whether the download is set.
         if ($media->params->get('link_type') === '0') {
             $this->fsize = $filesize;
 
@@ -665,6 +666,7 @@ class Cwmmedia
      * @param   bool      $direct  If coming from Direct
      *
      * @return string
+     * @deprecated 10.0.0 - jwplayer_image, jwplayer_mute, jwplayer_logo, jwplayer_logolink
      *
      * @since 9.1.2
      */
@@ -704,15 +706,12 @@ class Cwmmedia
 
         // Player attributes - jwplayer_* params are deprecated, kept for backward compatibility
         // These are now handled by the Fancybox player (see media/js/fancybox.js)
-        // @deprecated 10.0.0 - jwplayer_image, jwplayer_mute, jwplayer_logo, jwplayer_logolink
         $posterImage = $params->get('jwplayer_image', $params->get('player_image', ''));
         $muteOnStart = $params->get('jwplayer_mute', $params->get('player_mute', 'false'));
         $logoImage   = $params->get('jwplayer_logo', $params->get('player_logo', ''));
         $logoLink    = $params->get('jwplayer_logolink', $params->get('player_logolink', Uri::base()));
 
-        return '<a data-src="' . $path . '" data-id="' . $media->id . '" id="' . $media->id . '" title="' . $params->get(
-            'filename'
-        ) .
+        return '<a data-src="' . $path . '" data-id="' . $media->id . '" id="' . $media->id .
             '" data-fancybox class="fancybox_player hitplay" potext="' . $popout . '" ptype="' . $player->player .
             '" pwidth="' . $player->playerwidth . '" pheight="' .
             $player->playerheight . '" autostart="' . $params->get('autostart', false) . '" controls="' .
@@ -724,9 +723,9 @@ class Cwmmedia
     }
 
     /**
-     * Vimeo url to embed.
+     * Vimeo URL to embed.
      *
-     * @param   string  $string  Vimeo url to transform.
+     * @param   string  $string  Vimeo URL to transform.
      *
      * @return string
      *
@@ -812,7 +811,7 @@ class Cwmmedia
     }
 
     /**
-     * Set up Virtumart if Vertumart is installed.
+     * Set up Virtumart if Virtumart is installed.
      *
      * @param   object  $media  Media
      * @param   string  $image  Image
@@ -843,7 +842,7 @@ class Cwmmedia
      */
     public function getFluidDownloadLink(object $media, Registry $params, $template): string
     {
-        // Remove download form YouTube links.
+        // Remove the download option from YouTube links.
         $filename  = $media->params->get('filename');
         $link_type = 0;
 
@@ -1205,6 +1204,8 @@ class Cwmmedia
     }
 
     /**
+     * Convert YouTube URLs
+     *
      * @param   string  $path
      *
      * @return string
@@ -1216,7 +1217,16 @@ class Cwmmedia
         return $this->ensureHttpJoomla((new CWMAddonYoutube())->convertYoutube($path));
     }
 
-    public function ensureHttpJoomla($url)
+    /**
+     * Ensure URLs have HTTPS at the beginning.
+     *
+     * @param   string  $url  URL
+     *
+     * @return string
+     *
+     * @since 10.0.0
+     */
+    public function ensureHttpJoomla(string $url): string
     {
         $uri = new Uri($url);
         if (!$uri->getScheme()) {
@@ -1226,7 +1236,7 @@ class Cwmmedia
     }
 
     /**
-     * Process popup text template with placeholders
+     * Process pop-up text template with placeholders
      *
      * Replaces template placeholders like {{title}}, {{teacher}}, {{scripture}}, etc.
      * with actual values from the media object.
@@ -1305,7 +1315,7 @@ class Cwmmedia
      */
     public function getPopupFooter(object $media, Registry $params): string
     {
-        $template = $params->get('popupfooter', '{{filename}}');
+        $template = $params->get('popupfooter', '');
         return $this->processPopupText($template, $media, $params);
     }
 }

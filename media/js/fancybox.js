@@ -84,22 +84,28 @@ document.addEventListener("DOMContentLoaded", function () {
                 htmlContent += '</div>';
             }
 
+            // Fancybox options to hide default caption/filename display
+            const fancyboxOptions = {
+                Carousel: { infinite: false },
+                Toolbar: {
+                    display: {
+                        left: [],
+                        middle: [],
+                        right: ["close"]
+                    }
+                },
+                // Disable showing source URL in caption
+                caption: function() {
+                    return caption || '';
+                }
+            };
+
             // Show Fancybox
             if (contentType === 'html' && htmlContent) {
                 Fancybox.show([{
                     src: htmlContent,
-                    type: 'html',
-                    caption: caption
-                }], {
-                    Carousel: { infinite: false },
-                    Toolbar: {
-                        display: {
-                            left: [],
-                            middle: [],
-                            right: ["close"]
-                        }
-                    }
-                });
+                    type: 'html'
+                }], fancyboxOptions);
             } else {
                 // Use iframe for YouTube/Vimeo
                 Fancybox.show([{
@@ -108,18 +114,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     width: width,
                     height: height,
                     thumb: posterImage,
-                    preload: false,
-                    caption: caption
-                }], {
-                    Carousel: { infinite: false },
-                    Toolbar: {
-                        display: {
-                            left: [],
-                            middle: [],
-                            right: ["close"]
-                        }
-                    }
-                });
+                    preload: false
+                }], fancyboxOptions);
             }
         });
     });
