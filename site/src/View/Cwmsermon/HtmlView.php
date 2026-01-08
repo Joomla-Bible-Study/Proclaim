@@ -346,7 +346,7 @@ class HtmlView extends BaseHtmlView
         $this->loadHelper('params');
 
         // Get the podcast subscription
-        HtmlHelper::_('stylesheet', 'media/css/podcast.css');
+        HTMLHelper::_('stylesheet', 'media/css/podcast.css');
         $podcast         = new Cwmpodcastsubscribe();
         $this->subscribe = $podcast->buildSubscribeTable($this->item->params->get('subscribeintro', 'Our Podcasts'));
 

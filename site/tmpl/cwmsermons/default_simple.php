@@ -15,13 +15,13 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Html\HtmlHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 
-HtmlHelper::_('dropdown.init');
-HtmlHelper::_('behavior.multiselect');
-HtmlHelper::_('formbehavior.chosen', 'select');
+HTMLHelper::_('dropdown.init');
+HTMLHelper::_('behavior.multiselect');
+HTMLHelper::_('formbehavior.chosen', 'select');
 
 $app       = Factory::getApplication();
 $user      = $user = Factory::getApplication()->getSession()->get('user');

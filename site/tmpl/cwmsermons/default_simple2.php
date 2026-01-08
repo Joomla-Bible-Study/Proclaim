@@ -16,16 +16,16 @@
 
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Html\HtmlHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
 
-HtmlHelper::_('dropdown.init');
-HtmlHelper::_('behavior.multiselect');
-HtmlHelper::_('formbehavior.chosen', 'select');
+HTMLHelper::_('dropdown.init');
+HTMLHelper::_('behavior.multiselect');
+HTMLHelper::_('formbehavior.chosen', 'select');
 $wa = $this->document->getWebAssetManager();
 
 $wa->addInlineStyle(

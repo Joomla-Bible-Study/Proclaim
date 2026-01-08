@@ -203,7 +203,7 @@ class ProclaimNomenuRules implements RulesInterface
 
                 // Use parent view name if available for cleaner URLs
                 // e.g., /cwmsermons/sermon-alias instead of /cwmsermon/sermon-alias
-                if (isset($view->parent) && isset($view->parent->name)) {
+                if (isset($view->parent, $view->parent->name)) {
                     $segments[] = $view->parent->name;
                 } else {
                     $segments[] = $query['view'];

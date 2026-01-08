@@ -243,7 +243,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                             if (!$canChange) {
                                 $iconClass = ' inactive';
                             } elseif (!$saveOrder) {
-                                $iconClass = ' inactive" title="' . HtmlHelper::tooltipText(
+                                $iconClass = ' inactive" title="' . HTMLHelper::tooltipText(
                                     'JORDERINGDISABLED'
                                 );
                             }

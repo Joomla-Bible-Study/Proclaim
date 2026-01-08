@@ -440,7 +440,7 @@ class CwminstallModel extends ListModel
         $stack = json_encode($stack, JSON_THROW_ON_ERROR);
 
         // Compress and encode the stack for session storage
-        if (function_exists('gzdeflate')) {
+        if (\function_exists('gzdeflate')) {
             $stack = gzdeflate($stack, 9);
         }
 
@@ -529,7 +529,7 @@ class CwminstallModel extends ListModel
         // Decode and decompress the stack from session storage
         $stack = base64_decode($stack);
 
-        if (function_exists('gzinflate')) {
+        if (\function_exists('gzinflate')) {
             $stack = gzinflate($stack);
         }
 

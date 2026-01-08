@@ -14,11 +14,11 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Html\HTMLHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
-HtmlHelper::_('behavior.framework');
-HtmlHelper::_('bootstrap.modal');
+HTMLHelper::_('behavior.framework');
+HTMLHelper::_('bootstrap.modal');
 ?>
 
 <form action="index.php" name="adminForm" id="adminForm">

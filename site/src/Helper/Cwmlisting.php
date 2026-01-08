@@ -18,7 +18,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Html\HtmlHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
@@ -1116,15 +1116,15 @@ class Cwmlisting
                         }
 
                         if ($item->link1) {
-                            $data .= '<a href="' . $this->ensureScheme($item->link1) . '" target="_blank">' . $item->linklabel1 . '</a>';
+                            $data .= '<a href="' . $this->ensureScheme($item->link1) . '" target="_blank"><span style="padding-left: 4px; padding-right: 4px;">' . $item->linklabel1 . '</span></a>';
                         }
 
                         if ($item->link2) {
-                            $data .= '<a href="' . $this->ensureScheme($item->link2, 'http://') . '" target="_blank">' . $item->linklabel2 . '</a>';
+                            $data .= '<a href="' . $this->ensureScheme($item->link2, 'http://') . '" target="_blank"><span style="padding-left: 4px; padding-right: 4px;">' . $item->linklabel2 . '</span></a>';
                         }
 
                         if ($item->link3) {
-                            $data .= '<a href="' . $this->ensureScheme($item->link3) . '" target="_blank">' . $item->link3label . '</a>';
+                            $data .= '<a href="' . $this->ensureScheme($item->link3) . '" target="_blank"><span style="padding-left: 4px; padding-right: 4px;">' . $item->link3label . '</span></a>';
                         }
                     }
                 }
@@ -1134,7 +1134,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_INFORMATION');
                 } else {
-                    ($item->information ? $data = HtmlHelper::_(
+                    ($item->information ? $data = HTMLHelper::_(
                         'content.prepare',
                         $item->information,
                         '',
@@ -1155,7 +1155,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_LINK1');
                 } elseif ($item->link1) {
-                    $data = '<a href="' . $this->ensureScheme($item->link1) . '" target="_blank">' . $item->linklabel1 . '</a>';
+                    $data = '<a href="' . $this->ensureScheme($item->link1) . '" target="_blank"><span style="padding-left: 5px; padding-right: 5px;">' . $item->linklabel1 . '</span></a>';
                 }
                 break;
 
@@ -1163,7 +1163,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_LINK2');
                 } elseif ($item->link2) {
-                    $data = '<a href="' . $this->ensureScheme($item->link2, 'http://') . '" target="_blank">' . $item->linklabel2 . '</a>';
+                    $data = '<a href="' . $this->ensureScheme($item->link2, 'http://') . '" target="_blank"><span style="padding-left: 5px; padding-right: 5px;">' . $item->linklabel2 . '</span></a>';
                 }
                 break;
 
@@ -1196,7 +1196,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_PHONE');
                 } else {
-                    (isset($item->phone) ? $data = $item->phone : $data = '');
+                    (isset($item->phone) ? $data = '<a href="tel:' . preg_replace('/[^0-9]/', '', $item->phone) . '" target="_blank">' . $item->phone . '</a>' : $data);
                 }
                 break;
 
@@ -1231,7 +1231,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_SHORT_LIST');
                 } else {
-                    (isset($item->short) ? $data = HtmlHelper::_(
+                    (isset($item->short) ? $data = HTMLHelper::_(
                         'content.prepare',
                         $item->short,
                         '',
@@ -1312,7 +1312,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_CMN_STUDY_INTRO');
                 } else {
-                    isset($item->studyintro) ? $data = HtmlHelper::_(
+                    isset($item->studyintro) ? $data = HTMLHelper::_(
                         'content.prepare',
                         $item->studyintro,
                         '',
@@ -1359,7 +1359,7 @@ class Cwmlisting
                         $data .= '.';
                     }
                 } else {
-                    (isset($item->sdescription) ? $data = HtmlHelper::_(
+                    (isset($item->sdescription) ? $data = HTMLHelper::_(
                         'content.prepare',
                         $item->sdescription,
                         '',
@@ -1640,7 +1640,7 @@ class Cwmlisting
                 break;
             case 'studyintro':
                 if (isset($row->studyintro)) {
-                    $element = HtmlHelper::_('content.prepare', $row->studyintro, '', 'com_proclaim.' . $type);
+                    $element = HTMLHelper::_('content.prepare', $row->studyintro, '', 'com_proclaim.' . $type);
                 } else {
                     $element = '';
                 }
@@ -1765,9 +1765,9 @@ class Cwmlisting
             case 'series_description':
                 if (isset($row->sdescription)) {
                     if ($type === 'seriesdisplays' || $type === 'seriesdisplay') {
-                        $element = HtmlHelper::_('content.prepare', $row->description, '', 'com_proclaim.' . $type);
+                        $element = HTMLHelper::_('content.prepare', $row->description, '', 'com_proclaim.' . $type);
                     } else {
-                        $element = HtmlHelper::_('content.prepare', $row->sdescription, '', 'com_proclaim.' . $type);
+                        $element = HTMLHelper::_('content.prepare', $row->sdescription, '', 'com_proclaim.' . $type);
                     }
                 } else {
                     $element = '';
@@ -1986,34 +1986,34 @@ class Cwmlisting
             try {
                 switch ($params->get('date_format')) {
                     case 0:
-                        $date = HtmlHelper::_('date', $studydate, "M j, Y", null);
+                        $date = HTMLHelper::_('date', $studydate, "M j, Y", null);
                         break;
                     case 1:
-                        $date = HtmlHelper::_('date', $studydate, "M J", null);
+                        $date = HTMLHelper::_('date', $studydate, "M J", null);
                         break;
                     case 2:
-                        $date = HtmlHelper::_('date', $studydate, "n/j/Y", null);
+                        $date = HTMLHelper::_('date', $studydate, "n/j/Y", null);
                         break;
                     case 4:
-                        $date = HtmlHelper::_('date', $studydate, "l, F j, Y", null);
+                        $date = HTMLHelper::_('date', $studydate, "l, F j, Y", null);
                         break;
                     case 5:
-                        $date = HtmlHelper::_('date', $studydate, "F j, Y", null);
+                        $date = HTMLHelper::_('date', $studydate, "F j, Y", null);
                         break;
                     case 6:
-                        $date = HtmlHelper::_('date', $studydate, "j F Y", null);
+                        $date = HTMLHelper::_('date', $studydate, "j F Y", null);
                         break;
                     case 7:
                         $date = date("j/n/Y", strtotime($studydate));
                         break;
                     case 8:
-                        $date = HtmlHelper::_('date', $studydate, Text::_('DATE_FORMAT_LC'), null);
+                        $date = HTMLHelper::_('date', $studydate, Text::_('DATE_FORMAT_LC'), null);
                         break;
                     case 9:
-                        $date = HtmlHelper::_('date', $studydate, "Y/M/D", null);
+                        $date = HTMLHelper::_('date', $studydate, "Y/M/D", null);
                         break;
                     default:
-                        $date = HtmlHelper::_('date', $studydate, "n/j", null);
+                        $date = HTMLHelper::_('date', $studydate, "n/j", null);
                         break;
                 }
             } catch (\Exception $e) {
@@ -2021,7 +2021,7 @@ class Cwmlisting
             }
         } else {
             try {
-                $date = HtmlHelper::_('date', $studydate, $customDate);
+                $date = HTMLHelper::_('date', $studydate, $customDate);
             } catch (\Exception $e) {
                 return $studydate;
             }

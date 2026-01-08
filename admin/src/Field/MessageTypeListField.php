@@ -58,7 +58,7 @@ class MessageTypeListField extends ListField
 
         if ($messages) {
             foreach ($messages as $message) {
-                $options[] = HtmlHelper::_('select.option', $message->id, $message->message_type);
+                $options[] = HTMLHelper::_('select.option', $message->id, $message->message_type);
             }
         }
 
