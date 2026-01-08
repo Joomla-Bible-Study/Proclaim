@@ -223,16 +223,16 @@ class Cwmmedia
         if ($imageparams->get('media_button_color')) {
             $color = 'style="background-color:' . $imageparams->get('media_button_color') . ';"';
         } else {
-            $color = '#1e3e48';
+            $color = '';
         }
 
         switch ($imageparams->get('media_use_button_icon')) {
             case 1:
                 // Button only
-                $mediaimage = '<div  class="btn ' . $button . ' title="' . $buttontext . '" ' . $color . '>' . $buttontext . '</div>';
+                $mediaimage = '<span class="btn ' . $button . '" title="' . $buttontext . '" ' . $color . '>' . $buttontext . '</span>';
                 break;
             case 2:
-                // Button and icon
+                // Button and icon (text before icon)
                 if ($imageparams->get('media_icon_type') === '1') {
                     $icon = $imageparams->get('media_custom_icon');
                 } else {
@@ -242,8 +242,8 @@ class Cwmmedia
                     $icon = str_replace('fa fa-youtube', 'fab fa-youtube', $icon);
                 }
 
-                $mediaimage = '<div  type="button" class="btn ' . $button . '" title="' . $buttontext . '" ' . $color . '><span class="' .
-                    $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span></div>';
+                $mediaimage = '<span class="btn ' . $button . '" title="' . $buttontext . '" ' . $color . '>' .
+                    $buttontext . ' <span class="' . $icon . '" style="font-size:' . $textsize . 'px;"></span></span>';
                 break;
             case 3:
                 // Icon only
