@@ -22,6 +22,11 @@
         <include name="plugins/**/*.php"/>
         <include name="site/**/*.php"/>
         <exclude name=".git"/>
+        <exclude name=".phpunit.cache"/>
+        <exclude name=".phive"/>
+        <exclude name=".github"/>
+        <exclude name=".claude"/>
+        <exclude name=".ai"/>
     </fileset>
 
     <target name="lint" description="Perform syntax check of source code">
