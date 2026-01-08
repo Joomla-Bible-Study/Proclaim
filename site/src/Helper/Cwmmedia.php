@@ -443,9 +443,10 @@ class Cwmmedia
         $params = clone $params;
         $params->merge($media->params);
 
-        $input    = new Input();
-        $template = $input->getInt('t', '1');
-        $youtube  = new CWMAddonYoutube();
+        $input      = new Input();
+        $template   = $input->getInt('t', '1');
+        $youtube    = new CWMAddonYoutube();
+        $colorStyle = ($media->params->get("media_button_color")) ? ' style="color:' . $media->params->get("media_button_color") . '"' : '';
 
         // Here we get more information about the particular media file
         $filesize = $this->getFluidFilesize($media, $params);
@@ -470,7 +471,7 @@ class Cwmmedia
                         return $this->renderSB($media, $params, $player, $image, $path, true);
 
                     case 1: // Popup window
-                        $playercode = "<a style='color: #5F5A58;' href=\"javascript:;\"" .
+                        $playercode = "<a $colorStyle href=\"javascript:;\"" .
                             " onclick=\"window.open('index.php?option=com_proclaim&amp;player="
                             . $params->toObject()->player .
                             "&amp;view=cwmpopup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
@@ -519,12 +520,12 @@ class Cwmmedia
                         break;
 
                     case 1: // Popup
-                        // Add space for a popup window
+                        // Add space for a pop-up window
 
                         $diff                 = $params->get('player_width') - $params->get('playerwidth');
                         $player->playerwidth += abs($diff) + 10;
                         $player->playerheight += $params->get('popupmargin', '50');
-                        $playercode           = "<a style='color: #5F5A58;' href=\"javascript:;\"" .
+                        $playercode           = "<a $colorStyle href=\"javascript:;\"" .
                             " onclick=\"window.open('index.php?option=com_proclaim&amp;player="
                             . $player->player
                             . "&amp;view=cwmpopup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
@@ -541,7 +542,7 @@ class Cwmmedia
 
                 switch ($player->type) {
                     case 1: // This goes to the popup view
-                        $playercode = "<a style='color: #5F5A58;' href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
+                        $playercode = "<a $colorStyle href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
                             . "&amp;view=cwmpopup&amp;player=3&amp;t=" . $template .
                             "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
                             . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">" . $image . "</a>";
@@ -565,7 +566,7 @@ class Cwmmedia
                 return $this->getVirtuemart($media, $image);
 
             case 8: // Embed code
-                return "<a style='color: #5F5A58;' href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
+                return "<a $colorStyle href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
                     . "&amp;view=cwmpopup&amp;player=8&amp;t=" . $template .
                     "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
                     . $player->playerheight . "'); return false\">" . $image . "</a>";
