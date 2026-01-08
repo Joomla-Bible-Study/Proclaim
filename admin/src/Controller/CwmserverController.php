@@ -11,7 +11,7 @@
 
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
-use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
@@ -31,7 +31,7 @@ class CwmserverController extends FormController
     /**
      * Method to add a new record.
      *
-     * @return  bool  True if the record can be added, a error object if not.
+     * @return  bool  True if the record can be added, an error object if not.
      *
      * @throws \Exception
      * @since   12.2
@@ -53,8 +53,9 @@ class CwmserverController extends FormController
     /**
      * Resets the User state for the server type. Needed to allow the value from the DB to be used
      *
-     * @param   int     $key     ?
-     * @param   string  $urlVar  ?
+     * @param   string  $key  The name of the primary key of the URL variable.
+     * @param   string  $urlVar  The name of the URL variable if different from the primary key
+     *                           (sometimes required to avoid router collisions).
      *
      * @return  bool
      *
@@ -107,100 +108,37 @@ class CwmserverController extends FormController
     }
 
     /**
-     * Fetch upcoming videos from a YouTube server (AJAX handler)
+     * Generic AJAX handler for addon actions
+     *
+     * This method provides a single entry point for all addon AJAX requests.
+     * It routes requests to the appropriate addon based on the 'addon' parameter
+     * and dispatches to the specified action.
+     *
+     * URL format: index.php?option=com_proclaim&task=cwmserver.addonAjax&addon=youtube&action=testApi
      *
      * @return  void
      *
+     * @throws \Exception
      * @since   10.0.0
      */
-    public function fetchUpcoming(): void
+    public function addonAjax(): void
     {
-        // Suppress any error output that might corrupt JSON
-        @ini_set('display_errors', '0');
-        @error_reporting(0);
+        $app       = Factory::getApplication();
+        $addonType = $app->input->getString('addon', '');
+        $action    = $app->input->getString('action', '');
 
-        // Clear any output buffers completely
-        while (@ob_get_level()) {
-            @ob_end_clean();
+        if (empty($addonType)) {
+            CWMAddon::outputJson(['success' => false, 'error' => 'No addon type specified']);
+
+            return;
         }
 
-        $app = Factory::getApplication();
+        if (empty($action)) {
+            CWMAddon::outputJson(['success' => false, 'error' => 'No action specified']);
 
-        try {
-            $serverId = $app->input->getInt('server_id', 0);
-
-            // Verify this is a YouTube server
-            $db    = Factory::getContainer()->get('DatabaseDriver');
-            $query = $db->getQuery(true)
-                ->select($db->quoteName('type'))
-                ->from($db->quoteName('#__bsms_servers'))
-                ->where($db->quoteName('id') . ' = ' . $serverId);
-            $db->setQuery($query);
-            $serverType = $db->loadResult();
-
-            if (strtolower($serverType) !== 'youtube') {
-                CWMAddonYoutube::outputJson(['success' => false, 'error' => 'Selected server is not a YouTube server']);
-
-                return;
-            }
-
-            // Start buffering to capture any deprecation warnings from vendor code
-            ob_start();
-
-            $youtube = new CWMAddonYoutube();
-            $result  = @$youtube->fetchUpcomingVideos($serverId);
-
-            // Discard any output from vendor code (deprecation warnings, etc.)
-            ob_end_clean();
-
-            CWMAddonYoutube::outputJson($result);
-        } catch (\Exception $e) {
-            CWMAddonYoutube::outputJson([
-                'success' => false,
-                'error'   => $e->getMessage(),
-            ]);
-        }
-    }
-
-    /**
-     * Test YouTube API credentials (AJAX handler)
-     *
-     * @return  void
-     *
-     * @since   10.0.0
-     */
-    public function testYoutubeApi(): void
-    {
-        // Suppress any error output that might corrupt JSON
-        @ini_set('display_errors', '0');
-        @error_reporting(0);
-
-        // Clear any output buffers completely
-        while (@ob_get_level()) {
-            @ob_end_clean();
+            return;
         }
 
-        $app = Factory::getApplication();
-
-        try {
-            $apiKey    = $app->input->getString('api_key', '');
-            $channelId = $app->input->getString('channel_id', '');
-
-            // Start buffering to capture any deprecation warnings from vendor code
-            ob_start();
-
-            $youtube = new CWMAddonYoutube();
-            $result  = @$youtube->testApiConnection($apiKey, $channelId);
-
-            // Discard any output from vendor code (deprecation warnings, etc.)
-            ob_end_clean();
-
-            CWMAddonYoutube::outputJson($result);
-        } catch (\Exception $e) {
-            CWMAddonYoutube::outputJson([
-                'success' => false,
-                'error'   => $e->getMessage(),
-            ]);
-        }
+        CWMAddon::handleAjaxRequest($addonType, $action);
     }
 }

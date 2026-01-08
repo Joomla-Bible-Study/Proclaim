@@ -260,6 +260,145 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
+     * Get available AJAX actions for this addon
+     *
+     * @return  array  List of available action names
+     *
+     * @since   10.0.0
+     */
+    public function getAjaxActions(): array
+    {
+        return [
+            'testApi',
+            'fetchUpcoming',
+            'fetchChannelVideos',
+            'searchChannelVideos',
+            'fetchChannelPlaylists',
+            'fetchPlaylistVideos',
+            'fetchLiveVideos',
+        ];
+    }
+
+    /**
+     * Handle testApi AJAX action
+     *
+     * @return  array  Response data
+     *
+     * @since   10.0.0
+     */
+    protected function handleTestApiAction(): array
+    {
+        $app       = Factory::getApplication();
+        $apiKey    = $app->input->getString('api_key', '');
+        $channelId = $app->input->getString('channel_id', '');
+
+        return $this->testApiConnection($apiKey, $channelId);
+    }
+
+    /**
+     * Handle fetchUpcoming AJAX action
+     *
+     * @return  array  Response data
+     *
+     * @since   10.0.0
+     */
+    protected function handleFetchUpcomingAction(): array
+    {
+        $app      = Factory::getApplication();
+        $serverId = $app->input->getInt('server_id', 0);
+
+        // Verify this is a YouTube server
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('type'))
+            ->from($db->quoteName('#__bsms_servers'))
+            ->where($db->quoteName('id') . ' = ' . $serverId);
+        $db->setQuery($query);
+        $serverType = $db->loadResult();
+
+        if (strtolower($serverType) !== 'youtube') {
+            return ['success' => false, 'error' => 'Selected server is not a YouTube server'];
+        }
+
+        return $this->fetchUpcomingVideos($serverId);
+    }
+
+    /**
+     * Handle fetchChannelVideos AJAX action
+     *
+     * @return  array  Response data
+     *
+     * @since   10.0.0
+     */
+    protected function handleFetchChannelVideosAction(): array
+    {
+        $app   = Factory::getApplication();
+        $input = $app->input;
+
+        return $this->fetchChannelVideos($input);
+    }
+
+    /**
+     * Handle searchChannelVideos AJAX action
+     *
+     * @return  array  Response data
+     *
+     * @since   10.0.0
+     */
+    protected function handleSearchChannelVideosAction(): array
+    {
+        $app   = Factory::getApplication();
+        $input = $app->input;
+
+        return $this->searchChannelVideos($input);
+    }
+
+    /**
+     * Handle fetchChannelPlaylists AJAX action
+     *
+     * @return  array  Response data
+     *
+     * @since   10.0.0
+     */
+    protected function handleFetchChannelPlaylistsAction(): array
+    {
+        $app   = Factory::getApplication();
+        $input = $app->input;
+
+        return $this->fetchChannelPlaylists($input);
+    }
+
+    /**
+     * Handle fetchPlaylistVideos AJAX action
+     *
+     * @return  array  Response data
+     *
+     * @since   10.0.0
+     */
+    protected function handleFetchPlaylistVideosAction(): array
+    {
+        $app   = Factory::getApplication();
+        $input = $app->input;
+
+        return $this->fetchPlaylistVideos($input);
+    }
+
+    /**
+     * Handle fetchLiveVideos AJAX action
+     *
+     * @return  array  Response data
+     *
+     * @since   10.0.0
+     */
+    protected function handleFetchLiveVideosAction(): array
+    {
+        $app   = Factory::getApplication();
+        $input = $app->input;
+
+        return $this->fetchLiveVideos($input);
+    }
+
+    /**
      * Get server configuration by ID
      *
      * @param   int  $serverId  Server ID
@@ -286,20 +425,6 @@ class CWMAddonYoutube extends CWMAddon
         }
 
         return [];
-    }
-
-    /**
-     * Load addon language file
-     *
-     * @return  void
-     *
-     * @since   10.0.0
-     */
-    protected function loadLanguage(): void
-    {
-        $lang = Factory::getApplication()->getLanguage();
-        $path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/Youtube';
-        $lang->load('jbs_addon_youtube', $path);
     }
 
     /**
@@ -773,46 +898,5 @@ class CWMAddonYoutube extends CWMAddon
         ]);
 
         return $this->fetchLiveVideos($input);
-    }
-
-    /**
-     * Output JSON response and terminate
-     *
-     * @param   array  $data  The data to encode as JSON
-     *
-     * @return  void
-     *
-     * @since   10.0.0
-     */
-    public static function outputJson(array $data): void
-    {
-        // Clear all output buffers
-        while (@ob_get_level()) {
-            @ob_end_clean();
-        }
-
-        // Send headers before any output
-        if (!headers_sent()) {
-            header('Content-Type: application/json; charset=utf-8');
-            header('Cache-Control: no-cache, no-store, must-revalidate');
-            header('Pragma: no-cache');
-            header('Expires: 0');
-        }
-
-        // Encode and output JSON
-        $json = json_encode($data);
-
-        if ($json === false) {
-            $json = '{"success":false,"error":"JSON encoding failed"}';
-        }
-
-        echo $json;
-
-        // Force flush and terminate
-        if (\function_exists('fastcgi_finish_request')) {
-            fastcgi_finish_request();
-        }
-
-        exit;
     }
 }

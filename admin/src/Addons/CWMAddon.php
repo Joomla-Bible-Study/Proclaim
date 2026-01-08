@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Filesystem\Path;
 
@@ -209,4 +210,171 @@ abstract class CWMAddon
      * @since 9.0.0
      */
     abstract protected function upload(?array $data): mixed;
+
+    /**
+     * Get available AJAX actions for this addon
+     *
+     * Override in child classes to register available AJAX actions.
+     * Return an array of action names that map to handle{ActionName}Action methods.
+     *
+     * @return  array  List of available action names (e.g., ['testApi', 'fetchVideos'])
+     *
+     * @since   10.0.0
+     */
+    public function getAjaxActions(): array
+    {
+        return [];
+    }
+
+    /**
+     * Handle an AJAX action request
+     *
+     * This method dispatches to the appropriate handler method based on the action name.
+     * Handler methods should be named handle{ActionName}Action (e.g., handleTestApiAction).
+     *
+     * @param   string  $action  The action name to handle
+     *
+     * @return  array  Response data array with 'success' key and additional data
+     *
+     * @throws  \RuntimeException  If the action is not supported
+     * @since   10.0.0
+     */
+    public function handleAjaxAction(string $action): array
+    {
+        $availableActions = $this->getAjaxActions();
+
+        if (!\in_array($action, $availableActions, true)) {
+            return [
+                'success' => false,
+                'error'   => Text::sprintf('JBS_CMN_ADDON_ACTION_NOT_SUPPORTED', $action, $this->type),
+            ];
+        }
+
+        // Convert action name to method name (e.g., 'testApi' -> 'handleTestApiAction')
+        $methodName = 'handle' . ucfirst($action) . 'Action';
+
+        if (!method_exists($this, $methodName)) {
+            return [
+                'success' => false,
+                'error'   => Text::sprintf('JBS_CMN_ADDON_ACTION_METHOD_NOT_FOUND', $methodName, $this->type),
+            ];
+        }
+
+        return $this->$methodName();
+    }
+
+    /**
+     * Prepare environment for AJAX response (suppress errors, clear buffers)
+     *
+     * Call this at the start of an AJAX handler to ensure clean JSON output.
+     *
+     * @return  void
+     *
+     * @since   10.0.0
+     */
+    public static function prepareAjaxEnvironment(): void
+    {
+        // Suppress any error output that might corrupt JSON
+        @ini_set('display_errors', '0');
+        @error_reporting(0);
+
+        // Clear any output buffers completely
+        while (@ob_get_level()) {
+            @ob_end_clean();
+        }
+    }
+
+    /**
+     * Output JSON response and terminate
+     *
+     * @param   array  $data  The data to encode as JSON
+     *
+     * @return  void
+     *
+     * @since   10.0.0
+     */
+    public static function outputJson(array $data): void
+    {
+        // Clear all output buffers
+        while (@ob_get_level()) {
+            @ob_end_clean();
+        }
+
+        // Send headers before any output
+        if (!headers_sent()) {
+            header('Content-Type: application/json; charset=utf-8');
+            header('Cache-Control: no-cache, no-store, must-revalidate');
+            header('Pragma: no-cache');
+            header('Expires: 0');
+        }
+
+        // Encode and output JSON
+        $json = json_encode($data);
+
+        if ($json === false) {
+            $json = '{"success":false,"error":"JSON encoding failed"}';
+        }
+
+        echo $json;
+
+        // Force flush and terminate
+        if (\function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
+
+        exit;
+    }
+
+    /**
+     * Handle a generic AJAX request for any addon
+     *
+     * This static method is the main entry point for addon AJAX requests from the controller.
+     * It loads the appropriate addon, prepares the environment, and dispatches to the action handler.
+     *
+     * @param   string  $addonType  The addon type (e.g., 'youtube', 'vimeo')
+     * @param   string  $action     The action to perform
+     *
+     * @return  void  Outputs JSON and exits
+     *
+     * @since   10.0.0
+     */
+    public static function handleAjaxRequest(string $addonType, string $action): void
+    {
+        self::prepareAjaxEnvironment();
+
+        try {
+            // Load the addon
+            $addon = self::getInstance($addonType);
+
+            // Start buffering to capture any deprecation warnings from vendor code
+            ob_start();
+
+            // Handle the action
+            $result = @$addon->handleAjaxAction($action);
+
+            // Discard any output from vendor code (deprecation warnings, etc.)
+            ob_end_clean();
+
+            self::outputJson($result);
+        } catch (\Exception $e) {
+            self::outputJson([
+                'success' => false,
+                'error'   => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Load addon language file
+     *
+     * @return  void
+     *
+     * @since   10.0.0
+     */
+    protected function loadLanguage(): void
+    {
+        $lang = Factory::getApplication()->getLanguage();
+        $path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($this->type);
+        $lang->load('jbs_addon_' . strtolower($this->type), $path);
+    }
 }

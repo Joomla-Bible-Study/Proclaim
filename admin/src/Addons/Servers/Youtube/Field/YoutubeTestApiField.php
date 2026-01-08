@@ -87,7 +87,7 @@ class YoutubeTestApiField extends FormField
      */
     protected function getJavaScript(): string
     {
-        $baseUrl = Uri::base() . 'index.php?option=com_proclaim&task=cwmserver.testYoutubeApi&format=raw';
+        $baseUrl = Uri::base() . 'index.php?option=com_proclaim&task=cwmserver.addonAjax&addon=youtube&action=testApi&format=raw';
 
         // Pre-escape all language strings for use in JavaScript
         $noApiKey     = $this->escapeJs(Text::_('JBS_ADDON_YOUTUBE_NO_API_KEY'));
