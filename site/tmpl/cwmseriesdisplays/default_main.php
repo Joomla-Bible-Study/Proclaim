@@ -17,7 +17,7 @@
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmserieslist;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Html\HTMLHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\MVC\View\HtmlView;
@@ -38,7 +38,7 @@ $listing      = new Cwmlisting();
 $classelement = $listing->createelement($this->params->get('series_element'));
 
 if ($url) {
-    HtmlHelper::_('stylesheet', $url);
+    HTMLHelper::_('stylesheet', $url);
 }
 ?>
 <form action="<?php Route::_('index.php?option=com_proclaim&view=cwmseriesdisplay') ?>" method="post" name="adminForm" id="adminForm">

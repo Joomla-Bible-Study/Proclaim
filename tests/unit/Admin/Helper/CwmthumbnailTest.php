@@ -11,8 +11,8 @@
 
 namespace CWM\Component\Proclaim\Tests\Admin\Helper;
 
-use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
+use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**

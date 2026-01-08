@@ -17,12 +17,11 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Table\CwmmessageTable;
-use Exception;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
-use Joomla\Input\Input;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
+use Joomla\Input\Input;
 
 /**
  * MessageType model class
@@ -78,16 +77,16 @@ class CwmmessagetypeModel extends AdminModel
      *
      * @return  mixed  A JForm object on success, false on failure
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = array(), $loadData = true): mixed
+    public function getForm($data = [], $loadData = true): mixed
     {
         // Get the form.
         return $this->loadForm(
             'com_proclaim.messagetype',
             'messagetype',
-            array('control' => 'jform', 'load_data' => $loadData)
+            ['control' => 'jform', 'load_data' => $loadData]
         );
     }
 
@@ -114,10 +113,10 @@ class CwmmessagetypeModel extends AdminModel
      *
      * @return  Table  A Table object
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   3.0
      */
-    public function getTable($name = 'Cwmmessagetype', $prefix = '', $options = array()): Table
+    public function getTable($name = 'Cwmmessagetype', $prefix = '', $options = []): Table
     {
         return parent::getTable($name, $prefix, $options);
     }
@@ -127,12 +126,12 @@ class CwmmessagetypeModel extends AdminModel
      *
      * @return  mixed   The default data is an empty array.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   7.0
      */
     protected function loadFormData(): mixed
     {
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.messagetype.data', array());
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.messagetype.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();
@@ -154,6 +153,9 @@ class CwmmessagetypeModel extends AdminModel
     {
         jimport('joomla.filter.output');
 
+        $date = Factory::getDate();
+        $user = Factory::getApplication()->getIdentity();
+
         $table->message_type = htmlspecialchars_decode($table->message_type, ENT_QUOTES);
         $table->alias        = ApplicationHelper::stringURLSafe($table->alias);
 
@@ -161,7 +163,17 @@ class CwmmessagetypeModel extends AdminModel
             $table->alias = ApplicationHelper::stringURLSafe($table->message_type);
         }
 
+        // Always ensure created date is set (handles empty string from form)
+        if (empty($table->created) || $table->created === '') {
+            $table->created = $date->toSql();
+        }
+
         if (empty($table->id)) {
+            // Set the values for a new record
+            if (empty($table->created_by)) {
+                $table->created_by = $user->get('id');
+            }
+
             // Set ordering to the last item if not set
             if (empty($table->ordering)) {
                 $db    = Factory::getContainer()->get('DatabaseDriver');
@@ -172,6 +184,10 @@ class CwmmessagetypeModel extends AdminModel
 
                 $table->ordering = $max + 1;
             }
+        } else {
+            // Set the values for existing records
+            $table->modified    = $date->toSql();
+            $table->modified_by = $user->get('id');
         }
     }
 

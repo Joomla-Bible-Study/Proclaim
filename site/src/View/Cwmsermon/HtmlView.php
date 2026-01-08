@@ -152,7 +152,7 @@ class HtmlView extends BaseHtmlView
         $this->simple   = Cwmhelper::getSimpleView();
 
         // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
+        if (\count($errors = $this->get('Errors'))) {
             $app->enqueueMessage(implode("\n", $errors), 'error');
 
             return;
@@ -248,7 +248,7 @@ class HtmlView extends BaseHtmlView
         // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $groups = $user->getAuthorisedViewLevels();
 
-        if (($this->item->access > 1) && !in_array($this->item->access, $groups, true)) {
+        if (($this->item->access > 1) && !\in_array($this->item->access, $groups, true)) {
             $app->enqueueMessage(Text::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
         }
 
@@ -268,7 +268,7 @@ class HtmlView extends BaseHtmlView
         if (
             $item->params->get('useexpert_list') > 0
             || ($item->params->get('simple_mode') === '1')
-            || (is_string($item->params->get('sermontemplate')) === true && $item->params->get(
+            || (\is_string($item->params->get('sermontemplate')) === true && $item->params->get(
                 'sermontemplate'
             ) !== '0')
         ) {
@@ -346,7 +346,7 @@ class HtmlView extends BaseHtmlView
         $this->loadHelper('params');
 
         // Get the podcast subscription
-        HtmlHelper::_('stylesheet', 'media/css/podcast.css');
+        HTMLHelper::_('stylesheet', 'media/css/podcast.css');
         $podcast         = new Cwmpodcastsubscribe();
         $this->subscribe = $podcast->buildSubscribeTable($this->item->params->get('subscribeintro', 'Our Podcasts'));
 

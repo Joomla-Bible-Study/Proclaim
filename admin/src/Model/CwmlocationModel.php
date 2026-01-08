@@ -142,6 +142,38 @@ class CwmlocationModel extends AdminModel
     }
 
     /**
+     * Prepare and sanitise the table prior to saving.
+     *
+     * @param   Table  $table  A reference to a Table object.
+     *
+     * @return  void
+     *
+     * @throws \Exception
+     * @since   10.0.0
+     */
+    protected function prepareTable($table): void
+    {
+        $date = Factory::getDate();
+        $user = Factory::getApplication()->getIdentity();
+
+        // Always ensure created date is set (handles empty string from form)
+        if (empty($table->created) || $table->created === '') {
+            $table->created = $date->toSql();
+        }
+
+        if (empty($table->id)) {
+            // Set the values for a new record
+            if (empty($table->created_by)) {
+                $table->created_by = $user->get('id');
+            }
+        } else {
+            // Set the values for existing records
+            $table->modified    = $date->toSql();
+            $table->modified_by = $user->get('id');
+        }
+    }
+
+    /**
      * Custom clean the cache of com_proclaim and proclaim modules
      *
      * @param   string  $group      The cache group

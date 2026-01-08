@@ -53,7 +53,7 @@ class FiltersField extends FormField
         $groups = $this->getUserGroups();
 
         // Build the form control.
-        $html = array();
+        $html = [];
 
         // Open the table.
         $html[] = '<table id="filter-config" class="table">';
@@ -82,11 +82,11 @@ class FiltersField extends FormField
         foreach ($groups as $group) {
             if (!isset($this->value[$group->value])) {
                 $this->value                = [];
-                $this->value[$group->value] = array(
+                $this->value[$group->value] = [
                     'filter_type'       => 'BL',
                     'filter_tags'       => '',
-                    'filter_attributes' => ''
-                );
+                    'filter_attributes' => '',
+                ];
             }
 
             $group_filter = $this->value[$group->value];
@@ -98,7 +98,7 @@ class FiltersField extends FormField
             $html[] = '		<td class="acl-groups left">';
             $html[] = '			' . LayoutHelper::render(
                 'joomla.html.treeprefix',
-                array('level' => $group->level + 1)
+                ['level' => $group->level + 1]
             ) . $group->text;
             $html[] = '		</td>';
             $html[] = '		<td>';

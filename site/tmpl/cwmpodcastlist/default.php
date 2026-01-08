@@ -16,7 +16,7 @@
 use CWM\Component\Proclaim\Administrator\Helper\CWMImageLib;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Html\HTMLHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
@@ -49,7 +49,7 @@ echo Route::_('index.php?option=com_proclaim&view=podcastlist'); ?>" method="pos
             ?>
             <div class="CWMimg">
                 <?php
-                echo HtmlHelper::image($img, $item->id . ' : ' . stripslashes($item->series_text), $this->attribs); ?>
+                echo HTMLHelper::image($img, $item->id . ' : ' . stripslashes($item->series_text), $this->attribs); ?>
                 <div class="overlay">
                     <a href="<?php
                     echo Route::_(
@@ -88,5 +88,5 @@ echo Route::_('index.php?option=com_proclaim&view=podcastlist'); ?>" method="pos
     <input type="hidden" name="filter_order_Dir" value="<?php
     echo $listDirn; ?>"/>
     <?php
-    echo HtmlHelper::_('form.token'); ?>
+    echo HTMLHelper::_('form.token'); ?>
 </form>

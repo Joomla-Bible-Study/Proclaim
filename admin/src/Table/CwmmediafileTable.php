@@ -122,6 +122,14 @@ class CwmmediafileTable extends Table
 
     public $language;
 
+    /**
+     * Created date
+     *
+     * @var string
+     * @since    10.0.0
+     */
+    public $created = null;
+
     public $created_by;
 
     public $created_by_alias;
@@ -160,19 +168,19 @@ class CwmmediafileTable extends Table
      */
     public function bind($array, $ignore = ''): bool
     {
-        if (isset($array['params']) && is_array($array['params'])) {
+        if (isset($array['params']) && \is_array($array['params'])) {
             $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = (string)$registry;
         }
 
         // Bind the podcast_id
-        if (isset($array['podcast_id']) && is_array($array['podcast_id'])) {
+        if (isset($array['podcast_id']) && \is_array($array['podcast_id'])) {
             $array['podcast_id'] = implode(',', $array['podcast_id']);
         }
 
         // Bind the rules.
-        if (isset($array['rules']) && is_array($array['rules'])) {
+        if (isset($array['rules']) && \is_array($array['rules'])) {
             $rules = new Rules($array['rules']);
             $this->setRules($rules);
         }
@@ -224,14 +232,14 @@ class CwmmediafileTable extends Table
             return true;
         }
 
-        if (is_null($pk)) {
-            $pk = array();
+        if (\is_null($pk)) {
+            $pk = [];
 
             foreach ($this->_tbl_keys as $key) {
                 $pk[$this->$key] = $this->$key;
             }
-        } elseif (!is_array($pk)) {
-            $pk = array($this->_tbl_key => $pk);
+        } elseif (!\is_array($pk)) {
+            $pk = [$this->_tbl_key => $pk];
         }
 
         foreach ($this->_tbl_keys as $key) {

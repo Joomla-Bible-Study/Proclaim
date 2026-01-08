@@ -17,10 +17,9 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Html\HtmlHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
-
 
 /**
  * A helper to return buttons for podcast subscriptions
@@ -167,7 +166,7 @@ class Cwmpodcastsubscribe
         $podcastimage = null;
 
         if ($image->path) {
-            $podcastimage = HtmlHelper::image(
+            $podcastimage = HTMLHelper::image(
                 Uri::base() . $image->path,
                 $words,
                 'width = "' . $image->width

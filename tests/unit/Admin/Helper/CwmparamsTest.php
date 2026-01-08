@@ -11,8 +11,8 @@
 
 namespace CWM\Component\Proclaim\Tests\Admin\Helper;
 
-use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
@@ -73,7 +73,7 @@ class CwmparamsTest extends ProclaimTestCase
     public function testSetCompParamsAcceptsArrayParameter(): void
     {
         $reflection = new \ReflectionMethod(Cwmparams::class, 'setCompParams');
-        $params = $reflection->getParameters();
+        $params     = $reflection->getParameters();
 
         $this->assertCount(1, $params);
         $this->assertEquals('paramArray', $params[0]->getName());
@@ -89,7 +89,7 @@ class CwmparamsTest extends ProclaimTestCase
     public function testGetTemplateparamsMethodSignature(): void
     {
         $reflection = new \ReflectionMethod(Cwmparams::class, 'getTemplateparams');
-        $params = $reflection->getParameters();
+        $params     = $reflection->getParameters();
 
         $this->assertCount(1, $params);
         $this->assertEquals('pk', $params[0]->getName());

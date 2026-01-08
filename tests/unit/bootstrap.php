@@ -10,55 +10,55 @@
  */
 
 // Define _JEXEC to prevent "restricted access" errors
-define('_JEXEC', 1);
+\define('_JEXEC', 1);
 
 // Error reporting
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Define Joomla path constants for testing
-if (!defined('JPATH_BASE')) {
-    define('JPATH_BASE', dirname(__DIR__, 2));
+if (!\defined('JPATH_BASE')) {
+    \define('JPATH_BASE', \dirname(__DIR__, 2));
 }
 
-if (!defined('JPATH_ROOT')) {
-    define('JPATH_ROOT', JPATH_BASE);
+if (!\defined('JPATH_ROOT')) {
+    \define('JPATH_ROOT', JPATH_BASE);
 }
 
-if (!defined('JPATH_SITE')) {
-    define('JPATH_SITE', JPATH_ROOT);
+if (!\defined('JPATH_SITE')) {
+    \define('JPATH_SITE', JPATH_ROOT);
 }
 
-if (!defined('JPATH_ADMINISTRATOR')) {
-    define('JPATH_ADMINISTRATOR', JPATH_ROOT . '/administrator');
+if (!\defined('JPATH_ADMINISTRATOR')) {
+    \define('JPATH_ADMINISTRATOR', JPATH_ROOT . '/administrator');
 }
 
-if (!defined('JPATH_TESTS')) {
-    define('JPATH_TESTS', dirname(__DIR__));
+if (!\defined('JPATH_TESTS')) {
+    \define('JPATH_TESTS', \dirname(__DIR__));
 }
 
-if (!defined('JPATH_LIBRARIES')) {
-    define('JPATH_LIBRARIES', JPATH_ROOT . '/libraries');
+if (!\defined('JPATH_LIBRARIES')) {
+    \define('JPATH_LIBRARIES', JPATH_ROOT . '/libraries');
 }
 
-if (!defined('JPATH_CACHE')) {
-    define('JPATH_CACHE', JPATH_BASE . '/cache');
+if (!\defined('JPATH_CACHE')) {
+    \define('JPATH_CACHE', JPATH_BASE . '/cache');
 }
 
-if (!defined('JPATH_CONFIGURATION')) {
-    define('JPATH_CONFIGURATION', JPATH_BASE);
+if (!\defined('JPATH_CONFIGURATION')) {
+    \define('JPATH_CONFIGURATION', JPATH_BASE);
 }
 
-if (!defined('JPATH_PLUGINS')) {
-    define('JPATH_PLUGINS', JPATH_BASE . '/plugins');
+if (!\defined('JPATH_PLUGINS')) {
+    \define('JPATH_PLUGINS', JPATH_BASE . '/plugins');
 }
 
-if (!defined('JPATH_THEMES')) {
-    define('JPATH_THEMES', JPATH_BASE . '/templates');
+if (!\defined('JPATH_THEMES')) {
+    \define('JPATH_THEMES', JPATH_BASE . '/templates');
 }
 
-if (!defined('JDEBUG')) {
-    define('JDEBUG', false);
+if (!\defined('JDEBUG')) {
+    \define('JDEBUG', false);
 }
 
 // Load Composer autoloader
@@ -69,26 +69,26 @@ if (file_exists($composerAutoload)) {
 
 // Register PSR-4 autoloader for the Proclaim component
 spl_autoload_register(function ($class) {
-    $prefix = 'CWM\\Component\\Proclaim\\Administrator\\';
+    $prefix  = 'CWM\\Component\\Proclaim\\Administrator\\';
     $baseDir = JPATH_ROOT . '/admin/src/';
 
-    $len = strlen($prefix);
+    $len = \strlen($prefix);
     if (strncmp($prefix, $class, $len) === 0) {
         $relativeClass = substr($class, $len);
-        $file = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
+        $file          = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
         if (file_exists($file)) {
             require $file;
             return true;
         }
     }
 
-    $prefix = 'CWM\\Component\\Proclaim\\Site\\';
+    $prefix  = 'CWM\\Component\\Proclaim\\Site\\';
     $baseDir = JPATH_ROOT . '/site/src/';
 
-    $len = strlen($prefix);
+    $len = \strlen($prefix);
     if (strncmp($prefix, $class, $len) === 0) {
         $relativeClass = substr($class, $len);
-        $file = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
+        $file          = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
         if (file_exists($file)) {
             require $file;
             return true;
@@ -96,13 +96,13 @@ spl_autoload_register(function ($class) {
     }
 
     // Autoload test classes
-    $prefix = 'CWM\\Component\\Proclaim\\Tests\\';
+    $prefix  = 'CWM\\Component\\Proclaim\\Tests\\';
     $baseDir = JPATH_ROOT . '/tests/unit/';
 
-    $len = strlen($prefix);
+    $len = \strlen($prefix);
     if (strncmp($prefix, $class, $len) === 0) {
         $relativeClass = substr($class, $len);
-        $file = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
+        $file          = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
         if (file_exists($file)) {
             require $file;
             return true;

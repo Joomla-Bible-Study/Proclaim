@@ -193,8 +193,13 @@ CREATE TABLE IF NOT EXISTS `#__bsms_message_type`
     `published`    TINYINT(3)                                       NOT NULL DEFAULT '1',
     `asset_id`     INT(10) UNSIGNED                                 NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
     `access`       INT(10) UNSIGNED                                 NOT NULL DEFAULT '1',
-    `ordering`     INT(11)                                          NOT NULL DEFAULT '0',
-    `landing_show` INT(3)                                                    DEFAULT NULL,
+    `ordering`         INT(11)          NOT NULL DEFAULT '0',
+    `landing_show`     INT(3)                    DEFAULT NULL,
+    `created`          DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `created_by`       INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `created_by_alias` VARCHAR(255)     NOT NULL DEFAULT '',
+    `modified`         DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `modified_by`      INT(10) UNSIGNED NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`)
@@ -242,6 +247,11 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast`
     `episodesubtitle`         INT(11)                   DEFAULT NULL,
     `customsubtitle`          VARCHAR(200)              DEFAULT NULL,
     `linktype`                INT(10)          NOT NULL DEFAULT '0',
+    `created`                 DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `created_by`              INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `created_by_alias`        VARCHAR(255)     NOT NULL DEFAULT '',
+    `modified`                DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `modified_by`             INT(10) UNSIGNED NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`)
@@ -271,9 +281,15 @@ CREATE TABLE IF NOT EXISTS `#__bsms_series`
     `landing_show`     INT(3)                                                    DEFAULT NULL,
     `pc_show`          INT(3)                                           NOT NULL DEFAULT '1' COMMENT 'For displaying on
    podcasts page',
+    `created`          DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `created_by`       INT(10) UNSIGNED                                 NOT NULL DEFAULT '0',
+    `created_by_alias` VARCHAR(255)                                     NOT NULL DEFAULT '',
+    `modified`         DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `modified_by`      INT(10) UNSIGNED                                 NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
-    KEY `idx_access` (`access`)
+    KEY `idx_access` (`access`),
+    KEY `idx_createdby` (`created_by`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
@@ -291,9 +307,14 @@ CREATE TABLE IF NOT EXISTS `#__bsms_servers`
     `published`   TINYINT(3)       NOT NULL DEFAULT '1',
     `asset_id`    INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
     `access`      INT(10) UNSIGNED NOT NULL DEFAULT '1',
-    `type`        CHAR(255)        NOT NULL,
-    `params`      TEXT             NOT NULL,
-    `media`       TEXT             NOT NULL,
+    `type`             CHAR(255)        NOT NULL,
+    `params`           TEXT             NOT NULL,
+    `media`            TEXT             NOT NULL,
+    `created`          DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `created_by`       INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `created_by_alias` VARCHAR(255)     NOT NULL DEFAULT '',
+    `modified`         DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `modified_by`      INT(10) UNSIGNED NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`)
@@ -352,6 +373,9 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies`
     `published`           TINYINT(3)                                       NOT NULL DEFAULT '0',
     `publish_up`          DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
     `publish_down`        DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `created`             DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `created_by`          INT(10) UNSIGNED                                 NOT NULL DEFAULT '0',
+    `created_by_alias`    VARCHAR(255)                                     NOT NULL DEFAULT '',
     `modified`            DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
     `modified_by`         INT(10) UNSIGNED                                 NOT NULL DEFAULT '0',
     `asset_id`            INT(10) UNSIGNED                                 NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
@@ -364,7 +388,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies`
     KEY `idx_access` (`access`),
     KEY `idx_seriesid` (`series_id`),
     KEY `idx_user` (`user_id`),
-    KEY `idx_createdby` (`user_id`),
+    KEY `idx_createdby` (`created_by`),
     KEY `idx_checkout` (`checked_out`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -437,9 +461,15 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers`
     `address`           MEDIUMTEXT,
     `landing_show`      INT(3)                                                    DEFAULT NULL,
     `address1`          MEDIUMTEXT,
+    `created`           DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `created_by`        INT(10) UNSIGNED                                 NOT NULL DEFAULT '0',
+    `created_by_alias`  VARCHAR(255)                                     NOT NULL DEFAULT '',
+    `modified`          DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `modified_by`       INT(10) UNSIGNED                                 NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
-    KEY `idx_access` (`access`)
+    KEY `idx_access` (`access`),
+    KEY `idx_createdby` (`created_by`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
@@ -456,8 +486,13 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templatecode`
     `published`    TINYINT(3)       NOT NULL DEFAULT '1',
     `type`         TINYINT(3)       NOT NULL,
     `filename`     TEXT             NOT NULL,
-    `asset_id`     INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-    `templatecode` MEDIUMTEXT       NOT NULL,
+    `asset_id`         INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+    `created`          DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `created_by`       INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `created_by_alias` VARCHAR(255)     NOT NULL DEFAULT '',
+    `modified`         DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `modified_by`      INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `templatecode`     MEDIUMTEXT       NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -471,16 +506,21 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templatecode`
 
 CREATE TABLE IF NOT EXISTS `#__bsms_templates`
 (
-    `id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `type`      VARCHAR(255)     NOT NULL,
-    `tmpl`      LONGTEXT         NOT NULL,
-    `published` TINYINT(3)       NOT NULL DEFAULT '1',
-    `params`    LONGTEXT,
-    `title`     TEXT,
-    `text`      TEXT,
-    `pdf`       TEXT,
-    `asset_id`  INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-    `access`    INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `id`               INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `type`             VARCHAR(255)     NOT NULL,
+    `tmpl`             LONGTEXT         NOT NULL,
+    `published`        TINYINT(3)       NOT NULL DEFAULT '1',
+    `params`           LONGTEXT,
+    `title`            TEXT,
+    `text`             TEXT,
+    `pdf`              TEXT,
+    `asset_id`         INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+    `created`          DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `created_by`       INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `created_by_alias` VARCHAR(255)     NOT NULL DEFAULT '',
+    `modified`         DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `modified_by`      INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `access`           INT(10) UNSIGNED NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`)
@@ -511,13 +551,18 @@ CREATE TABLE IF NOT EXISTS `#__bsms_timeset`
 
 CREATE TABLE IF NOT EXISTS `#__bsms_topics`
 (
-    `id`         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `topic_text` TEXT,
-    `published`  TINYINT(3)       NOT NULL DEFAULT '1',
-    `params`     VARCHAR(511)              DEFAULT NULL,
-    `asset_id`   INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-    `language`   CHAR(7)                   DEFAULT '*',
-    `access`     INT(10) UNSIGNED NOT NULL DEFAULT '1',
+    `id`               INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `topic_text`       TEXT,
+    `published`        TINYINT(3)       NOT NULL DEFAULT '1',
+    `params`           VARCHAR(511)              DEFAULT NULL,
+    `created`          DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `created_by`       INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `created_by_alias` VARCHAR(255)     NOT NULL DEFAULT '',
+    `modified`         DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `modified_by`      INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `asset_id`         INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+    `language`         CHAR(7)                   DEFAULT '*',
+    `access`           INT(10) UNSIGNED NOT NULL DEFAULT '1',
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`)

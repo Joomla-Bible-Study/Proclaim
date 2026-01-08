@@ -549,7 +549,7 @@ class Cwmmedia
 
                     case 2: // This plays the video inline
                         $mediacode  = $this->getAVmediacode($media->mediacode, $media);
-                        $playercode = HtmlHelper::_('content.prepare', $mediacode);
+                        $playercode = HTMLHelper::_('content.prepare', $mediacode);
                         break;
                 }
 

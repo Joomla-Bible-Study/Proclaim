@@ -12,7 +12,6 @@
 namespace CWM\Component\Proclaim\Administrator\View\Cwmmediafiles;
 
 // No Direct Access
-use Exception;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
@@ -117,7 +116,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void  A string if successful, otherwise a JError object.
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   11.1
      * @see     fetch()
      */
@@ -171,7 +170,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     protected function addToolbar(): void
@@ -245,12 +244,12 @@ class HtmlView extends BaseHtmlView
      */
     protected function getSortFields(): array
     {
-        return array(
+        return [
             'study.studytitle'     => Text::_('JBS_CMN_STUDY_TITLE'),
             'mediatype.media_text' => Text::_('JBS_MED_MEDIA_TYPE'),
             'mediafile.ordering'   => Text::_('JGRID_HEADING_ORDERING'),
             'mediafile.published'  => Text::_('JSTATUS'),
-            'mediafile.id'         => Text::_('JGRID_HEADING_ID')
-        );
+            'mediafile.id'         => Text::_('JGRID_HEADING_ID'),
+        ];
     }
 }

@@ -61,9 +61,9 @@
         />
 
         <field name="studyintro" type="editor" label="JBS_CMN_DESCRIPTION"
-               filter="CwmproclaimHelper::filterText" buttons="true"/>
+               filter="CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper::filterText" buttons="true"/>
         <field name="studytext" type="editor" label="JBS_STY_STUDY_TEXT"
-               filter="CwmproclaimHelper::filterText" buttons="true"/>
+               filter="CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper::filterText" buttons="true"/>
 
         <field name="studynumber" type="text" class="inputbox" size="15" label="JBS_CMN_STUDYNUMBER"/>
 
@@ -117,12 +117,22 @@
                translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
                section="message" validate="rules"/>
 
-        <field name="user_name" type="text"
-               label="JGLOBAL_FIELD_CREATED_BY_ALIAS_LABEL" description=""
+        <field name="created" type="calendar" class="readonly"
+               label="JGLOBAL_FIELD_CREATED_LABEL"
+               readonly="true" translateformat="true"
+               showtime="true"
+               filter="user_utc"/>
+        <field name="created_by" type="user"
+               label="JGLOBAL_FIELD_CREATED_BY_LABEL"
+               class="readonly"
+               readonly="true"
+               filter="unset"/>
+        <field name="created_by_alias" type="text"
+               label="JGLOBAL_FIELD_CREATED_BY_ALIAS_LABEL"
                class="inputbox" size="20"/>
 
         <field name="modified" type="calendar" class="readonly"
-               label="JGLOBAL_FIELD_MODIFIED_LABEL" description=""
+               label="JGLOBAL_FIELD_MODIFIED_LABEL"
                readonly="true" translateformat="true"
                showtime="true"
                filter="user_utc"/>
@@ -130,8 +140,7 @@
                label="JGLOBAL_FIELD_MODIFIED_BY_LABEL"
                class="readonly"
                readonly="true"
-               filter="unset"
-        />
+               filter="unset"/>
 
         <field name="checked_out" type="hidden" filter="unset"/>
 

@@ -58,6 +58,46 @@ class CwmteacherTable extends Table
     public int $id = 0;
 
     /**
+     * Created date
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public $created = null;
+
+    /**
+     * Created by user ID
+     *
+     * @var int
+     * @since 10.1.0
+     */
+    public $created_by = null;
+
+    /**
+     * Created by alias
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public $created_by_alias = '';
+
+    /**
+     * Modified date
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public $modified = null;
+
+    /**
+     * Modified by user ID
+     *
+     * @var int
+     * @since 10.1.0
+     */
+    public $modified_by = null;
+
+    /**
      * Constructor
      *
      * @param   DatabaseDriver  $db  Database connector object
@@ -84,14 +124,14 @@ class CwmteacherTable extends Table
      */
     public function bind($src, $ignore = ''): bool
     {
-        if (array_key_exists('params', $src) && is_array($src['params'])) {
+        if (\array_key_exists('params', $src) && \is_array($src['params'])) {
             $registry = new Registry();
             $registry->loadArray($src['params']);
             $src['params'] = (string)$registry;
         }
 
         // Bind the rules.
-        if (isset($src['rules']) && is_array($src['rules'])) {
+        if (isset($src['rules']) && \is_array($src['rules'])) {
             $rules = new Rules($src['rules']);
             $this->setRules($rules);
         }

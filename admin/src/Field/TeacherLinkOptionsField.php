@@ -46,8 +46,8 @@ class TeacherLinkOptionsField extends ListField
      */
     protected function getOptions(): array
     {
-        $options[] = HtmlHelper::_('select.option', '0', Text::_('JBS_TPL_NO_LINK'));
-        $options[] = HtmlHelper::_('select.option', '3', Text::_('JBS_TPL_LINK_TO_TEACHERS_PROFILE'));
+        $options[] = HTMLHelper::_('select.option', '0', Text::_('JBS_TPL_NO_LINK'));
+        $options[] = HTMLHelper::_('select.option', '3', Text::_('JBS_TPL_LINK_TO_TEACHERS_PROFILE'));
 
         return array_merge(parent::getOptions(), $options);
     }

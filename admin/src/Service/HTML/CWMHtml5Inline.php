@@ -45,7 +45,7 @@ class CWMHtml5Inline
         $params,
         object $player,
         bool $popup = false,
-        int $t = null
+        ?int $t = null
     ): string {
         $popupMarg = 0;
 
@@ -100,7 +100,7 @@ class CWMHtml5Inline
 
         if ($params->get('playerwidth') && !isset($player->mp3)) {
             $media->playerwidth = $params->get('playerwidth');
-        } elseif (isset($player->mp3) && isset($player->playerwidth)) {
+        } elseif (isset($player->mp3, $player->playerwidth)) {
             $media->playerwidth = $player->playerwidth;
         } else {
             $media->playerwidth = $params->get('player_width');
@@ -219,6 +219,6 @@ class CWMHtml5Inline
      */
     private static function isMimeTypeAllowed(string $mimeType, array $mimeArray): bool
     {
-        return in_array($mimeType, $mimeArray, true);
+        return \in_array($mimeType, $mimeArray, true);
     }
 }

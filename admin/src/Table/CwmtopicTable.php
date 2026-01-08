@@ -73,6 +73,46 @@ class CwmtopicTable extends Table
     public $access;
 
     /**
+     * Created date
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public $created = null;
+
+    /**
+     * Created by user ID
+     *
+     * @var int
+     * @since 10.1.0
+     */
+    public $created_by = null;
+
+    /**
+     * Created by alias
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public $created_by_alias = '';
+
+    /**
+     * Modified date
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public $modified = null;
+
+    /**
+     * Modified by user ID
+     *
+     * @var int
+     * @since 10.1.0
+     */
+    public $modified_by = null;
+
+    /**
      * Constructor
      *
      * @param   DatabaseDriver  $db  Database connector object
@@ -100,18 +140,18 @@ class CwmtopicTable extends Table
      */
     public function bind($array, $ignore = '')
     {
-        if (is_object($array)) {
+        if (\is_object($array)) {
             return parent::bind($array, $ignore);
         }
 
-        if (isset($array['params']) && is_array($array['params'])) {
+        if (isset($array['params']) && \is_array($array['params'])) {
             $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = (string)$registry;
         }
 
         // Bind the rules.
-        if (isset($array['rules']) && is_array($array['rules'])) {
+        if (isset($array['rules']) && \is_array($array['rules'])) {
             $rules = new Rules($array['rules']);
             $this->setRules($rules);
         }
@@ -184,15 +224,15 @@ class CwmtopicTable extends Table
      *
      * @todo  this look like it is not used. (Neither Tom nor Brent wrote this one)
      */
-    public function checkAlias($data = array(), $recordId = null)
+    public function checkAlias($data = [], $recordId = null)
     {
         $topic = $data['topic_text'];
 
         // Topic_text not given? -> use the first language item with some text
-        if ($topic == null || strlen($topic) == 0) {
-            if (isset($data['params']) && is_array($data['params'])) {
+        if ($topic == null || \strlen($topic) == 0) {
+            if (isset($data['params']) && \is_array($data['params'])) {
                 foreach ($data['params'] as $language) {
-                    if (strlen($language) > 0) {
+                    if (\strlen($language) > 0) {
                         $topic = $language;
                         break;
                     }
@@ -202,7 +242,7 @@ class CwmtopicTable extends Table
 
         // If still empty: use id
         // todo: For new items, this is always '0'. Next primary key would be nice...
-        if ($topic == null || strlen($topic) == 0) {
+        if ($topic == null || \strlen($topic) == 0) {
             $topic = $recordId;
         }
 

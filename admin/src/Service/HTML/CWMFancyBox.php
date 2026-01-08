@@ -27,7 +27,7 @@ class CWMFancyBox
      * @var    array  Array containing information for loaded files
      * @since  9.0.0
      */
-    protected static array $loaded = array();
+    protected static array $loaded = [];
 
     /**
      * Method to load the fancybox JavaScript framework into the document head
@@ -52,7 +52,7 @@ class CWMFancyBox
         HTMLHelper::script('media/com_proclaim/js/fancybox.js');
 
         if ($mouseweel) {
-//            HTMLHelper::script('media/com_proclaim/js/jquery.mousewheel.pack.min.js');
+            //            HTMLHelper::script('media/com_proclaim/js/jquery.mousewheel.pack.min.js');
         }
 
         self::loadCss($option);

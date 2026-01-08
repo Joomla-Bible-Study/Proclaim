@@ -15,12 +15,12 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Html\HtmlHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
-HtmlHelper::_('behavior.framework', true);
-HtmlHelper::_('formbehavior.chosen', 'select');
+HTMLHelper::_('behavior.framework', true);
+HTMLHelper::_('formbehavior.chosen', 'select');
 
 $input     = Factory::getApplication()->getInput();
 $function  = $input->getCmd('function', 'jSelectServer');
@@ -42,7 +42,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
         <tr>
             <th>
                 <?php
-                echo HtmlHelper::_(
+                echo HTMLHelper::_(
                     'searchtools.sort',
                     'JBS_SVR_SERVER_NAME',
                     'mediafile.name',
@@ -88,5 +88,5 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
     <input type="hidden" name="filter_order_Dir" value="<?php
     echo $listDirn; ?>"/>
     <?php
-    echo HtmlHelper::_('form.token'); ?>
+    echo HTMLHelper::_('form.token'); ?>
 </form>

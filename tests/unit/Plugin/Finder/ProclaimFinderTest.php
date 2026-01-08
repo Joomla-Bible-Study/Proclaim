@@ -40,7 +40,7 @@ class ProclaimFinderTest extends ProclaimTestCase
     public function testPluginHasCorrectNamespace(): void
     {
         $filePath = JPATH_ROOT . '/plugins/finder/proclaim/src/Extension/Proclaim.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString(
             'namespace CWM\Plugin\Finder\Proclaim\Extension;',
@@ -56,7 +56,7 @@ class ProclaimFinderTest extends ProclaimTestCase
     public function testPluginExtendsAdapter(): void
     {
         $filePath = JPATH_ROOT . '/plugins/finder/proclaim/src/Extension/Proclaim.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('extends Adapter', $content);
         $this->assertStringContainsString(
@@ -73,7 +73,7 @@ class ProclaimFinderTest extends ProclaimTestCase
     public function testPluginImplementsSubscriberInterface(): void
     {
         $filePath = JPATH_ROOT . '/plugins/finder/proclaim/src/Extension/Proclaim.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('implements SubscriberInterface', $content);
         $this->assertStringContainsString(
@@ -90,7 +90,7 @@ class ProclaimFinderTest extends ProclaimTestCase
     public function testPluginDefinesContextProperty(): void
     {
         $filePath = JPATH_ROOT . '/plugins/finder/proclaim/src/Extension/Proclaim.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('$context = \'Proclaim\'', $content);
     }
@@ -103,7 +103,7 @@ class ProclaimFinderTest extends ProclaimTestCase
     public function testPluginDefinesExtensionProperty(): void
     {
         $filePath = JPATH_ROOT . '/plugins/finder/proclaim/src/Extension/Proclaim.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('$extension = \'com_proclaim\'', $content);
     }
@@ -116,7 +116,7 @@ class ProclaimFinderTest extends ProclaimTestCase
     public function testPluginDefinesTableProperty(): void
     {
         $filePath = JPATH_ROOT . '/plugins/finder/proclaim/src/Extension/Proclaim.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('$table = \'#__bsms_studies\'', $content);
     }
@@ -129,7 +129,7 @@ class ProclaimFinderTest extends ProclaimTestCase
     public function testPluginHasGetSubscribedEventsMethod(): void
     {
         $filePath = JPATH_ROOT . '/plugins/finder/proclaim/src/Extension/Proclaim.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('public static function getSubscribedEvents()', $content);
     }
@@ -142,7 +142,7 @@ class ProclaimFinderTest extends ProclaimTestCase
     public function testPluginHasIndexMethod(): void
     {
         $filePath = JPATH_ROOT . '/plugins/finder/proclaim/src/Extension/Proclaim.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('protected function index(Result $item)', $content);
     }
@@ -155,7 +155,7 @@ class ProclaimFinderTest extends ProclaimTestCase
     public function testPluginHasGetListQueryMethod(): void
     {
         $filePath = JPATH_ROOT . '/plugins/finder/proclaim/src/Extension/Proclaim.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('protected function getListQuery(', $content);
     }
@@ -168,7 +168,7 @@ class ProclaimFinderTest extends ProclaimTestCase
     public function testPluginHasGetStateQueryMethod(): void
     {
         $filePath = JPATH_ROOT . '/plugins/finder/proclaim/src/Extension/Proclaim.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('protected function getStateQuery()', $content);
     }
@@ -181,7 +181,7 @@ class ProclaimFinderTest extends ProclaimTestCase
     public function testPluginSubscribesToFinderEvents(): void
     {
         $filePath = JPATH_ROOT . '/plugins/finder/proclaim/src/Extension/Proclaim.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('onFinderAfterDelete', $content);
         $this->assertStringContainsString('onFinderAfterSave', $content);
@@ -197,7 +197,7 @@ class ProclaimFinderTest extends ProclaimTestCase
     public function testPluginUsesCwmhelperroute(): void
     {
         $filePath = JPATH_ROOT . '/plugins/finder/proclaim/src/Extension/Proclaim.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('Cwmhelperroute::getArticleRoute', $content);
     }

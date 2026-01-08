@@ -18,7 +18,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Html\HTMLHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
 
 $style = 'body { background-color:' . $this->params->get('popupbackground', 'black') . ' !important; padding:0 !important;}
@@ -44,7 +44,7 @@ $Cwmlisting = new Cwmlisting();
         $this->player === 2 || $this->player === 3 || $this->params->get('player') === "3" || $this->params->get('player') === "2"
     ) {
         $mediaCode = $this->getMedia->getAVmediacode($this->media->mediacode, $this->media);
-        echo HtmlHelper::_('content.prepare', $mediaCode);
+        echo HTMLHelper::_('content.prepare', $mediaCode);
     }
     //We now use HTML audio player for playing mp3 files.
     if ($this->player === 1 || $this->player === 7 || $this->params->get('player') === "1") {

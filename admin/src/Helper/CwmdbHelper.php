@@ -17,13 +17,12 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Model\CwmadminModel;
-use Exception;
 use Joomla\CMS\Factory;
-use JoomlaFilesystem\Folder;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\Database\DatabaseInterface;
+use JoomlaFilesystem\Folder;
 
 /**
  * Database Helper class for version 7.1.0
@@ -86,7 +85,7 @@ class CwmdbHelper
      *
      * @return bool
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.0
      */
     public static function alterDB(array $tables, ?string $from = null): bool
@@ -205,7 +204,7 @@ class CwmdbHelper
         $fields = $db->getTableColumns($table, 'false');
 
         if ($fields) {
-            if (array_key_exists($field, $fields) === true) {
+            if (\array_key_exists($field, $fields) === true) {
                 return true;
             }
         }
@@ -222,7 +221,7 @@ class CwmdbHelper
      *
      * @return bool true if success, or error string if failed
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.0
      */
     public static function performDB($query, ?string $from = null, ?int $limit = null): bool
@@ -256,7 +255,7 @@ class CwmdbHelper
      *
      * @return boolean
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public static function checkDB($table, $field): bool
@@ -286,14 +285,14 @@ class CwmdbHelper
         $db        = Factory::getContainer()->get('DatabaseDriver');
         $tables    = $db->getTableList();
         $prefix    = $db->getPrefix();
-        $prelength = strlen($prefix);
+        $prelength = \strlen($prefix);
         $bsms      = 'bsms_';
-        $objects   = array();
+        $objects   = [];
 
         foreach ($tables as $table) {
             if (str_contains($table, $prefix) && str_contains($table, $bsms)) {
                 $table     = substr_replace($table, '#__', 0, $prelength);
-                $objects[] = array('name' => $table);
+                $objects[] = ['name' => $table];
             }
         }
 
@@ -309,7 +308,7 @@ class CwmdbHelper
      */
     public static function getInstallState(): bool
     {
-        if (!is_bool(self::$install_state)) {
+        if (!\is_bool(self::$install_state)) {
             $db = Factory::getContainer()->get('DatabaseDriver');
 
             // Check if JBSM can be found from the database
@@ -334,7 +333,7 @@ class CwmdbHelper
      *
      * @return bool
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.1.0
      */
     public static function fixupcss(string $filename, bool $parent, string $newcss, ?int $id = null)
@@ -358,7 +357,7 @@ class CwmdbHelper
 
         // Now the arrays of changes that need to be done.
 
-        $oldlines = array(
+        $oldlines = [
             ".bsm_teachertable_list",
             "#bslisttable",
             "#bslisttable",
@@ -366,9 +365,9 @@ class CwmdbHelper
             "#landing_separator",
             "#landing_item",
             "#landing_title",
-            "#landinglist"
-        );
-        $newlines = array(
+            "#landinglist",
+        ];
+        $newlines = [
             "#bsm_teachertable_list",
             ".bslisttable",
             ".bslisttable",
@@ -376,8 +375,8 @@ class CwmdbHelper
             ".landing_separator",
             ".landing_item",
             ".landing_title",
-            ".landinglist"
-        );
+            ".landinglist",
+        ];
         $oldcss   = (string)str_replace($oldlines, $newlines, $oldcss);
 
         // Now see if we are adding new css to the db css
@@ -425,7 +424,7 @@ class CwmdbHelper
      *
      * @return bool
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @since 7.0
      */
@@ -444,7 +443,7 @@ class CwmdbHelper
 
             // This is a Joomla bug for currentAssetId being missing in table.php. When fixed in Joomla should be removed
             @$table->store();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new \RuntimeException('Caught exception: ' . $e->getMessage(), 500);
         }
 
@@ -458,7 +457,7 @@ class CwmdbHelper
      *
      * @return bool|int
      *
-     * @throws Exception
+     * @throws \Exception
      * @since  7.0
      */
     public static function resetdb($install = false): bool|int
@@ -494,7 +493,7 @@ class CwmdbHelper
             // Create an array of queries from the sql file
             $queries = $db->splitSql($buffer);
 
-            if (count($queries) === 0) {
+            if (\count($queries) === 0) {
                 // No queries to process
                 return 0;
             }
@@ -534,7 +533,7 @@ class CwmdbHelper
      *
      * @return  void
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   8.0.0
      *
      */
@@ -552,7 +551,7 @@ class CwmdbHelper
             $query->select('id, topic_id')->from('#__bsms_studytopics')->where('study_id = ' . $result->id);
             $db->setQuery($query);
             $resulta = $db->loadObjectList();
-            $c       = count($resulta);
+            $c       = \count($resulta);
 
             if ($resulta && $c > 1) {
                 $t = 1;
@@ -566,7 +565,7 @@ class CwmdbHelper
                         ->order('id desc');
                     $db->setQuery($query);
                     $results = $db->loadObjectList();
-                    $records = count($results);
+                    $records = \count($results);
 
                     if ($records > 1) {
                         foreach ($results as $id) {

@@ -105,7 +105,7 @@ class ProclaimNomenuRules implements RulesInterface
             // Standard view processing
             $vars['view'] = $viewName;
 
-            if (isset($view->key) && isset($segments[0])) {
+            if (isset($view->key, $segments[0])) {
                 if (\is_callable([$this->router, 'get' . ucfirst($view->name) . 'Id'])) {
                     $input = $this->router->app->getInput();
 
@@ -203,7 +203,7 @@ class ProclaimNomenuRules implements RulesInterface
 
                 // Use parent view name if available for cleaner URLs
                 // e.g., /cwmsermons/sermon-alias instead of /cwmsermon/sermon-alias
-                if (isset($view->parent) && isset($view->parent->name)) {
+                if (isset($view->parent, $view->parent->name)) {
                     $segments[] = $view->parent->name;
                 } else {
                     $segments[] = $query['view'];

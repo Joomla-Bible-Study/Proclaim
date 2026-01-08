@@ -167,7 +167,7 @@ class HtmlView extends BaseHtmlView
         // Add a batch button
         if ($user->authorise('core.edit')) {
             ToolbarHelper::divider();
-            HtmlHelper::_('bootstrap.modal', 'collapseModal');
+            HTMLHelper::_('bootstrap.modal', 'collapseModal');
 
             $title = Text::_('JBS_CMN_BATCH_LABLE');
             $dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
@@ -186,10 +186,10 @@ class HtmlView extends BaseHtmlView
      */
     protected function getSortFields(): array
     {
-        return array(
+        return [
             'servers.server_name' => Text::_('JGRID_HEADING_ORDERING'),
             'servers.published'   => Text::_('JSTATUS'),
-            'servers.id'          => Text::_('JGRID_HEADING_ID')
-        );
+            'servers.id'          => Text::_('JGRID_HEADING_ID'),
+        ];
     }
 }

@@ -18,7 +18,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
-HtmlHelper::_('behavior.keepalive');
+HTMLHelper::_('behavior.keepalive');
 ?>
 
 <?php
@@ -68,7 +68,7 @@ switch ($this->item->params->get('link_comments', 0)) {
                 <?php
             } else {
                 foreach ($this->comments as $comment) {
-                    $comment_date_display = HtmlHelper::_('date', $comment->comment_date, Text::_('DATE_FORMAT_LC3'));
+                    $comment_date_display = HTMLHelper::_('date', $comment->comment_date, Text::_('DATE_FORMAT_LC3'));
                     ?>
                     <div class="row-fluid">
                         <div class="col-lg-6"><strong><?php

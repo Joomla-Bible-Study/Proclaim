@@ -11,8 +11,8 @@
 
 namespace CWM\Component\Proclaim\Tests\Admin\Helper;
 
-use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
+use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 
 /**
  * Test class for CwmproclaimHelper
@@ -200,7 +200,7 @@ class CwmproclaimHelperTest extends ProclaimTestCase
      */
     public function testHalfarrayMethod(): void
     {
-        $array = [1, 2, 3, 4, 5, 6];
+        $array  = [1, 2, 3, 4, 5, 6];
         $result = CwmproclaimHelper::halfarray($array);
 
         $this->assertIsObject($result);
@@ -215,7 +215,7 @@ class CwmproclaimHelperTest extends ProclaimTestCase
      */
     public function testHalfarrayWithOddCount(): void
     {
-        $array = [1, 2, 3, 4, 5];
+        $array  = [1, 2, 3, 4, 5];
         $result = CwmproclaimHelper::halfarray($array);
 
         $this->assertEquals(2, $result->half);

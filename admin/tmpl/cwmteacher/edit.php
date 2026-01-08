@@ -16,6 +16,7 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
@@ -376,6 +377,17 @@ echo Route::_('index.php?option=com_proclaim&layout=' . $layout . $tmpl . '&id='
                     <?php
                     echo $this->form->getInput('linklabel3'); ?>
                 </div>
+            </div>
+        </div>
+        <?php
+        echo HTMLHelper::_('uitab.endTab'); ?>
+
+        <?php
+        echo HTMLHelper::_('uitab.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>
+        <div class="row">
+            <div class="col-lg-12">
+                <?php
+                echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
             </div>
         </div>
         <?php

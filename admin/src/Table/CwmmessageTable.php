@@ -348,9 +348,45 @@ class CwmmessageTable extends Table
      */
     public $publish_down = '0000-00-00 00:00:00';
 
-    public $modified;
+    /**
+     * Created date
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public $created = null;
 
-    public $modified_by;
+    /**
+     * Created by user ID
+     *
+     * @var int
+     * @since 10.1.0
+     */
+    public $created_by = null;
+
+    /**
+     * Created by alias
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public $created_by_alias = '';
+
+    /**
+     * Modified date
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public $modified = null;
+
+    /**
+     * Modified by user ID
+     *
+     * @var int
+     * @since 10.1.0
+     */
+    public $modified_by = null;
 
     public $asset_id;
 
@@ -402,14 +438,14 @@ class CwmmessageTable extends Table
      */
     public function bind($array, $ignore = ''): bool
     {
-        if (array_key_exists('params', $array) && is_array($array['params'])) {
+        if (\array_key_exists('params', $array) && \is_array($array['params'])) {
             $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = $registry->toString();
         }
 
         // Bind the rules.
-        if (isset($array['rules']) && is_array($array['rules'])) {
+        if (isset($array['rules']) && \is_array($array['rules'])) {
             $rules = new Rules($array['rules']);
             $this->setRules($rules);
         }

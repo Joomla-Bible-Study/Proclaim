@@ -70,7 +70,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             ->getHelper('ProclaimHelper')
             ->getLatest($data['params'], $this->getApplication());
 
-        if ($data['params']->get('useexpert_module') > 0 || is_string($data['params']->get('moduletemplate'))) {
+        if ($data['params']->get('useexpert_module') > 0 || \is_string($data['params']->get('moduletemplate'))) {
             foreach ($data['list'] as $item) {
                 try {
                     $renderedPage = $pageBuilder->buildPage($item, $data['params'], $data['cwmtemplate']);

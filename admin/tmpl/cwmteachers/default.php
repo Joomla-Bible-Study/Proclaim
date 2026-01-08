@@ -40,7 +40,7 @@ $columns    = 9;
 
 if ($saveOrder) {
     $saveOrderingUrl = 'index.php?option=com_proclaim&task=cwmteachers.saveOrderAjax&tmpl=component';
-    HtmlHelper::_('sortablelist.sortable', 'teachers', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+    HTMLHelper::_('sortablelist.sortable', 'teachers', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 
 ?>
@@ -80,7 +80,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                             </th>
                             <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
-                                echo HtmlHelper::_(
+                                echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'JBS_CMN_PUBLISHED',
                                     'cwmteacher.published',
@@ -90,7 +90,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                             </th>
                             <th scope="col" style="min-width:100px">
                                 <?php
-                                                                echo HtmlHelper::_(
+                                                                echo HTMLHelper::_(
                                                                     'searchtools.sort',
                                                                     'JBS_CMN_TEACHER',
                                                                     'cwmteacher.teachername',
@@ -100,7 +100,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                             </th>
                             <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
-                                                                echo HtmlHelper::_(
+                                                                echo HTMLHelper::_(
                                                                     'searchtools.sort',
                                                                     'JGRID_HEADING_ACCESS',
                                                                     'cwmteacher.access',
@@ -132,7 +132,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                             </th>
                             <th scope="col" class="w-1 text-center d-none d-lg-table-cell">
                                 <?php
-                                echo HtmlHelper::_(
+                                echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'JGRID_HEADING_ID',
                                     'cwmteacher.id',
@@ -162,7 +162,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                             echo $i % 2; ?>">
                                 <td class="text-center">
                                     <?php
-                                    echo HtmlHelper::_('grid.id', $i, $item->id); ?>
+                                    echo HTMLHelper::_('grid.id', $i, $item->id); ?>
                                 </td>
                                 <td class="text-center d-none d-md-table-cell">
                                     <?php
@@ -277,7 +277,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                 <input type="hidden" name="task" value=""/>
                 <input type="hidden" name="boxchecked" value="0"/>
                 <?php
-                echo HtmlHelper::_('form.token'); ?>
+                echo HTMLHelper::_('form.token'); ?>
             </div>
         </div>
     </div>

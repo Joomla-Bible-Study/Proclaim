@@ -16,9 +16,9 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Image\Image;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
-use Joomla\CMS\Image\Image;
 
 /**
  * Thumbnail helper class
@@ -76,7 +76,7 @@ class Cwmthumbnail
         $filename = str_replace('original_', '', basename($path));
 
         // Delete existing thumbnail
-        $old_thumbs = Folder::files(dirname($path), 'thumb_', true, true);
+        $old_thumbs = Folder::files(\dirname($path), 'thumb_', true, true);
 
         foreach ($old_thumbs as $thumb) {
             File::delete($thumb);
@@ -85,7 +85,7 @@ class Cwmthumbnail
         // Create new thumbnail
         $image     = new Image($path);
         $thumbnail = $image->resize($new_size, $new_size);
-        $thumbnail->toFile(dirname($path) . '/thumb_' . $filename, IMAGETYPE_PNG);
+        $thumbnail->toFile(\dirname($path) . '/thumb_' . $filename, IMAGETYPE_PNG);
     }
 
     /**

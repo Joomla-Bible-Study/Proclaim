@@ -137,7 +137,7 @@ class HtmlView extends BaseHtmlView
         $this->template = $state->get('template');
 
         // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
+        if (\count($errors = $this->get('Errors'))) {
             Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'worning');
         }
 
@@ -147,7 +147,7 @@ class HtmlView extends BaseHtmlView
 
         $images = new Cwmimages();
 
-        if ($params->get('useexpert_teacherdetail') > 0 || is_string($params->get('teacherstemplate'))) {
+        if ($params->get('useexpert_teacherdetail') > 0 || \is_string($params->get('teacherstemplate'))) {
             $pagebuilder = new Cwmpagebuilder();
 
             foreach ($items as $i => $item) {

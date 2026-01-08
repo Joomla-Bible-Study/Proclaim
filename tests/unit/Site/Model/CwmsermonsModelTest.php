@@ -40,7 +40,7 @@ class CwmsermonsModelTest extends ProclaimTestCase
     {
         parent::setUp();
 
-        $this->classFile = JPATH_ROOT . '/site/src/Model/CwmsermonsModel.php';
+        $this->classFile    = JPATH_ROOT . '/site/src/Model/CwmsermonsModel.php';
         $this->classContent = file_get_contents($this->classFile);
     }
 
