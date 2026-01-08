@@ -97,8 +97,18 @@ class HtmlView extends BaseHtmlView
         $this->canDo        = ContentHelper::getActions('com_proclaim', 'mediafile', (int)$this->item->id);
         $this->admin_params = $this->state->get('administrator');
 
-        // Wrap the media form with server params for addon default value handling (PHP 8.2+ compatible)
+        // Get server params for default values
         $s_params = $this->state->get('s_params', []);
+
+        // For new items, bind server defaults to the media form before rendering
+        $isNew = empty($this->item->id);
+
+        if ($isNew && $media_form && !empty($s_params)) {
+            // Bind server defaults to form - this sets field values before rendering
+            $media_form->bind(['params' => $s_params]);
+        }
+
+        // Wrap the media form with server params for addon default value handling (PHP 8.2+ compatible)
         $this->media_form = new class ($media_form, $s_params) {
             private $form;
             public array $s_params;
