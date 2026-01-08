@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" method="upgrade" client="site">
+    <name>mod_proclaim_youtube</name>
+    <author>CWM Team</author>
+    <authorEmail>info@christianwebministries.org</authorEmail>
+    <authorUrl>www.christianwebministries.org</authorUrl>
+    <copyright>(C) 2007 Proclaim All rights reserved.</copyright>
+    <version>10.0.1</version>
+    <creationDate>Jan 2026</creationDate>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <description>MOD_PROCLAIM_YOUTUBE_DESCRIPTION</description>
+    <namespace path="src">CWM\Module\ProclaimYoutube</namespace>
+    <files>
+        <folder module="mod_proclaim_youtube">services</folder>
+        <folder>tmpl</folder>
+        <folder>language</folder>
+        <folder>src</folder>
+    </files>
+    <languages folder="language">
+        <language tag="en-GB">en-GB/en-GB.mod_proclaim_youtube.ini</language>
+        <language tag="en-GB">en-GB/en-GB.mod_proclaim_youtube.sys.ini</language>
+    </languages>
+    <config>
+        <fields name="params" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+            <fieldset name="basic" label="JGLOBAL_FIELDSET_BASIC">
+                <field name="dummy" type="LoadLanguageFile" default=""/>
+
+                <field name="server_id"
+                       type="sql"
+                       label="MOD_PROCLAIM_YOUTUBE_SERVER"
+                       description="MOD_PROCLAIM_YOUTUBE_SERVER_DESC"
+                       default=""
+                       required="true"
+                       class="form-select"
+                       query="SELECT id, server_name FROM #__bsms_servers WHERE published = 1 AND type = 'youtube' ORDER BY server_name ASC"
+                       key_field="id"
+                       value_field="server_name">
+                    <option value="">MOD_PROCLAIM_YOUTUBE_SELECT_SERVER</option>
+                </field>
+
+                <field name="priority_mode"
+                       type="list"
+                       label="MOD_PROCLAIM_YOUTUBE_PRIORITY"
+                       description="MOD_PROCLAIM_YOUTUBE_PRIORITY_DESC"
+                       default="live_first"
+                       class="form-select">
+                    <option value="live_first">MOD_PROCLAIM_YOUTUBE_LIVE_FIRST</option>
+                    <option value="latest_only">MOD_PROCLAIM_YOUTUBE_LATEST_ONLY</option>
+                    <option value="live_only">MOD_PROCLAIM_YOUTUBE_LIVE_ONLY</option>
+                </field>
+            </fieldset>
+
+            <fieldset name="display" label="MOD_PROCLAIM_YOUTUBE_DISPLAY_OPTIONS">
+                <field name="player_width"
+                       type="text"
+                       label="MOD_PROCLAIM_YOUTUBE_WIDTH"
+                       description="MOD_PROCLAIM_YOUTUBE_WIDTH_DESC"
+                       default="560"
+                       filter="integer"/>
+
+                <field name="player_height"
+                       type="text"
+                       label="MOD_PROCLAIM_YOUTUBE_HEIGHT"
+                       description="MOD_PROCLAIM_YOUTUBE_HEIGHT_DESC"
+                       default="315"
+                       filter="integer"/>
+
+                <field name="responsive"
+                       type="radio"
+                       class="btn-group btn-group-yesno"
+                       default="1"
+                       label="MOD_PROCLAIM_YOUTUBE_RESPONSIVE"
+                       description="MOD_PROCLAIM_YOUTUBE_RESPONSIVE_DESC">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
+                <field name="show_title"
+                       type="radio"
+                       class="btn-group btn-group-yesno"
+                       default="1"
+                       label="MOD_PROCLAIM_YOUTUBE_SHOW_TITLE"
+                       description="MOD_PROCLAIM_YOUTUBE_SHOW_TITLE_DESC">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
+                <field name="show_description"
+                       type="radio"
+                       class="btn-group btn-group-yesno"
+                       default="0"
+                       label="MOD_PROCLAIM_YOUTUBE_SHOW_DESC"
+                       description="MOD_PROCLAIM_YOUTUBE_SHOW_DESC_DESC">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
+                <field name="desc_length"
+                       type="text"
+                       label="MOD_PROCLAIM_YOUTUBE_DESC_LENGTH"
+                       description="MOD_PROCLAIM_YOUTUBE_DESC_LENGTH_DESC"
+                       default="200"
+                       filter="integer"
+                       showon="show_description:1"/>
+
+                <field name="show_live_badge"
+                       type="radio"
+                       class="btn-group btn-group-yesno"
+                       default="1"
+                       label="MOD_PROCLAIM_YOUTUBE_SHOW_LIVE_BADGE"
+                       description="MOD_PROCLAIM_YOUTUBE_SHOW_LIVE_BADGE_DESC">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
+                <field name="autoplay_live"
+                       type="radio"
+                       class="btn-group btn-group-yesno"
+                       default="0"
+                       label="MOD_PROCLAIM_YOUTUBE_AUTOPLAY_LIVE"
+                       description="MOD_PROCLAIM_YOUTUBE_AUTOPLAY_LIVE_DESC">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
+                <field name="no_video_message"
+                       type="text"
+                       label="MOD_PROCLAIM_YOUTUBE_NO_VIDEO_MSG"
+                       description="MOD_PROCLAIM_YOUTUBE_NO_VIDEO_MSG_DESC"
+                       default=""
+                       size="50"/>
+            </fieldset>
+
+            <fieldset name="advanced" label="JGLOBAL_FIELDSET_ADVANCED">
+                <field name="layout"
+                       type="modulelayout"
+                       extension="mod_proclaim_youtube"
+                       class="form-select"
+                       label="JFIELD_ALT_LAYOUT_LABEL"
+                       description="JFIELD_ALT_MODULE_LAYOUT_DESC"/>
+
+                <field name="cache"
+                       type="list"
+                       default="1"
+                       class="form-select"
+                       label="COM_MODULES_FIELD_CACHING_LABEL">
+                    <option value="1">JGLOBAL_USE_GLOBAL</option>
+                    <option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+                </field>
+
+                <field name="cache_time"
+                       type="text"
+                       default="300"
+                       label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
+                       description="MOD_PROCLAIM_YOUTUBE_CACHE_TIME_DESC"
+                       filter="integer"/>
+            </fieldset>
+        </fields>
+    </config>
+</extension>
