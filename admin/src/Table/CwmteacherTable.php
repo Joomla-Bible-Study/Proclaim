@@ -43,13 +43,13 @@ class CwmteacherTable extends Table
      *
      * @since 9.0.0
      */
-    public string $alias;
+    public string $alias = '';
 
     /** @var string Ordering
      *
      * @since 9.0.0
      */
-    public string $ordering;
+    public string $ordering = '';
 
     /**
      * @var int

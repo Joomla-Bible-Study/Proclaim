@@ -83,13 +83,21 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         // Calculate aspect ratio for responsive
         $aspectRatio = ($playerWidth > 0) ? ($playerHeight / $playerWidth * 100) : 56.25;
 
-        $data['video']        = $video;
-        $data['embedUrl']     = $embedUrl;
-        $data['responsive']   = $responsive;
-        $data['playerWidth']  = $playerWidth;
-        $data['playerHeight'] = $playerHeight;
-        $data['aspectRatio']  = $aspectRatio;
-        $data['helper']       = $helper;
+        // Try to match video to a Proclaim message
+        $matchedMessage = null;
+
+        if ($video && $data['params']->get('auto_link_message', 1)) {
+            $matchedMessage = $helper->findMatchingMessage($video);
+        }
+
+        $data['video']          = $video;
+        $data['embedUrl']       = $embedUrl;
+        $data['responsive']     = $responsive;
+        $data['playerWidth']    = $playerWidth;
+        $data['playerHeight']   = $playerHeight;
+        $data['aspectRatio']    = $aspectRatio;
+        $data['helper']         = $helper;
+        $data['matchedMessage'] = $matchedMessage;
 
         return $data;
     }

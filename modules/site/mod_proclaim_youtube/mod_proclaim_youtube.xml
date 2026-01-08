@@ -131,6 +131,16 @@
                     <option value="0">JNO</option>
                 </field>
 
+                <field name="auto_link_message"
+                       type="radio"
+                       class="btn-group btn-group-yesno"
+                       default="1"
+                       label="MOD_PROCLAIM_YOUTUBE_AUTO_LINK"
+                       description="MOD_PROCLAIM_YOUTUBE_AUTO_LINK_DESC">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
                 <field name="autoplay_live"
                        type="radio"
                        class="btn-group btn-group-yesno"

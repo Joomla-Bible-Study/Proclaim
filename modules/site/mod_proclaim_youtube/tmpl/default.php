@@ -14,7 +14,9 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Site\Helper\CwmrouteHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 
 /** @var array|null $video */
 /** @var string|null $embedUrl */
@@ -22,6 +24,7 @@ use Joomla\CMS\Language\Text;
 /** @var int $playerWidth */
 /** @var int $playerHeight */
 /** @var float $aspectRatio */
+/** @var object|null $matchedMessage */
 /** @var \Joomla\Registry\Registry $params */
 ?>
 
@@ -83,6 +86,23 @@ use Joomla\CMS\Language\Text;
         <?php if ($showDescription && !empty($video['truncatedDescription'])): ?>
             <div class="mod-proclaim-youtube__description mt-2">
                 <p><?php echo htmlspecialchars($video['truncatedDescription'], ENT_QUOTES, 'UTF-8'); ?></p>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!empty($matchedMessage) && !empty($matchedMessage->id)): ?>
+            <div class="mod-proclaim-youtube__message-link mt-3">
+                <?php
+                $messageRoute = CwmrouteHelper::getMessageRoute((int) $matchedMessage->id);
+                ?>
+                <a href="<?php echo Route::_($messageRoute); ?>" class="btn btn-outline-primary btn-sm">
+                    <span class="icon-book me-1" aria-hidden="true"></span>
+                    <?php echo Text::_('MOD_PROCLAIM_YOUTUBE_VIEW_MESSAGE'); ?>
+                </a>
+                <?php if (!empty($matchedMessage->teachername)): ?>
+                    <small class="text-muted ms-2">
+                        <?php echo Text::sprintf('MOD_PROCLAIM_YOUTUBE_BY_TEACHER', htmlspecialchars($matchedMessage->teachername, ENT_QUOTES, 'UTF-8')); ?>
+                    </small>
+                <?php endif; ?>
             </div>
         <?php endif; ?>
 

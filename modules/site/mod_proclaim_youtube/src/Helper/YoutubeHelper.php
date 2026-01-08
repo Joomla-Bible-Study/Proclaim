@@ -282,4 +282,36 @@ class YoutubeHelper implements DatabaseAwareInterface
 
         return $truncated . '...';
     }
+
+    /**
+     * Find a matching Proclaim message for a YouTube video
+     *
+     * Parses the video title to extract message title and teacher name,
+     * then searches the Proclaim database for a matching message.
+     *
+     * @param   array  $video  Video data array with 'title' key
+     *
+     * @return  object|null  Matched message object or null if no match found
+     *
+     * @since   10.0.0
+     */
+    public function findMatchingMessage(array $video): ?object
+    {
+        if (empty($video['title'])) {
+            return null;
+        }
+
+        // Use the admin helper for matching logic
+        if (!class_exists('CWM\\Component\\Proclaim\\Administrator\\Helper\\CwmyoutubeHelper')) {
+            $helperFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Helper/CwmyoutubeHelper.php';
+
+            if (file_exists($helperFile)) {
+                require_once $helperFile;
+            } else {
+                return null;
+            }
+        }
+
+        return \CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeHelper::matchVideoToMessage($video['title']);
+    }
 }
