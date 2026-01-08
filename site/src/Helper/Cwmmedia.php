@@ -125,7 +125,7 @@ class Cwmmedia
             $mediaImage = (string)$imageparams->get('media_image');
             $image      = $this->useJImage(
                 $mediaImage,
-                $media->params->get('media_button_text', $params->get('download_button_text', 'Audio'))
+                $imageparams->get('media_button_text', $params->get('download_button_text', 'Audio'))
             );
         }
 
