@@ -275,11 +275,6 @@
             </field>
             <field name="studies_element" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-            <field name="use_headers_list" type="list" default="1"
-                   label="JBS_TPL_LISTITEMS_USE_HEADERS_LIST" description="JBS_TPL_LISTITEMS_USE_HEADERS_LIST_DESC">
-                <option value="0">JBS_TPL_NO_HEADER_ROW</option>
-                <option value="1">JBS_TPL_USE_HEADER_ROW</option>
-            </field>
             <field name="list_intro" type="editor" height="300" width="500"
                    label="JBS_TPL_LISTITEMS_LIST_INTRO" filter="raw"
                    buttons="true"/>
@@ -489,8 +484,6 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="teacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="teacherlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                   description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="teacher-titlerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_TITLE"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="teacher-titlecol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -885,8 +878,6 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="tsteacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="tsteacherlinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                   description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="tsteacher-titlerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_TITLE"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="tsteacher-titlecol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -1298,8 +1289,6 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="steacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="steacherlinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                   description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="steacher-titlerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_TITLE"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="steacher-titlecol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -1419,8 +1408,6 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="sdteacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="sdteacherlinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                   description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="sdteacher-titlerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_TITLE"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="sdteacher-titlecol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -1684,8 +1671,6 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="dteacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
-            <field name="dteacherlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                   description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="dteacher-titlerow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_TITLE"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="dteacher-titlecol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
