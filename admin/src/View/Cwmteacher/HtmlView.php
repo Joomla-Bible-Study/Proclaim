@@ -84,13 +84,13 @@ class HtmlView extends BaseHtmlView
      */
     public function display($tpl = null)
     {
-        $this->form = $this->get("Form");
-        $this->item = $this->get("Item");
+        $this->form  = $this->get("Form");
+        $this->item  = $this->get("Item");
         $this->state = $this->get("State");
         $this->canDo = ContentHelper::getActions('com_proclaim', 'teacher', (int)$this->item->id);
 
         // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
+        if (\count($errors = $this->get('Errors'))) {
             throw new \RuntimeException(implode("\n", $errors), 500);
         }
 

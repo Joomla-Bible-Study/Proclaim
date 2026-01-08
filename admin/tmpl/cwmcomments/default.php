@@ -35,7 +35,7 @@ $columns    = 9;
 
 if ($saveOrder) {
     $saveOrderingUrl = 'index.php?option=com_proclaim&task=cwmcomments.saveOrderAjax&tmpl=component';
-    HtmlHelper::_('sortablelist.sortable', 'comments', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+    HTMLHelper::_('sortablelist.sortable', 'comments', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */

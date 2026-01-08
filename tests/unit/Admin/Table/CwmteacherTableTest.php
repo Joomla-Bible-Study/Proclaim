@@ -75,7 +75,7 @@ class CwmteacherTableTest extends ProclaimTestCase
     public function testTableClassHasCorrectNamespace(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmteacherTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString(
             'namespace CWM\Component\Proclaim\Administrator\Table;',
@@ -92,7 +92,7 @@ class CwmteacherTableTest extends ProclaimTestCase
     public function testTableClassExtendsJoomlaTable(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmteacherTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('extends Table', $content);
         $this->assertStringContainsString('use Joomla\CMS\Table\Table;', $content);
@@ -107,7 +107,7 @@ class CwmteacherTableTest extends ProclaimTestCase
     public function testTableHasBindMethod(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmteacherTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('public function bind($src, $ignore = \'\')', $content);
     }
@@ -121,7 +121,7 @@ class CwmteacherTableTest extends ProclaimTestCase
     public function testTableHasStoreMethod(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmteacherTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('public function store($updateNulls = false)', $content);
     }
@@ -135,7 +135,7 @@ class CwmteacherTableTest extends ProclaimTestCase
     public function testTableDefinesTeachernameProperty(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmteacherTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('public ?string $teachername = null;', $content);
     }
@@ -149,7 +149,7 @@ class CwmteacherTableTest extends ProclaimTestCase
     public function testTableDefinesAliasProperty(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmteacherTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('public string $alias;', $content);
     }
@@ -163,7 +163,7 @@ class CwmteacherTableTest extends ProclaimTestCase
     public function testTableUsesCorrectDatabaseTable(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmteacherTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('#__bsms_teachers', $content);
     }
@@ -177,7 +177,7 @@ class CwmteacherTableTest extends ProclaimTestCase
     public function testTableHasGetAssetNameMethod(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmteacherTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('protected function _getAssetName()', $content);
         $this->assertStringContainsString('com_proclaim.teacher.', $content);
@@ -192,7 +192,7 @@ class CwmteacherTableTest extends ProclaimTestCase
     public function testTableHasGetAssetTitleMethod(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmteacherTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('protected function _getAssetTitle()', $content);
         $this->assertStringContainsString('JBS Teacher:', $content);
@@ -207,7 +207,7 @@ class CwmteacherTableTest extends ProclaimTestCase
     public function testTableProcessesParamsAsRegistry(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmteacherTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('use Joomla\Registry\Registry;', $content);
         $this->assertStringContainsString('$registry = new Registry();', $content);

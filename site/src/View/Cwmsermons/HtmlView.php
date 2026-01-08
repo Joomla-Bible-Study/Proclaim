@@ -204,14 +204,14 @@ class HtmlView extends BaseHtmlView
         if (
             $params->get('useexpert_list') > 0
             || ($params->get('simple_mode') === '1')
-            || (is_string($params->get('sermonstemplate')) === true && $params->get('sermonstemplate') !== '0')
+            || (\is_string($params->get('sermonstemplate')) === true && $params->get('sermonstemplate') !== '0')
         ) {
             $page_builder = new Cwmpagebuilder();
 
             foreach ($items as $iValue) {
                 $item = &$iValue;
 
-                if ($item->access > 1 && !in_array($item->access, $groups, true)) {
+                if ($item->access > 1 && !\in_array($item->access, $groups, true)) {
                     unset($item);
                 } else {
                     $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;

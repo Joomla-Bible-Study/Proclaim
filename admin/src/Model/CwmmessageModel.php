@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use CWM\Component\Proclaim\Administrator\Table\CwmmessageTable;
@@ -638,7 +637,17 @@ class CwmmessageModel extends AdminModel
             $table->alias = ApplicationHelper::stringURLSafe($table->studytitle);
         }
 
+        // Always ensure created date is set (handles empty string from form)
+        if (empty($table->created) || $table->created === '') {
+            $table->created = $date->toSql();
+        }
+
         if (empty($table->id)) {
+            // Set the values for a new record
+            if (empty($table->created_by)) {
+                $table->created_by = $user->get('id');
+            }
+
             // Set ordering to the last item if not set
             if (empty($table->ordering)) {
                 $db    = Factory::getContainer()->get('DatabaseDriver');
@@ -651,7 +660,7 @@ class CwmmessageModel extends AdminModel
                 $table->ordering = $max + 1;
             }
         } else {
-            // Set the values
+            // Set the values for existing records
             $table->modified    = $date->toSql();
             $table->modified_by = $user->get('id');
         }

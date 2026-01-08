@@ -22,7 +22,7 @@ use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Html\HTMLHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
@@ -197,7 +197,7 @@ class HtmlView extends BaseHtmlView
          *  If this is a direct new window, then all we need to do is perform hitPlay and close this window
          */
         if ($close === 1) {
-            echo HtmlHelper::_(
+            echo HTMLHelper::_(
                 'content.prepare',
                 '<script language="javascript" type="text/javascript">window.close();</script>'
             );

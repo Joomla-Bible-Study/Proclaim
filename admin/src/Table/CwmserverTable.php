@@ -82,6 +82,46 @@ class CwmserverTable extends Table
     public $media = null;
 
     /**
+     * Created date
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public $created = null;
+
+    /**
+     * Created by user ID
+     *
+     * @var int
+     * @since 10.1.0
+     */
+    public $created_by = null;
+
+    /**
+     * Created by alias
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public $created_by_alias = '';
+
+    /**
+     * Modified date
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public $modified = null;
+
+    /**
+     * Modified by user ID
+     *
+     * @var int
+     * @since 10.1.0
+     */
+    public $modified_by = null;
+
+    /**
      * Constructor
      *
      * @param   DatabaseDriver  $db  Database connector object
@@ -109,21 +149,21 @@ class CwmserverTable extends Table
     public function bind($array, $ignore = ''): bool
     {
         // Bind the server params
-        if (isset($array['params']) && is_array($array['params'])) {
+        if (isset($array['params']) && \is_array($array['params'])) {
             $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = (string)$registry;
         }
 
         // Bind the media defaults
-        if (isset($array['media']) && is_array($array['media'])) {
+        if (isset($array['media']) && \is_array($array['media'])) {
             $registry = new Registry();
             $registry->loadArray($array['media']);
             $array['media'] = (string)$registry;
         }
 
         // Bind the rules.
-        if (isset($array['rules']) && is_array($array['rules'])) {
+        if (isset($array['rules']) && \is_array($array['rules'])) {
             $rules = new Rules($array['rules']);
             $this->setRules($rules);
         }

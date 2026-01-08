@@ -12,7 +12,6 @@
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Log\Log;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -59,9 +58,10 @@ $language = $app->getLanguage();
 $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, null, true);
 
-if (is_dir(JPATH_ROOT . 'modules/mod_proclaim/')) {
-    $language->load('mod_proclaim', JPATH_ROOT . '/modules/mod_proclaim/', 'en-GB', true);
-    $language->load('moc_proclaim', JPATH_ROOT . '/modules/mod_proclaim/', null, true);
+$modProclaimPath = JPATH_ROOT . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'mod_proclaim';
+if (is_dir($modProclaimPath)) {
+    $language->load('mod_proclaim', $modProclaimPath, 'en-GB', true);
+    $language->load('mod_proclaim', $modProclaimPath, null, true);
 }
 
 // Add to the API to load the core CSS and JS for the component to function properly.

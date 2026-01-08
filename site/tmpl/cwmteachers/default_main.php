@@ -15,7 +15,7 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
-use Joomla\CMS\Html\HtmlHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 $listing = new Cwmlisting();
@@ -42,7 +42,7 @@ $classelement = $listing->createelement($this->params->get('teachers_element'));
     <div class="col-12">
         <?php
         if ($this->params->get('teacher_headercode')) {
-            echo HtmlHelper::_(
+            echo HTMLHelper::_(
                 'content.prepare',
                 $this->params->get('teacher_headercode'),
                 '',

@@ -587,3 +587,8 @@ p.expand {
   position: relative;
   border-radius: 9px;
 }
+
+table span a,
+a:not([class]) {
+    text-decoration: none;
+}

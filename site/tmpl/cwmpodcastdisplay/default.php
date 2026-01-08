@@ -17,13 +17,13 @@
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Html\HTMLHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-HtmlHelper::_('dropdown.init');
-HtmlHelper::_('formbehavior.chosen', 'select');
-HtmlHelper::_('behavior.multiselect');
+HTMLHelper::_('dropdown.init');
+HTMLHelper::_('formbehavior.chosen', 'select');
+HTMLHelper::_('behavior.multiselect');
 
 $app       = Factory::getApplication();
 $user      = $user = Factory::getApplication()->getSession()->get('user');
@@ -98,7 +98,7 @@ $CWMedia = new Cwmmedia();
                     </td>
                     <td>
                         <?php
-                        echo HtmlHelper::Date($item->createdate); ?>
+                        echo HTMLHelper::Date($item->createdate); ?>
                     </td>
                     <td class="row">
                         <a href="javascript:loadVideo('<?php

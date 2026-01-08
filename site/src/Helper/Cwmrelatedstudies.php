@@ -105,8 +105,8 @@ class Cwmrelatedstudies
      */
     public function getStudies(): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $user  = Factory::getApplication()->getIdentity();
+        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $user   = Factory::getApplication()->getIdentity();
         $groups = $user->getAuthorisedViewLevels();
 
         $query = $db->getQuery(true);
@@ -157,7 +157,7 @@ class Cwmrelatedstudies
      */
     public function getRelatedLinks(int $id): string
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db          = Factory::getContainer()->get('DatabaseDriver');
         $this->score = array_unique($this->score);
 
         if (empty($this->score)) {
@@ -189,7 +189,7 @@ class Cwmrelatedstudies
         ];
 
         foreach ($studyrecords as $studyrecord) {
-            $url = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . (int) $studyrecord->id . '&t=' . $templateId);
+            $url   = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . (int) $studyrecord->id . '&t=' . $templateId);
             $title = $studyrecord->studytitle;
 
             if (!empty($studyrecord->bookname)) {
@@ -204,11 +204,11 @@ class Cwmrelatedstudies
             $options,
             'urlList',
             [
-                'list.attr' => 'class="form-select chzn-color-state valid form-control-success" onchange="window.location.href=this.value"',
+                'list.attr'   => 'class="form-select chzn-color-state valid form-control-success" onchange="window.location.href=this.value"',
                 'list.select' => '',
-                'option.key' => 'value',
+                'option.key'  => 'value',
                 'option.text' => 'text',
-                'id' => 'urlList',
+                'id'          => 'urlList',
             ]
         );
 

@@ -95,6 +95,46 @@ class CwmserieTable extends Table
     public $landing_show;
 
     /**
+     * Created date
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public $created = null;
+
+    /**
+     * Created by user ID
+     *
+     * @var int
+     * @since 10.1.0
+     */
+    public $created_by = null;
+
+    /**
+     * Created by alias
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public $created_by_alias = '';
+
+    /**
+     * Modified date
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public $modified = null;
+
+    /**
+     * Modified by user ID
+     *
+     * @var int
+     * @since 10.1.0
+     */
+    public $modified_by = null;
+
+    /**
      * Constructor
      *
      * @param   DatabaseDriver  $db  Database connector object

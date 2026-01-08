@@ -66,7 +66,7 @@ class CwmmediafilesController extends AdminController
         }
 
         // Checkin succeeded.
-        $message = Text::plural($this->text_prefix . '_N_ITEMS_CHECKED_IN', count($ids));
+        $message = Text::plural($this->text_prefix . '_N_ITEMS_CHECKED_IN', \count($ids));
         $this->setRedirect(
             Route::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false),
             $message

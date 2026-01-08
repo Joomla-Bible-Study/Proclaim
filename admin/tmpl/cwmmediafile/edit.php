@@ -17,6 +17,7 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
 
 $input = Factory::getApplication()->getInput();
 
@@ -172,6 +173,17 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
 
         <?php
         echo $this->addon->render($this->media_form, $new); ?>
+
+        <?php
+        echo HTMLHelper::_('uitab.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>
+        <div class="row">
+            <div class="col-lg-12">
+                <?php
+                echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
+            </div>
+        </div>
+        <?php
+        echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
         if ($this->canDo->get('core.admin')) : ?>

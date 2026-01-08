@@ -99,7 +99,7 @@ class HtmlView extends BaseHtmlView
 
         if (is_dir($path)) {
             if (!$files = Folder::files($path, '.sql')) {
-                $types[] = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_NO_FILES_TO_DISPLAY'));
+                $types[] = HTMLHelper::_('select.option', '0', Text::_('JBS_CMN_NO_FILES_TO_DISPLAY'));
             } else {
                 asort($files, SORT_STRING);
                 $fileList = [];
@@ -109,14 +109,14 @@ class HtmlView extends BaseHtmlView
                     $fileList[]   = $fileListTemp;
                 }
 
-                $types[] = HtmlHelper::_('select.option', '0', Text::_('JBS_IBM_SELECT_DB'));
+                $types[] = HTMLHelper::_('select.option', '0', Text::_('JBS_IBM_SELECT_DB'));
                 $types   = array_merge($types, $fileList);
             }
         } else {
-            $types[] = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_NO_FILES_TO_DISPLAY'));
+            $types[] = HTMLHelper::_('select.option', '0', Text::_('JBS_CMN_NO_FILES_TO_DISPLAY'));
         }
 
-        $this->lists['backedupfiles'] = HtmlHelper::_(
+        $this->lists['backedupfiles'] = HTMLHelper::_(
             'select.genericlist',
             $types,
             'backuprestore',

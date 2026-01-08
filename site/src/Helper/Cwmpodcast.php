@@ -63,8 +63,8 @@ class Cwmpodcast
      */
     public function makePodcasts(): string
     {
-        $msg = [];
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $msg  = [];
+        $db   = Factory::getContainer()->get('DatabaseDriver');
         $year = '(' . date('Y') . ')';
         $date = date('r');
 
@@ -98,7 +98,7 @@ class Cwmpodcast
                 continue;
             }
 
-            $limit = (int) $podinfo->podcastlimit;
+            $limit    = (int) $podinfo->podcastlimit;
             $episodes = $this->getEpisodes((int) $podinfo->id, $limit > 0 ? 'LIMIT ' . $limit : '');
 
             if (!$episodes) {
@@ -110,7 +110,7 @@ class Cwmpodcast
             $registry->merge(Cwmparams::getTemplateparams()->params);
             $params = $registry;
             $params->set('show_verses', '1');
-            $protocol = $params->get('protocol', 'http://');
+            $protocol          = $params->get('protocol', 'http://');
             $detailstemplateid = (int) ($podinfo->detailstemplateid ?: 1);
 
             if (empty($podinfo->podcastlink)) {
@@ -158,24 +158,24 @@ class Cwmpodcast
     <itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>';
 
             $episodedetail = '';
-            $CWMlisting = new Cwmlisting();
+            $CWMlisting    = new Cwmlisting();
 
             foreach ($episodes as $episode) {
-                $episodedate = date("r", strtotime($episode->createdate));
-                $scripture = $CWMlisting->getScripture($params, $episode, 0, 1);
+                $episodedate   = date("r", strtotime($episode->createdate));
+                $scripture     = $CWMlisting->getScripture($params, $episode, 0, 1);
                 $episode->size = $episode->params->get('size', '30000000');
 
-                $title = $this->getEpisodeTitle($podinfo, $episode, $scripture, $params, $detailstemplateid, $episodedate);
+                $title    = $this->getEpisodeTitle($podinfo, $episode, $scripture, $params, $detailstemplateid, $episodedate);
                 $subtitle = $this->getEpisodeSubtitle($podinfo, $episode, $scripture, $params, $detailstemplateid, $episodedate);
 
-                $title = $this->escapeHTML($title);
+                $title    = $this->escapeHTML($title);
                 $subtitle = $this->escapeHTML($subtitle);
 
-                $file = str_replace(' ', "%20", $episode->params->get('filename'));
-                $path = Cwmhelper::mediaBuildUrl($episode->srparams->get('path'), $file, $params, false, false, true);
+                $file          = str_replace(' ', "%20", $episode->params->get('filename'));
+                $path          = Cwmhelper::mediaBuildUrl($episode->srparams->get('path'), $file, $params, false, false, true);
                 $episode->slug = $episode->alias ? ($episode->sid . ':' . $episode->alias) : $episode->sid;
 
-                $link = $this->getEpisodeLink($podinfo, $episode, $path, $protocol, $detailstemplateid);
+                $link     = $this->getEpisodeLink($podinfo, $episode, $path, $protocol, $detailstemplateid);
                 $duration = $this->getEpisodeDuration($episode);
 
                 $episodedetail .= '
@@ -204,14 +204,14 @@ class Cwmpodcast
             $podfoot = '
 </channel>
 </rss>';
-            $input = Factory::getApplication()->getInput();
-            $client = ApplicationHelper::getClientInfo($input->get('client', '0', 'int'));
-            $file_path = $client->path . '/' . $podinfo->filename;
+            $input       = Factory::getApplication()->getInput();
+            $client      = ApplicationHelper::getClientInfo($input->get('client', '0', 'int'));
+            $file_path   = $client->path . '/' . $podinfo->filename;
             $filecontent = $podhead . $episodedetail . $podfoot;
             $filewritten = $this->writeFile($file_path, $filecontent);
 
             $file_url = Uri::root() . $podinfo->filename;
-            $msg[] = $file_url . ' - ' . ($filewritten ? Text::_('JBS_PDC_XML_FILES_WRITTEN') : Text::_('JBS_PDC_XML_FILES_ERROR'));
+            $msg[]    = $file_url . ' - ' . ($filewritten ? Text::_('JBS_PDC_XML_FILES_WRITTEN') : Text::_('JBS_PDC_XML_FILES_ERROR'));
         }
 
         return implode('<br />', $msg) ?: 'No message';
@@ -255,7 +255,7 @@ class Cwmpodcast
                 return $episode->studytitle ? $title . ' - ' . $episode->studytitle : $title;
             case 5:
                 if ($this->templateid !== $detailstemplateid || $this->template === null) {
-                    $this->template = Cwmparams::getTemplateparams($detailstemplateid);
+                    $this->template   = Cwmparams::getTemplateparams($detailstemplateid);
                     $this->templateid = $detailstemplateid;
                 }
                 return (string) $CWMlisting->getFluidCustom($podinfo->custom, $episode, $params, $this->template, '24');
@@ -303,7 +303,7 @@ class Cwmpodcast
                 return $episode->bookname . ' ' . $episode->chapter_begin;
             case 7:
                 if ($this->templateid !== $detailstemplateid || $this->template === null) {
-                    $this->template = Cwmparams::getTemplateparams($detailstemplateid);
+                    $this->template   = Cwmparams::getTemplateparams($detailstemplateid);
                     $this->templateid = $detailstemplateid;
                 }
                 return (string) $CWMlisting->getFluidCustom($podinfo->custom, $episode, $params, $this->template, 'podcast');
@@ -343,7 +343,7 @@ class Cwmpodcast
      */
     private function getEpisodeDuration($episode): string
     {
-        $hours = $episode->params->get('media_hours', '00');
+        $hours   = $episode->params->get('media_hours', '00');
         $minutes = $episode->params->get('media_minutes', '00');
         $seconds = $episode->params->get('media_seconds', '00');
 
@@ -367,19 +367,19 @@ class Cwmpodcast
     private function getEnclosureXml($episode, $protocol, $path): string
     {
         $articleId = (int) $episode->params->get('article_id');
-        $docmanId = (int) $episode->params->get('docMan_id');
-        $basePath = $protocol . $episode->srparams->get('path');
-        $mimeType = $episode->params->get('mime_type');
-        $size = $episode->params->get('size', '100');
+        $docmanId  = (int) $episode->params->get('docMan_id');
+        $basePath  = $protocol . $episode->srparams->get('path');
+        $mimeType  = $episode->params->get('mime_type');
+        $size      = $episode->params->get('size', '100');
 
         if ($articleId > 1) {
-            $url = $basePath . '/index.php?option=com_content&amp;view=article&amp;id=' . $articleId;
+            $url  = $basePath . '/index.php?option=com_content&amp;view=article&amp;id=' . $articleId;
             $type = $mimeType ?: 'application/octet-stream';
         } elseif ($docmanId > 1) {
-            $url = $basePath . '/index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $docmanId;
+            $url  = $basePath . '/index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $docmanId;
             $type = $mimeType;
         } else {
-            $url = $protocol . $path;
+            $url  = $protocol . $path;
             $type = $mimeType ?: 'audio/mpeg3';
         }
 
@@ -440,7 +440,7 @@ class Cwmpodcast
         $episodes = $db->loadObjectList() ?: [];
 
         foreach ($episodes as $e) {
-            $e->params = new Registry($e->params);
+            $e->params   = new Registry($e->params);
             $e->srparams = new Registry($e->srparams);
         }
 
@@ -549,13 +549,13 @@ class Cwmpodcast
             while (!feof($fd)) {
                 $block = fread($fd, 10);
 
-                if (strlen($block) < 10) {
+                if (\strlen($block) < 10) {
                     break;
                 }
 
                 // Looking for 1111 1111 111 (frame synchronization bits)
 
-                if ($block[0] === "\xff" && (ord($block[1]) & 0xe0)) {
+                if ($block[0] === "\xff" && (\ord($block[1]) & 0xe0)) {
                     $info = $this->parseFrameHeader(substr($block, 0, 4));
 
                     if (empty($info['Framesize'])) {
@@ -590,17 +590,17 @@ class Cwmpodcast
     {
         // Do not worry about string vs array work right.
         if (str_starts_with($block, "ID3")) {
-            $id3v2_major_version    = ord($block[3]);
-            $id3v2_minor_version    = ord($block[4]);
-            $id3v2_flags            = ord($block[5]);
+            $id3v2_major_version    = \ord($block[3]);
+            $id3v2_minor_version    = \ord($block[4]);
+            $id3v2_flags            = \ord($block[5]);
             $flag_unsynchronisation = $id3v2_flags & 0x80 ? 1 : 0;
             $flag_extended_header   = $id3v2_flags & 0x40 ? 1 : 0;
             $flag_experimental_ind  = $id3v2_flags & 0x20 ? 1 : 0;
             $flag_footer_present    = $id3v2_flags & 0x10 ? 1 : 0;
-            $z0                     = ord($block[6]);
-            $z1                     = ord($block[7]);
-            $z2                     = ord($block[8]);
-            $z3                     = ord($block[9]);
+            $z0                     = \ord($block[6]);
+            $z1                     = \ord($block[7]);
+            $z2                     = \ord($block[8]);
+            $z3                     = \ord($block[9]);
 
             if ((($z0 & 0x80) === 0) && (($z1 & 0x80) === 0) && (($z2 & 0x80) === 0) && (($z3 & 0x80) === 0)) {
                 $header_size = 10;
@@ -652,13 +652,13 @@ class Cwmpodcast
             '2.5' => [11025, 12000, 8000],
         ];
         static $samples = [
-            1 => [1 => 384, 2 => 1152, 3 => 1152,],
-            2 => [1 => 384, 2 => 1152, 3 => 576,],
+            1 => [1 => 384, 2 => 1152, 3 => 1152],
+            2 => [1 => 384, 2 => 1152, 3 => 576],
         ];
 
-        $b1 = ord($fourbytes[1]);
-        $b2 = ord($fourbytes[2]);
-        $b3 = ord($fourbytes[3]);
+        $b1 = \ord($fourbytes[1]);
+        $b2 = \ord($fourbytes[2]);
+        $b3 = \ord($fourbytes[3]);
 
         $version_bits   = ($b1 & 0x18) >> 3;
         $version        = $versions[$version_bits];
@@ -668,7 +668,7 @@ class Cwmpodcast
         $layer      = (int)$layers[$layer_bits];
 
         $protection_bit = ($b1 & 0x01);
-        $bitrate_key    = sprintf('V%dL%d', $simple_version, $layer);
+        $bitrate_key    = \sprintf('V%dL%d', $simple_version, $layer);
         $bitrate_idx    = ($b2 & 0xf0) >> 4;
         $bitrate        = $bitrates[$bitrate_key][$bitrate_idx] ?? 0;
 

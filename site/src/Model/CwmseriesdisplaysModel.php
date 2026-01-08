@@ -146,12 +146,12 @@ class CwmseriesdisplaysModel extends ListModel
         // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user   = Factory::getApplication()->getIdentity();
         $groups = $user->getAuthorisedViewLevels();
-        $count  = count($items);
+        $count  = \count($items);
 
         if ($count > 0) {
             foreach ($items as $i => $iValue) {
                 if ($iValue->access > 1) {
-                    if (!in_array($iValue->access, $groups, true)) {
+                    if (!\in_array($iValue->access, $groups, true)) {
                         unset($items[$i]);
                     }
                 }
@@ -404,6 +404,4 @@ class CwmseriesdisplaysModel extends ListModel
     {
         return (int) $this->getState('list.start');
     }
-
-
 }

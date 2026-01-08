@@ -186,7 +186,7 @@ class CwmmediafileModel extends AdminModel
                 $siteinfo = strpos($path_server, $nohttp);
 
                 if ($siteinfo) {
-                    $filename = substr($path_server, strlen($nohttp));
+                    $filename = substr($path_server, \strlen($nohttp));
                     $filename = JPATH_SITE . '/' . $filename;
                 } else {
                     $filename = $path_server;
@@ -724,6 +724,49 @@ class CwmmediafileModel extends AdminModel
         $session = Factory::getApplication()->getUserState('com_proclaim.mediafile.edit.data', []);
 
         return empty($session) ? $this->data : $session;
+    }
+
+    /**
+     * Prepare and sanitise the table prior to saving.
+     *
+     * @param   CwmmediafileTable  $table  A reference to a Table object.
+     *
+     * @return  void
+     *
+     * @throws \Exception
+     * @since   10.0.0
+     */
+    protected function prepareTable($table): void
+    {
+        $date = Factory::getDate();
+        $user = Factory::getApplication()->getIdentity();
+
+        // Always ensure created date is set (handles empty string from form)
+        if (empty($table->created) || $table->created === '') {
+            $table->created = $date->toSql();
+        }
+
+        if (empty($table->id)) {
+            // Set the values for a new record
+            if (empty($table->created_by)) {
+                $table->created_by = $user->get('id');
+            }
+
+            // Set ordering to the last item if not set
+            if (empty($table->ordering)) {
+                $db    = Factory::getContainer()->get('DatabaseDriver');
+                $query = $db->getQuery(true);
+                $query->select('MAX(ordering)')->from('#__bsms_mediafiles');
+                $db->setQuery($query);
+                $max = $db->loadResult();
+
+                $table->ordering = $max + 1;
+            }
+        } else {
+            // Set the values for existing records
+            $table->modified    = $date->toSql();
+            $table->modified_by = $user->get('id');
+        }
     }
 
     /**

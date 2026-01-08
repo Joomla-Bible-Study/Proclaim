@@ -40,7 +40,7 @@ class CwmmessageTableTest extends ProclaimTestCase
     public function testTableClassHasCorrectNamespace(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmmessageTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString(
             'namespace CWM\Component\Proclaim\Administrator\Table;',
@@ -56,7 +56,7 @@ class CwmmessageTableTest extends ProclaimTestCase
     public function testTableClassExtendsJoomlaTable(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmmessageTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('extends Table', $content);
         $this->assertStringContainsString('use Joomla\CMS\Table\Table;', $content);
@@ -70,7 +70,7 @@ class CwmmessageTableTest extends ProclaimTestCase
     public function testTableUsesCorrectDatabaseTable(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmmessageTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('#__bsms_studies', $content);
     }
@@ -83,7 +83,7 @@ class CwmmessageTableTest extends ProclaimTestCase
     public function testTableDefinesIdProperty(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmmessageTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('public $id', $content);
     }
@@ -96,7 +96,7 @@ class CwmmessageTableTest extends ProclaimTestCase
     public function testTableHasStoreMethod(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmmessageTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('function store(', $content);
     }
@@ -109,7 +109,7 @@ class CwmmessageTableTest extends ProclaimTestCase
     public function testTableHasGetAssetNameMethod(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmmessageTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('function _getAssetName()', $content);
         $this->assertStringContainsString('com_proclaim.message.', $content);
@@ -123,7 +123,7 @@ class CwmmessageTableTest extends ProclaimTestCase
     public function testTableUsesCwmassets(): void
     {
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmmessageTable.php';
-        $content = file_get_contents($filePath);
+        $content  = file_get_contents($filePath);
 
         $this->assertStringContainsString('use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;', $content);
     }

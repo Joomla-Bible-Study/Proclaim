@@ -56,11 +56,11 @@ class StudyImageField extends MediaField
         $ismedia = substr_count($pparams, 'media');
 
         if ($ismedia !== 1) {
-            if ($pparams === '{}' || is_null($pparams)) {
+            if ($pparams === '{}' || \is_null($pparams)) {
                 $newmedia = '{"directories":{"directories0":{"directory":"media"}}}';
             } else {
                 $dircount  = substr_count($pparams, 'directory');
-                $end       = strlen($pparams);
+                $end       = \strlen($pparams);
                 $getstring = substr($pparams, 0, $end - 2);
                 $newmedia  = $getstring . ', "directories' . $dircount . '":{"directory":"media"}}}';
             }

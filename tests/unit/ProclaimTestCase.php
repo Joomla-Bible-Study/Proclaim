@@ -11,8 +11,8 @@
 
 namespace CWM\Component\Proclaim\Tests;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Base test case class for Proclaim unit tests
@@ -132,7 +132,7 @@ abstract class ProclaimTestCase extends TestCase
     protected function getProtectedProperty(object $object, string $property): mixed
     {
         $reflection = new \ReflectionClass($object);
-        $prop = $reflection->getProperty($property);
+        $prop       = $reflection->getProperty($property);
         $prop->setAccessible(true);
 
         return $prop->getValue($object);
@@ -150,7 +150,7 @@ abstract class ProclaimTestCase extends TestCase
     protected function setProtectedProperty(object $object, string $property, mixed $value): void
     {
         $reflection = new \ReflectionClass($object);
-        $prop = $reflection->getProperty($property);
+        $prop       = $reflection->getProperty($property);
         $prop->setAccessible(true);
         $prop->setValue($object, $value);
     }
@@ -167,7 +167,7 @@ abstract class ProclaimTestCase extends TestCase
     protected function invokeProtectedMethod(object $object, string $method, array $args = []): mixed
     {
         $reflection = new \ReflectionClass($object);
-        $method = $reflection->getMethod($method);
+        $method     = $reflection->getMethod($method);
         $method->setAccessible(true);
 
         return $method->invokeArgs($object, $args);

@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmmessages;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
-use Exception;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
@@ -99,7 +98,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void  A string if successful, otherwise a JError object.
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   11.1
      * @see     fetch()
      */
@@ -152,13 +151,13 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     protected function addToolbar(): void
     {
-        $canDo = ContentHelper::getActions('com_proclaim');
-        $user  = $this->getCurrentUser();
+        $canDo   = ContentHelper::getActions('com_proclaim');
+        $user    = $this->getCurrentUser();
         $toolbar = Toolbar::getInstance();
 
         ToolbarHelper::title(Text::_('JBS_CMN_STUDIES'), 'book book');

@@ -115,14 +115,14 @@ class CwmadminTable extends Table
         $params = [];
 
         // For Saving the page.
-        if (isset($array['params']) && is_array($array['params'])) {
+        if (isset($array['params']) && \is_array($array['params'])) {
             $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = (string)$registry;
         }
 
         // For loading the administrator page
-        if (isset($array['params']) && is_string($array['params'])) {
+        if (isset($array['params']) && \is_string($array['params'])) {
             // Convert the params field to a string.
             $parameter = new Registry();
             $parameter->loadString($array['params']);
@@ -175,7 +175,7 @@ class CwmadminTable extends Table
         }
 
         // Bind the rules.
-        if (isset($array['rules']) && is_array($array['rules'])) {
+        if (isset($array['rules']) && \is_array($array['rules'])) {
             $rules = new \JAccessRules($array['rules']);
             $this->setRules($rules);
         }

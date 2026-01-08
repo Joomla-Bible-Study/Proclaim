@@ -10,17 +10,17 @@
  * */
 
 // No Direct Access
-defined('_JEXEC') or die();
+\defined('_JEXEC') or die();
 
-$BsmTmplTags = array(
-    '[studyDate]'  => array(
+$BsmTmplTags = [
+    '[studyDate]' => [
         'method' => 'studyDate',
         'type'   => 'data',
-        'db'     => 'studydate'
-    ),
-    '[filterBook]' => array(
+        'db'     => 'studydate',
+    ],
+    '[filterBook]' => [
         'method' => 'filterBook',
         'type'   => 'generic',
-        'db'     => null
-    )
-);
+        'db'     => null,
+    ],
+];

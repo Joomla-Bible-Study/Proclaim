@@ -195,7 +195,7 @@ class CwmteacherModel extends AdminModel
         // Check for duplicates on new teachers
         if (
             (!isset($data['id']) || (int) $data['id'] === 0) && $data['alias'] === null &&
-            in_array(
+            \in_array(
                 $input->get('task'),
                 ['apply', 'save', 'save2new']
             )
@@ -292,7 +292,7 @@ class CwmteacherModel extends AdminModel
 
                 while ($x > 1) {
                     if (str_starts_with(basename($data['image']), $prefix)) {
-                        $str                       = substr(basename($data['image']), strlen($prefix));
+                        $str                       = substr(basename($data['image']), \strlen($prefix));
                         $data['teacher_image']     = $path . '/' . $str;
                         $data['teacher_thumbnail'] = $path . '/' . $str;
                         $data['image']             = $path . '/' . $str;
@@ -383,6 +383,9 @@ class CwmteacherModel extends AdminModel
      */
     protected function prepareTable($table): void
     {
+        $date = Factory::getDate();
+        $user = Factory::getApplication()->getIdentity();
+
         $table->teachername = htmlspecialchars_decode($table->teachername, ENT_QUOTES);
         $table->alias       = ApplicationHelper::stringURLSafe($table->alias);
 
@@ -390,7 +393,17 @@ class CwmteacherModel extends AdminModel
             $table->alias = ApplicationHelper::stringURLSafe($table->teachername);
         }
 
+        // Always ensure created date is set (handles empty string from form)
+        if (empty($table->created) || $table->created === '') {
+            $table->created = $date->toSql();
+        }
+
         if (empty($table->id)) {
+            // Set the values for a new record
+            if (empty($table->created_by)) {
+                $table->created_by = $user->get('id');
+            }
+
             // Set ordering to the last item if not set
             if (empty($table->ordering)) {
                 $db    = Factory::getContainer()->get('DatabaseDriver');
@@ -401,6 +414,10 @@ class CwmteacherModel extends AdminModel
 
                 $table->ordering = $max + 1;
             }
+        } else {
+            // Set the values for existing records
+            $table->modified    = $date->toSql();
+            $table->modified_by = $user->get('id');
         }
     }
 

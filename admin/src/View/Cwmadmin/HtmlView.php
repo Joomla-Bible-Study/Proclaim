@@ -356,7 +356,7 @@ class HtmlView extends BaseHtmlView
             return self::$cachedVersion;
         }
 
-        $jbsversion = Installer::parseXMLInstallFile($xmlFile);
+        $jbsversion          = Installer::parseXMLInstallFile($xmlFile);
         self::$cachedVersion = $jbsversion['version'] ?? '';
 
         return self::$cachedVersion;

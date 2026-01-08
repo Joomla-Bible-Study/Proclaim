@@ -57,7 +57,7 @@ class TeacherListField extends ListField
 
         if ($teachers) {
             foreach ($teachers as $teacher) {
-                $options[] = HtmlHelper::_('select.option', $teacher->id, $teacher->teachername);
+                $options[] = HTMLHelper::_('select.option', $teacher->id, $teacher->teachername);
             }
         }
 

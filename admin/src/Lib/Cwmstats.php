@@ -362,9 +362,9 @@ class Cwmstats
      */
     public static function getTopScore(): string
     {
-        $admin = Cwmparams::getAdmin();
+        $admin  = Cwmparams::getAdmin();
         $format = (int) $admin->params->get('format_popular', 0);
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db     = Factory::getContainer()->get('DatabaseDriver');
 
         $query = $db->getQuery(true);
         $query->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits']))
@@ -382,7 +382,7 @@ class Cwmstats
 
         foreach ($results as $result) {
             $total = ($format < 1) ? ((int) $result->added + (int) $result->hits) : (int) $result->added;
-            $link = ' <a href="' . Route::_('index.php?option=com_proclaim&task=message.edit&id=' . (int) $result->id) . '">' .
+            $link  = ' <a href="' . Route::_('index.php?option=com_proclaim&task=message.edit&id=' . (int) $result->id) . '">' .
                 htmlspecialchars($result->studytitle, ENT_QUOTES, 'UTF-8') . '</a> ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
             $final[] = ['total' => $total, 'link' => $link];
         }
@@ -393,7 +393,7 @@ class Cwmstats
         });
 
         // Slice to top 5
-        $final = array_slice($final, 0, 5);
+        $final = \array_slice($final, 0, 5);
 
         $top_score_table = '';
 
@@ -484,16 +484,16 @@ class Cwmstats
     private static function getMediaStatsFallback(): array
     {
         $stats = [
-            'total' => 0,
-            'player_none' => 0,
-            'player_global' => 0,
-            'player_internal' => 0,
-            'player_av' => 0,
-            'player_legacy' => 0,
-            'player_embed' => 0,
-            'popup_none' => 0,
-            'popup_popup' => 0,
-            'popup_inline' => 0,
+            'total'            => 0,
+            'player_none'      => 0,
+            'player_global'    => 0,
+            'player_internal'  => 0,
+            'player_av'        => 0,
+            'player_legacy'    => 0,
+            'player_embed'     => 0,
+            'popup_none'       => 0,
+            'popup_popup'      => 0,
+            'popup_inline'     => 0,
             'popup_squeezebox' => 0,
         ];
 
@@ -509,8 +509,8 @@ class Cwmstats
             return $stats;
         }
 
-        $stats['total'] = count($rows);
-        $registry = new Registry();
+        $stats['total'] = \count($rows);
+        $registry       = new Registry();
 
         foreach ($rows as $params) {
             $registry->loadString($params);
@@ -683,8 +683,8 @@ class Cwmstats
         $input = Factory::getApplication()->getInput();
         $t     = $input->get('t', 1, 'int');
 
-        $admin = Cwmparams::getAdmin();
-        $limit = (int) $admin->params->get('popular_limit', 25);
+        $admin  = Cwmparams::getAdmin();
+        $limit  = (int) $admin->params->get('popular_limit', 25);
         $format = (int) $admin->params->get('format_popular', 0);
 
         $db    = Factory::getContainer()->get('DatabaseDriver');
@@ -707,7 +707,7 @@ class Cwmstats
         $final = [];
 
         foreach ($items as $item) {
-            if (($item->access > 1) && !in_array($item->access, $groups, true)) {
+            if (($item->access > 1) && !\in_array($item->access, $groups, true)) {
                 continue;
             }
 
@@ -733,7 +733,7 @@ class Cwmstats
 
         // Slice to limit
         if ($limit > 0) {
-            $final = array_slice($final, 0, $limit);
+            $final = \array_slice($final, 0, $limit);
         }
 
         $options = [

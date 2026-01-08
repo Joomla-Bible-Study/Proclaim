@@ -67,9 +67,9 @@ class CwmtemplateController extends FormController
     {
         $app   = Factory::getApplication();
         $input = $app->input;
-        $cid   = $input->get('cid', array(0), 'array');
+        $cid   = $input->get('cid', [0], 'array');
 
-        if (!is_array($cid) || count($cid) < 1) {
+        if (!\is_array($cid) || \count($cid) < 1) {
             $app->enqueueMessage(Text::_('JBS_CMN_SELECT_ITEM_UNPUBLISH'), 'error');
         }
 

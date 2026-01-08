@@ -59,6 +59,46 @@ class CwmtemplatecodeTable extends Table
     public ?string $templatecode = null;
 
     /**
+     * Created date
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public $created = null;
+
+    /**
+     * Created by user ID
+     *
+     * @var int
+     * @since 10.1.0
+     */
+    public $created_by = null;
+
+    /**
+     * Created by alias
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public $created_by_alias = '';
+
+    /**
+     * Modified date
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public $modified = null;
+
+    /**
+     * Modified by user ID
+     *
+     * @var int
+     * @since 10.1.0
+     */
+    public $modified_by = null;
+
+    /**
      * Constructor
      *
      * @param     $db  DatabaseInterface connector object
@@ -86,7 +126,7 @@ class CwmtemplatecodeTable extends Table
     public function bind($src, $ignore = ''): bool
     {
         // Bind the rules.
-        if (isset($src['rules']) && is_array($src['rules'])) {
+        if (isset($src['rules']) && \is_array($src['rules'])) {
             $rules = new Rule($src['rules']);
             $this->setRules($rules);
         }

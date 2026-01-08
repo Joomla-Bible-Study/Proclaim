@@ -57,7 +57,7 @@ class SeriesField extends ListField
 
         if ($messages) {
             foreach ($messages as $message) {
-                $options[] = HtmlHelper::_('select.option', $message->id, $message->series_text);
+                $options[] = HTMLHelper::_('select.option', $message->id, $message->series_text);
             }
         }
 

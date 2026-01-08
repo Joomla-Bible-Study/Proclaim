@@ -15,15 +15,15 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Html\HtmlHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 
 // Do not remove
 // this is here to make sure that security of the site is maintained. It should be placed in every template file
 HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
-HtmlHelper::_('dropdown.init');
-HtmlHelper::_('behavior.multiselect');
-HtmlHelper::_('formbehavior.chosen', 'select');
+HTMLHelper::_('dropdown.init');
+HTMLHelper::_('behavior.multiselect');
+HTMLHelper::_('formbehavior.chosen', 'select');
 
 $app       = Factory::getApplication();
 $user      = $user = Factory::getApplication()->getSession()->get('user');

@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
@@ -30,11 +31,12 @@ use Joomla\Registry\Registry;
 class Cwmdownload
 {
     /**
-     * Method to send file to browser
+     * Method to send a file to the browser
      *
      * @param   int  $mid  ID of media
      *
      * @return void
+     * @throws \Exception
      * @since 6.1.2
      */
     public function download($mid): void
@@ -42,19 +44,23 @@ class Cwmdownload
         // Clears file status cache
         clearstatcache();
 
-        $this->hitDownloads((int)$mid);
-        $input    = new Input();
-        $template = $input->get('t', '1', 'int');
-        $db       = Factory::getContainer()->get('DatabaseDriver');
-        $mid      = $input->get('mid', '1', 'int');
+        $app        = Factory::getApplication();
+        $input      = new Input();
+        $templateId = $input->get('t', '1', 'int');
+        $db         = Factory::getContainer()->get('DatabaseDriver');
+        $mid        = (int)$mid;
 
         // Get the template so we can find a protocol
         $query = $db->getQuery(true);
         $query->select('id, params')
             ->from('#__bsms_templates')
-            ->where('id = ' . (int)$template);
+            ->where('id = ' . $templateId);
         $db->setQuery($query);
         $template = $db->loadObject();
+
+        if (!$template) {
+            $this->sendError($app, 404, 'Template not found');
+        }
 
         // Convert parameter fields to objects.
         $registry = new Registry();
@@ -68,22 +74,23 @@ class Cwmdownload
         )
             ->from('#__bsms_mediafiles')
             ->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)')
-            ->where('#__bsms_mediafiles.id = ' . (int)$mid);
+            ->where('#__bsms_mediafiles.id = ' . $mid);
         $db->setQuery($query, 0, 1);
 
         $media = $db->loadObject();
 
-        if ($media) {
-            $reg = new Registry();
-            $reg->loadString($media->sparams);
-            $sparams = $reg->toObject();
-
-            if (isset($sparams->path)) {
-                $media->spath = $sparams->path;
-            } else {
-                $media->spath = '';
-            }
+        if (!$media) {
+            $this->sendError($app, 404, 'Media not found');
         }
+
+        // Increment download count after validation
+        $this->hitDownloads($mid);
+
+        $reg = new Registry();
+        $reg->loadString($media->sparams);
+        $sparams = $reg->toObject();
+
+        $media->spath = $sparams->path ?? '';
 
         $registry = new Registry();
         $registry->loadString($media->params);
@@ -105,14 +112,14 @@ class Cwmdownload
         // Bytes per chunk (10 MB)
         $chunk = 10 * 1024 * 1024;
 
-        $fh = @fopen($download_file, "rb");
+        $fh = @fopen($download_file, 'rb');
 
         if (!$fh) {
             if (JBSMDEBUG) {
-                echo "<pre>" . $download_file . "</pre>";
+                echo '<pre>' . $download_file . '</pre>';
             }
 
-            jexit("Unable to open file");
+            $this->sendError($app, 500, 'Unable to open file');
         }
 
         // Clean the output buffer, Added to fix ZIP file corruption
@@ -137,11 +144,38 @@ class Cwmdownload
         }
 
         fclose($fh);
+        $app->close();
+    }
+
+    /**
+     * Send an HTTP error response and terminate
+     *
+     * @param   CMSApplication  $app      The application
+     * @param   int                                     $code     HTTP status code
+     * @param   string                                  $message  Error message
+     *
+     * @return  never
+     *
+     * @since   10.0.0
+     */
+    protected function sendError($app, int $code, string $message): never
+    {
+        $statusText = match ($code) {
+            400     => 'Bad Request',
+            404     => 'Not Found',
+            500     => 'Internal Server Error',
+            default => 'Error',
+        };
+
+        $app->setHeader('status', $code . ' ' . $statusText);
+        $app->sendHeaders();
+        echo $message;
+        $app->close();
         exit;
     }
 
     /**
-     * Method tho track Downloads
+     * Method to track Downloads
      *
      * @param   int  $mid  Media ID
      *

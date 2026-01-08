@@ -174,21 +174,21 @@ class CwmdirModel extends BaseModel
     {
         $OFolders = [];
 
-        for ($i = 0, $iMax = count($folderPaths); $i < $iMax; $i++) {
+        for ($i = 0, $iMax = \count($folderPaths); $i < $iMax; $i++) {
             $path                         = Path::clean($folderPaths[$i]);
             $OFolders[$i]                 = new \stdClass();
             $OFolders[$i]->fullPath       = $path;
             $OFolders[$i]->basename       = basename($path);
-            $OFolders[$i]->parentFullPath = dirname($path) . '/';
-            $OFolders[$i]->parentBasename = basename(dirname($path) . '/');
-            $OFolders[$i]->folderCount    = count(Folder::folders($path, '.', false, false));
-            $OFolders[$i]->fileCount      = count(Folder::files($path, '.', false, false, ["index.html"]));
+            $OFolders[$i]->parentFullPath = \dirname($path) . '/';
+            $OFolders[$i]->parentBasename = basename(\dirname($path) . '/');
+            $OFolders[$i]->folderCount    = \count(Folder::folders($path, '.', false, false));
+            $OFolders[$i]->fileCount      = \count(Folder::files($path, '.', false, false, ["index.html"]));
 
             // Make parent short path for go-up directory
             if ($path === BIBLESTUDY_ROOT_PATH . '/' . basename($path)) {
                 $OFolders[$i]->parentShort = "";
             } else {
-                $OFolders[$i]->parentShort = dirname(str_replace(BIBLESTUDY_ROOT_PATH, "", $path . '/'));
+                $OFolders[$i]->parentShort = \dirname(str_replace(BIBLESTUDY_ROOT_PATH, "", $path . '/'));
             }
 
             $OFolders[$i]->folderLink = $OFolders[$i]->parentShort . '/' . basename($path);
@@ -228,11 +228,11 @@ class CwmdirModel extends BaseModel
     {
         $OFiles = [];
 
-        for ($i = 0, $iMax = count($filePaths); $i < $iMax; $i++) {
+        for ($i = 0, $iMax = \count($filePaths); $i < $iMax; $i++) {
             $path                 = Path::clean($filePaths[$i]);
             $OFiles[$i]           = new \stdClass();
             $OFiles[$i]->basename = basename($path);
-            $OFiles[$i]->fullPath = dirname($path) . '/' . basename($path);
+            $OFiles[$i]->fullPath = \dirname($path) . '/' . basename($path);
             $OFiles[$i]->link     = Uri::root() . '/images' . $this->getCurrentDir(false, "/") . '/' . basename($path);
             $OFiles[$i]->ext      = File::getExt($path);
 
