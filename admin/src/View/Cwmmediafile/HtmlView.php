@@ -91,11 +91,29 @@ class HtmlView extends BaseHtmlView
     {
         $app                = Factory::getApplication();
         $this->form         = $this->get("Form");
-        $this->media_form   = $this->get("MediaForm");
+        $media_form         = $this->get("MediaForm");
         $this->item         = $this->get("Item");
         $this->state        = $this->get("State");
         $this->canDo        = ContentHelper::getActions('com_proclaim', 'mediafile', (int)$this->item->id);
         $this->admin_params = $this->state->get('administrator');
+
+        // Wrap the media form with server params for addon default value handling (PHP 8.2+ compatible)
+        $s_params = $this->state->get('s_params', []);
+        $this->media_form = new class ($media_form, $s_params) {
+            private $form;
+            public array $s_params;
+
+            public function __construct($form, array $s_params)
+            {
+                $this->form = $form;
+                $this->s_params = $s_params;
+            }
+
+            public function __call(string $name, array $args): mixed
+            {
+                return $this->form->$name(...$args);
+            }
+        };
 
         // Load the addon
         $this->addon = CWMAddon::getInstance($this->state->type);

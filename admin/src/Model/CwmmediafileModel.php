@@ -281,7 +281,7 @@ class CwmmediafileModel extends AdminModel
             return false;
         }
 
-        // Pass this data through state.
+        // Pass server params through state for use by view/addons when setting defaults
         $this->setState('s_params', $reg1->toArray());
         $this->setState('type', $server_type);
 
