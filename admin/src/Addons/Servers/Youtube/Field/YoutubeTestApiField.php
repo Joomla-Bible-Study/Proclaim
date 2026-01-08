@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  */
 
-namespace CWM\Component\Proclaim\Administrator\Field;
+namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\Field;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;

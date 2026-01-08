@@ -61,7 +61,8 @@
                        label="MOD_PROCLAIM_YOUTUBE_EXCLUDE_VIDEOS"
                        description="MOD_PROCLAIM_YOUTUBE_EXCLUDE_VIDEOS_DESC"
                        server_field="server_id"
-                       showon="priority_mode!:latest_only"/>
+                       showon="priority_mode!:latest_only"
+                       addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\Field"/>
             </fieldset>
 
             <fieldset name="display" label="MOD_PROCLAIM_YOUTUBE_DISPLAY_OPTIONS">

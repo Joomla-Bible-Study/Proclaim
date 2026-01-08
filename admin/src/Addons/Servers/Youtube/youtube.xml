@@ -13,7 +13,7 @@
                    description="JBS_ADDON_YOUTUBE_CHANNEL_ID_DESC" class="inputbox" size="40" />
             <field name="test_api" type="YoutubeTestApi" label="JBS_ADDON_YOUTUBE_TEST_API"
                    description="JBS_ADDON_YOUTUBE_TEST_API_DESC"
-                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field" />
+                   addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\Field" />
         </fieldset>
     </fields>
     <fields name="media">
