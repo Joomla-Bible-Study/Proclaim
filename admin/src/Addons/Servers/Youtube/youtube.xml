@@ -11,6 +11,9 @@
                    description="JBS_ADDON_YOUTUBE_API_KEY_DESC" class="inputbox" size="60" />
             <field name="channel_id" type="text" label="JBS_ADDON_YOUTUBE_CHANNEL_ID"
                    description="JBS_ADDON_YOUTUBE_CHANNEL_ID_DESC" class="inputbox" size="40" />
+            <field name="test_api" type="YoutubeTestApi" label="JBS_ADDON_YOUTUBE_TEST_API"
+                   description="JBS_ADDON_YOUTUBE_TEST_API_DESC"
+                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field" />
         </fieldset>
     </fields>
     <fields name="media">
