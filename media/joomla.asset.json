@@ -322,6 +322,17 @@
             "attributes": {
                 "defer": true
             }
+        },
+        {
+            "name": "com_proclaim.template-lazyload",
+            "type": "script",
+            "uri": "com_proclaim/template-lazyload.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
         }
     ]
 }
