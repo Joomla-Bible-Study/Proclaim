@@ -171,6 +171,24 @@ class CwmtemplateTable extends Table
     {
         if (isset($array['params']) && \is_array($array['params'])) {
             $registry = new Registry();
+
+            // For existing records, merge submitted params with existing params
+            // This preserves values from lazy-loaded sections that were never expanded
+            if (!empty($array['id'])) {
+                $db = $this->getDbo();
+                $query = $db->getQuery(true)
+                    ->select($db->quoteName('params'))
+                    ->from($db->quoteName('#__bsms_templates'))
+                    ->where($db->quoteName('id') . ' = ' . (int) $array['id']);
+                $db->setQuery($query);
+                $existingParams = $db->loadResult();
+
+                if ($existingParams) {
+                    $registry->loadString($existingParams);
+                }
+            }
+
+            // Merge submitted params on top of existing (submitted values take precedence)
             $registry->loadArray($array['params']);
             $array['params'] = (string)$registry;
         }

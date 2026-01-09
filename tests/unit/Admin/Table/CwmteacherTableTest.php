@@ -151,7 +151,7 @@ class CwmteacherTableTest extends ProclaimTestCase
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmteacherTable.php';
         $content  = file_get_contents($filePath);
 
-        $this->assertStringContainsString('public string $alias;', $content);
+        $this->assertStringContainsString('public string $alias = ', $content);
     }
 
     /**
