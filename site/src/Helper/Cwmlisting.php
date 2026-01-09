@@ -1835,10 +1835,23 @@ class Cwmlisting
 
             if (isset($row->bookname)) {
                 $book = Text::_($row->bookname);
+            } elseif ($booknumber > 0) {
+                // Look up bookname from database using booknumber
+                $db    = Factory::getContainer()->get('DatabaseDriver');
+                $query = $db->getQuery(true)
+                    ->select($db->quoteName('bookname'))
+                    ->from($db->quoteName('#__bsms_books'))
+                    ->where($db->quoteName('booknumber') . ' = ' . (int) $booknumber);
+                $db->setQuery($query);
+                $bookname = $db->loadResult();
+
+                if ($bookname) {
+                    $book = Text::_($bookname);
+                }
             }
         }
 
-        if (!isset($row->bookname) || $booknumber === "-1") {
+        if (empty($book) || $booknumber === 0) {
             return $scripture;
         }
 
