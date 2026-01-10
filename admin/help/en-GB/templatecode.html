@@ -1,477 +1,643 @@
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Template Code Helper</title>
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-    <style type="text/css">
-        table.sample {
-            border-width: 1px;
-            border-spacing: 2px;
-            border-style: outset;
-            border-color: rgb(128, 128, 128);
-            border-collapse: collapse;
-            background-color: white;
+    <meta charset="UTF-8">
+    <title>Template Code - Proclaim Help</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
         }
-
-        table.sample th {
-            padding: 2px;
-            border: 1px inset rgb(128, 128, 128);
-            background-color: white;
-
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            border-bottom: 2px solid #1a3867;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: #1a3867;
         }
-
-        table.sample td {
-            padding: 2px;
-            border: 1px inset rgb(128, 128, 128);
-            background-color: white;
-
-        }
-
-        table.sample th, table.sample td {
-            font-size: 77%;
-            font-family: "Myriad Web", Verdana, Helvetica, Arial, sans-serif;
-            background: #efe none;
-            color: #630;
-        }
-
         h2 {
-            font-size: 100%;
-            font-family: "Myriad Web", Verdana, Helvetica, Arial, sans-serif;
-            background: #efe none;
-            color: #630;
+            color: #1a3867;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2c5282;
+            margin-top: 25px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f5f5f5;
+        }
+        .code-table th {
+            background-color: #e8f4e8;
+            color: #2d5a2d;
+        }
+        .tip {
+            background-color: #e8f4fd;
+            border-left: 4px solid #2196F3;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        .warning {
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        .note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 90%;
+        }
+        pre {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 12px;
+            overflow-x: auto;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 13px;
+        }
+        ul, ol {
+            margin: 10px 0;
+        }
+        li {
+            margin: 5px 0;
+        }
+        .clickable-code {
+            cursor: pointer;
+            background-color: #f0f7f0;
+        }
+        .clickable-code:hover {
+            background-color: #e0efe0;
         }
     </style>
-
-
 </head>
 <body>
-<h2>Creating Template Files</h2>
-<p style="padding-left: 30px;">A Template File replaces the View you choose in the Template Display Settings. Once you create a file based on a specific view, you can choose it to use instead of the Template Display Settings.</p>
-<p style="padding-left: 30px;">Using these files is only for advanced users. Give the template file a name (with no .php) and choose a type of view.&nbsp;</p>
-<p style="padding-left: 30px;">Some code is placed in the editor, don't change it, please!</p>
-<p style="padding-left: 30px;">Start your coding at the bottom of the file. You are using a combination of PHP, HTML, CSS, and special codes that reveal data from rows in the database.&nbsp;&nbsp;</p>
-<h2>Template Code Helper (click field to select)</h2>
-<form action="post">
-    <div>
-        <table class="sample">
-            <thead>
-            <th colspan="2">Studies Codes (for all views)</th>
-            </thead>
-            <tbody>
-            <tr>
-                <td>To get the list, see each view</td>
-                <td><input onClick="this.select();" size="75" type="text"
-                           value="foreach ($this->items as $study){put individual items here}"/></td>
-            </tr>
-            <tr>
-                <td>Title</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->studytitle;"/></td>
-            </tr>
-            <tr>
-                <td>Study Number</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->studynumber;"/></td>
-            </tr>
-            <tr>
-                <td>Description</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->studyintro;"/></td>
-            </tr>
-            <tr>
-                <td>Date</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->studydate;"/></td>
-            </tr>
-            <tr>
-                <td>Id</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->id;"/></td>
-            </tr>
-            <tr>
-                <td>Scripture 1</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->scripture1;"/></td>
-            </tr>
-            <tr>
-                <td>Scripture 2</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->scripture2;"/></td>
-            </tr>
-            <tr>
-                <td>Title</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->studytitle;"/></td>
-            </tr>
-            <tr>
-                <td>Media</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->media;"/></td>
-            </tr>
-            <tr>
-                <td>Duration</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->duration;"/></td>
-            </tr>
-            <tr>
-                <td>Topics</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->topics;"/></td>
-            </tr>
-            <tr>
-                <td>Study Thumbnail</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->study_thumbnail;"/></td>
-            </tr>
-            <tr>
-                <td>Series Thumbnail</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->series_thumbnail;"/></td>
-            </tr>
-            <tr>
-                <td>Secondary Reference</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->secondary_reference;"/>
-                </td>
-            </tr>
-            <tr>
-                <td>Link to Details View</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->detailslink;"/></td>
-            </tr>
-            <tr>
-                <td>Topics</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->topics;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Name</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->teachername;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Title</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->teachertitle;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Image</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->teacherimage;"/></td>
-            </tr>
-            <tr>
-                <td>Topics</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->topics;"/></td>
-            </tr>
-            <tr>
-                <td>Hits</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->hits;"/></td>
-            </tr>
-            <tr>
-                <td>Submitted By</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->submitted;"/></td>
-            </tr>
-            <tr>
-                <td>Slug</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->slug;"/></td>
-            </tr>
-            <tr>
-                <td>Total Plays</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->totalplays;"/></td>
-            </tr>
-            <tr>
-                <td>Total Downloads</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->totaldownloads;"/></td>
-            </tr>
-            <tr>
-                <td>Location</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $study->location_text;"/></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <br/>
 
-    <div>
-        <table class="sample">
-            <th colspan="2">Sermon List Codes</th>
-            <tr>
-                <td>List Introduction</td>
-                <td><input onClick="this.select();" size="75" type="text"
-                           value="echo $this->params->get('list_intro');"/></td>
-            </tr>
-            <tr>
-                <td>Search Tools</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->searchtools;"/></td>
-            </tr>
-            <tr>
-                <td>Pagination links</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->pagelinks"/>;</td>
-            </tr>
-            <tr>
-                <td>Pagination Limit Box</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->limitbox;"/></td>
-            </tr>
-            <tr>
-                <td>Pagination array</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->pagination;"/></td>
-            </tr>
-            <tr>
-                <td>Sample Code</td>
-                <td><textarea cols="50" onClick="this.select();" rows="10">
-                foreach ($this->items as $study){echo $study->studyintro.'<br/>';}</textarea></td>
-            </tr>
-        </table>
-    </div>
-    <br/>
+<div class="header">Template Code Manager - Help Screen</div>
 
-    <div>
-        <table class="sample">
-            <th colspan="2">Sermon Display Codes (Plus any studies code)</th>
-            <tr>
-                <td>Print Button</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo  $this->page->print;"/></td>
-            </tr>
-            <tr>
-                <td>Social Media Box</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo  $this->page->social;"/></td>
-            </tr>
-            <tr>
-                <td>Study Text</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo  $this->item->studytext;"/></td>
-            </tr>
-            <tr>
-                <td>Main Reference Passage</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo  $this->passage;"/></td>
-            </tr>
-            <tr>
-                <td>Related Studies Drop Down</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo  $this->related;"/></td>
-            </tr>
-            <tr>
-                <td>Sample Code</td>
-                <td><textarea cols="50" onClick="this.select();" rows="10">
-                foreach ($this->items as $study){echo $study->studyintro.'<br/>';}</textarea></td>
-            </tr>
+<h2>Overview</h2>
+<p>
+    Template Codes allow advanced users to create custom PHP template files that replace the default Proclaim views.
+    This feature provides complete control over how sermons, series, teachers, and other content are displayed on your website.
+</p>
+<p>
+    Once created, a template code file can be selected in your Template Display Settings to override the default layout for a specific view type.
+</p>
 
-        </table>
-    </div>
-    <br/>
+<div class="warning">
+    <strong>Advanced Feature:</strong> Template Codes require knowledge of PHP, HTML, and CSS.
+    Incorrect code can break your site's display. Always test changes on a development site first.
+</div>
 
-    <div>
-        <table class="sample">
-            <th colspan="2">Series List Codes (plus Series Display Codes below)</th>
-            <tr>
-                <td>To get each series</td>
-                <td><input onClick="this.select();" size="75" type="text"
-                           value="foreach ($this->items as $series){echo $series->description; etc. See Below for More Codes"/>
-                </td>
-            </tr>
-            <tr>
-                <td>Link to each series</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $series->serieslink;"/></td>
-            </tr>
-            <tr>
-                <td>Series Image</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $series->image;"/></td>
-            </tr>
-            <tr>
-                <td>Series Drop down box</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->series;"/></td>
-            </tr>
-            <tr>
-                <td>Main Series Page Image</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->main;"/></td>
-            </tr>
-            <tr>
-                <td>Footer Pagination Links</td>
-                <td><input onClick="this.select();" size="75" type="text"
-                           value="echo $this->page->pagelinks; echo $this->page->counter;"/></td>
-            </tr>
-            <tr>
-                <td>Series Title</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $series->series_text;"/></td>
-            </tr>
-            <tr>
-                <td>Series Teacher Image</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $series->teacherimage;"/></td>
-            </tr>
-            <tr>
-                <td>Series Description</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $series->description;"/></td>
-            </tr>
-            <tr>
-                <td>Series Teacher Name</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $series->teachername;"/></td>
-            </tr>
-            <tr>
-                <td>Series Teacher Title</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $series->teachertitle;"/></td>
-            </tr>
-            <tr>
-                <td>Series Teacher Image</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $series->teacherimage;"/></td>
-            </tr>
-            <tr>
-                <td>Sample Code</td>
-                <td><textarea cols="50" onClick="this.select();" rows="10">
-                foreach ($this->items as $series){echo $series->series_text.'<br/>';}</textarea></td>
-            </tr>
+<h2>Template Code List</h2>
 
-        </table>
-    </div>
-    <br/>
+<h3>Column Descriptions</h3>
+<table>
+    <tr>
+        <th>Column</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>Checkbox</strong></td>
+        <td>Select template codes to perform bulk actions.</td>
+    </tr>
+    <tr>
+        <td><strong>Published</strong></td>
+        <td>Shows the publication status. Only published template codes can be used in templates.</td>
+    </tr>
+    <tr>
+        <td><strong>Filename</strong></td>
+        <td>The name of the template code file (without .php extension). Click to edit.</td>
+    </tr>
+    <tr>
+        <td><strong>Type</strong></td>
+        <td>The view type this template code is designed for.</td>
+    </tr>
+    <tr>
+        <td><strong>ID</strong></td>
+        <td>The unique database identifier for the template code record.</td>
+    </tr>
+</table>
 
-    <div>
-        <table class="sample">
-            <th colspan="2">Series Display Codes</th>
-            <tr>
-                <td>Series Title</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->series_text;"/></td>
-            </tr>
-            <tr>
-                <td>Series Thumbnail</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->image;"/></td>
-            </tr>
-            <tr>
-                <td>Series Studies</td>
-                <td><input onClick="this.select();" size="75" type="text"
-                           value="foreach ($this->seriesstudies as $study){echo $study-> see Studies List for details;}"/>
-                </td>
-            </tr>
-            <tr>
-                <td>Series Description</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->description;"/></td>
-            </tr>
-            <tr>
-                <td>Series Teacher Name</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->teachername;"/></td>
-            </tr>
-            <tr>
-                <td>Series Teacher Title</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->teachertitle;"/></td>
-            </tr>
-            <tr>
-                <td>Series Teacher Image</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->page->teacherimage;"/></td>
-            </tr>
-            <tr>
-                <td>Sample Code</td>
-                <td><textarea cols="50" onClick="this.select();" rows="10">
-                foreach ($this->items as $study){echo $study->studyintro.'<br/>';}</textarea></td>
-            </tr>
-        </table>
-    </div>
-    <br/>
+<h3>Toolbar Actions</h3>
+<table>
+    <tr>
+        <th>Button</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>New</strong></td>
+        <td>Create a new template code file.</td>
+    </tr>
+    <tr>
+        <td><strong>Actions</strong></td>
+        <td>Dropdown with Publish, Unpublish, Archive, and Trash options.</td>
+    </tr>
+    <tr>
+        <td><strong>Help</strong></td>
+        <td>Opens this help screen.</td>
+    </tr>
+</table>
 
-    <div>
-        <table class="sample">
-            <th colspan="2">Teacher List Codes (plus Teacher Display Codes below)</th>
-            <tr>
-                <td>Each Teacher's Information</td>
-                <td><input onClick="this.select();" size="75" type="text"
-                           value="foreach ($this->items as $teacher){echo $teacher->teachername; See Teacher Display Codes"/>
-                </td>
-            </tr>
-            <tr>
-                <td>Link to each teacher</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $teacher->teacherlink;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Image</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $teacher->image;"/></td>
-            </tr>
-            <tr>
-                <td>Sample Code</td>
-                <td><textarea cols="50" onClick="this.select();" rows="10">
-                foreach ($this->items as $teacher){echo $teacher->teachername.'<br/>';}</textarea></td>
-            </tr>
-        </table>
-    </div>
-    <br/>
+<h2>Creating/Editing Template Codes</h2>
 
-    <div>
-        <table class="sample">
-            <th colspan="2">Teacher Display Codes</th>
-            <tr>
-                <td>Teacher Thumbnail</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->$item->image;"/></td>
-            </tr>
-            <tr>
-                <td>Large Teacher Image</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->largeimage;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher's Studies</td>
-                <td><input onClick="this.select();" size="75" type="text"
-                           value="foreach($this->teacherstudies as $studies){echo $studies->studytitle;}"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Title</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->title;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Phone</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->phone;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Email</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->email;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Website</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->website;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Introduction</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->short;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Long Information</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->information;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Address</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->address;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Facebook URL</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->facebooklink;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Twitter URL</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->twitterlink;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Blog URL</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->bloglink;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Web Link1 URL</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->link1;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Web Link1 Label</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->linklabel1;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Web Link2 URL</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->link2;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Web Link2 Label</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->linklabel2;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Web Link3 URL</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->link3;"/></td>
-            </tr>
-            <tr>
-                <td>Teacher Web Link3 Label</td>
-                <td><input onClick="this.select();" size="75" type="text" value="echo $this->item->linklabel3;"/></td>
-            </tr>
-        </table>
-    </div>
-    <div>
-        <table class="sample">
-            <th colspan="2">Module Codes (Plus any Studies Code from above)</th>
-            <tr>
-                <td>Link to more studies</td>
-                <td><input onClick="this.select();" type="text" value="echo $link;"/></td>
-            </tr>
+<h3>Form Fields</h3>
+<table>
+    <tr>
+        <th>Field</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>Filename</strong></td>
+        <td>Enter a name for your template file (without the .php extension). Use lowercase letters, numbers, and underscores only.</td>
+    </tr>
+    <tr>
+        <td><strong>Type</strong></td>
+        <td>Select the view type this template will replace. Cannot be changed after creation.</td>
+    </tr>
+    <tr>
+        <td><strong>Template Code</strong></td>
+        <td>The PHP/HTML/CSS code for your custom template. Uses CodeMirror editor with syntax highlighting.</td>
+    </tr>
+    <tr>
+        <td><strong>Published</strong></td>
+        <td>Set to Published to make the template available for selection in Template Display Settings.</td>
+    </tr>
+</table>
 
-            <tr>
-                <td>Sample Code</td>
-                <td><textarea cols="50" onClick="this.select();" rows="10">
-                foreach ($list as $study){echo $study->studyintro.'<br/>';}</textarea></td>
-            </tr>
-        </table>
-    </div>
-</form>
+<h3>Template Types</h3>
+<table>
+    <tr>
+        <th>Type</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>Sermon List</strong></td>
+        <td>Replaces the default sermon/study listing page showing multiple sermons.</td>
+    </tr>
+    <tr>
+        <td><strong>Sermon</strong></td>
+        <td>Replaces the single sermon/study detail view.</td>
+    </tr>
+    <tr>
+        <td><strong>Teachers</strong></td>
+        <td>Replaces the teacher listing page showing all teachers.</td>
+    </tr>
+    <tr>
+        <td><strong>Teacher</strong></td>
+        <td>Replaces the single teacher detail view.</td>
+    </tr>
+    <tr>
+        <td><strong>Series Displays</strong></td>
+        <td>Replaces the series listing page showing all series.</td>
+    </tr>
+    <tr>
+        <td><strong>Series Display</strong></td>
+        <td>Replaces the single series detail view with its studies.</td>
+    </tr>
+    <tr>
+        <td><strong>Module</strong></td>
+        <td>Custom template for the Proclaim module.</td>
+    </tr>
+</table>
+
+<div class="tip">
+    <strong>Tip:</strong> When you create a new template code, default starter code is automatically inserted.
+    Do not modify the initial PHP code at the top of the file. Add your custom code at the bottom.
+</div>
+
+<h2>Template Code Reference</h2>
+<p>
+    The following tables list all available variables you can use in your template codes.
+    Click on any code field to select it for copying.
+</p>
+
+<h3>Study/Sermon Codes (All Views)</h3>
+<p>Use these codes within a loop to display study information:</p>
+<table class="code-table">
+    <tr>
+        <th>Description</th>
+        <th>Code</th>
+    </tr>
+    <tr>
+        <td>Loop through studies</td>
+        <td><code>foreach ($this->items as $study) { /* your code here */ }</code></td>
+    </tr>
+    <tr>
+        <td>Title</td>
+        <td><code>echo $study->studytitle;</code></td>
+    </tr>
+    <tr>
+        <td>Study Number</td>
+        <td><code>echo $study->studynumber;</code></td>
+    </tr>
+    <tr>
+        <td>Description/Intro</td>
+        <td><code>echo $study->studyintro;</code></td>
+    </tr>
+    <tr>
+        <td>Date</td>
+        <td><code>echo $study->studydate;</code></td>
+    </tr>
+    <tr>
+        <td>ID</td>
+        <td><code>echo $study->id;</code></td>
+    </tr>
+    <tr>
+        <td>Scripture Reference 1</td>
+        <td><code>echo $study->scripture1;</code></td>
+    </tr>
+    <tr>
+        <td>Scripture Reference 2</td>
+        <td><code>echo $study->scripture2;</code></td>
+    </tr>
+    <tr>
+        <td>Secondary Reference</td>
+        <td><code>echo $study->secondary_reference;</code></td>
+    </tr>
+    <tr>
+        <td>Media Files</td>
+        <td><code>echo $study->media;</code></td>
+    </tr>
+    <tr>
+        <td>Duration</td>
+        <td><code>echo $study->duration;</code></td>
+    </tr>
+    <tr>
+        <td>Topics</td>
+        <td><code>echo $study->topics;</code></td>
+    </tr>
+    <tr>
+        <td>Study Thumbnail</td>
+        <td><code>echo $study->study_thumbnail;</code></td>
+    </tr>
+    <tr>
+        <td>Series Thumbnail</td>
+        <td><code>echo $study->series_thumbnail;</code></td>
+    </tr>
+    <tr>
+        <td>Link to Details View</td>
+        <td><code>echo $study->detailslink;</code></td>
+    </tr>
+    <tr>
+        <td>Teacher Name</td>
+        <td><code>echo $study->teachername;</code></td>
+    </tr>
+    <tr>
+        <td>Teacher Title</td>
+        <td><code>echo $study->teachertitle;</code></td>
+    </tr>
+    <tr>
+        <td>Teacher Image</td>
+        <td><code>echo $study->teacherimage;</code></td>
+    </tr>
+    <tr>
+        <td>Location</td>
+        <td><code>echo $study->location_text;</code></td>
+    </tr>
+    <tr>
+        <td>Hits/Views</td>
+        <td><code>echo $study->hits;</code></td>
+    </tr>
+    <tr>
+        <td>Total Plays</td>
+        <td><code>echo $study->totalplays;</code></td>
+    </tr>
+    <tr>
+        <td>Total Downloads</td>
+        <td><code>echo $study->totaldownloads;</code></td>
+    </tr>
+    <tr>
+        <td>Submitted By</td>
+        <td><code>echo $study->submitted;</code></td>
+    </tr>
+    <tr>
+        <td>Slug (URL alias)</td>
+        <td><code>echo $study->slug;</code></td>
+    </tr>
+</table>
+
+<h3>Sermon List Page Codes</h3>
+<table class="code-table">
+    <tr>
+        <th>Description</th>
+        <th>Code</th>
+    </tr>
+    <tr>
+        <td>List Introduction Text</td>
+        <td><code>echo $this->params->get('list_intro');</code></td>
+    </tr>
+    <tr>
+        <td>Search Tools</td>
+        <td><code>echo $this->page->searchtools;</code></td>
+    </tr>
+    <tr>
+        <td>Pagination Links</td>
+        <td><code>echo $this->page->pagelinks;</code></td>
+    </tr>
+    <tr>
+        <td>Pagination Limit Box</td>
+        <td><code>echo $this->page->limitbox;</code></td>
+    </tr>
+    <tr>
+        <td>Pagination Object</td>
+        <td><code>echo $this->pagination;</code></td>
+    </tr>
+</table>
+
+<h4>Sample Sermon List Code</h4>
+<pre>foreach ($this->items as $study) {
+    echo $study->studytitle . '&lt;br/&gt;';
+    echo $study->studyintro . '&lt;br/&gt;';
+}</pre>
+
+<h3>Sermon Display Page Codes</h3>
+<p>In addition to study codes above:</p>
+<table class="code-table">
+    <tr>
+        <th>Description</th>
+        <th>Code</th>
+    </tr>
+    <tr>
+        <td>Print Button</td>
+        <td><code>echo $this->page->print;</code></td>
+    </tr>
+    <tr>
+        <td>Social Media Sharing</td>
+        <td><code>echo $this->page->social;</code></td>
+    </tr>
+    <tr>
+        <td>Full Study Text</td>
+        <td><code>echo $this->item->studytext;</code></td>
+    </tr>
+    <tr>
+        <td>Main Scripture Passage</td>
+        <td><code>echo $this->passage;</code></td>
+    </tr>
+    <tr>
+        <td>Related Studies Dropdown</td>
+        <td><code>echo $this->related;</code></td>
+    </tr>
+</table>
+
+<h3>Series List Codes</h3>
+<table class="code-table">
+    <tr>
+        <th>Description</th>
+        <th>Code</th>
+    </tr>
+    <tr>
+        <td>Loop through series</td>
+        <td><code>foreach ($this->items as $series) { /* code */ }</code></td>
+    </tr>
+    <tr>
+        <td>Series Title</td>
+        <td><code>echo $series->series_text;</code></td>
+    </tr>
+    <tr>
+        <td>Series Description</td>
+        <td><code>echo $series->description;</code></td>
+    </tr>
+    <tr>
+        <td>Series Image</td>
+        <td><code>echo $series->image;</code></td>
+    </tr>
+    <tr>
+        <td>Link to Series</td>
+        <td><code>echo $series->serieslink;</code></td>
+    </tr>
+    <tr>
+        <td>Teacher Name</td>
+        <td><code>echo $series->teachername;</code></td>
+    </tr>
+    <tr>
+        <td>Teacher Title</td>
+        <td><code>echo $series->teachertitle;</code></td>
+    </tr>
+    <tr>
+        <td>Teacher Image</td>
+        <td><code>echo $series->teacherimage;</code></td>
+    </tr>
+    <tr>
+        <td>Series Dropdown Box</td>
+        <td><code>echo $this->page->series;</code></td>
+    </tr>
+    <tr>
+        <td>Main Series Page Image</td>
+        <td><code>echo $this->page->main;</code></td>
+    </tr>
+    <tr>
+        <td>Pagination Links</td>
+        <td><code>echo $this->page->pagelinks; echo $this->page->counter;</code></td>
+    </tr>
+</table>
+
+<h3>Series Display Page Codes</h3>
+<table class="code-table">
+    <tr>
+        <th>Description</th>
+        <th>Code</th>
+    </tr>
+    <tr>
+        <td>Series Title</td>
+        <td><code>echo $this->page->series_text;</code></td>
+    </tr>
+    <tr>
+        <td>Series Thumbnail</td>
+        <td><code>echo $this->page->image;</code></td>
+    </tr>
+    <tr>
+        <td>Series Description</td>
+        <td><code>echo $this->page->description;</code></td>
+    </tr>
+    <tr>
+        <td>Teacher Name</td>
+        <td><code>echo $this->page->teachername;</code></td>
+    </tr>
+    <tr>
+        <td>Teacher Title</td>
+        <td><code>echo $this->page->teachertitle;</code></td>
+    </tr>
+    <tr>
+        <td>Teacher Image</td>
+        <td><code>echo $this->page->teacherimage;</code></td>
+    </tr>
+    <tr>
+        <td>Series Studies Loop</td>
+        <td><code>foreach ($this->seriesstudies as $study) { /* use study codes */ }</code></td>
+    </tr>
+</table>
+
+<h3>Teacher List Codes</h3>
+<table class="code-table">
+    <tr>
+        <th>Description</th>
+        <th>Code</th>
+    </tr>
+    <tr>
+        <td>Loop through teachers</td>
+        <td><code>foreach ($this->items as $teacher) { /* code */ }</code></td>
+    </tr>
+    <tr>
+        <td>Teacher Name</td>
+        <td><code>echo $teacher->teachername;</code></td>
+    </tr>
+    <tr>
+        <td>Teacher Image</td>
+        <td><code>echo $teacher->image;</code></td>
+    </tr>
+    <tr>
+        <td>Link to Teacher</td>
+        <td><code>echo $teacher->teacherlink;</code></td>
+    </tr>
+</table>
+
+<h3>Teacher Display Page Codes</h3>
+<table class="code-table">
+    <tr>
+        <th>Description</th>
+        <th>Code</th>
+    </tr>
+    <tr>
+        <td>Teacher Thumbnail</td>
+        <td><code>echo $this->item->image;</code></td>
+    </tr>
+    <tr>
+        <td>Large Teacher Image</td>
+        <td><code>echo $this->item->largeimage;</code></td>
+    </tr>
+    <tr>
+        <td>Teacher Title</td>
+        <td><code>echo $this->item->title;</code></td>
+    </tr>
+    <tr>
+        <td>Teacher Introduction</td>
+        <td><code>echo $this->item->short;</code></td>
+    </tr>
+    <tr>
+        <td>Teacher Full Bio</td>
+        <td><code>echo $this->item->information;</code></td>
+    </tr>
+    <tr>
+        <td>Phone</td>
+        <td><code>echo $this->item->phone;</code></td>
+    </tr>
+    <tr>
+        <td>Email</td>
+        <td><code>echo $this->item->email;</code></td>
+    </tr>
+    <tr>
+        <td>Website</td>
+        <td><code>echo $this->item->website;</code></td>
+    </tr>
+    <tr>
+        <td>Address</td>
+        <td><code>echo $this->item->address;</code></td>
+    </tr>
+    <tr>
+        <td>Facebook URL</td>
+        <td><code>echo $this->item->facebooklink;</code></td>
+    </tr>
+    <tr>
+        <td>Twitter URL</td>
+        <td><code>echo $this->item->twitterlink;</code></td>
+    </tr>
+    <tr>
+        <td>Blog URL</td>
+        <td><code>echo $this->item->bloglink;</code></td>
+    </tr>
+    <tr>
+        <td>Custom Link 1 URL</td>
+        <td><code>echo $this->item->link1;</code></td>
+    </tr>
+    <tr>
+        <td>Custom Link 1 Label</td>
+        <td><code>echo $this->item->linklabel1;</code></td>
+    </tr>
+    <tr>
+        <td>Custom Link 2 URL</td>
+        <td><code>echo $this->item->link2;</code></td>
+    </tr>
+    <tr>
+        <td>Custom Link 2 Label</td>
+        <td><code>echo $this->item->linklabel2;</code></td>
+    </tr>
+    <tr>
+        <td>Custom Link 3 URL</td>
+        <td><code>echo $this->item->link3;</code></td>
+    </tr>
+    <tr>
+        <td>Custom Link 3 Label</td>
+        <td><code>echo $this->item->linklabel3;</code></td>
+    </tr>
+    <tr>
+        <td>Teacher's Studies Loop</td>
+        <td><code>foreach ($this->teacherstudies as $study) { /* use study codes */ }</code></td>
+    </tr>
+</table>
+
+<h3>Module Codes</h3>
+<table class="code-table">
+    <tr>
+        <th>Description</th>
+        <th>Code</th>
+    </tr>
+    <tr>
+        <td>Loop through studies</td>
+        <td><code>foreach ($list as $study) { /* use study codes */ }</code></td>
+    </tr>
+    <tr>
+        <td>Link to More Studies</td>
+        <td><code>echo $link;</code></td>
+    </tr>
+</table>
+
+<h4>Sample Module Code</h4>
+<pre>foreach ($list as $study) {
+    echo $study->studytitle . '&lt;br/&gt;';
+    echo $study->studyintro . '&lt;br/&gt;';
+}</pre>
+
+<h2>Best Practices</h2>
+<ul>
+    <li>Always back up your template codes before making changes</li>
+    <li>Test your template code on a development site before deploying to production</li>
+    <li>Use meaningful filenames that describe the template's purpose</li>
+    <li>Add PHP comments to document your custom code</li>
+    <li>Do not modify the default code that appears at the top of new templates</li>
+    <li>Check for PHP errors in Joomla's error logs if your template doesn't display correctly</li>
+</ul>
+
+<h2>Related Links</h2>
+<ul>
+    <li><a href="https://www.christianwebministries.org/documentation/8-proclaim.html" target="_blank">Proclaim Documentation</a></li>
+    <li><a href="https://www.christianwebministries.org/forum.html" target="_blank">Community Forum</a></li>
+</ul>
+
 </body>
 </html>
