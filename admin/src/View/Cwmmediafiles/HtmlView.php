@@ -230,8 +230,7 @@ class HtmlView extends BaseHtmlView
                 ->message('JGLOBAL_CONFIRM_DELETE')
                 ->listCheck(true);
         }
-        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-        $toolbar->help('proclaim', false, $url = $help_url, 'com_proclaim');
+        $toolbar->help('mediafiles', true);
     }
 
     /**
