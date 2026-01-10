@@ -349,8 +349,8 @@ class Cwmmedia
         /**
          * @desc Players - from Template:
          * First, we check to see if in the template the user has set to use the internal player for all media. This can be overridden by itemparams
-         * popuptype = whether AVR should be window or lightbox (handled in avr code)
-         * internal_popup = whether direct or internal player should be popup/new window or inline
+         * popuptype = whether AVR should be a window or a lightbox (handled in AVR code)
+         * internal_popup = whether direct or internal player should be a popup/new window or inline
          * From media file:
          * player 0 = direct, 1 = internal, 2 = AVR, 3 = AV 7 = legacy internal player (from JBS 6.2.2)
          * internal_popup 0 = inline, 1 = popup, 2 = global settings
@@ -428,7 +428,7 @@ class Cwmmedia
     /**
      * Setup Player Code.
      *
-     * @param   Registry  $params  Params are the merged of system and items.
+     * @param   Registry  $params  Params are the merged system and items.
      * @param   object    $player  Player code
      * @param   String    $image   Image info
      * @param   object    $media   Media
@@ -1025,6 +1025,7 @@ class Cwmmedia
      *
      * @return object|bool
      *
+     * @throws \Exception
      * @since 9.0.0
      */
     public function getMediaRows2(int $id): object|bool
