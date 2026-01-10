@@ -2132,7 +2132,7 @@ class Cwmlisting
                 break;
 
             case 4:
-                // Case 4 is a details link with tooltip
+                // Case 4 is a details link with a tooltip
 
                 $link = Route::_(
                     Cwmhelperroute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid')
@@ -2232,47 +2232,55 @@ class Cwmlisting
      * @param   Registry          $params    Item Params
      * @param   CwmtemplateTable  $template  Template
      *
-     * @return object
+     * @return string
      *
      * @throws \Exception
      * @since 7.0
      */
-    public function getListingExp($row, $params, $template)
+    public function getListingExp($row, $params, $template): string
     {
-        $Media  = new Cwmmedia();
-        $images = new Cwmimages();
-        $image  = Cwmimages::getStudyThumbnail($row->thumbnailm);
-        $label  = $params->get('templatecode');
-        $label  = str_replace('{{teacher}}', $row->teachername, $label);
-        $label  = str_replace('{{title}}', $row->studytitle, $label);
-        $label  = str_replace('{{date}}', $this->$params, $row->studydate, $label);
-        $label  = str_replace('{{studyintro}}', $row->studyintro, $label);
-        $label  = str_replace('{{scripture}}', $this->getScripture($params, $row, 0, 1), $label);
-        $label  = str_replace('{{topics}}', $row->topic_text, $label);
-        $label  = str_replace(
-            '{{url}}',
-            Route::_('index.php?option=com_proclaim&view=Cwmsermon&id=' . $row->id . '&t=' . $template->id),
-            $label
-        );
-        $label  = str_replace(
-            '{{thumbnail}}',
-            $this->useJImage($image->path, "", "bsms_studyThumbnail" . $row->id, $image->width, $image->height),
-            $label
-        );
-        $label  = str_replace('{{seriestext}}', $row->series_text, $label);
-        $label  = str_replace('{{messagetype}}', $row->message_type, $label);
-        $label  = str_replace('{{bookname}}', $row->bookname, $label);
-        $label  = str_replace('{{topics}}', $row->topic_text, $label);
-        $label  = str_replace('{{hits}}', $row->hits, $label);
-        $label  = str_replace('{{location}}', $row->location_text, $label);
-        $label  = str_replace('{{plays}}', $row->totalplays, $label);
-        $label  = str_replace('{{downloads}}', $row->totaldownloads, $label);
+        $label = $params->get('templatecode');
 
-        // For now we need to use the existing mediatable function to get all the media
-        $mediaTable = $Media->getFluidMedia($row, $params, $template);
-        $label      = str_replace('{{media}}', $mediaTable, $label);
+        if (empty($label)) {
+            return '';
+        }
 
-        // Need to add template items for media...
+        $image     = Cwmimages::getStudyThumbnail($row->thumbnailm ?? '');
+        $thumbnail = $image ? $this->useJImage(
+            $image->path,
+            "",
+            "bsms_studyThumbnail" . $row->id,
+            $image->width,
+            $image->height
+        ) : '';
+
+        // Build replacements array for single str_replace call
+        $replacements = [
+            '{{teacher}}'     => $row->teachername ?? '',
+            '{{title}}'       => $row->studytitle ?? '',
+            '{{date}}'        => isset($row->studydate) ? $this->getStudyDate($params, $row->studydate) : '',
+            '{{studyintro}}'  => $row->studyintro ?? '',
+            '{{scripture}}'   => $this->getScripture($params, $row, 0, 1),
+            '{{topics}}'      => $row->topic_text ?? '',
+            '{{url}}'         => Route::_('index.php?option=com_proclaim&view=Cwmsermon&id=' . $row->id . '&t=' . $template->id),
+            '{{thumbnail}}'   => $thumbnail,
+            '{{seriestext}}'  => $row->series_text ?? '',
+            '{{messagetype}}' => $row->message_type ?? '',
+            '{{bookname}}'    => $row->bookname ?? '',
+            '{{hits}}'        => $row->hits ?? '',
+            '{{location}}'    => $row->location_text ?? '',
+            '{{plays}}'       => $row->totalplays ?? '',
+            '{{downloads}}'   => $row->totaldownloads ?? '',
+        ];
+
+        $label = str_replace(array_keys($replacements), array_values($replacements), $label);
+
+        // Only process media if the placeholder exists in the template
+        if (str_contains($label, '{{media}}')) {
+            $media      = new Cwmmedia();
+            $mediaTable = $media->getFluidMedia($row, $params, $template);
+            $label      = str_replace('{{media}}', $mediaTable, $label);
+        }
 
         return $label;
     }
