@@ -143,8 +143,9 @@ class Cwmlanding
 
         foreach ($items as $item) {
             if ($t >= $limit && !$showdiv) {
-                $html .= "\n\t" . '<div id="' . $divId . '" style="display:none;">';
-                $i       = 0;
+                // Use display:contents so items flow with visible section when expanded
+                $html .= "\n\t" . '<div id="' . $divId . '" class="landing-expandable" style="display:none;">';
+                // Don't reset $i - continue column flow from visible section
                 $showdiv = true;
             }
 
@@ -152,10 +153,17 @@ class Cwmlanding
             $i++;
             $t++;
 
-            if ($i === 3 && $t !== $limit && $t !== $count) {
+            if ($i === 3 && $t !== $count) {
                 $i = 0;
                 $html .= '<div class="w-100"></div>';
-            } elseif ($i === 3 || $t === $count || $t === $limit) {
+            } elseif ($i === 3 || $t === $count) {
+                // Add empty placeholder columns to complete the last row
+                if ($t === $count && $i > 0 && $i < 3) {
+                    $emptyColsNeeded = 3 - $i;
+                    for ($e = 0; $e < $emptyColsNeeded; $e++) {
+                        $html .= '<div class="col" style="margin-right:7px"></div>';
+                    }
+                }
                 $i = 0;
             }
         }
