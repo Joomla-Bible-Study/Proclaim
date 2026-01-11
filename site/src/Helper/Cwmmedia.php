@@ -522,7 +522,6 @@ class Cwmmedia
 
                     case 1: // Popup
                         // Add space for a pop-up window
-
                         $diff                 = $params->get('player_width') - $params->get('playerwidth');
                         $player->playerwidth += abs($diff) + 10;
                         $player->playerheight += $params->get('popupmargin', '50');

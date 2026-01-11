@@ -124,7 +124,7 @@ if (!empty($editor)) {
                             $attribs = 'data-function="' . $this->escape($onclick) . '"'
                                 . ' data-id="' . $item->name . '"'
                                 . ' data-title="' . $this->escape($item->title) . '"'
-                                . ' data-uri="' . $this->escape(CwmrouteHelper::getTypeRoute($item->name, 0)) . '"'
+                                . ' data-uri="' . $this->escape($item->name) . '"'
                                 . ' data-language="0"';
                             ?>
                             <a class="select-link" href="javascript:void(0)" <?php
