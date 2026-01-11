@@ -276,6 +276,7 @@ class CWMAddonYoutube extends CWMAddon
             'fetchChannelPlaylists',
             'fetchPlaylistVideos',
             'fetchLiveVideos',
+            'getVideoStatus',
         ];
     }
 
@@ -898,5 +899,110 @@ class CWMAddonYoutube extends CWMAddon
         ]);
 
         return $this->fetchLiveVideos($input);
+    }
+
+    /**
+     * Handle getVideoStatus AJAX action
+     *
+     * @return  array  Response data
+     *
+     * @since   10.0.0
+     */
+    protected function handleGetVideoStatusAction(): array
+    {
+        $app   = Factory::getApplication();
+        $input = $app->input;
+
+        return $this->getVideoStatus($input);
+    }
+
+    /**
+     * Get the live streaming status of a specific video
+     *
+     * Uses the Videos API with liveStreamingDetails to get the actual
+     * broadcast status, which is more reliable than search API for
+     * detecting status transitions.
+     *
+     * @param   Input  $input  Request input with server_id and video_id
+     *
+     * @return  array  Response with isLive, isUpcoming, liveBroadcastContent
+     *
+     * @since   10.0.0
+     */
+    public function getVideoStatus(Input $input): array
+    {
+        $this->loadLanguage();
+
+        $serverId = $input->getInt('server_id', 0);
+        $videoId  = $input->getString('video_id', '');
+
+        if (!$serverId) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_SERVER_ID')];
+        }
+
+        if (empty($videoId)) {
+            return ['success' => false, 'error' => 'No video ID provided'];
+        }
+
+        $config = $this->getServerConfig($serverId);
+        $apiKey = $config['api_key'] ?? '';
+
+        if (empty($apiKey)) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_API_KEY')];
+        }
+
+        try {
+            $client = new Google\Client();
+            $client->setApplicationName('Proclaim');
+            $client->setDeveloperKey($apiKey);
+
+            $youtube = new YouTube($client);
+
+            // Get video details with liveStreamingDetails
+            $response = $youtube->videos->listVideos('snippet,liveStreamingDetails', [
+                'id' => $videoId,
+            ]);
+
+            if (empty($response->items)) {
+                return [
+                    'success'    => true,
+                    'isLive'     => false,
+                    'isUpcoming' => false,
+                    'videoId'    => $videoId,
+                    'status'     => 'not_found',
+                ];
+            }
+
+            $video                 = $response->items[0];
+            $liveBroadcastContent  = $video->snippet->liveBroadcastContent ?? 'none';
+            $liveStreamingDetails  = $video->liveStreamingDetails;
+
+            // Determine status based on liveBroadcastContent
+            // Values: 'live', 'upcoming', 'none'
+            $isLive     = ($liveBroadcastContent === 'live');
+            $isUpcoming = ($liveBroadcastContent === 'upcoming');
+
+            $result = [
+                'success'              => true,
+                'isLive'               => $isLive,
+                'isUpcoming'           => $isUpcoming,
+                'videoId'              => $videoId,
+                'liveBroadcastContent' => $liveBroadcastContent,
+            ];
+
+            // Include scheduled start time if available
+            if ($liveStreamingDetails && $liveStreamingDetails->scheduledStartTime) {
+                $result['scheduledStartTime'] = $liveStreamingDetails->scheduledStartTime;
+            }
+
+            // Include actual start time if live or completed
+            if ($liveStreamingDetails && $liveStreamingDetails->actualStartTime) {
+                $result['actualStartTime'] = $liveStreamingDetails->actualStartTime;
+            }
+
+            return $result;
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
     }
 }

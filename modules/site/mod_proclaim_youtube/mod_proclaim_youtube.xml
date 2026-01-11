@@ -15,6 +15,7 @@
         <folder>tmpl</folder>
         <folder>language</folder>
         <folder>src</folder>
+        <filename>helper.php</filename>
     </files>
     <config>
         <fields name="params" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">

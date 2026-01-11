@@ -55,7 +55,13 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $helper = $this->getHelperFactory()->getHelper('YoutubeHelper');
 
         // Get video data
-        $video = $helper->getVideo($data['params'], $this->getApplication());
+        $video    = $helper->getVideo($data['params'], $this->getApplication());
+        $serverId = (int) $data['params']->get('server_id', 0);
+
+        // Verify live status in real-time (bypasses cache for status only)
+        if ($video && $serverId) {
+            $video = $helper->verifyLiveStatus($video, $serverId);
+        }
 
         // Build embed URL if video found
         $embedUrl = null;
@@ -98,6 +104,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $data['aspectRatio']    = $aspectRatio;
         $data['helper']         = $helper;
         $data['matchedMessage'] = $matchedMessage;
+        $data['serverId']       = (int) $data['params']->get('server_id', 0);
 
         return $data;
     }

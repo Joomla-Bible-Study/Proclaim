@@ -26,6 +26,10 @@ use Joomla\CMS\Router\Route;
 /** @var float $aspectRatio */
 /** @var object|null $matchedMessage */
 /** @var \Joomla\Registry\Registry $params */
+/** @var int $serverId */
+/** @var \stdClass $module */
+
+$moduleId = $module->id ?? 0;
 ?>
 
 <div class="mod-proclaim-youtube">
@@ -38,8 +42,23 @@ use Joomla\CMS\Router\Route;
         $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
         ?>
 
-        <?php if ($showLiveBadge && ($isLive || $isUpcoming)): ?>
-            <div class="mod-proclaim-youtube__badge mb-2">
+        <?php if ($showLiveBadge): ?>
+            <?php
+            $statusToken = \CWM\Module\ProclaimYoutube\Site\Helper\YoutubeHelper::generateStatusToken($serverId);
+            $ajaxUrl     = \Joomla\CMS\Uri\Uri::base() . 'index.php?option=com_ajax&module=proclaim_youtube&method=getStatus&format=json'
+                . '&server_id=' . $serverId
+                . '&video_id=' . urlencode($video['videoId'] ?? '')
+                . '&token=' . urlencode($statusToken);
+            ?>
+            <div id="mod-proclaim-youtube-badge-<?php echo $moduleId; ?>" class="mod-proclaim-youtube__badge mb-2"
+                 data-server-id="<?php echo $serverId; ?>"
+                 data-current-video="<?php echo htmlspecialchars($video['videoId'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                 data-is-live="<?php echo $isLive ? '1' : '0'; ?>"
+                 data-is-upcoming="<?php echo $isUpcoming ? '1' : '0'; ?>"
+                 data-token="<?php echo htmlspecialchars($statusToken, ENT_QUOTES, 'UTF-8'); ?>"
+                 data-ajax-url="<?php echo htmlspecialchars($ajaxUrl, ENT_QUOTES, 'UTF-8'); ?>"
+                 data-label-live="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_LIVE_NOW'), ENT_QUOTES, 'UTF-8'); ?>"
+                 data-label-upcoming="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_UPCOMING'), ENT_QUOTES, 'UTF-8'); ?>">
                 <?php if ($isLive): ?>
                     <span class="badge bg-danger">
                         <span class="fas fa-circle me-1" aria-hidden="true"></span>
@@ -140,3 +159,81 @@ use Joomla\CMS\Router\Route;
     font-size: 0.9em;
 }
 </style>
+
+<?php if ($video && $embedUrl && $showLiveBadge && ($isLive || $isUpcoming)): ?>
+<?php
+/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = \Joomla\CMS\Factory::getApplication()->getDocument()->getWebAssetManager();
+
+$inlineScript = <<<JS
+(function() {
+    'use strict';
+
+    var badgeEl = document.getElementById('mod-proclaim-youtube-badge-{$moduleId}');
+    if (!badgeEl) return;
+
+    var serverId = badgeEl.dataset.serverId;
+    var currentVideoId = badgeEl.dataset.currentVideo;
+    var wasLive = badgeEl.dataset.isLive === '1';
+    var wasUpcoming = badgeEl.dataset.isUpcoming === '1';
+    var labelLive = badgeEl.dataset.labelLive;
+    var labelUpcoming = badgeEl.dataset.labelUpcoming;
+    var token = badgeEl.dataset.token;
+
+    var pollInterval = wasUpcoming ? 30000 : 60000;
+    var ajaxUrl = badgeEl.dataset.ajaxUrl;
+
+    function updateBadge(isLive, isUpcoming) {
+        var html = '';
+        if (isLive) {
+            html = '<span class="badge bg-danger"><span class="fas fa-circle me-1" aria-hidden="true"></span>' + labelLive + '</span>';
+        } else if (isUpcoming) {
+            html = '<span class="badge bg-warning text-dark"><span class="fas fa-clock me-1" aria-hidden="true"></span>' + labelUpcoming + '</span>';
+        }
+        badgeEl.innerHTML = html;
+    }
+
+    function checkStatus() {
+        fetch(ajaxUrl, { method: 'GET', headers: { 'Accept': 'application/json' } })
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+            // if (data.data) { data = data.data; }
+            if (data.success) {
+                var isLive = data.isLive;
+                var isUpcoming = data.isUpcoming;
+                if (isLive !== wasLive || isUpcoming !== wasUpcoming) {
+                    updateBadge(isLive, isUpcoming);
+                    if (isLive && !wasLive) {
+                        wasLive = isLive;
+                        wasUpcoming = isUpcoming;
+                        setTimeout(function() { window.location.reload(); }, 2000);
+                        return;
+                    }
+                    if (!isLive && !isUpcoming) {
+                        clearInterval(pollTimer);
+                        return;
+                    }
+                    wasLive = isLive;
+                    wasUpcoming = isUpcoming;
+                }
+            }
+        })
+        .catch(function(error) { console.log('YouTube status check failed:', error); });
+    }
+
+    var pollTimer = setInterval(checkStatus, pollInterval);
+
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            clearInterval(pollTimer);
+        } else {
+            checkStatus();
+            pollTimer = setInterval(checkStatus, pollInterval);
+        }
+    });
+})();
+JS;
+
+$wa->addInlineScript($inlineScript, [], [], ['mod_proclaim_youtube_status_' . $moduleId]);
+?>
+<?php endif; ?>

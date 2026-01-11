@@ -120,6 +120,43 @@ class YoutubeHelper implements DatabaseAwareInterface
     }
 
     /**
+     * Verify and update the live status of a video in real-time
+     *
+     * This is called after getting cached video data to ensure the
+     * isLive/isUpcoming status is accurate on page load.
+     *
+     * @param   array  $video     Video data array
+     * @param   int    $serverId  Server ID for API access
+     *
+     * @return  array  Video data with updated status
+     *
+     * @since   10.0.0
+     */
+    public function verifyLiveStatus(array $video, int $serverId): array
+    {
+        // Only verify if video was marked as live or upcoming (to save API quota)
+        // JavaScript polling handles real-time updates for displayed live/upcoming videos
+        if (empty($video['videoId']) || (!($video['isLive'] ?? false) && !($video['isUpcoming'] ?? false))) {
+            return $video;
+        }
+
+        $youtube     = new CWMAddonYoutube();
+        $statusInput = new Input([
+            'server_id' => $serverId,
+            'video_id'  => $video['videoId'],
+        ]);
+
+        $result = $youtube->getVideoStatus($statusInput);
+
+        if ($result['success']) {
+            $video['isLive']     = $result['isLive'] ?? false;
+            $video['isUpcoming'] = $result['isUpcoming'] ?? false;
+        }
+
+        return $video;
+    }
+
+    /**
      * Fetch currently live or upcoming video
      *
      * @param   CWMAddonYoutube  $youtube        YouTube addon instance
@@ -174,7 +211,7 @@ class YoutubeHelper implements DatabaseAwareInterface
     }
 
     /**
-     * Parse excluded video IDs from comma-separated string
+     * Parse excluded video IDs from a comma-separated string
      *
      * @param   string  $excludeString  Comma-separated video IDs
      *
@@ -284,9 +321,121 @@ class YoutubeHelper implements DatabaseAwareInterface
     }
 
     /**
+     * AJAX method to get current video status (live/upcoming/none)
+     *
+     * This bypasses the cache to get real-time status from the YouTube API.
+     * Called via com_ajax: index.php?option=com_ajax&module=mod_proclaim_youtube&method=getStatus&format=json
+     *
+     * If video_id is provided, checks the specific video's status using the Videos API.
+     * Otherwise falls back to searching for live/upcoming videos on the channel.
+     *
+     * @return  array  Status data with isLive, isUpcoming, and videoId
+     *
+     * @throws \Exception
+     * @since   10.0.0
+     */
+    public static function getStatusAjax(): array
+    {
+        $app      = Factory::getApplication();
+        $input    = $app->getInput();
+        $serverId = $input->getInt('server_id', 0);
+        $videoId  = $input->getString('video_id', '');
+        $token    = $input->getString('token', '');
+
+        // Validate token to prevent external abuse
+        // Token is generated from server_id + a site secret
+        $expectedToken = self::generateStatusToken($serverId);
+
+        if (empty($token) || !hash_equals($expectedToken, $token)) {
+            return [
+                'success' => false,
+                'error'   => 'Invalid token',
+            ];
+        }
+
+        if (!$serverId) {
+            return [
+                'success' => false,
+                'error'   => 'No server ID provided',
+            ];
+        }
+
+        $youtube = new CWMAddonYoutube();
+
+        // If we have a specific video ID, check its status directly
+        // This is more reliable than the search API for status transitions
+        if (!empty($videoId)) {
+            $statusInput = new Input([
+                'server_id' => $serverId,
+                'video_id'  => $videoId,
+            ]);
+
+            $result = $youtube->getVideoStatus($statusInput);
+
+            if ($result['success']) {
+                return [
+                    'success'    => true,
+                    'isLive'     => $result['isLive'] ?? false,
+                    'isUpcoming' => $result['isUpcoming'] ?? false,
+                    'videoId'    => $videoId,
+                ];
+            }
+        }
+
+        // Fall back to searching for live/upcoming videos
+        // Check for currently live videos
+        $liveInput = new Input([
+            'server_id'   => $serverId,
+            'max_results' => 1,
+            'event_type'  => 'live',
+        ]);
+
+        $result = $youtube->fetchLiveVideos($liveInput);
+
+        if ($result['success'] && !empty($result['videos'])) {
+            $video = $result['videos'][0];
+
+            return [
+                'success'    => true,
+                'isLive'     => true,
+                'isUpcoming' => false,
+                'videoId'    => $video['videoId'] ?? '',
+            ];
+        }
+
+        // Check for upcoming videos
+        $upcomingInput = new Input([
+            'server_id'   => $serverId,
+            'max_results' => 1,
+            'event_type'  => 'upcoming',
+        ]);
+
+        $result = $youtube->fetchLiveVideos($upcomingInput);
+
+        if ($result['success'] && !empty($result['videos'])) {
+            $video = $result['videos'][0];
+
+            return [
+                'success'    => true,
+                'isLive'     => false,
+                'isUpcoming' => true,
+                'videoId'    => $video['videoId'] ?? '',
+            ];
+        }
+
+        // No live or upcoming video
+        return [
+            'success'    => true,
+            'isLive'     => false,
+            'isUpcoming' => false,
+            'videoId'    => '',
+        ];
+    }
+
+    /**
      * Find a matching Proclaim message for a YouTube video
      *
-     * Parses the video title to extract message title and teacher name,
+     * Parses the video title to extract the message title and the teacher's name,
      * then searches the Proclaim database for a matching message.
      *
      * @param   array  $video  Video data array with 'title' key
@@ -313,5 +462,25 @@ class YoutubeHelper implements DatabaseAwareInterface
         }
 
         return \CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeHelper::matchVideoToMessage($video['title']);
+    }
+
+    /**
+     * Generate a secure token for AJAX status requests
+     *
+     * Token is based on server_id and Joomla's secret key, ensuring
+     * Only requests from pages that rendered the module can call the API.
+     *
+     * @param   int  $serverId  Server ID
+     *
+     * @return  string  Token hash
+     *
+     * @throws \Exception
+     * @since   10.0.0
+     */
+    public static function generateStatusToken(int $serverId): string
+    {
+        $secret = Factory::getApplication()->get('secret', '');
+
+        return hash('sha256', 'mod_proclaim_youtube_status_' . $serverId . '_' . $secret);
     }
 }

@@ -131,7 +131,7 @@ class Cwmparams
             $db->setQuery($query);
             $template = $db->loadObject();
 
-            // This is a fall back to default template if specified template has been deleted.
+            // This is a fallback to the default template if the specified template has been deleted.
             if (!$template) {
                 self::$templateId = 1;
                 $query            = $db->getQuery(true);
