@@ -153,24 +153,4 @@ abstract class CwmrouteHelper
     {
         return 'index.php?option=com_proclaim&task=cwmmessageform.edit&a_id=' . (int)$id;
     }
-
-    /**
-     * Get the Teacher route.
-     *
-     * @param   string      $type      Type of server offered
-     * @param   int|string  $language  The language code.
-     * @param   ?string     $layout    The layout value.
-     *
-     * @return  string  The article route.
-     *
-     * @since   1.5
-     */
-    public static function getTypeRoute(string $type, int|string $language = '*', ?string $layout = null): string
-    {
-        if (!empty($type)) {
-            return '';
-        }
-
-        return $type;
-    }
 }
