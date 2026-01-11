@@ -100,7 +100,7 @@ class YoutubeHelper implements DatabaseAwareInterface
 
             case 'latest_only':
             default:
-                // Only get latest uploaded
+                // Only get the latest uploaded
                 $video = $this->fetchLatestVideo($youtube, $serverId);
                 break;
         }
@@ -134,7 +134,7 @@ class YoutubeHelper implements DatabaseAwareInterface
      */
     public function verifyLiveStatus(array $video, int $serverId): array
     {
-        // Only verify if video was marked as live or upcoming (to save API quota)
+        // Only verify if a video was marked as live or upcoming (to save API quota)
         // JavaScript polling handles real-time updates for displayed live/upcoming videos
         if (empty($video['videoId']) || (!($video['isLive'] ?? false) && !($video['isUpcoming'] ?? false))) {
             return $video;
@@ -233,7 +233,7 @@ class YoutubeHelper implements DatabaseAwareInterface
     }
 
     /**
-     * Fetch latest uploaded video
+     * Fetch the latest video
      *
      * @param   CWMAddonYoutube  $youtube   YouTube addon instance
      * @param   int              $serverId  Server ID
@@ -474,13 +474,16 @@ class YoutubeHelper implements DatabaseAwareInterface
      *
      * @return  string  Token hash
      *
-     * @throws \Exception
      * @since   10.0.0
      */
     public static function generateStatusToken(int $serverId): string
     {
-        $secret = Factory::getApplication()->get('secret', '');
+        try {
+            $secret = Factory::getApplication()->get('secret', '');
 
-        return hash('sha256', 'mod_proclaim_youtube_status_' . $serverId . '_' . $secret);
+            return hash('sha256', 'mod_proclaim_youtube_status_' . $serverId . '_' . $secret);
+        } catch (\Exception $e) {
+            return '';
+        }
     }
 }
