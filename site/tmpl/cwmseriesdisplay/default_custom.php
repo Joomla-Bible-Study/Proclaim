@@ -36,7 +36,7 @@ $t              = $this->template->id;
 echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
     <div id="proclaim" class="noRefTagger"> <!-- This div is the container for the whole page -->
         <?php
-        echo $JBSMSerieslist->getSeriesDetailsExp($this->items, $this->params, $this->template);
+        echo $JBSMSerieslist->getSeriesDetailsExp($this->items, $this->params);
         ?>
         <table class="table table-striped bslisttable"> <?php
             $studies = $JBSMSerieslist->getSeriesstudiesExp($this->items->id, $this->params, $this->template);

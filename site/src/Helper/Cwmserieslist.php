@@ -67,64 +67,62 @@ class Cwmserieslist extends Cwmlisting
      */
     public function getSerieslistExp($row, $params, $template): string
     {
-        $image = Cwmimages::getSeriesThumbnail($row->series_thumbnail);
         $label = (string) $params->get('series_templatecode');
+        $extra = [
+            'url' => 'index.php?option=com_proclaim&amp;view=cwmseriesdisplay&amp;t=' . $template . '&amp;id=' . $row->id,
+        ];
 
-        return preg_replace_callback('/{{(teacher|teachertitle|title|description|thumbnail|url)}}/', function ($matches) use ($row, $image, $template) {
-            switch ($matches[1]) {
-                case 'teacher':
-                    return $row->teachername;
-                case 'teachertitle':
-                    return $row->teachertitle;
-                case 'title':
-                    return $row->series_text;
-                case 'description':
-                    return $row->description;
-                case 'thumbnail':
-                    return '<img src="' . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" />';
-                case 'url':
-                    return 'index.php?option=com_proclaim&amp;view=cwmseriesdisplay&amp;t=' . $template . '&amp;id=' . $row->id;
-            }
-
-            return $matches[0];
-        }, $label);
+        return $this->replaceSeriesPlaceholders($row, $label, $extra);
     }
 
     /**
      * Get Series Details EXP
      *
-     * @param   object    $row       JTable
-     * @param   Registry  $params    Item Params
-     * @param   object    $template  Template
+     * @param   object    $row     JTable
+     * @param   Registry  $params  Item Params
      *
      * @return string
      *
      * @since    8.0
      */
-    public function getSeriesDetailsExp($row, $params, $template): string
+    public function getSeriesDetailsExp($row, $params): string
+    {
+        $label = (string) $params->get('series_detailcode');
+        $extra = [
+            'plays'     => $row->totalplays ?? '',
+            'downloads' => $row->totaldownloads ?? '',
+        ];
+
+        return $this->replaceSeriesPlaceholders($row, $label, $extra);
+    }
+
+    /**
+     * Replace common series placeholders in a template string
+     *
+     * @param   object  $row    Series row data
+     * @param   string  $label  Template string with placeholders
+     * @param   array   $extra  Additional replacements specific to the caller
+     *
+     * @return string
+     *
+     * @since   10.0.0
+     */
+    private function replaceSeriesPlaceholders(object $row, string $label, array $extra = []): string
     {
         $image = Cwmimages::getSeriesThumbnail($row->series_thumbnail);
-        $label = (string) $params->get('series_detailcode');
 
-        return preg_replace_callback('/{{(teacher|teachertitle|description|title|thumbnail|plays|downloads)}}/', function ($matches) use ($row, $image) {
-            switch ($matches[1]) {
-                case 'teacher':
-                    return $row->teachername;
-                case 'teachertitle':
-                    return $row->teachertitle;
-                case 'description':
-                    return $row->description;
-                case 'title':
-                    return $row->series_text;
-                case 'thumbnail':
-                    return '<img src="' . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" />';
-                case 'plays':
-                    return $row->totalplays;
-                case 'downloads':
-                    return $row->totaldownloads;
-            }
+        $replacements = [
+            'teacher'      => $row->teachername ?? '',
+            'teachertitle' => $row->teachertitle ?? '',
+            'title'        => $row->series_text ?? '',
+            'description'  => $row->description ?? '',
+            'thumbnail'    => '<img src="' . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" />',
+        ];
 
-            return $matches[0];
+        $replacements = array_merge($replacements, $extra);
+
+        return preg_replace_callback('/{{(\w+)}}/', function ($matches) use ($replacements) {
+            return $replacements[$matches[1]] ?? $matches[0];
         }, $label);
     }
 
@@ -144,53 +142,28 @@ class Cwmserieslist extends Cwmlisting
     {
         $input   = Factory::getApplication()->getInput();
         $nolimit = $input->get('nolimit', 0, 'int');
-        $limit   = '';
 
-        if ($params->get('series_detail_limit')) {
-            $limit = ' LIMIT ' . $params->get('series_detail_limit');
-        }
-
-        if ($nolimit === 1) {
-            $limit = '';
-        }
+        $limit = ($nolimit !== 1) ? (int) $params->get('series_detail_limit', 0) : 0;
 
         $items   = $this->getSeriesstudiesDBO($id, $params, $limit);
         $studies = (string) $params->get('series_headercode');
 
-        switch ($params->get('series_wrapcode')) {
-            case 'T':
-                // Table
-                $studies .= '<table class="table" id="bsms_seriestable" width="100%">';
-                break;
-            case 'D':
-                // DIV
-                $studies .= '<div>';
-                break;
-        }
+        $wrappers = [
+            'T' => ['<table class="table" id="bsms_seriestable" width="100%">', '</table>'],
+            'D' => ['<div>', '</div>'],
+        ];
 
-        // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-        $user   = Factory::getApplication()->getIdentity();
-        $groups = $user->getAuthorisedViewLevels();
+        $wrapCode  = $params->get('series_wrapcode');
+        $wrapOpen  = $wrappers[$wrapCode][0] ?? '';
+        $wrapClose = $wrappers[$wrapCode][1] ?? '';
 
-        foreach ($items as $i => $row) {
-            if (($row->access > 1) && !\in_array($row->access, $groups)) {
-                unset($items[$i]);
-                continue;
-            }
+        $studies .= $wrapOpen;
 
+        foreach ($items as $row) {
             $studies .= $this->getListingExp($row, $params, $params->get('seriesdetailtemplateid'));
         }
 
-        switch ($params->get('series_wrapcode')) {
-            case 'T':
-                // Table
-                $studies .= '</table>';
-                break;
-            case 'D':
-                // DIV
-                $studies .= '</div>';
-                break;
-        }
+        $studies .= $wrapClose;
 
         return $studies;
     }
@@ -200,24 +173,18 @@ class Cwmserieslist extends Cwmlisting
      *
      * @param   int       $id      ID
      * @param   Registry  $params  Item Params
-     * @param   string    $limit   Limit of Records
+     * @param   int       $limit   Limit of Records (0 = no limit)
      *
      * @return array
      *
      * @throws  \Exception
      * @since   8.0
      */
-    public function getSeriesstudiesDBO($id, $params, $limit = null): array
+    public function getSeriesstudiesDBO(int $id, Registry $params, int $limit = 0): array
     {
         $db       = Factory::getContainer()->get('DatabaseDriver');
         $user     = Factory::getApplication()->getIdentity();
         $language = $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*');
-        $setLimit = 0;
-
-        if ($limit) {
-            preg_match('!\d+!', $limit, $matches);
-            $setLimit = (int) ($matches[0] ?? 0);
-        }
 
         // Compute view access permissions.
         $groups = implode(',', $user->getAuthorisedViewLevels());
@@ -248,7 +215,7 @@ class Cwmserieslist extends Cwmlisting
                 $params->get('series_detail_sort', 'studydate') . ' ' . $params->get('series_detail_order', 'desc')
             );
 
-        $db->setQuery($query, 0, $setLimit);
+        $db->setQuery($query, 0, $limit);
         $items = $db->loadObjectList() ?: [];
 
         foreach ($items as $item) {
