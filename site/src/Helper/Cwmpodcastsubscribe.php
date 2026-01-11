@@ -53,12 +53,7 @@ class Cwmpodcastsubscribe
         $rows          = '';
 
         foreach ($podcasts as $podcast) {
-            $podcastshow = $podcast->podcast_subscribe_show ?: 2;
-
-            // Case 1 = hidden, skip
-            if ($podcastshow === 1) {
-                continue;
-            }
+            $podcastshow = (int) ($podcast->podcast_subscribe_show ?: 2);
 
             $content = match ($podcastshow) {
                 3 => $this->buildAlternatePodcast($podcast),
@@ -74,10 +69,6 @@ class Cwmpodcastsubscribe
                 . $podcast->title . '</h5>' . $content . '<hr /></div>';
         }
 
-        if (empty($rows)) {
-            return '';
-        }
-
         return '<div class="podcastsubscribe">'
             . '<div class="podcastheader"><h4>' . $introtext . '</h4></div>'
             . '<div class="prow row">' . $rows . '</div>'
@@ -85,7 +76,7 @@ class Cwmpodcastsubscribe
     }
 
     /**
-     * Get Podcasts
+     * Get Podcasts (excludes hidden podcasts with podcast_subscribe_show = 1)
      *
      * @return array Object List of Podcasts
      *
@@ -101,6 +92,8 @@ class Cwmpodcastsubscribe
         $query->select('*')
             ->from($db->quoteName('#__bsms_podcast', 'p'))
             ->where($db->quoteName('p.published') . ' = 1')
+            ->where('(' . $db->quoteName('p.podcast_subscribe_show') . ' IS NULL OR '
+                . $db->quoteName('p.podcast_subscribe_show') . ' != 1)')
             ->whereIn($db->quoteName('p.access'), $user->getAuthorisedViewLevels());
 
         $db->setQuery($query);
