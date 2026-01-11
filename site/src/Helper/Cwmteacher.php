@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 use Joomla\Component\Contact\Site\Model\ContactModel;
@@ -104,8 +103,9 @@ class Cwmteacher extends Cwmlisting
      * @return string
      *
      * @throws \Exception
-     * @todo     need to redo to bootstrap
-     * @since    8.0.0
+     * @todo       need to redo to bootstrap
+     * @since      8.0.0
+     * @deprecated 10.0.0 Use Cwmlisting::getFluidListing() instead
      */
     public function getTeacher($params, $id): string
     {
@@ -193,48 +193,26 @@ class Cwmteacher extends Cwmlisting
     /**
      * Get TeacherList Exp
      *
-     * @param   object            $row       Table info
-     * @param   object            $params    Item Params
-     * @param   CwmtemplateTable  $template  Template
+     * @param   object  $row       Table info
+     * @param   object  $params    Item Params
+     * @param   int     $template  Template ID
      *
-     * @return array|string|string[]
+     * @return string
      *
-     * @since    8.0.0
+     * @since      8.0.0
+     * @deprecated 10.0.0 Use Cwmlisting::getFluidListing() instead
      */
-    public function getTeacherListExp($row, $params, $template)
+    public function getTeacherListExp($row, $params, $template): string
     {
-        $imagelarge = Cwmimages::getTeacherThumbnail($row->teacher_image, $row->image);
-
-        $imagesmall = Cwmimages::getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
-
-        $label = $params->get('teacher_templatecode');
-        $label = str_replace('{{teacher}}', $row->teachername, $label);
-        $label = str_replace('{{title}}', $row->title, $label);
-        $label = str_replace('{{phone}}', $row->phone, $label);
-        $label = str_replace('{{website}}', '<A href="' . $row->website . '">Website</a>', $label);
-        $label = str_replace('{{information}}', $row->information, $label);
-        $label = str_replace(
-            '{{image}}',
-            '<img src="' . $imagelarge->path . '" width="' . $imagelarge->width .
-            '" height="' . $imagelarge->height . '" />',
-            $label
-        );
-        $label = str_replace('{{short}}', $row->short, $label);
-        $label = str_replace(
-            '{{thumbnail}}',
-            '<img src="' . $imagesmall->path . '" width="' . $imagesmall->width .
-            '" height="' . $imagesmall->height . '" />',
-            $label
-        );
-
-        return str_replace(
-            '{{url}}',
-            Route::_(
+        $label = (string) $params->get('teacher_templatecode');
+        $extra = [
+            'url' => Route::_(
                 'index.php?option=com_proclaim&amp;view=cwmteacherdisplay&amp;id=' .
-                $row->id . '&amp;t=' . (int)$template
+                $row->id . '&amp;t=' . (int) $template
             ),
-            $label
-        );
+        ];
+
+        return $this->replaceTeacherPlaceholders($row, $label, $extra);
     }
 
     /**
@@ -243,36 +221,52 @@ class Cwmteacher extends Cwmlisting
      * @param   object    $row     Table Row
      * @param   Registry  $params  Item Params
      *
-     * @return object
+     * @return string
      *
-     * @since    8.0.0
+     * @since      8.0.0
+     * @deprecated 10.0.0 Use Cwmlisting::getFluidListing() instead
      */
-    public function getTeacherDetailsExp($row, $params)
+    public function getTeacherDetailsExp($row, $params): string
     {
-        $imagelarge = Cwmimages::getTeacherThumbnail($row->teacher_image, $row->image);
+        $label = (string) $params->get('teacher_detailtemplate');
 
-        $imagesmall = Cwmimages::getTeacherThumbnail($row->teacher_thumbnail, $row->thumb);
+        return $this->replaceTeacherPlaceholders($row, $label);
+    }
 
-        $label = $params->get('teacher_detailtemplate');
-        $label = str_replace('{{teacher}}', $row->teachername, $label);
-        $label = str_replace('{{title}}', $row->title, $label);
-        $label = str_replace('{{phone}}', $row->phone, $label);
-        $label = str_replace('{{website}}', '<A href="' . $row->website . '">Website</a>', $label);
-        $label = str_replace('{{information}}', $row->information, $label);
-        $label = str_replace(
-            '{{image}}',
-            '<img src="' . $imagelarge->path . '" width="' . $imagelarge->width . '" height="'
-            . $imagelarge->height . '" />',
-            $label
-        );
-        $label = str_replace('{{short}}', $row->short, $label);
+    /**
+     * Replace common teacher placeholders in a template string
+     *
+     * @param   object  $row    Teacher row data
+     * @param   string  $label  Template string with placeholders
+     * @param   array   $extra  Additional replacements specific to the caller
+     *
+     * @return string
+     *
+     * @since   10.0.0
+     */
+    private function replaceTeacherPlaceholders(object $row, string $label, array $extra = []): string
+    {
+        $imageLarge = Cwmimages::getTeacherThumbnail($row->teacher_image ?? null, $row->image ?? null);
+        $imageSmall = Cwmimages::getTeacherThumbnail($row->teacher_thumbnail ?? null, $row->thumb ?? null);
 
-        return str_replace(
-            '{{thumbnail}}',
-            '<img src="' . $imagesmall->path . '" width="' . $imagesmall->width . '" height="'
-            . $imagesmall->height . '" />',
-            $label
-        );
+        $replacements = [
+            'teacher'     => $row->teachername ?? '',
+            'title'       => $row->title ?? '',
+            'phone'       => $row->phone ?? '',
+            'website'     => '<a href="' . ($row->website ?? '') . '">Website</a>',
+            'information' => $row->information ?? '',
+            'image'       => '<img src="' . $imageLarge->path . '" width="' . $imageLarge->width .
+                             '" height="' . $imageLarge->height . '" />',
+            'short'       => $row->short ?? '',
+            'thumbnail'   => '<img src="' . $imageSmall->path . '" width="' . $imageSmall->width .
+                             '" height="' . $imageSmall->height . '" />',
+        ];
+
+        $replacements = array_merge($replacements, $extra);
+
+        return preg_replace_callback('/{{(\w+)}}/', function ($matches) use ($replacements) {
+            return $replacements[$matches[1]] ?? $matches[0];
+        }, $label);
     }
 
     /**
@@ -284,29 +278,37 @@ class Cwmteacher extends Cwmlisting
      * @return string
      *
      * @throws \Exception
-     * @since    8.0.0
+     * @since      8.0.0
+     * @deprecated 10.0.0 Use Cwmlisting::getFluidListing() instead
      */
-    public function getTeacherStudiesExp($id, $params): string
+    public function getTeacherStudiesExp(int $id, Registry $params): string
     {
-        $limit   = '';
         $input   = Factory::getApplication()->getInput();
-        $nolimit = $input->get('nolimit', '', 'int');
+        $nolimit = $input->get('nolimit', 0, 'int');
 
-        if ($params->get('series_detail_limit')) {
-            $limit = $params->get('series_detail_limit');
-        }
+        // Determine effective limit (use the smaller of the two configured limits)
+        $detailLimit  = (int) $params->get('series_detail_limit', 0);
+        $studiesLimit = (int) $params->get('studies', 10);
 
         if ($nolimit === 1) {
-            $limit = '';
+            $limit = 0;
+        } elseif ($detailLimit > 0 && $studiesLimit > 0) {
+            $limit = min($detailLimit, $studiesLimit);
+        } else {
+            $limit = $detailLimit ?: $studiesLimit;
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $user   = Factory::getApplication()->getIdentity();
+        $groups = implode(',', $user->getAuthorisedViewLevels());
+
         $query = $db->getQuery(true);
         $query->select(
             '#__bsms_studies.*, #__bsms_teachers.id AS tid, #__bsms_teachers.teachername,'
             . ' #__bsms_series.id AS sid, #__bsms_series.series_text, #__bsms_message_type.id AS mid,'
             . ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-            . ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ") as topic_text'
+            . ' group_concat(#__bsms_topics.id separator ", ") AS tp_id,'
+            . ' group_concat(#__bsms_topics.topic_text separator ", ") as topic_text'
         )
             ->from('#__bsms_studies')
             ->leftJoin('#__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)')
@@ -315,39 +317,22 @@ class Cwmteacher extends Cwmlisting
             ->leftJoin('#__bsms_series ON (#__bsms_studies.series_id = #__bsms_series.id)')
             ->leftJoin('#__bsms_message_type ON (#__bsms_studies.messagetype = #__bsms_message_type.id)')
             ->leftJoin('#__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)')
-            ->where('#__bsms_teachers.id = ' . $id)->where('#__bsms_studies.published = ' . 1)
+            ->where('#__bsms_teachers.id = ' . $id)
+            ->where('#__bsms_studies.published = 1')
+            ->where('#__bsms_studies.access IN (' . $groups . ')')
             ->group('#__bsms_studies.id')
             ->order('studydate desc');
+
         $db->setQuery($query, 0, $limit);
-        $items = $db->loadObjectList();
+        $items = $db->loadObjectList() ?: [];
 
-        // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-
-        $user   = Factory::getApplication()->getIdentity();
-        $groups = $user->getAuthorisedViewLevels();
-
-        foreach ($items as $i => $iValue) {
-            if (($iValue->access > 1) && !\in_array($iValue->access, $groups, true)) {
-                unset($items[$i]);
-            }
-        }
-
-        $studieslimit = $params->get('studies', 10);
-
-        $studies = $this->getWrapOpen($params->get('wrapcode'), 'bsms_studytable');
-
-        $j = 0;
+        $studies = $this->getWrapOpen((string) $params->get('wrapcode'), 'bsms_studytable');
 
         foreach ($items as $row) {
-            if ($j >= $studieslimit) {
-                break;
-            }
-
             $studies .= $this->getListingExp($row, $params, $params->get('studieslisttemplateid'));
-            $j++;
         }
 
-        $studies .= $this->getWrapClose($params->get('wrapcode'));
+        $studies .= $this->getWrapClose((string) $params->get('wrapcode'));
 
         return $studies;
     }

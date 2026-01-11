@@ -22,12 +22,12 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
-$CWMTeacher = new Cwmteacher();
-$teachers = $CWMTeacher->getTeachersFluid($this->params);
-$listing = new Cwmlisting();
+$CWMTeacher   = new Cwmteacher();
+$teachers     = $CWMTeacher->getTeachersFluid($this->params);
+$listing      = new Cwmlisting();
 $classelement = $listing->createelement($this->params->get('studies_element'));
-$app = Factory::getApplication();
-$itemid = $app->input->get('Itemid');
+$app          = Factory::getApplication();
+$itemid       = $app->input->get('Itemid');
 
 ?>
 
@@ -37,7 +37,7 @@ $itemid = $app->input->get('Itemid');
         if ($this->params->get('showpodcastsubscribelist') === '1') {
             echo $this->subscribe;
         }
-        ?>
+?>
     </div>
     <?php
     if ($this->params->get('intro_show') > 0) {
@@ -68,7 +68,7 @@ $itemid = $app->input->get('Itemid');
                         }
                         echo '</div>';
                     }
-                    ?>
+            ?>
 
                 </div>
             </div>
@@ -86,12 +86,12 @@ $itemid = $app->input->get('Itemid');
                         echo '<i class="fas fa-bible fa-3x" style="display: flex; margin-right: 10px;"></i>';
                     }
                 }
-                if ($this->params->get('show_page_title') > 0) {
-                    echo '<h2 style="display: flex; list-style: none;"> ' . $this->params->get(
-                        'list_page_title'
-                    ) . '</h2>';
-                }
-                ?>
+            if ($this->params->get('show_page_title') > 0) {
+                echo '<h2 style="display: flex; list-style: none;"> ' . $this->params->get(
+                    'list_page_title'
+                ) . '</h2>';
+            }
+            ?>
             </div>
             <?php
         } ?>
@@ -119,58 +119,58 @@ $itemid = $app->input->get('Itemid');
         <div class="col1-12">
             <?php
             // Search tools bar
-            echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
-            ?>
+            echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
+?>
             <?php
-            // Add pagination links ?>
+// Add pagination links?>
             <?php
-            if (!empty($this->items)) : ?>
+if (!empty($this->items)) : ?>
                 <?php
-                if (
-                    ($this->pagination->pagesTotal > 1) &&
-                    ($this->params->def('show_pagination', 1) === '1' || ($this->params->get(
-                        'show_pagination'
-                    ) === '1'))
-                ) : ?>
+    if (
+        ($this->pagination->pagesTotal > 1) &&
+        ($this->params->def('show_pagination', 1) === '1' || ($this->params->get(
+            'show_pagination'
+        ) === '1'))
+    ) : ?>
                     <div class="pagination">
                         <?php
-                        if ($this->params->def('show_pagination_results', 1)) : ?>
+            if ($this->params->def('show_pagination_results', 1)) : ?>
                             <p class="counter float-right">
                                 <?php
-                                echo $this->pagination->getPagesCounter(); ?>
+                    echo $this->pagination->getPagesCounter(); ?>
                             </p>
                             <?php
-                        endif; ?>
+            endif; ?>
 
                         <?php
-                        echo $this->pagination->getPagesLinks(); ?>
+            echo $this->pagination->getPagesLinks(); ?>
                     </div>
                     <?php
-                endif; ?>
+    endif; ?>
                 <?php
-            endif; ?>
+endif; ?>
             <?php
-            if ($this->items) {
-                echo $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'sermons');
-            } else {
-                echo "<h4>" . Text::_("JBS_CMN_STUDY_NOT_FOUND") . "</h4><br />";
-            }
-            ?>
+if ($this->items) {
+    echo $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'sermons');
+} else {
+    echo "<h4>" . Text::_("JBS_CMN_STUDY_NOT_FOUND") . "</h4><br />";
+}
+?>
             <?php
-            // Add pagination links ?>
+// Add pagination links?>
             <?php
-            if (!empty($this->items)) : ?>
+if (!empty($this->items)) : ?>
                 <?php
-                if (
-                        ($this->pagination->pagesTotal > 1) &&
-                        ($this->params->def('show_pagination', 2) === '2' || ($this->params->get(
-                                                'show_pagination'
-                                        ) === '2'))) : ?>
+    if (
+        ($this->pagination->pagesTotal > 1) &&
+        ($this->params->def('show_pagination', 2) === '2' || ($this->params->get(
+            'show_pagination'
+        ) === '2'))) : ?>
                     <nav class="pagination__wrapper" aria-label="Pagination">
                         <?php if ($this->params->def('show_pagination_results', 1)) : ?>
                             <div class="text-end me-3">
                                 <?php
-                                echo $this->pagination->getPagesCounter(); ?>
+                echo $this->pagination->getPagesCounter(); ?>
                             </div>
                         <?php endif; ?>
                     </nav>
@@ -183,7 +183,7 @@ $itemid = $app->input->get('Itemid');
             if ($this->params->get('showpodcastsubscribelist') === '2') {
                 echo $this->subscribe;
             }
-            ?>
+?>
         </div>
     </div>
 </div>
