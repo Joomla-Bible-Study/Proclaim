@@ -5,7 +5,7 @@
  *
  * @package    Proclaim.Module
  * @subpackage mod_proclaim_youtube
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  */
@@ -23,7 +23,7 @@ use CWM\Module\ProclaimYoutube\Site\Helper\YoutubeHelper;
  * a class named Mod{Modulename}Helper containing the AJAX method.
  * This class forwards AJAX calls to the namespaced helper.
  *
- * @since  10.0.0
+ * @since  10.1.0
  */
 class ModProclaimYoutubeHelper
 {
@@ -34,7 +34,7 @@ class ModProclaimYoutubeHelper
      *
      * @return  array  Status data
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public static function getStatusAjax(): array
     {

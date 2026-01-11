@@ -5,7 +5,7 @@
  *
  * @package    Proclaim.Module
  * @subpackage mod_proclaim_youtube
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  */
@@ -29,7 +29,7 @@ use Joomla\Registry\Registry;
  *
  * @package     Proclaim.Module
  * @subpackage  mod_proclaim_youtube
- * @since       10.0.0
+ * @since       10.1.0
  */
 class YoutubeHelper implements DatabaseAwareInterface
 {
@@ -43,7 +43,7 @@ class YoutubeHelper implements DatabaseAwareInterface
      *
      * @return  array|null  Video data or null if none found
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function getVideo(Registry $params, SiteApplication $app): ?array
     {
@@ -130,7 +130,7 @@ class YoutubeHelper implements DatabaseAwareInterface
      *
      * @return  array  Video data with updated status
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function verifyLiveStatus(array $video, int $serverId): array
     {
@@ -166,7 +166,7 @@ class YoutubeHelper implements DatabaseAwareInterface
      *
      * @return  array|null  Video data or null
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     private function fetchLiveVideo(CWMAddonYoutube $youtube, int $serverId, bool $showUpcoming = true, array $excludeVideos = []): ?array
     {
@@ -217,7 +217,7 @@ class YoutubeHelper implements DatabaseAwareInterface
      *
      * @return  array  Array of video IDs
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     private function parseExcludedIds(string $excludeString): array
     {
@@ -240,7 +240,7 @@ class YoutubeHelper implements DatabaseAwareInterface
      *
      * @return  array|null  Video data or null
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     private function fetchLatestVideo(CWMAddonYoutube $youtube, int $serverId): ?array
     {
@@ -271,7 +271,7 @@ class YoutubeHelper implements DatabaseAwareInterface
      *
      * @return  string  Embed URL
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function getEmbedUrl(string $videoId, bool $autoplay = false, bool $isLive = false): string
     {
@@ -302,7 +302,7 @@ class YoutubeHelper implements DatabaseAwareInterface
      *
      * @return  string  Truncated description
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function truncateDescription(string $description, int $maxLength = 200): string
     {
@@ -332,7 +332,7 @@ class YoutubeHelper implements DatabaseAwareInterface
      * @return  array  Status data with isLive, isUpcoming, and videoId
      *
      * @throws \Exception
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public static function getStatusAjax(): array
     {
@@ -442,7 +442,7 @@ class YoutubeHelper implements DatabaseAwareInterface
      *
      * @return  object|null  Matched message object or null if no match found
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function findMatchingMessage(array $video): ?object
     {
@@ -474,7 +474,7 @@ class YoutubeHelper implements DatabaseAwareInterface
      *
      * @return  string  Token hash
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public static function generateStatusToken(int $serverId): string
     {

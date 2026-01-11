@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  */
@@ -24,7 +24,7 @@ use Joomla\CMS\Uri\Uri;
  * YouTube Exclude Field - allows selecting upcoming videos to exclude
  *
  * @package  Proclaim.Admin
- * @since    10.0.0
+ * @since    10.1.0
  */
 class YoutubeExcludeField extends FormField
 {
@@ -33,7 +33,7 @@ class YoutubeExcludeField extends FormField
      *
      * @var  string
      *
-     * @since 10.0.0
+     * @since 10.1.0
      */
     protected $type = 'YoutubeExclude';
 
@@ -42,7 +42,7 @@ class YoutubeExcludeField extends FormField
      *
      * @return  string  The field input markup.
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     protected function getInput(): string
     {
@@ -126,7 +126,7 @@ class YoutubeExcludeField extends FormField
      *
      * @return  string  JavaScript code
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     protected function getJavaScript(string $serverField, array $excludedIds): string
     {

@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -171,7 +171,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return string
      *
-     * @since 10.0.0
+     * @since 10.1.0
      */
     public function convertYoutube(string $url = ''): string
     {
@@ -264,7 +264,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  List of available action names
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function getAjaxActions(): array
     {
@@ -285,7 +285,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     protected function handleTestApiAction(): array
     {
@@ -301,7 +301,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     protected function handleFetchUpcomingAction(): array
     {
@@ -329,7 +329,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     protected function handleFetchChannelVideosAction(): array
     {
@@ -344,7 +344,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     protected function handleSearchChannelVideosAction(): array
     {
@@ -359,7 +359,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     protected function handleFetchChannelPlaylistsAction(): array
     {
@@ -374,7 +374,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     protected function handleFetchPlaylistVideosAction(): array
     {
@@ -389,7 +389,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     protected function handleFetchLiveVideosAction(): array
     {
@@ -406,7 +406,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Server params
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     protected function getServerConfig(int $serverId): array
     {
@@ -435,7 +435,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function fetchChannelVideos(Input $input): array
     {
@@ -522,7 +522,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function searchChannelVideos(Input $input): array
     {
@@ -603,7 +603,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function fetchChannelPlaylists(Input $input): array
     {
@@ -665,7 +665,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function fetchPlaylistVideos(Input $input): array
     {
@@ -740,7 +740,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function fetchLiveVideos(Input $input): array
     {
@@ -819,7 +819,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data with success status
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function testApiConnection(string $apiKey, string $channelId): array
     {
@@ -882,7 +882,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data with videos
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function fetchUpcomingVideos(int $serverId): array
     {
@@ -906,7 +906,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     protected function handleGetVideoStatusAction(): array
     {
@@ -927,7 +927,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response with isLive, isUpcoming, liveBroadcastContent
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function getVideoStatus(Input $input): array
     {

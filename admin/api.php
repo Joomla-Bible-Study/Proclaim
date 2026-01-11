@@ -4,7 +4,7 @@
  * Core Admin Proclaim file
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -34,9 +34,20 @@ try {
 }
 // phpcs:enable PSR1.Files.SideEffects
 
-// Version information
-const BIBLESTUDY_VERSION            = '10.0.1';
-const BIBLESTUDY_VERSION_UPDATEFILE = 'JBS Version ' . BIBLESTUDY_VERSION;
+// Version information - read from manifest XML
+$manifestFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
+$manifestVersion = '0.0.0';
+if (file_exists($manifestFile)) {
+    $xmlContent = file_get_contents($manifestFile);
+    if ($xmlContent !== false) {
+        $xml = @simplexml_load_string($xmlContent);
+        if ($xml && isset($xml->version)) {
+            $manifestVersion = (string) $xml->version;
+        }
+    }
+}
+define('BIBLESTUDY_VERSION', $manifestVersion);
+define('BIBLESTUDY_VERSION_UPDATEFILE', 'JBS Version ' . BIBLESTUDY_VERSION);
 
 // Default values
 const BIBLESTUDY_COMPONENT_NAME = 'com_proclaim';

@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  */
@@ -24,7 +24,7 @@ use Joomla\CMS\Uri\Uri;
  * YouTube Test API Field - button to test API key and channel ID
  *
  * @package  Proclaim.Admin
- * @since    10.0.0
+ * @since    10.1.0
  */
 class YoutubeTestApiField extends FormField
 {
@@ -33,7 +33,7 @@ class YoutubeTestApiField extends FormField
      *
      * @var  string
      *
-     * @since 10.0.0
+     * @since 10.1.0
      */
     protected $type = 'YoutubeTestApi';
 
@@ -42,7 +42,7 @@ class YoutubeTestApiField extends FormField
      *
      * @return  string  The field input markup.
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     protected function getInput(): string
     {
@@ -83,7 +83,7 @@ class YoutubeTestApiField extends FormField
      *
      * @return  string  JavaScript code
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     protected function getJavaScript(): string
     {
@@ -207,7 +207,7 @@ JS;
      *
      * @return  string  The escaped string
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     protected function escapeJs(string $string): string
     {

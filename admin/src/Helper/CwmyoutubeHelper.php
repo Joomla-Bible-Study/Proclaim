@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  */
@@ -22,7 +22,7 @@ use Joomla\Database\DatabaseInterface;
  * YouTube Helper for matching video titles to Proclaim messages
  *
  * @package  Proclaim.Admin
- * @since    10.0.0
+ * @since    10.1.0
  */
 class CwmyoutubeHelper
 {
@@ -39,7 +39,7 @@ class CwmyoutubeHelper
      *
      * @return  array  Array with 'part1', 'part2', and 'separator' keys
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public static function parseVideoTitle(string $title): array
     {
@@ -75,7 +75,7 @@ class CwmyoutubeHelper
      *
      * @return  int|null  The teacher ID or null if not found
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public static function findTeacherByName(string $teacherName): ?int
     {
@@ -113,7 +113,7 @@ class CwmyoutubeHelper
      *
      * @return  object|null  The message object or null if not found
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public static function findMessageByTitle(string $messageTitle, ?int $teacherId = null): ?object
     {
@@ -168,7 +168,7 @@ class CwmyoutubeHelper
      *
      * @return  object|null  The matched message object or null
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public static function matchVideoToMessage(string $videoTitle): ?object
     {
@@ -219,7 +219,7 @@ class CwmyoutubeHelper
      *
      * @return  array  Array of potential message matches with confidence scores
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public static function findPotentialMatches(string $videoTitle, int $limit = 5): array
     {

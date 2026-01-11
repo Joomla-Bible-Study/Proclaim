@@ -4,7 +4,7 @@
  * @package     Proclaim.Component
  * @package     Proclaim.Module
  * @subpackage  mod_proclaim_youtube
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  */

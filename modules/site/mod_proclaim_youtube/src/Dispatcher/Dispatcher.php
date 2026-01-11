@@ -5,7 +5,7 @@
  *
  * @package    Proclaim.Module
  * @subpackage mod_proclaim_youtube
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  */
@@ -24,7 +24,7 @@ use Joomla\CMS\Helper\HelperFactoryAwareTrait;
 /**
  * Dispatcher class for mod_proclaim_youtube
  *
- * @since  10.0.0
+ * @since  10.1.0
  */
 class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareInterface
 {
@@ -36,7 +36,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
      * @return  array
      *
      * @throws  \Exception
-     * @since   10.0.0
+     * @since   10.1.0
      */
     protected function getLayoutData(): array
     {

@@ -4,7 +4,7 @@
  * Router for Remote website that have treble with downloader.
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       http://www.christianwebministries.org
  * */

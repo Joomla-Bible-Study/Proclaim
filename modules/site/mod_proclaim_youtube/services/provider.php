@@ -5,7 +5,7 @@
  *
  * @package    Proclaim.Module
  * @subpackage mod_proclaim_youtube
- * @copyright  (C) 2007 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  */
@@ -23,7 +23,7 @@ use Joomla\DI\ServiceProviderInterface;
 /**
  * The Proclaim YouTube module service provider.
  *
- * @since  10.0.0
+ * @since  10.1.0
  */
 return new class () implements ServiceProviderInterface {
     /**
@@ -33,7 +33,7 @@ return new class () implements ServiceProviderInterface {
      *
      * @return  void
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function register(Container $container): void
     {
