@@ -26,10 +26,11 @@ use Joomla\Database\DatabaseInterface;
  *
  * @package  Proclaim.Site
  * @since    7.1.0
- *
  */
 class Cwmpodcastsubscribe
 {
+    private string $baseUri;
+
     /**
      * Build Subscribe Table
      *
@@ -44,54 +45,43 @@ class Cwmpodcastsubscribe
     {
         $podcasts = $this->getPodcasts();
 
-        $subscribe = '';
-
-        if ($podcasts) {
-            $subscribe .= '<div class="podcastheader" ><h4>' . $introtext . '</h4></div>';
-            $subscribe .= '<div class="prow row">';
-
-            foreach ($podcasts as $podcast) {
-                $podcastshow = $podcast->podcast_subscribe_show;
-
-                if (!$podcastshow) {
-                    $podcastshow = 2;
-                }
-
-                switch ($podcastshow) {
-                    case 1:
-                        break;
-
-                    case 2:
-                        $subscribe .= '<div class="pcell col-md-6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title . '</h5>';
-                        $subscribe .= $this->buildStandardPodcast($podcast);
-                        $subscribe .= '<hr /></div>';
-                        break;
-
-                    case 3:
-                        $subscribe .= '<div class="pcell col-md-6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title . '</h5>';
-                        $subscribe .= $this->buildAlternatePodcast($podcast);
-                        $subscribe .= '<hr /></div>';
-                        break;
-
-                    case 4:
-                        $subscribe .= '<div class="pcell col-md-6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title
-                            . '</h5><div class="row"><div class="col-6">';
-                        $subscribe .= $this->buildStandardPodcast($podcast);
-                        $subscribe .= '</div><div class="col-6">';
-                        $subscribe .= $this->buildAlternatePodcast($podcast);
-                        $subscribe .= '</div></div><hr /></div>';
-                        break;
-                }
-            }
-
-            // End of the row
-            $subscribe .= '</div>';
-
-            // Add a div around it all
-            $subscribe = '<div class="podcastsubscribe">' . $subscribe . '</div>';
+        if (empty($podcasts)) {
+            return '';
         }
 
-        return $subscribe;
+        $this->baseUri = Uri::base();
+        $rows          = '';
+
+        foreach ($podcasts as $podcast) {
+            $podcastshow = $podcast->podcast_subscribe_show ?: 2;
+
+            // Case 1 = hidden, skip
+            if ($podcastshow === 1) {
+                continue;
+            }
+
+            $content = match ($podcastshow) {
+                3 => $this->buildAlternatePodcast($podcast),
+                4 => '<div class="row"><div class="col-6">'
+                    . $this->buildStandardPodcast($podcast)
+                    . '</div><div class="col-6">'
+                    . $this->buildAlternatePodcast($podcast)
+                    . '</div></div>',
+                default => $this->buildStandardPodcast($podcast),
+            };
+
+            $rows .= '<div class="pcell col-md-6"><h5><i class="fa fa-podcast"></i> '
+                . $podcast->title . '</h5>' . $content . '<hr /></div>';
+        }
+
+        if (empty($rows)) {
+            return '';
+        }
+
+        return '<div class="podcastsubscribe">'
+            . '<div class="podcastheader"><h4>' . $introtext . '</h4></div>'
+            . '<div class="prow row">' . $rows . '</div>'
+            . '</div>';
     }
 
     /**
@@ -111,7 +101,7 @@ class Cwmpodcastsubscribe
         $query->select('*')
             ->from($db->quoteName('#__bsms_podcast', 'p'))
             ->where($db->quoteName('p.published') . ' = 1')
-            ->where($db->quoteName('p.access') . ' IN (' . implode(',', $user->getAuthorisedViewLevels()) . ')');
+            ->whereIn($db->quoteName('p.access'), $user->getAuthorisedViewLevels());
 
         $db->setQuery($query);
 
@@ -129,24 +119,19 @@ class Cwmpodcastsubscribe
      */
     public function buildStandardPodcast(object $podcast): string
     {
-        $subscribe = '';
+        $link = $this->baseUri . $podcast->filename;
+        $name = $podcast->podcast_subscribe_desc ?: $podcast->title;
+
+        $html = '';
 
         if (!empty($podcast->podcast_image_subscribe)) {
-            $image     = $this->buildPodcastImage($podcast->podcast_image_subscribe, $podcast->podcast_subscribe_desc);
-            $link      = '<div class="image"><a href="' . Uri::base(
-            ) . $podcast->filename . '">' . $image . '</a></div><div class="clr"></div>';
-            $subscribe .= $link;
+            $image = $this->buildPodcastImage($podcast->podcast_image_subscribe, $podcast->podcast_subscribe_desc);
+            $html .= '<div class="image"><a href="' . $link . '">' . $image . '</a></div><div class="clr"></div>';
         }
 
-        if (empty($podcast->podcast_subscribe_desc)) {
-            $name = $podcast->title;
-        } else {
-            $name = $podcast->podcast_subscribe_desc;
-        }
+        $html .= '<div class="text"><a href="' . $link . '">' . $name . '</a></div>';
 
-        $subscribe .= '<div class="text"><a href="' . Uri::base() . $podcast->filename . '">' . $name . '</a></div>';
-
-        return $subscribe;
+        return $html;
     }
 
     /**
@@ -155,26 +140,23 @@ class Cwmpodcastsubscribe
      * @param   ?string  $podcastimagefromdb  Podcast image
      * @param   ?string  $words               Alt podcast image text
      *
-     * @return string
-     *
+     * @return string|null
      *
      * @since    7.1
      */
     public function buildPodcastImage(?string $podcastimagefromdb = null, ?string $words = null): ?string
     {
-        $image        = Cwmimages::getMediaImage($podcastimagefromdb);
-        $podcastimage = null;
+        $image = Cwmimages::getMediaImage($podcastimagefromdb);
 
-        if ($image->path) {
-            $podcastimage = HTMLHelper::image(
-                Uri::base() . $image->path,
-                $words,
-                'width = "' . $image->width
-                . '" height = "' . $image->height . '" title = "' . $words . '"'
-            );
+        if (!$image->path) {
+            return null;
         }
 
-        return $podcastimage;
+        return HTMLHelper::image(
+            $this->baseUri . $image->path,
+            $words,
+            ['width' => $image->width, 'height' => $image->height, 'title' => $words]
+        );
     }
 
     /**
@@ -188,16 +170,15 @@ class Cwmpodcastsubscribe
      */
     public function buildAlternatePodcast(object $podcast): string
     {
-        $subscribe = '';
+        $html = '';
 
         if (!empty($podcast->alternateimage)) {
-            $image     = $this->buildPodcastImage($podcast->alternateimage, $podcast->alternatewords);
-            $link      = '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image . '</a></div><div class="clr"></div>';
-            $subscribe .= $link;
+            $image = $this->buildPodcastImage($podcast->alternateimage, $podcast->alternatewords);
+            $html .= '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image . '</a></div><div class="clr"></div>';
         }
 
-        $subscribe .= '<div class="text"><a href="' . $podcast->alternatelink . '">' . $podcast->alternatewords . '</a></div>';
+        $html .= '<div class="text"><a href="' . $podcast->alternatelink . '">' . $podcast->alternatewords . '</a></div>';
 
-        return $subscribe;
+        return $html;
     }
 }
