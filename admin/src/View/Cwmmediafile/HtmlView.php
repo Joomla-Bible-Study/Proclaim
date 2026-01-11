@@ -115,7 +115,7 @@ class HtmlView extends BaseHtmlView
 
             public function __construct($form, array $s_params)
             {
-                $this->form = $form;
+                $this->form     = $form;
                 $this->s_params = $s_params;
             }
 

@@ -46,8 +46,8 @@ $finder = PhpCsFixer\Finder::create()
     // https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues/3702#issuecomment-396717120
     ->notPath('/tmpl/')
     ->notPath('/layouts/')
-    ->notPath('/cassiopeia/')
-    ->notPath('/atum/')
+    // Ignore third-party vendor directories
+    ->notPath('/vendor/')
     // Ignore psr12 scripts because they contain invalid syntax
     ->notPath('/psr12/')
     ->notName('github_rebase.php');

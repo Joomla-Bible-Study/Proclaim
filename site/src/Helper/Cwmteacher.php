@@ -257,8 +257,8 @@ class Cwmteacher extends Cwmlisting
             'information' => $row->information ?? '',
             'image'       => '<img src="' . $imageLarge->path . '" width="' . $imageLarge->width .
                              '" height="' . $imageLarge->height . '" />',
-            'short'       => $row->short ?? '',
-            'thumbnail'   => '<img src="' . $imageSmall->path . '" width="' . $imageSmall->width .
+            'short'     => $row->short ?? '',
+            'thumbnail' => '<img src="' . $imageSmall->path . '" width="' . $imageSmall->width .
                              '" height="' . $imageSmall->height . '" />',
         ];
 

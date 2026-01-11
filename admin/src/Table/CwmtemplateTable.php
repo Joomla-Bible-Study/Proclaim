@@ -175,7 +175,7 @@ class CwmtemplateTable extends Table
             // For existing records, merge submitted params with existing params
             // This preserves values from lazy-loaded sections that were never expanded
             if (!empty($array['id'])) {
-                $db = $this->getDbo();
+                $db    = $this->getDbo();
                 $query = $db->getQuery(true)
                     ->select($db->quoteName('params'))
                     ->from($db->quoteName('#__bsms_templates'))
