@@ -92,7 +92,7 @@
         </field>
 
         <field name="topics" type="TopicsForm" label="JBS_CMN_TOPIC_TAG"
-               description="JBS_CMN_TOPIC_TAG_DESC" filter="row"/>
+               description="JBS_CMN_TOPIC_TAG_DESC" multiple="true"/>
 
         <field name="messagetype" type="MessageTypeList" label="JBS_CMN_MESSAGETYPE"
                description="JBS_STY_MESSAGETYPE_DESC">

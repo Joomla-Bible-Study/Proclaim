@@ -20,7 +20,6 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -129,29 +128,6 @@ class HtmlView extends BaseHtmlView
         $this->document     = Factory::getApplication()->getDocument();
 
         $this->simple = Cwmhelper::getSimpleView();
-
-        HTMLHelper::stylesheet('media/com_proclaim/css/token-input-jbs.min.css');
-
-        $script = "
-            jQuery(document).ready(function() {
-                jQuery('#topics').tokenInput(" . $this->get('alltopics') . ",
-                {
-                    theme: 'jbs',
-                    hintText: '" . Text::_('JBS_CMN_TOPIC_TAG') . "',
-                    noResultsText: '" . Text::_('JBS_CMN_NOT_FOUND') . "',
-                    searchingText: '" . Text::_('JBS_CMN_SEARCHING') . "',
-                    animateDropdown: false,
-                    preventDuplicates: true,
-                    allowFreeTagging: true,
-                    prePopulate: " . $this->get('topics') . "
-                });
-            });
-             ";
-
-        $wa = $this->getDocument()->getWebAssetManager();
-        $wa->addInlineScript($script);
-
-        HTMLHelper::script('media/com_proclaim/js/plugins/jquery.tokeninput.min.js');
 
         // Set the toolbar
         $this->addToolbar();
