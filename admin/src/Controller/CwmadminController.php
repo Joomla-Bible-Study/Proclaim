@@ -13,7 +13,6 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
-
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
@@ -49,7 +48,7 @@ class CwmadminController extends FormController
     protected $view_list = 'cwmcpanel';
 
     /**
-     * Tools to change player or pop-up
+     * Tools to change the player or pop-up
      *
      * @return void
      *
@@ -92,7 +91,7 @@ class CwmadminController extends FormController
 
         $db   = Factory::getContainer()->get('DatabaseDriver');
         $msg  = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
-        $post = $_POST['jform'];
+        $post = $this->input->post->get('jform', [], 'array');
         $reg  = new Registry();
         $reg->loadArray($post['params']);
         $from = $reg->get('from', 'x');
@@ -143,7 +142,7 @@ class CwmadminController extends FormController
         Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
         $db   = Factory::getContainer()->get('DatabaseDriver');
-        $post = $_POST['jform'];
+        $post = $this->input->post->get('jform', [], 'array');
         $reg  = new Registry();
         $reg->loadArray($post['params']);
         $from  = $reg->get('pFrom', 'x');
@@ -186,7 +185,7 @@ class CwmadminController extends FormController
     }
 
     /**
-     * Change media images from a digital file to css
+     * Change media images from a digital file to CSS
      *
      * @return void
      *
@@ -195,7 +194,7 @@ class CwmadminController extends FormController
      */
     public function mediaimages(): void
     {
-        $post    = $_POST['jform'];
+        $post    = $this->input->post->get('jform', [], 'raw');
         $decoded = json_decode($post['mediaimage'], true, 512, JSON_THROW_ON_ERROR);
         $db      = Factory::getContainer()->get('DatabaseDriver');
         $query   = $db->getQuery(true);
@@ -237,12 +236,8 @@ class CwmadminController extends FormController
                         $reg->set('media_image', $post['media_image']);
                         $reg->set('media_use_button_icon', $post['media_use_button_icon']);
                         $db->setQuery($query);
-                        $query->update('#__bsms_mediafiles')
-                            ->set('params = ' . $db->q($reg->toString()))
-                            ->where('id = ' . (int)$media->id);
 
                         try {
-                            $db->setQuery($query);
                             $query->update('#__bsms_mediafiles')
                                 ->set('params = ' . $db->q($reg->toString()))
                                 ->where('id = ' . (int)$media->id);
@@ -280,12 +275,8 @@ class CwmadminController extends FormController
                         $reg->set('media_image', $post['media_image']);
                         $reg->set('media_use_button_icon', $post['media_use_button_icon']);
                         $db->setQuery($query);
-                        $query->update('#__bsms_mediafiles')
-                            ->set('params = ' . $db->q($reg->toString()))
-                            ->where('id = ' . (int)$media->id);
 
                         try {
-                            $db->setQuery($query);
                             $query->update('#__bsms_mediafiles')
                                 ->set('params = ' . $db->q($reg->toString()))
                                 ->where('id = ' . (int)$media->id);
@@ -326,13 +317,9 @@ class CwmadminController extends FormController
                         $reg->set('media_icon_type', $post['media_icon_type']);
                         $reg->set('media_image', $post['media_image']);
                         $reg->set('media_use_button_icon', $post['media_use_button_icon']);
-                        $query->update('#__bsms_mediafiles')
-                            ->set('params = ' . $db->q($reg->toString()))
-                            ->where('id = ' . (int)$media->id);
                         $db->setQuery($query);
 
                         try {
-                            $db->setQuery($query);
                             $query->update('#__bsms_mediafiles')
                                 ->set('params = ' . $db->q($reg->toString()))
                                 ->where('id = ' . (int)$media->id);
@@ -553,7 +540,7 @@ class CwmadminController extends FormController
     {
         $user = Factory::getApplication()->getSession()->get('user');
 
-        if (\array_key_exists(8, $user->groups)) {
+        if ($user->authorise('core.admin')) {
             CwmdbHelper::resetdb();
             $this->setRedirect(
                 Route::_(
@@ -563,7 +550,7 @@ class CwmadminController extends FormController
                 )
             );
         } else {
-            Factory::getApplication()->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'eroor');
+            Factory::getApplication()->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
             $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmcpanel', false));
         }
     }

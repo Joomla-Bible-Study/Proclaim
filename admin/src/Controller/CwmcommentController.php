@@ -42,7 +42,7 @@ class CwmcommentController extends FormController
      *
      * @param   BaseDatabaseModel  $model  The model.
      *
-     * @return  boolean     True if successful, false otherwise and internal error is set.
+     * @return  bool     True if successful, false otherwise and internal error is set.
      *
      * @since   1.6
      */

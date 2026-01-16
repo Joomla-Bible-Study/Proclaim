@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Core Admin Proclaim file
+ * Core Admin Proclaim API file
  *
  * @package    Proclaim.Admin
  * @copyright  (C) 2026 CWM Team All rights reserved
@@ -9,13 +9,14 @@
  * @link       https://www.christianwebministries.org
  * */
 
-// No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 try {
     $app = Factory::getApplication();
 } catch (Exception $e) {
@@ -30,12 +31,11 @@ try {
         \define('JBSMDEBUG', 0);
     }
 } catch (\RuntimeException $e) {
-    throw new \RuntimeException("Could not find Debug setting.");
+    throw new \RuntimeException('Could not find Debug setting.');
 }
-// phpcs:enable PSR1.Files.SideEffects
 
 // Version information - read from manifest XML
-$manifestFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
+$manifestFile    = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
 $manifestVersion = '0.0.0';
 if (file_exists($manifestFile)) {
     $xmlContent = file_get_contents($manifestFile);
@@ -46,8 +46,8 @@ if (file_exists($manifestFile)) {
         }
     }
 }
-define('BIBLESTUDY_VERSION', $manifestVersion);
-define('BIBLESTUDY_VERSION_UPDATEFILE', 'JBS Version ' . BIBLESTUDY_VERSION);
+\define('BIBLESTUDY_VERSION', $manifestVersion);
+const BIBLESTUDY_VERSION_UPDATEFILE = 'Proclaim Version ' . BIBLESTUDY_VERSION;
 
 // Default values
 const BIBLESTUDY_COMPONENT_NAME = 'com_proclaim';
@@ -62,7 +62,6 @@ const BIBLESTUDY_MEDIA_PATH      = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . 
 
 // Admin Component paths
 const BIBLESTUDY_PATH_ADMIN         = BIBLESTUDY_ROOT_PATH_ADMIN . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_RELPATH;
-const BIBLESTUDY_PATH_ADMIN_HELPERS = BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'helpers';
 
 // If a phrase is not found in a specific language file, load the English language file:
 $language = $app->getLanguage();
@@ -75,7 +74,7 @@ if (is_dir($modProclaimPath)) {
     $language->load('mod_proclaim', $modProclaimPath, null, true);
 }
 
-// Add to the API to load the core CSS and JS for the component to function properly.
+// Add to the API to load the component's core CSS and JS for proper functionality.
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $app->getDocument()->getWebAssetManager();
 

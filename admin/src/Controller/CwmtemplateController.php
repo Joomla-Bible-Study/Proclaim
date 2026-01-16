@@ -115,13 +115,14 @@ class CwmtemplateController extends FormController
      *
      * @return  void
      *
+     * @throws \JsonException
      * @since   10.0.0
      */
     public function loadFieldset(): void
     {
         // Check for request forgeries
         if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'error' => 'Invalid token']);
+            echo json_encode(['success' => false, 'error' => 'Invalid token'], JSON_THROW_ON_ERROR);
             Factory::getApplication()->close();
 
             return;
@@ -133,7 +134,7 @@ class CwmtemplateController extends FormController
         $id        = $input->getInt('id', 0);
 
         if (empty($fieldset)) {
-            echo json_encode(['success' => false, 'error' => 'No fieldset specified']);
+            echo json_encode(['success' => false, 'error' => 'No fieldset specified'], JSON_THROW_ON_ERROR);
             $app->close();
 
             return;
@@ -147,7 +148,7 @@ class CwmtemplateController extends FormController
             $form = $model->getForm([], true);
 
             if (!$form) {
-                echo json_encode(['success' => false, 'error' => 'Could not load form']);
+                echo json_encode(['success' => false, 'error' => 'Could not load form'], JSON_THROW_ON_ERROR);
                 $app->close();
 
                 return;
@@ -166,7 +167,10 @@ class CwmtemplateController extends FormController
             $fields = $form->getFieldset($fieldset);
 
             if (empty($fields)) {
-                echo json_encode(['success' => false, 'error' => 'Fieldset not found: ' . $fieldset]);
+                echo json_encode(
+                    ['success' => false, 'error' => 'Fieldset not found: ' . $fieldset],
+                    JSON_THROW_ON_ERROR
+                );
                 $app->close();
 
                 return;
@@ -183,9 +187,9 @@ class CwmtemplateController extends FormController
                 $html .= '</div></div>';
             }
 
-            echo json_encode(['success' => true, 'html' => $html]);
+            echo json_encode(['success' => true, 'html' => $html], JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
-            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+            echo json_encode(['success' => false, 'error' => $e->getMessage()], JSON_THROW_ON_ERROR);
         }
 
         $app->close();

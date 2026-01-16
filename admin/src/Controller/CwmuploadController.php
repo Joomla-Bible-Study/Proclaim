@@ -252,6 +252,6 @@ class CwmuploadController extends AdminController
             ];
         }
 
-        die(json_encode($jsonrpc, JSON_THROW_ON_ERROR));
+        jexit(json_encode($jsonrpc, JSON_THROW_ON_ERROR));
     }
 }
