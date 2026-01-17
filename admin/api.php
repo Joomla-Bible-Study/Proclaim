@@ -20,7 +20,7 @@ use Joomla\CMS\Log\Log;
 try {
     $app = Factory::getApplication();
 } catch (Exception $e) {
-    return;
+    jexit('Could not load Factory');
 }
 
 // Component debugging
@@ -37,17 +37,25 @@ try {
 // Version information - read from manifest XML
 $manifestFile    = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
 $manifestVersion = '0.0.0';
-if (file_exists($manifestFile)) {
-    $xmlContent = file_get_contents($manifestFile);
-    if ($xmlContent !== false) {
-        $xml = @simplexml_load_string($xmlContent);
-        if ($xml && isset($xml->version)) {
-            $manifestVersion = (string) $xml->version;
+
+if (is_file($manifestFile) && is_readable($manifestFile)) {
+    libxml_use_internal_errors(true);
+    $xml = simplexml_load_string(file_get_contents($manifestFile));
+
+    if ($xml instanceof \SimpleXMLElement && isset($xml->version)) {
+        $manifestVersion = trim((string) $xml->version);
+    } else {
+        // Log XML parsing errors, if any
+        foreach (libxml_get_errors() as $error) {
+            Log::add('XML Error in proclaim.xml: ' . trim($error->message), Log::WARNING, 'com_proclaim');
         }
     }
+
+    libxml_clear_errors();
 }
+
 \define('BIBLESTUDY_VERSION', $manifestVersion);
-const BIBLESTUDY_VERSION_UPDATEFILE = 'Proclaim Version ' . BIBLESTUDY_VERSION;
+\define('BIBLESTUDY_VERSION_UPDATEFILE', 'Proclaim Version ' . BIBLESTUDY_VERSION);
 
 // Default values
 const BIBLESTUDY_COMPONENT_NAME = 'com_proclaim';
@@ -78,7 +86,7 @@ if (is_dir($modProclaimPath)) {
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $app->getDocument()->getWebAssetManager();
 
-// We register the extension registry because in  modules and plugins, the registry is not automatically loaded
+// We register the extension registry because in modules and plugins, the registry is not automatically loaded
 $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
 $wa->useStyle('com_proclaim.cwmcore')
     ->useScript('com_proclaim.cwmcorejs');
