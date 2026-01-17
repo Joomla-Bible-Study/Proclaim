@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
+use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
@@ -2327,26 +2328,88 @@ class Cwmlisting
      * @throws \Exception
      * @since 7.0
      */
-    public function getShare($link, $row, $params): ?string
+    public function getShare($link, $row, Registry $params): ?string
     {
-        $shareit = '<div class="row float-right">';
+        // Get a study title and prepare for sharing
+        $title = $row->studytitle ?? '';
+        $title = htmlspecialchars(strip_tags($title), ENT_QUOTES, 'UTF-8');
 
-        $shareit .= '<!-- AddThis Button BEGIN -->
-						<div class="a2a_kit a2a_kit_size_32 a2a_default_style">
-                            <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
-                        </div>
-						<script defer src="https://static.addtoany.com/menu/page.js"></script>
-						<!-- AddThis Button END -->
-						';
-        $doc     = Factory::getApplication()->getDocument();
-        $doc->addScriptDeclaration(
-            'var a2a_config = a2a_config || {};
-             a2a_config.onclick = 1;
-             a2a_config.thanks = { postShare: true, ad: false };'
-        );
+        // Get description from intro or first part of the study text
+        $description = '';
+
+        if (!empty($row->studyintro)) {
+            $description = strip_tags($row->studyintro);
+        } elseif (!empty($row->studytext)) {
+            $description = strip_tags($row->studytext);
+        }
+
+        $description = mb_substr($description, 0, 200);
+
+        // Get image URL for sharing
+        $imageUrl = '';
+
+        if (!empty($row->thumbnailm)) {
+            $imageUrl = Uri::root() . $row->thumbnailm;
+        } elseif (!empty($row->image)) {
+            $imageUrl = Uri::root() . $row->image;
+        }
+
+        // Ensure link is absolute
+        if (!str_starts_with($link, 'http')) {
+            $link = Uri::root() . ltrim($link, '/');
+        }
+
+        $shareit = '<div class="proclaim-share float-end">';
+
+        // AddToAny with data attributes for specific content
+        $shareit .= '<!-- AddToAny Share Buttons -->
+            <div class="a2a_kit a2a_kit_size_32 a2a_default_style"
+                 data-a2a-url="' . htmlspecialchars($link, ENT_QUOTES, 'UTF-8') . '"
+                 data-a2a-title="' . $title . '">
+                <a class="a2a_button_facebook"></a>
+                <a class="a2a_button_x"></a>
+                <a class="a2a_button_email"></a>
+                <a class="a2a_button_copy_link"></a>
+                <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+            </div>';
 
         $shareit .= '</div>';
 
+        // Add script and configuration once per page
+        $app = Factory::getApplication();
+
+        if (!$app instanceof CMSApplicationInterface) {
+            return $shareit;
+        }
+
+        $doc = $app->getDocument();
+
+        // Build configuration script with email template
+        // Note: ${link} and ${title} are AddToAny template placeholders (not PHP variables)
+        $escapedDesc = addslashes($description ?: 'Check out this message');
+        $config      = "var a2a_config = a2a_config || {};
+a2a_config.onclick = 1;
+a2a_config.num_services = 8;
+a2a_config.thanks = { postShare: true, ad: false };
+a2a_config.templates = a2a_config.templates || {};
+a2a_config.templates.email = {
+    subject: '\${title}',
+    body: '" . $escapedDesc . "\\n\\n\${link}'
+};";
+
+        // Add image for Open Graph sharing if available
+        if ($imageUrl) {
+            $config .= "\na2a_config.linkurl_default = '" . addslashes($link) . "';";
+        }
+
+        $doc->addScriptDeclaration($config);
+
+        // Add the AddToAny script (async for performance)
+        $doc->addScript(
+            'https://static.addtoany.com/menu/page.js',
+            [],
+            ['defer' => true, 'async' => true]
+        );
 
         return $shareit;
     }
