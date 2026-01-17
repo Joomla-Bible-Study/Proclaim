@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -1069,7 +1069,7 @@ class CwminstallModel extends ListModel
         // Default Version Pull
         $return = BIBLESTUDY_VERSION;
 
-        // Find Last updated Version in Update table
+        // Find the Last updated Version in the Update table
         $query = $this->_db->getQuery(true);
         $query
             ->select('version')

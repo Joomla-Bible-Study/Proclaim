@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -202,7 +202,7 @@ class HtmlView extends BaseHtmlView
                 $childBar->unpublish('cwmmediafiles.unpublish');
                 $childBar->archive('cwmmediafiles.archive');
 
-                if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
+                if ((int) $this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
                     $childBar->trash('cwmmediafiles.trash')->listCheck(true);
                 }
             }
@@ -222,17 +222,15 @@ class HtmlView extends BaseHtmlView
 
         if (
             !$this->isEmptyState
-            && $this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED && $canDo->get(
-                'core.delete'
-            )
+            && (int) $this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED
+            && $canDo->get('core.delete')
         ) {
             $toolbar->delete('cwmmediafiles.delete')
                 ->text('JTOOLBAR_EMPTY_TRASH')
                 ->message('JGLOBAL_CONFIRM_DELETE')
                 ->listCheck(true);
         }
-        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-        $toolbar->help('proclaim', false, $url = $help_url, 'com_proclaim');
+        $toolbar->help('mediafiles', true);
     }
 
     /**

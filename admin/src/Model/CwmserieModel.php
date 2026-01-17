@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -165,6 +165,7 @@ class CwmserieModel extends AdminModel
      *
      * @return    boolean    True on success.
      *
+     * @throws \Exception
      * @since    1.6
      */
     public function save($data)
@@ -172,46 +173,78 @@ class CwmserieModel extends AdminModel
         /** @var Registry $params */
         $params        = Cwmparams::getAdmin()->params;
         $app           = Factory::getApplication();
-        $path          = 'images/biblestudy/series/' . $data['id'];
-        $prefix        = 'thumb_';
         $image         = HTMLHelper::cleanImageURL($data['image']);
         $data['image'] = $image->url;
+
         // Alter the title for save as copy
         if ($app->input->get('task') == 'save2copy') {
-            list($title, $alias) = $this->generateNewTitle('0', $data['alias'], $data['title']);
-            $data['title']       = $title;
+            list($title, $alias) = $this->generateNewTitle('0', $data['alias'], $data['series_text']);
+            $data['series_text'] = $title;
             $data['alias']       = $alias;
         }
 
-        // If no image uploaded, just save data as usual
-        if (empty($data['image']) || strpos($data['image'], $prefix) !== false) {
+        // If no image uploaded or already processed, just save data as usual
+        if (empty($data['image']) || str_contains($data['image'], '/series/')) {
             if (empty($data['image'])) {
-                // Modify model data if no image is set.
-                $data['series_thumbnail'] = "";
-            } elseif (!str_starts_with(basename($data['image']), $prefix)) {
-                // Modify model data
-                $data['series_thumbnail'] = $path . '/thumb_' . basename($data['image']);
-            } elseif (substr_count(basename($data['image']), $prefix) > 1) {
-                $x = substr_count(basename($data['image']), $prefix);
-
-                while ($x > 1) {
-                    if (substr(basename($data['image']), 0, \strlen($prefix)) == $prefix) {
-                        $str                      = substr(basename($data['image']), \strlen($prefix));
-                        $data['series_thumbnail'] = $path . '/' . $str;
-                        $data['image']            = $path . '/' . $str;
-                    }
-
-                    $x--;
-                }
+                $data['series_thumbnail'] = '';
             }
 
             return parent::save($data);
         }
 
-        Cwmthumbnail::create($data['image'], $path, $params->get('thumbnail_series_size', 100));
+        // Store the original image path for processing after save
+        $originalImage = $data['image'];
+        $seriesTitle   = $data['series_text'] ?? $data['alias'] ?? null;
+        $isNew         = empty($data['id']);
 
-        // Modify model data
-        $data['series_thumbnail'] = $path . '/thumb_' . basename($data['image']);
+        // Validate image before processing
+        $absolutePath = JPATH_ROOT . '/' . $originalImage;
+        $validation   = Cwmthumbnail::validate($absolutePath);
+
+        if (!$validation['valid']) {
+            $app->enqueueMessage(
+                Text::sprintf('JBS_STY_IMAGE_VALIDATION_FAILED', $validation['error']),
+                'error'
+            );
+            $data['image']            = '';
+            $data['series_thumbnail'] = '';
+
+            return parent::save($data);
+        }
+
+        // For new records, save first to get the ID
+        if ($isNew) {
+            $data['image']            = '';
+            $data['series_thumbnail'] = '';
+
+            if (!parent::save($data)) {
+                return false;
+            }
+
+            // Get the new ID from the saved record
+            $data['id'] = $this->getState($this->getName() . '.id');
+        }
+
+        // Build path with title-ID format
+        $alias = ApplicationHelper::stringURLSafe($seriesTitle ?: 'series');
+        $path  = 'images/biblestudy/series/' . $alias . '-' . (int)$data['id'];
+
+        $result = Cwmthumbnail::create(
+            $originalImage,
+            $path,
+            $params->get('thumbnail_series_size', 300),
+            $seriesTitle
+        );
+
+        if ($result === false) {
+            $app->enqueueMessage(Text::_('JBS_STY_IMAGE_NOT_FOUND'), 'warning');
+
+            return $isNew || parent::save($data);
+        }
+
+        // Update paths with new locations
+        $data['image']            = $result['image'];
+        $data['series_thumbnail'] = $result['thumbnail'];
 
         return parent::save($data);
     }

@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -45,6 +45,7 @@ class Cwmmedia
     private int $fsize = 0;
 
     /**
+     *
      * @param   string  $url  url to process
      *
      * @return bool
@@ -53,7 +54,7 @@ class Cwmmedia
      */
     public static function isExternal(string $url): bool
     {
-        // Check if the url has a website string as some time it's just a path to a local file.
+        // Check if the URL contains a website string, since it may just be a path to a local file.
         if (strpos($url, "http") || strpos($url, "https") || strpos($url, "//")) {
             $components = parse_url($url);
             $root       = parse_url(Uri::root());
@@ -68,7 +69,7 @@ class Cwmmedia
                 return false;
             }
 
-            // Check if the url host is a subdomain
+            // Check if the URL host is a subdomain
             return strripos($components['host'], $root['host']) !== \strlen($components['host']) - \strlen($root['host']);
         }
 
@@ -125,7 +126,7 @@ class Cwmmedia
             $mediaImage = (string)$imageparams->get('media_image');
             $image      = $this->useJImage(
                 $mediaImage,
-                $media->params->get('media_button_text', $params->get('download_button_text', 'Audio'))
+                $imageparams->get('media_button_text', $params->get('download_button_text', 'Audio'))
             );
         }
 
@@ -146,7 +147,7 @@ class Cwmmedia
             $link_type = 3;
         }
 
-        // Used to override everything if used for use of the Podcast playlist system..
+        // Used to override everything if used for the use of the Podcast playlist system.
         if ($params->get('pcplaylist')) {
             $link_type = 0;
         }
@@ -223,27 +224,27 @@ class Cwmmedia
         if ($imageparams->get('media_button_color')) {
             $color = 'style="background-color:' . $imageparams->get('media_button_color') . ';"';
         } else {
-            $color = '#1e3e48';
+            $color = '';
         }
 
         switch ($imageparams->get('media_use_button_icon')) {
             case 1:
                 // Button only
-                $mediaimage = '<div  class="btn ' . $button . ' title="' . $buttontext . '" ' . $color . '>' . $buttontext . '</div>';
+                $mediaimage = '<span class="btn ' . $button . '" title="' . $buttontext . '" ' . $color . '>' . $buttontext . '</span>';
                 break;
             case 2:
-                // Button and icon
+                // Button and icon (text before icon)
                 if ($imageparams->get('media_icon_type') === '1') {
                     $icon = $imageparams->get('media_custom_icon');
                 } else {
                     $icon = $imageparams->get('media_icon_type', 'fas fa-play');
 
-                    // Check for fa youtube tag, change to fab
+                    // Check for far YouTube tag, change to fab
                     $icon = str_replace('fa fa-youtube', 'fab fa-youtube', $icon);
                 }
 
-                $mediaimage = '<div  type="button" class="btn ' . $button . '" title="' . $buttontext . '" ' . $color . '><span class="' .
-                    $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span></div>';
+                $mediaimage = '<span class="btn ' . $button . '" title="' . $buttontext . '" ' . $color . '>' .
+                    $buttontext . ' <span class="' . $icon . '" style="font-size:' . $textsize . 'px;"></span></span>';
                 break;
             case 3:
                 // Icon only
@@ -348,8 +349,8 @@ class Cwmmedia
         /**
          * @desc Players - from Template:
          * First, we check to see if in the template the user has set to use the internal player for all media. This can be overridden by itemparams
-         * popuptype = whether AVR should be window or lightbox (handled in avr code)
-         * internal_popup = whether direct or internal player should be popup/new window or inline
+         * popuptype = whether AVR should be a window or a lightbox (handled in AVR code)
+         * internal_popup = whether direct or internal player should be a popup/new window or inline
          * From media file:
          * player 0 = direct, 1 = internal, 2 = AVR, 3 = AV 7 = legacy internal player (from JBS 6.2.2)
          * internal_popup 0 = inline, 1 = popup, 2 = global settings
@@ -427,7 +428,7 @@ class Cwmmedia
     /**
      * Setup Player Code.
      *
-     * @param   Registry  $params  Params are the merged of system and items.
+     * @param   Registry  $params  Params are the merged system and items.
      * @param   object    $player  Player code
      * @param   String    $image   Image info
      * @param   object    $media   Media
@@ -443,9 +444,10 @@ class Cwmmedia
         $params = clone $params;
         $params->merge($media->params);
 
-        $input    = new Input();
-        $template = $input->getInt('t', '1');
-        $youtube  = new CWMAddonYoutube();
+        $input      = new Input();
+        $template   = $input->getInt('t', '1');
+        $youtube    = new CWMAddonYoutube();
+        $colorStyle = ($media->params->get("media_button_color")) ? ' style="color:' . $media->params->get("media_button_color") . '"' : '';
 
         // Here we get more information about the particular media file
         $filesize = $this->getFluidFilesize($media, $params);
@@ -470,7 +472,7 @@ class Cwmmedia
                         return $this->renderSB($media, $params, $player, $image, $path, true);
 
                     case 1: // Popup window
-                        $playercode = "<a style='color: #5F5A58;' href=\"javascript:;\"" .
+                        $playercode = "<a $colorStyle href=\"javascript:;\"" .
                             " onclick=\"window.open('index.php?option=com_proclaim&amp;player="
                             . $params->toObject()->player .
                             "&amp;view=cwmpopup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
@@ -519,12 +521,11 @@ class Cwmmedia
                         break;
 
                     case 1: // Popup
-                        // Add space for a popup window
-
+                        // Add space for a pop-up window
                         $diff                 = $params->get('player_width') - $params->get('playerwidth');
                         $player->playerwidth += abs($diff) + 10;
                         $player->playerheight += $params->get('popupmargin', '50');
-                        $playercode           = "<a style='color: #5F5A58;' href=\"javascript:;\"" .
+                        $playercode           = "<a $colorStyle href=\"javascript:;\"" .
                             " onclick=\"window.open('index.php?option=com_proclaim&amp;player="
                             . $player->player
                             . "&amp;view=cwmpopup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
@@ -541,7 +542,7 @@ class Cwmmedia
 
                 switch ($player->type) {
                     case 1: // This goes to the popup view
-                        $playercode = "<a style='color: #5F5A58;' href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
+                        $playercode = "<a $colorStyle href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
                             . "&amp;view=cwmpopup&amp;player=3&amp;t=" . $template .
                             "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
                             . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">" . $image . "</a>";
@@ -565,7 +566,7 @@ class Cwmmedia
                 return $this->getVirtuemart($media, $image);
 
             case 8: // Embed code
-                return "<a style='color: #5F5A58;' href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
+                return "<a $colorStyle href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
                     . "&amp;view=cwmpopup&amp;player=8&amp;t=" . $template .
                     "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
                     . $player->playerheight . "'); return false\">" . $image . "</a>";
@@ -588,7 +589,7 @@ class Cwmmedia
     {
         $filesize = 0;
 
-        // Check to see if we need to look up file size or not. By looking at if download like is set.
+        // Check whether we need to look up the file size. By looking at whether the download is set.
         if ($media->params->get('link_type') === '0') {
             $this->fsize = $filesize;
 
@@ -664,6 +665,7 @@ class Cwmmedia
      * @param   bool      $direct  If coming from Direct
      *
      * @return string
+     * @deprecated 10.0.0 - jwplayer_image, jwplayer_mute, jwplayer_logo, jwplayer_logolink
      *
      * @since 9.1.2
      */
@@ -703,15 +705,12 @@ class Cwmmedia
 
         // Player attributes - jwplayer_* params are deprecated, kept for backward compatibility
         // These are now handled by the Fancybox player (see media/js/fancybox.js)
-        // @deprecated 10.0.0 - jwplayer_image, jwplayer_mute, jwplayer_logo, jwplayer_logolink
         $posterImage = $params->get('jwplayer_image', $params->get('player_image', ''));
         $muteOnStart = $params->get('jwplayer_mute', $params->get('player_mute', 'false'));
         $logoImage   = $params->get('jwplayer_logo', $params->get('player_logo', ''));
         $logoLink    = $params->get('jwplayer_logolink', $params->get('player_logolink', Uri::base()));
 
-        return '<a data-src="' . $path . '" data-id="' . $media->id . '" id="' . $media->id . '" title="' . $params->get(
-            'filename'
-        ) .
+        return '<a data-src="' . $path . '" data-id="' . $media->id . '" id="' . $media->id .
             '" data-fancybox class="fancybox_player hitplay" potext="' . $popout . '" ptype="' . $player->player .
             '" pwidth="' . $player->playerwidth . '" pheight="' .
             $player->playerheight . '" autostart="' . $params->get('autostart', false) . '" controls="' .
@@ -723,9 +722,9 @@ class Cwmmedia
     }
 
     /**
-     * Vimeo url to embed.
+     * Vimeo URL to embed.
      *
-     * @param   string  $string  Vimeo url to transform.
+     * @param   string  $string  Vimeo URL to transform.
      *
      * @return string
      *
@@ -811,7 +810,7 @@ class Cwmmedia
     }
 
     /**
-     * Set up Virtumart if Vertumart is installed.
+     * Set up Virtumart if Virtumart is installed.
      *
      * @param   object  $media  Media
      * @param   string  $image  Image
@@ -842,7 +841,7 @@ class Cwmmedia
      */
     public function getFluidDownloadLink(object $media, Registry $params, $template): string
     {
-        // Remove download form YouTube links.
+        // Remove the download option from YouTube links.
         $filename  = $media->params->get('filename');
         $link_type = 0;
 
@@ -1025,6 +1024,7 @@ class Cwmmedia
      *
      * @return object|bool
      *
+     * @throws \Exception
      * @since 9.0.0
      */
     public function getMediaRows2(int $id): object|bool
@@ -1204,6 +1204,8 @@ class Cwmmedia
     }
 
     /**
+     * Convert YouTube URLs
+     *
      * @param   string  $path
      *
      * @return string
@@ -1215,7 +1217,16 @@ class Cwmmedia
         return $this->ensureHttpJoomla((new CWMAddonYoutube())->convertYoutube($path));
     }
 
-    public function ensureHttpJoomla($url)
+    /**
+     * Ensure URLs have HTTPS at the beginning.
+     *
+     * @param   string  $url  URL
+     *
+     * @return string
+     *
+     * @since 10.0.0
+     */
+    public function ensureHttpJoomla(string $url): string
     {
         $uri = new Uri($url);
         if (!$uri->getScheme()) {
@@ -1225,7 +1236,7 @@ class Cwmmedia
     }
 
     /**
-     * Process popup text template with placeholders
+     * Process pop-up text template with placeholders
      *
      * Replaces template placeholders like {{title}}, {{teacher}}, {{scripture}}, etc.
      * with actual values from the media object.
@@ -1304,7 +1315,7 @@ class Cwmmedia
      */
     public function getPopupFooter(object $media, Registry $params): string
     {
-        $template = $params->get('popupfooter', '{{filename}}');
+        $template = $params->get('popupfooter', '');
         return $this->processPopupText($template, $media, $params);
     }
 }

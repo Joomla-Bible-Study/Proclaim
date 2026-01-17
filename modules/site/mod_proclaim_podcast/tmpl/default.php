@@ -5,7 +5,7 @@
  *
  * @package         Proclaim
  * @subpackage      mod_proclaim_podcast
- * @copyright   (C) 2025 CWM Team All rights reserved
+ * @copyright   (C) 2026 CWM Team All rights reserved
  * @license         GNU General Public License version 2 or later; see LICENSE.txt
  * @link            https://www.christianwebministries.org
  */

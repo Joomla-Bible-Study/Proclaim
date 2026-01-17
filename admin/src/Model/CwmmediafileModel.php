@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -120,18 +120,18 @@ class CwmmediafileModel extends AdminModel
     }
 
     /**
-     * Overrides the JModelAdmin save routine in order to implode the podcast_id
+     * Overrides the AdminModel save routine to implode the podcast_id
      *
      * @param   array  $data  The form data.
      *
-     * @return  boolean True on successfully save
+     * @return  bool True on successful save
      *
      * @since   7.0
      */
     public function save($data): bool
     {
         if ($data) {
-            // Implode only if they selected at least one podcast. Otherwise just clear the podcast_id field
+            // Implode only if they selected at least one podcast. Otherwise, just clear the podcast_id field
             $data['podcast_id'] = empty($data['podcast_id']) ? '' : implode(",", $data['podcast_id']);
 
             $params = new Registry();
@@ -212,13 +212,13 @@ class CwmmediafileModel extends AdminModel
     /**
      * Get the media form
      *
-     * @return boolean|mixed
+     * @return bool|mixed
      *
      * @throws \Exception
      *
      * @since   9.0.0
      */
-    public function getMediaForm()
+    public function getMediaForm(): mixed
     {
         // If a user hasn't selected a server yet, just return an empty form
         $server_id = $this->data->server_id;
@@ -240,11 +240,24 @@ class CwmmediafileModel extends AdminModel
         $s_item      = $model->getItem($server_id);
         $server_type = $s_item->type;
 
+        // Load server params (stored as JSON string in database)
         $reg = new Registry();
-        $reg->loadArray($s_item->params);
 
+        if (\is_string($s_item->params)) {
+            $reg->loadString($s_item->params);
+        } elseif (\is_array($s_item->params)) {
+            $reg->loadArray($s_item->params);
+        }
+
+        // Load server media defaults (already converted to array by CwmserverModel::getItem)
         $reg1 = new Registry();
-        $reg1->loadArray($s_item->media);
+
+        if (\is_array($s_item->media)) {
+            $reg1->loadArray($s_item->media);
+        } elseif (\is_string($s_item->media)) {
+            $reg1->loadString($s_item->media);
+        }
+
         $reg1->merge($reg);
 
         if ($server_type) {
@@ -281,7 +294,7 @@ class CwmmediafileModel extends AdminModel
             return false;
         }
 
-        // Pass this data through state.
+        // Pass server params through state for use by view/addons when setting defaults
         $this->setState('s_params', $reg1->toArray());
         $this->setState('type', $server_type);
 
@@ -345,15 +358,15 @@ class CwmmediafileModel extends AdminModel
     /**
      * Get the form data
      *
-     * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param   array  $data      Data for the form.
+     * @param   bool   $loadData  True if the form is to load its own data (default case), false if not.
      *
-     * @return boolean|object
+     * @return bool|object
      *
      * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = [], $loadData = true)
+    public function getForm($data = [], $loadData = true): object|bool
     {
         if (empty($data)) {
             $this->getItem();
@@ -409,7 +422,7 @@ class CwmmediafileModel extends AdminModel
      * @param   array   $pks       An array of row IDs.
      * @param   array   $contexts  An array of item contexts.
      *
-     * @return  boolean  True if successful, false otherwise and internal error is set.
+     * @return  bool  True if successful, false otherwise, and an internal error is set.
      *
      * @throws \Exception
      * @since   2.5
@@ -448,10 +461,10 @@ class CwmmediafileModel extends AdminModel
     }
 
     /**
-     * Custom clean the cache of com_proclaim and Proclaim modules
+     * Custom clean the cache of the com_proclaim and Proclaim modules
      *
-     * @param   string   $group      The cache group
-     * @param   integer  $client_id  The ID of the client
+     * @param   string  $group      The cache group
+     * @param   int     $client_id  The ID of the client
      *
      * @return  void
      *
@@ -464,13 +477,13 @@ class CwmmediafileModel extends AdminModel
     }
 
     /**
-     * Batch popup changes for a group of media files.
+     * Batch pop-up changes for a group of media files.
      *
      * @param   string  $value     The new value matching a client.
      * @param   array   $pks       An array of row IDs.
      * @param   array   $contexts  An array of item contexts.
      *
-     * @return  boolean  True if successful, false otherwise and internal error is set.
+     * @return  bool  True if successful, false otherwise, and an internal error is set.
      *
      * @throws \Exception
      * @since   2.5
@@ -516,7 +529,7 @@ class CwmmediafileModel extends AdminModel
      * @param   array   $pks       An array of row IDs.
      * @param   array   $contexts  An array of item contexts.
      *
-     * @return  boolean  True if successful, false otherwise and internal error is set.
+     * @return  bool  True if successful, false otherwise, and an internal error is set.
      *
      * @throws \Exception
      * @since   2.5
@@ -556,13 +569,13 @@ class CwmmediafileModel extends AdminModel
     }
 
     /**
-     * Batch popup changes for a group of media files.
+     * Batch pop-up changes for a group of media files.
      *
      * @param   string  $value     The new value matching a client.
      * @param   array   $pks       An array of row IDs.
      * @param   array   $contexts  An array of item contexts.
      *
-     * @return  boolean  True if successful, false otherwise and internal error is set.
+     * @return  bool  True if successful, false otherwise, and an internal error is set.
      *
      * @throws \Exception
      * @since   2.5
@@ -607,7 +620,7 @@ class CwmmediafileModel extends AdminModel
      * @param   array   $pks       An array of row IDs.
      * @param   array   $contexts  An array of item contexts.
      *
-     * @return  boolean  True if successful, false otherwise and internal error is set.
+     * @return  bool  True if successful, false otherwise, and an internal error is set.
      *
      * @throws \Exception
      * @since   2.5
@@ -646,16 +659,16 @@ class CwmmediafileModel extends AdminModel
     }
 
     /**
-     * Method override to check-in a record or an array of record
+     * Method override to check in a record or an array of records
      *
      * @param   mixed  $pks  The ID of the primary key or an array of IDs
      *
-     * @return  mixed  Boolean false if there is an error, otherwise the count of records checked in.
+     * @return  false|int  Boolean false if there is an error, otherwise the count of records checked in.
      *
      * @throws \Exception
      * @since   12.2
      */
-    public function checkin($pks = [])
+    public function checkin($pks = []): false|int
     {
         $pks   = (array)$pks;
         $table = $this->getTable();
@@ -690,7 +703,7 @@ class CwmmediafileModel extends AdminModel
      *
      * @param   object  $record  A record object.
      *
-     * @return    boolean    True if allowed to delete the record. Defaults to the permission set in the component.
+     * @return    bool    True if allowed to delete the record. Defaults to the permission set in the component.
      *
      * @throws \Exception
      * @since    1.6
@@ -806,7 +819,7 @@ class CwmmediafileModel extends AdminModel
      *
      * @param   object  $table  A record object.
      *
-     * @return    array    An array of conditions to add to add to ordering queries.
+     * @return    array    An array of conditions to add to ordering queries.
      *
      * @since    1.6
      */

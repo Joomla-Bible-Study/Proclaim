@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -276,10 +276,13 @@ class CwmmediafilesModel extends ListModel
         // Filter by published state
         $published = (string) $this->getState('filter.published');
 
-        if (($published !== '*') && is_numeric($published)) {
+        if (is_numeric($published)) {
             $state = (int) $published;
             $query->where($db->quoteName('mediafile.published') . ' = :state')
                 ->bind(':state', $state, ParameterType::INTEGER);
+        } elseif ($published === '') {
+            // By default, exclude trashed items (-2), show published (1), unpublished (0), and archived (2)
+            $query->whereIn($db->quoteName('mediafile.published'), [0, 1, 2]);
         }
 
         // Filter by access level.

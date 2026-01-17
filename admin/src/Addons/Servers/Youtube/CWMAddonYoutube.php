@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -171,7 +171,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return string
      *
-     * @since 10.0.0
+     * @since 10.1.0
      */
     public function convertYoutube(string $url = ''): string
     {
@@ -260,13 +260,153 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
+     * Get available AJAX actions for this addon
+     *
+     * @return  array  List of available action names
+     *
+     * @since   10.1.0
+     */
+    public function getAjaxActions(): array
+    {
+        return [
+            'testApi',
+            'fetchUpcoming',
+            'fetchChannelVideos',
+            'searchChannelVideos',
+            'fetchChannelPlaylists',
+            'fetchPlaylistVideos',
+            'fetchLiveVideos',
+            'getVideoStatus',
+        ];
+    }
+
+    /**
+     * Handle testApi AJAX action
+     *
+     * @return  array  Response data
+     *
+     * @since   10.1.0
+     */
+    protected function handleTestApiAction(): array
+    {
+        $app       = Factory::getApplication();
+        $apiKey    = $app->input->getString('api_key', '');
+        $channelId = $app->input->getString('channel_id', '');
+
+        return $this->testApiConnection($apiKey, $channelId);
+    }
+
+    /**
+     * Handle fetchUpcoming AJAX action
+     *
+     * @return  array  Response data
+     *
+     * @since   10.1.0
+     */
+    protected function handleFetchUpcomingAction(): array
+    {
+        $app      = Factory::getApplication();
+        $serverId = $app->input->getInt('server_id', 0);
+
+        // Verify this is a YouTube server
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('type'))
+            ->from($db->quoteName('#__bsms_servers'))
+            ->where($db->quoteName('id') . ' = ' . $serverId);
+        $db->setQuery($query);
+        $serverType = $db->loadResult();
+
+        if (strtolower($serverType) !== 'youtube') {
+            return ['success' => false, 'error' => 'Selected server is not a YouTube server'];
+        }
+
+        return $this->fetchUpcomingVideos($serverId);
+    }
+
+    /**
+     * Handle fetchChannelVideos AJAX action
+     *
+     * @return  array  Response data
+     *
+     * @since   10.1.0
+     */
+    protected function handleFetchChannelVideosAction(): array
+    {
+        $app   = Factory::getApplication();
+        $input = $app->input;
+
+        return $this->fetchChannelVideos($input);
+    }
+
+    /**
+     * Handle searchChannelVideos AJAX action
+     *
+     * @return  array  Response data
+     *
+     * @since   10.1.0
+     */
+    protected function handleSearchChannelVideosAction(): array
+    {
+        $app   = Factory::getApplication();
+        $input = $app->input;
+
+        return $this->searchChannelVideos($input);
+    }
+
+    /**
+     * Handle fetchChannelPlaylists AJAX action
+     *
+     * @return  array  Response data
+     *
+     * @since   10.1.0
+     */
+    protected function handleFetchChannelPlaylistsAction(): array
+    {
+        $app   = Factory::getApplication();
+        $input = $app->input;
+
+        return $this->fetchChannelPlaylists($input);
+    }
+
+    /**
+     * Handle fetchPlaylistVideos AJAX action
+     *
+     * @return  array  Response data
+     *
+     * @since   10.1.0
+     */
+    protected function handleFetchPlaylistVideosAction(): array
+    {
+        $app   = Factory::getApplication();
+        $input = $app->input;
+
+        return $this->fetchPlaylistVideos($input);
+    }
+
+    /**
+     * Handle fetchLiveVideos AJAX action
+     *
+     * @return  array  Response data
+     *
+     * @since   10.1.0
+     */
+    protected function handleFetchLiveVideosAction(): array
+    {
+        $app   = Factory::getApplication();
+        $input = $app->input;
+
+        return $this->fetchLiveVideos($input);
+    }
+
+    /**
      * Get server configuration by ID
      *
      * @param   int  $serverId  Server ID
      *
      * @return  array  Server params
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     protected function getServerConfig(int $serverId): array
     {
@@ -289,27 +429,13 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
-     * Load addon language file
-     *
-     * @return  void
-     *
-     * @since   10.0.0
-     */
-    protected function loadLanguage(): void
-    {
-        $lang = Factory::getApplication()->getLanguage();
-        $path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/Youtube';
-        $lang->load('jbs_addon_youtube', $path);
-    }
-
-    /**
      * Fetch videos from YouTube channel (XHR handler)
      *
      * @param   Input  $input  Request input
      *
      * @return  array  Response data
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function fetchChannelVideos(Input $input): array
     {
@@ -396,7 +522,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function searchChannelVideos(Input $input): array
     {
@@ -477,7 +603,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function fetchChannelPlaylists(Input $input): array
     {
@@ -539,7 +665,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function fetchPlaylistVideos(Input $input): array
     {
@@ -614,7 +740,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
-     * @since   10.0.0
+     * @since   10.1.0
      */
     public function fetchLiveVideos(Input $input): array
     {
@@ -680,6 +806,201 @@ class CWMAddonYoutube extends CWMAddon
                 'prevPageToken' => $response->prevPageToken ?? null,
                 'totalResults'  => $response->pageInfo->totalResults ?? 0,
             ];
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Test YouTube API credentials
+     *
+     * @param   string  $apiKey     The YouTube API key
+     * @param   string  $channelId  The YouTube channel ID
+     *
+     * @return  array  Response data with success status
+     *
+     * @since   10.1.0
+     */
+    public function testApiConnection(string $apiKey, string $channelId): array
+    {
+        $this->loadLanguage();
+
+        if (empty($apiKey)) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_API_KEY')];
+        }
+
+        if (empty($channelId)) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_CHANNEL_ID')];
+        }
+
+        try {
+            $client = new Google\Client();
+            $client->setApplicationName('Proclaim');
+            $client->setDeveloperKey($apiKey);
+
+            $youtube = new YouTube($client);
+
+            // Try to get channel details (suppress warnings from cURL deprecation in PHP 8.5)
+            $response = @$youtube->channels->listChannels('snippet,statistics', [
+                'id' => $channelId,
+            ]);
+
+            if (empty($response->items)) {
+                return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_CHANNEL_NOT_FOUND')];
+            }
+
+            $channel = $response->items[0];
+
+            return [
+                'success' => true,
+                'message' => Text::_('JBS_ADDON_YOUTUBE_API_SUCCESS'),
+                'channel' => [
+                    'title'           => $channel->snippet->title,
+                    'description'     => substr($channel->snippet->description ?? '', 0, 100),
+                    'subscriberCount' => $channel->statistics->subscriberCount ?? null,
+                    'videoCount'      => $channel->statistics->videoCount ?? null,
+                ],
+            ];
+        } catch (Exception $e) {
+            $errorMessage = $e->getMessage();
+
+            // Try to parse Google API error
+            $decoded = json_decode($errorMessage, true);
+
+            if (isset($decoded['error']['message'])) {
+                $errorMessage = Text::_('JBS_ADDON_YOUTUBE_API_ERROR') . ': ' . $decoded['error']['message'];
+            }
+
+            return ['success' => false, 'error' => $errorMessage];
+        }
+    }
+
+    /**
+     * Fetch upcoming videos for exclusion list (AJAX handler)
+     *
+     * @param   int  $serverId  The server ID
+     *
+     * @return  array  Response data with videos
+     *
+     * @since   10.1.0
+     */
+    public function fetchUpcomingVideos(int $serverId): array
+    {
+        $this->loadLanguage();
+
+        if (!$serverId) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_SERVER_ID')];
+        }
+
+        $input = new Input([
+            'server_id'   => $serverId,
+            'max_results' => 25,
+            'event_type'  => 'upcoming',
+        ]);
+
+        return $this->fetchLiveVideos($input);
+    }
+
+    /**
+     * Handle getVideoStatus AJAX action
+     *
+     * @return  array  Response data
+     *
+     * @since   10.1.0
+     */
+    protected function handleGetVideoStatusAction(): array
+    {
+        $app   = Factory::getApplication();
+        $input = $app->input;
+
+        return $this->getVideoStatus($input);
+    }
+
+    /**
+     * Get the live streaming status of a specific video
+     *
+     * Uses the Videos API with liveStreamingDetails to get the actual
+     * broadcast status, which is more reliable than search API for
+     * detecting status transitions.
+     *
+     * @param   Input  $input  Request input with server_id and video_id
+     *
+     * @return  array  Response with isLive, isUpcoming, liveBroadcastContent
+     *
+     * @since   10.1.0
+     */
+    public function getVideoStatus(Input $input): array
+    {
+        $this->loadLanguage();
+
+        $serverId = $input->getInt('server_id', 0);
+        $videoId  = $input->getString('video_id', '');
+
+        if (!$serverId) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_SERVER_ID')];
+        }
+
+        if (empty($videoId)) {
+            return ['success' => false, 'error' => 'No video ID provided'];
+        }
+
+        $config = $this->getServerConfig($serverId);
+        $apiKey = $config['api_key'] ?? '';
+
+        if (empty($apiKey)) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_API_KEY')];
+        }
+
+        try {
+            $client = new Google\Client();
+            $client->setApplicationName('Proclaim');
+            $client->setDeveloperKey($apiKey);
+
+            $youtube = new YouTube($client);
+
+            // Get video details with liveStreamingDetails
+            $response = $youtube->videos->listVideos('snippet,liveStreamingDetails', [
+                'id' => $videoId,
+            ]);
+
+            if (empty($response->items)) {
+                return [
+                    'success'    => true,
+                    'isLive'     => false,
+                    'isUpcoming' => false,
+                    'videoId'    => $videoId,
+                    'status'     => 'not_found',
+                ];
+            }
+
+            $video                 = $response->items[0];
+            $liveBroadcastContent  = $video->snippet->liveBroadcastContent ?? 'none';
+            $liveStreamingDetails  = $video->liveStreamingDetails;
+
+            // Determine status based on liveBroadcastContent
+            // Values: 'live', 'upcoming', 'none'
+            $isLive     = ($liveBroadcastContent === 'live');
+            $isUpcoming = ($liveBroadcastContent === 'upcoming');
+
+            $result = [
+                'success'              => true,
+                'isLive'               => $isLive,
+                'isUpcoming'           => $isUpcoming,
+                'videoId'              => $videoId,
+                'liveBroadcastContent' => $liveBroadcastContent,
+            ];
+
+            // Include scheduled start time if available
+            if ($liveStreamingDetails && $liveStreamingDetails->scheduledStartTime) {
+                $result['scheduledStartTime'] = $liveStreamingDetails->scheduledStartTime;
+            }
+
+            // Include actual start time if live or completed
+            if ($liveStreamingDetails && $liveStreamingDetails->actualStartTime) {
+                $result['actualStartTime'] = $liveStreamingDetails->actualStartTime;
+            }
+
+            return $result;
         } catch (Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }

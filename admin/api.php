@@ -1,25 +1,26 @@
 <?php
 
 /**
- * Core Admin Proclaim file
+ * Core Admin Proclaim API file
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
-// No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 try {
     $app = Factory::getApplication();
 } catch (Exception $e) {
-    return;
+    jexit('Could not load Factory');
 }
 
 // Component debugging
@@ -30,13 +31,31 @@ try {
         \define('JBSMDEBUG', 0);
     }
 } catch (\RuntimeException $e) {
-    throw new \RuntimeException("Could not find Debug setting.");
+    throw new \RuntimeException('Could not find Debug setting.');
 }
-// phpcs:enable PSR1.Files.SideEffects
 
-// Version information
-const BIBLESTUDY_VERSION            = '10.0.1';
-const BIBLESTUDY_VERSION_UPDATEFILE = 'JBS Version ' . BIBLESTUDY_VERSION;
+// Version information - read from manifest XML
+$manifestFile    = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
+$manifestVersion = '0.0.0';
+
+if (is_file($manifestFile) && is_readable($manifestFile)) {
+    libxml_use_internal_errors(true);
+    $xml = simplexml_load_string(file_get_contents($manifestFile));
+
+    if ($xml instanceof \SimpleXMLElement && isset($xml->version)) {
+        $manifestVersion = trim((string) $xml->version);
+    } else {
+        // Log XML parsing errors, if any
+        foreach (libxml_get_errors() as $error) {
+            Log::add('XML Error in proclaim.xml: ' . trim($error->message), Log::WARNING, 'com_proclaim');
+        }
+    }
+
+    libxml_clear_errors();
+}
+
+\define('BIBLESTUDY_VERSION', $manifestVersion);
+\define('BIBLESTUDY_VERSION_UPDATEFILE', 'Proclaim Version ' . BIBLESTUDY_VERSION);
 
 // Default values
 const BIBLESTUDY_COMPONENT_NAME = 'com_proclaim';
@@ -51,7 +70,6 @@ const BIBLESTUDY_MEDIA_PATH      = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . 
 
 // Admin Component paths
 const BIBLESTUDY_PATH_ADMIN         = BIBLESTUDY_ROOT_PATH_ADMIN . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_RELPATH;
-const BIBLESTUDY_PATH_ADMIN_HELPERS = BIBLESTUDY_PATH_ADMIN . DIRECTORY_SEPARATOR . 'helpers';
 
 // If a phrase is not found in a specific language file, load the English language file:
 $language = $app->getLanguage();
@@ -64,11 +82,11 @@ if (is_dir($modProclaimPath)) {
     $language->load('mod_proclaim', $modProclaimPath, null, true);
 }
 
-// Add to the API to load the core CSS and JS for the component to function properly.
+// Add to the API to load the component's core CSS and JS for proper functionality.
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $app->getDocument()->getWebAssetManager();
 
-// We register the extension registry because in  modules and plugins, the registry is not automatically loaded
+// We register the extension registry because in modules and plugins, the registry is not automatically loaded
 $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
 $wa->useStyle('com_proclaim.cwmcore')
     ->useScript('com_proclaim.cwmcorejs');

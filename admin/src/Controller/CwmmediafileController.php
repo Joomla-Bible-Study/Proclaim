@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -108,7 +108,7 @@ class CwmmediafileController extends FormController
      */
     public function xhr(): void
     {
-        Session::checkToken('get') or die('Invalid Token');
+        Session::checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
         $input = Factory::getApplication()->getInput();
 
         $addonType = $input->get('type', 'Legacy', 'string');
@@ -132,7 +132,7 @@ class CwmmediafileController extends FormController
      *
      * @param   CwmmediafileModel  $model  The model.
      *
-     * @return  bool     True if successful, false otherwise and internal error is set.
+     * @return  bool     True if successful, false otherwise, and an internal error is set.
      *
      * @throws \Exception
      * @since   1.6

@@ -5,7 +5,7 @@
  *
  * @package        Proclaim
  * @subpackage     com_proclaim
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -25,7 +25,7 @@ use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 
 // phpcs:disable PSR1.Files.SideEffects
-defined('_JEXEC') or die;
+\defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -65,6 +65,7 @@ class com_proclaimInstallerScript extends InstallerScript
             'site' => [
                 'proclaim'         => ['', 0],
                 'proclaim_podcast' => ['', 0],
+                'proclaim_youtube' => ['', 0],
             ],
         ],
         // -- plugins => { (folder) => { (element) => (published) }* }*
@@ -188,7 +189,7 @@ class com_proclaimInstallerScript extends InstallerScript
         '/components/com_proclaim/proclaim.xml',
         '/components/com_proclaim/proclaimbak.php',
         '/components/com_proclaim/router.php',
-        // German language files for finder plugin
+        // German language files for the finder plugin
         '/plugins/finder/proclaim/language/de-DE/de-DE.plg_finder_biblestudy.ini',
         '/plugins/finder/proclaim/language/de-DE/de-DE.plg_finder_biblestudy.sys.ini',
     ];
@@ -259,35 +260,35 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     protected array $renameFolders = [
         // Site View folders - CWM prefix renamed to Cwm
-        '/components/com_proclaim/src/View/CWMCommentList' => '/components/com_proclaim/src/View/Cwmcommentlist',
-        '/components/com_proclaim/src/View/CWMLandingPage' => '/components/com_proclaim/src/View/Cwmlandingpage',
-        '/components/com_proclaim/src/View/CWMLatest' => '/components/com_proclaim/src/View/Cwmlatest',
-        '/components/com_proclaim/src/View/CWMMediaFileForm' => '/components/com_proclaim/src/View/Cwmmediafileform',
-        '/components/com_proclaim/src/View/CWMMediaFileList' => '/components/com_proclaim/src/View/Cwmmediafilelist',
-        '/components/com_proclaim/src/View/CWMMessageForm' => '/components/com_proclaim/src/View/Cwmmessageform',
-        '/components/com_proclaim/src/View/CWMMessageList' => '/components/com_proclaim/src/View/Cwmmessagelist',
+        '/components/com_proclaim/src/View/CWMCommentList'    => '/components/com_proclaim/src/View/Cwmcommentlist',
+        '/components/com_proclaim/src/View/CWMLandingPage'    => '/components/com_proclaim/src/View/Cwmlandingpage',
+        '/components/com_proclaim/src/View/CWMLatest'         => '/components/com_proclaim/src/View/Cwmlatest',
+        '/components/com_proclaim/src/View/CWMMediaFileForm'  => '/components/com_proclaim/src/View/Cwmmediafileform',
+        '/components/com_proclaim/src/View/CWMMediaFileList'  => '/components/com_proclaim/src/View/Cwmmediafilelist',
+        '/components/com_proclaim/src/View/CWMMessageForm'    => '/components/com_proclaim/src/View/Cwmmessageform',
+        '/components/com_proclaim/src/View/CWMMessageList'    => '/components/com_proclaim/src/View/Cwmmessagelist',
         '/components/com_proclaim/src/View/CWMPodcastDisplay' => '/components/com_proclaim/src/View/Cwmpodcastdisplay',
-        '/components/com_proclaim/src/View/CWMPodcastList' => '/components/com_proclaim/src/View/Cwmpodcastlist',
-        '/components/com_proclaim/src/View/CWMPopUp' => '/components/com_proclaim/src/View/Cwmpopup',
-        '/components/com_proclaim/src/View/CWMSeriesDisplay' => '/components/com_proclaim/src/View/Cwmseriesdisplay',
+        '/components/com_proclaim/src/View/CWMPodcastList'    => '/components/com_proclaim/src/View/Cwmpodcastlist',
+        '/components/com_proclaim/src/View/CWMPopUp'          => '/components/com_proclaim/src/View/Cwmpopup',
+        '/components/com_proclaim/src/View/CWMSeriesDisplay'  => '/components/com_proclaim/src/View/Cwmseriesdisplay',
         '/components/com_proclaim/src/View/CWMSeriesDisplays' => '/components/com_proclaim/src/View/Cwmseriesdisplays',
-        '/components/com_proclaim/src/View/CWMSermon' => '/components/com_proclaim/src/View/Cwmsermon',
-        '/components/com_proclaim/src/View/CWMSermons' => '/components/com_proclaim/src/View/Cwmsermons',
-        '/components/com_proclaim/src/View/CWMServersList' => '/components/com_proclaim/src/View/Cwmserverslist',
-        '/components/com_proclaim/src/View/CWMSqueezeBox' => '/components/com_proclaim/src/View/Cwmsqueezebox',
-        '/components/com_proclaim/src/View/CWMTeacher' => '/components/com_proclaim/src/View/Cwmteacher',
-        '/components/com_proclaim/src/View/CWMTeachers' => '/components/com_proclaim/src/View/Cwmteachers',
-        '/components/com_proclaim/src/View/CWMTerms' => '/components/com_proclaim/src/View/Cwmterms',
-        '/components/com_proclaim/src/View/CWMcommentform' => '/components/com_proclaim/src/View/Cwmcommentform',
-        '/components/com_proclaim/src/View/Teacher' => '/components/com_proclaim/src/View/Cwmteacher',
+        '/components/com_proclaim/src/View/CWMSermon'         => '/components/com_proclaim/src/View/Cwmsermon',
+        '/components/com_proclaim/src/View/CWMSermons'        => '/components/com_proclaim/src/View/Cwmsermons',
+        '/components/com_proclaim/src/View/CWMServersList'    => '/components/com_proclaim/src/View/Cwmserverslist',
+        '/components/com_proclaim/src/View/CWMSqueezeBox'     => '/components/com_proclaim/src/View/Cwmsqueezebox',
+        '/components/com_proclaim/src/View/CWMTeacher'        => '/components/com_proclaim/src/View/Cwmteacher',
+        '/components/com_proclaim/src/View/CWMTeachers'       => '/components/com_proclaim/src/View/Cwmteachers',
+        '/components/com_proclaim/src/View/CWMTerms'          => '/components/com_proclaim/src/View/Cwmterms',
+        '/components/com_proclaim/src/View/CWMcommentform'    => '/components/com_proclaim/src/View/Cwmcommentform',
+        '/components/com_proclaim/src/View/Teacher'           => '/components/com_proclaim/src/View/Cwmteacher',
         // Site tmpl folders - CWM prefix renamed to Cwm
-        '/components/com_proclaim/tmpl/CWMCommentForm' => '/components/com_proclaim/tmpl/Cwmcommentform',
-        '/components/com_proclaim/tmpl/CWMCommentList' => '/components/com_proclaim/tmpl/Cwmcommentlist',
+        '/components/com_proclaim/tmpl/CWMCommentForm'   => '/components/com_proclaim/tmpl/Cwmcommentform',
+        '/components/com_proclaim/tmpl/CWMCommentList'   => '/components/com_proclaim/tmpl/Cwmcommentlist',
         '/components/com_proclaim/tmpl/CWMMediaFileForm' => '/components/com_proclaim/tmpl/Cwmmediafileform',
         '/components/com_proclaim/tmpl/CWMMediaFileList' => '/components/com_proclaim/tmpl/Cwmmediafilelist',
-        '/components/com_proclaim/tmpl/CWMMessageForm' => '/components/com_proclaim/tmpl/Cwmmessageform',
-        '/components/com_proclaim/tmpl/CWMMessageList' => '/components/com_proclaim/tmpl/Cwmmessagelist',
-        '/components/com_proclaim/tmpl/Teacher' => '/components/com_proclaim/tmpl/Cwmteacher',
+        '/components/com_proclaim/tmpl/CWMMessageForm'   => '/components/com_proclaim/tmpl/Cwmmessageform',
+        '/components/com_proclaim/tmpl/CWMMessageList'   => '/components/com_proclaim/tmpl/Cwmmessagelist',
+        '/components/com_proclaim/tmpl/Teacher'          => '/components/com_proclaim/tmpl/Cwmteacher',
     ];
 
     /**
@@ -338,7 +339,7 @@ class com_proclaimInstallerScript extends InstallerScript
         try {
             $tables = $this->dbo->getTableList();
 
-            return in_array($table, $tables, true);
+            return \in_array($table, $tables, true);
         } catch (Exception $e) {
             return false;
         }
@@ -392,7 +393,7 @@ class com_proclaimInstallerScript extends InstallerScript
         if (class_exists(InstallerAdapter::class) && ($adapter instanceof InstallerAdapter)) {
             /**
              * If this is Joomla 4.2+ the adapter has a protected getDatabase() method which we can access with the
-             * magic property $adapter->db. On Joomla 4.1 and lower this is not available. So, we have to first figure
+             * magic property $adapter->db. On Joomla 4.1 and lower, this is not available. So, we have to first figure
              * out if we can actually use the magic property...
              */
 
@@ -405,7 +406,7 @@ class com_proclaimInstallerScript extends InstallerScript
                     return;
                 }
             } catch (Throwable $e) {
-                // If something breaks we will fall through
+                // If something breaks, we will fall through
             }
         }
 
@@ -464,7 +465,7 @@ class com_proclaimInstallerScript extends InstallerScript
                         if ($id !== null) {
                             $installer = new Installer();
                             $installer->setDatabase($this->dbo);
-                            $result = $installer->uninstall('module', $id, 1);
+                            $result                  = $installer->uninstall('module', $id, 1);
                             $this->status->modules[] = [
                                 'name'   => 'mod_' . $module,
                                 'client' => $folder,
@@ -494,7 +495,7 @@ class com_proclaimInstallerScript extends InstallerScript
                         if ($id !== null) {
                             $installer = new Installer();
                             $installer->setDatabase($this->dbo);
-                            $result = $installer->uninstall('plugin', $id, 1);
+                            $result                  = $installer->uninstall('plugin', $id, 1);
                             $this->status->plugins[] = [
                                 'name'   => 'plg_' . $plugin,
                                 'group'  => $folder,
@@ -611,7 +612,7 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Post Flight
      *
-     * @param   string            $type    The type of change (install, update or discover_install, not uninstall)
+     * @param   string            $type    The type of change (install, update, or discover_install, not uninstall)
      * @param   ComponentAdapter  $parent  The class calling this method
      *
      * @return void
@@ -702,7 +703,7 @@ class com_proclaimInstallerScript extends InstallerScript
 
                         $installer = new Installer();
                         $installer->setDatabase($this->dbo);
-                        $result = $installer->install($path);
+                        $result                  = $installer->install($path);
                         $this->status->modules[] = [
                             'name'   => 'mod_' . $module,
                             'client' => $folder,
@@ -794,10 +795,10 @@ class com_proclaimInstallerScript extends InstallerScript
                             ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
                             ->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder));
                         $this->dbo->setQuery($query);
-                        $count = $this->dbo->loadResult();
+                        $count     = $this->dbo->loadResult();
                         $installer = new Installer();
                         $installer->setDatabase($this->dbo);
-                        $result = $installer->install($path);
+                        $result                  = $installer->install($path);
                         $this->status->plugins[] = [
                             'name'   => 'plg_' . $plugin,
                             'group'  => $folder,
@@ -1072,7 +1073,7 @@ class com_proclaimInstallerScript extends InstallerScript
             // -- plugins => { (folder) => { (element) => (published) }* }*
             'plugins' => [
                 'finder' => ['biblestudy' => 0],
-                'search' => ['biblestudysearch' => 0,],
+                'search' => ['biblestudysearch' => 0],
                 'system' => [
                     'jbspodcast' => 0,
                     'jbsbackup'  => 0,
@@ -1095,7 +1096,7 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
-     * Rename legacy folders to new naming convention before deletion.
+     * Rename legacy folders to the new naming convention before deletion.
      * This preserves any user customizations by renaming rather than deleting.
      *
      * @return void
@@ -1108,7 +1109,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $oldFullPath = JPATH_ROOT . $oldPath;
             $newFullPath = JPATH_ROOT . $newPath;
 
-            // Only rename if old folder exists and new folder doesn't
+            // Only rename if the old folder exists and the new folder doesn't
             if (is_dir($oldFullPath) && !is_dir($newFullPath)) {
                 Folder::move($oldFullPath, $newFullPath);
             }

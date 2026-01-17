@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -288,12 +288,24 @@ class CwmsermonModel extends FormModel
      */
     public function storecomment(): bool
     {
-        $row                  = $this->getTable('comment');
-        $data                 = $_POST;
-        $data['comment_text'] = Factory::getApplication()->getInput()->get('comment_text', '', 'string');
+        $row   = $this->getTable('Cwmcomment');
+        $input = Factory::getApplication()->getInput();
+
+        // Build data array from input (not raw $_POST)
+        $data = [
+            'study_id'     => $input->getInt('study_id', 0),
+            'full_name'    => $input->getString('full_name', ''),
+            'user_email'   => $input->getString('user_email', ''),
+            'comment_text' => $input->get('comment_text', '', 'raw'),
+            'comment_date' => $input->getString('comment_date', Factory::getDate()->toSql()),
+            'published'    => $input->getInt('published', 1),
+            'language'     => $input->getString('language', '*'),
+        ];
 
         // Bind the form fields to the table
-        $row->bind($data);
+        if (!$row->bind($data)) {
+            return false;
+        }
 
         // Make sure the record is valid
         if (!$row->check()) {

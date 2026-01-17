@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Session\Session;
 use Joomla\Utilities\ArrayHelper;
 
 /**
@@ -107,5 +108,90 @@ class CwmtemplateController extends FormController
                         `published` = ' . $db->q('1');
 
         return $templatereturn;
+    }
+
+    /**
+     * AJAX handler to load a fieldset for lazy-loading tabs
+     *
+     * @return  void
+     *
+     * @throws \JsonException
+     * @since   10.0.0
+     */
+    public function loadFieldset(): void
+    {
+        // Check for request forgeries
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'error' => 'Invalid token'], JSON_THROW_ON_ERROR);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
+        $app       = Factory::getApplication();
+        $input     = $app->input;
+        $fieldset  = $input->getString('fieldset', '');
+        $id        = $input->getInt('id', 0);
+
+        if (empty($fieldset)) {
+            echo json_encode(['success' => false, 'error' => 'No fieldset specified'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            /** @var \CWM\Component\Proclaim\Administrator\Model\CwmtemplateModel $model */
+            $model = $this->getModel('Cwmtemplate');
+
+            // Load the form
+            $form = $model->getForm([], true);
+
+            if (!$form) {
+                echo json_encode(['success' => false, 'error' => 'Could not load form'], JSON_THROW_ON_ERROR);
+                $app->close();
+
+                return;
+            }
+
+            // If editing an existing template, bind the data
+            if ($id > 0) {
+                $item = $model->getItem($id);
+
+                if ($item) {
+                    $form->bind($item);
+                }
+            }
+
+            // Get the fieldset
+            $fields = $form->getFieldset($fieldset);
+
+            if (empty($fields)) {
+                echo json_encode(
+                    ['success' => false, 'error' => 'Fieldset not found: ' . $fieldset],
+                    JSON_THROW_ON_ERROR
+                );
+                $app->close();
+
+                return;
+            }
+
+            // Render the fieldset HTML
+            $html = '';
+
+            foreach ($fields as $field) {
+                $html .= '<div class="control-group">';
+                $html .= '<div class="control-label">' . $field->label . '</div>';
+                $html .= '<div class="controls">' . $field->input;
+                $html .= '<br />' . Text::_($field->description);
+                $html .= '</div></div>';
+            }
+
+            echo json_encode(['success' => true, 'html' => $html], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode(['success' => false, 'error' => $e->getMessage()], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
     }
 }

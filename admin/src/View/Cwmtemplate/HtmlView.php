@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -31,14 +31,6 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
 class HtmlView extends BaseHtmlView
 {
     /**
-     * Pagination
-     *
-     * @var array
-     * @since    7.0.0
-     */
-    protected $pagination;
-
-    /**
      * State
      *
      * @var array
@@ -53,14 +45,6 @@ class HtmlView extends BaseHtmlView
      * @since    7.0.0
      */
     protected $item;
-
-    /**
-     * Types
-     *
-     * @var object
-     * @since    7.0.0
-     */
-    protected $types;
 
     /**
      * Form
@@ -91,19 +75,15 @@ class HtmlView extends BaseHtmlView
      */
     public function display($tpl = null): void
     {
-        $this->item       = $this->get('Item');
-        $this->pagination = $this->get('Pagination');
-        $this->state      = $this->get('State');
-        $this->types      = $this->get('Types');
-        $this->form       = $this->get("Form");
-        $this->canDo      = ContentHelper::getActions('com_proclaim', 'template', (int)$this->item->id);
+        $this->item  = $this->get('Item');
+        $this->state = $this->get('State');
+        $this->form  = $this->get("Form");
+        $this->canDo = ContentHelper::getActions('com_proclaim', 'template', (int)$this->item->id);
 
         $this->setLayout("edit");
 
         // Set the toolbar
         $this->addToolbar();
-
-        $isNew = ($this->item->id < 1);
 
         // Display the template
         parent::display($tpl);

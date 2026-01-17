@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -13,11 +13,12 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
-
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmImageCleanup;
+use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Administrator\Lib\CwmpIconvert;
@@ -49,7 +50,7 @@ class CwmadminController extends FormController
     protected $view_list = 'cwmcpanel';
 
     /**
-     * Tools to change player or pop-up
+     * Tools to change the player or pop-up
      *
      * @return void
      *
@@ -92,7 +93,7 @@ class CwmadminController extends FormController
 
         $db   = Factory::getContainer()->get('DatabaseDriver');
         $msg  = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
-        $post = $_POST['jform'];
+        $post = $this->input->post->get('jform', [], 'array');
         $reg  = new Registry();
         $reg->loadArray($post['params']);
         $from = $reg->get('from', 'x');
@@ -143,7 +144,7 @@ class CwmadminController extends FormController
         Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
         $db   = Factory::getContainer()->get('DatabaseDriver');
-        $post = $_POST['jform'];
+        $post = $this->input->post->get('jform', [], 'array');
         $reg  = new Registry();
         $reg->loadArray($post['params']);
         $from  = $reg->get('pFrom', 'x');
@@ -186,7 +187,7 @@ class CwmadminController extends FormController
     }
 
     /**
-     * Change media images from a digital file to css
+     * Change media images from a digital file to CSS
      *
      * @return void
      *
@@ -195,7 +196,7 @@ class CwmadminController extends FormController
      */
     public function mediaimages(): void
     {
-        $post    = $_POST['jform'];
+        $post    = $this->input->post->get('jform', [], 'raw');
         $decoded = json_decode($post['mediaimage'], true, 512, JSON_THROW_ON_ERROR);
         $db      = Factory::getContainer()->get('DatabaseDriver');
         $query   = $db->getQuery(true);
@@ -237,12 +238,8 @@ class CwmadminController extends FormController
                         $reg->set('media_image', $post['media_image']);
                         $reg->set('media_use_button_icon', $post['media_use_button_icon']);
                         $db->setQuery($query);
-                        $query->update('#__bsms_mediafiles')
-                            ->set('params = ' . $db->q($reg->toString()))
-                            ->where('id = ' . (int)$media->id);
 
                         try {
-                            $db->setQuery($query);
                             $query->update('#__bsms_mediafiles')
                                 ->set('params = ' . $db->q($reg->toString()))
                                 ->where('id = ' . (int)$media->id);
@@ -280,12 +277,8 @@ class CwmadminController extends FormController
                         $reg->set('media_image', $post['media_image']);
                         $reg->set('media_use_button_icon', $post['media_use_button_icon']);
                         $db->setQuery($query);
-                        $query->update('#__bsms_mediafiles')
-                            ->set('params = ' . $db->q($reg->toString()))
-                            ->where('id = ' . (int)$media->id);
 
                         try {
-                            $db->setQuery($query);
                             $query->update('#__bsms_mediafiles')
                                 ->set('params = ' . $db->q($reg->toString()))
                                 ->where('id = ' . (int)$media->id);
@@ -326,13 +319,9 @@ class CwmadminController extends FormController
                         $reg->set('media_icon_type', $post['media_icon_type']);
                         $reg->set('media_image', $post['media_image']);
                         $reg->set('media_use_button_icon', $post['media_use_button_icon']);
-                        $query->update('#__bsms_mediafiles')
-                            ->set('params = ' . $db->q($reg->toString()))
-                            ->where('id = ' . (int)$media->id);
                         $db->setQuery($query);
 
                         try {
-                            $db->setQuery($query);
                             $query->update('#__bsms_mediafiles')
                                 ->set('params = ' . $db->q($reg->toString()))
                                 ->where('id = ' . (int)$media->id);
@@ -553,7 +542,7 @@ class CwmadminController extends FormController
     {
         $user = Factory::getApplication()->getSession()->get('user');
 
-        if (\array_key_exists(8, $user->groups)) {
+        if ($user->authorise('core.admin')) {
             CwmdbHelper::resetdb();
             $this->setRedirect(
                 Route::_(
@@ -563,7 +552,7 @@ class CwmadminController extends FormController
                 )
             );
         } else {
-            Factory::getApplication()->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'eroor');
+            Factory::getApplication()->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
             $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmcpanel', false));
         }
     }
@@ -612,7 +601,7 @@ class CwmadminController extends FormController
 
         if ($oldprefix) {
             if (!($this->copyTables($oldprefix))) {
-                $app->enqueueMessage(Text::_('JBS_CMN_DATABASE_NOT_COPIED'), 'worning');
+                $app->enqueueMessage(Text::_('JBS_CMN_DATABASE_NOT_COPIED'), 'warning');
             }
         } else {
             $import = new Cwmrestore();
@@ -650,19 +639,19 @@ class CwmadminController extends FormController
                 $oldlength       = \strlen($oldprefix);
                 $newsubtablename = substr($table, $oldlength);
                 $newtablename    = $prefix . $newsubtablename;
-                $query           = 'DROP TABLE IF EXISTS ' . $newtablename;
+                $query           = 'DROP TABLE IF EXISTS ' . $db->quoteName($newtablename);
 
                 if (!CwmdbHelper::performDB($query)) {
                     return false;
                 }
 
-                $query = 'CREATE TABLE ' . $newtablename . ' LIKE ' . $table;
+                $query = 'CREATE TABLE ' . $db->quoteName($newtablename) . ' LIKE ' . $db->quoteName($table);
 
                 if (!CwmdbHelper::performDB($query)) {
                     return false;
                 }
 
-                $query = 'INSERT INTO ' . $newtablename . ' SELECT * FROM ' . $table;
+                $query = 'INSERT INTO ' . $db->quoteName($newtablename) . ' SELECT * FROM ' . $db->quoteName($table);
 
                 if (!CwmdbHelper::performDB($query)) {
                     return false;
@@ -870,5 +859,157 @@ class CwmadminController extends FormController
         $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit', false));
 
         return true;
+    }
+
+    /**
+     * Get migration counts XHR - returns count of records needing migration
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.2.0
+     */
+    public function getMigrationCountsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        $counts = CwmImageMigration::getMigrationCounts();
+
+        echo json_encode($counts, JSON_THROW_ON_ERROR);
+
+        $app->close();
+    }
+
+    /**
+     * Get migration batch XHR - returns batch of records to migrate
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.2.0
+     */
+    public function getMigrationBatchXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $input    = $app->getInput();
+
+        $document->setMimeEncoding('application/json');
+
+        $type  = $input->get('type', 'studies', 'string');
+        $limit = $input->get('limit', 10, 'int');
+
+        $batch = CwmImageMigration::getBatch($type, $limit);
+
+        echo json_encode($batch, JSON_THROW_ON_ERROR);
+
+        $app->close();
+    }
+
+    /**
+     * Migrate single record XHR
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.2.0
+     */
+    public function migrateRecordXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $input    = $app->getInput();
+
+        $document->setMimeEncoding('application/json');
+
+        $type    = $input->get('type', '', 'string');
+        $id      = $input->get('id', 0, 'int');
+        $title   = $input->get('title', '', 'string');
+        $oldPath = $input->get('old_path', '', 'string');
+
+        if (empty($type) || empty($id) || empty($oldPath)) {
+            echo json_encode([
+                'success' => false,
+                'error'   => 'Missing required parameters',
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $result = CwmImageMigration::migrateRecord($type, $id, $title, $oldPath);
+
+        echo json_encode($result, JSON_THROW_ON_ERROR);
+
+        $app->close();
+    }
+
+    /**
+     * Get orphaned folders XHR - scans for orphaned image folders
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.2.0
+     */
+    public function getOrphanedFoldersXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        $orphans = CwmImageCleanup::findOrphanedFolders();
+        $totals  = CwmImageCleanup::getTotals($orphans);
+
+        echo json_encode([
+            'orphans' => $orphans,
+            'totals'  => $totals,
+        ], JSON_THROW_ON_ERROR);
+
+        $app->close();
+    }
+
+    /**
+     * Delete orphaned folders XHR
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.2.0
+     */
+    public function deleteOrphanedFoldersXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $input    = $app->getInput();
+
+        $document->setMimeEncoding('application/json');
+
+        $paths = $input->get('paths', [], 'array');
+
+        if (empty($paths)) {
+            echo json_encode([
+                'deleted' => 0,
+                'errors'  => ['No paths provided'],
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $result = CwmImageCleanup::deleteOrphans($paths);
+
+        echo json_encode($result, JSON_THROW_ON_ERROR);
+
+        $app->close();
     }
 }

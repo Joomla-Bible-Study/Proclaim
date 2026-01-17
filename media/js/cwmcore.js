@@ -189,7 +189,8 @@ function ReverseDisplay2(d)
 {
     const element = document.getElementById(d);
     if (element.style.display === 'none') {
-        element.style.display = 'block';
+        // Use 'contents' so children flow with parent's flex/grid layout
+        element.style.display = 'contents';
     } else {
         element.style.display = 'none';
     }

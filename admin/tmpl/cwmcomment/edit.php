@@ -4,7 +4,7 @@
  * Form
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -152,17 +152,6 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         echo $this->form->getInput('language'); ?>
                     </div>
                 </div>
-            </div>
-        </div>
-        <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
-
-        <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>
-        <div class="row">
-            <div class="col-lg-12">
-                <?php
-                echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
             </div>
         </div>
         <?php

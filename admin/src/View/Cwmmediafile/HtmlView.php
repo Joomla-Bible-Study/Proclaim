@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -91,11 +91,39 @@ class HtmlView extends BaseHtmlView
     {
         $app                = Factory::getApplication();
         $this->form         = $this->get("Form");
-        $this->media_form   = $this->get("MediaForm");
+        $media_form         = $this->get("MediaForm");
         $this->item         = $this->get("Item");
         $this->state        = $this->get("State");
         $this->canDo        = ContentHelper::getActions('com_proclaim', 'mediafile', (int)$this->item->id);
         $this->admin_params = $this->state->get('administrator');
+
+        // Get server params for default values
+        $s_params = $this->state->get('s_params', []);
+
+        // For new items, bind server defaults to the media form before rendering
+        $isNew = empty($this->item->id);
+
+        if ($isNew && $media_form && !empty($s_params)) {
+            // Bind server defaults to form - this sets field values before rendering
+            $media_form->bind(['params' => $s_params]);
+        }
+
+        // Wrap the media form with server params for addon default value handling (PHP 8.2+ compatible)
+        $this->media_form = new class ($media_form, $s_params) {
+            private $form;
+            public array $s_params;
+
+            public function __construct($form, array $s_params)
+            {
+                $this->form     = $form;
+                $this->s_params = $s_params;
+            }
+
+            public function __call(string $name, array $args): mixed
+            {
+                return $this->form->$name(...$args);
+            }
+        };
 
         // Load the addon
         $this->addon = CWMAddon::getInstance($this->state->type);
@@ -213,7 +241,6 @@ class HtmlView extends BaseHtmlView
         $toolbar->cancel('cwmmediafile.cancel');
 
         ToolbarHelper::divider();
-        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=33:media-file-entry-help&catid=20&Itemid=315&tmpl=component';
-        ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
+        ToolbarHelper::help('mediafile', true);
     }
 }

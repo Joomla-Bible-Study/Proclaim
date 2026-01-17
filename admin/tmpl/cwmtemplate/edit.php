@@ -4,7 +4,7 @@
  * Form
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -31,6 +31,10 @@ $input  = $app->input;
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate');
+
+// Add lazy loading script and pass CSRF token for AJAX calls
+$wa->useScript('com_proclaim.template-lazyload');
+$this->document->addScriptOptions('csrf.token', \Joomla\CMS\Session\Session::getFormToken());
 ?>
 
 <form action="<?php
@@ -249,7 +253,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="LISTITEMS">
                     <h2 class="accordion-header" id="heading2">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
@@ -260,25 +264,11 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('LISTITEMS') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="FILTERS">
                     <h2 class="accordion-header" id="heading3">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
@@ -289,25 +279,11 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('FILTERS') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="TOOLTIP">
                     <h2 class="accordion-header" id="heading4">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
@@ -318,25 +294,11 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('TOOLTIP') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="DISPLAYELEMENTS1">
                     <h2 class="accordion-header" id="heading5">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
@@ -347,26 +309,11 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="heading5"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DISPLAYELEMENTS1') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="DISPLAYELEMENTS2">
                     <h2 class="accordion-header" id="heading6">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
@@ -377,27 +324,12 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse6" class="accordion-collapse collapse" aria-labelledby="heading6"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DISPLAYELEMENTS2') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="DISPLAYELEMENTS3">
                     <h2 class="accordion-header" id="heading7">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse7" aria-expanded="false" aria-controls="collapse7">
@@ -408,26 +340,11 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse7" class="accordion-collapse collapse" aria-labelledby="heading7"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DISPLAYELEMENTS3') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="DISPLAYELEMENTS4">
                     <h2 class="accordion-header" id="heading8">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse8" aria-expanded="false" aria-controls="collapse8">
@@ -438,27 +355,12 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse8" class="accordion-collapse collapse" aria-labelledby="heading8"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DISPLAYELEMENTS4') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="DISPLAYELEMENTS5">
                     <h2 class="accordion-header" id="heading9">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse9" aria-expanded="false" aria-controls="collapse9">
@@ -469,27 +371,12 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse9" class="accordion-collapse collapse" aria-labelledby="heading9"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DISPLAYELEMENTS5') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="DISPLAYELEMENTS6">
                     <h2 class="accordion-header" id="heading10">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse10" aria-expanded="false" aria-controls="collapse10">
@@ -500,22 +387,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse10" class="accordion-collapse collapse" aria-labelledby="heading10"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DISPLAYELEMENTS6') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
@@ -558,7 +430,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="DDISPLAYELEMENTS1">
                     <h2 class="accordion-header" id="heading12">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse12" aria-expanded="false" aria-controls="collapse12">
@@ -569,26 +441,11 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse12" class="accordion-collapse collapse" aria-labelledby="heading12"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS1') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="DDISPLAYELEMENTS2">
                     <h2 class="accordion-header" id="heading13">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse13" aria-expanded="false" aria-controls="collapse13">
@@ -599,26 +456,11 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse13" class="accordion-collapse collapse" aria-labelledby="heading13"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS2') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="DDISPLAYELEMENTS3">
                     <h2 class="accordion-header" id="heading14">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse14" aria-expanded="false" aria-controls="collapse14">
@@ -629,26 +471,11 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse14" class="accordion-collapse collapse" aria-labelledby="heading14"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS3') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="DDISPLAYELEMENTS4">
                     <h2 class="accordion-header" id="heading15">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse15" aria-expanded="false" aria-controls="collapse15">
@@ -659,26 +486,11 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse15" class="accordion-collapse collapse" aria-labelledby="heading15"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS4') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="DDISPLAYELEMENTS5">
                     <h2 class="accordion-header" id="heading16">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse16" aria-expanded="false" aria-controls="collapse16">
@@ -689,27 +501,12 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse16" class="accordion-collapse collapse" aria-labelledby="heading16"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS5') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="DDISPLAYELEMENTS6">
                     <h2 class="accordion-header" id="heading17">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse17" aria-expanded="false" aria-controls="collapse17">
@@ -720,22 +517,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse17" class="accordion-collapse collapse" aria-labelledby="heading17"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS6') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
@@ -750,13 +532,13 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
             <div class="accordion" id="accordionlist">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="heading18">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse18" aria-expanded="false" aria-controls="collapse18">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse18" aria-expanded="true" aria-controls="collapse18">
                             <?php
                             echo Text::_('JBS_TPL_TEACHERDETAILS'); ?>
                         </button>
                     </h2>
-                    <div id="collapse18" class="accordion-collapse collapse" aria-labelledby="heading18"
+                    <div id="collapse18" class="accordion-collapse collapse show" aria-labelledby="heading18"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
@@ -778,7 +560,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="TEACHER">
                     <h2 class="accordion-header" id="heading318">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse318" aria-expanded="false" aria-controls="collapse318">
@@ -789,26 +571,11 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse318" class="accordion-collapse collapse" aria-labelledby="heading318"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('TEACHER') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="TEACHERDISPLAY">
                     <h2 class="accordion-header" id="heading219">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse219" aria-expanded="false" aria-controls="collapse219">
@@ -819,26 +586,11 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse219" class="accordion-collapse collapse" aria-labelledby="heading219"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('TEACHERDISPLAY') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="TEACHERDETAILSDISPLAY">
                     <h2 class="accordion-header" id="heading119">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse119" aria-expanded="false" aria-controls="collapse119">
@@ -849,22 +601,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse119" class="accordion-collapse collapse" aria-labelledby="heading119"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('TEACHERDETAILSDISPLAY') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
@@ -906,7 +643,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="SERIESDISPALY">
                     <h2 class="accordion-header" id="heading21">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse21" aria-expanded="false" aria-controls="collapse21">
@@ -917,25 +654,11 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse21" class="accordion-collapse collapse" aria-labelledby="heading21"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('SERIESDISPALY') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="SERIESDETAIL">
                     <h2 class="accordion-header" id="heading22">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse22" aria-expanded="false" aria-controls="collapse22">
@@ -946,25 +669,11 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse22" class="accordion-collapse collapse" aria-labelledby="heading22"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('SERIESDETAIL') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item" data-lazy-fieldset="SERIESDETAILDISPALY">
                     <h2 class="accordion-header" id="heading23">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse23" aria-expanded="false" aria-controls="collapse23">
@@ -975,21 +684,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                     <div id="collapse23" class="accordion-collapse collapse" aria-labelledby="heading23"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('SERIESDETAILDISPALY') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-                                <?php
-                            endforeach; ?>
+                            <div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_PLEASE_WAIT'); ?></div>
                         </div>
                     </div>
                 </div>

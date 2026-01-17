@@ -4,7 +4,7 @@
  * TemplateCode html
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2007 - 2012 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * @since          7.1.0
@@ -163,16 +163,16 @@ class HtmlView extends BaseHtmlView
                 $childBar->unpublish('cwmtemplatecodes.unpublish');
                 $childBar->archive('cwmtemplatecodes.archive');
 
-                if ($this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED) {
+                if ((int) $this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED) {
                     $childBar->trash('cwmtemplatecodes.trash')->listCheck(true);
                 }
             }
         }
 
         if (
-            !$this->isEmptyState && $this->state->get(
-                'filter.published'
-            ) === ContentComponent::CONDITION_TRASHED && $canDo->get('core.delete')
+            !$this->isEmptyState
+            && (int) $this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED
+            && $canDo->get('core.delete')
         ) {
             $toolbar->delete('cwmtemplatecodes.delete')
                 ->text('JTOOLBAR_EMPTY_TRASH')

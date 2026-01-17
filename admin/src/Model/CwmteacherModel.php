@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -270,47 +270,79 @@ class CwmteacherModel extends AdminModel
     {
         /** @var Registry $params */
         $params        = Cwmparams::getAdmin()->params;
-        $path          = 'images/biblestudy/teachers/' . $data['id'];
-        $prefix        = 'thumb_';
+        $app           = Factory::getApplication();
         $image         = HTMLHelper::cleanImageURL($data['image']);
         $data['image'] = $image->url;
-
-        // If no image uploaded, just save data as usual
-        if (empty($data['image']) || strpos($data['image'], $prefix) !== false) {
-            if (empty($data['image'])) {
-                // Modify model data if no image is set.
-                $data['teacher_image']     = "";
-                $data['teacher_thumbnail'] = "";
-            } elseif (!str_starts_with(basename($data['image']), $prefix)) {
-                // Modify the image and model data
-                Cwmthumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size', 100));
-                $data['teacher_image']     = $data['image'];
-                $data['teacher_thumbnail'] = $path . '/thumb_' . basename($data['image']);
-            } elseif (substr_count(basename($data['image']), $prefix) > 1) {
-                // Out Fix removing redundant 'thumb_' in path.
-                $x = substr_count(basename($data['image']), $prefix);
-
-                while ($x > 1) {
-                    if (str_starts_with(basename($data['image']), $prefix)) {
-                        $str                       = substr(basename($data['image']), \strlen($prefix));
-                        $data['teacher_image']     = $path . '/' . $str;
-                        $data['teacher_thumbnail'] = $path . '/' . $str;
-                        $data['image']             = $path . '/' . $str;
-                    }
-
-                    $x--;
-                }
-            }
-        }
 
         // Set contact to be an Int to work with Database
         $data['contact'] = (int) $data['contact'];
 
-        // Fix Save of an update file to match paths.
-        if ($data['teacher_image'] !== $data['image']) {
-            $data['teacher_thumbnail'] = $data['image'];
-            $data['teacher_image']     = $data['image'];
+        // If no image uploaded or already processed, just save data as usual
+        if (empty($data['image']) || str_contains($data['image'], '/teachers/')) {
+            if (empty($data['image'])) {
+                $data['teacher_image']     = '';
+                $data['teacher_thumbnail'] = '';
+            }
+
+            return parent::save($data);
         }
+
+        // Store the original image path for processing after save
+        $originalImage = $data['image'];
+        $teacherName   = $data['teachername'] ?? $data['alias'] ?? null;
+        $isNew         = empty($data['id']);
+
+        // Validate image before processing
+        $absolutePath = JPATH_ROOT . '/' . $originalImage;
+        $validation   = Cwmthumbnail::validate($absolutePath);
+
+        if (!$validation['valid']) {
+            $app->enqueueMessage(
+                Text::sprintf('JBS_STY_IMAGE_VALIDATION_FAILED', $validation['error']),
+                'error'
+            );
+            $data['image']             = '';
+            $data['teacher_image']     = '';
+            $data['teacher_thumbnail'] = '';
+
+            return parent::save($data);
+        }
+
+        // For new records, save first to get the ID
+        if ($isNew) {
+            $data['image']             = '';
+            $data['teacher_image']     = '';
+            $data['teacher_thumbnail'] = '';
+
+            if (!parent::save($data)) {
+                return false;
+            }
+
+            // Get the new ID from the saved record
+            $data['id'] = $this->getState($this->getName() . '.id');
+        }
+
+        // Build path with title-ID format
+        $alias = ApplicationHelper::stringURLSafe($teacherName ?: 'teacher');
+        $path  = 'images/biblestudy/teachers/' . $alias . '-' . (int)$data['id'];
+
+        $result = Cwmthumbnail::create(
+            $originalImage,
+            $path,
+            $params->get('thumbnail_teacher_size', 300),
+            $teacherName
+        );
+
+        if ($result === false) {
+            $app->enqueueMessage(Text::_('JBS_STY_IMAGE_NOT_FOUND'), 'warning');
+
+            return $isNew || parent::save($data);
+        }
+
+        // Update paths with new locations
+        $data['image']             = $result['image'];
+        $data['teacher_image']     = $result['image'];
+        $data['teacher_thumbnail'] = $result['thumbnail'];
 
         return parent::save($data);
     }

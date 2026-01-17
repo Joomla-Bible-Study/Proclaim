@@ -4,8 +4,8 @@
     <author>CWM Team</author>
     <authorEmail>info@christianwebministries.org</authorEmail>
     <authorUrl>www.christianwebministries.org</authorUrl>
-    <copyright>(C) 2007 Proclaim All rights reserved.</copyright>
-    <version>10.0.1</version>
+    <copyright>(C) 2026 Proclaim All rights reserved.</copyright>
+    <version>10.1.0</version>
     <creationDate>Sep 10, 2025</creationDate>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <description>MOD_PROCLAIM_DESCRIPTION</description>
@@ -183,7 +183,7 @@
                        label="JBS_TPL_MEDIA_SCREENCOLOR" description="JBS_TPL_MEDIA_SCREENCOLOR_DESC"/>
                 <field name="popuptitle" type="text" size="150" default="{{title}}"
                        label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_DESC"/>
-                <field name="popupfooter" type="text" size="150" default="{{filename}}"
+                <field name="popupfooter" type="text" size="150" default=""
                        label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_DESC"/>
                 <field name="popupmargin" type="text" default="50"
                        label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_TPL_MEDIA_POPUPMARGIN_DESC"/>

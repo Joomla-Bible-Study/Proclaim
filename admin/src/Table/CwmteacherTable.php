@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Table\Table;
@@ -43,13 +44,13 @@ class CwmteacherTable extends Table
      *
      * @since 9.0.0
      */
-    public string $alias;
+    public string $alias = '';
 
     /** @var string Ordering
      *
      * @since 9.0.0
      */
-    public string $ordering;
+    public string $ordering = '';
 
     /**
      * @var int
@@ -96,6 +97,14 @@ class CwmteacherTable extends Table
      * @since 10.1.0
      */
     public $modified_by = null;
+
+    /**
+     * Teacher thumbnail path
+     *
+     * @var string|null
+     * @since 10.2.0
+     */
+    public ?string $teacher_thumbnail = null;
 
     /**
      * Constructor
@@ -162,6 +171,34 @@ class CwmteacherTable extends Table
         }
 
         return parent::store($updateNulls);
+    }
+
+    /**
+     * Method to delete a row from the database by primary key value.
+     * Also cleans up associated image folder.
+     *
+     * @param   mixed  $pk  Primary key value to delete (null uses instance property)
+     *
+     * @return  bool  True on success
+     *
+     * @since 10.2.0
+     */
+    public function delete($pk = null): bool
+    {
+        $pk = $pk ?? $this->id;
+
+        // Load record to get image paths before deletion
+        if ($pk !== $this->id) {
+            $this->load($pk);
+        }
+
+        // Delete associated image folder if exists
+        if (!empty($this->teacher_thumbnail) && str_contains($this->teacher_thumbnail, 'images/biblestudy/teachers/')) {
+            $folderPath = \dirname($this->teacher_thumbnail);
+            Cwmthumbnail::deleteFolder($folderPath);
+        }
+
+        return parent::delete($pk);
     }
 
     /**

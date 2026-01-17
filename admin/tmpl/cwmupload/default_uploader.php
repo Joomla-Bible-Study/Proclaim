@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -74,7 +74,7 @@ echo Route::_($url);
     <div id="uploader">
 
         <p><?php
-            echo Text::_('JBS_UPLOADER_ERROR_RUNTIME_NOT_SUPORTED') . ' ' . $this->runtime; ?></p>
+            echo Text::_('JBS_UPLOADER_ERROR_RUNTIME_NOT_SUPPORTED') . ' ' . $this->runtime; ?></p>
 
     </div>
     <?php

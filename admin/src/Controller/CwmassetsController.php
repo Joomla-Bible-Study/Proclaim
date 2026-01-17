@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -80,18 +80,18 @@ class CwmassetsController extends BaseController
         // Check for request forgeries.
         (Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
 
-        $model       = new CwmassetsModel();
-        $checkassets = $model->checkAssets();
-        $session     = Factory::getApplication()->getSession();
+        $model      = new CwmassetsModel();
+        $checklists = $model->checkAssets();
+        $session    = Factory::getApplication()->getSession();
         $session->set('assat_stack', '', 'CWM');
-        $session->set('checkassets', $checkassets, 'CWM');
+        $session->set('checklists', $checklists, 'CWM');
         $this->input->set('view', 'Cwmassets');
 
         $this->display(false);
     }
 
     /**
-     * Start of installer display hook.
+     * Start of the assets display hook.
      *
      * @return void
      *

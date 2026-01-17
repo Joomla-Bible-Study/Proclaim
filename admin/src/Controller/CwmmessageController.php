@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -125,9 +125,20 @@ class CwmmessageController extends FormController
         $app   = Factory::getApplication();
         $data  = $this->input->post->get('jform', [], 'array');
 
-        // Get Tags
-        $vTags = $data['topics'];
-        $iTags = explode(",", $vTags);
+        // Get Tags - use topic_ids field (hidden input synced from fancy select)
+        // Falls back to topics for backward compatibility
+        $vTags = $data['topic_ids'] ?? $data['topics'] ?? '';
+
+        if (\is_string($vTags)) {
+            $iTags = $vTags !== '' ? explode(",", $vTags) : [];
+        } else {
+            $iTags = (array)$vTags;
+        }
+
+        // Filter out empty values
+        $iTags = array_filter($iTags, function ($tag) {
+            return $tag !== '' && $tag !== null;
+        });
 
         // Remove Exerting StudyTopics tags
         $db    = Factory::getContainer()->get('DatabaseDriver');

@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -206,7 +206,7 @@ class HtmlView extends BaseHtmlView
 
                 $childBar->checkin('cwmmessages.checkin')->listCheck(true);
 
-                if ($this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED) {
+                if ((int) $this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED) {
                     $childBar->trash('cwmmessages.trash')->listCheck(true);
                 }
             }

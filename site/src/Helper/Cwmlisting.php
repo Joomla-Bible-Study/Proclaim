@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
+use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
@@ -1786,6 +1787,14 @@ class Cwmlisting
     }
 
     /**
+     * Cache for book name lookups
+     *
+     * @var array
+     * @since 10.0.0
+     */
+    private static array $bookNameCache = [];
+
+    /**
      * Get Scripture
      *
      * @param   Registry  $params        Item Params
@@ -1799,141 +1808,130 @@ class Cwmlisting
      */
     public function getScripture(Registry $params, object $row, int $esv, int $scripturerow): string
     {
-        $scripture  = '';
-        $book       = '';
-        $booknumber = '';
-        $ch_b       = 0;
-        $ch_e       = 0;
-        $v_b        = 0;
-        $v_e        = 0;
-
-        if (!isset($row->booknumber2)) {
-            $row->booknumber2 = 0;
-        }
-
-        if (!isset($row->id) || ((int)$row->booknumber <= 0 && $row->booknumber2 !== 0)) {
+        if (!isset($row->id)) {
             return '';
         }
 
-        if (empty($row->booknumber)) {
-            $row->booknumber = 0;
+        $booknumber  = (int) ($row->booknumber ?? 0);
+        $booknumber2 = (int) ($row->booknumber2 ?? 0);
+
+        if ($booknumber <= 0 && $booknumber2 !== 0) {
+            return '';
         }
 
-        if ($scripturerow === 2 && $row->booknumber2 > 1) {
-            $booknumber = $row->booknumber2;
-            $ch_b       = (int)$row->chapter_begin2;
-            $ch_e       = (int)$row->chapter_end2;
-            $v_b        = (int)$row->verse_begin2;
-            $v_e        = (int)$row->verse_end2;
-            $book       = Text::_($row->bookname2);
-        } elseif ($scripturerow === 1 && $row->booknumber > 1) {
-            $booknumber = $row->booknumber;
-            $ch_b       = (int)$row->chapter_begin;
-            $ch_e       = (int)$row->chapter_end;
-            $v_b        = (int)$row->verse_begin;
-            $v_e        = (int)$row->verse_end;
-
-            if (isset($row->bookname)) {
-                $book = Text::_($row->bookname);
-            }
+        // Extract scripture data based on which row we're processing
+        if ($scripturerow === 2 && $booknumber2 > 1) {
+            $bookNum = $booknumber2;
+            $ch_b    = (int) ($row->chapter_begin2 ?? 0);
+            $ch_e    = (int) ($row->chapter_end2 ?? 0);
+            $v_b     = (int) ($row->verse_begin2 ?? 0);
+            $v_e     = (int) ($row->verse_end2 ?? 0);
+            $book    = Text::_($row->bookname2 ?? '');
+        } elseif ($scripturerow === 1 && $booknumber > 1) {
+            $bookNum = $booknumber;
+            $ch_b    = (int) ($row->chapter_begin ?? 0);
+            $ch_e    = (int) ($row->chapter_end ?? 0);
+            $v_b     = (int) ($row->verse_begin ?? 0);
+            $v_e     = (int) ($row->verse_end ?? 0);
+            $book    = isset($row->bookname) ? Text::_($row->bookname) : $this->getBookNameFromDb($booknumber);
+        } else {
+            return '';
         }
 
-        if (!isset($row->bookname) || $booknumber === "-1") {
-            return $scripture;
+        if (empty($book) || $bookNum === 0) {
+            return '';
         }
 
-        $show_verses = (int)$params->get('show_verses');
+        // Book only for non-standard books (>166) or show_verses mode 2
+        $show_verses = (int) $params->get('show_verses');
 
-        $b1  = ' ';
-        $b2  = ':';
-        $b2a = ':';
-        $b3  = '-';
-
-        if ($show_verses === 1) {
-            if ($ch_e === $ch_b) {
-                $ch_e = '';
-                $b2a  = '';
-            }
-
-            if ($ch_e === $ch_b && $v_b === $v_e) {
-                $b3   = '';
-                $ch_e = '';
-                $b2a  = '';
-                $v_e  = '';
-            }
-
-            if (empty($v_b)) {
-                $v_b = '';
-                $v_e = '';
-                $b2a = '';
-                $b2  = '';
-            }
-
-            if (empty($v_e)) {
-                $v_e = '';
-                $b2a = '';
-            }
-
-            if (empty($ch_e)) {
-                $b2a  = '';
-                $ch_e = '';
-
-                if (empty($v_e)) {
-                    $b3 = '';
-                }
-            }
-
-            $scripture = $book . $b1 . $ch_b . $b2 . $v_b . $b3 . $ch_e . $b2a . $v_e;
+        if ($bookNum > 166 || $show_verses === 2) {
+            return $book;
         }
 
-        // Else
+        // Chapters only mode (show_verses === 0)
         if ($show_verses === 0) {
-            if ($ch_e > $ch_b) {
-                $scripture = $book . $b1 . $ch_b . $b3 . $ch_e;
-            } else {
-                $scripture = $book . $b1 . $ch_b;
-            }
+            return $ch_e > $ch_b
+                ? $book . ' ' . $ch_b . '-' . $ch_e
+                : $book . ' ' . $ch_b;
         }
 
-        if ($esv === 1) {
-            if ($ch_e === $ch_b) {
-                $ch_e = '';
-                $b2a  = '';
-            }
+        // Full reference with verses (show_verses === 1 or esv mode)
+        return $this->formatScriptureReference($book, $ch_b, $ch_e, $v_b, $v_e);
+    }
 
-            if (empty($v_b)) {
-                $v_b = '';
-                $v_e = '';
-                $b2a = '';
-                $b2  = '';
-            }
-
-            if (empty($v_e)) {
-                $v_e = '';
-                $b2a = '';
-            }
-
-            if (empty($ch_e)) {
-                $b2a  = '';
-                $ch_e = '';
-
-                if (empty($v_e)) {
-                    $b3 = '';
-                }
-            }
-
-            $scripture = $book . $b1 . $ch_b . $b2 . $v_b . $b3 . $ch_e . $b2a . $v_e;
+    /**
+     * Get book name from database with caching
+     *
+     * @param   int  $booknumber  The book number to look up
+     *
+     * @return string The translated book name or empty string
+     *
+     * @since 10.0.0
+     */
+    private function getBookNameFromDb(int $booknumber): string
+    {
+        if ($booknumber <= 0) {
+            return '';
         }
 
-        if ($row->booknumber > 166) {
-            $scripture = $book;
+        if (isset(self::$bookNameCache[$booknumber])) {
+            return self::$bookNameCache[$booknumber];
         }
 
-        if ($show_verses === 2) {
-            $scripture = $book;
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('bookname'))
+            ->from($db->quoteName('#__bsms_books'))
+            ->where($db->quoteName('booknumber') . ' = ' . $booknumber);
+        $db->setQuery($query);
+        $bookname = $db->loadResult();
+
+        $result                           = $bookname ? Text::_($bookname) : '';
+        self::$bookNameCache[$booknumber] = $result;
+
+        return $result;
+    }
+
+    /**
+     * Format a scripture reference string
+     *
+     * @param   string  $book  Book name
+     * @param   int     $ch_b  Chapter begin
+     * @param   int     $ch_e  Chapter end
+     * @param   int     $v_b   Verse begin
+     * @param   int     $v_e   Verse end
+     *
+     * @return string Formatted scripture reference
+     *
+     * @since 10.0.0
+     */
+    private function formatScriptureReference(string $book, int $ch_b, int $ch_e, int $v_b, int $v_e): string
+    {
+        // No verses - just book and chapter(s)
+        if ($v_b === 0) {
+            return $ch_e > $ch_b
+                ? $book . ' ' . $ch_b . '-' . $ch_e
+                : $book . ' ' . $ch_b;
         }
 
-        return $scripture;
+        // Same chapter
+        if ($ch_e === $ch_b || $ch_e === 0) {
+            if ($v_e === 0 || $v_e === $v_b) {
+                // Single verse: "Book 1:5"
+                return $book . ' ' . $ch_b . ':' . $v_b;
+            }
+
+            // Verse range in same chapter: "Book 1:5-10"
+            return $book . ' ' . $ch_b . ':' . $v_b . '-' . $v_e;
+        }
+
+        // Different chapters with verses: "Book 1:5-2:10"
+        if ($v_e === 0) {
+            return $book . ' ' . $ch_b . ':' . $v_b . '-' . $ch_e;
+        }
+
+        return $book . ' ' . $ch_b . ':' . $v_b . '-' . $ch_e . ':' . $v_e;
     }
 
     /**
@@ -2119,7 +2117,7 @@ class Cwmlisting
                 break;
 
             case 4:
-                // Case 4 is a details link with tooltip
+                // Case 4 is a details link with a tooltip
 
                 $link = Route::_(
                     Cwmhelperroute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid')
@@ -2219,47 +2217,55 @@ class Cwmlisting
      * @param   Registry          $params    Item Params
      * @param   CwmtemplateTable  $template  Template
      *
-     * @return object
+     * @return string
      *
      * @throws \Exception
      * @since 7.0
      */
-    public function getListingExp($row, $params, $template)
+    public function getListingExp($row, $params, $template): string
     {
-        $Media  = new Cwmmedia();
-        $images = new Cwmimages();
-        $image  = Cwmimages::getStudyThumbnail($row->thumbnailm);
-        $label  = $params->get('templatecode');
-        $label  = str_replace('{{teacher}}', $row->teachername, $label);
-        $label  = str_replace('{{title}}', $row->studytitle, $label);
-        $label  = str_replace('{{date}}', $this->$params, $row->studydate, $label);
-        $label  = str_replace('{{studyintro}}', $row->studyintro, $label);
-        $label  = str_replace('{{scripture}}', $this->getScripture($params, $row, 0, 1), $label);
-        $label  = str_replace('{{topics}}', $row->topic_text, $label);
-        $label  = str_replace(
-            '{{url}}',
-            Route::_('index.php?option=com_proclaim&view=Cwmsermon&id=' . $row->id . '&t=' . $template->id),
-            $label
-        );
-        $label  = str_replace(
-            '{{thumbnail}}',
-            $this->useJImage($image->path, "", "bsms_studyThumbnail" . $row->id, $image->width, $image->height),
-            $label
-        );
-        $label  = str_replace('{{seriestext}}', $row->series_text, $label);
-        $label  = str_replace('{{messagetype}}', $row->message_type, $label);
-        $label  = str_replace('{{bookname}}', $row->bookname, $label);
-        $label  = str_replace('{{topics}}', $row->topic_text, $label);
-        $label  = str_replace('{{hits}}', $row->hits, $label);
-        $label  = str_replace('{{location}}', $row->location_text, $label);
-        $label  = str_replace('{{plays}}', $row->totalplays, $label);
-        $label  = str_replace('{{downloads}}', $row->totaldownloads, $label);
+        $label = $params->get('templatecode');
 
-        // For now we need to use the existing mediatable function to get all the media
-        $mediaTable = $Media->getFluidMedia($row, $params, $template);
-        $label      = str_replace('{{media}}', $mediaTable, $label);
+        if (empty($label)) {
+            return '';
+        }
 
-        // Need to add template items for media...
+        $image     = Cwmimages::getStudyThumbnail($row->thumbnailm ?? '');
+        $thumbnail = $image ? $this->useJImage(
+            $image->path,
+            "",
+            "bsms_studyThumbnail" . $row->id,
+            $image->width,
+            $image->height
+        ) : '';
+
+        // Build replacements array for single str_replace call
+        $replacements = [
+            '{{teacher}}'     => $row->teachername ?? '',
+            '{{title}}'       => $row->studytitle ?? '',
+            '{{date}}'        => isset($row->studydate) ? $this->getStudyDate($params, $row->studydate) : '',
+            '{{studyintro}}'  => $row->studyintro ?? '',
+            '{{scripture}}'   => $this->getScripture($params, $row, 0, 1),
+            '{{topics}}'      => $row->topic_text ?? '',
+            '{{url}}'         => Route::_('index.php?option=com_proclaim&view=Cwmsermon&id=' . $row->id . '&t=' . $template->id),
+            '{{thumbnail}}'   => $thumbnail,
+            '{{seriestext}}'  => $row->series_text ?? '',
+            '{{messagetype}}' => $row->message_type ?? '',
+            '{{bookname}}'    => $row->bookname ?? '',
+            '{{hits}}'        => $row->hits ?? '',
+            '{{location}}'    => $row->location_text ?? '',
+            '{{plays}}'       => $row->totalplays ?? '',
+            '{{downloads}}'   => $row->totaldownloads ?? '',
+        ];
+
+        $label = str_replace(array_keys($replacements), array_values($replacements), $label);
+
+        // Only process media if the placeholder exists in the template
+        if (str_contains($label, '{{media}}')) {
+            $media      = new Cwmmedia();
+            $mediaTable = $media->getFluidMedia($row, $params, $template);
+            $label      = str_replace('{{media}}', $mediaTable, $label);
+        }
 
         return $label;
     }
@@ -2319,29 +2325,91 @@ class Cwmlisting
      *
      * @return null|string
      *
+     * @throws \Exception
      * @since 7.0
      */
-    public function getShare($link, $row, $params): ?string
+    public function getShare($link, $row, Registry $params): ?string
     {
-        $shareit = '<div class="row float-right">';
+        // Get a study title and prepare for sharing
+        $title = $row->studytitle ?? '';
+        $title = htmlspecialchars(strip_tags($title), ENT_QUOTES, 'UTF-8');
 
-        $shareit .= '<!-- AddThis Button BEGIN -->
-						<div class="a2a_kit a2a_kit_size_32 a2a_default_style">
-                            <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
-                        </div>
-						<script type="text/javascript" src="https://static.addtoany.com/menu/page.js"></script>
-						<!-- AddThis Button END -->
-						';
-        $doc     = Factory::getApplication()->getDocument();
-        $doc->addScriptDeclaration(
-            'a2a_config.thanks = {
-                                    postShare: true,
-                                    ad: false,
-                                };'
-        );
+        // Get description from intro or first part of the study text
+        $description = '';
+
+        if (!empty($row->studyintro)) {
+            $description = strip_tags($row->studyintro);
+        } elseif (!empty($row->studytext)) {
+            $description = strip_tags($row->studytext);
+        }
+
+        $description = mb_substr($description, 0, 200);
+
+        // Get image URL for sharing
+        $imageUrl = '';
+
+        if (!empty($row->thumbnailm)) {
+            $imageUrl = Uri::root() . $row->thumbnailm;
+        } elseif (!empty($row->image)) {
+            $imageUrl = Uri::root() . $row->image;
+        }
+
+        // Ensure link is absolute
+        if (!str_starts_with($link, 'http')) {
+            $link = Uri::root() . ltrim($link, '/');
+        }
+
+        $shareit = '<div class="proclaim-share float-end">';
+
+        // AddToAny with data attributes for specific content
+        $shareit .= '<!-- AddToAny Share Buttons -->
+            <div class="a2a_kit a2a_kit_size_32 a2a_default_style"
+                 data-a2a-url="' . htmlspecialchars($link, ENT_QUOTES, 'UTF-8') . '"
+                 data-a2a-title="' . $title . '">
+                <a class="a2a_button_facebook"></a>
+                <a class="a2a_button_x"></a>
+                <a class="a2a_button_email"></a>
+                <a class="a2a_button_copy_link"></a>
+                <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+            </div>';
 
         $shareit .= '</div>';
 
+        // Add script and configuration once per page
+        $app = Factory::getApplication();
+
+        if (!$app instanceof CMSApplicationInterface) {
+            return $shareit;
+        }
+
+        $doc = $app->getDocument();
+
+        // Build configuration script with email template
+        // Note: ${link} and ${title} are AddToAny template placeholders (not PHP variables)
+        $escapedDesc = addslashes($description ?: 'Check out this message');
+        $config      = "var a2a_config = a2a_config || {};
+a2a_config.onclick = 1;
+a2a_config.num_services = 8;
+a2a_config.thanks = { postShare: true, ad: false };
+a2a_config.templates = a2a_config.templates || {};
+a2a_config.templates.email = {
+    subject: '\${title}',
+    body: '" . $escapedDesc . "\\n\\n\${link}'
+};";
+
+        // Add image for Open Graph sharing if available
+        if ($imageUrl) {
+            $config .= "\na2a_config.linkurl_default = '" . addslashes($link) . "';";
+        }
+
+        $doc->addScriptDeclaration($config);
+
+        // Add the AddToAny script (async for performance)
+        $doc->addScript(
+            'https://static.addtoany.com/menu/page.js',
+            [],
+            ['defer' => true, 'async' => true]
+        );
 
         return $shareit;
     }

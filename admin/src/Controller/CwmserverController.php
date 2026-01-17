@@ -4,13 +4,14 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
@@ -30,7 +31,7 @@ class CwmserverController extends FormController
     /**
      * Method to add a new record.
      *
-     * @return  bool  True if the record can be added, a error object if not.
+     * @return  bool  True if the record can be added, an error object if not.
      *
      * @throws \Exception
      * @since   12.2
@@ -52,8 +53,9 @@ class CwmserverController extends FormController
     /**
      * Resets the User state for the server type. Needed to allow the value from the DB to be used
      *
-     * @param   int     $key     ?
-     * @param   string  $urlVar  ?
+     * @param   string  $key  The name of the primary key of the URL variable.
+     * @param   string  $urlVar  The name of the URL variable if different from the primary key
+     *                           (sometimes required to avoid router collisions).
      *
      * @return  bool
      *
@@ -103,5 +105,40 @@ class CwmserverController extends FormController
                 false
             )
         );
+    }
+
+    /**
+     * Generic AJAX handler for addon actions
+     *
+     * This method provides a single entry point for all addon AJAX requests.
+     * It routes requests to the appropriate addon based on the 'addon' parameter
+     * and dispatches to the specified action.
+     *
+     * URL format: index.php?option=com_proclaim&task=cwmserver.addonAjax&addon=youtube&action=testApi
+     *
+     * @return  void
+     *
+     * @throws \Exception
+     * @since   10.0.0
+     */
+    public function addonAjax(): void
+    {
+        $app       = Factory::getApplication();
+        $addonType = $app->input->getString('addon', '');
+        $action    = $app->input->getString('action', '');
+
+        if (empty($addonType)) {
+            CWMAddon::outputJson(['success' => false, 'error' => 'No addon type specified']);
+
+            return;
+        }
+
+        if (empty($action)) {
+            CWMAddon::outputJson(['success' => false, 'error' => 'No action specified']);
+
+            return;
+        }
+
+        CWMAddon::handleAjaxRequest($addonType, $action);
     }
 }

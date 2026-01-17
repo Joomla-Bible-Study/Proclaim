@@ -4,7 +4,7 @@
  * Default
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -84,7 +84,7 @@ $Cwmlisting = new Cwmlisting();
 	    <?php
 	    // Social Networking begins here
 	    if ($this->params->get('embedshare') != 'FALSE') {
-	    echo $Cwmlisting->getShare($this->path1, $this->item, $this->params);
+	    echo $Cwmlisting->getShare($this->path1, $this->media, $this->params);
 	    }
 	    // End Social Networking ?>
         <p class="popupfooter">

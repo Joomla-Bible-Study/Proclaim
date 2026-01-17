@@ -4,7 +4,7 @@
  * Unit tests for CwmteacherTable
  *
  * @package    Proclaim.UnitTest
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  */
@@ -151,7 +151,7 @@ class CwmteacherTableTest extends ProclaimTestCase
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmteacherTable.php';
         $content  = file_get_contents($filePath);
 
-        $this->assertStringContainsString('public string $alias;', $content);
+        $this->assertStringContainsString('public string $alias = ', $content);
     }
 
     /**
