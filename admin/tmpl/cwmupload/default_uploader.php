@@ -74,7 +74,7 @@ echo Route::_($url);
     <div id="uploader">
 
         <p><?php
-            echo Text::_('JBS_UPLOADER_ERROR_RUNTIME_NOT_SUPORTED') . ' ' . $this->runtime; ?></p>
+            echo Text::_('JBS_UPLOADER_ERROR_RUNTIME_NOT_SUPPORTED') . ' ' . $this->runtime; ?></p>
 
     </div>
     <?php
