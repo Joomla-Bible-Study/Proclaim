@@ -36,6 +36,16 @@ $wa->useScript('keepalive')
 			alert("' . $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . '")
 		}
 	}
+
+	document.addEventListener("DOMContentLoaded", function() {
+		const translated = document.getElementById("topic_text_translated");
+		if (translated && translated.value !== "") {
+			const target = document.getElementById("jform_topic_text");
+			if (target) {
+				target.setAttribute("readonly", "readonly");
+			}
+		}
+	});
 '
     );
 
@@ -66,8 +76,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         </div>
                         <div class="controls">
                             <?php
-                            echo '<input type="text" name="topic_text" id="topic_text" value="' . Text::_($string) .
-                                '" class="readonly form-control valid form-control-success" size="75" aria-describedby="topic_text-desc" readonly aria-invalid="false">';
+                            echo '<input type="text" id="topic_text_translated" name="topic_text_translated" value="' . Text::_($string) . '" class="form-control readonly valid form-control-success" readonly="readonly" data-alt-value="' . Text::_($string) . '" autocomplete="off" aria-invalid="false">';
                             echo "<br/>"; ?>
                         </div>
                     </div>
