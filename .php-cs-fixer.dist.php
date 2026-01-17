@@ -64,7 +64,7 @@ $config
             '@PSR12' => true,
             // Short array syntax
             'array_syntax' => ['syntax' => 'short'],
-            // List of values separated by a comma is contained on a single line should not have a trailing comma like [$foo, $bar,] = ...
+            // List of values separated by a comma is contained on a single line, should not have a trailing comma like [$foo, $bar,] = ...
             'no_trailing_comma_in_singleline' => true,
             // Arrays on multiple lines should have a trailing comma
             'trailing_comma_in_multiline' => ['elements' => ['arrays']],

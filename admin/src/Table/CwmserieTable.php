@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseDriver;
@@ -169,6 +170,34 @@ class CwmserieTable extends Table
         }
 
         return parent::store($updateNulls);
+    }
+
+    /**
+     * Method to delete a row from the database by primary key value.
+     * Also cleans up associated image folder.
+     *
+     * @param   mixed  $pk  Primary key value to delete (null uses instance property)
+     *
+     * @return  bool  True on success
+     *
+     * @since 10.2.0
+     */
+    public function delete($pk = null): bool
+    {
+        $pk = $pk ?? $this->id;
+
+        // Load record to get image paths before deletion
+        if ($pk !== $this->id) {
+            $this->load($pk);
+        }
+
+        // Delete associated image folder if exists
+        if (!empty($this->series_thumbnail) && str_contains($this->series_thumbnail, 'images/biblestudy/series/')) {
+            $folderPath = \dirname($this->series_thumbnail);
+            Cwmthumbnail::deleteFolder($folderPath);
+        }
+
+        return parent::delete($pk);
     }
 
     /**

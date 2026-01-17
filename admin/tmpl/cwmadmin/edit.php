@@ -790,6 +790,268 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
 
+        <?php
+        echo HTMLHelper::_('uitab.addTab', 'myTab', 'imagetools', Text::_('JBS_ADM_IMAGE_TOOLS')); ?>
+        <div class="row" id="imagetools">
+            <!-- Image Migration Section -->
+            <div class="col-12 col-lg-6">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h4><?php echo Text::_('JBS_ADM_IMAGE_MIGRATION'); ?></h4>
+                    </div>
+                    <div class="card-body">
+                        <p><?php echo Text::_('JBS_ADM_IMAGE_MIGRATION_DESC'); ?></p>
+                        <div id="migration-counts" class="mb-3">
+                            <span class="spinner-border spinner-border-sm" role="status"></span>
+                            <?php echo Text::_('JBS_ADM_LOADING'); ?>
+                        </div>
+                        <div id="migration-progress" class="mb-3" style="display:none;">
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <div class="mt-2" id="migration-status"></div>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="btn-start-migration" disabled>
+                            <i class="icon-refresh"></i> <?php echo Text::_('JBS_ADM_START_MIGRATION'); ?>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orphan Cleanup Section -->
+            <div class="col-12 col-lg-6">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h4><?php echo Text::_('JBS_ADM_ORPHAN_CLEANUP'); ?></h4>
+                    </div>
+                    <div class="card-body">
+                        <p><?php echo Text::_('JBS_ADM_ORPHAN_CLEANUP_DESC'); ?></p>
+                        <div id="orphan-status" class="mb-3">
+                            <button type="button" class="btn btn-secondary" id="btn-scan-orphans">
+                                <i class="icon-search"></i> <?php echo Text::_('JBS_ADM_SCAN_ORPHANS'); ?>
+                            </button>
+                        </div>
+                        <div id="orphan-results" class="mb-3" style="display:none;">
+                            <div class="alert alert-info" id="orphan-summary"></div>
+                            <div id="orphan-list" class="table-responsive" style="max-height: 300px; overflow-y: auto;"></div>
+                        </div>
+                        <button type="button" class="btn btn-danger" id="btn-delete-orphans" style="display:none;">
+                            <i class="icon-trash"></i> <?php echo Text::_('JBS_ADM_DELETE_SELECTED'); ?>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var token = '<?php echo Session::getFormToken(); ?>';
+
+            // Load migration counts on page load
+            loadMigrationCounts();
+
+            function loadMigrationCounts() {
+                fetch('index.php?option=com_proclaim&task=cwmadmin.getMigrationCountsXHR&' + token + '=1')
+                    .then(response => response.json())
+                    .then(data => {
+                        var countsHtml = '<ul class="list-unstyled">' +
+                            '<li><strong><?php echo Text::_('JBS_CMN_STUDIES'); ?>:</strong> ' + data.studies + '</li>' +
+                            '<li><strong><?php echo Text::_('JBS_CMN_TEACHERS'); ?>:</strong> ' + data.teachers + '</li>' +
+                            '<li><strong><?php echo Text::_('JBS_CMN_SERIES'); ?>:</strong> ' + data.series + '</li>' +
+                            '<li><strong><?php echo Text::_('JBS_CMN_TOTAL'); ?>:</strong> ' + data.total + '</li>' +
+                            '</ul>';
+                        document.getElementById('migration-counts').innerHTML = countsHtml;
+                        document.getElementById('btn-start-migration').disabled = (data.total === 0);
+                    })
+                    .catch(error => {
+                        document.getElementById('migration-counts').innerHTML =
+                            '<span class="text-danger"><?php echo Text::_('JBS_ADM_ERROR_LOADING'); ?></span>';
+                    });
+            }
+
+            // Start migration
+            document.getElementById('btn-start-migration').addEventListener('click', function() {
+                var btn = this;
+                btn.disabled = true;
+                document.getElementById('migration-progress').style.display = 'block';
+
+                var types = ['studies', 'teachers', 'series'];
+                var typeIndex = 0;
+                var totalMigrated = 0;
+                var totalErrors = 0;
+
+                function migrateType() {
+                    if (typeIndex >= types.length) {
+                        document.getElementById('migration-status').innerHTML =
+                            '<span class="text-success"><?php echo Text::_('JBS_ADM_MIGRATION_COMPLETE'); ?> ' +
+                            totalMigrated + ' <?php echo Text::_('JBS_ADM_RECORDS_MIGRATED'); ?></span>';
+                        loadMigrationCounts();
+                        return;
+                    }
+
+                    var type = types[typeIndex];
+                    document.getElementById('migration-status').textContent =
+                        '<?php echo Text::_('JBS_ADM_MIGRATING'); ?> ' + type + '...';
+
+                    migrateBatch(type);
+                }
+
+                function migrateBatch(type) {
+                    fetch('index.php?option=com_proclaim&task=cwmadmin.getMigrationBatchXHR&' + token + '=1&type=' + type + '&limit=5')
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.records.length === 0) {
+                                typeIndex++;
+                                migrateType();
+                                return;
+                            }
+
+                            var promises = data.records.map(function(record) {
+                                var params = new URLSearchParams();
+                                params.append('type', type);
+                                params.append('id', record.id);
+                                params.append('title', record.studytitle || record.teachername || record.title || '');
+                                params.append('old_path', record.image_path);
+
+                                return fetch('index.php?option=com_proclaim&task=cwmadmin.migrateRecordXHR&' + token + '=1&' + params.toString())
+                                    .then(response => response.json())
+                                    .then(result => {
+                                        if (result.success) {
+                                            totalMigrated++;
+                                        } else {
+                                            totalErrors++;
+                                        }
+                                        return result;
+                                    });
+                            });
+
+                            Promise.all(promises).then(function() {
+                                var progress = ((typeIndex + 1) / types.length) * 100;
+                                document.querySelector('#migration-progress .progress-bar').style.width = progress + '%';
+
+                                if (data.remaining > 0) {
+                                    migrateBatch(type);
+                                } else {
+                                    typeIndex++;
+                                    migrateType();
+                                }
+                            });
+                        })
+                        .catch(error => {
+                            document.getElementById('migration-status').innerHTML =
+                                '<span class="text-danger"><?php echo Text::_('JBS_ADM_MIGRATION_ERROR'); ?></span>';
+                        });
+                }
+
+                migrateType();
+            });
+
+            // Scan for orphans
+            document.getElementById('btn-scan-orphans').addEventListener('click', function() {
+                var btn = this;
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> <?php echo Text::_('JBS_ADM_SCANNING'); ?>';
+
+                fetch('index.php?option=com_proclaim&task=cwmadmin.getOrphanedFoldersXHR&' + token + '=1')
+                    .then(response => response.json())
+                    .then(data => {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="icon-search"></i> <?php echo Text::_('JBS_ADM_SCAN_ORPHANS'); ?>';
+
+                        document.getElementById('orphan-results').style.display = 'block';
+                        document.getElementById('orphan-summary').innerHTML =
+                            '<?php echo Text::_('JBS_ADM_FOUND'); ?> <strong>' + data.totals.folders + '</strong> <?php echo Text::_('JBS_ADM_ORPHAN_FOLDERS'); ?> (' + data.totals.size_formatted + ')';
+
+                        if (data.totals.folders > 0) {
+                            var tableHtml = '<table class="table table-sm table-striped">' +
+                                '<thead><tr><th><input type="checkbox" id="select-all-orphans"></th><th><?php echo Text::_('JBS_ADM_FOLDER'); ?></th><th><?php echo Text::_('JBS_ADM_FILES'); ?></th><th><?php echo Text::_('JBS_ADM_SIZE'); ?></th></tr></thead><tbody>';
+
+                            ['studies', 'teachers', 'series'].forEach(function(type) {
+                                if (data.orphans[type] && data.orphans[type].length > 0) {
+                                    data.orphans[type].forEach(function(orphan) {
+                                        tableHtml += '<tr>' +
+                                            '<td><input type="checkbox" class="orphan-checkbox" value="' + orphan.path + '"></td>' +
+                                            '<td><small>' + orphan.path + '</small></td>' +
+                                            '<td>' + orphan.files + '</td>' +
+                                            '<td>' + formatBytes(orphan.size) + '</td>' +
+                                            '</tr>';
+                                    });
+                                }
+                            });
+
+                            tableHtml += '</tbody></table>';
+                            document.getElementById('orphan-list').innerHTML = tableHtml;
+                            document.getElementById('btn-delete-orphans').style.display = 'inline-block';
+
+                            document.getElementById('select-all-orphans').addEventListener('change', function() {
+                                document.querySelectorAll('.orphan-checkbox').forEach(function(cb) {
+                                    cb.checked = this.checked;
+                                }.bind(this));
+                            });
+                        } else {
+                            document.getElementById('orphan-list').innerHTML =
+                                '<p class="text-success"><?php echo Text::_('JBS_ADM_NO_ORPHANS'); ?></p>';
+                            document.getElementById('btn-delete-orphans').style.display = 'none';
+                        }
+                    })
+                    .catch(error => {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="icon-search"></i> <?php echo Text::_('JBS_ADM_SCAN_ORPHANS'); ?>';
+                        alert('<?php echo Text::_('JBS_ADM_ERROR_SCANNING'); ?>');
+                    });
+            });
+
+            // Delete orphans
+            document.getElementById('btn-delete-orphans').addEventListener('click', function() {
+                var selected = [];
+                document.querySelectorAll('.orphan-checkbox:checked').forEach(function(cb) {
+                    selected.push(cb.value);
+                });
+
+                if (selected.length === 0) {
+                    alert('<?php echo Text::_('JBS_ADM_SELECT_FOLDERS'); ?>');
+                    return;
+                }
+
+                if (!confirm('<?php echo Text::_('JBS_ADM_CONFIRM_DELETE'); ?> ' + selected.length + ' <?php echo Text::_('JBS_ADM_FOLDERS'); ?>?')) {
+                    return;
+                }
+
+                var btn = this;
+                btn.disabled = true;
+
+                var params = new URLSearchParams();
+                selected.forEach(function(path) {
+                    params.append('paths[]', path);
+                });
+
+                fetch('index.php?option=com_proclaim&task=cwmadmin.deleteOrphanedFoldersXHR&' + token + '=1', {
+                    method: 'POST',
+                    body: params
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        btn.disabled = false;
+                        alert('<?php echo Text::_('JBS_ADM_DELETED'); ?> ' + data.deleted + ' <?php echo Text::_('JBS_ADM_FOLDERS'); ?>');
+                        document.getElementById('btn-scan-orphans').click();
+                    })
+                    .catch(error => {
+                        btn.disabled = false;
+                        alert('<?php echo Text::_('JBS_ADM_ERROR_DELETING'); ?>');
+                    });
+            });
+
+            function formatBytes(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                var k = 1024;
+                var sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                var i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+        });
+        </script>
+        <?php
+        echo HTMLHelper::_('uitab.endTab'); ?>
 
         <!-- Track thumbnail sizes to fire event if they are changed -->
         <input type="hidden" id="thumbnail_teacher_size_old"

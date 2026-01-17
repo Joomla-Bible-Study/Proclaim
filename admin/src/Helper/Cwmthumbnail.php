@@ -16,9 +16,12 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Image\Image;
+use Joomla\CMS\Log\Log;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\Path;
 
 /**
  * Thumbnail helper class
@@ -31,61 +34,273 @@ class Cwmthumbnail
     public const SCALE_INSIDE = 2;
 
     /**
-     * Creates a thumbnail for an uploaded image
-     *
-     * @param   string  $file  File name
-     * @param   string  $path  Path to file
-     * @param   int     $size  Size of image with default of 100
-     *
-     * @return void
-     *
-     * @since 9.0.0
+     * Allowed base paths for image operations (safety whitelist)
      */
-    public static function create($file, $path, int $size = 300): void
-    {
-        $name     = basename($file);
-        $original = JPATH_ROOT . '/' . $file;
-        $thumb    = JPATH_ROOT . '/' . $path . '/thumb_' . $name;
-        $w        = 300;
-        $h        = 169;
-        // Delete destination folder if it exists
-        if (is_dir(JPATH_ROOT . '/' . $path)) {
-            Folder::delete(JPATH_ROOT . '/' . $path);
-        }
-        // Move uploaded image to destination
-        Folder::create(JPATH_ROOT . '/' . $path);
+    private const ALLOWED_PATHS = [
+        'images/biblestudy/studies/',
+        'images/biblestudy/teachers/',
+        'images/biblestudy/series/',
+    ];
 
-        // Create thumbnail
-        $image     = new Image($original);
-        $thumbnail = $image->resize($w, $h, true, $scaleMethod = self::SCALE_INSIDE);
-        $thumbnail->toFile($thumb, IMAGETYPE_JPEG);
+    /**
+     * Validate an image file before processing
+     *
+     * @param   string  $filePath       Absolute path to the file
+     * @param   array   $allowedTypes   Allowed MIME types
+     * @param   int     $maxSizeBytes   Maximum file size in bytes (default: 10MB)
+     * @param   int     $maxDimension   Maximum width/height in pixels (default: 5000)
+     *
+     * @return  array{valid: bool, error: ?string}  Validation result
+     *
+     * @since 10.2.0
+     */
+    public static function validate(
+        string $filePath,
+        array $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+        int $maxSizeBytes = 10485760,
+        int $maxDimension = 5000
+    ): array {
+        // Check file exists and is readable
+        if (!is_file($filePath) || !is_readable($filePath)) {
+            return ['valid' => false, 'error' => 'File not found or not readable'];
+        }
+
+        // Check file size
+        $fileSize = filesize($filePath);
+        if ($fileSize > $maxSizeBytes) {
+            $maxMB = round($maxSizeBytes / 1048576, 1);
+
+            return ['valid' => false, 'error' => "File size exceeds maximum allowed ({$maxMB}MB)"];
+        }
+
+        // Check MIME type using finfo
+        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->file($filePath);
+
+        if (!\in_array($mimeType, $allowedTypes, true)) {
+            return ['valid' => false, 'error' => 'Invalid file type. Allowed: JPG, PNG, GIF, WEBP'];
+        }
+
+        // Verify extension matches MIME type (security check)
+        $extension     = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+        $expectedExts  = [
+            'image/jpeg' => ['jpg', 'jpeg'],
+            'image/png'  => ['png'],
+            'image/gif'  => ['gif'],
+            'image/webp' => ['webp'],
+        ];
+
+        if (isset($expectedExts[$mimeType]) && !\in_array($extension, $expectedExts[$mimeType], true)) {
+            return ['valid' => false, 'error' => 'File extension does not match content type'];
+        }
+
+        // Check image dimensions
+        $imageInfo = @getimagesize($filePath);
+        if ($imageInfo === false) {
+            return ['valid' => false, 'error' => 'Could not read image dimensions'];
+        }
+
+        if ($imageInfo[0] > $maxDimension || $imageInfo[1] > $maxDimension) {
+            return ['valid' => false, 'error' => "Image dimensions exceed maximum ({$maxDimension}px)"];
+        }
+
+        return ['valid' => true, 'error' => null];
     }
 
     /**
-     * Resize image
+     * Delete an image folder safely (only within allowed paths)
      *
-     * @param string $path  Path to file
-     * @param int $new_size  New image size
+     * @param   string  $folderPath  Relative path to folder (e.g., 'images/biblestudy/studies/alias-123')
      *
-     * @return void
+     * @return  bool  True on success, false if path not allowed or deletion failed
+     *
+     * @since 10.2.0
+     */
+    public static function deleteFolder(string $folderPath): bool
+    {
+        // Normalize path
+        $folderPath = trim($folderPath, '/');
+
+        // CRITICAL: Validate path is within allowed scope
+        $isAllowed = false;
+        foreach (self::ALLOWED_PATHS as $prefix) {
+            if (str_starts_with($folderPath, $prefix)) {
+                $isAllowed = true;
+                break;
+            }
+        }
+
+        if (!$isAllowed) {
+            Log::add(
+                'Attempted to delete folder outside allowed scope: ' . $folderPath,
+                Log::WARNING,
+                'com_proclaim'
+            );
+
+            return false;
+        }
+
+        $absolutePath = Path::clean(JPATH_ROOT . '/' . $folderPath);
+
+        if (is_dir($absolutePath)) {
+            $result = Folder::delete($absolutePath);
+            if ($result) {
+                Log::add('Deleted image folder: ' . $folderPath, Log::INFO, 'com_proclaim');
+            }
+
+            return $result;
+        }
+
+        return true; // Folder doesn't exist, nothing to delete
+    }
+
+    /**
+     * Creates a thumbnail for an uploaded image and moves original to destination
+     *
+     * @param   string       $file        Source file path (relative to JPATH_ROOT)
+     * @param   string       $path        Destination folder path (relative to JPATH_ROOT)
+     * @param   int          $size        Thumbnail size (default 300)
+     * @param   string|null  $title       Optional title to use in filename (will be converted to URL-safe alias)
+     * @param   bool         $preserveOld If true, keeps existing files; if false, archives old folder
+     *
+     * @return array{image: string, thumbnail: string}|false Array with new paths on success, false on failure
+     *
+     * @since 9.0.0
+     */
+    public static function create(
+        string $file,
+        string $path,
+        int $size = 300,
+        ?string $title = null,
+        bool $preserveOld = true
+    ): array|false {
+        $originalPath = Path::clean(JPATH_ROOT . '/' . $file);
+        $destFolder   = Path::clean(JPATH_ROOT . '/' . $path);
+
+        // Verify source image exists
+        if (!is_file($originalPath)) {
+            return false;
+        }
+
+        // Get file extension
+        $extension = strtolower(pathinfo($originalPath, PATHINFO_EXTENSION));
+
+        // Generate filename from title or use original basename
+        if ($title !== null && trim($title) !== '') {
+            $baseFilename = ApplicationHelper::stringURLSafe($title);
+        } else {
+            $baseFilename = pathinfo($originalPath, PATHINFO_FILENAME);
+        }
+
+        $newFilename  = $baseFilename . '.' . $extension;
+        $thumbName    = 'thumb_' . $baseFilename . '.jpg';
+        $newImagePath = $destFolder . '/' . $newFilename;
+        $thumbPath    = $destFolder . '/' . $thumbName;
+
+        // Handle existing destination folder
+        if (is_dir($destFolder)) {
+            if ($preserveOld) {
+                // Keep existing files - just overwrite specific files
+                // This preserves any other files in the folder
+            } else {
+                // Archive old folder with timestamp instead of deleting
+                $archivePath = $destFolder . '_archive_' . date('YmdHis');
+                Folder::move($destFolder, $archivePath);
+                Log::add('Archived old image folder to: ' . $archivePath, Log::INFO, 'com_proclaim');
+            }
+        }
+
+        // Create destination folder if it doesn't exist
+        if (!is_dir($destFolder)) {
+            Folder::create($destFolder);
+        }
+
+        // Move original image to destination folder (if not already there)
+        $normalizedOriginal = Path::clean($originalPath);
+        $normalizedNew      = Path::clean($newImagePath);
+
+        if ($normalizedOriginal !== $normalizedNew) {
+            // Copy instead of move if source is in a different location
+            if (!File::copy($originalPath, $newImagePath)) {
+                return false;
+            }
+
+            // Delete the original only if copy succeeded and it's outside the dest folder
+            if (!str_starts_with($normalizedOriginal, $destFolder)) {
+                File::delete($originalPath);
+            }
+        }
+
+        // Create thumbnail
+        $image     = new Image($newImagePath);
+        $thumbnail = $image->resize($size, (int) round($size * 0.5625), true, self::SCALE_INSIDE);
+        $thumbnail->toFile($thumbPath, IMAGETYPE_JPEG);
+
+        // Return relative paths (without JPATH_ROOT)
+        return [
+            'image'     => $path . '/' . $newFilename,
+            'thumbnail' => $path . '/' . $thumbName,
+        ];
+    }
+
+    /**
+     * Resize image thumbnail
+     *
+     * @param   string    $path        Absolute path to source image file
+     * @param   int       $newSize     New thumbnail size (width)
+     * @param   int|null  $outputType  Output image type constant (default: IMAGETYPE_JPEG)
+     *
+     * @return bool True on success, false if source image doesn't exist
      *
      * @since 9.0
      */
-    public static function resize(string $path, int $new_size): void
+    public static function resize(string $path, int $newSize, ?int $outputType = null): bool
     {
-        $filename = str_replace('original_', '', basename($path));
+        // Verify source image exists
+        if (!is_file($path)) {
+            return false;
+        }
 
-        // Delete existing thumbnail
-        $old_thumbs = Folder::files(\dirname($path), 'thumb_', true, true);
+        // Determine output type - use JPEG for consistency with create() or preserve original
+        if ($outputType === null) {
+            $imageInfo  = @getimagesize($path);
+            $outputType = ($imageInfo !== false && isset($imageInfo[2])) ? $imageInfo[2] : IMAGETYPE_JPEG;
+        }
 
-        foreach ($old_thumbs as $thumb) {
+        // Get filename without any prefix patterns
+        $filename = basename($path);
+
+        // Remove common prefixes if present
+        $prefixesToRemove = ['original_', 'thumb_'];
+        foreach ($prefixesToRemove as $prefix) {
+            if (str_starts_with($filename, $prefix)) {
+                $filename = substr($filename, \strlen($prefix));
+                break;
+            }
+        }
+
+        // Get extension for output type
+        $extension = image_type_to_extension($outputType, false);
+
+        // Remove old extension and add new one
+        $filenameBase  = pathinfo($filename, PATHINFO_FILENAME);
+        $thumbFilename = 'thumb_' . $filenameBase . '.' . $extension;
+
+        // Delete existing thumbnails in this directory
+        $directory  = \dirname($path);
+        $oldThumbs  = Folder::files($directory, '^thumb_' . preg_quote($filenameBase, '/'), false, true);
+
+        foreach ($oldThumbs as $thumb) {
             File::delete($thumb);
         }
 
-        // Create new thumbnail
+        // Create new thumbnail with 16:9 aspect ratio (consistent with create())
         $image     = new Image($path);
-        $thumbnail = $image->resize($new_size, $new_size);
-        $thumbnail->toFile(\dirname($path) . '/thumb_' . $filename, IMAGETYPE_PNG);
+        $height    = (int) round($newSize * 0.5625);
+        $thumbnail = $image->resize($newSize, $height, true, self::SCALE_INSIDE);
+        $thumbnail->toFile($directory . '/' . $thumbFilename, $outputType);
+
+        return true;
     }
 
     /**

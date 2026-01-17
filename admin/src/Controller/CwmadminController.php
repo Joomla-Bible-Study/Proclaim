@@ -17,6 +17,8 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmImageCleanup;
+use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Administrator\Lib\CwmpIconvert;
@@ -599,7 +601,7 @@ class CwmadminController extends FormController
 
         if ($oldprefix) {
             if (!($this->copyTables($oldprefix))) {
-                $app->enqueueMessage(Text::_('JBS_CMN_DATABASE_NOT_COPIED'), 'worning');
+                $app->enqueueMessage(Text::_('JBS_CMN_DATABASE_NOT_COPIED'), 'warning');
             }
         } else {
             $import = new Cwmrestore();
@@ -637,19 +639,19 @@ class CwmadminController extends FormController
                 $oldlength       = \strlen($oldprefix);
                 $newsubtablename = substr($table, $oldlength);
                 $newtablename    = $prefix . $newsubtablename;
-                $query           = 'DROP TABLE IF EXISTS ' . $newtablename;
+                $query           = 'DROP TABLE IF EXISTS ' . $db->quoteName($newtablename);
 
                 if (!CwmdbHelper::performDB($query)) {
                     return false;
                 }
 
-                $query = 'CREATE TABLE ' . $newtablename . ' LIKE ' . $table;
+                $query = 'CREATE TABLE ' . $db->quoteName($newtablename) . ' LIKE ' . $db->quoteName($table);
 
                 if (!CwmdbHelper::performDB($query)) {
                     return false;
                 }
 
-                $query = 'INSERT INTO ' . $newtablename . ' SELECT * FROM ' . $table;
+                $query = 'INSERT INTO ' . $db->quoteName($newtablename) . ' SELECT * FROM ' . $db->quoteName($table);
 
                 if (!CwmdbHelper::performDB($query)) {
                     return false;
@@ -857,5 +859,157 @@ class CwmadminController extends FormController
         $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit', false));
 
         return true;
+    }
+
+    /**
+     * Get migration counts XHR - returns count of records needing migration
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.2.0
+     */
+    public function getMigrationCountsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        $counts = CwmImageMigration::getMigrationCounts();
+
+        echo json_encode($counts, JSON_THROW_ON_ERROR);
+
+        $app->close();
+    }
+
+    /**
+     * Get migration batch XHR - returns batch of records to migrate
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.2.0
+     */
+    public function getMigrationBatchXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $input    = $app->getInput();
+
+        $document->setMimeEncoding('application/json');
+
+        $type  = $input->get('type', 'studies', 'string');
+        $limit = $input->get('limit', 10, 'int');
+
+        $batch = CwmImageMigration::getBatch($type, $limit);
+
+        echo json_encode($batch, JSON_THROW_ON_ERROR);
+
+        $app->close();
+    }
+
+    /**
+     * Migrate single record XHR
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.2.0
+     */
+    public function migrateRecordXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $input    = $app->getInput();
+
+        $document->setMimeEncoding('application/json');
+
+        $type    = $input->get('type', '', 'string');
+        $id      = $input->get('id', 0, 'int');
+        $title   = $input->get('title', '', 'string');
+        $oldPath = $input->get('old_path', '', 'string');
+
+        if (empty($type) || empty($id) || empty($oldPath)) {
+            echo json_encode([
+                'success' => false,
+                'error'   => 'Missing required parameters',
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $result = CwmImageMigration::migrateRecord($type, $id, $title, $oldPath);
+
+        echo json_encode($result, JSON_THROW_ON_ERROR);
+
+        $app->close();
+    }
+
+    /**
+     * Get orphaned folders XHR - scans for orphaned image folders
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.2.0
+     */
+    public function getOrphanedFoldersXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        $orphans = CwmImageCleanup::findOrphanedFolders();
+        $totals  = CwmImageCleanup::getTotals($orphans);
+
+        echo json_encode([
+            'orphans' => $orphans,
+            'totals'  => $totals,
+        ], JSON_THROW_ON_ERROR);
+
+        $app->close();
+    }
+
+    /**
+     * Delete orphaned folders XHR
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.2.0
+     */
+    public function deleteOrphanedFoldersXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $input    = $app->getInput();
+
+        $document->setMimeEncoding('application/json');
+
+        $paths = $input->get('paths', [], 'array');
+
+        if (empty($paths)) {
+            echo json_encode([
+                'deleted' => 0,
+                'errors'  => ['No paths provided'],
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $result = CwmImageCleanup::deleteOrphans($paths);
+
+        echo json_encode($result, JSON_THROW_ON_ERROR);
+
+        $app->close();
     }
 }

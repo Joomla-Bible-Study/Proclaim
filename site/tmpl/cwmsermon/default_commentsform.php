@@ -234,7 +234,7 @@ switch ($this->item->params->get('link_comments', 0)) {
                                    value="<?php
                                     echo $this->item->id ?>"/>
 
-                            <input type="submit" class="button" id="button" value="Submit"/>
+                            <input type="submit" class="btn btn-primary" id="button" value="Submit"/>
                             <?php
                     } // End of if $allow > 10
                     ?>

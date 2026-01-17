@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Table\Table;
@@ -488,6 +489,34 @@ class CwmmessageTable extends Table
     public function ordering()
     {
         // No Data
+    }
+
+    /**
+     * Method to delete a row from the database by primary key value.
+     * Also cleans up associated image folder.
+     *
+     * @param   mixed  $pk  Primary key value to delete (null uses instance property)
+     *
+     * @return  bool  True on success
+     *
+     * @since 10.2.0
+     */
+    public function delete($pk = null): bool
+    {
+        $pk = $pk ?? $this->id;
+
+        // Load record to get image paths before deletion
+        if ($pk !== $this->id) {
+            $this->load($pk);
+        }
+
+        // Delete associated image folder if exists
+        if (!empty($this->thumbnailm) && str_contains($this->thumbnailm, 'images/biblestudy/studies/')) {
+            $folderPath = \dirname($this->thumbnailm);
+            Cwmthumbnail::deleteFolder($folderPath);
+        }
+
+        return parent::delete($pk);
     }
 
     /**

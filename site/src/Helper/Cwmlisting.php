@@ -2324,6 +2324,7 @@ class Cwmlisting
      *
      * @return null|string
      *
+     * @throws \Exception
      * @since 7.0
      */
     public function getShare($link, $row, $params): ?string
@@ -2334,15 +2335,14 @@ class Cwmlisting
 						<div class="a2a_kit a2a_kit_size_32 a2a_default_style">
                             <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
                         </div>
-						<script type="text/javascript" src="https://static.addtoany.com/menu/page.js"></script>
+						<script defer src="https://static.addtoany.com/menu/page.js"></script>
 						<!-- AddThis Button END -->
 						';
         $doc     = Factory::getApplication()->getDocument();
         $doc->addScriptDeclaration(
-            'a2a_config.thanks = {
-                                    postShare: true,
-                                    ad: false,
-                                };'
+            'var a2a_config = a2a_config || {};
+             a2a_config.onclick = 1;
+             a2a_config.thanks = { postShare: true, ad: false };'
         );
 
         $shareit .= '</div>';
