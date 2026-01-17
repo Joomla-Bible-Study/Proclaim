@@ -118,12 +118,26 @@ class HtmlView extends BaseHtmlView
         // Get the toolbar object instance
         $toolbar = Toolbar::getInstance('toolbar');
 
-        ToolbarHelper::title(Text::_('JBS_CMN_COMMENTS'), 'comments-2');
+        // Get pending comments count and add to title if any
+        $pendingCount = $this->getPendingCount();
+        $title        = Text::_('JBS_CMN_COMMENTS');
+        if ($pendingCount > 0) {
+            $title .= ' <span class="badge bg-warning text-dark">' . Text::sprintf('JBS_CMT_PENDING_COUNT', $pendingCount) . '</span>';
+        }
+
+        ToolbarHelper::title($title, 'comments-2');
         $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
         ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
 
         if ($canDo->get('core.create')) {
             $toolbar->addNew('cwmcomment.add');
+        }
+
+        // Add Approve button for comment moderation workflow
+        if ($canDo->get('core.edit.state')) {
+            $toolbar->standardButton('approve', 'JBS_CMT_APPROVE', 'cwmcomments.publish')
+                ->icon('icon-checkmark')
+                ->listCheck(true);
         }
 
         $dropdown = $toolbar->dropdownButton('status-group')
@@ -180,5 +194,24 @@ class HtmlView extends BaseHtmlView
             'access_level'      => Text::_('JGRID_HEADING_ACCESS'),
             'comment.id'        => Text::_('JGRID_HEADING_ID'),
         ];
+    }
+
+    /**
+     * Get the count of comments pending approval (unpublished)
+     *
+     * @return  int  Number of pending comments
+     *
+     * @since   10.2.0
+     */
+    protected function getPendingCount(): int
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_comments'))
+            ->where($db->quoteName('published') . ' = 0');
+        $db->setQuery($query);
+
+        return (int) $db->loadResult();
     }
 }

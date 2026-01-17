@@ -14,7 +14,6 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Button\PublishedButton;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
@@ -205,14 +204,37 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                                     echo HTMLHelper::_('grid.id', $i, $item->id); ?>
                                 </td>
                                 <td class="text-center d-none d-md-table-cell">
-                                    <?php
-                                    $options = [
-                                        'task_prefix' => 'cwmcomments.',
-                                        'disabled' => !$canChange,
-                                        'id' => 'state-' . $item->id
-                                    ];
-                                    echo (new PublishedButton())->render((int) $item->published, $i, $options);
-                                    ?>
+                                    <?php if ($item->published == 1) : ?>
+                                        <a href="javascript:void(0);"
+                                           onclick="return Joomla.listItemTask('cb<?php echo $i; ?>', 'cwmcomments.unpublish')"
+                                           class="tbody-icon<?php echo !$canChange ? ' disabled' : ''; ?>"
+                                           title="<?php echo Text::_('JBS_CMT_APPROVED'); ?>">
+                                            <span class="badge text-bg-success">
+                                                <span class="icon-check text-white" aria-hidden="true"></span>
+                                                <?php echo Text::_('JBS_CMT_APPROVED'); ?>
+                                            </span>
+                                        </a>
+                                    <?php elseif ($item->published == 0) : ?>
+                                        <a href="javascript:void(0);"
+                                           onclick="return Joomla.listItemTask('cb<?php echo $i; ?>', 'cwmcomments.publish')"
+                                           class="tbody-icon<?php echo !$canChange ? ' disabled' : ''; ?>"
+                                           title="<?php echo Text::_('JBS_CMT_PENDING_APPROVAL'); ?>">
+                                            <span class="badge text-bg-warning">
+                                                <span class="icon-clock text-dark" aria-hidden="true"></span>
+                                                <?php echo Text::_('JBS_CMT_PENDING_APPROVAL'); ?>
+                                            </span>
+                                        </a>
+                                    <?php else : ?>
+                                        <a href="javascript:void(0);"
+                                           onclick="return Joomla.listItemTask('cb<?php echo $i; ?>', 'cwmcomments.publish')"
+                                           class="tbody-icon<?php echo !$canChange ? ' disabled' : ''; ?>"
+                                           title="<?php echo Text::_('JTRASHED'); ?>">
+                                            <span class="badge text-bg-secondary">
+                                                <span class="icon-trash text-white" aria-hidden="true"></span>
+                                                <?php echo Text::_('JTRASHED'); ?>
+                                            </span>
+                                        </a>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="nowrap has-context" style="width:10%;">
                                     <div class="float-left">

@@ -832,6 +832,9 @@
                 <option value="0">JBS_TPL_APPROVAL_BACKEND</option>
                 <option value="1">JBS_TPL_NO_APPROVAL</option>
             </field>
+            <field name="comment_notify_email" type="email" default="" size="40"
+                   label="JBS_CMT_NOTIFY_EMAIL" description="JBS_CMT_NOTIFY_EMAIL_DESC"
+                   showon="comment_publish:0"/>
             <field name="email_comments" type="list" default="1"
                    label="JBS_TPL_DETAILS_EMAIL_COMMENTS" description="JBS_TPL_DETAILS_EMAIL_COMMENTS_DESC">
                 <option value="0">JBS_TPL_NO_EMAIL</option>

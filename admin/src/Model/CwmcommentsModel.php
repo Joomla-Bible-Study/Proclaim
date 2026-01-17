@@ -163,7 +163,7 @@ class CwmcommentsModel extends ListModel
         $query->from('#__bsms_comments AS comment');
 
         // Join over the language
-        $query->select('l.title AS language_title');
+        $query->select('l.title AS language_title, l.image AS language_image');
         $query->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = comment.language');
 
         // Filter by published state

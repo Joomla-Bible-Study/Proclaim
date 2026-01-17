@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Site\Controller;
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmnotificationHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmdownload;
 use CWM\Component\Proclaim\Site\Model\CwmsermonModel;
 use Joomla\CMS\Factory;
@@ -154,49 +155,88 @@ class CwmsermonController extends FormController
      */
     public function comment(): void
     {
-        $input = Factory::getApplication()->getInput();
+        // Check for CSRF token
+        $this->checkToken();
+
+        $app   = Factory::getApplication();
+        $input = $app->getInput();
+
         /** @var CwmsermonModel $model */
-        $model = $this->getModel('sermon');
-        $t     = $input->get('t', '1');
-        $input->set('t', $t);
+        $model = $this->getModel('Cwmsermon');
+        $t     = $input->getInt('t', 1);
 
-        // Convert parameter fields to objects.
-        $registry = new Registry();
-        $registry->loadString($model->_template[0]->params);
-        $params = $registry;
+        // Get template params
+        $params = new Registry();
 
+        if (!empty($model->_template[0]->params)) {
+            $params->loadString($model->_template[0]->params);
+        }
+
+        // Check captcha if enabled
         if ($params->get('use_captcha') > 0) {
-            // Begin reCaptcha
-            $data = $input->post;
             PluginHelper::importPlugin('captcha');
-            $res = Factory::getApplication()->triggerEvent('onCheckAnswer', $_POST['recaptcha_response_field']);
+            $captchaResponse = $input->get('recaptcha_response_field', '', 'string');
+            $res             = $app->triggerEvent('onCheckAnswer', [$captchaResponse]);
 
-            if (!$res[0]) {
-                // What happens when the CAPTCHA was entered incorrectly
-                $mess = Text::_('JBS_STY_INCORRECT_KEY');
-                echo "<script type='text/javascript'>alert('" . $mess . "')</script>";
-                echo "<script type='text/javascript'>window.parent.location.reload()</script>";
+            if (empty($res[0])) {
+                $app->enqueueMessage(Text::_('JBS_STY_INCORRECT_KEY'), 'error');
+                $this->redirectBack($input, $t);
 
                 return;
             }
         }
 
+        // Store the comment
         if ($model->storecomment()) {
-            $msg = Text::_('JBS_STY_COMMENT_SUBMITTED');
+            $published = $input->getInt('published', 1);
+
+            // Show appropriate message based on whether comment is auto-approved or held
+            if ($published === 0) {
+                $app->enqueueMessage(Text::_('JBS_CMT_SUBMITTED_PENDING_APPROVAL'), 'message');
+
+                // Send moderation notification email if configured
+                $notifyEmail = $params->get('comment_notify_email', '');
+                if (!empty($notifyEmail) || $app->get('mailfrom')) {
+                    CwmnotificationHelper::notifyCommentPending(
+                        $input->getInt('study_id', 0),
+                        $input->getString('full_name', 'Anonymous'),
+                        $input->get('comment_text', '', 'raw'),
+                        $params
+                    );
+                }
+            } else {
+                $app->enqueueMessage(Text::_('JBS_STY_COMMENT_SUBMITTED'), 'success');
+            }
+
+            // Send general email notification if enabled
+            if ($params->get('email_comments') > 0) {
+                $this->commentsEmail($params);
+            }
         } else {
-            $msg = Text::_('JBS_STY_ERROR_SUBMITTING_COMMENT');
+            $app->enqueueMessage(Text::_('JBS_STY_ERROR_SUBMITTING_COMMENT'), 'error');
         }
 
-        if ($params->get('email_comments') > 0) {
-            $this->commentsEmail($params);
-        }
+        $this->redirectBack($input, $t);
+    }
 
-        $study_detail_id = $input->get('study_detail_id', 0, 'int');
+    /**
+     * Redirect back to the sermon page
+     *
+     * @param   \Joomla\Input\Input  $input  Input object
+     * @param   int                  $t      Template ID
+     *
+     * @return void
+     *
+     * @since 10.2.0
+     */
+    private function redirectBack($input, int $t): void
+    {
+        $studyId = $input->getInt('study_detail_id', $input->getInt('study_id', 0));
 
-        Factory::getApplication()->redirect(
+        $this->setRedirect(
             Route::_(
-                'index.php?option=com_proclaim&id=' . $study_detail_id . '&view=cwmsermon&t=' . $t . '&msg=' . $msg,
-                'Comment Added'
+                'index.php?option=com_proclaim&view=cwmsermon&id=' . $studyId . '&t=' . $t,
+                false
             )
         );
     }
