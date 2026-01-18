@@ -57,7 +57,7 @@ class Cwmshowscripture
 
         switch ($choice) {
             case 1:
-                $passage = $this->getHideShow();
+                $passage = $this->getHideShow($params);
                 $css     = true;
                 break;
 
@@ -124,18 +124,26 @@ class Cwmshowscripture
     /**
      * Get HideShow
      *
+     * @param   Registry  $params  Parameters
+     *
      * @return string
      *
      * @since    7.1
      */
-    public function getHideShow(): string
+    public function getHideShow(Registry $params): string
     {
         $id      = 'scripture_' . uniqid('', true);
         $passage = '<div class="fluid-row"><div class="col-12"></div>';
-        $passage .= '<a class="heading" href="#" onclick="var e = document.getElementById(\'' . $id . '\'); e.style.display = (e.style.display == \'none\' ? \'block\' : \'none\'); return false;">'
-            . Text::_('JBS_CMN_SHOW_HIDE_SCRIPTURE') . '</a>';
+        
+        $passage .= '<a class="heading" href="#" role="button" aria-expanded="false" aria-controls="' . $id . '" onclick="var e = document.getElementById(\'' . $id . '\'); var isHidden = e.style.display == \'none\'; e.style.display = (isHidden ? \'block\' : \'none\'); this.setAttribute(\'aria-expanded\', isHidden); return false;">';
+
+        if ((int) $params->get('showpassage_icon') === 1) {
+            $passage .= '<i class="fas fa-bible fa-3x" aria-hidden="true" style="display: flex; margin-right: 10px;"></i>';
+        }
+
+        $passage .= Text::_('JBS_CMN_SHOW_HIDE_SCRIPTURE') . '</a>';
         $passage .= '<div id="' . $id . '" style="display: none;">';
-        $passage .= '<iframe src="' . $this->link . '" width="100%" height="400" style="border:0;"></iframe>';
+        $passage .= '<iframe src="' . $this->link . '" width="100%" height="400" style="border:0;" title="' . Text::_('JBS_CMN_BIBLE_PASSAGE') . '"></iframe>';
         $passage .= '</div>';
         $passage .= '</div>';
 
@@ -151,7 +159,7 @@ class Cwmshowscripture
      */
     public function getShow(): string
     {
-        return '<div class="passage"><iframe src="' . $this->link . '" width="100%" height="400" style="border:0;"></iframe></div>';
+        return '<div class="passage"><iframe src="' . $this->link . '" width="100%" height="400" style="border:0;" title="' . Text::_('JBS_CMN_BIBLE_PASSAGE') . '"></iframe></div>';
     }
 
     /**
@@ -172,7 +180,7 @@ class Cwmshowscripture
         $passage .= ' title="' . Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE') . '">';
 
         if ((int) $params->get('showpassage_icon') === 1) {
-            $passage .= '<i class="fas fa-bible fa-3x" style="display: flex; margin-right: 10px;"></i>';
+            $passage .= '<i class="fas fa-bible fa-3x" aria-hidden="true" style="display: flex; margin-right: 10px;"></i>';
         } elseif ($params->get('showpassage_icon') > 0) {
             $passage .= Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE');
         }
@@ -193,6 +201,6 @@ class Cwmshowscripture
      */
     public function bodyOnly(string $html): string
     {
-        return '<div class="passage"><iframe src="' . $this->link . '" width="100%" height="400" style="border:0;"></iframe></div>';
+        return '<div class="passage"><iframe src="' . $this->link . '" width="100%" height="400" style="border:0;" title="' . Text::_('JBS_CMN_BIBLE_PASSAGE') . '"></iframe></div>';
     }
 }
