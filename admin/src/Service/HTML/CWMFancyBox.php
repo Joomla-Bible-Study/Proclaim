@@ -49,12 +49,20 @@ class CWMFancyBox
             return;
         }
 
-        // Load fancybox script as ES module
         $document = Factory::getApplication()->getDocument();
+
+        // Load Fancybox UMD bundle (sets window.Fancybox)
+        $document->addScript(
+            'media/com_proclaim/fancybox/fancybox.umd.js',
+            [],
+            ['defer' => true]
+        );
+
+        // Load our custom handler script
         $document->addScript(
             'media/com_proclaim/js/fancybox.min.js',
             [],
-            ['type' => 'module']
+            ['defer' => true]
         );
 
         self::loadCss($option);
@@ -73,7 +81,7 @@ class CWMFancyBox
      */
     public static function loadCss(bool $option = false): void
     {
-        HTMLHelper::stylesheet('media/com_proclaim/fancybox/fancybox.min.css');
+        HTMLHelper::stylesheet('media/com_proclaim/fancybox/fancybox.css');
         HTMLHelper::stylesheet('media/com_proclaim/css/bsms.fancybox.min.css');
     }
 }
