@@ -9,6 +9,7 @@
 
 namespace CWM\Component\Proclaim\Administrator\Service\HTML;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -48,11 +49,9 @@ class CWMFancyBox
             return;
         }
 
-        HTMLHelper::script('media/com_proclaim/js/fancybox.js', [], ['type' => 'module']);
-
-        if ($mouseweel) {
-            //            HTMLHelper::script('media/com_proclaim/js/jquery.mousewheel.pack.min.js');
-        }
+        // Use Web Asset Manager for proper ES module handling
+        $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+        $wa->useScript('com_proclaim.fancybox');
 
         self::loadCss($option);
 
