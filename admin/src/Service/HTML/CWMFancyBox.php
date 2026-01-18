@@ -82,6 +82,6 @@ class CWMFancyBox
     public static function loadCss(bool $option = false): void
     {
         HTMLHelper::stylesheet('media/com_proclaim/fancybox/fancybox.css');
-        HTMLHelper::stylesheet('media/com_proclaim/css/bsms.fancybox.min.css');
+        HTMLHelper::stylesheet('media/com_proclaim/css/cwm.fancybox.min.css');
     }
 }

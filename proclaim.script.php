@@ -89,7 +89,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * @var    string
      * @since  3.6
      */
-    protected $release = '10.0.1';
+    protected $release = '10.1.0';
 
     /**
      * @var   DatabaseDriver|DatabaseInterface|null
@@ -156,6 +156,10 @@ class com_proclaimInstallerScript extends InstallerScript
         '/media/com_proclaim/css/bsmImport.min.css',
         '/media/com_proclaim/css/general.min.min.css',
         '/media/com_proclaim/css/biblestudy.css.map',
+        // Media CSS files removed in 10.1.0
+        '/media/com_proclaim/css/bsms.fancybox.css',
+        '/media/com_proclaim/css/bsms.fancybox.min.css',
+        '/media/com_proclaim/css/biblestudy-debug.css',
         // Media JS files removed
         '/media/com_proclaim/js/bsmImport.js',
         '/media/com_proclaim/js/bsmImport.min.js',
@@ -178,9 +182,15 @@ class com_proclaimInstallerScript extends InstallerScript
         '/media/com_proclaim/js/modernizr.old.js',
         '/media/com_proclaim/js/modernizr.old.min.js',
         '/media/com_proclaim/js/modernizr.old.min.min.js',
+        // Media JS files removed in 10.1.0
+        '/media/com_proclaim/js/popper.min.js',
+        '/media/com_proclaim/js/modernizr.min.js',
         // Fancybox old files (jQuery version)
         '/media/com_proclaim/fancybox/jquery.fancybox.min.css',
         '/media/com_proclaim/fancybox/jquery.fancybox.min.js',
+        // Fancybox files removed in 10.1.0 (ESM replaced with UMD)
+        '/media/com_proclaim/fancybox/fancybox.esm.js',
+        '/media/com_proclaim/fancybox/fancybox.esm.min.js',
         // Legacy site files
         '/components/com_proclaim/controller.php',
         '/components/com_proclaim/proclaim.php',
@@ -190,6 +200,8 @@ class com_proclaimInstallerScript extends InstallerScript
         // German language files for the finder plugin
         '/plugins/finder/proclaim/language/de-DE/de-DE.plg_finder_biblestudy.ini',
         '/plugins/finder/proclaim/language/de-DE/de-DE.plg_finder_biblestudy.sys.ini',
+        // Module files removed in 10.1.0
+        '/modules/mod_proclaim_youtube/helper.php',
     ];
 
     /**
@@ -206,6 +218,9 @@ class com_proclaimInstallerScript extends InstallerScript
         '/media/com_proclaim/js/plugins',
         '/media/com_proclaim/js/views',
         '/media/com_proclaim/js/mediafile',
+        // Media folders removed in 10.1.0
+        '/media/com_proclaim/carousel',
+        '/media/com_proclaim/panzoom',
         // Legacy site folders
         '/components/com_proclaim/views',
         '/components/com_proclaim/models',

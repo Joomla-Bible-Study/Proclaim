@@ -57,6 +57,12 @@ document.addEventListener("DOMContentLoaded", function () {
             let contentType = 'iframe';
             let htmlContent = '';
 
+            // Error message HTML for missing media files
+            const errorHtml = '<div class="proclaim-media-error" style="display:none;padding:30px 20px;text-align:center;color:#fff;">' +
+                '<p style="margin:0 0 10px;font-size:1.1em;font-weight:500;">Unable to load media file</p>' +
+                '<p style="margin:0;font-size:0.9em;color:#888;">The requested file could not be found or is unavailable.</p>' +
+                '</div>';
+
             if (isAudio) {
                 // Build HTML5 audio player
                 contentType = 'html';
@@ -67,6 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
                               'style="width:100%;">';
                 htmlContent += '<source src="' + src + '" type="audio/mpeg">';
                 htmlContent += '</audio>';
+                htmlContent += errorHtml;
                 htmlContent += logoHtml;
                 htmlContent += '</div>';
             } else if (isVideo && !/youtube\.com|youtu\.be|vimeo\.com/i.test(src)) {
@@ -80,11 +87,12 @@ document.addEventListener("DOMContentLoaded", function () {
                               'style="width:100%;height:100%;">';
                 htmlContent += '<source src="' + src + '" type="video/mp4">';
                 htmlContent += '</video>';
+                htmlContent += errorHtml;
                 htmlContent += logoHtml;
                 htmlContent += '</div>';
             }
 
-            // Fancybox options to hide default caption/filename display
+            // Fancybox v6 options
             const fancyboxOptions = {
                 Carousel: { infinite: false },
                 Toolbar: {
@@ -94,17 +102,46 @@ document.addEventListener("DOMContentLoaded", function () {
                         right: ["close"]
                     }
                 },
-                // Disable showing source URL in caption
-                caption: function() {
-                    return caption || '';
+                on: {
+                    reveal: function(fancybox) {
+                        // Add error handlers for audio/video elements
+                        const container = fancybox.container;
+                        const mediaElement = container.querySelector('audio, video');
+                        if (mediaElement) {
+                            mediaElement.addEventListener('error', function() {
+                                const wrapper = this.closest('.proclaim-player-wrapper');
+                                if (wrapper) {
+                                    const errorDiv = wrapper.querySelector('.proclaim-media-error');
+                                    if (errorDiv) {
+                                        this.style.display = 'none';
+                                        errorDiv.style.display = 'block';
+                                    }
+                                }
+                            });
+                            // Also check source element errors
+                            const source = mediaElement.querySelector('source');
+                            if (source) {
+                                source.addEventListener('error', function() {
+                                    const wrapper = mediaElement.closest('.proclaim-player-wrapper');
+                                    if (wrapper) {
+                                        const errorDiv = wrapper.querySelector('.proclaim-media-error');
+                                        if (errorDiv) {
+                                            mediaElement.style.display = 'none';
+                                            errorDiv.style.display = 'block';
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
                 }
             };
 
-            // Show Fancybox
+            // Show Fancybox - in v6, use 'html' property for HTML content
             if (contentType === 'html' && htmlContent) {
                 Fancybox.show([{
-                    src: htmlContent,
-                    type: 'html'
+                    html: htmlContent,
+                    caption: caption
                 }], fancyboxOptions);
             } else {
                 // Use iframe for YouTube/Vimeo
@@ -114,7 +151,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     width: width,
                     height: height,
                     thumb: posterImage,
-                    preload: false
+                    preload: false,
+                    caption: caption
                 }], fancyboxOptions);
             }
         });
