@@ -49,15 +49,13 @@ class CWMFancyBox
             return;
         }
 
-        // Get Web Asset Manager and register component assets if not already done
-        $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-
-        // Ensure our component's asset registry is loaded
-        if (!$wa->getRegistry()->exists('script', 'com_proclaim.fancybox')) {
-            $wa->getRegistry()->addRegistryFile('media/com_proclaim/joomla.asset.json');
-        }
-
-        $wa->useScript('com_proclaim.fancybox');
+        // Load fancybox script as ES module
+        $document = Factory::getApplication()->getDocument();
+        $document->addScript(
+            'media/com_proclaim/js/fancybox.min.js',
+            [],
+            ['type' => 'module']
+        );
 
         self::loadCss($option);
 
