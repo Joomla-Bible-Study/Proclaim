@@ -277,8 +277,7 @@
             "dependencies": [
                 "core",
                 "jquery-noconflict",
-                "com_proclaim.modernizr",
-                "com_proclaim.popper"
+                "com_proclaim.modernizr"
             ]
         },
         {
@@ -298,14 +297,6 @@
             "name": "com_proclaim.podcast",
             "type": "style",
             "uri": "com_proclaim/podcast.min.css"
-        },
-        {
-            "name": "com_proclaim.popper",
-            "type": "script",
-            "uri": "com_proclaim/popper.min.js",
-            "attributes": {
-                "defer": true
-            }
         },
         {
             "name": "com_proclaim.modernizr",
