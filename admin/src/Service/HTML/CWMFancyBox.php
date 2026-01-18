@@ -53,7 +53,7 @@ class CWMFancyBox
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
 
         // Ensure our component's asset registry is loaded
-        if (!$wa->getRegistry()->exists('com_proclaim.fancybox')) {
+        if (!$wa->getRegistry()->exists('script', 'com_proclaim.fancybox')) {
             $wa->getRegistry()->addRegistryFile('media/com_proclaim/joomla.asset.json');
         }
 
