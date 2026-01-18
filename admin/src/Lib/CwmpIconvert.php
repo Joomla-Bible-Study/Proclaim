@@ -1064,35 +1064,35 @@ class CwmpIconvert
         //go through the media inclusion list for a match
         if (\in_array('audio', $includemedia, true) && isset($pi->audio_link)) {
             {
-                foreach ($this->podcastids as $pods) {
-                    if ($pods['oldid'] == $podcast->id) {
-                        $podcast_id = $pods['newid'];
+            foreach ($this->podcastids as $pods) {
+                if ($pods['oldid'] == $podcast->id) {
+                    $podcast_id = $pods['newid'];
 
-                        return $podcast_id;
-                    }
+                    return $podcast_id;
                 }
+            }
             }
         }
         if (\in_array('video', $includemedia, true) && isset($pi->video_link)) {
             {
-                foreach ($this->podcastids as $pods) {
-                    if ($pods['oldid'] == $podcast->id) {
-                        $podcast_id = $pods['newid'];
+            foreach ($this->podcastids as $pods) {
+                if ($pods['oldid'] == $podcast->id) {
+                    $podcast_id = $pods['newid'];
 
-                        return $podcast_id;
-                    }
+                    return $podcast_id;
                 }
+            }
             }
         }
         if (\in_array('slides', $includemedia, true) && $pi->slides_link > 0) {
             {
-                foreach ($this->podcastids as $pods) {
-                    if ($pods['oldid'] == $podcast->id) {
-                        $podcast_id = $pods['newid'];
+            foreach ($this->podcastids as $pods) {
+                if ($pods['oldid'] == $podcast->id) {
+                    $podcast_id = $pods['newid'];
 
-                        return $podcast_id;
-                    }
+                    return $podcast_id;
                 }
+            }
             }
         }
     }
