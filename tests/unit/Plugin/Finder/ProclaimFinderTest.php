@@ -245,4 +245,98 @@ class ProclaimFinderTest extends ProclaimTestCase
         $filePath = JPATH_ROOT . '/plugins/finder/proclaim/services/provider.php';
         $this->assertFileExists($filePath);
     }
+
+    /**
+     * Test plugin handles cwmmessage context for messages
+     *
+     * The model uses com_proclaim.cwmmessage as typeAlias, so the plugin
+     * must handle this context for finder events.
+     *
+     * @return void
+     */
+    public function testPluginHandlesCwmmessageContext(): void
+    {
+        $filePath = JPATH_ROOT . '/plugins/finder/proclaim/src/Extension/Proclaim.php';
+        $content  = file_get_contents($filePath);
+
+        $this->assertStringContainsString(
+            'com_proclaim.cwmmessage',
+            $content,
+            'Plugin should handle com_proclaim.cwmmessage context from CwmmessageModel'
+        );
+    }
+
+    /**
+     * Test plugin handles cwmserie context for series
+     *
+     * The model uses com_proclaim.cwmserie as typeAlias, so the plugin
+     * must handle this context for finder events.
+     *
+     * @return void
+     */
+    public function testPluginHandlesCwmserieContext(): void
+    {
+        $filePath = JPATH_ROOT . '/plugins/finder/proclaim/src/Extension/Proclaim.php';
+        $content  = file_get_contents($filePath);
+
+        $this->assertStringContainsString(
+            'com_proclaim.cwmserie',
+            $content,
+            'Plugin should handle com_proclaim.cwmserie context from CwmserieModel'
+        );
+    }
+
+    /**
+     * Test plugin handles series access changes
+     *
+     * When a series is updated, the plugin should update indexes for
+     * all messages belonging to that series.
+     *
+     * @return void
+     */
+    public function testPluginHandlesSeriesAccessChanges(): void
+    {
+        $filePath = JPATH_ROOT . '/plugins/finder/proclaim/src/Extension/Proclaim.php';
+        $content  = file_get_contents($filePath);
+
+        $this->assertStringContainsString('seriesAccessChange', $content);
+        $this->assertStringContainsString('checkSeriesAccess', $content);
+        $this->assertStringContainsString('old_seriesAccess', $content);
+    }
+
+    /**
+     * Test plugin handles series state changes
+     *
+     * When a series publish state changes, the plugin should update
+     * the state of all messages in that series.
+     *
+     * @return void
+     */
+    public function testPluginHandlesSeriesStateChanges(): void
+    {
+        $filePath = JPATH_ROOT . '/plugins/finder/proclaim/src/Extension/Proclaim.php';
+        $content  = file_get_contents($filePath);
+
+        $this->assertStringContainsString('seriesStateChange', $content);
+    }
+
+    /**
+     * Test plugin defines state_field as 'published'
+     *
+     * The #__bsms_studies table uses 'published' column instead of 'state'
+     * for the published state. This must be explicitly set.
+     *
+     * @return void
+     */
+    public function testPluginDefinesStateFieldAsPublished(): void
+    {
+        $filePath = JPATH_ROOT . '/plugins/finder/proclaim/src/Extension/Proclaim.php';
+        $content  = file_get_contents($filePath);
+
+        $this->assertStringContainsString(
+            "\$state_field = 'published'",
+            $content,
+            'Plugin must define state_field as published since studies table uses published column'
+        );
+    }
 }
