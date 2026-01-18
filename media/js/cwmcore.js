@@ -15,8 +15,9 @@ $(function () {
         return false;
     });
 
-    // Check for Modernizr touch support safely
-    if (typeof Modernizr !== 'undefined' && Modernizr.touch) {
+    // Check for touch support using native browser APIs
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (isTouchDevice) {
         const jbsmcloseoverlay = $('.jbsmclose-overlay');
 
         jbsmcloseoverlay.removeClass('hidden');

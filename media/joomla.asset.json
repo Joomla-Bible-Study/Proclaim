@@ -276,8 +276,7 @@
             },
             "dependencies": [
                 "core",
-                "jquery-noconflict",
-                "com_proclaim.modernizr"
+                "jquery-noconflict"
             ]
         },
         {
@@ -297,14 +296,6 @@
             "name": "com_proclaim.podcast",
             "type": "style",
             "uri": "com_proclaim/podcast.min.css"
-        },
-        {
-            "name": "com_proclaim.modernizr",
-            "type": "script",
-            "uri": "com_proclaim/modernizr.min.js",
-            "attributes": {
-                "defer": true
-            }
         },
         {
             "name": "com_proclaim.fancybox",
