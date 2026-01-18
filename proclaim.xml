@@ -52,12 +52,10 @@
         <filename>joomla.asset.json</filename>
         <filename>index.html</filename>
         <folder>backup</folder>
-        <folder>carousel</folder>
         <folder>css</folder>
         <folder>fancybox</folder>
         <folder>images</folder>
         <folder>js</folder>
-        <folder>panzoom</folder>
     </media>
 
     <administration>
