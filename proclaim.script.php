@@ -104,7 +104,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * @var    string
      * @since  3.6
      */
-    protected $minimumPhp = '8.1.0';
+    protected $minimumPhp = '8.3.0';
 
     /**
      * Minimum Joomla! Version required to install the extension
@@ -439,7 +439,7 @@ class com_proclaimInstallerScript extends InstallerScript
     public function uninstall($parent): bool
     {
         // Uninstall sub-extensions
-        $this->uninstallSubextensions();
+        $this->uninstallSubExtensions();
 
         // Show the post-uninstalling page
         $this->renderPostUninstallation($this->status, $parent);
@@ -454,7 +454,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @since 9.0.18
      */
-    private function uninstallSubextensions(): void
+    private function uninstallSubExtensions(): void
     {
         $this->status          = new stdClass();
         $this->status->modules = [];
@@ -462,63 +462,106 @@ class com_proclaimInstallerScript extends InstallerScript
 
         // Modules uninstalling
         if (!empty(self::$installActionQueue['modules'])) {
-            foreach (self::$installActionQueue['modules'] as $folder => $modules) {
+            foreach (self::$installActionQueue['modules'] as $client => $modules) {
                 if (!empty($modules)) {
-                    foreach ($modules as $module => $modulePreferences) {
-                        // Find the module ID
-                        $sql = $this->dbo->getQuery(true)
-                            ->select($this->dbo->qn('extension_id'))
-                            ->from($this->dbo->qn('#__extensions'))
-                            ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q('mod_' . $module))
-                            ->where($this->dbo->qn('type') . ' = ' . $this->dbo->q('module'));
-                        $this->dbo->setQuery($sql);
-                        $id = $this->dbo->loadResult();
-
-                        // Uninstall the module
-                        if ($id !== null) {
-                            $installer = new Installer();
-                            $installer->setDatabase($this->dbo);
-                            $result                  = $installer->uninstall('module', $id, 1);
-                            $this->status->modules[] = [
-                                'name'   => 'mod_' . $module,
-                                'client' => $folder,
-                                'result' => $result,
-                            ];
-                        }
-                    }//end foreach
-                }//end if
-            }//end foreach
-        }//end if
+                    $this->uninstallModules($client, $modules);
+                }
+            }
+        }
 
         // Plugins uninstalling
         if (!empty(self::$installActionQueue['plugins'])) {
-            foreach (self::$installActionQueue['plugins'] as $folder => $plugins) {
+            foreach (self::$installActionQueue['plugins'] as $group => $plugins) {
                 if (!empty($plugins)) {
-                    foreach ($plugins as $plugin => $published) {
-                        $sql = $this->dbo->getQuery(true)
-                            ->select($this->dbo->qn('extension_id'))
-                            ->from($this->dbo->qn('#__extensions'))
-                            ->where($this->dbo->qn('type') . ' = ' . $this->dbo->q('plugin'))
-                            ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
-                            ->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder));
-                        $this->dbo->setQuery($sql);
+                    $this->uninstallPlugins($group, $plugins);
+                }
+            }
+        }
+    }
 
-                        $id = $this->dbo->loadResult();
+    /**
+     * Uninstall modules for a specific client
+     *
+     * @param   string  $client   Client (site/admin)
+     * @param   array   $modules  List of modules
+     *
+     * @return void
+     * @since 10.1.0
+     */
+    private function uninstallModules(string $client, array $modules): void
+    {
+        foreach ($modules as $module => $modulePreferences) {
+            $element = 'mod_' . $module;
+            $id      = $this->getExtensionId('module', $element);
 
-                        if ($id !== null) {
-                            $installer = new Installer();
-                            $installer->setDatabase($this->dbo);
-                            $result                  = $installer->uninstall('plugin', $id, 1);
-                            $this->status->plugins[] = [
-                                'name'   => 'plg_' . $plugin,
-                                'group'  => $folder,
-                                'result' => $result,
-                            ];
-                        }
-                    }//end foreach
-                }//end if
-            }//end foreach
-        }//end if
+            if ($id) {
+                $installer = new Installer();
+                $installer->setDatabase($this->dbo);
+                $result = $installer->uninstall('module', $id, 1);
+
+                $this->status->modules[] = [
+                    'name'   => $element,
+                    'client' => $client,
+                    'result' => $result,
+                ];
+            }
+        }
+    }
+
+    /**
+     * Uninstall plugins for a specific group
+     *
+     * @param   string  $group    Plugin group
+     * @param   array   $plugins  List of plugins
+     *
+     * @return void
+     * @since 10.1.0
+     */
+    private function uninstallPlugins(string $group, array $plugins): void
+    {
+        foreach ($plugins as $plugin => $published) {
+            $id = $this->getExtensionId('plugin', $plugin, $group);
+
+            if ($id) {
+                $installer = new Installer();
+                $installer->setDatabase($this->dbo);
+                $result = $installer->uninstall('plugin', $id, 1);
+
+                $this->status->plugins[] = [
+                    'name'   => 'plg_' . $plugin,
+                    'group'  => $group,
+                    'result' => $result,
+                ];
+            }
+        }
+    }
+
+    /**
+     * Get extension ID
+     *
+     * @param   string       $type     Extension type
+     * @param   string       $element  Extension element
+     * @param   string|null  $folder   Extension folder (optional)
+     *
+     * @return int|null
+     * @since 10.1.0
+     */
+    private function getExtensionId(string $type, string $element, ?string $folder = null): ?int
+    {
+        $query = $this->dbo->getQuery(true)
+            ->select($this->dbo->qn('extension_id'))
+            ->from($this->dbo->qn('#__extensions'))
+            ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($element))
+            ->where($this->dbo->qn('type') . ' = ' . $this->dbo->q($type));
+
+        if ($folder) {
+            $query->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder));
+        }
+
+        $this->dbo->setQuery($query);
+        $result = $this->dbo->loadResult();
+
+        return $result ? (int) $result : null;
     }
 
     /**
@@ -641,13 +684,13 @@ class com_proclaimInstallerScript extends InstallerScript
         }
 
         // Install subExtensions
-        $this->installSubextensions($parent);
+        $this->installSubExtensions($parent);
 
         // Show the post-installation page
         $this->renderPostInstallation($this->status, $parent);
 
         //Remove old com_biblestudy menu items on admin side
-        $this->removeBibleStudyVersion();
+        $this->removeBibleStudyVersion($parent);
 
         if ($type === 'install') {
             // A redirect to a new location after the installation is completed.
@@ -668,14 +711,42 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @since 1.7.0
      */
-    private function installSubextensions(InstallerAdapter $parent): void
+    private function installSubExtensions(InstallerAdapter $parent): void
     {
         $src                   = $parent->getParent()->getPath('source');
         $this->status          = new stdClass();
         $this->status->modules = [];
         $this->status->plugins = [];
 
-        // Clean up old installed language filesl
+        $this->cleanupLanguageFiles();
+
+        // Modules installation
+        if (!empty(self::$installActionQueue['modules'])) {
+            foreach (self::$installActionQueue['modules'] as $client => $modules) {
+                if (!empty($modules)) {
+                    $this->installModules($client, $modules, $src, $parent->route === 'install');
+                }
+            }
+        }
+
+        // Plugin's installation
+        if (!empty(self::$installActionQueue['plugins'])) {
+            foreach (self::$installActionQueue['plugins'] as $group => $plugins) {
+                if (!empty($plugins)) {
+                    $this->installPlugins($group, $plugins, $src);
+                }
+            }
+        }
+    }
+
+    /**
+     * Clean up old installed language files
+     *
+     * @return void
+     * @since 10.1.0
+     */
+    private function cleanupLanguageFiles(): void
+    {
         $languages = [
             "en-GB.com_proclaim.ini",
             "en-GB.com_proclaim.sys.ini",
@@ -697,140 +768,190 @@ class com_proclaimInstallerScript extends InstallerScript
                 File::delete(JPATH_ROOT . "/language/en-GB/$language");
             }
         }
+    }
 
-        // Modules installation
-        if (!empty(self::$installActionQueue['modules'])) {
-            foreach (self::$installActionQueue['modules'] as $folder => $modules) {
-                if (!empty($modules)) {
-                    foreach ($modules as $module => $modulePreferences) {
-                        // Install the module
-                        if (empty($folder)) {
-                            $folder = 'site';
-                        }
+    /**
+     * Install modules for a specific client
+     *
+     * @param   string  $client        Client (site/admin)
+     * @param   array   $modules       List of modules
+     * @param   string  $src           Source path
+     * @param   bool    $isNewInstall  True if new install
+     *
+     * @return void
+     * @since 10.1.0
+     */
+    private function installModules(string $client, array $modules, string $src, bool $isNewInstall): void
+    {
+        $client = $client ?: 'site';
 
-                        $path = $this->findExtensionPath($src, 'module', $folder, $module);
+        foreach ($modules as $module => $preferences) {
+            $path = $this->findExtensionPath($src, 'module', $client, $module);
 
-                        if ($path === null) {
-                            continue;
-                        }
+            if ($path === null) {
+                continue;
+            }
 
-                        $installer = new Installer();
-                        $installer->setDatabase($this->dbo);
-                        $result                  = $installer->install($path);
-                        $this->status->modules[] = [
-                            'name'   => 'mod_' . $module,
-                            'client' => $folder,
-                            'result' => $result,
-                        ];
+            $installer = new Installer();
+            $installer->setDatabase($this->dbo);
+            $result = $installer->install($path);
 
-                        // Modify where it's published and its published state
-                        if ($parent->route === "install") {
-                            // A. Position and state
-                            [$modulePosition, $modulePublished] = (array) $modulePreferences;
+            $this->status->modules[] = [
+                'name'   => 'mod_' . $module,
+                'client' => $client,
+                'result' => $result,
+            ];
 
-                            $sql = $this->dbo->getQuery(true)
-                                ->update($this->dbo->qn('#__modules'))
-                                ->set($this->dbo->qn('position') . ' = ' . $this->dbo->q($modulePosition))
-                                ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q('mod_' . $module));
+            if ($isNewInstall && $result) {
+                $this->configureModule($module, $client, $preferences);
+            }
+        }
+    }
 
-                            if ($modulePublished) {
-                                $sql->set($this->dbo->qn('published') . ' = ' . $this->dbo->q($modulePublished));
-                            }
+    /**
+     * Configure a module after installation
+     *
+     * @param   string  $module       Module name
+     * @param   string  $client       Client
+     * @param   array   $preferences  Preferences
+     *
+     * @return void
+     * @since 10.1.0
+     */
+    private function configureModule(string $module, string $client, array $preferences): void
+    {
+        [$position, $published] = (array) $preferences;
+        $element                = 'mod_' . $module;
 
-                            if ($module === "proclaimicon") {
-                                $params = '{"context":"mod_proclaimicon","header_icon":"fas fa-bible","show_messages":"1","show_mediafiles":"0","show_teachers":"1","show_series":"0","show_messagetypes":"0","show_locations":"0","show_topics":"0","show_comments":"0","show_servers":"0","show_podcasts":"0","show_templates":"0","show_templatecode":"0","show_admin":"0","module_tag":"div","bootstrap_size":"0","header_tag":"h3","header_class":"","style":"0"}';
-                                $sql->set($this->dbo->qn('params') . ' = ' . $this->dbo->q($params));
-                            }
+        $query = $this->dbo->getQuery(true)
+            ->update($this->dbo->qn('#__modules'))
+            ->set($this->dbo->qn('position') . ' = ' . $this->dbo->q($position))
+            ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q($element));
 
-                            $this->dbo->setQuery($sql);
-                            $this->dbo->execute();
+        if ($published !== null) {
+            $query->set($this->dbo->qn('published') . ' = ' . (int) $published);
+        }
 
-                            // B. Change the ordering of back-end modules to 1 + max ordering
-                            if ($folder === 'admin') {
-                                $query = $this->dbo->getQuery(true);
-                                $query->select('MAX(' . $this->dbo->qn('ordering') . ')')
-                                    ->from($this->dbo->qn('#__modules'))
-                                    ->where($this->dbo->qn('position') . '=' . $this->dbo->q($modulePosition));
-                                $this->dbo->setQuery($query);
-                                $position = $this->dbo->loadResult();
-                                $position++;
-                                $query = $this->dbo->getQuery(true);
-                                $query->update($this->dbo->qn('#__modules'))
-                                    ->set($this->dbo->qn('ordering') . ' = ' . $this->dbo->q($position))
-                                    ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q('mod_' . $module));
-                                $this->dbo->setQuery($query);
-                                $this->dbo->execute();
-                            }
+        if ($module === 'proclaimicon') {
+            $params = '{"context":"mod_proclaimicon","header_icon":"fas fa-bible","show_messages":"1","show_mediafiles":"0","show_teachers":"1","show_series":"0","show_messagetypes":"0","show_locations":"0","show_topics":"0","show_comments":"0","show_servers":"0","show_podcasts":"0","show_templates":"0","show_templatecode":"0","show_admin":"0","module_tag":"div","bootstrap_size":"0","header_tag":"h3","header_class":"","style":"0"}';
+            $query->set($this->dbo->qn('params') . ' = ' . $this->dbo->q($params));
+        }
 
-                            // C. Link to all pages
-                            $query = $this->dbo->getQuery(true);
-                            $query->select('id')
-                                ->from($this->dbo->qn('#__modules'))
-                                ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q('mod_' . $module));
-                            $this->dbo->setQuery($query);
-                            $moduleid = $this->dbo->loadResult();
-                            $query    = $this->dbo->getQuery(true);
-                            $query->select('*')
-                                ->from($this->dbo->qn('#__modules_menu'))
-                                ->where($this->dbo->qn('moduleid') . ' = ' . $this->dbo->q($moduleid));
-                            $this->dbo->setQuery($query);
-                            $assignments = $this->dbo->loadObjectList();
-                            $isAssigned  = !empty($assignments);
+        $this->dbo->setQuery($query);
+        $this->dbo->execute();
 
-                            if (!$isAssigned) {
-                                $o = (object)[
-                                    'moduleid' => $moduleid,
-                                    'menuid'   => 0,
-                                ];
-                                $this->dbo->insertObject('#__modules_menu', $o);
-                            }
-                        }//end if
-                    }//end foreach
-                }//end if
-            }//end foreach
-        }//end if
+        if ($client === 'admin') {
+            $this->reorderAdminModule($position, $element);
+        }
 
-        // Plugin's installation
-        if (!empty(self::$installActionQueue['plugins'])) {
-            foreach (self::$installActionQueue['plugins'] as $folder => $plugins) {
-                if (!empty($plugins)) {
-                    foreach ($plugins as $plugin => $published) {
-                        $path = $this->findExtensionPath($src, 'plugin', $folder, $plugin);
+        $this->assignModuleToAllPages($element);
+    }
 
-                        if ($path === null) {
-                            continue;
-                        }
+    /**
+     * Reorder admin module
+     *
+     * @param   string  $position  Module position
+     * @param   string  $element   Module element
+     *
+     * @return void
+     * @since 10.1.0
+     */
+    private function reorderAdminModule(string $position, string $element): void
+    {
+        $query = $this->dbo->getQuery(true)
+            ->select('MAX(' . $this->dbo->qn('ordering') . ')')
+            ->from($this->dbo->qn('#__modules'))
+            ->where($this->dbo->qn('position') . '=' . $this->dbo->q($position));
+        $this->dbo->setQuery($query);
+        $maxOrder = (int) $this->dbo->loadResult();
 
-                        // Was the plugin already installed?
-                        $query = $this->dbo->getQuery(true)
-                            ->select('COUNT(*)')
-                            ->from($this->dbo->qn('#__extensions'))
-                            ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
-                            ->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder));
-                        $this->dbo->setQuery($query);
-                        $count     = $this->dbo->loadResult();
-                        $installer = new Installer();
-                        $installer->setDatabase($this->dbo);
-                        $result                  = $installer->install($path);
-                        $this->status->plugins[] = [
-                            'name'   => 'plg_' . $plugin,
-                            'group'  => $folder,
-                            'result' => $result,
-                        ];
+        $query = $this->dbo->getQuery(true)
+            ->update($this->dbo->qn('#__modules'))
+            ->set($this->dbo->qn('ordering') . ' = ' . ($maxOrder + 1))
+            ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q($element));
+        $this->dbo->setQuery($query);
+        $this->dbo->execute();
+    }
 
-                        if ($published && !$count) {
-                            $query = $this->dbo->getQuery(true)
-                                ->update($this->dbo->qn('#__extensions'))
-                                ->set($this->dbo->qn('enabled') . ' = ' . $this->dbo->q('1'))
-                                ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
-                                ->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($folder));
-                            $this->dbo->setQuery($query);
-                            $this->dbo->execute();
-                        }
-                    }//end foreach
-                }//end if
-            }//end foreach
-        }//end if
+    /**
+     * Assign module to all pages
+     *
+     * @param   string  $element  Module element
+     *
+     * @return void
+     * @since 10.1.0
+     */
+    private function assignModuleToAllPages(string $element): void
+    {
+        $query = $this->dbo->getQuery(true)
+            ->select('id')
+            ->from($this->dbo->qn('#__modules'))
+            ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q($element));
+        $this->dbo->setQuery($query);
+        $moduleId = (int) $this->dbo->loadResult();
+
+        if ($moduleId) {
+            $query = $this->dbo->getQuery(true)
+                ->select('COUNT(*)')
+                ->from($this->dbo->qn('#__modules_menu'))
+                ->where($this->dbo->qn('moduleid') . ' = ' . $moduleId);
+            $this->dbo->setQuery($query);
+
+            if (!$this->dbo->loadResult()) {
+                $obj = (object) ['moduleid' => $moduleId, 'menuid' => 0];
+                $this->dbo->insertObject('#__modules_menu', $obj);
+            }
+        }
+    }
+
+    /**
+     * Install plugins for a specific group
+     *
+     * @param   string  $group    Plugin group
+     * @param   array   $plugins  List of plugins
+     * @param   string  $src      Source path
+     *
+     * @return void
+     * @since 10.1.0
+     */
+    private function installPlugins(string $group, array $plugins, string $src): void
+    {
+        foreach ($plugins as $plugin => $published) {
+            $path = $this->findExtensionPath($src, 'plugin', $group, $plugin);
+
+            if ($path === null) {
+                continue;
+            }
+
+            // Check if already installed
+            $query = $this->dbo->getQuery(true)
+                ->select('COUNT(*)')
+                ->from($this->dbo->qn('#__extensions'))
+                ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
+                ->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($group));
+            $this->dbo->setQuery($query);
+            $isInstalled = (bool) $this->dbo->loadResult();
+
+            $installer = new Installer();
+            $installer->setDatabase($this->dbo);
+            $result = $installer->install($path);
+
+            $this->status->plugins[] = [
+                'name'   => 'plg_' . $plugin,
+                'group'  => $group,
+                'result' => $result,
+            ];
+
+            if ($published && !$isInstalled) {
+                $query = $this->dbo->getQuery(true)
+                    ->update($this->dbo->qn('#__extensions'))
+                    ->set($this->dbo->qn('enabled') . ' = 1')
+                    ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($plugin))
+                    ->where($this->dbo->qn('folder') . ' = ' . $this->dbo->q($group));
+                $this->dbo->setQuery($query);
+                $this->dbo->execute();
+            }
+        }
     }
 
     /**
@@ -929,104 +1050,59 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Remove leftovers due to upgrading from an older Proclaim version.
      *
+     * @param   InstallerAdapter  $parent  The class calling this method
+     *
      * @return void
      * @throws Exception
      * @since 10.0.0
      */
-    private function removeBibleStudyVersion(): void
+    private function removeBibleStudyVersion(InstallerAdapter $parent): void
     {
-        $menuBibleStudyStatus = false;
-        $comBibleStudyStatus  = false;
+        $biblestudyID = $this->getExtensionId('component', 'com_biblestudy');
 
-        // Get BibleStudy extension ID
-        $query      = $this->dbo->getQuery(true);
-        $query->select('extension_id');
-        $query->from('#__extensions');
-        $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_biblestudy'));
-        $this->dbo->setQuery($query);
-        $biblestudyID = (int) $this->dbo->loadResult();
-
-        if ($biblestudyID !== 0) {
-            // Get Proclaim extension ID
-            $query      = $this->dbo->getQuery(true);
-            $query->select('extension_id');
-            $query->from('#__extensions');
-            $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_proclaim'));
-            $this->dbo->setQuery($query);
-            $proclaimID = (int) $this->dbo->loadResult();
+        if ($biblestudyID) {
+            $proclaimID = $this->getExtensionId('component', 'com_proclaim');
 
             // Remove old com_biblestudy folders and files as we can't uninstall them
             $this->deleteFolders = ['/components/com_biblestudy', '/administrator/components/com_biblestudy'];
             $this->deleteFiles   = ['/language/en-GB/en-GB.com_biblestudy.ini'];
-            $this->removefiles();
+
+            // Call parent removeFiles with the required argument
+            $this->removeFiles($parent);
 
             // Clean up Admin Menus from old install
-            $query      = $this->dbo->getQuery(true);
-            $query->delete($this->dbo->quoteName('#__menu'));
-            $query->where($this->dbo->quoteName('link') . 'LIKE "%com_biblestudy%"');
-
-            // This check to make sure the menu items is from the Admin Main menu only
-            $query->where($this->dbo->quoteName('client_id') . ' = 1');
-            $query->where($this->dbo->quoteName('menutype') . ' = ' . $this->dbo->quote('main'));
+            $query = $this->dbo->getQuery(true)
+                ->delete($this->dbo->qn('#__menu'))
+                ->where($this->dbo->qn('link') . ' LIKE ' . $this->dbo->q('%com_biblestudy%'))
+                ->where($this->dbo->qn('client_id') . ' = 1')
+                ->where($this->dbo->qn('menutype') . ' = ' . $this->dbo->q('main'));
             $this->dbo->setQuery($query);
 
             try {
-                $menuBibleStudyStatus = $this->dbo->execute();
+                $this->dbo->execute();
             } catch (RuntimeException $e) {
-                Factory::getApplication()->enqueueMessage("Failed to execute Admin Menu removal", "error");
+                Factory::getApplication()->enqueueMessage('Failed to execute Admin Menu removal', 'error');
             }
 
             // Update Site Menus for BibleStudy to Proclaim
-            $query      = $this->dbo->getQuery(true);
-            $query->select('id, component_id, link');
-            $query->from($this->dbo->quoteName('#__menu'));
-            $query->where($this->dbo->quoteName('link') . 'LIKE "%com_biblestudy%"');
-            $query->where($this->dbo->quoteName('client_id') . ' = 0');
-            $this->dbo->setQuery($query);
-            $results = $this->dbo->loadObjectList();
-
-            foreach ($results as $result) {
-                $query      = $this->dbo->getQuery(true);
-                // Fields to update.
-                $fields = [
-                    $this->dbo->quoteName('link') . ' = ' . $this->dbo->quote(str_replace("com_biblestudy&view=", "com_proclaim&view=cwm", $result->link)),
-                    $this->dbo->quoteName('component_id') . ' = ' . $proclaimID,
-                ];
-                // Conditions for which records should be updated.
-                $conditions = [
-                    $this->dbo->quoteName('id') . ' = ' . $result->id,
-                ];
-                $query->update($this->dbo->quoteName('#__menu'))->set($fields)->where($conditions);
-
+            if ($proclaimID) {
+                $query = $this->dbo->getQuery(true)
+                    ->update($this->dbo->qn('#__menu'))
+                    ->set($this->dbo->qn('component_id') . ' = ' . (int) $proclaimID)
+                    ->set($this->dbo->qn('link') . ' = REPLACE(' . $this->dbo->qn('link') . ', ' . $this->dbo->q('com_biblestudy&view=') . ', ' . $this->dbo->q('com_proclaim&view=cwm') . ')')
+                    ->where($this->dbo->qn('link') . ' LIKE ' . $this->dbo->q('%com_biblestudy%'))
+                    ->where($this->dbo->qn('client_id') . ' = 0');
                 $this->dbo->setQuery($query);
-                $menuBibleStudyStatus = $this->dbo->execute();
+                $this->dbo->execute();
             }
 
             // Update Site Modules for BibleStudy to Proclaim
-            $query      = $this->dbo->getQuery(true);
-            $query->select('id, module');
-            $query->from($this->dbo->quoteName('#__modules'));
-            $query->where($this->dbo->quoteName('module') . 'LIKE "%mod_biblestudy%"');
+            $query = $this->dbo->getQuery(true)
+                ->update($this->dbo->qn('#__modules'))
+                ->set($this->dbo->qn('module') . ' = REPLACE(' . $this->dbo->qn('module') . ', ' . $this->dbo->q('mod_biblestudy') . ', ' . $this->dbo->q('mod_proclaim') . ')')
+                ->where($this->dbo->qn('module') . ' LIKE ' . $this->dbo->q('%mod_biblestudy%'));
             $this->dbo->setQuery($query);
-            $results = $this->dbo->loadObjectList();
-
-            foreach ($results as $result) {
-                $query      = $this->dbo->getQuery(true);
-
-                // Fields to update.
-                $fields = [
-                    $this->dbo->quoteName('module') . ' = ' . $this->dbo->quote(str_replace("mod_biblestudy", "mod_proclaim", $result->module)),
-                ];
-
-                // Conditions for which records should be updated.
-                $conditions = [
-                    $this->dbo->quoteName('id') . ' = ' . $result->id,
-                ];
-                $query->update($this->dbo->quoteName('#__modules'))->set($fields)->where($conditions);
-
-                $this->dbo->setQuery($query);
-                $menuBibleStudyStatus = $this->dbo->execute();
-            }
+            $this->dbo->execute();
 
             // Migrate Plugin Podcast to Tasks
             $message                     = new \stdClass();
@@ -1045,28 +1121,10 @@ class com_proclaimInstallerScript extends InstallerScript
             (new CWM\Component\Proclaim\Administrator\Model\CwminstallModel())->postInstallMessages($message);
 
             // Delete Old stale com_biblestudy extension.
-            $query      = $this->dbo->getQuery(true);
-            $query->delete($this->dbo->quoteName('#__extensions'));
-            $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_biblestudy'));
-            $this->dbo->setQuery($query);
-
-            try {
-                $comBibleStudyStatus = $this->dbo->execute();
-            } catch (RuntimeException $e) {
-                Factory::getApplication()->enqueueMessage("Failed to execute com_biblestudy removal", "error");
-            }
+            $this->deleteExtension('component', 'com_biblestudy');
 
             // Delete Old stale pkg_biblestudy_package extension.
-            $query      = $this->dbo->getQuery(true);
-            $query->delete($this->dbo->quoteName('#__extensions'));
-            $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('pkg_biblestudy_package'));
-            $this->dbo->setQuery($query);
-
-            try {
-                $comBibleStudyStatus = $this->dbo->execute();
-            } catch (RuntimeException $e) {
-                Factory::getApplication()->enqueueMessage("Failed to execute pkg_biblestudy_package removal", "error");
-            }
+            $this->deleteExtension('package', 'pkg_biblestudy_package');
 
             // Reset Status info
             $this->status          = new stdClass();
@@ -1074,6 +1132,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $this->status->plugins = [];
 
             // Update Install Actions to uninstall the BibleStudy components
+            $originalQueue            = self::$installActionQueue;
             self::$installActionQueue = [
             // -- modules => { (folder) => { (module) => { (position), (published) } }* }*
             'modules' => [
@@ -1095,16 +1154,45 @@ class com_proclaimInstallerScript extends InstallerScript
             ];
 
             // Remove old Components
-            $this->uninstallSubextensions();
+            $this->uninstallSubExtensions();
+
+            // Restore queue
+            self::$installActionQueue = $originalQueue;
 
             if (
-                $menuBibleStudyStatus ||
-                $comBibleStudyStatus ||
                 !empty($this->status->modules) ||
                 !empty($this->status->plugins)
             ) {
-                Factory::getApplication()->enqueueMessage("We have removed leftovers from Proclaim old version", "notice");
+                Factory::getApplication()->enqueueMessage(
+                    'We have removed leftovers from the Proclaim old version',
+                    'notice'
+                );
             }
+        }
+    }
+
+    /**
+     * Delete an extension from the database
+     *
+     * @param   string  $type     Extension type
+     * @param   string  $element  Extension element
+     *
+     * @return void
+     * @throws Exception
+     * @since 10.1.0
+     */
+    private function deleteExtension(string $type, string $element): void
+    {
+        $query = $this->dbo->getQuery(true)
+            ->delete($this->dbo->qn('#__extensions'))
+            ->where($this->dbo->qn('element') . ' = ' . $this->dbo->q($element))
+            ->where($this->dbo->qn('type') . ' = ' . $this->dbo->q($type));
+        $this->dbo->setQuery($query);
+
+        try {
+            $this->dbo->execute();
+        } catch (RuntimeException $e) {
+            Factory::getApplication()->enqueueMessage("Failed to execute $element removal", 'error');
         }
     }
 
