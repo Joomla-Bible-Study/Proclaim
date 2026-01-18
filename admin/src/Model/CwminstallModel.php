@@ -789,29 +789,42 @@ class CwminstallModel extends ListModel
     private function fixImport(): void
     {
         $tables = CwmdbHelper::getObjects();
-        $set    = false;
 
         foreach ($tables as $table) {
             if (!str_contains($table['name'], '_bsms_timeset')) {
                 $query = $this->_db->getQuery(true);
-                $query->select('*')->from($table);
+                $query->select('*')->from($table['name']);
                 $this->_db->setQuery($query);
                 $data = $this->_db->loadObjectList();
 
                 foreach ($data as $row) {
+                    $set = false;
+
                     if (isset($row->params)) {
-                        $row->params = stripslashes($row->params);
-                        $set         = true;
+                        $clean = stripslashes($row->params);
+
+                        if ($clean !== $row->params) {
+                            $row->params = $clean;
+                            $set         = true;
+                        }
                     }
 
                     if (isset($row->metadata)) {
-                        $row->metadata = stripslashes($row->metadata);
-                        $set           = true;
+                        $clean = stripslashes($row->metadata);
+
+                        if ($clean !== $row->metadata) {
+                            $row->metadata = $clean;
+                            $set           = true;
+                        }
                     }
 
                     if (isset($row->stylecode)) {
-                        $row->stylecode = stripslashes($row->stylecode);
-                        $set            = true;
+                        $clean = stripslashes($row->stylecode);
+
+                        if ($clean !== $row->stylecode) {
+                            $row->stylecode = $clean;
+                            $set            = true;
+                        }
                     }
 
                     if ($set) {
@@ -1095,25 +1108,22 @@ class CwminstallModel extends ListModel
      */
     public function fixMenus(): bool
     {
-        $query = $this->_db->getQuery(true);
-        $query->select('*')
-            ->from('#__menu')
-            ->where($this->_db->qn('menutype') . ' != ' . $this->_db->q('main'))
-            ->where($this->_db->qn('link') . ' LIKE ' . $this->_db->q('%com_proclaim%'));
-        $this->_db->setQuery($query);
-        $menus = $this->_db->loadObjectList();
+        $replacements = [
+            'teacherlist'    => 'cwmteachers',
+            'teacherdisplay' => 'cwmteacher',
+            'studydetails'   => 'cwmsermon',
+            'serieslist'     => 'cwmseriesdisplays',
+            'seriesdetail'   => 'cwmseriesdisplay',
+            'studieslist'    => 'cwmsermons',
+        ];
 
-        foreach ($menus as $menu) {
-            $menu->link = str_replace('teacherlist', 'cwmteachers', $menu->link);
-            $menu->link = str_replace('teacherdisplay', 'cwmteacher', $menu->link);
-            $menu->link = str_replace('studydetails', 'cwmsermon', $menu->link);
-            $menu->link = str_replace('serieslist', 'cwmseriesdisplays', $menu->link);
-            $menu->link = str_replace('seriesdetail', 'cwmseriesdisplay', $menu->link);
-            $menu->link = str_replace('studieslist', 'cwmsermons', $menu->link);
-            $query      = $this->_db->getQuery(true);
+        foreach ($replacements as $old => $new) {
+            $query = $this->_db->getQuery(true);
             $query->update('#__menu')
-                ->set("link = " . $this->_db->q($menu->link))
-                ->where('id = ' . $this->_db->q($menu->id));
+                ->set('link = REPLACE(' . $this->_db->qn('link') . ', ' . $this->_db->q($old) . ', ' . $this->_db->q($new) . ')')
+                ->where($this->_db->qn('menutype') . ' != ' . $this->_db->q('main'))
+                ->where($this->_db->qn('link') . ' LIKE ' . $this->_db->q('%com_proclaim%'))
+                ->where($this->_db->qn('link') . ' LIKE ' . $this->_db->q('%' . $old . '%'));
             $this->_db->setQuery($query);
             $this->_db->execute();
         }
@@ -1154,8 +1164,10 @@ class CwminstallModel extends ListModel
             $query = $this->_db->getQuery(true);
             $query->update($table['table'])
                 ->set('access = ' . $id)
-                ->where("access = " . $this->_db->q('0'), $glue = 'OR')
-                ->where("access = " . $this->_db->q(' '));
+                ->where(
+                    '(' . $this->_db->qn('access') . ' = ' . $this->_db->q('0') .
+                    ' OR ' . $this->_db->qn('access') . ' = ' . $this->_db->q(' ') . ')'
+                );
             $this->_db->setQuery($query);
             $this->_db->execute();
         }
