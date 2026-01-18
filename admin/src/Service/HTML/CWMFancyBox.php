@@ -48,8 +48,7 @@ class CWMFancyBox
             return;
         }
 
-        HTMLHelper::script('media/com_proclaim/fancybox/fancybox.umd.js');
-        HTMLHelper::script('media/com_proclaim/js/fancybox.js');
+        HTMLHelper::script('media/com_proclaim/js/fancybox.js', [], ['type' => 'module']);
 
         if ($mouseweel) {
             //            HTMLHelper::script('media/com_proclaim/js/jquery.mousewheel.pack.min.js');

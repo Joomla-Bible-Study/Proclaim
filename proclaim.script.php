@@ -178,9 +178,7 @@ class com_proclaimInstallerScript extends InstallerScript
         '/media/com_proclaim/js/modernizr.old.js',
         '/media/com_proclaim/js/modernizr.old.min.js',
         '/media/com_proclaim/js/modernizr.old.min.min.js',
-        // Fancybox old files
-        '/media/com_proclaim/fancybox/fancybox.umd.js',
-        '/media/com_proclaim/fancybox/fancybox.umd.min.js',
+        // Fancybox old files (jQuery version)
         '/media/com_proclaim/fancybox/jquery.fancybox.min.css',
         '/media/com_proclaim/fancybox/jquery.fancybox.min.js',
         // Legacy site files
