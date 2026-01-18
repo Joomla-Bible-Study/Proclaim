@@ -6,7 +6,7 @@
  *   reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
-import { Fancybox } from '../fancybox/fancybox.esm.min.js';
+import { Fancybox } from '/media/com_proclaim/fancybox/fancybox.esm.min.js';
 
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".fancybox_player").forEach(function (element) {

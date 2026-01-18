@@ -298,20 +298,9 @@
             "uri": "com_proclaim/podcast.min.css"
         },
         {
-            "name": "com_proclaim.fancybox-lib",
-            "type": "script",
-            "uri": "com_proclaim/fancybox/fancybox.esm.min.js",
-            "attributes": {
-                "type": "module"
-            }
-        },
-        {
             "name": "com_proclaim.fancybox",
             "type": "script",
             "uri": "com_proclaim/js/fancybox.min.js",
-            "dependencies": [
-                "com_proclaim.fancybox-lib"
-            ],
             "attributes": {
                 "type": "module"
             }
