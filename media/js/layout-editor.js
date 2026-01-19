@@ -153,18 +153,17 @@
     ];
 
     /**
-     * Element type options
+     * Element type options (matches ElementOptionsField.php)
      */
     const ELEMENT_TYPES = [
-        { value: '0', label: 'Hidden' },
-        { value: '1', label: 'Paragraph' },
-        { value: '2', label: 'Div' },
-        { value: '3', label: 'Span' },
-        { value: '4', label: 'H1' },
-        { value: '5', label: 'H2' },
-        { value: '6', label: 'H3' },
-        { value: '7', label: 'H4' },
-        { value: '8', label: 'H5' }
+        { value: '0', labelKey: 'JBS_CMN_NONE', label: 'None' },
+        { value: '1', labelKey: 'JBS_TPL_PARAGRAPH', label: 'Paragraph' },
+        { value: '2', labelKey: 'JBS_TPL_HEADER1', label: 'Header 1' },
+        { value: '3', labelKey: 'JBS_TPL_HEADER2', label: 'Header 2' },
+        { value: '4', labelKey: 'JBS_TPL_HEADER3', label: 'Header 3' },
+        { value: '5', labelKey: 'JBS_TPL_HEADER4', label: 'Header 4' },
+        { value: '6', labelKey: 'JBS_TPL_HEADER5', label: 'Header 5' },
+        { value: '7', labelKey: 'JBS_TPL_BLOCKQUOTE', label: 'Blockquote' }
     ];
 
     /**
@@ -466,7 +465,7 @@
                             <div class="form-group">
                                 <label class="form-label" for="layout-element-type">${this.trans('JBS_TPL_ELEMENT') || 'Element Type'}</label>
                                 <select class="form-select" id="layout-element-type">
-                                    ${ELEMENT_TYPES.map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
+                                    ${ELEMENT_TYPES.map(opt => `<option value="${opt.value}">${this.trans(opt.labelKey) || opt.label}</option>`).join('')}
                                 </select>
                                 <div class="form-text">${this.trans('JBS_TPL_ELEMENT_DESC') || 'HTML element type to wrap this content'}</div>
                             </div>
@@ -1158,7 +1157,10 @@
                 let row = parseInt(templateParams[fieldPrefix + 'row'], 10) || 0;
                 let col = parseInt(templateParams[fieldPrefix + 'col'], 10) || 1;
                 let colspan = templateParams[fieldPrefix + 'colspan'] || '1';
-                let elementType = templateParams[fieldPrefix + 'element'] || '1';
+                let elementType = templateParams[fieldPrefix + 'element'];
+                if (elementType === undefined || elementType === null || elementType === '') {
+                    elementType = '1';
+                }
                 let custom = templateParams[fieldPrefix + 'custom'] || '';
                 let linktype = templateParams[fieldPrefix + 'linktype'] || '0';
 
