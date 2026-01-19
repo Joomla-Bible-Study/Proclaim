@@ -21,7 +21,7 @@ use Joomla\CMS\Language\Text;
 $listing = new Cwmlisting();
 $classelement = $listing->createelement($this->params->get('teachers_element'));
 ?>
-<div class="container">
+<div class="container proclaim-main-content" id="proclaim-main-content" role="main">
     <div class="hero-unit" style="padding-top:30px; padding-bottom:20px;"> <!-- This div is the header container -->
         <?php
         if ($classelement) : ?>

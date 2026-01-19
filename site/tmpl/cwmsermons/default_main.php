@@ -31,7 +31,7 @@ $itemid       = $app->input->get('Itemid');
 
 ?>
 
-<div class="container">
+<div class="container proclaim-main-content" id="proclaim-main-content" role="main">
     <div id="bsheader" class="row">
         <?php
         if ($this->params->get('showpodcastsubscribelist') === '1') {

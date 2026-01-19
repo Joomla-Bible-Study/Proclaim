@@ -13,6 +13,12 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Language\Text;
+
+?>
+<a href="#proclaim-main-content" class="proclaim-skip-link"><?php echo Text::_('JBS_CMN_SKIP_TO_CONTENT'); ?></a>
+<?php
+
 echo $this->loadTemplate('formheader');
 if ($this->params->get('sermonstemplate')) {
     echo $this->loadTemplate($this->params->get('sermonstemplate'));

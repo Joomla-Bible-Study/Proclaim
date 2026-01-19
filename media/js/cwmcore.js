@@ -250,3 +250,162 @@ function transferFileSize()
         return true;
     }
 }
+
+/**
+ * Accessibility: Modal Focus Management
+ * Traps focus within modal dialogs and restores focus on close
+ */
+const ProclaimA11y = {
+    /** Store the element that opened the modal */
+    previousActiveElement: null,
+
+    /**
+     * Get all focusable elements within a container
+     * @param {HTMLElement} container - The container element
+     * @returns {Array} Array of focusable elements
+     */
+    getFocusableElements: function(container) {
+        const focusableSelectors = [
+            'a[href]',
+            'button:not([disabled])',
+            'input:not([disabled]):not([type="hidden"])',
+            'select:not([disabled])',
+            'textarea:not([disabled])',
+            '[tabindex]:not([tabindex="-1"])',
+            '[contenteditable="true"]'
+        ].join(', ');
+
+        return Array.from(container.querySelectorAll(focusableSelectors))
+            .filter(el => el.offsetParent !== null); // Only visible elements
+    },
+
+    /**
+     * Initialize focus trap for a modal
+     * @param {HTMLElement|string} modal - Modal element or selector
+     */
+    trapFocus: function(modal) {
+        const modalElement = typeof modal === 'string' ? document.querySelector(modal) : modal;
+        if (!modalElement) return;
+
+        // Store the currently focused element
+        this.previousActiveElement = document.activeElement;
+
+        // Set aria-modal for screen readers
+        modalElement.setAttribute('aria-modal', 'true');
+        modalElement.setAttribute('role', 'dialog');
+
+        const focusableElements = this.getFocusableElements(modalElement);
+        if (focusableElements.length === 0) return;
+
+        const firstFocusable = focusableElements[0];
+        const lastFocusable = focusableElements[focusableElements.length - 1];
+
+        // Focus the first focusable element
+        firstFocusable.focus();
+
+        // Handle Tab key to trap focus
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                this.releaseFocus(modalElement, handleKeyDown);
+                // Trigger close if modal has a close method
+                const closeBtn = modalElement.querySelector('[data-dismiss="modal"], .btn-close, .close');
+                if (closeBtn) closeBtn.click();
+                return;
+            }
+
+            if (e.key !== 'Tab') return;
+
+            // Update focusable elements (in case of dynamic content)
+            const currentFocusable = this.getFocusableElements(modalElement);
+            if (currentFocusable.length === 0) return;
+
+            const first = currentFocusable[0];
+            const last = currentFocusable[currentFocusable.length - 1];
+
+            if (e.shiftKey) {
+                // Shift + Tab
+                if (document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                }
+            } else {
+                // Tab
+                if (document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        };
+
+        modalElement.addEventListener('keydown', handleKeyDown);
+        modalElement._a11yKeyHandler = handleKeyDown;
+    },
+
+    /**
+     * Release focus trap and restore previous focus
+     * @param {HTMLElement|string} modal - Modal element or selector
+     * @param {Function} handler - The keydown handler to remove (optional)
+     */
+    releaseFocus: function(modal, handler) {
+        const modalElement = typeof modal === 'string' ? document.querySelector(modal) : modal;
+        if (!modalElement) return;
+
+        // Remove the keydown handler
+        if (handler) {
+            modalElement.removeEventListener('keydown', handler);
+        } else if (modalElement._a11yKeyHandler) {
+            modalElement.removeEventListener('keydown', modalElement._a11yKeyHandler);
+            delete modalElement._a11yKeyHandler;
+        }
+
+        // Restore focus to the previous element
+        if (this.previousActiveElement && this.previousActiveElement.focus) {
+            this.previousActiveElement.focus();
+            this.previousActiveElement = null;
+        }
+    },
+
+    /**
+     * Announce message to screen readers
+     * @param {string} message - Message to announce
+     * @param {string} priority - 'polite' or 'assertive'
+     */
+    announce: function(message, priority = 'polite') {
+        let announcer = document.getElementById('proclaim-a11y-announcer');
+        if (!announcer) {
+            announcer = document.createElement('div');
+            announcer.id = 'proclaim-a11y-announcer';
+            announcer.setAttribute('aria-live', priority);
+            announcer.setAttribute('aria-atomic', 'true');
+            announcer.className = 'visually-hidden';
+            announcer.style.cssText = 'position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;';
+            document.body.appendChild(announcer);
+        }
+        announcer.setAttribute('aria-live', priority);
+        announcer.textContent = '';
+        // Use setTimeout to ensure screen readers pick up the change
+        setTimeout(() => { announcer.textContent = message; }, 100);
+    }
+};
+
+// Auto-initialize focus trap for Bootstrap modals
+document.addEventListener('DOMContentLoaded', function() {
+    // Listen for Bootstrap modal events
+    document.addEventListener('shown.bs.modal', function(e) {
+        ProclaimA11y.trapFocus(e.target);
+    });
+
+    document.addEventListener('hidden.bs.modal', function(e) {
+        ProclaimA11y.releaseFocus(e.target);
+    });
+
+    // Also support jQuery Bootstrap modals if present
+    if (typeof jQuery !== 'undefined') {
+        jQuery(document).on('shown.bs.modal', function(e) {
+            ProclaimA11y.trapFocus(e.target);
+        });
+        jQuery(document).on('hidden.bs.modal', function(e) {
+            ProclaimA11y.releaseFocus(e.target);
+        });
+    }
+});

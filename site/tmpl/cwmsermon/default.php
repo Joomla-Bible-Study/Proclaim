@@ -16,9 +16,11 @@
 
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
 ?>
-<div class="container-fluid"> <!-- This div is the container for the whole page --><?php
+<a href="#proclaim-main-content" class="proclaim-skip-link"><?php echo Text::_('JBS_CMN_SKIP_TO_CONTENT'); ?></a>
+<div class="container-fluid proclaim-main-content" id="proclaim-main-content" role="main"><?php
 
 if ($this->item->params->get('sermontemplate') && !$this->simple->mode) {
     echo $this->loadTemplate($this->item->params->get('sermontemplate'));

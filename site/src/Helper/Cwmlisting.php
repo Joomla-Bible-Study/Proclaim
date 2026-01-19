@@ -73,7 +73,7 @@ class Cwmlisting
             }
         }
 
-        if ($type === 'sermon') {
+        if ($type === 'sermon' && !empty($items) && isset($items[0]) && \is_object($items[0])) {
             $medias = $this->getFluidMediaids($items[0]);
             $item   = $items[0];
         }
@@ -222,21 +222,24 @@ class Cwmlisting
         // Start the table for the entire list
         $list .= '<div class="table-responsive" about="' . $type . '"><table class="table w-auto table-borderless">';
 
-        if (($type === 'sermons') && $params->get('use_headers_list') > 0) {
+        // Check if we have a valid first item for header rows
+        $hasValidFirstItem = !empty($items) && isset($items[0]) && \is_object($items[0]);
+
+        if (($type === 'sermons') && $params->get('use_headers_list') > 0 && $hasValidFirstItem) {
             // Start the header
             $list .= '<thead class="' . $params->get('listheadertype') . '">';
-            $list .= $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $header = 1, $type);
+            $list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $header = 1, $type);
             $list .= '</thead>';
         }
 
-        if (($type === 'sermon') && $params->get('use_headers_view') > 0) {
+        if (($type === 'sermon') && $params->get('use_headers_view') > 0 && $hasValidFirstItem) {
             // Start the header
             $list .= '<thead class="' . $params->get('listheadertype') . '">';
-            $list .= $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $header = 1, $type);
+            $list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $header = 1, $type);
             $list .= '</thead>';
         }
 
-        if (($type === 'seriesdisplays') && $params->get('use_headers_series') == 1) {
+        if (($type === 'seriesdisplays') && $params->get('use_headers_series') == 1 && $hasValidFirstItem) {
             // Start the header
             $list .= '<thead class="' . $params->get('listheadertype') . '" colspan="12">';
             $list .= $this->getFluidRow(
@@ -251,7 +254,7 @@ class Cwmlisting
             $list .= '</thead>';
         }
 
-        if ($type === 'seriesdisplay') {
+        if ($type === 'seriesdisplay' && $hasValidFirstItem) {
             if ($params->get('use_header_seriesdisplay') > 0) {
                 // Start the header
                 $list .= '<thead class="' . $params->get('listheadertype') . '">';
@@ -278,7 +281,7 @@ class Cwmlisting
             );
         }
 
-        if ($type === 'teacher') {
+        if ($type === 'teacher' && $hasValidFirstItem) {
             if ($params->get('use_headers_teacher_details') > 0) {
                 // Start the header
                 $list .= '<thead class="' . $params->get('listheadertype') . '">';
@@ -305,7 +308,7 @@ class Cwmlisting
             );
         }
 
-        if (($type === 'teachers') && $params->get('use_headers_teacher_list') > 0) {
+        if (($type === 'teachers') && $params->get('use_headers_teacher_list') > 0 && $hasValidFirstItem) {
             // Start the header
             $list .= '<thead class="' . $params->get('listheadertype') . '">';
             $list .= $this->getFluidRow(

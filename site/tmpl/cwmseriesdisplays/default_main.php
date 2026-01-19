@@ -42,7 +42,7 @@ if ($url) {
 }
 ?>
 <form action="<?php Route::_('index.php?option=com_proclaim&view=cwmseriesdisplay') ?>" method="post" name="adminForm" id="adminForm">
-    <div class="container">
+    <div class="container proclaim-main-content" id="proclaim-main-content" role="main">
         <div class="row">
             <div class="col1-12">
                 <div <?php echo $classelement; ?> class="componentheading">

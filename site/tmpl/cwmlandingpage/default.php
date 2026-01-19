@@ -21,8 +21,8 @@ use Joomla\CMS\Uri\Uri;
 $CWMLanding = new Cwmlanding();
 $params     = $this->params;
 ?>
-
-<div id="proclaim_landing" class="container"> <!-- This div is the container for the whole page -->
+<a href="#proclaim-main-content" class="proclaim-skip-link"><?php echo Text::_('JBS_CMN_SKIP_TO_CONTENT'); ?></a>
+<div id="proclaim_landing" class="container proclaim-main-content" role="main">
     <div id="bsms_header">
         <h1 class="componentheading">
             <?php if (isset($this->main->path) && ($this->params->get('landing_show_page_image') > 0)) {

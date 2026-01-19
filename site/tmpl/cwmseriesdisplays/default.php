@@ -13,6 +13,12 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Language\Text;
+
+?>
+<a href="#proclaim-main-content" class="proclaim-skip-link"><?php echo Text::_('JBS_CMN_SKIP_TO_CONTENT'); ?></a>
+<?php
+
 if ($this->params->get('useexpert_serieslist') > 0) {
     echo $this->loadTemplate('custom');
 } elseif ($this->params->get('seriesdisplaystemplate')) {

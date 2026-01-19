@@ -2,19 +2,50 @@
 :root {
   --color-white: #ffffff;
   --color-black: #000000;
-  --color-gray-dark: #666666;
-  --color-gray-medium: #707070;
-  --color-gray-light: #999999;
-  --color-gray-border: #C5C1BE;
+  /* WCAG AA compliant colors (4.5:1 contrast ratio minimum) */
+  --color-gray-dark: #595959;      /* Was #666666, now 7:1 contrast */
+  --color-gray-medium: #595959;    /* Was #707070, now 7:1 contrast */
+  --color-gray-light: #767676;     /* Was #999999, now 4.5:1 contrast */
+  --color-gray-border: #C5C1BE;    /* Border only, no text contrast needed */
   --color-off-white: #fffff0;
   --color-background-light: #eeeeee;
   --color-background-cell: #e3e2e2;
-  --color-scripture: #c02121;
+  --color-scripture: #a01a1a;      /* Was #c02121, now 7:1 contrast for AAA */
   --color-pagelinks-bg: #F2F2F2;
-  --color-dropdowns-bg: #A9A9A9;
+  --color-dropdowns-bg: #767676;   /* Was #A9A9A9, now 4.5:1 contrast */
   --transition-default: all 0.5s;
   --focus-outline-color: #005fcc;
   --focus-outline-width: 3px;
+}
+
+/* ==========================================================================
+   Accessibility - Skip Links
+   ========================================================================== */
+
+/* Skip link - hidden until focused */
+.proclaim-skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-black);
+  color: var(--color-white);
+  padding: 8px 16px;
+  z-index: 10000;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 0 0 4px 0;
+  transition: top 0.2s ease;
+}
+
+.proclaim-skip-link:focus {
+  top: 0;
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: 2px;
+}
+
+/* Main content landmark */
+.proclaim-main-content {
+  scroll-margin-top: 1rem;
 }
 
 /* ==========================================================================
