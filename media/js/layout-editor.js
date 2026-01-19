@@ -137,13 +137,19 @@
     };
 
     /**
-     * Link type options
+     * Link type options (matches LinkOptionsField.php)
      */
     const LINK_TYPES = [
-        { value: '0', label: 'No Link' },
-        { value: '1', label: 'Link to Details' },
-        { value: '2', label: 'Link in Popup' },
-        { value: '3', label: 'Link in Lightbox' }
+        { value: '0', labelKey: 'JBS_TPL_NO_LINK', label: 'No Link' },
+        { value: '1', labelKey: 'JBS_TPL_LINK_TO_DETAILS', label: 'Link to Details' },
+        { value: '4', labelKey: 'JBS_TPL_LINK_TO_DETAILS_TOOLTIP', label: 'Link to Details (Tooltip)' },
+        { value: '2', labelKey: 'JBS_TPL_LINK_TO_MEDIA', label: 'Link to Media' },
+        { value: '9', labelKey: 'JBS_TPL_LINK_TO_DOWNLOAD', label: 'Link to Download' },
+        { value: '5', labelKey: 'JBS_TPL_LINK_TO_MEDIA_TOOLTIP', label: 'Link to Media (Tooltip)' },
+        { value: '3', labelKey: 'JBS_TPL_LINK_TO_TEACHERS_PROFILE', label: 'Link to Teacher\'s Profile' },
+        { value: '6', labelKey: 'JBS_TPL_LINK_TO_FIRST_ARTICLE', label: 'Link to First Article' },
+        { value: '7', labelKey: 'JBS_TPL_LINK_TO_VIRTUEMART', label: 'Link to VirtueMart' },
+        { value: '8', labelKey: 'JBS_TPL_LINK_TO_DOCMAN', label: 'Link to DocMan' }
     ];
 
     /**
@@ -224,33 +230,33 @@
          */
         createStructure() {
             this.container.innerHTML = `
-                <div class="layout-help">
+                <div class="layout-help alert alert-info">
                     <span class="icon-info-circle" aria-hidden="true"></span>
                     ${this.trans('JBS_TPL_LAYOUT_HELP') || 'Drag elements from the sidebar onto rows to arrange your layout. Click the gear icon to configure element settings.'}
                 </div>
                 <div class="layout-context-tabs"></div>
                 <div class="layout-toolbar">
                     <div class="layout-toolbar-group">
-                        <button type="button" class="btn-toolbar btn-undo" title="Undo (Ctrl+Z)" disabled>
+                        <button type="button" class="btn btn-secondary btn-undo" title="Undo (Ctrl+Z)" disabled>
                             <span class="icon-undo" aria-hidden="true"></span>
                         </button>
-                        <button type="button" class="btn-toolbar btn-redo" title="Redo (Ctrl+Y)" disabled>
+                        <button type="button" class="btn btn-secondary btn-redo" title="Redo (Ctrl+Y)" disabled>
                             <span class="icon-redo" aria-hidden="true"></span>
                         </button>
                     </div>
                     <div class="layout-toolbar-group">
-                        <button type="button" class="btn-toolbar btn-grid" title="Toggle Grid">
+                        <button type="button" class="btn btn-secondary btn-grid" title="Toggle Grid">
                             <span class="icon-grid-view" aria-hidden="true"></span>
                             <span class="btn-text">Grid</span>
                         </button>
                     </div>
                     <div class="layout-toolbar-group layout-toolbar-spacer"></div>
                     <div class="layout-toolbar-group">
-                        <button type="button" class="btn-toolbar btn-view-visual active" title="Visual Editor">
+                        <button type="button" class="btn btn-primary btn-view-visual" title="Visual Editor">
                             <span class="icon-image" aria-hidden="true"></span>
                             <span class="btn-text">Visual</span>
                         </button>
-                        <button type="button" class="btn-toolbar btn-view-classic" title="Classic View">
+                        <button type="button" class="btn btn-secondary btn-view-classic" title="Classic View">
                             <span class="icon-list" aria-hidden="true"></span>
                             <span class="btn-text">Classic</span>
                         </button>
@@ -300,7 +306,8 @@
             contexts.forEach(ctx => {
                 const tab = document.createElement('button');
                 tab.type = 'button';
-                tab.className = 'layout-context-tab' + (ctx.id === this.currentContext ? ' active' : '');
+                const isActive = ctx.id === this.currentContext;
+                tab.className = 'btn layout-context-tab ' + (isActive ? 'btn-primary' : 'btn-secondary');
                 tab.dataset.context = ctx.id;
                 tab.textContent = ctx.label;
                 tab.addEventListener('click', () => this.switchContext(ctx.id));
@@ -318,9 +325,11 @@
             // Sync current state to form before switching
             this.syncToForm();
 
-            // Update active tab
+            // Update tab button states - swap primary/secondary classes
             this.contextTabs.querySelectorAll('.layout-context-tab').forEach(tab => {
-                tab.classList.toggle('active', tab.dataset.context === context);
+                const isActive = tab.dataset.context === context;
+                tab.classList.toggle('btn-primary', isActive);
+                tab.classList.toggle('btn-secondary', !isActive);
             });
 
             this.currentContext = context;
@@ -445,7 +454,6 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="layoutSettingsModalLabel">${this.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Element Settings'}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="${this.trans('JCLOSE') || 'Close'}"></button>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
@@ -465,7 +473,7 @@
                             <div class="form-group">
                                 <label class="form-label" for="layout-link-type">${this.trans('JBS_TPL_TYPE_OF_LINK') || 'Link Type'}</label>
                                 <select class="form-select" id="layout-link-type">
-                                    ${LINK_TYPES.map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
+                                    ${LINK_TYPES.map(opt => `<option value="${opt.value}">${this.trans(opt.labelKey) || opt.label}</option>`).join('')}
                                 </select>
                                 <div class="form-text">${this.trans('JBS_TPL_TYPE_OF_LINK_DESC') || 'How this element should link to the detail view'}</div>
                             </div>
@@ -476,8 +484,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${this.trans('JCANCEL') || 'Cancel'}</button>
-                            <button type="button" class="btn btn-primary" id="layout-settings-save">${this.trans('JAPPLY') || 'Apply'}</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">${this.trans('JCANCEL') || 'Cancel'}</button>
+                            <button type="button" class="btn btn-success" id="layout-settings-save">${this.trans('JAPPLY') || 'Apply'}</button>
                         </div>
                     </div>
                 </div>
@@ -670,7 +678,8 @@
             }
 
             this.updateElementInfo(evt.item);
-            this.recalculateColumns(evt.to);
+            // Auto-distribute colspans in the target row
+            this.distributeColspans(evt.to);
         }
 
         /**
@@ -678,18 +687,20 @@
          * @param {Event} evt - Sortable event
          */
         onElementMoved(evt) {
-            this.recalculateColumns(evt.to);
+            // Redistribute colspans in affected rows
+            this.distributeColspans(evt.to);
             if (evt.from !== evt.to) {
-                this.recalculateColumns(evt.from);
+                this.distributeColspans(evt.from);
             }
         }
 
         /**
-         * Handle element removed from a row
+         * Handle element removed from a row (moved to another row)
          * @param {Event} evt - Sortable event
          */
         onElementRemoved(evt) {
-            this.recalculateColumns(evt.from);
+            // Redistribute colspans in the source row
+            this.distributeColspans(evt.from);
         }
 
         /**
@@ -732,6 +743,50 @@
 
                 this.updateElementInfo(card);
             });
+        }
+
+        /**
+         * Auto-distribute colspans evenly across elements in a row
+         * First element gets full width (12), additional elements split evenly
+         * @param {HTMLElement} rowEl - Row element
+         * @param {boolean} preserveManual - If true, don't change manually set colspans
+         */
+        distributeColspans(rowEl, preserveManual = false) {
+            const children = Array.from(rowEl.children).filter(el =>
+                !el.classList.contains('sortable-ghost') &&
+                el.classList.contains('element-card')
+            );
+
+            const count = children.length;
+            if (count === 0) return;
+
+            const totalCols = this.options.numCols; // 12
+
+            if (count === 1) {
+                // Single element gets full width
+                const data = this.state.get(children[0].dataset.element);
+                if (data && (!preserveManual || !data.manualColspan)) {
+                    data.colspan = String(totalCols);
+                    children[0].dataset.colspan = String(totalCols);
+                }
+            } else {
+                // Multiple elements - distribute evenly
+                const baseColspan = Math.floor(totalCols / count);
+                const remainder = totalCols % count;
+
+                children.forEach((card, index) => {
+                    const data = this.state.get(card.dataset.element);
+                    if (data && (!preserveManual || !data.manualColspan)) {
+                        // First 'remainder' elements get +1 colspan
+                        const colspan = baseColspan + (index < remainder ? 1 : 0);
+                        data.colspan = String(colspan);
+                        card.dataset.colspan = String(colspan);
+                    }
+                });
+            }
+
+            // Recalculate column positions
+            this.recalculateColumns(rowEl);
         }
 
         /**
@@ -897,9 +952,9 @@
             // Remove from DOM
             card.remove();
 
-            // Recalculate columns
+            // Redistribute colspans for remaining elements
             if (rowEl) {
-                this.recalculateColumns(rowEl);
+                this.distributeColspans(rowEl);
             }
         }
 
@@ -922,6 +977,14 @@
                     linktype: '0'
                 };
                 this.state.set(elementId, data);
+            }
+
+            // Update modal title to show element name
+            const elementDef = this.getElementDefinition(elementId);
+            const modalTitle = document.getElementById('layoutSettingsModalLabel');
+            if (modalTitle && elementDef) {
+                const elementLabel = this.trans(elementDef.langKey) || elementDef.label;
+                modalTitle.textContent = `${this.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Element Settings'}: ${elementLabel}`;
             }
 
             // Populate modal fields
@@ -984,7 +1047,14 @@
             if (!data) return;
 
             // Get values from modal
-            data.colspan = document.getElementById('layout-colspan').value;
+            const newColspan = document.getElementById('layout-colspan').value;
+
+            // Mark colspan as manually set if changed by user
+            if (data.colspan !== newColspan) {
+                data.manualColspan = true;
+            }
+
+            data.colspan = newColspan;
             data.element = document.getElementById('layout-element-type').value;
             data.linktype = document.getElementById('layout-link-type').value;
             data.custom = document.getElementById('layout-custom-class').value;
@@ -1129,6 +1199,9 @@
 
             // Sort elements in each row by column
             this.sortCanvasElements();
+
+            // Migrate legacy templates with irregular colspans
+            this.migrateLegacyColspans();
         }
 
         /**
@@ -1165,6 +1238,53 @@
                 });
 
                 cards.forEach(card => rowEl.appendChild(card));
+            });
+        }
+
+        /**
+         * Migrate legacy templates with irregular colspan values
+         * Legacy templates may have:
+         * - Colspans that don't sum to 12
+         * - Single elements with small colspans (not using full width)
+         * - Inconsistent column distributions
+         *
+         * This method normalizes the layout by auto-distributing colspans.
+         */
+        migrateLegacyColspans() {
+            // Group elements by row
+            const rowGroups = new Map();
+
+            this.state.forEach((data, elementId) => {
+                if (data.row > 0) {
+                    if (!rowGroups.has(data.row)) {
+                        rowGroups.set(data.row, []);
+                    }
+                    rowGroups.get(data.row).push({ elementId, data });
+                }
+            });
+
+            // Check each row for legacy patterns
+            rowGroups.forEach((elements, row) => {
+                const totalColspan = elements.reduce((sum, el) => sum + (parseInt(el.data.colspan, 10) || 1), 0);
+                const elementCount = elements.length;
+
+                // Legacy pattern detection:
+                // 1. Single element not using full width (colspan < 12)
+                // 2. Multiple elements not filling the row (total < 12)
+                // 3. Elements overflowing the row (total > 12)
+                const needsMigration = (
+                    (elementCount === 1 && totalColspan < 12) ||
+                    (elementCount > 1 && totalColspan !== 12)
+                );
+
+                if (needsMigration) {
+                    // Get the row element and redistribute
+                    const rowEl = this.canvas.querySelector(`.row-elements[data-row="${row}"]`);
+                    if (rowEl) {
+                        // Don't preserve manual colspans during migration
+                        this.distributeColspans(rowEl, false);
+                    }
+                }
             });
         }
 
@@ -1356,9 +1476,11 @@
                 this.editor.classList.toggle('show-grid', this.showGrid);
             }
 
+            // Swap primary/secondary classes for grid button
             const gridBtn = this.toolbar?.querySelector('.btn-grid');
             if (gridBtn) {
-                gridBtn.classList.toggle('active', this.showGrid);
+                gridBtn.classList.toggle('btn-primary', this.showGrid);
+                gridBtn.classList.toggle('btn-secondary', !this.showGrid);
             }
         }
 
@@ -1375,11 +1497,17 @@
 
             this.viewMode = mode;
 
-            // Update button states
+            // Update button states - swap primary/secondary classes
             const visualBtn = this.toolbar?.querySelector('.btn-view-visual');
             const classicBtn = this.toolbar?.querySelector('.btn-view-classic');
-            if (visualBtn) visualBtn.classList.toggle('active', mode === 'visual');
-            if (classicBtn) classicBtn.classList.toggle('active', mode === 'classic');
+            if (visualBtn) {
+                visualBtn.classList.toggle('btn-primary', mode === 'visual');
+                visualBtn.classList.toggle('btn-secondary', mode !== 'visual');
+            }
+            if (classicBtn) {
+                classicBtn.classList.toggle('btn-primary', mode === 'classic');
+                classicBtn.classList.toggle('btn-secondary', mode !== 'classic');
+            }
 
             // Toggle views
             if (mode === 'visual') {
@@ -1450,10 +1578,10 @@
                             <td>${data.col}</td>
                             <td>${data.colspan}</td>
                             <td>
-                                <button type="button" class="btn btn-sm btn-secondary btn-classic-edit" data-element="${element.id}">
+                                <button type="button" class="btn btn-secondary btn-classic-edit" data-element="${element.id}">
                                     <span class="icon-options" aria-hidden="true"></span>
                                 </button>
-                                <button type="button" class="btn btn-sm btn-danger btn-classic-remove" data-element="${element.id}">
+                                <button type="button" class="btn btn-danger btn-classic-remove" data-element="${element.id}">
                                     <span class="icon-cancel" aria-hidden="true"></span>
                                 </button>
                             </td>
@@ -1498,10 +1626,17 @@
             // Only add to placed elements, not palette items
             if (card.dataset.paletteItem !== undefined) return;
 
+            // Right handle - affects element to the right
             const rightHandle = document.createElement('div');
             rightHandle.className = 'resize-handle resize-handle-right';
             rightHandle.addEventListener('mousedown', (e) => this.startResize(e, card, 'right'));
             card.appendChild(rightHandle);
+
+            // Left handle - affects element to the left
+            const leftHandle = document.createElement('div');
+            leftHandle.className = 'resize-handle resize-handle-left';
+            leftHandle.addEventListener('mousedown', (e) => this.startResize(e, card, 'left'));
+            card.appendChild(leftHandle);
         }
 
         /**
@@ -1514,22 +1649,73 @@
             e.preventDefault();
             e.stopPropagation();
 
+            const rowEl = card.closest('.row-elements');
+            if (!rowEl) return;
+
+            // Get all element cards in order
+            const children = Array.from(rowEl.children).filter(el =>
+                !el.classList.contains('sortable-ghost') &&
+                el.classList.contains('element-card')
+            );
+
+            const cardIndex = children.indexOf(card);
+
+            // Find the neighbor element based on direction
+            let neighborCard = null;
+            let isOuterEdge = false;
+
+            if (direction === 'right') {
+                if (cardIndex < children.length - 1) {
+                    neighborCard = children[cardIndex + 1];
+                } else {
+                    // Right edge of last element - outer edge resize
+                    isOuterEdge = true;
+                }
+            } else if (direction === 'left') {
+                if (cardIndex > 0) {
+                    neighborCard = children[cardIndex - 1];
+                } else {
+                    // Left edge of first element - outer edge resize
+                    isOuterEdge = true;
+                }
+            }
+
+            // For outer edge, we need at least 2 elements to redistribute
+            if (isOuterEdge && children.length < 2) return;
+
             this.isResizing = true;
             this.resizeCard = card;
+            this.resizeNeighborCard = neighborCard; // null for outer edge
             this.resizeDirection = direction;
+            this.resizeIsOuterEdge = isOuterEdge;
             this.resizeStartX = e.clientX;
+            this.resizeRowEl = rowEl;
 
             const data = this.state.get(card.dataset.element);
             this.resizeStartColspan = parseInt(data?.colspan || 1, 10);
 
+            if (neighborCard) {
+                const neighborData = this.state.get(neighborCard.dataset.element);
+                this.resizeNeighborStartColspan = parseInt(neighborData?.colspan || 1, 10);
+            } else {
+                // For outer edge, track other elements' colspans
+                this.resizeOtherElements = children.filter(el => el !== card);
+                this.resizeOtherStartColspans = this.resizeOtherElements.map(el => {
+                    const d = this.state.get(el.dataset.element);
+                    return parseInt(d?.colspan || 1, 10);
+                });
+            }
+
             // Calculate column width
-            const rowEl = card.closest('.row-elements');
             this.columnWidth = rowEl.offsetWidth / 12;
 
             // Save state for undo
             this.saveStateForUndo();
 
             card.classList.add('resizing');
+            if (neighborCard) {
+                neighborCard.classList.add('resizing');
+            }
 
             // Add mousemove and mouseup listeners
             document.addEventListener('mousemove', this.handleResize);
@@ -1538,23 +1724,123 @@
 
         /**
          * Handle resize drag
+         * Resizing affects either the immediate neighbor or redistributes other elements for outer edges
          * @param {MouseEvent} e - Mouse event
          */
         handleResize = (e) => {
             if (!this.isResizing || !this.resizeCard) return;
 
             const deltaX = e.clientX - this.resizeStartX;
-            const colsDelta = Math.round(deltaX / this.columnWidth);
+            let colsDelta = Math.round(deltaX / this.columnWidth);
+
+            // For left handle, invert the delta (dragging left = growing current element)
+            if (this.resizeDirection === 'left') {
+                colsDelta = -colsDelta;
+            }
+
+            if (this.resizeIsOuterEdge) {
+                // Outer edge resize - redistribute among other elements
+                this.handleOuterEdgeResize(colsDelta);
+            } else if (this.resizeNeighborCard) {
+                // Inner edge resize - only affect neighbor
+                this.handleInnerEdgeResize(colsDelta);
+            }
+        }
+
+        /**
+         * Handle inner edge resize (between two adjacent elements)
+         * @param {number} colsDelta - Column change
+         */
+        handleInnerEdgeResize(colsDelta) {
+            // Calculate new colspans for both elements
+            // Total combined colspan stays the same
+            const combinedColspan = this.resizeStartColspan + this.resizeNeighborStartColspan;
 
             let newColspan = this.resizeStartColspan + colsDelta;
-            newColspan = Math.max(1, Math.min(12, newColspan));
+            let newNeighborColspan = combinedColspan - newColspan;
 
+            // Ensure both elements have at least 1 column
+            if (newColspan < 1) {
+                newColspan = 1;
+                newNeighborColspan = combinedColspan - 1;
+            }
+            if (newNeighborColspan < 1) {
+                newNeighborColspan = 1;
+                newColspan = combinedColspan - 1;
+            }
+
+            // Update current element
             const data = this.state.get(this.resizeCard.dataset.element);
-            if (data && data.colspan !== String(newColspan)) {
+            if (data) {
                 data.colspan = String(newColspan);
+                data.manualColspan = true;
                 this.resizeCard.dataset.colspan = String(newColspan);
                 this.updateElementInfo(this.resizeCard);
             }
+
+            // Update neighbor element
+            const neighborData = this.state.get(this.resizeNeighborCard.dataset.element);
+            if (neighborData) {
+                neighborData.colspan = String(newNeighborColspan);
+                neighborData.manualColspan = true;
+                this.resizeNeighborCard.dataset.colspan = String(newNeighborColspan);
+                this.updateElementInfo(this.resizeNeighborCard);
+            }
+        }
+
+        /**
+         * Handle outer edge resize (first element's left or last element's right)
+         * Redistributes remaining space among other elements
+         * @param {number} colsDelta - Column change
+         */
+        handleOuterEdgeResize(colsDelta) {
+            const otherCount = this.resizeOtherElements.length;
+            if (otherCount === 0) return;
+
+            // Calculate new colspan for the resized element
+            let newColspan = this.resizeStartColspan + colsDelta;
+
+            // Min: 1, Max: 12 minus minimum space for other elements (1 each)
+            const maxColspan = 12 - otherCount;
+            newColspan = Math.max(1, Math.min(maxColspan, newColspan));
+
+            // Calculate remaining space for other elements
+            const remainingCols = 12 - newColspan;
+
+            // Distribute remaining space proportionally based on original ratios
+            const originalOtherTotal = this.resizeOtherStartColspans.reduce((a, b) => a + b, 0);
+
+            // Update current element
+            const data = this.state.get(this.resizeCard.dataset.element);
+            if (data) {
+                data.colspan = String(newColspan);
+                data.manualColspan = true;
+                this.resizeCard.dataset.colspan = String(newColspan);
+                this.updateElementInfo(this.resizeCard);
+            }
+
+            // Distribute remaining space among other elements proportionally
+            let distributed = 0;
+            this.resizeOtherElements.forEach((card, index) => {
+                const otherData = this.state.get(card.dataset.element);
+                if (otherData) {
+                    let newOtherColspan;
+                    if (index === otherCount - 1) {
+                        // Last element gets the remainder to ensure total = 12
+                        newOtherColspan = remainingCols - distributed;
+                    } else {
+                        // Distribute proportionally based on original ratio
+                        const ratio = this.resizeOtherStartColspans[index] / originalOtherTotal;
+                        newOtherColspan = Math.max(1, Math.round(remainingCols * ratio));
+                        distributed += newOtherColspan;
+                    }
+
+                    newOtherColspan = Math.max(1, newOtherColspan);
+                    otherData.colspan = String(newOtherColspan);
+                    card.dataset.colspan = String(newOtherColspan);
+                    this.updateElementInfo(card);
+                }
+            });
         }
 
         /**
@@ -1564,17 +1850,30 @@
             if (!this.isResizing) return;
 
             this.isResizing = false;
+
+            // Remove resizing class from elements
             if (this.resizeCard) {
                 this.resizeCard.classList.remove('resizing');
-
-                // Recalculate columns
-                const rowEl = this.resizeCard.closest('.row-elements');
-                if (rowEl) {
-                    this.recalculateColumns(rowEl);
-                }
+            }
+            if (this.resizeNeighborCard) {
+                this.resizeNeighborCard.classList.remove('resizing');
+            }
+            if (this.resizeOtherElements) {
+                this.resizeOtherElements.forEach(card => card.classList.remove('resizing'));
             }
 
+            // Recalculate column positions
+            if (this.resizeRowEl) {
+                this.recalculateColumns(this.resizeRowEl);
+            }
+
+            // Clean up
             this.resizeCard = null;
+            this.resizeNeighborCard = null;
+            this.resizeRowEl = null;
+            this.resizeIsOuterEdge = false;
+            this.resizeOtherElements = null;
+            this.resizeOtherStartColspans = null;
 
             document.removeEventListener('mousemove', this.handleResize);
             document.removeEventListener('mouseup', this.endResize);

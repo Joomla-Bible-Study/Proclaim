@@ -63,6 +63,18 @@ Text::script('JBS_TPL_LINK_TO_FIRST_ARTICLE');
 Text::script('JBS_TPL_LINK_TO_VIRTUEMART');
 Text::script('JBS_TPL_LINK_TO_DOCMAN');
 
+// Link type options (matches LinkOptionsField.php)
+Text::script('JBS_TPL_NO_LINK');
+Text::script('JBS_TPL_LINK_TO_DETAILS');
+Text::script('JBS_TPL_LINK_TO_DETAILS_TOOLTIP');
+Text::script('JBS_TPL_LINK_TO_MEDIA');
+Text::script('JBS_TPL_LINK_TO_DOWNLOAD');
+Text::script('JBS_TPL_LINK_TO_MEDIA_TOOLTIP');
+Text::script('JBS_TPL_LINK_TO_TEACHERS_PROFILE');
+Text::script('JBS_TPL_LINK_TO_FIRST_ARTICLE');
+Text::script('JBS_TPL_LINK_TO_VIRTUEMART');
+Text::script('JBS_TPL_LINK_TO_DOCMAN');
+
 // Element options (matches ElementOptionsField.php)
 Text::script('JBS_CMN_NONE');
 Text::script('JBS_TPL_PARAGRAPH');

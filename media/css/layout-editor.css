@@ -428,6 +428,7 @@
     box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--layout-element-bg);
 }
 
+/* Remove button turns red on hover */
 .row-elements .element-card .btn-remove:hover {
     background: var(--layout-danger);
     color: #fff;
@@ -435,18 +436,31 @@
 
 /* ==========================================================================
    Colspan Visual Indicator
+   Uses calc() for responsive widths based on 12-column grid
+   Each column = 8.333% (100%/12), minus gap space
    ========================================================================== */
-.row-elements .element-card[data-colspan="2"] { min-width: 120px; }
-.row-elements .element-card[data-colspan="3"] { min-width: 160px; }
-.row-elements .element-card[data-colspan="4"] { min-width: 200px; }
-.row-elements .element-card[data-colspan="5"] { min-width: 240px; }
-.row-elements .element-card[data-colspan="6"] { min-width: 280px; }
-.row-elements .element-card[data-colspan="7"] { min-width: 320px; }
-.row-elements .element-card[data-colspan="8"] { min-width: 360px; }
-.row-elements .element-card[data-colspan="9"] { min-width: 400px; }
-.row-elements .element-card[data-colspan="10"] { min-width: 440px; }
-.row-elements .element-card[data-colspan="11"] { min-width: 480px; }
-.row-elements .element-card[data-colspan="12"] { min-width: 100%; }
+.row-elements .element-card {
+    /* Default minimum width for single column */
+    min-width: calc(8.333% - 0.5rem);
+    /* Prevent shrinking below readable size */
+    min-width: max(calc(8.333% - 0.5rem), 100px);
+    /* Allow growth based on content */
+    flex-shrink: 0;
+}
+
+/* Percentage-based widths for each colspan */
+.row-elements .element-card[data-colspan="1"] { width: calc(8.333% - 0.5rem); min-width: 100px; }
+.row-elements .element-card[data-colspan="2"] { width: calc(16.666% - 0.5rem); min-width: 100px; }
+.row-elements .element-card[data-colspan="3"] { width: calc(25% - 0.5rem); min-width: 100px; }
+.row-elements .element-card[data-colspan="4"] { width: calc(33.333% - 0.5rem); min-width: 100px; }
+.row-elements .element-card[data-colspan="5"] { width: calc(41.666% - 0.5rem); min-width: 100px; }
+.row-elements .element-card[data-colspan="6"] { width: calc(50% - 0.5rem); min-width: 100px; }
+.row-elements .element-card[data-colspan="7"] { width: calc(58.333% - 0.5rem); min-width: 100px; }
+.row-elements .element-card[data-colspan="8"] { width: calc(66.666% - 0.5rem); min-width: 100px; }
+.row-elements .element-card[data-colspan="9"] { width: calc(75% - 0.5rem); min-width: 100px; }
+.row-elements .element-card[data-colspan="10"] { width: calc(83.333% - 0.5rem); min-width: 100px; }
+.row-elements .element-card[data-colspan="11"] { width: calc(91.666% - 0.5rem); min-width: 100px; }
+.row-elements .element-card[data-colspan="12"] { width: calc(100% - 0.5rem); min-width: 100px; }
 
 /* ==========================================================================
    Resize Handles
@@ -513,8 +527,8 @@
     gap: .5rem;
     margin-bottom: .75rem;
     padding: .5rem;
-    background: var(--layout-bg-secondary);
-    border: 1px solid var(--layout-border-color);
+    background: var(--bs-tertiary-bg);
+    border: 1px solid var(--bs-border-color);
     border-radius: .25rem;
 }
 
@@ -527,55 +541,15 @@
 .layout-toolbar-group + .layout-toolbar-group {
     margin-left: .5rem;
     padding-left: .75rem;
-    border-left: 1px solid var(--layout-border-color);
+    border-left: 1px solid var(--bs-border-color);
 }
 
-.layout-toolbar .btn-toolbar {
+/* Toolbar buttons - layout adjustments only, let Bootstrap handle colors */
+.layout-toolbar .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: .375rem;
-    padding: .375rem .625rem;
-    background: var(--layout-bg-primary);
-    border: 1px solid var(--layout-border-color);
-    border-radius: .25rem;
-    color: var(--layout-text-secondary);
-    font-size: .875rem;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    min-height: 32px;
-}
-
-.layout-toolbar .btn-toolbar:hover {
-    background: var(--layout-bg-tertiary);
-    border-color: var(--layout-accent);
-    color: var(--layout-text-primary);
-}
-
-.layout-toolbar .btn-toolbar:focus {
-    outline: none;
-    box-shadow: var(--layout-focus-ring);
-}
-
-.layout-toolbar .btn-toolbar.active {
-    background: var(--layout-accent);
-    border-color: var(--layout-accent);
-    color: var(--layout-accent-text);
-}
-
-.layout-toolbar .btn-toolbar:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.layout-toolbar .btn-toolbar [class*="icon-"] {
-    font-size: 1rem;
-}
-
-/* Undo/Redo specific styling */
-.layout-toolbar .btn-undo,
-.layout-toolbar .btn-redo {
-    padding: .375rem .5rem;
 }
 
 /* Toolbar spacer - pushes view toggle to the right */
@@ -590,31 +564,25 @@
    Classic View
    ========================================================================== */
 .layout-classic {
-    background: var(--layout-bg-primary);
-    border: 1px solid var(--layout-border-color);
+    background: var(--bs-body-bg);
+    border: 1px solid var(--bs-border-color);
     border-radius: .25rem;
     padding: 1rem;
 }
 
 .classic-view-container .table {
     margin-bottom: 0;
+    --bs-table-bg: transparent;
 }
 
 .classic-view-container .table th {
-    background: var(--layout-bg-secondary);
-    color: var(--layout-text-primary);
+    background: var(--bs-tertiary-bg);
     font-weight: 600;
     border-bottom-width: 2px;
 }
 
 .classic-view-container .table td {
     vertical-align: middle;
-    color: var(--layout-text-primary);
-}
-
-.classic-view-container .btn-classic-edit,
-.classic-view-container .btn-classic-remove {
-    padding: .25rem .5rem;
 }
 
 /* ==========================================================================
@@ -632,12 +600,25 @@
     transition: none !important;
     /* GPU acceleration hint */
     will-change: transform;
+    /* Maintain a reasonable width during drag - the element is detached from parent */
+    /* so percentage widths don't work. Use the captured width from JS instead. */
+    min-width: 120px;
+    max-width: 400px;
+    /* Override percentage-based widths during drag */
+    width: auto !important;
+}
+
+/* Palette items being dragged should use compact width */
+.element-palette-items .sortable-drag {
+    min-width: 150px;
+    max-width: 200px;
 }
 
 .sortable-fallback {
     opacity: 0.9 !important;
     box-shadow: var(--layout-shadow-lg) !important;
     transition: none !important;
+    min-width: 120px;
 }
 
 /* Element card - only apply transitions when NOT being dragged */
@@ -672,45 +653,57 @@
 /* ==========================================================================
    Settings Modal
    ========================================================================== */
-.layout-settings-modal .modal-header {
+.layout-settings-modal.modal .modal-dialog .modal-content {
+    border-radius: .5rem;
+    overflow: hidden;
+}
+
+.layout-settings-modal.modal .modal-dialog .modal-content .modal-header {
     background: var(--layout-bg-secondary);
     border-bottom: 1px solid var(--layout-border-color);
+    padding: 1rem 1.5rem !important;
 }
 
-.layout-settings-modal .modal-body {
-    background: var(--layout-bg-primary);
-    color: var(--layout-text-primary);
+.layout-settings-modal.modal .modal-dialog .modal-content .modal-header .modal-title {
+    font-weight: 600;
 }
 
-.layout-settings-modal .modal-footer {
-    background: var(--layout-bg-secondary);
-    border-top: 1px solid var(--layout-border-color);
+/* Ensure modal dialog has proper margins */
+.layout-settings-modal.modal .modal-dialog {
+    margin: 1.75rem auto;
+    max-width: 500px;
 }
 
-.layout-settings-modal .form-group {
-    margin-bottom: 1rem;
+/* Force padding on modal sections - use ID for highest specificity */
+#layoutSettingsModal .modal-header {
+    padding: 1rem 1.5rem !important;
 }
 
-.layout-settings-modal .form-label {
-    color: var(--layout-text-primary);
+#layoutSettingsModal .modal-body {
+    padding: 1.5rem !important;
+}
+
+#layoutSettingsModal .modal-footer {
+    padding: 1rem 1.5rem !important;
+}
+
+/* Modal form groups */
+#layoutSettingsModal .form-group {
+    margin-bottom: 1.25rem;
+}
+
+#layoutSettingsModal .form-group:last-child {
+    margin-bottom: 0;
+}
+
+#layoutSettingsModal .form-label {
     font-weight: 500;
+    margin-bottom: 0.5rem;
 }
 
-.layout-settings-modal .form-text {
-    color: var(--layout-text-muted);
-}
-
-.layout-settings-modal .form-control,
-.layout-settings-modal .form-select {
-    background-color: var(--layout-bg-primary);
-    border-color: var(--layout-border-color);
-    color: var(--layout-text-primary);
-}
-
-.layout-settings-modal .form-control:focus,
-.layout-settings-modal .form-select:focus {
-    border-color: var(--layout-accent);
-    box-shadow: var(--layout-focus-ring);
+#layoutSettingsModal .form-text {
+    font-size: 0.875rem;
+    margin-top: 0.375rem;
 }
 
 /* ==========================================================================
@@ -721,51 +714,15 @@
     flex-wrap: wrap;
     gap: .25rem;
     margin-bottom: 1rem;
-    border-bottom: 1px solid var(--layout-border-color);
+    border-bottom: 1px solid var(--bs-border-color);
     padding-bottom: .5rem;
 }
 
-.layout-context-tab {
-    padding: .375rem .75rem;
-    background: transparent;
-    border: 1px solid transparent;
-    border-radius: .25rem;
-    font-weight: 500;
-    color: var(--layout-text-muted);
-    cursor: pointer;
-    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-}
-
-.layout-context-tab:hover {
-    color: var(--layout-text-primary);
-    background: var(--layout-bg-secondary);
-}
-
-.layout-context-tab:focus {
-    outline: none;
-    box-shadow: var(--layout-focus-ring);
-}
-
-.layout-context-tab.active {
-    background: var(--layout-accent);
-    color: var(--layout-accent-text);
-    border-color: var(--layout-accent);
-}
-
-.layout-context-tab.active:focus {
-    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.3), var(--layout-focus-ring);
-}
-
 /* ==========================================================================
-   Help Text
+   Help Text - uses Bootstrap alert-info styling
    ========================================================================== */
 .layout-help {
     margin-bottom: 1rem;
-    padding: .75rem 1rem;
-    background: var(--layout-info-bg);
-    border: 1px solid var(--layout-info-border);
-    border-radius: .25rem;
-    color: var(--layout-info-text);
 }
 
 .layout-help [class*="icon-"] {
