@@ -393,7 +393,9 @@
             modal.id = 'layoutSettingsModal';
             modal.tabIndex = -1;
             modal.setAttribute('aria-labelledby', 'layoutSettingsModalLabel');
-            modal.setAttribute('aria-hidden', 'true');
+            // Use inert attribute instead of aria-hidden to prevent focus issues
+            // See: https://w3c.github.io/aria/#aria-hidden
+            modal.inert = true;
 
             modal.innerHTML = `
                 <div class="modal-dialog">
@@ -807,13 +809,18 @@
             // Show modal
             const modalInstance = this.getModalInstance();
             if (modalInstance) {
+                // Remove inert before Bootstrap shows the modal
+                if (this.modal) {
+                    this.modal.inert = false;
+                }
                 modalInstance.show();
             } else {
                 // Fallback: manually show modal with CSS classes
                 if (this.modal) {
+                    // Remove inert to allow interaction
+                    this.modal.inert = false;
                     this.modal.classList.add('show');
                     this.modal.style.display = 'block';
-                    this.modal.removeAttribute('aria-hidden');
                     this.modal.setAttribute('aria-modal', 'true');
                     this.modal.setAttribute('role', 'dialog');
                     document.body.classList.add('modal-open');
@@ -826,11 +833,14 @@
                         document.body.appendChild(backdrop);
                     }
 
-                    // Focus the first focusable element in the modal
-                    const firstFocusable = this.modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-                    if (firstFocusable) {
-                        firstFocusable.focus();
-                    }
+                    // Focus the first focusable element in the modal after a brief delay
+                    // to ensure the modal is fully visible
+                    requestAnimationFrame(() => {
+                        const firstFocusable = this.modal.querySelector('select, input, button, [href], textarea, [tabindex]:not([tabindex="-1"])');
+                        if (firstFocusable) {
+                            firstFocusable.focus();
+                        }
+                    });
                 }
             }
         }
@@ -866,8 +876,14 @@
             const modalInstance = this.getModalInstance();
             if (modalInstance) {
                 modalInstance.hide();
+                // Re-apply inert after Bootstrap hides the modal
+                if (this.modal) {
+                    this.modal.addEventListener('hidden.bs.modal', () => {
+                        this.modal.inert = true;
+                    }, { once: true });
+                }
             } else if (this.modal) {
-                // Move focus out of modal before hiding to avoid accessibility warning
+                // Move focus out of modal before hiding
                 const triggerElement = this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"] .btn-settings`);
                 if (triggerElement) {
                     triggerElement.focus();
@@ -879,7 +895,9 @@
                 this.modal.classList.remove('show');
                 this.modal.style.display = 'none';
                 this.modal.removeAttribute('aria-modal');
-                this.modal.setAttribute('aria-hidden', 'true');
+                this.modal.removeAttribute('role');
+                // Use inert instead of aria-hidden to prevent focus issues
+                this.modal.inert = true;
                 document.body.classList.remove('modal-open');
 
                 // Remove backdrop
@@ -900,8 +918,14 @@
             const modalInstance = this.getModalInstance();
             if (modalInstance) {
                 modalInstance.hide();
+                // Re-apply inert after Bootstrap hides the modal
+                if (this.modal) {
+                    this.modal.addEventListener('hidden.bs.modal', () => {
+                        this.modal.inert = true;
+                    }, { once: true });
+                }
             } else if (this.modal) {
-                // Move focus out of modal before hiding to avoid accessibility warning
+                // Move focus out of modal before hiding
                 const triggerElement = this.currentSettingsElement
                     ? this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"] .btn-settings`)
                     : null;
@@ -915,7 +939,9 @@
                 this.modal.classList.remove('show');
                 this.modal.style.display = 'none';
                 this.modal.removeAttribute('aria-modal');
-                this.modal.setAttribute('aria-hidden', 'true');
+                this.modal.removeAttribute('role');
+                // Use inert instead of aria-hidden to prevent focus issues
+                this.modal.inert = true;
                 document.body.classList.remove('modal-open');
 
                 // Remove backdrop
