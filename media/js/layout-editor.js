@@ -539,10 +539,13 @@
                         put: false
                     },
                     sort: false,
-                    animation: 150,
+                    animation: 80, // Faster animation for snappier feel
                     ghostClass: 'sortable-ghost',
                     chosenClass: 'sortable-chosen',
                     dragClass: 'sortable-drag',
+                    delay: 0,
+                    delayOnTouchOnly: true,
+                    touchStartThreshold: 3,
                     onStart: function () {
                         // Save state for undo when starting to drag from palette
                         self.saveStateForUndo();
@@ -575,11 +578,14 @@
             this.canvas.querySelectorAll('.row-elements').forEach(rowEl => {
                 const sortable = Sortable.create(rowEl, {
                     group: 'elements',
-                    animation: 150,
+                    animation: 80, // Faster animation for snappier feel
                     ghostClass: 'sortable-ghost',
                     chosenClass: 'sortable-chosen',
                     dragClass: 'sortable-drag',
                     handle: '.element-handle',
+                    delay: 0,
+                    delayOnTouchOnly: true,
+                    touchStartThreshold: 3,
                     onStart: function () {
                         // Save state for undo when drag starts
                         self.saveStateForUndo();
