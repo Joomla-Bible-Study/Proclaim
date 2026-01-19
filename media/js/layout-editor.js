@@ -729,6 +729,14 @@
                 saveBtn.addEventListener('click', () => this.saveSettings());
             }
 
+            // Settings modal close (for fallback when Bootstrap modal not available)
+            if (this.modal) {
+                const closeBtn = this.modal.querySelector('.btn-close');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => this.closeSettingsModal());
+                }
+            }
+
             // Form submit - sync state to form fields
             const form = document.getElementById(this.options.formId);
             if (form) {
@@ -805,7 +813,9 @@
                 if (this.modal) {
                     this.modal.classList.add('show');
                     this.modal.style.display = 'block';
-                    this.modal.setAttribute('aria-hidden', 'false');
+                    this.modal.removeAttribute('aria-hidden');
+                    this.modal.setAttribute('aria-modal', 'true');
+                    this.modal.setAttribute('role', 'dialog');
                     document.body.classList.add('modal-open');
 
                     // Create backdrop
@@ -814,6 +824,12 @@
                         backdrop = document.createElement('div');
                         backdrop.className = 'modal-backdrop fade show';
                         document.body.appendChild(backdrop);
+                    }
+
+                    // Focus the first focusable element in the modal
+                    const firstFocusable = this.modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                    if (firstFocusable) {
+                        firstFocusable.focus();
                     }
                 }
             }
@@ -851,9 +867,54 @@
             if (modalInstance) {
                 modalInstance.hide();
             } else if (this.modal) {
+                // Move focus out of modal before hiding to avoid accessibility warning
+                const triggerElement = this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"] .btn-settings`);
+                if (triggerElement) {
+                    triggerElement.focus();
+                } else {
+                    document.body.focus();
+                }
+
                 // Fallback: manually hide modal
                 this.modal.classList.remove('show');
                 this.modal.style.display = 'none';
+                this.modal.removeAttribute('aria-modal');
+                this.modal.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('modal-open');
+
+                // Remove backdrop
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+            }
+
+            this.currentSettingsElement = null;
+        }
+
+        /**
+         * Close settings modal without saving (for close button)
+         */
+        closeSettingsModal() {
+            // Close modal
+            const modalInstance = this.getModalInstance();
+            if (modalInstance) {
+                modalInstance.hide();
+            } else if (this.modal) {
+                // Move focus out of modal before hiding to avoid accessibility warning
+                const triggerElement = this.currentSettingsElement
+                    ? this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"] .btn-settings`)
+                    : null;
+                if (triggerElement) {
+                    triggerElement.focus();
+                } else {
+                    document.body.focus();
+                }
+
+                // Fallback: manually hide modal
+                this.modal.classList.remove('show');
+                this.modal.style.display = 'none';
+                this.modal.removeAttribute('aria-modal');
                 this.modal.setAttribute('aria-hidden', 'true');
                 document.body.classList.remove('modal-open');
 
