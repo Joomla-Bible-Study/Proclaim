@@ -202,7 +202,8 @@
     border: 1px solid var(--layout-border-color);
     border-radius: .25rem;
     cursor: grab;
-    transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    /* Note: transitions are applied conditionally in the Sortable section */
+    /* to avoid interfering with drag performance */
 }
 
 .element-card:hover {
@@ -623,25 +624,38 @@
     opacity: 0.4;
 }
 
+/* Dragged element - disable all transitions for smooth dragging */
 .sortable-drag {
     opacity: 1 !important;
-    transform: scale(1.02);
     z-index: 1000;
+    /* Disable transitions during drag for smooth movement */
+    transition: none !important;
+    /* GPU acceleration hint */
+    will-change: transform;
 }
 
 .sortable-fallback {
     opacity: 0.9 !important;
     box-shadow: var(--layout-shadow-lg) !important;
+    transition: none !important;
 }
 
-/* Drag animation */
+/* Element card - only apply transitions when NOT being dragged */
 .element-card {
+    /* GPU acceleration for smoother animations */
+    will-change: transform, box-shadow;
+}
+
+/* Apply transitions only to non-dragging states */
+.element-card:not(.sortable-drag):not(.sortable-chosen):not(.sortable-ghost) {
     transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
+/* Chosen (picked up) element - minimal styling, no transitions */
 .element-card.sortable-chosen {
-    transform: scale(1.02);
     box-shadow: var(--layout-shadow-lg);
+    /* Disable transitions when chosen for immediate response */
+    transition: none !important;
 }
 
 /* Drop indicator animation */
