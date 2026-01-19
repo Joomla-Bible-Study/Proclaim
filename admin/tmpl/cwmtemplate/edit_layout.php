@@ -63,6 +63,16 @@ Text::script('JBS_TPL_LINK_TO_FIRST_ARTICLE');
 Text::script('JBS_TPL_LINK_TO_VIRTUEMART');
 Text::script('JBS_TPL_LINK_TO_DOCMAN');
 
+// Element options (matches ElementOptionsField.php)
+Text::script('JBS_CMN_NONE');
+Text::script('JBS_TPL_PARAGRAPH');
+Text::script('JBS_TPL_HEADER1');
+Text::script('JBS_TPL_HEADER2');
+Text::script('JBS_TPL_HEADER3');
+Text::script('JBS_TPL_HEADER4');
+Text::script('JBS_TPL_HEADER5');
+Text::script('JBS_TPL_BLOCKQUOTE');
+
 // Element labels
 Text::script('JBS_CMN_SCRIPTURE');
 Text::script('JBS_CMN_SCRIPTURE2');
