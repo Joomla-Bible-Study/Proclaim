@@ -187,6 +187,15 @@
             this.sortableInstances = [];
             this.paletteSortable = null;
 
+            // Undo/Redo history
+            this.undoStack = [];
+            this.redoStack = [];
+            this.maxHistory = 50;
+
+            // UI state
+            this.showGrid = false;
+            this.isResizing = false;
+
             // Language strings helper
             this.trans = (key) => {
                 if (window.Joomla && window.Joomla.Text && typeof window.Joomla.Text._ === 'function') {
@@ -220,6 +229,22 @@
                     ${this.trans('JBS_TPL_LAYOUT_HELP') || 'Drag elements from the sidebar onto rows to arrange your layout. Click the gear icon to configure element settings.'}
                 </div>
                 <div class="layout-context-tabs"></div>
+                <div class="layout-toolbar">
+                    <div class="layout-toolbar-group">
+                        <button type="button" class="btn-toolbar btn-undo" title="Undo (Ctrl+Z)" disabled>
+                            <span class="icon-undo" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn-toolbar btn-redo" title="Redo (Ctrl+Y)" disabled>
+                            <span class="icon-redo" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div class="layout-toolbar-group">
+                        <button type="button" class="btn-toolbar btn-grid" title="Toggle Grid">
+                            <span class="icon-grid-view" aria-hidden="true"></span>
+                            <span class="btn-text">Grid</span>
+                        </button>
+                    </div>
+                </div>
                 <div class="layout-editor">
                     <aside class="layout-sidebar">
                         <h4>${this.trans('JBS_TPL_AVAILABLE_ELEMENTS') || 'Available Elements'}</h4>
@@ -233,6 +258,8 @@
             this.palette = this.container.querySelector('.element-palette');
             this.canvas = this.container.querySelector('.layout-canvas');
             this.contextTabs = this.container.querySelector('.layout-context-tabs');
+            this.toolbar = this.container.querySelector('.layout-toolbar');
+            this.editor = this.container.querySelector('.layout-editor');
 
             // Create context tabs
             this.createContextTabs();
@@ -500,6 +527,10 @@
                     ghostClass: 'sortable-ghost',
                     chosenClass: 'sortable-chosen',
                     dragClass: 'sortable-drag',
+                    onStart: function () {
+                        // Save state for undo when starting to drag from palette
+                        self.saveStateForUndo();
+                    },
                     onClone: function (evt) {
                         // Transform clone into a full element card
                         const clone = evt.clone;
@@ -533,8 +564,15 @@
                     chosenClass: 'sortable-chosen',
                     dragClass: 'sortable-drag',
                     handle: '.element-handle',
+                    onStart: function () {
+                        // Save state for undo when drag starts
+                        self.saveStateForUndo();
+                    },
                     onAdd: function (evt) {
                         self.onElementAdded(evt);
+                        // Add drop animation
+                        evt.item.classList.add('just-dropped');
+                        setTimeout(() => evt.item.classList.remove('just-dropped'), 300);
                     },
                     onUpdate: function (evt) {
                         self.onElementMoved(evt);
@@ -603,6 +641,10 @@
                         </button>
                     `;
                 }
+
+                // Add resize handles and make focusable
+                evt.item.tabIndex = 0;
+                this.addResizeHandles(evt.item);
             }
 
             this.updateElementInfo(evt.item);
@@ -720,6 +762,7 @@
                 if (removeBtn) {
                     const card = removeBtn.closest('.element-card');
                     if (card) {
+                        this.saveStateForUndo();
                         this.removeElement(card);
                     }
                 }
@@ -782,6 +825,30 @@
                     this.syncToForm();
                 }
             });
+
+            // Toolbar buttons
+            if (this.toolbar) {
+                // Undo button
+                const undoBtn = this.toolbar.querySelector('.btn-undo');
+                if (undoBtn) {
+                    undoBtn.addEventListener('click', () => this.undo());
+                }
+
+                // Redo button
+                const redoBtn = this.toolbar.querySelector('.btn-redo');
+                if (redoBtn) {
+                    redoBtn.addEventListener('click', () => this.redo());
+                }
+
+                // Grid toggle button
+                const gridBtn = this.toolbar.querySelector('.btn-grid');
+                if (gridBtn) {
+                    gridBtn.addEventListener('click', () => this.toggleGrid());
+                }
+            }
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => this.handleKeyboard(e));
         }
 
         /**
@@ -1043,7 +1110,11 @@
 
             const card = this.createElementCard(element, false);
             card.dataset.colspan = data.colspan;
+            card.tabIndex = 0; // Make focusable for keyboard navigation
             rowEl.appendChild(card);
+
+            // Add resize handles
+            this.addResizeHandles(card);
 
             this.updateElementInfo(card);
         }
@@ -1130,6 +1201,322 @@
                 state[key] = { ...value };
             });
             return state;
+        }
+
+        // =====================================================================
+        // Undo/Redo Functionality
+        // =====================================================================
+
+        /**
+         * Save current state to undo stack
+         */
+        saveStateForUndo() {
+            // Clone current state
+            const stateCopy = new Map();
+            this.state.forEach((value, key) => {
+                stateCopy.set(key, { ...value });
+            });
+
+            this.undoStack.push(stateCopy);
+
+            // Limit history size
+            if (this.undoStack.length > this.maxHistory) {
+                this.undoStack.shift();
+            }
+
+            // Clear redo stack when new action is performed
+            this.redoStack = [];
+
+            this.updateToolbarState();
+        }
+
+        /**
+         * Undo last action
+         */
+        undo() {
+            if (this.undoStack.length === 0) return;
+
+            // Save current state to redo stack
+            const currentState = new Map();
+            this.state.forEach((value, key) => {
+                currentState.set(key, { ...value });
+            });
+            this.redoStack.push(currentState);
+
+            // Restore previous state
+            this.state = this.undoStack.pop();
+
+            // Rebuild canvas
+            this.rebuildCanvas();
+            this.updateToolbarState();
+        }
+
+        /**
+         * Redo last undone action
+         */
+        redo() {
+            if (this.redoStack.length === 0) return;
+
+            // Save current state to undo stack
+            const currentState = new Map();
+            this.state.forEach((value, key) => {
+                currentState.set(key, { ...value });
+            });
+            this.undoStack.push(currentState);
+
+            // Restore next state
+            this.state = this.redoStack.pop();
+
+            // Rebuild canvas
+            this.rebuildCanvas();
+            this.updateToolbarState();
+        }
+
+        /**
+         * Rebuild canvas from state
+         */
+        rebuildCanvas() {
+            // Clear all elements from canvas rows
+            this.canvas.querySelectorAll('.row-elements').forEach(rowEl => {
+                rowEl.innerHTML = '';
+            });
+
+            // Re-add elements from state
+            const contextDef = ELEMENT_DEFINITIONS[this.currentContext];
+            if (!contextDef) return;
+
+            this.state.forEach((data, elementId) => {
+                const element = contextDef.elements.find(el => el.id === elementId);
+                if (element && data.row > 0) {
+                    this.addElementToCanvas(element, data);
+                }
+            });
+
+            this.sortCanvasElements();
+        }
+
+        /**
+         * Update toolbar button states
+         */
+        updateToolbarState() {
+            const undoBtn = this.toolbar?.querySelector('.btn-undo');
+            const redoBtn = this.toolbar?.querySelector('.btn-redo');
+
+            if (undoBtn) {
+                undoBtn.disabled = this.undoStack.length === 0;
+            }
+            if (redoBtn) {
+                redoBtn.disabled = this.redoStack.length === 0;
+            }
+        }
+
+        // =====================================================================
+        // Grid Toggle
+        // =====================================================================
+
+        /**
+         * Toggle grid overlay visibility
+         */
+        toggleGrid() {
+            this.showGrid = !this.showGrid;
+
+            if (this.editor) {
+                this.editor.classList.toggle('show-grid', this.showGrid);
+            }
+
+            const gridBtn = this.toolbar?.querySelector('.btn-grid');
+            if (gridBtn) {
+                gridBtn.classList.toggle('active', this.showGrid);
+            }
+        }
+
+        // =====================================================================
+        // Resize Handles
+        // =====================================================================
+
+        /**
+         * Add resize handles to an element card
+         * @param {HTMLElement} card - Element card
+         */
+        addResizeHandles(card) {
+            // Only add to placed elements, not palette items
+            if (card.dataset.paletteItem !== undefined) return;
+
+            const rightHandle = document.createElement('div');
+            rightHandle.className = 'resize-handle resize-handle-right';
+            rightHandle.addEventListener('mousedown', (e) => this.startResize(e, card, 'right'));
+            card.appendChild(rightHandle);
+        }
+
+        /**
+         * Start resizing an element
+         * @param {MouseEvent} e - Mouse event
+         * @param {HTMLElement} card - Element card
+         * @param {string} direction - 'left' or 'right'
+         */
+        startResize(e, card, direction) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.isResizing = true;
+            this.resizeCard = card;
+            this.resizeDirection = direction;
+            this.resizeStartX = e.clientX;
+
+            const data = this.state.get(card.dataset.element);
+            this.resizeStartColspan = parseInt(data?.colspan || 1, 10);
+
+            // Calculate column width
+            const rowEl = card.closest('.row-elements');
+            this.columnWidth = rowEl.offsetWidth / 12;
+
+            // Save state for undo
+            this.saveStateForUndo();
+
+            card.classList.add('resizing');
+
+            // Add mousemove and mouseup listeners
+            document.addEventListener('mousemove', this.handleResize);
+            document.addEventListener('mouseup', this.endResize);
+        }
+
+        /**
+         * Handle resize drag
+         * @param {MouseEvent} e - Mouse event
+         */
+        handleResize = (e) => {
+            if (!this.isResizing || !this.resizeCard) return;
+
+            const deltaX = e.clientX - this.resizeStartX;
+            const colsDelta = Math.round(deltaX / this.columnWidth);
+
+            let newColspan = this.resizeStartColspan + colsDelta;
+            newColspan = Math.max(1, Math.min(12, newColspan));
+
+            const data = this.state.get(this.resizeCard.dataset.element);
+            if (data && data.colspan !== String(newColspan)) {
+                data.colspan = String(newColspan);
+                this.resizeCard.dataset.colspan = String(newColspan);
+                this.updateElementInfo(this.resizeCard);
+            }
+        }
+
+        /**
+         * End resize operation
+         */
+        endResize = () => {
+            if (!this.isResizing) return;
+
+            this.isResizing = false;
+            if (this.resizeCard) {
+                this.resizeCard.classList.remove('resizing');
+
+                // Recalculate columns
+                const rowEl = this.resizeCard.closest('.row-elements');
+                if (rowEl) {
+                    this.recalculateColumns(rowEl);
+                }
+            }
+
+            this.resizeCard = null;
+
+            document.removeEventListener('mousemove', this.handleResize);
+            document.removeEventListener('mouseup', this.endResize);
+        }
+
+        // =====================================================================
+        // Keyboard Navigation
+        // =====================================================================
+
+        /**
+         * Handle keyboard events
+         * @param {KeyboardEvent} e - Keyboard event
+         */
+        handleKeyboard(e) {
+            // Check if we're in an input field
+            if (e.target.matches('input, textarea, select')) return;
+
+            // Undo: Ctrl+Z
+            if (e.ctrlKey && e.key === 'z' && !e.shiftKey) {
+                e.preventDefault();
+                this.undo();
+                return;
+            }
+
+            // Redo: Ctrl+Y or Ctrl+Shift+Z
+            if ((e.ctrlKey && e.key === 'y') || (e.ctrlKey && e.shiftKey && e.key === 'z')) {
+                e.preventDefault();
+                this.redo();
+                return;
+            }
+
+            // Delete: Delete or Backspace on focused element
+            if ((e.key === 'Delete' || e.key === 'Backspace') && document.activeElement?.classList.contains('element-card')) {
+                const card = document.activeElement;
+                if (card.closest('.row-elements')) {
+                    e.preventDefault();
+                    this.saveStateForUndo();
+                    this.removeElement(card);
+                }
+                return;
+            }
+
+            // Arrow keys for navigation
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                const focused = document.activeElement;
+                if (focused?.classList.contains('element-card') && focused.closest('.row-elements')) {
+                    e.preventDefault();
+                    this.navigateElements(focused, e.key);
+                }
+            }
+        }
+
+        /**
+         * Navigate between elements with arrow keys
+         * @param {HTMLElement} current - Currently focused element
+         * @param {string} direction - Arrow key direction
+         */
+        navigateElements(current, direction) {
+            const rowEl = current.closest('.row-elements');
+            const allRows = Array.from(this.canvas.querySelectorAll('.row-elements'));
+            const rowIndex = allRows.indexOf(rowEl);
+
+            let targetCard = null;
+
+            switch (direction) {
+                case 'ArrowLeft': {
+                    targetCard = current.previousElementSibling;
+                    break;
+                }
+                case 'ArrowRight': {
+                    targetCard = current.nextElementSibling;
+                    break;
+                }
+                case 'ArrowUp': {
+                    if (rowIndex > 0) {
+                        const prevRow = allRows[rowIndex - 1];
+                        const cards = prevRow.querySelectorAll('.element-card');
+                        if (cards.length > 0) {
+                            targetCard = cards[0];
+                        }
+                    }
+                    break;
+                }
+                case 'ArrowDown': {
+                    if (rowIndex < allRows.length - 1) {
+                        const nextRow = allRows[rowIndex + 1];
+                        const cards = nextRow.querySelectorAll('.element-card');
+                        if (cards.length > 0) {
+                            targetCard = cards[0];
+                        }
+                    }
+                    break;
+                }
+            }
+
+            if (targetCard?.classList.contains('element-card')) {
+                targetCard.focus();
+            }
         }
     }
 
