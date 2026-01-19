@@ -244,6 +244,17 @@
                             <span class="btn-text">Grid</span>
                         </button>
                     </div>
+                    <div class="layout-toolbar-group layout-toolbar-spacer"></div>
+                    <div class="layout-toolbar-group">
+                        <button type="button" class="btn-toolbar btn-view-visual active" title="Visual Editor">
+                            <span class="icon-image" aria-hidden="true"></span>
+                            <span class="btn-text">Visual</span>
+                        </button>
+                        <button type="button" class="btn-toolbar btn-view-classic" title="Classic View">
+                            <span class="icon-list" aria-hidden="true"></span>
+                            <span class="btn-text">Classic</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="layout-editor">
                     <aside class="layout-sidebar">
@@ -252,6 +263,7 @@
                     </aside>
                     <main class="layout-canvas"></main>
                 </div>
+                <div class="layout-classic" style="display: none;"></div>
             `;
 
             this.sidebar = this.container.querySelector('.layout-sidebar');
@@ -260,6 +272,10 @@
             this.contextTabs = this.container.querySelector('.layout-context-tabs');
             this.toolbar = this.container.querySelector('.layout-toolbar');
             this.editor = this.container.querySelector('.layout-editor');
+            this.classicView = this.container.querySelector('.layout-classic');
+
+            // Current view mode
+            this.viewMode = 'visual';
 
             // Create context tabs
             this.createContextTabs();
@@ -845,6 +861,16 @@
                 if (gridBtn) {
                     gridBtn.addEventListener('click', () => this.toggleGrid());
                 }
+
+                // View toggle buttons
+                const visualBtn = this.toolbar.querySelector('.btn-view-visual');
+                const classicBtn = this.toolbar.querySelector('.btn-view-classic');
+                if (visualBtn) {
+                    visualBtn.addEventListener('click', () => this.switchView('visual'));
+                }
+                if (classicBtn) {
+                    classicBtn.addEventListener('click', () => this.switchView('classic'));
+                }
             }
 
             // Keyboard shortcuts
@@ -1328,6 +1354,130 @@
             if (gridBtn) {
                 gridBtn.classList.toggle('active', this.showGrid);
             }
+        }
+
+        // =====================================================================
+        // View Toggle (Visual/Classic)
+        // =====================================================================
+
+        /**
+         * Switch between visual and classic view modes
+         * @param {string} mode - 'visual' or 'classic'
+         */
+        switchView(mode) {
+            if (this.viewMode === mode) return;
+
+            this.viewMode = mode;
+
+            // Update button states
+            const visualBtn = this.toolbar?.querySelector('.btn-view-visual');
+            const classicBtn = this.toolbar?.querySelector('.btn-view-classic');
+            if (visualBtn) visualBtn.classList.toggle('active', mode === 'visual');
+            if (classicBtn) classicBtn.classList.toggle('active', mode === 'classic');
+
+            // Toggle views
+            if (mode === 'visual') {
+                if (this.editor) this.editor.style.display = '';
+                if (this.classicView) this.classicView.style.display = 'none';
+            } else {
+                if (this.editor) this.editor.style.display = 'none';
+                if (this.classicView) {
+                    this.classicView.style.display = '';
+                    this.renderClassicView();
+                }
+            }
+        }
+
+        /**
+         * Render classic view with element list
+         */
+        renderClassicView() {
+            const contextDef = ELEMENT_DEFINITIONS[this.currentContext];
+            if (!contextDef || !this.classicView) return;
+
+            // Get elements in layout (row > 0) sorted by row then col
+            const placedElements = [];
+            this.state.forEach((data, elementId) => {
+                if (data.row > 0) {
+                    const element = contextDef.elements.find(el => el.id === elementId);
+                    if (element) {
+                        placedElements.push({ element, data });
+                    }
+                }
+            });
+
+            placedElements.sort((a, b) => {
+                if (a.data.row !== b.data.row) return a.data.row - b.data.row;
+                return a.data.col - b.data.col;
+            });
+
+            // Render as a simple table
+            let html = `
+                <div class="classic-view-container">
+                    <table class="table table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>Element</th>
+                                <th>Row</th>
+                                <th>Col</th>
+                                <th>Colspan</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            if (placedElements.length === 0) {
+                html += `
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">
+                            No elements in layout. Switch to Visual view to add elements.
+                        </td>
+                    </tr>
+                `;
+            } else {
+                placedElements.forEach(({ element, data }) => {
+                    html += `
+                        <tr data-element="${element.id}">
+                            <td><strong>${element.label}</strong></td>
+                            <td>${data.row}</td>
+                            <td>${data.col}</td>
+                            <td>${data.colspan}</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-secondary btn-classic-edit" data-element="${element.id}">
+                                    <span class="icon-options" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger btn-classic-remove" data-element="${element.id}">
+                                    <span class="icon-cancel" aria-hidden="true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            this.classicView.innerHTML = html;
+
+            // Bind classic view events
+            this.classicView.querySelectorAll('.btn-classic-edit').forEach(btn => {
+                btn.addEventListener('click', () => this.openSettings(btn.dataset.element));
+            });
+
+            this.classicView.querySelectorAll('.btn-classic-remove').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    this.saveStateForUndo();
+                    const elementId = btn.dataset.element;
+                    this.state.delete(elementId);
+                    this.rebuildCanvas();
+                    this.renderClassicView();
+                });
+            });
         }
 
         // =====================================================================
