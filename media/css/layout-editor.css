@@ -577,6 +577,45 @@
     padding: .375rem .5rem;
 }
 
+/* Toolbar spacer - pushes view toggle to the right */
+.layout-toolbar-spacer {
+    flex: 1;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* ==========================================================================
+   Classic View
+   ========================================================================== */
+.layout-classic {
+    background: var(--layout-bg-primary);
+    border: 1px solid var(--layout-border-color);
+    border-radius: .25rem;
+    padding: 1rem;
+}
+
+.classic-view-container .table {
+    margin-bottom: 0;
+}
+
+.classic-view-container .table th {
+    background: var(--layout-bg-secondary);
+    color: var(--layout-text-primary);
+    font-weight: 600;
+    border-bottom-width: 2px;
+}
+
+.classic-view-container .table td {
+    vertical-align: middle;
+    color: var(--layout-text-primary);
+}
+
+.classic-view-container .btn-classic-edit,
+.classic-view-container .btn-classic-remove {
+    padding: .25rem .5rem;
+}
+
 /* ==========================================================================
    Sortable Ghost & Drag States
    ========================================================================== */
