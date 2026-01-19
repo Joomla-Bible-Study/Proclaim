@@ -114,7 +114,7 @@ class HtmlView extends BaseHtmlView
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
-        // We don't need toolbar in the modal window.
+        // We don't need a toolbar in the modal window.
         if ($this->getLayout() !== 'modal') {
             $this->addToolbar();
         }
@@ -133,15 +133,10 @@ class HtmlView extends BaseHtmlView
      */
     protected function addToolbar(): void
     {
-        $canDo = ContentHelper::getActions('com_proclaim');
-        $user  = Factory::getApplication()->getIdentity();
-
         // Get the toolbar object instance
         $toolbar = Toolbar::getInstance('toolbar');
 
         ToolbarHelper::title(Text::_('JBS_CMN_TEMPLATES'), 'grid grid');
-        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-        ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
 
         if ($this->canDo->get('core.create')) {
             ToolbarHelper::addNew('cwmtemplate.add');
@@ -173,12 +168,15 @@ class HtmlView extends BaseHtmlView
 
         $url = Route::_('index.php?option=com_proclaim&view=templates&layout=default_export');
         $toolbar->appendButton('Link', 'export', 'JBS_TPL_IMPORT_EXPORT_TEMPLATE', $url);
+
+        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
+        ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
     }
 
     /**
-     * Returns an array of fields the table can be sorted by
+     * Returns an array of fields that the table can be sorted by
      *
-     * @return  array  Array containing the field name to sort by as the key and display text as value
+     * @return  array  Array containing the field name to sort by as the key and display text as the value
      *
      * @since   3.0
      */
