@@ -48,15 +48,16 @@ $itemid       = $app->input->get('Itemid');
 
                     <?php
                     foreach ($teachers as $teacher) {
+                        $teacherAlt = htmlspecialchars($teacher['name'], ENT_QUOTES, 'UTF-8');
                         echo '<div class="col">';
                         if ($this->params->get('teacherlink') > 0) {
                             echo '<a href="' . Route::_(
                                 'index.php?option=com_proclaim&view=cwmteacher&id=' . $teacher['id'] . '&t=' . $teacher['t'] . '&Itemid=' . $itemid
-                            ) . '" >
+                            ) . '">
 							<img class="img-polaroid" src="' . Uri::base(
-                            ) . $teacher['image'] . '" alt="Teachers Image"></a>';
+                            ) . $teacher['image'] . '" alt="' . $teacherAlt . '"></a>';
                         } else {
-                            echo '<img class="img-polaroid" src="' . Uri::base() . $teacher['image'] . '">';
+                            echo '<img class="img-polaroid" src="' . Uri::base() . $teacher['image'] . '" alt="' . $teacherAlt . '">';
                         }
                         if ($this->params->get('teacherlink') > 0) {
                             echo '<div class="caption"><p><a href="' . Route::_(

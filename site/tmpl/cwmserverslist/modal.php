@@ -16,6 +16,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
@@ -38,9 +39,10 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
     echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
     ?>
     <table class="table table-striped table-condensed">
+        <caption class="visually-hidden"><?php echo Text::_('JBS_SVR_SERVER_LIST'); ?></caption>
         <thead>
         <tr>
-            <th>
+            <th scope="col">
                 <?php
                 echo HTMLHelper::_(
                     'searchtools.sort',
@@ -62,18 +64,20 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
         </tfoot>
         <tbody>
         <?php
-        foreach ($this->items as $i => $item) : ?>
-            <tr class="row<?php
-            echo $i % 2; ?>">
-                <td class="center">
-                    <a href="javascript:void(0)"
-                       onclick="if (window.parent) window.parent.<?php
-                        echo $this->escape($function); ?>('<?php
-                       echo $item->id; ?>', '<?php
-                       echo $item->server_name; ?>', '', null, '<?php
-                       echo "index.php?option=com_proclaim&view=server&id=" . $item->id; ?>', '', null);">
-                        <?php
-                        echo $this->escape($item->server_name); ?>
+        foreach ($this->items as $i => $item) :
+            $selectFunction = "if (window.parent) window.parent." . $this->escape($function)
+                . "('" . $item->id . "', '" . $this->escape($item->server_name) . "', '', null, '"
+                . "index.php?option=com_proclaim&view=server&id=" . $item->id . "', '', null);";
+            ?>
+            <tr class="row<?php echo $i % 2; ?>">
+                <td>
+                    <a href="#"
+                       role="button"
+                       class="select-server-link"
+                       data-server-id="<?php echo $item->id; ?>"
+                       onclick="<?php echo $selectFunction; ?> return false;"
+                       onkeydown="if(event.key === 'Enter' || event.key === ' ') { event.preventDefault(); <?php echo $selectFunction; ?> }">
+                        <?php echo $this->escape($item->server_name); ?>
                     </a>
                 </td>
             </tr>

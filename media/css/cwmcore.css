@@ -13,6 +13,68 @@
   --color-pagelinks-bg: #F2F2F2;
   --color-dropdowns-bg: #A9A9A9;
   --transition-default: all 0.5s;
+  --focus-outline-color: #005fcc;
+  --focus-outline-width: 3px;
+}
+
+/* ==========================================================================
+   Accessibility - Focus Styles
+   ========================================================================== */
+
+/* Focus styles for all interactive elements */
+a:focus,
+button:focus,
+input:focus,
+select:focus,
+textarea:focus,
+[role="button"]:focus,
+[tabindex]:focus {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: 2px;
+}
+
+/* Focus-visible for keyboard-only focus indication */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: 2px;
+}
+
+/* Remove outline on mouse click but keep for keyboard */
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible),
+[role="button"]:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* High contrast mode support */
+@media (forced-colors: active) {
+  a:focus,
+  button:focus,
+  [role="button"]:focus {
+    outline: 3px solid CanvasText;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .overlay {
+    transition: none;
+  }
 }
 
 /* Teacher Table */
