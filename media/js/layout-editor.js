@@ -737,6 +737,23 @@
                 if (closeBtn) {
                     closeBtn.addEventListener('click', () => this.closeSettingsModal());
                 }
+
+                // Handle Bootstrap modal events for accessibility
+                // Before hide: move focus out to prevent aria-hidden warning
+                this.modal.addEventListener('hide.bs.modal', () => {
+                    const triggerElement = this.currentSettingsElement
+                        ? this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"] .btn-settings`)
+                        : null;
+                    if (triggerElement) {
+                        triggerElement.focus();
+                    }
+                });
+
+                // After hide: set inert to prevent future focus issues
+                this.modal.addEventListener('hidden.bs.modal', () => {
+                    this.modal.inert = true;
+                    this.currentSettingsElement = null;
+                });
             }
 
             // Form submit - sync state to form fields
@@ -872,18 +889,13 @@
                 }
             }
 
-            // Close modal
+            // Close modal - global event listeners in bindEvents() handle focus and inert
             const modalInstance = this.getModalInstance();
             if (modalInstance) {
                 modalInstance.hide();
-                // Re-apply inert after Bootstrap hides the modal
-                if (this.modal) {
-                    this.modal.addEventListener('hidden.bs.modal', () => {
-                        this.modal.inert = true;
-                    }, { once: true });
-                }
             } else if (this.modal) {
-                // Move focus out of modal before hiding
+                // Fallback: manually hide modal
+                // Move focus out first
                 const triggerElement = this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"] .btn-settings`);
                 if (triggerElement) {
                     triggerElement.focus();
@@ -891,12 +903,10 @@
                     document.body.focus();
                 }
 
-                // Fallback: manually hide modal
                 this.modal.classList.remove('show');
                 this.modal.style.display = 'none';
                 this.modal.removeAttribute('aria-modal');
                 this.modal.removeAttribute('role');
-                // Use inert instead of aria-hidden to prevent focus issues
                 this.modal.inert = true;
                 document.body.classList.remove('modal-open');
 
@@ -905,27 +915,22 @@
                 if (backdrop) {
                     backdrop.remove();
                 }
-            }
 
-            this.currentSettingsElement = null;
+                this.currentSettingsElement = null;
+            }
         }
 
         /**
          * Close settings modal without saving (for close button)
          */
         closeSettingsModal() {
-            // Close modal
+            // Close modal - global event listeners in bindEvents() handle focus and inert
             const modalInstance = this.getModalInstance();
             if (modalInstance) {
                 modalInstance.hide();
-                // Re-apply inert after Bootstrap hides the modal
-                if (this.modal) {
-                    this.modal.addEventListener('hidden.bs.modal', () => {
-                        this.modal.inert = true;
-                    }, { once: true });
-                }
             } else if (this.modal) {
-                // Move focus out of modal before hiding
+                // Fallback: manually hide modal
+                // Move focus out first
                 const triggerElement = this.currentSettingsElement
                     ? this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"] .btn-settings`)
                     : null;
@@ -935,12 +940,10 @@
                     document.body.focus();
                 }
 
-                // Fallback: manually hide modal
                 this.modal.classList.remove('show');
                 this.modal.style.display = 'none';
                 this.modal.removeAttribute('aria-modal');
                 this.modal.removeAttribute('role');
-                // Use inert instead of aria-hidden to prevent focus issues
                 this.modal.inert = true;
                 document.body.classList.remove('modal-open');
 
@@ -949,9 +952,9 @@
                 if (backdrop) {
                     backdrop.remove();
                 }
-            }
 
-            this.currentSettingsElement = null;
+                this.currentSettingsElement = null;
+            }
         }
 
         /**
