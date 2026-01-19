@@ -51,6 +51,18 @@ Text::script('JCLOSE');
 Text::script('JCANCEL');
 Text::script('JAPPLY');
 
+// Link type options (matches LinkOptionsField.php)
+Text::script('JBS_TPL_NO_LINK');
+Text::script('JBS_TPL_LINK_TO_DETAILS');
+Text::script('JBS_TPL_LINK_TO_DETAILS_TOOLTIP');
+Text::script('JBS_TPL_LINK_TO_MEDIA');
+Text::script('JBS_TPL_LINK_TO_DOWNLOAD');
+Text::script('JBS_TPL_LINK_TO_MEDIA_TOOLTIP');
+Text::script('JBS_TPL_LINK_TO_TEACHERS_PROFILE');
+Text::script('JBS_TPL_LINK_TO_FIRST_ARTICLE');
+Text::script('JBS_TPL_LINK_TO_VIRTUEMART');
+Text::script('JBS_TPL_LINK_TO_DOCMAN');
+
 // Element labels
 Text::script('JBS_CMN_SCRIPTURE');
 Text::script('JBS_CMN_SCRIPTURE2');
