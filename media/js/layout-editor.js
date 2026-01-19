@@ -754,6 +754,19 @@
                     this.modal.inert = true;
                     this.currentSettingsElement = null;
                 });
+
+                // Use MutationObserver to remove aria-hidden whenever Bootstrap sets it
+                // We use inert instead, so aria-hidden is not needed and causes warnings
+                const observer = new MutationObserver((mutations) => {
+                    mutations.forEach((mutation) => {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'aria-hidden') {
+                            if (this.modal.getAttribute('aria-hidden') === 'true') {
+                                this.modal.removeAttribute('aria-hidden');
+                            }
+                        }
+                    });
+                });
+                observer.observe(this.modal, { attributes: true, attributeFilter: ['aria-hidden'] });
             }
 
             // Form submit - sync state to form fields
