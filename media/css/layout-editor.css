@@ -305,6 +305,64 @@
 }
 
 /* ==========================================================================
+   12-Column Grid Overlay
+   Shows column guides when dragging or on hover
+   ========================================================================== */
+.row-elements {
+    position: relative;
+}
+
+.row-elements::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    /* 12-column grid using repeating gradient */
+    background: repeating-linear-gradient(
+        to right,
+        var(--layout-grid-line, rgba(0, 0, 0, 0.05)) 0,
+        var(--layout-grid-line, rgba(0, 0, 0, 0.05)) 1px,
+        transparent 1px,
+        transparent calc(100% / 12)
+    );
+    background-size: calc(100% / 12 * 1) 100%;
+    z-index: 0;
+}
+
+/* Show grid when dragging over or when grid is enabled */
+.row-elements.sortable-drag-over::before,
+.row-elements.show-grid::before,
+.layout-editor.show-grid .row-elements::before {
+    opacity: 1;
+}
+
+/* Grid line color for dark mode */
+[data-bs-theme="dark"] {
+    --layout-grid-line: rgba(255, 255, 255, 0.08);
+}
+
+/* Column number indicators (optional, shown on hover) */
+.layout-editor.show-grid-numbers .row-elements::after {
+    content: '1  2  3  4  5  6  7  8  9  10 11 12';
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    right: 0;
+    font-size: 9px;
+    color: var(--layout-text-muted);
+    opacity: 0.5;
+    text-align: center;
+    letter-spacing: calc((100% - 12ch) / 11);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ==========================================================================
    Element Card in Canvas (Placed Elements)
    ========================================================================== */
 .row-elements .element-card {
@@ -390,6 +448,136 @@
 .row-elements .element-card[data-colspan="12"] { min-width: 100%; }
 
 /* ==========================================================================
+   Resize Handles
+   Drag edge to change colspan
+   ========================================================================== */
+.row-elements .element-card .resize-handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    cursor: ew-resize;
+    background: transparent;
+    transition: background-color 0.15s ease;
+    z-index: 10;
+}
+
+.row-elements .element-card .resize-handle-right {
+    right: -4px;
+}
+
+.row-elements .element-card .resize-handle-left {
+    left: -4px;
+}
+
+.row-elements .element-card .resize-handle:hover,
+.row-elements .element-card .resize-handle.resizing {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.row-elements .element-card .resize-handle::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 2px;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 1px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.row-elements .element-card .resize-handle:hover::after,
+.row-elements .element-card .resize-handle.resizing::after {
+    opacity: 1;
+}
+
+/* Colspan indicator during resize */
+.row-elements .element-card.resizing .element-info {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   Editor Toolbar
+   Contains grid toggle, undo/redo, view toggle
+   ========================================================================== */
+.layout-toolbar {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: .75rem;
+    padding: .5rem;
+    background: var(--layout-bg-secondary);
+    border: 1px solid var(--layout-border-color);
+    border-radius: .25rem;
+}
+
+.layout-toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+}
+
+.layout-toolbar-group + .layout-toolbar-group {
+    margin-left: .5rem;
+    padding-left: .75rem;
+    border-left: 1px solid var(--layout-border-color);
+}
+
+.layout-toolbar .btn-toolbar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .375rem;
+    padding: .375rem .625rem;
+    background: var(--layout-bg-primary);
+    border: 1px solid var(--layout-border-color);
+    border-radius: .25rem;
+    color: var(--layout-text-secondary);
+    font-size: .875rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    min-height: 32px;
+}
+
+.layout-toolbar .btn-toolbar:hover {
+    background: var(--layout-bg-tertiary);
+    border-color: var(--layout-accent);
+    color: var(--layout-text-primary);
+}
+
+.layout-toolbar .btn-toolbar:focus {
+    outline: none;
+    box-shadow: var(--layout-focus-ring);
+}
+
+.layout-toolbar .btn-toolbar.active {
+    background: var(--layout-accent);
+    border-color: var(--layout-accent);
+    color: var(--layout-accent-text);
+}
+
+.layout-toolbar .btn-toolbar:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.layout-toolbar .btn-toolbar [class*="icon-"] {
+    font-size: 1rem;
+}
+
+/* Undo/Redo specific styling */
+.layout-toolbar .btn-undo,
+.layout-toolbar .btn-redo {
+    padding: .375rem .5rem;
+}
+
+/* ==========================================================================
    Sortable Ghost & Drag States
    ========================================================================== */
 .sortable-ghost {
@@ -398,11 +586,34 @@
 
 .sortable-drag {
     opacity: 1 !important;
+    transform: scale(1.02);
+    z-index: 1000;
 }
 
 .sortable-fallback {
     opacity: 0.9 !important;
     box-shadow: var(--layout-shadow-lg) !important;
+}
+
+/* Drag animation */
+.element-card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.element-card.sortable-chosen {
+    transform: scale(1.02);
+    box-shadow: var(--layout-shadow-lg);
+}
+
+/* Drop indicator animation */
+@keyframes drop-pulse {
+    0% { box-shadow: 0 0 0 0 var(--layout-accent); }
+    50% { box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.3); }
+    100% { box-shadow: 0 0 0 0 var(--layout-accent); }
+}
+
+.element-card.just-dropped {
+    animation: drop-pulse 0.3s ease-out;
 }
 
 /* ==========================================================================
