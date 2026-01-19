@@ -114,11 +114,11 @@
         series: {
             label: 'Series List',
             elements: [
-                { id: 'series', label: 'Series Title', langKey: 'JBS_CMN_TITLE' },
+                { id: 'title', label: 'Series Title', langKey: 'JBS_CMN_TITLE' },
                 { id: 'description', label: 'Description', langKey: 'JBS_CMN_DESCRIPTION' },
-                { id: 'seriesthumbnail', label: 'Thumbnail', langKey: 'JBS_CMN_THUMBNAIL' },
+                { id: 'thumbnail', label: 'Thumbnail', langKey: 'JBS_CMN_THUMBNAIL' },
                 { id: 'teacher', label: 'Teacher', langKey: 'JBS_CMN_TEACHER' },
-                { id: 'dcustom', label: 'Custom', langKey: 'JBS_CMN_CUSTOM' }
+                { id: 'custom', label: 'Custom', langKey: 'JBS_CMN_CUSTOM' }
             ],
             prefix: 's'
         },
@@ -126,9 +126,9 @@
         seriesDetails: {
             label: 'Series Details',
             elements: [
-                { id: 'series', label: 'Series Title', langKey: 'JBS_CMN_TITLE' },
+                { id: 'title', label: 'Series Title', langKey: 'JBS_CMN_TITLE' },
                 { id: 'description', label: 'Description', langKey: 'JBS_CMN_DESCRIPTION' },
-                { id: 'seriesthumbnail', label: 'Thumbnail', langKey: 'JBS_CMN_THUMBNAIL' },
+                { id: 'thumbnail', label: 'Thumbnail', langKey: 'JBS_CMN_THUMBNAIL' },
                 { id: 'teacher', label: 'Teacher', langKey: 'JBS_CMN_TEACHER' },
                 { id: 'custom', label: 'Custom', langKey: 'JBS_CMN_CUSTOM' }
             ],
@@ -137,33 +137,28 @@
     };
 
     /**
-     * Link type options (matches LinkOptionsField.php)
+     * Link type options
      */
     const LINK_TYPES = [
-        { value: '0', labelKey: 'JBS_TPL_NO_LINK', label: 'No Link' },
-        { value: '1', labelKey: 'JBS_TPL_LINK_TO_DETAILS', label: 'Link to Details' },
-        { value: '4', labelKey: 'JBS_TPL_LINK_TO_DETAILS_TOOLTIP', label: 'Link to Details (Tooltip)' },
-        { value: '2', labelKey: 'JBS_TPL_LINK_TO_MEDIA', label: 'Link to Media' },
-        { value: '9', labelKey: 'JBS_TPL_LINK_TO_DOWNLOAD', label: 'Link to Download' },
-        { value: '5', labelKey: 'JBS_TPL_LINK_TO_MEDIA_TOOLTIP', label: 'Link to Media (Tooltip)' },
-        { value: '3', labelKey: 'JBS_TPL_LINK_TO_TEACHERS_PROFILE', label: 'Link to Teacher\'s Profile' },
-        { value: '6', labelKey: 'JBS_TPL_LINK_TO_FIRST_ARTICLE', label: 'Link to First Article' },
-        { value: '7', labelKey: 'JBS_TPL_LINK_TO_VIRTUEMART', label: 'Link to VirtueMart' },
-        { value: '8', labelKey: 'JBS_TPL_LINK_TO_DOCMAN', label: 'Link to DocMan' }
+        { value: '0', label: 'No Link' },
+        { value: '1', label: 'Link to Details' },
+        { value: '2', label: 'Link in Popup' },
+        { value: '3', label: 'Link in Lightbox' }
     ];
 
     /**
-     * Element type options (matches ElementOptionsField.php)
+     * Element type options
      */
     const ELEMENT_TYPES = [
-        { value: '0', labelKey: 'JBS_CMN_NONE', label: 'None' },
-        { value: '1', labelKey: 'JBS_TPL_PARAGRAPH', label: 'Paragraph' },
-        { value: '2', labelKey: 'JBS_TPL_HEADER1', label: 'Header 1' },
-        { value: '3', labelKey: 'JBS_TPL_HEADER2', label: 'Header 2' },
-        { value: '4', labelKey: 'JBS_TPL_HEADER3', label: 'Header 3' },
-        { value: '5', labelKey: 'JBS_TPL_HEADER4', label: 'Header 4' },
-        { value: '6', labelKey: 'JBS_TPL_HEADER5', label: 'Header 5' },
-        { value: '7', labelKey: 'JBS_TPL_BLOCKQUOTE', label: 'Blockquote' }
+        { value: '0', label: 'Hidden' },
+        { value: '1', label: 'Paragraph' },
+        { value: '2', label: 'Div' },
+        { value: '3', label: 'Span' },
+        { value: '4', label: 'H1' },
+        { value: '5', label: 'H2' },
+        { value: '6', label: 'H3' },
+        { value: '7', label: 'H4' },
+        { value: '8', label: 'H5' }
     ];
 
     /**
@@ -191,15 +186,6 @@
             this.currentContext = this.options.context;
             this.sortableInstances = [];
             this.paletteSortable = null;
-
-            // Undo/Redo history
-            this.undoStack = [];
-            this.redoStack = [];
-            this.maxHistory = 50;
-
-            // UI state
-            this.showGrid = false;
-            this.isResizing = false;
 
             // Language strings helper
             this.trans = (key) => {
@@ -229,38 +215,11 @@
          */
         createStructure() {
             this.container.innerHTML = `
-                <div class="layout-help alert alert-info">
+                <div class="layout-help">
                     <span class="icon-info-circle" aria-hidden="true"></span>
                     ${this.trans('JBS_TPL_LAYOUT_HELP') || 'Drag elements from the sidebar onto rows to arrange your layout. Click the gear icon to configure element settings.'}
                 </div>
                 <div class="layout-context-tabs"></div>
-                <div class="layout-toolbar">
-                    <div class="layout-toolbar-group">
-                        <button type="button" class="btn btn-secondary btn-undo" title="Undo (Ctrl+Z)" disabled>
-                            <span class="icon-undo" aria-hidden="true"></span>
-                        </button>
-                        <button type="button" class="btn btn-secondary btn-redo" title="Redo (Ctrl+Y)" disabled>
-                            <span class="icon-redo" aria-hidden="true"></span>
-                        </button>
-                    </div>
-                    <div class="layout-toolbar-group">
-                        <button type="button" class="btn btn-secondary btn-grid" title="Toggle Grid">
-                            <span class="icon-grid-view" aria-hidden="true"></span>
-                            <span class="btn-text">Grid</span>
-                        </button>
-                    </div>
-                    <div class="layout-toolbar-group layout-toolbar-spacer"></div>
-                    <div class="layout-toolbar-group">
-                        <button type="button" class="btn btn-primary btn-view-visual" title="Visual Editor">
-                            <span class="icon-image" aria-hidden="true"></span>
-                            <span class="btn-text">Visual</span>
-                        </button>
-                        <button type="button" class="btn btn-secondary btn-view-classic" title="Classic View">
-                            <span class="icon-list" aria-hidden="true"></span>
-                            <span class="btn-text">Classic</span>
-                        </button>
-                    </div>
-                </div>
                 <div class="layout-editor">
                     <aside class="layout-sidebar">
                         <h4>${this.trans('JBS_TPL_AVAILABLE_ELEMENTS') || 'Available Elements'}</h4>
@@ -268,19 +227,12 @@
                     </aside>
                     <main class="layout-canvas"></main>
                 </div>
-                <div class="layout-classic" style="display: none;"></div>
             `;
 
             this.sidebar = this.container.querySelector('.layout-sidebar');
             this.palette = this.container.querySelector('.element-palette');
             this.canvas = this.container.querySelector('.layout-canvas');
             this.contextTabs = this.container.querySelector('.layout-context-tabs');
-            this.toolbar = this.container.querySelector('.layout-toolbar');
-            this.editor = this.container.querySelector('.layout-editor');
-            this.classicView = this.container.querySelector('.layout-classic');
-
-            // Current view mode
-            this.viewMode = 'visual';
 
             // Create context tabs
             this.createContextTabs();
@@ -305,8 +257,7 @@
             contexts.forEach(ctx => {
                 const tab = document.createElement('button');
                 tab.type = 'button';
-                const isActive = ctx.id === this.currentContext;
-                tab.className = 'btn layout-context-tab ' + (isActive ? 'btn-primary' : 'btn-secondary');
+                tab.className = 'layout-context-tab' + (ctx.id === this.currentContext ? ' active' : '');
                 tab.dataset.context = ctx.id;
                 tab.textContent = ctx.label;
                 tab.addEventListener('click', () => this.switchContext(ctx.id));
@@ -324,11 +275,9 @@
             // Sync current state to form before switching
             this.syncToForm();
 
-            // Update tab button states - swap primary/secondary classes
+            // Update active tab
             this.contextTabs.querySelectorAll('.layout-context-tab').forEach(tab => {
-                const isActive = tab.dataset.context === context;
-                tab.classList.toggle('btn-primary', isActive);
-                tab.classList.toggle('btn-secondary', !isActive);
+                tab.classList.toggle('active', tab.dataset.context === context);
             });
 
             this.currentContext = context;
@@ -444,15 +393,14 @@
             modal.id = 'layoutSettingsModal';
             modal.tabIndex = -1;
             modal.setAttribute('aria-labelledby', 'layoutSettingsModalLabel');
-            // Use inert attribute instead of aria-hidden to prevent focus issues
-            // See: https://w3c.github.io/aria/#aria-hidden
-            modal.inert = true;
+            modal.setAttribute('aria-hidden', 'true');
 
             modal.innerHTML = `
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="layoutSettingsModalLabel">${this.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Element Settings'}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="${this.trans('JCLOSE') || 'Close'}"></button>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
@@ -465,14 +413,14 @@
                             <div class="form-group">
                                 <label class="form-label" for="layout-element-type">${this.trans('JBS_TPL_ELEMENT') || 'Element Type'}</label>
                                 <select class="form-select" id="layout-element-type">
-                                    ${ELEMENT_TYPES.map(opt => `<option value="${opt.value}">${this.trans(opt.labelKey) || opt.label}</option>`).join('')}
+                                    ${ELEMENT_TYPES.map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
                                 </select>
                                 <div class="form-text">${this.trans('JBS_TPL_ELEMENT_DESC') || 'HTML element type to wrap this content'}</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label" for="layout-link-type">${this.trans('JBS_TPL_TYPE_OF_LINK') || 'Link Type'}</label>
                                 <select class="form-select" id="layout-link-type">
-                                    ${LINK_TYPES.map(opt => `<option value="${opt.value}">${this.trans(opt.labelKey) || opt.label}</option>`).join('')}
+                                    ${LINK_TYPES.map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
                                 </select>
                                 <div class="form-text">${this.trans('JBS_TPL_TYPE_OF_LINK_DESC') || 'How this element should link to the detail view'}</div>
                             </div>
@@ -483,8 +431,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">${this.trans('JCANCEL') || 'Cancel'}</button>
-                            <button type="button" class="btn btn-success" id="layout-settings-save">${this.trans('JAPPLY') || 'Apply'}</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${this.trans('JCANCEL') || 'Cancel'}</button>
+                            <button type="button" class="btn btn-primary" id="layout-settings-save">${this.trans('JAPPLY') || 'Apply'}</button>
                         </div>
                     </div>
                 </div>
@@ -531,14 +479,6 @@
         initSortable() {
             if (typeof Sortable === 'undefined') {
                 console.error('Sortable.js is not loaded');
-                // Show user-facing error message
-                const errorMsg = document.createElement('div');
-                errorMsg.className = 'alert alert-danger';
-                errorMsg.innerHTML = `
-                    <span class="icon-warning" aria-hidden="true"></span>
-                    ${this.trans('JBS_TPL_SORTABLE_NOT_LOADED') || 'Drag and drop functionality is unavailable. Please refresh the page or contact support.'}
-                `;
-                this.container.insertBefore(errorMsg, this.container.firstChild);
                 return;
             }
 
@@ -554,22 +494,30 @@
                         put: false
                     },
                     sort: false,
-                    animation: 80, // Faster animation for snappier feel
+                    animation: 150,
                     ghostClass: 'sortable-ghost',
                     chosenClass: 'sortable-chosen',
                     dragClass: 'sortable-drag',
-                    delay: 0,
-                    delayOnTouchOnly: true,
-                    touchStartThreshold: 3,
-                    onStart: function () {
-                        // Save state for undo when starting to drag from palette
-                        self.saveStateForUndo();
-                    },
                     onClone: function (evt) {
-                        // Mark clone as coming from palette - buttons will be added in onAdd handler
-                        // Do NOT add buttons here as evt.clone stays in the palette
+                        // Transform clone into a full element card
                         const clone = evt.clone;
-                        clone.dataset.paletteItem = 'true';
+                        const elementId = clone.dataset.element;
+                        const element = self.getElementDefinition(elementId);
+
+                        if (element) {
+                            clone.dataset.paletteItem = '';
+                            clone.innerHTML = `
+                                <span class="element-handle"><span class="icon-menu" aria-hidden="true"></span></span>
+                                <span class="element-name">${element.label}</span>
+                                <span class="element-info">Col 1</span>
+                                <button type="button" class="btn-settings" title="${self.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Settings'}">
+                                    <span class="icon-options" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="btn-remove" title="${self.trans('JBS_TPL_REMOVE_ELEMENT') || 'Remove'}">
+                                    <span class="icon-cancel" aria-hidden="true"></span>
+                                </button>
+                            `;
+                        }
                     }
                 });
             }
@@ -578,23 +526,13 @@
             this.canvas.querySelectorAll('.row-elements').forEach(rowEl => {
                 const sortable = Sortable.create(rowEl, {
                     group: 'elements',
-                    animation: 80, // Faster animation for snappier feel
+                    animation: 150,
                     ghostClass: 'sortable-ghost',
                     chosenClass: 'sortable-chosen',
                     dragClass: 'sortable-drag',
                     handle: '.element-handle',
-                    delay: 0,
-                    delayOnTouchOnly: true,
-                    touchStartThreshold: 3,
-                    onStart: function () {
-                        // Save state for undo when drag starts
-                        self.saveStateForUndo();
-                    },
                     onAdd: function (evt) {
                         self.onElementAdded(evt);
-                        // Add drop animation
-                        evt.item.classList.add('just-dropped');
-                        setTimeout(() => evt.item.classList.remove('just-dropped'), 300);
                     },
                     onUpdate: function (evt) {
                         self.onElementMoved(evt);
@@ -663,15 +601,10 @@
                         </button>
                     `;
                 }
-
-                // Add resize handles and make focusable
-                evt.item.tabIndex = 0;
-                this.addResizeHandles(evt.item);
             }
 
             this.updateElementInfo(evt.item);
-            // Auto-distribute colspans in the target row
-            this.distributeColspans(evt.to);
+            this.recalculateColumns(evt.to);
         }
 
         /**
@@ -679,20 +612,18 @@
          * @param {Event} evt - Sortable event
          */
         onElementMoved(evt) {
-            // Redistribute colspans in affected rows
-            this.distributeColspans(evt.to);
+            this.recalculateColumns(evt.to);
             if (evt.from !== evt.to) {
-                this.distributeColspans(evt.from);
+                this.recalculateColumns(evt.from);
             }
         }
 
         /**
-         * Handle element removed from a row (moved to another row)
+         * Handle element removed from a row
          * @param {Event} evt - Sortable event
          */
         onElementRemoved(evt) {
-            // Redistribute colspans in the source row
-            this.distributeColspans(evt.from);
+            this.recalculateColumns(evt.from);
         }
 
         /**
@@ -716,7 +647,6 @@
 
         /**
          * Recalculate column positions for all elements in a row
-         * Validates that col + colspan doesn't exceed grid width (12 columns)
          * @param {HTMLElement} rowEl - Row element
          */
         recalculateColumns(rowEl) {
@@ -731,65 +661,11 @@
                 if (data) {
                     data.row = row;
                     data.col = col;
-
-                    // Validate colspan doesn't exceed remaining grid space
-                    let colspan = parseInt(data.colspan, 10) || 1;
-                    const remainingCols = this.options.numCols - col + 1;
-                    if (colspan > remainingCols) {
-                        colspan = remainingCols;
-                        data.colspan = String(colspan);
-                        card.dataset.colspan = String(colspan);
-                    }
-
-                    col += colspan;
+                    col += parseInt(data.colspan, 10) || 1;
                 }
 
                 this.updateElementInfo(card);
             });
-        }
-
-        /**
-         * Auto-distribute colspans evenly across elements in a row
-         * First element gets full width (12), additional elements split evenly
-         * @param {HTMLElement} rowEl - Row element
-         * @param {boolean} preserveManual - If true, don't change manually set colspans
-         */
-        distributeColspans(rowEl, preserveManual = false) {
-            const children = Array.from(rowEl.children).filter(el =>
-                !el.classList.contains('sortable-ghost') &&
-                el.classList.contains('element-card')
-            );
-
-            const count = children.length;
-            if (count === 0) return;
-
-            const totalCols = this.options.numCols; // 12
-
-            if (count === 1) {
-                // Single element gets full width
-                const data = this.state.get(children[0].dataset.element);
-                if (data && (!preserveManual || !data.manualColspan)) {
-                    data.colspan = String(totalCols);
-                    children[0].dataset.colspan = String(totalCols);
-                }
-            } else {
-                // Multiple elements - distribute evenly
-                const baseColspan = Math.floor(totalCols / count);
-                const remainder = totalCols % count;
-
-                children.forEach((card, index) => {
-                    const data = this.state.get(card.dataset.element);
-                    if (data && (!preserveManual || !data.manualColspan)) {
-                        // First 'remainder' elements get +1 colspan
-                        const colspan = baseColspan + (index < remainder ? 1 : 0);
-                        data.colspan = String(colspan);
-                        card.dataset.colspan = String(colspan);
-                    }
-                });
-            }
-
-            // Recalculate column positions
-            this.recalculateColumns(rowEl);
         }
 
         /**
@@ -842,7 +718,6 @@
                 if (removeBtn) {
                     const card = removeBtn.closest('.element-card');
                     if (card) {
-                        this.saveStateForUndo();
                         this.removeElement(card);
                     }
                 }
@@ -852,44 +727,6 @@
             const saveBtn = document.getElementById('layout-settings-save');
             if (saveBtn) {
                 saveBtn.addEventListener('click', () => this.saveSettings());
-            }
-
-            // Settings modal close (for fallback when Bootstrap modal not available)
-            if (this.modal) {
-                const closeBtn = this.modal.querySelector('.btn-close');
-                if (closeBtn) {
-                    closeBtn.addEventListener('click', () => this.closeSettingsModal());
-                }
-
-                // Handle Bootstrap modal events for accessibility
-                // Before hide: move focus out to prevent aria-hidden warning
-                this.modal.addEventListener('hide.bs.modal', () => {
-                    const triggerElement = this.currentSettingsElement
-                        ? this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"] .btn-settings`)
-                        : null;
-                    if (triggerElement) {
-                        triggerElement.focus();
-                    }
-                });
-
-                // After hide: set inert to prevent future focus issues
-                this.modal.addEventListener('hidden.bs.modal', () => {
-                    this.modal.inert = true;
-                    this.currentSettingsElement = null;
-                });
-
-                // Use MutationObserver to remove aria-hidden whenever Bootstrap sets it
-                // We use inert instead, so aria-hidden is not needed and causes warnings
-                const observer = new MutationObserver((mutations) => {
-                    mutations.forEach((mutation) => {
-                        if (mutation.type === 'attributes' && mutation.attributeName === 'aria-hidden') {
-                            if (this.modal.getAttribute('aria-hidden') === 'true') {
-                                this.modal.removeAttribute('aria-hidden');
-                            }
-                        }
-                    });
-                });
-                observer.observe(this.modal, { attributes: true, attributeFilter: ['aria-hidden'] });
             }
 
             // Form submit - sync state to form fields
@@ -905,40 +742,6 @@
                     this.syncToForm();
                 }
             });
-
-            // Toolbar buttons
-            if (this.toolbar) {
-                // Undo button
-                const undoBtn = this.toolbar.querySelector('.btn-undo');
-                if (undoBtn) {
-                    undoBtn.addEventListener('click', () => this.undo());
-                }
-
-                // Redo button
-                const redoBtn = this.toolbar.querySelector('.btn-redo');
-                if (redoBtn) {
-                    redoBtn.addEventListener('click', () => this.redo());
-                }
-
-                // Grid toggle button
-                const gridBtn = this.toolbar.querySelector('.btn-grid');
-                if (gridBtn) {
-                    gridBtn.addEventListener('click', () => this.toggleGrid());
-                }
-
-                // View toggle buttons
-                const visualBtn = this.toolbar.querySelector('.btn-view-visual');
-                const classicBtn = this.toolbar.querySelector('.btn-view-classic');
-                if (visualBtn) {
-                    visualBtn.addEventListener('click', () => this.switchView('visual'));
-                }
-                if (classicBtn) {
-                    classicBtn.addEventListener('click', () => this.switchView('classic'));
-                }
-            }
-
-            // Keyboard shortcuts
-            document.addEventListener('keydown', (e) => this.handleKeyboard(e));
         }
 
         /**
@@ -955,9 +758,9 @@
             // Remove from DOM
             card.remove();
 
-            // Redistribute colspans for remaining elements
+            // Recalculate columns
             if (rowEl) {
-                this.distributeColspans(rowEl);
+                this.recalculateColumns(rowEl);
             }
         }
 
@@ -982,14 +785,6 @@
                 this.state.set(elementId, data);
             }
 
-            // Update modal title to show element name
-            const elementDef = this.getElementDefinition(elementId);
-            const modalTitle = document.getElementById('layoutSettingsModalLabel');
-            if (modalTitle && elementDef) {
-                const elementLabel = this.trans(elementDef.langKey) || elementDef.label;
-                modalTitle.textContent = `${this.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Element Settings'}: ${elementLabel}`;
-            }
-
             // Populate modal fields
             const colspanEl = document.getElementById('layout-colspan');
             const elementTypeEl = document.getElementById('layout-element-type');
@@ -1004,20 +799,13 @@
             // Show modal
             const modalInstance = this.getModalInstance();
             if (modalInstance) {
-                // Remove inert before Bootstrap shows the modal
-                if (this.modal) {
-                    this.modal.inert = false;
-                }
                 modalInstance.show();
             } else {
                 // Fallback: manually show modal with CSS classes
                 if (this.modal) {
-                    // Remove inert to allow interaction
-                    this.modal.inert = false;
                     this.modal.classList.add('show');
                     this.modal.style.display = 'block';
-                    this.modal.setAttribute('aria-modal', 'true');
-                    this.modal.setAttribute('role', 'dialog');
+                    this.modal.setAttribute('aria-hidden', 'false');
                     document.body.classList.add('modal-open');
 
                     // Create backdrop
@@ -1027,15 +815,6 @@
                         backdrop.className = 'modal-backdrop fade show';
                         document.body.appendChild(backdrop);
                     }
-
-                    // Focus the first focusable element in the modal after a brief delay
-                    // to ensure the modal is fully visible
-                    requestAnimationFrame(() => {
-                        const firstFocusable = this.modal.querySelector('select, input, button, [href], textarea, [tabindex]:not([tabindex="-1"])');
-                        if (firstFocusable) {
-                            firstFocusable.focus();
-                        }
-                    });
                 }
             }
         }
@@ -1050,17 +829,7 @@
             if (!data) return;
 
             // Get values from modal
-            let newColspan = parseInt(document.getElementById('layout-colspan').value, 10) || 1;
-
-            // Validate colspan is within bounds (1-12)
-            newColspan = Math.max(1, Math.min(this.options.numCols, newColspan));
-
-            // Mark colspan as manually set if changed by user
-            if (data.colspan !== String(newColspan)) {
-                data.manualColspan = true;
-            }
-
-            data.colspan = String(newColspan);
+            data.colspan = document.getElementById('layout-colspan').value;
             data.element = document.getElementById('layout-element-type').value;
             data.linktype = document.getElementById('layout-link-type').value;
             data.custom = document.getElementById('layout-custom-class').value;
@@ -1077,25 +846,15 @@
                 }
             }
 
-            // Close modal - global event listeners in bindEvents() handle focus and inert
+            // Close modal
             const modalInstance = this.getModalInstance();
             if (modalInstance) {
                 modalInstance.hide();
             } else if (this.modal) {
                 // Fallback: manually hide modal
-                // Move focus out first
-                const triggerElement = this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"] .btn-settings`);
-                if (triggerElement) {
-                    triggerElement.focus();
-                } else {
-                    document.body.focus();
-                }
-
                 this.modal.classList.remove('show');
                 this.modal.style.display = 'none';
-                this.modal.removeAttribute('aria-modal');
-                this.modal.removeAttribute('role');
-                this.modal.inert = true;
+                this.modal.setAttribute('aria-hidden', 'true');
                 document.body.classList.remove('modal-open');
 
                 // Remove backdrop
@@ -1103,46 +862,9 @@
                 if (backdrop) {
                     backdrop.remove();
                 }
-
-                this.currentSettingsElement = null;
             }
-        }
 
-        /**
-         * Close settings modal without saving (for close button)
-         */
-        closeSettingsModal() {
-            // Close modal - global event listeners in bindEvents() handle focus and inert
-            const modalInstance = this.getModalInstance();
-            if (modalInstance) {
-                modalInstance.hide();
-            } else if (this.modal) {
-                // Fallback: manually hide modal
-                // Move focus out first
-                const triggerElement = this.currentSettingsElement
-                    ? this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"] .btn-settings`)
-                    : null;
-                if (triggerElement) {
-                    triggerElement.focus();
-                } else {
-                    document.body.focus();
-                }
-
-                this.modal.classList.remove('show');
-                this.modal.style.display = 'none';
-                this.modal.removeAttribute('aria-modal');
-                this.modal.removeAttribute('role');
-                this.modal.inert = true;
-                document.body.classList.remove('modal-open');
-
-                // Remove backdrop
-                const backdrop = document.querySelector('.modal-backdrop');
-                if (backdrop) {
-                    backdrop.remove();
-                }
-
-                this.currentSettingsElement = null;
-            }
+            this.currentSettingsElement = null;
         }
 
         /**
@@ -1155,8 +877,7 @@
             const prefix = contextDef.prefix;
 
             // Get params from Joomla script options (passed from PHP)
-            // Use defensive check in case Joomla object is not available
-            const templateParams = (window.Joomla?.getOptions?.('com_proclaim.templateParams')) || {};
+            const templateParams = Joomla.getOptions('com_proclaim.templateParams') || {};
 
             contextDef.elements.forEach(element => {
                 const fieldPrefix = prefix + element.id;
@@ -1165,10 +886,7 @@
                 let row = parseInt(templateParams[fieldPrefix + 'row'], 10) || 0;
                 let col = parseInt(templateParams[fieldPrefix + 'col'], 10) || 1;
                 let colspan = templateParams[fieldPrefix + 'colspan'] || '1';
-                let elementType = templateParams[fieldPrefix + 'element'];
-                if (elementType === undefined || elementType === null || elementType === '') {
-                    elementType = '1';
-                }
+                let elementType = templateParams[fieldPrefix + 'element'] || '1';
                 let custom = templateParams[fieldPrefix + 'custom'] || '';
                 let linktype = templateParams[fieldPrefix + 'linktype'] || '0';
 
@@ -1209,9 +927,6 @@
 
             // Sort elements in each row by column
             this.sortCanvasElements();
-
-            // Migrate legacy templates with irregular colspans
-            this.migrateLegacyColspans();
         }
 
         /**
@@ -1225,11 +940,7 @@
 
             const card = this.createElementCard(element, false);
             card.dataset.colspan = data.colspan;
-            card.tabIndex = 0; // Make focusable for keyboard navigation
             rowEl.appendChild(card);
-
-            // Add resize handles
-            this.addResizeHandles(card);
 
             this.updateElementInfo(card);
         }
@@ -1248,53 +959,6 @@
                 });
 
                 cards.forEach(card => rowEl.appendChild(card));
-            });
-        }
-
-        /**
-         * Migrate legacy templates with irregular colspan values
-         * Legacy templates may have:
-         * - Colspans that don't sum to 12
-         * - Single elements with small colspans (not using full width)
-         * - Inconsistent column distributions
-         *
-         * This method normalizes the layout by auto-distributing colspans.
-         */
-        migrateLegacyColspans() {
-            // Group elements by row
-            const rowGroups = new Map();
-
-            this.state.forEach((data, elementId) => {
-                if (data.row > 0) {
-                    if (!rowGroups.has(data.row)) {
-                        rowGroups.set(data.row, []);
-                    }
-                    rowGroups.get(data.row).push({ elementId, data });
-                }
-            });
-
-            // Check each row for legacy patterns
-            rowGroups.forEach((elements, row) => {
-                const totalColspan = elements.reduce((sum, el) => sum + (parseInt(el.data.colspan, 10) || 1), 0);
-                const elementCount = elements.length;
-
-                // Legacy pattern detection:
-                // 1. Single element not using full width (colspan < 12)
-                // 2. Multiple elements not filling the row (total < 12)
-                // 3. Elements overflowing the row (total > 12)
-                const needsMigration = (
-                    (elementCount === 1 && totalColspan < 12) ||
-                    (elementCount > 1 && totalColspan !== 12)
-                );
-
-                if (needsMigration) {
-                    // Get the row element and redistribute
-                    const rowEl = this.canvas.querySelector(`.row-elements[data-row="${row}"]`);
-                    if (rowEl) {
-                        // Don't preserve manual colspans during migration
-                        this.distributeColspans(rowEl, false);
-                    }
-                }
             });
         }
 
@@ -1363,625 +1027,6 @@
                 state[key] = { ...value };
             });
             return state;
-        }
-
-        // =====================================================================
-        // Undo/Redo Functionality
-        // =====================================================================
-
-        /**
-         * Save current state to undo stack
-         */
-        saveStateForUndo() {
-            // Clone current state
-            const stateCopy = new Map();
-            this.state.forEach((value, key) => {
-                stateCopy.set(key, { ...value });
-            });
-
-            this.undoStack.push(stateCopy);
-
-            // Limit history size
-            if (this.undoStack.length > this.maxHistory) {
-                this.undoStack.shift();
-            }
-
-            // Clear redo stack when new action is performed
-            this.redoStack = [];
-
-            this.updateToolbarState();
-        }
-
-        /**
-         * Undo last action
-         */
-        undo() {
-            if (this.undoStack.length === 0) return;
-
-            // Save current state to redo stack
-            const currentState = new Map();
-            this.state.forEach((value, key) => {
-                currentState.set(key, { ...value });
-            });
-            this.redoStack.push(currentState);
-
-            // Restore previous state
-            this.state = this.undoStack.pop();
-
-            // Rebuild canvas
-            this.rebuildCanvas();
-            this.updateToolbarState();
-        }
-
-        /**
-         * Redo last undone action
-         */
-        redo() {
-            if (this.redoStack.length === 0) return;
-
-            // Save current state to undo stack
-            const currentState = new Map();
-            this.state.forEach((value, key) => {
-                currentState.set(key, { ...value });
-            });
-            this.undoStack.push(currentState);
-
-            // Restore next state
-            this.state = this.redoStack.pop();
-
-            // Rebuild canvas
-            this.rebuildCanvas();
-            this.updateToolbarState();
-        }
-
-        /**
-         * Rebuild canvas from state
-         */
-        rebuildCanvas() {
-            // Clear all elements from canvas rows
-            this.canvas.querySelectorAll('.row-elements').forEach(rowEl => {
-                rowEl.innerHTML = '';
-            });
-
-            // Re-add elements from state
-            const contextDef = ELEMENT_DEFINITIONS[this.currentContext];
-            if (!contextDef) return;
-
-            this.state.forEach((data, elementId) => {
-                const element = contextDef.elements.find(el => el.id === elementId);
-                if (element && data.row > 0) {
-                    this.addElementToCanvas(element, data);
-                }
-            });
-
-            this.sortCanvasElements();
-        }
-
-        /**
-         * Update toolbar button states
-         */
-        updateToolbarState() {
-            const undoBtn = this.toolbar?.querySelector('.btn-undo');
-            const redoBtn = this.toolbar?.querySelector('.btn-redo');
-
-            if (undoBtn) {
-                undoBtn.disabled = this.undoStack.length === 0;
-            }
-            if (redoBtn) {
-                redoBtn.disabled = this.redoStack.length === 0;
-            }
-        }
-
-        // =====================================================================
-        // Grid Toggle
-        // =====================================================================
-
-        /**
-         * Toggle grid overlay visibility
-         */
-        toggleGrid() {
-            this.showGrid = !this.showGrid;
-
-            if (this.editor) {
-                this.editor.classList.toggle('show-grid', this.showGrid);
-            }
-
-            // Swap primary/secondary classes for grid button
-            const gridBtn = this.toolbar?.querySelector('.btn-grid');
-            if (gridBtn) {
-                gridBtn.classList.toggle('btn-primary', this.showGrid);
-                gridBtn.classList.toggle('btn-secondary', !this.showGrid);
-            }
-        }
-
-        // =====================================================================
-        // View Toggle (Visual/Classic)
-        // =====================================================================
-
-        /**
-         * Switch between visual and classic view modes
-         * @param {string} mode - 'visual' or 'classic'
-         */
-        switchView(mode) {
-            if (this.viewMode === mode) return;
-
-            this.viewMode = mode;
-
-            // Update button states - swap primary/secondary classes
-            const visualBtn = this.toolbar?.querySelector('.btn-view-visual');
-            const classicBtn = this.toolbar?.querySelector('.btn-view-classic');
-            if (visualBtn) {
-                visualBtn.classList.toggle('btn-primary', mode === 'visual');
-                visualBtn.classList.toggle('btn-secondary', mode !== 'visual');
-            }
-            if (classicBtn) {
-                classicBtn.classList.toggle('btn-primary', mode === 'classic');
-                classicBtn.classList.toggle('btn-secondary', mode !== 'classic');
-            }
-
-            // Toggle views
-            if (mode === 'visual') {
-                if (this.editor) this.editor.style.display = '';
-                if (this.classicView) this.classicView.style.display = 'none';
-            } else {
-                if (this.editor) this.editor.style.display = 'none';
-                if (this.classicView) {
-                    this.classicView.style.display = '';
-                    this.renderClassicView();
-                }
-            }
-        }
-
-        /**
-         * Render classic view with element list
-         */
-        renderClassicView() {
-            const contextDef = ELEMENT_DEFINITIONS[this.currentContext];
-            if (!contextDef || !this.classicView) return;
-
-            // Get elements in layout (row > 0) sorted by row then col
-            const placedElements = [];
-            this.state.forEach((data, elementId) => {
-                if (data.row > 0) {
-                    const element = contextDef.elements.find(el => el.id === elementId);
-                    if (element) {
-                        placedElements.push({ element, data });
-                    }
-                }
-            });
-
-            placedElements.sort((a, b) => {
-                if (a.data.row !== b.data.row) return a.data.row - b.data.row;
-                return a.data.col - b.data.col;
-            });
-
-            // Render as a simple table
-            let html = `
-                <div class="classic-view-container">
-                    <table class="table table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th>Element</th>
-                                <th>Row</th>
-                                <th>Col</th>
-                                <th>Colspan</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-
-            if (placedElements.length === 0) {
-                html += `
-                    <tr>
-                        <td colspan="5" class="text-center text-muted">
-                            No elements in layout. Switch to Visual view to add elements.
-                        </td>
-                    </tr>
-                `;
-            } else {
-                placedElements.forEach(({ element, data }) => {
-                    html += `
-                        <tr data-element="${element.id}">
-                            <td><strong>${element.label}</strong></td>
-                            <td>${data.row}</td>
-                            <td>${data.col}</td>
-                            <td>${data.colspan}</td>
-                            <td>
-                                <button type="button" class="btn btn-secondary btn-classic-edit" data-element="${element.id}">
-                                    <span class="icon-options" aria-hidden="true"></span>
-                                </button>
-                                <button type="button" class="btn btn-danger btn-classic-remove" data-element="${element.id}">
-                                    <span class="icon-cancel" aria-hidden="true"></span>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                });
-            }
-
-            html += `
-                        </tbody>
-                    </table>
-                </div>
-            `;
-
-            this.classicView.innerHTML = html;
-
-            // Bind classic view events
-            this.classicView.querySelectorAll('.btn-classic-edit').forEach(btn => {
-                btn.addEventListener('click', () => this.openSettings(btn.dataset.element));
-            });
-
-            this.classicView.querySelectorAll('.btn-classic-remove').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    this.saveStateForUndo();
-                    const elementId = btn.dataset.element;
-                    this.state.delete(elementId);
-                    this.rebuildCanvas();
-                    this.renderClassicView();
-                });
-            });
-        }
-
-        // =====================================================================
-        // Resize Handles
-        // =====================================================================
-
-        /**
-         * Add resize handles to an element card
-         * @param {HTMLElement} card - Element card
-         */
-        addResizeHandles(card) {
-            // Only add to placed elements, not palette items
-            if (card.dataset.paletteItem !== undefined) return;
-
-            // Right handle - affects element to the right
-            const rightHandle = document.createElement('div');
-            rightHandle.className = 'resize-handle resize-handle-right';
-            rightHandle.addEventListener('mousedown', (e) => this.startResize(e, card, 'right'));
-            card.appendChild(rightHandle);
-
-            // Left handle - affects element to the left
-            const leftHandle = document.createElement('div');
-            leftHandle.className = 'resize-handle resize-handle-left';
-            leftHandle.addEventListener('mousedown', (e) => this.startResize(e, card, 'left'));
-            card.appendChild(leftHandle);
-        }
-
-        /**
-         * Start resizing an element
-         * @param {MouseEvent} e - Mouse event
-         * @param {HTMLElement} card - Element card
-         * @param {string} direction - 'left' or 'right'
-         */
-        startResize(e, card, direction) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            const rowEl = card.closest('.row-elements');
-            if (!rowEl) return;
-
-            // Get all element cards in order
-            const children = Array.from(rowEl.children).filter(el =>
-                !el.classList.contains('sortable-ghost') &&
-                el.classList.contains('element-card')
-            );
-
-            const cardIndex = children.indexOf(card);
-
-            // Find the neighbor element based on direction
-            let neighborCard = null;
-            let isOuterEdge = false;
-
-            if (direction === 'right') {
-                if (cardIndex < children.length - 1) {
-                    neighborCard = children[cardIndex + 1];
-                } else {
-                    // Right edge of last element - outer edge resize
-                    isOuterEdge = true;
-                }
-            } else if (direction === 'left') {
-                if (cardIndex > 0) {
-                    neighborCard = children[cardIndex - 1];
-                } else {
-                    // Left edge of first element - outer edge resize
-                    isOuterEdge = true;
-                }
-            }
-
-            // For outer edge, we need at least 2 elements to redistribute
-            if (isOuterEdge && children.length < 2) return;
-
-            this.isResizing = true;
-            this.resizeCard = card;
-            this.resizeNeighborCard = neighborCard; // null for outer edge
-            this.resizeDirection = direction;
-            this.resizeIsOuterEdge = isOuterEdge;
-            this.resizeStartX = e.clientX;
-            this.resizeRowEl = rowEl;
-
-            const data = this.state.get(card.dataset.element);
-            this.resizeStartColspan = parseInt(data?.colspan || 1, 10);
-
-            if (neighborCard) {
-                const neighborData = this.state.get(neighborCard.dataset.element);
-                this.resizeNeighborStartColspan = parseInt(neighborData?.colspan || 1, 10);
-            } else {
-                // For outer edge, track other elements' colspans
-                this.resizeOtherElements = children.filter(el => el !== card);
-                this.resizeOtherStartColspans = this.resizeOtherElements.map(el => {
-                    const d = this.state.get(el.dataset.element);
-                    return parseInt(d?.colspan || 1, 10);
-                });
-            }
-
-            // Calculate column width
-            this.columnWidth = rowEl.offsetWidth / 12;
-
-            // Save state for undo
-            this.saveStateForUndo();
-
-            card.classList.add('resizing');
-            if (neighborCard) {
-                neighborCard.classList.add('resizing');
-            }
-
-            // Add mousemove and mouseup listeners
-            document.addEventListener('mousemove', this.handleResize);
-            document.addEventListener('mouseup', this.endResize);
-        }
-
-        /**
-         * Handle resize drag
-         * Resizing affects either the immediate neighbor or redistributes other elements for outer edges
-         * @param {MouseEvent} e - Mouse event
-         */
-        handleResize = (e) => {
-            if (!this.isResizing || !this.resizeCard) return;
-
-            const deltaX = e.clientX - this.resizeStartX;
-            let colsDelta = Math.round(deltaX / this.columnWidth);
-
-            // For left handle, invert the delta (dragging left = growing current element)
-            if (this.resizeDirection === 'left') {
-                colsDelta = -colsDelta;
-            }
-
-            if (this.resizeIsOuterEdge) {
-                // Outer edge resize - redistribute among other elements
-                this.handleOuterEdgeResize(colsDelta);
-            } else if (this.resizeNeighborCard) {
-                // Inner edge resize - only affect neighbor
-                this.handleInnerEdgeResize(colsDelta);
-            }
-        }
-
-        /**
-         * Handle inner edge resize (between two adjacent elements)
-         * @param {number} colsDelta - Column change
-         */
-        handleInnerEdgeResize(colsDelta) {
-            // Calculate new colspans for both elements
-            // Total combined colspan stays the same
-            const combinedColspan = this.resizeStartColspan + this.resizeNeighborStartColspan;
-
-            let newColspan = this.resizeStartColspan + colsDelta;
-            let newNeighborColspan = combinedColspan - newColspan;
-
-            // Ensure both elements have at least 1 column
-            if (newColspan < 1) {
-                newColspan = 1;
-                newNeighborColspan = combinedColspan - 1;
-            }
-            if (newNeighborColspan < 1) {
-                newNeighborColspan = 1;
-                newColspan = combinedColspan - 1;
-            }
-
-            // Update current element
-            const data = this.state.get(this.resizeCard.dataset.element);
-            if (data) {
-                data.colspan = String(newColspan);
-                data.manualColspan = true;
-                this.resizeCard.dataset.colspan = String(newColspan);
-                this.updateElementInfo(this.resizeCard);
-            }
-
-            // Update neighbor element
-            const neighborData = this.state.get(this.resizeNeighborCard.dataset.element);
-            if (neighborData) {
-                neighborData.colspan = String(newNeighborColspan);
-                neighborData.manualColspan = true;
-                this.resizeNeighborCard.dataset.colspan = String(newNeighborColspan);
-                this.updateElementInfo(this.resizeNeighborCard);
-            }
-        }
-
-        /**
-         * Handle outer edge resize (first element's left or last element's right)
-         * Redistributes remaining space among other elements
-         * @param {number} colsDelta - Column change
-         */
-        handleOuterEdgeResize(colsDelta) {
-            const otherCount = this.resizeOtherElements.length;
-            if (otherCount === 0) return;
-
-            // Calculate new colspan for the resized element
-            let newColspan = this.resizeStartColspan + colsDelta;
-
-            // Min: 1, Max: 12 minus minimum space for other elements (1 each)
-            const maxColspan = 12 - otherCount;
-            newColspan = Math.max(1, Math.min(maxColspan, newColspan));
-
-            // Calculate remaining space for other elements
-            const remainingCols = 12 - newColspan;
-
-            // Distribute remaining space proportionally based on original ratios
-            const originalOtherTotal = this.resizeOtherStartColspans.reduce((a, b) => a + b, 0);
-
-            // Update current element
-            const data = this.state.get(this.resizeCard.dataset.element);
-            if (data) {
-                data.colspan = String(newColspan);
-                data.manualColspan = true;
-                this.resizeCard.dataset.colspan = String(newColspan);
-                this.updateElementInfo(this.resizeCard);
-            }
-
-            // Distribute remaining space among other elements proportionally
-            let distributed = 0;
-            this.resizeOtherElements.forEach((card, index) => {
-                const otherData = this.state.get(card.dataset.element);
-                if (otherData) {
-                    let newOtherColspan;
-                    if (index === otherCount - 1) {
-                        // Last element gets the remainder to ensure total = 12
-                        newOtherColspan = remainingCols - distributed;
-                    } else {
-                        // Distribute proportionally based on original ratio
-                        const ratio = this.resizeOtherStartColspans[index] / originalOtherTotal;
-                        newOtherColspan = Math.max(1, Math.round(remainingCols * ratio));
-                        distributed += newOtherColspan;
-                    }
-
-                    newOtherColspan = Math.max(1, newOtherColspan);
-                    otherData.colspan = String(newOtherColspan);
-                    card.dataset.colspan = String(newOtherColspan);
-                    this.updateElementInfo(card);
-                }
-            });
-        }
-
-        /**
-         * End resize operation
-         */
-        endResize = () => {
-            if (!this.isResizing) return;
-
-            this.isResizing = false;
-
-            // Remove resizing class from elements
-            if (this.resizeCard) {
-                this.resizeCard.classList.remove('resizing');
-            }
-            if (this.resizeNeighborCard) {
-                this.resizeNeighborCard.classList.remove('resizing');
-            }
-            if (this.resizeOtherElements) {
-                this.resizeOtherElements.forEach(card => card.classList.remove('resizing'));
-            }
-
-            // Recalculate column positions
-            if (this.resizeRowEl) {
-                this.recalculateColumns(this.resizeRowEl);
-            }
-
-            // Clean up
-            this.resizeCard = null;
-            this.resizeNeighborCard = null;
-            this.resizeRowEl = null;
-            this.resizeIsOuterEdge = false;
-            this.resizeOtherElements = null;
-            this.resizeOtherStartColspans = null;
-
-            document.removeEventListener('mousemove', this.handleResize);
-            document.removeEventListener('mouseup', this.endResize);
-        }
-
-        // =====================================================================
-        // Keyboard Navigation
-        // =====================================================================
-
-        /**
-         * Handle keyboard events
-         * @param {KeyboardEvent} e - Keyboard event
-         */
-        handleKeyboard(e) {
-            // Check if we're in an input field
-            if (e.target.matches('input, textarea, select')) return;
-
-            // Undo: Ctrl+Z
-            if (e.ctrlKey && e.key === 'z' && !e.shiftKey) {
-                e.preventDefault();
-                this.undo();
-                return;
-            }
-
-            // Redo: Ctrl+Y or Ctrl+Shift+Z
-            if ((e.ctrlKey && e.key === 'y') || (e.ctrlKey && e.shiftKey && e.key === 'z')) {
-                e.preventDefault();
-                this.redo();
-                return;
-            }
-
-            // Delete: Delete or Backspace on focused element
-            if ((e.key === 'Delete' || e.key === 'Backspace') && document.activeElement?.classList.contains('element-card')) {
-                const card = document.activeElement;
-                if (card.closest('.row-elements')) {
-                    e.preventDefault();
-                    this.saveStateForUndo();
-                    this.removeElement(card);
-                }
-                return;
-            }
-
-            // Arrow keys for navigation
-            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-                const focused = document.activeElement;
-                if (focused?.classList.contains('element-card') && focused.closest('.row-elements')) {
-                    e.preventDefault();
-                    this.navigateElements(focused, e.key);
-                }
-            }
-        }
-
-        /**
-         * Navigate between elements with arrow keys
-         * @param {HTMLElement} current - Currently focused element
-         * @param {string} direction - Arrow key direction
-         */
-        navigateElements(current, direction) {
-            const rowEl = current.closest('.row-elements');
-            const allRows = Array.from(this.canvas.querySelectorAll('.row-elements'));
-            const rowIndex = allRows.indexOf(rowEl);
-
-            let targetCard = null;
-
-            switch (direction) {
-                case 'ArrowLeft': {
-                    targetCard = current.previousElementSibling;
-                    break;
-                }
-                case 'ArrowRight': {
-                    targetCard = current.nextElementSibling;
-                    break;
-                }
-                case 'ArrowUp': {
-                    if (rowIndex > 0) {
-                        const prevRow = allRows[rowIndex - 1];
-                        const cards = prevRow.querySelectorAll('.element-card');
-                        if (cards.length > 0) {
-                            targetCard = cards[0];
-                        }
-                    }
-                    break;
-                }
-                case 'ArrowDown': {
-                    if (rowIndex < allRows.length - 1) {
-                        const nextRow = allRows[rowIndex + 1];
-                        const cards = nextRow.querySelectorAll('.element-card');
-                        if (cards.length > 0) {
-                            targetCard = cards[0];
-                        }
-                    }
-                    break;
-                }
-            }
-
-            if (targetCard?.classList.contains('element-card')) {
-                targetCard.focus();
-            }
         }
     }
 
