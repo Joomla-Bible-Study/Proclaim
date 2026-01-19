@@ -12,10 +12,13 @@
 namespace CWM\Component\Proclaim\Administrator\View\Cwmpodcasts;
 
 // No Direct Access
+use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Button\DropdownButton;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -113,36 +116,43 @@ class HtmlView extends BaseHtmlView
      */
     protected function addToolbar(): void
     {
+        $user  = Factory::getApplication()->getIdentity();
+
+        // Get the toolbar object instance
+        $toolbar = Toolbar::getInstance();
+
         ToolbarHelper::title(Text::_('JBS_CMN_PODCASTS'), 'feed feed');
+
+        if ($this->canDo->get('core.create')) {
+            $toolbar->addNew('cwmpodcast.add');
+        }
+
+        if ($this->canDo->get('core.edit', 'com_proclaim')) {
+            /** @var  DropdownButton $dropdown */
+            $dropdown = $toolbar->dropdownButton('status-group', 'JTOOLBAR_CHANGE_STATUS')
+                ->toggleSplit(false)
+                ->icon('icon-ellipsis-h')
+                ->buttonClass('btn btn-action')
+                ->listCheck(true);
+
+            $childBar = $dropdown->getChildToolbar();
+
+            $childBar->publish('cwmpodcasts.publish')->listCheck(true);
+            $childBar->unpublish('cwmpodcasts.unpublish')->listCheck(true);
+            $childBar->archive('cwmpodcasts.archive')->listCheck(true);
+
+            if ($this->state->get('filter.published') != -2) {
+                $childBar->trash('cwmpodcasts.trash')->listCheck(true);
+            }
+        }
+
+        if ($this->canDo->get('core.create')) {
+            ToolbarHelper::divider();
+            ToolbarHelper::custom('cwmpodcasts.writeXMLFile', 'file', '', 'JBS_PDC_WRITE_XML_FILES', false);
+        }
+
         $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
         ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
-
-        if ($this->canDo->get('core.create')) {
-            ToolbarHelper::addNew('cwmpodcast.add');
-        }
-
-        if ($this->canDo->get('core.edit')) {
-            ToolbarHelper::editList('cwmpodcast.edit');
-        }
-
-        if ($this->canDo->get('core.edit.state')) {
-            ToolbarHelper::divider();
-            ToolbarHelper::publishList('cwmpodcasts.publish');
-            ToolbarHelper::unpublishList('cwmpodcasts.unpublish');
-            ToolbarHelper::divider();
-            ToolbarHelper::archiveList('cwmpodcasts.archive');
-        }
-
-        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
-            ToolbarHelper::deleteList('', 'cwmpodcasts.delete', 'JTOOLBAR_EMPTY_TRASH');
-        } elseif ($this->canDo->get('core.delete')) {
-            ToolbarHelper::trash('cwmpodcasts.trash');
-        }
-
-        if ($this->canDo->get('core.create')) {
-            ToolbarHelper::divider();
-            ToolbarHelper::custom('cwmpodcasts.writeXMLFile', 'xml.png', '', 'JBS_PDC_WRITE_XML_FILES', false);
-        }
     }
 
     /**

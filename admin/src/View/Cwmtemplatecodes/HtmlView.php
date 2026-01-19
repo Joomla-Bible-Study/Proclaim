@@ -141,8 +141,6 @@ class HtmlView extends BaseHtmlView
         $toolbar = Toolbar::getInstance('toolbar');
 
         ToolbarHelper::title(Text::_('JBS_TPLCODE_TPLCODES'), 'stack stack');
-        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-        ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
 
         if ($canDo->get('core.create')) {
             $toolbar->addNew('cwmtemplatecode.add');
@@ -184,13 +182,14 @@ class HtmlView extends BaseHtmlView
             $toolbar->preferences('com_proclaim');
         }
 
-        $toolbar->help('Messages', true);
+        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
+        ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
     }
 
     /**
-     * Returns an array of fields the table can be sorted by
+     * Returns an array of fields that the table can be sorted by
      *
-     * @return  array  Array containing the field name to sort by as the key and display text as value
+     * @return  array  Array containing the field name to sort by as the key and display text as the value
      *
      * @since   3.0
      */
