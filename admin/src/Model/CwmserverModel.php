@@ -47,6 +47,16 @@ class CwmserverModel extends AdminModel
      * @since  1.6
      */
     protected $text_prefix = 'COM_PROCLAIM';
+
+    /**
+     * Allowed batch commands
+     *
+     * @var array
+     * @since 10.0.0
+     */
+    protected $batch_commands = [
+        'assetgroup_id' => 'batchAccess',
+    ];
     /**
      * Data
      *

@@ -16,8 +16,10 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Table\CwmpodcastTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
@@ -37,6 +39,18 @@ class CwmpodcastModel extends AdminModel
      * @since    1.6
      */
     protected $text_prefix = 'com_proclaim';
+
+    /**
+     * Allowed batch commands
+     *
+     * @var array
+     * @since 10.0.0
+     */
+    protected $batch_commands = [
+        'assetgroup_id' => 'batchAccess',
+        'language_id'   => 'batchLanguage',
+        'linkType'      => 'batchLinkType',
+    ];
 
     /**
      * Get the form data
@@ -135,6 +149,49 @@ class CwmpodcastModel extends AdminModel
             $table->modified    = $date->toSql();
             $table->modified_by = $user->get('id');
         }
+    }
+
+    /**
+     * Batch link type changes for a group of podcasts.
+     *
+     * @param   string  $value     The new value matching a link type.
+     * @param   array   $pks       An array of row IDs.
+     * @param   array   $contexts  An array of item contexts.
+     *
+     * @return  bool  True if successful, false otherwise and internal error is set.
+     *
+     * @throws \Exception
+     * @since   10.0.0
+     */
+    protected function batchLinkType($value, $pks, $contexts): bool
+    {
+        // Set the variables
+        $user = Factory::getApplication()->getSession()->get('user');
+        /** @var CwmpodcastTable $table */
+        $table = $this->getTable();
+
+        foreach ($pks as $pk) {
+            if ($user->authorise('core.edit', $contexts[$pk])) {
+                $table->reset();
+                $table->load($pk);
+                $table->linktype = (int)$value;
+
+                if (!$table->store()) {
+                    $this->setError($table->getError());
+
+                    return false;
+                }
+            } else {
+                $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+
+                return false;
+            }
+        }
+
+        // Clean the cache
+        $this->cleanCache();
+
+        return true;
     }
 
     /**
