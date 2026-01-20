@@ -220,7 +220,7 @@ class Cwmlisting
 
 
         // Start the table for the entire list
-        $list .= '<div class="table-responsive" about="' . $type . '"><table class="table w-auto table-borderless">';
+        $list .= '<div class="table-responsive" about="' . $type . '"><table class="table w-100 table-borderless">';
 
         // Check if we have a valid first item for header rows
         $hasValidFirstItem = !empty($items) && isset($items[0]) && \is_object($items[0]);
@@ -241,7 +241,7 @@ class Cwmlisting
 
         if (($type === 'seriesdisplays') && $params->get('use_headers_series') == 1 && $hasValidFirstItem) {
             // Start the header
-            $list .= '<thead class="' . $params->get('listheadertype') . '" colspan="12">';
+            $list .= '<thead class="' . $params->get('listheadertype') . '">';
             $list .= $this->getFluidRow(
                 $listrows,
                 $listsorts,
@@ -515,7 +515,7 @@ class Cwmlisting
         $l->custom     = $this->params->get($paramtext . 'custom');
         $l->linktype   = $this->params->get($paramtext . 'linktype');
         $l->name       = $paramtext;
-        $l->customtext = $this->params->get($paramtext . 'text');
+        $l->customtext = (string) $this->params->get($paramtext . 'text', '');
 
         return $l;
     }
@@ -795,186 +795,140 @@ class Cwmlisting
 
         foreach ($listrows as $row) {
             if ($row->row === '1') {
-                if ($row1count === $row1count2 & $header === 0) {
+                if ($row1count === $row1count2) {
                     $frow .= '<tr scope="row">';
                 }
 
                 if ($header === 1) {
                     if ($row->colspan > 0) {
                         $thadd = 'colspan="' . $row->colspan . '"';
+                    } else {
+                        $thadd = '';
                     }
-
-                    // If ($extra == 's'){$thadd = 'class="col-12"';}
-                    // $thadd = '';
-                    $frow .= '<th scope="col"' . $thadd . '>' . $this->getFluidData(
-                        $item,
-                        $row,
-                        $params,
-                        $template,
-                        $header = 1,
-                        $type
-                    );
+                    $frow .= '<th scope="col" ' . $thadd . '>' . $this->getFluidData($item, $row, $params, $template, 1, $type) . '</th>';
                 } else {
-                    $frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
+                    $frow .= $this->getFluidData($item, $row, $params, $template, 0, $type);
                 }
 
                 $row1count--;
 
-                if ($row1count === 0 && !$header) {
+                if ($row1count === 0) {
                     $frow .= '</tr>';
-                }
-
-                if ($row1count === 0 && $header === 1) {
-                    $frow .= '</th></tr>';
                 }
             }
 
             if ($row->row === '2') {
-                if ($row2count === $row2count2 && $header === 0) {
+                if ($row2count === $row2count2) {
                     $frow .= '<tr scope="row">';
                 }
 
                 if ($header === 1) {
                     if ($row->colspan > 0) {
                         $thadd = 'colspan="' . $row->colspan . '"';
+                    } else {
+                        $thadd = '';
                     }
-
-                    $frow .= '<tr scope="row"> <th ' . $thadd . ' scope="col">'
-                        . $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+                    $frow .= '<th scope="col" ' . $thadd . '>' . $this->getFluidData($item, $row, $params, $template, 1, $type) . '</th>';
                 } else {
-                    $frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
+                    $frow .= $this->getFluidData($item, $row, $params, $template, 0, $type);
                 }
 
                 $row2count--;
 
-                if ($row2count === 0 && $header === 0) {
+                if ($row2count === 0) {
                     $frow .= '</tr>';
-                }
-
-                if ($row2count === 0 && $header === 1) {
-                    $frow .= '</th></tr>';
                 }
             }
 
             if ($row->row === '3') {
-                if ($row3count === $row3count2 && $header === 0) {
+                if ($row3count === $row3count2) {
                     $frow .= '<tr scope="row">';
                 }
 
                 if ($header === 1) {
                     if ($row->colspan > 0) {
                         $thadd = 'colspan="' . $row->colspan . '"';
+                    } else {
+                        $thadd = '';
                     }
-
-                    $frow .= '<tr scope="row"><th ' . $thadd . ' scope="col">'
-                        . $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+                    $frow .= '<th scope="col" ' . $thadd . '>' . $this->getFluidData($item, $row, $params, $template, 1, $type) . '</th>';
                 } else {
-                    $frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
+                    $frow .= $this->getFluidData($item, $row, $params, $template, 0, $type);
                 }
 
                 $row3count--;
 
-                if ($row3count === 0 && $header === 0) {
+                if ($row3count === 0) {
                     $frow .= '</tr>';
-                }
-
-                if ($row3count === 0 && $header === 1) {
-                    $frow .= '</th></tr>';
                 }
             }
 
             if ($row->row === '4') {
-                if ($row4count === $row4count2 && $header === 0) {
+                if ($row4count === $row4count2) {
                     $frow .= '<tr scope="row">';
                 }
 
                 if ($header === 1) {
                     if ($row->colspan > 0) {
                         $thadd = 'colspan="' . $row->colspan . '"';
+                    } else {
+                        $thadd = '';
                     }
-
-                    $frow .= '<tr scope="row"><th ' . $thadd . ' scope="col">'
-                        . $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
+                    $frow .= '<th scope="col" ' . $thadd . '>' . $this->getFluidData($item, $row, $params, $template, 1, $type) . '</th>';
                 } else {
-                    $frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
+                    $frow .= $this->getFluidData($item, $row, $params, $template, 0, $type);
                 }
 
                 $row4count--;
 
-                if ($row4count === 0 && $header === 0) {
+                if ($row4count === 0) {
                     $frow .= '</tr>';
-                }
-
-                if ($row4count === 0 && $header === 1) {
-                    $frow .= '</th></tr>';
                 }
             }
 
             if ($row->row === '5') {
-                if ($row5count === $row5count2 && $header === 0) {
+                if ($row5count === $row5count2) {
                     $frow .= '<tr scope="row">';
                 }
 
                 if ($header === 1) {
                     if ($row->colspan > 0) {
                         $thadd = 'colspan="' . $row->colspan . '"';
+                    } else {
+                        $thadd = '';
                     }
-
-                    // $thadd = '';
-                    $frow .= '<tr scope="row"><th ' . $thadd . ' scope="col">' . $this->getFluidData(
-                        $item,
-                        $row,
-                        $params,
-                        $template,
-                        $header = 1,
-                        $type
-                    );
+                    $frow .= '<th scope="col" ' . $thadd . '>' . $this->getFluidData($item, $row, $params, $template, 1, $type) . '</th>';
                 } else {
-                    $frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
+                    $frow .= $this->getFluidData($item, $row, $params, $template, 0, $type);
                 }
 
                 $row5count--;
 
-                if ($row5count === 0 && $header === 0) {
+                if ($row5count === 0) {
                     $frow .= '</tr>';
-                }
-
-                if ($row5count === 0 && $header === 1) {
-                    $frow .= '</th></tr>';
                 }
             }
 
             if ($row->row === '6') {
-                if ($row6count === $row6count2 && $header === 0) {
+                if ($row6count === $row6count2) {
                     $frow .= '<tr scope="row">';
                 }
 
                 if ($header === 1) {
                     if ($row->colspan > 0) {
                         $thadd = 'colspan="' . $row->colspan . '"';
+                    } else {
+                        $thadd = '';
                     }
-
-                    // $thadd = '';
-                    $frow .= '<tr scope="row"><th ' . $thadd . ' scope="col">' . $this->getFluidData(
-                        $item,
-                        $row,
-                        $params,
-                        $template,
-                        $header = 1,
-                        $type
-                    );
+                    $frow .= '<th scope="col" ' . $thadd . '>' . $this->getFluidData($item, $row, $params, $template, 1, $type) . '</th>';
                 } else {
-                    $frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
+                    $frow .= $this->getFluidData($item, $row, $params, $template, 0, $type);
                 }
 
                 $row6count--;
 
-                if ($row6count === 0 && $header === 0) {
+                if ($row6count === 0) {
                     $frow .= '</tr>';
-                }
-
-                if ($row6count === 0 && $header === 1) {
-                    $frow .= '</th></tr>';
                 }
             }
         }
@@ -1087,7 +1041,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = '';
                 } else {
-                    $data = $this->getFluidCustom($row->customtext, $item, $params, $template, $type);
+                    $data = $this->getFluidCustom((string) $row->customtext, $item, $params, $template, $type);
                 }
                 break;
 
@@ -1346,50 +1300,54 @@ class Cwmlisting
                 }
                 break;
             case $extra . 'description':
-                if ($type === 'seriesdisplays' || ($type === 'seriesdisplay' && $header !== 1)) {
-                    (isset($item->description) ? $data = HTMLHelper::_(
-                        'content.prepare',
-                        $item->description,
-                        '',
-                        'com_proclaim.' . $type
-                    ) : $data);
-
-                    if ($params->get('series_characters')) {
-                        $d    = substr($data, 0, $params->get('series_characters'));
-                        $data = substr($d, 0, strrpos($d, '. '));
-                    }
-
-                    if ($data) {
-                        $data .= '.';
-                    }
+                if ($header === 1) {
+                    $data = Text::_('JBS_CMN_SERIES_DESCRIPTION');
                 } else {
-                    (isset($item->sdescription) ? $data = HTMLHelper::_(
-                        'content.prepare',
-                        $item->sdescription,
-                        '',
-                        'com_proclaim.' . $type
-                    ) : $data);
+                    if ($type === 'seriesdisplays' || $type === 'seriesdisplay') {
+                        (isset($item->description) ? $data = HTMLHelper::_(
+                            'content.prepare',
+                            $item->description,
+                            '',
+                            'com_proclaim.' . $type
+                        ) : $data);
 
-                    if ($params->get('series_characters')) {
-                        $d    = substr($data, 0, $params->get('series_characters'));
-                        $data = substr($d, 0, strrpos($d, '. '));
+                        if ($params->get('series_characters')) {
+                            $d    = substr($data, 0, $params->get('series_characters'));
+                            $data = substr($d, 0, strrpos($d, '. '));
+                        }
+
+                        if ($data) {
+                            $data .= '.';
+                        }
+                    } else {
+                        (isset($item->sdescription) ? $data = HTMLHelper::_(
+                            'content.prepare',
+                            $item->sdescription,
+                            '',
+                            'com_proclaim.' . $type
+                        ) : $data);
+
+                        if ($params->get('series_characters')) {
+                            $d    = substr($data, 0, $params->get('series_characters'));
+                            $data = substr($d, 0, strrpos($d, '. '));
+                        }
+
+                        if ($data) {
+                            $data .= '.';
+                        }
                     }
 
-                    if ($data) {
-                        $data .= '.';
-                    }
-                }
+                    if ($type === 'seriesdisplays') {
+                        (isset($item->description) ? $data = stripslashes($item->description) : $data = '');
 
-                if ($type === 'seriesdisplays' && !$header) {
-                    (isset($item->description) ? $data = stripslashes($item->description) : $data = '');
+                        if ($params->get('series_characters')) {
+                            $d    = substr($data, 0, $params->get('series_characters'));
+                            $data = substr($d, 0, strrpos($d, '. '));
+                        }
 
-                    if ($params->get('series_characters')) {
-                        $d    = substr($data, 0, $params->get('series_characters'));
-                        $data = substr($d, 0, strrpos($d, '. '));
-                    }
-
-                    if ($data) {
-                        $data .= '.';
+                        if ($data) {
+                            $data .= '.';
+                        }
                     }
                 }
                 break;
