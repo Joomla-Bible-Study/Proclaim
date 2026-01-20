@@ -165,11 +165,26 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplates'); ?>" method="po
                 <?php
                 endif; ?>
                 <?php
-                echo $this->pagination->getListFooter(); ?>
-                <?php
                 // Load the batch processing form. ?>
                 <?php
-                // echo $this->loadTemplate('batch'); ?>
+                if ($user->authorise('core.create', 'com_proclaim')
+                    && $user->authorise('core.edit', 'com_proclaim')
+                    && $user->authorise('core.edit.state', 'com_proclaim')
+                ) : ?>
+                    <?php
+                    echo HTMLHelper::_(
+                        'bootstrap.renderModal',
+                        'collapseModal',
+                        array(
+                            'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
+                            'footer' => $this->loadTemplate('batch_footer')
+                        ),
+                        $this->loadTemplate('batch_body')
+                    ); ?>
+                <?php
+                endif; ?>
+                <?php
+                echo $this->pagination->getListFooter(); ?>
                 <input type="hidden" name="task" value=""/>
                 <input type="hidden" name="boxchecked" value="0"/>
                 <?php

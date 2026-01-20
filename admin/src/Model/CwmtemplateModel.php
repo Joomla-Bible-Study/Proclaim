@@ -32,6 +32,16 @@ use Joomla\CMS\Table\Table;
 class CwmtemplateModel extends AdminModel
 {
     /**
+     * Allowed batch commands
+     *
+     * @var array
+     * @since 10.0.0
+     */
+    protected $batch_commands = [
+        'assetgroup_id' => 'batchAccess',
+    ];
+
+    /**
      * Method to save the form data.
      *
      * @param   array  $data  The form data.
