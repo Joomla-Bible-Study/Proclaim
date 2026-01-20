@@ -34,8 +34,13 @@ $t = $this->template;
     <div class="row-fluid">
         <div class="col-lg-12">
             <?php
-            $seriesstudies = $listing->getFluidListing($this->seriesstudies, $this->params, $t, $type = 'sermons');
-            echo $seriesstudies; ?>
+            if (!empty($this->seriesstudies)) {
+                $seriesstudies = $listing->getFluidListing($this->seriesstudies, $this->params, $t, $type = 'sermons');
+                echo $seriesstudies;
+            } else {
+                echo '<div class="alert alert-info">' . Text::_('JBS_CMN_NO_RECORDS') . '</div>';
+            }
+            ?>
         </div>
     </div>
     <hr/>
