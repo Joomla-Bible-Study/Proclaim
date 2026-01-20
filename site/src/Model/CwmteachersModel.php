@@ -139,7 +139,7 @@ class CwmteachersModel extends ListModel
         $this->setState('template', $template);
         $this->setState('administrator', $admin);
 
-        $user = $app->getSession()->get('user');
+        $user = $app->getIdentity();
 
         if (
             (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(

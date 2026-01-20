@@ -131,7 +131,7 @@ class CwmteacherModel extends ItemModel
         $this->setState('template', $template);
         $this->setState('administrator', $admin);
         $this->setState('params', $params);
-        $user = $app->getSession()->get('user');
+        $user = $app->getIdentity();
 
         if (
             (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
