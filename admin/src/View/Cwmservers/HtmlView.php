@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmservers;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
@@ -114,6 +115,7 @@ class HtmlView extends BaseHtmlView
      */
     protected function addToolbar(): void
     {
+        $user = Factory::getApplication()->getSession()->get('user');
 
         // Get the toolbar object instance
         $toolbar = Toolbar::getInstance();
@@ -140,6 +142,18 @@ class HtmlView extends BaseHtmlView
 
             if ($this->state->get('filter.published') != -2) {
                 $childBar->trash('cwmservers.trash')->listCheck(true);
+            }
+
+            // Add a batch button
+            if (
+                $user->authorise('core.create', 'com_proclaim')
+                && $user->authorise('core.edit', 'com_proclaim')
+                && $user->authorise('core.edit.state', 'com_proclaim')
+            ) {
+                $childBar->popupButton('batch')
+                    ->text('JTOOLBAR_BATCH')
+                    ->selector('collapseModal')
+                    ->listCheck(true);
             }
         }
 

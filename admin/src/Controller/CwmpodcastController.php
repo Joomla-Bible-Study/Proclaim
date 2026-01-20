@@ -16,7 +16,9 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwmpodcastModel;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Router\Route;
 
 /**
  * Podcast form class
@@ -26,4 +28,25 @@ use Joomla\CMS\MVC\Controller\FormController;
  */
 class CwmpodcastController extends FormController
 {
+    /**
+     * Method to run batch operations.
+     *
+     * @param   CwmpodcastModel  $model  The model.
+     *
+     * @return  bool     True if successful, false otherwise and internal error is set.
+     *
+     * @throws \Exception
+     * @since   1.6
+     */
+    public function batch($model = null): bool
+    {
+        $this->checkToken();
+
+        // Preset the redirect
+        $this->setRedirect(
+            Route::_('index.php?option=com_proclaim&view=cwmpodcasts' . $this->getRedirectToListAppend(), false)
+        );
+
+        return parent::batch($this->getModel());
+    }
 }

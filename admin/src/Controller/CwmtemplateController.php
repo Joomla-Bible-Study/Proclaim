@@ -16,9 +16,11 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwmtemplateModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\Utilities\ArrayHelper;
 
@@ -193,5 +195,27 @@ class CwmtemplateController extends FormController
         }
 
         $app->close();
+    }
+
+    /**
+     * Method to run batch operations.
+     *
+     * @param   CwmtemplateModel  $model  The model.
+     *
+     * @return  bool     True if successful, false otherwise and internal error is set.
+     *
+     * @throws \Exception
+     * @since   1.6
+     */
+    public function batch($model = null): bool
+    {
+        $this->checkToken();
+
+        // Preset the redirect
+        $this->setRedirect(
+            Route::_('index.php?option=com_proclaim&view=cwmtemplates' . $this->getRedirectToListAppend(), false)
+        );
+
+        return parent::batch($this->getModel());
     }
 }

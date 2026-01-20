@@ -144,6 +144,18 @@ class HtmlView extends BaseHtmlView
             if ($this->state->get('filter.published') != -2) {
                 $childBar->trash('cwmpodcasts.trash')->listCheck(true);
             }
+
+            // Add a batch button
+            if (
+                $user->authorise('core.create', 'com_proclaim')
+                && $user->authorise('core.edit', 'com_proclaim')
+                && $user->authorise('core.edit.state', 'com_proclaim')
+            ) {
+                $childBar->popupButton('batch')
+                    ->text('JTOOLBAR_BATCH')
+                    ->selector('collapseModal')
+                    ->listCheck(true);
+            }
         }
 
         if ($this->canDo->get('core.create')) {

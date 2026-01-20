@@ -133,6 +133,8 @@ class HtmlView extends BaseHtmlView
      */
     protected function addToolbar(): void
     {
+        $user = Factory::getApplication()->getSession()->get('user');
+
         // Get the toolbar object instance
         $toolbar = Toolbar::getInstance('toolbar');
 
@@ -156,6 +158,18 @@ class HtmlView extends BaseHtmlView
 
             if ($this->canDo->get('core.edit.state')) {
                 $childBar->trash('cwmtemplates.trash');
+            }
+
+            // Add a batch button
+            if (
+                $user->authorise('core.create', 'com_proclaim')
+                && $user->authorise('core.edit', 'com_proclaim')
+                && $user->authorise('core.edit.state', 'com_proclaim')
+            ) {
+                $childBar->popupButton('batch')
+                    ->text('JTOOLBAR_BATCH')
+                    ->selector('collapseModal')
+                    ->listCheck(true);
             }
         }
 
