@@ -104,7 +104,7 @@ class CwmpodcastdisplayModel extends ItemModel
 
         /** @var Registry $params */
         $params          = $app->getParams();
-        $user            = $user = Factory::getApplication()->getSession()->get('user');
+        $user            = Factory::getApplication()->getIdentity();
         $groups          = implode(',', $user->getAuthorisedViewLevels());
         $db              = Factory::getContainer()->get('DatabaseDriver');
         $query           = $db->getQuery(true);
@@ -255,7 +255,7 @@ class CwmpodcastdisplayModel extends ItemModel
         $this->setState('template', $template);
         $this->setState('administrator', $admin);
 
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
         if (
             (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(

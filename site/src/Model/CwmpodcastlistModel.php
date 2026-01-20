@@ -43,7 +43,7 @@ class CwmpodcastlistModel extends ListModel
     public function getItems(): mixed
     {
         $items  = parent::getItems();
-        $user   = Factory::getApplication()->getSession()->get('user');
+        $user   = Factory::getApplication()->getIdentity();
         $userId = $user->get('id');
         $guest  = $user->get('guest');
         $groups = $user->getAuthorisedViewLevels();
@@ -140,7 +140,7 @@ class CwmpodcastlistModel extends ListModel
 
         $params = $app->getParams();
 
-        $user = $app->getSession()->get('user');
+        $user = $app->getIdentity();
 
         if (
             (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
@@ -191,7 +191,7 @@ class CwmpodcastlistModel extends ListModel
     protected function getListQuery(): DatabaseQuery
     {
         // Get the current user for authorization checks
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
         // Create a new query object.
         $db    = Factory::getContainer()->get('DatabaseDriver');
