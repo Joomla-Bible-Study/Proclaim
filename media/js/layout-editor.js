@@ -731,6 +731,7 @@
 
         /**
          * Recalculate column positions for all elements in a row
+         * Validates that col + colspan doesn't exceed grid width (12 columns)
          * @param {HTMLElement} rowEl - Row element
          */
         recalculateColumns(rowEl) {
@@ -745,7 +746,17 @@
                 if (data) {
                     data.row = row;
                     data.col = col;
-                    col += parseInt(data.colspan, 10) || 1;
+
+                    // Validate colspan doesn't exceed remaining grid space
+                    let colspan = parseInt(data.colspan, 10) || 1;
+                    const remainingCols = this.options.numCols - col + 1;
+                    if (colspan > remainingCols) {
+                        colspan = remainingCols;
+                        data.colspan = String(colspan);
+                        card.dataset.colspan = String(colspan);
+                    }
+
+                    col += colspan;
                 }
 
                 this.updateElementInfo(card);
@@ -1054,14 +1065,17 @@
             if (!data) return;
 
             // Get values from modal
-            const newColspan = document.getElementById('layout-colspan').value;
+            let newColspan = parseInt(document.getElementById('layout-colspan').value, 10) || 1;
+
+            // Validate colspan is within bounds (1-12)
+            newColspan = Math.max(1, Math.min(this.options.numCols, newColspan));
 
             // Mark colspan as manually set if changed by user
-            if (data.colspan !== newColspan) {
+            if (data.colspan !== String(newColspan)) {
                 data.manualColspan = true;
             }
 
-            data.colspan = newColspan;
+            data.colspan = String(newColspan);
             data.element = document.getElementById('layout-element-type').value;
             data.linktype = document.getElementById('layout-link-type').value;
             data.custom = document.getElementById('layout-custom-class').value;
@@ -1156,7 +1170,8 @@
             const prefix = contextDef.prefix;
 
             // Get params from Joomla script options (passed from PHP)
-            const templateParams = Joomla.getOptions('com_proclaim.templateParams') || {};
+            // Use defensive check in case Joomla object is not available
+            const templateParams = (window.Joomla?.getOptions?.('com_proclaim.templateParams')) || {};
 
             contextDef.elements.forEach(element => {
                 const fieldPrefix = prefix + element.id;
