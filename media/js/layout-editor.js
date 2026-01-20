@@ -114,11 +114,11 @@
         series: {
             label: 'Series List',
             elements: [
-                { id: 'title', label: 'Series Title', langKey: 'JBS_CMN_TITLE' },
+                { id: 'series', label: 'Series Title', langKey: 'JBS_CMN_TITLE' },
                 { id: 'description', label: 'Description', langKey: 'JBS_CMN_DESCRIPTION' },
-                { id: 'thumbnail', label: 'Thumbnail', langKey: 'JBS_CMN_THUMBNAIL' },
+                { id: 'seriesthumbnail', label: 'Thumbnail', langKey: 'JBS_CMN_THUMBNAIL' },
                 { id: 'teacher', label: 'Teacher', langKey: 'JBS_CMN_TEACHER' },
-                { id: 'custom', label: 'Custom', langKey: 'JBS_CMN_CUSTOM' }
+                { id: 'dcustom', label: 'Custom', langKey: 'JBS_CMN_CUSTOM' }
             ],
             prefix: 's'
         },
@@ -126,9 +126,9 @@
         seriesDetails: {
             label: 'Series Details',
             elements: [
-                { id: 'title', label: 'Series Title', langKey: 'JBS_CMN_TITLE' },
+                { id: 'series', label: 'Series Title', langKey: 'JBS_CMN_TITLE' },
                 { id: 'description', label: 'Description', langKey: 'JBS_CMN_DESCRIPTION' },
-                { id: 'thumbnail', label: 'Thumbnail', langKey: 'JBS_CMN_THUMBNAIL' },
+                { id: 'seriesthumbnail', label: 'Thumbnail', langKey: 'JBS_CMN_THUMBNAIL' },
                 { id: 'teacher', label: 'Teacher', langKey: 'JBS_CMN_TEACHER' },
                 { id: 'custom', label: 'Custom', langKey: 'JBS_CMN_CUSTOM' }
             ],
@@ -531,6 +531,14 @@
         initSortable() {
             if (typeof Sortable === 'undefined') {
                 console.error('Sortable.js is not loaded');
+                // Show user-facing error message
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'alert alert-danger';
+                errorMsg.innerHTML = `
+                    <span class="icon-warning" aria-hidden="true"></span>
+                    ${this.trans('JBS_TPL_SORTABLE_NOT_LOADED') || 'Drag and drop functionality is unavailable. Please refresh the page or contact support.'}
+                `;
+                this.container.insertBefore(errorMsg, this.container.firstChild);
                 return;
             }
 
