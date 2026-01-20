@@ -154,7 +154,7 @@ class HtmlView extends BaseHtmlView
             $childBar->publish('cwmtemplates.publish');
             $childBar->unpublish('cwmtemplates.unpublish');
 
-            if ($canDo->get('core.edit.state')) {
+            if ($this->canDo->get('core.edit.state')) {
                 $childBar->trash('cwmtemplates.trash');
             }
         }
