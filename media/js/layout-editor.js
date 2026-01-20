@@ -566,25 +566,10 @@
                         self.saveStateForUndo();
                     },
                     onClone: function (evt) {
-                        // Transform clone into a full element card
+                        // Mark clone as coming from palette - buttons will be added in onAdd handler
+                        // Do NOT add buttons here as evt.clone stays in the palette
                         const clone = evt.clone;
-                        const elementId = clone.dataset.element;
-                        const element = self.getElementDefinition(elementId);
-
-                        if (element) {
-                            clone.dataset.paletteItem = '';
-                            clone.innerHTML = `
-                                <span class="element-handle"><span class="icon-menu" aria-hidden="true"></span></span>
-                                <span class="element-name">${element.label}</span>
-                                <span class="element-info">Col 1</span>
-                                <button type="button" class="btn-settings" title="${self.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Settings'}">
-                                    <span class="icon-options" aria-hidden="true"></span>
-                                </button>
-                                <button type="button" class="btn-remove" title="${self.trans('JBS_TPL_REMOVE_ELEMENT') || 'Remove'}">
-                                    <span class="icon-cancel" aria-hidden="true"></span>
-                                </button>
-                            `;
-                        }
+                        clone.dataset.paletteItem = 'true';
                     }
                 });
             }

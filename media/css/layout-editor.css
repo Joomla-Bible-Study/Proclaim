@@ -190,6 +190,14 @@
     gap: .375rem;
 }
 
+/* Ensure palette items never show action buttons, info, or resize handles */
+.element-palette-items .element-card .btn-settings,
+.element-palette-items .element-card .btn-remove,
+.element-palette-items .element-card .element-info,
+.element-palette-items .element-card .resize-handle {
+    display: none !important;
+}
+
 /* ==========================================================================
    Draggable Element Cards in Sidebar
    ========================================================================== */
