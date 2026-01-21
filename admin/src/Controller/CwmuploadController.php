@@ -46,7 +46,9 @@ class CwmuploadController extends AdminController
     public function upload(): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $contentType = null;
 
@@ -252,6 +254,7 @@ class CwmuploadController extends AdminController
             ];
         }
 
-        jexit(json_encode($jsonrpc, JSON_THROW_ON_ERROR));
+        echo json_encode($jsonrpc, JSON_THROW_ON_ERROR);
+        Factory::getApplication()->close();
     }
 }

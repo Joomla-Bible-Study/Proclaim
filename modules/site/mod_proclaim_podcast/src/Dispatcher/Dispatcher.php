@@ -62,6 +62,8 @@ class Dispatcher extends AbstractModuleDispatcher
             $data['list'] = '';
         }
 
+        $data['app'] = $this->getApplication();
+
         // Display the module
         return $data;
     }
