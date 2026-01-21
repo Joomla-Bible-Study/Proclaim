@@ -49,7 +49,9 @@ class CwmtemplatesController extends AdminController
     public function templateImport(): CwmtemplatesController|int
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         // Set Variables.
         $sermonstemplate        = null;
@@ -267,7 +269,9 @@ class CwmtemplatesController extends AdminController
     public function templateExport(): bool|CwmtemplatesController
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $input          = new Input();
         $data           = $input->get('template_export');

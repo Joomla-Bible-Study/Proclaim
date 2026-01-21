@@ -108,7 +108,9 @@ class CwmmediafileController extends FormController
      */
     public function xhr(): void
     {
-        Session::checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken('get')) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
         $input = Factory::getApplication()->getInput();
 
         $addonType = $input->get('type', 'Legacy', 'string');
@@ -165,7 +167,9 @@ class CwmmediafileController extends FormController
      */
     public function cancel($key = null): bool
     {
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $app   = Factory::getApplication();
         $model = $this->getModel();
@@ -264,7 +268,9 @@ class CwmmediafileController extends FormController
     public function setServer(): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $app   = Factory::getApplication();
         $input = $app->input;

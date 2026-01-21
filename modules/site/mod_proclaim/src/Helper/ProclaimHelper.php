@@ -18,7 +18,7 @@ namespace CWM\Module\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Application\SiteApplication;
-use Joomla\CMS\Factory;
+use Joomla\CMS\Date\Date;
 use Joomla\Database\DatabaseAwareInterface;
 use Joomla\Database\DatabaseAwareTrait;
 use Joomla\Registry\Registry;
@@ -47,11 +47,11 @@ class ProclaimHelper implements DatabaseAwareInterface
      */
     public function getLatest(Registry $params, SiteApplication $app): array
     {
-        $user = $app->getSession()->get('user');
+        $user = $app->getIdentity();
 
         $groups = [1];
 
-        if (isset($user)) {
+        if ($user) {
             $groups = $user->getAuthorisedViewLevels();
         }
 
@@ -203,10 +203,12 @@ class ProclaimHelper implements DatabaseAwareInterface
 
         // Define null and now dates
         $nullDate = $db->quote($db->getNullDate());
-        $nowDate  = $db->quote(Factory::getDate()->toSql(true));
+        $nowDate  = $db->quote((new Date('now', $app->get('offset')))->toSql(true));
 
         // Filter by start and end dates.
-        if (!$user->authorise('core.edit.state', 'com_proclaim') && !$user->authorise('core.edit', 'com_proclaim')) {
+        $canEdit = $user && ($user->authorise('core.edit.state', 'com_proclaim') || $user->authorise('core.edit', 'com_proclaim'));
+
+        if (!$canEdit) {
             $query->where('(' . $db->quoteName('study.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('study.publish_up') . ' <= ' . $nowDate . ')')
                 ->where('(' . $db->quoteName('study.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('study.publish_down') . ' >= ' . $nowDate . ')');
         }
@@ -222,7 +224,7 @@ class ProclaimHelper implements DatabaseAwareInterface
 
         // Filter by language
         $language = $params->get('language', '*');
-        $lang     = Factory::getApplication()->getLanguage();
+        $lang     = $app->getLanguage();
 
         if ($lang || $language !== '*') {
             $query->where(
