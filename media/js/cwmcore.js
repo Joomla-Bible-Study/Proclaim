@@ -1,201 +1,171 @@
-$(function () {
+document.addEventListener('DOMContentLoaded', function () {
     'use strict';
 
-    $('.btnPlay').on('click', function () {
-        const $this = $(this);
-        const mediaId = $this.attr('alt');
-        const $mediaid = $('#media-' + mediaId);
+    document.querySelectorAll('.btnPlay').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const mediaId = this.getAttribute('alt');
+            const mediaEl = document.getElementById('media-' + mediaId);
 
-        $('.inlinePlayer:not(#media-' + mediaId + ')').hide();
-        $('.inlinePlayer').html('');
-        $mediaid.toggle();
-        $mediaid.load(
-            'index.php?option=com_proclaim&view=cwmstudieslist&controller=cwmstudieslist&task=inlinePlayer&tmpl=component'
-        );
-        return false;
+            document.querySelectorAll('.inlinePlayer').forEach(function (el) {
+                if (el.id !== 'media-' + mediaId) {
+                    el.style.display = 'none';
+                }
+                el.innerHTML = '';
+            });
+
+            if (mediaEl) {
+                if (window.getComputedStyle(mediaEl).display === 'none') {
+                    mediaEl.style.display = 'block';
+                } else {
+                    mediaEl.style.display = 'none';
+                }
+
+                fetch('index.php?option=com_proclaim&view=cwmstudieslist&controller=cwmstudieslist&task=inlinePlayer&tmpl=component')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.text();
+                    })
+                    .then(html => {
+                        mediaEl.innerHTML = html;
+                    })
+                    .catch(error => {
+                        console.error('Error loading content:', error);
+                    });
+            }
+        });
     });
 
     // Check for touch support using native browser APIs
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
     if (isTouchDevice) {
-        const jbsmcloseoverlay = $('.jbsmclose-overlay');
+        const jbsmcloseoverlay = document.querySelectorAll('.jbsmclose-overlay');
 
-        jbsmcloseoverlay.removeClass('hidden');
-
-        $('.jbsmimg').on('click', function () {
-            if (!$(this).hasClass('hover')) {
-                $(this).addClass('hover');
-            }
+        jbsmcloseoverlay.forEach(function (el) {
+            el.classList.remove('hidden');
         });
 
-        jbsmcloseoverlay.on('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            if ($(this).closest('.jbsmimg').hasClass('hover')) {
-                $(this).closest('.jbsmimg').removeClass('hover');
-            }
+        document.querySelectorAll('.jbsmimg').forEach(function (el) {
+            el.addEventListener('click', function () {
+                if (!this.classList.contains('hover')) {
+                    this.classList.add('hover');
+                }
+            });
+        });
+
+        jbsmcloseoverlay.forEach(function (el) {
+            el.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const closestImg = this.closest('.jbsmimg');
+                if (closestImg && closestImg.classList.contains('hover')) {
+                    closestImg.classList.remove('hover');
+                }
+            });
         });
     } else {
-        $('.jbsmimg').on('mouseenter', function () {
-            $(this).addClass('hover');
-        }).mouseleave(function () {
-            $(this).removeClass('hover');
-        });
-    }
-
-    $('#addReference').on('click', function () {
-        const $newReference = $('#reference').clone();
-        const $deleteButton = $('<a>', {
-            href: '#',
-            'class': 'referenceDelete',
-            text: 'Delete'
-        });
-
-        $newReference.children('#text').attr('value', '');
-        $newReference.children('#scripture').selectOptions('0');
-
-        $newReference.append($deleteButton);
-        $newReference.appendTo('#references');
-        return false;
-    });
-
-    // Use event delegation for dynamically added delete buttons
-    $('#references').on('click', '.referenceDelete', function (e) {
-        e.preventDefault();
-        $(this).parent('#reference').remove();
-    });
-
-    $('.imgChoose').on('change', function () {
-        const targetImage = $('#img' + $(this).attr('id'));
-        const activeDir = targetImage.attr('src').split('/');
-        activeDir.pop();
-
-        if (parseInt($(this).val()) === 0) {
-            targetImage.hide();
-        } else {
-            targetImage.show();
-        }
-
-        // Safely escape the value - use underscore if available, otherwise basic HTML escape
-        const escapeHtml = (str) => {
-            if (typeof _ !== 'undefined' && typeof _.escape === 'function') {
-                return _.escape(str);
-            }
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
-        };
-        targetImage.attr('src', activeDir.join('/') + '/' + escapeHtml($(this).val()));
-    });
-
-    $('#type').on('change', function () {
-        const selectedFunction = $('#type').find('option:selected').attr('value');
-        // Whitelist of allowed template functions to prevent arbitrary code execution
-        const allowedFunctions = ['tmplList'];
-        if (allowedFunctions.includes(selectedFunction) && typeof window[selectedFunction] === 'function') {
-            window[selectedFunction]();
-        }
-    });
-
-    function canvasItemFunctions()
-    {
-        $('#canvasDeleteItem').click(function () {
-            $(this).parent('#canvasListItem').draggable({
-                handle: 'div#canvasDeleteItem',
+        document.querySelectorAll('.jbsmimg').forEach(function (el) {
+            el.addEventListener('mouseenter', function () {
+                this.classList.add('hover');
+            });
+            el.addEventListener('mouseleave', function () {
+                this.classList.remove('hover');
             });
         });
     }
 
-    function canvasItemControls(itemLabel)
-    {
-        const $canvasItem = $('.canvasItem');
+    const addReferenceBtn = document.getElementById('addReference');
+    if (addReferenceBtn) {
+        addReferenceBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const referenceTemplate = document.getElementById('reference');
+            if (!referenceTemplate) return;
 
-        // Create elements safely to prevent XSS
-        $canvasItem.append($('<div>', { id: 'canvasItemOptions', html: '&nbsp;' }));
-        $canvasItem.append($('<div>', { id: 'canvasMoveItem', html: '&nbsp;' }));
-        $canvasItem.append($('<div>', { id: 'canvasDeleteItem', html: '&nbsp;' }));
-        // Use .text() to safely escape itemLabel and prevent XSS
-        $canvasItem.append($('<div>', { 'class': 'canvasItemName' }).text(itemLabel));
+            const newReference = referenceTemplate.cloneNode(true);
 
-        canvasItemFunctions();
+            const deleteButton = document.createElement('a');
+            deleteButton.href = '#';
+            deleteButton.className = 'referenceDelete';
+            deleteButton.textContent = 'Delete';
+
+            const textInput = newReference.querySelector('#text');
+            if (textInput) {
+                textInput.value = '';
+                textInput.setAttribute('value', '');
+            }
+
+            const scriptureSelect = newReference.querySelector('#scripture');
+            if (scriptureSelect) {
+                scriptureSelect.value = '0';
+            }
+
+            newReference.appendChild(deleteButton);
+            const referencesContainer = document.getElementById('references');
+            if (referencesContainer) {
+                referencesContainer.appendChild(newReference);
+            }
+        });
     }
 
-    function tmplList()
-    {
-        const canvasListItem = '<div id="canvasListItem" class="canvasItem"></div>';
-
-        $('#tmplCanvas').append(canvasListItem);
-        canvasItemControls('List Items');
+    // Use event delegation for dynamically added delete buttons
+    const referencesContainer = document.getElementById('references');
+    if (referencesContainer) {
+        referencesContainer.addEventListener('click', function (e) {
+            if (e.target.classList.contains('referenceDelete')) {
+                e.preventDefault();
+                const parent = e.target.closest('#reference');
+                if (parent) {
+                    parent.remove();
+                }
+            }
+        });
     }
 
-    // Removed unused functions tmplListItem, tmplSingleItem, tmplModuleList, tmplModuleItem, tmplPopup
+    document.querySelectorAll('.imgChoose').forEach(function (el) {
+        el.addEventListener('change', function () {
+            const targetImage = document.getElementById('img' + this.id);
+            if (!targetImage) return;
+
+            const src = targetImage.getAttribute('src');
+            let activeDir = [];
+            if (src) {
+                activeDir = src.split('/');
+                activeDir.pop();
+            }
+
+            if (parseInt(this.value) === 0) {
+                targetImage.style.display = 'none';
+            } else {
+                targetImage.style.display = '';
+            }
+
+            // Safely escape the value - use underscore if available, otherwise basic HTML escape
+            const escapeHtml = (str) => {
+                if (typeof _ !== 'undefined' && typeof _.escape === 'function') {
+                    return _.escape(str);
+                }
+                const entityMap = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                };
+                return String(str).replace(/[&<>"']/g, function (s) {
+                    return entityMap[s];
+                });
+            };
+
+            if (activeDir.length > 0) {
+                targetImage.setAttribute('src', activeDir.join('/') + '/' + escapeHtml(this.value));
+            }
+        });
+    });
+
+    // Removed unused functions tmplListItem, tmplSingleItem, tmplModuleList, tmplModuleItem, tmplPopup, tmplList
 });
-
-/**
- * Returns true if the URL is a relative path (does not begin with scheme or '//')
- */
-function isSafeRelativeUrl(url) {
-    // Only allow URLs that do not start with a scheme or '//'
-    return typeof url === 'string' &&
-        url.trim().length > 0 &&
-        !/^[a-z][a-z0-9+.-]*:/.test(url) && // No scheme like http:, https:, javascript:, data:, etc.
-        !/^\/\//.test(url); // Not protocol-relative
-}
-
-function goTo()
-{
-    let sE = null, url;
-    if (document.getElementById) {
-        sE = document.getElementById('urlList');
-    } else {
-        if (document.getElementsByName('urlList')) {
-            sE = document.getElementsByName('urlList');
-        }
-    }
-
-    if (sE && (url = sE.options[sE.selectedIndex].value)) {
-        if (isSafeRelativeUrl(url)) {
-            location.href = url;
-        } else {
-            alert('Navigation to external or potentially unsafe URL is not allowed.');
-            console.error('Unsafe navigation attempt:', url);
-        }
-    }
-}
-
-function ReverseDisplay()
-{
-    const ele = document.getElementById('scripture');
-    const text = document.getElementById('heading');
-    if (ele.style.display === 'block') {
-        ele.style.display = 'none';
-        text.innerHTML = 'show';
-    } else {
-        ele.style.display = 'block';
-        text.innerHTML = 'hide';
-    }
-}
-
-function HideContent(d)
-{
-    document.getElementById(d).style.display = 'none';
-}
-
-function ShowContent(d)
-{
-    document.getElementById(d).style.display = 'block';
-}
-
-function ReverseDisplay2(d)
-{
-    const element = document.getElementById(d);
-    if (element.style.display === 'none') {
-        // Use 'contents' so children flow with parent's flex/grid layout
-        element.style.display = 'contents';
-    } else {
-        element.style.display = 'none';
-    }
-}
 
 function decOnly(i)
 {
@@ -398,14 +368,4 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('hidden.bs.modal', function(e) {
         ProclaimA11y.releaseFocus(e.target);
     });
-
-    // Also support jQuery Bootstrap modals if present
-    if (typeof jQuery !== 'undefined') {
-        jQuery(document).on('shown.bs.modal', function(e) {
-            ProclaimA11y.trapFocus(e.target);
-        });
-        jQuery(document).on('hidden.bs.modal', function(e) {
-            ProclaimA11y.releaseFocus(e.target);
-        });
-    }
 });
