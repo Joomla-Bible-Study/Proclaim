@@ -40,7 +40,7 @@ Proclaim is a Joomla component designed to display information about church Bibl
 
 ### Compatibility
 1. Joomla 4+ compatibility for current development
-2. PHP 8.1+ support
+2. PHP 8.3+ support
 3. Backward compatibility considerations for existing users
 
 ### Performance
@@ -66,14 +66,14 @@ Proclaim is a Joomla component designed to display information about church Bibl
 3. Must follow Joomla coding standards and best practices
 
 ### User Experience Constraints
-1. Interface must be intuitive for church staff with varying technical skills
+1. The interface must be intuitive for church staff with varying technical skills
 2. Setup and configuration should be straightforward
 3. Documentation must be comprehensive yet accessible
 
 ## Goals
 
 ### Short-term Goals
-1. Ensure full compatibility with latest Joomla version
+1. Ensure full compatibility with the latest Joomla version
 2. Improve user interface and experience
 3. Enhance media handling capabilities
 4. Strengthen security measures

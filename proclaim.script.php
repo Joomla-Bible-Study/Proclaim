@@ -112,7 +112,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * @var    string
      * @since  3.6
      */
-    protected $minimumJoomla = '4.2.0';
+    protected $minimumJoomla = '5.0.0';
 
     /**
      * @var   string The component's name
