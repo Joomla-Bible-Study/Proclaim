@@ -42,7 +42,9 @@ class CwmpodcastsController extends AdminController
     public function writeXMLFile(): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $podcasts = new Cwmpodcast();
         $result   = $podcasts->makePodcasts();

@@ -78,7 +78,9 @@ class CwmassetsController extends BaseController
     public function checkassets(): void
     {
         // Check for request forgeries.
-        (Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $model      = new CwmassetsModel();
         $checklists = $model->checkAssets();
@@ -101,7 +103,9 @@ class CwmassetsController extends BaseController
     public function browse(): void
     {
         // Check for request forgeries.
-        (Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $app     = Factory::getApplication();
         $session = $app->getSession();
@@ -133,7 +137,9 @@ class CwmassetsController extends BaseController
     public function run(): void
     {
         // Check for request forgeries.
-        (Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $app   = Factory::getApplication();
         $model = new CwmassetsModel();
@@ -155,7 +161,9 @@ class CwmassetsController extends BaseController
     public function clear(): void
     {
         // Check for request forgeries.
-        (Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         Cwmhelper::clearCache();
         $session = Factory::getApplication()->getSession();

@@ -105,6 +105,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $data['helper']         = $helper;
         $data['matchedMessage'] = $matchedMessage;
         $data['serverId']       = (int) $data['params']->get('server_id', 0);
+        $data['app']            = $this->getApplication();
 
         return $data;
     }

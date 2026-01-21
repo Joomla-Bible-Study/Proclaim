@@ -53,7 +53,9 @@ class CwmmessageController extends FormController
     public function resetHits(): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $msg   = null;
         $input = new Input();
@@ -119,7 +121,9 @@ class CwmmessageController extends FormController
     public function save($key = null, $urlVar = null): bool
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $model = new CwmtopicModel();
         $app   = Factory::getApplication();

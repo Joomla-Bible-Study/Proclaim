@@ -109,7 +109,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $url = $data['params']->get('stylesheet');
 
         if ($url) {
-            $wa->load($url);
+            $wa->registerAndUseStyle('mod_proclaim.custom', $url);
         }
 
         if ($data['params']->get('simple_mode') === '1') {
