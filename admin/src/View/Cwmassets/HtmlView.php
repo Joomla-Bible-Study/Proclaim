@@ -9,6 +9,8 @@
  * @link       https://www.christianwebministries.org
  * */
 
+declare(strict_types=1);
+
 namespace CWM\Component\Proclaim\Administrator\View\Cwmassets;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -77,6 +79,12 @@ class HtmlView extends BaseHtmlView
      */
     protected string $percentage;
 
+    /** @var bool Scan State
+     *
+     * @since 9.0.0
+     */
+    public $scanstate;
+
     /** @var array The pre-versions to process
      *
      * @since 9.0.0
@@ -104,8 +112,12 @@ class HtmlView extends BaseHtmlView
         $layout      = $app->input->get('layout', 'edit');
         $task        = $app->input->get('task', 'checkassets');
 
+        if (strpos($task, '.') !== false) {
+            $task = explode('.', $task)[1];
+        }
+
         $session      = $app->getSession();
-        $this->assets = $session->get('checkassets', null, 'CWM');
+        $this->assets = $session->get('checklists', '', 'CWM');
         $stack        = $session->get('asset_stack', '', 'CWM');
 
         if (empty($stack)) {
@@ -146,7 +158,7 @@ class HtmlView extends BaseHtmlView
         $this->more = $more;
         $this->setLayout($layout);
 
-        $this->percentage = $percent;
+        $this->percentage = (string)$percent;
 
         if ($this->more) {
             $doc = $this->getDocument();
@@ -159,7 +171,7 @@ class HtmlView extends BaseHtmlView
                 );
         }
 
-        if ($task === 'browse' || $task === 'run') {
+        if ($task === 'browse' || $task === 'run' || $this->scanstate) {
             $this->setLayout('fix');
         } else {
             $this->setLayout('edit');

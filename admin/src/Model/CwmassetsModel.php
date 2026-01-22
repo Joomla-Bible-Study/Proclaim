@@ -9,6 +9,8 @@
  * @link       https://www.christianwebministries.org
  * */
 
+declare(strict_types=1);
+
 namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -351,7 +353,6 @@ class CwmassetsModel extends ListModel
     public function checkAssets(): array
     {
         $return = [];
-        $result = '';
         $db     = Factory::getContainer()->get('DatabaseDriver');
 
         // First get the new parent_id
@@ -377,16 +378,19 @@ class CwmassetsModel extends ListModel
             $arulesrows  = 0;
             $nomatchrows = 0;
             $numrows     = \count($results);
+            $lastResult  = null;
 
             // Now go through each record to test it for asset id
             foreach ($results as $result) {
+                $lastResult = $result;
+
                 // If there is no jasset_id it means that this has not been set and should be
                 if (!$result->jasset_id) {
                     $nullrows++;
                 }
 
                 // If there is a jasset_id but no match to the parent_id then a mismatch has occurred
-                if ($this->parent_id !== (int)(int)$result->parent_id && $result->jasset_id) {
+                if ($this->parent_id !== (int)$result->parent_id && $result->jasset_id) {
                     $nomatchrows++;
                 }
 
@@ -409,9 +413,9 @@ class CwmassetsModel extends ListModel
                 'arulesrows'       => $arulesrows,
                 'nomatchrows'      => $nomatchrows,
                 'parent_id'        => $this->parent_id,
-                'result_parent_id' => $result->parent_id,
-                'id'               => $result->jid,
-                'assetid'          => $result->jasset_id,
+                'result_parent_id' => $lastResult ? $lastResult->parent_id : null,
+                'id'               => $lastResult ? $lastResult->jid : null,
+                'assetid'          => $lastResult ? $lastResult->jasset_id : null,
             ];
         }
 

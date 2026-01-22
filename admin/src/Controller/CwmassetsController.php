@@ -9,6 +9,8 @@
  * @link       https://www.christianwebministries.org
  * */
 
+declare(strict_types=1);
+
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -85,7 +87,7 @@ class CwmassetsController extends BaseController
         $model      = new CwmassetsModel();
         $checklists = $model->checkAssets();
         $session    = Factory::getApplication()->getSession();
-        $session->set('assat_stack', '', 'CWM');
+        $session->set('asset_stack', '', 'CWM');
         $session->set('checklists', $checklists, 'CWM');
         $this->input->set('view', 'Cwmassets');
 
@@ -167,7 +169,7 @@ class CwmassetsController extends BaseController
 
         Cwmhelper::clearCache();
         $session = Factory::getApplication()->getSession();
-        $session->set('assat_stack', '', 'CWM');
+        $session->set('asset_stack', '', 'CWM');
         $app = Factory::getApplication();
         $app->input->set('view', 'Cwmassets');
         $this->display(false);
