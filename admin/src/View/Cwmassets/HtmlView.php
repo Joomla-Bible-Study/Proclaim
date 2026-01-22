@@ -31,13 +31,13 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var int Total numbers of Steps
+    /** @var int Total number of Steps
      *
      * @since 9.0.0
      */
     public int $totalSteps = 0;
 
-    /** @var int Numbers of Steps already processed
+    /** @var int Number of Steps already processed
      *
      * @since 9.0.0
      */
@@ -166,7 +166,7 @@ class HtmlView extends BaseHtmlView
             $wa->useScript('form.validate')
                 ->addInlineScript(
                     "setTimeout(function(){
-                                    jQuery('#adminForm').submit()
+                                    document.getElementById('adminForm').submit();
 								}, 1000);"
                 );
         }
