@@ -27,6 +27,10 @@
         <exclude name=".github"/>
         <exclude name=".claude"/>
         <exclude name=".ai"/>
+        <exclude name=".vscode"/>
+        <exclude name=".idea"/>
+        <exclude name="libraries/vendor/**"/>
+        <exclude name="node_modules/**"/>
     </fileset>
 
     <target name="lint" description="Perform syntax check of source code">
@@ -36,9 +40,30 @@
     </target>
 
     <target name="phpcs" depends="init" description="Generate checkstyle.xml using PHP_CodeSniffer">
-        <exec executable="/Applications/MAMP/bin/php/php8.3.15/bin/php" checkreturn="true"
-              output="${basedir}/build/reports/phpcs.log" error="${basedir}/build/reports/phpcs-error.log">
+        <exec executable="php" checkreturn="false"
+              output="${basedir}/build/reports/phpcs.log"
+              returnProperty="phpcs.return">
             <arg line="${basedir}/libraries/vendor/bin/phpcs --standard=${basedir}/build/psr12/ruleset.xml -d memory_limit=2G --report=checkstyle --report-file=${basedir}/build/reports/phpcs-checkstyle.xml --ignore=*/tests/*,*/vendor/*,*/node_modules/*,*/tmpl/* ${basedir}"/>
+        </exec>
+
+        <if>
+            <equals arg1="${phpcs.return}" arg2="1"/>
+            <then>
+                <echo message="PHPCS found violations. Running PHP-CS-Fixer..."/>
+                <phingcall target="php-cs-fixer"/>
+            </then>
+        </if>
+    </target>
+
+    <target name="php-cs-fixer" description="Run PHP CS Fixer">
+        <exec executable="php" passthru="true" checkreturn="true">
+            <arg line="${basedir}/libraries/vendor/bin/php-cs-fixer fix --config=${basedir}/.php-cs-fixer.dist.php -v"/>
+        </exec>
+    </target>
+
+    <target name="phpunit" depends="init" description="Run unit tests with PHPUnit">
+        <exec executable="php" passthru="true" checkreturn="true">
+            <arg line="${basedir}/libraries/vendor/bin/phpunit --configuration ${basedir}/phpunit.xml"/>
         </exec>
     </target>
 
@@ -52,11 +77,29 @@
                 <include name="modules/**"/>
                 <include name="plugins/**"/>
                 <include name="site/**"/>
+                <include name="libraries/**"/>
                 <include name="*.php"/>
-                <exclude name="build.xml"/>
                 <include name="*.xml"/>
                 <include name="*.txt"/>
                 <include name="*.md"/>
+                <exclude name="build.xml"/>
+                <exclude name="build.properties"/>
+                <exclude name="build.dist.properties"/>
+                <exclude name="phpunit.xml"/>
+                <exclude name="phpunit.xml.bak"/>
+                <exclude name=".php-cs-fixer.dist.php"/>
+                <exclude name="CLAUDE.md"/>
+                <exclude name="SECURITY.md"/>
+                <exclude name="_config.yml"/>
+                <exclude name=".git*"/>
+                <exclude name=".vscode"/>
+                <exclude name=".idea/**"/>
+                <exclude name=".ds_store"/>
+                <exclude name="node_modules/**"/>
+                <exclude name="composer.json"/>
+                <exclude name="composer.lock"/>
+                <exclude name="package.json"/>
+                <exclude name="package-lock.json"/>
             </fileset>
         </zip>
         <phingcall target="dev.init"/>
@@ -78,7 +121,7 @@
         <delete file="${basedir}/media/css/site/cwmcore.css"/>
     </target>
 
-    <!-- Set the default joomla path and create symbolic links -->
+    <!-- Set the default Joomla path and create symbolic links -->
     <target name="dev.Setup_Symbolic_Links">
 
         <echo message="Joomla path set to: ${builder.joomla_path}${builder.joomla_dir}"/>
@@ -110,5 +153,5 @@
         <phingcall target="dev.init"/>
     </target>
 
-    <target name="build" depends="init,lint,component"/>
+    <target name="build" depends="init,lint,phpcs,phpunit,component"/>
 </project>
