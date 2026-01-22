@@ -28,19 +28,19 @@ class AllLibsTest extends ProclaimTestCase
     public function testAllLibsSanity(): void
     {
         $libDir = JPATH_ROOT . '/admin/src/Lib';
-        $files = glob($libDir . '/*.php');
+        $files  = glob($libDir . '/*.php');
 
         foreach ($files as $file) {
-            $content = file_get_contents($file);
+            $content   = file_get_contents($file);
             $className = basename($file, '.php');
-            
+
             // Check namespace
             $this->assertStringContainsString(
                 'namespace CWM\Component\Proclaim\Administrator\Lib;',
                 $content,
                 "File $className should have correct namespace"
             );
-            
+
             // Check class definition
             $this->assertStringContainsString(
                 "class $className",

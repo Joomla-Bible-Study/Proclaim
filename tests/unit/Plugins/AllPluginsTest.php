@@ -28,7 +28,7 @@ class AllPluginsTest extends ProclaimTestCase
     public function testAllPluginsSanity(): void
     {
         $pluginsDir = JPATH_ROOT . '/plugins';
-        $groups = ['finder', 'task'];
+        $groups     = ['finder', 'task'];
 
         foreach ($groups as $group) {
             $groupDir = $pluginsDir . '/' . $group;
@@ -40,7 +40,7 @@ class AllPluginsTest extends ProclaimTestCase
 
             foreach ($plugins as $pluginDir) {
                 $pluginName = basename($pluginDir);
-                $srcDir = $pluginDir . '/src';
+                $srcDir     = $pluginDir . '/src';
 
                 if (is_dir($srcDir)) {
                     // Check Extension
@@ -48,9 +48,9 @@ class AllPluginsTest extends ProclaimTestCase
                     if (is_dir($extensionDir)) {
                         $files = glob($extensionDir . '/*.php');
                         foreach ($files as $file) {
-                            $content = file_get_contents($file);
+                            $content   = file_get_contents($file);
                             $className = basename($file, '.php');
-                            
+
                             // Check namespace
                             // Namespace format: CWM\Plugin\Group\PluginName\Extension
                             $this->assertStringContainsString(

@@ -28,7 +28,7 @@ class AllModulesTest extends ProclaimTestCase
     public function testAllModulesSanity(): void
     {
         $modulesDir = JPATH_ROOT . '/modules';
-        $clients = ['site', 'admin'];
+        $clients    = ['site', 'admin'];
 
         foreach ($clients as $client) {
             $clientDir = $modulesDir . '/' . $client;
@@ -40,7 +40,7 @@ class AllModulesTest extends ProclaimTestCase
 
             foreach ($modules as $moduleDir) {
                 $moduleName = basename($moduleDir);
-                $srcDir = $moduleDir . '/src';
+                $srcDir     = $moduleDir . '/src';
 
                 if (is_dir($srcDir)) {
                     // Check Helpers
@@ -48,9 +48,9 @@ class AllModulesTest extends ProclaimTestCase
                     if (is_dir($helperDir)) {
                         $files = glob($helperDir . '/*.php');
                         foreach ($files as $file) {
-                            $content = file_get_contents($file);
+                            $content   = file_get_contents($file);
                             $className = basename($file, '.php');
-                            
+
                             // Check namespace
                             // Namespace format: CWM\Module\ModuleName\Site\Helper or Admin\Helper
                             // ModuleName is usually CamelCase of mod_proclaim -> Proclaim
@@ -68,9 +68,9 @@ class AllModulesTest extends ProclaimTestCase
                     if (is_dir($dispatcherDir)) {
                         $files = glob($dispatcherDir . '/*.php');
                         foreach ($files as $file) {
-                            $content = file_get_contents($file);
+                            $content   = file_get_contents($file);
                             $className = basename($file, '.php');
-                            
+
                             $this->assertStringContainsString(
                                 'namespace CWM\Module\\',
                                 $content,

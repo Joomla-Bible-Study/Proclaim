@@ -116,10 +116,10 @@ final class Proclaim extends Adapter implements SubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return array_merge(parent::getSubscribedEvents(), [
-            'onFinderChangeState'  => 'onFinderChangeState',
-            'onFinderAfterDelete'  => 'onFinderAfterDelete',
-            'onFinderBeforeSave'   => 'onFinderBeforeSave',
-            'onFinderAfterSave'    => 'onFinderAfterSave',
+            'onFinderChangeState' => 'onFinderChangeState',
+            'onFinderAfterDelete' => 'onFinderAfterDelete',
+            'onFinderBeforeSave'  => 'onFinderBeforeSave',
+            'onFinderAfterSave'   => 'onFinderAfterSave',
         ]);
     }
 
@@ -439,8 +439,8 @@ final class Proclaim extends Adapter implements SubscriberInterface
         if (!empty($item->thumbnailm)) {
             // Try to decode as JSON
             $decoded = json_decode($item->thumbnailm);
-            
-            if (json_last_error() === JSON_ERROR_NONE && is_object($decoded)) {
+
+            if (json_last_error() === JSON_ERROR_NONE && \is_object($decoded)) {
                 $images = $decoded;
             } else {
                 // Treat as direct path
