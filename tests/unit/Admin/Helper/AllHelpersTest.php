@@ -28,12 +28,12 @@ class AllHelpersTest extends ProclaimTestCase
     public function testAllHelpersSanity(): void
     {
         $helperDir = JPATH_ROOT . '/admin/src/Helper';
-        $files = glob($helperDir . '/*.php');
+        $files     = glob($helperDir . '/*.php');
 
         foreach ($files as $file) {
-            $content = file_get_contents($file);
+            $content   = file_get_contents($file);
             $className = basename($file, '.php');
-            
+
             // Skip if it's not a class file (e.g. tagDefinitions.helper.php might not be a class)
             if (strpos($className, '.helper') !== false) {
                 continue;
@@ -45,7 +45,7 @@ class AllHelpersTest extends ProclaimTestCase
                 $content,
                 "File $className should have correct namespace"
             );
-            
+
             // Check class definition
             $this->assertStringContainsString(
                 "class $className",

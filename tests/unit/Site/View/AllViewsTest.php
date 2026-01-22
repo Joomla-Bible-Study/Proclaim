@@ -28,22 +28,22 @@ class AllViewsTest extends ProclaimTestCase
     public function testAllViewsSanity(): void
     {
         $viewDir = JPATH_ROOT . '/site/src/View';
-        $dirs = glob($viewDir . '/*', GLOB_ONLYDIR);
+        $dirs    = glob($viewDir . '/*', GLOB_ONLYDIR);
 
         foreach ($dirs as $dir) {
             $viewName = basename($dir);
-            $file = $dir . '/HtmlView.php';
+            $file     = $dir . '/HtmlView.php';
 
             if (file_exists($file)) {
                 $content = file_get_contents($file);
-                
+
                 // Check namespace
                 $this->assertStringContainsString(
                     "namespace CWM\Component\Proclaim\Site\View\\$viewName;",
                     $content,
                     "View $viewName should have correct namespace"
                 );
-                
+
                 // Check class definition
                 $this->assertStringContainsString(
                     "class HtmlView",

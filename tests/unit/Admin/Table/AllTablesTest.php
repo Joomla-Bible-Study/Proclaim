@@ -28,26 +28,26 @@ class AllTablesTest extends ProclaimTestCase
     public function testAllTablesSanity(): void
     {
         $tableDir = JPATH_ROOT . '/admin/src/Table';
-        $files = glob($tableDir . '/*.php');
+        $files    = glob($tableDir . '/*.php');
 
         foreach ($files as $file) {
-            $content = file_get_contents($file);
+            $content   = file_get_contents($file);
             $className = basename($file, '.php');
-            
+
             // Check namespace
             $this->assertStringContainsString(
                 'namespace CWM\Component\Proclaim\Administrator\Table;',
                 $content,
                 "File $className should have correct namespace"
             );
-            
+
             // Check class definition
             $this->assertStringContainsString(
                 "class $className",
                 $content,
                 "File $className should define class $className"
             );
-            
+
             // Check inheritance (should extend Table)
             $this->assertStringContainsString(
                 'extends Table',
