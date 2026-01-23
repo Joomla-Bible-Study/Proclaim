@@ -1,6 +1,11 @@
 # Proclaim Improvement Tasks
 
-This document contains a comprehensive list of actionable improvement tasks for the Proclaim Joomla component. Each task is logically ordered and covers both architectural and code-level improvements.
+This document contains actionable improvement tasks for the Proclaim Joomla component. Each task is organized by category with checkboxes for tracking progress.
+
+For project requirements and goals, see [requirements.md](requirements.md).
+For implementation strategy and phasing, see [plan.md](plan.md).
+
+---
 
 ## 1. Technical Foundation Modernization
 

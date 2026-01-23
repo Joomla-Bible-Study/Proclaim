@@ -1,37 +1,50 @@
-## Welcome to GitHub Pages
+# Proclaim Documentation
 
-You can use the [editor on GitHub](https://github.com/Joomla-Bible-Study/Joomla-Bible-Study/edit/master/docs/index.md) to maintain and preview the content for your website in Markdown files.
+Proclaim (CWM Proclaim) is a Joomla 4+ component for managing and displaying Bible studies and sermons. It supports teachers, series, topics, locations, media files, podcasting, and social sharing with customizable templates.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Documentation
 
-### Markdown
+| Document | Description |
+|----------|-------------|
+| [Requirements](requirements.md) | Project requirements, goals, constraints, and success metrics |
+| [Plan](plan.md) | Implementation strategy, phased approach, and development practices |
+| [Tasks](tasks.md) | Actionable improvement tasks with progress tracking |
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Quick Links
 
-```markdown
-Syntax highlighted code block
+- **GitHub Repository**: [Joomla-Bible-Study/Proclaim](https://github.com/Joomla-Bible-Study/Proclaim)
+- **PHP Requirement**: 8.3.0+
+- **Joomla Compatibility**: 4.0+
 
-# Header 1
-## Header 2
-### Header 3
+## Getting Started
 
-- Bulleted
-- List
+For development setup instructions, see [CLAUDE.md](../CLAUDE.md) in the repository root.
 
-1. Numbered
-2. List
+### Build Commands
 
-**Bold** and _Italic_ and `Code` text
+```bash
+# Install dependencies
+composer install --dev
 
-[Link](url) and ![Image](src)
+# Run tests
+./libraries/vendor/bin/phpunit
+
+# PHP CS Fixer
+./libraries/vendor/bin/php-cs-fixer fix
+
+# Phing build
+./libraries/vendor/bin/phing build
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+## Project Structure
 
-### Jekyll Themes
+- `admin/src/` - Administrator component code
+- `site/src/` - Frontend component code
+- `libraries/vendor/` - Composer dependencies
+- `modules/` - Joomla modules
+- `plugins/` - Joomla plugins
+- `media/` - CSS, JS, and assets
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Joomla-Bible-Study/Joomla-Bible-Study/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+## Support
 
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+Having issues? [Open an issue](https://github.com/Joomla-Bible-Study/Proclaim/issues) on GitHub.
