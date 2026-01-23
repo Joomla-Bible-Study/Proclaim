@@ -59,12 +59,14 @@ composer setup
 | Command | Description |
 |---------|-------------|
 | `composer setup` | Interactive setup wizard |
-| `composer joomla-install` | Download and install Joomla |
+| `composer joomla-install` | Download and install Joomla (choose version) |
+| `composer joomla-latest` | Show latest available Joomla version |
 | `composer symlink` | Create symbolic links to Joomla |
-| `composer test` | Run tests |
-| `./libraries/vendor/bin/phpunit` | Run tests (direct) |
-| `./libraries/vendor/bin/php-cs-fixer fix --dry-run` | Check code style |
-| `./libraries/vendor/bin/php-cs-fixer fix` | Fix code style |
+| `composer test` | Run PHPUnit tests |
+| `composer lint` | Check code style (dry-run) |
+| `composer lint:fix` | Fix code style issues |
+| `composer cs` | Run PHPCS |
+| `composer check` | Run lint + tests together |
 | `./libraries/vendor/bin/phing build` | Full build |
 | `./libraries/vendor/bin/phing dev.full-setup` | Full setup in one command |
 

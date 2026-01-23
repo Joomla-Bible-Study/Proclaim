@@ -41,8 +41,11 @@ composer setup
 | `composer joomla-install` | Download and install Joomla (choose version) |
 | `composer joomla-latest` | Show latest available Joomla version |
 | `composer symlink` | Create symbolic links to Joomla |
-| `composer test` | Run tests |
-| `./libraries/vendor/bin/php-cs-fixer fix` | Fix code style |
+| `composer test` | Run PHPUnit tests |
+| `composer lint` | Check code style (dry-run) |
+| `composer lint:fix` | Fix code style issues |
+| `composer cs` | Run PHPCS |
+| `composer check` | Run lint + tests together |
 | `./libraries/vendor/bin/phing build` | Full build |
 
 ## Project Structure
