@@ -20,21 +20,30 @@ Proclaim (CWM Proclaim) is a Joomla 4+ component for managing and displaying Bib
 
 For development setup instructions, see [CLAUDE.md](../CLAUDE.md) in the repository root.
 
-### Build Commands
+### Quick Setup
 
 ```bash
-# Install dependencies
+# Install dependencies (creates build.properties from template)
 composer install --dev
 
-# Run tests
-./libraries/vendor/bin/phpunit
+# Run interactive setup wizard (configures paths, optionally installs Joomla)
+composer setup
 
-# PHP CS Fixer
-./libraries/vendor/bin/php-cs-fixer fix
-
-# Phing build
-./libraries/vendor/bin/phing build
+# Or do full setup in one command
+./libraries/vendor/bin/phing dev.full-setup
 ```
+
+### Build Commands
+
+| Command | Description |
+|---------|-------------|
+| `composer setup` | Interactive setup wizard |
+| `composer joomla-install` | Download and install Joomla (choose version) |
+| `composer joomla-latest` | Show latest available Joomla version |
+| `composer symlink` | Create symbolic links to Joomla |
+| `composer test` | Run tests |
+| `./libraries/vendor/bin/php-cs-fixer fix` | Fix code style |
+| `./libraries/vendor/bin/phing build` | Full build |
 
 ## Project Structure
 

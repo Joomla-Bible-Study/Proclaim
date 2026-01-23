@@ -44,13 +44,13 @@ A Joomla 4+ component for managing and displaying Bible studies and sermons, dev
 git clone https://github.com/YOUR-USERNAME/Proclaim.git
 cd Proclaim
 
-# Install dependencies
+# Install dependencies (creates build.properties from template if missing)
 composer install --dev
 
-# Configure Joomla path (create build.properties)
-echo "builder.joomla_path=/path/to/your/joomla" > build.properties
+# Run interactive setup wizard (configures paths and optionally installs Joomla)
+composer setup
 
-# Set up symbolic links
+# Or manually configure build.properties and set up symbolic links
 ./libraries/vendor/bin/phing dev.Setup_Symbolic_Links
 ```
 
@@ -58,11 +58,15 @@ echo "builder.joomla_path=/path/to/your/joomla" > build.properties
 
 | Command | Description |
 |---------|-------------|
-| `./libraries/vendor/bin/phpunit` | Run tests |
+| `composer setup` | Interactive setup wizard |
+| `composer joomla-install` | Download and install Joomla |
+| `composer symlink` | Create symbolic links to Joomla |
+| `composer test` | Run tests |
+| `./libraries/vendor/bin/phpunit` | Run tests (direct) |
 | `./libraries/vendor/bin/php-cs-fixer fix --dry-run` | Check code style |
 | `./libraries/vendor/bin/php-cs-fixer fix` | Fix code style |
 | `./libraries/vendor/bin/phing build` | Full build |
-| `./libraries/vendor/bin/phing package` | Create package |
+| `./libraries/vendor/bin/phing dev.full-setup` | Full setup in one command |
 
 ## Contributing
 

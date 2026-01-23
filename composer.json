@@ -95,7 +95,14 @@
     "test": "phpunit",
     "phpcs": "phpcs . --standard=./build/psr12/ruleset.xml",
     "php-cs-fixer": "php-cs-fixer --config=.php-cs-fixer.dist.php",
-    "post-install-cmd": "\"libraries/vendor/bin/phpcs\" --config-set installed_paths libraries/vendor/squizlabs/php_codesniffer/src/Standards",
+    "setup": "libraries/vendor/bin/phing dev.setup",
+    "joomla-install": "libraries/vendor/bin/phing joomla.install",
+    "joomla-latest": "libraries/vendor/bin/phing joomla.get-latest-version",
+    "symlink": "libraries/vendor/bin/phing dev.Setup_Symbolic_Links",
+    "post-install-cmd": [
+      "\"libraries/vendor/bin/phpcs\" --config-set installed_paths libraries/vendor/squizlabs/php_codesniffer/src/Standards",
+      "@php -r \"if (!file_exists('build.properties')) { copy('build.dist.properties', 'build.properties'); echo 'Created build.properties from template. Run composer setup to configure.\\n'; }\""
+    ],
     "post-update-cmd": "\"libraries/vendor/bin/phpcs\" --config-set installed_paths libraries/vendor/squizlabs/php_codesniffer/src/Standards"
   }
 }
