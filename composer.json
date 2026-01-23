@@ -93,8 +93,10 @@
   },
   "scripts": {
     "test": "phpunit",
-    "phpcs": "phpcs . --standard=./build/psr12/ruleset.xml",
-    "php-cs-fixer": "php-cs-fixer --config=.php-cs-fixer.dist.php",
+    "lint": "php-cs-fixer fix --dry-run --diff",
+    "lint:fix": "php-cs-fixer fix",
+    "cs": "phpcs . --standard=./build/psr12/ruleset.xml",
+    "check": "@composer lint && @composer test",
     "setup": "libraries/vendor/bin/phing dev.setup",
     "joomla-install": "libraries/vendor/bin/phing joomla.install",
     "joomla-latest": "libraries/vendor/bin/phing joomla.get-latest-version",
