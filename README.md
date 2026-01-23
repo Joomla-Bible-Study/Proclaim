@@ -77,14 +77,16 @@ We appreciate contributions in various capacities.
 ### Development Workflow
 
 1. [Fork this repository](http://help.github.com/fork-a-repo/)
-2. Install dev dependencies: `composer install --dev`
-3. [Set up your dev environment](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Setting-up-your-development-environment)
+2. Install dependencies: `composer install --dev`
+3. Run setup wizard: `composer setup`
 4. [Create a topic branch](http://learn.github.com/p/branching.html)
 5. Implement your feature or bug fix
 6. Add/update unit tests for new functionality
-7. Run `./libraries/vendor/bin/phing build` - fix issues if build fails
+7. Run `composer check` to verify lint and tests pass
 8. Commit and push your changes
 9. [Submit a pull request](http://help.github.com/send-pull-requests/)
+
+See [Development Setup](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Setting-up-your-development-environment) for full details.
 
 **Important:** Submit separate pull requests for each fix or feature. Avoid combining multiple changes in a single PR.
 
