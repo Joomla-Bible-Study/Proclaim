@@ -133,7 +133,7 @@ class HtmlView extends BaseHtmlView
      */
     protected function addToolbar(): void
     {
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
         // Get the toolbar object instance
         $toolbar = Toolbar::getInstance('toolbar');
@@ -155,10 +155,7 @@ class HtmlView extends BaseHtmlView
         if ($this->canDo->get('core.edit.state')) {
             $childBar->publish('cwmtemplates.publish');
             $childBar->unpublish('cwmtemplates.unpublish');
-
-            if ($this->canDo->get('core.edit.state')) {
-                $childBar->trash('cwmtemplates.trash');
-            }
+            $childBar->trash('cwmtemplates.trash');
 
             // Add a batch button
             if (
