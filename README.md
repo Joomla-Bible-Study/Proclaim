@@ -24,9 +24,9 @@ A Joomla 4+ component for managing and displaying Bible studies and sermons, dev
 
 - [Wiki Home](https://github.com/Joomla-Bible-Study/Proclaim/wiki) - Main documentation
 - [Development Setup](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Setting-up-your-development-environment) - Configure your environment
-- [Requirements](docs/requirements.md) - Project requirements and goals
-- [Plan](docs/plan.md) - Implementation strategy
-- [Tasks](docs/tasks.md) - Improvement tasks with progress tracking
+- [Requirements](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Requirements) - Project requirements and goals
+- [Plan](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Plan) - Implementation strategy
+- [Tasks](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Tasks) - Improvement tasks with progress tracking
 
 ## Quick Start
 

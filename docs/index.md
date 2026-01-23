@@ -1,62 +1,35 @@
 # Proclaim Documentation
 
-Proclaim (CWM Proclaim) is a Joomla 4+ component for managing and displaying Bible studies and sermons. It supports teachers, series, topics, locations, media files, podcasting, and social sharing with customizable templates.
+The official documentation for Proclaim is maintained in the **GitHub Wiki**.
 
 ## Documentation
 
+**[View Full Documentation on the Wiki](https://github.com/Joomla-Bible-Study/Proclaim/wiki)**
+
+### Quick Links
+
 | Document | Description |
 |----------|-------------|
-| [Requirements](requirements.md) | Project requirements, goals, constraints, and success metrics |
-| [Plan](plan.md) | Implementation strategy, phased approach, and development practices |
-| [Tasks](tasks.md) | Actionable improvement tasks with progress tracking |
+| [Home](https://github.com/Joomla-Bible-Study/Proclaim/wiki) | Wiki home and overview |
+| [Requirements](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Requirements) | Project requirements and goals |
+| [Plan](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Plan) | Implementation strategy |
+| [Tasks](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Tasks) | Improvement tasks with progress |
+| [Development Setup](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Setting-up-your-development-environment) | Set up your dev environment |
+| [Standards](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Standards-and-Conventions) | Coding standards |
 
-## Quick Links
-
-- **GitHub Repository**: [Joomla-Bible-Study/Proclaim](https://github.com/Joomla-Bible-Study/Proclaim)
-- **PHP Requirement**: 8.3.0+
-- **Joomla Compatibility**: 4.0+
-
-## Getting Started
-
-For development setup instructions, see [CLAUDE.md](../CLAUDE.md) in the repository root.
-
-### Quick Setup
+## Quick Start
 
 ```bash
-# Install dependencies (creates build.properties from template)
+# Clone and install
+git clone https://github.com/YOUR-USERNAME/Proclaim.git
+cd Proclaim
 composer install --dev
 
-# Run interactive setup wizard (configures paths, optionally installs Joomla)
+# Run interactive setup
 composer setup
-
-# Or do full setup in one command
-./libraries/vendor/bin/phing dev.full-setup
 ```
-
-### Build Commands
-
-| Command | Description |
-|---------|-------------|
-| `composer setup` | Interactive setup wizard |
-| `composer joomla-install` | Download and install Joomla (choose version) |
-| `composer joomla-latest` | Show latest available Joomla version |
-| `composer symlink` | Create symbolic links to Joomla |
-| `composer test` | Run PHPUnit tests |
-| `composer lint` | Check code style (dry-run) |
-| `composer lint:fix` | Fix code style issues |
-| `composer cs` | Run PHPCS |
-| `composer check` | Run lint + tests together |
-| `./libraries/vendor/bin/phing build` | Full build |
-
-## Project Structure
-
-- `admin/src/` - Administrator component code
-- `site/src/` - Frontend component code
-- `libraries/vendor/` - Composer dependencies
-- `modules/` - Joomla modules
-- `plugins/` - Joomla plugins
-- `media/` - CSS, JS, and assets
 
 ## Support
 
-Having issues? [Open an issue](https://github.com/Joomla-Bible-Study/Proclaim/issues) on GitHub.
+- **Issues**: [GitHub Issues](https://github.com/Joomla-Bible-Study/Proclaim/issues)
+- **Email**: info@christianwebministries.org
