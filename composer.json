@@ -96,7 +96,7 @@
     "lint": "php-cs-fixer fix --dry-run --diff",
     "lint:fix": "php-cs-fixer fix",
     "cs": "phpcs . --standard=./build/psr12/ruleset.xml",
-    "check": "@composer lint && @composer test",
+    "check": ["@lint", "@test"],
     "setup": "libraries/vendor/bin/phing dev.setup",
     "joomla-install": "libraries/vendor/bin/phing joomla.install",
     "joomla-latest": "libraries/vendor/bin/phing joomla.get-latest-version",
