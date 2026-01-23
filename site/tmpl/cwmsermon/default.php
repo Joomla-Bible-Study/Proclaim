@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Default
  *
@@ -14,7 +16,6 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 
@@ -29,20 +30,20 @@ if ($this->item->params->get('sermontemplate') && !$this->simple->mode) {
 } else {
     echo '<div>' . $this->loadTemplate('main') . '</div>';
 }
-    $show_comments = $this->item->params->get('show_comments');
+
+$show_comments = $this->item->params->get('show_comments');
+
 if ($show_comments >= 1) {
-    $container            = Factory::getContainer();
-    $app                  = $container->get(SiteApplication::class);
-    Factory::$application = $app;
-    $user                 = Factory::getApplication()->getSession()->get('user');
-    $groups               = $user->getAuthorisedViewLevels();
-    $comment_access       = $this->item->params->get('comment_access');
+    $user   = Factory::getUser();
+    $groups = $user->getAuthorisedViewLevels();
+
     if (in_array($show_comments, $groups, false)) {
         echo '<div style="padding-top: 10px; margin: auto;">' . $this->loadTemplate('commentsform') . '</div>';
     }
 }
-    echo $this->loadTemplate('footer');
-    echo $this->loadTemplate('footerlink');
+
+echo $this->loadTemplate('footer');
+echo $this->loadTemplate('footerlink');
 
 ?>
 </div><!--end of container fluid-->
