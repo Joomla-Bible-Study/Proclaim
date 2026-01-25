@@ -14,8 +14,44 @@ SYNC_ALL_KEYS = True
 # Requires: GOOGLE_TRANSLATE_API_KEY environment variable or set below
 AUTO_TRANSLATE = True
 
-# Google Translate API key (or set GOOGLE_TRANSLATE_API_KEY environment variable)
-GOOGLE_API_KEY = os.environ.get('GOOGLE_TRANSLATE_API_KEY', '')
+# Google Translate API key - loaded in order of priority:
+# 1. GOOGLE_TRANSLATE_API_KEY environment variable
+# 2. 1Password CLI (if 'op' is available and OP_GOOGLE_TRANSLATE_REF is set)
+# 3. Empty (translation disabled)
+def get_api_key():
+    """
+    Securely retrieve API key from environment or 1Password.
+    """
+    # First check environment variable
+    key = os.environ.get('GOOGLE_TRANSLATE_API_KEY', '')
+    if key:
+        return key
+
+    # Check for 1Password secret reference
+    op_ref = os.environ.get('OP_GOOGLE_TRANSLATE_REF', '')
+    if op_ref:
+        try:
+            import subprocess
+            result = subprocess.run(
+                ['op', 'read', op_ref],
+                capture_output=True,
+                text=True,
+                timeout=10
+            )
+            if result.returncode == 0:
+                return result.stdout.strip()
+            else:
+                print(f"  Warning: Failed to read from 1Password: {result.stderr.strip()}")
+        except FileNotFoundError:
+            print("  Warning: 1Password CLI (op) not found. Install from https://1password.com/downloads/command-line/")
+        except subprocess.TimeoutExpired:
+            print("  Warning: 1Password CLI timed out (you may need to authenticate)")
+        except Exception as e:
+            print(f"  Warning: 1Password error: {e}")
+
+    return ''
+
+GOOGLE_API_KEY = get_api_key()
 
 # Translation cache file (to avoid re-translating the same strings)
 TRANSLATION_CACHE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.translation_cache.json')
@@ -611,12 +647,21 @@ if __name__ == "__main__":
 
     if AUTO_TRANSLATE:
         if GOOGLE_API_KEY:
-            print("Auto-translation: ENABLED (Google Translate)")
+            # Determine source of API key for logging (without exposing the key)
+            if os.environ.get('GOOGLE_TRANSLATE_API_KEY'):
+                key_source = "environment variable"
+            elif os.environ.get('OP_GOOGLE_TRANSLATE_REF'):
+                key_source = "1Password"
+            else:
+                key_source = "unknown"
+            print(f"Auto-translation: ENABLED (Google Translate via {key_source})")
             load_translation_cache()
             print(f"Translation cache: {len(_translation_cache)} entries loaded")
         else:
             print("Auto-translation: DISABLED (no API key)")
-            print("  Set GOOGLE_TRANSLATE_API_KEY environment variable to enable")
+            print("  Options to provide API key:")
+            print("    1. Set GOOGLE_TRANSLATE_API_KEY environment variable")
+            print("    2. Set OP_GOOGLE_TRANSLATE_REF to 1Password reference (e.g., op://Vault/Item/field)")
     else:
         print("Auto-translation: DISABLED")
 
