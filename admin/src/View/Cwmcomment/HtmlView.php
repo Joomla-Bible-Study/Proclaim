@@ -129,8 +129,6 @@ class HtmlView extends BaseHtmlView
         }
 
         ToolbarHelper::divider();
-
-        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=31:comment-editing-help&catid=20&Itemid=315&tmpl=component';
-        ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
+        ToolbarHelper::help('comment', true);
     }
 }

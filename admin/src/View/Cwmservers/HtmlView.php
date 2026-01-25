@@ -163,8 +163,7 @@ class HtmlView extends BaseHtmlView
             ToolbarHelper::trash('cwmservers.trash');
         }
 
-        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=40:server-entry-screen-help&catid=20&Itemid=315&tmpl=component';
-        $toolbar->help('proclaim', false, $help_url, 'com_proclaim');
+        ToolbarHelper::help('servers', true);
     }
 
     /**

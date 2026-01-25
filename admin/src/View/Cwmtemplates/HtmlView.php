@@ -180,8 +180,7 @@ class HtmlView extends BaseHtmlView
         $url = Route::_('index.php?option=com_proclaim&view=templates&layout=default_export');
         $toolbar->appendButton('Link', 'export', 'JBS_TPL_IMPORT_EXPORT_TEMPLATE', $url);
 
-        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-        ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
+        ToolbarHelper::help('templates', true);
     }
 
     /**

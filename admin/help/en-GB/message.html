@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Message Entry - Proclaim Help</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            border-bottom: 2px solid #1a3867;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: #1a3867;
+        }
+        h2 {
+            color: #1a3867;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2c5282;
+            margin-top: 25px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f5f5f5;
+        }
+        .tip {
+            background-color: #e8f4fd;
+            border-left: 4px solid #2196F3;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        .note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        ul {
+            margin: 10px 0;
+        }
+        li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">Message Entry - Help Screen</div>
+
+<h2>Overview</h2>
+<p>
+    The Message Entry form allows you to create and edit sermon/study records.
+    Messages are the core content of Proclaim, representing individual sermons,
+    Bible studies, or teachings. Each message can have multiple media files attached.
+</p>
+
+<h2>Toolbar Actions</h2>
+<table>
+    <tr>
+        <th>Button</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>Save</strong></td>
+        <td>Saves the message and remains on the edit form.</td>
+    </tr>
+    <tr>
+        <td><strong>Save & Close</strong></td>
+        <td>Saves the message and returns to the Messages list.</td>
+    </tr>
+    <tr>
+        <td><strong>Save & New</strong></td>
+        <td>Saves the current message and opens a blank form for a new one.</td>
+    </tr>
+    <tr>
+        <td><strong>Save as Copy</strong></td>
+        <td>Creates a duplicate of the current message.</td>
+    </tr>
+    <tr>
+        <td><strong>Cancel</strong></td>
+        <td>Discards any unsaved changes and returns to the Messages list.</td>
+    </tr>
+    <tr>
+        <td><strong>Help</strong></td>
+        <td>Opens this help screen.</td>
+    </tr>
+</table>
+
+<h2>Details Tab</h2>
+
+<h3>Basic Information</h3>
+<table>
+    <tr>
+        <th>Field</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>Title</strong></td>
+        <td><em>(Required)</em> The sermon/study title as it will appear on the website.</td>
+    </tr>
+    <tr>
+        <td><strong>Alias</strong></td>
+        <td>URL-friendly version of the title. Auto-generated if left blank.</td>
+    </tr>
+    <tr>
+        <td><strong>Study Date</strong></td>
+        <td>The date the message was delivered or recorded.</td>
+    </tr>
+    <tr>
+        <td><strong>Teacher</strong></td>
+        <td>The speaker who delivered this message.</td>
+    </tr>
+    <tr>
+        <td><strong>Series</strong></td>
+        <td>Optionally assign this message to a series.</td>
+    </tr>
+    <tr>
+        <td><strong>Message Type</strong></td>
+        <td>Category of message (e.g., Sermon, Bible Study, Devotional).</td>
+    </tr>
+    <tr>
+        <td><strong>Location</strong></td>
+        <td>Where the message was delivered.</td>
+    </tr>
+    <tr>
+        <td><strong>Topics</strong></td>
+        <td>Tags/topics associated with this message for filtering and search.</td>
+    </tr>
+</table>
+
+<h3>Scripture References</h3>
+<table>
+    <tr>
+        <th>Field</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>Book</strong></td>
+        <td>Primary Bible book referenced.</td>
+    </tr>
+    <tr>
+        <td><strong>Chapter/Verse</strong></td>
+        <td>Specific chapter and verse references.</td>
+    </tr>
+    <tr>
+        <td><strong>Secondary Reference</strong></td>
+        <td>Additional scripture passages covered.</td>
+    </tr>
+</table>
+
+<h3>Content</h3>
+<table>
+    <tr>
+        <th>Field</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>Study Text</strong></td>
+        <td>Full text, notes, or outline of the message. Supports rich text formatting.</td>
+    </tr>
+    <tr>
+        <td><strong>Status</strong></td>
+        <td>Publication status: Published, Unpublished, Archived, or Trashed.</td>
+    </tr>
+    <tr>
+        <td><strong>Access</strong></td>
+        <td>Viewing access level for this message.</td>
+    </tr>
+    <tr>
+        <td><strong>Language</strong></td>
+        <td>Language assignment for multilingual sites.</td>
+    </tr>
+</table>
+
+<h2>Media Files Tab</h2>
+<p>
+    View and manage media files attached to this message. Click "New" to add
+    audio, video, or document files. Each message can have multiple media files.
+</p>
+
+<div class="tip">
+    <strong>Tip:</strong> Add multiple media types (audio, video, notes PDF) to make your messages accessible in different formats.
+</div>
+
+<h2>Images Tab</h2>
+<table>
+    <tr>
+        <th>Field</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>Message Image</strong></td>
+        <td>Featured image for this message. Displayed in lists and social sharing.</td>
+    </tr>
+    <tr>
+        <td><strong>Thumbnail</strong></td>
+        <td>Smaller version for compact displays.</td>
+    </tr>
+</table>
+
+<h2>Publishing Tab</h2>
+<p>Standard Joomla publishing information including created/modified dates and users.</p>
+
+<h2>Permissions Tab</h2>
+<p>Configure access control for this specific message.</p>
+
+<h2>Best Practices</h2>
+<ul>
+    <li>Use descriptive titles that help visitors find relevant content</li>
+    <li>Always include scripture references for easy searching</li>
+    <li>Assign topics to improve discoverability</li>
+    <li>Add a featured image for social media sharing</li>
+    <li>Include study notes or outlines in the Study Text field</li>
+</ul>
+
+<h2>Related Links</h2>
+<ul>
+    <li><a href="https://www.christianwebministries.org/documentation/8-proclaim.html" target="_blank">Proclaim Documentation</a></li>
+    <li><a href="https://www.christianwebministries.org/forum.html" target="_blank">Community Forum</a></li>
+</ul>
+
+</body>
+</html>

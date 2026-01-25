@@ -132,7 +132,6 @@ class HtmlView extends BaseHtmlView
         }
 
         ToolbarHelper::divider();
-        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=39:topic-entry-screen-help&catid=20&Itemid=315&tmpl=component';
-        ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
+        ToolbarHelper::help('topic', true);
     }
 }

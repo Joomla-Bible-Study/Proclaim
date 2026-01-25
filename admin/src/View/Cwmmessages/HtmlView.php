@@ -235,7 +235,6 @@ class HtmlView extends BaseHtmlView
                 ->listCheck(true);
         }
 
-        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=19&Itemid=315&tmpl=component';
-        $toolbar->help('Messages', false, $help_url);
+        ToolbarHelper::help('messages', true);
     }
 }
