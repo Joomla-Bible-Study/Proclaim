@@ -14,10 +14,136 @@ SYNC_ALL_KEYS = True
 # Requires: GOOGLE_TRANSLATE_API_KEY environment variable or set below
 AUTO_TRANSLATE = True
 
+# 1Password configuration - standard item name for the API key
+OP_ITEM_NAME = "Google Translate API - Proclaim"
+OP_VAULT = os.environ.get('OP_VAULT', 'Private')  # Default vault, can override with env var
+
 # Google Translate API key - loaded in order of priority:
 # 1. GOOGLE_TRANSLATE_API_KEY environment variable
-# 2. 1Password CLI (if 'op' is available and OP_GOOGLE_TRANSLATE_REF is set)
-# 3. Empty (translation disabled)
+# 2. OP_GOOGLE_TRANSLATE_REF environment variable (custom 1Password reference)
+# 3. Standard 1Password item: "Google Translate API - Proclaim"
+# 4. Empty (translation disabled)
+
+def check_op_cli():
+    """Check if 1Password CLI is available and authenticated."""
+    try:
+        import subprocess
+        result = subprocess.run(['op', '--version'], capture_output=True, text=True, timeout=5)
+        return result.returncode == 0
+    except:
+        return False
+
+def get_api_key_from_op(item_ref=None):
+    """
+    Retrieve API key from 1Password.
+    """
+    import subprocess
+
+    if item_ref:
+        # Use provided reference directly
+        cmd = ['op', 'read', item_ref]
+    else:
+        # Use standard item name
+        cmd = ['op', 'item', 'get', OP_ITEM_NAME, '--vault', OP_VAULT, '--fields', 'credential', '--format', 'json']
+
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
+        if result.returncode == 0:
+            if item_ref:
+                return result.stdout.strip()
+            else:
+                # Parse JSON response
+                import json
+                data = json.loads(result.stdout)
+                return data.get('value', '') if isinstance(data, dict) else result.stdout.strip()
+        return None
+    except:
+        return None
+
+def create_op_item(api_key):
+    """
+    Create a 1Password item to store the API key.
+    """
+    import subprocess
+
+    print(f"Creating 1Password item '{OP_ITEM_NAME}' in vault '{OP_VAULT}'...")
+
+    cmd = [
+        'op', 'item', 'create',
+        '--category', 'API Credential',
+        '--title', OP_ITEM_NAME,
+        '--vault', OP_VAULT,
+        f'credential={api_key}',
+    ]
+
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
+        if result.returncode == 0:
+            print(f"  ✓ Created 1Password item '{OP_ITEM_NAME}'")
+            return True
+        else:
+            print(f"  ✗ Failed to create item: {result.stderr.strip()}")
+            return False
+    except Exception as e:
+        print(f"  ✗ Error creating item: {e}")
+        return False
+
+def setup_api_key():
+    """
+    Interactive setup to store API key in 1Password.
+    """
+    print("\n=== Google Translate API Key Setup ===\n")
+
+    if not check_op_cli():
+        print("1Password CLI (op) is not installed or not authenticated.")
+        print("Install from: https://1password.com/downloads/command-line/")
+        print("Then run: op signin")
+        return False
+
+    # Check if item already exists
+    existing_key = get_api_key_from_op()
+    if existing_key:
+        print(f"API key already exists in 1Password item '{OP_ITEM_NAME}'")
+        response = input("Overwrite? [y/N]: ").strip().lower()
+        if response != 'y':
+            print("Setup cancelled.")
+            return False
+        # Delete existing item
+        import subprocess
+        subprocess.run(['op', 'item', 'delete', OP_ITEM_NAME, '--vault', OP_VAULT], capture_output=True)
+
+    # Prompt for API key
+    print("\nEnter your Google Translate API key")
+    print("(Get one from: https://console.cloud.google.com/apis/credentials)")
+    api_key = input("API Key: ").strip()
+
+    if not api_key:
+        print("No key provided. Setup cancelled.")
+        return False
+
+    # Test the key
+    print("\nTesting API key...")
+    try:
+        import urllib.request
+        import urllib.parse
+        url = 'https://translation.googleapis.com/language/translate/v2'
+        params = {'key': api_key, 'q': 'test', 'source': 'en', 'target': 'es'}
+        data = urllib.parse.urlencode(params).encode('utf-8')
+        req = urllib.request.Request(url, data=data, method='POST')
+        with urllib.request.urlopen(req, timeout=10) as response:
+            print("  ✓ API key is valid")
+    except Exception as e:
+        print(f"  ✗ API key test failed: {e}")
+        response = input("Save anyway? [y/N]: ").strip().lower()
+        if response != 'y':
+            return False
+
+    # Create the item
+    if create_op_item(api_key):
+        print(f"\nSetup complete! The script will now automatically use the key from 1Password.")
+        return True
+    return False
+
 def get_api_key():
     """
     Securely retrieve API key from environment or 1Password.
@@ -25,33 +151,26 @@ def get_api_key():
     # First check environment variable
     key = os.environ.get('GOOGLE_TRANSLATE_API_KEY', '')
     if key:
-        return key
+        return key, 'environment variable'
 
-    # Check for 1Password secret reference
+    # Check for custom 1Password secret reference
     op_ref = os.environ.get('OP_GOOGLE_TRANSLATE_REF', '')
     if op_ref:
-        try:
-            import subprocess
-            result = subprocess.run(
-                ['op', 'read', op_ref],
-                capture_output=True,
-                text=True,
-                timeout=10
-            )
-            if result.returncode == 0:
-                return result.stdout.strip()
-            else:
-                print(f"  Warning: Failed to read from 1Password: {result.stderr.strip()}")
-        except FileNotFoundError:
-            print("  Warning: 1Password CLI (op) not found. Install from https://1password.com/downloads/command-line/")
-        except subprocess.TimeoutExpired:
-            print("  Warning: 1Password CLI timed out (you may need to authenticate)")
-        except Exception as e:
-            print(f"  Warning: 1Password error: {e}")
+        key = get_api_key_from_op(op_ref)
+        if key:
+            return key, '1Password (custom ref)'
 
-    return ''
+    # Try standard 1Password item
+    if check_op_cli():
+        key = get_api_key_from_op()
+        if key:
+            return key, f'1Password ({OP_ITEM_NAME})'
 
-GOOGLE_API_KEY = get_api_key()
+    return '', None
+
+# Defer loading until we know if we're in setup mode
+GOOGLE_API_KEY = ''
+API_KEY_SOURCE = None
 
 # Translation cache file (to avoid re-translating the same strings)
 TRANSLATION_CACHE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.translation_cache.json')
@@ -639,29 +758,55 @@ def scan_and_process(root_dir):
                     process_directory(lang_path, patterns)
 
 if __name__ == "__main__":
+    import sys
+
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(script_dir)
+
+    # Check for setup command
+    if len(sys.argv) > 1 and sys.argv[1] == 'setup':
+        setup_api_key()
+        sys.exit(0)
+
+    # Check for help
+    if len(sys.argv) > 1 and sys.argv[1] in ('--help', '-h', 'help'):
+        print("""
+sync_languages.py - Synchronize and translate Joomla language files
+
+Usage:
+    python3 sync_languages.py          Run translation sync
+    python3 sync_languages.py setup    Store API key in 1Password
+    python3 sync_languages.py help     Show this help
+
+API Key Options (in priority order):
+    1. GOOGLE_TRANSLATE_API_KEY env var
+    2. OP_GOOGLE_TRANSLATE_REF env var (custom 1Password reference)
+    3. 1Password item "Google Translate API - Proclaim" (run 'setup' to create)
+
+Environment Variables:
+    GOOGLE_TRANSLATE_API_KEY    API key directly
+    OP_GOOGLE_TRANSLATE_REF     Custom 1Password reference (e.g., op://Vault/Item/field)
+    OP_VAULT                    1Password vault name (default: Private)
+""")
+        sys.exit(0)
+
+    # Load API key
+    GOOGLE_API_KEY, API_KEY_SOURCE = get_api_key()
 
     print(f"Scanning project from {project_root}...")
     print(f"Mode: {'Sync all keys' if SYNC_ALL_KEYS else 'Prune untranslated keys'}")
 
     if AUTO_TRANSLATE:
         if GOOGLE_API_KEY:
-            # Determine source of API key for logging (without exposing the key)
-            if os.environ.get('GOOGLE_TRANSLATE_API_KEY'):
-                key_source = "environment variable"
-            elif os.environ.get('OP_GOOGLE_TRANSLATE_REF'):
-                key_source = "1Password"
-            else:
-                key_source = "unknown"
-            print(f"Auto-translation: ENABLED (Google Translate via {key_source})")
+            print(f"Auto-translation: ENABLED (Google Translate via {API_KEY_SOURCE})")
             load_translation_cache()
             print(f"Translation cache: {len(_translation_cache)} entries loaded")
         else:
             print("Auto-translation: DISABLED (no API key)")
             print("  Options to provide API key:")
-            print("    1. Set GOOGLE_TRANSLATE_API_KEY environment variable")
-            print("    2. Set OP_GOOGLE_TRANSLATE_REF to 1Password reference (e.g., op://Vault/Item/field)")
+            print("    1. Run 'python3 sync_languages.py setup' to store in 1Password")
+            print("    2. Set GOOGLE_TRANSLATE_API_KEY environment variable")
+            print("    3. Set OP_GOOGLE_TRANSLATE_REF to 1Password reference")
     else:
         print("Auto-translation: DISABLED")
 
