@@ -73,7 +73,7 @@ class CwmmediafileModel extends AdminModel
         'linkType'      => 'batchLinkType',
         'mimetype'      => 'batchMimetype',
         'mediaType'     => 'batchMediatype',
-        'popup'         => 'popup',
+        'popup'         => 'batchPopup',
     ];
 
     /**
