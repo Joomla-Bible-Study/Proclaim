@@ -25,7 +25,8 @@ use Joomla\Input\Input;
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('core')
-    ->useScript('bootstrap.dropdown');
+    ->useScript('bootstrap.dropdown')
+    ->useStyle('com_proclaim.general');
 
 $msg   = '';
 $input = new Input();

@@ -1,4 +1,4 @@
-/* CSS Custom Properties */
+/* CSS Custom Properties - Light Mode (Default) */
 :root {
   --color-white: #ffffff;
   --color-black: #000000;
@@ -13,6 +13,50 @@
   --color-link: #08c;
   --color-install-border: #99CCFF;
   --color-install-bg: #D9D9FF;
+  --color-shadow: rgba(0, 0, 0, 0.15);
+  --color-shadow-light: rgba(0, 0, 0, 0.1);
+}
+
+/* CSS Custom Properties - Dark Mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-white: #1a1a2e;
+    --color-black: #ffffff;
+    --color-gray-light: #404040;
+    --color-gray-medium: #a0a0a0;
+    --color-gray-dark: #c0c0c0;
+    --color-border: #404040;
+    --color-background-light: #2d2d44;
+    --color-background-alt: #252538;
+    --color-background-row0: #1f1f30;
+    --color-accent: #6eb5ff;
+    --color-link: #6eb5ff;
+    --color-install-border: #4080c0;
+    --color-install-bg: #2a2a4a;
+    --color-shadow: rgba(0, 0, 0, 0.4);
+    --color-shadow-light: rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Joomla Admin Dark Mode Support */
+html[data-color-scheme="dark"],
+body.dark,
+.dark-mode {
+  --color-white: #1a1a2e;
+  --color-black: #ffffff;
+  --color-gray-light: #404040;
+  --color-gray-medium: #a0a0a0;
+  --color-gray-dark: #c0c0c0;
+  --color-border: #404040;
+  --color-background-light: #2d2d44;
+  --color-background-alt: #252538;
+  --color-background-row0: #1f1f30;
+  --color-accent: #6eb5ff;
+  --color-link: #6eb5ff;
+  --color-install-border: #4080c0;
+  --color-install-bg: #2a2a4a;
+  --color-shadow: rgba(0, 0, 0, 0.4);
+  --color-shadow-light: rgba(0, 0, 0, 0.3);
 }
 
 /* Panel Form */
@@ -338,6 +382,51 @@ table.fbstat .col2 {
 #cpanel span {
   display: block;
   text-align: center;
+}
+
+/* CPanel Button Hover Effects */
+.visible-desktop .col .btn {
+  display: block;
+  padding: 15px 10px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background-color: var(--color-background-light);
+  border: 1px solid transparent;
+  text-decoration: none;
+  color: var(--color-gray-dark);
+}
+
+.visible-desktop .col .btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px var(--color-shadow);
+  background-color: var(--color-white);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.visible-desktop .col .btn:hover i {
+  transform: scale(1.1);
+  color: var(--color-accent);
+}
+
+.visible-desktop .col .btn i {
+  transition: all 0.3s ease;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.visible-desktop .col .btn span {
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.visible-desktop .col .btn:hover span {
+  color: var(--color-accent);
+}
+
+.visible-desktop .col .btn:active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px var(--color-shadow-light);
 }
 
 /* Sermon List Separator */
