@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmtemplatemigrationHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
@@ -263,6 +264,7 @@ class CwminstallModel extends ListModel
             'fixemptyaccess',
             'fixemptylanguage',
             'updatetemplatedefaults',
+            'registerguidedtours',
             'rmoldurl',
             'setupdateurl',
             'podcastlinkmissing',
@@ -988,6 +990,13 @@ class CwminstallModel extends ListModel
                 $updated       = $migration->migrateFromVersion($this->versionSwitch);
                 $this->running = 'Update Template Defaults (' . $updated . ' templates updated)';
                 Log::add('Updated ' . $updated . ' templates with new default parameters', Log::INFO, 'com_proclaim');
+                break;
+            case 'registerguidedtours':
+                $tourHelper    = new CwmguidedtourHelper();
+                $tours         = $tourHelper->registerGuidedTours();
+                $messages      = $tourHelper->registerPostInstallMessages();
+                $this->running = 'Register Guided Tours (' . $tours . ' tours, ' . $messages . ' messages)';
+                Log::add('Registered ' . $tours . ' guided tours and ' . $messages . ' post-install messages', Log::INFO, 'com_proclaim');
                 break;
             case 'rmoldurl':
                 // Removes all other update urls except package url.
