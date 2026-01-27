@@ -370,61 +370,73 @@ table.fbstat .col2 {
   margin-left: 5px;
 }
 
-/* Control Panel */
-#cpanel a {
-  float: left;
-  min-width: 90px;
+/* ==========================================================================
+   Control Panel Buttons
+   ========================================================================== */
+
+.cpanel-buttons {
+  margin: 20px 0;
 }
-#cpanel img {
-  padding: 10px 0;
+
+.cpanel-buttons .row {
   margin: 0 auto;
-}
-#cpanel span {
-  display: block;
-  text-align: center;
+  max-width: 1200px;
 }
 
-/* CPanel Button Hover Effects */
-.visible-desktop .col .btn {
-  display: block;
-  padding: 15px 10px;
+.cpanel-buttons .col {
+  display: flex;
+}
+
+.cpanel-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20px 15px;
+  min-height: 120px;
   border-radius: 8px;
-  transition: all 0.3s ease;
   background-color: var(--color-background-light);
-  border: 1px solid transparent;
-  text-decoration: none;
+  border: 1px solid var(--color-border);
   color: var(--color-gray-dark);
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
 }
 
-.visible-desktop .col .btn:hover {
+.cpanel-btn i {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--color-gray-medium);
+  transition: all 0.3s ease;
+}
+
+.cpanel-btn span {
+  font-weight: 500;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  transition: color 0.3s ease;
+}
+
+.cpanel-btn:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 20px var(--color-shadow);
   background-color: var(--color-white);
   border-color: var(--color-accent);
   color: var(--color-accent);
+  text-decoration: none;
 }
 
-.visible-desktop .col .btn:hover i {
+.cpanel-btn:hover i,
+.cpanel-btn:hover span {
+  color: var(--color-accent);
+}
+
+.cpanel-btn:hover i {
   transform: scale(1.1);
-  color: var(--color-accent);
 }
 
-.visible-desktop .col .btn i {
-  transition: all 0.3s ease;
-  display: block;
-  margin-bottom: 8px;
-}
-
-.visible-desktop .col .btn span {
-  font-weight: 500;
-  transition: color 0.3s ease;
-}
-
-.visible-desktop .col .btn:hover span {
-  color: var(--color-accent);
-}
-
-.visible-desktop .col .btn:active {
+.cpanel-btn:active {
   transform: translateY(-2px);
   box-shadow: 0 4px 10px var(--color-shadow-light);
 }

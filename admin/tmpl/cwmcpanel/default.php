@@ -138,112 +138,103 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                     echo Text::_('JBS_CPL_VISIT_FAQ'); ?></a></p>
         </div>
         <div class="clearfix" style="margin:10px;"></div>
-        <div class="visible-desktop">
+        <div class="cpanel-buttons">
             <h2 class="text-center">
-                <?php
-                echo Text::_('JBS_CPL_MENUE_LINKS'); ?>
+                <?php echo Text::_('JBS_CPL_MENUE_LINKS'); ?>
             </h2>
             <div class="container">
-                <div class="row">
-                    <div class="col" style="text-align: center">
-                        <a href="<?php
-                        echo Route::_('index.php?option=com_proclaim&amp;task=cwmadmin.edit&amp;id=1'); ?>"
-                           title="<?php
-                            echo Text::_('JBS_CMN_ADMINISTRATION'); ?>" class="btn"> <i
-                                    class="icon-big icon-options fa-3x"></i><br>
-                            <span><?php
-                                echo Text::_('JBS_CMN_ADMINISTRATION'); ?></span></a>
+                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3 justify-content-center">
+                    <div class="col">
+                        <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;task=cwmadmin.edit&amp;id=1'); ?>"
+                           title="<?php echo Text::_('JBS_CMN_ADMINISTRATION'); ?>" class="cpanel-btn">
+                            <i class="icon-options fa-3x"></i>
+                            <span><?php echo Text::_('JBS_CMN_ADMINISTRATION'); ?></span>
+                        </a>
                     </div>
-                    <div class="col" style="text-align: center">
-                        <a href="<?php
-                        echo Route::_('index.php?option=com_proclaim&amp;view=cwmmessages'); ?>"
-                           title="<?php
-                            echo Text::_('JBS_CMN_STUDIES'); ?>" class="btn"> <i
-                                    class="icon-big icon-book fa-3x" ></i><br>
-                            <span><?php
-                                echo Text::_('JBS_CMN_STUDIES'); ?></span></a>
+                    <div class="col">
+                        <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmmessages'); ?>"
+                           title="<?php echo Text::_('JBS_CMN_STUDIES'); ?>" class="cpanel-btn">
+                            <i class="icon-book fa-3x"></i>
+                            <span><?php echo Text::_('JBS_CMN_STUDIES'); ?></span>
+                        </a>
                     </div>
-                    <div class="col" style="text-align: center">
-                        <a href="<?php
-                        echo Route::_('index.php?option=com_proclaim&amp;view=cwmmediafiles'); ?>"
-                           title="<?php
-                            echo Text::_('JBS_CMN_MEDIA_FILES'); ?>" class="btn"> <i
-                                    class="icon-big icon-video fa-3x" ></i><br>
-                            <span><?php
-                                echo Text::_('JBS_CMN_MEDIA_FILES'); ?> </span></a>
+                    <div class="col">
+                        <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmmediafiles'); ?>"
+                           title="<?php echo Text::_('JBS_CMN_MEDIA_FILES'); ?>" class="cpanel-btn">
+                            <i class="icon-video fa-3x"></i>
+                            <span><?php echo Text::_('JBS_CMN_MEDIA_FILES'); ?></span>
+                        </a>
                     </div>
-                    <div class="col" style="text-align: center">
-                        <a href="<?php
-                        echo Route::_('index.php?option=com_proclaim&amp;view=cwmteachers'); ?>"
-                           title="<?php
-                            echo Text::_('JBS_CMN_TEACHERS'); ?>" class="btn"> <i
-                                    class="icon-user icon-big fa-3x" ></i><br>
-                            <span><?php
-                                echo Text::_('JBS_CMN_TEACHERS'); ?></span></a>
+                    <div class="col">
+                        <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmteachers'); ?>"
+                           title="<?php echo Text::_('JBS_CMN_TEACHERS'); ?>" class="cpanel-btn">
+                            <i class="icon-user fa-3x"></i>
+                            <span><?php echo Text::_('JBS_CMN_TEACHERS'); ?></span>
+                        </a>
                     </div>
-                    <div class="col" style="text-align: center">
+                    <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmseries'); ?>"
-                           title="<?php echo Text::_('JBS_CMN_SERIES'); ?>" class="btn">
-                            <i class="icon-big icon-tree-2 fa-3x"></i><br>
+                           title="<?php echo Text::_('JBS_CMN_SERIES'); ?>" class="cpanel-btn">
+                            <i class="icon-tree-2 fa-3x"></i>
                             <span><?php echo Text::_('JBS_CMN_SERIES'); ?></span>
                         </a>
                     </div>
                     <?php if (!$simple->mode) : ?>
-                    <div class="col" style="text-align: center">
+                    <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmmessagetypes'); ?>"
-                           title="<?php echo Text::_('JBS_CMN_MESSAGETYPES'); ?>" class="btn">
-                            <i class="icon-big icon-list-2 fa-3x"></i><br>
+                           title="<?php echo Text::_('JBS_CMN_MESSAGETYPES'); ?>" class="cpanel-btn">
+                            <i class="icon-list-2 fa-3x"></i>
                             <span><?php echo Text::_('JBS_CMN_MESSAGETYPES'); ?></span>
                         </a>
                     </div>
-                    <div class="col" style="text-align: center">
+                    <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmlocations'); ?>"
-                           title="<?php echo Text::_('JBS_CMN_LOCATIONS'); ?>" class="btn">
-                            <i class="icon-big icon-home fa-3x"></i><br>
+                           title="<?php echo Text::_('JBS_CMN_LOCATIONS'); ?>" class="cpanel-btn">
+                            <i class="icon-home fa-3x"></i>
                             <span><?php echo Text::_('JBS_CMN_LOCATIONS'); ?></span>
                         </a>
                     </div>
-                    <div class="col" style="text-align: center">
+                    <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmtopics'); ?>"
-                           title="<?php echo Text::_('JBS_CMN_TOPICS'); ?>" class="btn">
-                            <i class="icon-big icon-tags fa-3x"></i><br>
+                           title="<?php echo Text::_('JBS_CMN_TOPICS'); ?>" class="cpanel-btn">
+                            <i class="icon-tags fa-3x"></i>
                             <span><?php echo Text::_('JBS_CMN_TOPICS'); ?></span>
                         </a>
                     </div>
-                    <div class="col" style="text-align: center">
+                    <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmcomments'); ?>"
-                           title="<?php echo Text::_('JBS_CMN_COMMENTS'); ?>" class="btn">
-                            <i class="icon-big icon-comments-2 fa-3x"></i><br>
+                           title="<?php echo Text::_('JBS_CMN_COMMENTS'); ?>" class="cpanel-btn">
+                            <i class="icon-comments-2 fa-3x"></i>
                             <span><?php echo Text::_('JBS_CMN_COMMENTS'); ?></span>
                         </a>
                     </div>
                     <?php endif; ?>
-                    <div class="col" style="text-align: center">
+                    <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmservers'); ?>"
-                           title="<?php echo Text::_('JBS_CMN_SERVERS'); ?>" class="btn">
-                            <i class="icon-big icon-database fa-3x"></i><br>
+                           title="<?php echo Text::_('JBS_CMN_SERVERS'); ?>" class="cpanel-btn">
+                            <i class="icon-database fa-3x"></i>
                             <span><?php echo Text::_('JBS_CMN_SERVERS'); ?></span>
                         </a>
                     </div>
-                    <div class="col" style="text-align: center">
+                    <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmpodcasts'); ?>"
-                           title="<?php echo Text::_('JBS_CMN_PODCASTS'); ?>" class="btn">
-                            <i class="icon-big fa-solid fa-podcast fa-3x"></i><br>
+                           title="<?php echo Text::_('JBS_CMN_PODCASTS'); ?>" class="cpanel-btn">
+                            <i class="fa-solid fa-podcast fa-3x"></i>
                             <span><?php echo Text::_('JBS_CMN_PODCASTS'); ?></span>
                         </a>
                     </div>
                     <?php if (!$simple->mode) : ?>
-                    <div class="col" style="text-align: center">
+                    <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmtemplates'); ?>"
-                           title="<?php echo Text::_('JBS_CMN_TEMPLATES'); ?>" class="btn">
-                            <i class="icon-big icon-grid fa-3x"></i><br>
+                           title="<?php echo Text::_('JBS_CMN_TEMPLATES'); ?>" class="cpanel-btn">
+                            <i class="icon-grid fa-3x"></i>
                             <span><?php echo Text::_('JBS_CMN_TEMPLATES'); ?></span>
                         </a>
                     </div>
-                    <div class="col" style="text-align: center">
+                    <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmtemplatecodes'); ?>"
-                           title="<?php echo Text::_('JBS_CMN_TEMPLATECODE'); ?>" class="btn">
-                            <i class="icon-big fa-solid fa-file-code fa-3x"></i><br>
+                           title="<?php echo Text::_('JBS_CMN_TEMPLATECODE'); ?>" class="cpanel-btn">
+                            <i class="fa-solid fa-file-code fa-3x"></i>
                             <span><?php echo Text::_('JBS_CMN_TEMPLATECODE'); ?></span>
                         </a>
                     </div>
