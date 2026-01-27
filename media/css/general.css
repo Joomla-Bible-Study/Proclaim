@@ -371,6 +371,57 @@ table.fbstat .col2 {
 }
 
 /* ==========================================================================
+   Control Panel Header
+   ========================================================================== */
+
+.cpanel-header-card {
+  background-color: var(--color-background-light);
+  color: var(--color-gray-dark);
+  padding: 15px;
+  border: 1px solid var(--color-border);
+}
+
+.cpanel-logo {
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+.cpanel-logo img {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+}
+
+.cpanel-version {
+  padding-left: 10px;
+}
+
+.cpanel-version strong {
+  color: var(--color-gray-dark);
+}
+
+.cpanel-version div {
+  color: var(--color-gray-medium);
+}
+
+.cpanel-intro {
+  color: var(--color-gray-dark);
+}
+
+.cpanel-intro h3 {
+  color: var(--color-gray-dark);
+  margin-bottom: 15px;
+}
+
+.cpanel-intro a {
+  color: var(--color-link);
+}
+
+.cpanel-intro a:hover {
+  color: var(--color-accent);
+}
+
+/* ==========================================================================
    Control Panel Buttons
    ========================================================================== */
 

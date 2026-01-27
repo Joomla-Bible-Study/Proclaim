@@ -105,37 +105,29 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             <?php
         }
         ?>
-        <div class="col-lg-4 bg-light text-dark rounded" style="padding:5px">
-            <div id="fbheader">
-                <a href="<?php
-                echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>"><img
-                            src="../media/com_proclaim/images/proclaim.jpg"
-                            alt="<?php
-                            echo Text::_('JBS_CMN_JOOMLA_BIBLE_STUDY'); ?>"
-                            style="width:100px;height:100px;"/></a>
+        <div class="col-lg-4 cpanel-header-card rounded">
+            <div class="cpanel-logo">
+                <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>">
+                    <img src="../media/com_proclaim/images/proclaim.jpg"
+                         alt="<?php echo Text::_('JBS_CMN_JOOMLA_BIBLE_STUDY'); ?>" />
+                </a>
             </div>
-            <div id="fbmenu" class="">
-                <strong><?php
-                    echo Text::_('JBS_CPL_VERSION_INFORMATION'); ?></strong>
-
-                <div class=""><?php
-                    echo $this->xml->version . ' (' . $this->xml->creationDate . ')'; ?></div>
+            <div class="cpanel-version">
+                <strong><?php echo Text::_('JBS_CPL_VERSION_INFORMATION'); ?></strong>
+                <div><?php echo $this->xml->version . ' (' . $this->xml->creationDate . ')'; ?></div>
             </div>
         </div>
-        <div class="col-lg-8">
-            <h3><?php
-                echo Text::_('JBS_CMN_JOOMLA_BIBLE_STUDY'); ?></h3>
-            <br/>
-            <p><?php
-                echo Text::_('JBS_CPL_INTRO'); ?></p>
-            <p><a href="https://www.christianwebministries.org/documentation/8-proclaim.html"
-                  target="_blank">
-                    <?php
-                    echo Text::_('JBS_CPL_ONLINE_DOCUMENTATION'); ?></a> - <a
-                        href="https://github.com/Joomla-Bible-Study/Proclaim/discussions/categories/q-a"
-                        target="_blank">
-                    <?php
-                    echo Text::_('JBS_CPL_VISIT_FAQ'); ?></a></p>
+        <div class="col-lg-8 cpanel-intro">
+            <h3><?php echo Text::_('JBS_CMN_JOOMLA_BIBLE_STUDY'); ?></h3>
+            <p><?php echo Text::_('JBS_CPL_INTRO'); ?></p>
+            <p>
+                <a href="https://www.christianwebministries.org/documentation/8-proclaim.html" target="_blank">
+                    <?php echo Text::_('JBS_CPL_ONLINE_DOCUMENTATION'); ?>
+                </a> -
+                <a href="https://github.com/Joomla-Bible-Study/Proclaim/discussions/categories/q-a" target="_blank">
+                    <?php echo Text::_('JBS_CPL_VISIT_FAQ'); ?>
+                </a>
+            </p>
         </div>
         <div class="clearfix" style="margin:10px;"></div>
         <div class="cpanel-buttons">
