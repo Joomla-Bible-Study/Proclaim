@@ -14,7 +14,7 @@
 
 use Joomla\CMS\Language\Text;
 
-if (!array_key_exists('field', $displayData)) {
+if (!\array_key_exists('field', $displayData)) {
     return;
 }
 
@@ -34,7 +34,7 @@ if ($field->context === 'com_contact.mail') {
     return;
 }
 
-if (!strlen($value)) {
+if (!\strlen($value)) {
     return;
 }
 

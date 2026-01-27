@@ -93,6 +93,15 @@ class CwmlandingpageModel extends ListModel
         $this->setState('template', $template);
         $this->setState('administrator', $admin);
 
+        // Get show_archived parameter, fall back to template default
+        $app = Factory::getApplication();
+        $menuParams = $app->getParams();
+        $showArchived = $menuParams->get('show_archived', '');
+        if ($showArchived === '' || $showArchived === null) {
+            $showArchived = $params->get('default_show_archived', '0');
+        }
+        $this->setState('filter.show_archived', $showArchived);
+
         parent::populateState('s.studydate', 'DESC');
     }
 
@@ -142,7 +151,21 @@ class CwmlandingpageModel extends ListModel
         $query->select('l.id as lid, l.location_text');
         $query->join('LEFT', '#__bsms_locations as l on s.location_id = l.id');
         $rightnow = date('Y-m-d H:i:s');
-        $query->where('s.published = 1');
+
+        // Filter by published state based on show_archived parameter
+        $showArchived = $this->getState('filter.show_archived', '0');
+        switch ($showArchived) {
+            case '1': // Archived only
+                $query->where('s.published = 2');
+                break;
+            case '2': // Both published and archived
+                $query->where('s.published IN (1, 2)');
+                break;
+            default: // Published only (backward compatible)
+                $query->where('s.published = 1');
+                break;
+        }
+
         $query->where("date_format(s.studydate, %Y-%m-%d %T') <= " . (int)$rightnow);
 
         // Order by order filter

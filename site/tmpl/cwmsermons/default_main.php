@@ -32,6 +32,19 @@ $itemid       = $app->input->get('Itemid');
 ?>
 
 <div class="container proclaim-main-content" id="proclaim-main-content" role="main">
+    <?php
+    $showArchived = $this->params->get('show_archived', '0');
+    if ($showArchived === '1') : ?>
+        <div class="alert alert-info proclaim-archive-notice">
+            <i class="fas fa-archive" aria-hidden="true"></i>
+            <?php echo Text::_('JBS_CMN_VIEWING_ARCHIVED'); ?>
+        </div>
+    <?php elseif ($showArchived === '2') : ?>
+        <div class="alert alert-info proclaim-archive-notice">
+            <i class="fas fa-archive" aria-hidden="true"></i>
+            <?php echo Text::_('JBS_CMN_VIEWING_ALL'); ?>
+        </div>
+    <?php endif; ?>
     <div id="bsheader" class="row">
         <?php
         if ($this->params->get('showpodcastsubscribelist') === '1') {
