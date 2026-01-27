@@ -1,0 +1,282 @@
+<?php
+
+/**
+ * Part of Proclaim Package
+ *
+ * @package    Proclaim.Admin
+ * @copyright  (C) 2026 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @link       https://www.christianwebministries.org
+ * */
+
+namespace CWM\Component\Proclaim\Administrator\Helper;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+
+// phpcs:enable PSR1.Files.SideEffects
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Log\Log;
+use Joomla\Database\DatabaseInterface;
+use Joomla\Registry\Registry;
+
+/**
+ * Helper class for migrating template parameters during upgrades.
+ *
+ * This class provides a future-proof way to add new default parameters
+ * to existing templates during component upgrades.
+ *
+ * @package  Proclaim.Admin
+ * @since    10.2.0
+ */
+class CwmtemplatemigrationHelper
+{
+    /**
+     * Database driver
+     *
+     * @var DatabaseInterface
+     * @since 10.2.0
+     */
+    protected DatabaseInterface $db;
+
+    /**
+     * Array of parameter migrations keyed by version.
+     * Each migration defines parameters to add with their default values.
+     *
+     * Format:
+     * [
+     *     '10.2.0' => [
+     *         'parameter_name' => 'default_value',
+     *         'another_param' => '1',
+     *     ],
+     *     '10.3.0' => [
+     *         'new_feature_enabled' => '0',
+     *     ],
+     * ]
+     *
+     * @var array
+     * @since 10.2.0
+     */
+    protected array $migrations = [
+        '10.2.0' => [
+            'default_show_archived'      => '2',
+            'default_show_archive_badge' => '1',
+        ],
+    ];
+
+    /**
+     * Constructor
+     *
+     * @since 10.2.0
+     */
+    public function __construct()
+    {
+        $this->db = Factory::getContainer()->get(DatabaseInterface::class);
+    }
+
+    /**
+     * Run all template parameter migrations from a given version.
+     *
+     * @param   string  $fromVersion  The version to migrate from (migrations after this version will run)
+     *
+     * @return  int  Number of templates updated
+     *
+     * @since   10.2.0
+     */
+    public function migrateFromVersion(string $fromVersion = '0.0.0'): int
+    {
+        $updatedCount = 0;
+
+        // Get all migrations that should run (versions greater than fromVersion)
+        $migrationsToRun = $this->getMigrationsAfterVersion($fromVersion);
+
+        if (empty($migrationsToRun)) {
+            Log::add('No template migrations to run from version ' . $fromVersion, Log::INFO, 'com_proclaim');
+            return 0;
+        }
+
+        // Merge all parameters from applicable migrations
+        $paramsToAdd = [];
+
+        foreach ($migrationsToRun as $version => $params) {
+            $paramsToAdd = array_merge($paramsToAdd, $params);
+            Log::add('Including template migration for version ' . $version, Log::INFO, 'com_proclaim');
+        }
+
+        // Apply merged parameters to all templates
+        $updatedCount = $this->applyParamsToTemplates($paramsToAdd);
+
+        Log::add('Template migration complete. Updated ' . $updatedCount . ' templates.', Log::INFO, 'com_proclaim');
+
+        return $updatedCount;
+    }
+
+    /**
+     * Run all template parameter migrations regardless of version.
+     * Useful for ensuring all templates have all required parameters.
+     *
+     * @return  int  Number of templates updated
+     *
+     * @since   10.2.0
+     */
+    public function migrateAll(): int
+    {
+        return $this->migrateFromVersion('0.0.0');
+    }
+
+    /**
+     * Add a custom migration at runtime (for testing or special cases).
+     *
+     * @param   string  $version  Version identifier for the migration
+     * @param   array   $params   Array of parameter => default value pairs
+     *
+     * @return  self
+     *
+     * @since   10.2.0
+     */
+    public function addMigration(string $version, array $params): self
+    {
+        $this->migrations[$version] = $params;
+        return $this;
+    }
+
+    /**
+     * Get migrations that should run for versions after the specified version.
+     *
+     * @param   string  $fromVersion  Version to compare against
+     *
+     * @return  array  Array of migrations to run
+     *
+     * @since   10.2.0
+     */
+    protected function getMigrationsAfterVersion(string $fromVersion): array
+    {
+        $result = [];
+
+        foreach ($this->migrations as $version => $params) {
+            if (version_compare($version, $fromVersion, '>')) {
+                $result[$version] = $params;
+            }
+        }
+
+        // Sort by version
+        uksort($result, 'version_compare');
+
+        return $result;
+    }
+
+    /**
+     * Apply parameters to all templates, only adding if not already set.
+     *
+     * @param   array  $paramsToAdd  Array of parameter => default value pairs
+     *
+     * @return  int  Number of templates updated
+     *
+     * @since   10.2.0
+     */
+    protected function applyParamsToTemplates(array $paramsToAdd): int
+    {
+        $updatedCount = 0;
+
+        // Get all templates
+        $query = $this->db->getQuery(true)
+            ->select(['id', 'params', 'title'])
+            ->from($this->db->quoteName('#__bsms_templates'));
+        $this->db->setQuery($query);
+        $templates = $this->db->loadObjectList();
+
+        foreach ($templates as $template) {
+            $updated  = false;
+            $registry = new Registry();
+
+            if (!empty($template->params)) {
+                $registry->loadString($template->params);
+            }
+
+            // Add each parameter if it doesn't exist
+            foreach ($paramsToAdd as $param => $defaultValue) {
+                if ($registry->get($param) === null) {
+                    $registry->set($param, $defaultValue);
+                    $updated = true;
+                    Log::add(
+                        'Added parameter "' . $param . '" with default "' . $defaultValue . '" to template "' . $template->title . '"',
+                        Log::INFO,
+                        'com_proclaim'
+                    );
+                }
+            }
+
+            // Save if any parameters were added
+            if ($updated) {
+                $this->updateTemplateParams($template->id, $registry->toString());
+                $updatedCount++;
+            }
+        }
+
+        return $updatedCount;
+    }
+
+    /**
+     * Update a template's params in the database.
+     *
+     * @param   int     $templateId  Template ID
+     * @param   string  $params      JSON encoded params
+     *
+     * @return  bool  True on success
+     *
+     * @since   10.2.0
+     */
+    protected function updateTemplateParams(int $templateId, string $params): bool
+    {
+        $query = $this->db->getQuery(true)
+            ->update($this->db->quoteName('#__bsms_templates'))
+            ->set($this->db->quoteName('params') . ' = ' . $this->db->quote($params))
+            ->where($this->db->quoteName('id') . ' = ' . $templateId);
+        $this->db->setQuery($query);
+
+        return $this->db->execute();
+    }
+
+    /**
+     * Get the list of all defined migrations.
+     *
+     * @return  array  Array of migrations
+     *
+     * @since   10.2.0
+     */
+    public function getMigrations(): array
+    {
+        return $this->migrations;
+    }
+
+    /**
+     * Check if a specific parameter exists in any template.
+     *
+     * @param   string  $paramName  Parameter name to check
+     *
+     * @return  bool  True if parameter exists in at least one template
+     *
+     * @since   10.2.0
+     */
+    public function parameterExistsInTemplates(string $paramName): bool
+    {
+        $query = $this->db->getQuery(true)
+            ->select('params')
+            ->from($this->db->quoteName('#__bsms_templates'));
+        $this->db->setQuery($query);
+        $templates = $this->db->loadColumn();
+
+        foreach ($templates as $params) {
+            if (!empty($params)) {
+                $registry = new Registry($params);
+
+                if ($registry->get($paramName) !== null) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+}

@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmtemplatemigrationHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use Joomla\CMS\Factory;
@@ -261,6 +262,7 @@ class CwminstallModel extends ListModel
             'fixmenus',
             'fixemptyaccess',
             'fixemptylanguage',
+            'updatetemplatedefaults',
             'rmoldurl',
             'setupdateurl',
             'podcastlinkmissing',
@@ -980,6 +982,12 @@ class CwminstallModel extends ListModel
             case 'fixemptylanguage':
                 $run           = $this->fixemptylanguage();
                 $this->running = 'Fix Empty Language';
+                break;
+            case 'updatetemplatedefaults':
+                $migration     = new CwmtemplatemigrationHelper();
+                $updated       = $migration->migrateFromVersion($this->versionSwitch);
+                $this->running = 'Update Template Defaults (' . $updated . ' templates updated)';
+                Log::add('Updated ' . $updated . ' templates with new default parameters', Log::INFO, 'com_proclaim');
                 break;
             case 'rmoldurl':
                 // Removes all other update urls except package url.
