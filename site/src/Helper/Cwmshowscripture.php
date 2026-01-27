@@ -134,7 +134,7 @@ class Cwmshowscripture
     {
         $id      = 'scripture_' . uniqid('', true);
         $passage = '<div class="fluid-row"><div class="col-12"></div>';
-        
+
         $passage .= '<a class="heading" href="#" role="button" aria-expanded="false" aria-controls="' . $id . '" onclick="var e = document.getElementById(\'' . $id . '\'); var isHidden = e.style.display == \'none\'; e.style.display = (isHidden ? \'block\' : \'none\'); this.setAttribute(\'aria-expanded\', isHidden); return false;">';
 
         if ((int) $params->get('showpassage_icon') === 1) {

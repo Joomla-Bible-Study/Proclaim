@@ -48,7 +48,7 @@ class Cwmdownload
         $input      = new Input();
         $templateId = $input->get('t', '1', 'int');
         $db         = Factory::getContainer()->get('DatabaseDriver');
-        $mid        = (int)$mid;
+        $mid        = (int) $mid;
 
         // Get the template so we can find a protocol
         $query = $db->getQuery(true);
@@ -98,7 +98,7 @@ class Cwmdownload
 
         $download_file = Cwmhelper::mediaBuildUrl($media->spath, $params->get('filename'), $params, true);
 
-        if ((int)$params->get('size', 0) === 0) {
+        if ((int) $params->get('size', 0) === 0) {
             $getSize = Cwmhelper::getRemoteFileSize($download_file);
         } else {
             $getSize = $params->get('size', 0);
