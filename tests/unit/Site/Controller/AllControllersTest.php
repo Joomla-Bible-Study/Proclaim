@@ -28,19 +28,19 @@ class AllControllersTest extends ProclaimTestCase
     public function testAllControllersSanity(): void
     {
         $controllerDir = JPATH_ROOT . '/site/src/Controller';
-        $files = glob($controllerDir . '/*.php');
+        $files         = glob($controllerDir . '/*.php');
 
         foreach ($files as $file) {
-            $content = file_get_contents($file);
+            $content   = file_get_contents($file);
             $className = basename($file, '.php');
-            
+
             // Check namespace
             $this->assertStringContainsString(
                 'namespace CWM\Component\Proclaim\Site\Controller;',
                 $content,
                 "File $className should have correct namespace"
             );
-            
+
             // Check class definition
             $this->assertStringContainsString(
                 "class $className",

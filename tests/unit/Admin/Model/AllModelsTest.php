@@ -28,26 +28,26 @@ class AllModelsTest extends ProclaimTestCase
     public function testAllModelsSanity(): void
     {
         $modelDir = JPATH_ROOT . '/admin/src/Model';
-        $files = glob($modelDir . '/*.php');
+        $files    = glob($modelDir . '/*.php');
 
         foreach ($files as $file) {
-            $content = file_get_contents($file);
+            $content   = file_get_contents($file);
             $className = basename($file, '.php');
-            
+
             // Check namespace
             $this->assertStringContainsString(
                 'namespace CWM\Component\Proclaim\Administrator\Model;',
                 $content,
                 "File $className should have correct namespace"
             );
-            
+
             // Check class definition
             $this->assertStringContainsString(
                 "class $className",
                 $content,
                 "File $className should define class $className"
             );
-            
+
             // Check inheritance (most extend AdminModel or ListModel)
             // We check if it extends something, usually AdminModel, ListModel, or FormModel
             $this->assertMatchesRegularExpression(

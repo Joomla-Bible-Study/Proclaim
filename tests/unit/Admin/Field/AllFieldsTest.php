@@ -28,26 +28,26 @@ class AllFieldsTest extends ProclaimTestCase
     public function testAllFieldsSanity(): void
     {
         $fieldDir = JPATH_ROOT . '/admin/src/Field';
-        $files = glob($fieldDir . '/*.php');
+        $files    = glob($fieldDir . '/*.php');
 
         foreach ($files as $file) {
-            $content = file_get_contents($file);
+            $content   = file_get_contents($file);
             $className = basename($file, '.php');
-            
+
             // Check namespace
             $this->assertStringContainsString(
                 'namespace CWM\Component\Proclaim\Administrator\Field;',
                 $content,
                 "File $className should have correct namespace"
             );
-            
+
             // Check class definition
             $this->assertStringContainsString(
                 "class $className",
                 $content,
                 "File $className should define class $className"
             );
-            
+
             // Check inheritance (should extend FormField or ListField)
             $this->assertMatchesRegularExpression(
                 '/class\s+' . $className . '\s+extends\s+[a-zA-Z0-9_]+/',

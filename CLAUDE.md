@@ -91,9 +91,25 @@ Base test class: `CWM\Component\Proclaim\Tests\ProclaimTestCase`
 
 ## Code Style
 
-- PSR-12 with Joomla conventions
+This project follows **PSR-12** coding standards. All code must pass PHP CS Fixer before committing.
+
+### PSR-12 Requirements
+
+- **Type casts**: Always include a space after the cast operator: `(int) $var`, `(string) $value`
+- **Indentation**: 4 spaces, no tabs
+- **Line length**: Should not exceed 120 characters
+- **Braces**: Opening brace on same line for control structures, new line for classes/methods
+- **Namespaces**: One blank line after namespace declaration
+- **Use statements**: Grouped by type, one blank line after use block
+
+### Tools
+
 - PHP CS Fixer config: `.php-cs-fixer.dist.php`
 - PHPCS ruleset: `build/psr12/ruleset.xml`
+- Run `./libraries/vendor/bin/php-cs-fixer fix` before committing
+
+### Naming Conventions
+
 - Class naming: `Cwm` prefix (e.g., `CwmparamsModel`, `CwmteacherTable`)
 - Template files in `tmpl/` and `layouts/` are excluded from linting
 
