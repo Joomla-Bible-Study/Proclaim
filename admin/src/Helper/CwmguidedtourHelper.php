@@ -56,25 +56,36 @@ class CwmguidedtourHelper
      * @since 10.2.0
      */
     protected array $tours = [
-        'archived_messages' => [
-            'title'       => 'COM_PROCLAIM_TOUR_ARCHIVED_MESSAGES_TITLE',
-            'description' => 'COM_PROCLAIM_TOUR_ARCHIVED_MESSAGES_DESC',
+        'whats_new_10_1' => [
+            'title'       => 'COM_PROCLAIM_TOUR_WHATS_NEW_TITLE',
+            'description' => 'COM_PROCLAIM_TOUR_WHATS_NEW_DESC',
             'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
             'extensions'  => ['com_proclaim'],
             'published'   => 1,
             'access'      => 1,
             'language'    => '*',
             'note'        => '',
-            'uid'         => 'com_proclaim_archived_messages',
+            'uid'         => 'com_proclaim_whats_new_10_1',
             'steps'       => [
+                // Welcome step
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_WELCOME_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_WELCOME_DESC',
+                    'position'    => 'bottom',
+                    'target'      => '',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+                ],
+                // Archived Messages Feature - Step 1
                 [
                     'title'       => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP1_TITLE',
                     'description' => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP1_DESC',
                     'position'    => 'bottom',
                     'target'      => '',
                     'type'        => 0,
-                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+                    'url'         => '',
                 ],
+                // Archived Messages Feature - Step 2
                 [
                     'title'       => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP2_TITLE',
                     'description' => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP2_DESC',
@@ -83,6 +94,7 @@ class CwmguidedtourHelper
                     'type'        => 1,
                     'url'         => '',
                 ],
+                // Archived Messages Feature - Step 3
                 [
                     'title'       => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP3_TITLE',
                     'description' => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP3_DESC',
@@ -91,6 +103,7 @@ class CwmguidedtourHelper
                     'type'        => 1,
                     'url'         => 'administrator/index.php?option=com_proclaim&view=cwmmessages',
                 ],
+                // Archived Messages Feature - Step 4
                 [
                     'title'       => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP4_TITLE',
                     'description' => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP4_DESC',
@@ -99,9 +112,20 @@ class CwmguidedtourHelper
                     'type'        => 1,
                     'url'         => '',
                 ],
+                // Archived Messages Feature - Step 5
                 [
                     'title'       => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP5_TITLE',
                     'description' => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP5_DESC',
+                    'position'    => 'center',
+                    'target'      => '',
+                    'type'        => 0,
+                    'url'         => '',
+                ],
+                // Add more feature steps here for future releases
+                // Closing step
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_COMPLETE_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_COMPLETE_DESC',
                     'position'    => 'center',
                     'target'      => '',
                     'type'        => 0,
