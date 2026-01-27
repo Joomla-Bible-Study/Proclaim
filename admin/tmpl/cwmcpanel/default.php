@@ -105,7 +105,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             <?php
         }
         ?>
-        <div class="col-lg-4 cpanel-header-card rounded">
+        <div class="col-lg-2 rounded">
             <div class="cpanel-logo">
                 <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>">
                     <img src="../media/com_proclaim/images/proclaim.jpg"
