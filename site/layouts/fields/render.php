@@ -15,7 +15,7 @@
 use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
 
 // Check if we have all the data
-if (!array_key_exists('item', $displayData) || !array_key_exists('context', $displayData)) {
+if (!\array_key_exists('item', $displayData) || !\array_key_exists('context', $displayData)) {
     return;
 }
 
@@ -36,7 +36,7 @@ $parts     = explode('.', $context);
 $component = $parts[0];
 $fields    = null;
 
-if (array_key_exists('fields', $displayData)) {
+if (\array_key_exists('fields', $displayData)) {
     $fields = $displayData['fields'];
 } else {
     $fields = $item->jcfields ?: FieldsHelper::getFields($context, $item, true);
@@ -46,7 +46,7 @@ if (!$fields) {
     return;
 }
 
-// Check if we have mail context in first element
+// Check if we have mail context in the first element
 $isMail = (reset($fields)->context == 'com_contact.mail');
 
 if (!$isMail) {
@@ -57,7 +57,7 @@ if (!$isMail) {
 // Loop through the fields and print them
 foreach ($fields as $field) {
     // If the value is empty do nothing
-    if (!strlen($field->value) && !$isMail) {
+    if (!\strlen($field->value) && !$isMail) {
         continue;
     }
 
