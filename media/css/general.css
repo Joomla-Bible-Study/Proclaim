@@ -1,4 +1,4 @@
-/* CSS Custom Properties */
+/* CSS Custom Properties - Light Mode (Default) */
 :root {
   --color-white: #ffffff;
   --color-black: #000000;
@@ -13,6 +13,50 @@
   --color-link: #08c;
   --color-install-border: #99CCFF;
   --color-install-bg: #D9D9FF;
+  --color-shadow: rgba(0, 0, 0, 0.15);
+  --color-shadow-light: rgba(0, 0, 0, 0.1);
+}
+
+/* CSS Custom Properties - Dark Mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-white: #1a1a2e;
+    --color-black: #ffffff;
+    --color-gray-light: #404040;
+    --color-gray-medium: #a0a0a0;
+    --color-gray-dark: #c0c0c0;
+    --color-border: #404040;
+    --color-background-light: #2d2d44;
+    --color-background-alt: #252538;
+    --color-background-row0: #1f1f30;
+    --color-accent: #6eb5ff;
+    --color-link: #6eb5ff;
+    --color-install-border: #4080c0;
+    --color-install-bg: #2a2a4a;
+    --color-shadow: rgba(0, 0, 0, 0.4);
+    --color-shadow-light: rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Joomla Admin Dark Mode Support */
+html[data-color-scheme="dark"],
+body.dark,
+.dark-mode {
+  --color-white: #1a1a2e;
+  --color-black: #ffffff;
+  --color-gray-light: #404040;
+  --color-gray-medium: #a0a0a0;
+  --color-gray-dark: #c0c0c0;
+  --color-border: #404040;
+  --color-background-light: #2d2d44;
+  --color-background-alt: #252538;
+  --color-background-row0: #1f1f30;
+  --color-accent: #6eb5ff;
+  --color-link: #6eb5ff;
+  --color-install-border: #4080c0;
+  --color-install-bg: #2a2a4a;
+  --color-shadow: rgba(0, 0, 0, 0.4);
+  --color-shadow-light: rgba(0, 0, 0, 0.3);
 }
 
 /* Panel Form */
@@ -326,18 +370,126 @@ table.fbstat .col2 {
   margin-left: 5px;
 }
 
-/* Control Panel */
-#cpanel a {
-  float: left;
-  min-width: 90px;
+/* ==========================================================================
+   Control Panel Header
+   ========================================================================== */
+
+.cpanel-header-card {
+  background-color: var(--color-background-light);
+  color: var(--color-gray-dark);
+  padding: 15px;
+  border: 1px solid var(--color-border);
 }
-#cpanel img {
-  padding: 10px 0;
+
+.cpanel-logo {
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+.cpanel-logo img {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+}
+
+.cpanel-version {
+  padding-left: 10px;
+}
+
+.cpanel-version strong {
+  color: var(--color-gray-dark);
+}
+
+.cpanel-version div {
+  color: var(--color-gray-medium);
+}
+
+.cpanel-intro {
+  color: var(--color-gray-dark);
+}
+
+.cpanel-intro h3 {
+  color: var(--color-gray-dark);
+  margin-bottom: 15px;
+}
+
+.cpanel-intro a {
+  color: var(--color-link);
+}
+
+.cpanel-intro a:hover {
+  color: var(--color-accent);
+}
+
+/* ==========================================================================
+   Control Panel Buttons
+   ========================================================================== */
+
+.cpanel-buttons {
+  margin: 20px 0;
+}
+
+.cpanel-buttons .row {
   margin: 0 auto;
+  max-width: 1200px;
 }
-#cpanel span {
-  display: block;
+
+.cpanel-buttons .col {
+  display: flex;
+}
+
+.cpanel-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20px 15px;
+  min-height: 120px;
+  border-radius: 8px;
+  background-color: var(--color-background-light);
+  border: 1px solid var(--color-border);
+  color: var(--color-gray-dark);
   text-align: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.cpanel-btn i {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--color-gray-medium);
+  transition: all 0.3s ease;
+}
+
+.cpanel-btn span {
+  font-weight: 500;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  transition: color 0.3s ease;
+}
+
+.cpanel-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px var(--color-shadow);
+  background-color: var(--color-white);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.cpanel-btn:hover i,
+.cpanel-btn:hover span {
+  color: var(--color-accent);
+}
+
+.cpanel-btn:hover i {
+  transform: scale(1.1);
+}
+
+.cpanel-btn:active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px var(--color-shadow-light);
 }
 
 /* Sermon List Separator */
