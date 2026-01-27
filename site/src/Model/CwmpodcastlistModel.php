@@ -148,8 +148,13 @@ class CwmpodcastlistModel extends ListModel
                 'com_proclaim'
             ))
         ) {
-            // Filter on published for those who do not have edit or edit.state rights.
-            $this->setState('filter.published', 1);
+            // Get show_archived parameter from menu, fall back to template default
+            $showArchived = $params->get('show_archived', '');
+            if ($showArchived === '' || $showArchived === null) {
+                $template_params = Cwmparams::getTemplateparams();
+                $showArchived = $template_params->params->get('default_show_archived', '0');
+            }
+            $this->setState('filter.show_archived', $showArchived);
         }
 
         $this->setState('filter.language', Multilanguage::isEnabled());
@@ -204,13 +209,18 @@ class CwmpodcastlistModel extends ListModel
             )
         );
 
-        // Filter by state
-        $state = $this->getState('filter.published');
-
-        if (is_numeric($state)) {
-            $query->where('a.published = ' . (int)$state);
-        } else {
-            $query->where('(a.published IN (0,1,2))');
+        // Filter by published state based on show_archived parameter
+        $showArchived = $this->getState('filter.show_archived', '0');
+        switch ($showArchived) {
+            case '1': // Archived only
+                $query->where('a.published = 2');
+                break;
+            case '2': // Both published and archived
+                $query->where('a.published IN (1, 2)');
+                break;
+            default: // Published only (backward compatible)
+                $query->where('a.published = 1');
+                break;
         }
 
         // Filter by access level.

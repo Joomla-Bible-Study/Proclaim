@@ -57,6 +57,26 @@
                    label="JBS_STY_METADESCRIPTION"
                    description="JBS_STY_METADESCRIPTION_DESC"/>
 
+            <field name="show_archived"
+                   type="list"
+                   label="JBS_CMN_SHOW_ARCHIVED"
+                   description="JBS_CMN_SHOW_ARCHIVED_DESC"
+                   default="">
+                <option value="">JBS_CMN_USE_TEMPLATE_DEFAULT</option>
+                <option value="0">JBS_CMN_PUBLISHED_ONLY</option>
+                <option value="1">JBS_CMN_ARCHIVED_ONLY</option>
+                <option value="2">JBS_CMN_BOTH_PUBLISHED_ARCHIVED</option>
+            </field>
+
+            <field name="show_archive_badge"
+                   type="list"
+                   label="JBS_CMN_SHOW_ARCHIVE_BADGE"
+                   description="JBS_CMN_SHOW_ARCHIVE_BADGE_DESC"
+                   default="1">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+
         </fieldset>
     </fields>
 </metadata>

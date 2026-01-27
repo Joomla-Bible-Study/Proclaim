@@ -475,7 +475,21 @@ class Cwmlisting
         }
 
         $query->where('#__bsms_mediafiles.id IN (' . implode(',', array_unique($ids)) . ')');
-        $query->where('#__bsms_mediafiles.published = 1');
+
+        // Include archived media when showing archived messages
+        $showArchived = '0';
+        if (isset($this->params)) {
+            $showArchived = $this->params->get('show_archived', '');
+            if ($showArchived === '' || $showArchived === null) {
+                $showArchived = $this->params->get('default_show_archived', '0');
+            }
+        }
+        if ($showArchived === '1' || $showArchived === '2') {
+            $query->where('#__bsms_mediafiles.published IN (1, 2)');
+        } else {
+            $query->where('#__bsms_mediafiles.published = 1');
+        }
+
         $query->where(
             '#__bsms_mediafiles.language in ('
             . $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*') . ')'
@@ -796,7 +810,11 @@ class Cwmlisting
         foreach ($listrows as $row) {
             if ($row->row === '1') {
                 if ($row1count === $row1count2 & $header === 0) {
-                    $frow .= '<tr scope="row">';
+                    $rowClass = '';
+                    if (isset($item->published) && (int)$item->published === 2) {
+                        $rowClass = ' class="proclaim-archived"';
+                    }
+                    $frow .= '<tr scope="row"' . $rowClass . '>';
                 }
 
                 if ($header === 1) {
@@ -1286,6 +1304,16 @@ class Cwmlisting
                     $data = Text::_('JBS_CMN_TITLE');
                 } else {
                     isset($item->studytitle) ? $data = stripslashes($item->studytitle) : $data;
+                    // Add archive badge if item is archived and badge is enabled
+                    $showBadge = $params->get('show_archive_badge', '');
+                    if ($showBadge === '' || $showBadge === null) {
+                        $showBadge = $params->get('default_show_archive_badge', '1');
+                    }
+                    if (isset($item->published) && (int)$item->published === 2
+                        && (int)$showBadge === 1) {
+                        $data .= ' <span class="badge bg-secondary proclaim-archive-badge">'
+                            . Text::_('JBS_CMN_ARCHIVE_BADGE') . '</span>';
+                    }
                 }
                 break;
             case $extra . 'date':
@@ -1641,6 +1669,16 @@ class Cwmlisting
                 break;
             case 'title':
                 $element = $row->studytitle ?? '';
+                // Add archive badge if item is archived and badge is enabled
+                $showBadge = $params->get('show_archive_badge', '');
+                if ($showBadge === '' || $showBadge === null) {
+                    $showBadge = $params->get('default_show_archive_badge', '1');
+                }
+                if (isset($row->published) && (int)$row->published === 2
+                    && (int)$showBadge === 1) {
+                    $element .= ' <span class="badge bg-secondary proclaim-archive-badge">'
+                        . Text::_('JBS_CMN_ARCHIVE_BADGE') . '</span>';
+                }
                 break;
             case 'studyintro':
                 if (isset($row->studyintro)) {
@@ -2177,8 +2215,19 @@ class Cwmlisting
         $query = $db->getQuery(true);
         $query->select('#__bsms_mediafiles.*')
             ->from('#__bsms_mediafiles')
-            ->where('study_id = ' . $db->q($id3))
-            ->where('#__bsms_mediafiles.published = 1');
+            ->where('study_id = ' . $db->q($id3));
+
+        // Include archived media when showing archived messages
+        $showArchived = $params->get('show_archived', '');
+        if ($showArchived === '' || $showArchived === null) {
+            $showArchived = $params->get('default_show_archived', '0');
+        }
+        if ($showArchived === '1' || $showArchived === '2') {
+            $query->where('#__bsms_mediafiles.published IN (1, 2)');
+        } else {
+            $query->where('#__bsms_mediafiles.published = 1');
+        }
+
         $db->setQuery($query);
         $db->execute();
         $num_rows = $db->getNumRows();

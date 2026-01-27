@@ -842,7 +842,7 @@ class Cwmmedia
     public function getFluidDownloadLink(object $media, Registry $params, $template): string
     {
         // Remove the download option from YouTube links.
-        $filename  = $media->params->get('filename');
+        $filename  = $media->params->get('filename') ?? '';
         $link_type = 0;
 
         if (substr_count($filename, 'youtube') || substr_count($filename, 'youtu.be')) {
@@ -1044,7 +1044,7 @@ class Cwmmedia
             ->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
             ->leftJoin('#__bsms_series AS se ON (s.series_id = se.id)')
             ->where('#__bsms_mediafiles.id = ' . (int)$id)
-            ->where('#__bsms_mediafiles.published = ' . 1)
+            ->where('#__bsms_mediafiles.published IN (1, 2)')
             ->where(
                 '#__bsms_mediafiles.language in (' . $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*') . ')'
             )
