@@ -47,11 +47,11 @@ class ProclaimHelper implements DatabaseAwareInterface
      */
     public function getLatest(Registry $params, SiteApplication $app): array
     {
-        $user = $app->getSession()->get('user');
+        $user = $app->getIdentity();
 
         $groups = [1];
 
-        if (isset($user)) {
+        if ($user !== null && !$user->guest) {
             $groups = $user->getAuthorisedViewLevels();
         }
 
@@ -206,7 +206,10 @@ class ProclaimHelper implements DatabaseAwareInterface
         $nowDate  = $db->quote(Factory::getDate()->toSql(true));
 
         // Filter by start and end dates.
-        if (!$user->authorise('core.edit.state', 'com_proclaim') && !$user->authorise('core.edit', 'com_proclaim')) {
+        $canEditState = $user !== null && $user->authorise('core.edit.state', 'com_proclaim');
+        $canEdit      = $user !== null && $user->authorise('core.edit', 'com_proclaim');
+
+        if (!$canEditState && !$canEdit) {
             $query->where('(' . $db->quoteName('study.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('study.publish_up') . ' <= ' . $nowDate . ')')
                 ->where('(' . $db->quoteName('study.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('study.publish_down') . ' >= ' . $nowDate . ')');
         }
