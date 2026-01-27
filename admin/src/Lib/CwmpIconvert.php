@@ -158,7 +158,9 @@ class CwmpIconvert
     public function convertPI()
     {
         // Check for request forgeries.
-        Session::checkToken('get') or Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $this->commentsids   = [];
         $this->serversids    = [];
@@ -568,18 +570,18 @@ class CwmpIconvert
             }
             // Endforeach study
         }
-        /**$piconvertresults = '<table><tr><td><h3>' . JText::_('JBS_IBM_PREACHIT_RESULTS') . '</h3></td></tr>'
-         * . '<tr><td>' . JText::_('JBS_IBM_PI_SERVERS') . '<strong>' . $this->svadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->svnoadd . '</td></tr>'
-         * . '<tr><td>' . JText::_('JBS_IBM_PI_TEACHERS') . '<strong>' . $this->tadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->tnoadd . '</td></tr>'
-         * . '<tr><td>' . JText::_('JBS_IBM_PI_SERIES') . '<strong>' . $$this->sradd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->srnoadd . '</td></tr>'
-         * . '<tr><td>' . JText::_('JBS_IBM_PI_PODCAST') . '<strong>' . $this->padd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->pnoadd . '</td></tr>'
-         * . '<tr><td>' . JText::_('JBS_IBM_PI_STUDIES') . '<strong>' . $this->sadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->snoadd . '</td></tr>'
-         * . '<tr><td>' . JText::_('JBS_IBM_PI_MEDIA') . '<strong>' . $this->madd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED') . $this->mnoadd . '</td></tr>'
-         * . '<tr><td>' . JText::_('JBS_IBM_PI_COMMENTS') . '<strong>' . $this->cadd . '</strong> - ' . JText::_('JBS_IBM_NOT_CONVERTED')
+        /**$piconvertresults = '<table><tr><td><h3>' . Text::_('JBS_IBM_PREACHIT_RESULTS') . '</h3></td></tr>'
+         * . '<tr><td>' . Text::_('JBS_IBM_PI_SERVERS') . '<strong>' . $this->svadd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED') . $this->svnoadd . '</td></tr>'
+         * . '<tr><td>' . Text::_('JBS_IBM_PI_TEACHERS') . '<strong>' . $this->tadd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED') . $this->tnoadd . '</td></tr>'
+         * . '<tr><td>' . Text::_('JBS_IBM_PI_SERIES') . '<strong>' . $$this->sradd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED') . $this->srnoadd . '</td></tr>'
+         * . '<tr><td>' . Text::_('JBS_IBM_PI_PODCAST') . '<strong>' . $this->padd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED') . $this->pnoadd . '</td></tr>'
+         * . '<tr><td>' . Text::_('JBS_IBM_PI_STUDIES') . '<strong>' . $this->sadd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED') . $this->snoadd . '</td></tr>'
+         * . '<tr><td>' . Text::_('JBS_IBM_PI_MEDIA') . '<strong>' . $this->madd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED') . $this->mnoadd . '</td></tr>'
+         * . '<tr><td>' . Text::_('JBS_IBM_PI_COMMENTS') . '<strong>' . $this->cadd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED')
          * . $this->cnoadd . '</td></tr>'
          * . '</table>';
          *
-         * Factory::getApplication()->enqueueMessage(JText::_($piconvertresults), 'message'); ;*/
+         * Factory::getApplication()->enqueueMessage(Text::_($piconvertresults), 'message'); ;*/
     }
 
     /**

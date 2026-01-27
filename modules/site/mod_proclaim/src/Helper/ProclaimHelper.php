@@ -18,7 +18,7 @@ namespace CWM\Module\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Application\SiteApplication;
-use Joomla\CMS\Factory;
+use Joomla\CMS\Date\Date;
 use Joomla\Database\DatabaseAwareInterface;
 use Joomla\Database\DatabaseAwareTrait;
 use Joomla\Registry\Registry;
@@ -51,7 +51,7 @@ class ProclaimHelper implements DatabaseAwareInterface
 
         $groups = [1];
 
-        if ($user !== null && !$user->guest) {
+if ($user !== null && !$user->guest) {
             $groups = $user->getAuthorisedViewLevels();
         }
 
@@ -203,7 +203,7 @@ class ProclaimHelper implements DatabaseAwareInterface
 
         // Define null and now dates
         $nullDate = $db->quote($db->getNullDate());
-        $nowDate  = $db->quote(Factory::getDate()->toSql(true));
+        $nowDate  = $db->quote((new Date('now', $app->get('offset')))->toSql(true));
 
         // Filter by start and end dates.
         $canEditState = $user !== null && $user->authorise('core.edit.state', 'com_proclaim');
@@ -225,7 +225,7 @@ class ProclaimHelper implements DatabaseAwareInterface
 
         // Filter by language
         $language = $params->get('language', '*');
-        $lang     = Factory::getApplication()->getLanguage();
+        $lang     = $app->getLanguage();
 
         if ($lang || $language !== '*') {
             $query->where(

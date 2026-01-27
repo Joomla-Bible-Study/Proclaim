@@ -105,6 +105,24 @@
         <phingcall target="dev.init"/>
     </target>
 
+    <target name="sync-languages" description="Sync and translate language files">
+        <exec executable="python3" passthru="true" checkreturn="true">
+            <arg line="${basedir}/build/sync_languages.py"/>
+        </exec>
+    </target>
+
+    <target name="sync-languages-setup" description="Setup Google Translate API key in 1Password">
+        <exec executable="python3" passthru="true" checkreturn="true">
+            <arg line="${basedir}/build/sync_languages.py setup"/>
+        </exec>
+    </target>
+
+    <target name="sync-languages-help" description="Show sync-languages help">
+        <exec executable="python3" passthru="true" checkreturn="true">
+            <arg line="${basedir}/build/sync_languages.py help"/>
+        </exec>
+    </target>
+
     <target name="dev.init">
         <echo message="Initializing development state"/>
         <symlink target="${basedir}/proclaim.xml" link="${basedir}/admin/proclaim.xml" overwrite="true"/>

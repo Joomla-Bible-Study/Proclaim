@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Podcast Entry - Proclaim Help</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            border-bottom: 2px solid #1a3867;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: #1a3867;
+        }
+        h2 {
+            color: #1a3867;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2c5282;
+            margin-top: 25px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f5f5f5;
+        }
+        .tip {
+            background-color: #e8f4fd;
+            border-left: 4px solid #2196F3;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        .note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        ul {
+            margin: 10px 0;
+        }
+        li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">Podcast Entry - Help Screen</div>
+
+<h2>Overview</h2>
+<p>
+    The Podcast Entry form allows you to create and edit podcast feeds.
+    Podcasts generate RSS feeds that can be submitted to Apple Podcasts, Spotify,
+    Google Podcasts, and other podcast directories.
+</p>
+
+<h2>Toolbar Actions</h2>
+<table>
+    <tr>
+        <th>Button</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>Save</strong></td>
+        <td>Saves the podcast and remains on the edit form.</td>
+    </tr>
+    <tr>
+        <td><strong>Save & Close</strong></td>
+        <td>Saves the podcast and returns to the Podcasts list.</td>
+    </tr>
+    <tr>
+        <td><strong>Cancel</strong></td>
+        <td>Discards any unsaved changes and returns to the list.</td>
+    </tr>
+    <tr>
+        <td><strong>Help</strong></td>
+        <td>Opens this help screen.</td>
+    </tr>
+</table>
+
+<h2>Details Tab</h2>
+
+<h3>Basic Information</h3>
+<table>
+    <tr>
+        <th>Field</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>Podcast Title</strong></td>
+        <td><em>(Required)</em> The name of the podcast as it will appear in podcast apps.</td>
+    </tr>
+    <tr>
+        <td><strong>Alias</strong></td>
+        <td>URL-friendly version for the feed URL.</td>
+    </tr>
+    <tr>
+        <td><strong>Description</strong></td>
+        <td>Description of the podcast shown in directories and apps.</td>
+    </tr>
+    <tr>
+        <td><strong>Status</strong></td>
+        <td>Publication status: Published generates the feed, Unpublished disables it.</td>
+    </tr>
+    <tr>
+        <td><strong>Language</strong></td>
+        <td>Primary language of the podcast content.</td>
+    </tr>
+</table>
+
+<h3>iTunes/Apple Podcasts Settings</h3>
+<table>
+    <tr>
+        <th>Field</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>iTunes Category</strong></td>
+        <td>Primary category for podcast directories (e.g., Religion & Spirituality).</td>
+    </tr>
+    <tr>
+        <td><strong>iTunes Subcategory</strong></td>
+        <td>Subcategory within the main category.</td>
+    </tr>
+    <tr>
+        <td><strong>iTunes Author</strong></td>
+        <td>Author name shown in podcast apps.</td>
+    </tr>
+    <tr>
+        <td><strong>iTunes Owner Name</strong></td>
+        <td>Name of podcast owner for directory contact.</td>
+    </tr>
+    <tr>
+        <td><strong>iTunes Owner Email</strong></td>
+        <td>Contact email for podcast directories.</td>
+    </tr>
+    <tr>
+        <td><strong>Explicit Content</strong></td>
+        <td>Mark if podcast contains explicit content.</td>
+    </tr>
+</table>
+
+<h2>Image Tab</h2>
+<table>
+    <tr>
+        <th>Field</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>Podcast Image</strong></td>
+        <td>Cover art for the podcast. Required for most directories.</td>
+    </tr>
+</table>
+
+<div class="note">
+    <strong>Image Requirements:</strong> Apple Podcasts requires a square image, minimum 1400x1400 pixels,
+    maximum 3000x3000 pixels, in JPEG or PNG format.
+</div>
+
+<h2>Feed Settings</h2>
+<table>
+    <tr>
+        <th>Field</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>Items per Feed</strong></td>
+        <td>Number of episodes to include in the RSS feed.</td>
+    </tr>
+    <tr>
+        <td><strong>Download Link</strong></td>
+        <td>Control how download links appear in the feed.</td>
+    </tr>
+    <tr>
+        <td><strong>Website Link</strong></td>
+        <td>URL to your podcast's website or landing page.</td>
+    </tr>
+</table>
+
+<div class="tip">
+    <strong>Tip:</strong> After creating a podcast, assign media files to it from the Media Files edit screen.
+    Only published media files assigned to a podcast will appear in the RSS feed.
+</div>
+
+<h2>Feed URL</h2>
+<p>
+    Your podcast feed URL will be:<br>
+    <code>https://yoursite.com/index.php?option=com_proclaim&amp;view=podcast&amp;id=X</code>
+</p>
+<p>Submit this URL to podcast directories like Apple Podcasts and Spotify.</p>
+
+<h2>Related Links</h2>
+<ul>
+    <li><a href="https://www.christianwebministries.org/documentation/8-proclaim.html" target="_blank">Proclaim Documentation</a></li>
+    <li><a href="https://www.christianwebministries.org/forum.html" target="_blank">Community Forum</a></li>
+</ul>
+
+</body>
+</html>

@@ -15,7 +15,7 @@
 
 use CWM\Component\Proclaim\Site\Helper\CwmrouteHelper;
 use CWM\Module\ProclaimYoutube\Site\Helper\YoutubeHelper;
-use Joomla\CMS\Factory;
+use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
@@ -31,6 +31,7 @@ use Joomla\Registry\Registry;
 /** @var Registry $params */
 /** @var int $serverId */
 /** @var \stdClass $module */
+/** @var SiteApplication $app */
 
 $moduleId        = $module->id ?? 0;
 $isLive          = $video['isLive'] ?? false;
@@ -162,7 +163,7 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
 <?php if ($video && $embedUrl && $showLiveBadge && ($isLive || $isUpcoming)) : ?>
     <?php
     /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-    $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+    $wa = $app->getDocument()->getWebAssetManager();
 
     $inlineScript = <<<JS
 (function() {

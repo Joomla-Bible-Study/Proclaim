@@ -45,7 +45,9 @@ class CwmmediafilesController extends AdminController
     public function checkin(): bool
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $ids = Factory::getApplication()->getInput()->post->get('cid', [], 'array');
 

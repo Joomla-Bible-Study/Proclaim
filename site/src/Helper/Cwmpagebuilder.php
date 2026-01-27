@@ -242,7 +242,7 @@ class Cwmpagebuilder
         }
 
         // Compute view access permissions.
-        $user   = \Joomla\CMS\Factory::getApplication()->getSession()->get('user');
+        $user   = \Joomla\CMS\Factory::getApplication()->getIdentity();
         $groups = implode(',', $user->getAuthorisedViewLevels());
 
         $query = $db->getQuery(true);

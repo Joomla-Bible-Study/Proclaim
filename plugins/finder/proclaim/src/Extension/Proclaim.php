@@ -580,7 +580,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
         $case_when_item_alias = ' CASE WHEN ';
         $case_when_item_alias .= $query->charLength('a.alias', '!=', '0');
         $case_when_item_alias .= ' THEN ';
-        $a_id                 = $query->castAsChar('a.id');
+        $a_id                 = $query->castAs('CHAR', 'a.id');
         $case_when_item_alias .= $query->concatenate([$a_id, 'a.alias'], ':');
         $case_when_item_alias .= ' ELSE ';
         $case_when_item_alias .= $a_id . ' END as slug';
@@ -589,7 +589,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
         $case_when_series_alias = ' CASE WHEN ';
         $case_when_series_alias .= $query->charLength('s.alias', '!=', '0');
         $case_when_series_alias .= ' THEN ';
-        $s_id                     = $query->castAsChar('s.id');
+        $s_id                     = $query->castAs('CHAR', 's.id');
         $case_when_series_alias .= $query->concatenate([$s_id, 's.alias'], ':');
         $case_when_series_alias .= ' ELSE ';
         $case_when_series_alias .= $s_id . ' END as seriesslug';

@@ -96,11 +96,13 @@
     "lint": "php-cs-fixer fix --dry-run --diff",
     "lint:fix": "php-cs-fixer fix",
     "cs": "phpcs . --standard=./build/psr12/ruleset.xml",
-    "check": "@composer lint && @composer test",
+    "check": ["@lint", "@test"],
     "setup": "libraries/vendor/bin/phing dev.setup",
     "joomla-install": "libraries/vendor/bin/phing joomla.install",
     "joomla-latest": "libraries/vendor/bin/phing joomla.get-latest-version",
     "symlink": "libraries/vendor/bin/phing dev.Setup_Symbolic_Links",
+    "sync-languages": "libraries/vendor/bin/phing sync-languages",
+    "sync-languages-setup": "libraries/vendor/bin/phing sync-languages-setup",
     "post-install-cmd": [
       "\"libraries/vendor/bin/phpcs\" --config-set installed_paths libraries/vendor/squizlabs/php_codesniffer/src/Standards",
       "@php -r \"if (!file_exists('build.properties')) { copy('build.dist.properties', 'build.properties'); echo 'Created build.properties from template. Run composer setup to configure.\\n'; }\""

@@ -89,7 +89,9 @@ class CwmadminController extends FormController
     public function changePlayers(): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $db   = Factory::getContainer()->get('DatabaseDriver');
         $msg  = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
@@ -141,7 +143,9 @@ class CwmadminController extends FormController
     public function changePopup(): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $db   = Factory::getContainer()->get('DatabaseDriver');
         $post = $this->input->post->get('jform', [], 'array');
@@ -405,7 +409,9 @@ class CwmadminController extends FormController
     public function resetHits(): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $msg   = null;
@@ -434,7 +440,9 @@ class CwmadminController extends FormController
     public function resetDownloads(): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $msg   = null;
         $db    = Factory::getContainer()->get('DatabaseDriver');
@@ -464,7 +472,9 @@ class CwmadminController extends FormController
     public function resetPlays(): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $msg   = null;
         $db    = Factory::getContainer()->get('DatabaseDriver');
@@ -506,7 +516,9 @@ class CwmadminController extends FormController
     public function convertSermonSpeaker(): void
     {
         // Check for request forgeries.
-        Session::checkToken('get') || Session::checkToken() || jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $convert      = new Cwmssconvert();
         $ssconversion = $convert->convertSS();
@@ -523,7 +535,9 @@ class CwmadminController extends FormController
     public function convertPreachIt(): void
     {
         // Check for request forgeries.
-        Session::checkToken('get') || Session::checkToken() || jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $convert      = new CwmpIconvert();
         $piconversion = $convert->convertPI();
@@ -567,7 +581,9 @@ class CwmadminController extends FormController
     public function aliasUpdate(): void
     {
         // Check for request forgeries.
-        Session::checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken('get')) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $update = Cwmalias::updateAlias();
         $this->setMessage(Text::_('JBS_ADM_ALIAS_ROWS') . $update);
@@ -587,7 +603,9 @@ class CwmadminController extends FormController
     public function doimport(bool $parent = true): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $alt         = '';
 
@@ -624,7 +642,9 @@ class CwmadminController extends FormController
     public function copyTables(string $oldprefix): bool
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         // Create table tablename_new like tablename; -> this will copy the structure...
         // Insert into tablename_new select * from tablename; -> this would copy all the data
@@ -673,7 +693,9 @@ class CwmadminController extends FormController
     public function import(): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $application = Factory::getApplication();
         $import      = new Cwmrestore();
@@ -701,7 +723,9 @@ class CwmadminController extends FormController
     public function export(): void
     {
         // Check for request forgeries.
-        Session::checkToken('get') || Session::checkToken() || jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $input  = Factory::getApplication()->getInput();
         $run    = (int)$input->get('run', '', 'int');
@@ -792,7 +816,9 @@ class CwmadminController extends FormController
     public function doArchive(): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
         $model = new CwmarchiveModel();
         try {

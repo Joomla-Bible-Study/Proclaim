@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Administration - Proclaim Help</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            border-bottom: 2px solid #1a3867;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: #1a3867;
+        }
+        h2 {
+            color: #1a3867;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2c5282;
+            margin-top: 25px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f5f5f5;
+        }
+        .tip {
+            background-color: #e8f4fd;
+            border-left: 4px solid #2196F3;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        .warning {
+            background-color: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        .note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        ul {
+            margin: 10px 0;
+        }
+        li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">Administration - Help Screen</div>
+
+<h2>Overview</h2>
+<p>
+    The Administration screen provides access to system-level settings and maintenance
+    tools for Proclaim. From here you can configure component options, manage database
+    tables, and perform maintenance tasks.
+</p>
+
+<h2>Toolbar Actions</h2>
+<table>
+    <tr>
+        <th>Button</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>Options</strong></td>
+        <td>Open the component options/configuration screen.</td>
+    </tr>
+    <tr>
+        <td><strong>Help</strong></td>
+        <td>Opens this help screen.</td>
+    </tr>
+</table>
+
+<h2>Administration Tabs</h2>
+
+<h3>Database</h3>
+<p>Tools for managing the Proclaim database:</p>
+<ul>
+    <li><strong>Check Tables</strong> - Verify database table integrity</li>
+    <li><strong>Fix Tables</strong> - Repair common database issues</li>
+    <li><strong>Reset Hits</strong> - Reset view counters on messages</li>
+</ul>
+
+<h3>Backup</h3>
+<p>Create and restore backups of your Proclaim data:</p>
+<ul>
+    <li><strong>Export</strong> - Create a backup file of all Proclaim data</li>
+    <li><strong>Import</strong> - Restore data from a backup file</li>
+</ul>
+
+<div class="warning">
+    <strong>Important:</strong> Always create a full site backup before performing database operations or restores.
+</div>
+
+<h3>Archive</h3>
+<p>Manage archived content:</p>
+<ul>
+    <li>View archived messages and media files</li>
+    <li>Restore archived items to published status</li>
+    <li>Permanently delete archived content</li>
+</ul>
+
+<h3>Assets</h3>
+<p>Manage and rebuild the Joomla assets table for Proclaim:</p>
+<ul>
+    <li><strong>Check Assets</strong> - Verify asset permissions are correct</li>
+    <li><strong>Fix Assets</strong> - Rebuild asset records</li>
+</ul>
+
+<div class="note">
+    <strong>When to use:</strong> Run asset fixes if you experience permission errors or if items don't appear when they should.
+</div>
+
+<h2>Component Options</h2>
+<p>The Options button opens the component configuration with these sections:</p>
+
+<h3>General Settings</h3>
+<ul>
+    <li>Default template selection</li>
+    <li>Items per page</li>
+    <li>Date format options</li>
+    <li>Default images</li>
+</ul>
+
+<h3>Permissions</h3>
+<ul>
+    <li>Configure access control for component features</li>
+    <li>Set permissions by user group</li>
+</ul>
+
+<h3>Integration</h3>
+<ul>
+    <li>Social sharing options</li>
+    <li>Analytics integration</li>
+    <li>Third-party service connections</li>
+</ul>
+
+<div class="tip">
+    <strong>Tip:</strong> Review the component options after installation to configure Proclaim for your specific needs.
+</div>
+
+<h2>Related Links</h2>
+<ul>
+    <li><a href="https://www.christianwebministries.org/documentation/8-proclaim.html" target="_blank">Proclaim Documentation</a></li>
+    <li><a href="https://www.christianwebministries.org/forum.html" target="_blank">Community Forum</a></li>
+</ul>
+
+</body>
+</html>

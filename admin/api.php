@@ -20,7 +20,7 @@ use Joomla\CMS\Log\Log;
 try {
     $app = Factory::getApplication();
 } catch (Exception $e) {
-    jexit('Could not load Factory');
+    throw new \RuntimeException('Could not load Factory');
 }
 
 // Component debugging

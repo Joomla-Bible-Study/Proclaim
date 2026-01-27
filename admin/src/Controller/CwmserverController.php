@@ -12,6 +12,7 @@
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Model\CwmserverModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
@@ -140,5 +141,27 @@ class CwmserverController extends FormController
         }
 
         CWMAddon::handleAjaxRequest($addonType, $action);
+    }
+
+    /**
+     * Method to run batch operations.
+     *
+     * @param   CwmserverModel  $model  The model.
+     *
+     * @return  bool     True if successful, false otherwise and internal error is set.
+     *
+     * @throws \Exception
+     * @since   1.6
+     */
+    public function batch($model = null): bool
+    {
+        $this->checkToken();
+
+        // Preset the redirect
+        $this->setRedirect(
+            Route::_('index.php?option=com_proclaim&view=cwmservers' . $this->getRedirectToListAppend(), false)
+        );
+
+        return parent::batch($this->getModel());
     }
 }

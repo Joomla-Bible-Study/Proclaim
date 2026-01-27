@@ -35,6 +35,12 @@ $wa->useScript('keepalive')
 // Add lazy loading script and pass CSRF token for AJAX calls
 $wa->useScript('com_proclaim.template-lazyload');
 $this->document->addScriptOptions('csrf.token', \Joomla\CMS\Session\Session::getFormToken());
+
+// Add layout editor assets
+$wa->useScript('bootstrap.modal')
+    ->useScript('com_proclaim.sortable')
+    ->useScript('com_proclaim.layout-editor')
+    ->useStyle('com_proclaim.layout-editor');
 ?>
 
 <form action="<?php
@@ -148,6 +154,16 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                 </div>
                 <?php
             endforeach; ?>
+        </div>
+        <?php
+        echo HTMLHelper::_('uitab.endTab'); ?>
+
+        <?php
+        echo HTMLHelper::_('uitab.addTab', 'myTab', 'layout', Text::_('JBS_TPL_LAYOUT_EDITOR')); ?>
+        <div class="row">
+            <div class="col-12">
+                <?php include __DIR__ . '/edit_layout.php'; ?>
+            </div>
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>

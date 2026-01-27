@@ -182,7 +182,7 @@ class HtmlView extends BaseHtmlView
                     ->buttonClass('text-center py-2 h3');
 
                 $cmd      = "Joomla.submitbutton('cwmmessages.runTransition');";
-                $messages = "{error: [Joomla.JText._('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST')]}";
+                $messages = "{error: [Joomla.Text._('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST')]}";
                 $alert    = 'Joomla.renderMessages(' . $messages . ')';
                 $cmd      = 'if (document.adminForm.boxchecked.value == 0) { ' . $alert . ' } else { ' . $cmd . ' }';
 
@@ -235,10 +235,6 @@ class HtmlView extends BaseHtmlView
                 ->listCheck(true);
         }
 
-        if ($user->authorise('core.admin', 'com_proclaim') || $user->authorise('core.options', 'com_proclaim')) {
-            $toolbar->preferences('com_proclaim');
-        }
-        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=19&Itemid=315&tmpl=component';
-        $toolbar->help('Messages', false, $help_url);
+        ToolbarHelper::help('messages', true);
     }
 }

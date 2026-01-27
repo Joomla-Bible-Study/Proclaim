@@ -16,10 +16,13 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmservers;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Button\DropdownButton;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 /**
@@ -112,32 +115,55 @@ class HtmlView extends BaseHtmlView
      */
     protected function addToolbar(): void
     {
-        $canDo = ContentHelper::getActions('com_proclaim');
+        $user = Factory::getApplication()->getIdentity();
+
+        // Get the toolbar object instance
+        $toolbar = Toolbar::getInstance();
+
         ToolbarHelper::title(Text::_('JBS_CMN_SERVERS'), 'database database');
-        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=40:server-entry-screen-help&catid=20&Itemid=315&tmpl=component';
-        ToolbarHelper::help('proclaim', false, $help_url, 'com_proclaim');
 
-        if ($canDo->get('core.create')) {
-            ToolbarHelper::addNew('cwmserver.add');
+        if ($this->canDo->get('core.create')) {
+            $toolbar->addNew('cwmserver.add');
         }
 
-        if ($canDo->get('core.edit')) {
-            ToolbarHelper::editList('cwmserver.edit');
+        if ($this->canDo->get('core.edit', 'com_proclaim')) {
+            /** @var  DropdownButton $dropdown */
+            $dropdown = $toolbar->dropdownButton('status-group', 'JTOOLBAR_CHANGE_STATUS')
+                ->toggleSplit(false)
+                ->icon('icon-ellipsis-h')
+                ->buttonClass('btn btn-action')
+                ->listCheck(true);
+
+            $childBar = $dropdown->getChildToolbar();
+
+            $childBar->publish('cwmservers.publish')->listCheck(true);
+            $childBar->unpublish('cwmservers.unpublish')->listCheck(true);
+            $childBar->archive('cwmservers.archive')->listCheck(true);
+
+            if ($this->state->get('filter.published') != -2) {
+                $childBar->trash('cwmservers.trash')->listCheck(true);
+            }
+
+            // Add a batch button
+            if (
+                $user->authorise('core.create', 'com_proclaim')
+                && $user->authorise('core.edit', 'com_proclaim')
+                && $user->authorise('core.edit.state', 'com_proclaim')
+            ) {
+                $childBar->popupButton('batch')
+                    ->text('JTOOLBAR_BATCH')
+                    ->selector('collapseModal')
+                    ->listCheck(true);
+            }
         }
 
-        if ($canDo->get('core.edit.state')) {
-            ToolbarHelper::divider();
-            ToolbarHelper::publishList('cwmservers.publish');
-            ToolbarHelper::unpublishList('cwmservers.unpublish');
-            ToolbarHelper::divider();
-            ToolbarHelper::archiveList('cwmservers.archive');
-        }
-
-        if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete')) {
+        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
             ToolbarHelper::deleteList('', 'cwmservers.delete', 'JTOOLBAR_EMPTY_TRASH');
-        } elseif ($canDo->get('core.delete')) {
+        } elseif ($this->canDo->get('core.delete')) {
             ToolbarHelper::trash('cwmservers.trash');
         }
+
+        ToolbarHelper::help('servers', true);
     }
 
     /**

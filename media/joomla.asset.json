@@ -259,6 +259,75 @@
             }
         },
         {
+            "name": "com_proclaim.cwmadmin-servers-batch.es5",
+            "type": "script",
+            "uri": "com_proclaim/cwmadmin-servers-default-batch-footer-es5.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "nomodule": true,
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.cwmadmin-servers-batch",
+            "type": "script",
+            "uri": "com_proclaim/cwmadmin-servers-default-batch-footer.js",
+            "dependencies": [
+                "com_proclaim.cwmadmin-servers-batch.es5"
+            ],
+            "attributes": {
+                "type": "module"
+            }
+        },
+        {
+            "name": "com_proclaim.cwmadmin-templates-batch.es5",
+            "type": "script",
+            "uri": "com_proclaim/cwmadmin-templates-default-batch-footer-es5.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "nomodule": true,
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.cwmadmin-templates-batch",
+            "type": "script",
+            "uri": "com_proclaim/cwmadmin-templates-default-batch-footer.js",
+            "dependencies": [
+                "com_proclaim.cwmadmin-templates-batch.es5"
+            ],
+            "attributes": {
+                "type": "module"
+            }
+        },
+        {
+            "name": "com_proclaim.cwmadmin-podcasts-batch.es5",
+            "type": "script",
+            "uri": "com_proclaim/cwmadmin-podcasts-default-batch-footer-es5.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "nomodule": true,
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.cwmadmin-podcasts-batch",
+            "type": "script",
+            "uri": "com_proclaim/cwmadmin-podcasts-default-batch-footer.js",
+            "dependencies": [
+                "com_proclaim.cwmadmin-podcasts-batch.es5"
+            ],
+            "attributes": {
+                "type": "module"
+            }
+        },
+        {
             "name": "com_proclaim.cwmcore",
             "type": "style",
             "uri": "com_proclaim/cwmcore.min.css",
@@ -315,6 +384,31 @@
             "attributes": {
                 "defer": true
             }
+        },
+        {
+            "name": "com_proclaim.sortable",
+            "type": "script",
+            "uri": "com_proclaim/vendor/Sortable.min.js",
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.layout-editor",
+            "type": "script",
+            "uri": "com_proclaim/layout-editor.js",
+            "dependencies": [
+                "core",
+                "com_proclaim.sortable"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.layout-editor",
+            "type": "style",
+            "uri": "com_proclaim/layout-editor.css"
         }
     ]
 }

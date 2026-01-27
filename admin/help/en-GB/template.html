@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Template Entry - Proclaim Help</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            border-bottom: 2px solid #1a3867;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: #1a3867;
+        }
+        h2 {
+            color: #1a3867;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2c5282;
+            margin-top: 25px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f5f5f5;
+        }
+        .tip {
+            background-color: #e8f4fd;
+            border-left: 4px solid #2196F3;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        .note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        ul {
+            margin: 10px 0;
+        }
+        li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">Template Entry - Help Screen</div>
+
+<h2>Overview</h2>
+<p>
+    The Template Entry form allows you to configure display templates.
+    Templates control how messages, media files, and other content are displayed
+    on the frontend. Each template has multiple settings tabs for fine-tuned control.
+</p>
+
+<h2>Toolbar Actions</h2>
+<table>
+    <tr>
+        <th>Button</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>Save</strong></td>
+        <td>Saves the template and remains on the edit form.</td>
+    </tr>
+    <tr>
+        <td><strong>Save & Close</strong></td>
+        <td>Saves the template and returns to the Templates list.</td>
+    </tr>
+    <tr>
+        <td><strong>Cancel</strong></td>
+        <td>Discards any unsaved changes and returns to the list.</td>
+    </tr>
+    <tr>
+        <td><strong>Help</strong></td>
+        <td>Opens this help screen.</td>
+    </tr>
+</table>
+
+<h2>Details Tab</h2>
+<table>
+    <tr>
+        <th>Field</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>Template Title</strong></td>
+        <td><em>(Required)</em> A descriptive name for this template configuration.</td>
+    </tr>
+    <tr>
+        <td><strong>Status</strong></td>
+        <td>Publication status.</td>
+    </tr>
+    <tr>
+        <td><strong>Access</strong></td>
+        <td>Access level required to use this template.</td>
+    </tr>
+</table>
+
+<h2>List Display Settings</h2>
+<p>Controls how message lists are displayed:</p>
+<table>
+    <tr>
+        <th>Field</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>Show Title</strong></td>
+        <td>Display the message title in lists.</td>
+    </tr>
+    <tr>
+        <td><strong>Show Teacher</strong></td>
+        <td>Display the teacher/speaker name.</td>
+    </tr>
+    <tr>
+        <td><strong>Show Date</strong></td>
+        <td>Display the study date.</td>
+    </tr>
+    <tr>
+        <td><strong>Show Scripture</strong></td>
+        <td>Display scripture references.</td>
+    </tr>
+    <tr>
+        <td><strong>Show Series</strong></td>
+        <td>Display the series name.</td>
+    </tr>
+    <tr>
+        <td><strong>Show Image</strong></td>
+        <td>Display thumbnail images.</td>
+    </tr>
+    <tr>
+        <td><strong>Show Description</strong></td>
+        <td>Display message description/excerpt.</td>
+    </tr>
+</table>
+
+<h2>Item Display Settings</h2>
+<p>Controls how individual message detail pages are displayed:</p>
+<table>
+    <tr>
+        <th>Field</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>Show Full Text</strong></td>
+        <td>Display the complete message text.</td>
+    </tr>
+    <tr>
+        <td><strong>Show Media Files</strong></td>
+        <td>Display attached media files.</td>
+    </tr>
+    <tr>
+        <td><strong>Show Topics</strong></td>
+        <td>Display topic tags.</td>
+    </tr>
+    <tr>
+        <td><strong>Show Social Share</strong></td>
+        <td>Display social sharing buttons.</td>
+    </tr>
+</table>
+
+<h2>Media Display Settings</h2>
+<p>Controls how media files appear:</p>
+<table>
+    <tr>
+        <th>Field</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>Media Layout</strong></td>
+        <td>How media items are arranged (list, grid, etc.).</td>
+    </tr>
+    <tr>
+        <td><strong>Show Duration</strong></td>
+        <td>Display media duration.</td>
+    </tr>
+    <tr>
+        <td><strong>Show File Size</strong></td>
+        <td>Display file size information.</td>
+    </tr>
+</table>
+
+<div class="tip">
+    <strong>Tip:</strong> Create multiple templates for different display needs - one for the main sermon archive, another for a sidebar widget, etc.
+</div>
+
+<div class="note">
+    <strong>Note:</strong> Template ID 1 is the default template and cannot be unpublished or deleted.
+</div>
+
+<h2>Related Links</h2>
+<ul>
+    <li><a href="https://www.christianwebministries.org/documentation/8-proclaim.html" target="_blank">Proclaim Documentation</a></li>
+    <li><a href="https://www.christianwebministries.org/forum.html" target="_blank">Community Forum</a></li>
+</ul>
+
+</body>
+</html>

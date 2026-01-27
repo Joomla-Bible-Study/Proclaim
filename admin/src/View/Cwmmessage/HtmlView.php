@@ -184,7 +184,6 @@ class HtmlView extends BaseHtmlView
         }
 
         ToolbarHelper::divider();
-        $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=29:message-edit-help-screen&catid=20&Itemid=315&tmpl=component';
-        ToolbarHelper::help('Message', false, $help_url);
+        ToolbarHelper::help('message', true);
     }
 }

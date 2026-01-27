@@ -104,7 +104,7 @@ class CwmpodcastdisplayModel extends ItemModel
 
         /** @var Registry $params */
         $params          = $app->getParams();
-        $user            = $user = Factory::getApplication()->getSession()->get('user');
+        $user            = Factory::getApplication()->getIdentity();
         $groups          = implode(',', $user->getAuthorisedViewLevels());
         $db              = Factory::getContainer()->get('DatabaseDriver');
         $query           = $db->getQuery(true);
@@ -269,21 +269,19 @@ class CwmpodcastdisplayModel extends ItemModel
         $this->setState('template', $template);
         $this->setState('administrator', $admin);
 
-        // Get show_archived parameter from menu, fall back to template default
+// Get show_archived parameter from menu, fall back to template default
         $showArchived = $params->get('show_archived', '');
         if ($showArchived === '' || $showArchived === null) {
             $showArchived = $params->get('default_show_archived', '0');
         }
         $this->setState('filter.show_archived', $showArchived);
 
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
-        if (
-            (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
-                'core.edit',
-                'com_proclaim'
-            ))
-        ) {
+        $canEditState = $user !== null && $user->authorise('core.edit.state', 'com_proclaim');
+        $canEdit      = $user !== null && $user->authorise('core.edit', 'com_proclaim');
+
+        if (!$canEditState && !$canEdit) {
             $this->setState('filter.published', 1);
             $this->setState('filter.archived', 2);
         }

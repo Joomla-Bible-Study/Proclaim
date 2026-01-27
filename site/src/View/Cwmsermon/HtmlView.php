@@ -143,7 +143,7 @@ class HtmlView extends BaseHtmlView
     {
         $app            = Factory::getApplication();
         $this->form     = $this->get('Form');
-        $user           = $app->getSession()->get('user');
+        $user           = $app->getIdentity();
         $CWMListing     = new Cwmlisting();
         $this->item     = $this->get('Item');
         $this->state    = $this->get('State');
