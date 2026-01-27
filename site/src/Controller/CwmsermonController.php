@@ -113,7 +113,7 @@ class CwmsermonController extends FormController
      * @param   string  $key     The name of the primary key of the URL variable.
      * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
      *
-     * @return    boolean    True if access level check and checkout passes, false otherwise.
+     * @return    bool    True if access level check and checkout pass, false otherwise.
      *
      * @since    1.6
      */
@@ -162,7 +162,7 @@ class CwmsermonController extends FormController
         $input = $app->getInput();
 
         /** @var CwmsermonModel $model */
-        $model = $this->getModel('Cwmsermon');
+        $model = $this->getModel();
         $t     = $input->getInt('t', 1);
 
         // Get template params
@@ -190,7 +190,7 @@ class CwmsermonController extends FormController
         if ($model->storecomment()) {
             $published = $input->getInt('published', 1);
 
-            // Show appropriate message based on whether comment is auto-approved or held
+            // Show appropriate message based on whether the comment is auto-approved or held
             if ($published === 0) {
                 $app->enqueueMessage(Text::_('JBS_CMT_SUBMITTED_PENDING_APPROVAL'), 'message');
 
@@ -263,11 +263,11 @@ class CwmsermonController extends FormController
     /**
      * Email comment out.
      *
-     * @param   Registry  $params  Params of to parse
+     * @param   Registry  $params  Params to parse
      *
      * @return void
      *
-     * @throws Exception
+     * @throws Exception|\Exception
      * @since 7.0
      */
     public function commentsEmail($params): void
@@ -284,7 +284,7 @@ class CwmsermonController extends FormController
         $comment_livesite = Uri::root();
         $db               = Factory::getContainer()->get('DatabaseDriver');
         $query            = $db->getQuery(true);
-        $query->select('id, studytitle, studydate')->from('#__bsms_studies')->where('id = ' . (int)$comment_study_id);
+        $query->select('id, studytitle, studydate')->from('#__bsms_studies')->where('id = ' . (int) $comment_study_id);
         $db->setQuery($query);
         $comment_details    = $db->loadObject();
         $comment_title      = $comment_details->studytitle;

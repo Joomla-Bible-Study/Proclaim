@@ -265,6 +265,13 @@ class CwmseriesdisplaysModel extends ListModel
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
 
+        // Get show_archived parameter from menu, fall back to template default
+        $showArchived = $params->get('show_archived', '');
+        if ($showArchived === '' || $showArchived === null) {
+            $showArchived = $params->get('default_show_archived', '0');
+        }
+        $this->setState('filter.show_archived', $showArchived);
+
         $this->setState('layout', $input->get('layout', '', 'cmd'));
         parent::populateState($ordering, $direction);
 
@@ -295,6 +302,7 @@ class CwmseriesdisplaysModel extends ListModel
         $id .= ':' . $this->getState('filter.access');
         $id .= ':' . $this->getState('filter.language');
         $id .= ':' . serialize($this->getState('filter.teacher'));
+        $id .= ':' . $this->getState('filter.show_archived');
 
         return parent::getStoreId($id);
     }
@@ -359,6 +367,20 @@ class CwmseriesdisplaysModel extends ListModel
             $type      = $this->getState('filter.teacher.include', true) ? ' = ' : ' <> ';
             $query->where($db->quoteName('se.teacher') . $type . ':teacher')
                 ->bind(':teacher', $teacher, ParameterType::INTEGER);
+        }
+
+        // Filter by published state based on show_archived parameter
+        $showArchived = $this->getState('filter.show_archived', '0');
+        switch ($showArchived) {
+            case '1': // Archived only
+                $query->where('se.published = 2');
+                break;
+            case '2': // Both published and archived
+                $query->where('se.published IN (1, 2)');
+                break;
+            default: // Published only (backward compatible)
+                $query->where('se.published = 1');
+                break;
         }
 
         //Filter by year

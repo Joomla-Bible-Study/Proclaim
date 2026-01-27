@@ -685,3 +685,19 @@ table span a,
 a:not([class]) {
     text-decoration: none;
 }
+
+/* ==========================================================================
+   Archive Display Styles
+   ========================================================================== */
+
+.proclaim-archive-badge {
+    font-size: 0.75rem;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+.proclaim-archive-notice {
+    margin-bottom: 1rem;
+}
+
+/* .proclaim-archived class is added to archived message rows for custom styling */

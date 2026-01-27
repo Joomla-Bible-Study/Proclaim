@@ -286,7 +286,7 @@ class CwmmessagesModel extends ListModel
         if (is_numeric($published)) {
             $query->where('study.published = ' . (int)$published);
         } elseif ($published === '') {
-            $query->where('(study.published = 0 OR study.published = 1)');
+            $query->where('(study.published = 0 OR study.published = 1 OR study.published = 2)');
         }
 
         // Filter by search in title.

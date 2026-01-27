@@ -16,6 +16,7 @@
 
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView;
 
 // Create shortcuts to some parameters.
@@ -50,7 +51,18 @@ if ($this->item->params->get('showpodcastsubscribedetails') === '1') {
                 } else {
                     echo $this->item->scripture1;
                 }
-            } ?>        </h1>
+                // Add archive badge if item is archived and badge is enabled
+                $showBadge = $this->item->params->get('show_archive_badge', '');
+                if ($showBadge === '' || $showBadge === null) {
+                    $showBadge = $this->item->params->get('default_show_archive_badge', '1');
+                }
+                if (isset($this->item->published) && (int)$this->item->published === 2
+                    && (int)$showBadge === 1) {
+                    echo ' <span class="badge bg-secondary proclaim-archive-badge">'
+                        . Text::_('JBS_CMN_ARCHIVE_BADGE') . '</span>';
+                }
+            } ?>
+        </h1>
     </div>
 <?php
 if ($this->item->params->get('showrelated') === '1') {

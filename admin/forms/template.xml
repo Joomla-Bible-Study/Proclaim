@@ -87,6 +87,19 @@
                 <option value="table-light">JBS_TPL_HEADER_LIGHT</option>
                 <option value="table-dark">JBS_TPL_HEADER_DARK</option>
             </field>
+            <field name="default_show_archived" type="list" default="2"
+                   label="JBS_TPL_DEFAULT_SHOW_ARCHIVED"
+                   description="JBS_TPL_DEFAULT_SHOW_ARCHIVED_DESC">
+                <option value="0">JBS_CMN_PUBLISHED_ONLY</option>
+                <option value="1">JBS_CMN_ARCHIVED_ONLY</option>
+                <option value="2">JBS_CMN_BOTH_PUBLISHED_ARCHIVED</option>
+            </field>
+            <field name="default_show_archive_badge" type="list" default="1"
+                   label="JBS_TPL_DEFAULT_SHOW_ARCHIVE_BADGE"
+                   description="JBS_TPL_DEFAULT_SHOW_ARCHIVE_BADGE_DESC">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
         </fieldset>
         <fieldset name="FILTERS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="lteacher_id" type="TeacherList" default="-1" multiple="true"

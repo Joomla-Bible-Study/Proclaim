@@ -51,7 +51,7 @@ class ProclaimHelper implements DatabaseAwareInterface
 
         $groups = [1];
 
-        if ($user) {
+if ($user !== null && !$user->guest) {
             $groups = $user->getAuthorisedViewLevels();
         }
 
@@ -206,9 +206,10 @@ class ProclaimHelper implements DatabaseAwareInterface
         $nowDate  = $db->quote((new Date('now', $app->get('offset')))->toSql(true));
 
         // Filter by start and end dates.
-        $canEdit = $user && ($user->authorise('core.edit.state', 'com_proclaim') || $user->authorise('core.edit', 'com_proclaim'));
+        $canEditState = $user !== null && $user->authorise('core.edit.state', 'com_proclaim');
+        $canEdit      = $user !== null && $user->authorise('core.edit', 'com_proclaim');
 
-        if (!$canEdit) {
+        if (!$canEditState && !$canEdit) {
             $query->where('(' . $db->quoteName('study.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('study.publish_up') . ' <= ' . $nowDate . ')')
                 ->where('(' . $db->quoteName('study.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('study.publish_down') . ' >= ' . $nowDate . ')');
         }

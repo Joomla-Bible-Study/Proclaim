@@ -462,6 +462,13 @@ class CwmsermonsModel extends ListModel
         $this->setState('filter.location', $location);
         $this->setState('filter.landinglocation', $location);
 
+        // Get show_archived parameter from menu, fall back to template default
+        $showArchived = $params->get('show_archived', '');
+        if ($showArchived === '' || $showArchived === null) {
+            $showArchived = $params->get('default_show_archived', '0');
+        }
+        $this->setState('filter.show_archived', $showArchived);
+
         parent::populateState($ordering, $direction);
 
         // Force a language
@@ -497,6 +504,7 @@ class CwmsermonsModel extends ListModel
         $id .= ':' . $this->getState('filter.access');
         $id .= ':' . $this->getState('filter.language');
         $id .= ':' . $this->getState('filter.search');
+        $id .= ':' . $this->getState('filter.show_archived');
 
         return parent::getStoreId($id);
     }
@@ -593,8 +601,19 @@ class CwmsermonsModel extends ListModel
         $query->where('(series.access IN (' . $groups . ') or study.series_id <= 0)');
         $query->where('study.access IN (' . $groups . ')');
 
-        // Select only published studies
-        $query->where('study.published = 1');
+        // Filter by published state based on show_archived parameter
+        $showArchived = $this->getState('filter.show_archived', '0');
+        switch ($showArchived) {
+            case '1': // Archived only
+                $query->where('study.published = 2');
+                break;
+            case '2': // Both published and archived
+                $query->where('study.published IN (1, 2)');
+                break;
+            default: // Published only (backward compatible)
+                $query->where('study.published = 1');
+                break;
+        }
         $query->where('(series.published = 1 or study.series_id <= 0)');
 
         // Define null and now dates
