@@ -22,7 +22,8 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\Database\DatabaseInterface;
-use JoomlaFilesystem\Folder;
+use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\File;
 
 /**
  * Database Helper class for version 7.1.0
@@ -253,7 +254,7 @@ class CwmdbHelper
      * @param   string  $table  table is the table you are checking
      * @param   string  $field  field you are checking
      *
-     * @return bool
+     * @return boolean
      *
      * @throws \Exception
      * @since 7.0
@@ -336,7 +337,7 @@ class CwmdbHelper
      * @throws  \Exception
      * @since   7.1.0
      */
-    public static function fixupcss(string $filename, bool $parent, string $newcss, ?int $id = null)
+    public static function fixupcss(string $filename, bool $parent, string $newcss, ?int $id = null): bool
     {
         $app = Factory::getApplication();
 
@@ -428,7 +429,7 @@ class CwmdbHelper
      *
      * @since 7.0
      */
-    public static function reloadtable(object $result, string $table = 'Style')
+    public static function reloadtable(object $result, string $table = 'Style'): bool
     {
         $db = Factory::getContainer()->get('DatabaseDriver');
 
@@ -464,8 +465,6 @@ class CwmdbHelper
     {
         $app = Factory::getApplication();
         $db  = Factory::getContainer()->get('DatabaseDriver');
-        jimport('joomla.filesystem.folder');
-        jimport('joomla.filesystem.file');
         $path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_proclaim/sql';
 
         $files = str_replace('.sql', '', Folder::files($path, '\.sql$'));
@@ -473,7 +472,7 @@ class CwmdbHelper
 
         if ($install === true) {
             foreach ($files as $a => $file) {
-                if (strpos($file, 'uninstall') !== false) {
+                if (str_contains($file, 'uninstall')) {
                     unset($files[$a]);
                 }
             }
