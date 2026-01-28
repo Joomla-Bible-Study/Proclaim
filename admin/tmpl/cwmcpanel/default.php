@@ -14,6 +14,7 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -37,6 +38,48 @@ if ($msg) {
 }
 
 $simple = Cwmhelper::getSimpleView();
+
+// Check for guided tours
+$tourHelper = new CwmguidedtourHelper();
+$hasTour    = false;
+if ($tourHelper->supportsGuidedTours()) {
+    // Ensure tours and messages are registered
+    $tourHelper->registerAll();
+
+    $tourId = $tourHelper->getTourId('com_proclaim_whats_new_10_1');
+    if ($tourId) {
+        $hasTour = true;
+        // Check if the asset exists before trying to use it
+        if ($wa->getRegistry()->exists('script', 'com_guidedtours.tour')) {
+            $wa->useScript('com_guidedtours.tour');
+            $this->document->addScriptOptions('guidedtours', ['tourId' => $tourId]);
+        }
+    }
+}
+
+// Check for startTour parameter
+$startTour = $input->getInt('startTour', 0);
+if ($startTour && $hasTour) {
+    $tourId = $tourHelper->getTourId('com_proclaim_whats_new_10_1');
+    if ($tourId) {
+        // Force start the tour
+        $wa->addInlineScript('
+            document.addEventListener("DOMContentLoaded", function() {
+                setTimeout(function() {
+                    if (typeof Joomla !== "undefined" && Joomla.guidedTours) {
+                        Joomla.guidedTours.startTour(' . $tourId . ');
+                    } else {
+                        // Fallback: try to click the button if it exists
+                        const btn = document.querySelector(".button-start-guidedtour[data-gt-uid=\'com_proclaim_whats_new_10_1\']");
+                        if (btn) {
+                            btn.click();
+                        }
+                    }
+                }, 500);
+            });
+        ');
+    }
+}
 ?>
 <!-- Header -->
 <form action="<?php
@@ -115,6 +158,14 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             <div class="cpanel-version">
                 <strong><?php echo Text::_('JBS_CPL_VERSION_INFORMATION'); ?></strong>
                 <div><?php echo $this->xml->version . ' (' . $this->xml->creationDate . ')'; ?></div>
+                <?php if ($hasTour) : ?>
+                    <div class="mt-2">
+                        <button class="btn btn-info btn-sm button-start-guidedtour" type="button" data-gt-uid="com_proclaim_whats_new_10_1">
+                            <span class="icon-location" aria-hidden="true"></span>
+                            <?php echo Text::_('COM_PROCLAIM_TOUR_START_BUTTON'); ?>
+                        </button>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
         <div class="col-lg-8 cpanel-intro">

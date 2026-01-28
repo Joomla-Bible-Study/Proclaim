@@ -13,7 +13,7 @@
 \defined('_JEXEC') or die;
 
 // Always load Proclaim API if it exists.
-$api = '../components/com_proclaim/api.php';
+$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
 if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
     require_once $api;
@@ -32,7 +32,7 @@ use Joomla\Registry\Registry;
  *
  * @return  bool
  *
- * @since   10.2.0
+ * @since   10.1.0
  */
 function admin_postinstall_archivedmessages_condition(): bool
 {
@@ -67,7 +67,7 @@ function admin_postinstall_archivedmessages_condition(): bool
  * @return  void
  *
  * @throws \Exception
- * @since   10.2.0
+ * @since   10.1.0
  */
 function admin_postinstall_archivedmessages_action(): void
 {

@@ -10,6 +10,7 @@
  * @link           https://www.christianwebministries.org
  * */
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
 use Joomla\CMS\Installer\Adapter\FileAdapter;
@@ -17,8 +18,8 @@ use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Installer\InstallerAdapter;
 use Joomla\CMS\Installer\InstallerScript;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\Session\Session;
-use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
@@ -621,7 +622,7 @@ class com_proclaimInstallerScript extends InstallerScript
                                 echo ' ' . ($module['result'] ? Text::_('JBS_INS_REMOVED') : Text::_(
                                     'JBS_INS_NOT_REMOVED'
                                 ));
-                    ?>
+                                ?>
                             </strong>
                         </td>
                     </tr>
@@ -654,7 +655,7 @@ class com_proclaimInstallerScript extends InstallerScript
                                 echo '' . ($plugin['result'] ? Text::_('JBS_INS_REMOVED') : Text::_(
                                     'JBS_INS_NOT_REMOVED'
                                 ));
-                    ?>
+                                ?>
                             </strong>
                         </td>
                     </tr>
@@ -686,20 +687,46 @@ class com_proclaimInstallerScript extends InstallerScript
         // Install subExtensions
         $this->installSubExtensions($parent);
 
+        // Copy language files to the system folder
+        $this->copyLanguageFiles();
+
         // Show the post-installation page
         $this->renderPostInstallation($this->status, $parent);
 
-        //Remove old com_biblestudy menu items on admin side
+        //Remove old com_biblestudy menu items on the admin side
         $this->removeBibleStudyVersion($parent);
 
         if ($type === 'install') {
-            // A redirect to a new location after the installation is completed.
-            $parent->getParent()->setRedirectURL(
-                Uri::base() .
-                'index.php?option=com_proclaim&view=cwminstall&task=cwminstall.browse&scanstate=start&' .
-                Session::getFormToken() . '=1'
-            );
+            // This is a fresh install. Register for the guided tour directly.
+            try {
+                $helperPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Helper/CwmguidedtourHelper.php';
+                if (file_exists($helperPath)) {
+                    require_once $helperPath;
+                    $tourHelper = new CwmguidedtourHelper();
+                    $tours      = $tourHelper->registerGuidedTours();
+                    $messages   = $tourHelper->registerPostInstallMessages();
+
+                    if ($tours > 0) {
+                        Factory::getApplication()->enqueueMessage($tours . ' guided tour(s) have been installed.', 'message');
+                    } else {
+                        Factory::getApplication()->enqueueMessage('No new guided tours were installed.', 'notice');
+                    }
+
+                    if ($messages > 0) {
+                        Factory::getApplication()->enqueueMessage($messages . ' post-installation message(s) have been installed.', 'message');
+                    }
+                } else {
+                    Factory::getApplication()->enqueueMessage('Guided tour helper file not found.', 'warning');
+                }
+            } catch (\Exception $e) {
+                Factory::getApplication()->enqueueMessage('Failed to register guided tour: ' . $e->getMessage(), 'error');
+            }
         }
+        // For updates, we use the migration process
+        $parent->getParent()->setRedirectURL(
+            'index.php?option=com_proclaim&view=cwminstall&task=cwminstall.browse&scanstate=start&' .
+            Session::getFormToken() . '=1'
+        );
     }
 
     /**
@@ -717,8 +744,6 @@ class com_proclaimInstallerScript extends InstallerScript
         $this->status          = new stdClass();
         $this->status->modules = [];
         $this->status->plugins = [];
-
-        $this->cleanupLanguageFiles();
 
         // Modules installation
         if (!empty(self::$installActionQueue['modules'])) {
@@ -740,32 +765,49 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
-     * Clean up old installed language files
+     * Copy language files to the system folder
      *
      * @return void
      * @since 10.1.0
      */
-    private function cleanupLanguageFiles(): void
+    private function copyLanguageFiles(): void
     {
-        $languages = [
-            "en-GB.com_proclaim.ini",
-            "en-GB.com_proclaim.sys.ini",
-            "en-GB.mod_proclaim.ini",
-            "en-GB.mod_proclaim.sys.ini",
-            "en-GB.mod_proclaim_podcast.ini",
-            "en-GB.mod_proclaim_podcast.sys.ini",
-            "en-GB.plg_proclaim.ini",
-            "en-GB.plg_proclaim.sys.ini",
-            "en-GB.plg_finder_proclaim.ini",
-            "en-GB.plg_finder_proclaim.sys.ini",
-        ];
+        $src  = JPATH_ADMINISTRATOR . '/components/com_proclaim/language';
+        $dest = JPATH_ADMINISTRATOR . '/language';
 
-        foreach ($languages as $language) {
-            if (file_exists(JPATH_ADMINISTRATOR . "/language/en-GB/$language")) {
-                File::delete(JPATH_ADMINISTRATOR . "/language/en-GB/$language");
+        if (!Folder::exists($src)) {
+            Log::add('Language source folder not found: ' . $src, Log::WARNING, 'com_proclaim');
+            return;
+        }
+
+        $folders = Folder::folders($src);
+
+        if (empty($folders)) {
+            Log::add('No language folders found in: ' . $src, Log::WARNING, 'com_proclaim');
+            return;
+        }
+
+        foreach ($folders as $folder) {
+            $targetDir = $dest . '/' . $folder;
+
+            if (!Folder::exists($targetDir)) {
+                Folder::create($targetDir);
             }
-            if (file_exists(JPATH_ROOT . "/language/en-GB/$language")) {
-                File::delete(JPATH_ROOT . "/language/en-GB/$language");
+
+            $files = Folder::files($src . '/' . $folder);
+            foreach ($files as $file) {
+                $srcFile  = $src . '/' . $folder . '/' . $file;
+                $destFile = $targetDir . '/' . $file;
+
+                try {
+                    if (File::copy($srcFile, $destFile)) {
+                        Log::add('Copied language file: ' . $file, Log::INFO, 'com_proclaim');
+                    } else {
+                        Log::add('Failed to copy language file: ' . $file, Log::WARNING, 'com_proclaim');
+                    }
+                } catch (\Exception $e) {
+                    Log::add('Exception copying language file: ' . $file . ' - ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
+                }
             }
         }
     }

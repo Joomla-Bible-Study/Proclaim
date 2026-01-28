@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmcpanel;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use CWM\Component\Proclaim\Administrator\Model\CwmcpanelModel;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -90,7 +91,7 @@ class HtmlView extends BaseHtmlView
         $this->total_messages = Cwmstats::getTotalMessages();
 
         $this->hasPostInstallationMessages = $model->hasPostInstallMessages();
-        $this->extension_id                = (int)$this->state->get('extension_id', 0, 'int');
+        $this->extension_id                = ComponentHelper::getComponent('com_proclaim')->id;
 
         // Display the template
         parent::display($tpl);

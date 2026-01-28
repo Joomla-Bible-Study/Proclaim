@@ -66,12 +66,13 @@ class CwmguidedtourHelper
             'language'    => '*',
             'note'        => '',
             'uid'         => 'com_proclaim_whats_new_10_1',
+            'autostart'   => false,
             'steps'       => [
                 // Welcome step
                 [
                     'title'       => 'COM_PROCLAIM_TOUR_WELCOME_TITLE',
                     'description' => 'COM_PROCLAIM_TOUR_WELCOME_DESC',
-                    'position'    => 'bottom',
+                    'position'    => 'center',
                     'target'      => '',
                     'type'        => 0,
                     'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
@@ -83,43 +84,43 @@ class CwmguidedtourHelper
                     'position'    => 'bottom',
                     'target'      => '',
                     'type'        => 0,
-                    'url'         => '',
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
                 ],
                 // Archived Messages Feature - Step 2
                 [
                     'title'       => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP2_TITLE',
                     'description' => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP2_DESC',
-                    'position'    => 'bottom',
-                    'target'      => '.sidebar-nav a[href*="cwmmessages"]',
+                    'position'    => 'right',
+                    'target'      => 'a[href*="view=cwmmessages"]',
                     'type'        => 1,
-                    'url'         => '',
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
                 ],
                 // Archived Messages Feature - Step 3
                 [
                     'title'       => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP3_TITLE',
                     'description' => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP3_DESC',
                     'position'    => 'bottom',
-                    'target'      => '#filter_published',
-                    'type'        => 1,
+                    'target'      => '.js-stools-container-bar',
+                    'type'        => 0,
                     'url'         => 'administrator/index.php?option=com_proclaim&view=cwmmessages',
                 ],
                 // Archived Messages Feature - Step 4
                 [
                     'title'       => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP4_TITLE',
                     'description' => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP4_DESC',
-                    'position'    => 'bottom',
-                    'target'      => '.sidebar-nav a[href*="cwmtemplates"]',
+                    'position'    => 'right',
+                    'target'      => 'a[href*="view=cwmtemplates"]',
                     'type'        => 1,
-                    'url'         => '',
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmmessages',
                 ],
                 // Archived Messages Feature - Step 5
                 [
                     'title'       => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP5_TITLE',
                     'description' => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP5_DESC',
-                    'position'    => 'center',
-                    'target'      => '',
+                    'position'    => 'top',
+                    'target'      => '#adminForm',
                     'type'        => 0,
-                    'url'         => '',
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmtemplates',
                 ],
                 // Layout Editor - Step 1
                 [
@@ -128,24 +129,24 @@ class CwmguidedtourHelper
                     'position'    => 'center',
                     'target'      => '',
                     'type'        => 0,
-                    'url'         => '',
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmtemplates',
                 ],
                 // Layout Editor - Step 2
                 [
                     'title'       => 'COM_PROCLAIM_TOUR_LAYOUT_STEP2_TITLE',
                     'description' => 'COM_PROCLAIM_TOUR_LAYOUT_STEP2_DESC',
                     'position'    => 'bottom',
-                    'target'      => '#myTabTabs button[data-bs-target*="layout"]',
-                    'type'        => 1,
+                    'target'      => '#myTabTabs',
+                    'type'        => 0,
                     'url'         => 'administrator/index.php?option=com_proclaim&view=cwmtemplate&layout=edit&id=1',
                 ],
                 // CPanel Improvements - Step 1
                 [
                     'title'       => 'COM_PROCLAIM_TOUR_CPANEL_STEP1_TITLE',
                     'description' => 'COM_PROCLAIM_TOUR_CPANEL_STEP1_DESC',
-                    'position'    => 'bottom',
-                    'target'      => '.cpanel-links',
-                    'type'        => 1,
+                    'position'    => 'top',
+                    'target'      => '.cpanel-buttons',
+                    'type'        => 0,
                     'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
                 ],
                 // CPanel Improvements - Step 2 (Dark Mode)
@@ -155,7 +156,7 @@ class CwmguidedtourHelper
                     'position'    => 'center',
                     'target'      => '',
                     'type'        => 0,
-                    'url'         => '',
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
                 ],
                 // Accessibility Improvements
                 [
@@ -164,7 +165,7 @@ class CwmguidedtourHelper
                     'position'    => 'center',
                     'target'      => '',
                     'type'        => 0,
-                    'url'         => '',
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
                 ],
                 // Closing step
                 [
@@ -173,7 +174,7 @@ class CwmguidedtourHelper
                     'position'    => 'center',
                     'target'      => '',
                     'type'        => 0,
-                    'url'         => '',
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
                 ],
             ],
         ],
@@ -195,7 +196,17 @@ class CwmguidedtourHelper
             'action'             => 'admin_postinstall_archivedmessages_action',
             'condition_file'     => 'admin://components/com_proclaim/postinstall/archivedmessages.php',
             'condition_method'   => 'admin_postinstall_archivedmessages_condition',
-            'version_introduced' => '10.2.0',
+            'version_introduced' => '10.1.0',
+        ],
+        'whats_new_tour' => [
+            'title_key'          => 'COM_PROCLAIM_TOUR_WHATS_NEW_TITLE',
+            'description_key'    => 'COM_PROCLAIM_TOUR_WHATS_NEW_DESC',
+            'action_key'         => 'COM_PROCLAIM_TOUR_START_BUTTON',
+            'type'               => 'link',
+            'action'             => 'index.php?option=com_proclaim&view=cwmcpanel&startTour=1',
+            'condition_file'     => 'admin://components/com_proclaim/postinstall/whatsnewtour.php',
+            'condition_method'   => 'admin_postinstall_whatsnewtour_condition',
+            'version_introduced' => '10.1.0',
         ],
     ];
 
@@ -361,6 +372,30 @@ class CwmguidedtourHelper
     }
 
     /**
+     * Get tour ID by UID.
+     *
+     * @param   string  $uid  Tour UID
+     *
+     * @return  int  Tour ID or 0 if not found
+     *
+     * @since   10.2.0
+     */
+    public function getTourId(string $uid): int
+    {
+        if (!$this->supportsGuidedTours()) {
+            return 0;
+        }
+
+        $query = $this->db->getQuery(true)
+            ->select('id')
+            ->from($this->db->quoteName('#__guidedtours'))
+            ->where($this->db->quoteName('uid') . ' = ' . $this->db->quote($uid));
+        $this->db->setQuery($query);
+
+        return (int) $this->db->loadResult();
+    }
+
+    /**
      * Check if a tour already exists.
      *
      * @param   string  $uid  Tour UID
@@ -422,13 +457,14 @@ class CwmguidedtourHelper
             $tourObj = (object) [
                 'title'       => $tour['title'],
                 'description' => $tour['description'],
-                'extensions'  => json_encode($tour['extensions']),
+                'extensions'  => json_encode($tour['extensions'], JSON_THROW_ON_ERROR),
                 'url'         => $tour['url'],
                 'published'   => $tour['published'],
                 'access'      => $tour['access'],
                 'language'    => $tour['language'],
                 'note'        => $tour['note'],
                 'uid'         => $tour['uid'],
+                'autostart'   => $tour['autostart'] ?? false,
                 'created'     => Factory::getDate()->toSql(),
                 'created_by'  => 0,
             ];
@@ -440,6 +476,12 @@ class CwmguidedtourHelper
             $ordering = 1;
 
             foreach ($tour['steps'] as $step) {
+                // Ensure URL is correct for admin side
+                $url = $step['url'];
+                if (!empty($url) && strpos($url, 'administrator/') !== 0 && strpos($url, 'http') !== 0) {
+                    $url = 'administrator/' . $url;
+                }
+
                 $stepObj = (object) [
                     'tour_id'     => $tourId,
                     'title'       => $step['title'],
@@ -447,7 +489,7 @@ class CwmguidedtourHelper
                     'position'    => $step['position'],
                     'target'      => $step['target'],
                     'type'        => $step['type'],
-                    'url'         => $step['url'],
+                    'url'         => $url,
                     'published'   => 1,
                     'language'    => '*',
                     'ordering'    => $ordering++,

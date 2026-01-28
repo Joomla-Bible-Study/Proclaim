@@ -342,6 +342,13 @@ class CwminstallModel extends ListModel
                     }
                 }
             }
+        } else {
+            // New Install
+            // Add guided tours to the finish steps
+            if (!in_array('registerguidedtours', $this->finish)) {
+                $this->finish[] = 'registerguidedtours';
+                $this->totalSteps++;
+            }
         }
 
         $this->isimport = Factory::getApplication()->getInput()->getInt('cwmalt', 0);
@@ -1333,6 +1340,10 @@ class CwminstallModel extends ListModel
             '<h2>' . Text::_('JBS_INS_UNINSTALLED') . ' ' .
             BIBLESTUDY_VERSION . '</h2> <div>' . $drop_result . '</div>'
         );
+
+        // Remove Guided Tours
+        $tourHelper = new CwmguidedtourHelper();
+        $tourHelper->removeAllTours();
 
         return true;
     }
