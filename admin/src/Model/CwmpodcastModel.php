@@ -38,7 +38,7 @@ class CwmpodcastModel extends AdminModel
      * @var        string    The prefix to use with controller messages.
      * @since    1.6
      */
-    protected $text_prefix = 'com_proclaim';
+    protected string $text_prefix = 'com_proclaim';
 
     /**
      * Allowed batch commands
@@ -46,7 +46,7 @@ class CwmpodcastModel extends AdminModel
      * @var array
      * @since 10.0.0
      */
-    protected $batch_commands = [
+    protected array $batch_commands = [
         'assetgroup_id' => 'batchAccess',
         'language_id'   => 'batchLanguage',
         'linkType'      => 'batchLinkType',

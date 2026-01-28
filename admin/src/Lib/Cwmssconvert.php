@@ -28,7 +28,7 @@ use Joomla\CMS\Uri\Uri;
  */
 class Cwmssconvert
 {
-    private $serverid;
+    private int $serverid;
 
     /**
      * function to convert SermonSpeaker
