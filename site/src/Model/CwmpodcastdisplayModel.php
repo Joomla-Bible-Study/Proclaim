@@ -36,7 +36,7 @@ class CwmpodcastdisplayModel extends ItemModel
      *
      * @since 7.0
      */
-    protected $context = 'com_proclaim.podcastdisplay';
+    protected string $context = 'com_proclaim.podcastdisplay';
 
     /**
      * Method to get study data.

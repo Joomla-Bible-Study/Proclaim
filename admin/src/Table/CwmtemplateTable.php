@@ -108,7 +108,7 @@ class CwmtemplateTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public $created = null;
+    public ?string $created = null;
 
     /**
      * Created by user ID
@@ -116,7 +116,7 @@ class CwmtemplateTable extends Table
      * @var int
      * @since 10.1.0
      */
-    public $created_by = null;
+    public ?int $created_by = null;
 
     /**
      * Created by alias
@@ -124,7 +124,7 @@ class CwmtemplateTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public $created_by_alias = '';
+    public string $created_by_alias = '';
 
     /**
      * Modified date
@@ -132,7 +132,7 @@ class CwmtemplateTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public $modified = null;
+    public ?string $modified = null;
 
     /**
      * Modified by user ID
@@ -140,7 +140,7 @@ class CwmtemplateTable extends Table
      * @var int
      * @since 10.1.0
      */
-    public $modified_by = null;
+    public ?int $modified_by = null;
 
     /**
      * Contractor
