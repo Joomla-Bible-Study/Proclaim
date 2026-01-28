@@ -468,7 +468,7 @@ class CwmmessageTable extends Table
      * @link    https://docs.joomla.org/JTable/store
      * @since   11.1
      */
-    public function store($updateNulls = false)
+    public function store($updateNulls = false): bool
     {
         if (!$this->_rules) {
             $this->setRules(
@@ -486,7 +486,7 @@ class CwmmessageTable extends Table
      *
      * @since 9.0.0
      */
-    public function ordering()
+    public function ordering(): void
     {
         // No Data
     }
@@ -528,7 +528,7 @@ class CwmmessageTable extends Table
      *
      * @since  1.6
      */
-    protected function _getAssetName()
+    protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
 
@@ -542,7 +542,7 @@ class CwmmessageTable extends Table
      *
      * @since  1.6
      */
-    protected function _getAssetTitle()
+    protected function _getAssetTitle(): string
     {
         return 'JBS Message: ' . $this->studytitle;
     }

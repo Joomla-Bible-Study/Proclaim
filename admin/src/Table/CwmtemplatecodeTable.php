@@ -289,7 +289,7 @@ class CwmtemplatecodeTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetName()
+    protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
 
@@ -303,7 +303,7 @@ class CwmtemplatecodeTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetTitle()
+    protected function _getAssetTitle(): string
     {
         return 'JBS Templatecode ' . $this->filename;
     }

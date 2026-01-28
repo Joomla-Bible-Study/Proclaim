@@ -227,7 +227,7 @@ class CwmserverTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetTitle()
+    protected function _getAssetTitle(): string
     {
         return 'JBS Server: ' . $this->server_name;
     }
