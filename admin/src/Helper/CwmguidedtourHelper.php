@@ -121,6 +121,24 @@ class CwmguidedtourHelper
                     'type'        => 0,
                     'url'         => '',
                 ],
+                // Layout Editor - Step 1
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_LAYOUT_STEP1_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_LAYOUT_STEP1_DESC',
+                    'position'    => 'center',
+                    'target'      => '',
+                    'type'        => 0,
+                    'url'         => '',
+                ],
+                // Layout Editor - Step 2
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_LAYOUT_STEP2_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_LAYOUT_STEP2_DESC',
+                    'position'    => 'bottom',
+                    'target'      => '#myTabTabs button[data-bs-target*="layout"]',
+                    'type'        => 1,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmtemplate&layout=edit&id=1',
+                ],
                 // CPanel Improvements - Step 1
                 [
                     'title'       => 'COM_PROCLAIM_TOUR_CPANEL_STEP1_TITLE',
