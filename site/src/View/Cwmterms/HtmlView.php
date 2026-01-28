@@ -123,7 +123,7 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0.0
      */
-    protected function prepareDocument()
+    protected function prepareDocument(): void
     {
         $app   = Factory::getApplication();
         $menus = $app->getMenu();

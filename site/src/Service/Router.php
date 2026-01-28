@@ -260,7 +260,7 @@ class Router extends RouterView
      * @return  mixed   The id of this item or false
      * @since  10.0.0
      */
-    public function getCWMSermonsId(string $segment, array $query)
+    public function getCWMSermonsId(string $segment, array $query): mixed
     {
         return $this->getCWMSermonId($segment, $query);
     }

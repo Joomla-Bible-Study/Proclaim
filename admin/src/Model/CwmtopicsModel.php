@@ -83,7 +83,7 @@ class CwmtopicsModel extends ListModel
      *
      * @since   7.0
      */
-    protected function populateState($ordering = 'topic.topic_text', $direction = 'ASC')
+    protected function populateState($ordering = 'topic.topic_text', $direction = 'ASC'): void
     {
         // Adjust the context to support modal layouts.
         $input  = new Input();
@@ -127,7 +127,7 @@ class CwmtopicsModel extends ListModel
      * @return \Joomla\Database\QueryInterface
      * @since   7.0
      */
-    protected function getListQuery()
+    protected function getListQuery(): mixed
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);

@@ -139,7 +139,7 @@ class CwmtemplatesModel extends ListModel
      *
      * @since   7.0
      */
-    protected function getListQuery()
+    protected function getListQuery(): mixed
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);

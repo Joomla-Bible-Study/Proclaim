@@ -113,7 +113,7 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 9.2.4
      */
-    public function getShowHide($showIt, $showIt_phrase, $i)
+    public function getShowHide($showIt, $showIt_phrase, $i): string
     {
         // End Switch
         if ($this->params->get('landing' . $showIt . 'limit')) {

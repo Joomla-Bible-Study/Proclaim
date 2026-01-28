@@ -904,7 +904,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    private function insertPodcast($pi)
+    private function insertPodcast($pi): mixed
     {
         $podtest = 0;
         $db      = Factory::getContainer()->get('DatabaseDriver');
@@ -1052,7 +1052,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    private function checkMedia($includemedia, $pi, $podcast)
+    private function checkMedia($includemedia, $pi, $podcast): mixed
     {
         //check for which media to include
         if ($includemedia == 'all') {
@@ -1107,7 +1107,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    private function insertMediaRecord($mediafiles)
+    private function insertMediaRecord($mediafiles): bool
     {
         $db = Factory::getContainer()->get('DatabaseDriver');
         if (!$db->insertObject('#__bsms_mediafiles', $mediafiles, 'id')) {
@@ -1127,7 +1127,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    private function insertComments($oldid, $newid)
+    private function insertComments($oldid, $newid): bool
     {
         if (!$this->picomments) {
             return false;

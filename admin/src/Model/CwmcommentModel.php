@@ -52,7 +52,7 @@ class CwmcommentModel extends AdminModel
      *
      * @since 7.0.1
      */
-    public function save($data)
+    public function save($data): bool
     {
         if (parent::save($data)) {
             return true;
@@ -70,7 +70,7 @@ class CwmcommentModel extends AdminModel
      *
      * @since   11.1
      */
-    public function checkout($pk = null)
+    public function checkout($pk = null): mixed
     {
         return $pk;
     }
@@ -86,7 +86,7 @@ class CwmcommentModel extends AdminModel
      * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = [], $loadData = true)
+    public function getForm($data = [], $loadData = true): mixed
     {
         // Get the form.
         $form = $this->loadForm('com_proclaim.comment', 'comment', ['control' => 'jform', 'load_data' => $loadData]);
@@ -138,7 +138,7 @@ class CwmcommentModel extends AdminModel
      * @throws \Exception
      * @since    11.1
      */
-    protected function batchCopy($value, $pks, $contexts)
+    protected function batchCopy($value, $pks, $contexts): array|bool
     {
         $categoryId = (int)'';
         $newIds     = [];
@@ -239,7 +239,7 @@ class CwmcommentModel extends AdminModel
      *
      * @since    1.6
      */
-    protected function cleanCache($group = null, $client_id = 0)
+    protected function cleanCache($group = null, $client_id = 0): void
     {
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');
@@ -255,7 +255,7 @@ class CwmcommentModel extends AdminModel
      * @throws \Exception
      * @since    1.6
      */
-    protected function canDelete($record)
+    protected function canDelete($record): bool
     {
         if (!empty($record->id)) {
             if ($record->published != -2) {
@@ -281,7 +281,7 @@ class CwmcommentModel extends AdminModel
      * @throws \Exception
      * @since    1.6
      */
-    protected function canEditState($record)
+    protected function canEditState($record): bool
     {
         $user = Factory::getApplication()->getSession()->get('user');
 

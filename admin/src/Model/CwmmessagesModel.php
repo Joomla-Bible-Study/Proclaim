@@ -121,7 +121,7 @@ class CwmmessagesModel extends ListModel
      * @throws \Exception
      * @since 7.1.0
      */
-    protected function populateState($ordering = 'study.studydate', $direction = 'desc')
+    protected function populateState($ordering = 'study.studydate', $direction = 'desc'): void
     {
         $app = Factory::getApplication();
 
@@ -199,7 +199,7 @@ class CwmmessagesModel extends ListModel
      * @throws \Exception
      * @since   7.0
      */
-    protected function getListQuery()
+    protected function getListQuery(): mixed
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
