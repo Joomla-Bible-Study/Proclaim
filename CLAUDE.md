@@ -120,3 +120,15 @@ This project follows **PSR-12** coding standards. All code must pass PHP CS Fixe
    builder.joomla_path=/path/to/your/joomla
    ```
 2. Run `./libraries/vendor/bin/phing dev.Setup_Symbolic_Links` to symlink component to Joomla
+
+## Documentation
+
+All project documentation is maintained in the **Proclaim.wiki** repository, not in this main repository.
+
+- **Wiki location**: `../Proclaim.wiki/` (sibling directory)
+- **GitHub**: https://github.com/Joomla-Bible-Study/Proclaim/wiki
+
+When updating documentation:
+- Release notes go in wiki as `Whats-New-X.X.md`
+- Update `Tasks.md` when features are completed
+- Keep this repo's `README.md` minimal - link to wiki for details

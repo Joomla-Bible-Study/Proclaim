@@ -121,7 +121,33 @@ class CwmguidedtourHelper
                     'type'        => 0,
                     'url'         => '',
                 ],
-                // Add more feature steps here for future releases
+                // CPanel Improvements - Step 1
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_CPANEL_STEP1_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_CPANEL_STEP1_DESC',
+                    'position'    => 'bottom',
+                    'target'      => '.cpanel-links',
+                    'type'        => 1,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+                ],
+                // CPanel Improvements - Step 2 (Dark Mode)
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_CPANEL_STEP2_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_CPANEL_STEP2_DESC',
+                    'position'    => 'center',
+                    'target'      => '',
+                    'type'        => 0,
+                    'url'         => '',
+                ],
+                // Accessibility Improvements
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_A11Y_STEP1_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_A11Y_STEP1_DESC',
+                    'position'    => 'center',
+                    'target'      => '',
+                    'type'        => 0,
+                    'url'         => '',
+                ],
                 // Closing step
                 [
                     'title'       => 'COM_PROCLAIM_TOUR_COMPLETE_TITLE',

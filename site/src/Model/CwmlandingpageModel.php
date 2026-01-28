@@ -94,8 +94,8 @@ class CwmlandingpageModel extends ListModel
         $this->setState('administrator', $admin);
 
         // Get show_archived parameter, fall back to template default
-        $app = Factory::getApplication();
-        $menuParams = $app->getParams();
+        $app          = Factory::getApplication();
+        $menuParams   = $app->getParams();
         $showArchived = $menuParams->get('show_archived', '');
         if ($showArchived === '' || $showArchived === null) {
             $showArchived = $params->get('default_show_archived', '0');
