@@ -38,7 +38,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $commentsids;
+    public array $commentsids;
 
     /**
      * Array of Servers Id's
@@ -47,7 +47,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $serversids;
+    public array $serversids;
 
     /**
      * Array of Folders Id's
@@ -56,7 +56,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $foldersids;
+    public array $foldersids;
 
     /**
      * Array of Studies Id's
@@ -65,7 +65,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $studiesids;
+    public array $studiesids;
 
     /**
      * Array of Media-Files Id's
@@ -74,7 +74,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $mediafilesids;
+    public array $mediafilesids;
 
     /**
      * Array of Teachers Id's
@@ -83,7 +83,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $teachersids;
+    public array $teachersids;
 
     /**
      * Array of Series Id's
@@ -92,7 +92,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $seriesids;
+    public array $seriesids;
 
     /**
      * Array of Podcasts Id's
@@ -101,7 +101,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $podcastids;
+    public array $podcastids;
 
     /**
      * Array of Locations
@@ -110,7 +110,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $locations;
+    public array $locations;
 
     /**
      * ???
@@ -119,7 +119,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $cnoadd;
+    public int $cnoadd;
 
     /**
      * Can Add switch
@@ -128,7 +128,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $cadd;
+    public int $cadd;
 
     /**
      * Comment object
@@ -137,7 +137,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $picomments;
+    public object $picomments;
 
     /**
      * Number of Podcasts
@@ -146,7 +146,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $podcasts;
+    public int $podcasts;
 
     /**
      * Convert PreachIT

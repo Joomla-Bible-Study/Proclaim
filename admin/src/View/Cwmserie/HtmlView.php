@@ -39,7 +39,7 @@ class HtmlView extends BaseHtmlView
      * @var object
      * @since    7.0.0
      */
-    public $canDo;
+    public object $canDo;
 
     /**
      * Form
@@ -47,7 +47,7 @@ class HtmlView extends BaseHtmlView
      * @var object
      * @since    7.0.0
      */
-    protected $form;
+    protected object $form;
 
     /**
      * Item
@@ -55,7 +55,7 @@ class HtmlView extends BaseHtmlView
      * @var object
      * @since    7.0.0
      */
-    protected $item;
+    protected object $item;
 
     /**
      * Admin
@@ -63,7 +63,7 @@ class HtmlView extends BaseHtmlView
      * @var Registry
      * @since    7.0.0
      */
-    protected $admin_params;
+    protected Registry $admin_params;
 
     /**
      * Execute and display a template script.

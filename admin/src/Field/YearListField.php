@@ -34,7 +34,7 @@ class YearListField extends ListField
      *
      * @since 9.0.0
      */
-    protected $type = 'YearList';
+    protected string $type = 'YearList';
 
     /**
      * Method to get a list of options for a list input.
