@@ -95,7 +95,7 @@ class CwmpodcastsModel extends ListModel
      *
      * @since   7.0
      */
-    protected function populateState($ordering = 'podcast.title', $direction = 'ASC')
+    protected function populateState($ordering = 'podcast.title', $direction = 'ASC'): void
     {
         $app = Factory::getApplication();
 
@@ -139,7 +139,7 @@ class CwmpodcastsModel extends ListModel
      * @throws \Exception
      * @since   7.0
      */
-    protected function getListQuery()
+    protected function getListQuery(): mixed
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);

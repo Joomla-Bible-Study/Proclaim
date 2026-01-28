@@ -102,7 +102,7 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
-    public function display($tpl = null)
+    public function display($tpl = null): void
     {
         $this->form       = $this->get("Form");
         $this->item       = $this->get("Item");

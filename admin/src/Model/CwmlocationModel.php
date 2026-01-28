@@ -96,7 +96,7 @@ class CwmlocationModel extends AdminModel
      *
      * @since  7.0
      */
-    public function getForm($data = [], $loadData = true)
+    public function getForm($data = [], $loadData = true): mixed
     {
         // Get the form.
         $form = $this->loadForm(
@@ -130,7 +130,7 @@ class CwmlocationModel extends AdminModel
      * @throws \Exception
      * @since   7.0
      */
-    protected function loadFormData()
+    protected function loadFormData(): mixed
     {
         $data = Factory::getApplication()->getUserState('com_proclaim.edit.location.data', []);
 
@@ -183,7 +183,7 @@ class CwmlocationModel extends AdminModel
      *
      * @since    1.6
      */
-    protected function cleanCache($group = null, int $client_id = 0)
+    protected function cleanCache($group = null, int $client_id = 0): void
     {
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');

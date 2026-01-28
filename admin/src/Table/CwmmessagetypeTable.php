@@ -143,7 +143,7 @@ class CwmmessagetypeTable extends Table
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
-    public function bind($array, $ignore = '')
+    public function bind($array, $ignore = ''): bool
     {
         if (\is_object($array)) {
             return parent::bind($array, $ignore);

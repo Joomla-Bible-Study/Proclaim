@@ -86,7 +86,7 @@ class CwmteachersModel extends ListModel
      * @throws \Exception
      * @since   7.0
      */
-    protected function populateState($ordering = 'teacher.teachername', $direction = 'asc')
+    protected function populateState($ordering = 'teacher.teachername', $direction = 'asc'): void
     {
         $app = Factory::getApplication();
 
@@ -141,7 +141,7 @@ class CwmteachersModel extends ListModel
      *
      * @since   7.0
      */
-    protected function getListQuery()
+    protected function getListQuery(): mixed
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
