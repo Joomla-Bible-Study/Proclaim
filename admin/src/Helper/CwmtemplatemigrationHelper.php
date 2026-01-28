@@ -100,7 +100,9 @@ class CwmtemplatemigrationHelper
         $paramsToAdd = [];
 
         foreach ($migrationsToRun as $version => $params) {
-            $paramsToAdd = array_merge($paramsToAdd, $params);
+            foreach ($params as $key => $value) {
+                $paramsToAdd[$key] = $value;
+            }
             Log::add('Including template migration for version ' . $version, Log::INFO, 'com_proclaim');
         }
 
