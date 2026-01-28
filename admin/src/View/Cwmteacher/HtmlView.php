@@ -32,14 +32,6 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
 class HtmlView extends BaseHtmlView
 {
     /**
-     * Form
-     *
-     * @var mixed
-     * @since    7.0.0
-     */
-    //public mixed $form;
-
-    /**
      * Item
      *
      * @var object
@@ -115,6 +107,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0.0
      */
     protected function addToolbar()

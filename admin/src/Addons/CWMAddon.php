@@ -369,6 +369,7 @@ abstract class CWMAddon
      *
      * @return  void
      *
+     * @throws \Exception
      * @since   10.0.0
      */
     protected function loadLanguage(): void

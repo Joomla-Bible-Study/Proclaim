@@ -44,7 +44,7 @@ class LoadLanguageFileField extends ListField
     /**
      * The hidden state for the form field.
      *
-     * @var    boolean
+     * @var    bool
      * @since 9.0.0
      */
     protected $hidden = true;
@@ -65,6 +65,7 @@ class LoadLanguageFileField extends ListField
      * Method to load the language file; nothing to display.
      *
      * @return  string  The field input markup.
+     * @throws \Exception
      * @since 9.0.0
      */
     protected function getInput(): string

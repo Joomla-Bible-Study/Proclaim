@@ -41,6 +41,7 @@ class CwmnotificationHelper
      *
      * @return  bool  True on success, false on failure
      *
+     * @throws \Exception
      * @since   10.2.0
      */
     public static function notifyCommentPending(

@@ -69,7 +69,7 @@ class CwmcpanelModel extends BaseModel
      * Returns null if the com_postinstall component is broken because the user screwed up his Joomla! site following
      * some idiot's advice. Apparently there's no shortage of idiots giving terribly bad advice to Joomla! users.
      *
-     * @return boolean
+     * @return bool
      *
      * @since 7.0
      */

@@ -33,7 +33,7 @@ class CwmtopicTable extends Table
     /**
      * Primary Key
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -51,7 +51,7 @@ class CwmtopicTable extends Table
     /**
      * Published
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -132,7 +132,7 @@ class CwmtopicTable extends Table
      * @param   mixed  $array   An associative array or object to bind to the Table instance.
      * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @todo    Consider deprecating this override
      * @link    http://docs.joomla.org/Table/bind
@@ -166,9 +166,9 @@ class CwmtopicTable extends Table
      * a new row will be inserted into the database with the properties from the
      * Table instance.
      *
-     * @param   boolean  $updateNulls  True to update fields even if they are null.
+     * @param   bool  $updateNulls  True to update fields even if they are null.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
@@ -187,11 +187,11 @@ class CwmtopicTable extends Table
     /**
      * Overloaded load function
      *
-     * @param   mixed    $keys   An optional primary key value to load the row by, or an array of fields to match.  If not
+     * @param   mixed  $keys     An optional primary key value to load the row by, or an array of fields to match.  If not
      *                           set the instance property value is used.
-     * @param   boolean  $reset  True to reset the default values before loading the new row.
+     * @param   bool   $reset    True to reset the default values before loading the new row.
      *
-     * @return  boolean  True if successful. False if row not found.
+     * @return  bool  True if successful. False if row not found.
      *
      * @see   Table:load
      *
@@ -218,7 +218,7 @@ class CwmtopicTable extends Table
      * @param   array  $data      Data of record
      * @param   int    $recordId  id
      *
-     * @return  boolean|array ?
+     * @return  bool|array ?
      *
      * @since 9.0.0
      *

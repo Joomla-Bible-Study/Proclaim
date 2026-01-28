@@ -48,11 +48,6 @@ class HtmlView extends BaseHtmlView
     /** @var object
      * @since    7.0.0
      */
-    //public mixed $form;
-
-    /** @var object
-     * @since    7.0.0
-     */
     public $media_form;
 
     /** @var object

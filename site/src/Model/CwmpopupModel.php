@@ -48,7 +48,6 @@ class CwmpopupModel extends ListModel
         $app = Factory::getApplication();
 
         // Load the parameters
-        /** @var Registry $params */
         $params = $app->getParams();
         $this->setState('params', $params);
         $template = Cwmparams::getTemplateparams();

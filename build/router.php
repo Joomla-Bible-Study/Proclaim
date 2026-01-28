@@ -40,7 +40,7 @@ readfile($file);
  *
  * @param   string  $url  URL
  *
- * @return  boolean
+ * @return  bool|int
  *
  * @since 8.0.0
  */

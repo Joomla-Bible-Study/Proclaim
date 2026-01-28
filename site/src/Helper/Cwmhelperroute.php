@@ -41,7 +41,7 @@ abstract class Cwmhelperroute
      * Get Article Rout
      *
      * @param   string   $id         ID or ID:Alias for the route to build
-     * @param   ?integer  $series_id  The category ID.
+     * @param   ?int     $series_id  The category ID.
      * @param   ?string  $language   The state of language
      * @param   string   $layout     The layout value.
      *

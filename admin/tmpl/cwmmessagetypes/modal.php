@@ -19,7 +19,7 @@ use Joomla\Input\Input;
 // phpcs:enable PSR1.Files.SideEffects
 
 HTMLHelper::_('behavior.multiselect');
-$input     = new Input;
+$input     = new Input();
 $function  = $input->get('function', 'jSelectMessagetype', 'cmd');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));

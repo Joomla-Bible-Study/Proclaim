@@ -964,7 +964,7 @@ class Cwmlisting
      * @param   ?string  $height  Height
      * @param   ?string  $class   CSS Class
      *
-     * @return boolean|string
+     * @return bool|string
      *
      * @since 9.0.0
      */

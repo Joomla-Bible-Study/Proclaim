@@ -12,12 +12,12 @@
 defined('_JEXEC') or die;
 
 use CWM\Module\Proclaimicon\Administrator\Helper\ProclaimIconHelper;
+use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
-/** @var \Joomla\CMS\Application\CMSApplication $app */
+/** @var CMSApplication $app */
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $app->getDocument()->getWebAssetManager();
 $wa->useScript('core')
     ->useScript('bootstrap.dropdown');

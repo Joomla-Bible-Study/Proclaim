@@ -238,6 +238,7 @@ final class Version
      *
      * @return  string
      *
+     * @throws \Exception
      * @since   3.2
      */
     public function generateMediaVersion(): string

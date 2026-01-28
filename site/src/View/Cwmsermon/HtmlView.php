@@ -89,7 +89,7 @@ class HtmlView extends BaseHtmlView
      */
     protected $subscribe;
 
-    /** @var  integer Menu ID
+    /** @var  int Menu ID
      *
      * @since 7.0
      */

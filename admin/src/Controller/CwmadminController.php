@@ -84,6 +84,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0.0
      */
     public function changePlayers(): void
@@ -138,6 +139,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0.0
      */
     public function changePopup(): void
@@ -404,6 +406,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0.0
      */
     public function resetHits(): void
@@ -435,6 +438,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0.0
      */
     public function resetDownloads(): void
@@ -467,6 +471,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0.0
      */
     public function resetPlays(): void
@@ -511,6 +516,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0.0
      */
     public function convertSermonSpeaker(): void
@@ -530,6 +536,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0.0
      */
     public function convertPreachIt(): void
@@ -576,6 +583,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.1.0
      */
     public function aliasUpdate(): void
@@ -811,6 +819,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
+     * @throws \Exception
      * @since 9.0.1
      */
     public function doArchive(): void

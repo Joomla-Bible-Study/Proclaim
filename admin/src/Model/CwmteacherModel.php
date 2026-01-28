@@ -352,7 +352,7 @@ class CwmteacherModel extends AdminModel
      *
      * @param   object  $record  A record object.
      *
-     * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
+     * @return  bool  True if allowed to delete the record. Defaults to the permission for the component.
      *
      * @throws \Exception
      * @since   1.6
@@ -411,6 +411,7 @@ class CwmteacherModel extends AdminModel
      *
      * @return  void
      *
+     * @throws \Exception
      * @since    1.6
      */
     protected function prepareTable($table): void

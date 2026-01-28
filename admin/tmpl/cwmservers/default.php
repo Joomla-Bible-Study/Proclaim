@@ -168,7 +168,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                                         'id'          => 'state-' . $item->id
                                     ];
 
-                                    echo (new PublishedButton)->render((int)$item->published, $i, $options, '', '');
+                                    echo (new PublishedButton())->render((int)$item->published, $i, $options, '', '');
                                     ?>
                                 </td>
                                 <td class="nowrap has-context">

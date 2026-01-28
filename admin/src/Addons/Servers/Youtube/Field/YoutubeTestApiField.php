@@ -42,6 +42,7 @@ class YoutubeTestApiField extends FormField
      *
      * @return  string  The field input markup.
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     protected function getInput(): string

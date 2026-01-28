@@ -153,6 +153,7 @@ class CwmpIconvert
      *
      * @return string
      *
+     * @throws \Exception
      * @since 7.1.0
      */
     public function convertPI()
@@ -673,7 +674,7 @@ class CwmpIconvert
      * @param int $newid New ID
      * @param int $oldid Old ID
      *
-     * @return boolean
+     * @return bool
      *
      * @since 9.0.0
      *
@@ -1122,7 +1123,7 @@ class CwmpIconvert
      * @param int $oldid ?
      * @param int $newid ?
      *
-     * @return boolean
+     * @return bool
      *
      * @since 9.0.0
      */

@@ -35,7 +35,7 @@ class Cwmassets
     public static array $query = [];
 
     /**
-     * @var integer
+     * @var int
      * @since 7.0.4
      */
     public static int $count = 0;

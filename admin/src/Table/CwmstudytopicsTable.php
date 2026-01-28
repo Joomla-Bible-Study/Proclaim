@@ -31,7 +31,7 @@ class CwmstudytopicsTable extends Table
     /**
      * ID
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -40,7 +40,7 @@ class CwmstudytopicsTable extends Table
     /**
      * Study ID
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -49,7 +49,7 @@ class CwmstudytopicsTable extends Table
     /**
      * Topic ID
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -80,9 +80,9 @@ class CwmstudytopicsTable extends Table
      * a new row will be inserted into the database with the properties from the
      * Table instance.
      *
-     * @param   boolean  $updateNulls  True to update fields even if they are null.
+     * @param   bool  $updateNulls  True to update fields even if they are null.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1

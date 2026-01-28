@@ -29,7 +29,7 @@ $archived  = $this->state->get('filter.published') == 2 ? true : false;
 $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder === 'ordering';
 
-$CWMedia = new Cwmmedia;
+$CWMedia = new Cwmmedia();
 ?>
 <h2><?php
     echo Text::_('JBS_CMN_PODCASTS_LIST'); ?></h2>

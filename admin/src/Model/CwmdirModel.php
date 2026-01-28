@@ -222,6 +222,7 @@ class CwmdirModel extends BaseModel
      *
      * @return array
      *
+     * @throws \Exception
      * @since 7.0
      */
     private function setFileInfo($filePaths): array

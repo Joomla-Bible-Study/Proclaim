@@ -39,6 +39,7 @@ class FiltersField extends FormField
      *
      * @return  string   The field input markup.
      *
+     * @throws \Exception
      * @since    1.6
      */
     protected function getInput(): string

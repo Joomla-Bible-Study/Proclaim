@@ -285,6 +285,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     protected function handleTestApiAction(): array
@@ -301,6 +302,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     protected function handleFetchUpcomingAction(): array
@@ -329,6 +331,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     protected function handleFetchChannelVideosAction(): array
@@ -344,6 +347,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     protected function handleSearchChannelVideosAction(): array
@@ -359,6 +363,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     protected function handleFetchChannelPlaylistsAction(): array
@@ -374,6 +379,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     protected function handleFetchPlaylistVideosAction(): array
@@ -389,6 +395,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     protected function handleFetchLiveVideosAction(): array
@@ -906,6 +913,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     protected function handleGetVideoStatusAction(): array

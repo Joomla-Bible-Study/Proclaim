@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\QueryInterface;
 
 /**
  * Teachers model class
@@ -137,8 +138,9 @@ class CwmteachersModel extends ListModel
     /**
      * Build an SQL query to load the list data.
      *
-     * @return  \Joomla\Database\QueryInterface
+     * @return  QueryInterface
      *
+     * @throws \Exception
      * @since   7.0
      */
     protected function getListQuery()

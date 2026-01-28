@@ -162,7 +162,7 @@ class CwmmediafileTable extends Table
      * @param   mixed  $array   An associative array or object to bind to the Table instance.
      * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @since    7.0.0
      */
@@ -195,9 +195,9 @@ class CwmmediafileTable extends Table
      * a new row will be inserted into the database with the properties from the
      * Table instance.
      *
-     * @param   boolean  $updateNulls  True to update fields even if they are null.
+     * @param   bool  $updateNulls  True to update fields even if they are null.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
@@ -219,7 +219,7 @@ class CwmmediafileTable extends Table
      *
      * @param   mixed  $pk  An optional primary key value to check out.  If not set the instance property value is used.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @throws  \UnexpectedValueException
      * @since   11.1

@@ -98,7 +98,7 @@ class Cwmalias
      * @param   string  $table  Table
      * @param   string  $title  Title
      *
-     * @return boolean|array
+     * @return bool|array
      *
      * @since 1.5
      */

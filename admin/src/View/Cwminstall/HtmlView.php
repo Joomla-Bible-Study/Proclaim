@@ -169,7 +169,7 @@ class HtmlView extends BaseHtmlView
     /**
      * Loads the Versions/SQL/After stack from the session
      *
-     * @return boolean
+     * @return bool
      *
      * @throws \Exception
      * @since    7.0.0

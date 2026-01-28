@@ -93,6 +93,7 @@ class CwmpodcastsModel extends ListModel
      *
      * @return  void
      *
+     * @throws \Exception
      * @since   7.0
      */
     protected function populateState($ordering = 'podcast.title', $direction = 'ASC')

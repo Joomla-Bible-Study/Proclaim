@@ -153,7 +153,7 @@ class CwmserverModel extends AdminModel
      *
      * @param   string  $addon  Type of server
      *
-     * @return \SimpleXMLElement|false  SimpleXMLElement on success, false on failure
+     * @return \SimpleXMLElement|bool  SimpleXMLElement on success, false on failure
      *
      * @since   9.0.0
      */
@@ -181,8 +181,9 @@ class CwmserverModel extends AdminModel
      *
      * @param   array  $data  The form data.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
+     * @throws \Exception
      * @since   1.6
      */
     public function save($data): bool
@@ -287,7 +288,7 @@ class CwmserverModel extends AdminModel
      * Abstract method for getting the form from the model.
      *
      * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param   bool  $loadData  True if the form is to load its own data (default case), false if not.
      *
      * @return  mixed  A JForm object on success, false on failure
      *
@@ -332,7 +333,7 @@ class CwmserverModel extends AdminModel
      *
      * @param   object  $record  A record object.
      *
-     * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
+     * @return  bool  True if allowed to delete the record. Defaults to the permission for the component.
      *
      * @throws \Exception
      * @since    1.6
@@ -419,8 +420,8 @@ class CwmserverModel extends AdminModel
     /**
      * Custom clean the cache of com_proclaim and proclaim modules
      *
-     * @param   string   $group      The cache group
-     * @param   integer  $client_id  The ID of the client
+     * @param   string  $group      The cache group
+     * @param   int     $client_id  The ID of the client
      *
      * @return  void
      *

@@ -56,7 +56,7 @@ class CwmpodcastModel extends AdminModel
      * Get the form data
      *
      * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param   bool  $loadData  True if the form is to load its own data (default case), false if not.
      *
      * @return  Form  A JForm object on success, false on failure
      *

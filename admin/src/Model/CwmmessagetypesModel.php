@@ -97,6 +97,7 @@ class CwmmessagetypesModel extends ListModel
      *
      * @return  void
      *
+     * @throws \Exception
      * @since   7.0.0
      */
     protected function populateState($ordering = 'messagetype.message_type', $direction = 'asc'): void

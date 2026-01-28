@@ -162,7 +162,6 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
 
 <?php if ($video && $embedUrl && $showLiveBadge && ($isLive || $isUpcoming)) : ?>
     <?php
-    /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
     $wa = $app->getDocument()->getWebAssetManager();
 
     $inlineScript = <<<JS

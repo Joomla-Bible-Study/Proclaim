@@ -188,7 +188,7 @@ class CwmsermonsModel extends ListModel
     /**
      * Method to get the starting number of items for the data set.
      *
-     * @return  integer  The starting number of items available in the data set.
+     * @return  int  The starting number of items available in the data set.
      *
      * @since   12.2
      */

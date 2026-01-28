@@ -48,6 +48,7 @@ class CwmmessageController extends FormController
      *
      * @return void
      *
+     * @throws \Exception
      * @since 1.5
      */
     public function resetHits(): void

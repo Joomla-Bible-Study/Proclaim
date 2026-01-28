@@ -41,7 +41,7 @@ class CwmserieController extends FormController
      *
      * @param   object  $model  The model.
      *
-     * @return  boolean     True if successful, false otherwise and internal error is set.
+     * @return  bool     True if successful, false otherwise and internal error is set.
      *
      * @since   1.6
      */
@@ -60,7 +60,7 @@ class CwmserieController extends FormController
      *
      * @param   array  $data  An array of input data.
      *
-     * @return  boolean
+     * @return  bool
      *
      * @since   1.6
      */
@@ -77,7 +77,7 @@ class CwmserieController extends FormController
      * @param   array   $data  An array of input data.
      * @param   string  $key   The name of the key for the primary key.
      *
-     * @return  boolean
+     * @return  bool
      *
      * @throws \Exception
      * @since   1.6

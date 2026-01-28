@@ -60,7 +60,7 @@ class CwmserieModel extends AdminModel
     /**
      * Items data
      *
-     * @var  object|boolean
+     * @var  object|bool
      * @since 10.0.0
      */
     private $data;
@@ -68,11 +68,12 @@ class CwmserieModel extends AdminModel
     /**
      * Abstract method for getting the form from the model.
      *
-     * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param   array  $data      Data for the form.
+     * @param   bool   $loadData  True if the form is to load its own data (default case), false if not.
      *
      * @return  mixed  A JForm object on success, false on failure
      *
+     * @throws \Exception
      * @since 7.0
      */
     public function getForm($data = [], $loadData = true)
@@ -163,7 +164,7 @@ class CwmserieModel extends AdminModel
      *
      * @param   array  $data  The form data.
      *
-     * @return    boolean    True on success.
+     * @return    bool    True on success.
      *
      * @throws \Exception
      * @since    1.6
@@ -391,6 +392,7 @@ class CwmserieModel extends AdminModel
      *
      * @return  bool  True if allowed to delete the record. Defaults to the permission for the component.
      *
+     * @throws \Exception
      * @since   12.2
      */
     protected function canDelete($record)
@@ -439,6 +441,7 @@ class CwmserieModel extends AdminModel
      *
      * @return  void
      *
+     * @throws \Exception
      * @since    1.6
      */
     protected function prepareTable($table)

@@ -37,6 +37,7 @@ class CwmmessagetypeModel extends AdminModel
      * @access    public
      * @return    bool    True on success
      *
+     * @throws \Exception
      * @since     7.0.0
      */
     public function store(): bool
@@ -147,6 +148,7 @@ class CwmmessagetypeModel extends AdminModel
      *
      * @return  void
      *
+     * @throws \Exception
      * @since    1.6
      */
     protected function prepareTable($table): void

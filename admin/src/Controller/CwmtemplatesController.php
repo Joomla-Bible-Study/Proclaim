@@ -41,7 +41,7 @@ class CwmtemplatesController extends AdminController
     /**
      * Import Template
      *
-     * @return CwmtemplatesController|integer
+     * @return CwmtemplatesController|int
      *
      * @throws \Exception
      * @since 8.0
@@ -264,6 +264,7 @@ class CwmtemplatesController extends AdminController
      *
      * @return CwmtemplatesController|false
      *
+     * @throws \Exception
      * @since 8.0
      */
     public function templateExport(): bool|CwmtemplatesController

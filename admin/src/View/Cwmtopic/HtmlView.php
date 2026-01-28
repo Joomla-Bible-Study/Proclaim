@@ -109,6 +109,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0
      */
     protected function addToolbar(): void

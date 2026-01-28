@@ -84,7 +84,7 @@ class CwmtemplateController extends FormController
      *
      * @param   string  $template  filename
      *
-     * @return boolean|string
+     * @return bool|string
      *
      * @since      7.0
      *

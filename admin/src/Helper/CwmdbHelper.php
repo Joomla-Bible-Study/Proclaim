@@ -253,7 +253,7 @@ class CwmdbHelper
      * @param   string  $table  table is the table you are checking
      * @param   string  $field  field you are checking
      *
-     * @return boolean
+     * @return bool
      *
      * @throws \Exception
      * @since 7.0

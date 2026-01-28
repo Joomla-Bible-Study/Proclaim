@@ -94,6 +94,7 @@ class CwmlocationModel extends AdminModel
      *
      * @return  false|Form  A JForm object on success, false on failure
      *
+     * @throws \Exception
      * @since  7.0
      */
     public function getForm($data = [], $loadData = true)

@@ -34,7 +34,7 @@ class CwmmessageTable extends Table
     /**
      * Primary Key
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -52,7 +52,7 @@ class CwmmessageTable extends Table
     /**
      * Teacher id
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -61,7 +61,7 @@ class CwmmessageTable extends Table
     /**
      * Study Number
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -70,7 +70,7 @@ class CwmmessageTable extends Table
     /**
      * Book Number
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -79,7 +79,7 @@ class CwmmessageTable extends Table
     /**
      * Chapter Begin
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -88,7 +88,7 @@ class CwmmessageTable extends Table
     /**
      * Verse Begin
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -97,7 +97,7 @@ class CwmmessageTable extends Table
     /**
      * Chapter End
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -106,7 +106,7 @@ class CwmmessageTable extends Table
     /**
      * Verse End
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -133,7 +133,7 @@ class CwmmessageTable extends Table
     /**
      * Chapter Begin2
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -142,7 +142,7 @@ class CwmmessageTable extends Table
     /**
      * Verse Begin2
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -151,7 +151,7 @@ class CwmmessageTable extends Table
     /**
      * Chapter End2
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -160,7 +160,7 @@ class CwmmessageTable extends Table
     /**
      * Verse End2
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -183,7 +183,7 @@ class CwmmessageTable extends Table
     /**
      * Comments
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -192,7 +192,7 @@ class CwmmessageTable extends Table
     /**
      * Hits
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -201,7 +201,7 @@ class CwmmessageTable extends Table
     /**
      * User ID
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -219,7 +219,7 @@ class CwmmessageTable extends Table
     /**
      * Show Level
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -228,7 +228,7 @@ class CwmmessageTable extends Table
     /**
      * Location ID
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -273,7 +273,7 @@ class CwmmessageTable extends Table
     /**
      * Series ID
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -300,7 +300,7 @@ class CwmmessageTable extends Table
     /**
      * ThumbNail Height
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -309,7 +309,7 @@ class CwmmessageTable extends Table
     /**
      * ThumbNail Width
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -331,7 +331,7 @@ class CwmmessageTable extends Table
     /**
      * Published
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -432,7 +432,7 @@ class CwmmessageTable extends Table
      * @param   mixed  $array  An associative array or object to bind to the JTable instance.
      * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    http://docs.joomla.org/JTable/bind
      * @since   11.1
@@ -461,9 +461,9 @@ class CwmmessageTable extends Table
      * a new row will be inserted into the database with the properties from the
      * Table instance.
      *
-     * @param   boolean  $updateNulls  True to update fields even if they are null.
+     * @param   bool  $updateNulls  True to update fields even if they are null.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    https://docs.joomla.org/JTable/store
      * @since   11.1

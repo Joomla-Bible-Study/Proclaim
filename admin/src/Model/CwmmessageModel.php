@@ -553,7 +553,7 @@ class CwmmessageModel extends AdminModel
      * @param   array   $pks       An array of row IDs.
      * @param   array   $contexts  An array of item contexts.
      *
-     * @return  boolean  True if successful, false otherwise and internal error is set.
+     * @return  bool  True if successful, false otherwise and internal error is set.
      *
      * @throws \Exception
      * @since   2.5

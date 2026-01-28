@@ -214,7 +214,7 @@ class S3
     *
     * @param string $accessKey Access key
     * @param string $secretKey Secret key
-    * @param boolean $useSSL Enable SSL
+    * @param bool $useSSL Enable SSL
     * @param string $endpoint Amazon URI
     * @return void
     */
@@ -294,7 +294,7 @@ class S3
     /**
     * Check if AWS keys have been set
     *
-    * @return boolean
+    * @return bool
     */
     public static function hasAuth()
     {
@@ -305,8 +305,8 @@ class S3
     /**
     * Set SSL on or off
     *
-    * @param boolean $enabled SSL enabled
-    * @param boolean $validate SSL certificate validation
+    * @param bool $enabled SSL enabled
+    * @param bool $validate SSL certificate validation
     * @return void
     */
     public static function setSSL($enabled, $validate = true)
@@ -350,7 +350,7 @@ class S3
     /**
     * Set the error mode to exceptions
     *
-    * @param boolean $enabled Enable exceptions
+    * @param bool $enabled Enable exceptions
     * @return void
     */
     public static function setExceptions($enabled = true)
@@ -387,8 +387,8 @@ class S3
     *
     * @param string $keyPairId AWS Key Pair ID
     * @param string $signingKey Private Key
-    * @param boolean $isFile Load private key from file, set to false to load string
-    * @return boolean
+    * @param bool $isFile Load private key from file, set to false to load string
+    * @return bool
     */
     public static function setSigningKey($keyPairId, $signingKey, $isFile = true)
     {
@@ -452,7 +452,7 @@ class S3
     /**
     * Get a list of buckets
     *
-    * @param boolean $detailed Returns detailed bucket list when true
+    * @param bool $detailed Returns detailed bucket list when true
     * @return array | false
     */
     public static function listBuckets($detailed = false)
@@ -507,7 +507,7 @@ class S3
     * @param string $marker Marker (last file listed)
     * @param string $maxKeys Max keys (maximum number of keys to return)
     * @param string $delimiter Delimiter
-    * @param boolean $returnCommonPrefixes Set to true to return CommonPrefixes
+    * @param bool $returnCommonPrefixes Set to true to return CommonPrefixes
     * @return array | false
     */
     public static function getBucket($bucket, $prefix = null, $marker = null, $maxKeys = null, $delimiter = null, $returnCommonPrefixes = false)
@@ -625,7 +625,7 @@ class S3
     * @param string $bucket Bucket name
     * @param constant $acl ACL flag
     * @param string $location Set as "EU" to create buckets hosted in Europe
-    * @return boolean
+    * @return bool
     */
     public static function putBucket($bucket, $acl = self::ACL_PRIVATE, $location = false)
     {
@@ -667,7 +667,7 @@ class S3
     * Delete an empty bucket
     *
     * @param string $bucket Bucket name
-    * @return boolean
+    * @return bool
     */
     public static function deleteBucket($bucket)
     {
@@ -748,7 +748,7 @@ class S3
     * @param array $requestHeaders Array of request headers or content type as a string
     * @param constant $storageClass Storage class constant
     * @param constant $serverSideEncryption Server-side encryption
-    * @return boolean
+    * @return bool
     */
     public static function putObject($input, $bucket, $uri, $acl = self::ACL_PRIVATE, $metaHeaders = [], $requestHeaders = [], $storageClass = self::STORAGE_CLASS_STANDARD, $serverSideEncryption = self::SSE_NONE)
     {
@@ -858,7 +858,7 @@ class S3
     * @param constant $acl ACL constant
     * @param array $metaHeaders Array of x-amz-meta-* headers
     * @param string $contentType Content type
-    * @return boolean
+    * @return bool
     */
     public static function putObjectFile($file, $bucket, $uri, $acl = self::ACL_PRIVATE, $metaHeaders = [], $contentType = null)
     {
@@ -875,7 +875,7 @@ class S3
     * @param constant $acl ACL constant
     * @param array $metaHeaders Array of x-amz-meta-* headers
     * @param string $contentType Content type
-    * @return boolean
+    * @return bool
     */
     public static function putObjectString($string, $bucket, $uri, $acl = self::ACL_PRIVATE, $metaHeaders = [], $contentType = 'text/plain')
     {
@@ -927,7 +927,7 @@ class S3
     *
     * @param string $bucket Bucket name
     * @param string $uri Object URI
-    * @param boolean $returnInfo Return response information
+    * @param bool $returnInfo Return response information
     * @return mixed | false
     */
     public static function getObjectInfo($bucket, $uri, $returnInfo = true)
@@ -1005,7 +1005,7 @@ class S3
     *
     * @param string $bucket Bucket name
     * @param string $location Target host name
-    * @return boolean
+    * @return bool
     */
     public static function setBucketRedirect($bucket = null, $location = null)
     {
@@ -1050,7 +1050,7 @@ class S3
     * @param string $bucket Bucket name
     * @param string $targetBucket Target bucket (where logs are stored)
     * @param string $targetPrefix Log prefix (e,g; domain.com-)
-    * @return boolean
+    * @return bool
     */
     public static function setBucketLogging($bucket, $targetBucket, $targetPrefix = null)
     {
@@ -1158,7 +1158,7 @@ class S3
     * Disable bucket logging
     *
     * @param string $bucket Bucket name
-    * @return boolean
+    * @return bool
     */
     public static function disableBucketLogging($bucket)
     {
@@ -1198,7 +1198,7 @@ class S3
     * @param string $bucket Bucket name
     * @param string $uri Object URI
     * @param array $acp Access Control Policy Data (same as the data returned from getAccessControlPolicy)
-    * @return boolean
+    * @return bool
     */
     public static function setAccessControlPolicy($bucket, $uri = '', $acp = [])
     {
@@ -1325,7 +1325,7 @@ class S3
     *
     * @param string $bucket Bucket name
     * @param string $uri Object URI
-    * @return boolean
+    * @return bool
     */
     public static function deleteObject($bucket, $uri)
     {
@@ -1352,8 +1352,8 @@ class S3
     * @param string $bucket Bucket name
     * @param string $uri Object URI
     * @param integer $lifetime Lifetime in seconds
-    * @param boolean $hostBucket Use the bucket name as the hostname
-    * @param boolean $https Use HTTPS ($hostBucket should be false for SSL verification)
+    * @param bool $hostBucket Use the bucket name as the hostname
+    * @param bool $https Use HTTPS ($hostBucket should be false for SSL verification)
     * @return string
     */
     public static function getAuthenticatedURL($bucket, $uri, $lifetime, $hostBucket = false, $https = false)
@@ -1427,7 +1427,7 @@ class S3
     * @param string $successRedirect Redirect URL or 200 / 201 status code
     * @param array $amzHeaders Array of x-amz-meta-* headers
     * @param array $headers Array of request headers or content type as a string
-    * @param boolean $flashVars Includes additional "Filename" variable posted by Flash
+    * @param bool $flashVars Includes additional "Filename" variable posted by Flash
     * @return object
     */
     public static function getHttpUploadPostParams(
@@ -1506,7 +1506,7 @@ class S3
     * Create a CloudFront distribution
     *
     * @param string $bucket Bucket name
-    * @param boolean $enabled Enabled (true/false)
+    * @param bool $enabled Enabled (true/false)
     * @param array $cnames Array containing CNAME aliases
     * @param string $comment Use the bucket name as the hostname
     * @param string $defaultRootObject Default root object
@@ -1664,7 +1664,7 @@ class S3
     * Delete a CloudFront distribution
     *
     * @param array $dist Distribution array info identical to output of getDistribution()
-    * @return boolean
+    * @return bool
     */
     public static function deleteDistribution($dist)
     {
@@ -1799,7 +1799,7 @@ class S3
     *
     * @param string $distributionId Distribution ID from listDistributions()
     * @param array $paths Array of object paths to invalidate
-    * @return boolean
+    * @return bool
     */
     public static function invalidateDistribution($distributionId, $paths)
     {
@@ -1918,7 +1918,7 @@ class S3
     *
     * @internal Used to create XML in createDistribution() and updateDistribution()
     * @param string $bucket S3 Origin bucket
-    * @param boolean $enabled Enabled (true/false)
+    * @param bool $enabled Enabled (true/false)
     * @param string $comment Comment to append
     * @param string $callerReference Caller reference
     * @param array $cnames Array of CNAME aliases
@@ -2687,7 +2687,7 @@ final class S3Request
     * Check DNS conformity
     *
     * @param string $bucket Bucket name
-    * @return boolean
+    * @return bool
     */
     private function __dnsBucketName($bucket)
     {

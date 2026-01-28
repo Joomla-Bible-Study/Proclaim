@@ -392,7 +392,7 @@ class CwmadminModel extends AdminModel
     /**
      * Check if com_proclaim parameters are blank. If so, populate with com_content text filters.
      *
-     * @return  mixed  boolean true if params are updated, null otherwise
+     * @return  mixed  bool true if params are updated, null otherwise
      *
      * @since 7.0
      */
@@ -482,6 +482,7 @@ class CwmadminModel extends AdminModel
      *
      * @return string
      *
+     * @throws \Exception
      * @since 9.0.12
      */
     public function playerByMediaType(): string
@@ -599,7 +600,7 @@ class CwmadminModel extends AdminModel
      *
      * @param   object  $record  A record object.
      *
-     * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
+     * @return  bool  True if allowed to change the state of the record. Defaults to the permission set in the component.
      *
      * @throws \Exception
      * @since   1.6

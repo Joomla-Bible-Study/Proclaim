@@ -48,7 +48,7 @@ class CwmcommentModel extends AdminModel
      *
      * @param   array  $data  The form data.
      *
-     * @return  boolean  True on success, False on error.
+     * @return  bool  True on success, False on error.
      *
      * @since 7.0.1
      */
@@ -64,9 +64,9 @@ class CwmcommentModel extends AdminModel
     /**
      * Method to check-out a row for editing.
      *
-     * @param   integer  $pk  The numeric id of the primary key.
+     * @param   int  $pk  The numeric id of the primary key.
      *
-     * @return  boolean  False on failure or error, true otherwise.
+     * @return  bool  False on failure or error, true otherwise.
      *
      * @since   11.1
      */
@@ -79,7 +79,7 @@ class CwmcommentModel extends AdminModel
      * Get the form data
      *
      * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param   bool  $loadData  True if the form is to load its own data (default case), false if not.
      *
      * @return  mixed  A JForm object on success, false on failure
      *
@@ -129,11 +129,11 @@ class CwmcommentModel extends AdminModel
     /**
      * Batch copy items to a new category or current.
      *
-     * @param   integer  $value     The new category.
-     * @param   array    $pks       An array of row IDs.
-     * @param   array    $contexts  An array of item contexts.
+     * @param   int    $value     The new category.
+     * @param   array  $pks       An array of row IDs.
+     * @param   array  $contexts  An array of item contexts.
      *
-     * @return  mixed  An array of new IDs on success, boolean false on failure.
+     * @return  mixed  An array of new IDs on success, bool false on failure.
      *
      * @throws \Exception
      * @since    11.1
@@ -232,8 +232,8 @@ class CwmcommentModel extends AdminModel
     /**
      * Clean the cache
      *
-     * @param   string   $group      The cache group
-     * @param   integer  $client_id  The ID of the client
+     * @param   string  $group      The cache group
+     * @param   int     $client_id  The ID of the client
      *
      * @return  void
      *
@@ -250,8 +250,9 @@ class CwmcommentModel extends AdminModel
      *
      * @param   object  $record  A record object.
      *
-     * @return    boolean    True if allowed to delete the record. Defaults to the permission set in the component.
+     * @return    bool    True if allowed to delete the record. Defaults to the permission set in the component.
      *
+     * @throws \Exception
      * @since    1.6
      */
     protected function canDelete($record)
@@ -275,7 +276,7 @@ class CwmcommentModel extends AdminModel
      *
      * @param   object  $record  A record object.
      *
-     * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
+     * @return  bool  True if allowed to change the state of the record. Defaults to the permission for the component.
      *
      * @throws \Exception
      * @since    1.6

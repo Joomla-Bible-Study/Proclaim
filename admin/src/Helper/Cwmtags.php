@@ -43,6 +43,7 @@ class Cwmtags
      *
      * @return bool
      *
+     * @throws \Exception
      * @since 7.0
      */
     public static function isDuplicate($study_id, $topic_id)

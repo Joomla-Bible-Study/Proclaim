@@ -33,7 +33,7 @@ class CwmtemplateTable extends Table
     /**
      * Id
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -60,7 +60,7 @@ class CwmtemplateTable extends Table
     /**
      * Published
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
@@ -162,7 +162,7 @@ class CwmtemplateTable extends Table
      * @param   mixed  $array  An associative array or object to bind to the Table instance.
      * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
@@ -209,9 +209,9 @@ class CwmtemplateTable extends Table
      * a new row will be inserted into the database with the properties from the
      * Table instance.
      *
-     * @param   boolean  $updateNulls  True to update fields even if they are null.
+     * @param   bool  $updateNulls  True to update fields even if they are null.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    http://docs.joomla.org/Table/store
      * @since   11.1
@@ -265,7 +265,7 @@ class CwmtemplateTable extends Table
      * @param   ?Table  $table  A Table object for the asset parent.
      * @param   null    $id     Id to look up
      *
-     * @return  integer
+     * @return  int
      *
      * @since   11.1
      */

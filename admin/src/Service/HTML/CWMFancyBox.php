@@ -40,6 +40,7 @@ class CWMFancyBox
      *
      * @return  void
      *
+     * @throws \Exception
      * @since      10.0.0
      */
     public static function framework(bool $option = false, bool $mouseweel = false): void

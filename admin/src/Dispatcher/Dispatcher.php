@@ -64,7 +64,7 @@ class Dispatcher extends ComponentDispatcher
     /**
      * Redirects the browser or returns false if no redirect is set.
      *
-     * @return  boolean  False if no redirect exists.
+     * @return  bool  False if no redirect exists.
      *
      * @throws  \Exception
      * @since   3.0
