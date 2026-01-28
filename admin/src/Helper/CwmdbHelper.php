@@ -581,7 +581,7 @@ class CwmdbHelper
                                     );
                                 } else {
                                     $app->enqueueMessage('Removed Duplicat topic Record ' . $id->id, 'notice');
-                                }
+                                 }
 
                                 $t++;
                             }
