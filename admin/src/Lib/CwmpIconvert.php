@@ -155,7 +155,7 @@ class CwmpIconvert
      *
      * @since 7.1.0
      */
-    public function convertPI()
+    public function convertPI(): void
     {
         // Check for request forgeries.
         if (!Session::checkToken('get') && !Session::checkToken()) {
@@ -591,7 +591,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    private function getBooks()
+    private function getBooks(): array
     {
         $books = [
             ['id' => '1', 'book_name' => 'Genesis', 'published' => '1', 'jbs' => '101'],
@@ -678,7 +678,7 @@ class CwmpIconvert
      * @since 9.0.0
      *
      */
-    public function insertMedia($pi, $type, $newid, $oldid)
+    public function insertMedia($pi, $type, $newid, $oldid): bool
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
