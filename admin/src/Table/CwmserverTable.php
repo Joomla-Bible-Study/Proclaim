@@ -213,7 +213,7 @@ class CwmserverTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetName()
+    protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
 
