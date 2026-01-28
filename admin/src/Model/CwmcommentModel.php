@@ -296,7 +296,7 @@ class CwmcommentModel extends AdminModel
     /**
      * Prepare and sanitise the table prior to saving.
      *
-     * @param   Table  $table  A reference to a JTable object.
+     * @param   CwmcommentTable  $table  A reference to a JTable object.
      *
      * @return  void
      *

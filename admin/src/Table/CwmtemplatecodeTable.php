@@ -32,6 +32,15 @@ use Joomla\Filesystem\File;
 class CwmtemplatecodeTable extends Table
 {
     /**
+     * ID of the record
+     *
+     * @var int
+     *
+     * @since 9.0.0
+     */
+    public int $id = 0;
+
+    /**
      * File Name
      *
      * @var string|null

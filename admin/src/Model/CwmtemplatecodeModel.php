@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Table\CwmtemplatecodeTable;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -224,7 +225,7 @@ class CwmtemplatecodeModel extends AdminModel
     /**
      * Prepare and sanitise the table prior to saving.
      *
-     * @param   Table  $table  A reference to a Table object.
+     * @param   CwmtemplatecodeTable  $table  A reference to a Table object.
      *
      * @return  void
      *
