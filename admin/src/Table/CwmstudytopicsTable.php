@@ -87,7 +87,7 @@ class CwmstudytopicsTable extends Table
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
-    public function store($updateNulls = false)
+    public function store($updateNulls = false): bool
     {
         if (!$this->_rules) {
             $this->setRules(
@@ -107,7 +107,7 @@ class CwmstudytopicsTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetName()
+    protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
 
@@ -121,7 +121,7 @@ class CwmstudytopicsTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetTitle()
+    protected function _getAssetTitle(): string
     {
         return 'JBS StudyTopics: ' . $this->id;
     }

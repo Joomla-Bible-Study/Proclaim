@@ -224,7 +224,7 @@ class CwmteacherTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetTitle()
+    protected function _getAssetTitle(): string
     {
         return 'JBS Teacher: ' . $this->teachername;
     }
