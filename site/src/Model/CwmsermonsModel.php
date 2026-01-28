@@ -44,7 +44,7 @@ class CwmsermonsModel extends ListModel
     /** @var string Needed for context for Populate State
      * @since 9.0.14
      */
-    public string $context = 'com_proclaim.sermons.list';
+    public $context = 'com_proclaim.sermons.list';
 
     /**
      * Constructor.

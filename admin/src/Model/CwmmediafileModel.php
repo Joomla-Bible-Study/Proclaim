@@ -46,12 +46,12 @@ class CwmmediafileModel extends AdminModel
      * @var    string
      * @since  3.2
      */
-    public string $typeAlias = 'com_proclaim.mediafile';
+    public $typeAlias = 'com_proclaim.mediafile';
     /**
      * @var    string  The prefix to use with controller messages.
      * @since  1.6
      */
-    protected string $text_prefix = 'com_proclaim';
+    protected $text_prefix = 'com_proclaim';
     /**
      * Data
      *
@@ -67,7 +67,7 @@ class CwmmediafileModel extends AdminModel
      * @var array
      * @since 10.0.0
      */
-    protected array $batch_commands = [
+    protected $batch_commands = [
         'assetgroup_id' => 'batchAccess',
         'player'        => 'batchPlayer',
         'linkType'      => 'batchLinkType',
