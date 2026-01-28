@@ -71,7 +71,7 @@ class CwmmessagetypesModel extends ListModel
      *
      * @since 7.0.0
      */
-    public function getDeletes()
+    public function getDeletes(): array
     {
         if (empty($this->deletes)) {
             $query         = 'SELECT allowdeletes'

@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Table\CwmserverTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Form\Form;
@@ -211,9 +212,9 @@ class CwmserverModel extends AdminModel
         }
 
         if (isset($data['params']['path'])) {
-            if (strpos($data['params']['path'], '//')) {
+            if (str_contains($data['params']['path'], '//')) {
                 $data['params']['path'] = substr($data['params']['path'], strpos($data['params']['path'], '//'));
-            } elseif (strpos($data['params']['path'], '//') === false) {
+            } elseif (!str_contains($data['params']['path'], '//')) {
                 $data['params']['path'] = '//' . $data['params']['path'];
             }
         }
@@ -388,7 +389,7 @@ class CwmserverModel extends AdminModel
     /**
      * Prepare and sanitise the table prior to saving.
      *
-     * @param   Table  $table  A reference to a Table object.
+     * @param   CwmserverTable  $table  A reference to a Table object.
      *
      * @return  void
      *

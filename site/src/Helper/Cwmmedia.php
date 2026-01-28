@@ -55,7 +55,7 @@ class Cwmmedia
     public static function isExternal(string $url): bool
     {
         // Check if the URL contains a website string, since it may just be a path to a local file.
-        if (strpos($url, "http") || strpos($url, "https") || strpos($url, "//")) {
+        if (str_contains($url, "http") || str_contains($url, "https") || str_contains($url, "//")) {
             $components = parse_url($url);
             $root       = parse_url(Uri::root());
 

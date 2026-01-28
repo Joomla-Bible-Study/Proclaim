@@ -112,7 +112,7 @@ class HtmlView extends BaseHtmlView
         $layout      = $app->input->get('layout', 'edit');
         $task        = $app->input->get('task', 'checkassets');
 
-        if (strpos($task, '.') !== false) {
+        if (str_contains($task, '.')) {
             $task = explode('.', $task)[1];
         }
 

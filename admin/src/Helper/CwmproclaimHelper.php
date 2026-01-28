@@ -643,12 +643,7 @@ class CwmproclaimHelper
      */
     public static function endsWith(string $haystack, string $needle): bool
     {
-        // Search forward starting from the end minus the needle length characters
-        return $needle === '' || (($temp = \strlen($haystack) - \strlen($needle)) >= 0 && strpos(
-            $haystack,
-            $needle,
-            $temp
-        ) !== false);
+        return str_ends_with($haystack, $needle);
     }
 
     /**

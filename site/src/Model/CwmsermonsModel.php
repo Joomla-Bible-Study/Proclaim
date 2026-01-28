@@ -136,7 +136,7 @@ class CwmsermonsModel extends ListModel
      * @since 7.0
      * @todo  Need to see if we can use this out of a helper to reduce code.
      */
-    public function getDownloads($id)
+    public function getDownloads($id): string
     {
         $query = $this->_db->getQuery(true);
         $query->select('SUM(downloads) AS totalDownloads')
@@ -162,7 +162,7 @@ class CwmsermonsModel extends ListModel
      *
      * @since 7.0
      */
-    public function getFiles()
+    public function getFiles(): ?array
     {
         $mediaFiles = null;
         $db         = Factory::getContainer()->get('DatabaseDriver');
@@ -192,7 +192,7 @@ class CwmsermonsModel extends ListModel
      *
      * @since   12.2
      */
-    public function getStart()
+    public function getStart(): int
     {
         return $this->getState('list.start');
     }
@@ -203,7 +203,7 @@ class CwmsermonsModel extends ListModel
      * @return mixed
      * @since 9.0.0
      */
-    public function getTeachers()
+    public function getTeachers(): array
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
@@ -225,7 +225,7 @@ class CwmsermonsModel extends ListModel
      * @return mixed
      * @since 9.0.0
      */
-    public function getYears()
+    public function getYears(): array
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
@@ -247,7 +247,7 @@ class CwmsermonsModel extends ListModel
      * @throws \Exception
      * @since 7.0
      */
-    public function getSeries()
+    public function getSeries(): array
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
@@ -279,7 +279,7 @@ class CwmsermonsModel extends ListModel
         return $items;
     }
 
-    public function getBooks()
+    public function getBooks(): array
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);

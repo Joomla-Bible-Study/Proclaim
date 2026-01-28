@@ -67,7 +67,7 @@ class CwmtemplatesModel extends ListModel
      *
      * @since    7.0.0
      */
-    public function getTemplates()
+    public function getTemplates(): array
     {
         if (empty($this->templates)) {
             $query           = 'SELECT id as value, title as text FROM `#__bsms_templates` WHERE published = 1 ORDER BY id ASC';
@@ -84,7 +84,7 @@ class CwmtemplatesModel extends ListModel
      *
      * @since   7.0
      */
-    public function getTypes()
+    public function getTypes(): array
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);

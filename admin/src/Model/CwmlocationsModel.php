@@ -73,7 +73,7 @@ class CwmlocationsModel extends ListModel
      *
      * @since 7.0
      */
-    public function getDeletes()
+    public function getDeletes(): array
     {
         if (empty($this->deletes)) {
             $query         = 'SELECT allow_deletes'
