@@ -199,7 +199,7 @@ class CwmtemplateModel extends AdminModel
     /**
      * Prepare and sanitise the table prior to saving.
      *
-     * @param   Table  $table  A reference to a Table object.
+     * @param   CwmtemplateTable  $table  A reference to a Table object.
      *
      * @return  void
      *
