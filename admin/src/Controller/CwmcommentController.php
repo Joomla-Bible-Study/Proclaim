@@ -46,7 +46,7 @@ class CwmcommentController extends FormController
      *
      * @since   1.6
      */
-    public function batch($model = null)
+    public function batch($model = null): bool
     {
         // Set the model
         if ($model === null) {
