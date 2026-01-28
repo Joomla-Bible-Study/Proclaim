@@ -37,7 +37,7 @@ class CwmteachersModel extends ListModel
      * @throws \Exception
      * @since   9.0.0
      */
-    public function getItems()
+    public function getItems(): array
     {
         $items = parent::getItems();
 

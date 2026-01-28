@@ -156,7 +156,7 @@ class Router extends RouterView
      */
     public function getCWMSermonSegment(int|string $id, array $query): array
     {
-        if ((int)$this->cacheiddata !== (int)$id && !strpos($id, ':')) {
+        if ((int)$this->cacheiddata !== (int)$id && !str_contains((string)$id, ':')) {
             $id      = (int)$id;
             $dbquery = $this->db->getQuery(true);
             $dbquery->select($this->db->quoteName('alias'))
@@ -224,7 +224,7 @@ class Router extends RouterView
      */
     public function getCWMTeacherSegment(int|string $id, array $query): array
     {
-        if ((int)$this->cacheiddata !== (int)$id && !strpos($id, ':')) {
+        if ((int)$this->cacheiddata !== (int)$id && !str_contains((string)$id, ':')) {
             $id      = (int)$id;
             $dbquery = $this->db->getQuery(true);
             $dbquery->select($this->db->quoteName('alias'))
@@ -367,7 +367,7 @@ class Router extends RouterView
      */
     public function getCWMSeriesDisplaySegment(mixed $id, array $query): array
     {
-        if (!strpos($id, ':')) {
+        if (!str_contains((string)$id, ':')) {
             $id      = (int)$id;
             $dbquery = $this->db->getQuery(true);
             $dbquery->select($this->db->quoteName('alias'))

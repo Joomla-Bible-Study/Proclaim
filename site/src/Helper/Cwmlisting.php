@@ -1477,7 +1477,7 @@ class Cwmlisting
         $customclass = '';
 
         if (isset($row->custom)) {
-            if (strpos($row->custom, 'style=') !== false) {
+            if (str_contains($row->custom, 'style=')) {
                 $style = $row->custom;
             } else {
                 $customclass = $row->custom;

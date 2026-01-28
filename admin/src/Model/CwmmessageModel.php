@@ -148,7 +148,7 @@ class CwmmessageModel extends AdminModel
      * @throws \Exception
      * @since 7.0.1
      */
-    public function getAlltopics()
+    public function getAlltopics(): string
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
@@ -180,7 +180,7 @@ class CwmmessageModel extends AdminModel
      * @throws \Exception
      * @since   7.0
      */
-    public function getMediaFiles()
+    public function getMediaFiles(): array
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);

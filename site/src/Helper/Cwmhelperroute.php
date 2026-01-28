@@ -129,7 +129,7 @@ abstract class Cwmhelperroute
      * @throws \Exception
      * @since    7.2
      */
-    protected static function findItem(array $needles = [])
+    protected static function findItem(array $needles = []): int|false
     {
         $app   = Factory::getApplication();
         $menus = $app->getMenu('site');

@@ -42,7 +42,7 @@ class Cwmalias
      * @return string
      * @since 7.1.0
      */
-    public static function updateAlias()
+    public static function updateAlias(): int
     {
         $done    = 0;
         $db      = Factory::getContainer()->get('DatabaseDriver');
@@ -80,7 +80,7 @@ class Cwmalias
      *
      * @since 1.5
      */
-    private static function getObjects()
+    private static function getObjects(): array
     {
         $objects = [
             ['name' => '#__bsms_series', 'titlefield' => 'series_text'],
@@ -102,7 +102,7 @@ class Cwmalias
      *
      * @since 1.5
      */
-    private static function getTableQuery($table, $title)
+    private static function getTableQuery($table, $title): bool|array
     {
         $data = [];
 

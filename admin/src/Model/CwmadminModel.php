@@ -527,7 +527,7 @@ class CwmadminModel extends AdminModel
 
             $extension = substr($filename, strrpos($filename, '.') + 1);
 
-            if ($from === 'http' && strpos($filename, 'http') !== false) {
+            if ($from === 'http' && str_contains($filename, 'http')) {
                 $reg->set('mime_type', ' ');
                 $isfrom = 'http';
                 $search = true;
@@ -539,7 +539,7 @@ class CwmadminModel extends AdminModel
                 $search = true;
             }
 
-            if (strpos($key, $extension) !== false || $reg->get('mime_type', 0) == $from) {
+            if (str_contains($key, $extension) || $reg->get('mime_type', 0) == $from) {
                 $reg->set('mime_type', $from);
                 $isfrom = 'Extenstion';
                 $search = true;

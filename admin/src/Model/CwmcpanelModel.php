@@ -33,7 +33,7 @@ class CwmcpanelModel extends BaseModel
      *
      * @since 7.0
      */
-    public function getData()
+    public function getData(): ?object
     {
         // Get version information
         $db     = Factory::getContainer()->get('DatabaseDriver');

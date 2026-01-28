@@ -336,7 +336,7 @@ class CwmdbHelper
      * @throws  \Exception
      * @since   7.1.0
      */
-    public static function fixupcss(string $filename, bool $parent, string $newcss, ?int $id = null)
+    public static function fixupcss(string $filename, bool $parent, string $newcss, ?int $id = null): bool
     {
         $app = Factory::getApplication();
 
@@ -428,7 +428,7 @@ class CwmdbHelper
      *
      * @since 7.0
      */
-    public static function reloadtable(object $result, string $table = 'Style')
+    public static function reloadtable(object $result, string $table = 'Style'): bool
     {
         $db = Factory::getContainer()->get('DatabaseDriver');
 
@@ -473,7 +473,7 @@ class CwmdbHelper
 
         if ($install === true) {
             foreach ($files as $a => $file) {
-                if (strpos($file, 'uninstall') !== false) {
+                if (str_contains($file, 'uninstall')) {
                     unset($files[$a]);
                 }
             }

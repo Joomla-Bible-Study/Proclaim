@@ -188,7 +188,7 @@ class HtmlView extends BaseHtmlView
             $currentLink = $active->link;
 
             // If the current view is the active item and an article view for this article, then the menu item params take priority
-            if (strpos($currentLink, 'view=cwmsermon') && (strpos($currentLink, '&id=' . (string)$item->id))) {
+            if (str_contains($currentLink, 'view=cwmsermon') && str_contains($currentLink, '&id=' . (string)$item->id)) {
                 // $item->params are the article params, $temp are the menu item params
                 // Merge so that the menu item params take priority
                 $item->params->merge($temp);

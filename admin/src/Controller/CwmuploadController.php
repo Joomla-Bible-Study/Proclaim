@@ -113,7 +113,7 @@ class CwmuploadController extends AdminController
         }
 
         // Directory check
-        if (!file_exists($targetDir) && !is_dir($targetDir) && strpos(Uri::base(), $targetDir) !== false) {
+        if (!file_exists($targetDir) && !is_dir($targetDir) && str_contains(Uri::base(), $targetDir)) {
             $this->setResponse(100, Text::_('JBS_ERROR_UPLOAD_INVALID_PATH'));
         }
 

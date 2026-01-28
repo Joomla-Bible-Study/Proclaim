@@ -82,9 +82,9 @@ class CWMHtml5Inline
         $acceptedFormats = array_merge($videoFormats, $audioFormats);
 
         if (
-            !strpos($media->path1, 'youtube.com')
-            && !strpos($media->path1, 'youtu.be')
-            && !strpos($media->path1, 'rtmp://')
+            !str_contains($media->path1, 'youtube.com')
+            && !str_contains($media->path1, 'youtu.be')
+            && !str_contains($media->path1, 'rtmp://')
             && !self::isMimeTypeAllowed($media->params->get('mime_type'), $acceptedFormats)
         ) {
             return '<a href="' . $media->path1 . '"><img src="' . Uri::root() . $params->get(

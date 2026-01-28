@@ -51,7 +51,7 @@ class ProclaimHelper implements DatabaseAwareInterface
 
         $groups = [1];
 
-if ($user !== null && !$user->guest) {
+        if ($user !== null && !$user->guest) {
             $groups = $user->getAuthorisedViewLevels();
         }
 

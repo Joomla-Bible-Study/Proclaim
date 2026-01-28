@@ -269,7 +269,7 @@ class CwmpodcastdisplayModel extends ItemModel
         $this->setState('template', $template);
         $this->setState('administrator', $admin);
 
-// Get show_archived parameter from menu, fall back to template default
+        // Get show_archived parameter from menu, fall back to template default
         $showArchived = $params->get('show_archived', '');
         if ($showArchived === '' || $showArchived === null) {
             $showArchived = $params->get('default_show_archived', '0');

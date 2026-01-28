@@ -45,7 +45,7 @@ class Cwmtags
      *
      * @since 7.0
      */
-    public static function isDuplicate($study_id, $topic_id)
+    public static function isDuplicate($study_id, $topic_id): bool
     {
         Factory::getApplication()->enqueueMessage('Need to update this function', 'error');
 
