@@ -295,7 +295,7 @@ class CwmseriesdisplaysModel extends ListModel
      *
      * @since   1.6
      */
-    protected function getStoreId($id = '')
+    protected function getStoreId($id = ''): string
     {
         // Compile the store id.
         $id .= ':' . serialize($this->getState('filter.published'));

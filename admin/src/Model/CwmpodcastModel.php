@@ -108,7 +108,7 @@ class CwmpodcastModel extends AdminModel
      * @throws \Exception
      * @since   7.0
      */
-    protected function loadFormData()
+    protected function loadFormData(): mixed
     {
         $data = Factory::getApplication()->getUserState('com_proclaim.edit.podcast.data', []);
 

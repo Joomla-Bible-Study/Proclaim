@@ -39,7 +39,7 @@ class CwmlocationModel extends AdminModel
      * @throws \Exception
      * @since     7.0
      */
-    public function store()
+    public function store(): bool
     {
         $row   = $this->getTable();
         $input = new Input();

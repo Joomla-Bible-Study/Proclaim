@@ -71,7 +71,7 @@ class CwmcommentsModel extends ListModel
      * @throws \Exception
      * @since 7.0
      */
-    protected function populateState($ordering = 'comment.comment_date', $direction = 'desc')
+    protected function populateState($ordering = 'comment.comment_date', $direction = 'desc'): void
     {
         $app = Factory::getApplication();
 
@@ -146,7 +146,7 @@ class CwmcommentsModel extends ListModel
      *
      * @since   7.0
      */
-    protected function getListQuery()
+    protected function getListQuery(): mixed
     {
         // Create a new query object.
         $db = Factory::getContainer()->get('DatabaseDriver');

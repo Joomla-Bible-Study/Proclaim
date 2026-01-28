@@ -51,7 +51,7 @@ class CwmtemplateModel extends AdminModel
      * @throws \Exception
      * @since   12.2
      */
-    public function save($data)
+    public function save($data): bool
     {
         // Make sure we cannot unpublished default template.
         if ($data['id'] == '1' && $data['published'] != '1') {
