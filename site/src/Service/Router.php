@@ -38,7 +38,7 @@ class Router extends RouterView
      * @var    bool
      * @since  10.0.0
      */
-    protected $noIDs = false;
+    protected bool $noIDs = false;
 
     /**
      * The db
@@ -47,7 +47,7 @@ class Router extends RouterView
      *
      * @since  4.0.0
      */
-    private $db;
+    private DatabaseInterface $db;
 
     private string|int $cacheiddata = 0;
 
