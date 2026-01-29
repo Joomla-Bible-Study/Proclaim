@@ -47,7 +47,8 @@
   "autoload": {
     "psr-12": {
       "CWM\\Component\\Proclaim\\Administrator\\": "admin/src/",
-      "CWM\\Component\\Proclaim\\Site\\": "site/src/"
+      "CWM\\Component\\Proclaim\\Site\\": "site/src/",
+      "CWM\\Proclaim\\Libraries\\": "libraries/src/"
     }
   },
   "autoload-dev": {
@@ -93,10 +94,11 @@
   },
   "scripts": {
     "test": "phpunit",
-    "lint": "php-cs-fixer fix --dry-run --diff",
-    "lint:fix": "php-cs-fixer fix",
+    "lint": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --dry-run --diff",
+    "lint:fix": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix",
     "cs": "phpcs . --standard=./build/psr12/ruleset.xml",
     "check": ["@lint", "@test"],
+    "build:assets": "npm install && npm run build",
     "setup": "libraries/vendor/bin/phing dev.setup",
     "joomla-install": "libraries/vendor/bin/phing joomla.install",
     "joomla-latest": "libraries/vendor/bin/phing joomla.get-latest-version",

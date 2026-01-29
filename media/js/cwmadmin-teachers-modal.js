@@ -15,7 +15,9 @@
 
         if (!Joomla.getOptions('xtd-teachers')) {
             // Something went wrong!
-            // @TODO Close the modal
+            if (window.parent.Joomla.Modal) {
+                window.parent.Joomla.Modal.getCurrent().close()
+            }
             return false
         }
 

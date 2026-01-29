@@ -67,7 +67,31 @@
         </exec>
     </target>
 
-    <target name="component" depends="init" description="Build component">
+    <target name="jest" depends="init" description="Run JavaScript tests with Jest">
+        <echo message="Running JavaScript tests..."/>
+        <exec executable="npm" passthru="true" checkreturn="true">
+            <arg line="test"/>
+        </exec>
+    </target>
+
+    <target name="jest-coverage" depends="init" description="Run JavaScript tests with coverage">
+        <echo message="Running JavaScript tests with coverage..."/>
+        <exec executable="npm" passthru="true" checkreturn="true">
+            <arg line="run test:coverage"/>
+        </exec>
+    </target>
+
+    <target name="build-assets" description="Build frontend assets (JS/CSS)">
+        <echo message="Building frontend assets..."/>
+        <exec executable="npm" passthru="true" checkreturn="true">
+            <arg line="install"/>
+        </exec>
+        <exec executable="npm" passthru="true" checkreturn="true">
+            <arg line="run build"/>
+        </exec>
+    </target>
+
+    <target name="component" depends="init,build-assets" description="Build component">
         <input message="Enter the version you are building. ex. 10.0.0" propertyName="version" defaultValue="10.0.x"/>
         <delete file="${basedir}/build/com_proclaim-${version}.zip"/>
         <zip destfile="${basedir}/build/com_proclaim-${version}.zip">
@@ -100,6 +124,8 @@
                 <exclude name="composer.lock"/>
                 <exclude name="package.json"/>
                 <exclude name="package-lock.json"/>
+                <exclude name="rollup.config.js"/>
+                <exclude name="build-css.js"/>
             </fileset>
         </zip>
         <phingcall target="dev.init"/>
@@ -171,7 +197,7 @@
         <phingcall target="dev.init"/>
     </target>
 
-    <target name="build" depends="init,lint,phpcs,phpunit,component"/>
+    <target name="build" depends="init,lint,phpcs,phpunit,jest,component"/>
 
     <!-- Interactive setup wizard for build.properties -->
     <target name="dev.setup" description="Interactive setup wizard for build.properties">

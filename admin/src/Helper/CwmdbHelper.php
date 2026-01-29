@@ -22,8 +22,8 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\Database\DatabaseInterface;
-use Joomla\Filesystem\Folder;
 use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 
 /**
  * Database Helper class for version 7.1.0
@@ -463,8 +463,8 @@ class CwmdbHelper
      */
     public static function resetdb($install = false): bool|int
     {
-        $app = Factory::getApplication();
-        $db  = Factory::getContainer()->get('DatabaseDriver');
+        $app  = Factory::getApplication();
+        $db   = Factory::getContainer()->get('DatabaseDriver');
         $path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_proclaim/sql';
 
         $files = str_replace('.sql', '', Folder::files($path, '\.sql$'));
@@ -581,7 +581,7 @@ class CwmdbHelper
                                     );
                                 } else {
                                     $app->enqueueMessage('Removed Duplicat topic Record ' . $id->id, 'notice');
-                                 }
+                                }
 
                                 $t++;
                             }

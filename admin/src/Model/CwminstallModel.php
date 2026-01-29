@@ -345,7 +345,7 @@ class CwminstallModel extends ListModel
         } else {
             // New Install
             // Add guided tours to the finish steps
-            if (!in_array('registerguidedtours', $this->finish)) {
+            if (!\in_array('registerguidedtours', $this->finish)) {
                 $this->finish[] = 'registerguidedtours';
                 $this->totalSteps++;
             }

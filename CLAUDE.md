@@ -12,11 +12,17 @@ Proclaim (CWM Proclaim) is a Joomla 4+ component for managing and displaying Bib
 ## Build Commands
 
 ```bash
-# Install dependencies (vendor dir is libraries/vendor)
+# Install PHP dependencies (vendor dir is libraries/vendor)
 composer install --dev
 
-# Run tests
+# Install JS dependencies
+npm install
+
+# Run PHP tests
 ./libraries/vendor/bin/phpunit
+
+# Run JS tests
+npm test
 
 # Run a single test file
 ./libraries/vendor/bin/phpunit tests/unit/Admin/Helper/CwmparamsTest.php
@@ -81,6 +87,8 @@ Messages (sermons), Teachers, Series, Topics, Locations, MediaFiles, Servers, Po
 
 ## Testing
 
+### PHP Tests (PHPUnit)
+
 Tests are in `tests/unit/` with structure mirroring the source:
 - `tests/unit/Admin/Helper/` - Admin helper tests
 - `tests/unit/Site/Helper/` - Site helper tests
@@ -88,6 +96,25 @@ Tests are in `tests/unit/` with structure mirroring the source:
 - `tests/unit/Site/Model/` - Site model tests
 
 Base test class: `CWM\Component\Proclaim\Tests\ProclaimTestCase`
+
+### JavaScript Tests (Jest)
+
+JS tests are in `tests/js/` and use Jest with jsdom for DOM testing.
+
+```bash
+# Run JS tests
+npm test
+
+# Run JS tests in watch mode (for development)
+npm run test:watch
+
+# Run JS tests with coverage
+npm run test:coverage
+```
+
+Test files should be named `*.test.js` or `*.spec.js`. Coverage reports are generated in `build/reports/coverage-js/`.
+
+**PhpStorm Integration**: Jest is auto-detected. Use gutter icons next to tests, or right-click test files to run.
 
 ## Code Style
 
