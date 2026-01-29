@@ -1,10 +1,14 @@
+/* jshint node: true, esversion: 11 */
+"use strict";
+
 const babel = require('@rollup/plugin-babel');
 const resolve = require('@rollup/plugin-node-resolve');
 const terser = require('@rollup/plugin-terser');
 const fs = require('fs');
 const path = require('path');
 
-const sourceDir = 'media/js';
+const sourceDir = path.resolve(__dirname, '../media/js');
+const outputDir = sourceDir;
 
 // Helper to find files
 const getFiles = (dir) => {
@@ -24,7 +28,7 @@ module.exports = files.flatMap(file => {
 
     // Determine ES5 output filename based on existing convention
     let es5Filename = `${name}.es5.js`;
-    if (fs.existsSync(path.join(sourceDir, `${name}-es5.js`))) {
+    if (fs.existsSync(path.join(outputDir, `${name}-es5.js`))) {
         es5Filename = `${name}-es5.js`;
     }
 
@@ -38,7 +42,7 @@ module.exports = files.flatMap(file => {
         {
             input: filePath,
             output: {
-                file: path.join(sourceDir, `${name}.min.js`),
+                file: path.join(outputDir, `${name}.min.js`),
                 format: 'iife',
                 name: name.replace(/-/g, '_'),
                 sourcemap: true
@@ -52,7 +56,7 @@ module.exports = files.flatMap(file => {
         {
             input: filePath,
             output: {
-                file: path.join(sourceDir, es5Filename),
+                file: path.join(outputDir, es5Filename),
                 format: 'iife',
                 name: name.replace(/-/g, '_')
             },
@@ -69,7 +73,7 @@ module.exports = files.flatMap(file => {
         {
             input: filePath,
             output: {
-                file: path.join(sourceDir, es5Filename.replace('.js', '.min.js')),
+                file: path.join(outputDir, es5Filename.replace('.js', '.min.js')),
                 format: 'iife',
                 name: name.replace(/-/g, '_'),
                 sourcemap: true

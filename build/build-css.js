@@ -1,8 +1,11 @@
+/* jshint node: true, esversion: 11 */
+"use strict";
+
 const fs = require('fs');
 const path = require('path');
 const csso = require('csso');
 
-const cssDir = path.join(__dirname, 'media/css');
+const cssDir = path.join(__dirname, '../media/css');
 
 function minifyDir(dir) {
     const files = fs.readdirSync(dir);

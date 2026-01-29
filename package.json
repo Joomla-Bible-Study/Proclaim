@@ -47,12 +47,12 @@
   ],
   "scripts": {
     "build": "npm run build:js && npm run build:css",
-    "build:js": "rollup -c",
-    "build:css": "node build-css.js",
-    "watch": "rollup -c -w",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "build:js": "rollup -c build/rollup.config.js",
+    "build:css": "node build/build-css.js",
+    "watch": "rollup -c build/rollup.config.js -w",
+    "test": "jest -c build/jest.config.js",
+    "test:watch": "jest -c build/jest.config.js --watch",
+    "test:coverage": "jest -c build/jest.config.js --coverage"
   },
   "dependencies": {
     "@hapi/cryptiles": "^6.0.3",

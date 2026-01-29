@@ -124,8 +124,6 @@
                 <exclude name="composer.lock"/>
                 <exclude name="package.json"/>
                 <exclude name="package-lock.json"/>
-                <exclude name="rollup.config.js"/>
-                <exclude name="build-css.js"/>
             </fileset>
         </zip>
         <phingcall target="dev.init"/>

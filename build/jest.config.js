@@ -1,6 +1,9 @@
+/* jshint node: true, esversion: 11 */
+
 /**
  * Jest configuration for Proclaim JavaScript testing
  * Optimized for PhpStorm integration
+ * @see https://jestjs.io/docs/configuration
  *
  * @type {import('jest').Config}
  */
@@ -62,7 +65,7 @@ module.exports = {
     reporters: ['default'],
 
     // Root directory
-    rootDir: '.',
+    rootDir: '..',
 
     // Module name mapper for any aliases
     moduleNameMapper: {
