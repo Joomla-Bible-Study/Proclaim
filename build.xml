@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="proclaim" default="build" basedir=".">
+    <tstamp/>
     <property file="build.properties" override="false"/>
     <autoloader autoloaderpath="${project.basedir}/libraries/vendor/autoload.php"/>
 
@@ -113,6 +114,7 @@
                 <exclude name="phpunit.xml.bak"/>
                 <exclude name=".php-cs-fixer.dist.php"/>
                 <exclude name="CLAUDE.md"/>
+                <exclude name="GEMINI.md"/>
                 <exclude name="SECURITY.md"/>
                 <exclude name="_config.yml"/>
                 <exclude name=".git*"/>
@@ -291,10 +293,10 @@ joomla.version=${input.joomla_version}
 
         <!-- Fetch latest version for display -->
         <mkdir dir="${basedir}/build"/>
-        <exec executable="curl" failonerror="false">
+        <exec executable="curl">
             <arg line="-s -o ${basedir}/build/joomla-latest.json https://api.github.com/repos/joomla/joomla-cms/releases/latest"/>
         </exec>
-        <exec executable="php" outputProperty="joomla.latest.available" failonerror="false">
+        <exec executable="php" outputProperty="joomla.latest.available">
             <arg line="-r &quot;echo json_decode(file_get_contents('${basedir}/build/joomla-latest.json'))->tag_name ?? 'unknown';&quot;"/>
         </exec>
         <echo message="Latest available version: ${joomla.latest.available}"/>
@@ -348,16 +350,9 @@ Enter choice (1/2/3):"
                 <if>
                     <equals arg1="${joomla.update.config}" arg2="y"/>
                     <then>
-                        <reflexive>
-                            <fileset dir="${basedir}">
-                                <include name="build.properties"/>
-                            </fileset>
-                            <filterchain>
-                                <replaceregexp>
-                                    <regexp pattern="joomla\.version=.*" replace="joomla.version=${joomla.install.version}"/>
-                                </replaceregexp>
-                            </filterchain>
-                        </reflexive>
+                        <propertyfile file="${basedir}/build.properties">
+                            <entry key="joomla.version" value="${joomla.install.version}"/>
+                        </propertyfile>
                         <echo message="Updated build.properties with joomla.version=${joomla.install.version}"/>
                     </then>
                 </if>
