@@ -172,7 +172,8 @@ $version = [
     'reldate'    => $date->format('j-F-Y'),
     'reltime'    => $date->format('H:i'),
     'reltz'      => 'GMT',
-    'credate'    => $date->format('Y-m'),
+    'credate'    => $date->format('M j, Y'),
+    'year'       => $date->format('Y'),
 ];
 
 // Version Codename.
@@ -193,6 +194,7 @@ echo '- Release date:' . PHP_TAB . PHP_TAB . $version['reldate'] . PHP_EOL;
 echo '- Release time:' . PHP_TAB . PHP_TAB . $version['reltime'] . PHP_EOL;
 echo '- Release timezone:' . PHP_TAB . $version['reltz'] . PHP_EOL;
 echo '- Creation date:' . PHP_TAB . $version['credate'] . PHP_EOL;
+echo '- Copyright year:' . PHP_TAB . $version['year'] . PHP_EOL;
 
 if (!empty($version['codename'])) {
     echo '- Codename:' . PHP_TAB . PHP_TAB . $version['codename'] . PHP_EOL;
@@ -236,6 +238,13 @@ if (file_exists($rootPath . $versionFile)) {
             $fileContents
         );
     }
+
+    // Update the COPYRIGHT constant
+    $fileContents = preg_replace(
+        "#COPYRIGHT\s*=\s*'[^\']*'#",
+        "COPYRIGHT = '(C) " . $version['year'] . " CWM Team All rights reserved<https://www.christianwebministries.org>'",
+        $fileContents
+    );
 
     file_put_contents($rootPath . $versionFile, $fileContents);
 }
@@ -383,7 +392,7 @@ foreach ($iterator as $file) {
             }
 
             // Update copyright years in PHP/JS/SQL files (CWM Team copyrights only).
-            // Matches patterns like: @copyright  (C) 2025 CWM Team, @copyright  (C) 2007 CWM Team, etc.
+            // Matches patterns like: @copyright  (C) 2026 CWM Team, @copyright  (C) 2026 CWM Team, etc.
             if (preg_match('#\.(php|js|sql)$#', $filePath)) {
                 // Pattern for @copyright with various year formats - update to current year
                 $newContents = preg_replace(

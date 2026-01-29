@@ -51,7 +51,7 @@ final class Version
      * @var    int
      * @since  3.8.0
      */
-    public const MINOR_VERSION = 0;
+    public const MINOR_VERSION = 1;
 
     /**
      * Patch release version.
@@ -59,7 +59,7 @@ final class Version
      * @var    int
      * @since  3.8.0
      */
-    public const PATCH_VERSION = 1;
+    public const PATCH_VERSION = 0;
 
     /**
      * Extra release version info.
@@ -94,7 +94,7 @@ final class Version
      * @var    string
      * @since  3.5
      */
-    public const RELDATE = '18-November-2023';
+    public const RELDATE = '29-January-2026';
 
     /**
      * Release time.
@@ -102,7 +102,7 @@ final class Version
      * @var    string
      * @since  3.5
      */
-    public const RELTIME = '14:48';
+    public const RELTIME = '17:11';
 
     /**
      * Release timezone.
@@ -118,7 +118,7 @@ final class Version
      * @var    string
      * @since  3.5
      */
-    public const COPYRIGHT = '(C) 2025 CWM Team All rights reserved<https://www.christianwebministries.org>';
+    public const COPYRIGHT = '(C) 2026 CWM Team All rights reserved<https://www.christianwebministries.org>';
 
     /**
      * Link text.

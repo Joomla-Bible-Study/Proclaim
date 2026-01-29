@@ -34,6 +34,7 @@ A Joomla 4+ component for managing and displaying Bible studies and sermons, dev
 
 - PHP 8.3.0+
 - Composer
+- Node.js 20.0.0+ and npm 10.1.0+
 - Joomla 4+ installation
 - Git
 
@@ -46,12 +47,13 @@ cd Proclaim
 
 # Install dependencies (creates build.properties from template if missing)
 composer install --dev
+npm install
 
 # Run interactive setup wizard (configures paths and optionally installs Joomla)
 composer setup
 
 # Or manually configure build.properties and set up symbolic links
-./libraries/vendor/bin/phing dev.Setup_Symbolic_Links
+composer symlink
 ```
 
 ### Common Commands
@@ -59,16 +61,16 @@ composer setup
 | Command | Description |
 |---------|-------------|
 | `composer setup` | Interactive setup wizard |
-| `composer joomla-install` | Download and install Joomla (choose version) |
-| `composer joomla-latest` | Show latest available Joomla version |
+| `composer joomla-install` | Download and install Joomla |
+| `composer joomla-latest` | Show latest Joomla version available |
 | `composer symlink` | Create symbolic links to Joomla |
+| `composer clean` | Remove symbolic links (clean dev state) |
 | `composer test` | Run PHPUnit tests |
-| `composer lint` | Check code style (dry-run) |
+| `composer check` | Run syntax + lint + tests |
+| `composer check:all` | Run all checks + all tests (PHP + JS) |
 | `composer lint:fix` | Fix code style issues |
-| `composer cs` | Run PHPCS |
-| `composer check` | Run lint + tests together |
-| `./libraries/vendor/bin/phing build` | Full build |
-| `./libraries/vendor/bin/phing dev.full-setup` | Full setup in one command |
+| `composer build` | Build component package (zip) |
+| `composer build:full` | Run all checks then build |
 
 ## Contributing
 
@@ -77,7 +79,7 @@ We appreciate contributions in various capacities.
 ### Development Workflow
 
 1. [Fork this repository](http://help.github.com/fork-a-repo/)
-2. Install dependencies: `composer install --dev`
+2. Install dependencies: `composer install --dev && npm install`
 3. Run setup wizard: `composer setup`
 4. [Create a topic branch](http://learn.github.com/p/branching.html)
 5. Implement your feature or bug fix
