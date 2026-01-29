@@ -45,14 +45,14 @@
     "docs": "https://www.christianwebministries.org/docs"
   },
   "autoload": {
-    "psr-12": {
+    "psr-4": {
       "CWM\\Component\\Proclaim\\Administrator\\": "admin/src/",
       "CWM\\Component\\Proclaim\\Site\\": "site/src/",
       "CWM\\Proclaim\\Libraries\\": "libraries/src/"
     }
   },
   "autoload-dev": {
-    "psr-12": {
+    "psr-4": {
       "CWM\\Component\\Proclaim\\Tests\\": "tests/unit/"
     }
   },

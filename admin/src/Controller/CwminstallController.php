@@ -56,7 +56,22 @@ class CwminstallController extends BaseController
     /**
      * Constructor.
      *
-     * @param   string  $task  An optional associative array of configuration settings.
+     * @param   array  $config  An optional associative array of configuration settings.
+     *
+     * @return void
+     *
+     * @throws \Exception
+     * @since 9.0.0
+     */
+    public function __construct($config = [])
+    {
+        parent::__construct($config);
+    }
+
+    /**
+     * Execute the task.
+     *
+     * @param   string  $task  The task to execute.
      *
      * @return void
      *
@@ -92,8 +107,7 @@ class CwminstallController extends BaseController
         $stack   = $session->get('migration_stack', '', 'CWM');
 
         if (empty($stack) || !\is_array($stack)) {
-            Cwmhelper::clearCache('site');
-            Cwmhelper::clearCache('administrator');
+            Cwmhelper::clearCache();
             $session->set('migration_stack', '', 'CWM');
 
             $model = new CwminstallModel();
@@ -146,8 +160,7 @@ class CwminstallController extends BaseController
             throw new \Exception(Text::_('JINVALID_TOKEN'));
         }
 
-        Cwmhelper::clearCache('site');
-        Cwmhelper::clearCache('administrator');
+        Cwmhelper::clearCache();
         $session = Factory::getApplication()->getSession();
         $session->set('migration_stack', '', 'CWM');
         $app = Factory::getApplication();

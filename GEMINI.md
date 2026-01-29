@@ -63,6 +63,7 @@ composer symlink
 ### Directory Layout
 - `admin/src/`: Backend component logic (Namespace: `CWM\Component\Proclaim\Administrator`)
 - `site/src/`: Frontend component logic (Namespace: `CWM\Component\Proclaim\Site`)
+- `libraries/src/`: Shared library logic (Namespace: `CWM\Proclaim\Libraries`)
 - `libraries/vendor/`: Composer dependencies (non-standard location)
 - `media/`: CSS, JavaScript, and other assets
 - `modules/`: Joomla modules (both admin and site)

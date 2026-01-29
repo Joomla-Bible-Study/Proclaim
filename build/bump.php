@@ -4,7 +4,7 @@
  * Script used to make a version bump
  *
  * Updates:
- * - Version in libraries/src/Version.php
+ * - Version in admin/src/Helper/Version.php
  * - Version and creationDate in all XML manifest files (component, modules, plugins)
  * - Copyright years to current year in all PHP, JS, SQL, and XML files
  * - Replaces __DEPLOY_VERSION__ placeholder with release version
@@ -42,7 +42,7 @@ function usage($command): void
 const PHP_TAB = "\t";
 
 // File paths.
-$versionFile = '/libraries/src/Version.php';
+$versionFile = '/admin/src/Helper/Version.php';
 
 $coreXmlFiles = [
     '/proclaim.xml',

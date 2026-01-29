@@ -10,7 +10,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Proclaim\Libraries;
+namespace CWM\Component\Proclaim\Administrator\Helper;
 
 use Joomla\CMS\Cache\CacheController;
 use Joomla\CMS\Cache\CacheControllerFactoryInterface;

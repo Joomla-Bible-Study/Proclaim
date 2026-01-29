@@ -45,6 +45,11 @@ try {
     exit(1);
 }
 
+/**
+ * Displays the help message with available commands.
+ *
+ * @return void
+ */
 function showHelp()
 {
     echo "Proclaim Build Tool\n";
@@ -59,6 +64,12 @@ function showHelp()
     echo "  lint-syntax     Check PHP syntax errors\n";
 }
 
+/**
+ * Reads and parses the build.properties file.
+ *
+ * @return array Associative array of properties.
+ * @throws Exception If build.properties does not exist.
+ */
 function getProperties()
 {
     if (!file_exists(PROPERTIES_FILE)) {
@@ -79,6 +90,13 @@ function getProperties()
     return $props;
 }
 
+/**
+ * Prompts the user for input via STDIN.
+ *
+ * @param string $question The question to ask.
+ * @param string|null $default The default value if no input is provided.
+ * @return string The user's input or the default value.
+ */
 function ask($question, $default = null)
 {
     echo $question . ($default ? " [$default]" : "") . ": ";
@@ -89,6 +107,11 @@ function ask($question, $default = null)
     return $line === '' ? $default : $line;
 }
 
+/**
+ * Runs the interactive setup wizard to configure build.properties.
+ *
+ * @return void
+ */
 function doSetup()
 {
     echo "=== Proclaim Development Setup Wizard ===\n\n";
@@ -113,7 +136,14 @@ function doSetup()
     }
 }
 
-function doLink()
+/**
+ * Creates symbolic links between the project and a local Joomla installation.
+ *
+ * @param bool $quiet If true, suppresses non-error output.
+ * @return void
+ * @throws Exception If the Joomla path does not exist.
+ */
+function doLink($quiet = false)
 {
     $props      = getProperties();
     $joomlaPath = rtrim($props['builder.joomla_path'], '/') . '/' . trim($props['builder.joomla_dir'], '/');
@@ -123,15 +153,17 @@ function doLink()
         throw new Exception("Joomla path does not exist: $joomlaPath");
     }
 
-    echo "Linking to Joomla at: $joomlaPath\n";
+    if (!$quiet) {
+        echo "Linking to Joomla at: $joomlaPath\n";
+    }
 
     // Internal links (dev.init)
-    symlink_force(BASE_DIR . '/proclaim.xml', BASE_DIR . '/admin/proclaim.xml');
-    symlink_force(BASE_DIR . '/proclaim.script.php', BASE_DIR . '/admin/proclaim.script.php');
+    symlink_force(BASE_DIR . '/proclaim.xml', BASE_DIR . '/admin/proclaim.xml', $quiet);
+    symlink_force(BASE_DIR . '/proclaim.script.php', BASE_DIR . '/admin/proclaim.script.php', $quiet);
     if (!is_dir(BASE_DIR . '/media/css/site')) {
         mkdir(BASE_DIR . '/media/css/site', 0777, true);
     }
-    symlink_force(BASE_DIR . '/media/css/cwmcore.css', BASE_DIR . '/media/css/site/cwmcore.css');
+    symlink_force(BASE_DIR . '/media/css/cwmcore.css', BASE_DIR . '/media/css/site/cwmcore.css', $quiet);
 
     // External links
     $links = [
@@ -147,35 +179,83 @@ function doLink()
     ];
 
     foreach ($links as $target => $link) {
-        symlink_force($target, $link);
+        symlink_force($target, $link, $quiet);
     }
 
-    echo "Symlinks created successfully.\n";
+    if (!$quiet) {
+        echo "Symlinks created successfully.\n";
+    }
 }
 
-function symlink_force($target, $link)
+/**
+ * Forces creation of a symbolic link, removing any existing file or directory at the link path.
+ *
+ * @param string $target The target path the link should point to.
+ * @param string $link The path where the link should be created.
+ * @param bool $quiet If true, suppresses success messages.
+ * @return void
+ */
+function symlink_force($target, $link, $quiet = false)
 {
-    if (file_exists($link) || is_link($link)) {
-        if (PHP_OS_FAMILY === 'Windows') {
-            if (is_dir($link)) {
-                rmdir($link);
+    // Clear file status cache to ensure we get fresh results
+    clearstatcache(true, $link);
+
+    // Check if link/file exists
+    // Note: is_link() returns true for symlinks (even broken ones)
+    // file_exists() returns true for files and directories (and valid symlinks to them)
+    if (is_link($link)) {
+        // It is a symlink, just unlink it
+        if (!@unlink($link)) {
+            echo "WARNING: Failed to unlink symlink $link\n";
+        }
+    } elseif (file_exists($link)) {
+        // It is a real file or directory (not a symlink)
+        if (is_dir($link)) {
+            // Recursive delete for directories
+            if (PHP_OS_FAMILY === 'Windows') {
+                exec("rmdir /s /q " . escapeshellarg($link), $output, $returnVar);
             } else {
-                unlink($link);
+                exec("rm -rf " . escapeshellarg($link), $output, $returnVar);
+            }
+            if (isset($returnVar) && $returnVar !== 0) {
+                echo "WARNING: Failed to remove directory $link\n";
             }
         } else {
-            exec("rm -rf " . escapeshellarg($link));
+            // Regular file
+            if (!@unlink($link)) {
+                echo "WARNING: Failed to unlink file $link\n";
+            }
         }
     }
+
     // Ensure parent dir exists
     $parent = \dirname($link);
     if (!is_dir($parent)) {
-        mkdir($parent, 0777, true);
+        if (!mkdir($parent, 0777, true)) {
+            echo "ERROR: Failed to create parent directory $parent\n";
+            return;
+        }
     }
 
-    echo "Linking $link -> $target\n";
-    symlink($target, $link);
+    if (!$quiet) {
+        echo "Linking $link -> $target\n";
+    }
+    
+    if (!@symlink($target, $link)) {
+        echo "ERROR: Failed to create symlink $link -> $target\n";
+        $e = error_get_last();
+        if ($e) {
+            echo "  Details: " . $e['message'] . "\n";
+        }
+    }
 }
 
+/**
+ * Builds the component package (ZIP file).
+ *
+ * @return void
+ * @throws Exception If asset build fails or ZIP creation fails.
+ */
 function doBuild()
 {
     // Build assets first
@@ -185,7 +265,46 @@ function doBuild()
         throw new Exception("Asset build failed");
     }
 
-    $version = ask("Enter the version you are building", "10.0.x");
+    // Get version from proclaim.xml
+    $xmlVersion = "10.0.x";
+    if (file_exists(BASE_DIR . '/proclaim.xml')) {
+        $xml = simplexml_load_file(BASE_DIR . '/proclaim.xml');
+        if ($xml && isset($xml->version)) {
+            $xmlVersion = (string) $xml->version;
+        }
+    }
+
+    // Generate date-based version
+    $dateVersion = date('Ymd');
+
+    // Check if running in a non-interactive environment
+    if (stream_isatty(STDIN)) {
+        echo "\nSelect version to build:\n";
+        echo "  [1] XML Version ($xmlVersion) - Default\n";
+        echo "  [2] Date Version ($dateVersion)\n";
+        echo "  [3] Custom Version\n";
+        
+        $choice = ask("Enter choice [1-3]", "1");
+        
+        switch ($choice) {
+            case '2':
+                $version = $dateVersion;
+                break;
+            case '3':
+                $version = ask("Enter custom version");
+                break;
+            case '1':
+            default:
+                $version = $xmlVersion;
+                break;
+        }
+    } else {
+        echo "Non-interactive mode detected. Using XML version: $xmlVersion\n";
+        $version = $xmlVersion;
+    }
+
+    echo "\nPackaging Proclaim v$version...\n";
+
     $zipFile = BUILD_DIR . "/com_proclaim-$version.zip";
 
     if (file_exists($zipFile)) {
@@ -206,7 +325,11 @@ function doBuild()
         'build.xml', 'build.properties', 'build.dist.properties', 'phpunit.xml', 'phpunit.xml.bak',
         '.php-cs-fixer.dist.php', 'CLAUDE.md', 'GEMINI.md', 'SECURITY.md', '_config.yml',
         '.git', '.vscode', '.idea', '.ds_store', 'node_modules', 'composer.json', 'composer.lock',
-        'package.json', 'package-lock.json', 'build/', 'tests/',
+        'package.json', 'package-lock.json', 'build', 'tests',
+        // Exclude internal symlinks created by doLink
+        'admin/proclaim.xml',
+        'admin/proclaim.script.php',
+        'media/css/site/cwmcore.css',
     ];
 
     $includes    = ['admin/', 'media/', 'modules/', 'plugins/', 'site/', 'libraries/'];
@@ -218,12 +341,34 @@ function doBuild()
         }
 
         $filePath     = $file->getRealPath();
-        $relativePath = substr($filePath, \strlen(BASE_DIR) + 1);
+        // Normalize path separators to forward slashes
+        $relativePath = str_replace('\\', '/', substr($filePath, \strlen(BASE_DIR) + 1));
 
         // Check excludes
         $excludeFile = false;
         foreach ($excludes as $exclude) {
-            if (str_starts_with($relativePath, $exclude) || str_contains($relativePath, "/$exclude")) {
+            $cleanExclude = rtrim($exclude, '/');
+
+            // 1. Exact match (root file or folder)
+            if ($relativePath === $cleanExclude) {
+                $excludeFile = true;
+                break;
+            }
+
+            // 2. Start with exclude + / (content of excluded folder in root)
+            if (str_starts_with($relativePath, $cleanExclude . '/')) {
+                $excludeFile = true;
+                break;
+            }
+
+            // 3. Inside a subdirectory (e.g. some/path/exclude/...)
+            if (str_contains($relativePath, '/' . $cleanExclude . '/')) {
+                $excludeFile = true;
+                break;
+            }
+
+            // 4. End with /exclude (file or folder in subdirectory)
+            if (str_ends_with($relativePath, '/' . $cleanExclude)) {
                 $excludeFile = true;
                 break;
             }
@@ -254,12 +399,21 @@ function doBuild()
     }
 
     $zip->close();
-    echo "Created $zipFile\n";
 
-    // Restore dev state (symlinks)
-    doLink();
+    echo "\n" . str_repeat('=', 50) . "\n";
+    echo "  BUILD COMPLETE\n";
+    echo str_repeat('=', 50) . "\n";
+    echo "  Version:  $version\n";
+    echo "  Package:  " . basename($zipFile) . "\n";
+    echo "  Location: $zipFile\n";
+    echo str_repeat('=', 50) . "\n";
 }
 
+/**
+ * Downloads and installs a specific version of Joomla.
+ *
+ * @return void
+ */
 function doInstallJoomla()
 {
     $props       = getProperties();
@@ -303,6 +457,11 @@ function doInstallJoomla()
     unlink($zipFile);
 }
 
+/**
+ * Removes all symbolic links created by the link command.
+ *
+ * @return void
+ */
 function doClean()
 {
     echo "Cleaning up development state...\n";
@@ -359,6 +518,12 @@ function doClean()
     echo "Clean complete.\n";
 }
 
+/**
+ * Fetches and displays the latest available Joomla version from GitHub.
+ *
+ * @return void
+ * @throws Exception If the GitHub API request fails.
+ */
 function doJoomlaLatest()
 {
     echo "Fetching latest Joomla version from GitHub...\n";
@@ -389,6 +554,11 @@ function doJoomlaLatest()
     echo "\nTo install: composer joomla-install\n";
 }
 
+/**
+ * Checks all PHP files in the project for syntax errors.
+ *
+ * @return void
+ */
 function doLintSyntax()
 {
     echo "Checking PHP syntax...\n";
