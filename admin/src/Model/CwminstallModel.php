@@ -963,238 +963,135 @@ class CwminstallModel extends ListModel
      */
     private function finish(string $step): void
     {
-        match ($step) {
-            'updateversion' => $this->finishUpdateVersion(),
-            'fixassets' => $this->finishFixAssets(),
-            'fixmenus' => $this->finishFixMenus(),
-            'fixemptyaccess' => $this->finishFixEmptyAccess(),
-            'fixemptylanguage' => $this->finishFixEmptyLanguage(),
-            'updatetemplatedefaults' => $this->finishUpdateTemplateDefaults(),
-            'registerguidedtours' => $this->finishRegisterGuidedTours(),
-            'rmoldurl' => $this->finishRemoveOldUrl(),
-            'setupdateurl' => $this->finishSetUpdateUrl(),
-            'podcastlinkmissing' => $this->finishPodcastLinkMissing(),
-            default => $this->finishDefault(),
-        };
-    }
+        $app = Factory::getApplication();
 
-    /**
-     * Finish step: Update version in schema
-     *
-     * @return void
-     *
-     * @throws \Exception
-     * @since  10.1.0
-     */
-    private function finishUpdateVersion(): void
-    {
-        $update = $this->getUpdateVersion();
-        $this->setSchemaVersion($update, $this->biblestudyEid);
-        $this->running = 'Update Version';
-    }
+        switch ($step) {
+            case 'updateversion':
+                $update = $this->getUpdateVersion();
 
-    /**
-     * Finish step: Fix assets by building what needs to be fixed
-     *
-     * @return void
-     *
-     * @since 10.1.0
-     */
-    private function finishFixAssets(): void
-    {
-        $assets             = new Cwmassets();
-        $string             = $assets->build();
-        $this->installQuery = $string->query;
-        $this->totalSteps  += $string->count;
-    }
-
-    /**
-     * Finish step: Fix menus
-     *
-     * @return void
-     *
-     * @since 10.1.0
-     */
-    private function finishFixMenus(): void
-    {
-        $this->fixMenus();
-        $this->running = 'Fix Menus';
-    }
-
-    /**
-     * Finish step: Fix empty access values
-     *
-     * @return void
-     *
-     * @throws \Exception
-     * @since  10.1.0
-     */
-    private function finishFixEmptyAccess(): void
-    {
-        $this->fixemptyaccess();
-        $this->running = 'Fix Empty Access';
-    }
-
-    /**
-     * Finish step: Fix empty language values
-     *
-     * @return void
-     *
-     * @since 10.1.0
-     */
-    private function finishFixEmptyLanguage(): void
-    {
-        $this->fixemptylanguage();
-        $this->running = 'Fix Empty Language';
-    }
-
-    /**
-     * Finish step: Update template defaults
-     *
-     * @return void
-     *
-     * @since 10.1.0
-     */
-    private function finishUpdateTemplateDefaults(): void
-    {
-        $migration     = new CwmtemplatemigrationHelper();
-        $updated       = $migration->migrateFromVersion($this->versionSwitch);
-        $this->running = 'Update Template Defaults (' . $updated . ' templates updated)';
-        Log::add('Updated ' . $updated . ' templates with new default parameters', Log::INFO, 'com_proclaim');
-    }
-
-    /**
-     * Finish step: Register guided tours
-     *
-     * @return void
-     *
-     * @since 10.1.0
-     */
-    private function finishRegisterGuidedTours(): void
-    {
-        $tourHelper    = new CwmguidedtourHelper();
-        $tours         = $tourHelper->registerGuidedTours();
-        $messages      = $tourHelper->registerPostInstallMessages();
-        $this->running = 'Register Guided Tours (' . $tours . ' tours, ' . $messages . ' messages)';
-        Log::add('Registered ' . $tours . ' guided tours and ' . $messages . ' post-install messages', Log::INFO, 'com_proclaim');
-    }
-
-    /**
-     * Finish step: Remove old update URLs
-     *
-     * @return void
-     *
-     * @since 10.1.0
-     */
-    private function finishRemoveOldUrl(): void
-    {
-        $conditions = $this->rmoldurl();
-        $query      = $this->_db->getQuery(true);
-        $query->delete($this->_db->qn('#__update_sites'));
-        $query->where($conditions, $glue = 'OR');
-        $this->_db->setQuery($query);
-        $this->_db->execute();
-        $this->running = 'Remove Old Update URL\'s';
-    }
-
-    /**
-     * Finish step: Set new update URL
-     *
-     * @return void
-     *
-     * @since 10.1.0
-     */
-    private function finishSetUpdateUrl(): void
-    {
-        // Find Extension ID of component
-        $query = $this->_db->getQuery(true);
-        $query
-            ->select('extension_id')
-            ->from('#__extensions')
-            ->where($this->_db->qn('name') . ' = ' . $this->_db->q('com_proclaim'));
-        $this->_db->setQuery($query);
-        $eid = $this->_db->loadResult();
-
-        $conditions = [
-            $this->_db->qn('name') . ' = ' .
-            $this->_db->q('Proclaim Package'),
-        ];
-        $query      = $this->_db->getQuery(true);
-        $query->delete($this->_db->qn('#__update_sites'));
-        $query->where($conditions, $glue = 'OR');
-        $this->_db->setQuery($query);
-        $this->_db->execute();
-
-        $conditions = [
-            $this->_db->qn('extension_id') . ' = ' .
-            $this->_db->q($eid),
-        ];
-        $query      = $this->_db->getQuery(true);
-        $query->delete($this->_db->qn('#__update_sites_extensions'));
-        $query->where($conditions, $glue = 'OR');
-        $this->_db->setQuery($query);
-        $this->_db->execute();
-
-        $updateurl           = new \stdClass();
-        $updateurl->name     = 'Proclaim Package';
-        $updateurl->type     = 'extension';
-        $updateurl->location = 'https://www.christianwebministries.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;id=2&amp;format=xml';
-        $updateurl->enabled  = '1';
-        $this->_db->insertObject('#__update_sites', $updateurl);
-        $lastid                     = $this->_db->insertid();
-        $updateurl1                 = new \stdClass();
-        $updateurl1->update_site_id = $lastid;
-        $updateurl1->extension_id   = $eid;
-        $this->_db->insertObject('#__update_sites_extensions', $updateurl1);
-        $this->running = 'Set New Update URL';
-    }
-
-    /**
-     * Finish step: Add missing podcastlink column
-     *
-     * @return void
-     *
-     * @since 10.1.0
-     */
-    private function finishPodcastLinkMissing(): void
-    {
-        $tableName  = '#__bsms_podcast';
-        $columnName = 'podcastlink';
-
-        $tableColumns = $this->_db->getTableColumns($tableName);
-
-        if (!isset($tableColumns[$columnName])) {
-            $query = $this->_db->getQuery(true)
-                ->setQuery('ALTER TABLE ' . $this->_db->quoteName($tableName) . ' ADD ' . $this->_db->quoteName($columnName) . ' VARCHAR(255) NULL');
-
-            $this->_db->setQuery($query);
-
-            try {
+                // Set new Schema Version
+                $this->setSchemaVersion($update, $this->biblestudyEid);
+                $this->running = 'Update Version';
+                break;
+            case 'fixassets':
+                // Final step is to fix assets by building what needs to be fixed.
+                $assets             = new Cwmassets();
+                $string             = $assets->build();
+                $this->installQuery = $string->query;
+                $this->totalSteps += $string->count;
+                break;
+            case 'fixmenus':
+                $run           = $this->fixMenus();
+                $this->running = 'Fix Menus';
+                break;
+            case 'fixemptyaccess':
+                $run           = $this->fixemptyaccess();
+                $this->running = 'Fix Empty Access';
+                break;
+            case 'fixemptylanguage':
+                $run           = $this->fixemptylanguage();
+                $this->running = 'Fix Empty Language';
+                break;
+            case 'updatetemplatedefaults':
+                $migration     = new CwmtemplatemigrationHelper();
+                $updated       = $migration->migrateFromVersion($this->versionSwitch);
+                $this->running = 'Update Template Defaults (' . $updated . ' templates updated)';
+                Log::add('Updated ' . $updated . ' templates with new default parameters', Log::INFO, 'com_proclaim');
+                break;
+            case 'registerguidedtours':
+                $tourHelper    = new CwmguidedtourHelper();
+                $tours         = $tourHelper->registerGuidedTours();
+                $messages      = $tourHelper->registerPostInstallMessages();
+                $this->running = 'Register Guided Tours (' . $tours . ' tours, ' . $messages . ' messages)';
+                Log::add('Registered ' . $tours . ' guided tours and ' . $messages . ' post-install messages', Log::INFO, 'com_proclaim');
+                break;
+            case 'rmoldurl':
+                // Removes all other update urls except package url.
+                $conditions = $this->rmoldurl();
+                $query      = $this->_db->getQuery(true);
+                $query->delete($this->_db->qn('#__update_sites'));
+                $query->where($conditions, $glue = 'OR');
+                $this->_db->setQuery($query);
                 $this->_db->execute();
-                Log::add('Added podcastlink column to bsms_podcast table', Log::INFO, 'com_proclaim');
-            } catch (\Exception $e) {
-                Log::add('Error adding podcastlink column to bsms_podcast table: Could already exist ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
-            }
+                $this->running = 'Remove Old Update URL\'s';
+                break;
+            case 'setupdateurl':
+                // Find Extension ID of component
+                $query = $this->_db->getQuery(true);
+                $query
+                    ->select('extension_id')
+                    ->from('#__extensions')
+                    ->where($this->_db->qn('name') . ' = ' . $this->_db->q('com_proclaim'));
+                $this->_db->setQuery($query);
+                $eid = $this->_db->loadResult();
+
+                $conditions = [
+                    $this->_db->qn('name') . ' = ' .
+                    $this->_db->q('Proclaim Package'),
+                ];
+                $query      = $this->_db->getQuery(true);
+                $query->delete($this->_db->qn('#__update_sites'));
+                $query->where($conditions, $glue = 'OR');
+                $this->_db->setQuery($query);
+                $this->_db->execute();
+
+                $conditions = [
+                    $this->_db->qn('extension_id') . ' = ' .
+                    $this->_db->q($eid),
+                ];
+                $query      = $this->_db->getQuery(true);
+                $query->delete($this->_db->qn('#__update_sites_extensions'));
+                $query->where($conditions, $glue = 'OR');
+                $this->_db->setQuery($query);
+                $this->_db->execute();
+
+                $updateurl           = new \stdClass();
+                $updateurl->name     = 'Proclaim Package';
+                $updateurl->type     = 'extension';
+                $updateurl->location = 'https://www.christianwebministries.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;id=2&amp;format=xml';
+                $updateurl->enabled  = '1';
+                $this->_db->insertObject('#__update_sites', $updateurl);
+                $lastid                     = $this->_db->insertid();
+                $updateurl1                 = new \stdClass();
+                $updateurl1->update_site_id = $lastid;
+                $updateurl1->extension_id   = $eid;
+                $this->_db->insertObject('#__update_sites_extensions', $updateurl1);
+                $this->running = 'Set New Update URL';
+                break;
+            case 'podcastlinkmissing':
+                // Define the table and column names
+                $tableName  = '#__bsms_podcast';
+                $columnName = 'podcastlink';
+
+                // Get the list of columns for the specified table
+                $tableColumns = $this->_db->getTableColumns($tableName);
+
+                // Check if the 'podcastlink' column does not exist
+                if (!isset($tableColumns[$columnName])) {
+                    // Prepare the ALTER TABLE query to add the new column
+                    // You can customize the column definition (e.g., VARCHAR(255) NULL) as needed
+                    $query = $this->_db->getQuery(true)
+                        ->setQuery('ALTER TABLE ' . $this->_db->quoteName($tableName) . ' ADD ' . $this->_db->quoteName($columnName) . ' VARCHAR(255) NULL');
+
+                    // Set the query and execute it
+                    $this->_db->setQuery($query);
+
+                    try {
+                        $this->_db->execute();
+                        log::add('Added podcastlink column to bsms_podcast table', Log::INFO, 'com_proclaim');
+                    } catch (\Exception $e) {
+                        log::add('Error adding podcastlink column to bsms_podcast table: Could already exist ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
+                    }
+                }
+                // No break
+            default:
+                $app->enqueueMessage(
+                    '' . Text::_('JBS_CMN_OPERATION_SUCCESSFUL') .
+                    Text::_('SIMPLEMODEMESSAGE_BODY') .
+                    Text::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE')
+                );
+                break;
         }
-
-        $this->finishDefault();
-    }
-
-    /**
-     * Finish step: Default completion message
-     *
-     * @return void
-     *
-     * @throws \Exception
-     * @since  10.1.0
-     */
-    private function finishDefault(): void
-    {
-        Factory::getApplication()->enqueueMessage(
-            '' . Text::_('JBS_CMN_OPERATION_SUCCESSFUL') .
-            Text::_('SIMPLEMODEMESSAGE_BODY') .
-            Text::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE')
-        );
     }
 
     /**

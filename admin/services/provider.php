@@ -39,10 +39,10 @@ return new class () implements ServiceProviderInterface {
      */
     public function register(Container $container): void
     {
-        $container->registerServiceProvider(new CategoryFactory('\\CWM\\Component\\Proclaim\\Administrator'));
-        $container->registerServiceProvider(new MVCFactory('\\CWM\\Component\\Proclaim\\Administrator'));
-        $container->registerServiceProvider(new ComponentDispatcherFactory('\\CWM\\Component\\Proclaim\\Administrator'));
-        $container->registerServiceProvider(new RouterFactory('\\CWM\\Component\\Proclaim\\Administrator'));
+        $container->registerServiceProvider(new CategoryFactory('\\CWM\\Component\\Proclaim'));
+        $container->registerServiceProvider(new MVCFactory('\\CWM\\Component\\Proclaim'));
+        $container->registerServiceProvider(new ComponentDispatcherFactory('\\CWM\\Component\\Proclaim'));
+        $container->registerServiceProvider(new RouterFactory('\\CWM\\Component\\Proclaim'));
 
         $container->set(
             ComponentInterface::class,

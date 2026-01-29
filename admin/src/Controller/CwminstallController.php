@@ -56,22 +56,7 @@ class CwminstallController extends BaseController
     /**
      * Constructor.
      *
-     * @param   array  $config  An optional associative array of configuration settings.
-     *
-     * @return void
-     *
-     * @throws \Exception
-     * @since 9.0.0
-     */
-    public function __construct($config = [])
-    {
-        parent::__construct($config);
-    }
-
-    /**
-     * Execute the task.
-     *
-     * @param   string  $task  The task to execute.
+     * @param   string  $task  An optional associative array of configuration settings.
      *
      * @return void
      *
