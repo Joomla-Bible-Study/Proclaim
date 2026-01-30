@@ -37,7 +37,7 @@ class CwmmessagetypeTable extends Table
      *
      * @since 9.0.0
      */
-    public $id = null;
+    public ?int $id = null;
 
     /**
      * Topic text
@@ -46,7 +46,7 @@ class CwmmessagetypeTable extends Table
      *
      * @since 9.0.0
      */
-    public $topic_text = null;
+    public ?string $topic_text = null;
 
     /**
      * Published
@@ -55,7 +55,7 @@ class CwmmessagetypeTable extends Table
      *
      * @since 9.0.0
      */
-    public $published = 1;
+    public int $published = 1;
 
     /**
      * Params
@@ -64,13 +64,13 @@ class CwmmessagetypeTable extends Table
      *
      * @since 9.0.0
      */
-    public $params = null;
+    public mixed $params = null;
 
-    public $asset_id;
+    public ?int $asset_id = null;
 
-    public $language;
+    public ?string $language = null;
 
-    public $access;
+    public ?int $access = null;
 
     /**
      * Created date
@@ -78,7 +78,7 @@ class CwmmessagetypeTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public $created = null;
+    public ?string $created = null;
 
     /**
      * Created by user ID
@@ -86,7 +86,7 @@ class CwmmessagetypeTable extends Table
      * @var int
      * @since 10.1.0
      */
-    public $created_by = null;
+    public ?int $created_by = null;
 
     /**
      * Created by alias
@@ -94,7 +94,7 @@ class CwmmessagetypeTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public $created_by_alias = '';
+    public string $created_by_alias = '';
 
     /**
      * Modified date
@@ -102,7 +102,7 @@ class CwmmessagetypeTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public $modified = null;
+    public ?string $modified = null;
 
     /**
      * Modified by user ID
@@ -110,7 +110,7 @@ class CwmmessagetypeTable extends Table
      * @var int
      * @since 10.1.0
      */
-    public $modified_by = null;
+    public ?int $modified_by = null;
 
     /**
      * @var ?string
@@ -143,7 +143,8 @@ class CwmmessagetypeTable extends Table
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
-    public function bind($array, $ignore = '')
+    #[\Override]
+    public function bind($array, $ignore = ''): bool
     {
         if (\is_object($array)) {
             return parent::bind($array, $ignore);
@@ -178,6 +179,7 @@ class CwmmessagetypeTable extends Table
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
+    #[\Override]
     public function store($updateNulls = false): bool
     {
         if (!$this->_rules) {
@@ -202,6 +204,7 @@ class CwmmessagetypeTable extends Table
      *
      * @since 9.0.0
      */
+    #[\Override]
     public function load($keys = null, $reset = true): bool
     {
         if (parent::load($keys, $reset)) {
@@ -227,6 +230,7 @@ class CwmmessagetypeTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
@@ -241,6 +245,7 @@ class CwmmessagetypeTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetTitle(): string
     {
         return 'CWM MessageType: ' . $this->message_type;
@@ -259,6 +264,7 @@ class CwmmessagetypeTable extends Table
      *
      * @since   11.1
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID

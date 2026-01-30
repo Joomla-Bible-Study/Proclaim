@@ -49,6 +49,7 @@ class ServerTypeField extends FormField
      * @throws \Exception
      * @since 7.0
      */
+    #[\Override]
     protected function getInput(): string
     {
         $allowNew       = ((string)$this->element['new'] === 'true');
@@ -114,7 +115,7 @@ class ServerTypeField extends FormField
         }
 
         $urlSelect = $linkSeries . '&amp;function=jSelectType_' . $this->id;
-        $urlEdit   = $linkSerie . '&amp;task=cwmserver.edit&amp;id=\' + document.getElementById(&quot;' . $this->id . '_id&quot;).value + \'';
+        $urlEdit   = $linkSerie . '&amp;task=cwmserver.edit&amp;id=\' + document.getElementById(&quot;' . $this->id . '&quot;).value + \'';
         $urlNew    = $linkSerie . '&amp;task=cwmserver.add';
 
         // The current series display field.
@@ -260,7 +261,7 @@ class ServerTypeField extends FormField
         // Note: class='required' for client side validation.
         $class = $this->required ? ' class="required modal-value"' : '';
 
-        $html .= '<input type="hidden" id="' . $this->id . '_id"' . $class . ' data-required="' . (int)$this->required
+        $html .= '<input type="hidden" id="' . $this->id . '"' . $class . ' data-required="' . (int)$this->required
             . '" name="' . $this->name . '" data-text="' .
             htmlspecialchars(Text::_('JBS_CMN_SELECT_SERVERTYPE'), ENT_COMPAT, 'UTF-8') . '" value="' . $value . '">';
 
@@ -274,6 +275,7 @@ class ServerTypeField extends FormField
      *
      * @since   3.4
      */
+    #[\Override]
     protected function getLabel(): string
     {
         return str_replace($this->id, $this->id . '_name', parent::getLabel());

@@ -69,6 +69,7 @@ class TemplateCodeField extends ListField
      *
      * @since   10.0.0
      */
+    #[\Override]
     protected function getOptions(): array
     {
         // Get the template type from the field definition

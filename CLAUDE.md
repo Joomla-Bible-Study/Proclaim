@@ -12,35 +12,73 @@ Proclaim (CWM Proclaim) is a Joomla 4+ component for managing and displaying Bib
 ## Build Commands
 
 ```bash
-# Install dependencies (vendor dir is libraries/vendor)
+# Install PHP dependencies (vendor dir is libraries/vendor)
 composer install --dev
 
-# Run tests
-./libraries/vendor/bin/phpunit
+# Install JS dependencies
+npm install
 
-# Run a single test file
+# Run PHP tests
+composer test
+
+# Run JS tests
+npm test
+
+# Run a single PHP test file
 ./libraries/vendor/bin/phpunit tests/unit/Admin/Helper/CwmparamsTest.php
 
 # Run a specific test suite
 ./libraries/vendor/bin/phpunit --testsuite "Admin Helper Tests"
 
-# PHP CS Fixer - dry run
-./libraries/vendor/bin/php-cs-fixer fix --dry-run
+# Check PHP syntax errors
+composer lint:syntax
 
-# PHP CS Fixer - apply fixes
-./libraries/vendor/bin/php-cs-fixer fix
+# Check code style (dry-run)
+composer lint
 
-# PHP CodeSniffer
-./libraries/vendor/bin/phpcs --standard=./build/psr12/ruleset.xml .
+# Fix code style issues
+composer lint:fix
 
-# Phing build (runs lint + creates component zip)
-./libraries/vendor/bin/phing build
+# Run PHPCS
+composer cs
 
-# Phing lint only
-./libraries/vendor/bin/phing lint
+# Run lint + PHP tests
+composer check
 
-# Set up symlinks to local Joomla installation (configure build.properties first)
-./libraries/vendor/bin/phing dev.Setup_Symbolic_Links
+# Run all checks + all tests (PHP + JS)
+composer check:all
+
+# Full build with all checks
+composer build:full
+
+# Build frontend assets (JS/CSS)
+composer build:assets
+
+# Build component package (zip)
+composer build
+
+# Setup development environment
+composer setup
+
+# Create symlinks to Joomla installation
+composer symlink
+
+# Install Joomla (interactive)
+composer joomla-install
+
+# Show latest available Joomla version
+composer joomla-latest
+
+# Clean dev state (remove symlinks)
+composer clean
+
+# Sync and translate language files
+composer sync-languages
+
+# Bump version (for releases)
+composer version -- -v 10.2.0
+composer version -- -v 10.2.0-beta1
+composer version -- -v 10.2.0-dev -c "New Codename"
 ```
 
 ## Architecture
@@ -81,6 +119,8 @@ Messages (sermons), Teachers, Series, Topics, Locations, MediaFiles, Servers, Po
 
 ## Testing
 
+### PHP Tests (PHPUnit)
+
 Tests are in `tests/unit/` with structure mirroring the source:
 - `tests/unit/Admin/Helper/` - Admin helper tests
 - `tests/unit/Site/Helper/` - Site helper tests
@@ -88,6 +128,25 @@ Tests are in `tests/unit/` with structure mirroring the source:
 - `tests/unit/Site/Model/` - Site model tests
 
 Base test class: `CWM\Component\Proclaim\Tests\ProclaimTestCase`
+
+### JavaScript Tests (Jest)
+
+JS tests are in `tests/js/` and use Jest with jsdom for DOM testing.
+
+```bash
+# Run JS tests
+npm test
+
+# Run JS tests in watch mode (for development)
+npm run test:watch
+
+# Run JS tests with coverage
+npm run test:coverage
+```
+
+Test files should be named `*.test.js` or `*.spec.js`. Coverage reports are generated in `build/reports/coverage-js/`.
+
+**PhpStorm Integration**: Jest is auto-detected. Use gutter icons next to tests, or right-click test files to run.
 
 ## Code Style
 
@@ -106,7 +165,7 @@ This project follows **PSR-12** coding standards. All code must pass PHP CS Fixe
 
 - PHP CS Fixer config: `.php-cs-fixer.dist.php`
 - PHPCS ruleset: `build/psr12/ruleset.xml`
-- Run `./libraries/vendor/bin/php-cs-fixer fix` before committing
+- Run `composer lint:fix` before committing
 
 ### Naming Conventions
 
@@ -115,11 +174,9 @@ This project follows **PSR-12** coding standards. All code must pass PHP CS Fixe
 
 ## Development Setup
 
-1. Configure `build.properties` with your local Joomla path:
-   ```
-   builder.joomla_path=/path/to/your/joomla
-   ```
-2. Run `./libraries/vendor/bin/phing dev.Setup_Symbolic_Links` to symlink component to Joomla
+1. Run `composer install --dev` to install dependencies
+2. Run `composer setup` for interactive configuration (or manually edit `build.properties`)
+3. Run `composer symlink` to link component to your Joomla installation
 
 ## Documentation
 

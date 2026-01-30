@@ -373,7 +373,6 @@ class CwmmediafileModel extends AdminModel
         }
 
         // Get the form.
-        // @TODO Rename the form to "media" instead of mediafile
         $form = $this->loadForm(
             'com_proclaim.mediafile',
             'mediafile',
@@ -384,14 +383,14 @@ class CwmmediafileModel extends AdminModel
             return false;
         }
 
-        $jinput = Factory::getApplication()->getInput();
+        $input = Factory::getApplication()->getInput();
 
-        // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
-        if ($jinput->get('a_id')) {
-            $id = $jinput->get('a_id', 0);
+        // The front end calls this model and uses a_id to avoid id clashes, so we need to check for that first.
+        if ($input->get('a_id')) {
+            $id = $input->get('a_id', 0);
         } else {
             // The back end uses id so we use that the rest of the time and set it to 0 by default.
-            $id = $jinput->get('id', 0);
+            $id = $input->get('id', 0);
         }
 
         $user = Factory::getApplication()->getSession()->get('user');

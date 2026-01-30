@@ -1,0 +1,25 @@
+{
+  "esversion": 6,
+  "browser": true,
+  "devel": true,
+  "node": true,
+  "globals": {
+    "Joomla": true,
+    "Proclaim": true,
+    "bootstrap": true,
+    "jQuery": true,
+    "$": true
+  },
+  "strict": true,
+  "bitwise": true,
+  "curly": true,
+  "eqeqeq": true,
+  "forin": true,
+  "freeze": true,
+  "latedef": true,
+  "noarg": true,
+  "nonbsp": true,
+  "undef": true,
+  "unused": true,
+  "varstmt": false
+}

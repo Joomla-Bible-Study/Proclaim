@@ -64,7 +64,7 @@ class CwmtemplatecodesModel extends ListModel
      * @throws \Exception
      * @since   7.1
      */
-    protected function populateState($ordering = 'templatecode.filename', $direction = 'ASC')
+    protected function populateState($ordering = 'templatecode.filename', $direction = 'ASC'): void
     {
         $app = Factory::getApplication();
 
@@ -90,7 +90,7 @@ class CwmtemplatecodesModel extends ListModel
      *
      * @since 7.1
      */
-    protected function getListQuery()
+    protected function getListQuery(): mixed
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);

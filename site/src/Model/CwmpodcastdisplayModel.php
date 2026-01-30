@@ -36,7 +36,7 @@ class CwmpodcastdisplayModel extends ItemModel
      *
      * @since 7.0
      */
-    protected $context = 'com_proclaim.podcastdisplay';
+    protected string $context = 'com_proclaim.podcastdisplay';
 
     /**
      * Method to get study data.
@@ -50,7 +50,7 @@ class CwmpodcastdisplayModel extends ItemModel
      * @since 7.1.0
      * @todo  look at removing this, as it may not be used. bcc
      */
-    public function getItem($pk = null)
+    public function getItem($pk = null): mixed
     {
         // Initialise variables.
         $pk = (!empty($pk)) ? $pk : (int)$this->getState('series.id');

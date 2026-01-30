@@ -33,11 +33,11 @@ class CwmpodcastTable extends Table
     /**
      * Primary Key
      *
-     * @var int
+     * @var ?int
      *
      * @since 9.0.0
      */
-    public $id = null;
+    public ?int $id = null;
 
     /**
      * Published
@@ -46,196 +46,196 @@ class CwmpodcastTable extends Table
      *
      * @since 9.0.0
      */
-    public $published = 1;
+    public int $published = 1;
 
     /**
      * Title
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $title = null;
+    public ?string $title = null;
 
     /**
      * Website Address
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $website = null;
+    public ?string $website = null;
 
     /**
      * Description
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $description = null;
+    public ?string $description = null;
 
     /**
      * Image
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $image = null;
+    public ?string $image = null;
 
     /**
      * Image Height
      *
-     * @var int
+     * @var ?int
      *
      * @since 9.0.0
      */
-    public $imageh = null;
+    public ?int $imageh = null;
 
     /**
      * Image Width
      *
-     * @var int
+     * @var ?int
      *
      * @since 9.0.0
      */
-    public $imagew = null;
+    public ?int $imagew = null;
 
     /**
      * Author
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $author = null;
+    public ?string $author = null;
 
     /**
      * Podcast Image
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $podcastimage = null;
+    public ?string $podcastimage = null;
 
     /**
      * Podcast Summary
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $podcastsummary = null;
+    public ?string $podcastsummary = null;
 
     /**
      * Podcast Search Words
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $podcastsearch = null;
+    public ?string $podcastsearch = null;
 
     /**
      * File Name
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $filename = null;
+    public ?string $filename = null;
 
     /**
      * Language of Podcast
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $language = null;
+    public ?string $language = null;
 
     /**
      * Podcast name
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $podcastname = null;
+    public ?string $podcastname = null;
 
     /**
      * Editor Name
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $editor_name = null;
+    public ?string $editor_name = null;
 
     /**
      * Editor Email Address
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $editor_email = null;
+    public ?string $editor_email = null;
 
     /**
      * Limit of the episodes in the podcast
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $podcastlimit = null;
+    public ?string $podcastlimit = null;
 
     /**
      * Episode Title
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $episodetitle = null;
+    public ?string $episodetitle = null;
 
     /**
      * Custom
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $custom = null;
+    public ?string $custom = null;
 
     /**
      * Details template ID
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $episodesubtitle = null;
+    public ?string $episodesubtitle = null;
 
     /**
      * Custom
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $customsubtitle = null;
+    public ?string $customsubtitle = null;
 
     /**
      * Details template ID
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $detailstemplateid = null;
+    public ?string $detailstemplateid = null;
 
     /**
      * Type of link to use for podcast.
@@ -244,27 +244,27 @@ class CwmpodcastTable extends Table
      * 1 = Direct Link.
      * 2 = Popup Player Window with default player as internal.
      *
-     * @var string
+     * @var ?string
      *
      * @since 9.0.0
      */
-    public $linktype = null;
+    public ?string $linktype = null;
 
     /**
      * Created date
      *
-     * @var string
+     * @var ?string
      * @since 10.1.0
      */
-    public $created = null;
+    public ?string $created = null;
 
     /**
      * Created by user ID
      *
-     * @var int
+     * @var ?int
      * @since 10.1.0
      */
-    public $created_by = null;
+    public ?int $created_by = null;
 
     /**
      * Created by alias
@@ -272,23 +272,23 @@ class CwmpodcastTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public $created_by_alias = '';
+    public string $created_by_alias = '';
 
     /**
      * Modified date
      *
-     * @var string
+     * @var ?string
      * @since 10.1.0
      */
-    public $modified = null;
+    public ?string $modified = null;
 
     /**
      * Modified by user ID
      *
-     * @var int
+     * @var ?int
      * @since 10.1.0
      */
-    public $modified_by = null;
+    public ?int $modified_by = null;
 
     /**
      * Constructor
@@ -308,14 +308,15 @@ class CwmpodcastTable extends Table
      * takes an array of properties to ignore when binding.
      *
      * @param   mixed  $array  An associative array or object to bind to the Table instance.
-     * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
+     * @param   mixed  $ignore  An optional array or space-separated list of properties to ignore while binding.
      *
      * @return  bool  True on success.
      *
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
-    public function bind($array, $ignore = '')
+    #[\Override]
+    public function bind($array, $ignore = ''): bool
     {
         if (isset($array['params']) && \is_array($array['params'])) {
             $registry = new Registry();
@@ -346,7 +347,8 @@ class CwmpodcastTable extends Table
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
-    public function store($updateNulls = false)
+    #[\Override]
+    public function store($updateNulls = false): bool
     {
         if (!$this->_rules) {
             $this->setRules(
@@ -366,7 +368,8 @@ class CwmpodcastTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetName()
+    #[\Override]
+    protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
 
@@ -380,7 +383,8 @@ class CwmpodcastTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetTitle()
+    #[\Override]
+    protected function _getAssetTitle(): string
     {
         return 'JBS Podcast: ' . $this->title;
     }
@@ -398,6 +402,7 @@ class CwmpodcastTable extends Table
      *
      * @since   11.1
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID

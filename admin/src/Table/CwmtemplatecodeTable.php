@@ -32,6 +32,15 @@ use Joomla\Filesystem\File;
 class CwmtemplatecodeTable extends Table
 {
     /**
+     * ID of the record
+     *
+     * @var int
+     *
+     * @since 9.0.0
+     */
+    public int $id = 0;
+
+    /**
      * File Name
      *
      * @var string|null
@@ -123,6 +132,7 @@ class CwmtemplatecodeTable extends Table
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
+    #[\Override]
     public function bind($src, $ignore = ''): bool
     {
         // Bind the rules.
@@ -144,6 +154,7 @@ class CwmtemplatecodeTable extends Table
      * @throws \Exception
      * @since    1.6
      */
+    #[\Override]
     public function store($updateNulls = false): bool
     {
         if (
@@ -232,6 +243,7 @@ class CwmtemplatecodeTable extends Table
      * @since   11.1
      * @link    http://docs.joomla.org/Table/delete
      */
+    #[\Override]
     public function delete($pk = null): bool
     {
         $filename     = 'default_' . $this->filename . '.php';
@@ -289,7 +301,8 @@ class CwmtemplatecodeTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetName()
+    #[\Override]
+    protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
 
@@ -303,7 +316,8 @@ class CwmtemplatecodeTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetTitle()
+    #[\Override]
+    protected function _getAssetTitle(): string
     {
         return 'JBS Templatecode ' . $this->filename;
     }
@@ -321,6 +335,7 @@ class CwmtemplatecodeTable extends Table
      *
      * @since   11.1
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get to Proclaim Root ID

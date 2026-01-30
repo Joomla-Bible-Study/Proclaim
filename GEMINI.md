@@ -51,11 +51,11 @@ composer cs
 composer setup
 
 # Full build (runs lint and creates component zip)
-./libraries/vendor/bin/phing build
+composer build
 
 # Set up symbolic links to a local Joomla installation
 # (Requires builder.joomla_path to be set in build.properties)
-./libraries/vendor/bin/phing dev.Setup_Symbolic_Links
+composer symlink
 ```
 
 ## Architecture & Structure
@@ -63,6 +63,7 @@ composer setup
 ### Directory Layout
 - `admin/src/`: Backend component logic (Namespace: `CWM\Component\Proclaim\Administrator`)
 - `site/src/`: Frontend component logic (Namespace: `CWM\Component\Proclaim\Site`)
+- `libraries/src/`: Shared library logic (Namespace: `CWM\Proclaim\Libraries`)
 - `libraries/vendor/`: Composer dependencies (non-standard location)
 - `media/`: CSS, JavaScript, and other assets
 - `modules/`: Joomla modules (both admin and site)

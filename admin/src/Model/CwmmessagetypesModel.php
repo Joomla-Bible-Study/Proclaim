@@ -71,7 +71,7 @@ class CwmmessagetypesModel extends ListModel
      *
      * @since 7.0.0
      */
-    public function getDeletes()
+    public function getDeletes(): array
     {
         if (empty($this->deletes)) {
             $query         = 'SELECT allowdeletes'
@@ -183,7 +183,7 @@ class CwmmessagetypesModel extends ListModel
      * @throws \Exception
      * @since   7.0.0
      */
-    protected function getListQuery()
+    protected function getListQuery(): mixed
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);

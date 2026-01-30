@@ -68,6 +68,7 @@ class SermonsTemplateFileField extends ListField
      *
      * @since 7.0
      */
+    #[\Override]
     protected function getOptions(): array
     {
         // Return cached options if available

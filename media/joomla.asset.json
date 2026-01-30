@@ -6,38 +6,14 @@
     "license": "GPL-2.0-or-later",
     "assets": [
         {
-            "name": "com_proclaim.cwmadmin-messages-batch.es5",
-            "type": "script",
-            "uri": "com_proclaim/cwmadmin-messages-default-batch-footer-es5.min.js",
-            "dependencies": [
-                "core"
-            ],
-            "attributes": {
-                "nomodule": true,
-                "defer": true
-            }
-        },
-        {
             "name": "com_proclaim.cwmadmin-messages-batch",
             "type": "script",
             "uri": "com_proclaim/cwmadmin-messages-default-batch-footer.min.js",
             "dependencies": [
-                "com_proclaim.cwmadmin-messages-batch.es5"
-            ],
-            "attributes": {
-                "type": "module"
-            }
-        },
-        {
-            "name": "com_proclaim.cwmadmin-mediafiles-batch.es5",
-            "type": "script",
-            "uri": "com_proclaim/cwmadmin-mediafiles-default-batch-footer-es5.min.js",
-            "dependencies": [
                 "core"
             ],
             "attributes": {
-                "nomodule": true,
-                "defer": true
+                "type": "module"
             }
         },
         {
@@ -45,22 +21,10 @@
             "type": "script",
             "uri": "com_proclaim/cwmadmin-mediafiles-default-batch-footer.min.js",
             "dependencies": [
-                "com_proclaim.cwmadmin-mediafiles-batch.es5"
-            ],
-            "attributes": {
-                "type": "module"
-            }
-        },
-        {
-            "name": "com_proclaim.cwmadmin-messages-modal.es5",
-            "type": "script",
-            "uri": "com_proclaim/cwmadmin-messages-modal-es5.min.js",
-            "dependencies": [
                 "core"
             ],
             "attributes": {
-                "nomodule": true,
-                "defer": true
+                "type": "module"
             }
         },
         {
@@ -68,22 +32,10 @@
             "type": "script",
             "uri": "com_proclaim/cwmadmin-messages-modal.min.js",
             "dependencies": [
-                "com_proclaim.cwmadmin-messages-modal.es5"
-            ],
-            "attributes": {
-                "type": "module"
-            }
-        },
-        {
-            "name": "com_proclaim.cwmadmin-types-modal.es5",
-            "type": "script",
-            "uri": "com_proclaim/cwmadmin-types-modal-es5.min.js",
-            "dependencies": [
                 "core"
             ],
             "attributes": {
-                "nomodule": true,
-                "defer": true
+                "type": "module"
             }
         },
         {
@@ -91,22 +43,10 @@
             "type": "script",
             "uri": "com_proclaim/cwmadmin-types-modal.min.js",
             "dependencies": [
-                "com_proclaim.cwmadmin-types-modal.es5"
-            ],
-            "attributes": {
-                "type": "module"
-            }
-        },
-        {
-            "name": "com_proclaim.cwmadmin-series-modal.es5",
-            "type": "script",
-            "uri": "com_proclaim/cwmadmin-series-modal-es5.min.js",
-            "dependencies": [
                 "core"
             ],
             "attributes": {
-                "nomodule": true,
-                "defer": true
+                "type": "module"
             }
         },
         {
@@ -114,22 +54,10 @@
             "type": "script",
             "uri": "com_proclaim/cwmadmin-series-modal.min.js",
             "dependencies": [
-                "com_proclaim.cwmadmin-series-modal.es5"
-            ],
-            "attributes": {
-                "type": "module"
-            }
-        },
-        {
-            "name": "com_proclaim.cwmadmin-teachers-modal.es5",
-            "type": "script",
-            "uri": "com_proclaim/cwmadmin-teachers-modal.es5.min.js",
-            "dependencies": [
                 "core"
             ],
             "attributes": {
-                "nomodule": true,
-                "defer": true
+                "type": "module"
             }
         },
         {
@@ -137,22 +65,10 @@
             "type": "script",
             "uri": "com_proclaim/cwmadmin-teachers-modal.min.js",
             "dependencies": [
-                "com_proclaim.cwmadmin-teachers-modal.es5"
-            ],
-            "attributes": {
-                "type": "module"
-            }
-        },
-        {
-            "name": "com_proclaim.cwmadmin-locations-modal.es5",
-            "type": "script",
-            "uri": "com_proclaim/cwmadmin-locations-modal.es5.min.js",
-            "dependencies": [
                 "core"
             ],
             "attributes": {
-                "nomodule": true,
-                "defer": true
+                "type": "module"
             }
         },
         {
@@ -160,22 +76,10 @@
             "type": "script",
             "uri": "com_proclaim/cwmadmin-locations-modal.min.js",
             "dependencies": [
-                "com_proclaim.cwmadmin-locations-modal.es5"
-            ],
-            "attributes": {
-                "type": "module"
-            }
-        },
-        {
-            "name": "com_proclaim.cwmadmin-servers-modal.es5",
-            "type": "script",
-            "uri": "com_proclaim/cwmadmin-servers-modal-es5.min.js",
-            "dependencies": [
                 "core"
             ],
             "attributes": {
-                "nomodule": true,
-                "defer": true
+                "type": "module"
             }
         },
         {
@@ -183,22 +87,10 @@
             "type": "script",
             "uri": "com_proclaim/cwmadmin-servers-modal.min.js",
             "dependencies": [
-                "com_proclaim.cwmadmin-servers-modal.es5"
-            ],
-            "attributes": {
-                "type": "module"
-            }
-        },
-        {
-            "name": "com_proclaim.cwmadmin-locations-batch.es5",
-            "type": "script",
-            "uri": "com_proclaim/cwmadmin-locations-default-batch-footer-es5.min.js",
-            "dependencies": [
                 "core"
             ],
             "attributes": {
-                "nomodule": true,
-                "defer": true
+                "type": "module"
             }
         },
         {
@@ -206,22 +98,10 @@
             "type": "script",
             "uri": "com_proclaim/cwmadmin-locations-default-batch-footer.min.js",
             "dependencies": [
-                "com_proclaim.cwmadmin-locations-batch.es5"
-            ],
-            "attributes": {
-                "type": "module"
-            }
-        },
-        {
-            "name": "com_proclaim.cwmadmin-teachers-batch.es5",
-            "type": "script",
-            "uri": "com_proclaim/cwmadmin-teachers-batch-es5.min.js",
-            "dependencies": [
                 "core"
             ],
             "attributes": {
-                "nomodule": true,
-                "defer": true
+                "type": "module"
             }
         },
         {
@@ -229,22 +109,10 @@
             "type": "script",
             "uri": "com_proclaim/cwmadmin-teachers-batch.min.js",
             "dependencies": [
-                "com_proclaim.cwmadmin-teachers-batch.es5"
-            ],
-            "attributes": {
-                "type": "module"
-            }
-        },
-        {
-            "name": "com_proclaim.cwmadmin-series-batch.es5",
-            "type": "script",
-            "uri": "com_proclaim/cwmadmin-series-batch-es5.min.js",
-            "dependencies": [
                 "core"
             ],
             "attributes": {
-                "nomodule": true,
-                "defer": true
+                "type": "module"
             }
         },
         {
@@ -252,76 +120,40 @@
             "type": "script",
             "uri": "com_proclaim/cwmadmin-series-batch.min.js",
             "dependencies": [
-                "com_proclaim.cwmadmin-series-batch.es5"
-            ],
-            "attributes": {
-                "type": "module"
-            }
-        },
-        {
-            "name": "com_proclaim.cwmadmin-servers-batch.es5",
-            "type": "script",
-            "uri": "com_proclaim/cwmadmin-servers-default-batch-footer-es5.js",
-            "dependencies": [
                 "core"
             ],
             "attributes": {
-                "nomodule": true,
-                "defer": true
+                "type": "module"
             }
         },
         {
             "name": "com_proclaim.cwmadmin-servers-batch",
             "type": "script",
-            "uri": "com_proclaim/cwmadmin-servers-default-batch-footer.js",
-            "dependencies": [
-                "com_proclaim.cwmadmin-servers-batch.es5"
-            ],
-            "attributes": {
-                "type": "module"
-            }
-        },
-        {
-            "name": "com_proclaim.cwmadmin-templates-batch.es5",
-            "type": "script",
-            "uri": "com_proclaim/cwmadmin-templates-default-batch-footer-es5.js",
+            "uri": "com_proclaim/cwmadmin-servers-default-batch-footer.min.js",
             "dependencies": [
                 "core"
             ],
             "attributes": {
-                "nomodule": true,
-                "defer": true
+                "type": "module"
             }
         },
         {
             "name": "com_proclaim.cwmadmin-templates-batch",
             "type": "script",
-            "uri": "com_proclaim/cwmadmin-templates-default-batch-footer.js",
+            "uri": "com_proclaim/cwmadmin-templates-default-batch-footer.min.js",
             "dependencies": [
-                "com_proclaim.cwmadmin-templates-batch.es5"
+                "core"
             ],
             "attributes": {
                 "type": "module"
             }
         },
         {
-            "name": "com_proclaim.cwmadmin-podcasts-batch.es5",
-            "type": "script",
-            "uri": "com_proclaim/cwmadmin-podcasts-default-batch-footer-es5.js",
-            "dependencies": [
-                "core"
-            ],
-            "attributes": {
-                "nomodule": true,
-                "defer": true
-            }
-        },
-        {
             "name": "com_proclaim.cwmadmin-podcasts-batch",
             "type": "script",
-            "uri": "com_proclaim/cwmadmin-podcasts-default-batch-footer.js",
+            "uri": "com_proclaim/cwmadmin-podcasts-default-batch-footer.min.js",
             "dependencies": [
-                "com_proclaim.cwmadmin-podcasts-batch.es5"
+                "core"
             ],
             "attributes": {
                 "type": "module"

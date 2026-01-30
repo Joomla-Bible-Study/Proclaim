@@ -10,8 +10,12 @@
  * */
 
 // No direct access
-defined('_JEXEC') or die();
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
+
+\defined('_JEXEC') or die();
 $first_bc = true;
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmdir\HtmlView $this */
 ?>
 <div id="fm_breadcrumbs">
 
@@ -49,7 +53,7 @@ $first_bc = true;
             <input id="current_folder" type="hidden" name="current_folder" value="<?php
             echo $this->currentFolder; ?>"/>
             <input id="token" type="hidden" name="<?php
-            echo JSession::getFormToken(); ?>" value="1"/>
+            echo Session::getFormToken(); ?>" value="1"/>
         </form>
     </div>
     <!---/New Folder-->

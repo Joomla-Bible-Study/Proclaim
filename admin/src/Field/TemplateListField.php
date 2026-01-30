@@ -49,6 +49,7 @@ class TemplateListField extends ListField
      *
      * @since 9.0.0
      */
+    #[\Override]
     protected function getOptions(): array
     {
         if (self::$templates) {

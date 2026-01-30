@@ -161,7 +161,8 @@ class CwmserieTable extends Table
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
-    public function store($updateNulls = false)
+    #[\Override]
+    public function store($updateNulls = false): bool
     {
         if (!$this->_rules) {
             $this->setRules(
@@ -182,6 +183,7 @@ class CwmserieTable extends Table
      *
      * @since 10.2.0
      */
+    #[\Override]
     public function delete($pk = null): bool
     {
         $pk = $pk ?? $this->id;
@@ -209,7 +211,8 @@ class CwmserieTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetName()
+    #[\Override]
+    protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
 
@@ -223,7 +226,8 @@ class CwmserieTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetTitle()
+    #[\Override]
+    protected function _getAssetTitle(): string
     {
         return 'JBS Series: ' . $this->series_text;
     }
@@ -241,6 +245,7 @@ class CwmserieTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID

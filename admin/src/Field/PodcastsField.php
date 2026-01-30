@@ -44,6 +44,7 @@ class PodcastsField extends ListField
      *
      * @since 10.0.0
      */
+    #[\Override]
     protected function getOptions(): array
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');

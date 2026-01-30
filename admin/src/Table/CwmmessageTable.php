@@ -437,6 +437,7 @@ class CwmmessageTable extends Table
      * @link    http://docs.joomla.org/JTable/bind
      * @since   11.1
      */
+    #[\Override]
     public function bind($array, $ignore = ''): bool
     {
         if (\array_key_exists('params', $array) && \is_array($array['params'])) {
@@ -468,7 +469,8 @@ class CwmmessageTable extends Table
      * @link    https://docs.joomla.org/JTable/store
      * @since   11.1
      */
-    public function store($updateNulls = false)
+    #[\Override]
+    public function store($updateNulls = false): bool
     {
         if (!$this->_rules) {
             $this->setRules(
@@ -486,7 +488,7 @@ class CwmmessageTable extends Table
      *
      * @since 9.0.0
      */
-    public function ordering()
+    public function ordering(): void
     {
         // No Data
     }
@@ -501,6 +503,7 @@ class CwmmessageTable extends Table
      *
      * @since 10.2.0
      */
+    #[\Override]
     public function delete($pk = null): bool
     {
         $pk = $pk ?? $this->id;
@@ -528,7 +531,8 @@ class CwmmessageTable extends Table
      *
      * @since  1.6
      */
-    protected function _getAssetName()
+    #[\Override]
+    protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
 
@@ -542,7 +546,8 @@ class CwmmessageTable extends Table
      *
      * @since  1.6
      */
-    protected function _getAssetTitle()
+    #[\Override]
+    protected function _getAssetTitle(): string
     {
         return 'JBS Message: ' . $this->studytitle;
     }
@@ -560,6 +565,7 @@ class CwmmessageTable extends Table
      *
      * @since   11.1
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID

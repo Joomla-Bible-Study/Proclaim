@@ -98,6 +98,7 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
+    #[\Override]
     public function display($tpl = null): void
     {
         $this->state = $this->get('state');
@@ -206,17 +207,17 @@ class HtmlView extends BaseHtmlView
 
             // Catch active filters and update them.
             if ($from !== null || $set !== null) {
-                $this->activeFilters[] = $filter;
+                $this->activeFilters = $filter;
             }
 
-            // Remove from view if set to hid in template.
+            // Remove from view if set to 'hide' in the' template.
             if ((int)$this->params->get('show_' . $filter . '_search', 1) === 0 && $filter !== 'language') {
                 $this->filterForm->removeField($filter, 'filter');
             }
         }
 
         foreach ($lists as $list) {
-            // Remove from view if set to hid in template.
+            // Remove from view if set to 'hide' in the' template.
             if ((int)$this->params->get('show_' . $list . '_search', 1) === 0) {
                 $this->filterForm->removeField($list, 'list');
             }

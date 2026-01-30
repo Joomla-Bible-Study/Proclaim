@@ -73,7 +73,7 @@ class CwmlocationsModel extends ListModel
      *
      * @since 7.0
      */
-    public function getDeletes()
+    public function getDeletes(): array
     {
         if (empty($this->deletes)) {
             $query         = 'SELECT allow_deletes'
@@ -98,7 +98,7 @@ class CwmlocationsModel extends ListModel
      *
      * @since   7.1.0
      */
-    protected function getStoreId($id = '')
+    protected function getStoreId($id = ''): string
     {
         // Compile the store ID.
         $id .= ':' . $this->getState('filter.published');
@@ -125,7 +125,7 @@ class CwmlocationsModel extends ListModel
      * @throws  \Exception
      * @since   7.0
      */
-    protected function populateState($ordering = 'location.id', $direction = 'desc')
+    protected function populateState($ordering = 'location.id', $direction = 'desc'): void
     {
         $app = Factory::getApplication();
 
@@ -185,7 +185,7 @@ class CwmlocationsModel extends ListModel
      * @throws \Exception
      * @since   12.2
      */
-    protected function getListQuery()
+    protected function getListQuery(): mixed
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);

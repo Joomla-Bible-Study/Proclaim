@@ -131,6 +131,7 @@ class CwmteacherTable extends Table
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
+    #[\Override]
     public function bind($src, $ignore = ''): bool
     {
         if (\array_key_exists('params', $src) && \is_array($src['params'])) {
@@ -162,6 +163,7 @@ class CwmteacherTable extends Table
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
+    #[\Override]
     public function store($updateNulls = false): bool
     {
         if (!$this->_rules) {
@@ -183,6 +185,7 @@ class CwmteacherTable extends Table
      *
      * @since 10.2.0
      */
+    #[\Override]
     public function delete($pk = null): bool
     {
         $pk = $pk ?? $this->id;
@@ -210,6 +213,7 @@ class CwmteacherTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
@@ -224,7 +228,8 @@ class CwmteacherTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetTitle()
+    #[\Override]
+    protected function _getAssetTitle(): string
     {
         return 'JBS Teacher: ' . $this->teachername;
     }
@@ -242,6 +247,7 @@ class CwmteacherTable extends Table
      *
      * @since   11.1
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get to Proclaim Root ID

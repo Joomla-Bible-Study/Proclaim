@@ -110,6 +110,7 @@ class CwmadminTable extends Table
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
+    #[\Override]
     public function bind($array, $ignore = ''): bool
     {
         $params = [];
@@ -197,6 +198,7 @@ class CwmadminTable extends Table
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
+    #[\Override]
     public function store($updateNulls = false): bool
     {
         if (!$this->_rules) {
@@ -217,7 +219,8 @@ class CwmadminTable extends Table
      *
      * @since   1.6
      */
-    protected function _getAssetName()
+    #[\Override]
+    protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
 
@@ -231,7 +234,8 @@ class CwmadminTable extends Table
      *
      * @since   1.6
      */
-    protected function _getAssetTitle()
+    #[\Override]
+    protected function _getAssetTitle(): string
     {
         return 'JBS Admin: ' . $this->id;
     }
@@ -249,6 +253,7 @@ class CwmadminTable extends Table
      *
      * @since   11.1
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID

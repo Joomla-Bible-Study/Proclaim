@@ -42,6 +42,7 @@ class FiltersField extends FormField
      * @throws \Exception
      * @since    1.6
      */
+    #[\Override]
     protected function getInput(): string
     {
         // Add translation string for notification

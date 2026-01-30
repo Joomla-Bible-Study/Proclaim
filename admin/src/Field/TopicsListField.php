@@ -47,6 +47,7 @@ class TopicsListField extends ListField
      * @throws \Exception
      * @since 9.0.0
      */
+    #[\Override]
     protected function getOptions(): array
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');

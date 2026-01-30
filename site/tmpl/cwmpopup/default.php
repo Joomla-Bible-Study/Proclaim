@@ -81,12 +81,12 @@ $Cwmlisting = new Cwmlisting();
     }
     ?>
     <div class="popupfooter">
-	    <?php
-	    // Social Networking begins here
-	    if ($this->params->get('embedshare') != 'FALSE') {
-	    echo $Cwmlisting->getShare($this->path1, $this->media, $this->params);
-	    }
-	    // End Social Networking ?>
+        <?php
+        // Social Networking begins here
+        if ($this->params->get('embedshare') != 'FALSE') {
+            echo $Cwmlisting->getShare($this->path1, $this->media, $this->params);
+        }
+        // End Social Networking ?>
         <p class="popupfooter">
 
            <?php echo $this->footertext; ?>

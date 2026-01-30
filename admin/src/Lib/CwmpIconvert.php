@@ -38,7 +38,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $commentsids;
+    public array $commentsids;
 
     /**
      * Array of Servers Id's
@@ -47,7 +47,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $serversids;
+    public array $serversids;
 
     /**
      * Array of Folders Id's
@@ -56,7 +56,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $foldersids;
+    public array $foldersids;
 
     /**
      * Array of Studies Id's
@@ -65,7 +65,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $studiesids;
+    public array $studiesids;
 
     /**
      * Array of Media-Files Id's
@@ -74,7 +74,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $mediafilesids;
+    public array $mediafilesids;
 
     /**
      * Array of Teachers Id's
@@ -83,7 +83,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $teachersids;
+    public array $teachersids;
 
     /**
      * Array of Series Id's
@@ -92,7 +92,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $seriesids;
+    public array $seriesids;
 
     /**
      * Array of Podcasts Id's
@@ -101,7 +101,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $podcastids;
+    public array $podcastids;
 
     /**
      * Array of Locations
@@ -110,7 +110,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $locations;
+    public array $locations;
 
     /**
      * ???
@@ -119,7 +119,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $cnoadd;
+    public int $cnoadd;
 
     /**
      * Can Add switch
@@ -128,7 +128,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $cadd;
+    public int $cadd;
 
     /**
      * Comment object
@@ -137,7 +137,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $picomments;
+    public object $picomments;
 
     /**
      * Number of Podcasts
@@ -146,7 +146,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    public $podcasts;
+    public int $podcasts;
 
     /**
      * Convert PreachIT
@@ -156,7 +156,7 @@ class CwmpIconvert
      * @throws \Exception
      * @since 7.1.0
      */
-    public function convertPI()
+    public function convertPI(): void
     {
         // Check for request forgeries.
         if (!Session::checkToken('get') && !Session::checkToken()) {
@@ -592,7 +592,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    private function getBooks()
+    private function getBooks(): array
     {
         $books = [
             ['id' => '1', 'book_name' => 'Genesis', 'published' => '1', 'jbs' => '101'],
@@ -679,7 +679,7 @@ class CwmpIconvert
      * @since 9.0.0
      *
      */
-    public function insertMedia($pi, $type, $newid, $oldid)
+    public function insertMedia($pi, $type, $newid, $oldid): bool
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
@@ -904,7 +904,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    private function insertPodcast($pi)
+    private function insertPodcast($pi): mixed
     {
         $podtest = 0;
         $db      = Factory::getContainer()->get('DatabaseDriver');
@@ -1052,7 +1052,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    private function checkMedia($includemedia, $pi, $podcast)
+    private function checkMedia($includemedia, $pi, $podcast): mixed
     {
         //check for which media to include
         if ($includemedia == 'all') {
@@ -1066,35 +1066,29 @@ class CwmpIconvert
         }
         //go through the media inclusion list for a match
         if (\in_array('audio', $includemedia, true) && isset($pi->audio_link)) {
-            {
-                foreach ($this->podcastids as $pods) {
-                    if ($pods['oldid'] == $podcast->id) {
-                        $podcast_id = $pods['newid'];
+            foreach ($this->podcastids as $pods) {
+                if ($pods['oldid'] == $podcast->id) {
+                    $podcast_id = $pods['newid'];
 
-                        return $podcast_id;
-                    }
+                    return $podcast_id;
                 }
             }
         }
         if (\in_array('video', $includemedia, true) && isset($pi->video_link)) {
-            {
-                foreach ($this->podcastids as $pods) {
-                    if ($pods['oldid'] == $podcast->id) {
-                        $podcast_id = $pods['newid'];
+            foreach ($this->podcastids as $pods) {
+                if ($pods['oldid'] == $podcast->id) {
+                    $podcast_id = $pods['newid'];
 
-                        return $podcast_id;
-                    }
+                    return $podcast_id;
                 }
             }
         }
         if (\in_array('slides', $includemedia, true) && $pi->slides_link > 0) {
-            {
-                foreach ($this->podcastids as $pods) {
-                    if ($pods['oldid'] == $podcast->id) {
-                        $podcast_id = $pods['newid'];
+            foreach ($this->podcastids as $pods) {
+                if ($pods['oldid'] == $podcast->id) {
+                    $podcast_id = $pods['newid'];
 
-                        return $podcast_id;
-                    }
+                    return $podcast_id;
                 }
             }
         }
@@ -1107,7 +1101,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    private function insertMediaRecord($mediafiles)
+    private function insertMediaRecord($mediafiles): bool
     {
         $db = Factory::getContainer()->get('DatabaseDriver');
         if (!$db->insertObject('#__bsms_mediafiles', $mediafiles, 'id')) {
@@ -1127,7 +1121,7 @@ class CwmpIconvert
      *
      * @since 9.0.0
      */
-    private function insertComments($oldid, $newid)
+    private function insertComments($oldid, $newid): bool
     {
         if (!$this->picomments) {
             return false;

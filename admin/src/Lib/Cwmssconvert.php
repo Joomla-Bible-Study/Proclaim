@@ -28,7 +28,7 @@ use Joomla\CMS\Uri\Uri;
  */
 class Cwmssconvert
 {
-    private $serverid;
+    private int $serverid;
 
     /**
      * function to convert SermonSpeaker
@@ -37,7 +37,7 @@ class Cwmssconvert
      *
      * @since 9.0.0
      */
-    public function convertSS()
+    public function convertSS(): string
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);

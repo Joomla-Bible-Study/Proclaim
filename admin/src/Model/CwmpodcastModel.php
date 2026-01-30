@@ -35,7 +35,7 @@ class CwmpodcastModel extends AdminModel
     /**
      * Protect prefix
      *
-     * @var        string    The prefix to use with controller messages.
+     * @var      string    The prefix to use with controller messages.
      * @since    1.6
      */
     protected $text_prefix = 'com_proclaim';
@@ -55,8 +55,8 @@ class CwmpodcastModel extends AdminModel
     /**
      * Get the form data
      *
-     * @param   array    $data      Data for the form.
-     * @param   bool  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param   array  $data      Data for the form.
+     * @param   bool   $loadData  True if the form is to load its own data (default case), false if not.
      *
      * @return  Form  A JForm object on success, false on failure
      *
@@ -108,7 +108,7 @@ class CwmpodcastModel extends AdminModel
      * @throws \Exception
      * @since   7.0
      */
-    protected function loadFormData()
+    protected function loadFormData(): mixed
     {
         $data = Factory::getApplication()->getUserState('com_proclaim.edit.podcast.data', []);
 
@@ -122,7 +122,7 @@ class CwmpodcastModel extends AdminModel
     /**
      * Prepare and sanitise the table prior to saving.
      *
-     * @param   Table  $table  A reference to a Table object.
+     * @param   CwmpodcastTable  $table  A reference to a Table object.
      *
      * @return  void
      *
@@ -158,7 +158,7 @@ class CwmpodcastModel extends AdminModel
      * @param   array   $pks       An array of row IDs.
      * @param   array   $contexts  An array of item contexts.
      *
-     * @return  bool  True if successful, false otherwise and internal error is set.
+     * @return  bool  True if successful, false otherwise, and an internal error is set.
      *
      * @throws \Exception
      * @since   10.0.0

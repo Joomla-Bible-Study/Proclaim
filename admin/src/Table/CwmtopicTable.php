@@ -138,7 +138,8 @@ class CwmtopicTable extends Table
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
-    public function bind($array, $ignore = '')
+    #[\Override]
+    public function bind($array, $ignore = ''): bool
     {
         if (\is_object($array)) {
             return parent::bind($array, $ignore);
@@ -173,6 +174,7 @@ class CwmtopicTable extends Table
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
+    #[\Override]
     public function store($updateNulls = false): bool
     {
         if (!$this->_rules) {
@@ -197,6 +199,7 @@ class CwmtopicTable extends Table
      *
      * @since 9.0.0
      */
+    #[\Override]
     public function load($keys = null, $reset = true): bool
     {
         if (parent::load($keys, $reset)) {
@@ -224,7 +227,7 @@ class CwmtopicTable extends Table
      *
      * @todo  this look like it is not used. (Neither Tom nor Brent wrote this one)
      */
-    public function checkAlias($data = [], $recordId = null)
+    public function checkAlias($data = [], $recordId = null): array|bool
     {
         $topic = $data['topic_text'];
 
@@ -268,7 +271,8 @@ class CwmtopicTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetName()
+    #[\Override]
+    protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
 
@@ -282,7 +286,8 @@ class CwmtopicTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetTitle()
+    #[\Override]
+    protected function _getAssetTitle(): string
     {
         return 'JBS Topic: ' . $this->topic_text;
     }
@@ -300,6 +305,7 @@ class CwmtopicTable extends Table
      *
      * @since   11.1
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID

@@ -33,6 +33,7 @@ class Dispatcher extends AbstractModuleDispatcher
      * @throws \Exception
      * @since   10.0.0
      */
+    #[\Override]
     protected function getLayoutData(): array
     {
         $data = parent::getLayoutData();

@@ -44,6 +44,7 @@ class LocationListField extends ListField
      *
      * @since 7.0
      */
+    #[\Override]
     protected function getOptions(): array
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');

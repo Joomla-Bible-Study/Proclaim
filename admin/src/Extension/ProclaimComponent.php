@@ -48,7 +48,7 @@ class ProclaimComponent extends MVCComponent implements
      *
      * @since   4.0.0
      */
-    public const CONDITION_NAMES = [
+    public const array CONDITION_NAMES = [
         self::CONDITION_PUBLISHED   => 'JPUBLISHED',
         self::CONDITION_UNPUBLISHED => 'JUNPUBLISHED',
         self::CONDITION_ARCHIVED    => 'JARCHIVED',
@@ -59,25 +59,25 @@ class ProclaimComponent extends MVCComponent implements
      *
      * @since   4.0.0
      */
-    public const CONDITION_ARCHIVED = 2;
+    public const int CONDITION_ARCHIVED = 2;
     /**
      * The published condition
      *
      * @since   4.0.0
      */
-    public const CONDITION_PUBLISHED = 1;
+    public const int CONDITION_PUBLISHED = 1;
     /**
      * The unpublished condition
      *
      * @since   4.0.0
      */
-    public const CONDITION_UNPUBLISHED = 0;
+    public const int CONDITION_UNPUBLISHED = 0;
     /**
      * The trashed condition
      *
      * @since   4.0.0
      */
-    public const CONDITION_TRASHED = -2;
+    public const int CONDITION_TRASHED = -2;
 
     /**
      * @var array Supported functionality
@@ -102,8 +102,34 @@ class ProclaimComponent extends MVCComponent implements
      *
      * @since   4.0.0
      */
-    public function boot(ContainerInterface $container)
+    /**
+     * Minimum PHP version required for Proclaim
+     *
+     * @since 10.1.0
+     */
+    public const string MIN_PHP_VERSION = '8.3.0';
+
+    public function boot(ContainerInterface $container): void
     {
+        // Check PHP version requirement
+        if (version_compare(PHP_VERSION, self::MIN_PHP_VERSION, '<')) {
+            // Always load Proclaim API if it exists.
+            $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
+
+            if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
+                require_once $api;
+            }
+
+            Factory::getApplication()->enqueueMessage(
+                Text::sprintf(
+                    'COM_PROCLAIM_ERROR_PHP_VERSION',
+                    self::MIN_PHP_VERSION,
+                    PHP_VERSION
+                ),
+                'error'
+            );
+        }
+
         $this->getRegistry()->register('proclaimadministrator', new CWMAdministratorService());
     }
 

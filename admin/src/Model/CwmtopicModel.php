@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Table\CwmtopicTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
@@ -39,7 +40,7 @@ class CwmtopicModel extends AdminModel
      * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = [], $loadData = true)
+    public function getForm($data = [], $loadData = true): mixed
     {
         // Get the form.
         $form = $this->loadForm('com_proclaim.topic', 'topic', ['control' => 'jform', 'load_data' => $loadData]);
@@ -66,15 +67,15 @@ class CwmtopicModel extends AdminModel
     /**
      * Method to check out a row for editing.
      *
-     * @param   int  $pk  The numeric ID of the primary key.
+     * @param   ?int  $pk  The numeric ID of the primary key.
      *
      * @return  bool  False on failure or error, true otherwise.
      *
      * @since   11.1
      */
-    public function checkout($pk = null)
+    public function checkout(?int $pk = null): bool
     {
-        return $pk;
+        return true;
     }
 
     /**
@@ -102,7 +103,7 @@ class CwmtopicModel extends AdminModel
      * @throws \Exception
      * @since   7.0
      */
-    protected function loadFormData()
+    protected function loadFormData(): mixed
     {
         $data = Factory::getApplication()->getUserState('com_proclaim.edit.topic.data', []);
 
@@ -116,7 +117,7 @@ class CwmtopicModel extends AdminModel
     /**
      * Prepare and sanitise the table prior to saving.
      *
-     * @param   Table  $table  A reference to a Table object.
+     * @param   CwmtopicTable  $table  A reference to a Table object.
      *
      * @return  void
      *
@@ -155,7 +156,7 @@ class CwmtopicModel extends AdminModel
      *
      * @since    1.6
      */
-    protected function cleanCache($group = null, $client_id = 0)
+    protected function cleanCache($group = null, int $client_id = 0): void
     {
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');

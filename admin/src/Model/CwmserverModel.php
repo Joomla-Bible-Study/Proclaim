@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Table\CwmserverTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Form\Form;
@@ -114,7 +115,7 @@ class CwmserverModel extends AdminModel
      *
      * @since 9.0.0
      */
-    public function getItem($pk = null, bool $ext = false)
+    public function getItem($pk = null, bool $ext = false): mixed
     {
         if (!empty($this->data)) {
             return $this->data;
@@ -211,9 +212,9 @@ class CwmserverModel extends AdminModel
         }
 
         if (isset($data['params']['path'])) {
-            if (strpos($data['params']['path'], '//')) {
+            if (str_contains($data['params']['path'], '//')) {
                 $data['params']['path'] = substr($data['params']['path'], strpos($data['params']['path'], '//'));
-            } elseif (strpos($data['params']['path'], '//') === false) {
+            } elseif (!str_contains($data['params']['path'], '//')) {
                 $data['params']['path'] = '//' . $data['params']['path'];
             }
         }
@@ -295,7 +296,7 @@ class CwmserverModel extends AdminModel
      * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = [], $loadData = true)
+    public function getForm($data = [], $loadData = true): mixed
     {
         if (empty($data)) {
             $this->getItem();
@@ -357,7 +358,7 @@ class CwmserverModel extends AdminModel
      * @throws \Exception
      * @since    1.6
      */
-    protected function canEditState($record)
+    protected function canEditState($record): bool
     {
         $user = Factory::getApplication()->getSession()->get('user');
 
@@ -388,7 +389,7 @@ class CwmserverModel extends AdminModel
     /**
      * Prepare and sanitise the table prior to saving.
      *
-     * @param   Table  $table  A reference to a Table object.
+     * @param   CwmserverTable  $table  A reference to a Table object.
      *
      * @return  void
      *
@@ -427,7 +428,7 @@ class CwmserverModel extends AdminModel
      *
      * @since    1.6
      */
-    protected function cleanCache($group = null, int $client_id = 0)
+    protected function cleanCache($group = null, int $client_id = 0): void
     {
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');
@@ -441,7 +442,7 @@ class CwmserverModel extends AdminModel
      * @throws \Exception
      * @since   9.0.0
      */
-    protected function populateState()
+    protected function populateState(): void
     {
         $app   = Factory::getApplication();
         $input = $app->input;

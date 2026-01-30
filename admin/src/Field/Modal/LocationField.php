@@ -26,7 +26,7 @@ use Joomla\CMS\WebAsset\WebAssetManager;
 use Joomla\Database\ParameterType;
 
 /**
- * Supports a modal article picker.
+ * Supports a modal location picker.
  *
  * @since  1.6
  */
@@ -41,30 +41,32 @@ class LocationField extends FormField
     protected $type = 'Modal_Location';
 
     /**
+     * Method to get the field input markup.
      *
-     * @return string
+     * @return  string  The field input markup.
      *
      * @throws \Exception
-     * @since 7.0.0
+     * @since   7.0.0
      */
+    #[\Override]
     protected function getInput(): string
     {
-        $allowNew       = ((string)$this->element['new'] == 'true');
-        $allowEdit      = ((string)$this->element['edit'] == 'true');
-        $allowClear     = ((string)$this->element['clear'] != 'false');
-        $allowSelect    = ((string)$this->element['select'] != 'false');
-        $allowPropagate = ((string)$this->element['propagate'] == 'true');
+        $allowNew       = ((string)$this->element['new'] === 'true');
+        $allowEdit      = ((string)$this->element['edit'] === 'true');
+        $allowClear     = ((string)$this->element['clear'] !== 'false');
+        $allowSelect    = ((string)$this->element['select'] !== 'false');
+        $allowPropagate = ((string)$this->element['propagate'] === 'true');
 
         $languages = LanguageHelper::getContentLanguages([0, 1], false);
 
         // Load language
         Factory::getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
-        // The active article id field.
+        // The active location id field.
         $value = (int)$this->value ?: '';
 
         // Create the modal id.
-        $modalId = 'Article_' . $this->id;
+        $modalId = 'Cwmlocation_' . $this->id;
 
         /** @var WebAssetManager $wa */
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
@@ -82,9 +84,9 @@ class LocationField extends FormField
 
             if (!isset($scriptSelect[$this->id])) {
                 $wa->addInlineScript(
-                    "
-				window.jSelectArticle_" . $this->id . " = function (id, location_text) {
-					window.processModalSelect('Location', '" . $this->id . "', id, location_text);
+                    '
+				window.jSelectCwmlocation_' . $this->id . " = function (id, location_text) {
+					window.processModalSelect('Cwmlocation', '" . $this->id . "', id, location_text);
 				}",
                     [],
                     ['type' => 'module']
@@ -97,22 +99,22 @@ class LocationField extends FormField
         }
 
         // Setup variables for display.
-        $linkArticles = 'index.php?option=com_proclaim&amp;view=cwmlocations&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken(
-        ) . '=1';
-        $linkArticle  = 'index.php?option=com_proclaim&amp;view=cwmlocation&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken(
-        ) . '=1';
+        $linkLocations = 'index.php?option=com_proclaim&amp;view=cwmlocations&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
+        $linkLocation  = 'index.php?option=com_proclaim&amp;view=cwmlocation&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken() . '=1';
 
         if (isset($this->element['language'])) {
-            $linkArticles .= '&amp;forcedLanguage=' . $this->element['language'];
-            $linkArticle .= '&amp;forcedLanguage=' . $this->element['language'];
-            $modalTitle   = Text::_('COM_CONTENT_SELECT_AN_ARTICLE') . ' &#8212; ' . $this->element['label'];
+            $linkLocations .= '&amp;forcedLanguage=' . $this->element['language'];
+            $linkLocation .= '&amp;forcedLanguage=' . $this->element['language'];
+            $modalTitle   = Text::_('JBS_CMN_SELECT_LOCATION') . ' &#8212; ' . $this->element['label'];
         } else {
             $modalTitle = Text::_('JBS_CMN_SELECT_LOCATION');
         }
 
-        $urlSelect = $linkArticles . '&amp;function=jSelectArticle_' . $this->id;
-        $urlEdit   = $linkArticle . '&amp;task=article.edit&amp;id=\' + document.getElementById(&quot;' . $this->id . '_id&quot;).value + \'';
-        $urlNew    = $linkArticle . '&amp;task=article.add';
+        $urlSelect = $linkLocations . '&amp;function=jSelectCwmlocation_' . $this->id;
+        $urlEdit   = $linkLocation . '&amp;task=cwmlocation.edit&amp;id=\' + document.getElementById(&quot;' . $this->id . '&quot;).value + \'';
+        $urlNew    = $linkLocation . '&amp;task=cwmlocation.add';
+
+        $title = null;
 
         if ($value) {
             $db    = Factory::getContainer()->get('DatabaseDriver');
@@ -132,7 +134,7 @@ class LocationField extends FormField
 
         $title = empty($title) ? Text::_('JBS_CMN_SELECT_LOCATION') : htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
 
-        // The current article display field.
+        // The current location display field.
         $html = '';
 
         if ($allowSelect || $allowNew || $allowEdit || $allowClear) {
@@ -141,7 +143,7 @@ class LocationField extends FormField
 
         $html .= '<input class="form-control" id="' . $this->id . '_name" type="text" value="' . $title . '" readonly size="35">';
 
-        // Select article button
+        // Select location button
         if ($allowSelect) {
             $html .= '<button'
                 . ' class="btn btn-primary' . ($value ? ' hidden' : '') . '"'
@@ -153,7 +155,7 @@ class LocationField extends FormField
                 . '</button>';
         }
 
-        // New article button
+        // New location button
         if ($allowNew) {
             $html .= '<button'
                 . ' class="btn btn-secondary' . ($value ? ' hidden' : '') . '"'
@@ -165,7 +167,7 @@ class LocationField extends FormField
                 . '</button>';
         }
 
-        // Edit article button
+        // Edit location button
         if ($allowEdit) {
             $html .= '<button'
                 . ' class="btn btn-primary' . ($value ? '' : ' hidden') . '"'
@@ -177,7 +179,7 @@ class LocationField extends FormField
                 . '</button>';
         }
 
-        // Clear article button
+        // Clear location button
         if ($allowClear) {
             $html .= '<button'
                 . ' class="btn btn-secondary' . ($value ? '' : ' hidden') . '"'
@@ -188,11 +190,11 @@ class LocationField extends FormField
                 . '</button>';
         }
 
-        // Propagate article button
+        // Propagate location button
         if ($allowPropagate && \count($languages) > 2) {
             // Strip off language tag at the end
             $tagLength            = (int)\strlen($this->element['language']);
-            $callbackFunctionStem = substr("jSelectArticle_" . $this->id, 0, -$tagLength);
+            $callbackFunctionStem = substr("jSelectCwmlocation_" . $this->id, 0, -$tagLength);
 
             $html .= '<button'
                 . ' class="btn btn-primary' . ($value ? '' : ' hidden') . '"'
@@ -210,7 +212,7 @@ class LocationField extends FormField
             $html .= '</span>';
         }
 
-        // Select article modal
+        // Select location modal
         if ($allowSelect) {
             $html .= HTMLHelper::_(
                 'bootstrap.renderModal',
@@ -228,13 +230,13 @@ class LocationField extends FormField
             );
         }
 
-        // New article modal
+        // New location modal
         if ($allowNew) {
             $html .= HTMLHelper::_(
                 'bootstrap.renderModal',
                 'ModalNew' . $modalId,
                 [
-                    'title'       => Text::_('COM_CONTENT_NEW_ARTICLE'),
+                    'title'       => Text::_('JACTION_CREATE') . ' ' . Text::_('JBS_CMN_LOCATION'),
                     'backdrop'    => 'static',
                     'keyboard'    => false,
                     'closeButton' => false,
@@ -244,25 +246,25 @@ class LocationField extends FormField
                     'bodyHeight'  => 70,
                     'modalWidth'  => 80,
                     'footer'      => '<button type="button" class="btn btn-secondary"'
-                        . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'article\', \'cancel\', \'item-form\'); return false;">'
+                        . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'cwmlocation\', \'cancel\', \'item-form\'); return false;">'
                         . Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>'
                         . '<button type="button" class="btn btn-primary"'
-                        . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'article\', \'save\', \'item-form\'); return false;">'
+                        . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'cwmlocation\', \'save\', \'item-form\'); return false;">'
                         . Text::_('JSAVE') . '</button>'
                         . '<button type="button" class="btn btn-success"'
-                        . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'article\', \'apply\', \'item-form\'); return false;">'
+                        . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'cwmlocation\', \'apply\', \'item-form\'); return false;">'
                         . Text::_('JAPPLY') . '</button>',
                 ]
             );
         }
 
-        // Edit article modal
+        // Edit location modal
         if ($allowEdit) {
             $html .= HTMLHelper::_(
                 'bootstrap.renderModal',
                 'ModalEdit' . $modalId,
                 [
-                    'title'       => Text::_('COM_CONTENT_EDIT_ARTICLE'),
+                    'title'       => Text::_('JACTION_EDIT') . ' ' . Text::_('JBS_CMN_LOCATION'),
                     'backdrop'    => 'static',
                     'keyboard'    => false,
                     'closeButton' => false,
@@ -272,13 +274,13 @@ class LocationField extends FormField
                     'bodyHeight'  => 70,
                     'modalWidth'  => 80,
                     'footer'      => '<button type="button" class="btn btn-secondary"'
-                        . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'article\', \'cancel\', \'item-form\'); return false;">'
+                        . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'cwmlocation\', \'cancel\', \'item-form\'); return false;">'
                         . Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>'
                         . '<button type="button" class="btn btn-primary"'
-                        . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'article\', \'save\', \'item-form\'); return false;">'
+                        . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'cwmlocation\', \'save\', \'item-form\'); return false;">'
                         . Text::_('JSAVE') . '</button>'
                         . '<button type="button" class="btn btn-success"'
-                        . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'article\', \'apply\', \'item-form\'); return false;">'
+                        . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'cwmlocation\', \'apply\', \'item-form\'); return false;">'
                         . Text::_('JAPPLY') . '</button>',
                 ]
             );
@@ -287,7 +289,7 @@ class LocationField extends FormField
         // Note: class='required' for client side validation.
         $class = $this->required ? ' class="required modal-value"' : '';
 
-        $html .= '<input type="hidden" id="' . $this->id . '_id" ' . $class . ' data-required="' . (int)$this->required . '" name="' . $this->name
+        $html .= '<input type="hidden" id="' . $this->id . '" ' . $class . ' data-required="' . (int)$this->required . '" name="' . $this->name
             . '" data-text="' . htmlspecialchars(
                 Text::_('JBS_CMN_SELECT_LOCATION'),
                 ENT_COMPAT,
@@ -304,6 +306,7 @@ class LocationField extends FormField
      *
      * @since   3.4
      */
+    #[\Override]
     protected function getLabel(): string
     {
         return str_replace($this->id, $this->id . '_name', parent::getLabel());

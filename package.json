@@ -1,6 +1,6 @@
 {
-  "name": "cwmproclaim",
-  "version": "1.0.0",
+  "name": "com_proclaim",
+  "version": "10.1.0",
   "description": "CWM Proclaim - A Joomla! Extension for Church Media Management",
   "license": "GPL-2.0-or-later",
   "repository": {
@@ -12,10 +12,18 @@
     "npm": ">=10.1.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.25.2",
-    "@babel/core": "^7.25.2",
-    "@babel/preset-env": "^7.25.2",
-    "terser": "^5.27.0"
+    "@babel/cli": "^7.28.6",
+    "@babel/core": "^7.28.6",
+    "@babel/preset-env": "^7.28.6",
+    "@rollup/plugin-babel": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@types/jest": "^29.5.14",
+    "csso": "^5.0.5",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "rollup": "^4.57.0",
+    "terser": "^5.46.0"
   },
   "babel": {
     "presets": [
@@ -37,11 +45,16 @@
     "last 2 major versions",
     "not IE < 11"
   ],
+  "scripts": {
+    "build": "npm run build:js && npm run build:css",
+    "build:js": "rollup -c build/rollup.config.js",
+    "build:css": "node build/build-css.js",
+    "watch": "rollup -c build/rollup.config.js -w",
+    "test": "node --no-deprecation node_modules/.bin/jest -c build/jest.config.js",
+    "test:watch": "node --no-deprecation node_modules/.bin/jest -c build/jest.config.js --watch",
+    "test:coverage": "node --no-deprecation node_modules/.bin/jest -c build/jest.config.js --coverage"
+  },
   "dependencies": {
-    "core-js": "^3.38.1",
-    "@hapi/cryptiles": "^6.0.1",
-    "@hapi/hoek": "^11.0.4",
-    "csso": "^5.0.5",
-    "less": "^4.2.0"
+    "core-js": "^3.48.0"
   }
 }

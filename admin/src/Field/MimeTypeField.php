@@ -44,6 +44,7 @@ class MimeTypeField extends ListField
      *
      * @since 7.0
      */
+    #[\Override]
     protected function getOptions(): array
     {
         $MediaHelper = new Cwmmedia();

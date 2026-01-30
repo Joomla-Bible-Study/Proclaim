@@ -444,7 +444,7 @@ class Cwmlisting
      * @throws \Exception
      * @since 7.0
      */
-    public function getMediaFiles(array $medias)
+    public function getMediaFiles(array $medias): array
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
@@ -611,7 +611,7 @@ class Cwmlisting
      * @param   array      $listsorts  ?
      * @param   Object     $item       ?
      * @param   Registry   $params     Item Params
-     * @param   \stdClass  $template   Template info
+     * @param   \stdClass  $template  Template info
      * @param   integer    $header     ?
      * @param   string     $type       ?
      *
@@ -1263,8 +1263,10 @@ class Cwmlisting
                     if ($showBadge === '' || $showBadge === null) {
                         $showBadge = $params->get('default_show_archive_badge', '1');
                     }
-                    if (isset($item->published) && (int)$item->published === 2
-                        && (int)$showBadge === 1) {
+                    if (
+                        isset($item->published) && (int)$item->published === 2
+                        && (int)$showBadge === 1
+                    ) {
                         $data .= ' <span class="badge bg-secondary proclaim-archive-badge">'
                             . Text::_('JBS_CMN_ARCHIVE_BADGE') . '</span>';
                     }
@@ -1477,7 +1479,7 @@ class Cwmlisting
         $customclass = '';
 
         if (isset($row->custom)) {
-            if (strpos($row->custom, 'style=') !== false) {
+            if (str_contains($row->custom, 'style=')) {
                 $style = $row->custom;
             } else {
                 $customclass = $row->custom;
@@ -1576,7 +1578,7 @@ class Cwmlisting
      * @throws \Exception
      * @since 7.0
      */
-    public function getFluidCustom(string $custom, object $item, Registry $params, $template, string $type)
+    public function getFluidCustom(string $custom, object $item, Registry $params, $template, string $type): string
     {
         $countbraces = substr_count($custom, '{');
 
@@ -1632,8 +1634,10 @@ class Cwmlisting
                 if ($showBadge === '' || $showBadge === null) {
                     $showBadge = $params->get('default_show_archive_badge', '1');
                 }
-                if (isset($row->published) && (int)$row->published === 2
-                    && (int)$showBadge === 1) {
+                if (
+                    isset($row->published) && (int)$row->published === 2
+                    && (int)$showBadge === 1
+                ) {
                     $element .= ' <span class="badge bg-secondary proclaim-archive-badge">'
                         . Text::_('JBS_CMN_ARCHIVE_BADGE') . '</span>';
                 }
@@ -2036,7 +2040,7 @@ class Cwmlisting
      *
      * @since 7.0
      */
-    public function createelement($element)
+    public function createelement($element): string
     {
         switch ($element) {
             case 1:
@@ -2290,7 +2294,7 @@ class Cwmlisting
      *
      * @since 7.0
      */
-    public function getPassage($params, $row)
+    public function getPassage($params, $row): string
     {
         $esv          = 1;
         $scripturerow = 1;

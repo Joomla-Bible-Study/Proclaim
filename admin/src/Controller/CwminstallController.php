@@ -92,8 +92,7 @@ class CwminstallController extends BaseController
         $stack   = $session->get('migration_stack', '', 'CWM');
 
         if (empty($stack) || !\is_array($stack)) {
-            Cwmhelper::clearCache('site');
-            Cwmhelper::clearCache('administrator');
+            Cwmhelper::clearCache();
             $session->set('migration_stack', '', 'CWM');
 
             $model = new CwminstallModel();
@@ -146,8 +145,7 @@ class CwminstallController extends BaseController
             throw new \Exception(Text::_('JINVALID_TOKEN'));
         }
 
-        Cwmhelper::clearCache('site');
-        Cwmhelper::clearCache('administrator');
+        Cwmhelper::clearCache();
         $session = Factory::getApplication()->getSession();
         $session->set('migration_stack', '', 'CWM');
         $app = Factory::getApplication();

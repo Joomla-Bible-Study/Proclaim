@@ -19,7 +19,6 @@ namespace CWM\Component\Proclaim\Site\Model;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
-use Joomla\Registry\Registry;
 
 /**
  * Comment model class

@@ -47,7 +47,7 @@ class CwmyoutubeHelper
         $separators = [' - ', ' | ', ': '];
 
         foreach ($separators as $sep) {
-            if (strpos($title, $sep) !== false) {
+            if (str_contains($title, $sep)) {
                 $parts = explode($sep, $title, 2);
 
                 if (\count($parts) === 2) {
@@ -197,9 +197,7 @@ class CwmyoutubeHelper
         }
 
         // Strategy 3: Try part1 as title without teacher filter
-        $message = self::findMessageByTitle($parsed['part1'], null);
-
-        if ($message) {
+        if ($message = self::findMessageByTitle($parsed['part1'])) {
             return $message;
         }
 

@@ -11,6 +11,7 @@
  * */
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
+use CWM\Component\Proclaim\Administrator\Model\CwminstallModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
 use Joomla\CMS\Installer\Adapter\FileAdapter;

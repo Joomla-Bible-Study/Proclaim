@@ -40,6 +40,19 @@ class TeacherDisplayField extends FormField
     protected $type = 'Modal_TeacherDisplay';
 
     /**
+     * Method to get the field label markup.
+     *
+     * @return  string  The field label markup.
+     *
+     * @since   9.0.0
+     */
+    #[\Override]
+    protected function getLabel(): string
+    {
+        return str_replace($this->id, $this->id . '_name', parent::getLabel());
+    }
+
+    /**
      * Method to get the field input markup.
      *
      * @return  string  The field input markup.
@@ -47,6 +60,7 @@ class TeacherDisplayField extends FormField
      * @throws \Exception
      * @since    1.6
      */
+    #[\Override]
     protected function getInput(): string
     {
         $allowNew       = ((string)$this->element['new'] == 'true');
@@ -109,7 +123,7 @@ class TeacherDisplayField extends FormField
         }
 
         $urlSelect = $linkSeries . '&amp;function=jSelectTeachers_' . $this->id;
-        $urlEdit   = $linkSerie . '&amp;task=cwmteacher.edit&amp;id=\' + document.getElementById(&quot;' . $this->id . '_id&quot;).value + \'';
+        $urlEdit   = $linkSerie . '&amp;task=cwmteacher.edit&amp;id=\' + document.getElementById(&quot;' . $this->id . '&quot;).value + \'';
         $urlNew    = $linkSerie . '&amp;task=cwmteacher.add';
 
         if ($value) {
@@ -214,7 +228,7 @@ class TeacherDisplayField extends FormField
                 'bootstrap.renderModal',
                 'ModalNew' . $modalId,
                 [
-                    'title'       => Text::_('JBS_NEW_MESSAGE'),
+                    'title'       => Text::_('JBS_TITLE_TEACHER_CREATING'),
                     'backdrop'    => 'static',
                     'keyboard'    => false,
                     'closeButton' => false,
@@ -242,7 +256,7 @@ class TeacherDisplayField extends FormField
                 'bootstrap.renderModal',
                 'ModalEdit' . $modalId,
                 [
-                    'title'       => Text::_('JBS_NEW_MESSAGE'),
+                    'title'       => Text::_('JBS_TITLE_TEACHER_EDITING'),
                     'backdrop'    => 'static',
                     'keyboard'    => false,
                     'closeButton' => false,
@@ -267,7 +281,7 @@ class TeacherDisplayField extends FormField
         // Note: class='required' for client side validation.
         $class = $this->required ? ' class="required modal-value"' : '';
 
-        $html .= '<input type="hidden" id="' . $this->id . '_id"' . $class . ' data-required="' . (int)$this->required . '" name="' . $this->name
+        $html .= '<input type="hidden" id="' . $this->id . '"' . $class . ' data-required="' . (int)$this->required . '" name="' . $this->name
             . '" data-text="' . htmlspecialchars(
                 Text::_('JBS_CMN_SELECT_TEACHER'),
                 ENT_COMPAT,

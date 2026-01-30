@@ -46,6 +46,7 @@ class SeriesOptionsField extends ListField
      *
      * @since 7.0
      */
+    #[\Override]
     protected function getOptions(): array
     {
         $options[] = HTMLHelper::_('select.option', '5', Text::_('JBS_TPL_TITLE_BRACE'));

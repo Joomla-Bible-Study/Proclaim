@@ -44,6 +44,7 @@ class YearListField extends ListField
      * @throws \Exception
      * @since 9.0.0
      */
+    #[\Override]
     protected function getOptions(): array
     {
         return array_merge(parent::getOptions(), CwmproclaimHelper::getStudyYears());

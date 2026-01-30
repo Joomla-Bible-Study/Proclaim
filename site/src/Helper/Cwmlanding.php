@@ -160,9 +160,10 @@ class Cwmlanding
                 // Add empty placeholder columns to complete the last row
                 if ($t === $count && $i > 0 && $i < 3) {
                     $emptyColsNeeded = 3 - $i;
-                    for ($e = 0; $e < $emptyColsNeeded; $e++) {
-                        $html .= '<div class="col" style="margin-right:7px"></div>';
-                    }
+                    $html .= str_repeat(
+                        '<div class="col" style="margin-right:7px"></div>',
+                        $emptyColsNeeded
+                    );
                 }
                 $i = 0;
             }

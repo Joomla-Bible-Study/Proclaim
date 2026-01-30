@@ -89,7 +89,7 @@ class CwmsermonsModelTest extends ProclaimTestCase
      */
     public function testModelHasInputProperty(): void
     {
-        $this->assertStringContainsString('public $input;', $this->classContent);
+        $this->assertStringContainsString('public mixed $input;', $this->classContent);
     }
 
     /**

@@ -38,6 +38,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
      * @throws  \Exception
      * @since   10.1.0
      */
+    #[\Override]
     protected function getLayoutData(): array
     {
         // Load component API

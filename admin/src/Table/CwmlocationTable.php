@@ -119,7 +119,8 @@ class CwmlocationTable extends Table
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
-    public function bind($array, $ignore = '')
+    #[\Override]
+    public function bind($array, $ignore = ''): bool
     {
         if (isset($array['params']) && \is_array($array['params'])) {
             $registry = new Registry();
@@ -150,7 +151,8 @@ class CwmlocationTable extends Table
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
-    public function store($updateNulls = false)
+    #[\Override]
+    public function store($updateNulls = false): bool
     {
         if (!$this->_rules) {
             $this->setRules(
@@ -170,7 +172,8 @@ class CwmlocationTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetName()
+    #[\Override]
+    protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
 
@@ -184,7 +187,8 @@ class CwmlocationTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetTitle()
+    #[\Override]
+    protected function _getAssetTitle(): string
     {
         return 'JBS Location: ' . $this->location_text;
     }
@@ -202,6 +206,7 @@ class CwmlocationTable extends Table
      *
      * @since   11.1
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID

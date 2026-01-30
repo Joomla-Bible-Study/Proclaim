@@ -45,13 +45,13 @@
     "docs": "https://www.christianwebministries.org/docs"
   },
   "autoload": {
-    "psr-12": {
+    "psr-4": {
       "CWM\\Component\\Proclaim\\Administrator\\": "admin/src/",
       "CWM\\Component\\Proclaim\\Site\\": "site/src/"
     }
   },
   "autoload-dev": {
-    "psr-12": {
+    "psr-4": {
       "CWM\\Component\\Proclaim\\Tests\\": "tests/unit/"
     }
   },
@@ -77,7 +77,6 @@
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
     "phan/phan": "^5.4",
     "roave/security-advisories": "dev-latest",
-    "phing/phing": "^3.0",
     "pdepend/pdepend": "^2.16",
     "phpmd/phpmd": "^2.15"
   },
@@ -93,16 +92,25 @@
   },
   "scripts": {
     "test": "phpunit",
-    "lint": "php-cs-fixer fix --dry-run --diff",
-    "lint:fix": "php-cs-fixer fix",
-    "cs": "phpcs . --standard=./build/psr12/ruleset.xml",
-    "check": ["@lint", "@test"],
-    "setup": "libraries/vendor/bin/phing dev.setup",
-    "joomla-install": "libraries/vendor/bin/phing joomla.install",
-    "joomla-latest": "libraries/vendor/bin/phing joomla.get-latest-version",
-    "symlink": "libraries/vendor/bin/phing dev.Setup_Symbolic_Links",
-    "sync-languages": "libraries/vendor/bin/phing sync-languages",
-    "sync-languages-setup": "libraries/vendor/bin/phing sync-languages-setup",
+    "test:js": "npm test",
+    "test:all": ["@test", "@test:js"],
+    "lint:syntax": "php build/proclaim_build.php lint-syntax",
+    "lint:report": "phpcs --report=summary,full,source,xml,json,checkstyle,gitblame,console,csv,emacs,junit,md,pathextensions,php,pmd,screen,source,text,vcs,xml",
+    "lint": "phpcs .",
+    "lint:fix": "phpcbf .",
+    "check": ["@lint:syntax", "@lint", "@test"],
+    "check:all": ["@lint:syntax", "@lint", "@test:all"],
+    "build:assets": "npm install && npm run build",
+    "build:full": ["@check:all", "@build"],
+    "setup": "php build/proclaim_build.php setup",
+    "joomla-install": "php build/proclaim_build.php install-joomla",
+    "joomla-latest": "php build/proclaim_build.php joomla-latest",
+    "symlink": "php build/proclaim_build.php link",
+    "clean": "php build/proclaim_build.php clean",
+    "build": "php build/proclaim_build.php build",
+    "version": "php build/bump.php",
+    "sync-languages": "python3 build/sync_languages.py",
+    "sync-languages-setup": "python3 build/sync_languages.py setup",
     "post-install-cmd": [
       "\"libraries/vendor/bin/phpcs\" --config-set installed_paths libraries/vendor/squizlabs/php_codesniffer/src/Standards",
       "@php -r \"if (!file_exists('build.properties')) { copy('build.dist.properties', 'build.properties'); echo 'Created build.properties from template. Run composer setup to configure.\\n'; }\""

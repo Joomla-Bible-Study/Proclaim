@@ -194,10 +194,10 @@ if (!empty($editor)) {
                                 . ' data-language="' . $this->escape($lang) . '"';
                             ?>
                             <a class="select-link" href="javascript:void(0)" <?php
-                            echo $attribs; ?>">
+                            echo $attribs; ?>>
                             <?php
                             echo $this->escape($item->studytitle); ?>
-
+                            </a>
                         </th>
                         <td class="nowrap small d-none d-md-table-cell">
                             <?php

@@ -51,7 +51,7 @@ class CwmtemplateModel extends AdminModel
      * @throws \Exception
      * @since   12.2
      */
-    public function save($data)
+    public function save($data): bool
     {
         // Make sure we cannot unpublished default template.
         if ($data['id'] == '1' && $data['published'] != '1') {
@@ -199,7 +199,7 @@ class CwmtemplateModel extends AdminModel
     /**
      * Prepare and sanitise the table prior to saving.
      *
-     * @param   Table  $table  A reference to a Table object.
+     * @param   CwmtemplateTable  $table  A reference to a Table object.
      *
      * @return  void
      *

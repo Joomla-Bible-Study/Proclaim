@@ -42,7 +42,7 @@ class Cwmsearchfilters
      *
      * @since 7.0
      */
-    public static function genrate($study_id, $topic_id)
+    public static function genrate($study_id, $topic_id): bool
     {
         return true;
     }

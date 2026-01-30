@@ -11,9 +11,9 @@
 
 namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube;
 
+// phpcs:disable PSR1.Files.SideEffects
 require_once __DIR__ . '/vendor/autoload.php';
 
-// phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 
 // phpcs:enable PSR1.Files.SideEffects
@@ -211,7 +211,7 @@ class CWMAddonYoutube extends CWMAddon
      * @throws Exception
      * @since version
      */
-    public function buildPlaylistList($key, $playlistID = 'UULyz8iEvzxyhKEBzOTs6bJQ', $pageToken = 'EAAaI1BUOkNESWlFREUzUVRSQ09EQkdSVUV6UWprM09EVW9BVkFC', $maxResults = 50)
+    public function buildPlaylistList($key, $playlistID = 'UULyz8iEvzxyhKEBzOTs6bJQ', $pageToken = 'EAAaI1BUOkNESWlFREUzUVRSQ09EQkdSVUV6UWprM09EVW9BVkFC', $maxResults = 50): void
     {
         $client = new Google\Client();
         $client->setApplicationName("Client_Library_Examples");

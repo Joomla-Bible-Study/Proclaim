@@ -47,7 +47,7 @@ $finder = PhpCsFixer\Finder::create()
     ->notPath('/tmpl/')
     ->notPath('/layouts/')
     // Ignore third-party vendor directories
-    ->notPath('/vendor/')
+    ->notPath('#vendor/#')
     // Ignore psr12 scripts because they contain invalid syntax
     ->notPath('/psr12/')
     ->notName('github_rebase.php');
@@ -92,6 +92,8 @@ $config
             'combine_consecutive_unsets' => true,
             // There must be no sprintf calls with only the first argument
             'no_useless_sprintf' => true,
+            // Fix indentation
+            'indentation_type' => true,
         ]
     )
     ->setFinder($finder);

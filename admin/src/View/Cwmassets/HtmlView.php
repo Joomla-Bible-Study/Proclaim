@@ -102,6 +102,7 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
+    #[\Override]
     public function display($tpl = null): void
     {
         $app             = Factory::getApplication();
@@ -112,7 +113,7 @@ class HtmlView extends BaseHtmlView
         $layout      = $app->input->get('layout', 'edit');
         $task        = $app->input->get('task', 'checkassets');
 
-        if (strpos($task, '.') !== false) {
+        if (str_contains($task, '.')) {
             $task = explode('.', $task)[1];
         }
 

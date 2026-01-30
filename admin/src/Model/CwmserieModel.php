@@ -76,7 +76,7 @@ class CwmserieModel extends AdminModel
      * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = [], $loadData = true)
+    public function getForm($data = [], $loadData = true): mixed
     {
         if (empty($data)) {
             $this->getItem();
@@ -129,7 +129,7 @@ class CwmserieModel extends AdminModel
      *
      * @since 7.0
      */
-    public function getItem($pk = null)
+    public function getItem($pk = null): mixed
     {
         $item = parent::getItem($pk);
 
@@ -147,7 +147,7 @@ class CwmserieModel extends AdminModel
      *
      * @since 7.0
      */
-    public function getTeacher()
+    public function getTeacher(): mixed
     {
         if (empty($this->teacher)) {
             $query         = 'SELECT id AS value, teachername AS text'
@@ -169,7 +169,7 @@ class CwmserieModel extends AdminModel
      * @throws \Exception
      * @since    1.6
      */
-    public function save($data)
+    public function save($data): bool
     {
         /** @var Registry $params */
         $params        = Cwmparams::getAdmin()->params;
@@ -259,7 +259,7 @@ class CwmserieModel extends AdminModel
      *
      * @since   11.1
      */
-    public function checkout($pk = null)
+    public function checkout($pk = null): bool
     {
         return true;
     }
@@ -276,7 +276,7 @@ class CwmserieModel extends AdminModel
      * @throws \Exception
      * @since    11.1
      */
-    protected function batchCopy($value, $pks, $contexts)
+    protected function batchCopy($value, $pks, $contexts): array|bool
     {
         $app = Factory::getApplication();
         /** @type CwmserieTable $table */
@@ -378,7 +378,7 @@ class CwmserieModel extends AdminModel
      *
      * @since    1.6
      */
-    protected function cleanCache($group = null, $client_id = 0)
+    protected function cleanCache($group = null, $client_id = 0): void
     {
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');
@@ -395,7 +395,7 @@ class CwmserieModel extends AdminModel
      * @throws \Exception
      * @since   12.2
      */
-    protected function canDelete($record)
+    protected function canDelete($record): bool
     {
         if (!empty($record->id)) {
             if ($record->published != -2) {
@@ -421,7 +421,7 @@ class CwmserieModel extends AdminModel
      * @throws \Exception
      * @since    1.6
      */
-    protected function canEditState($record)
+    protected function canEditState($record): bool
     {
         $user = Factory::getApplication()->getSession()->get('user');
 
@@ -444,7 +444,7 @@ class CwmserieModel extends AdminModel
      * @throws \Exception
      * @since    1.6
      */
-    protected function prepareTable($table)
+    protected function prepareTable($table): void
     {
         jimport('joomla.filter.output');
 
@@ -499,7 +499,7 @@ class CwmserieModel extends AdminModel
      * @throws \Exception
      * @since   7.0
      */
-    protected function loadFormData()
+    protected function loadFormData(): mixed
     {
         // Check the session for previously entered form data.
         $app  = Factory::getApplication();
@@ -521,7 +521,7 @@ class CwmserieModel extends AdminModel
      *
      * @since    1.6
      */
-    protected function getReorderConditions($table)
+    protected function getReorderConditions($table): array
     {
         return [];
     }

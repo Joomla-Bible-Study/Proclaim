@@ -45,6 +45,7 @@ class Dispatcher extends ComponentDispatcher
      * @throws \Exception
      * @since   4.0.0
      */
+    #[\Override]
     public function dispatch(): void
     {
         CwmproclaimHelper::applyViewAndController($this->defaultController);

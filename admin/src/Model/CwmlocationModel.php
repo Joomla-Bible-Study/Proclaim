@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Table\CwmlocationTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\Model\AdminModel;
@@ -39,7 +40,7 @@ class CwmlocationModel extends AdminModel
      * @throws \Exception
      * @since     7.0
      */
-    public function store()
+    public function store(): bool
     {
         $row   = $this->getTable();
         $input = new Input();
@@ -97,7 +98,7 @@ class CwmlocationModel extends AdminModel
      * @throws \Exception
      * @since  7.0
      */
-    public function getForm($data = [], $loadData = true)
+    public function getForm($data = [], $loadData = true): mixed
     {
         // Get the form.
         $form = $this->loadForm(
@@ -131,7 +132,7 @@ class CwmlocationModel extends AdminModel
      * @throws \Exception
      * @since   7.0
      */
-    protected function loadFormData()
+    protected function loadFormData(): mixed
     {
         $data = Factory::getApplication()->getUserState('com_proclaim.edit.location.data', []);
 
@@ -145,7 +146,7 @@ class CwmlocationModel extends AdminModel
     /**
      * Prepare and sanitise the table prior to saving.
      *
-     * @param   Table  $table  A reference to a Table object.
+     * @param   CwmlocationTable  $table  A reference to a Table object.
      *
      * @return  void
      *
@@ -184,7 +185,7 @@ class CwmlocationModel extends AdminModel
      *
      * @since    1.6
      */
-    protected function cleanCache($group = null, int $client_id = 0)
+    protected function cleanCache($group = null, int $client_id = 0): void
     {
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');

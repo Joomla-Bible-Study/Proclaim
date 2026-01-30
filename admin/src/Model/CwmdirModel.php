@@ -132,7 +132,7 @@ class CwmdirModel extends BaseModel
         $currentDir           = Path::check($directoryPathCleaned);
         $currentDirBase64     = base64_encode($currentDir);
 
-        if (strpos($currentDir, BIBLESTUDY_ROOT_PATH) === false) {
+        if (!str_contains($currentDir, BIBLESTUDY_ROOT_PATH)) {
             // Path is invalid, save default directory
             $session->set('current_dir', $homeDirBase64, 'com_proclaim');
         } else {
