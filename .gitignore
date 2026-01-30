@@ -36,3 +36,4 @@ com_proclaim/media/css/site/
 # Language sync caches
 /build/.translation_cache.json
 /build/.source_cache.json
+!/docs/
