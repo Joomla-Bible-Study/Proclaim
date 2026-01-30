@@ -40,6 +40,18 @@ class SeriesField extends FormField
     protected $type = 'Modal_Series';
 
     /**
+     * Method to get the field label markup.
+     *
+     * @return  string  The field label markup.
+     *
+     * @since   9.0.0
+     */
+    protected function getLabel(): string
+    {
+        return str_replace($this->id, $this->id . '_name', parent::getLabel());
+    }
+
+    /**
      * Method to get the field input markup.
      *
      * @return  string  The field input markup.
@@ -109,7 +121,7 @@ class SeriesField extends FormField
         }
 
         $urlSelect = $linkSeries . '&amp;function=jSelectSeries_' . $this->id;
-        $urlEdit   = $linkSerie . '&amp;task=cwmserie.edit&amp;id=\' + document.getElementById(&quot;' . $this->id . '_id&quot;).value + \'';
+        $urlEdit   = $linkSerie . '&amp;task=cwmserie.edit&amp;id=\' + document.getElementById(&quot;' . $this->id . '&quot;).value + \'';
         $urlNew    = $linkSerie . '&amp;task=cwmserie.add';
 
         if ($value) {
@@ -214,7 +226,7 @@ class SeriesField extends FormField
                 'bootstrap.renderModal',
                 'ModalNew' . $modalId,
                 [
-                    'title'       => Text::_('COM_CONTENT_NEW_ARTICLE'),
+                    'title'       => Text::_('JBS_TITLE_SERIES_CREATING'),
                     'backdrop'    => 'static',
                     'keyboard'    => false,
                     'closeButton' => false,
@@ -242,7 +254,7 @@ class SeriesField extends FormField
                 'bootstrap.renderModal',
                 'ModalEdit' . $modalId,
                 [
-                    'title'       => Text::_('COM_CONTENT_EDIT_ARTICLE'),
+                    'title'       => Text::_('JBS_TITLE_SERIES_EDITING'),
                     'backdrop'    => 'static',
                     'keyboard'    => false,
                     'closeButton' => false,
@@ -267,7 +279,7 @@ class SeriesField extends FormField
         // Note: class='required' for client-side validation.
         $class = $this->required ? ' class="required modal-value"' : '';
 
-        $html .= '<input type="hidden" id="' . $this->id . '_id"' . $class . ' data-required="' . (int)$this->required . '" name="' . $this->name
+        $html .= '<input type="hidden" id="' . $this->id . '"' . $class . ' data-required="' . (int)$this->required . '" name="' . $this->name
             . '" data-text="' . htmlspecialchars(
                 Text::_('JBS_CMN_SELECT_SERIES'),
                 ENT_COMPAT,
