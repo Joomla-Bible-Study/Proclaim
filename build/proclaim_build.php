@@ -325,11 +325,13 @@ function doBuild()
         'build.xml', 'build.properties', 'build.dist.properties', 'phpunit.xml', 'phpunit.xml.bak',
         '.php-cs-fixer.dist.php', 'CLAUDE.md', 'GEMINI.md', 'SECURITY.md', '_config.yml',
         '.git', '.vscode', '.idea', '.ds_store', 'node_modules', 'composer.json', 'composer.lock',
-        'package.json', 'package-lock.json', 'build', 'tests',
+        'package.json', 'package-lock.json', 'build', 'tests', '.jshintrc',
         // Exclude internal symlinks created by doLink
         'admin/proclaim.xml',
         'admin/proclaim.script.php',
         'media/css/site/cwmcore.css',
+        // Exclude dev files
+        'media/js/joomla.d.ts',
     ];
 
     $includes    = ['admin/', 'media/', 'modules/', 'plugins/', 'site/', 'libraries/'];

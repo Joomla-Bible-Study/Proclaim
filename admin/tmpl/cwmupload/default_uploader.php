@@ -80,7 +80,7 @@ echo Route::_($url);
     <?php
     echo HTMLHelper::_('form.token'); ?>
     <input type="hidden" name="<?php
-    echo JSession::getFormToken(); ?>" value="1"/>
+    echo Session::getFormToken(); ?>" value="1"/>
 
 
 </form>
