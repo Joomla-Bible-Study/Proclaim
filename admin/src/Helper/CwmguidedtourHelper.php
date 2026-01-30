@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Version;
@@ -465,7 +466,7 @@ class CwmguidedtourHelper
                 'note'        => $tour['note'],
                 'uid'         => $tour['uid'],
                 'autostart'   => $tour['autostart'] ?? false,
-                'created'     => Factory::getDate()->toSql(),
+                'created'     => (new Date())->toSql(),
                 'created_by'  => 0,
             ];
 

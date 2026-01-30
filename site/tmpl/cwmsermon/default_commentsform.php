@@ -14,6 +14,7 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -170,7 +171,7 @@ if (!$this->item->id) {
                         <input type="hidden" name="study_detail_id" value="<?php echo $this->item->id; ?>">
                         <input type="hidden" name="t" value="<?php echo $input->getInt('t', 0); ?>">
                         <input type="hidden" name="published" value="<?php echo (int) $this->item->params->get('comment_publish', 1); ?>">
-                        <input type="hidden" name="comment_date" value="<?php echo Factory::getDate()->toSql(); ?>">
+                        <input type="hidden" name="comment_date" value="<?php echo (new Date())->toSql(); ?>">
                         <?php echo HTMLHelper::_('form.token'); ?>
                     </form>
                 </div>

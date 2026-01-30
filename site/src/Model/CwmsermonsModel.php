@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Site\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
@@ -53,7 +54,7 @@ class CwmsermonsModel extends ListModel
      *
      * @throws \Exception
      * @since   11.1
-     * @see     JController
+     * @see     ListModel
      */
     public function __construct($config = [])
     {
@@ -618,7 +619,7 @@ class CwmsermonsModel extends ListModel
 
         // Define null and now dates
         $nullDate = $db->quote($db->getNullDate());
-        $nowDate  = $db->quote(Factory::getDate()->toSql());
+        $nowDate  = $db->quote((new Date())->toSql());
 
         // Filter by start and end dates.
         if (

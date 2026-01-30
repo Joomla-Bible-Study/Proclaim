@@ -26,7 +26,7 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Registry\Registry;
 
 /**
- * JView class for Serie
+ * HtmlView class for Serie
  *
  * @package  Proclaim.Admin
  * @since    7.0.0

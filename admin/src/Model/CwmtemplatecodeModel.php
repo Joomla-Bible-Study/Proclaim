@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplatecodeTable;
 use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
@@ -234,7 +235,7 @@ class CwmtemplatecodeModel extends AdminModel
      */
     protected function prepareTable($table): void
     {
-        $date = Factory::getDate();
+        $date = new Date();
         $user = Factory::getApplication()->getIdentity();
 
         // Always ensure created date is set (handles empty string from form)

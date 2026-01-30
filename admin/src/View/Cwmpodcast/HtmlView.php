@@ -1,7 +1,7 @@
 <?php
 
 /**
- * JView html
+ * HtmlView for Podcast
  *
  * @package    Proclaim.Admin
  * @copyright  (C) 2026 CWM Team All rights reserved

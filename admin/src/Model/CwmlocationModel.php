@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Table\CwmlocationTable;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\Model\AdminModel;
@@ -155,7 +156,7 @@ class CwmlocationModel extends AdminModel
      */
     protected function prepareTable($table): void
     {
-        $date = Factory::getDate();
+        $date = new Date();
         $user = Factory::getApplication()->getIdentity();
 
         // Always ensure created date is set (handles empty string from form)

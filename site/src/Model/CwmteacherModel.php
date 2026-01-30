@@ -103,7 +103,6 @@ class CwmteacherModel extends ItemModel
         $app = Factory::getApplication();
 
         // Load state from the request.
-        // $input = new JInput;
         $pk = $app->input->get('id', '', 'int');
         $this->setState('teacher.id', $pk);
 

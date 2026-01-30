@@ -41,7 +41,7 @@ class CwmseriesdisplaysModel extends ListModel
      *
      * @throws \Exception
      * @since   11.1
-     * @see     JController
+     * @see     ListModel
      */
     public function __construct($config = [])
     {

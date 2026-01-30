@@ -21,6 +21,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use CWM\Component\Proclaim\Administrator\Table\CwmmessageTable;
 use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -663,12 +664,12 @@ class CwmmessageModel extends AdminModel
      */
     protected function prepareTable($table): void
     {
-        $date = Factory::getDate();
+        $date = new Date();
         $user = Factory::getApplication()->getIdentity();
 
         // Set the publishing date to now
         if ($table->published === Workflow::CONDITION_PUBLISHED && (int)$table->publish_up === 0) {
-            $table->publish_up = Factory::getDate()->toSql();
+            $table->publish_up = (new Date())->toSql();
         }
 
         if ($table->published === Workflow::CONDITION_PUBLISHED && (int)$table->publish_down === 0) {

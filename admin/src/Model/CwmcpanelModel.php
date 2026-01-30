@@ -19,7 +19,7 @@ use Joomla\Registry\Registry;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * JModel class for Cpanel
+ * Model class for Cpanel
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
