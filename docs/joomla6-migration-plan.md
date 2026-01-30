@@ -84,4 +84,5 @@ After fixes:
 - [x] All CMSObject usage removed
 - [x] All legacy docblocks updated
 - [x] Tests passing (335 tests, 1120 assertions)
-- [ ] PR created and merged
+- [x] PR created: https://github.com/Joomla-Bible-Study/Proclaim/pull/new/feature/joomla4-mvc-migration
+- [ ] PR merged
