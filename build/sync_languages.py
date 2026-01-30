@@ -195,12 +195,12 @@ LANG_CODE_MAP = {
 
 # Replacements applied to the source language (en-GB)
 SOURCE_REPLACEMENTS = {
-    'Series': 'Theme'
+    #'Series': 'Theme'
 }
 
 # Global replacements applied to all non-source languages
 GLOBAL_REPLACEMENTS = {
-    # 'Series': 'Theme' # Removed to avoid forcing English 'Theme' into other languages
+    'Series': 'Theme' # Removed to avoid forcing English 'Theme' into other languages
 }
 
 # Language-specific replacements (applied AFTER translation)
