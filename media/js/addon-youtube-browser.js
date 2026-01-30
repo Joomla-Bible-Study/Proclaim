@@ -3,6 +3,8 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @description YouTube Video Browser for Proclaim Media Files
  */
+/* jshint esversion: 6 */
+/* global Joomla, bootstrap, Proclaim, console */
 (function() {
     'use strict';
 
@@ -16,6 +18,7 @@
         selectedPlaylist: '',
         filterType: 'all', // all, live, upcoming, completed
         playlists: [],
+        processedVideoIds: new Set(), // Track processed video IDs to prevent duplicates
 
         init: function() {
             this.createModal();
@@ -81,6 +84,19 @@
                 '</div>';
 
             document.body.insertAdjacentHTML('beforeend', modalHtml);
+            
+            // Add event listener for modal hidden event to clean up backdrop
+            var modalEl = document.getElementById('youtubeBrowserModal');
+            modalEl.addEventListener('hidden.bs.modal', function () {
+                // Ensure backdrop is removed
+                var backdrops = document.querySelectorAll('.modal-backdrop');
+                backdrops.forEach(function(backdrop) {
+                    backdrop.remove();
+                });
+                document.body.classList.remove('modal-open');
+                document.body.style.overflow = '';
+                document.body.style.paddingRight = '';
+            });
         },
 
         bindEvents: function() {
@@ -88,7 +104,11 @@
 
             var searchBtn = document.getElementById('youtubeSearchBtn');
             if (searchBtn) {
-                searchBtn.addEventListener('click', function() {
+                // Remove existing listeners to prevent duplicates (though cloning is safer)
+                var newSearchBtn = searchBtn.cloneNode(true);
+                searchBtn.parentNode.replaceChild(newSearchBtn, searchBtn);
+                
+                newSearchBtn.addEventListener('click', function() {
                     self.searchQuery = document.getElementById('youtubeSearchInput').value;
                     self.currentPageToken = '';
                     self.loadVideos();
@@ -97,7 +117,10 @@
 
             var searchInput = document.getElementById('youtubeSearchInput');
             if (searchInput) {
-                searchInput.addEventListener('keypress', function(e) {
+                var newSearchInput = searchInput.cloneNode(true);
+                searchInput.parentNode.replaceChild(newSearchInput, searchInput);
+
+                newSearchInput.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
                         self.searchQuery = this.value;
@@ -110,7 +133,10 @@
             // Filter type change
             var filterType = document.getElementById('youtubeFilterType');
             if (filterType) {
-                filterType.addEventListener('change', function() {
+                var newFilterType = filterType.cloneNode(true);
+                filterType.parentNode.replaceChild(newFilterType, filterType);
+
+                newFilterType.addEventListener('change', function() {
                     self.filterType = this.value;
                     self.currentPageToken = '';
                     self.loadVideos();
@@ -120,7 +146,10 @@
             // Playlist selection change
             var playlistSelect = document.getElementById('youtubePlaylistSelect');
             if (playlistSelect) {
-                playlistSelect.addEventListener('change', function() {
+                var newPlaylistSelect = playlistSelect.cloneNode(true);
+                playlistSelect.parentNode.replaceChild(newPlaylistSelect, playlistSelect);
+
+                newPlaylistSelect.addEventListener('change', function() {
                     self.selectedPlaylist = this.value;
                     self.currentPageToken = '';
                     self.loadVideos();
@@ -129,7 +158,10 @@
 
             var resetBtn = document.getElementById('youtubeResetBtn');
             if (resetBtn) {
-                resetBtn.addEventListener('click', function() {
+                var newResetBtn = resetBtn.cloneNode(true);
+                resetBtn.parentNode.replaceChild(newResetBtn, resetBtn);
+
+                newResetBtn.addEventListener('click', function() {
                     document.getElementById('youtubeSearchInput').value = '';
                     document.getElementById('youtubeFilterType').value = 'all';
                     document.getElementById('youtubePlaylistSelect').value = '';
@@ -143,7 +175,10 @@
 
             var prevBtn = document.getElementById('youtubePrevBtn');
             if (prevBtn) {
-                prevBtn.addEventListener('click', function() {
+                var newPrevBtn = prevBtn.cloneNode(true);
+                prevBtn.parentNode.replaceChild(newPrevBtn, prevBtn);
+
+                newPrevBtn.addEventListener('click', function() {
                     if (this.dataset.pageToken) {
                         self.currentPageToken = this.dataset.pageToken;
                         self.loadVideos();
@@ -153,7 +188,10 @@
 
             var nextBtn = document.getElementById('youtubeNextBtn');
             if (nextBtn) {
-                nextBtn.addEventListener('click', function() {
+                var newNextBtn = nextBtn.cloneNode(true);
+                nextBtn.parentNode.replaceChild(newNextBtn, nextBtn);
+
+                newNextBtn.addEventListener('click', function() {
                     if (this.dataset.pageToken) {
                         self.currentPageToken = this.dataset.pageToken;
                         self.loadVideos();
@@ -247,6 +285,9 @@
             loading.style.display = 'block';
             error.style.display = 'none';
             noResults.style.display = 'none';
+            
+            // Reset processed video IDs for new search
+            this.processedVideoIds.clear();
 
             // Determine which handler to use based on filters
             var handler;
@@ -317,6 +358,12 @@
             var self = this;
 
             videos.forEach(function(video) {
+                // Check for duplicates
+                if (self.processedVideoIds.has(video.videoId)) {
+                    return;
+                }
+                self.processedVideoIds.add(video.videoId);
+
                 var card = document.createElement('div');
                 card.className = 'col';
 
@@ -388,8 +435,15 @@
     };
 
     document.addEventListener('DOMContentLoaded', function() {
-        if (document.getElementById('youtube-browse-btn')) {
-            Proclaim.YoutubeBrowser.init();
+        var browseBtn = document.getElementById('youtube-browse-btn');
+        if (browseBtn) {
+            // Use cloneNode to remove existing listeners to prevent duplicates
+            var newBrowseBtn = browseBtn.cloneNode(true);
+            browseBtn.parentNode.replaceChild(newBrowseBtn, browseBtn);
+            
+            newBrowseBtn.addEventListener('click', function() {
+                Proclaim.YoutubeBrowser.open();
+            });
         }
     });
 })();
