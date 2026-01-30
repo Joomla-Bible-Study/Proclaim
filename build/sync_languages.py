@@ -14,6 +14,11 @@ SYNC_ALL_KEYS = True
 # Requires: GOOGLE_TRANSLATE_API_KEY environment variable or set below
 AUTO_TRANSLATE = True
 
+# When True: Force re-translation of ALL keys (ignores existing translations)
+# Useful when source values have changed and you want to refresh all translations
+# Set via --force command line argument
+FORCE_RETRANSLATE = False
+
 # 1Password configuration - standard item name for the API key
 OP_ITEM_NAME = "Google Translate API - Proclaim"
 OP_VAULT = os.environ.get('OP_VAULT', 'Private')  # Default vault, can override with env var
@@ -36,6 +41,7 @@ def check_op_cli():
 def get_api_key_from_op(item_ref=None):
     """
     Retrieve API key from 1Password.
+    Searches all vaults if OP_VAULT is not explicitly set.
     """
     import subprocess
 
@@ -43,8 +49,13 @@ def get_api_key_from_op(item_ref=None):
         # Use provided reference directly
         cmd = ['op', 'read', item_ref]
     else:
-        # Use standard item name
-        cmd = ['op', 'item', 'get', OP_ITEM_NAME, '--vault', OP_VAULT, '--fields', 'credential', '--format', 'json']
+        # Use standard item name - search specific vault if set, otherwise all vaults
+        # Note: --reveal is required to get the actual credential value
+        if os.environ.get('OP_VAULT'):
+            cmd = ['op', 'item', 'get', OP_ITEM_NAME, '--vault', OP_VAULT, '--fields', 'credential', '--format', 'json', '--reveal']
+        else:
+            # Search all vaults
+            cmd = ['op', 'item', 'get', OP_ITEM_NAME, '--fields', 'credential', '--format', 'json', '--reveal']
 
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
@@ -60,19 +71,20 @@ def get_api_key_from_op(item_ref=None):
     except:
         return None
 
-def create_op_item(api_key):
+def create_op_item(api_key, vault=None):
     """
     Create a 1Password item to store the API key.
     """
     import subprocess
 
-    print(f"Creating 1Password item '{OP_ITEM_NAME}' in vault '{OP_VAULT}'...")
+    target_vault = vault or OP_VAULT
+    print(f"Creating 1Password item '{OP_ITEM_NAME}' in vault '{target_vault}'...")
 
     cmd = [
         'op', 'item', 'create',
         '--category', 'API Credential',
         '--title', OP_ITEM_NAME,
-        '--vault', OP_VAULT,
+        '--vault', target_vault,
         f'credential={api_key}',
     ]
 
@@ -175,6 +187,9 @@ API_KEY_SOURCE = None
 # Translation cache file (to avoid re-translating the same strings)
 TRANSLATION_CACHE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.translation_cache.json')
 
+# Source values cache file (to detect when source values change)
+SOURCE_CACHE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.source_cache.json')
+
 # Map Joomla language codes to Google Translate language codes
 LANG_CODE_MAP = {
     'en-GB': 'en',
@@ -220,6 +235,50 @@ LANG_SPECIFIC_KEY_UPDATES = {
     #     'JBS_CMN_PODCAST': 'pódcast'
     # }
 }
+
+# === SOURCE VALUES CACHE ===
+# Tracks previous source (en-GB) values to detect changes
+_source_cache = {}
+
+def load_source_cache():
+    """Load the source values cache from disk."""
+    global _source_cache
+    if os.path.exists(SOURCE_CACHE_FILE):
+        try:
+            with open(SOURCE_CACHE_FILE, 'r', encoding='utf-8') as f:
+                _source_cache = json.load(f)
+        except (json.JSONDecodeError, IOError):
+            _source_cache = {}
+    return _source_cache
+
+def save_source_cache():
+    """Save the source values cache to disk."""
+    try:
+        with open(SOURCE_CACHE_FILE, 'w', encoding='utf-8') as f:
+            json.dump(_source_cache, f, ensure_ascii=False, indent=2)
+    except IOError as e:
+        print(f"  Warning: Could not save source cache: {e}")
+
+def get_changed_source_keys(file_key, current_source_map):
+    """
+    Compare current source values against cached values.
+    Returns a set of keys whose source values have changed.
+    """
+    global _source_cache
+    changed_keys = set()
+
+    cached_values = _source_cache.get(file_key, {})
+
+    for key, current_value in current_source_map.items():
+        if key in cached_values and cached_values[key] != current_value:
+            changed_keys.add(key)
+
+    return changed_keys
+
+def update_source_cache(file_key, source_map):
+    """Update the source cache with current source values."""
+    global _source_cache
+    _source_cache[file_key] = dict(source_map)
 
 # === TRANSLATION CACHE ===
 _translation_cache = {}
@@ -509,12 +568,13 @@ def update_translations(file_path, value_replacements=None, key_updates=None):
             f.writelines(new_lines)
         print(f"  Updated translations in {os.path.basename(file_path)}")
 
-def sync_keys(source_file, target_file, target_lang=None):
+def sync_keys(source_file, target_file, target_lang=None, file_key=None):
     """
     Synchronizes keys between source and target files:
     - Adds missing keys from source to target
     - If AUTO_TRANSLATE is enabled, translates missing keys
     - Removes keys from target that don't exist in source (obsolete keys)
+    - Re-translates keys when the source (en-GB) value has changed
     - Preserves existing translations (doesn't overwrite different values)
     """
     if not os.path.exists(source_file):
@@ -540,18 +600,31 @@ def sync_keys(source_file, target_file, target_lang=None):
     missing_keys = source_keys - target_keys  # In source but not in target
     obsolete_keys = target_keys - source_keys  # In target but not in source
 
-    # Also find untranslated keys (same value as source)
+    # Find untranslated keys (same value as source)
     untranslated_keys = set()
     for key in target_keys:
         if key in source_map and target_map[key] == source_map[key]:
             untranslated_keys.add(key)
 
-    if not missing_keys and not obsolete_keys and not untranslated_keys:
+    # Find keys where source value has changed (needs re-translation)
+    changed_keys = set()
+    if file_key:
+        changed_keys = get_changed_source_keys(file_key, source_map)
+        # Only consider changed keys that exist in target and aren't already untranslated
+        changed_keys = changed_keys & target_keys - untranslated_keys
+
+    # Force re-translation of all existing keys if requested
+    force_retranslate_keys = set()
+    if FORCE_RETRANSLATE:
+        # All keys that exist in both source and target (excluding untranslated which are already included)
+        force_retranslate_keys = (source_keys & target_keys) - untranslated_keys
+
+    if not missing_keys and not obsolete_keys and not untranslated_keys and not changed_keys and not force_retranslate_keys:
         return
 
-    # Translate missing and untranslated keys if enabled
+    # Translate missing, untranslated, changed, and force-retranslate keys if enabled
     translations = {}
-    keys_to_translate = list(missing_keys | untranslated_keys)
+    keys_to_translate = list(missing_keys | untranslated_keys | changed_keys | force_retranslate_keys)
 
     if AUTO_TRANSLATE and GOOGLE_API_KEY and keys_to_translate and target_lang:
         google_lang = LANG_CODE_MAP.get(target_lang)
@@ -576,9 +649,10 @@ def sync_keys(source_file, target_file, target_lang=None):
     # Build new target content
     new_lines = []
 
-    # Process existing lines, removing obsolete keys and updating untranslated
+    # Process existing lines, removing obsolete keys and updating untranslated/changed
     removed_count = 0
     updated_count = 0
+    retranslated_count = 0
     for line in target_lines:
         stripped = line.strip()
         if '=' in line and not stripped.startswith(';'):
@@ -590,6 +664,16 @@ def sync_keys(source_file, target_file, target_lang=None):
             if key in untranslated_keys and key in translations:
                 new_lines.append(f'{key}="{translations[key]}"\n')
                 updated_count += 1
+                continue
+            # Re-translate keys where source value changed
+            if key in changed_keys and key in translations:
+                new_lines.append(f'{key}="{translations[key]}"\n')
+                retranslated_count += 1
+                continue
+            # Force re-translate all keys
+            if key in force_retranslate_keys and key in translations:
+                new_lines.append(f'{key}="{translations[key]}"\n')
+                retranslated_count += 1
                 continue
         new_lines.append(line)
 
@@ -623,6 +707,8 @@ def sync_keys(source_file, target_file, target_lang=None):
             actions.append(f"added {added_count} keys")
     if updated_count:
         actions.append(f"translated {updated_count} existing")
+    if retranslated_count:
+        actions.append(f"re-translated {retranslated_count} changed")
     if removed_count:
         actions.append(f"removed {removed_count} obsolete")
     if actions:
@@ -698,11 +784,22 @@ def process_directory(base_path, file_patterns):
 
         print(f"\n  Processing {file_pattern}...")
 
+        # Generate a unique key for this source file (for change tracking)
+        file_key = f"{base_path}:{file_pattern}"
+
         # 1. Remove duplicates from source
         remove_duplicates(source_file_path)
 
         # 2. Update source translations (apply SOURCE_REPLACEMENTS)
         update_translations(source_file_path, value_replacements=SOURCE_REPLACEMENTS)
+
+        # Parse source file to get current values (for change detection)
+        _, source_map, _ = parse_ini_file(source_file_path)
+
+        # Check for changed source keys
+        changed_keys = get_changed_source_keys(file_key, source_map)
+        if changed_keys:
+            print(f"    Source values changed for {len(changed_keys)} keys: {', '.join(sorted(changed_keys)[:5])}{'...' if len(changed_keys) > 5 else ''}")
 
         for target_lang in target_langs:
             target_file_name = f"{target_lang}.{file_pattern}"
@@ -725,10 +822,13 @@ def process_directory(base_path, file_patterns):
             # 5. Sync or prune based on configuration
             if SYNC_ALL_KEYS:
                 # Keep all keys in sync (add missing, remove obsolete, translate if enabled)
-                sync_keys(source_file_path, target_file_path, target_lang)
+                sync_keys(source_file_path, target_file_path, target_lang, file_key)
             else:
                 # Prune untranslated keys (rely on Joomla fallback)
                 prune_redundant_keys(source_file_path, target_file_path)
+
+        # After processing all target languages, update the source cache
+        update_source_cache(file_key, source_map)
 
 def scan_and_process(root_dir):
     """
@@ -774,9 +874,14 @@ if __name__ == "__main__":
 sync_languages.py - Synchronize and translate Joomla language files
 
 Usage:
-    python3 sync_languages.py          Run translation sync
-    python3 sync_languages.py setup    Store API key in 1Password
-    python3 sync_languages.py help     Show this help
+    python3 sync_languages.py              Run translation sync
+    python3 sync_languages.py --force      Force re-translate ALL keys
+    python3 sync_languages.py setup        Store API key in 1Password
+    python3 sync_languages.py help         Show this help
+
+Options:
+    --force     Force re-translation of all keys, ignoring existing translations.
+                Useful when source (en-GB) values have changed significantly.
 
 API Key Options (in priority order):
     1. GOOGLE_TRANSLATE_API_KEY env var
@@ -790,11 +895,22 @@ Environment Variables:
 """)
         sys.exit(0)
 
+    # Check for --force flag
+    if '--force' in sys.argv:
+        FORCE_RETRANSLATE = True
+        sys.argv.remove('--force')
+
     # Load API key
     GOOGLE_API_KEY, API_KEY_SOURCE = get_api_key()
 
     print(f"Scanning project from {project_root}...")
     print(f"Mode: {'Sync all keys' if SYNC_ALL_KEYS else 'Prune untranslated keys'}")
+    if FORCE_RETRANSLATE:
+        print("Force re-translate: ENABLED (all keys will be re-translated)")
+
+    # Load source cache (for detecting changed source values)
+    load_source_cache()
+    print(f"Source cache: {len(_source_cache)} files tracked")
 
     if AUTO_TRANSLATE:
         if GOOGLE_API_KEY:
@@ -812,7 +928,10 @@ Environment Variables:
 
     scan_and_process(project_root)
 
-    # Save translation cache
+    # Save caches
+    save_source_cache()
+    print(f"Source cache: {len(_source_cache)} files saved")
+
     if AUTO_TRANSLATE and GOOGLE_API_KEY:
         save_translation_cache()
         print(f"Translation cache: {len(_translation_cache)} entries saved")

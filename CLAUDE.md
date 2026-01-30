@@ -75,6 +75,9 @@ composer clean
 # Sync and translate language files
 composer sync-languages
 
+# Force re-translate ALL language keys (use after major English changes)
+composer sync-languages-force
+
 # Bump version (for releases)
 composer version -- -v 10.2.0
 composer version -- -v 10.2.0-beta1

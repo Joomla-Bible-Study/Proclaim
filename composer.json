@@ -110,6 +110,7 @@
     "build": "php build/proclaim_build.php build",
     "version": "php build/bump.php",
     "sync-languages": "python3 build/sync_languages.py",
+    "sync-languages-force": "python3 build/sync_languages.py --force",
     "sync-languages-setup": "python3 build/sync_languages.py setup",
     "post-install-cmd": [
       "\"libraries/vendor/bin/phpcs\" --config-set installed_paths libraries/vendor/squizlabs/php_codesniffer/src/Standards",
