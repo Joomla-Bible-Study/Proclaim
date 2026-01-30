@@ -1,90 +1,59 @@
 /* jshint node: true, esversion: 11 */
 "use strict";
 
-const babel = require('@rollup/plugin-babel');
 const resolve = require('@rollup/plugin-node-resolve');
 const terser = require('@rollup/plugin-terser');
 const fs = require('fs');
 const path = require('path');
 
-const sourceDir = path.resolve(__dirname, '../media/js');
-const outputDir = sourceDir;
+// Define source directories
+const sourceDirs = [
+    path.resolve(__dirname, '../media/js'),
+];
 
 // Helper to find files
 const getFiles = (dir) => {
+    if (!fs.existsSync(dir)) return [];
+    
     return fs.readdirSync(dir).filter(file => {
+        const fullPath = path.join(dir, file);
+        
+        // Skip directories (including vendor, node_modules, etc.)
+        if (fs.statSync(fullPath).isDirectory()) {
+            return false;
+        }
+
         return file.endsWith('.js') &&
                !file.includes('.min.') &&
-               !file.match(/[-.]es5[-.]/) && // Exclude existing es5 files from being sources
-               fs.statSync(path.join(dir, file)).isFile();
-    });
+               !file.match(/[-.]es5[-.]/) &&
+               !file.endsWith('.d.ts');
+    }).map(file => ({
+        name: file,
+        path: path.join(dir, file),
+        dir: dir
+    }));
 };
 
-const files = getFiles(sourceDir);
+// Collect all files
+const allFiles = sourceDirs.flatMap(dir => getFiles(dir));
 
-module.exports = files.flatMap(file => {
-    const filePath = path.join(sourceDir, file);
-    const name = path.basename(file, '.js');
-
-    // Determine ES5 output filename based on existing convention
-    let es5Filename = `${name}.es5.js`;
-    if (fs.existsSync(path.join(outputDir, `${name}-es5.js`))) {
-        es5Filename = `${name}-es5.js`;
-    }
-
-    // Common plugins
-    const plugins = [
-        resolve(),
-    ];
+module.exports = allFiles.flatMap(fileObj => {
+    const name = path.basename(fileObj.name, '.js');
+    const outputDir = fileObj.dir;
+    const variableName = name.replace(/-/g, '_');
 
     return [
-        // ES6+ Minified
+        // Minified
         {
-            input: filePath,
+            input: fileObj.path,
             output: {
                 file: path.join(outputDir, `${name}.min.js`),
                 format: 'iife',
-                name: name.replace(/-/g, '_'),
+                name: variableName,
                 sourcemap: true
             },
             plugins: [
-                ...plugins,
-                terser()
-            ]
-        },
-        // ES5 Transpiled
-        {
-            input: filePath,
-            output: {
-                file: path.join(outputDir, es5Filename),
-                format: 'iife',
-                name: name.replace(/-/g, '_')
-            },
-            plugins: [
-                ...plugins,
-                babel({
-                    babelHelpers: 'bundled',
-                    presets: ['@babel/preset-env'],
-                    exclude: 'node_modules/**'
-                })
-            ]
-        },
-        // ES5 Transpiled + Minified
-        {
-            input: filePath,
-            output: {
-                file: path.join(outputDir, es5Filename.replace('.js', '.min.js')),
-                format: 'iife',
-                name: name.replace(/-/g, '_'),
-                sourcemap: true
-            },
-            plugins: [
-                ...plugins,
-                babel({
-                    babelHelpers: 'bundled',
-                    presets: ['@babel/preset-env'],
-                    exclude: 'node_modules/**'
-                }),
+                resolve(),
                 terser()
             ]
         }
