@@ -3,58 +3,76 @@
 
 const resolve = require('@rollup/plugin-node-resolve');
 const terser = require('@rollup/plugin-terser');
+const gzipPlugin = require('rollup-plugin-gzip').default;
 const fs = require('fs');
 const path = require('path');
 
-// Define source directories
-const sourceDirs = [
-    path.resolve(__dirname, '../media/js'),
-];
+// Source and output directories
+const sourceDir = path.resolve(__dirname, 'media_source/js');
+const outputDir = path.resolve(__dirname, '../media/js');
 
-// Helper to find files
-const getFiles = (dir) => {
-    if (!fs.existsSync(dir)) return [];
-    
-    return fs.readdirSync(dir).filter(file => {
-        const fullPath = path.join(dir, file);
-        
-        // Skip directories (including vendor, node_modules, etc.)
-        if (fs.statSync(fullPath).isDirectory()) {
-            return false;
-        }
+// Ensure output directory exists
+if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+}
 
-        return file.endsWith('.js') &&
-               !file.includes('.min.') &&
-               !file.match(/[-.]es5[-.]/) &&
-               !file.endsWith('.d.ts');
-    }).map(file => ({
-        name: file,
-        path: path.join(dir, file),
-        dir: dir
-    }));
+// Get all .es6.js files from source directory
+const getSourceFiles = () => {
+    if (!fs.existsSync(sourceDir)) {
+        console.warn(`Source directory not found: ${sourceDir}`);
+        return [];
+    }
+
+    return fs.readdirSync(sourceDir)
+        .filter(file => file.endsWith('.es6.js'))
+        .map(file => ({
+            name: file,
+            path: path.join(sourceDir, file),
+            // Output name without .es6 suffix
+            outputName: file.replace('.es6.js', '')
+        }));
 };
 
-// Collect all files
-const allFiles = sourceDirs.flatMap(dir => getFiles(dir));
+const sourceFiles = getSourceFiles();
 
-module.exports = allFiles.flatMap(fileObj => {
-    const name = path.basename(fileObj.name, '.js');
-    const outputDir = fileObj.dir;
-    const variableName = name.replace(/-/g, '_');
+if (sourceFiles.length === 0) {
+    console.warn('No .es6.js files found to process');
+}
+
+module.exports = sourceFiles.flatMap(fileObj => {
+    const variableName = fileObj.outputName.replace(/-/g, '_');
 
     return [
-        // Minified
+        // Unminified version
         {
             input: fileObj.path,
             output: {
-                file: path.join(outputDir, `${name}.min.js`),
+                file: path.join(outputDir, `${fileObj.outputName}.js`),
+                format: 'iife',
+                name: variableName,
+                sourcemap: false
+            },
+            plugins: [
+                resolve()
+            ]
+        },
+        // Minified version with gzip
+        {
+            input: fileObj.path,
+            output: {
+                file: path.join(outputDir, `${fileObj.outputName}.min.js`),
                 format: 'iife',
                 name: variableName,
                 sourcemap: true
             },
             plugins: [
                 resolve(),
-                terser()
+                terser({
+                    format: {
+                        comments: false
+                    }
+                }),
+                gzipPlugin()
             ]
         }
     ];

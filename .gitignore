@@ -30,4 +30,4 @@ com_proclaim/media/css/site/
 /build.properties
 
 # Test cache
-.phpunit.cache/
+.phpunit.cache/!/tests/.tmp/
