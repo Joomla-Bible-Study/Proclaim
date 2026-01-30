@@ -611,7 +611,7 @@ class Cwmlisting
      * @param   array      $listsorts  ?
      * @param   Object     $item       ?
      * @param   Registry   $params     Item Params
-     * @param   \stdClass  $template   Template info
+     * @param   \stdClass  $template  Template info
      * @param   integer    $header     ?
      * @param   string     $type       ?
      *
@@ -1263,8 +1263,10 @@ class Cwmlisting
                     if ($showBadge === '' || $showBadge === null) {
                         $showBadge = $params->get('default_show_archive_badge', '1');
                     }
-                    if (isset($item->published) && (int)$item->published === 2
-                        && (int)$showBadge === 1) {
+                    if (
+                        isset($item->published) && (int)$item->published === 2
+                        && (int)$showBadge === 1
+                    ) {
                         $data .= ' <span class="badge bg-secondary proclaim-archive-badge">'
                             . Text::_('JBS_CMN_ARCHIVE_BADGE') . '</span>';
                     }
@@ -1632,8 +1634,10 @@ class Cwmlisting
                 if ($showBadge === '' || $showBadge === null) {
                     $showBadge = $params->get('default_show_archive_badge', '1');
                 }
-                if (isset($row->published) && (int)$row->published === 2
-                    && (int)$showBadge === 1) {
+                if (
+                    isset($row->published) && (int)$row->published === 2
+                    && (int)$showBadge === 1
+                ) {
                     $element .= ' <span class="badge bg-secondary proclaim-archive-badge">'
                         . Text::_('JBS_CMN_ARCHIVE_BADGE') . '</span>';
                 }

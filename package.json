@@ -1,5 +1,5 @@
 {
-  "name": "cwmproclaim",
+  "name": "com_proclaim",
   "version": "10.1.0",
   "description": "CWM Proclaim - A Joomla! Extension for Church Media Management",
   "license": "GPL-2.0-or-later",
@@ -55,8 +55,6 @@
     "test:coverage": "node --no-deprecation node_modules/.bin/jest -c build/jest.config.js --coverage"
   },
   "dependencies": {
-    "@hapi/cryptiles": "^6.0.3",
-    "@hapi/hoek": "^11.0.7",
     "core-js": "^3.48.0"
   }
 }

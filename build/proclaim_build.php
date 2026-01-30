@@ -240,7 +240,7 @@ function symlink_force($target, $link, $quiet = false)
     if (!$quiet) {
         echo "Linking $link -> $target\n";
     }
-    
+
     if (!@symlink($target, $link)) {
         echo "ERROR: Failed to create symlink $link -> $target\n";
         $e = error_get_last();
@@ -283,9 +283,9 @@ function doBuild()
         echo "  [1] XML Version ($xmlVersion) - Default\n";
         echo "  [2] Date Version ($dateVersion)\n";
         echo "  [3] Custom Version\n";
-        
+
         $choice = ask("Enter choice [1-3]", "1");
-        
+
         switch ($choice) {
             case '2':
                 $version = $dateVersion;

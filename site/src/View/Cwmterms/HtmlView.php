@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Site\View\Cwmterms;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Document\Document;
@@ -72,15 +71,15 @@ class HtmlView extends BaseHtmlView
      */
     public function display($tpl = null): void
     {
-        $input       = Factory::getApplication()->getInput();
-        $mid         = $input->get('mid', '', 'int');
-        $compat_mode = $input->get('compat_mode', '0', 'int');
+        $input             = Factory::getApplication()->getInput();
+        $mid               = $input->get('mid', '', 'int');
+        $this->compat_mode = $input->get('compat_mode', '0', 'int');
 
-        $template     = Cwmparams::getTemplateparams();
-        $this->params = $template->params;
-        $termstext    = $this->params->get('terms');
-        $db           = Factory::getContainer()->get('DatabaseDriver');
-        $query        = $db->getQuery('true');
+        $template           = Cwmparams::getTemplateparams();
+        $this->params       = $template->params;
+        $this->termstext    = $this->params->get('terms');
+        $db                 = Factory::getContainer()->get('DatabaseDriver');
+        $query              = $db->getQuery('true');
         $query->select('*');
         $query->from('#__bsms_mediafiles');
         $query->where('id= ' . (int)$mid);
@@ -91,28 +90,10 @@ class HtmlView extends BaseHtmlView
         $registory = new Registry();
         $registory->loadString($this->media->params);
         $this->media->params = $registory;
-        ?>
-        <div class="termstext">
-            <?php
-            echo $termstext;
-        ?>
-        </div>
-        <div class="termslink">
-            <?php
-        if ((int)$compat_mode === 1) {
-            echo '<a href="https://www.christianwebministries.org/router.php?file=' .
-            Cwmhelper::mediaBuildUrl($this->media->spath, $this->media->filename, $this->params)
-            . '&size=' . $this->media->size . '">' . Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
-        } else {
-            echo '<a href="index.php?option=com_proclaim&task=cwmsermons.download&id=' . $this->media->study_id
-            . '&mid=' . $this->media->id . '">'
-            . Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
-        }
-        ?>
-        </div>
-        <?php
 
         $this->prepareDocument();
+
+        parent::display($tpl);
     }
 
     /**

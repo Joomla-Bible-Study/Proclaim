@@ -11,9 +11,9 @@
 
 namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube;
 
+// phpcs:disable PSR1.Files.SideEffects
 require_once __DIR__ . '/vendor/autoload.php';
 
-// phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 
 // phpcs:enable PSR1.Files.SideEffects

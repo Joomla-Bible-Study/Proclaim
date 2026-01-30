@@ -15,7 +15,6 @@ use Joomla\CMS\Log\Log;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
-// phpcs:enable PSR1.Files.SideEffects
 
 try {
     $app = Factory::getApplication();
@@ -55,7 +54,7 @@ if (is_file($manifestFile) && is_readable($manifestFile)) {
 }
 
 \define('BIBLESTUDY_VERSION', $manifestVersion);
-\define('BIBLESTUDY_VERSION_UPDATEFILE', 'Proclaim Version ' . BIBLESTUDY_VERSION);
+const BIBLESTUDY_VERSION_UPDATEFILE = 'Proclaim Version ' . BIBLESTUDY_VERSION;
 
 // Default values
 const BIBLESTUDY_COMPONENT_NAME = 'com_proclaim';
@@ -102,3 +101,4 @@ Log::addLogger(
 
 // CWM has been initialized
 const CWM_LOADED = 1;
+// phpcs:enable PSR1.Files.SideEffects

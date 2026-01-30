@@ -47,8 +47,7 @@
   "autoload": {
     "psr-4": {
       "CWM\\Component\\Proclaim\\Administrator\\": "admin/src/",
-      "CWM\\Component\\Proclaim\\Site\\": "site/src/",
-      "CWM\\Proclaim\\Libraries\\": "libraries/src/"
+      "CWM\\Component\\Proclaim\\Site\\": "site/src/"
     }
   },
   "autoload-dev": {
@@ -96,11 +95,11 @@
     "test:js": "npm test",
     "test:all": ["@test", "@test:js"],
     "lint:syntax": "php build/proclaim_build.php lint-syntax",
-    "lint": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --dry-run --diff",
-    "lint:fix": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix",
-    "cs": "phpcs . --standard=./build/psr12/ruleset.xml",
+    "lint:report": "phpcs --report=summary,full,source,xml,json,checkstyle,gitblame,console,csv,emacs,junit,md,pathextensions,php,pmd,screen,source,text,vcs,xml",
+    "lint": "phpcs .",
+    "lint:fix": "phpcbf .",
     "check": ["@lint:syntax", "@lint", "@test"],
-    "check:all": ["@lint:syntax", "@lint", "@cs", "@test:all"],
+    "check:all": ["@lint:syntax", "@lint", "@test:all"],
     "build:assets": "npm install && npm run build",
     "build:full": ["@check:all", "@build"],
     "setup": "php build/proclaim_build.php setup",
