@@ -48,7 +48,7 @@ class ProclaimComponent extends MVCComponent implements
      *
      * @since   4.0.0
      */
-    public const CONDITION_NAMES = [
+    public const array CONDITION_NAMES = [
         self::CONDITION_PUBLISHED   => 'JPUBLISHED',
         self::CONDITION_UNPUBLISHED => 'JUNPUBLISHED',
         self::CONDITION_ARCHIVED    => 'JARCHIVED',
@@ -59,25 +59,25 @@ class ProclaimComponent extends MVCComponent implements
      *
      * @since   4.0.0
      */
-    public const CONDITION_ARCHIVED = 2;
+    public const int CONDITION_ARCHIVED = 2;
     /**
      * The published condition
      *
      * @since   4.0.0
      */
-    public const CONDITION_PUBLISHED = 1;
+    public const int CONDITION_PUBLISHED = 1;
     /**
      * The unpublished condition
      *
      * @since   4.0.0
      */
-    public const CONDITION_UNPUBLISHED = 0;
+    public const int CONDITION_UNPUBLISHED = 0;
     /**
      * The trashed condition
      *
      * @since   4.0.0
      */
-    public const CONDITION_TRASHED = -2;
+    public const int CONDITION_TRASHED = -2;
 
     /**
      * @var array Supported functionality
@@ -107,7 +107,7 @@ class ProclaimComponent extends MVCComponent implements
      *
      * @since 10.1.0
      */
-    public const MIN_PHP_VERSION = '8.3.0';
+    public const string MIN_PHP_VERSION = '8.3.0';
 
     public function boot(ContainerInterface $container): void
     {

@@ -146,6 +146,7 @@ class CwmserverTable extends Table
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
+    #[\Override]
     public function bind($array, $ignore = ''): bool
     {
         // Bind the server params
@@ -185,6 +186,7 @@ class CwmserverTable extends Table
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
+    #[\Override]
     public function store($updateNulls = false): bool
     {
         if (!$this->_rules) {
@@ -213,6 +215,7 @@ class CwmserverTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
@@ -227,6 +230,7 @@ class CwmserverTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetTitle(): string
     {
         return 'JBS Server: ' . $this->server_name;
@@ -245,6 +249,7 @@ class CwmserverTable extends Table
      *
      * @since   11.1
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID

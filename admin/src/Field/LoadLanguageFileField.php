@@ -55,6 +55,7 @@ class LoadLanguageFileField extends ListField
      * @return string;
      * @since 9.0.0
      */
+    #[\Override]
     public function getLabel(): string
     {
         // Return an empty string; nothing to display
@@ -68,6 +69,7 @@ class LoadLanguageFileField extends ListField
      * @throws \Exception
      * @since 9.0.0
      */
+    #[\Override]
     protected function getInput(): string
     {
         // Get language file; english language as fallback

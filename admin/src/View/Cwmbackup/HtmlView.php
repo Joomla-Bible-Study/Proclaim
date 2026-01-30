@@ -83,6 +83,7 @@ class HtmlView extends BaseHtmlView
      * @see     \ViewLegacy::loadTemplate()
      * @since   3.0
      */
+    #[\Override]
     public function display($tpl = null): void
     {
         $model = new CwmadminModel();

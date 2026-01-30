@@ -45,6 +45,7 @@ class MediaFileField extends ListField
      *
      * @since 7.0
      */
+    #[\Override]
     protected function getOptions(): array
     {
         if ($this->form->getValue('id')) {

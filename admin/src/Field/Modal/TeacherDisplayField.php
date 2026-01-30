@@ -46,6 +46,7 @@ class TeacherDisplayField extends FormField
      *
      * @since   9.0.0
      */
+    #[\Override]
     protected function getLabel(): string
     {
         return str_replace($this->id, $this->id . '_name', parent::getLabel());
@@ -59,6 +60,7 @@ class TeacherDisplayField extends FormField
      * @throws \Exception
      * @since    1.6
      */
+    #[\Override]
     protected function getInput(): string
     {
         $allowNew       = ((string)$this->element['new'] == 'true');

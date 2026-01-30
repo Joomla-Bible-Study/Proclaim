@@ -113,6 +113,7 @@ class HtmlView extends BaseHtmlView
      * @throws  \Exception
      * @since   7.0.0
      */
+    #[\Override]
     public function display($tpl = null): void
     {
         $app             = Factory::getApplication();

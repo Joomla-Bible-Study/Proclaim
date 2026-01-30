@@ -88,6 +88,7 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0
      */
+    #[\Override]
     public function display($tpl = null): void
     {
         $pagebuilder = new Cwmpagebuilder();

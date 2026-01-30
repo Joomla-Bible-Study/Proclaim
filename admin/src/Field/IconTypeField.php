@@ -46,6 +46,7 @@ class IconTypeField extends ListField
      *
      * @since   9.1.3
      */
+    #[\Override]
     protected function getInput(): string
     {
         $data = $this->getLayoutData();
@@ -76,6 +77,7 @@ class IconTypeField extends ListField
      *
      * @since 7.0
      */
+    #[\Override]
     protected function getOptions(): array
     {
         $MediaHelper = new Cwmmedia();

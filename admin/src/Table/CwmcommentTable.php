@@ -183,6 +183,7 @@ class CwmcommentTable extends Table
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
+    #[\Override]
     public function store($updateNulls = false): bool
     {
         if (!$this->_rules) {
@@ -203,6 +204,7 @@ class CwmcommentTable extends Table
      *
      * @since   1.6
      */
+    #[\Override]
     protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
@@ -217,6 +219,7 @@ class CwmcommentTable extends Table
      *
      * @since   1.6
      */
+    #[\Override]
     protected function _getAssetTitle(): string
     {
         return 'JBS Comment - id/date: ' . $this->user_id . ' - ' . $this->comment_date;
@@ -230,6 +233,7 @@ class CwmcommentTable extends Table
      * @throws \Exception
      * @since 10.1.0
      */
+    #[\Override]
     public function check(): bool
     {
         // We check for null specifically to allow 0 (Guest) as a valid user_id
@@ -253,6 +257,7 @@ class CwmcommentTable extends Table
      *
      * @since   1.6
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID

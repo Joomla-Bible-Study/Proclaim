@@ -31,12 +31,12 @@ use Joomla\Filesystem\Path;
  */
 class Cwmthumbnail
 {
-    public const SCALE_INSIDE = 2;
+    public const int SCALE_INSIDE = 2;
 
     /**
      * Allowed base paths for image operations (safety whitelist)
      */
-    private const ALLOWED_PATHS = [
+    private const array ALLOWED_PATHS = [
         'images/biblestudy/studies/',
         'images/biblestudy/teachers/',
         'images/biblestudy/series/',

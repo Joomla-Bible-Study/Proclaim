@@ -35,7 +35,7 @@ final class Version
      * @var    string
      * @since  3.5
      */
-    public const PRODUCT = 'Proclaim';
+    public const string PRODUCT = 'Proclaim';
 
     /**
      * Major release version.
@@ -43,7 +43,7 @@ final class Version
      * @var    int
      * @since  3.8.0
      */
-    public const MAJOR_VERSION = 10;
+    public const int MAJOR_VERSION = 10;
 
     /**
      * Minor release version.
@@ -51,7 +51,7 @@ final class Version
      * @var    int
      * @since  3.8.0
      */
-    public const MINOR_VERSION = 1;
+    public const int MINOR_VERSION = 1;
 
     /**
      * Patch release version.
@@ -59,7 +59,7 @@ final class Version
      * @var    int
      * @since  3.8.0
      */
-    public const PATCH_VERSION = 0;
+    public const int PATCH_VERSION = 0;
 
     /**
      * Extra release version info.
@@ -70,7 +70,7 @@ final class Version
      * @var    string
      * @since  3.8.0
      */
-    public const EXTRA_VERSION = 'rc2-dev';
+    public const string EXTRA_VERSION = 'rc2-dev';
 
     /**
      * Development status.
@@ -78,7 +78,7 @@ final class Version
      * @var    string
      * @since  3.5
      */
-    public const DEV_STATUS = 'Development';
+    public const string DEV_STATUS = 'Development';
 
     /**
      * Code name.
@@ -86,7 +86,7 @@ final class Version
      * @var    string
      * @since  3.5
      */
-    public const CODENAME = 'Kuboresha';
+    public const string CODENAME = 'Kuboresha';
 
     /**
      * Release date.
@@ -94,7 +94,7 @@ final class Version
      * @var    string
      * @since  3.5
      */
-    public const RELDATE = '29-January-2026';
+    public const string RELDATE = '29-January-2026';
 
     /**
      * Release time.
@@ -102,7 +102,7 @@ final class Version
      * @var    string
      * @since  3.5
      */
-    public const RELTIME = '17:11';
+    public const string RELTIME = '17:11';
 
     /**
      * Release timezone.
@@ -110,7 +110,7 @@ final class Version
      * @var    string
      * @since  3.5
      */
-    public const RELTZ = 'GMT';
+    public const string RELTZ = 'GMT';
 
     /**
      * Copyright Notice.
@@ -118,7 +118,7 @@ final class Version
      * @var    string
      * @since  3.5
      */
-    public const COPYRIGHT = '(C) 2026 CWM Team All rights reserved<https://www.christianwebministries.org>';
+    public const string COPYRIGHT = '(C) 2026 CWM Team All rights reserved<https://www.christianwebministries.org>';
 
     /**
      * Link text.
@@ -126,7 +126,7 @@ final class Version
      * @var    string
      * @since  3.5
      */
-    public const URL = '<a href="https://www.christianwebministries.org">CWM Proclaim</a> is Free Software released under the GNU General Public License.';
+    public const string URL = '<a href="https://www.christianwebministries.org">CWM Proclaim</a> is Free Software released under the GNU General Public License.';
 
     /**
      * Media version string
@@ -262,7 +262,7 @@ final class Version
         // Load the media version and cache it for future use
         if (self::$mediaVersion === null) {
             self::$mediaVersion = $this->getMediaVersionCache()
-                ->get([$this, 'generateMediaVersion'], [], md5('_media_version' . $this->getLongVersion()));
+                ->get($this->generateMediaVersion(...), [], md5('_media_version' . $this->getLongVersion()));
         }
 
         return self::$mediaVersion;

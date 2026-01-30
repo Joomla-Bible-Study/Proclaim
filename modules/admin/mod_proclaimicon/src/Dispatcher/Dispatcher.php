@@ -34,6 +34,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
      *
      * @since   10.0.0
      */
+    #[\Override]
     protected function getLayoutData(): array|false
     {
         if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {

@@ -49,6 +49,7 @@ class ServerTypeField extends FormField
      * @throws \Exception
      * @since 7.0
      */
+    #[\Override]
     protected function getInput(): string
     {
         $allowNew       = ((string)$this->element['new'] === 'true');
@@ -274,6 +275,7 @@ class ServerTypeField extends FormField
      *
      * @since   3.4
      */
+    #[\Override]
     protected function getLabel(): string
     {
         return str_replace($this->id, $this->id . '_name', parent::getLabel());

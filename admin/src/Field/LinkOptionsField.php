@@ -44,6 +44,7 @@ class LinkOptionsField extends ListField
      *
      * @since 7.0
      */
+    #[\Override]
     protected function getOptions(): array
     {
         $options[] = HTMLHelper::_('select.option', '0', Text::_('JBS_TPL_NO_LINK'));

@@ -143,6 +143,7 @@ class CwmmessagetypeTable extends Table
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
+    #[\Override]
     public function bind($array, $ignore = ''): bool
     {
         if (\is_object($array)) {
@@ -178,6 +179,7 @@ class CwmmessagetypeTable extends Table
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
+    #[\Override]
     public function store($updateNulls = false): bool
     {
         if (!$this->_rules) {
@@ -202,6 +204,7 @@ class CwmmessagetypeTable extends Table
      *
      * @since 9.0.0
      */
+    #[\Override]
     public function load($keys = null, $reset = true): bool
     {
         if (parent::load($keys, $reset)) {
@@ -227,6 +230,7 @@ class CwmmessagetypeTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
@@ -241,6 +245,7 @@ class CwmmessagetypeTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetTitle(): string
     {
         return 'CWM MessageType: ' . $this->message_type;
@@ -259,6 +264,7 @@ class CwmmessagetypeTable extends Table
      *
      * @since   11.1
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID

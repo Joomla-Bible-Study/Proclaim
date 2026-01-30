@@ -44,6 +44,7 @@ class TeacherListField extends ListField
      *
      * @since 9.0.0
      */
+    #[\Override]
     protected function getOptions(): array
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');

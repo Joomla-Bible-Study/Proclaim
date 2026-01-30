@@ -44,6 +44,7 @@ class BookListField extends ListField
      * @throws \Exception
      * @since 7.0
      */
+    #[\Override]
     protected function getOptions(): array
     {
         return array_merge(parent::getOptions(), CwmproclaimHelper::getStudyBooks());

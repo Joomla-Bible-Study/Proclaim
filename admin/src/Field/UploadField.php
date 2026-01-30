@@ -42,6 +42,7 @@ class UploadField extends FormField
      * @throws \Exception
      * @since 9.0.0
      */
+    #[\Override]
     protected function getInput(): string
     {
         $wa = $this->document->getWebAssetManager();

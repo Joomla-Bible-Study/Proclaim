@@ -42,6 +42,7 @@ class HtmlView extends BaseHtmlView
      * @since  11.1
      * @see    ViewLegacy::loadTemplate()
      */
+    #[\Override]
     public function display($tpl = null): void
     {
         $this->form = $this->get("Form");

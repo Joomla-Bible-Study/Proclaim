@@ -43,6 +43,7 @@ class FilesizeField extends ListField
      *
      * @since 1.5
      */
+    #[\Override]
     protected function getInput(): string
     {
         // Initialize some field attributes.

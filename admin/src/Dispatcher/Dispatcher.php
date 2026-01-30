@@ -42,6 +42,7 @@ class Dispatcher extends ComponentDispatcher
      * @throws \Throwable
      * @since 10.0.0
      */
+    #[\Override]
     public function dispatch(): void
     {
         // Always load Proclaim API if it exists.
@@ -100,6 +101,7 @@ class Dispatcher extends ComponentDispatcher
      *
      * @since  4.0.0
      */
+    #[\Override]
     protected function checkAccess(): void
     {
         $task         = $this->input->getCmd('task');

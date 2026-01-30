@@ -166,6 +166,7 @@ class CwmmediafileTable extends Table
      *
      * @since    7.0.0
      */
+    #[\Override]
     public function bind($array, $ignore = ''): bool
     {
         if (isset($array['params']) && \is_array($array['params'])) {
@@ -202,6 +203,7 @@ class CwmmediafileTable extends Table
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
+    #[\Override]
     public function store($updateNulls = false): bool
     {
         if (!$this->_rules) {
@@ -225,6 +227,7 @@ class CwmmediafileTable extends Table
      * @since   11.1
      * @link    http://docs.joomla.org/Table/checkIn
      */
+    #[\Override]
     public function checkIn($pk = null): bool
     {
         // If there is no checked_out or checked_out_time field, just return true.
@@ -281,6 +284,7 @@ class CwmmediafileTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
@@ -295,6 +299,7 @@ class CwmmediafileTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetTitle(): string
     {
         return 'JBS Media File: ' . $this->id;
@@ -313,6 +318,7 @@ class CwmmediafileTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID

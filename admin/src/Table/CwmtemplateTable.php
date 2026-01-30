@@ -167,6 +167,7 @@ class CwmtemplateTable extends Table
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
+    #[\Override]
     public function bind($array, $ignore = ''): bool
     {
         if (isset($array['params']) && \is_array($array['params'])) {
@@ -216,6 +217,7 @@ class CwmtemplateTable extends Table
      * @link    http://docs.joomla.org/Table/store
      * @since   11.1
      */
+    #[\Override]
     public function store($updateNulls = false): bool
     {
         // Set default rules if not already set
@@ -237,6 +239,7 @@ class CwmtemplateTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
@@ -251,6 +254,7 @@ class CwmtemplateTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetTitle(): string
     {
         return 'JBS Template: ' . $this->title;
@@ -269,6 +273,7 @@ class CwmtemplateTable extends Table
      *
      * @since   11.1
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID

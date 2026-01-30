@@ -47,6 +47,7 @@ class StudyField extends FormField
      *
      * @since   9.0.0
      */
+    #[\Override]
     protected function getLabel(): string
     {
         return str_replace($this->id, $this->id . '_name', parent::getLabel());
@@ -60,6 +61,7 @@ class StudyField extends FormField
      * @throws \Exception
      * @since 9.0.0
      */
+    #[\Override]
     protected function getInput(): string
     {
         $allowNew       = ((string)$this->element['new'] == 'true');

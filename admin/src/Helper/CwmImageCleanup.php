@@ -31,7 +31,7 @@ class CwmImageCleanup
     /**
      * Allowed base paths (SAFETY: only scan within these)
      */
-    private const ALLOWED_PATHS = [
+    private const array ALLOWED_PATHS = [
         'images/biblestudy/studies',
         'images/biblestudy/teachers',
         'images/biblestudy/series',

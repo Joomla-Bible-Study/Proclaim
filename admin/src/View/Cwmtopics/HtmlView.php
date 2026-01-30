@@ -91,6 +91,7 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
+    #[\Override]
     public function display($tpl = null): void
     {
         $items            = $this->get('Items');
