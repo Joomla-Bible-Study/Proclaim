@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
@@ -143,7 +144,7 @@ class CwmsermonModel extends FormModel
                 ) {
                     // Filter by start and end dates.
                     $nullDate = $db->quote($db->getNullDate());
-                    $date     = Factory::getDate();
+                    $date     = new Date();
 
                     $nowDate = $db->quote($date->toSql());
 
@@ -297,7 +298,7 @@ class CwmsermonModel extends FormModel
             'full_name'    => $input->getString('full_name', ''),
             'user_email'   => $input->getString('user_email', ''),
             'comment_text' => $input->get('comment_text', '', 'raw'),
-            'comment_date' => $input->getString('comment_date', Factory::getDate()->toSql()),
+            'comment_date' => $input->getString('comment_date', (new Date())->toSql()),
             'published'    => $input->getInt('published', 1),
             'language'     => $input->getString('language', '*'),
         ];

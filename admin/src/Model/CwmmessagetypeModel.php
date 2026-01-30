@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 use CWM\Component\Proclaim\Administrator\Table\CwmmessageTable;
 use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
@@ -155,7 +156,7 @@ class CwmmessagetypeModel extends AdminModel
     {
         jimport('joomla.filter.output');
 
-        $date = Factory::getDate();
+        $date = new Date();
         $user = Factory::getApplication()->getIdentity();
 
         $table->message_type = htmlspecialchars_decode($table->message_type, ENT_QUOTES);

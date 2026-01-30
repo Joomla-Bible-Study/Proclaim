@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CwmteacherTable;
 use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Form\Form;
@@ -416,7 +417,7 @@ class CwmteacherModel extends AdminModel
      */
     protected function prepareTable($table): void
     {
-        $date = Factory::getDate();
+        $date = new Date();
         $user = Factory::getApplication()->getIdentity();
 
         $table->teachername = htmlspecialchars_decode($table->teachername, ENT_QUOTES);

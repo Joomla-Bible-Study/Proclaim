@@ -22,6 +22,7 @@ use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
 use CWM\Component\Proclaim\Administrator\Table\CwmserverTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
@@ -750,7 +751,7 @@ class CwmmediafileModel extends AdminModel
      */
     protected function prepareTable($table): void
     {
-        $date = Factory::getDate();
+        $date = new Date();
         $user = Factory::getApplication()->getIdentity();
 
         // Always ensure created date is set (handles empty string from form)

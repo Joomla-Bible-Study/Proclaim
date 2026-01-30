@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CwmserieTable;
 use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -448,7 +449,7 @@ class CwmserieModel extends AdminModel
     {
         jimport('joomla.filter.output');
 
-        $date = Factory::getDate();
+        $date = new Date();
         $user = Factory::getApplication()->getIdentity();
 
         $table->series_text = htmlspecialchars_decode($table->series_text, ENT_QUOTES);

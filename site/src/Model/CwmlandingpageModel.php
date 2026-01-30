@@ -37,7 +37,7 @@ class CwmlandingpageModel extends ListModel
      *
      * @throws \Exception
      * @since      1.6
-     * @see        JController
+     * @see        ListModel
      */
     public function __construct($config = [])
     {

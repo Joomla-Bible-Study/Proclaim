@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Table\CwmcommentTable;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
@@ -44,7 +45,7 @@ class CwmcommentModel extends AdminModel
     protected $text_prefix = 'com_proclaim';
 
     /**
-     * Overrides the JModelAdmin save routine to save the topics(tags)
+     * Overrides the AdminModel save routine to save the topics(tags)
      *
      * @param   array  $data  The form data.
      *
@@ -306,7 +307,7 @@ class CwmcommentModel extends AdminModel
      */
     protected function prepareTable($table): void
     {
-        $date = Factory::getDate();
+        $date = new Date();
         $user = Factory::getApplication()->getIdentity();
 
         // Always ensure created date is set (handles empty string from form)

@@ -17,11 +17,11 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Table\CwmpodcastTable;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
-use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
 
 /**
@@ -103,7 +103,7 @@ class CwmpodcastModel extends AdminModel
     /**
      * Method to get the data that should be injected into the form.
      *
-     * @return  CMSObject|array   The default data is an empty array.
+     * @return  object|array   The default data is an empty array.
      *
      * @throws \Exception
      * @since   7.0
@@ -131,7 +131,7 @@ class CwmpodcastModel extends AdminModel
      */
     protected function prepareTable($table): void
     {
-        $date = Factory::getDate();
+        $date = new Date();
         $user = Factory::getApplication()->getIdentity();
 
         // Always ensure created date is set (handles empty string from form)

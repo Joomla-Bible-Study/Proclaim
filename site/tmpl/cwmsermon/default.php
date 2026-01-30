@@ -34,7 +34,7 @@ if ($this->item->params->get('sermontemplate') && !$this->simple->mode) {
 $show_comments = $this->item->params->get('show_comments');
 
 if ($show_comments >= 1) {
-    $user   = Factory::getUser();
+    $user   = Factory::getApplication()->getIdentity();
     $groups = $user->getAuthorisedViewLevels();
 
     if (in_array($show_comments, $groups, false)) {

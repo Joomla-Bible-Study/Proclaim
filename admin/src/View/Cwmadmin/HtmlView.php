@@ -26,7 +26,6 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Filesystem\Folder;
@@ -194,7 +193,7 @@ class HtmlView extends BaseHtmlView
     /**
      * Item
      *
-     * @var CMSObject
+     * @var object
      * @since    7.0.0
      */
     protected $item;
@@ -202,7 +201,7 @@ class HtmlView extends BaseHtmlView
     /**
      * State
      *
-     * @var CMSObject
+     * @var Registry
      * @since    7.0.0
      */
     protected $state;

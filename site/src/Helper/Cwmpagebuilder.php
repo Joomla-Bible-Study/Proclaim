@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
@@ -328,7 +329,7 @@ class Cwmpagebuilder
 
         // Define null and now dates
         $nullDate = $db->quote($db->getNullDate());
-        $nowDate  = $db->quote(Factory::getDate()->toSql());
+        $nowDate  = $db->quote((new Date())->toSql());
 
         // Filter by start and end dates.
         if (
