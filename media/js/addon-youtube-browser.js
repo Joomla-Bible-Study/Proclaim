@@ -32,7 +32,7 @@
                     return;
                 }
 
-                var modalHtml = '<div class="modal fade" id="youtubeBrowserModal" tabindex="-1" aria-labelledby="youtubeBrowserModalLabel" aria-hidden="true">' +
+                var modalHtml = '<div class="modal fade" id="youtubeBrowserModal" tabindex="-1" aria-labelledby="youtubeBrowserModalLabel">' +
                     '<div class="modal-dialog modal-xl modal-dialog-scrollable">' +
                     '<div class="modal-content">' +
                     '<div class="modal-header">' +
