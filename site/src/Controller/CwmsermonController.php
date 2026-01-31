@@ -151,6 +151,7 @@ class CwmsermonController extends FormController
      * @return void
      *
      * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function comment(): void

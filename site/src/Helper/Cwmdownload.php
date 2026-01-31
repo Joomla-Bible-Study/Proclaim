@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
@@ -36,10 +37,10 @@ class Cwmdownload
      * @param   int  $mid  ID of media
      *
      * @return void
-     * @throws \Exception
+     * @throws \Exception If the template or media is not found.
      * @since 6.1.2
      */
-    public function download($mid): void
+    public function download(int $mid): void
     {
         // Clears file status cache
         clearstatcache();
@@ -48,7 +49,6 @@ class Cwmdownload
         $input      = new Input();
         $templateId = $input->get('t', '1', 'int');
         $db         = Factory::getContainer()->get('DatabaseDriver');
-        $mid        = (int) $mid;
 
         // Get the template so we can find a protocol
         $query = $db->getQuery(true);
@@ -97,53 +97,91 @@ class Cwmdownload
         $params->merge($registry);
 
         $download_file = Cwmhelper::mediaBuildUrl($media->spath, $params->get('filename'), $params, true);
+        $isLocal       = false;
+
+        // Optimization: Check if a file is local to avoid HTTP loopback and get an accurate size
+        if ($download_file) {
+            $root = Uri::root();
+            if (str_starts_with($download_file, $root)) {
+                $relativePath = substr($download_file, \strlen($root));
+                $localPath    = JPATH_ROOT . '/' . $relativePath;
+                // Clean up path
+                $localPath = str_replace('//', '/', $localPath);
+
+                if (file_exists($localPath)) {
+                    $download_file = $localPath;
+                    $isLocal       = true;
+                }
+            }
+        }
 
         if ((int) $params->get('size', 0) === 0) {
-            $getSize = Cwmhelper::getRemoteFileSize($download_file);
+            if ($isLocal) {
+                $getSize = filesize($download_file);
+            } else {
+                $getSize = Cwmhelper::getRemoteFileSize($download_file);
+            }
         } else {
             $getSize = $params->get('size', 0);
         }
 
+        // Disable the time limit and close the session to prevent locking
         @set_time_limit(0);
         ignore_user_abort(false);
+        if (session_id()) {
+            session_write_close();
+        }
+
         ini_set('output_buffering', 0);
         ini_set('zlib.output_compression', 0);
 
-        // Bytes per chunk (10 MB)
-        $chunk = 10 * 1024 * 1024;
-
-        $fh = @fopen($download_file, 'rb');
-
-        if (!$fh) {
-            if (JBSMDEBUG) {
-                echo '<pre>' . $download_file . '</pre>';
-            }
-
-            $this->sendError($app, 500, 'Unable to open file');
-        }
-
         // Clean the output buffer, Added to fix ZIP file corruption
-        @ob_end_clean();
-        @ob_start();
+        while (ob_get_level()) {
+            @ob_end_clean();
+        }
 
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename="' . basename($params->get('filename')) . '"');
         header('Expires: 0');
-        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-        header("Cache-Control: private", false);
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Cache-Control: private', false);
         header('Pragma: public');
-        header("Content-Transfer-Encoding: binary");
-        header('Content-Length: ' . $getSize);
+        header('Content-Transfer-Encoding: binary');
 
-        // Repeat reading until EOF
-        while (!feof($fh)) {
-            echo fread($fh, $chunk);
-            @ob_flush();
-            @flush();
+        if ($getSize > 0) {
+            header('Content-Length: ' . $getSize);
         }
 
-        fclose($fh);
+        // Flush headers before streaming
+        flush();
+
+        if ($isLocal) {
+            readfile($download_file);
+        } else {
+            // Bytes per chunk (8 KB) - Reduced from 10MB to save memory
+            $chunk = 8 * 1024;
+
+            $fh = @fopen($download_file, 'rb');
+
+            if (!$fh) {
+                if (\defined('JBSMDEBUG') && JBSMDEBUG) {
+                    echo '<pre>' . $download_file . '</pre>';
+                }
+
+                // We cannot send a 500 error cleanly if headers are already sent, but we can try
+                exit;
+            }
+
+            // Repeat reading until EOF
+            while (!feof($fh)) {
+                echo fread($fh, $chunk);
+                flush();
+            }
+
+            fclose($fh);
+        }
+
         $app->close();
     }
 
@@ -151,14 +189,14 @@ class Cwmdownload
      * Send an HTTP error response and terminate
      *
      * @param   CMSApplication  $app      The application
-     * @param   int                                     $code     HTTP status code
-     * @param   string                                  $message  Error message
+     * @param   int             $code     HTTP status code
+     * @param   string          $message  Error message
      *
      * @return  never
      *
      * @since   10.0.0
      */
-    protected function sendError($app, int $code, string $message): never
+    protected function sendError(CMSApplication $app, int $code, string $message): never
     {
         $statusText = match ($code) {
             400     => 'Bad Request',
@@ -179,7 +217,7 @@ class Cwmdownload
      *
      * @param   int  $mid  Media ID
      *
-     * @return  bool True if hit makes it or False if failed to query
+     * @return  bool True if hit makes it, or False if failed to query
      *
      * @since   7.0.0
      */
