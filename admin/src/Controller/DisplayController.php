@@ -42,7 +42,7 @@ class DisplayController extends BaseController
      * @var    string
      * @since  1.6
      */
-    protected $extension;
+    protected mixed $extension;
 
     /**
      * Constructor.
@@ -80,22 +80,19 @@ class DisplayController extends BaseController
      */
     public function display($cachable = false, $urlparams = []): BaseController|bool
     {
-        // Get the document object.
-        $document = $this->app->getDocument();
-
         // Set the default view name and format from the Request.
         $vName   = $this->input->get('view', 'cwmcpanel');
         $lName   = $this->input->get('layout', 'default', 'string');
         $id      = $this->input->getInt('id');
 
-        // Check for edit form.
+        // Check for an edit form.
         if ($vName === 'cwmmessage' && $lName === 'edit' && !$this->checkEditId('com_proclaim.edit.cwmmessage', $id)) {
             // Somehow the person just went to the form - we don't allow that.
             if (!\count($this->app->getMessageQueue())) {
                 $this->setMessage(Text::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 'error');
             }
 
-            $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmsermons', false));
+            $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmmessages', false));
 
             return false;
         }
