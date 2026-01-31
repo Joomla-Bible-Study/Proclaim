@@ -69,7 +69,7 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
-     * Render Fields for general view.
+     * Render Fields for a general view.
      *
      * @param object  $media_form  Medea files form
      * @param bool    $new         If media is new
@@ -124,8 +124,7 @@ class CWMAddonYoutube extends CWMAddon
      */
     public function render($media_form, bool $new): string
     {
-        $html = '';
-        $html .= HTMLHelper::_('uitab.addTab', 'myTab', 'options', Text::_('Options'));
+        $html = HTMLHelper::_('uitab.addTab', 'myTab', 'options', Text::_('Options'));
 
         $html .= '<div class="row-fluid">';
 
@@ -427,9 +426,7 @@ class CWMAddonYoutube extends CWMAddon
         $result = $db->loadResult();
 
         if ($result) {
-            $registry = new Registry($result);
-
-            return $registry->toArray();
+            return (new Registry($result))->toArray();
         }
 
         return [];
@@ -442,6 +439,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     public function fetchChannelVideos(Input $input): array
@@ -529,6 +527,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     public function searchChannelVideos(Input $input): array
@@ -610,6 +609,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     public function fetchChannelPlaylists(Input $input): array
@@ -672,6 +672,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     public function fetchPlaylistVideos(Input $input): array
@@ -747,6 +748,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     public function fetchLiveVideos(Input $input): array
@@ -826,6 +828,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data with success status
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     public function testApiConnection(string $apiKey, string $channelId): array
@@ -872,7 +875,7 @@ class CWMAddonYoutube extends CWMAddon
             $errorMessage = $e->getMessage();
 
             // Try to parse Google API error
-            $decoded = json_decode($errorMessage, true);
+            $decoded = json_decode($errorMessage, true, 512, JSON_THROW_ON_ERROR);
 
             if (isset($decoded['error']['message'])) {
                 $errorMessage = Text::_('JBS_ADDON_YOUTUBE_API_ERROR') . ': ' . $decoded['error']['message'];
@@ -889,6 +892,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response data with videos
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     public function fetchUpcomingVideos(int $serverId): array
@@ -935,6 +939,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array  Response with isLive, isUpcoming, liveBroadcastContent
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     public function getVideoStatus(Input $input): array
