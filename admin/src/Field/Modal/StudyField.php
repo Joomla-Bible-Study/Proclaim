@@ -124,7 +124,7 @@ class StudyField extends FormField
         }
 
         $urlSelect = $linkSeries . '&amp;function=jSelectMessages_' . $this->id;
-        $urlEdit   = $linkSerie . '&amp;task=cwmmessage.edit&amp;id=\' + document.getElementById(&quot;' . $this->id . '&quot;).value + \'';
+        $urlEdit   = $linkSerie . '&amp;task=cwmmessage.edit&amp;id=\' + document.getElementById(&quot;' . $this->id . '_id&quot;).value + \'';
         $urlNew    = $linkSerie . '&amp;task=cwmmessage.add';
 
         if ($value) {
@@ -282,7 +282,7 @@ class StudyField extends FormField
         // Note: class='required' for client side validation.
         $class = $this->required ? ' class="required modal-value"' : '';
 
-        $html .= '<input type="hidden" id="' . $this->id . '"' . $class . ' data-required="' . (int)$this->required . '" name="' . $this->name
+        $html .= '<input type="hidden" id="' . $this->id . '_id"' . $class . ' data-required="' . (int)$this->required . '" name="' . $this->name
             . '" data-text="' . htmlspecialchars(
                 Text::_('JBS_CMN_SELECT_STUDY'),
                 ENT_COMPAT,

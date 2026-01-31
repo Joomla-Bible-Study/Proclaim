@@ -123,7 +123,7 @@ class TeacherDisplayField extends FormField
         }
 
         $urlSelect = $linkSeries . '&amp;function=jSelectTeachers_' . $this->id;
-        $urlEdit   = $linkSerie . '&amp;task=cwmteacher.edit&amp;id=\' + document.getElementById(&quot;' . $this->id . '&quot;).value + \'';
+        $urlEdit   = $linkSerie . '&amp;task=cwmteacher.edit&amp;id=\' + document.getElementById(&quot;' . $this->id . '_id&quot;).value + \'';
         $urlNew    = $linkSerie . '&amp;task=cwmteacher.add';
 
         if ($value) {
@@ -281,7 +281,7 @@ class TeacherDisplayField extends FormField
         // Note: class='required' for client side validation.
         $class = $this->required ? ' class="required modal-value"' : '';
 
-        $html .= '<input type="hidden" id="' . $this->id . '"' . $class . ' data-required="' . (int)$this->required . '" name="' . $this->name
+        $html .= '<input type="hidden" id="' . $this->id . '_id"' . $class . ' data-required="' . (int)$this->required . '" name="' . $this->name
             . '" data-text="' . htmlspecialchars(
                 Text::_('JBS_CMN_SELECT_TEACHER'),
                 ENT_COMPAT,
