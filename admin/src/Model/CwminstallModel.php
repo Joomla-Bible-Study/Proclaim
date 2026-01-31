@@ -6,7 +6,7 @@
  * @package        Proclaim.Admin
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
- * @link           https://www.christianwebministries.org
+ * @link       https://www.christianwebministries.org
  * */
 
 namespace CWM\Component\Proclaim\Administrator\Model;
@@ -949,7 +949,7 @@ class CwminstallModel extends ListModel
                 Log::add('Registered ' . $tours . ' guided tours and ' . $messages . ' post-install messages', Log::INFO, 'com_proclaim');
                 break;
             case 'rmoldurl':
-                // Removes all other update urls except package url.
+                // Removes all other update URLs except the package URL.
                 $conditions = CwmmigrationHelper::rmoldurl();
                 $query      = $this->_db->getQuery(true);
                 $query->delete($this->_db->qn('#__update_sites'));
@@ -1157,5 +1157,41 @@ class CwminstallModel extends ListModel
         $tourHelper->removeAllTours();
 
         return true;
+    }
+
+    /**
+     * Fix Menus
+     *
+     * @return bool
+     *
+     * @since 7.1
+     */
+    public function fixMenus(): bool
+    {
+        return CwmmigrationHelper::fixMenus();
+    }
+
+    /**
+     * Fix Empty Access
+     *
+     * @return bool
+     *
+     * @since 7.1
+     */
+    public function fixemptyaccess(): bool
+    {
+        return CwmmigrationHelper::fixemptyaccess();
+    }
+
+    /**
+     * Fix Empty Language
+     *
+     * @return bool
+     *
+     * @since 7.1
+     */
+    public function fixemptylanguage(): bool
+    {
+        return CwmmigrationHelper::fixemptylanguage();
     }
 }

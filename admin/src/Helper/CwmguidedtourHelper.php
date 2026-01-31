@@ -19,7 +19,6 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
-use Joomla\CMS\Version;
 use Joomla\Database\DatabaseInterface;
 
 /**
@@ -82,7 +81,7 @@ class CwmguidedtourHelper
                 [
                     'title'       => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP1_TITLE',
                     'description' => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP1_DESC',
-                    'position'    => 'bottom',
+                    'position'    => 'center',
                     'target'      => '',
                     'type'        => 0,
                     'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
@@ -270,9 +269,8 @@ class CwmguidedtourHelper
             return false;
         }
 
-        // Check if Joomla version supports guided tours (4.3+)
         if (!$this->supportsGuidedTours()) {
-            Log::add('Joomla version does not support guided tours', Log::INFO, 'com_proclaim');
+            Log::add('Guided tours not supported on this Joomla version', Log::INFO, 'com_proclaim');
             return false;
         }
 
@@ -338,7 +336,12 @@ class CwmguidedtourHelper
         $count = 0;
 
         foreach ($this->tours as $key => $tour) {
-            if (!$this->tourExists($tour['uid'])) {
+            if ($this->tourExists($tour['uid'])) {
+                if ($this->updateTour($key, $tour)) {
+                    $count++;
+                    Log::add('Updated guided tour: ' . $key, Log::INFO, 'com_proclaim');
+                }
+            } else {
                 if ($this->insertTour($key, $tour)) {
                     $count++;
                     Log::add('Registered guided tour: ' . $key, Log::INFO, 'com_proclaim');
@@ -349,6 +352,8 @@ class CwmguidedtourHelper
         return $count;
     }
 
+
+
     /**
      * Check if the current Joomla version supports guided tours.
      *
@@ -358,13 +363,6 @@ class CwmguidedtourHelper
      */
     public function supportsGuidedTours(): bool
     {
-        $version = new Version();
-
-        // Guided tours were introduced in Joomla 4.3
-        if (version_compare($version->getShortVersion(), '4.3.0', '<')) {
-            return false;
-        }
-
         // Check if the guided tours table exists
         $tables = $this->db->getTableList();
         $prefix = $this->db->getPrefix();
@@ -454,6 +452,9 @@ class CwmguidedtourHelper
     protected function insertTour(string $key, array $tour): bool
     {
         try {
+            $user   = Factory::getApplication()->getIdentity();
+            $userId = $user ? $user->id : 0;
+
             // Insert the tour
             $tourObj = (object) [
                 'title'       => $tour['title'],
@@ -465,9 +466,11 @@ class CwmguidedtourHelper
                 'language'    => $tour['language'],
                 'note'        => $tour['note'],
                 'uid'         => $tour['uid'],
-                'autostart'   => $tour['autostart'] ?? false,
+                'autostart'   => (int) ($tour['autostart'] ?? 0),
                 'created'     => (new Date())->toSql(),
-                'created_by'  => 0,
+                'created_by'  => $userId,
+                'modified'    => (new Date())->toSql(),
+                'modified_by' => $userId,
             ];
 
             $this->db->insertObject('#__guidedtours', $tourObj, 'id');
@@ -495,6 +498,10 @@ class CwmguidedtourHelper
                     'language'    => '*',
                     'ordering'    => $ordering++,
                     'note'        => '',
+                    'created'     => (new Date())->toSql(),
+                    'created_by'  => $userId,
+                    'modified'    => (new Date())->toSql(),
+                    'modified_by' => $userId,
                 ];
 
                 $this->db->insertObject('#__guidedtour_steps', $stepObj);
@@ -503,6 +510,90 @@ class CwmguidedtourHelper
             return true;
         } catch (\Exception $e) {
             Log::add('Error inserting tour: ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
+            return false;
+        }
+    }
+
+    /**
+     * Update an existing guided tour and its steps.
+     *
+     * @param   string  $key   Tour key
+     * @param   array   $tour  Tour definition
+     *
+     * @return  bool  True on success
+     *
+     * @since   10.2.0
+     */
+    protected function updateTour(string $key, array $tour): bool
+    {
+        try {
+            $tourId = $this->getTourId($tour['uid']);
+            if (!$tourId) {
+                return false;
+            }
+
+            $user   = Factory::getApplication()->getIdentity();
+            $userId = $user ? $user->id : 0;
+
+            // Update the tour
+            $tourObj = (object) [
+                'id'          => $tourId,
+                'title'       => $tour['title'],
+                'description' => $tour['description'],
+                'extensions'  => json_encode($tour['extensions'], JSON_THROW_ON_ERROR),
+                'url'         => $tour['url'],
+                'published'   => $tour['published'],
+                'access'      => $tour['access'],
+                'language'    => $tour['language'],
+                'note'        => $tour['note'],
+                'autostart'   => (int) ($tour['autostart'] ?? 0),
+                'modified'    => (new Date())->toSql(),
+                'modified_by' => $userId,
+            ];
+
+            $this->db->updateObject('#__guidedtours', $tourObj, 'id');
+
+            // Delete existing steps
+            $query = $this->db->getQuery(true)
+                ->delete($this->db->quoteName('#__guidedtour_steps'))
+                ->where($this->db->quoteName('tour_id') . ' = ' . (int) $tourId);
+            $this->db->setQuery($query);
+            $this->db->execute();
+
+            // Insert the steps
+            $ordering = 1;
+
+            foreach ($tour['steps'] as $step) {
+                // Ensure URL is correct for admin side
+                $url = $step['url'];
+                if (!empty($url) && strpos($url, 'administrator/') !== 0 && strpos($url, 'http') !== 0) {
+                    $url = 'administrator/' . $url;
+                }
+
+                $stepObj = (object) [
+                    'tour_id'     => $tourId,
+                    'title'       => $step['title'],
+                    'description' => $step['description'],
+                    'position'    => $step['position'],
+                    'target'      => $step['target'],
+                    'type'        => $step['type'],
+                    'url'         => $url,
+                    'published'   => 1,
+                    'language'    => '*',
+                    'ordering'    => $ordering++,
+                    'note'        => '',
+                    'created'     => (new Date())->toSql(),
+                    'created_by'  => $userId,
+                    'modified'    => (new Date())->toSql(),
+                    'modified_by' => $userId,
+                ];
+
+                $this->db->insertObject('#__guidedtour_steps', $stepObj);
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            Log::add('Error updating tour: ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
             return false;
         }
     }

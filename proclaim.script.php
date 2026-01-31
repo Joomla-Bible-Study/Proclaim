@@ -12,7 +12,6 @@
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
-use CWM\Component\Proclaim\Administrator\Model\CwminstallModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
 use Joomla\CMS\Installer\Adapter\FileAdapter;
@@ -122,12 +121,6 @@ class com_proclaimInstallerScript extends InstallerScript
      * @since 1.5
      */
     protected $extension = 'com_proclaim';
-
-    /**
-     * @var   string
-     * @since 1.5
-     */
-    protected $xml;
 
     /**
      * @var   object
@@ -624,7 +617,7 @@ class com_proclaimInstallerScript extends InstallerScript
                                 echo ' ' . ($module['result'] ? Text::_('JBS_INS_REMOVED') : Text::_(
                                     'JBS_INS_NOT_REMOVED'
                                 ));
-                                ?>
+                    ?>
                             </strong>
                         </td>
                     </tr>
@@ -657,7 +650,7 @@ class com_proclaimInstallerScript extends InstallerScript
                                 echo '' . ($plugin['result'] ? Text::_('JBS_INS_REMOVED') : Text::_(
                                     'JBS_INS_NOT_REMOVED'
                                 ));
-                                ?>
+                    ?>
                             </strong>
                         </td>
                     </tr>
@@ -698,13 +691,15 @@ class com_proclaimInstallerScript extends InstallerScript
         //Remove old com_biblestudy menu items on the admin side
         $this->removeBibleStudyVersion($parent);
 
-        if ($type === 'install') {
+        if ($type === 'install' || $type === 'update') {
             // This is a fresh install. Register for the guided tour directly.
             try {
                 $helperPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Helper/CwmguidedtourHelper.php';
+
                 if (file_exists($helperPath)) {
                     require_once $helperPath;
                     $tourHelper = new CwmguidedtourHelper();
+
                     $tours      = $tourHelper->registerGuidedTours();
                     $messages   = $tourHelper->registerPostInstallMessages();
 
@@ -777,7 +772,7 @@ class com_proclaimInstallerScript extends InstallerScript
         $src  = JPATH_ADMINISTRATOR . '/components/com_proclaim/language';
         $dest = JPATH_ADMINISTRATOR . '/language';
 
-        if (!Folder::exists($src)) {
+        if (!is_dir($src)) {
             Log::add('Language source folder not found: ' . $src, Log::WARNING, 'com_proclaim');
             return;
         }
@@ -792,7 +787,7 @@ class com_proclaimInstallerScript extends InstallerScript
         foreach ($folders as $folder) {
             $targetDir = $dest . '/' . $folder;
 
-            if (!Folder::exists($targetDir)) {
+            if (!is_dir($targetDir)) {
                 Folder::create($targetDir);
             }
 
@@ -1103,6 +1098,12 @@ class com_proclaimInstallerScript extends InstallerScript
     private function removeBibleStudyVersion(InstallerAdapter $parent): void
     {
         $biblestudyID = $this->getExtensionId('component', 'com_biblestudy');
+
+        // Check if the migration helper exists and include it
+        $migrationHelperPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Helper/CwmmigrationHelper.php';
+        if (file_exists($migrationHelperPath)) {
+            require_once $migrationHelperPath;
+        }
 
         if ($biblestudyID) {
             $proclaimID = $this->getExtensionId('component', 'com_proclaim');
