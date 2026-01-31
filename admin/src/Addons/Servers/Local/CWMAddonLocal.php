@@ -113,7 +113,7 @@ class CWMAddonLocal extends CWMAddon
      */
     public function render($media_form, bool $new): string
     {
-        $html = HTMLHelper::_('uitab.addTab', 'myTab', 'options', Text::_('Options'));
+        $html = HTMLHelper::_('uitab.addTab', 'myTab', 'options', Text::_('JBS_ADDON_MEDIA_OPTIONS_LABEL'));
 
         $html .= '<div class="row-fluid">';
 
