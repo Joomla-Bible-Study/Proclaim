@@ -17,6 +17,18 @@
             }
         },
         {
+            "name": "com_proclaim.addon-youtube-browser",
+            "type": "script",
+            "uri": "com_proclaim/addon-youtube-browser.min.js",
+            "dependencies": [
+                "core",
+                "bootstrap.modal"
+            ],
+            "attributes": {
+                "type": "module"
+            }
+        },
+        {
             "name": "com_proclaim.cwmadmin-mediafiles-batch",
             "type": "script",
             "uri": "com_proclaim/cwmadmin-mediafiles-default-batch-footer.min.js",
