@@ -84,7 +84,9 @@ class CwminstallController extends BaseController
     {
         // Check for request forgeries.
         if (!Session::checkToken('get') && !Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwminstall', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
 
         $app     = Factory::getApplication();
@@ -118,7 +120,9 @@ class CwminstallController extends BaseController
     {
         // Check for request forgeries.
         if (!Session::checkToken('get') && !Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwminstall', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
 
         $app   = Factory::getApplication();
@@ -142,7 +146,9 @@ class CwminstallController extends BaseController
     {
         // Check for request forgeries.
         if (!Session::checkToken('get') && !Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwminstall', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
 
         Cwmhelper::clearCache();

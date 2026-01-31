@@ -46,7 +46,9 @@ class CwmmediafilesController extends AdminController
     {
         // Check for request forgeries.
         if (!Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmmediafiles', Text::_('JINVALID_TOKEN'), 'error');
+
+            return false;
         }
 
         $ids = Factory::getApplication()->getInput()->post->get('cid', [], 'array');

@@ -47,7 +47,9 @@ class CwmuploadController extends AdminController
     {
         // Check for request forgeries.
         if (!Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmupload', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
 
         $contentType = null;

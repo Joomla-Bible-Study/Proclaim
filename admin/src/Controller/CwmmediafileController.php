@@ -109,7 +109,9 @@ class CwmmediafileController extends FormController
     public function xhr(): void
     {
         if (!Session::checkToken('get')) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmmediafiles', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
         $input = Factory::getApplication()->getInput();
 
@@ -167,8 +169,11 @@ class CwmmediafileController extends FormController
      */
     public function cancel($key = null): bool
     {
+        // Check for request forgeries.
         if (!Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmmediafiles', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
 
         $app   = Factory::getApplication();
@@ -269,7 +274,9 @@ class CwmmediafileController extends FormController
     {
         // Check for request forgeries.
         if (!Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmmediafiles', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
 
         $app   = Factory::getApplication();

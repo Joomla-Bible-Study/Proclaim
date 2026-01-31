@@ -91,7 +91,9 @@ class CwmadminController extends FormController
     {
         // Check for request forgeries.
         if (!Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
 
         $db   = Factory::getContainer()->get('DatabaseDriver');
@@ -146,7 +148,9 @@ class CwmadminController extends FormController
     {
         // Check for request forgeries.
         if (!Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
 
         $db   = Factory::getContainer()->get('DatabaseDriver');
@@ -413,7 +417,9 @@ class CwmadminController extends FormController
     {
         // Check for request forgeries.
         if (!Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
 
         $db    = Factory::getContainer()->get('DatabaseDriver');
@@ -445,7 +451,9 @@ class CwmadminController extends FormController
     {
         // Check for request forgeries.
         if (!Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
 
         $msg   = null;
@@ -478,7 +486,9 @@ class CwmadminController extends FormController
     {
         // Check for request forgeries.
         if (!Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
 
         $msg   = null;
@@ -523,7 +533,9 @@ class CwmadminController extends FormController
     {
         // Check for request forgeries.
         if (!Session::checkToken('get') && !Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
 
         $convert      = new Cwmssconvert();
@@ -543,7 +555,9 @@ class CwmadminController extends FormController
     {
         // Check for request forgeries.
         if (!Session::checkToken('get') && !Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
 
         $convert      = new CwmpIconvert();
@@ -590,7 +604,9 @@ class CwmadminController extends FormController
     {
         // Check for request forgeries.
         if (!Session::checkToken('get')) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
 
         $update = Cwmalias::updateAlias();
@@ -612,7 +628,9 @@ class CwmadminController extends FormController
     {
         // Check for request forgeries.
         if (!Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
 
         $alt         = '';
@@ -651,7 +669,9 @@ class CwmadminController extends FormController
     {
         // Check for request forgeries.
         if (!Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return false;
         }
 
         // Create table tablename_new like tablename; -> this will copy the structure...
@@ -702,7 +722,9 @@ class CwmadminController extends FormController
     {
         // Check for request forgeries.
         if (!Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
 
         $application = Factory::getApplication();
@@ -732,7 +754,9 @@ class CwmadminController extends FormController
     {
         // Check for request forgeries.
         if (!Session::checkToken('get') && !Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
 
         $input  = Factory::getApplication()->getInput();
@@ -826,7 +850,9 @@ class CwmadminController extends FormController
     {
         // Check for request forgeries.
         if (!Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
 
         $model = new CwmarchiveModel();

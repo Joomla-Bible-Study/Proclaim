@@ -55,7 +55,9 @@ class CwmmessageController extends FormController
     {
         // Check for request forgeries.
         if (!Session::checkToken()) {
-            throw new \Exception(Text::_('JINVALID_TOKEN'));
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmmessages', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
         }
 
         $msg   = null;

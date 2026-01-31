@@ -86,6 +86,13 @@ The project strictly follows Joomla 4's MVC architecture:
 - **Files:** Follow Joomla's file naming conventions for components.
 - **Documentation:** Use PHPDoc for classes and methods.
 
+## Documentation & Tasks
+
+All project documentation and task tracking are maintained in the **Proclaim.wiki** repository (sibling directory).
+
+- **Wiki location:** `../Proclaim.wiki/`
+- **GitHub Wiki:** [https://github.com/Joomla-Bible-Study/Proclaim/wiki](https://github.com/Joomla-Bible-Study/Proclaim/wiki)
+
 ## Important Notes
 
 - **Vendor Directory:** Unlike many PHP projects, the `vendor` folder is located at `libraries/vendor`.
