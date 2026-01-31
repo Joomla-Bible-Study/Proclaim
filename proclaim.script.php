@@ -11,6 +11,7 @@
  * */
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
 use CWM\Component\Proclaim\Administrator\Model\CwminstallModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
@@ -1153,7 +1154,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $message->description_key    = 'You may now want to set up Podcast RSS Task to replace your old system. We could not migrate your old podcast plugin schedule'; // Language string
             $message->type               = 'message'; // message | action
             $message->version_introduced = '10.0.0';
-            (new CWM\Component\Proclaim\Administrator\Model\CwminstallModel())->postInstallMessages($message);
+            CwmmigrationHelper::postInstallMessages($message);
 
             // Migrate Plugin Backup to Tasks
             $message                     = new \stdClass();
@@ -1161,7 +1162,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $message->description_key    = 'You may now what to setup backups to replace your old system. We could not migrate your old backup plugin schedule'; // Language string
             $message->type               = 'message'; // message | action
             $message->version_introduced = '10.0.0';
-            (new CWM\Component\Proclaim\Administrator\Model\CwminstallModel())->postInstallMessages($message);
+            CwmmigrationHelper::postInstallMessages($message);
 
             // Delete Old stale com_biblestudy extension.
             $this->deleteExtension('component', 'com_biblestudy');

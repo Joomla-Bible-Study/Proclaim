@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmtemplatemigrationHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
@@ -342,13 +343,11 @@ class CwminstallModel extends ListModel
                     }
                 }
             }
-        } else {
-            // New Install
+        } elseif (!\in_array('registerguidedtours', $this->finish, true)) {
+            // New Installation
             // Add guided tours to the finish steps
-            if (!\in_array('registerguidedtours', $this->finish)) {
-                $this->finish[] = 'registerguidedtours';
-                $this->totalSteps++;
-            }
+            $this->finish[] = 'registerguidedtours';
+            $this->totalSteps++;
         }
 
         $this->isimport = Factory::getApplication()->getInput()->getInt('cwmalt', 0);
@@ -586,7 +585,7 @@ class CwminstallModel extends ListModel
         }
 
         if ($this->isimport) {
-            $this->fixImport();
+            CwmmigrationHelper::fixImport();
             $this->running  = 'Fixing Imported Params';
             $this->isimport = 0;
             Log::add('Fixing Imported Params', Log::INFO, 'com_proclaim');
@@ -791,62 +790,6 @@ class CwminstallModel extends ListModel
     }
 
     /**
-     * Fix an Import problem
-     *
-     * @return void True if fix complete, False if failure
-     *
-     * @since 7.1
-     */
-    private function fixImport(): void
-    {
-        $tables = CwmdbHelper::getObjects();
-
-        foreach ($tables as $table) {
-            if (!str_contains($table['name'], '_bsms_timeset')) {
-                $query = $this->_db->getQuery(true);
-                $query->select('*')->from($table['name']);
-                $this->_db->setQuery($query);
-                $data = $this->_db->loadObjectList();
-
-                foreach ($data as $row) {
-                    $set = false;
-
-                    if (isset($row->params)) {
-                        $clean = stripslashes($row->params);
-
-                        if ($clean !== $row->params) {
-                            $row->params = $clean;
-                            $set         = true;
-                        }
-                    }
-
-                    if (isset($row->metadata)) {
-                        $clean = stripslashes($row->metadata);
-
-                        if ($clean !== $row->metadata) {
-                            $row->metadata = $clean;
-                            $set           = true;
-                        }
-                    }
-
-                    if (isset($row->stylecode)) {
-                        $clean = stripslashes($row->stylecode);
-
-                        if ($clean !== $row->stylecode) {
-                            $row->stylecode = $clean;
-                            $set            = true;
-                        }
-                    }
-
-                    if ($set) {
-                        $this->_db->updateObject($table['name'], $row, ['id']);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * Function to update using the version number for SQL files
      *
      * @param   string  $value  The File name.
@@ -981,15 +924,15 @@ class CwminstallModel extends ListModel
                 $this->totalSteps += $string->count;
                 break;
             case 'fixmenus':
-                $run           = $this->fixMenus();
+                $run           = CwmmigrationHelper::fixMenus();
                 $this->running = 'Fix Menus';
                 break;
             case 'fixemptyaccess':
-                $run           = $this->fixemptyaccess();
+                $run           = CwmmigrationHelper::fixemptyaccess();
                 $this->running = 'Fix Empty Access';
                 break;
             case 'fixemptylanguage':
-                $run           = $this->fixemptylanguage();
+                $run           = CwmmigrationHelper::fixemptylanguage();
                 $this->running = 'Fix Empty Language';
                 break;
             case 'updatetemplatedefaults':
@@ -1007,7 +950,7 @@ class CwminstallModel extends ListModel
                 break;
             case 'rmoldurl':
                 // Removes all other update urls except package url.
-                $conditions = $this->rmoldurl();
+                $conditions = CwmmigrationHelper::rmoldurl();
                 $query      = $this->_db->getQuery(true);
                 $query->delete($this->_db->qn('#__update_sites'));
                 $query->where($conditions, $glue = 'OR');
@@ -1124,138 +1067,6 @@ class CwminstallModel extends ListModel
     }
 
     /**
-     * Fix Menus
-     *
-     * @return   bool
-     * @since 7.1.0
-     *
-     */
-    public function fixMenus(): bool
-    {
-        $replacements = [
-            'teacherlist'    => 'cwmteachers',
-            'teacherdisplay' => 'cwmteacher',
-            'studydetails'   => 'cwmsermon',
-            'serieslist'     => 'cwmseriesdisplays',
-            'seriesdetail'   => 'cwmseriesdisplay',
-            'studieslist'    => 'cwmsermons',
-        ];
-
-        foreach ($replacements as $old => $new) {
-            $query = $this->_db->getQuery(true);
-            $query->update('#__menu')
-                ->set('link = REPLACE(' . $this->_db->qn('link') . ', ' . $this->_db->q($old) . ', ' . $this->_db->q($new) . ')')
-                ->where($this->_db->qn('menutype') . ' != ' . $this->_db->q('main'))
-                ->where($this->_db->qn('link') . ' LIKE ' . $this->_db->q('%com_proclaim%'))
-                ->where($this->_db->qn('link') . ' LIKE ' . $this->_db->q('%' . $old . '%'));
-            $this->_db->setQuery($query);
-            $this->_db->execute();
-        }
-
-        return true;
-    }
-
-    /**
-     * Function to find empty access in the DB and set them to Public
-     *
-     * @return   bool
-     * @throws \Exception
-     * @since 7.1.0
-     *
-     */
-    public function fixemptyaccess(): bool
-    {
-        // Tables to fix
-        $tables = [
-            ['table' => '#__bsms_admin'],
-            ['table' => '#__bsms_mediafiles'],
-            ['table' => '#__bsms_message_type'],
-            ['table' => '#__bsms_podcast'],
-            ['table' => '#__bsms_series'],
-            ['table' => '#__bsms_servers'],
-            ['table' => '#__bsms_studies'],
-            ['table' => '#__bsms_studytopics'],
-            ['table' => '#__bsms_teachers'],
-            ['table' => '#__bsms_templates'],
-            ['table' => '#__bsms_topics'],
-        ];
-
-        // Get Public ID
-        $id = Factory::getApplication()->getConfig()->get('access', 1);
-
-        // Correct blank or not set records
-        foreach ($tables as $table) {
-            $query = $this->_db->getQuery(true);
-            $query->update($table['table'])
-                ->set('access = ' . $id)
-                ->where(
-                    '(' . $this->_db->qn('access') . ' = ' . $this->_db->q('0') .
-                    ' OR ' . $this->_db->qn('access') . ' = ' . $this->_db->q(' ') . ')'
-                );
-            $this->_db->setQuery($query);
-            $this->_db->execute();
-        }
-
-        return true;
-    }
-
-    /**
-     * Function to find empty language fields and set them to "*"
-     *
-     * @return   bool
-     * @since 7.1.0
-     *
-     */
-    public function fixemptylanguage(): bool
-    {
-        // Tables to fix
-        $tables = [
-            ['table' => '#__bsms_comments'],
-            ['table' => '#__bsms_mediafiles'],
-            ['table' => '#__bsms_series'],
-            ['table' => '#__bsms_studies'],
-            ['table' => '#__bsms_teachers'],
-        ];
-
-        // Correct blank records
-        foreach ($tables as $table) {
-            $query = $this->_db->getQuery(true);
-            $query->update($table['table'])
-                ->set('language = ' . $this->_db->q('*'))
-                ->where('language = ' . $this->_db->q(''));
-            $this->_db->setQuery($query);
-            $this->_db->execute();
-        }
-
-        return true;
-    }
-
-    /**
-     * Old Update URLs
-     *
-     * @return array
-     *
-     * @since 7.1
-     */
-    public function rmoldurl(): array
-    {
-        return [
-            $this->_db->qn('name') . ' = ' .
-            $this->_db->q('Proclaim Module'),
-            $this->_db->qn('name') . ' = ' .
-            $this->_db->q('Proclaim Podcast Module'),
-            $this->_db->qn('name') . ' = ' .
-            $this->_db->q('Proclaim Finder Plg'),
-            $this->_db->qn('name') . ' = ' .
-            $this->_db->q('Proclaim Backup Plg'),
-            $this->_db->qn('name') . ' = ' .
-            $this->_db->q('Proclaim Podcast Plg'),
-            $this->_db->qn('name') . ' = ' .
-            $this->_db->q('Proclaim'),
-        ];
-    }
-
-    /**
      * Uninstall of CWM
      *
      * @return bool
@@ -1346,43 +1157,5 @@ class CwminstallModel extends ListModel
         $tourHelper->removeAllTours();
 
         return true;
-    }
-
-    /**
-     * Update messages
-     *
-     * @param   object  $message  Install object
-     *                            $message = new \stdClass();
-     *                            $message->title_key = ''; // Language string
-     *                            $message->description_key = ''; // Language string
-     *                            $message->action_key = ''; // (for action only) Language string
-     *                            $message->type = ''; // message | action
-     *                            $message->action_file = ''; // (for action only) site://path/to/php | admin://path/to/php
-     *                            $message->action = ''; // (for action only) = Function to call
-     *                            $message->condition_file = ''; // (for action only) = site://path/to/php | admin://path/to/php
-     *                            $message->condition_method = ''; // (for action only) = Function to call
-     *                            $message->version_introduced = '10.0.0';
-     *
-     * @return void
-     *
-     * @since 7.1
-     */
-    public function postInstallMessages(object $message): void
-    {
-        // Find Extension ID of a component
-        $query = $this->_db->getQuery(true);
-        $query
-            ->select('extension_id')
-            ->from('#__extensions')
-            ->where($this->_db->qn('name') . ' = ' . $this->_db->q('com_proclaim'));
-        $this->_db->setQuery($query);
-        $this->biblestudyEid         = $this->_db->loadResult();
-        $message->extension_id       = $this->biblestudyEid;
-        $message->language_extension = 'com_proclaim';
-        $message->language_client_id = 1;
-
-        if ($this->_db->insertObject('#__postinstall_messages', $message) !== true) {
-            log::add('Bad error for PostInstall Message', Log::NOTICE, 'com_proclaim');
-        }
     }
 }
