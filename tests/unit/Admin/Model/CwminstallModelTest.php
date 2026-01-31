@@ -115,6 +115,18 @@ class CwminstallModelTest extends ProclaimTestCase
             $this->classContent
         );
         $this->assertStringContainsString(
+            'use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;',
+            $this->classContent
+        );
+        $this->assertStringContainsString(
+            'use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;',
+            $this->classContent
+        );
+        $this->assertStringContainsString(
+            'use CWM\Component\Proclaim\Administrator\Helper\CwmtemplatemigrationHelper;',
+            $this->classContent
+        );
+        $this->assertStringContainsString(
             'use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;',
             $this->classContent
         );
@@ -147,36 +159,6 @@ class CwminstallModelTest extends ProclaimTestCase
     }
 
     /**
-     * Test model has fixMenus method
-     *
-     * @return void
-     */
-    public function testModelHasFixMenusMethod(): void
-    {
-        $this->assertStringContainsString('public function fixMenus()', $this->classContent);
-    }
-
-    /**
-     * Test model has fixemptyaccess method
-     *
-     * @return void
-     */
-    public function testModelHasFixEmptyAccessMethod(): void
-    {
-        $this->assertStringContainsString('public function fixemptyaccess()', $this->classContent);
-    }
-
-    /**
-     * Test model has fixemptylanguage method
-     *
-     * @return void
-     */
-    public function testModelHasFixEmptyLanguageMethod(): void
-    {
-        $this->assertStringContainsString('public function fixemptylanguage()', $this->classContent);
-    }
-
-    /**
      * Test model has uninstall method
      *
      * @return void
@@ -186,319 +168,9 @@ class CwminstallModelTest extends ProclaimTestCase
         $this->assertStringContainsString('public function uninstall()', $this->classContent);
     }
 
-    /**
-     * Test model has postInstallMessages method
-     *
-     * @return void
-     */
-    public function testModelHasPostInstallMessagesMethod(): void
-    {
-        $this->assertStringContainsString('public function postInstallMessages(', $this->classContent);
-    }
-
-    /**
-     * Test model has rmoldurl method
-     *
-     * @return void
-     */
-    public function testModelHasRmOldUrlMethod(): void
-    {
-        $this->assertStringContainsString('public function rmoldurl()', $this->classContent);
-    }
-
-    // =========================================================================
-    // Tests for fixImport method logic
-    // =========================================================================
-
-    /**
-     * Test fixImport method uses correct table name from array
-     *
-     * The fixImport method should use $table['name'] not $table directly
-     *
-     * @return void
-     */
-    public function testFixImportUsesTableNameFromArray(): void
-    {
-        $this->assertStringContainsString(
-            '->from($table[\'name\'])',
-            $this->classContent,
-            'fixImport should use $table[\'name\'] not $table directly'
-        );
-    }
-
-    /**
-     * Test fixImport initializes $set inside the row loop
-     *
-     * The $set variable should be reset for each row to avoid unnecessary updates
-     *
-     * @return void
-     */
-    public function testFixImportInitializesSetInsideLoop(): void
-    {
-        // Check that $set = false is inside the foreach data loop
-        $pattern = '/foreach\s*\(\$data\s+as\s+\$row\)\s*\{\s*\$set\s*=\s*false;/';
-        $this->assertMatchesRegularExpression(
-            $pattern,
-            $this->classContent,
-            '$set should be initialized inside the foreach $data loop'
-        );
-    }
-
-    /**
-     * Test fixImport only updates when value actually changes
-     *
-     * The method should check if stripslashes actually modifies the value
-     *
-     * @return void
-     */
-    public function testFixImportOnlyUpdatesWhenValueChanges(): void
-    {
-        // Check for the comparison pattern: if ($clean !== $row->params)
-        $this->assertStringContainsString(
-            'if ($clean !== $row->params)',
-            $this->classContent,
-            'fixImport should only update params when stripslashes changes the value'
-        );
-
-        $this->assertStringContainsString(
-            'if ($clean !== $row->metadata)',
-            $this->classContent,
-            'fixImport should only update metadata when stripslashes changes the value'
-        );
-
-        $this->assertStringContainsString(
-            'if ($clean !== $row->stylecode)',
-            $this->classContent,
-            'fixImport should only update stylecode when stripslashes changes the value'
-        );
-    }
-
-    // =========================================================================
-    // Tests for fixMenus method logic
-    // =========================================================================
-
-    /**
-     * Test fixMenus has correct replacements array
-     *
-     * @return void
-     */
-    public function testFixMenusHasCorrectReplacements(): void
-    {
-        $this->assertStringContainsString("'teacherlist'    => 'cwmteachers'", $this->classContent);
-        $this->assertStringContainsString("'teacherdisplay' => 'cwmteacher'", $this->classContent);
-        $this->assertStringContainsString("'studydetails'   => 'cwmsermon'", $this->classContent);
-        $this->assertStringContainsString("'serieslist'     => 'cwmseriesdisplays'", $this->classContent);
-        $this->assertStringContainsString("'seriesdetail'   => 'cwmseriesdisplay'", $this->classContent);
-        $this->assertStringContainsString("'studieslist'    => 'cwmsermons'", $this->classContent);
-    }
-
-    /**
-     * Test fixMenus uses SQL REPLACE function
-     *
-     * The method should use SQL REPLACE instead of loading all rows into PHP
-     *
-     * @return void
-     */
-    public function testFixMenusUsesSqlReplace(): void
-    {
-        $this->assertStringContainsString(
-            'REPLACE(',
-            $this->classContent,
-            'fixMenus should use SQL REPLACE function'
-        );
-    }
-
-    /**
-     * Test fixMenus filters by com_proclaim links
-     *
-     * @return void
-     */
-    public function testFixMenusFiltersByProclaimLinks(): void
-    {
-        $this->assertStringContainsString(
-            "'%com_proclaim%'",
-            $this->classContent,
-            'fixMenus should filter by com_proclaim links'
-        );
-    }
-
-    /**
-     * Test fixMenus excludes main menutype
-     *
-     * @return void
-     */
-    public function testFixMenusExcludesMainMenutype(): void
-    {
-        $this->assertStringContainsString(
-            "' != ' . \$this->_db->q('main')",
-            $this->classContent,
-            'fixMenus should exclude main menutype'
-        );
-    }
-
-    // =========================================================================
-    // Tests for fixemptyaccess method logic
-    // =========================================================================
-
-    /**
-     * Test fixemptyaccess has correct tables list
-     *
-     * @return void
-     */
-    public function testFixEmptyAccessHasCorrectTables(): void
-    {
-        $expectedTables = [
-            '#__bsms_admin',
-            '#__bsms_mediafiles',
-            '#__bsms_message_type',
-            '#__bsms_podcast',
-            '#__bsms_series',
-            '#__bsms_servers',
-            '#__bsms_studies',
-            '#__bsms_studytopics',
-            '#__bsms_teachers',
-            '#__bsms_templates',
-            '#__bsms_topics',
-        ];
-
-        foreach ($expectedTables as $table) {
-            $this->assertStringContainsString(
-                "'" . $table . "'",
-                $this->classContent,
-                "fixemptyaccess should include table: $table"
-            );
-        }
-    }
-
-    /**
-     * Test fixemptyaccess uses proper OR condition
-     *
-     * The WHERE clause should use proper parenthetical OR syntax
-     *
-     * @return void
-     */
-    public function testFixEmptyAccessUsesProperOrCondition(): void
-    {
-        // Check for proper OR syntax with parentheses
-        $this->assertStringContainsString(
-            "->where(\n                    '(' .",
-            $this->classContent,
-            'fixemptyaccess should use parenthetical OR condition'
-        );
-
-        $this->assertStringContainsString(
-            "' OR '",
-            $this->classContent,
-            'fixemptyaccess should use OR in the condition'
-        );
-    }
-
-    /**
-     * Test fixemptyaccess checks for both zero and empty string
-     *
-     * @return void
-     */
-    public function testFixEmptyAccessChecksBothZeroAndEmptyString(): void
-    {
-        $this->assertStringContainsString(
-            "\$this->_db->q('0')",
-            $this->classContent,
-            'fixemptyaccess should check for access = 0'
-        );
-
-        $this->assertStringContainsString(
-            "\$this->_db->q(' ')",
-            $this->classContent,
-            'fixemptyaccess should check for access = empty string'
-        );
-    }
-
-    // =========================================================================
-    // Tests for fixemptylanguage method logic
-    // =========================================================================
-
-    /**
-     * Test fixemptylanguage has correct tables list
-     *
-     * @return void
-     */
-    public function testFixEmptyLanguageHasCorrectTables(): void
-    {
-        // The fixemptylanguage method should have these tables
-        $expectedTables = [
-            '#__bsms_comments',
-            '#__bsms_mediafiles',
-            '#__bsms_series',
-            '#__bsms_studies',
-            '#__bsms_teachers',
-        ];
-
-        // Count occurrences of each table in the method
-        foreach ($expectedTables as $table) {
-            $this->assertStringContainsString(
-                "'" . $table . "'",
-                $this->classContent,
-                "fixemptylanguage should include table: $table"
-            );
-        }
-    }
-
-    /**
-     * Test fixemptylanguage sets language to asterisk
-     *
-     * @return void
-     */
-    public function testFixEmptyLanguageSetsToAsterisk(): void
-    {
-        $this->assertStringContainsString(
-            "->set('language = ' . \$this->_db->q('*'))",
-            $this->classContent,
-            'fixemptylanguage should set language to *'
-        );
-    }
-
-    // =========================================================================
-    // Tests for rmoldurl method logic
-    // =========================================================================
-
-    /**
-     * Test rmoldurl returns array with correct old URLs
-     *
-     * @return void
-     */
-    public function testRmOldUrlReturnsCorrectUrls(): void
-    {
-        $expectedUrls = [
-            'Proclaim Module',
-            'Proclaim Podcast Module',
-            'Proclaim Finder Plg',
-            'Proclaim Backup Plg',
-            'Proclaim Podcast Plg',
-            'Proclaim',
-        ];
-
-        foreach ($expectedUrls as $url) {
-            $this->assertStringContainsString(
-                "'" . $url . "'",
-                $this->classContent,
-                "rmoldurl should include: $url"
-            );
-        }
-    }
-
     // =========================================================================
     // Tests for private helper methods
     // =========================================================================
-
-    /**
-     * Test model has private fixImport method
-     *
-     * @return void
-     */
-    public function testModelHasPrivateFixImportMethod(): void
-    {
-        $this->assertStringContainsString('private function fixImport()', $this->classContent);
-    }
 
     /**
      * Test model has private resetStack method
@@ -508,6 +180,16 @@ class CwminstallModelTest extends ProclaimTestCase
     public function testModelHasPrivateResetStackMethod(): void
     {
         $this->assertStringContainsString('private function resetStack()', $this->classContent);
+    }
+
+    /**
+     * Test model has private resetTimer method
+     *
+     * @return void
+     */
+    public function testModelHasPrivateResetTimerMethod(): void
+    {
+        $this->assertStringContainsString('private function resetTimer()', $this->classContent);
     }
 
     /**
@@ -551,6 +233,16 @@ class CwminstallModelTest extends ProclaimTestCase
     }
 
     /**
+     * Test model has private getSteps method
+     *
+     * @return void
+     */
+    public function testModelHasPrivateGetStepsMethod(): void
+    {
+        $this->assertStringContainsString('private function getSteps()', $this->classContent);
+    }
+
+    /**
      * Test model has private getUpdateVersion method
      *
      * @return void
@@ -568,6 +260,96 @@ class CwminstallModelTest extends ProclaimTestCase
     public function testModelHasPrivateFinishMethod(): void
     {
         $this->assertStringContainsString('private function finish(', $this->classContent);
+    }
+
+    /**
+     * Test model has private postinstallclenup method
+     *
+     * @return void
+     */
+    public function testModelHasPrivatePostinstallclenupMethod(): void
+    {
+        $this->assertStringContainsString('private function postinstallclenup()', $this->classContent);
+    }
+
+    /**
+     * Test model has private setSchemaVersion method
+     *
+     * @return void
+     */
+    public function testModelHasPrivateSetSchemaVersionMethod(): void
+    {
+        $this->assertStringContainsString('private function setSchemaVersion(', $this->classContent);
+    }
+
+    /**
+     * Test model has private realRun method
+     *
+     * @return void
+     */
+    public function testModelHasPrivateRealRunMethod(): void
+    {
+        $this->assertStringContainsString('private function realRun()', $this->classContent);
+    }
+
+    /**
+     * Test model has private allUpdate method
+     *
+     * @return void
+     */
+    public function testModelHasPrivateAllUpdateMethod(): void
+    {
+        $this->assertStringContainsString('private function allUpdate(', $this->classContent);
+    }
+
+    /**
+     * Test model has private runUpdates method
+     *
+     * @return void
+     */
+    public function testModelHasPrivateRunUpdatesMethod(): void
+    {
+        $this->assertStringContainsString('private function runUpdates(', $this->classContent);
+    }
+
+    // =========================================================================
+    // Tests for helper calls
+    // =========================================================================
+
+    /**
+     * Test finish method calls helpers
+     *
+     * @return void
+     */
+    public function testFinishMethodCallsHelpers(): void
+    {
+        $this->assertStringContainsString('CwmmigrationHelper::fixMenus()', $this->classContent);
+        $this->assertStringContainsString('CwmmigrationHelper::fixemptyaccess()', $this->classContent);
+        $this->assertStringContainsString('CwmmigrationHelper::fixemptylanguage()', $this->classContent);
+        $this->assertStringContainsString('CwmmigrationHelper::rmoldurl()', $this->classContent);
+        $this->assertStringContainsString('new CwmtemplatemigrationHelper()', $this->classContent);
+        $this->assertStringContainsString('new CwmguidedtourHelper()', $this->classContent);
+    }
+
+    /**
+     * Test realRun method calls fixImport
+     *
+     * @return void
+     */
+    public function testRealRunMethodCallsFixImport(): void
+    {
+        $this->assertStringContainsString('CwmmigrationHelper::fixImport()', $this->classContent);
+    }
+
+    /**
+     * Test uninstall method calls CwmguidedtourHelper
+     *
+     * @return void
+     */
+    public function testUninstallMethodCallsGuidedTourHelper(): void
+    {
+        $this->assertStringContainsString('new CwmguidedtourHelper()', $this->classContent);
+        $this->assertStringContainsString('->removeAllTours()', $this->classContent);
     }
 
     // =========================================================================

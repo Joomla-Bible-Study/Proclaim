@@ -173,7 +173,7 @@ class CwmmediafileController extends FormController
         if (!Session::checkToken()) {
             $this->setRedirect('index.php?option=com_proclaim&view=cwmmediafiles', Text::_('JINVALID_TOKEN'), 'error');
 
-            return;
+            return false;
         }
 
         $app   = Factory::getApplication();
