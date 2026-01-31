@@ -56,5 +56,10 @@
   },
   "dependencies": {
     "core-js": "^3.48.0"
+  },
+  "overrides": {
+    "jest-environment-jsdom": {
+      "jsdom": "^24.0.0"
+    }
   }
 }

@@ -22,7 +22,10 @@ A Joomla 4+ component for managing and displaying Bible studies and sermons, dev
 
 ## Documentation
 
-- [Wiki Home](https://github.com/Joomla-Bible-Study/Proclaim/wiki) - Main documentation
+The main documentation and project tasks are maintained in the **Proclaim.wiki** repository. If cloned locally, it should be a sibling directory to this project.
+
+- [Local Wiki Home](../Proclaim.wiki/Home.md) - Local access (if cloned)
+- [Wiki Home](https://github.com/Joomla-Bible-Study/Proclaim/wiki) - Main documentation on GitHub
 - [Development Setup](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Setting-up-your-development-environment) - Configure your environment
 - [Requirements](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Requirements) - Project requirements and goals
 - [Plan](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Plan) - Implementation strategy
