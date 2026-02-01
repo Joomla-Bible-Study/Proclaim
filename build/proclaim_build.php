@@ -6,9 +6,9 @@
  * Replaces Phing build.xml
  */
 
-\define('BASE_DIR', \dirname(__DIR__));
-\define('BUILD_DIR', BASE_DIR . '/build');
-\define('PROPERTIES_FILE', BASE_DIR . '/build.properties');
+const BASE_DIR        = __DIR__ . '/..';
+const BUILD_DIR       = BASE_DIR . '/build';
+const PROPERTIES_FILE = BASE_DIR . '/build.properties';
 
 $command = $argv[1] ?? 'help';
 
@@ -41,7 +41,7 @@ try {
             break;
     }
 } catch (Exception $e) {
-    echo "Error: " . $e->getMessage() . "\n";
+    echo 'Error: ' . $e->getMessage() . "\n";
     exit(1);
 }
 
@@ -49,8 +49,9 @@ try {
  * Displays the help message with available commands.
  *
  * @return void
+ * @since 10.1.0
  */
-function showHelp()
+function showHelp(): void
 {
     echo "Proclaim Build Tool\n";
     echo "Usage: php build/proclaim_build.php [command]\n\n";
@@ -69,11 +70,12 @@ function showHelp()
  *
  * @return array Associative array of properties.
  * @throws Exception If build.properties does not exist.
+ * @since 10.1.0
  */
-function getProperties()
+function getProperties(): array
 {
     if (!file_exists(PROPERTIES_FILE)) {
-        throw new Exception("build.properties not found. Run 'composer setup' first.");
+        throw new \RuntimeException("build.properties not found. Run 'composer setup' first.");
     }
     $lines = file(PROPERTIES_FILE, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     $props = [];
@@ -84,7 +86,7 @@ function getProperties()
         if (!str_contains($line, '=')) {
             continue;
         }
-        list($key, $value) = explode('=', $line, 2);
+        [$key, $value]     = explode('=', $line, 2);
         $props[trim($key)] = trim($value);
     }
     return $props;
@@ -93,14 +95,16 @@ function getProperties()
 /**
  * Prompts the user for input via STDIN.
  *
- * @param string $question The question to ask.
- * @param string|null $default The default value if no input is provided.
- * @return string The user's input or the default value.
+ * @param   string       $question  The question to ask.
+ * @param   string|null  $default   The default value if no input is provided.
+ *
+ * @return string|null The user's input or the default value.
+ * @since 10.1.0
  */
-function ask($question, $default = null)
+function ask(string $question, string|null $default = null): string|null
 {
-    echo $question . ($default ? " [$default]" : "") . ": ";
-    $handle = fopen("php://stdin", "r");
+    echo $question . ($default ? " [$default]" : '') . ': ';
+    $handle = fopen('php://stdin', 'rb');
     $line   = fgets($handle);
     fclose($handle);
     $line = trim($line);
@@ -111,16 +115,18 @@ function ask($question, $default = null)
  * Runs the interactive setup wizard to configure build.properties.
  *
  * @return void
+ * @throws Exception
+ * @since 10.1.0
  */
-function doSetup()
+function doSetup(): void
 {
     echo "=== Proclaim Development Setup Wizard ===\n\n";
 
     $currentProps = file_exists(PROPERTIES_FILE) ? getProperties() : [];
 
-    $joomlaPath    = ask("Enter the full path to your Joomla installation", $currentProps['builder.joomla_path'] ?? '');
-    $joomlaDir     = ask("Enter subdirectory within Joomla path (leave empty if none)", $currentProps['builder.joomla_dir'] ?? '');
-    $joomlaVersion = ask("Enter the Joomla version for testing", $currentProps['joomla.version'] ?? '5.4.2');
+    $joomlaPath    = ask('Enter the full path to your Joomla installation', $currentProps['builder.joomla_path'] ?? '');
+    $joomlaDir     = ask('Enter subdirectory within Joomla path (leave empty if none)', $currentProps['builder.joomla_dir'] ?? '');
+    $joomlaVersion = ask('Enter the Joomla version for testing', $currentProps['joomla.version'] ?? '5.4.2');
 
     $content = "# Build properties\n";
     $content .= "builder.joomla_path=$joomlaPath\n";
@@ -139,18 +145,21 @@ function doSetup()
 /**
  * Creates symbolic links between the project and a local Joomla installation.
  *
- * @param bool $quiet If true, suppresses non-error output.
+ * @param   bool  $quiet  If true, suppresses non-error output.
+ *
  * @return void
  * @throws Exception If the Joomla path does not exist.
+ * @since 10.1.0
+ * @since 10.1.0
  */
-function doLink($quiet = false)
+function doLink(bool $quiet = false): void
 {
     $props      = getProperties();
     $joomlaPath = rtrim($props['builder.joomla_path'], '/') . '/' . trim($props['builder.joomla_dir'], '/');
     $joomlaPath = rtrim($joomlaPath, '/');
 
     if (!is_dir($joomlaPath)) {
-        throw new Exception("Joomla path does not exist: $joomlaPath");
+        throw new \RuntimeException("Joomla path does not exist: $joomlaPath");
     }
 
     if (!$quiet) {
@@ -160,22 +169,28 @@ function doLink($quiet = false)
     // Internal links (dev.init)
     symlink_force(BASE_DIR . '/proclaim.xml', BASE_DIR . '/admin/proclaim.xml', $quiet);
     symlink_force(BASE_DIR . '/proclaim.script.php', BASE_DIR . '/admin/proclaim.script.php', $quiet);
-    if (!is_dir(BASE_DIR . '/media/css/site')) {
-        mkdir(BASE_DIR . '/media/css/site', 0777, true);
+    if (!is_dir(BASE_DIR . '/media/css/site') && !mkdir(
+        $concurrentDirectory = BASE_DIR . '/media/css/site',
+        0777,
+        true
+    ) && !is_dir($concurrentDirectory)) {
+        throw new \RuntimeException(\sprintf('Directory "%s" was not created', $concurrentDirectory));
     }
     symlink_force(BASE_DIR . '/media/css/cwmcore.css', BASE_DIR . '/media/css/site/cwmcore.css', $quiet);
 
     // External links
     $links = [
-        BASE_DIR . '/media'                             => "$joomlaPath/media/com_proclaim",
-        BASE_DIR . '/admin'                             => "$joomlaPath/administrator/components/com_proclaim",
-        BASE_DIR . '/site'                              => "$joomlaPath/components/com_proclaim",
-        BASE_DIR . '/modules/site/mod_proclaim'         => "$joomlaPath/modules/mod_proclaim",
-        BASE_DIR . '/modules/admin/mod_proclaimicon'    => "$joomlaPath/administrator/modules/mod_proclaimicon",
-        BASE_DIR . '/modules/site/mod_proclaim_podcast' => "$joomlaPath/modules/mod_proclaim_podcast",
-        BASE_DIR . '/modules/site/mod_proclaim_youtube' => "$joomlaPath/modules/mod_proclaim_youtube",
-        BASE_DIR . '/plugins/finder/proclaim'           => "$joomlaPath/plugins/finder/proclaim",
-        BASE_DIR . '/plugins/task/proclaim'             => "$joomlaPath/plugins/task/proclaim",
+        BASE_DIR . '/media'                                           => "$joomlaPath/media/com_proclaim",
+        BASE_DIR . '/admin'                                           => "$joomlaPath/administrator/components/com_proclaim",
+        BASE_DIR . '/site'                                            => "$joomlaPath/components/com_proclaim",
+        BASE_DIR . '/modules/site/mod_proclaim'                       => "$joomlaPath/modules/mod_proclaim",
+        BASE_DIR . '/modules/admin/mod_proclaimicon'                  => "$joomlaPath/administrator/modules/mod_proclaimicon",
+        BASE_DIR . '/modules/site/mod_proclaim_podcast'               => "$joomlaPath/modules/mod_proclaim_podcast",
+        BASE_DIR . '/modules/site/mod_proclaim_youtube'               => "$joomlaPath/modules/mod_proclaim_youtube",
+        BASE_DIR . '/plugins/finder/proclaim'                         => "$joomlaPath/plugins/finder/proclaim",
+        BASE_DIR . '/plugins/task/proclaim'                           => "$joomlaPath/plugins/task/proclaim",
+        BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.ini'     => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.ini",
+        BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.sys.ini' => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.sys.ini",
     ];
 
     foreach ($links as $target => $link) {
@@ -190,14 +205,17 @@ function doLink($quiet = false)
 /**
  * Forces creation of a symbolic link, removing any existing file or directory at the link path.
  *
- * @param string $target The target path the link should point to.
- * @param string $link The path where the link should be created.
- * @param bool $quiet If true, suppresses success messages.
+ * @param   string  $target  The target path the link should point to.
+ * @param   string  $link    The path where the link should be created.
+ * @param   bool    $quiet   If true, suppresses success messages.
+ *
  * @return void
+ * @since 10.1.0
+ * @since 10.1.0
  */
-function symlink_force($target, $link, $quiet = false)
+function symlink_force(string $target, string $link, bool $quiet = false): void
 {
-    // Clear file status cache to ensure we get fresh results
+    // Clear the file status cache to ensure we get fresh results
     clearstatcache(true, $link);
 
     // Check if link/file exists
@@ -213,28 +231,24 @@ function symlink_force($target, $link, $quiet = false)
         if (is_dir($link)) {
             // Recursive delete for directories
             if (PHP_OS_FAMILY === 'Windows') {
-                exec("rmdir /s /q " . escapeshellarg($link), $output, $returnVar);
+                exec('rmdir /s /q ' . escapeshellarg($link), $output, $returnVar);
             } else {
-                exec("rm -rf " . escapeshellarg($link), $output, $returnVar);
+                exec('rm -rf ' . escapeshellarg($link), $output, $returnVar);
             }
             if (isset($returnVar) && $returnVar !== 0) {
                 echo "WARNING: Failed to remove directory $link\n";
             }
-        } else {
+        } elseif (!@unlink($link)) {
             // Regular file
-            if (!@unlink($link)) {
-                echo "WARNING: Failed to unlink file $link\n";
-            }
+            echo "WARNING: Failed to unlink file $link\n";
         }
     }
 
     // Ensure parent dir exists
     $parent = \dirname($link);
-    if (!is_dir($parent)) {
-        if (!mkdir($parent, 0777, true)) {
-            echo "ERROR: Failed to create parent directory $parent\n";
-            return;
-        }
+    if (!is_dir($parent) && !mkdir($parent, 0777, true) && !is_dir($parent)) {
+        echo "ERROR: Failed to create parent directory $parent\n";
+        return;
     }
 
     if (!$quiet) {
@@ -245,7 +259,7 @@ function symlink_force($target, $link, $quiet = false)
         echo "ERROR: Failed to create symlink $link -> $target\n";
         $e = error_get_last();
         if ($e) {
-            echo "  Details: " . $e['message'] . "\n";
+            echo '  Details: ' . $e['message'] . "\n";
         }
     }
 }
@@ -255,20 +269,21 @@ function symlink_force($target, $link, $quiet = false)
  *
  * @return void
  * @throws Exception If asset build fails or ZIP creation fails.
+ * @since 10.1.0
  */
-function doBuild()
+function doBuild(): void
 {
     // Build assets first
     echo "Building frontend assets...\n";
-    passthru("npm install && npm run build", $returnVar);
+    passthru('npm install && npm run build', $returnVar);
     if ($returnVar !== 0) {
-        throw new Exception("Asset build failed");
+        throw new \RuntimeException('Asset build failed');
     }
 
     // Get version from proclaim.xml
-    $xmlVersion = "10.0.x";
+    $xmlVersion = '10.0.x';
     if (file_exists(BASE_DIR . '/proclaim.xml')) {
-        $xml = simplexml_load_file(BASE_DIR . '/proclaim.xml');
+        $xml = simplexml_load_string(file_get_contents(BASE_DIR . '/proclaim.xml'));
         if ($xml && isset($xml->version)) {
             $xmlVersion = (string) $xml->version;
         }
@@ -284,14 +299,14 @@ function doBuild()
         echo "  [2] Date Version ($dateVersion)\n";
         echo "  [3] Custom Version\n";
 
-        $choice = ask("Enter choice [1-3]", "1");
+        $choice = ask('Enter choice [1-3]', '1');
 
         switch ($choice) {
             case '2':
                 $version = $dateVersion;
                 break;
             case '3':
-                $version = ask("Enter custom version");
+                $version = ask('Enter custom version');
                 break;
             case '1':
             default:
@@ -313,11 +328,11 @@ function doBuild()
 
     $zip = new ZipArchive();
     if ($zip->open($zipFile, ZipArchive::CREATE) !== true) {
-        throw new Exception("Cannot open <$zipFile>");
+        throw new \RuntimeException("Cannot open <$zipFile>");
     }
 
     $files = new RecursiveIteratorIterator(
-        new RecursiveDirectoryIterator(BASE_DIR, RecursiveDirectoryIterator::SKIP_DOTS),
+        new RecursiveDirectoryIterator(BASE_DIR, FilesystemIterator::SKIP_DOTS),
         RecursiveIteratorIterator::LEAVES_ONLY
     );
 
@@ -389,7 +404,7 @@ function doBuild()
         }
         if (!$shouldInclude) {
             $ext = pathinfo($relativePath, PATHINFO_EXTENSION);
-            if (\in_array($ext, $includeExts) && !str_contains($relativePath, '/')) {
+            if (\in_array($ext, $includeExts, true) && !str_contains($relativePath, '/')) {
                 // Root files
                 $shouldInclude = true;
             }
@@ -406,7 +421,7 @@ function doBuild()
     echo "  BUILD COMPLETE\n";
     echo str_repeat('=', 50) . "\n";
     echo "  Version:  $version\n";
-    echo "  Package:  " . basename($zipFile) . "\n";
+    echo '  Package:  ' . basename($zipFile) . "\n";
     echo "  Location: $zipFile\n";
     echo str_repeat('=', 50) . "\n";
 }
@@ -415,8 +430,10 @@ function doBuild()
  * Downloads and installs a specific version of Joomla.
  *
  * @return void
+ * @throws Exception
+ * @since 10.1.0
  */
-function doInstallJoomla()
+function doInstallJoomla(): void
 {
     $props       = getProperties();
     $version     = $props['joomla.version'] ?? '5.4.2';
@@ -431,14 +448,14 @@ function doInstallJoomla()
         }
         echo "Removing $installPath...\n";
         if (PHP_OS_FAMILY === 'Windows') {
-            exec("rmdir /s /q " . escapeshellarg($installPath));
+            exec('rmdir /s /q ' . escapeshellarg($installPath));
         } else {
-            exec("rm -rf " . escapeshellarg($installPath));
+            exec('rm -rf ' . escapeshellarg($installPath));
         }
     }
 
-    if (!is_dir($installPath)) {
-        mkdir($installPath, 0777, true);
+    if (!is_dir($installPath) && !mkdir($installPath, 0777, true) && !is_dir($installPath)) {
+        throw new \RuntimeException(\sprintf('Directory "%s" was not created', $installPath));
     }
 
     $url     = "https://github.com/joomla/joomla-cms/releases/download/$version/Joomla_$version-Stable-Full_Package.zip";
@@ -463,8 +480,9 @@ function doInstallJoomla()
  * Removes all symbolic links created by the link command.
  *
  * @return void
+ * @since 10.1.0
  */
-function doClean()
+function doClean(): void
 {
     echo "Cleaning up development state...\n";
 
@@ -482,7 +500,7 @@ function doClean()
         }
     }
 
-    // Try to get Joomla path for external links
+    // Try to get a Joomla path for external links
     if (file_exists(PROPERTIES_FILE)) {
         try {
             $props      = getProperties();
@@ -503,6 +521,8 @@ function doClean()
                     "$joomlaPath/modules/mod_proclaim_youtube",
                     "$joomlaPath/plugins/finder/proclaim",
                     "$joomlaPath/plugins/task/proclaim",
+                    "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.ini",
+                    "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.sys.ini",
                 ];
 
                 foreach ($externalLinks as $link) {
@@ -525,8 +545,9 @@ function doClean()
  *
  * @return void
  * @throws Exception If the GitHub API request fails.
+ * @since 10.1.0
  */
-function doJoomlaLatest()
+function doJoomlaLatest(): void
 {
     echo "Fetching latest Joomla version from GitHub...\n";
 
@@ -540,12 +561,12 @@ function doJoomlaLatest()
     $json = @file_get_contents('https://api.github.com/repos/joomla/joomla-cms/releases/latest', false, $context);
 
     if ($json === false) {
-        throw new Exception("Failed to fetch from GitHub API");
+        throw new \RuntimeException('Failed to fetch from GitHub API');
     }
 
-    $data = json_decode($json, true);
+    $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
     if (!$data || !isset($data['tag_name'])) {
-        throw new Exception("Invalid response from GitHub API");
+        throw new \RuntimeException('Invalid response from GitHub API');
     }
 
     $version   = $data['tag_name'];
@@ -560,8 +581,9 @@ function doJoomlaLatest()
  * Checks all PHP files in the project for syntax errors.
  *
  * @return void
+ * @since 10.1.0
  */
-function doLintSyntax()
+function doLintSyntax(): void
 {
     echo "Checking PHP syntax...\n";
 
@@ -576,7 +598,7 @@ function doLintSyntax()
         }
 
         $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS)
+            new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)
         );
 
         foreach ($iterator as $file) {

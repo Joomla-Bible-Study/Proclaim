@@ -15,6 +15,11 @@
     <!-- Installer Hooks -->
     <scriptfile>proclaim.script.php</scriptfile>
 
+    <languages folder="admin">
+        <language tag="en-GB">language/en-GB/en-GB.com_proclaim.ini</language>
+        <language tag="en-GB">language/en-GB/en-GB.com_proclaim.sys.ini</language>
+    </languages>
+
     <!-- Installer DB Hooks -->
     <install>
         <sql>
