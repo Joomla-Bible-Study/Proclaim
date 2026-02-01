@@ -1,5 +1,5 @@
 {
-  "esversion": 6,
+  "esversion": 11,
   "browser": true,
   "devel": true,
   "node": true,
@@ -8,7 +8,10 @@
     "Proclaim": true,
     "bootstrap": true,
     "jQuery": true,
-    "$": true
+    "$": true,
+    "Sortable": true,
+    "google": true,
+    "gapi": true
   },
   "strict": true,
   "bitwise": true,

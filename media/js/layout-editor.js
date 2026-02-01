@@ -9,6 +9,9 @@
      * @license    GNU General Public License version 2 or later; see LICENSE.txt
      */
 
+    /* jshint esversion: 11, browser: true */
+    /* globals Sortable, bootstrap */
+
     (function () {
 
         /**
@@ -211,6 +214,10 @@
                     return key;
                 };
 
+                // Bind resize event handlers
+                this.handleResize = this.handleResize.bind(this);
+                this.endResize = this.endResize.bind(this);
+
                 this.init();
             }
 
@@ -321,7 +328,7 @@
              * @param {string} context - The context to switch to
              */
             switchContext(context) {
-                if (context === this.currentContext) return;
+                if (context === this.currentContext) { return; }
 
                 // Sync current state to form before switching
                 this.syncToForm();
@@ -763,7 +770,7 @@
                 );
 
                 const count = children.length;
-                if (count === 0) return;
+                if (count === 0) { return; }
 
                 const totalCols = this.options.numCols; // 12
 
@@ -802,7 +809,7 @@
                 const elementId = card.dataset.element;
                 const data = this.state.get(elementId);
 
-                if (!data) return;
+                if (!data) { return; }
 
                 const infoEl = card.querySelector('.element-info');
                 if (infoEl) {
@@ -822,7 +829,7 @@
              */
             getElementDefinition(elementId) {
                 const contextDef = ELEMENT_DEFINITIONS[this.currentContext];
-                if (!contextDef) return null;
+                if (!contextDef) { return null; }
                 return contextDef.elements.find(el => el.id === elementId) || null;
             }
 
@@ -866,9 +873,9 @@
                     // Handle Bootstrap modal events for accessibility
                     // Before hide: move focus out to prevent aria-hidden warning
                     this.modal.addEventListener('hide.bs.modal', () => {
-                        const triggerElement = this.currentSettingsElement
-                            ? this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"] .btn-settings`)
-                            : null;
+                        const triggerElement = this.currentSettingsElement ?
+                            this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"] .btn-settings`) :
+                            null;
                         if (triggerElement) {
                             triggerElement.focus();
                         }
@@ -998,10 +1005,10 @@
                 const linkTypeEl = document.getElementById('layout-link-type');
                 const customClassEl = document.getElementById('layout-custom-class');
 
-                if (colspanEl) colspanEl.value = String(data.colspan) || '1';
-                if (elementTypeEl) elementTypeEl.value = String(data.element) || '1';
-                if (linkTypeEl) linkTypeEl.value = String(data.linktype) || '0';
-                if (customClassEl) customClassEl.value = data.custom || '';
+                if (colspanEl) { colspanEl.value = String(data.colspan) || '1'; }
+                if (elementTypeEl) { elementTypeEl.value = String(data.element) || '1'; }
+                if (linkTypeEl) { linkTypeEl.value = String(data.linktype) || '0'; }
+                if (customClassEl) { customClassEl.value = data.custom || ''; }
 
                 // Show modal
                 const modalInstance = this.getModalInstance();
@@ -1046,10 +1053,10 @@
              * Save settings from modal
              */
             saveSettings() {
-                if (!this.currentSettingsElement) return;
+                if (!this.currentSettingsElement) { return; }
 
                 const data = this.state.get(this.currentSettingsElement);
-                if (!data) return;
+                if (!data) { return; }
 
                 // Get values from modal
                 let newColspan = parseInt(document.getElementById('layout-colspan').value, 10) || 1;
@@ -1121,9 +1128,9 @@
                 } else if (this.modal) {
                     // Fallback: manually hide modal
                     // Move focus out first
-                    const triggerElement = this.currentSettingsElement
-                        ? this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"] .btn-settings`)
-                        : null;
+                    const triggerElement = this.currentSettingsElement ?
+                        this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"] .btn-settings`) :
+                        null;
                     if (triggerElement) {
                         triggerElement.focus();
                     } else {
@@ -1152,7 +1159,7 @@
              */
             loadFromParams() {
                 const contextDef = ELEMENT_DEFINITIONS[this.currentContext];
-                if (!contextDef) return;
+                if (!contextDef) { return; }
 
                 const prefix = contextDef.prefix;
 
@@ -1184,11 +1191,11 @@
                         const customField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}custom]"]`);
                         const linktypeField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}linktype]"]`);
 
-                        if (colField) col = parseInt(colField.value, 10) || col;
-                        if (colspanField) colspan = colspanField.value || colspan;
-                        if (elementField) elementType = elementField.value || elementType;
-                        if (customField) custom = customField.value || custom;
-                        if (linktypeField) linktype = linktypeField.value || linktype;
+                        if (colField) { col = parseInt(colField.value, 10) || col; }
+                        if (colspanField) { colspan = colspanField.value || colspan; }
+                        if (elementField) { elementType = elementField.value || elementType; }
+                        if (customField) { custom = customField.value || custom; }
+                        if (linktypeField) { linktype = linktypeField.value || linktype; }
                     }
 
                     // Only add to canvas if row > 0 (element is visible)
@@ -1223,7 +1230,7 @@
              */
             addElementToCanvas(element, data) {
                 const rowEl = this.canvas.querySelector(`.row-elements[data-row="${data.row}"]`);
-                if (!rowEl) return;
+                if (!rowEl) { return; }
 
                 const card = this.createElementCard(element, false);
                 card.dataset.colspan = data.colspan;
@@ -1305,7 +1312,7 @@
              */
             syncToForm() {
                 const contextDef = ELEMENT_DEFINITIONS[this.currentContext];
-                if (!contextDef) return;
+                if (!contextDef) { return; }
 
                 const prefix = contextDef.prefix;
                 const form = document.getElementById(this.options.formId);
@@ -1398,7 +1405,7 @@
              * Undo last action
              */
             undo() {
-                if (this.undoStack.length === 0) return;
+                if (this.undoStack.length === 0) { return; }
 
                 // Save current state to redo stack
                 const currentState = new Map();
@@ -1419,7 +1426,7 @@
              * Redo last undone action
              */
             redo() {
-                if (this.redoStack.length === 0) return;
+                if (this.redoStack.length === 0) { return; }
 
                 // Save current state to undo stack
                 const currentState = new Map();
@@ -1447,7 +1454,7 @@
 
                 // Re-add elements from state
                 const contextDef = ELEMENT_DEFINITIONS[this.currentContext];
-                if (!contextDef) return;
+                if (!contextDef) { return; }
 
                 this.state.forEach((data, elementId) => {
                     const element = contextDef.elements.find(el => el.id === elementId);
@@ -1505,7 +1512,7 @@
              * @param {string} mode - 'visual' or 'classic'
              */
             switchView(mode) {
-                if (this.viewMode === mode) return;
+                if (this.viewMode === mode) { return; }
 
                 this.viewMode = mode;
 
@@ -1523,10 +1530,10 @@
 
                 // Toggle views
                 if (mode === 'visual') {
-                    if (this.editor) this.editor.style.display = '';
-                    if (this.classicView) this.classicView.style.display = 'none';
+                    if (this.editor) { this.editor.style.display = ''; }
+                    if (this.classicView) { this.classicView.style.display = 'none'; }
                 } else {
-                    if (this.editor) this.editor.style.display = 'none';
+                    if (this.editor) { this.editor.style.display = 'none'; }
                     if (this.classicView) {
                         this.classicView.style.display = '';
                         this.renderClassicView();
@@ -1539,7 +1546,7 @@
              */
             renderClassicView() {
                 const contextDef = ELEMENT_DEFINITIONS[this.currentContext];
-                if (!contextDef || !this.classicView) return;
+                if (!contextDef || !this.classicView) { return; }
 
                 // Get elements in layout (row > 0) sorted by row then col
                 const placedElements = [];
@@ -1553,7 +1560,7 @@
                 });
 
                 placedElements.sort((a, b) => {
-                    if (a.data.row !== b.data.row) return a.data.row - b.data.row;
+                    if (a.data.row !== b.data.row) { return a.data.row - b.data.row; }
                     return a.data.col - b.data.col;
                 });
 
@@ -1636,7 +1643,7 @@
              */
             addResizeHandles(card) {
                 // Only add to placed elements, not palette items
-                if (card.dataset.paletteItem !== undefined) return;
+                if (card.dataset.paletteItem !== undefined) { return; }
 
                 // Right handle - affects element to the right
                 const rightHandle = document.createElement('div');
@@ -1662,7 +1669,7 @@
                 e.stopPropagation();
 
                 const rowEl = card.closest('.row-elements');
-                if (!rowEl) return;
+                if (!rowEl) { return; }
 
                 // Get all element cards in order
                 const children = Array.from(rowEl.children).filter(el =>
@@ -1693,7 +1700,7 @@
                 }
 
                 // For outer edge, we need at least 2 elements to redistribute
-                if (isOuterEdge && children.length < 2) return;
+                if (isOuterEdge && children.length < 2) { return; }
 
                 this.isResizing = true;
                 this.resizeCard = card;
@@ -1739,8 +1746,8 @@
              * Resizing affects either the immediate neighbor or redistributes other elements for outer edges
              * @param {MouseEvent} e - Mouse event
              */
-            handleResize = (e) => {
-                if (!this.isResizing || !this.resizeCard) return;
+            handleResize(e) {
+                if (!this.isResizing || !this.resizeCard) { return; }
 
                 const deltaX = e.clientX - this.resizeStartX;
                 let colsDelta = Math.round(deltaX / this.columnWidth);
@@ -1807,7 +1814,7 @@
              */
             handleOuterEdgeResize(colsDelta) {
                 const otherCount = this.resizeOtherElements.length;
-                if (otherCount === 0) return;
+                if (otherCount === 0) { return; }
 
                 // Calculate new colspan for the resized element
                 let newColspan = this.resizeStartColspan + colsDelta;
@@ -1858,8 +1865,8 @@
             /**
              * End resize operation
              */
-            endResize = () => {
-                if (!this.isResizing) return;
+            endResize() {
+                if (!this.isResizing) { return; }
 
                 this.isResizing = false;
 
@@ -1901,7 +1908,7 @@
              */
             handleKeyboard(e) {
                 // Check if we're in an input field
-                if (e.target.matches('input, textarea, select')) return;
+                if (e.target.matches('input, textarea, select')) { return; }
 
                 // Undo: Ctrl+Z
                 if (e.ctrlKey && e.key === 'z' && !e.shiftKey) {

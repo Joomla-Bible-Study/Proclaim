@@ -9,6 +9,8 @@
      *   reserved.
      * @license     GNU General Public License version 2 or later; see LICENSE.txt
      */
+    /* jshint esversion: 11, browser: true */
+    /* globals Fancybox */
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll(".fancybox_player").forEach(function (element) {
             element.addEventListener("click", function () {

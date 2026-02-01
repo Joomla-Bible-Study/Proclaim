@@ -1,6 +1,8 @@
 (function () {
     'use strict';
 
+    /* jshint esversion: 11, browser: true */
+    /* globals _ */
     (function (window, document) {
 
         /**
@@ -37,7 +39,7 @@
              */
             trapFocus: function(modal) {
                 const modalElement = typeof modal === 'string' ? document.querySelector(modal) : modal;
-                if (!modalElement) return;
+                if (!modalElement) { return; }
 
                 // Store the currently focused element
                 this.previousActiveElement = document.activeElement;
@@ -47,13 +49,10 @@
                 modalElement.setAttribute('role', 'dialog');
 
                 const focusableElements = this.getFocusableElements(modalElement);
-                if (focusableElements.length === 0) return;
-
-                const firstFocusable = focusableElements[0];
-                focusableElements[focusableElements.length - 1];
+                if (focusableElements.length === 0) { return; }
 
                 // Focus the first focusable element
-                firstFocusable.focus();
+                focusableElements[0].focus();
 
                 // Handle Tab key to trap focus
                 const handleKeyDown = (e) => {
@@ -61,15 +60,15 @@
                         this.releaseFocus(modalElement, handleKeyDown);
                         // Trigger close if modal has a close method
                         const closeBtn = modalElement.querySelector('[data-dismiss="modal"], .btn-close, .close');
-                        if (closeBtn) closeBtn.click();
+                        if (closeBtn) { closeBtn.click(); }
                         return;
                     }
 
-                    if (e.key !== 'Tab') return;
+                    if (e.key !== 'Tab') { return; }
 
                     // Update focusable elements (in case of dynamic content)
                     const currentFocusable = this.getFocusableElements(modalElement);
-                    if (currentFocusable.length === 0) return;
+                    if (currentFocusable.length === 0) { return; }
 
                     const first = currentFocusable[0];
                     const last = currentFocusable[currentFocusable.length - 1];
@@ -100,7 +99,7 @@
              */
             releaseFocus: function(modal, handler) {
                 const modalElement = typeof modal === 'string' ? document.querySelector(modal) : modal;
-                if (!modalElement) return;
+                if (!modalElement) { return; }
 
                 // Remove the keydown handler
                 if (handler) {
@@ -224,7 +223,7 @@
                 addReferenceBtn.addEventListener('click', function (e) {
                     e.preventDefault();
                     const referenceTemplate = document.getElementById('reference');
-                    if (!referenceTemplate) return;
+                    if (!referenceTemplate) { return; }
 
                     const newReference = referenceTemplate.cloneNode(true);
 
@@ -269,7 +268,7 @@
             document.querySelectorAll('.imgChoose').forEach(function (el) {
                 el.addEventListener('change', function () {
                     const targetImage = document.getElementById('img' + this.id);
-                    if (!targetImage) return;
+                    if (!targetImage) { return; }
 
                     const src = targetImage.getAttribute('src');
                     let activeDir = [];

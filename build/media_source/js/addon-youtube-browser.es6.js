@@ -403,6 +403,7 @@
         },
 
         selectVideo: function(videoId, title, thumbnail) {
+            void thumbnail; // Parameter kept for API consistency with callers
             var filenameField = document.querySelector('[name="jform[params][filename]"]');
             if (filenameField) {
                 filenameField.value = 'https://www.youtube.com/watch?v=' + videoId;

@@ -31,10 +31,10 @@
             // Show loading indicator
             container.innerHTML = '<div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> Loading...</div>';
 
-            const url = 'index.php?option=com_proclaim&task=cwmtemplate.loadFieldset&format=json'
-                + '&fieldset=' + encodeURIComponent(fieldsetName)
-                + '&id=' + templateId
-                + '&' + Joomla.getOptions('csrf.token', '') + '=1';
+            const url = 'index.php?option=com_proclaim&task=cwmtemplate.loadFieldset&format=json' +
+                '&fieldset=' + encodeURIComponent(fieldsetName) +
+                '&id=' + templateId +
+                '&' + Joomla.getOptions('csrf.token', '') + '=1';
 
             fetch(url, {
                 method: 'GET',
