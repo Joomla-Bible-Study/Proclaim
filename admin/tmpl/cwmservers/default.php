@@ -21,18 +21,19 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
-/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmservers\HtmlView $this */
+
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('table.columns')
     ->useScript('multiselect');
 
 $app       = Factory::getApplication();
-$user      = $user = Factory::getApplication()->getSession()->get('user');
-$userId    = $user->get('id');
+$user      = $app->getIdentity();
+$userId    = $user->id;
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
-$archived  = $this->state->get('filter.published') == 2 ? true : false;
-$trashed   = $this->state->get('filter.published') == -2 ? true : false;
+$archived  = $this->state->get('filter.published') == 2;
+$trashed   = $this->state->get('filter.published') == -2;
 $columns   = 4;
 
 $workflow_enabled  = ComponentHelper::getParams('com_proclaim')->get('workflow_enabled');
@@ -40,7 +41,7 @@ $workflow_state    = false;
 $workflow_featured = false;
 if ($workflow_enabled) :
 
-// @todo move the script to a file
+    // @todo move the script to a file
     $js = <<<JS
 	(function() {
 		document.addEventListener('DOMContentLoaded', function() {
@@ -79,7 +80,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
         <div class="col-md-12">
             <div id="j-main-container" class="j-main-container">
                 <?php
-                echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+                echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
                 <?php
                 if (empty($this->items)) : ?>
                     <div class="alert alert-info">
@@ -89,8 +90,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                         <?php
                         echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                     </div>
-                <?php
-                else : ?>
+                <?php else : ?>
                     <table class="table itemList" id="messagesList">
                         <caption class="visually-hidden">
                             <?php
@@ -149,10 +149,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                         <?php
                         foreach ($this->items as $i => $item) :
                             $item->max_ordering = 0;
-                            $canCreate = $user->authorise('core.create');
-                            $canEdit = $user->authorise('core.edit', 'com_proclaim.cwmserver.' . $item->id);
-                            $canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.cwmserver.' . $item->id);
-                            $canChange = $user->authorise('core.edit.state', 'com_proclaim.cwmserver.' . $item->id);
+                            $canCreate          = $user->authorise('core.create');
+                            $canEdit            = $user->authorise('core.edit', 'com_proclaim.cwmserver.' . $item->id);
+                            $canEditOwn         = $user->authorise('core.edit.own', 'com_proclaim.cwmserver.' . $item->id);
+                            $canChange          = $user->authorise('core.edit.state', 'com_proclaim.cwmserver.' . $item->id);
                             ?>
                             <tr class="row<?php
                             echo $i % 2; ?>">
@@ -165,33 +165,32 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                                     $options = [
                                         'task_prefix' => 'cwmservers.',
                                         'disabled'    => $workflow_state || !$canChange,
-                                        'id'          => 'state-' . $item->id
+                                        'id'          => 'state-' . $item->id,
                                     ];
 
-                                    echo (new PublishedButton())->render((int)$item->published, $i, $options, '', '');
-                                    ?>
+                            echo (new PublishedButton())->render((int)$item->published, $i, $options, '', '');
+                            ?>
                                 </td>
                                 <td class="nowrap has-context">
                                     <div class="float-left">
 
                                         <?php
-                                        if ($canEdit || $canEditOwn) : ?>
+                                if ($canEdit || $canEditOwn) : ?>
                                             <a href="<?php
-                                            echo Route::_(
-                                                'index.php?option=com_proclaim&task=cwmserver.edit&id=' . (int)$item->id
-                                            ); ?>"
+                                    echo Route::_(
+                                        'index.php?option=com_proclaim&task=cwmserver.edit&id=' . (int)$item->id
+                                    ); ?>"
                                                title="<?php
-                                               echo Text::_('JACTION_EDIT'); ?>">
+                                       echo Text::_('JACTION_EDIT'); ?>">
                                                 <?php
-                                                echo $this->escape($item->server_name); ?></a>
-                                        <?php
-                                        else : ?>
+                                        echo $this->escape($item->server_name); ?></a>
+                                        <?php else : ?>
                                             <span
                                                     title="<?php
-                                                    echo Text::sprintf(
-                                                        'JFIELD_ALIAS_LABEL',
-                                                        $this->escape($item->server_name)
-                                                    ); ?>"><?php
+                                            echo Text::sprintf(
+                                                'JFIELD_ALIAS_LABEL',
+                                                $this->escape($item->server_name)
+                                            ); ?>"><?php
                                                 echo $this->escape($item->server_name); ?></span>
                                         <?php
                                         endif; ?>
@@ -209,7 +208,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                 <?php
                 endif; ?>
                 <?php
-                // Load the batch processing form. ?>
+                // Load the batch processing form.?>
                 <?php
                 if ($user->authorise('core.create', 'com_proclaim')
                     && $user->authorise('core.edit', 'com_proclaim')
@@ -219,10 +218,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                     echo HTMLHelper::_(
                         'bootstrap.renderModal',
                         'collapseModal',
-                        array(
-                            'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
-                            'footer' => $this->loadTemplate('batch_footer')
-                        ),
+                        [
+                                'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
+                                'footer' => $this->loadTemplate('batch_footer'),
+                            ],
                         $this->loadTemplate('batch_body')
                     ); ?>
                 <?php

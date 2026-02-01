@@ -13,7 +13,6 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Site\Helper\CwmrouteHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
@@ -28,8 +27,9 @@ if ($app->isClient('site')) {
     Session::checkToken('get') or die(Text::_('JINVALID_TOKEN'));
 }
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmservers\HtmlView $this */
+
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('core')
     ->useScript('multiselect')
     ->useScript('com_proclaim.cwmadmin-types-modal')
@@ -40,18 +40,18 @@ $wa->useScript('core')
 	}"
     );
 
-$function = $app->input->getCmd('function', 'jSelectType');
-$editor = $app->input->getCmd('editor', '');
+$function  = $app->input->getCmd('function', 'jSelectType');
+$editor    = $app->input->getCmd('editor', '');
 $listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn = $this->escape($this->state->get('list.direction'));
-$onclick = $this->escape($function);
+$listDirn  = $this->escape($this->state->get('list.direction'));
+$onclick   = $this->escape($function);
 $multilang = Multilanguage::isEnabled();
 
 $this->recordId = $app->input->getInt('recordId');
 
 if (!empty($editor)) {
     // This view is used also in com_menus. Load the xtd script only if the editor is set!
-    $this->document->addScriptOptions('xtd-types', array('editor' => $editor));
+    $this->document->addScriptOptions('xtd-types', ['editor' => $editor]);
     $onclick = "jSelectType";
 }
 ?>
@@ -64,7 +64,7 @@ if (!empty($editor)) {
           id="adminForm">
 
         <?php
-        echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+        echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
 
         <?php
         if (empty($this->types)) : ?>
@@ -75,8 +75,7 @@ if (!empty($editor)) {
                 <?php
                 echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
             </div>
-        <?php
-        else : ?>
+        <?php else : ?>
             <table class="table table-sm">
                 <caption class="visually-hidden">
                     <?php
@@ -126,20 +125,20 @@ if (!empty($editor)) {
                                 . ' data-title="' . $this->escape($item->title) . '"'
                                 . ' data-uri="' . $this->escape($item->name) . '"'
                                 . ' data-language="0"';
-                            ?>
+                    ?>
                             <a class="select-link" href="javascript:void(0)" <?php
-                            echo $attribs; ?>
+                    echo $attribs; ?>
                                onclick="setType('<?php
-                               echo base64_encode(
-                                   json_encode(array('id' => $this->recordId, 'name' => $item->name))
-                               ); ?>')">
+                       echo base64_encode(
+                           json_encode(['id' => $this->recordId, 'name' => $item->name])
+                       ); ?>')">
                                 <?php
-                                echo $this->escape($item->title); ?>
+                           echo $this->escape($item->title); ?>
                             </a>
                         </th>
                         <td class="small d-none d-md-table-cell">
                             <?php
-                            echo $this->escape($item->description); ?>
+                       echo $this->escape($item->description); ?>
                         </td>
                     </tr>
                 <?php

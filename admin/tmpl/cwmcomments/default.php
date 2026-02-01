@@ -21,14 +21,16 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmcomments\HtmlView $this */
+
 $app        = Factory::getApplication();
-$user       = $user = Factory::getApplication()->getSession()->get('user');
-$userId     = $user->get('id');
+$user       = $app->getIdentity();
+$userId     = $user->id;
 $listOrder  = $this->escape($this->state->get('list.ordering'));
 $listDirn   = $this->escape($this->state->get('list.direction'));
-$archived   = $this->state->get('filter.published') == 2 ? true : false;
-$trashed    = $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder  = $listOrder == 'ordering';
+$archived   = $this->state->get('filter.published') == 2;
+$trashed    = $this->state->get('filter.published') == -2;
+$saveOrder  = $listOrder === 'ordering';
 $sortFields = $this->getSortFields();
 $columns    = 9;
 
@@ -37,8 +39,7 @@ if ($saveOrder) {
     HTMLHelper::_('sortablelist.sortable', 'comments', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->addInlineScript(
@@ -68,7 +69,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
         <div class="col-md-12">
             <div id="j-main-container" class="j-main-container">
                 <?php
-                echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+                echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
                 <?php
                 if (empty($this->items)) : ?>
                     <div class="alert alert-info">
@@ -78,8 +79,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                         <?php
                         echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                     </div>
-                    <?php
-                else : ?>
+                    <?php else : ?>
                     <table class="table table-striped itemlist" id="comments">
                         <caption class="visually-hidden">
                             <?php
@@ -190,11 +190,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                         endif; ?>>
                         <?php
                         foreach ($this->items as $i => $item) :
-                            $link = Route::_('index.php?option=com_proclaim&task=cwmcomment.edit&id=' . (int)$item->id);
-                            $canCreate = $user->authorise('core.create');
-                            $canEdit = $user->authorise('core.edit', 'com_proclaim.comment.' . $item->id);
+                            $link       = Route::_('index.php?option=com_proclaim&task=cwmcomment.edit&id=' . (int)$item->id);
+                            $canCreate  = $user->authorise('core.create');
+                            $canEdit    = $user->authorise('core.edit', 'com_proclaim.comment.' . $item->id);
                             $canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.comment.' . $item->id);
-                            $canChange = $user->authorise('core.edit.state', 'com_proclaim.comment.' . $item->id);
+                            $canChange  = $user->authorise('core.edit.state', 'com_proclaim.comment.' . $item->id);
                             ?>
                             <tr class="row<?php
                             echo $i % 2; ?>" data-draggable-group="<?php
@@ -244,14 +244,13 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                                             echo $link; ?>"><?php
                                                 echo $this->escape($item->studytitle) . ' - '
                                                     . Text::_($item->bookname) . ' ' . $item->chapter_begin; ?></a>
-                                            <?php
-                                        else : ?>
+                                            <?php else : ?>
                                             <?php
                                             echo $this->escape($item->studytitle) . ' - ' . Text::_(
                                                 $item->bookname
                                             ) . ' ' . $item->chapter_begin; ?>
                                             <?php
-                                        endif; ?>
+                                            endif; ?>
                                     </div>
                                 </td>
                                 <td class="small d-none d-md-table-cell">
@@ -274,7 +273,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                                 if (Multilanguage::isEnabled()) : ?>
                                     <td class="small d-none d-md-table-cell">
                                         <?php
-                                        echo LayoutHelper::render('joomla.content.language', $item); ?>
+                                            echo LayoutHelper::render('joomla.content.language', $item); ?>
                                     </td>
                                     <?php
                                 endif; ?>
@@ -289,12 +288,12 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                     </table>
 
                     <?php
-                    // load the pagination. ?>
+                    // load the pagination.?>
                     <?php
                     echo $this->pagination->getListFooter(); ?>
 
                     <?php
-                    // Load the batch processing form. ?>
+                    // Load the batch processing form.?>
                     <?php
                     if (
                         $user->authorise('core.create', 'com_proclaim')
@@ -305,10 +304,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                         echo HTMLHelper::_(
                             'bootstrap.renderModal',
                             'collapseModal',
-                            array(
-                                'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
-                                'footer' => $this->loadTemplate('batch_footer'),
-                            ),
+                            [
+                                    'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
+                                    'footer' => $this->loadTemplate('batch_footer'),
+                                ],
                             $this->loadTemplate('batch_body')
                         ); ?>
                         <?php
@@ -316,7 +315,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                     <?php
                 endif; ?>
                 <?php
-                // Load the batch processing form. ?>
+                // Load the batch processing form.?>
                 <input type="hidden" name="task" value=""/>
                 <input type="hidden" name="boxchecked" value="0"/>
                 <?php

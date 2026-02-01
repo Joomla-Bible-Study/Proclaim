@@ -20,18 +20,19 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
-HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+/** @var CWM\Component\Proclaim\Site\View\Cwmpodcastdisplay\HtmlView $this */
+
 HTMLHelper::_('dropdown.init');
 HTMLHelper::_('formbehavior.chosen', 'select');
 HTMLHelper::_('behavior.multiselect');
 
 $app       = Factory::getApplication();
-$user      = $user = Factory::getApplication()->getSession()->get('user');
-$userId    = $user->get('id');
+$user      = $app->getIdentity();
+$userId    = $user->id;
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
-$archived  = $this->state->get('filter.published') == 2 ? true : false;
-$trashed   = $this->state->get('filter.published') == -2 ? true : false;
+$archived  = $this->state->get('filter.published') == 2;
+$trashed   = $this->state->get('filter.published') == -2;
 $saveOrder = $listOrder === 'ordering';
 
 $CWMedia = new Cwmmedia();

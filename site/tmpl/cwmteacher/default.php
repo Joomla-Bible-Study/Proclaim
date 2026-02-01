@@ -13,6 +13,8 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Site\View\Cwmteacher\HtmlView $this */
+
 if ($this->params->get('teachertemplate')) {
     echo $this->loadTemplate($this->params->get('teachertemplate'));
 } else {

@@ -54,7 +54,7 @@ class HtmlView extends BaseHtmlView
     /**
      * Admin
      *
-     * @var array
+     * @var object
      * @since    7.0.0
      */
     protected $admin;
@@ -70,10 +70,10 @@ class HtmlView extends BaseHtmlView
     /**
      * Media Files
      *
-     * @var string
+     * @var array
      * @since    7.0.0
      */
-    protected $mediafiles;
+    protected array $mediafiles = [];
 
     /**
      * Admin Params

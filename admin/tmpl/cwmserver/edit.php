@@ -20,12 +20,13 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmserver\HtmlView $this */
+
 // Create shortcut to parameters.
-$app = Factory::getApplication();
+$app   = Factory::getApplication();
 $input = $app->input;
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->addInlineScript(
@@ -52,7 +53,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (
       class="form-validate" enctype="multipart/form-data">
     <div class="main-card">
         <?php
-        echo HTMLHelper::_('uitab.startTabSet', 'myTab', array('active' => 'general')); ?>
+        echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general']); ?>
 
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_GENERAL')); ?>
@@ -147,44 +148,44 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (
                     <div class="accordion" id="accordionlist">
                         <?php
                         $test = $this->server_form->getFieldsets('media');
-                        foreach ($this->server_form->getFieldsets('media') as $name => $fieldset) : ?>
+                foreach ($this->server_form->getFieldsets('media') as $name => $fieldset) : ?>
                             <div class="accordion-item">
                                 <h2 class="accordion-heading" id="<?php
-                                echo Text::_($name) ?>">
+                        echo Text::_($name) ?>">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                             data-bs-target="#collapse<?php
-                                            echo Text::_($name) ?>" aria-expanded="false"
+                                    echo Text::_($name) ?>" aria-expanded="false"
                                             aria-controls="collapse<?php
-                                            echo Text::_($name) ?>">
+                                    echo Text::_($name) ?>">
                                         <?php
-                                        echo Text::_($fieldset->label); ?>
+                                echo Text::_($fieldset->label); ?>
                                     </button>
                                 </h2>
                                 <div id="collapse<?php
-                                echo Text::_($name) ?>" class="accordion-collapse collapse"
+                        echo Text::_($name) ?>" class="accordion-collapse collapse"
                                      aria-labelledby="heading<?php
-                                        echo $name; ?>"
+                                echo $name; ?>"
                                      data-bs-parent="#accordionlist">
                                     <div class="accordion-body">
                                         <?php
-                                        foreach ($this->server_form->getFieldset($name) as $field) : ?>
+                                foreach ($this->server_form->getFieldset($name) as $field) : ?>
                                             <div class="control-group">
                                                 <div class="control-label">
                                                     <?php
-                                                    echo $field->label; ?>
+                                            echo $field->label; ?>
                                                 </div>
                                                 <div class="controls">
                                                     <?php
-                                                    echo $field->input; ?>
+                                            echo $field->input; ?>
                                                 </div>
                                             </div>
                                             <?php
-                                        endforeach; ?>
+                                endforeach; ?>
                                     </div>
                                 </div>
                             </div>
                             <?php
-                        endforeach; ?>
+                endforeach; ?>
                     </div>
                 </div>
                 <?php

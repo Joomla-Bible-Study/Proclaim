@@ -14,6 +14,8 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Site\View\Cwmlandingpage\HtmlView $this */
+
 use CWM\Component\Proclaim\Site\Helper\Cwmlanding;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
@@ -32,10 +34,10 @@ $params     = $this->params;
                 // End of column for logo
             }
 
-            if ($this->params->get('landing_show_page_title') > 0) {
-                echo $this->params->get('landing_page_title');
-            }
-            ?>
+if ($this->params->get('landing_show_page_title') > 0) {
+    echo $this->params->get('landing_page_title');
+}
+?>
         </h1>
         <?php
         if ($this->params->get('landing_intro_show') > 0) { ?>
@@ -107,20 +109,20 @@ $params     = $this->params;
                     if (!empty($heading)) {
                         echo $params->get($showIt . 'label');
                     }
-                    ?>
+            ?>
                 </div>
                 <!-- end div id="landing_title" -->
                 <div class="landinglist container">
                     <div class="row">
                     <?php
-                    if (isset($showhideall)) {
-                        echo $showhideall;
-                    }
+            if (isset($showhideall)) {
+                echo $showhideall;
+            }
 
-                    if (isset($heading)) {
-                        echo $heading;
-                    }
-                    ?>
+            if (isset($heading)) {
+                echo $heading;
+            }
+            ?>
                     </div>
                 </div>
                 <!-- end div class="landinglist" -->
@@ -128,5 +130,5 @@ $params     = $this->params;
             <?php
         }
     } // End Loop for the landing items
-    ?>
+?>
 </div><!-- end div id="proclaim_landing" -->

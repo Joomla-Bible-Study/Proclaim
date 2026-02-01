@@ -17,11 +17,11 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmcomment\HtmlView $this */
+
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
 $wa->useScript('keepalive')
     ->useScript('form.validate')

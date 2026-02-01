@@ -15,6 +15,8 @@
 
 use Joomla\CMS\Language\Text;
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmtemplate\HtmlView $this */
+
 /**
  * This file provides the layout editor tab content.
  * It creates a visual drag-and-drop interface for arranging template display elements.
@@ -112,16 +114,15 @@ Text::script('JBS_CMN_DESCRIPTION');
 // Pass template params to JavaScript for initial loading
 // The form fields are lazy-loaded, so we need to provide the data directly
 $params = $this->item->params;
-if (is_string($params)) {
+if (\is_string($params)) {
     $paramsArray = json_decode($params, true) ?: [];
-} elseif (is_object($params)) {
+} elseif (\is_object($params)) {
     $paramsArray = $params->toArray();
 } else {
     $paramsArray = (array) $params;
 }
 
-/** @var \Joomla\CMS\Document\Document $document */
-$document = $this->document ?? \Joomla\CMS\Factory::getApplication()->getDocument();
+$document = $this->getDocument();
 $document->addScriptOptions('com_proclaim.templateParams', $paramsArray);
 ?>
 

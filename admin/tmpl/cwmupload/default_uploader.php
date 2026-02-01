@@ -13,8 +13,15 @@
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
+use Joomla\Input\Input;
 
-defined('_JEXEC') or die();
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+
+// phpcs:enable PSR1.Files.SideEffects
+
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmupload\HtmlView $this */
 
 ?>
 <script type="javascript">
@@ -41,7 +48,7 @@ defined('_JEXEC') or die();
 </script>
 <form action="
 <?php
-$input = new Joomla\Input\Input();
+$input = new Input();
 if ($input->get('layout', '', 'string') === 'modal') {
     $url = 'index.php?option=com_proclaim&view=cwmupload&tmpl=component&layout=modal';
 } else {
@@ -73,8 +80,7 @@ echo Route::_($url);
 
     <div id="uploader">
 
-        <p><?php
-            echo Text::_('JBS_UPLOADER_ERROR_RUNTIME_NOT_SUPPORTED') . ' ' . $this->runtime; ?></p>
+        <p><?php echo Text::_('JBS_UPLOADER_ERROR_RUNTIME_NOT_SUPPORTED') . ' ' . $this->runtime; ?></p>
 
     </div>
     <?php

@@ -9,8 +9,12 @@
  * @link       https://www.christianwebministries.org
  * */
 
-// No direct access
-defined('_JEXEC') or die();
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+
+// phpcs:enable PSR1.Files.SideEffects
+
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmupload\HtmlView $this */
 
 ?>
 <div id="mediamu_wrapper">

@@ -21,19 +21,20 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
-/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmseries\HtmlView $this */
+
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('table.columns')
     ->useScript('multiselect');
 
 $app       = Factory::getApplication();
-$user      = $user = Factory::getApplication()->getSession()->get('user');
-$userId    = $user->get('id');
+$user      = $app->getIdentity();
+$userId    = $user->id;
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
-$archived  = $this->state->get('filter.published') == 2 ? true : false;
-$trashed   = $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder = $listOrder == 'series.ordering';
+$archived  = $this->state->get('filter.published') == 2;
+$trashed   = $this->state->get('filter.published') == -2;
+$saveOrder = $listOrder === 'series.ordering';
 $columns   = 7;
 
 if ($saveOrder) {
@@ -50,7 +51,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post"
         <div class="col-md-12">
             <div id="j-main-container" class="j-main-container">
                 <?php
-                echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+                echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
                 <?php
                 if (empty($this->items)) : ?>
                     <div class="alert alert-info">
@@ -60,8 +61,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post"
                         <?php
                         echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                     </div>
-                <?php
-                else : ?>
+                <?php else : ?>
                     <table class="table itemList" id="seriesList">
                         <thead>
                         <tr>
@@ -136,11 +136,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post"
                         <?php
                         foreach ($this->items as $i => $item) :
                             $item->max_ordering = 0; //??
-                            $ordering = ($listOrder == 'series.ordering');
-                            $canCreate = $user->authorise('core.create');
-                            $canEdit = $user->authorise('core.edit', 'com_proclaim.serie.' . $item->id);
-                            $canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.serie.' . $item->id);
-                            $canChange = $user->authorise('core.edit.state', 'com_proclaim.serie.' . $item->id);
+                            $ordering           = ($listOrder === 'series.ordering');
+                            $canCreate          = $user->authorise('core.create');
+                            $canEdit            = $user->authorise('core.edit', 'com_proclaim.serie.' . $item->id);
+                            $canEditOwn         = $user->authorise('core.edit.own', 'com_proclaim.serie.' . $item->id);
+                            $canChange          = $user->authorise('core.edit.state', 'com_proclaim.serie.' . $item->id);
                             ?>
                             <tr class="row<?php
                             echo $i % 2; ?>">
@@ -152,24 +152,23 @@ echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post"
                                     <?php
                                     $options = [
                                         'task_prefix' => 'cwmseries.',
-                                        'disabled' => !$canChange,
-                                        'id' => 'state-' . $item->id
+                                        'disabled'    => !$canChange,
+                                        'id'          => 'state-' . $item->id,
                                     ];
-                                    echo (new PublishedButton())->render((int) $item->published, $i, $options);
-                                    ?>
+                            echo (new PublishedButton())->render((int) $item->published, $i, $options);
+                            ?>
                                 </td>
                                 <td class="nowrap has-context">
                                     <div class="float-left">
                                         <?php
-                                        if ($item->language == '*'): ?>
+                                if ($item->language == '*'): ?>
                                             <?php
-                                            $language = Text::alt('JALL', 'language'); ?>
-                                        <?php
-                                        else: ?>
+                                    $language = Text::alt('JALL', 'language'); ?>
+                                        <?php else: ?>
                                             <?php
-                                            $language = $item->language_title ? $this->escape(
-                                                $item->language_title
-                                            ) : Text::_('JUNDEFINED'); ?>
+                                    $language = $item->language_title ? $this->escape(
+                                        $item->language_title
+                                    ) : Text::_('JUNDEFINED'); ?>
                                         <?php
                                         endif; ?>
                                         <?php
@@ -182,8 +181,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post"
                                                echo Text::_('JACTION_EDIT'); ?>">
                                                 <?php
                                                 echo $this->escape($item->series_text); ?></a>
-                                        <?php
-                                        else : ?>
+                                        <?php else : ?>
                                             <span
                                                     title="<?php
                                                     echo Text::sprintf(
@@ -217,7 +215,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post"
                         </tbody>
                     </table>
                     <?php
-                    // Load the batch processing form. ?>
+                    // Load the batch processing form.?>
                     <?php
                     if ($user->authorise('core.create', 'com_proclaim')
                         && $user->authorise('core.edit', 'com_proclaim')
@@ -227,10 +225,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post"
                         echo HTMLHelper::_(
                             'bootstrap.renderModal',
                             'collapseModal',
-                            array(
-                                'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
-                                'footer' => $this->loadTemplate('batch_footer'),
-                            ),
+                            [
+                                    'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
+                                    'footer' => $this->loadTemplate('batch_footer'),
+                                ],
                             $this->loadTemplate('batch_body')
                         ); ?>
                     <?php
@@ -241,7 +239,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post"
                 <?php
                 echo $this->pagination->getListFooter(); ?>
                 <?php
-                //Load the batch processing form. ?>
+                //Load the batch processing form.?>
 
                 <input type="hidden" name="task" value=""/>
                 <input type="hidden" name="boxchecked" value="0"/>

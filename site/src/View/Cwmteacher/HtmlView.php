@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmteacher;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use Joomla\CMS\Document\Document;
@@ -57,11 +58,11 @@ class HtmlView extends BaseHtmlView
      * @since 7.0
      */
     protected $params;
-    /** @var  TableTemplate Template Info
+    /** @var  CwmtemplateTable Template Info
      *
      * @since 7.0
      */
-    protected $template;
+    protected CwmtemplateTable $template;
     /** @var  JObject Template Studies
      *
      * @since 7.0
@@ -238,7 +239,7 @@ class HtmlView extends BaseHtmlView
         $this->item = $item;
         $print      = $input->get('print', '', 'bool');
 
-        // Build the html select list for ordering
+        // Build the HTML select list for ordering
         $this->print    = $print;
         $this->params   = $params;
         $this->template = $this->state->template;

@@ -80,7 +80,7 @@ class CwmseriesdisplaysModel extends ListModel
 
 
     /**
-     * Get a list of teachers associated with series
+     * Get a list of teachers associated with the series
      *
      * @return mixed
      * @since 9.0.0
@@ -102,7 +102,7 @@ class CwmseriesdisplaysModel extends ListModel
     }
 
     /**
-     * Get a list of teachers associated with series
+     * Get a list of teachers associated with the series
      *
      * @return mixed
      * @since 9.0.0

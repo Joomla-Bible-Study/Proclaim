@@ -177,7 +177,7 @@ class CwmmessageModel extends AdminModel
     /**
      * Returns a list of media files associated with this study
      *
-     * @return object
+     * @return array
      * @throws \Exception
      * @since   7.0
      */

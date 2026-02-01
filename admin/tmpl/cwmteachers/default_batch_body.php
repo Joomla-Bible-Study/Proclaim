@@ -25,7 +25,7 @@ $params = ComponentHelper::getParams('com_proclaim');
 
 $published = (int)$this->state->get('filter.published');
 
-$user = Factory::getApplication()->getSession()->get('user');
+$user = Factory::getApplication()->getIdentity();
 ?>
 <div class="p-3">
     <div class="row">

@@ -14,16 +14,18 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Factory;
+/** @var CWM\Component\Proclaim\Site\View\Cwmserverslist\HtmlView $this */
+
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
+use Joomla\Input\Input;
 
 HTMLHelper::_('behavior.framework', true);
 HTMLHelper::_('formbehavior.chosen', 'select');
 
-$input     = Factory::getApplication()->getInput();
+$input     = new Input();
 $function  = $input->getCmd('function', 'jSelectServer');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
@@ -36,21 +38,21 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
         method="post" name="adminForm" id="adminForm" class="form-inline">
     <?php
     // Search tools bar
-    echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
-    ?>
+    echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
+?>
     <table class="table table-striped table-condensed">
         <caption class="visually-hidden"><?php echo Text::_('JBS_SVR_SERVER_LIST'); ?></caption>
         <thead>
         <tr>
             <th scope="col">
                 <?php
-                echo HTMLHelper::_(
-                    'searchtools.sort',
-                    'JBS_SVR_SERVER_NAME',
-                    'mediafile.name',
-                    $listDirn,
-                    $listOrder
-                ); ?>
+            echo HTMLHelper::_(
+                'searchtools.sort',
+                'JBS_SVR_SERVER_NAME',
+                'mediafile.name',
+                $listDirn,
+                $listOrder
+            ); ?>
             </th>
         </tr>
         </thead>
@@ -58,7 +60,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
         <tr>
             <td colspan="1">
                 <?php
-                echo $this->pagination->getListFooter(); ?>
+            echo $this->pagination->getListFooter(); ?>
             </td>
         </tr>
         </tfoot>

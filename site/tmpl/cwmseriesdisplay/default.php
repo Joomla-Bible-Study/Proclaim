@@ -13,6 +13,8 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Site\View\Cwmseriesdisplay\HtmlView $this */
+
 if ($this->params->get('useexpert_seriesdetail') > 0) {
     echo $this->loadTemplate('custom');
 } elseif ($this->params->get('seriesdisplaytemplate')) {

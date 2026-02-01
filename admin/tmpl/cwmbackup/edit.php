@@ -21,8 +21,9 @@ use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Utility\Utility;
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmbackup\HtmlView $this */
+
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->addInlineScript(
@@ -83,9 +84,9 @@ echo Route::_('index.php?option=com_proclaim&view=cwmbackup'); ?>" enctype="mult
                 echo Text::_('JBS_CMN_IMPORT'); ?></h3>
             <p>
                 <?php
-                echo Text::_('JBS_IBM_MAX_UPLOAD') . ': ' . ini_get('upload_max_filesize'); ?><br/>
+                echo Text::_('JBS_IBM_MAX_UPLOAD') . ': ' . \ini_get('upload_max_filesize'); ?><br/>
                 <?php
-                echo Text::_('JBS_IBM_MAX_EXECUTION_TIME') . ': ' . ini_get('max_execution_time'); ?><br/>
+                echo Text::_('JBS_IBM_MAX_EXECUTION_TIME') . ': ' . \ini_get('max_execution_time'); ?><br/>
             </p>
             <div class="control-group">
                 <div class="control-label">

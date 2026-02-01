@@ -30,8 +30,9 @@ if ($input->getInt('id')) {
     $series_thumbnail = $this->admin_params->get('default_series_image');
 }
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmserie\HtmlView $this */
+
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->addInlineScript(

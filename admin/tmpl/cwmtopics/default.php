@@ -13,6 +13,8 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmtopics\HtmlView $this */
+
 use Joomla\CMS\Button\PublishedButton;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -20,18 +22,17 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
-/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('table.columns')
     ->useScript('multiselect');
 
 $app       = Factory::getApplication();
-$user      = $user = Factory::getApplication()->getSession()->get('user');
-$userId    = $user->get('id');
+$user      = $app->getIdentity();
+$userId    = $user->id;
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
-$archived  = $this->state->get('filter.published') == 2 ? true : false;
-$trashed   = $this->state->get('filter.published') == -2 ? true : false;
+$archived  = $this->state->get('filter.published') == 2;
+$trashed   = $this->state->get('filter.published') == -2;
 $columns   = 4;
 
 $sortFields = $this->getSortFields();
@@ -43,7 +44,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtopics'); ?>" method="post"
         <div class="col-md-12">
             <div id="j-main-container" class="j-main-container">
                 <?php
-                echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+                echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
                 <?php
                 if (empty($this->items)) : ?>
                     <div class="alert alert-info">
@@ -53,8 +54,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtopics'); ?>" method="post"
                         <?php
                         echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                     </div>
-                <?php
-                else : ?>
+                <?php else : ?>
                     <table class="table itemList" id="topics">
                         <thead>
                         <tr>
@@ -104,11 +104,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtopics'); ?>" method="post"
                         <tbody>
                         <?php
                         foreach ($this->items as $i => $item) :
-                            $link = Route::_('index.php?option=com_proclaim&task=topic.edit&id=' . (int)$item->id);
-                            $canCreate = $user->authorise('core.create');
-                            $canEdit = $user->authorise('core.edit', 'com_proclaim.topic.' . $item->id);
+                            $link       = Route::_('index.php?option=com_proclaim&task=topic.edit&id=' . (int)$item->id);
+                            $canCreate  = $user->authorise('core.create');
+                            $canEdit    = $user->authorise('core.edit', 'com_proclaim.topic.' . $item->id);
                             $canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.topic.' . $item->id);
-                            $canChange = $user->authorise('core.edit.state', 'com_proclaim.topic.' . $item->id);
+                            $canChange  = $user->authorise('core.edit.state', 'com_proclaim.topic.' . $item->id);
                             ?>
                             <tr class="row<?php
                             echo $i % 2; ?>">
@@ -120,31 +120,30 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtopics'); ?>" method="post"
                                     <?php
                                     $options = [
                                         'task_prefix' => 'cwmtopics.',
-                                        'disabled' => !$canChange,
-                                        'id' => 'state-' . $item->id
+                                        'disabled'    => !$canChange,
+                                        'id'          => 'state-' . $item->id,
                                     ];
-                                    echo (new PublishedButton())->render((int) $item->published, $i, $options);
-                                    ?>
+                            echo (new PublishedButton())->render((int) $item->published, $i, $options);
+                            ?>
                                 </td>
                                 <td class="nowrap has-context">
                                     <div class="float-left">
 
                                         <?php
-                                        if ($canEdit || $canEditOwn) : ?>
+                                if ($canEdit || $canEditOwn) : ?>
                                             <a href="<?php
-                                            echo Route::_(
-                                                'index.php?option=com_proclaim&task=cwmtopic.edit&id=' . (int)$item->id
-                                            ); ?>">
+                                    echo Route::_(
+                                        'index.php?option=com_proclaim&task=cwmtopic.edit&id=' . (int)$item->id
+                                    ); ?>">
                                                 <?php
-                                                echo $this->escape($item->topic_text); ?>
+                                        echo $this->escape($item->topic_text); ?>
                                             </a>
 
-                                        <?php
-                                        else : ?>
+                                        <?php else : ?>
                                             <span
                                                     title="<?php
-                                                    echo $this->escape($item->topic_text); ?>"><?php
-                                                echo $this->escape($item->topic_text); ?></span>
+                                            echo $this->escape($item->topic_text); ?>"><?php
+                                        echo $this->escape($item->topic_text); ?></span>
                                         <?php
                                         endif; ?>
                                     </div>

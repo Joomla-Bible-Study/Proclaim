@@ -16,8 +16,9 @@
 
 use Joomla\CMS\Language\Text;
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmpodcasts\HtmlView $this */
+
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('com_proclaim.cwmadmin-podcasts-batch');
 ?>
 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">

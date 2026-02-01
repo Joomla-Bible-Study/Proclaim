@@ -23,14 +23,15 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmmessages\HtmlView $this */
+
 $app = Factory::getApplication();
 
 if ($app->isClient('site')) {
     Session::checkToken('get') or die(Text::_('JINVALID_TOKEN'));
 }
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('core')
     ->useScript('com_proclaim.cwmadmin-messages-modal');
 
@@ -42,9 +43,9 @@ $onclick   = $this->escape($function);
 $multilang = Multilanguage::isEnabled();
 
 if (!empty($editor)) {
-    // This view is used also in com_menus. Load the xtd script only if the editor is set!
-    $this->document->addScriptOptions('xtd-messages', array('editor' => $editor));
-    $onclick = "jSelectMessages";
+    // This view is also used in com_menus. Load the xtd script only if the editor is set!
+    $this->getDocument()->addScriptOptions('xtd-messages', ['editor' => $editor]);
+    $onclick = 'jSelectMessages';
 }
 ?>
 <div class="container-popup">
@@ -56,7 +57,7 @@ if (!empty($editor)) {
           id="adminForm" class="form-inline">
 
         <?php
-        echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+        echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
 
         <?php
         if (empty($this->items)) : ?>
@@ -67,8 +68,7 @@ if (!empty($editor)) {
                 <?php
                 echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
             </div>
-            <?php
-        else : ?>
+            <?php else : ?>
             <table class="table table-sm">
                 <caption class="visually-hidden">
                     <?php
@@ -152,80 +152,80 @@ if (!empty($editor)) {
                 </thead>
                 <tbody>
                 <?php
-                $iconStates = array(
+                $iconStates = [
                     -2 => 'icon-trash',
                     0  => 'icon-times',
                     1  => 'icon-check',
-                );
-                ?>
+                ];
+?>
                 <?php
-                foreach ($this->items as $i => $item) : ?>
+foreach ($this->items as $i => $item) : ?>
                     <?php
-                    if ($item->language && $multilang) {
-                        $tag = strlen($item->language);
-                        if ($tag == 5) {
-                            $lang = substr($item->language, 0, 2);
-                        } elseif ($tag == 6) {
-                            $lang = substr($item->language, 0, 3);
-                        } else {
-                            $lang = '';
-                        }
-                    } elseif (!$multilang) {
-                        $lang = '';
-                    }
-                    ?>
+    if ($item->language && $multilang) {
+        $tag = \strlen($item->language);
+        if ($tag == 5) {
+            $lang = substr($item->language, 0, 2);
+        } elseif ($tag == 6) {
+            $lang = substr($item->language, 0, 3);
+        } else {
+            $lang = '';
+        }
+    } elseif (!$multilang) {
+        $lang = '';
+    }
+    ?>
                     <tr class="row<?php
-                    echo $i % 2; ?>">
+    echo $i % 2; ?>">
                         <td class="text-center">
                             <span class="tbody-icon">
                                 <span class="<?php
-                                echo $iconStates[$this->escape($item->published)]; ?>"
+                echo $iconStates[$this->escape($item->published)]; ?>"
                                       aria-hidden="true"></span>
                             </span>
                         </td>
                         <th scope="row">
                             <?php
-                            $attribs = 'data-function="' . $this->escape($onclick) . '"'
-                                . ' data-id="' . $item->id . '"'
-                                . ' data-title="' . $this->escape($item->studytitle) . '"'
-                                . ' data-uri="' . $this->escape(
-                                    CwmrouteHelper::getMessageRoute($item->id, $item->language)
-                                ) . '"'
-                                . ' data-language="' . $this->escape($lang) . '"';
-                            ?>
+            $attribs = 'data-function="' . $this->escape($onclick) . '"'
+                . ' data-id="' . $item->id . '"'
+                . ' data-title="' . $this->escape($item->studytitle) . '"'
+                . ' data-uri="' . $this->escape(
+                    CwmrouteHelper::getMessageRoute($item->id, $item->language)
+                ) . '"'
+                . ' data-language="' . $this->escape($lang) . '"';
+    ?>
                             <a class="select-link" href="javascript:void(0)" <?php
-                            echo $attribs; ?>>
+    echo $attribs; ?>>
                             <?php
-                            echo $this->escape($item->studytitle); ?>
+    echo $this->escape($item->studytitle); ?>
                             </a>
                         </th>
                         <td class="nowrap small d-none d-md-table-cell">
                             <?php
-                            echo HTMLHelper::_('date', $item->studydate, Text::_('DATE_FORMAT_LC4')); ?>
+    echo HTMLHelper::_('date', $item->studydate, Text::_('DATE_FORMAT_LC4')); ?>
                         </td>
                         <td class="small d-none d-md-table-cell">
                             <?php
-                            echo $this->escape($item->teachername); ?>
+    echo $this->escape($item->teachername); ?>
                         </td>
                         <td class="small d-none d-md-table-cell">
                             <?php
-                            echo $this->escape($item->messageType); ?>
+    echo $this->escape($item->messageType); ?>
                         </td>
                         <td class="small d-none d-md-table-cell">
                             <?php
-                            echo $this->escape($item->series_text); ?>
+    echo $this->escape($item->series_text); ?>
                         </td>
                         <?php
                         if ($multilang) : ?>
                             <td class="small">
                                 <?php
-                                echo LayoutHelper::render('joomla.content.language', $item); ?>
+        echo LayoutHelper::render('joomla.content.language', $item); ?>
                             </td>
                             <?php
                         endif; ?>
                     </tr>
                     <?php
-                endforeach; ?>
+endforeach; ?>
                 </tbody>
             </table>
             <?php

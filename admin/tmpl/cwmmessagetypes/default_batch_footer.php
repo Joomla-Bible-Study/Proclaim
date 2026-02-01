@@ -16,10 +16,9 @@
 
 use Joomla\CMS\Language\Text;
 
-$published = $this->state->get('filter.published');
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmmediafiles\HtmlView $this */
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('com_proclaim.cwmadmin-messages-batch');
 
 ?>

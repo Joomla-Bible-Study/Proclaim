@@ -16,10 +16,11 @@
 
 use Joomla\CMS\Language\Text;
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmseries\HtmlView $this */
+
 $published = $this->state->get('filter.published');
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('com_proclaim.cwmadmin-series-batch');
 
 ?>

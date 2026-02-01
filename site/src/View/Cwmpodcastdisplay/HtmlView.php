@@ -81,27 +81,27 @@ class HtmlView extends BaseHtmlView
         // Get the series image
         $image              = Cwmimages::getSeriesThumbnail($item->series_thumbnail);
         $item->image        = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="" />';
-        $teacherimage       = Cwmimages::getTeacherThumbnail($item->thumb, $image2 = null);
-        $item->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="'
-            . $teacherimage->width . '" alt="" />';
+        $teacherImage       = Cwmimages::getTeacherThumbnail($item->thumb, $image2 = null);
+        $item->teacherimage = '<img src="' . $teacherImage->path . '" height="' . $teacherImage->height . '" width="'
+            . $teacherImage->width . '" alt="" />';
 
         $media = [];
 
         if ($this->studies) {
-            foreach ($this->studies as $s => $stude) {
-                $exmedias = explode(',', $stude->mids);
-                $jbsmedia = new Cwmmedia();
+            foreach ($this->studies as $s => $study) {
+                $medias   = explode(',', $study->mids);
+                $jbsMedia = new Cwmmedia();
 
-                foreach ($exmedias as $i => $exmedia) {
-                    $rmedia = $jbsmedia->getMediaRows2($exmedia);
+                foreach ($medias as $i => $extraMedia) {
+                    $rowMedia = $jbsMedia->getMediaRows2($extraMedia);
 
-                    if ($rmedia) {
+                    if ($rowMedia) {
                         $reg = new Registry();
-                        $reg->loadString($rmedia->params);
-                        $rparams = $reg;
+                        $reg->loadString($rowMedia->params);
+                        $rowParams = $reg;
 
-                        if ($this->endsWith($rparams->get('filename'), '.mp3') === true) {
-                            $media[] = $rmedia;
+                        if ($this->endsWith($rowParams->get('filename'), '.mp3') === true) {
+                            $media[] = $rowMedia;
                         }
                     }
                 }
@@ -128,7 +128,7 @@ class HtmlView extends BaseHtmlView
         $user   = Factory::getApplication()->getIdentity();
         $groups = $user->getAuthorisedViewLevels();
 
-        if (!\in_array($item->access, $groups) && $item->access) {
+        if ($item->access && !\in_array($item->access, $groups, true)) {
             $mainframe->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
 
             return;
@@ -139,9 +139,7 @@ class HtmlView extends BaseHtmlView
         // End process prepare content plugins
         $this->params      = &$params;
         $this->item        = $item;
-        $uri               = new Uri();
-        $stringuri         = $uri->toString();
-        $this->request_url = $stringuri;
+        $this->request_url = (new Uri())->toString();
 
         parent::display($tpl);
     }

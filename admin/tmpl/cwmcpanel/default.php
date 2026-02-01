@@ -22,9 +22,10 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\Input\Input;
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmcpanel\HtmlView $this */
+
 // Load the tooltip behavior.
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('core')
     ->useScript('bootstrap.dropdown')
     ->useStyle('com_proclaim.general');
@@ -42,18 +43,17 @@ $simple = Cwmhelper::getSimpleView();
 // Check for guided tours
 $tourHelper = new CwmguidedtourHelper();
 $hasTour    = false;
-if ($tourHelper->supportsGuidedTours()) {
-    // Ensure tours and messages are registered
-    $tourHelper->registerAll();
 
-    $tourId = $tourHelper->getTourId('com_proclaim_whats_new_10_1');
-    if ($tourId) {
-        $hasTour = true;
-        // Check if the asset exists before trying to use it
-        if ($wa->getRegistry()->exists('script', 'com_guidedtours.tour')) {
-            $wa->useScript('com_guidedtours.tour');
-            $this->document->addScriptOptions('guidedtours', ['tourId' => $tourId]);
-        }
+// Ensure tours and messages are registered
+$tourHelper->registerAll();
+
+$tourId = $tourHelper->getTourId('com_proclaim_whats_new_10_1');
+if ($tourId) {
+    $hasTour = true;
+    // Check if the asset exists before trying to use it
+    if ($wa->getRegistry()->exists('script', 'com_guidedtours.tour')) {
+        $wa->useScript('com_guidedtours.tour');
+        $this->document->addScriptOptions('guidedtours', ['tourId' => $tourId]);
     }
 }
 
@@ -105,8 +105,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                     echo Text::_('JBS_CPL_PIM_BUTTON'); ?>
                 </a>
             </div>
-            <?php
-        elseif ($this->hasPostInstallationMessages === null) : ?>
+            <?php elseif ($this->hasPostInstallationMessages === null) : ?>
             <div class="alert alert-error">
                 <h3>
                     <?php
@@ -124,30 +123,30 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                 </a>
             </div>
             <?php
-        endif; ?>
+            endif; ?>
         <?php
-        if ($simple->mode === 1 && $simple->display === 1) {
-            ?>
+            if ($simple->mode === 1 && $simple->display === 1) {
+                ?>
             <div class="alert alert-info">
                 <h3>
                     <?php
-                    echo Text::_('JBS_CPANEL_SIMPLE_MODE_ON'); ?>
+                        echo Text::_('JBS_CPANEL_SIMPLE_MODE_ON'); ?>
                 </h3>
 
                 <p>
                     <?php
-                    echo Text::_('JBS_CPANEL_SIMPLE_MODE_DESC'); ?>
+                        echo Text::_('JBS_CPANEL_SIMPLE_MODE_DESC'); ?>
                 </p>
                 <a href="<?php
-                echo Route::_('index.php?option=com_proclaim&task=cwmadmin.edit&id=1'); ?>"
+                    echo Route::_('index.php?option=com_proclaim&task=cwmadmin.edit&id=1'); ?>"
                    class="btn btn-primary btn-large" style="color: #FFFFFF">
                     <?php
-                    echo Text::_('JBS_CPANEL_SIMPLE_MODE_LINK'); ?>
+                        echo Text::_('JBS_CPANEL_SIMPLE_MODE_LINK'); ?>
                 </a>
             </div>
             <?php
-        }
-        ?>
+            }
+?>
         <div class="col-lg-2 rounded">
             <div class="cpanel-logo">
                 <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>">
@@ -299,74 +298,74 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                 <thead class="thead-light">
                 <tr>
                     <th><?php
-                        echo Text::_('JBS_CPL_STATISTIC'); ?></th>
+                echo Text::_('JBS_CPL_STATISTIC'); ?></th>
                     <th><?php
-                        echo Text::_('JBS_CPL_VALUE'); ?></th>
+                echo Text::_('JBS_CPL_VALUE'); ?></th>
                     <th><?php
-                        echo Text::_('JBS_CPL_STATISTIC'); ?></th>
+                echo Text::_('JBS_CPL_STATISTIC'); ?></th>
                     <th><?php
-                        echo Text::_('JBS_CPL_VALUE'); ?></th>
+                echo Text::_('JBS_CPL_VALUE'); ?></th>
                 </tr>
                 </thead>
                 <?php
-                $yesterday = mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"));
-                $lastmonth = mktime(0, 0, 0, date("m") - 1, date("d"), date("Y") - 1);
-                $today     = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
-                ?>
+        $yesterday = mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"));
+$lastmonth         = mktime(0, 0, 0, date("m") - 1, date("d"), date("Y") - 1);
+$today             = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
+?>
                 <tbody>
                 <tr>
                     <td><?php
-                        echo Text::_('JBS_CPL_TOTAL_MESSAGES'); ?></td>
+        echo Text::_('JBS_CPL_TOTAL_MESSAGES'); ?></td>
                     <td><strong><?php
-                            echo Cwmstats::getTotalMessages(); ?></strong></td>
+            echo Cwmstats::getTotalMessages(); ?></strong></td>
                     <td><?php
-                        echo Text::_('JBS_CPL_TOTAL_COMMENTS'); ?></td>
+        echo Text::_('JBS_CPL_TOTAL_COMMENTS'); ?></td>
                     <td><strong><?php
-                            echo Cwmstats::getTotalComments(); ?></strong></td>
+            echo Cwmstats::getTotalComments(); ?></strong></td>
                 </tr>
                 <tr>
                     <td><?php
-                        echo Text::_('JBS_CPL_TOTAL_TOPICS'); ?></td>
+        echo Text::_('JBS_CPL_TOTAL_TOPICS'); ?></td>
                     <td><strong><?php
-                            echo Cwmstats::getTotalTopics(); ?></strong></td>
+            echo Cwmstats::getTotalTopics(); ?></strong></td>
                     <td><?php
-                        echo Text::_('JBS_CPL_TOTAL_MEDIA_FILES'); ?></td>
+        echo Text::_('JBS_CPL_TOTAL_MEDIA_FILES'); ?></td>
                     <td><strong><?php
-                            echo Cwmstats::getTotalMediaFiles(); ?></strong></td>
+            echo Cwmstats::getTotalMediaFiles(); ?></strong></td>
                 </tr>
                 <tr>
                     <td><?php
-                        echo Text::_('JBS_CPL_TOP5_STUDIES_HITS'); ?></td>
+        echo Text::_('JBS_CPL_TOP5_STUDIES_HITS'); ?></td>
                     <td><strong><?php
-                            echo Cwmstats::getTopStudies(); ?></strong></td>
+            echo Cwmstats::getTopStudies(); ?></strong></td>
                     <td><?php
-                        echo Text::_('JBS_CPL_TOP5_STUDIES_HITS_90DAYS'); ?></td>
+        echo Text::_('JBS_CPL_TOP5_STUDIES_HITS_90DAYS'); ?></td>
                     <td><strong><?php
-                            echo Cwmstats::getTopThirtyDays(); ?></strong></td>
+            echo Cwmstats::getTopThirtyDays(); ?></strong></td>
                 </tr>
                 <tr>
                     <td><?php
-                        echo Text::_('JBS_CPL_TOTAL_DOWNLOADS'); ?></td>
+        echo Text::_('JBS_CPL_TOTAL_DOWNLOADS'); ?></td>
                     <td><strong><?php
-                            echo Cwmstats::getTotalDownloads(); ?></strong></td>
+            echo Cwmstats::getTotalDownloads(); ?></strong></td>
                     <td><?php
-                        echo Text::_('JBS_CPL_TOP5_DOWNLOADS'); ?></td>
+        echo Text::_('JBS_CPL_TOP5_DOWNLOADS'); ?></td>
                     <td><strong><?php
-                            echo Cwmstats::getTopDownloads(); ?></strong></td>
+            echo Cwmstats::getTopDownloads(); ?></strong></td>
                 </tr>
                 <tr>
                     <td><?php
-                        echo Text::_('JBS_CPL_TOP5_DOWNLOADS_LAST_90DAYS'); ?></td>
+        echo Text::_('JBS_CPL_TOP5_DOWNLOADS_LAST_90DAYS'); ?></td>
                     <td><strong><?php
-                            echo Cwmstats::getDownloadsLastThreeMonths(); ?></strong></td>
+            echo Cwmstats::getDownloadsLastThreeMonths(); ?></strong></td>
                     <td></td>
                     <td><strong></strong></td>
                 </tr>
                 <tr>
                     <td> <?php
-                        echo Text::_('JBS_CPL_TOP_STUDIES_HITS_PLAYS_DOWNLOADS'); ?></td>
+        echo Text::_('JBS_CPL_TOP_STUDIES_HITS_PLAYS_DOWNLOADS'); ?></td>
                     <td><strong><?php
-                            echo Cwmstats::getTopScore(); ?></strong></td>
+            echo Cwmstats::getTopScore(); ?></strong></td>
                     <td></td>
                     <td></td>
                 </tr>

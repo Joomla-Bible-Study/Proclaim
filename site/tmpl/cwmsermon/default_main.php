@@ -14,10 +14,11 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Site\View\Cwmsermon\HtmlView $this */
+
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\MVC\View\HtmlView;
 
 // Create shortcuts to some parameters.
 /** @type Joomla\Registry\Registry $params */
@@ -107,11 +108,8 @@ echo $this->passage;
 
     echo $this->item->studytext;
 
-    ?>
+?>
 <?php
 if ($this->item->params->get('showrelated') === '2') {
     echo $this->related;
 }
-
-
-

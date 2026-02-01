@@ -17,6 +17,8 @@
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
+/** @var CWM\Component\Proclaim\Site\View\Cwmsqueezebox\HtmlView $this */
+
 HTMLHelper::_('behavior.framework');
 HTMLHelper::_('bootstrap.modal');
 ?>

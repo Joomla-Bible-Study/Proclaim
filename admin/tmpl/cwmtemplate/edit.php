@@ -20,6 +20,8 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmtemplate\HtmlView $this */
+
 // Create shortcut to parameters.
 /** @type \Joomla\Registry\Registry $params */
 $params = $this->state->get('params');
@@ -27,14 +29,13 @@ $params = $params->toArray();
 $app    = Factory::getApplication();
 $input  = $app->input;
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate');
 
 // Add lazy loading script and pass CSRF token for AJAX calls
 $wa->useScript('com_proclaim.template-lazyload');
-$this->document->addScriptOptions('csrf.token', \Joomla\CMS\Session\Session::getFormToken());
+$this->getDocument()->addScriptOptions('csrf.token', \Joomla\CMS\Session\Session::getFormToken());
 
 // Add layout editor assets
 $wa->useScript('bootstrap.modal')
@@ -111,49 +112,49 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         <div class="row">
             <?php
             $c     = 0;
-            $count = CwmproclaimHelper::halfarray($this->form->getFieldset('TEMPLATES'));
-            foreach ($this->form->getFieldset('TEMPLATES') as $field) :
-                if ($c === 0) {
-                    echo '<div class="col-12 col-lg-6">';
-                } elseif ($c === (int)$count->half) {
-                    echo '</div><div class="col-12 col-lg-6">';
-                }
-                ?>
+$count             = CwmproclaimHelper::halfarray($this->form->getFieldset('TEMPLATES'));
+foreach ($this->form->getFieldset('TEMPLATES') as $field) :
+    if ($c === 0) {
+        echo '<div class="col-12 col-lg-6">';
+    } elseif ($c === (int)$count->half) {
+        echo '</div><div class="col-12 col-lg-6">';
+    }
+    ?>
                 <div class="control-group">
                     <div class="control-label">
                         <?php
-                        echo $field->label; ?>
+            echo $field->label; ?>
                     </div>
                     <div class="controls">
                         <?php
-                        echo $field->input; ?>
+            echo $field->input; ?>
                         <br /> <?php echo Text::_($field->description); ?>
                     </div>
                 </div>
                 <?php
-                $c++;
-                if ($c === (int)$count->count) {
-                    echo '</div>';
-                }
-            endforeach; ?>
+    $c++;
+    if ($c === (int)$count->count) {
+        echo '</div>';
+    }
+endforeach; ?>
         </div>
         <hr/>
         <div class="col-12 col-lg-12">
             <?php
-            foreach ($this->form->getFieldset('TERMS') as $field) : ?>
+foreach ($this->form->getFieldset('TERMS') as $field) : ?>
                 <div class="control-group">
                     <div class="control-label">
                         <?php
-                        echo $field->label; ?>
+            echo $field->label; ?>
                     </div>
                     <div class="controls">
                         <?php
-                        echo $field->input; ?>
+            echo $field->input; ?>
                         <br /> <?php echo Text::_($field->description); ?>
                     </div>
                 </div>
                 <?php
-            endforeach; ?>
+endforeach; ?>
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
@@ -172,32 +173,32 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'media', Text::_('JBS_CMN_MEDIA')); ?>
         <div class="row">
             <?php
-            $c     = 0;
-            $count = CwmproclaimHelper::halfarray($this->form->getFieldset('MEDIA'));
-            foreach ($this->form->getFieldset('MEDIA') as $field) :
-                if ($c === 0) {
-                    echo '<div class="col-12 col-lg-6">';
-                } elseif ($c === (int)$count->half) {
-                    echo '</div><div class="col-12 col-lg-6">';
-                }
-                ?>
+$c     = 0;
+$count = CwmproclaimHelper::halfarray($this->form->getFieldset('MEDIA'));
+foreach ($this->form->getFieldset('MEDIA') as $field) :
+    if ($c === 0) {
+        echo '<div class="col-12 col-lg-6">';
+    } elseif ($c === (int)$count->half) {
+        echo '</div><div class="col-12 col-lg-6">';
+    }
+    ?>
                 <div class="control-group">
                     <div class="control-label">
                         <?php
-                        echo $field->label; ?>
+            echo $field->label; ?>
                     </div>
                     <div class="controls">
                         <?php
-                        echo $field->input; ?>
+            echo $field->input; ?>
                         <br /> <?php echo Text::_($field->description); ?>
                     </div>
                 </div>
                 <?php
-                (int)$c++;
-                if ($c === (int)$count->count) {
-                    echo '</div>';
-                }
-            endforeach; ?>
+    (int)$c++;
+    if ($c === (int)$count->count) {
+        echo '</div>';
+    }
+endforeach; ?>
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
@@ -206,32 +207,32 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'landing', Text::_('JBS_TPL_LANDING_PAGE')); ?>
         <div class="row">
             <?php
-            $c     = 0;
-            $count = CwmproclaimHelper::halfarray($this->form->getFieldset('LANDINGPAGE'));
-            foreach ($this->form->getFieldset('LANDINGPAGE') as $field) :
-                if ($c === 0) {
-                    echo '<div class="col-12 col-lg-7">';
-                } elseif ($c === $count->half) {
-                    echo '</div><div class="col-12 col-lg-5">';
-                }
-                ?>
+$c     = 0;
+$count = CwmproclaimHelper::halfarray($this->form->getFieldset('LANDINGPAGE'));
+foreach ($this->form->getFieldset('LANDINGPAGE') as $field) :
+    if ($c === 0) {
+        echo '<div class="col-12 col-lg-7">';
+    } elseif ($c === $count->half) {
+        echo '</div><div class="col-12 col-lg-5">';
+    }
+    ?>
                 <div class="control-group">
                     <div class="control-label">
                         <?php
-                        echo $field->label; ?>
+            echo $field->label; ?>
                     </div>
                     <div class="controls">
                         <?php
-                        echo $field->input; ?>
+            echo $field->input; ?>
                         <br /> <?php echo Text::_($field->description); ?>
                     </div>
                 </div>
                 <?php
-                $c++;
-                if ($c === $count->count) {
-                    echo '</div>';
-                }
-            endforeach; ?>
+    $c++;
+    if ($c === $count->count) {
+        echo '</div>';
+    }
+endforeach; ?>
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
@@ -245,27 +246,27 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
                             <?php
-                            echo Text::_('JBS_TPL_VERSES_DATES_CSS'); ?>
+                echo Text::_('JBS_TPL_VERSES_DATES_CSS'); ?>
                         </button>
                     </h2>
                     <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="heading1"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('VERSES') as $field) : ?>
+                foreach ($this->form->getFieldset('VERSES') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
-                                        echo $field->label; ?>
+                            echo $field->label; ?>
                                     </div>
                                     <div class="controls">
                                         <?php
-                                        echo $field->input; ?>
+                            echo $field->input; ?>
                                         <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
                                 <?php
-                            endforeach; ?>
+                endforeach; ?>
                         </div>
                     </div>
                 </div>
@@ -274,7 +275,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
                             <?php
-                            echo Text::_('JBS_TPL_LIST_ITEMS'); ?>
+                echo Text::_('JBS_TPL_LIST_ITEMS'); ?>
                         </button>
                     </h2>
                     <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2"
@@ -289,7 +290,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
                             <?php
-                            echo Text::_('JBS_TPL_FILTERS'); ?>
+                echo Text::_('JBS_TPL_FILTERS'); ?>
                         </button>
                     </h2>
                     <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3"
@@ -304,7 +305,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
                             <?php
-                            echo Text::_('JBS_TPL_TOOLTIP'); ?>
+                echo Text::_('JBS_TPL_TOOLTIP'); ?>
                         </button>
                     </h2>
                     <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4"
@@ -319,7 +320,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
                             <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS1'); ?>
+                echo Text::_('JBS_TPL_DISPLAY_ITEMS1'); ?>
                         </button>
                     </h2>
                     <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="heading5"
@@ -334,7 +335,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
                             <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS2'); ?>
+                echo Text::_('JBS_TPL_DISPLAY_ITEMS2'); ?>
                         </button>
                     </h2>
                     <div id="collapse6" class="accordion-collapse collapse" aria-labelledby="heading6"
@@ -350,7 +351,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse7" aria-expanded="false" aria-controls="collapse7">
                             <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS3'); ?>
+                echo Text::_('JBS_TPL_DISPLAY_ITEMS3'); ?>
                         </button>
                     </h2>
                     <div id="collapse7" class="accordion-collapse collapse" aria-labelledby="heading7"
@@ -365,7 +366,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse8" aria-expanded="false" aria-controls="collapse8">
                             <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS4'); ?>
+                echo Text::_('JBS_TPL_DISPLAY_ITEMS4'); ?>
                         </button>
                     </h2>
                     <div id="collapse8" class="accordion-collapse collapse" aria-labelledby="heading8"
@@ -381,7 +382,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse9" aria-expanded="false" aria-controls="collapse9">
                             <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS5'); ?>
+                echo Text::_('JBS_TPL_DISPLAY_ITEMS5'); ?>
                         </button>
                     </h2>
                     <div id="collapse9" class="accordion-collapse collapse" aria-labelledby="heading9"
@@ -397,7 +398,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse10" aria-expanded="false" aria-controls="collapse10">
                             <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS6'); ?>
+                echo Text::_('JBS_TPL_DISPLAY_ITEMS6'); ?>
                         </button>
                     </h2>
                     <div id="collapse10" class="accordion-collapse collapse" aria-labelledby="heading10"
@@ -421,28 +422,28 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse11" aria-expanded="false" aria-controls="collapse11">
                             <?php
-                            echo Text::_('JBS_TPL_STUDY_DETAILS_VIEW'); ?>
+                echo Text::_('JBS_TPL_STUDY_DETAILS_VIEW'); ?>
                         </button>
                     </h2>
                     <div id="collapse11" class="accordion-collapse collapse show" aria-labelledby="heading11"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('DETAILS') as $field) : ?>
+                foreach ($this->form->getFieldset('DETAILS') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
-                                        echo $field->label; ?>
+                            echo $field->label; ?>
                                     </div>
                                     <div class="controls">
                                         <?php
-                                        echo $field->input; ?>
+                            echo $field->input; ?>
                                         <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
 
                                 <?php
-                            endforeach; ?>
+                endforeach; ?>
                         </div>
                     </div>
                 </div>
@@ -451,7 +452,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse12" aria-expanded="false" aria-controls="collapse12">
                             <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS1'); ?>
+                echo Text::_('JBS_TPL_DISPLAY_ITEMS1'); ?>
                         </button>
                     </h2>
                     <div id="collapse12" class="accordion-collapse collapse" aria-labelledby="heading12"
@@ -466,7 +467,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse13" aria-expanded="false" aria-controls="collapse13">
                             <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS2'); ?>
+                echo Text::_('JBS_TPL_DISPLAY_ITEMS2'); ?>
                         </button>
                     </h2>
                     <div id="collapse13" class="accordion-collapse collapse" aria-labelledby="heading13"
@@ -481,7 +482,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse14" aria-expanded="false" aria-controls="collapse14">
                             <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS3'); ?>
+                echo Text::_('JBS_TPL_DISPLAY_ITEMS3'); ?>
                         </button>
                     </h2>
                     <div id="collapse14" class="accordion-collapse collapse" aria-labelledby="heading14"
@@ -496,7 +497,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse15" aria-expanded="false" aria-controls="collapse15">
                             <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS4'); ?>
+                echo Text::_('JBS_TPL_DISPLAY_ITEMS4'); ?>
                         </button>
                     </h2>
                     <div id="collapse15" class="accordion-collapse collapse" aria-labelledby="heading15"
@@ -511,7 +512,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse16" aria-expanded="false" aria-controls="collapse16">
                             <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS5'); ?>
+                echo Text::_('JBS_TPL_DISPLAY_ITEMS5'); ?>
                         </button>
                     </h2>
                     <div id="collapse16" class="accordion-collapse collapse" aria-labelledby="heading16"
@@ -527,7 +528,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse17" aria-expanded="false" aria-controls="collapse17">
                             <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS6'); ?>
+                echo Text::_('JBS_TPL_DISPLAY_ITEMS6'); ?>
                         </button>
                     </h2>
                     <div id="collapse17" class="accordion-collapse collapse" aria-labelledby="heading17"
@@ -551,28 +552,28 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse18" aria-expanded="true" aria-controls="collapse18">
                             <?php
-                            echo Text::_('JBS_TPL_TEACHERDETAILS'); ?>
+                echo Text::_('JBS_TPL_TEACHERDETAILS'); ?>
                         </button>
                     </h2>
                     <div id="collapse18" class="accordion-collapse collapse show" aria-labelledby="heading18"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('TEACHERDETAILS') as $field) : ?>
+                foreach ($this->form->getFieldset('TEACHERDETAILS') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
-                                        echo $field->label; ?>
+                            echo $field->label; ?>
                                     </div>
                                     <div class="controls">
                                         <?php
-                                        echo $field->input; ?>
+                            echo $field->input; ?>
                                         <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
 
                                 <?php
-                            endforeach; ?>
+                endforeach; ?>
                         </div>
                     </div>
                 </div>
@@ -581,7 +582,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse318" aria-expanded="false" aria-controls="collapse318">
                             <?php
-                            echo Text::_('JBS_TPL_TEACHER'); ?>
+                echo Text::_('JBS_TPL_TEACHER'); ?>
                         </button>
                     </h2>
                     <div id="collapse318" class="accordion-collapse collapse" aria-labelledby="heading318"
@@ -596,7 +597,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse219" aria-expanded="false" aria-controls="collapse219">
                             <?php
-                            echo Text::_('JBS_TPL_TEACHERDISPLAY'); ?>
+                echo Text::_('JBS_TPL_TEACHERDISPLAY'); ?>
                         </button>
                     </h2>
                     <div id="collapse219" class="accordion-collapse collapse" aria-labelledby="heading219"
@@ -611,7 +612,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse119" aria-expanded="false" aria-controls="collapse119">
                             <?php
-                            echo Text::_('JBS_TPL_TEACHERDETAILSDISPLAY'); ?>
+                echo Text::_('JBS_TPL_TEACHERDETAILSDISPLAY'); ?>
                         </button>
                     </h2>
                     <div id="collapse119" class="accordion-collapse collapse" aria-labelledby="heading119"
@@ -635,27 +636,27 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse20" aria-expanded="false" aria-controls="collapse20">
                             <?php
-                            echo Text::_('JBS_TPL_SERIESLIST'); ?>
+                echo Text::_('JBS_TPL_SERIESLIST'); ?>
                         </button>
                     </h2>
                     <div id="collapse20" class="accordion-collapse collapse show" aria-labelledby="heading20"
                          data-bs-parent="#accordionlist">
                         <div class="accordion-body">
                             <?php
-                            foreach ($this->form->getFieldset('SERIES') as $field) : ?>
+                foreach ($this->form->getFieldset('SERIES') as $field) : ?>
                                 <div class="control-group">
                                     <div class="control-label">
                                         <?php
-                                        echo $field->label; ?>
+                            echo $field->label; ?>
                                     </div>
                                     <div class="controls">
                                         <?php
-                                        echo $field->input; ?>
+                            echo $field->input; ?>
                                         <br /> <?php echo Text::_($field->description); ?>
                                     </div>
                                 </div>
                                 <?php
-                            endforeach; ?>
+                endforeach; ?>
                         </div>
                     </div>
                 </div>
@@ -664,7 +665,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse21" aria-expanded="false" aria-controls="collapse21">
                             <?php
-                            echo Text::_('JBS_TPL_SERIESLISTDISPLAY'); ?>
+                echo Text::_('JBS_TPL_SERIESLISTDISPLAY'); ?>
                         </button>
                     </h2>
                     <div id="collapse21" class="accordion-collapse collapse" aria-labelledby="heading21"
@@ -679,7 +680,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse22" aria-expanded="false" aria-controls="collapse22">
                             <?php
-                            echo Text::_('JBS_TPL_SERIESDETAILS'); ?>
+                echo Text::_('JBS_TPL_SERIESDETAILS'); ?>
                         </button>
                     </h2>
                     <div id="collapse22" class="accordion-collapse collapse" aria-labelledby="heading22"
@@ -694,7 +695,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse23" aria-expanded="false" aria-controls="collapse23">
                             <?php
-                            echo Text::_('JBS_TPL_SERIESDETAILSDISPLAY'); ?>
+                echo Text::_('JBS_TPL_SERIESDETAILSDISPLAY'); ?>
                         </button>
                     </h2>
                     <div id="collapse23" class="accordion-collapse collapse" aria-labelledby="heading23"

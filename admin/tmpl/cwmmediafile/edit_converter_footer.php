@@ -16,6 +16,8 @@
 
 use Joomla\CMS\Language\Text;
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmmediafile\HtmlView $this */
+
 $published = $this->state->get('filter.published');
 ?>
 <a class="btn" type="button" data-dismiss="modal">

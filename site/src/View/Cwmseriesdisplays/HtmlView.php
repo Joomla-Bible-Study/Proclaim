@@ -19,8 +19,10 @@ namespace CWM\Component\Proclaim\Site\View\Cwmseriesdisplays;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
@@ -51,41 +53,43 @@ class HtmlView extends BaseHtmlView
      */
     protected $template;
 
-    /** @var  \JObject Pagination
+    /** @var Pagination  Pagination
      *
      * @since 7.0
      */
-    protected $pagination;
+    protected Pagination $pagination;
 
     /** @var  string Request Url
      *
      * @since 7.0
      */
-    protected $request_url;
+    protected string $request_url;
 
     /** @var  Registry Params
      *
      * @since 7.0
      */
-    protected $params;
+    protected Registry $params;
 
-    /** @var  string Page
+    /** @var  \stdClass Page
      *
      * @since 7.0
      */
-    protected $page;
+    protected \stdClass $page;
 
     /** @var Registry State
      *
      * @since 7.0
      */
-    protected $state;
+    protected Registry $state;
 
     /** @var string State
      *
      * @since 7.0
      */
-    protected $go;
+    protected string $go;
+
+    public Form|null $filterForm;
 
     /**
      * Execute and display a template script.
@@ -176,7 +180,7 @@ class HtmlView extends BaseHtmlView
     }
 
     /**
-     * Update Filters per landing page call and Hide filters per the template settings.
+     * Update Filters per landing page call and hide filters per the template settings.
      *
      * @return  void
      *

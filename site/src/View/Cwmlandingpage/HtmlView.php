@@ -118,64 +118,54 @@ class HtmlView extends BaseHtmlView
     {
         // End Switch
         if ($this->params->get('landing' . $showIt . 'limit')) {
-            $showhide_tmp = Cwmimages::getShowHide();
+            $showHide_tmp = Cwmimages::getShowHide();
 
-            $showhideall = "<div id='showhide" . $i . "'>";
+            $showHideAll = "<div id='showhide" . $i . "'>";
 
-            $buttonlink = "\n\t" . '<a class="showhideheadingbutton" href="javascript:ReverseDisplay2(' . "'showhide"
+            $buttonLink = "\n\t" . '<a class="showhideheadingbutton" href="javascript:ReverseDisplay2(' . "'showhide"
                 . $showIt . "'" . ')">';
-            $labellink  = "\n\t" . '<a class="showhideheadinglabel" href="javascript:ReverseDisplay2(' . "'showhide"
+            $labelLink  = "\n\t" . '<a class="showhideheadinglabel" href="javascript:ReverseDisplay2(' . "'showhide"
                 . $showIt . "'" . ')">';
 
             switch ($this->params->get('landing_hide', 0)) {
                 case 0: // Image only
-                    $showhideall .= $buttonlink;
+                    $showHideAll .= $buttonLink;
 
-                    // $showhideall .= "\n\t\t" . '<img src="' . Uri::base() . $showhide_tmp->path . '" alt="'
-                    // . Text::_('JBS_CMN_SHOW_HIDE_ALL');
-                    // $showhideall .= ' ' . $showIt_phrase . '" title="' . Text::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' .
-                    //  $showIt_phrase . '" border="0" width="';
-                    // $showhideall .= $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
-                    $showhideall .= '<i class="fas fa-arrow-down" title="x"></i>';
+                    $showHideAll .= "\n\t\t" . '<img src="' . Uri::base() . $showHide_tmp->path . '" alt="' . $showIt_phrase . '" title="' . $showIt_phrase . '" border="0" width="';
+                    $showHideAll .= $showHide_tmp->width . '" height="' . $showHide_tmp->height . '" />';
+                    $showHideAll .= '<i class="fas fa-arrow-down" title="x"></i>';
 
                     // Spacer
-                    $showhideall .= ' ';
-                    $showhideall .= "\n\t" . '</a>';
+                    $showHideAll .= ' ';
+                    $showHideAll .= "\n\t" . '</a>';
                     break;
 
                 case 1: // Image and label
-                    $showhideall .= $buttonlink;
-
-                    // $showhideall .= "\n\t\t" . '<img src="' . Uri::base() . $showhide_tmp->path . '" alt="' .
-                    //  Text::_('JBS_CMN_SHOW_HIDE_ALL');
-                    // $showhideall .= ' ' . $showIt_phrase . '" title="' . Text::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' .
-                    //  $showIt_phrase . '" border="0" width="';
-                    // $showhideall .= $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
-
-                    $showhideall .= '<i class="fas fa-arrow-down" title="x"></i>';
+                    $showHideAll .= $buttonLink;
+                    $showHideAll .= '<i class="fas fa-arrow-down" title="x"></i>';
 
                     // Spacer
-                    $showhideall .= ' ';
-                    $showhideall .= "\n\t" . '</a>';
-                    $showhideall .= $labellink;
-                    $showhideall .= "\n\t\t" . '<span id="landing_label">' . $this->params->get(
+                    $showHideAll .= ' ';
+                    $showHideAll .= "\n\t" . '</a>';
+                    $showHideAll .= $labelLink;
+                    $showHideAll .= "\n\t\t" . '<span id="landing_label">' . $this->params->get(
                         'landing_hidelabel'
                     ) . '</span>';
-                    $showhideall .= "\n\t" . '</a>';
+                    $showHideAll .= "\n\t" . '</a>';
                     break;
 
                 case 2: // Label only
-                    $showhideall .= $labellink;
-                    $showhideall .= "\n\t\t" . '<span id="landing_label">' . $this->params->get(
+                    $showHideAll .= $labelLink;
+                    $showHideAll .= "\n\t\t" . '<span id="landing_label">' . $this->params->get(
                         'landing_hidelabel'
                     ) . '</span>';
-                    $showhideall .= "\n\t" . '</a>';
+                    $showHideAll .= "\n\t" . '</a>';
                     break;
             }
 
-            $showhideall .= "\n" . '</div> <!-- end div id="showhide" for ' . $i . ' -->' . "\n";
+            $showHideAll .= "\n" . '</div> <!-- end div id="showhide" for ' . $i . ' -->' . "\n";
 
-            return $showhideall;
+            return $showHideAll;
         }
 
         return '';

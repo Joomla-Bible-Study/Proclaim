@@ -16,6 +16,8 @@ declare(strict_types=1);
 
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Site\View\Cwmsermon\HtmlView $this */
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 
@@ -37,7 +39,7 @@ if ($show_comments >= 1) {
     $user   = Factory::getApplication()->getIdentity();
     $groups = $user->getAuthorisedViewLevels();
 
-    if (in_array($show_comments, $groups, false)) {
+    if (\in_array($show_comments, $groups, false)) {
         echo '<div style="padding-top: 10px; margin: auto;">' . $this->loadTemplate('commentsform') . '</div>';
     }
 }

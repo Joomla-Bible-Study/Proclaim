@@ -18,7 +18,9 @@ use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
-$listing = new Cwmlisting();
+/** @var CWM\Component\Proclaim\Site\View\Cwmteachers\HtmlView $this */
+
+$listing      = new Cwmlisting();
 $classelement = $listing->createelement($this->params->get('teachers_element'));
 ?>
 <div class="container proclaim-main-content" id="proclaim-main-content" role="main">
@@ -49,14 +51,14 @@ $classelement = $listing->createelement($this->params->get('teachers_element'));
                 'com_proclaim.teachers'
             );
         }
-        ?>
+?>
     </div>
 </div>
 <div class="row">
     <div class="col-12">
         <?php
-        echo $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'teachers');
-        ?>
+echo $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'teachers');
+?>
     </div>
 </div>
 <hr>
@@ -64,7 +66,7 @@ $classelement = $listing->createelement($this->params->get('teachers_element'));
 <div class="listingfooter">
     <?php
     echo $this->page->pagelinks;
-    echo $this->page->counter;
-    ?>
+echo $this->page->counter;
+?>
 </div>
 <!--end of bsfooter div-->

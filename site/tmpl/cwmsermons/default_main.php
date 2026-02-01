@@ -14,6 +14,8 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Site\View\Cwmsermons\HtmlView $this */
+
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmteacher;
 use Joomla\CMS\Factory;
@@ -34,7 +36,7 @@ $itemid       = $app->input->get('Itemid');
 <div class="container proclaim-main-content" id="proclaim-main-content" role="main">
     <?php
     $showArchived = $this->params->get('show_archived', '0');
-    if ($showArchived === '1') : ?>
+if ($showArchived === '1') : ?>
         <div class="alert alert-info proclaim-archive-notice">
             <i class="fas fa-archive" aria-hidden="true"></i>
             <?php echo Text::_('JBS_CMN_VIEWING_ARCHIVED'); ?>
@@ -47,9 +49,9 @@ $itemid       = $app->input->get('Itemid');
     <?php endif; ?>
     <div id="bsheader" class="row">
         <?php
-        if ($this->params->get('showpodcastsubscribelist') === '1') {
-            echo $this->subscribe;
-        }
+    if ($this->params->get('showpodcastsubscribelist') === '1') {
+        echo $this->subscribe;
+    }
 ?>
     </div>
     <?php

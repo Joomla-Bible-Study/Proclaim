@@ -12,3 +12,5 @@
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
+
+/** @var CWM\Component\Proclaim\Site\View\Cwmlatest\HtmlView $this */

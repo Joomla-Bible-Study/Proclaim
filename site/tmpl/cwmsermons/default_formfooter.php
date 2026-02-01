@@ -13,6 +13,8 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Site\View\Cwmsermons\HtmlView $this */
+
 ?>
 <input name="option" value="com_proclaim" type="hidden"/>
 <input name="task" value="" type="hidden"/>

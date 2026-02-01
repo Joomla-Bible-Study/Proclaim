@@ -20,10 +20,10 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
-use Joomla\CMS\WebAsset\WebAssetManager;
 
-/** @var WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmmediafiles\HtmlView $this */
+
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('table.columns')
     ->useScript('multiselect');
 
@@ -46,7 +46,7 @@ if ($saveOrder && !empty($this->items)) {
         <div class="col-md-12">
             <div id="j-main-container" class="j-main-container">
                 <?php
-                echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+                echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
                 <?php
                 if (empty($this->items)) : ?>
                     <div class="alert alert-info">
@@ -56,8 +56,7 @@ if ($saveOrder && !empty($this->items)) {
                         <?php
                         echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                     </div>
-                <?php
-                else : ?>
+                <?php else : ?>
                     <table class="table itemList" id="mediafileList">
                         <caption class="visually-hidden">
                             <?php
@@ -150,11 +149,11 @@ if ($saveOrder && !empty($this->items)) {
                         <?php
                         foreach ($this->items as $i => $item) :
                             $item->max_ordering = 0;
-                            $canCheckin = $user->authorise('core.manage', 'com_checkin') || $item->checked_out == $userId || is_null($item->checked_out);
-                            $canEdit = $user->authorise('core.edit', 'com_proclaim.mediafile.' . $item->id);
-                            $canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.mediafile.' . $item->id);
-                            $canChange = $user->authorise('core.edit.state', 'com_proclaim.mediafile.' . $item->id);
-                            $label = $this->escape($item->serverConfig->name->__toString()) . ' - ';
+                            $canCheckin         = $user->authorise('core.manage', 'com_checkin') || $item->checked_out == $userId || \is_null($item->checked_out);
+                            $canEdit            = $user->authorise('core.edit', 'com_proclaim.mediafile.' . $item->id);
+                            $canEditOwn         = $user->authorise('core.edit.own', 'com_proclaim.mediafile.' . $item->id);
+                            $canChange          = $user->authorise('core.edit.state', 'com_proclaim.mediafile.' . $item->id);
+                            $label              = $this->escape($item->serverConfig->name->__toString()) . ' - ';
                             $label .= $this->escape(
                                 $item->params[$item->serverConfig->config->media_resource->__toString()]
                             )
@@ -170,14 +169,14 @@ if ($saveOrder && !empty($this->items)) {
                                 <td class="text-center d-none d-md-table-cell">
                                     <?php
                                     $iconClass = '';
-                                    if (!$canChange) {
-                                        $iconClass = ' inactive';
-                                    } elseif (!$saveOrder) {
-                                        $iconClass = ' inactive tip-top hasTooltip" title="' . HTMLHelper::tooltipText(
-                                                'JORDERINGDISABLED'
-                                            );
-                                    }
-                                    ?>
+                            if (!$canChange) {
+                                $iconClass = ' inactive';
+                            } elseif (!$saveOrder) {
+                                $iconClass = ' inactive tip-top hasTooltip" title="' . HTMLHelper::tooltipText(
+                                    'JORDERINGDISABLED'
+                                );
+                            }
+                            ?>
                                     <span class="sortable-handler<?php echo $iconClass ?>">
                                         <span class="icon-ellipsis-v" aria-hidden="true"></span>
                                     </span>
@@ -190,37 +189,36 @@ if ($saveOrder && !empty($this->items)) {
                                     <?php
                                     $options = [
                                         'task_prefix' => 'cwmmediafiles.',
-                                        'disabled' => !$canChange,
-                                        'id' => 'state-' . $item->id
+                                        'disabled'    => !$canChange,
+                                        'id'          => 'state-' . $item->id,
                                     ];
-                                    echo (new PublishedButton())->render((int) $item->published, $i, $options);
-                                    ?>
+                            echo (new PublishedButton())->render((int) $item->published, $i, $options);
+                            ?>
                                 </td>
                                 <td class="nowrap has-context">
                                     <div class="float-left">
                                         <?php
-                                        if ($item->checked_out) : ?>
+                                if ($item->checked_out) : ?>
                                             <?php
-                                            echo HTMLHelper::_(
-                                                'jgrid.checkedout',
-                                                $i,
-                                                $item->editor,
-                                                $item->checked_out_time,
-                                                'cwmmediafiles.',
-                                                $canCheckin
-                                            ); ?>
+                                    echo HTMLHelper::_(
+                                        'jgrid.checkedout',
+                                        $i,
+                                        $item->editor,
+                                        $item->checked_out_time,
+                                        'cwmmediafiles.',
+                                        $canCheckin
+                                    ); ?>
                                         <?php
-                                        endif; ?>
+                                endif; ?>
                                         <?php
-                                        if ($item->language === '*'): ?>
+                                if ($item->language === '*'): ?>
                                             <?php
-                                            $language = Text::alt('JALL', 'language'); ?>
-                                        <?php
-                                        else: ?>
+                                    $language = Text::alt('JALL', 'language'); ?>
+                                        <?php else: ?>
                                             <?php
-                                            $language = $item->language_title ? $this->escape(
-                                                $item->language_title
-                                            ) : Text::_('JUNDEFINED'); ?>
+                                    $language = $item->language_title ? $this->escape(
+                                        $item->language_title
+                                    ) : Text::_('JUNDEFINED'); ?>
                                         <?php
                                         endif; ?>
                                         <?php
@@ -232,8 +230,7 @@ if ($saveOrder && !empty($this->items)) {
                                                 <span class="label float-left"><?php
                                                     echo $this->escape($label); ?></span>
                                             </a>
-                                        <?php
-                                        else : ?>
+                                        <?php else : ?>
                                             <span
                                                     title="<?php
                                                     echo Text::sprintf(
@@ -294,7 +291,7 @@ if ($saveOrder && !empty($this->items)) {
                     echo $this->pagination->getListFooter(); ?>
 
                     <?php
-                    // Load the batch processing form. ?>
+                    // Load the batch processing form.?>
                     <?php
                     if ($user->authorise('core.create', 'com_proclaim')
                         && $user->authorise('core.edit', 'com_proclaim')
@@ -304,11 +301,11 @@ if ($saveOrder && !empty($this->items)) {
                         echo HTMLHelper::_(
                             'bootstrap.renderModal',
                             'collapseModal',
-                            array(
-                                'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
-                                'footer' => $this->loadTemplate('batch_footer')
-                            ),
-                        $this->loadTemplate('batch_body')
+                            [
+                                    'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
+                                    'footer' => $this->loadTemplate('batch_footer'),
+                                ],
+                            $this->loadTemplate('batch_body')
                         ); ?>
                     <?php
                     endif; ?>

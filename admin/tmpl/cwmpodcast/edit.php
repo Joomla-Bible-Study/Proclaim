@@ -20,6 +20,8 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmpodcast\HtmlView $this */
+
 // Create shortcut to parameters.
 /** @type Joomla\Registry\Registry $params */
 $params = $this->state->get('params');
@@ -27,8 +29,7 @@ $params = $params->toArray();
 $app    = Factory::getApplication();
 $input  = $app->input;
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->addInlineScript(
@@ -53,7 +54,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
 
     <div class="main-card">
         <?php
-        echo HTMLHelper::_('uitab.startTabSet', 'myTab', array('active' => 'general')); ?>
+        echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general']); ?>
 
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_STY_GENERAL')); ?>

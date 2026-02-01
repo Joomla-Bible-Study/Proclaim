@@ -14,16 +14,10 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 
-$params = ComponentHelper::getParams('com_proclaim');
-
-$published = (int)$this->state->get('filter.published');
-
-$user = Factory::getApplication()->getSession()->get('user');
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmmediafiles\HtmlView $this */
 ?>
 <div class="modal hide fade" id="collapseModal">
     <div class="modal-header">

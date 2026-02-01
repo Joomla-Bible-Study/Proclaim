@@ -14,14 +14,15 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmtopic\HtmlView $this */
+
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\Input\Input;
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->addInlineScript(
@@ -69,64 +70,64 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
             <div class="col-lg-9">
                 <?php
                 $string = $this->form->getValue('topic_text');
-                if (str_starts_with($string, 'JBS')) { ?>
+if (str_starts_with($string, 'JBS')) { ?>
                     <div class="control-group">
                         <div class="control-label">
                             <label id="topic_text-lbl" for="topic_text">Translated:</label>
                         </div>
                         <div class="controls">
                             <?php
-                            echo '<input type="text" id="topic_text_translated" name="topic_text_translated" value="' . Text::_($string) . '" class="form-control readonly valid form-control-success" readonly="readonly" data-alt-value="' . Text::_($string) . '" autocomplete="off" aria-invalid="false">';
-                            echo "<br/>"; ?>
+            echo '<input type="text" id="topic_text_translated" name="topic_text_translated" value="' . Text::_($string) . '" class="form-control readonly valid form-control-success" readonly="readonly" data-alt-value="' . Text::_($string) . '" autocomplete="off" aria-invalid="false">';
+    echo "<br/>"; ?>
                         </div>
                     </div>
                     <?php
-                } ?>
+} ?>
                 <div class="control-group">
                     <div class="control-label">
                         <?php
-                        echo $this->form->getLabel('topic_text'); ?>
+        echo $this->form->getLabel('topic_text'); ?>
                     </div>
                     <div class="controls">
                         <?php
-                        echo $this->form->getInput('topic_text'); ?>
+        echo $this->form->getInput('topic_text'); ?>
                     </div>
                 </div>
                 <?php
-                foreach ($this->form->getFieldset('params') as $field) : ?>
+foreach ($this->form->getFieldset('params') as $field) : ?>
                     <div class="control-group">
                         <div class="control-label">
                             <?php
-                            echo $field->label; ?>
+            echo $field->label; ?>
                         </div>
                         <div class="controls">
                             <?php
-                            echo $field->input; ?>
+            echo $field->input; ?>
                         </div>
                     </div>
                     <?php
-                endforeach; ?>
+endforeach; ?>
             </div>
 
             <div class="col-lg-3">
                 <div class="control-group">
                     <div class="control-label">
                         <?php
-                        echo $this->form->getLabel('published'); ?>
+        echo $this->form->getLabel('published'); ?>
                     </div>
                     <div class="controls">
                         <?php
-                        echo $this->form->getInput('published'); ?>
+        echo $this->form->getInput('published'); ?>
                     </div>
                 </div>
                 <div class="control-group">
                     <div class="control-label">
                         <?php
-                        echo $this->form->getLabel('language'); ?>
+        echo $this->form->getLabel('language'); ?>
                     </div>
                     <div class="controls">
                         <?php
-                        echo $this->form->getInput('language'); ?>
+        echo $this->form->getInput('language'); ?>
                     </div>
                 </div>
             </div>
@@ -139,7 +140,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         <div class="row">
             <div class="col-lg-12">
                 <?php
-                echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
+echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
             </div>
         </div>
         <?php
@@ -151,7 +152,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
             <div class="row-fluid">
                 <?php
-                echo $this->form->getInput('rules'); ?>
+echo $this->form->getInput('rules'); ?>
             </div>
             <?php
             echo HTMLHelper::_('uitab.endTab'); ?>

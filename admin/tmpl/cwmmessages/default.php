@@ -24,6 +24,8 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmmessages\HtmlView $this */
+
 $app       = Factory::getApplication();
 $user      = $this->getCurrentUser();
 $userId    = $user->id;
@@ -34,8 +36,7 @@ $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder === 'study.ordering';
 $columns   = 11;
 
-/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('table.columns')
     ->useScript('multiselect');
 
@@ -73,7 +74,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
         <div class="col-md-12">
             <div id="j-main-container" class="j-main-container">
                 <?php
-                echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+                echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
                 <?php
                 if (empty($this->items)) : ?>
                     <div class="alert alert-info">
@@ -83,8 +84,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                         <?php
                         echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                     </div>
-                <?php
-                else : ?>
+                <?php else : ?>
                     <table class="table" id="messagesList">
                         <caption class="visually-hidden">
                             <?php
@@ -221,14 +221,14 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                         <?php
                         foreach ($this->items as $i => $item) :
                             $item->max_ordering = 0;
-                            $canCheckin = $user->authorise(
+                            $canCheckin         = $user->authorise(
                                 'core.manage',
                                 'com_checkin'
-                            ) || $item->checked_out == $userId || is_null($item->checked_out);
-                            $canCreate = $user->authorise('core.create');
-                            $canEdit = $user->authorise('core.edit', 'com_proclaim.message.' . $item->id);
+                            ) || $item->checked_out == $userId || \is_null($item->checked_out);
+                            $canCreate  = $user->authorise('core.create');
+                            $canEdit    = $user->authorise('core.edit', 'com_proclaim.message.' . $item->id);
                             $canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.message.' . $item->id);
-                            $canChange = $user->authorise('core.edit.state', 'com_proclaim.message.' . $item->id);
+                            $canChange  = $user->authorise('core.edit.state', 'com_proclaim.message.' . $item->id);
                             ?>
                             <tr class="row<?php
                             echo $i % 2; ?>" data-draggable-group="<?php
@@ -266,7 +266,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                             $options = [
                                 'task_prefix' => 'cwmmessages.',
                                 'disabled'    => $workflow_state || !$canChange,
-                                'id'          => 'state-' . $item->id
+                                'id'          => 'state-' . $item->id,
                             ];
 
                             echo (new PublishedButton())->render(
@@ -296,52 +296,51 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                                 <?php
                                                 echo $this->escape($item->studytitle); ?>
                                             </a>
-                                        <?php
-                                else : ?>
+                                        <?php else : ?>
                                             <?php
                                     echo $this->escape($item->studytitle); ?>
                                         <?php
-                                endif; ?>
+                                        endif; ?>
                                         <br/>
                                         <span class="small">
                                         <?php
-                                echo Text::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
+                                        echo Text::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
                                     </span>
                                     </div>
                                 </td>
                                 <td class="small d-none d-md-table-cell">
                                     <?php
-                                    echo $this->escape($item->teachername); ?>
+                                            echo $this->escape($item->teachername); ?>
                                 </td>
                                 <td class="small d-none d-md-table-cell">
                                     <?php
-                                    echo $this->escape($item->messageType); ?>
+                                            echo $this->escape($item->messageType); ?>
                                 </td>
                                 <td class="small d-none d-md-table-cell">
                                     <?php
-                                    echo $this->escape($item->series_text); ?>
+                                            echo $this->escape($item->series_text); ?>
                                 </td>
                                 <td class="d-none d-md-table-cell text-center">
                                     <button type="button" class="btn btn-sm btn-info"><?php
-                                echo Text::sprintf('JBS_CMN_HITS', $this->escape($item->hits)); ?></button>
+                                        echo Text::sprintf('JBS_CMN_HITS', $this->escape($item->hits)); ?></button>
                                     <br/>
                                     <button type="button" class="btn btn-sm btn-info"><?php
-                                echo Text::sprintf('JBS_CMN_PLAYS', $this->escape($item->totalplays)); ?></button>
+                                        echo Text::sprintf('JBS_CMN_PLAYS', $this->escape($item->totalplays)); ?></button>
                                     <br/>
                                     <button type="button" class="btn btn-sm btn-info"><?php
-                                echo Text::sprintf('JBS_CMN_DOWNLOADS', $this->escape($item->totaldownloads)); ?></button>
+                                        echo Text::sprintf('JBS_CMN_DOWNLOADS', $this->escape($item->totaldownloads)); ?></button>
                                 </td>
                                 <?php
-                                if (Multilanguage::isEnabled()) : ?>
+                                        if (Multilanguage::isEnabled()) : ?>
                                     <td class="small d-none d-md-table-cell">
                                         <?php
-                                echo LayoutHelper::render('joomla.content.language', $item); ?>
+                                        echo LayoutHelper::render('joomla.content.language', $item); ?>
                                     </td>
                                 <?php
-                                endif; ?>
+                                        endif; ?>
                                 <td class="d-none d-lg-table-cell">
                                     <?php
-                                    echo $item->id; ?>
+                                            echo $item->id; ?>
                                 </td>
                             </tr>
                         <?php
@@ -366,10 +365,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                         echo HTMLHelper::_(
                             'bootstrap.renderModal',
                             'collapseModal',
-                            array(
-                                    'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
-                                    'footer' => $this->loadTemplate('batch_footer'),
-                                ),
+                            [
+                                        'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
+                                        'footer' => $this->loadTemplate('batch_footer'),
+                                    ],
                             $this->loadTemplate('batch_body')
                         ); ?>
                     <?php

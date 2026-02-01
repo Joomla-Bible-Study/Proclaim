@@ -14,6 +14,8 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Site\View\Cwmsermons\HtmlView $this */
+
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -26,7 +28,7 @@ use Joomla\Registry\Registry;
 HTMLHelper::_('dropdown.init');
 HTMLHelper::_('behavior.multiselect');
 HTMLHelper::_('formbehavior.chosen', 'select');
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 
 $wa->addInlineStyle(
     "
@@ -151,19 +153,17 @@ position: absolute;
 }"
 );
 $app       = Factory::getApplication();
-$user      = $user = Factory::getApplication()->getSession()->get('user');
-$userId    = $user->get('id');
+$user      = $app->getIdentity();
+$userId    = $user->id;
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
-$archived  = $this->state->get('filter.published') == 2 ? true : false;
-$trashed   = $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder = $listOrder == 'study.ordering';
+$archived  = $this->state->get('filter.published') == 2;
+$trashed   = $this->state->get('filter.published') == -2;
+$saveOrder = $listOrder === 'study.ordering';
 $listing   = new Cwmlisting();
 $files     = new File();
 $folder    = Folder::files('media/com_proclaim/images/rotating');
-$count     = count($folder);
-
-
+$count     = \count($folder);
 ?>
 
 <div class="container">
@@ -202,24 +202,24 @@ $count     = count($folder);
         }
         if ($studyimage === null || (empty($item->thumbnailm) && ($params->get('studyimage') == -1))) {
             $random = random_int(0, $count);
-            if (array_key_exists($random, $folder)) {
+            if (\array_key_exists($random, $folder)) {
                 $image = 'media/com_proclaim/images/rotating/' . $folder[$random];
             }
-            if ($image == 'media/com_proclaim/images/stockimages/') {
+            if ($image === 'media/com_proclaim/images/stockimages/') {
                 $image = 'media/com_proclaim/images/rotating/bible01.jpg';
             }
-            if ($image == 'media/com_proclaim/images/stockimages/-1') {
+            if ($image === 'media/com_proclaim/images/stockimages/-1') {
                 $image = 'media/com_proclaim/images/rotating/bible01.jpg';
             }
         }
         if (
             $this->params->get('simplegridtextoverlay') == 1 || $params->get(
                 'nooverlaysimplemode'
-            ) == 'yes'
+            ) === 'yes'
         ) {
             $overlaytext = '<h5 class="card-title text-uppercase overlay-text -webkit-text-stroke" style="text-shadow: 2px 2px #000000;">' . $item->studytitle . '</h5>';
         }
-        if ($params->get('nooverlaysimplemode') == 'no') {
+        if ($params->get('nooverlaysimplemode') === 'no') {
             $overlaytext = '';
         }
         ?>

@@ -15,18 +15,11 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhtml;
-use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Layout\LayoutHelper;
 
-$params = ComponentHelper::getParams('com_proclaim');
-
-$published = (int)$this->state->get('filter.published');
-
-$user = Factory::getApplication()->getSession()->get('user');
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmmediafiles\HtmlView $this */
 ?>
-
 <div class="p-3">
     <div class="row">
         <?php

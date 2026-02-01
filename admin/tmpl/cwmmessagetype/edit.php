@@ -20,6 +20,8 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmmessagetype\HtmlView $this */
+
 // Create shortcut to parameters.
 /** @type Joomla\Registry\Registry $params */
 $params = $this->state->get('params');
@@ -27,8 +29,7 @@ $params = $params->toArray();
 $app    = Factory::getApplication();
 $input  = $app->input;
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->addInlineScript(

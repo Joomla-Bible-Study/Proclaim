@@ -14,8 +14,10 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmtemplates\HtmlView $this */
 
 use Joomla\CMS\Layout\LayoutHelper;
+
 ?>
 <div class="p-3">
     <div class="row">

@@ -14,14 +14,15 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Site\View\Cwmsermon\HtmlView $this */
+
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate');
 
@@ -136,14 +137,14 @@ if (!$this->item->id) {
                                           required></textarea>
                             </div>
 
-                            <?php // Render captcha and other form fields ?>
+                            <?php // Render captcha and other form fields?>
                             <?php foreach ($this->form->getFieldsets() as $fieldset) : ?>
                                 <?php if ($fieldset->name === 'captcha' && !$this->captchaEnabled) : ?>
                                     <?php continue; ?>
                                 <?php endif; ?>
 
                                 <?php $fields = $this->form->getFieldset($fieldset->name); ?>
-                                <?php if (count($fields)) : ?>
+                                <?php if (\count($fields)) : ?>
                                     <div class="col-12">
                                         <?php if (isset($fieldset->label) && ($legend = trim(Text::_($fieldset->label))) !== '') : ?>
                                             <h4 class="h6"><?php echo $legend; ?></h4>
@@ -164,7 +165,7 @@ if (!$this->item->id) {
                             </div>
                         </div>
 
-                        <?php // Hidden fields ?>
+                        <?php // Hidden fields?>
                         <input type="hidden" name="option" value="com_proclaim">
                         <input type="hidden" name="task" value="cwmsermon.comment">
                         <input type="hidden" name="study_id" value="<?php echo $this->item->id; ?>">

@@ -21,8 +21,9 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmservers\HtmlView $this */
+
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('com_proclaim.cwmadmin-servers-modal');
 
 $input     = Factory::getApplication()->getInput();
@@ -51,8 +52,7 @@ $onclick   = $this->escape($function);
                 <?php
                 echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
             </div>
-            <?php
-        else : ?>
+            <?php else : ?>
             <table class="table table-sm">
                 <caption class="visually-hidden">
                     <?php
@@ -98,11 +98,11 @@ $onclick   = $this->escape($function);
                                     "index.php?option=com_proclaim&view=server&id=" . $item->id
                                 ) . '"'
                                 . ' data-language="*"';
-                            ?>
+                    ?>
                             <a class="select-link" href="javascript:void(0)" <?php
-                            echo $attribs; ?>>
+                    echo $attribs; ?>>
                                 <?php
-                                echo $this->escape($item->server_name); ?>
+                        echo $this->escape($item->server_name); ?>
                             </a>
                         </th>
                     </tr>
@@ -112,14 +112,14 @@ $onclick   = $this->escape($function);
             </table>
 
             <?php
-        endif; ?>
+            endif; ?>
 
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="filter_order" value="<?php
-        echo $listOrder; ?>"/>
+            echo $listOrder; ?>"/>
         <input type="hidden" name="filter_order_Dir" value="<?php
-        echo $listDirn; ?>"/>
+            echo $listDirn; ?>"/>
         <?php
-        echo HTMLHelper::_('form.token'); ?>
+            echo HTMLHelper::_('form.token'); ?>
     </form>
 </div>

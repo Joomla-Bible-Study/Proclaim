@@ -20,13 +20,14 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmassets\HtmlView $this */
+
 ToolbarHelper::title(Text::_('JBS_ADM_ASSET_TABLE_NAME'), 'administration');
 
 $app  = Factory::getApplication();
-$user = Factory::getApplication()->getSession()->get('user');
+$user = $app->getIdentity();
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->addInlineScript(
@@ -108,27 +109,27 @@ echo Route::_('index.php?option=com_proclaim&view=cwmassets') ?>" method="post" 
             echo '</td></tr>';
             echo '</table>';
         }
-        ?>
+?>
         <!--        --><?php
-        //if ($user->authorise('core.create', 'com_proclaim')
-        //          && $user->authorise('core.edit', 'com_proclaim')
-        //          && $user->authorise('core.edit.state', 'com_proclaim')
-        //      ) : ?>
+//if ($user->authorise('core.create', 'com_proclaim')
+//          && $user->authorise('core.edit', 'com_proclaim')
+//          && $user->authorise('core.edit.state', 'com_proclaim')
+//      ) :?>
         <!--            --><?php
-        //echo HTMLHelper::_(
-        //              'bootstrap.renderModal',
-        //              'collapseModal',
-        //              array(
-        //                  'title'  => Text::_('JBS_ADM_FIX'),
-        //                  'footer' => $this->loadTemplate('fix'),
-        //              ),
-        //          ); ?>
+//echo HTMLHelper::_(
+//              'bootstrap.renderModal',
+//              'collapseModal',
+//              array(
+//                  'title'  => Text::_('JBS_ADM_FIX'),
+//                  'footer' => $this->loadTemplate('fix'),
+//              ),
+//          );?>
         <!--        --><?php
-        //endif; ?>
+//endif;?>
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="tooltype" value=""/>
         <input type="hidden" name="component" value="com_proclaim"/>
         <?php
-        echo HTMLHelper::_('form.token'); ?>
+echo HTMLHelper::_('form.token'); ?>
     </div>
 </form>

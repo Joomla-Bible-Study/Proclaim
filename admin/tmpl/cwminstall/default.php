@@ -14,7 +14,9 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
-defined('_JEXEC') or die();
+/** @var CWM\Component\Proclaim\Administrator\View\Cwminstall\HtmlView $this */
+
+\defined('_JEXEC') or die();
 
 if ($this->totalSteps != '0') {
     $pre = $this->doneSteps . ' of ' . $this->totalSteps;
@@ -34,8 +36,7 @@ if ($this->more) {
     <?php
 }
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->addInlineScript(
     "if (typeof jQuery == 'function') {
 	                                    if (typeof jQuery.ui == 'object') {
@@ -61,34 +62,34 @@ $wa->addInlineScript(
         echo Route::_('index.php?option=com_proclaim&view=cwminstall'); ?>" name="adminForm" id="adminForm"
               method="get">
             <?php
-            ?>
+?>
             <?php
-            if ($this->state === 'start') {
-                ?>
+if ($this->state === 'start') {
+    ?>
                 <input type="hidden" name="task" value="cwminstall.browse"/>
                 <?php
-            } else {
-                ?>
+} else {
+    ?>
                 <input type="hidden" name="task" value="cwminstall.run"/>
                 <?php
-            }
-            ?>
+}
+?>
 
             <div id="backup-complete">
                 <?php
-                if (!$this->more) : ?>
+    if (!$this->more) : ?>
                     <div class="alert alert-info">
                         <p><?php
-                            echo Text::_('JBS_LBL_REDIRECT_IN_3S');
-                            $wa->useScript('form.validate')
-                                ->addInlineScript(
-                                    "setTimeout(function(){
+                echo Text::_('JBS_LBL_REDIRECT_IN_3S');
+        $wa->useScript('form.validate')
+            ->addInlineScript(
+                "setTimeout(function(){
                                     jQuery('#adminForm').submit()
 								}, 3000);"
-                                ); ?></p>
+            ); ?></p>
                     </div>
                     <?php
-                endif; ?>
+    endif; ?>
             </div>
             <?php
             echo HTMLHelper::_('form.token'); ?>

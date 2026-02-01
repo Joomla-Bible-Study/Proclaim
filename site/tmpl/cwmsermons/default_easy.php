@@ -14,25 +14,23 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Site\View\Cwmsermons\HtmlView $this */
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
-
-// Do not remove
-// this is here to make sure that security of the site is maintained. It should be placed in every template file
-HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 HTMLHelper::_('dropdown.init');
 HTMLHelper::_('behavior.multiselect');
 HTMLHelper::_('formbehavior.chosen', 'select');
 
 $app       = Factory::getApplication();
-$user      = $user = Factory::getApplication()->getSession()->get('user');
-$userId    = $user->get('id');
+$user      = Factory::getApplication()->getInput();
+$userId    = $user->id;
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
-$archived  = $this->state->get('filter.published') == 2 ? true : false;
-$trashed   = $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder = $listOrder == 'study.ordering';
+$archived  = $this->state->get('filter.published') == 2;
+$trashed   = $this->state->get('filter.published') == -2;
+$saveOrder = $listOrder === 'study.ordering';
 $columns   = 12;
 
 
@@ -54,9 +52,9 @@ $columns   = 12;
 
     <?php
     echo $this->page->books;
-    echo $this->page->teachers;
-    echo $this->page->series;
-    ?>
+echo $this->page->teachers;
+echo $this->page->series;
+?>
 </div>
 <?php
 foreach ($this->items as $study) {

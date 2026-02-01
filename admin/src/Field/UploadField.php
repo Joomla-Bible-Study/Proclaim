@@ -45,15 +45,15 @@ class UploadField extends FormField
     #[\Override]
     protected function getInput(): string
     {
-        $wa = $this->document->getWebAssetManager();
+        // Include Plupload libraries
+        $document = Factory::getApplication()->getDocument();
+
+        $wa = $document->getWebAssetManager();
         $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
         $wa->useScript(
             '/administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/plupload.full.min.js'
         )
             ->useScript('/administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/legacy.js');
-
-        // Include Plupload libraries
-        $document = Factory::getApplication()->getDocument();
 
         $document->addScriptDeclaration(
             '

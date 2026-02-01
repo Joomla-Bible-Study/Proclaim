@@ -13,6 +13,8 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Site\View\Cwmsermon\HtmlView $this */
+
 ?>
 <div class="container-fluid">
 
@@ -32,21 +34,21 @@
     </div>
     <?php
     echo $this->print;
-    echo $this->page->social;
-    //echo $this->related;
-    ?>
+echo $this->page->social;
+//echo $this->related;
+?>
     <br/>
     <h2 style="text-align:center;">
         <?php
-        echo $this->item->studytitle; ?>
+    echo $this->item->studytitle; ?>
     </h2>
     <h4 style="text-align:center;">
         <strong><?php
-            echo $this->item->scripture1; ?></strong></h4>
+        echo $this->item->scripture1; ?></strong></h4>
     <?php
-    echo $this->item->media; ?>
+echo $this->item->media; ?>
     <p>
         <?php
-        echo $this->item->studytext; ?>
+    echo $this->item->studytext; ?>
     </p>
 </div>

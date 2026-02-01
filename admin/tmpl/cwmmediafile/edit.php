@@ -19,6 +19,8 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmmediafile\HtmlView $this */
+
 $input = Factory::getApplication()->getInput();
 
 // Set up defaults
@@ -34,8 +36,7 @@ if ($input->getInt('id')) {
 
 $new = ($this->item->id === '0' || empty($this->item->id));
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->addInlineScript(
@@ -63,7 +64,7 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
       class="form-validate">
     <div class="form-horizontal">
         <?php
-        echo HTMLHelper::_('uitab.startTabSet', 'myTab', array('active' => 'general')); ?>
+        echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general']); ?>
 
         <!-- Begin Content -->
         <?php
@@ -192,15 +193,15 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
         echo HTMLHelper::_('uitab.endTabSet'); ?>
 
         <?php
-        // Load the batch processing form. ?>
+        // Load the batch processing form.?>
         <?php
         echo HTMLHelper::_(
             'bootstrap.renderModal',
             'collapseModal',
-            array(
+            [
                 'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
-                'footer' => $this->loadTemplate('converter_footer')
-            ),
+                'footer' => $this->loadTemplate('converter_footer'),
+            ],
             $this->loadTemplate('converter_body')
         ); ?>
     </div>

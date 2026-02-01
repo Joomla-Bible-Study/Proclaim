@@ -13,6 +13,8 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Site\View\Cwmsermon\HtmlView $this */
+
 if ($this->item->params->get('showpodcastsubscribedetails') === '2') {
     echo '<hr/>';
     echo $this->subscribe;

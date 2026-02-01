@@ -13,6 +13,8 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmmediafile\HtmlView $this */
+
 ?>
 <div class="row-fluid">
     <div class="control-group">

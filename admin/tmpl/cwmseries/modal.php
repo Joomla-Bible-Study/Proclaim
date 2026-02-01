@@ -29,10 +29,11 @@ if ($app->isClient('site')) {
     Session::checkToken('get') or die(Text::_('JINVALID_TOKEN'));
 }
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmseries\HtmlView $this */
+
 HTMLHelper::_('behavior.multiselect');
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('core')
     ->useScript('com_proclaim.cwmadmin-series-modal');
 

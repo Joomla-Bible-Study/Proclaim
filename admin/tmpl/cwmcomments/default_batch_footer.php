@@ -16,11 +16,9 @@
 
 use Joomla\CMS\Language\Text;
 
-$published = $this->state->get('filter.published');
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmcomments\HtmlView $this */
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-//$wa = $this->document->getWebAssetManager();
-//$wa->useScript('com_proclaim.cwmadmin-comments-batch');
+$published = $this->state->get('filter.published');
 
 ?>
 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">

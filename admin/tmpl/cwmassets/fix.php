@@ -14,9 +14,11 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
-defined('_JEXEC') or die();
+\defined('_JEXEC') or die();
 
-$wa = $this->document->getWebAssetManager();
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmassets\HtmlView $this */
+
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->addInlineScript(
     "if (typeof jQuery == 'function')
 	{

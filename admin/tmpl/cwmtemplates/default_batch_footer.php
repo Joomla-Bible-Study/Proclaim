@@ -14,10 +14,11 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmtemplates\HtmlView $this */
+
 use Joomla\CMS\Language\Text;
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('com_proclaim.cwmadmin-templates-batch');
 ?>
 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">

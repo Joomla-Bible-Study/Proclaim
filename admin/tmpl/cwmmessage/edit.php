@@ -22,9 +22,11 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 
-$this->configFieldsets  = array('editorConfig');
-$this->hiddenFieldsets  = array('basic-limited');
-$this->ignore_fieldsets = array('jmetadata', 'item_associations');
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmmessage\HtmlView $this */
+
+$this->configFieldsets  = ['editorConfig'];
+$this->hiddenFieldsets  = ['basic-limited'];
+$this->ignore_fieldsets = ['jmetadata', 'item_associations'];
 $this->canDo            = ContentHelper::getActions('com_proclaim', 'message');
 
 // Create shortcut to parameters.
@@ -57,8 +59,7 @@ if ($input->getInt('id')) {
     $user_id     = $this->admin->user_id;
 }
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->addInlineScript(
@@ -109,7 +110,7 @@ echo Route::_(
                 <tbody>
 
                 <?php
-                if (count($this->mediafiles) > 0) :
+                if (\count($this->mediafiles) > 0) :
                     foreach ($this->mediafiles as $i => $item) :
                         ?>
                         <tr class="row<?php
@@ -123,11 +124,11 @@ echo Route::_(
                                    title="<?php
                                     echo $this->escape($item->params->get('filename')) ?: $this->escape(
                                         $item->params->get('media_image_name')
-                                          ); ?>">
+                                    ); ?>">
                                     <?php
-                                    echo($this->escape($item->params->get('filename')) ?: $this->escape(
+                                    echo $this->escape($item->params->get('filename')) ?: $this->escape(
                                         $item->params->get('media_image_name')
-                                    )); ?>
+                                    ); ?>
                                 </a>
                             </td>
                             <td class="center">
@@ -194,7 +195,7 @@ echo Route::_(
                                 <?php
                                 echo Text::_('JBS_STY_ADD_MEDIA_FILE'); ?></a> <?php
                         }
-                        ?>
+?>
                     </td>
                 </tr>
                 </tfoot>
@@ -204,7 +205,7 @@ echo Route::_(
 
     <div class="main-card">
         <?php
-        echo HTMLHelper::_('uitab.startTabSet', 'myTab', array('active' => 'general')); ?>
+        echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general']); ?>
 
         <!-- Begin Content -->
         <?php
@@ -216,15 +217,15 @@ echo Route::_(
                     <div>
                         <fieldset class="adminform">
                             <?php
-                            echo $this->form->getLabel('studyintro'); ?>
+    echo $this->form->getLabel('studyintro'); ?>
                             <?php
-                            echo $this->form->getInput('studyintro'); ?>
+    echo $this->form->getInput('studyintro'); ?>
                         </fieldset>
                         <fieldset class="adminform">
                             <?php
-                            echo $this->form->getLabel('studytext'); ?>
+    echo $this->form->getLabel('studytext'); ?>
                             <?php
-                            echo $this->form->getInput('studytext'); ?>
+    echo $this->form->getInput('studytext'); ?>
                         </fieldset>
                     </div>
                 </div>
@@ -233,8 +234,10 @@ echo Route::_(
             <div class="col-lg-5">
                 <div class="control-group">
                     <div class="control-label">
-                        <?php
-                        echo Text::_('JBS_STY_HITS'); ?>
+                        <label id="jform_hits-lbl" for="jform_hits">
+                            <?php
+                            echo Text::_('JBS_STY_HITS'); ?>
+                        </label>
                     </div>
                     <div class="controls">
                         <input type="text" id="jform_hits" value="<?php

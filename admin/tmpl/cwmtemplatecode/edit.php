@@ -20,6 +20,8 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmtemplatecode\HtmlView $this */
+
 $app   = Factory::getApplication();
 $input = $app->input;
 
@@ -30,8 +32,7 @@ if ($input->getInt('a_id')) {
     $templatecode = $this->defaultcode;
 }
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->addInlineScript(

@@ -20,7 +20,7 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
-$app = Factory::getApplication();
+$app   = Factory::getApplication();
 $input = $app->input;
 
 // Set up defaults
@@ -30,8 +30,9 @@ if ($input->getInt('id')) {
     $teacher_thumbnail = $this->admin->params->get('default_teacher_image');
 }
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmteacher\HtmlView $this */
+
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->addInlineScript(

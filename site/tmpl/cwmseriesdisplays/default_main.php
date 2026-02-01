@@ -14,24 +14,22 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Site\View\Cwmseriesdisplays\HtmlView $this */
+
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmserieslist;
-use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
-use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
-use Joomla\CMS\WebAsset\WebAssetManager;
+use Joomla\Input\Input;
 
-$document      = Factory::getApplication();
-$input         = $document->getInput();
+$input         = new Input();
 $option        = $input->get('option', '', 'cmd');
 $CWMSerieslist = new Cwmserieslist();
 $series_menu   = $this->params->get('series_id', 1);
 
-/** @type Joomla\Registry\Registry $params */
 $params       = $this->params;
 $url          = $params->get('stylesheet');
 $listing      = new Cwmlisting();
@@ -53,42 +51,42 @@ if ($url) {
                         ) . '" alt="' . $this->params->get('show_series_title') . '" />';
                         // End of column for logo
                     }
-                    ?>
+?>
                     <?php
-                    if ($this->params->get('show_series_title') > 0) {
-                        echo '<h1>' . $this->params->get('series_title') . '</h1>';
-                    }
-                    ?>
+if ($this->params->get('show_series_title') > 0) {
+    echo '<h1>' . $this->params->get('series_title') . '</h1>';
+}
+?>
     
                 </div>
                 <!--header-->
 
                 <?php
-                echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
-                if ($this->items) {
-                    try {
-                        $list = $listing->getFluidListing(
-                            $this->items,
-                            $this->params,
-                            $this->template,
-                            $type = 'seriesdisplays'
-                        );
-                    } catch (Exception $e) {
-                    }
-                    echo $list;
-                } else {
-                    echo "<h4>" . Text::_('JBS_CMN_SERIES_NOT_FOUND') . "</h4>";
-                }
-                ?>
+                echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
+if ($this->items) {
+    try {
+        $list = $listing->getFluidListing(
+            $this->items,
+            $this->params,
+            $this->template,
+            $type = 'seriesdisplays'
+        );
+        echo $list;
+    } catch (Exception $e) {
+    }
+} else {
+    echo '<h4>' . Text::_('JBS_CMN_SERIES_NOT_FOUND') . '</h4>';
+}
+?>
                 <div class="pagination">
                     <?php
-                    if ($this->params->get('series_list_show_pagination') == 2) {
-                        echo '<span class="display-limit">' . Text::_(
-                            'JGLOBAL_DISPLAY_NUM'
-                        ) . $this->pagination->getLimitBox() . '</span>';
-                    }
-                    echo $this->pagination->getPageslinks();
-                    ?>
+    if ((int) $this->params->get('series_list_show_pagination') === 2) {
+        echo '<span class="display-limit">' . Text::_(
+            'JGLOBAL_DISPLAY_NUM'
+        ) . $this->pagination->getLimitBox() . '</span>';
+    }
+echo $this->pagination->getPageslinks();
+?>
                 </div>
                 <!--end of bsfooter div-->
 

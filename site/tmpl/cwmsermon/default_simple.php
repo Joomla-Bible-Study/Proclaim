@@ -14,6 +14,8 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Site\View\Cwmsermon\HtmlView $this */
+
 use Joomla\CMS\Language\Text;
 
 ?>

@@ -17,6 +17,8 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwminstall\HtmlView $this */
+
 // Clear Session after finish
 $session = Factory::getApplication()->getSession();
 $session->set('migration_stack', '', 'CWM');
@@ -27,7 +29,7 @@ if (!empty($errors)) : ?>
     <div style="background-color: #900; color: #fff; font-size: large;">
         <h1>MySQL errors during installation</h1>
 
-        <p>The installation script detected MySQL error which will
+        <p>The installation script detected a MySQL error, which will
             prevent the component from working properly. We suggest uninstalling
             any previous version of Proclaim and trying a clean installation.
         </p>
@@ -72,7 +74,7 @@ $rows = 0; ?>
         <td><strong>Installed</strong></td>
     </tr>
     <?php
-    if (count($this->status->cwmmodules)) : ?>
+    if (\count($this->status->cwmmodules)) : ?>
         <tr>
             <th>Module</th>
             <th>Client</th>
@@ -81,7 +83,7 @@ $rows = 0; ?>
         <?php
         foreach ($this->status->cwmmodules as $module) : ?>
             <tr class="row<?php
-            echo(++$rows % 2); ?>">
+            echo ++$rows % 2; ?>">
                 <td class="key"><?php
                     echo Text::_(strtoupper($module['name'])); ?></td>
                 <td class="key"><?php
@@ -97,7 +99,7 @@ $rows = 0; ?>
         <?php
     endif; ?>
     <?php
-    if (count($this->status->cwmplugins)) : ?>
+    if (\count($this->status->cwmplugins)) : ?>
         <tr>
             <th>Plugin</th>
             <th>Group</th>
@@ -106,7 +108,7 @@ $rows = 0; ?>
         <?php
         foreach ($this->status->cwmplugins as $plugin) : ?>
             <tr class="row<?php
-            echo(++$rows % 2); ?>">
+            echo ++$rows % 2; ?>">
                 <td class="key"><?php
                     echo Text::_(strtoupper($plugin['name'])); ?></td>
                 <td class="key"><?php

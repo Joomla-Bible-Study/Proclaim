@@ -15,27 +15,27 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
-HTMLHelper::_('behavior.formvalidator');
-HTMLHelper::_('jquery.framework');
-HTMLHelper::_('formbehavior.chosen', 'select');
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmarchive\HtmlView $this */
 
-Factory::getApplication()->getDocument()->addScriptDeclaration(
-    "
+$wa = $this->getDocument()->getWebAssetManager();
+$wa->useScript('keepalive')
+    ->useScript('form.validate')
+    ->addInlineScript(
+        "
 		Joomla.submitbutton = function(task)
 		{
-			var form = document.getElementById('item-assets');
+			var form = document.getElementById('adminForm');
 			if (task == 'cwmadmin.back' || document.formvalidator.isValid(form))
 			{
 				Joomla.submitform(task, form);
 			}
 		};
 "
-);
+    );
 ?>
 <form action="<?php
 echo Route::_('index.php?option=com_proclaim&view=cwmarchive'); ?>" enctype="multipart/form-data"
@@ -55,7 +55,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmarchive'); ?>" enctype="mul
             </div>
             <div class="control-group">
 	            <?php
-	            echo $this->form->getLabel('switch'); ?>
+                echo $this->form->getLabel('switch'); ?>
                 <div class="controls">
 	                <?php echo $this->form->getInput('switch'); ?>
                 </div>

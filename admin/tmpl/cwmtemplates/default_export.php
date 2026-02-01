@@ -14,25 +14,28 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmtemplates\HtmlView $this */
+
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Router\Route;
 
 HTMLHelper::_('bootstrap.framework');
 HTMLHelper::_('behavior.multiselect');
 HTMLHelper::_('formbehavior.chosen', 'select');
 
-// $templates is used to generate export list.
-$templates = $this->get('templates');
-$types[] = HTMLHelper::_('select.option', '0', Text::_('JBS_CMN_SELECT_TEMPLATE'));
-$types = array_merge($types, $templates);
+// $templates is used to generate the export list.
+$templates       = $this->get('templates');
+$types[]         = HTMLHelper::_('select.option', '0', Text::_('JBS_CMN_SELECT_TEMPLATE'));
+$types           = array_merge($types, $templates);
 $this->templates = HTMLHelper::_(
     'select.genericlist',
     $types,
     'template_export',
-    'class="inputbox" size="1" ',
+    'class="input box" size="1" ',
     'value',
     'text',
-    "$"
+    '$'
 );
 
 /**
@@ -53,33 +56,32 @@ echo Route::_('index.php?option=com_proclaim&view=templates'); ?>"
         <hr/>
     </div>
     <div id="j-main-container" class="col-10">
-        <?php
-    else : ?>
+        <?php else : ?>
         <div id="j-main-container">
             <?php
-    endif; ?>
+        endif; ?>
             <div class="col-6">
                 <h2><?php
-                    echo Text::_('JBS_CMN_EXPORT'); ?></h2>
+                        echo Text::_('JBS_CMN_EXPORT'); ?></h2>
                 <span class="btn btn-default"><?php
-                    echo $this->templates; ?>
+                        echo $this->templates; ?>
                     <input type="submit" class="btn btn-default" value="<?php
-                    echo Text::_('JBS_CMN_SUBMIT'); ?>"
+                        echo Text::_('JBS_CMN_SUBMIT'); ?>"
                            onclick="Joomla.submitbutton('templates.templateExport')"/></span>
             </div>
             <div class="input-append col-6">
                 <h2><?php
-                    echo Text::_('JBS_CMN_IMPORT'); ?></h2>
+                        echo Text::_('JBS_CMN_IMPORT'); ?></h2>
                 <span class="btn btn-default btn-file">
                         <input class="file" id="template_import" name="template_import" type="file" size="57"/>
                             <input type="submit" class="btn btn-default"
                                    value="<?php
-                                    echo Text::_('JBS_CMN_SUBMIT'); ?>"
+                                        echo Text::_('JBS_CMN_SUBMIT'); ?>"
                                    onclick="Joomla.submitbutton('templates.templateImport')"/>
                 </span>
             </div>
             <input type="hidden" name="task" value=""/>
             <?php
-            echo HTMLHelper::_('form.token'); ?>
+                echo HTMLHelper::_('form.token'); ?>
         </div>
 </form>

@@ -15,6 +15,8 @@
 
 use Joomla\CMS\Language\Text;
 
+/** @var CWM\Component\Proclaim\Site\View\Cwmteachers\HtmlView $this */
+
 ?>
 <a href="#proclaim-main-content" class="proclaim-skip-link"><?php echo Text::_('JBS_CMN_SKIP_TO_CONTENT'); ?></a>
 <?php
