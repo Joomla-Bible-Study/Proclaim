@@ -16,13 +16,10 @@
 
 /** @var CWM\Component\Proclaim\Site\View\Cwmsermons\HtmlView $this */
 
-use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
-use Joomla\Filesystem\File;
-use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
 
 HTMLHelper::_('dropdown.init');
@@ -160,10 +157,10 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 $archived  = $this->state->get('filter.published') == 2;
 $trashed   = $this->state->get('filter.published') == -2;
 $saveOrder = $listOrder === 'study.ordering';
-$listing   = new Cwmlisting();
-$files     = new File();
-$folder    = Folder::files('media/com_proclaim/images/rotating');
-$count     = \count($folder);
+// Use pre-calculated values from HtmlView
+$listing = $this->listing;
+$folder  = $this->rotatingImages;
+$count   = $this->rotatingImageCount;
 ?>
 
 <div class="container">

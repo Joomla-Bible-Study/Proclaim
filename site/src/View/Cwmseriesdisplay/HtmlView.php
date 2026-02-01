@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmseriesdisplay;
 
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
+use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -129,6 +130,14 @@ class HtmlView extends BaseHtmlView
      * @since 7.0
      */
     protected $requestUrl;
+
+    /**
+     * Listing helper instance for template use
+     *
+     * @var Cwmlisting
+     * @since 10.0.0
+     */
+    public Cwmlisting $listing;
 
     /**
      * Execute and display a template script.
@@ -269,6 +278,9 @@ class HtmlView extends BaseHtmlView
         $uri              = new Uri();
         $stringuri        = $uri->toString();
         $this->requestUrl = $stringuri;
+
+        // Pre-create listing helper for template use
+        $this->listing = new Cwmlisting();
 
         parent::display($tpl);
     }

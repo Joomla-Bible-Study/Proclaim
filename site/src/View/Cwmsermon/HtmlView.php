@@ -65,7 +65,7 @@ class HtmlView extends BaseHtmlView
      */
     protected $state;
 
-    /** @var  string User
+    /** @var  \Joomla\CMS\User\User|null User
      *
      * @since 7.0
      */
@@ -101,13 +101,13 @@ class HtmlView extends BaseHtmlView
      */
     protected $detailslink;
 
-    /** @var  string Page
+    /** @var  \stdClass|null Page
      *
      * @since 7.0
      */
     protected $page;
 
-    /** @var  string Article
+    /** @var  \stdClass|null Article
      *
      * @since 7.0
      */
@@ -126,6 +126,46 @@ class HtmlView extends BaseHtmlView
      * @since 9.2.3
      */
     protected $simple;
+
+    /**
+     * Form for comments
+     *
+     * @var \Joomla\CMS\Form\Form|null
+     * @since 9.2.3
+     */
+    public $form;
+
+    /**
+     * Captcha enabled flag
+     *
+     * @var bool
+     * @since 9.2.3
+     */
+    public bool $captchaEnabled = false;
+
+    /**
+     * Template object
+     *
+     * @var object|null
+     * @since 9.2.3
+     */
+    protected $template;
+
+    /**
+     * Listing helper instance
+     *
+     * @var Cwmlisting
+     * @since 10.0.0
+     */
+    protected Cwmlisting $listing;
+
+    /**
+     * Pre-calculated fluid listing HTML for the sermon
+     *
+     * @var string
+     * @since 10.0.0
+     */
+    public string $fluidListing = '';
 
     /**
      * Execute and display a template script.
@@ -407,9 +447,6 @@ class HtmlView extends BaseHtmlView
             $this->item->studytext = $article->text;
         }
 
-        $Biblepassage  = new Cwmshowscripture();
-        $this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);
-
         // Prepares a link string for use in social networking
         $u                 = Uri::getInstance();
         $detailslink       = htmlspecialchars($u->toString());
@@ -422,6 +459,19 @@ class HtmlView extends BaseHtmlView
         // End process prepares content plugins
         $this->template = $this->state->get('template');
         $this->article  = $article;
+
+        // Store listing helper for template use and pre-calculate fluid listing
+        $this->listing = $CWMListing;
+        try {
+            $this->fluidListing = $CWMListing->getFluidListing(
+                $this->item,
+                $this->item->params,
+                $this->template,
+                'sermon'
+            );
+        } catch (\Exception $e) {
+            $this->fluidListing = '';
+        }
 
         // Increment the hit counter of the Sermon.
         if ($offset === 0 && !$this->params->get('intro_only')) {

@@ -17,9 +17,12 @@ namespace CWM\Component\Proclaim\Site\View\Cwmsermons;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
+use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcastsubscribe;
+use CWM\Component\Proclaim\Site\Helper\Cwmteacher;
 use CWM\Component\Proclaim\Site\Model\CwmsermonsModel;
+use Joomla\Filesystem\Folder;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
@@ -157,6 +160,62 @@ class HtmlView extends BaseHtmlView
     protected $request_url;
 
     /**
+     * Main image HTML string
+     *
+     * @var string
+     * @since 10.0.0
+     */
+    public string $mainimage = '';
+
+    /**
+     * Listing helper instance for template use
+     *
+     * @var Cwmlisting
+     * @since 10.0.0
+     */
+    public Cwmlisting $listing;
+
+    /**
+     * Studies element CSS class
+     *
+     * @var string
+     * @since 10.0.0
+     */
+    public string $classelement = '';
+
+    /**
+     * Pre-calculated teacher data for fluid display
+     *
+     * @var array
+     * @since 10.0.0
+     */
+    public array $teachersFluid = [];
+
+    /**
+     * Rotating images folder files for simple2 template
+     *
+     * @var array
+     * @since 10.0.0
+     */
+    public array $rotatingImages = [];
+
+    /**
+     * Count of rotating images
+     *
+     * @var int
+     * @since 10.0.0
+     */
+    public int $rotatingImageCount = 0;
+
+    /**
+     * Current menu item ID
+     *
+     * @var int
+     * @since 10.0.0
+     */
+    public int $itemid = 0;
+
+    /**
      * Execute and display a template script.
      *
      * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
@@ -271,6 +330,22 @@ class HtmlView extends BaseHtmlView
         $stringuri         = $uri->toString();
         $this->request_url = $stringuri;
         $this->params      = &$params;
+
+        // Pre-calculate values for templates to avoid helper instantiation in templates
+        $this->listing      = new Cwmlisting();
+        $this->classelement = $this->listing->createelement($params->get('studies_element'));
+        $this->itemid       = (int) $mainframe->input->get('Itemid', 0);
+
+        // Pre-calculate teacher data for default_main template
+        $cwmTeacher          = new Cwmteacher();
+        $this->teachersFluid = $cwmTeacher->getTeachersFluid($params);
+
+        // Pre-calculate rotating images for default_simple2 template
+        $rotatingPath = 'media/com_proclaim/images/rotating';
+        if (is_dir(JPATH_ROOT . '/' . $rotatingPath)) {
+            $this->rotatingImages     = Folder::files(JPATH_ROOT . '/' . $rotatingPath);
+            $this->rotatingImageCount = \count($this->rotatingImages);
+        }
 
         $this->updateFilters();
 

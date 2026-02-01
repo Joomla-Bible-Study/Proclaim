@@ -16,11 +16,11 @@
 
 /** @var CWM\Component\Proclaim\Site\View\Cwmlandingpage\HtmlView $this */
 
-use CWM\Component\Proclaim\Site\Helper\Cwmlanding;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
-$CWMLanding = new Cwmlanding();
+// Use pre-created landing helper from HtmlView
+$CWMLanding = $this->landing;
 $params     = $this->params;
 ?>
 <a href="#proclaim-main-content" class="proclaim-skip-link"><?php echo Text::_('JBS_CMN_SKIP_TO_CONTENT'); ?></a>

@@ -17,7 +17,9 @@ namespace CWM\Component\Proclaim\Site\View\Cwmseriesdisplays;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
+use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
+use CWM\Component\Proclaim\Site\Helper\Cwmserieslist;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
@@ -90,6 +92,46 @@ class HtmlView extends BaseHtmlView
     protected string $go;
 
     public Form|null $filterForm;
+
+    /**
+     * Active filters array
+     *
+     * @var array
+     * @since 10.0.0
+     */
+    public $activeFilters;
+
+    /**
+     * Listing helper instance for template use
+     *
+     * @var Cwmlisting
+     * @since 10.0.0
+     */
+    public Cwmlisting $listing;
+
+    /**
+     * Series element CSS class
+     *
+     * @var string
+     * @since 10.0.0
+     */
+    public string $classelement = '';
+
+    /**
+     * Series list helper for menu
+     *
+     * @var Cwmserieslist
+     * @since 10.0.0
+     */
+    public Cwmserieslist $serieslist;
+
+    /**
+     * Series menu ID
+     *
+     * @var int
+     * @since 10.0.0
+     */
+    public int $seriesMenu = 1;
 
     /**
      * Execute and display a template script.
@@ -173,6 +215,12 @@ class HtmlView extends BaseHtmlView
 
         // $this->lists = $lists;
         $this->request_url = $uri_tostring;
+
+        // Pre-create helpers for template use
+        $this->listing      = new Cwmlisting();
+        $this->classelement = $this->listing->createelement($params->get('series_element'));
+        $this->serieslist   = new Cwmserieslist();
+        $this->seriesMenu   = (int) $params->get('series_id', 1);
 
         $this->updateFilters();
 

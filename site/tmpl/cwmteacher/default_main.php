@@ -14,14 +14,14 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
 /** @var CWM\Component\Proclaim\Site\View\Cwmteacher\HtmlView $this */
 
-$listing = new Cwmlisting();
-$teacher = new Cwmlisting();
+// Use pre-created listing from HtmlView
+$listing = $this->listing;
+$teacher = $this->listing;
 ?>
 <div class="container">
 

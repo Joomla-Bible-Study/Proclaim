@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmteachers;
 
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
+use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use Joomla\CMS\Document\Document;
 use Joomla\CMS\Factory;
@@ -117,6 +118,22 @@ class HtmlView extends BaseHtmlView
     protected $request_url;
 
     /**
+     * Listing helper instance for template use
+     *
+     * @var Cwmlisting
+     * @since 10.0.0
+     */
+    public Cwmlisting $listing;
+
+    /**
+     * Studies element CSS class
+     *
+     * @var string
+     * @since 10.0.0
+     */
+    public string $classelement = '';
+
+    /**
      * Execute and display a template script.
      *
      * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
@@ -186,6 +203,10 @@ class HtmlView extends BaseHtmlView
         $this->request_url     = $stringuri;
         $this->params          = $params;
         $this->items           = $items;
+
+        // Pre-create listing helper for template use
+        $this->listing      = new Cwmlisting();
+        $this->classelement = $this->listing->createelement($params->get('teachers_element'));
 
         $this->prepareDocument();
 

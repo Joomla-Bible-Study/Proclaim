@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmlandingpage;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
+use CWM\Component\Proclaim\Site\Helper\Cwmlanding;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -56,6 +57,14 @@ class HtmlView extends BaseHtmlView
     public mixed $state;
 
     public object $main;
+
+    /**
+     * Landing page helper instance
+     *
+     * @var Cwmlanding
+     * @since 10.0.0
+     */
+    public Cwmlanding $landing;
 
     /**
      * Execute and display a template script.
@@ -98,6 +107,9 @@ class HtmlView extends BaseHtmlView
         $uri               = new Uri();
         $Uri_toString      = $uri->toString();
         $this->request_url = $Uri_toString;
+
+        // Pre-create landing helper for template use
+        $this->landing = new Cwmlanding();
 
         parent::display($tpl);
     }
