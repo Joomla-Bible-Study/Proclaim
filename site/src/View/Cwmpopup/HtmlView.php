@@ -43,17 +43,23 @@ class HtmlView extends BaseHtmlView
      */
     public int $player;
 
-    /** @var  string Media
+    /** @var  object|bool Media
      *
      * @since 7.0
      */
-    public $media;
+    public object|bool $media;
 
-    /** @var  array Media info
+    /** @var  Cwmmedia Media info
      *
      * @since 7.0
      */
-    public $getMedia;
+    public Cwmmedia $getMedia;
+
+    /** @var  Cwmlisting Listing info
+     *
+     * @since 7.0
+     */
+    public Cwmlisting $listing;
 
     /** @var  string Scripture Text
      *
@@ -65,115 +71,115 @@ class HtmlView extends BaseHtmlView
      *
      * @since 7.0
      */
-    public $date;
+    public string $date;
 
     /** @var  string Series Thumbnail
      *
      * @since 7.0
      */
-    public $series_thumbnail;
+    public string $series_thumbnail;
 
     /** @var  string Teacher Image
      *
      * @since 7.0
      */
-    public $teacherimage;
+    public string $teacherimage;
 
     /** @var  string Path 1
      *
      * @since 7.0
      */
-    public $path1;
+    public string $path1;
 
     /** @var  string Width
      *
      * @since 7.0
      */
-    public $playerwidth;
+    public string $playerwidth;
 
     /** @var  string Player Height
      *
      * @since 7.0
      */
-    public $playerheight;
+    public string $playerheight;
 
     /** @var  string Flash Vars
      *
      * @since 7.0
      */
-    public $flashvars;
+    public string $flashvars;
 
     /** @var  string Back Color
      *
      * @since 7.0
      */
-    public $backcolor;
+    public string $backcolor;
 
     /** @var  string Front Color
      *
      * @since 7.0
      */
-    public $frontcolor;
+    public string $frontcolor;
 
     /** @var  string Light Color
      *
      * @since 7.0
      */
-    public $lightcolor;
+    public string $lightcolor;
 
     /** @var  string Screen Color
      *
      * @since 7.0
      */
-    public $screencolor;
+    public string $screencolor;
 
     /** @var  string Auto Start
      *
      * @since 7.0
      */
-    public $autostart;
+    public string $autostart;
 
     /** @var  string Player Idle Hide
      *
      * @since 7.0
      */
-    public $playeridlehide;
+    public string $playeridlehide;
 
     /** @var  string Header Text
      *
      * @since 7.0
      */
-    public $headertext;
+    public string $headertext;
 
     /** @var  string Footer Text
      *
      * @since 7.0
      */
-    public $footertext;
+    public string $footertext;
 
     /** @var  Registry Params
      *
      * @since 7.0
      */
-    protected $params;
+    protected Registry $params;
 
     /** @var  Registry Params
      *
      * @since 7.0
      */
-    protected $state;
+    protected Registry $state;
 
     /** @var  Registry Extra Params
      *
      * @since 7.0
      */
-    protected $extraparams;
+    protected Registry $extraparams;
 
     /** @var  CwmtemplateTable Template
      *
      * @since 7.0
      */
-    protected $template;
+    protected CwmtemplateTable $template;
 
     /**
      * Execute and display a template script.
@@ -188,7 +194,14 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $input = Factory::getApplication()->getInput();
+        $app = Factory::getApplication();
+        if ($app) {
+            $input = $app->getInput();
+        } else {
+            // Fallback or error handling if application is not available
+            return;
+        }
+
         $input->get('tmpl', 'component', 'string');
         $mediaid      = $input->get('mediaid', '', 'int');
         $close        = $input->get('close', '0', 'int');
@@ -206,8 +219,33 @@ class HtmlView extends BaseHtmlView
 
         $this->getMedia = new Cwmmedia();
         $this->media    = $this->getMedia->getMediaRows2($mediaid);
-        $this->state    = $this->get('state');
-        $this->template = $this->state->get('template');
+
+        // Use getModel()->getState() if possible, otherwise fallback to get('State')
+        // In Joomla 4 MVC, the model is usually available.
+        $model = $this->getModel();
+        if ($model) {
+            $state = $model->getState();
+        } else {
+            // Fallback for when model is not explicitly set or found
+            // Suppress deprecated warning for get('State') as it is the fallback
+            $state = @$this->get('State');
+        }
+
+        if ($state instanceof Registry) {
+            $this->state = $state;
+        } else {
+            $this->state = new Registry();
+        }
+
+        $template = $this->state->get('template');
+        if ($template instanceof CwmtemplateTable) {
+            $this->template = $template;
+        } else {
+            // Handle case where template is not of expected type, maybe create a default or throw error
+            $db             = Factory::getContainer()->get('DatabaseDriver');
+            $this->template = new CwmtemplateTable($db);
+        }
+
 
         /*
          *  Convert parameter fields to objects.
@@ -226,6 +264,7 @@ class HtmlView extends BaseHtmlView
         $saveid          = $this->media->id;
         $this->media->id = $this->media->study_id;
         $JBSMListing     = new Cwmlisting();
+        $this->listing   = $JBSMListing;
         $this->scripture = $JBSMListing->getScripture($this->params, $this->media, 0, 1);
         $this->media->id = $saveid;
         $this->date      = $JBSMListing->getStudyDate($this->params, $this->media->studydate);
@@ -267,7 +306,12 @@ class HtmlView extends BaseHtmlView
         }
 
         if ($this->params->get('playervars')) {
-            $this->extraparams = $this->params->get('playervars');
+            $playervars = $this->params->get('playervars');
+            if ($playervars instanceof Registry) {
+                $this->extraparams = $playervars;
+            } else {
+                $this->extraparams = new Registry($playervars);
+            }
         }
 
         if ($this->params->get('altflashvars')) {
@@ -275,7 +319,7 @@ class HtmlView extends BaseHtmlView
         }
 
         if ($this->player === 100) {
-            $this->player = (int) $this->template->params->get('player', "0");
+            $this->player = (int) $this->template->params->get('player', '0');
         }
 
         $this->backcolor   = $this->params->get('backcolor', '0x287585');
@@ -283,7 +327,7 @@ class HtmlView extends BaseHtmlView
         $this->lightcolor  = $this->params->get('lightcolor', '0x000000');
         $this->screencolor = $this->params->get('screencolor', '0xFFFFFF');
 
-        if ($this->params->get('autostart', "1") === "1") {
+        if ($this->params->get('autostart', '1') === '1') {
             $this->autostart = 'true';
         } else {
             $this->autostart = 'false';
@@ -295,9 +339,9 @@ class HtmlView extends BaseHtmlView
             $this->playeridlehide = 'false';
         }
 
-        if ($this->params->get('autostart') === "1") {
+        if ($this->params->get('autostart') === '1') {
             $this->autostart = 'true';
-        } elseif ($this->params->get('autostart') === "2") {
+        } elseif ($this->params->get('autostart') === '2') {
             $this->autostart = 'false';
         }
 
@@ -370,9 +414,7 @@ class HtmlView extends BaseHtmlView
             $text = str_replace('{{title}}', $media->studytitle, $text);
         }
 
-        if (isset($scripture)) {
-            $text = str_replace('{{scripture}}', $scripture, $text);
-        }
+        $text = str_replace('{{scripture}}', $scripture, $text);
 
         if (isset($this->teacherimage)) {
             $text = str_replace('{{teacherimage}}', $this->teacherimage, $text);

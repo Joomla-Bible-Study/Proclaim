@@ -14,81 +14,78 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
-use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
-use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
+use CWM\Component\Proclaim\Site\View\Cwmpopup\HtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
 
-$style = 'body { background-color:' . $this->params->get('popupbackground', 'black') . ' !important; padding:0 !important;}
-	#all{background-color:' . $this->params->get('popupbackground', 'black') . ' !important;}';
+/** @var HtmlView $this */
+
 try {
     $app = Factory::getApplication();
 } catch (Exception $e) {
-    die();
+    die('Application not found');
 }
-$doc   = $app->getDocument();
+
+$doc = $app->getDocument();
+
+$backgroundColor = $this->params->get('popupbackground', 'black');
+$style           = "body { background-color: $backgroundColor !important; padding:0 !important;}
+	#all{background-color: $backgroundColor !important;}";
+
 $doc->addStyleDeclaration($style);
-$CWMedia = new Cwmmedia();
-$Cwmlisting = new Cwmlisting();
+
+// Normalize player value to integer for easier comparison
+$playerParam = (int) $this->params->get('player');
+$player      = $this->player;
 ?>
 <div id="popupwindow" class="popupwindow">
-    <div class="popuptitle"><p class="popuptitle"><?php
-            echo $this->headertext ?>
-        </p>
+    <div class="popuptitle">
+        <p class="popuptitle"><?php echo $this->headertext; ?></p>
     </div>
     <?php
-    // Here is where we choose whether to use the Internal Viewer or All Videos
-    if (
-        $this->player === 2 || $this->player === 3 || $this->params->get('player') === "3" || $this->params->get('player') === "2"
-    ) {
+    // Internal Viewer or All Videos
+    if (\in_array($player, [2, 3], true) || \in_array($playerParam, [2, 3], true)) {
         $mediaCode = $this->getMedia->getAVmediacode($this->media->mediacode, $this->media);
         echo HTMLHelper::_('content.prepare', $mediaCode);
     }
-    //We now use HTML audio player for playing mp3 files.
-    if ($this->player === 1 || $this->player === 7 || $this->params->get('player') === "1") {
-        $path = Cwmhelper::mediaBuildUrl(
-            $this->media->sparams->get('path'),
-            $this->params->get('filename'),
-            $this->params,
-            true
-        );
 
-        if (preg_match('(youtube.com|youtu.be)', $path) === 1) {
-            echo '<iframe width="' . $this->params->get('player_width') . '" height="' . $this->params->get(
-                'player_height'
-            ) . '" src="' .
-                $CWMedia->convertYoutube(
-                    $path
-                ) . '" style="border:0;" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
-        } elseif (preg_match('(vimeo.com)', $path) === 1) {
-            echo '<iframe src="' . $CWMedia->convertVimeo($path) . '" width="' . $this->params->get(
-                'player_width'
-            ) . '" height="' .
-                $this->params->get(
-                    'player_height'
-                ) . '" style="border:0;" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
-        } else {
-            echo '<audio controls autoplay><source src="' . $path . '" type="audio/mp3"></audio>';
-        }
-    }
+// HTML audio player / YouTube / Vimeo
+if ($player === 1 || $player === 7 || $playerParam === 1) {
+    $path = $this->path1;
 
-    if ($this->player === 8) {
-        echo stripslashes($this->params->get('mediacode'));
-    } elseif ($this->player === 0) {
-        $app->redirect(Route::_($this->path1));
+    $width  = $this->playerwidth;
+    $height = $this->playerheight;
+
+    if (preg_match('/(youtube.com|youtu.be)/', $path) === 1) {
+        $src = $this->getMedia->convertYoutube($path);
+        echo '<iframe width="' . $width . '" height="' . $height . '" src="' . $src . '" style="border:0;" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+    } elseif (preg_match('/(vimeo.com)/', $path) === 1) {
+        $src = $this->getMedia->convertVimeo($path);
+        echo '<iframe src="' . $src . '" width="' . $width . '" height="' . $height . '" style="border:0;" allowfullscreen></iframe>';
+    } else {
+        echo '<audio controls autoplay><source src="' . $path . '" type="audio/mp3"></audio>';
     }
-    ?>
+}
+
+if ($player === 8) {
+    echo stripslashes($this->params->get('mediacode'));
+} elseif ($player === 0) {
+    $app->redirect(Route::_($this->path1));
+}
+?>
     <div class="popupfooter">
         <?php
-        // Social Networking begins here
-        if ($this->params->get('embedshare') != 'FALSE') {
-            echo $Cwmlisting->getShare($this->path1, $this->media, $this->params);
+    // Social Networking
+    if ($this->params->get('embedshare') !== 'FALSE') {
+        try {
+            echo $this->listing->getShare($this->path1, $this->media, $this->params);
+        } catch (Exception $e) {
+            // Ignore errors in share module
         }
-        // End Social Networking ?>
+    }
+?>
         <p class="popupfooter">
-
            <?php echo $this->footertext; ?>
         </p>
     </div>
