@@ -41,11 +41,11 @@ class HtmlView extends BaseHtmlView
     /**
      * Params
      *
-     * @var Registry
+     * @var Registry|null
      *
      * @since 7.0
      */
-    public Registry $params;
+    public ?Registry $params = null;
 
     /**
      * Params
@@ -56,15 +56,21 @@ class HtmlView extends BaseHtmlView
      */
     public mixed $state;
 
-    public object $main;
+    /**
+     * Main study image object
+     *
+     * @var object|null
+     * @since 7.0
+     */
+    public ?object $main = null;
 
     /**
      * Landing page helper instance
      *
-     * @var Cwmlanding
+     * @var Cwmlanding|null
      * @since 10.0.0
      */
-    public Cwmlanding $landing;
+    public ?Cwmlanding $landing = null;
 
     /**
      * Execute and display a template script.

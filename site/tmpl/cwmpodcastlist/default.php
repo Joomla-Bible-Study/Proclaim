@@ -44,7 +44,7 @@ echo Route::_('index.php?option=com_proclaim&view=podcastlist'); ?>" method="pos
             if (!empty($originalFile) && file_exists(JPATH_ROOT . '/' . $originalFile)) {
                 $img = CWMImageLib::getSeriesPodcast($originalFile);
             } else {
-                $img = CWMImageLib::getSeriesPodcast($this->params->get('default_study_image'));
+                $img = CWMImageLib::getSeriesPodcast($this->params->get('default_study_image', ''));
             }
             ?>
             <div class="CWMimg">

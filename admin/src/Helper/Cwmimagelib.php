@@ -48,6 +48,11 @@ class Cwmimagelib
         // Prep files
         $img_base    = pathinfo($img);
         $array       = explode('.', $img_base['basename']);
+
+        if (\count($array) < 2) {
+            return $img;
+        }
+
         $NewfileName = $img_base["dirname"] . '/' . $array[0] . '-200x112.' . $array[1];
         $new_sub     = JPATH_ROOT . '/' . $NewfileName;
         $img_sub     = JPATH_ROOT . '/' . $img;
@@ -121,8 +126,8 @@ class Cwmimagelib
 
         if (file_exists($targetFile)) {
             unlink($targetFile);
-        } else {
-            $image_save_func($tmp, $targetFile);
         }
+
+        $image_save_func($tmp, $targetFile);
     }
 }

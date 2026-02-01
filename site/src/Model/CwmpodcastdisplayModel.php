@@ -55,36 +55,40 @@ class CwmpodcastdisplayModel extends ItemModel
         // Initialise variables.
         $pk = (!empty($pk)) ? $pk : (int)$this->getState('series.id');
 
-        if (!isset($this->_item[$pk])) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
-            $query = $db->getQuery(true);
-            $query->select(
-                $this->getState(
-                    'item.select',
-                    'se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END AS slug'
-                )
-            );
-            $query->from('#__bsms_series AS se');
+        if ($pk > 0) {
+            if (!isset($this->_item[$pk])) {
+                $db    = Factory::getContainer()->get('DatabaseDriver');
+                $query = $db->getQuery(true);
+                $query->select(
+                    $this->getState(
+                        'item.select',
+                        'se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END AS slug'
+                    )
+                );
+                $query->from('#__bsms_series AS se');
 
-            // Join over teachers
-            $query->select(
-                't.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail'
-            );
-            $query->join('LEFT', '#__bsms_teachers AS t ON se.teacher = t.id');
-            $query->where('se.id = ' . (int)$pk);
-            $db->setQuery($query);
-            $data = $db->loadObject();
+                // Join over teachers
+                $query->select(
+                    't.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail'
+                );
+                $query->join('LEFT', '#__bsms_teachers AS t ON se.teacher = t.id');
+                $query->where('se.id = ' . (int)$pk);
+                $db->setQuery($query);
+                $data = $db->loadObject();
 
-            if (empty($data)) {
-                Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_SERIES_NOT_FOUND'), 'message');
+                if (empty($data)) {
+                    Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_SERIES_NOT_FOUND'), 'message');
 
-                return false;
+                    return false;
+                }
+
+                $this->_item[$pk] = $data;
             }
 
-            $this->_item[$pk] = $data;
+            return $this->_item[$pk];
         }
 
-        return $this->_item[$pk];
+        return false;
     }
 
     /**
@@ -198,7 +202,10 @@ class CwmpodcastdisplayModel extends ItemModel
                 break;
         }
         $query->where('(series.published = 1 OR study.series_id <= 0)');
-        $query->where('study.series_id = ' . (int)$sid);
+
+        if ($sid > 0) {
+            $query->where('study.series_id = ' . (int)$sid);
+        }
 
         // Order by order filter
         $orderparam = $params->get('default_order');
@@ -239,13 +246,6 @@ class CwmpodcastdisplayModel extends ItemModel
         /** @type \JApplicationSite $app */
         $app = Factory::getApplication('site');
 
-        // Load state from the request.
-        $pk = $app->input->get('id', '', 'int');
-        $this->setState('series.id', $pk);
-
-        $offset = $app->input->get('limitstart', '', 'int');
-        $this->setState('list.offset', $offset);
-
         // Load the parameters.
         $params = $app->getParams();
         $this->setState('params', $params);
@@ -255,6 +255,25 @@ class CwmpodcastdisplayModel extends ItemModel
         $template->params->merge($params);
         $template->params->merge($admin->params);
         $params = $template->params;
+
+        // Load state from the request.
+        $pk = $app->input->get('id', '', 'int');
+
+        if (empty($pk)) {
+            $mseries_id = $params->get('mseries_id');
+            if (!empty($mseries_id)) {
+                if (\is_array($mseries_id)) {
+                    $pk = (int)$mseries_id[0];
+                } else {
+                    $pk = (int)$mseries_id;
+                }
+            }
+        }
+
+        $this->setState('series.id', $pk);
+
+        $offset = $app->input->get('limitstart', '', 'int');
+        $this->setState('list.offset', $offset);
 
         $t = $params->get('seriesid');
 

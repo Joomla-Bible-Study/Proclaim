@@ -34,59 +34,67 @@ use Joomla\Registry\Registry;
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var  Document Print
+    /** @var  Document|null Print
      *
      * @since 7.0
      */
-    public $document;
-    /** @var  object Item
+    public $document = null;
+
+    /** @var  object|null Item
      *
      * @since 7.0
      */
-    protected $item;
-    /** @var  object Contact
+    protected ?object $item;
+
+    /** @var  object|null Contact
      *
      * @since 7.0
      */
-    protected $contact;
-    /** @var  Registry Admin
+    protected ?object $contact = null;
+
+    /** @var  Registry|null Admin
      *
      * @since 7.0
      */
-    protected $state;
-    /** @var  Registry Params
+    protected ?Registry $state = null;
+
+    /** @var  Registry|null Params
      *
      * @since 7.0
      */
-    protected $params;
-    /** @var  CwmtemplateTable Template Info
+    protected ?Registry $params = null;
+
+    /** @var  CwmtemplateTable|null Template Info
      *
      * @since 7.0
      */
-    protected CwmtemplateTable $template;
-    /** @var  JObject Template Studies
+    protected ?CwmtemplateTable $template = null;
+
+    /** @var  array|null Template Studies
      *
      * @since 7.0
      */
-    protected $teacherstudies;
-    /** @var  JObject Print
+    protected ?array $teacherstudies = null;
+
+    /** @var  bool|string|null Print flag
      *
      * @since 7.0
      */
-    protected $print;
-    /** @var  JObject Studies
+    protected $print = null;
+
+    /** @var  array|null Studies
      *
      * @since 7.0
      */
-    protected $studies;
+    protected ?array $studies = null;
 
     /**
      * Listing helper instance for template use
      *
-     * @var Cwmlisting
+     * @var Cwmlisting|null
      * @since 10.0.0
      */
-    public Cwmlisting $listing;
+    public ?Cwmlisting $listing = null;
 
     /**
      * Execute and display a template script.
@@ -301,7 +309,7 @@ class HtmlView extends BaseHtmlView
 
         $this->document->setTitle($title);
 
-        // Prepare meta information (under development)
+        // Prepare meta-information (under development)
         if ($itemparams->get('metakey')) {
             $this->document->setMetaData('keywords', $itemparams->get('metakey'));
         } elseif ($this->params->get('menu-meta_keywords')) {

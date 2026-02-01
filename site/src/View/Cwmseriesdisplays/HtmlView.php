@@ -37,66 +37,72 @@ use Joomla\Registry\Registry;
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var object Admin Info
+    /** @var object|null Admin Info
      *
      * @since 7.0
      */
     protected $admin;
 
-    /** @var  \JObject Items
+    /** @var  array|null Items
      *
      * @since 7.0
      */
     protected $items;
 
-    /** @var  \JObject Template
+    /** @var  object|null Template
      *
      * @since 7.0
      */
     protected $template;
 
-    /** @var Pagination  Pagination
+    /** @var Pagination|null  Pagination
      *
      * @since 7.0
      */
-    protected Pagination $pagination;
+    protected ?Pagination $pagination = null;
 
     /** @var  string Request Url
      *
      * @since 7.0
      */
-    protected string $request_url;
+    protected string $request_url = '';
 
-    /** @var  Registry Params
+    /** @var  Registry|null Params
      *
      * @since 7.0
      */
-    protected Registry $params;
+    protected ?Registry $params = null;
 
-    /** @var  \stdClass Page
+    /** @var  \stdClass|null Page
      *
      * @since 7.0
      */
-    protected \stdClass $page;
+    protected ?\stdClass $page = null;
 
-    /** @var Registry State
+    /** @var Registry|null State
      *
      * @since 7.0
      */
-    protected Registry $state;
+    protected ?Registry $state = null;
 
     /** @var string State
      *
      * @since 7.0
      */
-    protected string $go;
+    protected string $go = '';
 
+    /**
+     * Filter form
+     *
+     * @var Form|null
+     * @since 9.1.4
+     */
     public Form|null $filterForm;
 
     /**
      * Active filters array
      *
-     * @var array
+     * @var array|null
      * @since 10.0.0
      */
     public $activeFilters;
@@ -104,10 +110,10 @@ class HtmlView extends BaseHtmlView
     /**
      * Listing helper instance for template use
      *
-     * @var Cwmlisting
+     * @var Cwmlisting|null
      * @since 10.0.0
      */
-    public Cwmlisting $listing;
+    public ?Cwmlisting $listing = null;
 
     /**
      * Series element CSS class
@@ -120,10 +126,10 @@ class HtmlView extends BaseHtmlView
     /**
      * Series list helper for menu
      *
-     * @var Cwmserieslist
+     * @var Cwmserieslist|null
      * @since 10.0.0
      */
-    public Cwmserieslist $serieslist;
+    public ?Cwmserieslist $serieslist = null;
 
     /**
      * Series menu ID

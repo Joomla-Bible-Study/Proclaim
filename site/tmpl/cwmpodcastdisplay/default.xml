@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- $Id: default.xml tf 12-11-2007 $ -->
 <metadata>
-    <layout hidden="true" title="JBS_MNU_PODCASTS_LIST_EDIT_LAYOUT">
+    <layout title="JBS_MNU_PODCASTS_LIST_EDIT_LAYOUT">
         <message>
             <![CDATA[JBS_MNU_PODCASTS_LIST_EDIT_LAYOUT_DESC]]>
         </message>
@@ -21,7 +21,7 @@
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="mseries_id"
-                   type="SeriesList"
+                   type="Series"
                    multiple="true"
                    label="JBS_CMN_FILTERS_SERIES"
                    description="JBS_CMN_FILTERS_DESC"
@@ -29,15 +29,12 @@
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="mbooknumber"
-                   type="SQL"
+                   type="BookList"
                    class="inputbox"
                    label="JBS_CMN_FILTERS_BOOKS"
                    multiple="true"
                    size="10"
                    translate="true"
-                   query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
-                   key_field="booknumber"
-                   value_field="bookname"
                    description="JBS_CMN_FILTERS_DESC"
                    default="-1">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
@@ -57,7 +54,7 @@
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
             <field name="mlocations"
-                   type="LocationsList"
+                   type="LocationList"
                    multiple="true"
                    label="JBS_CMN_FILTERS_LOCATIONS"
                    description="JBS_CMN_FILTERS_DESC"

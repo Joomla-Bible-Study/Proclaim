@@ -38,7 +38,7 @@ class HtmlView extends BaseHtmlView
     /**
      * State
      *
-     * @var array
+     * @var Registry|null
      *
      * @since 7.0
      */
@@ -47,7 +47,7 @@ class HtmlView extends BaseHtmlView
     /**
      * Item
      *
-     * @var array
+     * @var object|null
      *
      * @since 7.0
      */
@@ -56,7 +56,7 @@ class HtmlView extends BaseHtmlView
     /**
      * Items
      *
-     * @var array
+     * @var object|null
      *
      * @since 7.0
      */
@@ -65,79 +65,79 @@ class HtmlView extends BaseHtmlView
     /**
      * Pagination
      *
-     * @var array
+     * @var object|null
      *
      * @since 7.0
      */
     protected $pagination = null;
 
-    /** @var  object Admin
+    /** @var  object|null Admin
      *
      * @since 7.0
      */
-    protected $admin;
+    protected $admin = null;
 
-    /** @var  Registry Admin Params
+    /** @var  Registry|null Admin Params
      *
      * @since 7.0
      */
-    protected $adminParams;
+    protected $adminParams = null;
 
-    /** @var  object Page
+    /** @var  object|null Page
      *
      * @since 7.0
      */
-    protected $page;
+    protected $page = null;
 
-    /** @var  object Series Studies
+    /** @var  object|null Series Studies
      *
      * @since 7.0
      */
-    protected $seriesstudies;
+    protected $seriesstudies = null;
 
-    /** @var  CwmtemplateTable Template
+    /** @var  CwmtemplateTable|null Template
      *
      * @since 7.0
      */
-    protected $template;
+    protected $template = null;
 
-    /** @var  Registry Params
+    /** @var  Registry|null Params
      *
      * @since 7.0
      */
-    protected $params;
+    protected $params = null;
 
-    /** @var  string Article
+    /** @var  string|null Article
      *
      * @since 7.0
      */
-    protected $article;
+    protected $article = null;
 
-    /** @var  string Passage Link
+    /** @var  string|null Passage Link
      *
      * @since 7.0
      */
-    protected $passageLink;
+    protected $passageLink = null;
 
-    /** @var  object Studies
+    /** @var  object|null Studies
      *
      * @since 7.0
      */
-    protected $studies;
+    protected $studies = null;
 
-    /** @var  string Request URL
+    /** @var  string|null Request URL
      *
      * @since 7.0
      */
-    protected $requestUrl;
+    protected $requestUrl = null;
 
     /**
      * Listing helper instance for template use
      *
-     * @var Cwmlisting
+     * @var Cwmlisting|null
      * @since 10.0.0
      */
-    public Cwmlisting $listing;
+    public ?Cwmlisting $listing = null;
 
     /**
      * Execute and display a template script.
@@ -272,7 +272,7 @@ class HtmlView extends BaseHtmlView
         }
 
         // End process prepare content plugins
-        $this->params     = &$params;
+        $this->params     = $params;
         $this->items      = $items;
         $this->studies    = $studies;
         $uri              = new Uri();

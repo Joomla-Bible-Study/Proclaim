@@ -22,10 +22,6 @@ use Joomla\CMS\Language\Text;
 
 /** @var CWM\Component\Proclaim\Site\View\Cwmpodcastdisplay\HtmlView $this */
 
-HTMLHelper::_('dropdown.init');
-HTMLHelper::_('formbehavior.chosen', 'select');
-HTMLHelper::_('behavior.multiselect');
-
 $app       = Factory::getApplication();
 $user      = $app->getIdentity();
 $userId    = $user->id;
@@ -37,24 +33,43 @@ $saveOrder = $listOrder === 'ordering';
 
 $CWMedia = new Cwmmedia();
 ?>
+<script>
+    function loadVideo(path, image) {
+        var audio = document.querySelector('audio');
+        if (audio) {
+            audio.src = path;
+            audio.play();
+        } else {
+            // Fallback for iframe/video if present
+            var iframe = document.querySelector('iframe.playhit');
+            if (iframe) {
+                // This is tricky for iframes, as path might need conversion
+                // For now, assuming audio since this view filters for MP3s
+                console.log('Video/Iframe update not fully supported in this view for ' + path);
+            }
+        }
+    }
+</script>
 <div class="container-fluid">
-    <div class="col-lg-6">
-        <?php
-        echo $this->item->image; ?>
-        <h2><?php
-            echo Text::_($this->item->series_text); ?></h2>
-        <p class="description"><?php
-            echo $this->item->description; ?></p>
-    </div>
-
-    <?php
-    if (!empty($this->media)) {
-        ?>
+    <div class="row">
         <div class="col-lg-6">
             <?php
-            $this->params->set('player_width', ''); ?>
-            <?php
-            echo $CWMedia->getFluidMedia($this->media[0], $this->params, $this->template); ?>
+            echo $this->item->image; ?>
+            <h2><?php
+                echo Text::_($this->item->series_text); ?></h2>
+            <p class="description"><?php
+                echo $this->item->description; ?></p>
+        </div>
+
+        <?php
+        if (!empty($this->media)) {
+            ?>
+            <div class="col-lg-6">
+                <?php
+                $this->params->set('player_width', ''); ?>
+                <?php
+                echo $CWMedia->getFluidMedia($this->media[0], $this->params, $this->template); ?>
+            </div>
         </div>
 
         <table class="table table-striped">
@@ -101,7 +116,7 @@ $CWMedia = new Cwmmedia();
                         <?php
                         echo HTMLHelper::Date($item->createdate); ?>
                     </td>
-                    <td class="row">
+                    <td>
                         <a href="javascript:loadVideo('<?php
                         echo $path1; ?>', '<?php
                         echo $item->series_thumbnail; ?>')">
@@ -113,10 +128,11 @@ $CWMedia = new Cwmmedia();
                 <?php
             } ?></table>
         <?php
-    } else { ?>
+        } else { ?>
+        </div>
         <div style="clear: both"></div>
         <p><?php
-            echo Text::_('JBS_CMN_NO_PODCASTS'); ?></p>
+                echo Text::_('JBS_CMN_NO_PODCASTS'); ?></p>
         <?php
-    } ?>
+        } ?>
 </div>

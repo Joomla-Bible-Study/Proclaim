@@ -28,14 +28,53 @@ use Joomla\Registry\Registry;
  */
 class HtmlView extends BaseHtmlView
 {
+    /**
+     * State object
+     *
+     * @var object|null
+     * @since 7.0
+     */
     protected $state;
 
+    /**
+     * Items array
+     *
+     * @var array|null
+     * @since 7.0
+     */
     protected $items;
 
+    /**
+     * Template object
+     *
+     * @var object|null
+     * @since 7.0
+     */
     protected $template;
 
-    /** @var  Registry */
-    protected Registry $params;
+    /**
+     * Parameters
+     *
+     * @var Registry|null
+     * @since 7.0
+     */
+    protected ?Registry $params = null;
+
+    /**
+     * Pagination object
+     *
+     * @var \Joomla\CMS\Pagination\Pagination|null
+     * @since 7.0
+     */
+    protected $pagination;
+
+    /**
+     * HTML attributes array
+     *
+     * @var array
+     * @since 7.0
+     */
+    protected array $attribs = [];
 
     /**
      * Execute and display a template script.

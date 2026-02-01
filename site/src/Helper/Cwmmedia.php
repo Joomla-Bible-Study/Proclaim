@@ -182,9 +182,9 @@ class Cwmmedia
             case 1:
                 if ($downloadLink) {
                     if ($filesize > 0) {
-                        $mediafile = $playerCode . '<div class="col">' . $downloadLink . $filesize . '</div>';
+                        $mediafile = $playerCode . '<div>' . $downloadLink . $filesize . '</div>';
                     } else {
-                        $mediafile = $playerCode . '<div class="col">' . $downloadLink .  '</div>';
+                        $mediafile = $playerCode . '<div>' . $downloadLink .  '</div>';
                     }
                 } else {
                     $mediafile = $playerCode;
@@ -265,27 +265,27 @@ class Cwmmedia
             $filename = $media->get('filename');
 
             switch ($filename) {
-                case preg_match('(youtube.com|youtu.be)', $filename) === 1:
+                case preg_match('/(youtube.com|youtu.be)/', $filename) === 1:
                     $mediaimage = '<span class="fab fa-youtube" title="YouTube" style="font-size:24px;"></span>';
                     break;
 
-                case preg_match('(pdf|PDF)', $filename) === 1:
+                case preg_match('/(pdf|PDF)/', $filename) === 1:
                     $mediaimage = '<span class="fas fa-file-pdf" title="PDF" style="font-size:24px;"></span>';
                     break;
 
-                case preg_match('(mp3|MP3)', $filename) === 1:
+                case preg_match('/(mp3|MP3)/', $filename) === 1:
                     $mediaimage = '<span class="fas fa-play" title="Audio" style="font-size:24px;"></span>';
                     break;
 
-                case preg_match('(mp4|MP4)', $filename) === 1:
-                case preg_match('(m4v|M4V)', $filename) === 1:
+                case preg_match('/(mp4|MP4)/', $filename) === 1:
+                case preg_match('/(m4v|M4V)/', $filename) === 1:
                     $mediaimage = '<span class="fas fa-television" title="Video" style="font-size:24px;"></span>';
                     break;
 
-                case preg_match('(pptx|ppt|PPTX|PPT)', $filename) === 1:
+                case preg_match('/(pptx|ppt|PPTX|PPT)/', $filename) === 1:
                     $mediaimage = '<span class="fas fa-file-powerpoint" title="Powerpoint" style="font-size:24px;"></span>';
                     break;
-                case preg_match('(docx|DOCX)', $filename) === 1:
+                case preg_match('/(docx|DOCX)/', $filename) === 1:
                     $mediaimage = '<span class="fas fa-word" title="Word" style="font-size:24px;"></span>';
                     break;
                 default:
@@ -504,11 +504,11 @@ class Cwmmedia
                             }
                         }
 
-                        if (preg_match('(youtube.com|youtu.be)', $path) === 1) {
+                        if (preg_match('/(youtube.com|youtu.be)/', $path) === 1) {
                             $playercode = '<iframe class="playhit" data-id="' . $media->id . '" width="' . $player->playerwidth . '" height="' .
                                 $player->playerheight . '" src="' . $youtube->convertYoutube($path) .
                                 '" allow="autoplay; encrypted-media" allowfullscreen style="border: none"></iframe>';
-                        } elseif (preg_match('(vimeo.com)', $path) === 1) {
+                        } elseif (preg_match('/(vimeo.com)/', $path) === 1) {
                             $playercode = '<iframe class="playhit" data-id="' . $media->id . '" src="' . $this->convertVimeo(
                                 $path
                             ) .
@@ -693,7 +693,7 @@ class Cwmmedia
         $headerText = htmlspecialchars($this->getPopupHeader($media, $params), ENT_QUOTES, 'UTF-8');
         $footerText = htmlspecialchars($this->getPopupFooter($media, $params), ENT_QUOTES, 'UTF-8');
 
-        if (preg_match('(youtube.com|youtu.be|vimeo.com)', $path) === 1) {
+        if (preg_match('/(youtube.com|youtu.be|vimeo.com)/', $path) === 1) {
             $path = (new CWMAddonYoutube())->convertYoutube($path);
             $data = '<a data-fancybox="video-gallery" class="fancybox_player playhit" data-id="' . $media->id .
                 '" aria-hidden="false" data-src="' . $path .

@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Site\View\Cwmteachers;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
@@ -24,6 +23,7 @@ use Joomla\CMS\Document\Document;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
@@ -48,85 +48,85 @@ class HtmlView extends BaseHtmlView
     /**
      * Template Table
      *
-     * @var CwmtemplateTable
+     * @var \stdClass
      *
      * @since 7.0
      */
-    public $template;
+    protected \stdClass $template;
 
     /**
      * Items
      *
-     * @var object
+     * @var array|null
      *
      * @since 7.0
      */
-    protected $items = null;
+    protected ?array $items = [];
 
     /**
      * Pagination
      *
-     * @var object
+     * @var Pagination
      *
      * @since 7.0
      */
-    protected $pagination;
+    protected Pagination $pagination;
 
     /**
      * State
      *
-     * @var Registry
+     * @var Registry|null
      *
      * @since 7.0
      */
-    protected Registry $state;
+    protected ?Registry $state = null;
 
     /**
      * Params
      *
-     * @var Registry
+     * @var Registry|null
      *
      * @since 7.0
      */
-    protected Registry $params;
+    protected ?Registry $params = null;
 
     /**
      * Admin
      *
-     * @var object
+     * @var object|null
      *
      * @since 7.0
      */
-    protected $admin;
+    protected ?object $admin;
 
     /**
      * Page
      *
-     * @var object
+     * @var object|null
      *
      * @since 7.0
      */
-    protected $page;
+    protected ?object $page;
 
     /**
      * Request Url
      *
-     * @var string
+     * @var string|null
      *
      * @since 7.0
      */
-    protected $request_url;
+    protected ?string $request_url;
 
     /**
      * Listing helper instance for template use
      *
-     * @var Cwmlisting
+     * @var Cwmlisting|null
      * @since 10.0.0
      */
-    public Cwmlisting $listing;
+    public ?Cwmlisting $listing = null;
 
     /**
-     * Studies element CSS class
+     * Studies the element CSS class
      *
      * @var string
      * @since 10.0.0
@@ -163,22 +163,21 @@ class HtmlView extends BaseHtmlView
         $this->admin = $state->get('administrator');
         $uri         = new Uri();
 
-        $images = new Cwmimages();
+        $images      = new Cwmimages();
+        $pagebuilder = new Cwmpagebuilder();
 
-        if ($params->get('useexpert_teacherdetail') > 0 || \is_string($params->get('teacherstemplate'))) {
-            $pagebuilder = new Cwmpagebuilder();
+        foreach ($items as $i => $item) {
+            if (isset($item->teacher_thumbnail)) {
+                $image                  = $images::getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
+                $items[$i]->image       = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width
+                    . '" alt="' . $item->teachername . '" />';
+                $items[$i]->slug        = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
+                    . str_replace(' ', '-', htmlspecialchars_decode($item->teachername, ENT_QUOTES));
+                $items[$i]->teacherlink = Route::_(
+                    'index.php?option=com_proclaim&view=teacher&id=' . $item->slug . '&t=' . $this->template->id
+                );
 
-            foreach ($items as $i => $item) {
-                if (isset($item->teacher_thumbnail)) {
-                    $image                  = $images::getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
-                    $items[$i]->image       = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width
-                        . '" alt="' . $item->teachername . '" />';
-                    $items[$i]->slug        = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
-                        . str_replace(' ', '-', htmlspecialchars_decode($item->teachername, ENT_QUOTES));
-                    $items[$i]->teacherlink = Route::_(
-                        'index.php?option=com_proclaim&view=teacher&id=' . $item->slug . '&t=' . $this->template->id
-                    );
-
+                if ($params->get('useexpert_teacherdetail') > 0 || \is_string($params->get('teacherstemplate'))) {
                     if (isset($items[$i]->information)) {
                         $items[$i]->text        = $items[$i]->information;
                         $information            = $pagebuilder->runContentPlugins($items[$i], $params);
@@ -228,10 +227,9 @@ class HtmlView extends BaseHtmlView
 
         /** @var Registry $itemparams */
         $itemparams = $app->getParams();
-        $title      = null;
 
         // Because the application sets a default page title,
-        // we need to get it from the menu item itself
+        // We need to get it from the menu item itself
         $menu = $menus->getActive();
 
         if ($menu) {

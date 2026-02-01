@@ -32,16 +32,34 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
  */
 class HtmlView extends BaseHtmlView
 {
+    /**
+     * Active search filters
+     *
+     * @var array|null
+     * @since 9.1.4
+     */
     public $activeFilters;
 
+    /**
+     * Filter form object
+     *
+     * @var \Joomla\CMS\Form\Form|null
+     * @since 9.1.4
+     */
     public $filterForm;
 
+    /**
+     * Server types options
+     *
+     * @var array|null
+     * @since 7.0
+     */
     public $types;
 
     /**
      * Items
      *
-     * @var object
+     * @var array|null
      *
      * @since 7.0
      */
@@ -50,7 +68,7 @@ class HtmlView extends BaseHtmlView
     /**
      * Pagination
      *
-     * @var object
+     * @var object|null
      *
      * @since 7.0
      */
@@ -59,7 +77,7 @@ class HtmlView extends BaseHtmlView
     /**
      * State
      *
-     * @var object
+     * @var object|null
      *
      * @since 7.0
      */
@@ -68,19 +86,19 @@ class HtmlView extends BaseHtmlView
     /**
      * Can Do
      *
-     * @var object
+     * @var object|null
      *
      * @since 7.0
      */
     protected $canDo;
 
-    /** @var  array Filter Levels
+    /** @var  array|null Filter Levels
      *
      * @since 7.0
      */
     protected $f_levels;
 
-    /** @var  object Side Bar
+    /** @var  object|null Side Bar
      *
      * @since 7.0
      */

@@ -41,29 +41,29 @@ use Joomla\Registry\Registry;
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var object Item
+    /** @var object|null Item
      *
      * @since 7.0
      */
-    protected $item;
+    protected ?object $item = null;
 
-    /** @var Registry Params
+    /** @var Registry|null Params
      *
      * @since 7.0
      */
-    protected $params;
+    protected ?Registry $params = null;
 
-    /** @var  string Print
+    /** @var  string|null Print
      *
      * @since 7.0
      */
-    protected $print;
+    protected ?string $print = null;
 
-    /** @var Registry State
+    /** @var Registry|null State
      *
      * @since 7.0
      */
-    protected $state;
+    protected ?Registry $state = null;
 
     /** @var  \Joomla\CMS\User\User|null User
      *
@@ -71,61 +71,61 @@ class HtmlView extends BaseHtmlView
      */
     protected $user;
 
-    /** @var  string Passage
+    /** @var  string|null Passage
      *
      * @since 7.0
      */
-    protected $passage;
+    protected ?string $passage = null;
 
-    /** @var  string Related
+    /** @var  string|null Related
      *
      * @since 7.0
      */
-    protected $related;
+    protected ?string $related = null;
 
-    /** @var  string Subscribe
+    /** @var  string|null Subscribe
      *
      * @since 7.0
      */
-    protected $subscribe;
+    protected ?string $subscribe = null;
 
-    /** @var  int Menu ID
+    /** @var  int|null Menu ID
      *
      * @since 7.0
      */
-    protected $menuid;
+    protected ?int $menuid = null;
 
-    /** @var  string Details Link
+    /** @var  string|null Details Link
      *
      * @since 7.0
      */
-    protected $detailslink;
+    protected ?string $detailslink = null;
 
     /** @var  \stdClass|null Page
      *
      * @since 7.0
      */
-    protected $page;
+    protected ?\stdClass $page = null;
 
     /** @var  \stdClass|null Article
      *
      * @since 7.0
      */
-    protected $article;
+    protected ?\stdClass $article = null;
 
-    /** @var  array Article
+    /** @var  array|null Comments
      *
      * @since 7.0
      */
-    protected $comments;
+    protected ?array $comments = null;
 
     /**
      * Simple Mode object
      *
-     * @var object
+     * @var object|null
      * @since 9.2.3
      */
-    protected $simple;
+    protected ?object $simple = null;
 
     /**
      * Form for comments
@@ -149,15 +149,15 @@ class HtmlView extends BaseHtmlView
      * @var object|null
      * @since 9.2.3
      */
-    protected $template;
+    protected ?object $template = null;
 
     /**
      * Listing helper instance
      *
-     * @var Cwmlisting
+     * @var Cwmlisting|null
      * @since 10.0.0
      */
-    protected Cwmlisting $listing;
+    protected ?Cwmlisting $listing = null;
 
     /**
      * Pre-calculated fluid listing HTML for the sermon
@@ -200,7 +200,7 @@ class HtmlView extends BaseHtmlView
         }
 
         // Create a shortcut for $item.
-        $item = &$this->item;
+        $item = $this->item;
 
         if (!$item) {
             return;
