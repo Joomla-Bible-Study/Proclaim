@@ -169,11 +169,13 @@ function doLink(bool $quiet = false): void
     // Internal links (dev.init)
     symlink_force(BASE_DIR . '/proclaim.xml', BASE_DIR . '/admin/proclaim.xml', $quiet);
     symlink_force(BASE_DIR . '/proclaim.script.php', BASE_DIR . '/admin/proclaim.script.php', $quiet);
-    if (!is_dir(BASE_DIR . '/media/css/site') && !mkdir(
-        $concurrentDirectory = BASE_DIR . '/media/css/site',
-        0777,
-        true
-    ) && !is_dir($concurrentDirectory)) {
+    if (
+        !is_dir(BASE_DIR . '/media/css/site') && !mkdir(
+            $concurrentDirectory = BASE_DIR . '/media/css/site',
+            0777,
+            true
+        ) && !is_dir($concurrentDirectory)
+    ) {
         throw new \RuntimeException(\sprintf('Directory "%s" was not created', $concurrentDirectory));
     }
     symlink_force(BASE_DIR . '/media/css/cwmcore.css', BASE_DIR . '/media/css/site/cwmcore.css', $quiet);
