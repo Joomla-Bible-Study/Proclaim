@@ -38,7 +38,7 @@ if ($url) {
     HTMLHelper::_('stylesheet', $url);
 }
 ?>
-<form action="<?php Route::_('index.php?option=com_proclaim&view=cwmseriesdisplay') ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmseriesdisplays'); ?>" method="post" name="adminForm" id="adminForm">
     <div class="container proclaim-main-content" id="proclaim-main-content" role="main">
         <div class="row">
             <div class="col1-12">
