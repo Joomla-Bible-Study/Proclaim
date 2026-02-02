@@ -233,13 +233,13 @@ echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post"
                         ); ?>
                     <?php
                     endif; ?>
+
+                    <?php
+                    // Load the pagination. ?>
+                    <?php
+                    echo $this->pagination->getListFooter(); ?>
                 <?php
                 endif; ?>
-
-                <?php
-                echo $this->pagination->getListFooter(); ?>
-                <?php
-                //Load the batch processing form.?>
 
                 <input type="hidden" name="task" value=""/>
                 <input type="hidden" name="boxchecked" value="0"/>
