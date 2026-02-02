@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 <?php
 
+// phpcs:disable PSR1.Files.SideEffects
 /**
  * Proclaim Build Script
  * Replaces Phing build.xml
@@ -639,3 +640,4 @@ function doLintSyntax(): void
 
     echo "No syntax errors detected.\n";
 }
+// phpcs:enable PSR1.Files.SideEffects

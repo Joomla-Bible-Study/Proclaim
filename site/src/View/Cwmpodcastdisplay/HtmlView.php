@@ -21,6 +21,7 @@ use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
@@ -81,6 +82,14 @@ class HtmlView extends BaseHtmlView
     protected string $request_url = '';
 
     /**
+     * Pagination object
+     *
+     * @var Pagination|null
+     * @since 7.0
+     */
+    protected ?Pagination $pagination = null;
+
+    /**
      * Execute and display a template script.
      *
      * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
@@ -113,6 +122,12 @@ class HtmlView extends BaseHtmlView
         // Get studies associated with this series
         $mainframe->setUserState('sid', $item->id);
         $studies = $this->get('Studies');
+
+        // Pagination
+        $total            = $this->get('Total');
+        $limit            = $params->get('series_detail_limit', 20);
+        $limitstart       = $this->state->get('list.offset');
+        $this->pagination = new Pagination($total, $limitstart, $limit);
 
         // Get the series image
         $image              = Cwmimages::getSeriesThumbnail($item->series_thumbnail);

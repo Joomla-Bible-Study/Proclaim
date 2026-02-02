@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ItemModel;
+use Joomla\Database\QueryInterface;
 
 /**
  * Model class for PodcastDisplay
@@ -92,14 +93,14 @@ class CwmpodcastdisplayModel extends ItemModel
     }
 
     /**
-     * Get Studies
+     * Get Studies Query
      *
-     * @return array
+     * @return QueryInterface
      *
      * @throws \Exception
      * @since 7.0
      */
-    public function getStudies(): array
+    protected function getStudiesQuery(): QueryInterface
     {
         /** @type \JApplicationSite $app */
         $app = Factory::getApplication('site');
@@ -222,6 +223,24 @@ class CwmpodcastdisplayModel extends ItemModel
 
         $query->order('studydate ' . $order);
 
+        return $query;
+    }
+
+    /**
+     * Get Studies
+     *
+     * @return array
+     *
+     * @throws \Exception
+     * @since 7.0
+     */
+    public function getStudies(): array
+    {
+        $db              = Factory::getContainer()->get('DatabaseDriver');
+        $query           = $this->getStudiesQuery();
+        $template_params = Cwmparams::getTemplateparams();
+        $t_params        = $template_params->params;
+
         // Fix pagination offset
         $offset = $this->getState('list.offset');
         $limit  = $t_params->get('series_detail_limit', 20);
@@ -234,6 +253,27 @@ class CwmpodcastdisplayModel extends ItemModel
         }
 
         return $studies;
+    }
+
+    /**
+     * Get Total Studies
+     *
+     * @return int
+     *
+     * @throws \Exception
+     * @since 7.0
+     */
+    public function getTotal(): int
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $this->getStudiesQuery();
+
+        $query->clear('select')->clear('order')->clear('limit')->clear('offset');
+        $query->select('COUNT(DISTINCT study.id)');
+
+        $db->setQuery($query);
+
+        return (int)$db->loadResult();
     }
 
     /**

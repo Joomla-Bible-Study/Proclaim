@@ -26,6 +26,7 @@
  * @since      10.1.0
  */
 
+// phpcs:disable PSR1.Files.SideEffects
 // Functions.
 function usage($command): void
 {
@@ -445,3 +446,4 @@ if ($changedFilesSinceVersion > 0 || $changedFilesCopyright > 0) {
 }
 
 echo 'Version bump complete!' . PHP_EOL;
+// phpcs:enable PSR1.Files.SideEffects
