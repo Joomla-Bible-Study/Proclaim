@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmseries;
 
 // No Direct Access
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
@@ -89,6 +90,14 @@ class HtmlView extends BaseHtmlView
      * @since    7.0.0
      */
     protected array $activeFilters;
+
+    /**
+     * Filter Form
+     *
+     * @var Form
+     * @since    7.0.0
+     */
+    public Form $filterForm;
 
     /**
      * Execute and display a template script.

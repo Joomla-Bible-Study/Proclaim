@@ -40,6 +40,29 @@
     </fieldset>
     <fields name="list">
         <field
+                name="fullordering"
+                type="list"
+                label="COM_CONTENT_LIST_FULL_ORDERING"
+                description="COM_CONTENT_LIST_FULL_ORDERING_DESC"
+                onchange="this.form.submit();"
+                default="series.series_text ASC"
+                validate="options"
+        >
+            <option value="">JGLOBAL_SORT_BY</option>
+            <option value="series.ordering ASC">JGRID_HEADING_ORDERING_ASC</option>
+            <option value="series.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>
+            <option value="series.series_text ASC">JBS_CMN_SERIES_ASC</option>
+            <option value="series.series_text DESC">JBS_CMN_SERIES_DESC</option>
+            <option value="series.published ASC">JBS_CMN_PUBLISHED_ASC</option>
+            <option value="series.published DESC">JBS_CMN_PUBLISHED_DESC</option>
+            <option value="series.id ASC">JGRID_HEADING_ID_ASC</option>
+            <option value="series.id DESC">JGRID_HEADING_ID_DESC</option>
+            <option value="access_level ASC">JGRID_HEADING_ACCESS_ASC</option>
+            <option value="access_level DESC">JGRID_HEADING_ACCESS_DESC</option>
+            <option value="series.language ASC">JGRID_HEADING_LANGUAGE_ASC</option>
+            <option value="series.language DESC">JGRID_HEADING_LANGUAGE_DESC</option>
+        </field>
+        <field
                 name="limit"
                 type="limitbox"
                 class="input-mini"
