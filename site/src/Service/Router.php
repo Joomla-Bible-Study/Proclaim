@@ -121,13 +121,14 @@ class Router extends RouterView
         $podcastDisplay->setKey('id')->setParent($podcastList);
         $this->registerView($podcastDisplay);
 
-        // Series Podcast list view
+        // Series Podcast list view (parent for single series podcast display)
         $seriesPodcastList = new RouterViewConfiguration('cwmseriespodcastlist');
         $this->registerView($seriesPodcastList);
 
-        // Series Podcast display view
+        // Series Podcast display view - child of series podcast list
+        // URL: /series-podcasts-menu/series-alias (instead of /series-podcasts-menu/cwmseriespodcastdisplay/series-alias)
         $seriesPodcastDisplay = new RouterViewConfiguration('cwmseriespodcastdisplay');
-        $seriesPodcastDisplay->setKey('id')->setParent($seriesDisplays);
+        $seriesPodcastDisplay->setKey('id')->setParent($seriesPodcastList);
         $this->registerView($seriesPodcastDisplay);
 
         // Popup view
