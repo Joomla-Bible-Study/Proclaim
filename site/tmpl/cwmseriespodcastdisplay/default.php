@@ -28,8 +28,7 @@ HTMLHelper::_('dropdown.init');
 HTMLHelper::_('formbehavior.chosen', 'select');
 HTMLHelper::_('behavior.multiselect');
 
-$app       = Factory::getApplication();
-$user      = $app->getIdentity();
+$user      = $this->getCurrentUser();
 $userId    = $user->id;
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));

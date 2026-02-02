@@ -23,6 +23,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -102,9 +103,7 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $mainframe = Factory::getApplication();
-        $input     = $mainframe->input;
-        $document  = $mainframe->getDocument();
+        $input = new Input();
 
         // Get the menu item object
         // Load the Admin settings and params from the template
@@ -120,7 +119,7 @@ class HtmlView extends BaseHtmlView
         }
 
         // Get studies associated with this series
-        $mainframe->setUserState('sid', $item->id);
+        Factory::getApplication()->setUserState('sid', $item->id);
         $studies = $this->get('Studies');
 
         // Pagination
@@ -166,13 +165,13 @@ class HtmlView extends BaseHtmlView
         $params->set('show_filesize', 0);
         $params->set('mp3', true);
 
-        // Prepare meta information (under development)
+        // Prepare meta-information (under development)
         if ($params->get('metakey')) {
-            $document->setMetaData('keywords', $params->get('metakey'));
+            $this->getDocument()->setMetaData('keywords', $params->get('metakey'));
         }
 
         if ($params->get('metadesc')) {
-            $document->setDescription($params->get('metadesc'));
+            $this->getDocument()->setDescription($params->get('metadesc'));
         }
 
         // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
@@ -180,7 +179,7 @@ class HtmlView extends BaseHtmlView
         $groups = $user->getAuthorisedViewLevels();
 
         if ($item->access && !\in_array($item->access, $groups, true)) {
-            $mainframe->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
+            Factory::getApplication()->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
 
             return;
         }
