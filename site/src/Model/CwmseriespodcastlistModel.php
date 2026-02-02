@@ -42,7 +42,13 @@ class CwmseriespodcastlistModel extends ListModel
      */
     public function getItems(): mixed
     {
-        $items  = parent::getItems();
+        $items = parent::getItems();
+
+        // Return empty array if query failed
+        if ($items === false) {
+            return [];
+        }
+
         $user   = Factory::getApplication()->getIdentity();
         $userId = $user->get('id');
         $guest  = $user->get('guest');
@@ -71,15 +77,11 @@ class CwmseriespodcastlistModel extends ListModel
             $access = $this->getState('filter.access');
 
             if ($access) {
-                // If the access filter has been set, we already have only the articles this user can view.
+                // If the access filter has been set, we already have only the series this user can view.
                 $item->params->set('access-view', true);
-            } elseif ($item->catid == 0 || $item->category_access === null) {
-                $item->params->set('access-view', \in_array($item->access, $groups));
             } else {
-                $item->params->set(
-                    'access-view',
-                    \in_array($item->access, $groups) && \in_array($item->category_access, $groups)
-                );
+                // Series don't have categories, just check item access level
+                $item->params->set('access-view', \in_array($item->access, $groups));
             }
 
             // Get the tags
@@ -202,10 +204,11 @@ class CwmseriespodcastlistModel extends ListModel
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
 
+        // Select only the columns we need for performance
         $query->select(
             $this->getState(
                 'list.select',
-                '*'
+                'a.id, a.series_text, a.alias, a.series_thumbnail, a.access, a.created_by, a.published'
             )
         );
 

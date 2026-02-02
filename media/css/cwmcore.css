@@ -432,6 +432,19 @@ p.popupfooter {
 .jbsmimg img {
   border: none;
 }
+.cwm-no-image {
+  width: 200px;
+  height: 113px;
+  background-color: var(--color-gray-200, #e9ecef);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+.cwm-no-image .icon-image {
+  font-size: 48px;
+  color: var(--color-gray-400, #ced4da);
+}
 div.JBSM .img-rounded {
   border-radius: 25px;
 }
@@ -442,11 +455,36 @@ div.JBSM .img-rounded {
 /* Effects */
 .effects {
   padding-left: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 .effects .jbsmimg {
   position: relative;
-  float: left;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.effects .jbsmimg-wrapper {
+  position: relative;
+  overflow: hidden;
+  width: 200px;
+  height: 113px;
+}
+.effects .jbsmimg-title {
+  display: block;
+  font-size: 13px;
+  color: var(--color-gray-700, #495057);
+  text-align: center;
+  text-decoration: none;
+  padding: 8px 4px;
+  max-width: 200px;
+  line-height: 1.3;
+  word-break: break-word;
+}
+.effects .jbsmimg-title:hover {
+  color: var(--color-primary, #0d6efd);
+  text-decoration: underline;
 }
 .effects .jbsmimg img {
   display: block;

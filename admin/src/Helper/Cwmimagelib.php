@@ -38,36 +38,54 @@ class Cwmimagelib
      *
      * @param   string  $img  Org Image File
      *
-     * @return string
+     * @return string Empty string if no valid image, otherwise path to resized image
      *
      * @throws \Exception
      * @since 9.0.18
      */
     public static function getSeriesPodcast(string $img): string
     {
+        // Return empty if no image path provided
+        if (empty($img)) {
+            return '';
+        }
+
         // Prep files
-        $img_base    = pathinfo($img);
-        $array       = explode('.', $img_base['basename']);
+        $img_base = pathinfo($img);
 
-        if (\count($array) < 2) {
-            return $img;
+        // Ensure we have a valid filename with extension
+        if (empty($img_base['filename']) || empty($img_base['extension'])) {
+            return '';
         }
 
-        $NewfileName = $img_base["dirname"] . '/' . $array[0] . '-200x112.' . $array[1];
-        $new_sub     = JPATH_ROOT . '/' . $NewfileName;
-        $img_sub     = JPATH_ROOT . '/' . $img;
+        $newFileName = $img_base['dirname'] . '/' . $img_base['filename'] . '-200x112.' . $img_base['extension'];
+        $newFilePath = JPATH_ROOT . '/' . $newFileName;
+        $origFilePath = JPATH_ROOT . '/' . $img;
 
-        if (file_exists($img_sub) && !file_exists($new_sub)) {
-            if (\function_exists('gd_info') && \extension_loaded('gd')) {
-                self::resizeImage($new_sub, $img_sub);
+        // Check if original file exists
+        if (!file_exists($origFilePath)) {
+            return '';
+        }
 
-                return $NewfileName;
+        // If resized version already exists, return it
+        if (file_exists($newFilePath)) {
+            return $newFileName;
+        }
+
+        // Try to create resized version
+        if (\function_exists('gd_info') && \extension_loaded('gd')) {
+            try {
+                self::resizeImage($newFilePath, $origFilePath);
+
+                return $newFileName;
+            } catch (\Exception $e) {
+                // Fall back to original if resize fails
+                return $img;
             }
-
-            return $img;
         }
 
-        return $NewfileName;
+        // Return original if GD not available
+        return $img;
     }
 
     /**
