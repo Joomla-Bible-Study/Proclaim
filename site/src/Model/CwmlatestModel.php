@@ -16,8 +16,8 @@ namespace CWM\Component\Proclaim\Site\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\Database\ParameterType;
 
 /**
  * Model class for Latest Study
@@ -36,12 +36,14 @@ class CwmlatestModel extends BaseDatabaseModel
      */
     public function getLatestStudyId(): ?int
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = $this->getDatabase();
         $query = $db->getQuery(true);
 
-        $query->select('id')
+        $published = 1;
+        $query->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_studies'))
-            ->where($db->quoteName('published') . ' = 1')
+            ->where($db->quoteName('published') . ' = :published')
+            ->bind(':published', $published, ParameterType::INTEGER)
             ->order($db->quoteName('studydate') . ' DESC')
             ->setLimit(1);
 

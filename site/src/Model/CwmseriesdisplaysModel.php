@@ -82,42 +82,43 @@ class CwmseriesdisplaysModel extends ListModel
     /**
      * Get a list of teachers associated with the series
      *
-     * @return mixed
+     * @return array
      * @since 9.0.0
      */
     public function getTeachers(): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = $this->getDatabase();
         $query = $db->getQuery(true);
-        $query->select('t.id AS value, t.teachername AS text');
-        $query->from('#__bsms_teachers AS t');
-        $query->select('series.access');
-        $query->join('INNER', '#__bsms_series AS series ON t.id = series.teacher');
-        $query->group('t.id');
-        $query->order('t.teachername ASC');
+        $query->select($db->quoteName(['t.id', 't.teachername'], ['value', 'text']));
+        $query->from($db->quoteName('#__bsms_teachers', 't'));
+        $query->select($db->quoteName('series.access'));
+        $query->join('INNER', $db->quoteName('#__bsms_series', 'series') . ' ON t.id = series.teacher');
+        $query->group($db->quoteName('t.id'));
+        $query->order($db->quoteName('t.teachername') . ' ASC');
 
-        $db->setQuery($query->__toString());
+        $db->setQuery($query);
 
         return $db->loadObjectList();
     }
 
     /**
-     * Get a list of teachers associated with the series
+     * Get a list of years from studies associated with series
      *
-     * @return mixed
+     * @return array
      * @since 9.0.0
      */
     public function getYears(): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = $this->getDatabase();
         $query = $db->getQuery(true);
-        $query->select('DISTINCT YEAR(s.studydate) as value, YEAR(s.studydate) as text');
-        $query->from('#__bsms_studies as s');
-        $query->select('series.access');
-        $query->join('INNER', '#__bsms_series as series on s.series_id = series.id');
+        $query->select('DISTINCT YEAR(' . $db->quoteName('s.studydate') . ') as value');
+        $query->select('YEAR(' . $db->quoteName('s.studydate') . ') as text');
+        $query->from($db->quoteName('#__bsms_studies', 's'));
+        $query->select($db->quoteName('series.access'));
+        $query->join('INNER', $db->quoteName('#__bsms_series', 'series') . ' ON s.series_id = series.id');
         $query->order('value');
 
-        $db->setQuery($query->__toString());
+        $db->setQuery($query);
 
         return $db->loadObjectList();
     }
@@ -131,20 +132,20 @@ class CwmseriesdisplaysModel extends ListModel
      */
     public function getSeries(): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = $this->getDatabase();
         $query = $db->getQuery(true);
 
-        $query->select('series.id AS value, series.series_text AS text, series.access');
-        $query->from('#__bsms_series AS series');
-        $query->join('INNER', '#__bsms_studies AS study ON study.series_id = series.id');
-        $query->group('series.id');
-        $query->order('series.series_text');
+        $query->select($db->quoteName(['series.id', 'series.series_text', 'series.access'], ['value', 'text', 'access']));
+        $query->from($db->quoteName('#__bsms_series', 'series'));
+        $query->join('INNER', $db->quoteName('#__bsms_studies', 'study') . ' ON study.series_id = series.id');
+        $query->group($db->quoteName('series.id'));
+        $query->order($db->quoteName('series.series_text'));
 
-        $db->setQuery($query->__toString());
+        $db->setQuery($query);
         $items = $db->loadObjectList();
 
         // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-        $user   = Factory::getApplication()->getIdentity();
+        $user   = $this->getCurrentUser();
         $groups = $user->getAuthorisedViewLevels();
         $count  = \count($items);
 

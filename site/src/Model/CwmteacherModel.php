@@ -16,6 +16,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ItemModel;
+use Joomla\Database\ParameterType;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -58,7 +59,7 @@ class CwmteacherModel extends ItemModel
 
         if (!isset($this->_item[$pk])) {
             try {
-                $db    = Factory::getContainer()->get('DatabaseDriver');
+                $db    = $this->getDatabase();
                 $query = $db->getQuery(true);
                 $query->select(
                     $this->getState(
@@ -66,8 +67,9 @@ class CwmteacherModel extends ItemModel
                         't.*,CASE WHEN CHAR_LENGTH(t.alias) THEN CONCAT_WS(\':\', t.id, t.alias) ELSE t.id END as slug'
                     )
                 );
-                $query->from('#__bsms_teachers AS t');
-                $query->where('t.id = ' . (int)$pk);
+                $query->from($db->quoteName('#__bsms_teachers', 't'));
+                $query->where($db->quoteName('t.id') . ' = :id')
+                    ->bind(':id', $pk, ParameterType::INTEGER);
                 $db->setQuery($query);
                 $data = $db->loadObject();
 
