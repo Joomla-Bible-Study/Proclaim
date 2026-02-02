@@ -12,10 +12,11 @@
 namespace CWM\Component\Proclaim\Administrator\View\Cwmseries;
 
 // No Direct Access
-use Joomla\CMS\Factory;
+use CWM\Component\Proclaim\Administrator\Model\CwmseriesModel;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Model\State;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Pagination\Pagination;
@@ -36,36 +37,12 @@ use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 class HtmlView extends BaseHtmlView
 {
     /**
-     * Can Do
-     *
-     * @var object
-     * @since    7.0.0
-     */
-    public $canDo;
-
-    /**
-     * Filter Levels
+     * Items
      *
      * @var array
      * @since    7.0.0
      */
-    public $f_levels;
-
-    /**
-     * Side Bar
-     *
-     * @var string
-     * @since    7.0.0
-     */
-    public $sidebar;
-
-    /**
-     * Items
-     *
-     * @var object
-     * @since    7.0.0
-     */
-    protected $items;
+    protected array $items;
 
     /**
      * Pagination
@@ -78,18 +55,10 @@ class HtmlView extends BaseHtmlView
     /**
      * State
      *
-     * @var mixed
+     * @var State|\Joomla\Registry\Registry
      * @since    7.0.0
      */
-    protected $state;
-
-    /**
-     * Active Filters
-     *
-     * @var array
-     * @since    7.0.0
-     */
-    protected array $activeFilters;
+    protected State|\Joomla\Registry\Registry $state;
 
     /**
      * Filter Form
@@ -98,6 +67,30 @@ class HtmlView extends BaseHtmlView
      * @since    7.0.0
      */
     public Form $filterForm;
+
+    /**
+     * The active search filters
+     *
+     * @var  array
+     * @since 4.0.0
+     */
+    public array $activeFilters;
+
+    /**
+     * All transitions, which can be executed if the items
+     *
+     * @var  array
+     * @since 4.0.0
+     */
+    protected array $transitions = [];
+
+    /**
+     * Is this view an Empty State
+     *
+     * @var   bool
+     * @since 4.0.0
+     */
+    private bool $isEmptyState = false;
 
     /**
      * Execute and display a template script.
@@ -113,12 +106,15 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $this->items      = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
-        $this->state      = $this->get('State');
+        /** @var CwmseriesModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
 
-        $this->filterForm    = $this->get('FilterForm');
-        $this->activeFilters = $this->get('ActiveFilters');
+        $this->items         = $model->getItems();
+        $this->pagination    = $model->getPagination();
+        $this->state         = $model->getState();
+        $this->filterForm    = $model->getFilterForm();
+        $this->activeFilters = $model->getActiveFilters();
         $this->canDo         = ContentHelper::getActions('com_proclaim', 'serie');
 
         // Check for errors.
@@ -126,7 +122,7 @@ class HtmlView extends BaseHtmlView
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
-        // We don't need toolbar in the modal window.
+        // We don't need a toolbar in the modal window.
         if ($this->getLayout() !== 'modal') {
             $this->addToolbar();
 
@@ -136,6 +132,11 @@ class HtmlView extends BaseHtmlView
                 $this->filterForm->removeField('language', 'filter');
             }
         }
+
+        // Add form control fields
+        $this->filterForm
+            ->addControlField('task', '')
+            ->addControlField('boxchecked', '0');
 
         // Display the template
         parent::display($tpl);
@@ -152,14 +153,14 @@ class HtmlView extends BaseHtmlView
     protected function addToolbar(): void
     {
         $canDo = ContentHelper::getActions('com_proclaim');
-        $user  = Factory::getApplication()->getIdentity();
+        $user  = $this->getCurrentUser();
 
         // Get the toolbar object instance
-        $toolbar = Toolbar::getInstance('toolbar');
+        $toolbar = $this->getDocument()->getToolbar();
 
         ToolbarHelper::title(Text::_('JBS_CMN_SERIES'), 'tree-2 tree-2');
 
-        if ($this->canDo->get('core.create')) {
+        if ($canDo->get('core.create')) {
             $toolbar->addNew('cwmserie.add');
         }
 
@@ -200,7 +201,7 @@ class HtmlView extends BaseHtmlView
                 ->listCheck(true);
         }
 
-        ToolbarHelper::help('series', true);
+        $toolbar->help('series', true);
     }
 
     /**
@@ -213,11 +214,9 @@ class HtmlView extends BaseHtmlView
     protected function getSortFields(): array
     {
         return [
-            'series.ordering'  => Text::_('JGRID_HEADING_ORDERING'),
-            'series.published' => Text::_('JSTATUS'),
-            'access_level'     => Text::_('JGRID_HEADING_ACCESS'),
-            'series.language'  => Text::_('JGRID_HEADING_LANGUAGE'),
-            'series.id'        => Text::_('JGRID_HEADING_ID'),
+            'serie.topic_text' => Text::_('JBS_CMN_TOPICS'),
+            'serie.published'  => Text::_('JSTATUS'),
+            'serie.id'         => Text::_('JGRID_HEADING_ID'),
         ];
     }
 }

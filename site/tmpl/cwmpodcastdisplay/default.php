@@ -19,8 +19,14 @@ use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Registry\Registry;
 
 /** @var CWM\Component\Proclaim\Site\View\Cwmpodcastdisplay\HtmlView $this */
+
+HTMLHelper::_('dropdown.init');
+HTMLHelper::_('formbehavior.chosen', 'select');
+HTMLHelper::_('behavior.multiselect');
 
 $app       = Factory::getApplication();
 $user      = $app->getIdentity();
@@ -36,103 +42,161 @@ $CWMedia = new Cwmmedia();
 <script>
     function loadVideo(path, image) {
         var audio = document.querySelector('audio');
+        var loading = document.getElementById('audio-loading');
+        var timeoutId;
+
         if (audio) {
+            // Show loading
+            if (loading) {
+                loading.style.display = 'block';
+                loading.innerHTML = '<?php echo Text::_('JBS_CMN_LOADING'); ?>...';
+                loading.className = 'alert alert-info';
+            }
+
             audio.src = path;
-            audio.play();
+
+            // Set timeout (e.g., 10 seconds)
+            timeoutId = setTimeout(function() {
+                if (loading) {
+                    loading.innerHTML = '<?php echo Text::_('JBS_CMN_LOADING_TIMEOUT', 'Loading is taking longer than expected...'); ?>';
+                    loading.className = 'alert alert-warning';
+                }
+            }, 10000);
+
+            // When audio is ready to play
+            audio.oncanplay = function() {
+                clearTimeout(timeoutId);
+                if (loading) {
+                    loading.style.display = 'none';
+                }
+                audio.play();
+            };
+
+            // Handle errors
+            audio.onerror = function() {
+                clearTimeout(timeoutId);
+                if (loading) {
+                    loading.innerHTML = '<?php echo Text::_('JBS_CMN_LOADING_ERROR', 'Error loading audio file.'); ?>';
+                    loading.className = 'alert alert-danger';
+                }
+            };
+
+            // Trigger load
+            audio.load();
         } else {
             // Fallback for iframe/video if present
             var iframe = document.querySelector('iframe.playhit');
             if (iframe) {
-                // This is tricky for iframes, as path might need conversion
-                // For now, assuming audio since this view filters for MP3s
                 console.log('Video/Iframe update not fully supported in this view for ' + path);
             }
         }
     }
 </script>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-lg-6">
-            <?php
-            echo $this->item->image; ?>
-            <h2><?php
-                echo Text::_($this->item->series_text); ?></h2>
-            <p class="description"><?php
-                echo $this->item->description; ?></p>
-        </div>
 
-        <?php
-        if (!empty($this->media)) {
-            ?>
+<form action="<?php echo htmlspecialchars(Uri::getInstance()->toString()); ?>" method="post" name="adminForm" id="adminForm">
+    <div class="container-fluid">
+        <div class="row">
             <div class="col-lg-6">
                 <?php
-                $this->params->set('player_width', ''); ?>
-                <?php
-                echo $CWMedia->getFluidMedia($this->media[0], $this->params, $this->template); ?>
+                echo $this->item->image; ?>
+                <h2><?php
+                    echo Text::_($this->item->series_text); ?></h2>
+                <p class="description"><?php
+                    echo $this->item->description; ?></p>
             </div>
-        </div>
 
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>
-                    <?php
-                    echo Text::_('JBS_CMN_TITLE'); ?>
-                </th>
-                <th>
-                    <?php
-                    echo Text::_('JBS_CPL_DATE'); ?>
-                </th>
-                <th>
-
-                </th>
-            </tr>
-            </thead>
             <?php
-            foreach ($this->media as $item) {
-                // Sparams are the server parameters
-                $reg = new Joomla\Registry\Registry();
-                $reg->loadString($item->sparams);
-                $item->sparams = $reg;
-
-                // Params are the individual params for the media file record
-                $reg = new Joomla\Registry\Registry();
-                $reg->loadString($item->params);
-                $item->params = $reg;
+            if (!empty($this->media)) {
                 ?>
-                <tr>
+                <div class="col-lg-6">
                     <?php
-                    $path1 = Cwmhelper::mediaBuildUrl(
-                        $item->sparams->get('path'),
-                        $item->params->get('filename'),
-                        $item->params,
-                        true
-                    ); ?>
-                    <td>
+                    $this->params->set('player_width', ''); ?>
+                    
+                    <div id="audio-loading" style="display:none; margin-bottom: 10px;"></div>
+                    
+                    <?php
+                    echo $CWMedia->getFluidMedia($this->media[0], $this->params, $this->template); ?>
+
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>
+                                <?php
+                                echo Text::_('JBS_CMN_TITLE'); ?>
+                            </th>
+                            <th>
+                                <?php
+                                echo Text::_('JBS_CPL_DATE'); ?>
+                            </th>
+                            <th>
+
+                            </th>
+                        </tr>
+                        </thead>
                         <?php
-                        echo stripslashes($item->studytitle); ?>
-                    </td>
-                    <td>
-                        <?php
-                        echo HTMLHelper::Date($item->createdate); ?>
-                    </td>
-                    <td>
-                        <a href="javascript:loadVideo('<?php
-                        echo $path1; ?>', '<?php
-                        echo $item->series_thumbnail; ?>')">
+                        foreach ($this->media as $item) {
+                            // Sparams are the server parameters
+                            $reg = new Registry();
+                            $reg->loadString($item->sparams);
+                            $item->sparams = $reg;
+
+                            // Params are the individual params for the media file record
+                            $reg = new Registry();
+                            $reg->loadString($item->params);
+                            $item->params = $reg;
+                            ?>
+                            <tr>
+                                <?php
+                                $path1 = Cwmhelper::mediaBuildUrl(
+                                    $item->sparams->get('path'),
+                                    $item->params->get('filename'),
+                                    $item->params,
+                                    true
+                                ); ?>
+                                <td>
+                                    <?php
+                                    echo stripslashes($item->studytitle); ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    echo HTMLHelper::Date($item->createdate); ?>
+                                </td>
+                                <td>
+                                    <a href="javascript:loadVideo('<?php
+                                    echo $path1; ?>', '<?php
+                                    echo $item->series_thumbnail; ?>')">
+                                        <?php
+                                        echo Text::_('JBS_CMN_LISTEN'); ?>
+                                    </a>
+                                </td>
+                            </tr>
                             <?php
-                            echo Text::_('JBS_CMN_LISTEN'); ?>
-                        </a>
-                    </td>
-                </tr>
+                        } ?>
+                    </table>
+                    
+                    <?php
+                    // Add pagination
+                    if ($this->pagination->pagesTotal > 1) : ?>
+                        <div class="pagination">
+                            <?php echo $this->pagination->getPagesLinks(); ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
                 <?php
-            } ?></table>
-        <?php
-        } else { ?>
+            } else { ?>
+                <div class="col-lg-6">
+                    <p><?php
+                        echo Text::_('JBS_CMN_NO_PODCASTS'); ?></p>
+                </div>
+                <?php
+            } ?>
         </div>
-        <div style="clear: both"></div>
-        <p><?php
-                echo Text::_('JBS_CMN_NO_PODCASTS'); ?></p>
-        <?php
-        } ?>
-</div>
+    </div>
+
+    <input type="hidden" name="limitstart" value="" />
+    <input type="hidden" name="task" value="" />
+    <input type="hidden" name="boxchecked" value="0" />
+    <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
+    <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
+    <?php echo HTMLHelper::_('form.token'); ?>
+</form>

@@ -16,9 +16,12 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\ParameterType;
 use Joomla\Database\QueryInterface;
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Series model class
@@ -80,12 +83,13 @@ class CwmseriesModel extends ListModel
      */
     protected function populateState($ordering = 'series.series_text', $direction = 'asc'): void
     {
-        $app = Factory::getApplication();
+        $app   = Factory::getApplication();
+        $input = $app->getInput();
 
         $forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
 
         // Adjust the context to support modal layouts.
-        if ($layout = $app->input->get('layout')) {
+        if ($layout = $input->get('layout')) {
             $this->context .= '.' . $layout;
         }
 
@@ -94,34 +98,15 @@ class CwmseriesModel extends ListModel
             $this->context .= '.' . $forcedLanguage;
         }
 
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
-        $this->setState('filter.search', $search);
+        // Load the parameters.
+        $params = ComponentHelper::getParams('com_proclaim');
+        $this->setState('params', $params);
 
-        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
-        $this->setState('filter.access', $access);
-
-        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
-        $this->setState('filter.published', $published);
-
-        $level = $this->getUserStateFromRequest($this->context . '.filter.level', 'filter_level', 0, 'int');
-        $this->setState('filter.level', $level);
-
-        $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
-        $this->setState('filter.language', $language);
-
-        $formSubmited = $app->input->post->get('form_submited');
-
-        // Gets the value of a user state variable and sets it in the session
-        $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
-        $this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id');
-
-        if ($formSubmited) {
-            $access = $app->input->post->get('access');
-            $this->setState('filter.access', $access);
-
-            $authorId = $app->input->post->get('author_id');
-            $this->setState('filter.author_id', $authorId);
-        }
+        $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
+        $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
+        $this->getUserStateFromRequest($this->context . '.filter.level', 'filter_level', 0, 'int');
+        $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
 
         // List state information.
         parent::populateState($ordering, $direction);
@@ -149,7 +134,7 @@ class CwmseriesModel extends ListModel
     {
         // Compile the store id.
         $id .= ':' . $this->getState('filter.search');
-        $id .= ':' . $this->getState('filter.access');
+        $id .= ':' . serialize($this->getState('filter.access'));
         $id .= ':' . $this->getState('filter.published');
         $id .= ':' . $this->getState('filter.language');
 
@@ -167,54 +152,65 @@ class CwmseriesModel extends ListModel
     protected function getListQuery(): QueryInterface|string
     {
         // Create a new query object.
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $user  = Factory::getApplication()->getSession()->get('user');
+        $db    = $this->getDatabase();
+        $query = $db->createQuery();
+        $user  = $this->getCurrentUser();
 
         // Select the required fields from the table.
         $query->select(
             $this->getState(
                 'list.select',
-                'series.id, series_text, series.published, series.alias, series.language , series.access, series.ordering'
+                [
+                    $db->quoteName('series.id'),
+                    $db->quoteName('series.series_text'),
+                    $db->quoteName('series.published'),
+                    $db->quoteName('series.alias'),
+                    $db->quoteName('series.language'),
+                    $db->quoteName('series.access'),
+                    $db->quoteName('series.ordering'),
+                ]
             )
-        );
-        $query->from('#__bsms_series AS series');
+        )
+            ->select(
+                [
+                    $db->quoteName('l.title', 'language_title'),
+                    $db->quoteName('ag.title', 'access_level'),
+
+                ]
+            )
+        ->from($db->quoteName('#__bsms_series', 'series'))
 
         // Join over the language
-        $query->select('l.title AS language_title');
-        $query->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = series.language');
+        ->join('LEFT', $db->quoteName('#__languages', 'l'), $db->quoteName('l.lang_code') . ' = ' . $db->quoteName('series.language'))
 
         // Join over the asset groups.
-        $query->select('ag.title AS access_level');
-        $query->join('LEFT', '#__viewlevels AS ag ON ag.id = series.access');
+        ->join('LEFT', '#__viewlevels AS ag ON ag.id = series.access');
 
         // Filter on the language.
-        $language = $this->getState('filter.language');
-
-        if ($language) {
-            $query->where('series.language = ' . $db->quote($language));
+        if ($language = $this->getState('filter.language')) {
+            $query->where($db->quoteName('series.language') . ' = :language')
+            ->bind(':language', $language);
         }
 
         // Filter by access level.
         $access = $this->getState('filter.access');
 
-        if ($access) {
-            $query->where('series.access = ' . (int)$access);
-        }
-
-        // Implement View Level Access
-        if (!$user->authorise('core.cwmadmin')) {
-            $groups = implode(',', $user->getAuthorisedViewLevels());
-            $query->where('series.access IN (' . $groups . ')');
+        if (is_numeric($access)) {
+            $access = (int) $access;
+            $query->where($db->quoteName('series.access') . ' = :access')
+                ->bind(':access', $access, ParameterType::INTEGER);
+        } elseif (\is_array($access)) {
+            $access = ArrayHelper::toInteger($access);
+            $query->whereIn($db->quoteName('series.access'), $access);
         }
 
         // Filter by published state
-        $published = $this->getState('filter.published');
+        $published = (string) $this->getState('filter.published');
 
-        if (is_numeric($published)) {
-            $query->where('series.published = ' . (int)$published);
-        } elseif ($published === '') {
-            $query->where('(series.published = 0 OR series.published = 1)');
+        if (($published !== '*') && is_numeric($published)) {
+            $state = (int) $published;
+            $query->where($db->quoteName('series.published') . ' = :state')
+                ->bind(':state', $state, ParameterType::INTEGER);
         }
 
         // Filter by search in title.
@@ -222,33 +218,29 @@ class CwmseriesModel extends ListModel
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where('series.id = ' . (int)substr($search, 3));
+                $search = (int) substr($search, 3);
+                $query->where($db->quoteName('series.id') . ' = :search')
+                    ->bind(':search', $search, ParameterType::INTEGER);
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
                 $query->where('(series.series_text LIKE ' . $search . ' OR series.alias LIKE ' . $search . ')');
+                $search = '%' . str_replace(' ', '%', trim($search)) . '%';
+                $query->where(
+                    '(' . $db->quoteName('series.series_text') . ' LIKE :search1 OR ' . $db->quoteName('series.alias') . ' LIKE :search2)'
+                )
+                    ->bind([':search1', ':search2'], $search);
             }
         }
 
         // Filter on the language.
-        $language = $this->getState('filter.language');
-
-        if ($language) {
-            $query->where('series.language = ' . $db->quote($language));
+        if ($language = $this->getState('filter.language')) {
+            $query->where($db->quoteName('series.language ') . ' = :language')
+                ->bind(':language', $language);
         }
 
         // Add the list ordering clause
         $orderCol  = $this->state->get('list.ordering', 'series.series_text');
         $orderDirn = $this->state->get('list.direction', 'asc');
-
-        // Sqlsrv change
-        if ($orderCol == 'language') {
-            $orderCol = 'l.title';
-        }
-
-        if ($orderCol == 'access_level') {
-            $orderCol = 'ag.title';
-        }
-
         $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
 
         return $query;

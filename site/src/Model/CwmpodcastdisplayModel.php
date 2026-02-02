@@ -221,7 +221,12 @@ class CwmpodcastdisplayModel extends ItemModel
         }
 
         $query->order('studydate ' . $order);
-        $db->setQuery($query, 0, $t_params->get('series_detail_limit', 20));
+
+        // Fix pagination offset
+        $offset = $this->getState('list.offset');
+        $limit  = $t_params->get('series_detail_limit', 20);
+
+        $db->setQuery($query, $offset, $limit);
         $studies = $db->loadObjectList();
 
         if (\count($studies) < 1) {
@@ -272,7 +277,8 @@ class CwmpodcastdisplayModel extends ItemModel
 
         $this->setState('series.id', $pk);
 
-        $offset = $app->input->get('limitstart', '', 'int');
+        // Use getUserStateFromRequest to handle pagination state persistence
+        $offset = $app->getUserStateFromRequest($this->context . '.limitstart', 'limitstart', 0, 'int');
         $this->setState('list.offset', $offset);
 
         $t = $params->get('seriesid');
