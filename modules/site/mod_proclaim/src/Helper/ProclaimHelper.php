@@ -162,12 +162,21 @@ class ProclaimHelper implements DatabaseAwareInterface
         $query->select($db->quoteName('book2.bookname', 'bookname2'));
         $query->join('LEFT', $db->quoteName('#__bsms_books', 'book2') . ' ON book2.booknumber = study.booknumber2');
 
-        // Join over MediaFiles and Plays/Downloads
-        $query->select('GROUP_CONCAT(DISTINCT ' . $db->quoteName('mediafile.id') . ') as mids');
-        $query->select('SUM(' . $db->quoteName('mediafile.plays') . ') AS totalplays');
-        $query->select('SUM(' . $db->quoteName('mediafile.downloads') . ') as totaldownloads');
-        $query->select($db->quoteName('mediafile.study_id'));
-        $query->join('LEFT', $db->quoteName('#__bsms_mediafiles', 'mediafile') . ' ON mediafile.study_id = study.id');
+        // Join over MediaFiles and Plays/Downloads (only if show_media is enabled)
+        $showMedia = (int) $params->get('show_media', 1);
+        if ($showMedia === 1) {
+            $query->select('GROUP_CONCAT(DISTINCT ' . $db->quoteName('mediafile.id') . ') as mids');
+            $query->select('SUM(' . $db->quoteName('mediafile.plays') . ') AS totalplays');
+            $query->select('SUM(' . $db->quoteName('mediafile.downloads') . ') as totaldownloads');
+            $query->join(
+                'LEFT',
+                $db->quoteName('#__bsms_mediafiles', 'mediafile') .
+                ' ON mediafile.study_id = study.id AND mediafile.published = 1'
+            );
+        } else {
+            // Provide empty defaults when media is disabled
+            $query->select('NULL as mids, 0 AS totalplays, 0 as totaldownloads');
+        }
 
         // Join over topics
         $query->select('GROUP_CONCAT(DISTINCT ' . $db->quoteName('st.topic_id') . ')');

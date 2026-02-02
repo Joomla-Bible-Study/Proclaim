@@ -38,6 +38,12 @@
                     <option value="1">JYES</option>
                     <option value="0">JNO</option>
                 </field>
+                <field name="show_media" type="radio" class="btn-group" default="1"
+                       label="JBS_MDL_SHOW_MEDIA"
+                       description="JBS_MDL_SHOW_MEDIA_DESC" labelclass="control-label">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
                 <field name="moduleitems" label="JBS_MDL_ITEMS"
                        description="JBS_MDL_ITEMS_DESC" default="5" type="text" size="10"/>
                 <field name="use_headers_list" type="radio" class="btn-group" default="1"
