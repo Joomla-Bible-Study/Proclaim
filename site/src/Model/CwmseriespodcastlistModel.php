@@ -29,7 +29,7 @@ use Joomla\Database\DatabaseQuery;
  * @package  Proclaim.Site
  * @since    8.0.0
  */
-class CwmpodcastlistModel extends ListModel
+class CwmseriespodcastlistModel extends ListModel
 {
     /**
      * Method to get a list of sermons.

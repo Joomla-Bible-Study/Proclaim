@@ -9,7 +9,7 @@
  * @link           https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Site\View\Cwmpodcastlist;
+namespace CWM\Component\Proclaim\Site\View\Cwmseriespodcastlist;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmpodcastlist;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Pagination\Pagination;
 use Joomla\Registry\Registry;
 
 /**
@@ -63,10 +64,10 @@ class HtmlView extends BaseHtmlView
     /**
      * Pagination object
      *
-     * @var \Joomla\CMS\Pagination\Pagination|null
+     * @var Pagination
      * @since 7.0
      */
-    protected $pagination;
+    protected Pagination $pagination;
 
     /**
      * HTML attributes array
@@ -102,23 +103,6 @@ class HtmlView extends BaseHtmlView
 
         $this->attribs = $attribs;
 
-        $this->prepareDocument();
-
         parent::display($tpl);
-    }
-
-    /**
-     * Prepares the document
-     *
-     * @return void
-     *
-     * @throws \Exception
-     * @since 7.0
-     */
-    protected function prepareDocument(): void
-    {
-        $app   = Factory::getApplication('site');
-        $menus = $app->getMenu()->getActive();
-        $this->params->merge($menus->params);
     }
 }

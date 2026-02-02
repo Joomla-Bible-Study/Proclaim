@@ -28,7 +28,7 @@ use Joomla\Database\QueryInterface;
  * @package  Proclaim.Site
  * @since    7.0.0
  */
-class CwmpodcastdisplayModel extends ItemModel
+class CwmseriespodcastdisplayModel extends ItemModel
 {
     /**
      * Model context string.

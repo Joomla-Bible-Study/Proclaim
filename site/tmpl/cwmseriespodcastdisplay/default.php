@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Default
+ * Layout for Series Podcast Display
  *
  * @package    Proclaim.Site
  * @copyright  (C) 2026 CWM Team All rights reserved
@@ -16,25 +16,12 @@
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
-use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
-/** @var CWM\Component\Proclaim\Site\View\Cwmpodcastdisplay\HtmlView $this */
-
-HTMLHelper::_('dropdown.init');
-HTMLHelper::_('formbehavior.chosen', 'select');
-HTMLHelper::_('behavior.multiselect');
-
-$user      = $this->getCurrentUser();
-$userId    = $user->id;
-$listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
-$archived  = $this->state->get('filter.published') == 2;
-$trashed   = $this->state->get('filter.published') == -2;
-$saveOrder = $listOrder === 'ordering';
+/** @var CWM\Component\Proclaim\Site\View\Cwmseriespodcastdisplay\HtmlView $this */
 
 $CWMedia = new Cwmmedia();
 ?>
@@ -192,10 +179,7 @@ $CWMedia = new Cwmmedia();
         </div>
     </div>
 
-    <input type="hidden" name="limitstart" value="" />
     <input type="hidden" name="task" value="" />
     <input type="hidden" name="boxchecked" value="0" />
-    <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
-    <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
     <?php echo HTMLHelper::_('form.token'); ?>
 </form>

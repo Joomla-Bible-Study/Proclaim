@@ -19,21 +19,6 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 
-HTMLHelper::_('dropdown.init');
-HTMLHelper::_('behavior.multiselect');
-HTMLHelper::_('formbehavior.chosen', 'select');
-
-$app       = Factory::getApplication();
-$user      = Factory::getApplication()->getInput();
-$userId    = $user->id;
-$listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
-$archived  = $this->state->get('filter.published') == 2;
-$trashed   = $this->state->get('filter.published') == -2;
-$saveOrder = $listOrder === 'study.ordering';
-$columns   = 12;
-
-
 ?>
 <style>img {
         border-radius: 4px;

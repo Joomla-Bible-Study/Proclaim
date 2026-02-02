@@ -55,7 +55,7 @@ foreach ($list as $study) {
 
         <dd class="published">
             <span class="icon-calendar icon-fw" aria-hidden="true"></span>
-            <time datetime="<?php echo HTMLHelper::_('date', $study->studydate, 'c'); ?>" itemprop="datePublished">
+            <time datetime="<?php echo $study->studydate; ?>" itemprop="datePublished">
                 <?php
                 echo $study->studydate; ?>    </time>
         </dd>
@@ -82,4 +82,3 @@ foreach ($list as $study) {
 <!--end of footer div-->
 <!--end container -->
 <div style="clear: both;"></div>
-

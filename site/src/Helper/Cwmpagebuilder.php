@@ -174,37 +174,37 @@ class Cwmpagebuilder
         // Set the item for the plugin to $item->text //run content plugins
         if ($page->scripture1) {
             $item->text       = $page->scripture1;
-            $item             = $CWMElements->runContentPlugins($item, $params);
+            $item             = $this->runContentPlugins($item, $params);
             $page->scripture1 = $item->text;
         }
 
         if ($page->scripture2) {
             $item->text       = $page->scripture2;
-            $item             = $CWMElements->runContentPlugins($item, $params);
+            $item             = $this->runContentPlugins($item, $params);
             $page->scripture2 = $item->text;
         }
 
         if ($item->studyintro) {
             $item->text       = $item->studyintro;
-            $item             = $CWMElements->runContentPlugins($item, $params);
+            $item             = $this->runContentPlugins($item, $params);
             $page->studyintro = $item->text;
         }
 
         if ($item->studytext) {
             $item->text      = $item->studytext;
-            $item            = $CWMElements->runContentPlugins($item, $params);
+            $item            = $this->runContentPlugins($item, $params);
             $page->studytext = $item->text;
         }
 
         if ($item->secondary_reference) {
             $item->text                = $item->secondary_reference;
-            $item                      = $CWMElements->runContentPlugins($item, $params);
+            $item                      = $this->runContentPlugins($item, $params);
             $page->secondary_reference = $item->text;
         }
 
         if ($item->sdescription) {
             $item->text         = $item->sdescription;
-            $item               = $CWMElements->runContentPlugins($item, $params);
+            $item               = $this->runContentPlugins($item, $params);
             $page->sdescription = $item->text;
         }
 

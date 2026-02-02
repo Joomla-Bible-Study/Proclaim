@@ -32,6 +32,12 @@
                        key_field="filename" value_field="filename">
                     <option value="0">JBS_CMN_USE_DEFAULT</option>
                 </field>
+                <field name="simple_mode" type="radio" class="btn-group" default="0"
+                       label="JBS_MDL_SIMPLE_MODE"
+                       description="JBS_MDL_SIMPLE_MODE_DESC" labelclass="control-label">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
                 <field name="moduleitems" label="JBS_MDL_ITEMS"
                        description="JBS_MDL_ITEMS_DESC" default="5" type="text" size="10"/>
                 <field name="use_headers_list" type="radio" class="btn-group" default="1"
