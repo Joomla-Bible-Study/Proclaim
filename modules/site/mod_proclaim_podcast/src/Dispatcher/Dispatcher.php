@@ -40,7 +40,7 @@ class Dispatcher extends AbstractModuleDispatcher
 
 
         // Always load Proclaim API if it exists.
-        if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
+        if (!\defined('CWM_LOADED')) {
             $apiPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
             if (file_exists($apiPath)) {

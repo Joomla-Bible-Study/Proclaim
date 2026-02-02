@@ -21,6 +21,7 @@ use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Date\Date;
 use Joomla\Database\DatabaseAwareInterface;
 use Joomla\Database\DatabaseAwareTrait;
+use Joomla\Database\DatabaseQuery;
 use Joomla\Registry\Registry;
 
 /**
@@ -251,16 +252,16 @@ class ProclaimHelper implements DatabaseAwareInterface
     /**
      * Apply filter to query
      *
-     * @param   \Joomla\Database\DatabaseQuery  $query      The query object
-     * @param   mixed                           $filters    The filter values
-     * @param   string                          $field      The field to filter on
-     * @param   string                          $condition  The condition (AND/OR)
+     * @param   DatabaseQuery  $query      The query object
+     * @param   mixed          $filters    The filter values
+     * @param   string         $field      The field to filter on
+     * @param   string         $condition  The condition (AND/OR)
      *
      * @return  void
      *
      * @since   10.0.0
      */
-    private function applyFilter($query, $filters, string $field, string $condition): void
+    private function applyFilter(DatabaseQuery $query, mixed $filters, string $field, string $condition): void
     {
         if (empty($filters)) {
             return;

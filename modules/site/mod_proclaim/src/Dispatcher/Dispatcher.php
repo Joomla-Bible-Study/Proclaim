@@ -42,7 +42,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
     #[\Override]
     protected function getLayoutData(): array
     {
-        if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
+        if (!\defined('CWM_LOADED')) {
             require_once JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
         }
 

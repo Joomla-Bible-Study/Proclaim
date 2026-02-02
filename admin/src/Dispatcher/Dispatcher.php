@@ -48,7 +48,7 @@ class Dispatcher extends ComponentDispatcher
         // Always load Proclaim API if it exists.
         $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
-        if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
+        if (!\defined('CWM_LOADED')) {
             // Check the minimum PHP version
             if ((!PHP_VERSION_ID) >= 80100) {
                 throw new \RuntimeException(
