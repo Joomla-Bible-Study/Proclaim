@@ -13,9 +13,11 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmseries;
 
 // No Direct Access
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Component\Content\Administrator\Helper\ContentHelper;
@@ -67,10 +69,10 @@ class HtmlView extends BaseHtmlView
     /**
      * Pagination
      *
-     * @var object
+     * @var Pagination
      * @since    7.0.0
      */
-    protected $pagination;
+    protected Pagination $pagination;
 
     /**
      * State
@@ -79,6 +81,14 @@ class HtmlView extends BaseHtmlView
      * @since    7.0.0
      */
     protected $state;
+
+    /**
+     * Active Filters
+     *
+     * @var array
+     * @since    7.0.0
+     */
+    protected array $activeFilters;
 
     /**
      * Execute and display a template script.
@@ -98,8 +108,9 @@ class HtmlView extends BaseHtmlView
         $this->pagination = $this->get('Pagination');
         $this->state      = $this->get('State');
 
-        $this->filterForm = $this->get('FilterForm');
-        $this->canDo      = ContentHelper::getActions('com_proclaim', 'serie');
+        $this->filterForm    = $this->get('FilterForm');
+        $this->activeFilters = $this->get('ActiveFilters');
+        $this->canDo         = ContentHelper::getActions('com_proclaim', 'serie');
 
         // Check for errors.
         if (\count($errors = $this->get('Errors'))) {
@@ -109,6 +120,12 @@ class HtmlView extends BaseHtmlView
         // We don't need toolbar in the modal window.
         if ($this->getLayout() !== 'modal') {
             $this->addToolbar();
+
+            // We do not need to filter by language when multilingual is disabled
+            if (!Multilanguage::isEnabled()) {
+                unset($this->activeFilters['language']);
+                $this->filterForm->removeField('language', 'filter');
+            }
         }
 
         // Display the template

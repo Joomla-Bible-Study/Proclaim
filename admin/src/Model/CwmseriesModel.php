@@ -62,32 +62,6 @@ class CwmseriesModel extends ListModel
     }
 
     /**
-     * Method to get a list of articles.
-     * Overridden to add a check for access levels.
-     *
-     * @return    mixed    An array of data items on success, false on failure.
-     *
-     * @throws \Exception
-     * @since    1.6.1
-     */
-    public function getItems(): mixed
-    {
-        $items = parent::getItems();
-
-        $user   = Factory::getApplication()->getIdentity();
-        $groups = $user->getAuthorisedViewLevels();
-
-        foreach ($items as $x => $xValue) {
-            // Check the access level. Remove articles the user shouldn't see
-            if (!\in_array($xValue->access, $groups, true)) {
-                unset($items[$x]);
-            }
-        }
-
-        return $items;
-    }
-
-    /**
      * Method to auto-populate the model state.
      *
      * This method should only be called once per instantiation and is designed
