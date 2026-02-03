@@ -15,6 +15,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseQuery;
+use Joomla\Database\ParameterType;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -66,31 +67,39 @@ class CwmteachersModel extends ListModel
      */
     protected function getListQuery(): DatabaseQuery
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = $this->getDatabase();
 
         // See if this view is being filtered by language in the menu
         $app  = Factory::getApplication();
         $menu = $app->getMenu();
         $item = $menu->getActive();
 
-        if (isset($item->language)) {
-            $language = $db->quote($item->language) . ',' . $db->quote('*');
-        } else {
-            $language = $db->quote('*');
-        }
-
         $query = $db->getQuery(true);
         $query->select(
             'teachers.*,CASE WHEN CHAR_LENGTH(teachers.alias) THEN CONCAT_WS(\':\', teachers.id, teachers.alias)'
             . 'ELSE teachers.id END as slug'
         );
-        $query->from('#__bsms_teachers as teachers');
-        $query->select('s.id as sid');
-        $query->join('LEFT', '#__bsms_studies as s on teachers.id = s.teacher_id');
-        $query->where('teachers.language in (' . $language . ')');
-        $query->where('teachers.published = 1 AND teachers.list_show = 1');
-        $query->order('teachers.ordering, teachers.teachername ASC');
-        $query->group('teachers.id');
+        $query->from($db->quoteName('#__bsms_teachers', 'teachers'));
+        $query->select($db->quoteName('s.id', 'sid'));
+        $query->join('LEFT', $db->quoteName('#__bsms_studies', 's') . ' ON teachers.id = s.teacher_id');
+
+        // Filter by language
+        if (isset($item->language) && $item->language !== '*') {
+            $query->whereIn($db->quoteName('teachers.language'), [$item->language, '*'], ParameterType::STRING);
+        } else {
+            $allLang = '*';
+            $query->where($db->quoteName('teachers.language') . ' = :lang')
+                ->bind(':lang', $allLang, ParameterType::STRING);
+        }
+
+        $published = 1;
+        $listShow  = 1;
+        $query->where($db->quoteName('teachers.published') . ' = :published')
+            ->where($db->quoteName('teachers.list_show') . ' = :listShow')
+            ->bind(':published', $published, ParameterType::INTEGER)
+            ->bind(':listShow', $listShow, ParameterType::INTEGER);
+        $query->order($db->quoteName('teachers.ordering') . ', ' . $db->quoteName('teachers.teachername') . ' ASC');
+        $query->group($db->quoteName('teachers.id'));
 
         return $query;
     }

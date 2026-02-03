@@ -9,7 +9,7 @@
  * @link           https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Site\View\Cwmpodcastdisplay;
+namespace CWM\Component\Proclaim\Site\View\Cwmseriespodcastdisplay;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -21,7 +21,9 @@ use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -32,17 +34,61 @@ use Joomla\Registry\Registry;
  */
 class HtmlView extends BaseHtmlView
 {
-    protected $state;
+    /**
+     * State object
+     *
+     * @var Registry|null
+     * @since 7.0
+     */
+    protected ?Registry $state = null;
 
-    protected $item;
+    /**
+     * Item object (podcast)
+     *
+     * @var object|null
+     * @since 7.0
+     */
+    protected ?object $item = null;
 
-    protected $template;
+    /**
+     * Template object
+     *
+     * @var object|null
+     * @since 7.0
+     */
+    protected ?object $template = null;
 
-    protected $media;
+    /**
+     * Media files array
+     *
+     * @var array
+     * @since 7.0
+     */
+    protected array $media = [];
 
-    protected $params;
+    /**
+     * Parameters
+     *
+     * @var Registry|null
+     * @since 7.0
+     */
+    protected ?Registry $params = null;
 
-    private $studies;
+    /**
+     * Request URL string
+     *
+     * @var string
+     * @since 7.0
+     */
+    protected string $request_url = '';
+
+    /**
+     * Pagination object
+     *
+     * @var Pagination|null
+     * @since 7.0
+     */
+    protected ?Pagination $pagination = null;
 
     /**
      * Execute and display a template script.
@@ -57,9 +103,7 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $mainframe = Factory::getApplication();
-        $input     = $mainframe->input;
-        $document  = $mainframe->getDocument();
+        $input = new Input();
 
         // Get the menu item object
         // Load the Admin settings and params from the template
@@ -67,7 +111,7 @@ class HtmlView extends BaseHtmlView
         $this->state = $this->get('State');
 
         /** @var Registry $params */
-        $params         = $this->state->template->params;
+        $params         = clone $this->state->template->params;
         $this->template = $this->state->get('template');
 
         if (!$item) {
@@ -75,8 +119,14 @@ class HtmlView extends BaseHtmlView
         }
 
         // Get studies associated with this series
-        $mainframe->setUserState('sid', $item->id);
-        $this->studies = $this->get('Studies');
+        Factory::getApplication()->setUserState('sid', $item->id);
+        $studies = $this->get('Studies');
+
+        // Pagination
+        $total            = $this->get('Total');
+        $limit            = $params->get('series_detail_limit', 20);
+        $limitstart       = $this->state->get('list.offset');
+        $this->pagination = new Pagination($total, $limitstart, $limit);
 
         // Get the series image
         $image              = Cwmimages::getSeriesThumbnail($item->series_thumbnail);
@@ -87,20 +137,20 @@ class HtmlView extends BaseHtmlView
 
         $media = [];
 
-        if ($this->studies) {
-            foreach ($this->studies as $s => $study) {
-                $medias   = explode(',', $study->mids);
+        if ($studies) {
+            foreach ($studies as $s => $study) {
+                $medias   = !empty($study->mids) ? explode(',', $study->mids) : [];
                 $jbsMedia = new Cwmmedia();
 
                 foreach ($medias as $i => $extraMedia) {
-                    $rowMedia = $jbsMedia->getMediaRows2($extraMedia);
+                    $rowMedia = $jbsMedia->getMediaRows2((int)$extraMedia);
 
                     if ($rowMedia) {
                         $reg = new Registry();
                         $reg->loadString($rowMedia->params);
                         $rowParams = $reg;
 
-                        if ($this->endsWith($rowParams->get('filename'), '.mp3') === true) {
+                        if ($this->endsWith($rowParams->get('filename', ''), '.mp3') === true) {
                             $media[] = $rowMedia;
                         }
                     }
@@ -115,13 +165,13 @@ class HtmlView extends BaseHtmlView
         $params->set('show_filesize', 0);
         $params->set('mp3', true);
 
-        // Prepare meta information (under development)
+        // Prepare meta-information (under development)
         if ($params->get('metakey')) {
-            $document->setMetaData('keywords', $params->get('metakey'));
+            $this->getDocument()->setMetaData('keywords', $params->get('metakey'));
         }
 
         if ($params->get('metadesc')) {
-            $document->setDescription($params->get('metadesc'));
+            $this->getDocument()->setDescription($params->get('metadesc'));
         }
 
         // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
@@ -129,7 +179,7 @@ class HtmlView extends BaseHtmlView
         $groups = $user->getAuthorisedViewLevels();
 
         if ($item->access && !\in_array($item->access, $groups, true)) {
-            $mainframe->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
+            Factory::getApplication()->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
 
             return;
         }
@@ -137,7 +187,7 @@ class HtmlView extends BaseHtmlView
         $input->set('returnid', $item->id);
 
         // End process prepare content plugins
-        $this->params      = &$params;
+        $this->params      = $params;
         $this->item        = $item;
         $this->request_url = (new Uri())->toString();
 

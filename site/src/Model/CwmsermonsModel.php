@@ -137,19 +137,19 @@ class CwmsermonsModel extends ListModel
      * @since 7.0
      * @todo  Need to see if we can use this out of a helper to reduce code.
      */
-    public function getDownloads($id): string
+    public function getDownloads(int $id): string
     {
-        $query = $this->_db->getQuery(true);
-        $query->select('SUM(downloads) AS totalDownloads')
-            ->from('#__bsms_mediafiles')
-            ->where('study_id = ' . $id)
-            ->group('study_id');
+        $db    = $this->getDatabase();
+        $query = $db->getQuery(true);
+        $query->select('SUM(' . $db->quoteName('downloads') . ') AS totalDownloads')
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('study_id') . ' = :studyId')
+            ->bind(':studyId', $id, ParameterType::INTEGER)
+            ->group($db->quoteName('study_id'));
         $result = $this->_getList($query);
 
         if (!$result) {
-            $result = '0';
-
-            return $result;
+            return '0';
         }
 
         return $result[0]->totalDownloads;
@@ -159,24 +159,27 @@ class CwmsermonsModel extends ListModel
      * Creates and executes a new query that retrieves the medifile information from the mediafiles table.
      * It then adds to the dataObject the mediafiles associated with the sermon.
      *
-     * @return array
+     * @return array|null
      *
      * @since 7.0
      */
     public function getFiles(): ?array
     {
         $mediaFiles = null;
-        $db         = Factory::getContainer()->get('DatabaseDriver');
-        $i          = 0;
+        $db         = $this->getDatabase();
 
         foreach ($this->_data as $sermon) {
-            $i++;
-            $sermon_id = $sermon->id;
+            $sermon_id = (int) $sermon->id;
             $query     = $db->getQuery(true);
-            $query->select('study_id, filename, #__bsms_servers.server_path')
-                ->from('#__bsms_mediafiles')
-                ->leftJoin('#__bsms_servers ON (#__bsms_mediafiles.server = #__bsms_servers.id)')
-                ->where('study_id` = ' . $sermon_id);
+            $query->select($db->quoteName(['study_id', 'filename']))
+                ->select($db->quoteName('#__bsms_servers.server_path'))
+                ->from($db->quoteName('#__bsms_mediafiles'))
+                ->leftJoin(
+                    $db->quoteName('#__bsms_servers') .
+                    ' ON ' . $db->quoteName('#__bsms_mediafiles.server') . ' = ' . $db->quoteName('#__bsms_servers.id')
+                )
+                ->where($db->quoteName('study_id') . ' = :studyId')
+                ->bind(':studyId', $sermon_id, ParameterType::INTEGER);
             $db->setQuery($query);
             $mediaFiles[$sermon->id] = $db->loadAssocList();
         }
@@ -201,42 +204,43 @@ class CwmsermonsModel extends ListModel
     /**
      * Get a list of teachers associated with series
      *
-     * @return mixed
+     * @return array
      * @since 9.0.0
      */
     public function getTeachers(): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = $this->getDatabase();
         $query = $db->getQuery(true);
-        $query->select('t.id AS value, t.teachername AS text');
-        $query->from('#__bsms_teachers AS t');
-        $query->select('series.access');
-        $query->join('INNER', '#__bsms_series AS series ON t.id = series.teacher');
-        $query->group('t.id');
-        $query->order('t.teachername ASC');
+        $query->select($db->quoteName(['t.id', 't.teachername'], ['value', 'text']));
+        $query->from($db->quoteName('#__bsms_teachers', 't'));
+        $query->select($db->quoteName('series.access'));
+        $query->join('INNER', $db->quoteName('#__bsms_series', 'series') . ' ON t.id = series.teacher');
+        $query->group($db->quoteName('t.id'));
+        $query->order($db->quoteName('t.teachername') . ' ASC');
 
-        $db->setQuery($query->__toString());
+        $db->setQuery($query);
 
         return $db->loadObjectList();
     }
 
     /**
-     * Get a list of teachers associated with series
+     * Get a list of years from studies associated with series
      *
-     * @return mixed
+     * @return array
      * @since 9.0.0
      */
     public function getYears(): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = $this->getDatabase();
         $query = $db->getQuery(true);
-        $query->select('DISTINCT YEAR(s.studydate) as value, YEAR(s.studydate) as text');
-        $query->from('#__bsms_studies as s');
-        $query->select('series.access');
-        $query->join('INNER', '#__bsms_series as series on s.series_id = series.id');
+        $query->select('DISTINCT YEAR(' . $db->quoteName('s.studydate') . ') as value');
+        $query->select('YEAR(' . $db->quoteName('s.studydate') . ') as text');
+        $query->from($db->quoteName('#__bsms_studies', 's'));
+        $query->select($db->quoteName('series.access'));
+        $query->join('INNER', $db->quoteName('#__bsms_series', 'series') . ' ON s.series_id = series.id');
         $query->order('value');
 
-        $db->setQuery($query->__toString());
+        $db->setQuery($query);
 
         return $db->loadObjectList();
     }
@@ -244,26 +248,26 @@ class CwmsermonsModel extends ListModel
     /**
      * Get a list of all used series
      *
-     * @return object
+     * @return array
      * @throws \Exception
      * @since 7.0
      */
     public function getSeries(): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = $this->getDatabase();
         $query = $db->getQuery(true);
 
-        $query->select('series.id AS value, series.series_text AS text, series.access');
-        $query->from('#__bsms_series AS series');
-        $query->join('INNER', '#__bsms_studies AS study ON study.series_id = series.id');
-        $query->group('series.id');
-        $query->order('series.series_text');
+        $query->select($db->quoteName(['series.id', 'series.series_text', 'series.access'], ['value', 'text', 'access']));
+        $query->from($db->quoteName('#__bsms_series', 'series'));
+        $query->join('INNER', $db->quoteName('#__bsms_studies', 'study') . ' ON study.series_id = series.id');
+        $query->group($db->quoteName('series.id'));
+        $query->order($db->quoteName('series.series_text'));
 
-        $db->setQuery($query->__toString());
+        $db->setQuery($query);
         $items = $db->loadObjectList();
 
         // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-        $user   = Factory::getApplication()->getIdentity();
+        $user   = $this->getCurrentUser();
         $groups = $user->getAuthorisedViewLevels();
         $count  = \count($items);
 
@@ -280,16 +284,22 @@ class CwmsermonsModel extends ListModel
         return $items;
     }
 
+    /**
+     * Get a list of all books
+     *
+     * @return array
+     * @since 7.0
+     */
     public function getBooks(): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = $this->getDatabase();
         $query = $db->getQuery(true);
 
-        $query->select('books.id AS value, books.bookname AS text, books.id as value');
-        $query->from('#__bsms_books AS books');
-        $query->order('books.booknumber');
+        $query->select($db->quoteName(['books.id', 'books.bookname', 'books.id'], ['value', 'text', 'value']));
+        $query->from($db->quoteName('#__bsms_books', 'books'));
+        $query->order($db->quoteName('books.booknumber'));
 
-        $db->setQuery($query->__toString());
+        $db->setQuery($query);
         $books = $db->loadObjectList();
 
         foreach ($books as $book) {
@@ -520,9 +530,9 @@ class CwmsermonsModel extends ListModel
      */
     protected function getListQuery(): QueryInterface|string
     {
-        $user   = Factory::getApplication()->getIdentity();
-        $groups = implode(',', $user->getAuthorisedViewLevels());
-        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $user   = $this->getCurrentUser();
+        $groups = $user->getAuthorisedViewLevels();
+        $db     = $this->getDatabase();
         $query  = parent::getListQuery();
         $query->select(
             $this->getState(
@@ -596,11 +606,18 @@ class CwmsermonsModel extends ListModel
             ->join('LEFT', '#__users AS users ON study.user_id = users.id')
             ->join('LEFT', '#__users AS uam ON uam.id = study.modified_by');
 
-        $query->group('study.id');
+        $query->group($db->quoteName('study.id'));
 
         // Filter only for authorized view
-        $query->where('(series.access IN (' . $groups . ') or study.series_id <= 0)');
-        $query->where('study.access IN (' . $groups . ')');
+        $query->whereIn($db->quoteName('study.access'), $groups);
+        $query->extendWhere(
+            'AND',
+            [
+                $db->quoteName('series.access') . ' IN (' . implode(',', $groups) . ')',
+                $db->quoteName('study.series_id') . ' <= 0',
+            ],
+            'OR'
+        );
 
         // Filter by published state based on show_archived parameter
         $showArchived = $this->getState('filter.show_archived', '0');

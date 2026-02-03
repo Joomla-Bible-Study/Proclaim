@@ -16,20 +16,16 @@
 
 /** @var CWM\Component\Proclaim\Site\View\Cwmsermons\HtmlView $this */
 
-use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
-use CWM\Component\Proclaim\Site\Helper\Cwmteacher;
-use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
-$CWMTeacher   = new Cwmteacher();
-$teachers     = $CWMTeacher->getTeachersFluid($this->params);
-$listing      = new Cwmlisting();
-$classelement = $listing->createelement($this->params->get('studies_element'));
-$app          = Factory::getApplication();
-$itemid       = $app->input->get('Itemid');
+// Use pre-calculated values from HtmlView
+$teachers     = $this->teachersFluid;
+$listing      = $this->listing;
+$classelement = $this->classelement;
+$itemid       = $this->itemid;
 
 ?>
 

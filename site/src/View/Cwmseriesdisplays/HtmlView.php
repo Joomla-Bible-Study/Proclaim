@@ -17,7 +17,9 @@ namespace CWM\Component\Proclaim\Site\View\Cwmseriesdisplays;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
+use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
+use CWM\Component\Proclaim\Site\Helper\Cwmserieslist;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
@@ -35,61 +37,107 @@ use Joomla\Registry\Registry;
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var object Admin Info
+    /** @var object|null Admin Info
      *
      * @since 7.0
      */
     protected $admin;
 
-    /** @var  \JObject Items
+    /** @var  array|null Items
      *
      * @since 7.0
      */
     protected $items;
 
-    /** @var  \JObject Template
+    /** @var  object|null Template
      *
      * @since 7.0
      */
     protected $template;
 
-    /** @var Pagination  Pagination
+    /** @var Pagination|null  Pagination
      *
      * @since 7.0
      */
-    protected Pagination $pagination;
+    protected ?Pagination $pagination = null;
 
     /** @var  string Request Url
      *
      * @since 7.0
      */
-    protected string $request_url;
+    protected string $request_url = '';
 
-    /** @var  Registry Params
+    /** @var  Registry|null Params
      *
      * @since 7.0
      */
-    protected Registry $params;
+    protected ?Registry $params = null;
 
-    /** @var  \stdClass Page
+    /** @var  \stdClass|null Page
      *
      * @since 7.0
      */
-    protected \stdClass $page;
+    protected ?\stdClass $page = null;
 
-    /** @var Registry State
+    /** @var Registry|null State
      *
      * @since 7.0
      */
-    protected Registry $state;
+    protected ?Registry $state = null;
 
     /** @var string State
      *
      * @since 7.0
      */
-    protected string $go;
+    protected string $go = '';
 
+    /**
+     * Filter form
+     *
+     * @var Form|null
+     * @since 9.1.4
+     */
     public Form|null $filterForm;
+
+    /**
+     * Active filters array
+     *
+     * @var array|null
+     * @since 10.0.0
+     */
+    public $activeFilters;
+
+    /**
+     * Listing helper instance for template use
+     *
+     * @var Cwmlisting|null
+     * @since 10.0.0
+     */
+    public ?Cwmlisting $listing = null;
+
+    /**
+     * Series element CSS class
+     *
+     * @var string
+     * @since 10.0.0
+     */
+    public string $classelement = '';
+
+    /**
+     * Series list helper for menu
+     *
+     * @var Cwmserieslist|null
+     * @since 10.0.0
+     */
+    public ?Cwmserieslist $serieslist = null;
+
+    /**
+     * Series menu ID
+     *
+     * @var int
+     * @since 10.0.0
+     */
+    public int $seriesMenu = 1;
 
     /**
      * Execute and display a template script.
@@ -173,6 +221,12 @@ class HtmlView extends BaseHtmlView
 
         // $this->lists = $lists;
         $this->request_url = $uri_tostring;
+
+        // Pre-create helpers for template use
+        $this->listing      = new Cwmlisting();
+        $this->classelement = $this->listing->createelement($params->get('series_element'));
+        $this->serieslist   = new Cwmserieslist();
+        $this->seriesMenu   = (int) $params->get('series_id', 1);
 
         $this->updateFilters();
 

@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseQuery;
+use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 
 /**
@@ -115,7 +116,7 @@ class CwmlandingpageModel extends ListModel
      */
     protected function getListQuery(): DatabaseQuery
     {
-        $db              = Factory::getContainer()->get('DatabaseDriver');
+        $db              = $this->getDatabase();
         $query           = $db->getQuery(true);
         $template_params = Cwmparams::getTemplateparams();
         $registry        = new Registry();
@@ -134,39 +135,54 @@ class CwmlandingpageModel extends ListModel
             $menuparams->loadString($menu->params);
         }
 
-        $query->select("'list.select', 's.id'");
-        $query->from('#__bsms_studies as s');
-        $query->select('t.id as tid, t.teachername, t.title as teachertitle, t.language');
-        $query->join('LEFT', '#__bsms_teachers as t on s.teacher_id = t.id');
-        $query->select('se.id as sid, se.series_text, se.description as sdescription, se.series_thumbnail');
-        $query->join('LEFT', '#__bsms_series as se on s.series_id = se.id');
-        $query->select('m.id as mid, m.message_type');
-        $query->join('LEFT', '#__bsms_message_type as m on s.messagetype = m.id');
-        $query->select('GROUP_CONCAT(DISTINCT st.topic_id)');
-        $query->join('LEFT', '#__bsms_studytopics AS st ON s.id = st.study_id');
+        $query->select($db->quoteName('s.id'));
+        $query->from($db->quoteName('#__bsms_studies', 's'));
         $query->select(
-            'GROUP_CONCAT(DISTINCT tp.id), GROUP_CONCAT(DISTINCT tp.topic_text) as topics_text, GROUP_CONCAT(DISTINCT tp.params)'
+            $db->quoteName(['t.id', 't.teachername', 't.title', 't.language'], ['tid', 'teachertitle', null, null])
         );
-        $query->join('LEFT', '#__bsms_topics AS tp ON tp.id = st.topic_id');
-        $query->select('l.id as lid, l.location_text');
-        $query->join('LEFT', '#__bsms_locations as l on s.location_id = l.id');
+        $query->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON s.teacher_id = t.id');
+        $query->select(
+            $db->quoteName(
+                ['se.id', 'se.series_text', 'se.description', 'se.series_thumbnail'],
+                ['sid', null, 'sdescription', null]
+            )
+        );
+        $query->join('LEFT', $db->quoteName('#__bsms_series', 'se') . ' ON s.series_id = se.id');
+        $query->select($db->quoteName(['m.id', 'm.message_type'], ['mid', null]));
+        $query->join('LEFT', $db->quoteName('#__bsms_message_type', 'm') . ' ON s.messagetype = m.id');
+        $query->select('GROUP_CONCAT(DISTINCT ' . $db->quoteName('st.topic_id') . ')');
+        $query->join('LEFT', $db->quoteName('#__bsms_studytopics', 'st') . ' ON s.id = st.study_id');
+        $query->select(
+            'GROUP_CONCAT(DISTINCT ' . $db->quoteName('tp.id') . '), ' .
+            'GROUP_CONCAT(DISTINCT ' . $db->quoteName('tp.topic_text') . ') as topics_text, ' .
+            'GROUP_CONCAT(DISTINCT ' . $db->quoteName('tp.params') . ')'
+        );
+        $query->join('LEFT', $db->quoteName('#__bsms_topics', 'tp') . ' ON tp.id = st.topic_id');
+        $query->select($db->quoteName(['l.id', 'l.location_text'], ['lid', null]));
+        $query->join('LEFT', $db->quoteName('#__bsms_locations', 'l') . ' ON s.location_id = l.id');
+
         $rightnow = date('Y-m-d H:i:s');
 
         // Filter by published state based on show_archived parameter
         $showArchived = $this->getState('filter.show_archived', '0');
         switch ($showArchived) {
             case '1': // Archived only
-                $query->where('s.published = 2');
+                $archived = 2;
+                $query->where($db->quoteName('s.published') . ' = :published')
+                    ->bind(':published', $archived, ParameterType::INTEGER);
                 break;
             case '2': // Both published and archived
-                $query->where('s.published IN (1, 2)');
+                $query->whereIn($db->quoteName('s.published'), [1, 2]);
                 break;
             default: // Published only (backward compatible)
-                $query->where('s.published = 1');
+                $published = 1;
+                $query->where($db->quoteName('s.published') . ' = :published')
+                    ->bind(':published', $published, ParameterType::INTEGER);
                 break;
         }
 
-        $query->where("date_format(s.studydate, %Y-%m-%d %T') <= " . (int)$rightnow);
+        $query->where($db->quoteName('s.studydate') . ' <= :rightnow')
+            ->bind(':rightnow', $rightnow, ParameterType::STRING);
 
         // Order by order filter
         $orderparam = $params->get('default_order');
@@ -175,11 +191,7 @@ class CwmlandingpageModel extends ListModel
             $orderparam = $t_params->get('default_order', '1');
         }
 
-        if ($orderparam == 2) {
-            $order = "ASC";
-        } else {
-            $order = "DESC";
-        }
+        $order = ($orderparam == 2) ? 'ASC' : 'DESC';
 
         $orderstate = $this->getState('filter.order');
 
@@ -187,7 +199,7 @@ class CwmlandingpageModel extends ListModel
             $order = $orderstate;
         }
 
-        $query->order('studydate ' . $order);
+        $query->order($db->quoteName('studydate') . ' ' . $db->escape($order));
 
         return $query;
     }

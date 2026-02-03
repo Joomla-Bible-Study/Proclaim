@@ -21,92 +21,95 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ItemModel;
 use Joomla\Database\ParameterType;
-use Joomla\Registry\Registry;
+use Joomla\Database\QueryInterface;
 
 /**
- * Model class for SeriesDisplay
+ * Model class for PodcastDisplay
  *
  * @package  Proclaim.Site
  * @since    7.0.0
  */
-class CwmseriesdisplayModel extends ItemModel
+class CwmseriespodcastdisplayModel extends ItemModel
 {
     /**
      * Model context string.
      *
-     * @var        string
+     * @var  string
      *
      * @since 7.0
      */
-    protected $context = 'com_proclaim.seriesdisplay';
+    protected string $context = 'com_proclaim.podcastdisplay';
 
     /**
      * Method to get study data.
      *
-     * @param   int  $pk  The id of the study.
+     * @param   int  $pk  The ID of the study.
      *
      * @return    mixed    Menu item data object on success, false on failure.
      *
      * @throws \Exception
      *
      * @since 7.1.0
-     * @todo  look are removing this may not used. bcc
+     * @todo  look at removing this, as it may not be used. bcc
      */
     public function getItem($pk = null): mixed
     {
         // Initialise variables.
         $pk = (!empty($pk)) ? $pk : (int) $this->getState('series.id');
 
-        if (!isset($this->_item[$pk])) {
-            $db    = $this->getDatabase();
-            $query = $db->getQuery(true);
-            $query->select(
-                $this->getState(
-                    'item.select',
-                    'se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END AS slug'
-                )
-            );
-            $query->from($db->quoteName('#__bsms_series', 'se'));
+        if ($pk > 0) {
+            if (!isset($this->_item[$pk])) {
+                $db    = $this->getDatabase();
+                $query = $db->getQuery(true);
+                $query->select(
+                    $this->getState(
+                        'item.select',
+                        'se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END AS slug'
+                    )
+                );
+                $query->from($db->quoteName('#__bsms_series', 'se'));
 
-            // Join over teachers
-            $query->select(
-                $db->quoteName(
-                    ['t.id', 't.teachername', 't.title', 't.thumb', 't.thumbh', 't.thumbw', 't.teacher_thumbnail'],
-                    ['tid', null, 'teachertitle', null, null, null, null]
-                )
-            );
-            $query->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON se.teacher = t.id');
-            $query->where($db->quoteName('se.id') . ' = :id')
-                ->bind(':id', $pk, ParameterType::INTEGER);
-            $db->setQuery($query);
-            $data = $db->loadObject();
+                // Join over teachers
+                $query->select(
+                    $db->quoteName(
+                        ['t.id', 't.teachername', 't.title', 't.thumb', 't.thumbh', 't.thumbw', 't.teacher_thumbnail'],
+                        ['tid', null, 'teachertitle', null, null, null, null]
+                    )
+                );
+                $query->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON se.teacher = t.id');
+                $query->where($db->quoteName('se.id') . ' = :id')
+                    ->bind(':id', $pk, ParameterType::INTEGER);
+                $db->setQuery($query);
+                $data = $db->loadObject();
 
-            if (empty($data)) {
-                Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_SERIES_NOT_FOUND'), 'message');
+                if (empty($data)) {
+                    Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_SERIES_NOT_FOUND'), 'message');
 
-                return false;
+                    return false;
+                }
+
+                $this->_item[$pk] = $data;
             }
 
-            $this->_item[$pk] = $data;
+            return $this->_item[$pk];
         }
 
-        return $this->_item[$pk];
+        return false;
     }
 
     /**
-     * Get Studies
+     * Get Studies Query
      *
-     * @return mixed
+     * @return QueryInterface
      *
      * @throws \Exception
      * @since 7.0
      */
-    public function getStudies(): mixed
+    protected function getStudiesQuery(): QueryInterface
     {
-        $app = Factory::getApplication();
+        $app = Factory::getApplication('site');
         $sid = (int) $app->getUserState('sid');
 
-        /** @var Registry $params */
         $params          = $app->getParams();
         $user            = $app->getIdentity();
         $groups          = $user->getAuthorisedViewLevels();
@@ -132,7 +135,7 @@ class CwmseriesdisplayModel extends ItemModel
                 'study.publish_down,
 		                study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
 		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
-		                study.verse_end2, study.verse_begin2, ' . $query->length('study.studytext') . ' AS readmore,'
+		                study.verse_end2, study.verse_begin2,' . ' ' . $query->length('study.studytext') . ' AS readmore,'
             )
             . ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END AS slug '
         );
@@ -178,16 +181,6 @@ class CwmseriesdisplayModel extends ItemModel
         // Join over Locations
         $query->select($db->quoteName('locations.location_text'));
         $query->join('LEFT', $db->quoteName('#__bsms_locations', 'locations') . ' ON study.location_id = locations.id');
-
-        // Join over topics
-        $query->select('GROUP_CONCAT(DISTINCT ' . $db->quoteName('st.topic_id') . ')');
-        $query->join('LEFT', $db->quoteName('#__bsms_studytopics', 'st') . ' ON study.id = st.study_id');
-        $query->select(
-            'GROUP_CONCAT(DISTINCT ' . $db->quoteName('t.id') . '), ' .
-            'GROUP_CONCAT(DISTINCT ' . $db->quoteName('t.topic_text') . ') AS topics_text, ' .
-            'GROUP_CONCAT(DISTINCT ' . $db->quoteName('t.params') . ')'
-        );
-        $query->join('LEFT', $db->quoteName('#__bsms_topics', 't') . ' ON t.id = st.topic_id');
 
         // Join over users
         $query->select($db->quoteName('users.name', 'submitted'));
@@ -235,27 +228,73 @@ class CwmseriesdisplayModel extends ItemModel
             'OR'
         );
 
-        $query->where($db->quoteName('study.series_id') . ' = :sid')
-            ->bind(':sid', $sid, ParameterType::INTEGER);
+        if ($sid > 0) {
+            $query->where($db->quoteName('study.series_id') . ' = :sid')
+                ->bind(':sid', $sid, ParameterType::INTEGER);
+        }
 
         // Order by order filter
-        $orderparam = (int) $params->get('default_order');
+        $orderparam = $params->get('default_order');
 
         if (empty($orderparam)) {
             $orderparam = $t_params->get('series_detail_order', '1');
         }
 
-        $order = ($orderparam === 2) ? 'ASC' : 'DESC';
+        $order = ($orderparam == 2) ? 'ASC' : 'DESC';
 
-        $query->order($db->quoteName('study.studydate') . ' ' . $order);
-        $db->setQuery($query, 0, (int) $t_params->get('series_detail_limit', 20));
+        $query->order($db->quoteName('studydate') . ' ' . $order);
+
+        return $query;
+    }
+
+    /**
+     * Get Studies
+     *
+     * @return array
+     *
+     * @throws \Exception
+     * @since 7.0
+     */
+    public function getStudies(): array
+    {
+        $db              = $this->getDatabase();
+        $query           = $this->getStudiesQuery();
+        $template_params = Cwmparams::getTemplateparams();
+        $t_params        = $template_params->params;
+
+        // Fix pagination offset
+        $offset = (int) $this->getState('list.offset');
+        $limit  = (int) $t_params->get('series_detail_limit', 20);
+
+        $db->setQuery($query, $offset, $limit);
         $studies = $db->loadObjectList();
 
         if (\count($studies) < 1) {
-            return false;
+            return [];
         }
 
         return $studies;
+    }
+
+    /**
+     * Get Total Studies
+     *
+     * @return int
+     *
+     * @throws \Exception
+     * @since 7.0
+     */
+    public function getTotal(): int
+    {
+        $db    = $this->getDatabase();
+        $query = $this->getStudiesQuery();
+
+        $query->clear('select')->clear('order')->clear('limit')->clear('offset');
+        $query->select('COUNT(DISTINCT ' . $db->quoteName('study.id') . ')');
+
+        $db->setQuery($query);
+
+        return (int) $db->loadResult();
     }
 
     /**
@@ -270,14 +309,8 @@ class CwmseriesdisplayModel extends ItemModel
      */
     protected function populateState(): void
     {
-        $app = Factory::getApplication();
-
-        // Load state from the request.
-        $pk = $app->input->get('id', '', 'int');
-        $this->setState('series.id', $pk);
-
-        $offset = $app->input->get('limitstart', '', 'int');
-        $this->setState('list.offset', $offset);
+        /** @type \JApplicationSite $app */
+        $app = Factory::getApplication('site');
 
         // Load the parameters.
         $params = $app->getParams();
@@ -289,7 +322,27 @@ class CwmseriesdisplayModel extends ItemModel
         $template->params->merge($admin->params);
         $params = $template->params;
 
-        $t = (int) $params->get('seriesid');
+        // Load state from the request.
+        $pk = $app->input->get('id', '', 'int');
+
+        if (empty($pk)) {
+            $mseries_id = $params->get('mseries_id');
+            if (!empty($mseries_id)) {
+                if (\is_array($mseries_id)) {
+                    $pk = (int)$mseries_id[0];
+                } else {
+                    $pk = (int)$mseries_id;
+                }
+            }
+        }
+
+        $this->setState('series.id', $pk);
+
+        // Use getUserStateFromRequest to handle pagination state persistence
+        $offset = $app->getUserStateFromRequest($this->context . '.limitstart', 'limitstart', 0, 'int');
+        $this->setState('list.offset', $offset);
+
+        $t = $params->get('seriesid');
 
         if (!$t) {
             $t = $app->input->get('t', 1, 'int');
@@ -300,14 +353,19 @@ class CwmseriesdisplayModel extends ItemModel
         $this->setState('template', $template);
         $this->setState('administrator', $admin);
 
-        $user = $app->getIdentity();
+        // Get show_archived parameter from menu, fall back to template default
+        $showArchived = $params->get('show_archived', '');
+        if ($showArchived === '' || $showArchived === null) {
+            $showArchived = $params->get('default_show_archived', '0');
+        }
+        $this->setState('filter.show_archived', $showArchived);
 
-        if (
-            (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
-                'core.edit',
-                'com_proclaim'
-            ))
-        ) {
+        $user = Factory::getApplication()->getIdentity();
+
+        $canEditState = $user !== null && $user->authorise('core.edit.state', 'com_proclaim');
+        $canEdit      = $user !== null && $user->authorise('core.edit', 'com_proclaim');
+
+        if (!$canEditState && !$canEdit) {
             $this->setState('filter.published', 1);
             $this->setState('filter.archived', 2);
         }

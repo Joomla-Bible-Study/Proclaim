@@ -16,15 +16,14 @@
 
 /** @var CWM\Component\Proclaim\Site\View\Cwmsermon\HtmlView $this */
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-use Joomla\Input\Input;
 
 ?>
 <div class="listingfooter">
     <?php
-    $input     = new Input();
-$link_text     = $this->item->params->get('link_text');
+$link_text = $this->item->params->get('link_text');
 
 if (!$link_text) {
     $link_text = Text::_('JBS_STY_RETURN_STUDIES_LIST');
@@ -34,7 +33,7 @@ if ($this->item->params->get('view_link') > 0) {
     $t = $this->item->params->get('studieslisttemplateid');
 
     if (!$t) {
-        $t = $input->get('t', 1, 'int');
+        $t = Factory::getApplication()->getInput()->get('t', 1, 'int');
     }
     if (!isset($returnmenu)) {
         $returnmenu = 1;

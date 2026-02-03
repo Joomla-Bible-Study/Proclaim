@@ -16,19 +16,19 @@
 
 /** @var CWM\Component\Proclaim\Site\View\Cwmseriesdisplay\HtmlView $this */
 
-use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
-$t = $this->template;
+// Use pre-created listing from HtmlView
+$listing = $this->listing;
+$t       = $this->template;
 ?>
 <!-- Begin Fluid layout -->
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="col-lg-12">
             <?php
-            $listing = new Cwmlisting();
-$list                = $listing->getFluidListing($this->items, $this->params, $t, $type = 'seriesdisplay');
+$list = $listing->getFluidListing($this->items, $this->params, $t, $type = 'seriesdisplay');
 echo $list;
 ?>
         </div>

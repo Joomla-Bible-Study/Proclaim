@@ -9,7 +9,7 @@
  * @link           https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Site\View\Cwmpodcastlist;
+namespace CWM\Component\Proclaim\Site\View\Cwmseriespodcastlist;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmpodcastlist;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Pagination\Pagination;
 use Joomla\Registry\Registry;
 
 /**
@@ -28,14 +29,53 @@ use Joomla\Registry\Registry;
  */
 class HtmlView extends BaseHtmlView
 {
+    /**
+     * State object
+     *
+     * @var object|null
+     * @since 7.0
+     */
     protected $state;
 
+    /**
+     * Items array
+     *
+     * @var array|null
+     * @since 7.0
+     */
     protected $items;
 
+    /**
+     * Template object
+     *
+     * @var object|null
+     * @since 7.0
+     */
     protected $template;
 
-    /** @var  Registry */
-    protected Registry $params;
+    /**
+     * Parameters
+     *
+     * @var Registry|null
+     * @since 7.0
+     */
+    protected ?Registry $params = null;
+
+    /**
+     * Pagination object
+     *
+     * @var Pagination
+     * @since 7.0
+     */
+    protected Pagination $pagination;
+
+    /**
+     * HTML attributes array
+     *
+     * @var array
+     * @since 7.0
+     */
+    protected array $attribs = [];
 
     /**
      * Execute and display a template script.
@@ -63,23 +103,6 @@ class HtmlView extends BaseHtmlView
 
         $this->attribs = $attribs;
 
-        $this->prepareDocument();
-
         parent::display($tpl);
-    }
-
-    /**
-     * Prepares the document
-     *
-     * @return void
-     *
-     * @throws \Exception
-     * @since 7.0
-     */
-    protected function prepareDocument(): void
-    {
-        $app   = Factory::getApplication('site');
-        $menus = $app->getMenu()->getActive();
-        $this->params->merge($menus->params);
     }
 }

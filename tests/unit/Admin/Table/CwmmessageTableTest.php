@@ -85,7 +85,7 @@ class CwmmessageTableTest extends ProclaimTestCase
         $filePath = JPATH_ROOT . '/admin/src/Table/CwmmessageTable.php';
         $content  = file_get_contents($filePath);
 
-        $this->assertStringContainsString('public $id', $content);
+        $this->assertStringContainsString('public ?int $id', $content);
     }
 
     /**

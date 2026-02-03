@@ -34,151 +34,193 @@ class CwmmessageTable extends Table
     /**
      * Primary Key
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $id = null;
+    public ?int $id = null;
 
     /**
      * Study Date
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $studydate = null;
+    public ?string $studydate = null;
 
     /**
      * Teacher id
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $teacher_id = null;
+    public ?int $teacher_id = null;
 
     /**
      * Study Number
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $studynumber = null;
+    public ?int $studynumber = null;
 
     /**
      * Book Number
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $booknumber = null;
+    public ?int $booknumber = null;
 
     /**
      * Chapter Begin
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $chapter_begin = null;
+    public ?int $chapter_begin = null;
 
     /**
      * Verse Begin
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $verse_begin = null;
+    public ?int $verse_begin = null;
 
     /**
      * Chapter End
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $chapter_end = null;
+    public ?int $chapter_end = null;
 
     /**
      * Verse End
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $verse_end = null;
+    public ?int $verse_end = null;
 
     /**
      * Secondary Reference
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $secondary_reference = null;
+    public ?string $secondary_reference = null;
 
     /**
      * Book Number 2
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $booknumber2 = null;
+    public ?string $booknumber2 = null;
 
     /**
      * Chapter Begin2
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $chapter_begin2 = null;
+    public ?int $chapter_begin2 = null;
 
     /**
      * Verse Begin2
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $verse_begin2 = null;
+    public ?int $verse_begin2 = null;
 
     /**
      * Chapter End2
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $chapter_end2 = null;
+    public ?int $chapter_end2 = null;
 
     /**
      * Verse End2
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $verse_end2 = null;
+    public ?int $verse_end2 = null;
 
-    public $prod_dvd;
+    /**
+     * Prod DVD
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $prod_dvd = null;
 
-    public $prod_cd;
+    /**
+     * Prod CD
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $prod_cd = null;
 
-    public $server_cd;
+    /**
+     * Server CD
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $server_cd = null;
 
-    public $server_dvd;
+    /**
+     * Server DVD
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $server_dvd = null;
 
-    public $image_cd;
+    /**
+     * Image CD
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    public ?string $image_cd = null;
 
-    public $image_dvd;
+    /**
+     * Image DVD
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    public ?string $image_dvd = null;
 
-    public $studytext2;
+    /**
+     * Study Text 2
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    public ?string $studytext2 = null;
 
     /**
      * Comments
@@ -187,7 +229,7 @@ class CwmmessageTable extends Table
      *
      * @since 9.0.0
      */
-    public $comments = 1;
+    public int $comments = 1;
 
     /**
      * Hits
@@ -196,137 +238,149 @@ class CwmmessageTable extends Table
      *
      * @since 9.0.0
      */
-    public $hits = 0;
+    public int $hits = 0;
 
     /**
      * User ID
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $user_id = null;
+    public ?int $user_id = null;
 
     /**
      * User Name
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $user_name = null;
+    public ?string $user_name = null;
 
     /**
      * Show Level
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $show_level = null;
+    public ?int $show_level = null;
 
     /**
      * Location ID
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $location_id = null;
+    public ?int $location_id = null;
 
     /**
      * Study Title
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $studytitle = null;
+    public ?string $studytitle = null;
 
     /**
      * Alias
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $alias = null;
+    public ?string $alias = null;
 
     /**
      * Study Intro
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $studyintro = null;
+    public ?string $studyintro = null;
 
     /**
      * MessageType
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $messagetype = null;
+    public ?string $messagetype = null;
 
     /**
      * Series ID
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $series_id = null;
+    public ?int $series_id = null;
 
     /**
      * Study Text
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $studytext = null;
+    public ?string $studytext = null;
 
     /**
      * ThumbNail Media
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $thumbnailm = null;
+    public ?string $thumbnailm = null;
 
     /**
      * ThumbNail Height
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $thumbhm = null;
+    public ?int $thumbhm = null;
 
     /**
      * ThumbNail Width
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $thumbwm = null;
+    public ?int $thumbwm = null;
 
     /**
      * Params
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $params = null;
+    public ?string $params = null;
 
-    public $checked_out;
+    /**
+     * Checked Out
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $checked_out = null;
 
-    public $checked_out_time;
+    /**
+     * Checked Out Time
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    public ?string $checked_out_time = null;
 
     /**
      * Published
@@ -335,35 +389,35 @@ class CwmmessageTable extends Table
      *
      * @since 9.0.0
      */
-    public $published = 1;
+    public int $published = 1;
 
     /** @var string Publish Up
      *
      * @since 9.0.0
      */
-    public $publish_up = '0000-00-00 00:00:00';
+    public string $publish_up = '0000-00-00 00:00:00';
 
     /** @var string Publish Down
      *
      * @since 9.0.0
      */
-    public $publish_down = '0000-00-00 00:00:00';
+    public string $publish_down = '0000-00-00 00:00:00';
 
     /**
      * Created date
      *
-     * @var string
+     * @var string|null
      * @since 10.1.0
      */
-    public $created = null;
+    public ?string $created = null;
 
     /**
      * Created by user ID
      *
-     * @var int
+     * @var int|null
      * @since 10.1.0
      */
-    public $created_by = null;
+    public ?int $created_by = null;
 
     /**
      * Created by alias
@@ -371,46 +425,70 @@ class CwmmessageTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public $created_by_alias = '';
+    public string $created_by_alias = '';
 
     /**
      * Modified date
      *
-     * @var string
+     * @var string|null
      * @since 10.1.0
      */
-    public $modified = null;
+    public ?string $modified = null;
 
     /**
      * Modified by user ID
      *
-     * @var int
+     * @var int|null
      * @since 10.1.0
      */
-    public $modified_by = null;
+    public ?int $modified_by = null;
 
-    public $asset_id;
+    /**
+     * Asset ID
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $asset_id = null;
 
-    public $access;
+    /**
+     * Access Level
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $access = null;
 
     /**
      * Ordering
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $ordering = null;
+    public ?string $ordering = null;
 
-    public $language;
+    /**
+     * Language
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    public ?string $language = null;
 
-    public $download_id;
+    /**
+     * Download ID
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $download_id = null;
 
     /**
      * @var ?string
      * @since version
      */
-    public ?string $message_type;
+    public ?string $message_type = null;
 
     /**
      * Constructor.

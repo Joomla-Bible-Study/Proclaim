@@ -9,7 +9,7 @@
  * @link           https://www.christianwebministries.org
  **/
 
-defined('_JEXEC') or die;
+\defined('_JEXEC') or die;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhtml;
 use Joomla\CMS\HTML\HTMLHelper;

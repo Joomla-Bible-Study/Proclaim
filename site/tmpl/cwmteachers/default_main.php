@@ -14,14 +14,14 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 /** @var CWM\Component\Proclaim\Site\View\Cwmteachers\HtmlView $this */
 
-$listing      = new Cwmlisting();
-$classelement = $listing->createelement($this->params->get('teachers_element'));
+// Use pre-created values from HtmlView
+$listing      = $this->listing;
+$classelement = $this->classelement;
 ?>
 <div class="container proclaim-main-content" id="proclaim-main-content" role="main">
     <div class="hero-unit" style="padding-top:30px; padding-bottom:20px;"> <!-- This div is the header container -->

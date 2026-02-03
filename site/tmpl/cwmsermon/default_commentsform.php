@@ -26,8 +26,8 @@ $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate');
 
-// Check permissions for comments
-$user           = Factory::getApplication()->getIdentity();
+// Check permissions for comments - use user from HtmlView
+$user           = $this->user;
 $groups         = $user->getAuthorisedViewLevels();
 $showComments   = (int) $this->item->params->get('show_comments', 0);
 $commentAccess  = (int) $this->item->params->get('comment_access', 0);

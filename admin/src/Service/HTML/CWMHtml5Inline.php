@@ -145,7 +145,7 @@ class CWMHtml5Inline
         $ratio  = $media->playerwidth / $rat1;
         $height = $ratio * $rat2;
 
-        if ($popup) {
+        if ($popup || $params->get('pcplaylist')) {
             if ($params->get('playerresponsive') !== 0) {
                 $media->playerwidth = '100%';
                 $render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:100%;\">";

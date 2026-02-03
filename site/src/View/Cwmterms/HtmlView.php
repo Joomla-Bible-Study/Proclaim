@@ -37,27 +37,45 @@ class HtmlView extends BaseHtmlView
     /**
      * Media
      *
-     * @var object
+     * @var object|null
      *
      * @since 7.0
      */
-    public $media;
+    public ?object $media = null;
+
     /**
      * Document
      *
-     * @var Document
+     * @var Document|null
      *
      * @since 7.0
      */
     public $document;
+
     /**
      * Params
      *
-     * @var Registry
+     * @var Registry|null
      *
      * @since 7.0
      */
-    protected $params;
+    protected ?Registry $params = null;
+
+    /**
+     * Compatibility mode flag
+     *
+     * @var int
+     * @since 7.0
+     */
+    public int $compat_mode = 0;
+
+    /**
+     * Terms text content
+     *
+     * @var string|null
+     * @since 7.0
+     */
+    public ?string $termstext = null;
 
     /**
      * Execute and display a template script.
@@ -88,9 +106,11 @@ class HtmlView extends BaseHtmlView
         $this->media = $db->loadObject();
 
         // Params are the individual params for the media file record
-        $registory = new Registry();
-        $registory->loadString($this->media->params);
-        $this->media->params = $registory;
+        if ($this->media) {
+            $registory = new Registry();
+            $registory->loadString($this->media->params);
+            $this->media->params = $registory;
+        }
 
         $this->prepareDocument();
 
@@ -124,7 +144,9 @@ class HtmlView extends BaseHtmlView
         }
 
         $title = $this->params->get('page_title', '');
-        $title .= ' : ' . $this->media->params->get('filename');
+        if ($this->media && $this->media->params instanceof Registry) {
+            $title .= ' : ' . $this->media->params->get('filename');
+        }
 
         if (empty($title)) {
             $title = $app->get('sitename');

@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\QueryInterface;
 use Joomla\Input\Input;
 
 /**
@@ -124,10 +125,10 @@ class CwmtopicsModel extends ListModel
     /**
      * Get List Query
      *
-     * @return \Joomla\Database\QueryInterface
+     * @return QueryInterface|string
      * @since   7.0
      */
-    protected function getListQuery(): mixed
+    protected function getListQuery(): QueryInterface|string
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);

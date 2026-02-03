@@ -16,7 +16,6 @@
 
 /** @var CWM\Component\Proclaim\Site\View\Cwmsermon\HtmlView $this */
 
-use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 
@@ -91,12 +90,7 @@ if ($this->item->params->get('socialnetworking') > 0) {
     <!-- Begin Fluid layout -->
 
 <?php
-$listing = new Cwmlisting();
-try {
-    $list = $listing->getFluidListing($this->item, $this->item->params, $this->template, $type = 'sermon');
-} catch (Exception $e) {
-}
-echo $list;
+echo $this->fluidListing;
 ?>
 
     <!-- End Fluid Layout -->

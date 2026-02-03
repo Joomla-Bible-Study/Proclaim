@@ -33,7 +33,7 @@ class CwmpodcastTable extends Table
     /**
      * Primary Key
      *
-     * @var ?int
+     * @var int|null
      *
      * @since 9.0.0
      */
@@ -51,7 +51,7 @@ class CwmpodcastTable extends Table
     /**
      * Title
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -60,7 +60,7 @@ class CwmpodcastTable extends Table
     /**
      * Website Address
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -69,7 +69,7 @@ class CwmpodcastTable extends Table
     /**
      * Description
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -78,7 +78,7 @@ class CwmpodcastTable extends Table
     /**
      * Image
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -87,7 +87,7 @@ class CwmpodcastTable extends Table
     /**
      * Image Height
      *
-     * @var ?int
+     * @var int|null
      *
      * @since 9.0.0
      */
@@ -96,7 +96,7 @@ class CwmpodcastTable extends Table
     /**
      * Image Width
      *
-     * @var ?int
+     * @var int|null
      *
      * @since 9.0.0
      */
@@ -105,7 +105,7 @@ class CwmpodcastTable extends Table
     /**
      * Author
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -114,7 +114,7 @@ class CwmpodcastTable extends Table
     /**
      * Podcast Image
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -123,7 +123,7 @@ class CwmpodcastTable extends Table
     /**
      * Podcast Summary
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -132,7 +132,7 @@ class CwmpodcastTable extends Table
     /**
      * Podcast Search Words
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -141,7 +141,7 @@ class CwmpodcastTable extends Table
     /**
      * File Name
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -150,7 +150,7 @@ class CwmpodcastTable extends Table
     /**
      * Language of Podcast
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -159,7 +159,7 @@ class CwmpodcastTable extends Table
     /**
      * Podcast name
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -168,7 +168,7 @@ class CwmpodcastTable extends Table
     /**
      * Editor Name
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -177,7 +177,7 @@ class CwmpodcastTable extends Table
     /**
      * Editor Email Address
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -186,7 +186,7 @@ class CwmpodcastTable extends Table
     /**
      * Limit of the episodes in the podcast
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -195,7 +195,7 @@ class CwmpodcastTable extends Table
     /**
      * Episode Title
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -204,7 +204,7 @@ class CwmpodcastTable extends Table
     /**
      * Custom
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -213,7 +213,7 @@ class CwmpodcastTable extends Table
     /**
      * Details template ID
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -222,7 +222,7 @@ class CwmpodcastTable extends Table
     /**
      * Custom
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -231,7 +231,7 @@ class CwmpodcastTable extends Table
     /**
      * Details template ID
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -244,7 +244,7 @@ class CwmpodcastTable extends Table
      * 1 = Direct Link.
      * 2 = Popup Player Window with default player as internal.
      *
-     * @var ?string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -253,7 +253,7 @@ class CwmpodcastTable extends Table
     /**
      * Created date
      *
-     * @var ?string
+     * @var string|null
      * @since 10.1.0
      */
     public ?string $created = null;
@@ -261,7 +261,7 @@ class CwmpodcastTable extends Table
     /**
      * Created by user ID
      *
-     * @var ?int
+     * @var int|null
      * @since 10.1.0
      */
     public ?int $created_by = null;
@@ -277,7 +277,7 @@ class CwmpodcastTable extends Table
     /**
      * Modified date
      *
-     * @var ?string
+     * @var string|null
      * @since 10.1.0
      */
     public ?string $modified = null;
@@ -285,10 +285,34 @@ class CwmpodcastTable extends Table
     /**
      * Modified by user ID
      *
-     * @var ?int
+     * @var int|null
      * @since 10.1.0
      */
     public ?int $modified_by = null;
+
+    /**
+     * Asset ID
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $asset_id = null;
+
+    /**
+     * Access Level
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $access = null;
+
+    /**
+     * Params
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    public ?string $params = null;
 
     /**
      * Constructor

@@ -17,8 +17,10 @@ namespace CWM\Component\Proclaim\Site\View\Cwmlandingpage;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
+use CWM\Component\Proclaim\Site\Helper\Cwmlanding;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
@@ -40,11 +42,11 @@ class HtmlView extends BaseHtmlView
     /**
      * Params
      *
-     * @var Registry
+     * @var Registry|null
      *
      * @since 7.0
      */
-    public Registry $params;
+    public ?Registry $params = null;
 
     /**
      * Params
@@ -55,7 +57,21 @@ class HtmlView extends BaseHtmlView
      */
     public mixed $state;
 
-    public object $main;
+    /**
+     * Main study image object
+     *
+     * @var object|null
+     * @since 7.0
+     */
+    public ?object $main = null;
+
+    /**
+     * Landing page helper instance
+     *
+     * @var Cwmlanding|null
+     * @since 10.0.0
+     */
+    public ?Cwmlanding $landing = null;
 
     /**
      * Execute and display a template script.
@@ -99,6 +115,9 @@ class HtmlView extends BaseHtmlView
         $Uri_toString      = $uri->toString();
         $this->request_url = $Uri_toString;
 
+        // Pre-create landing helper for template use
+        $this->landing = new Cwmlanding();
+
         parent::display($tpl);
     }
 
@@ -116,58 +135,23 @@ class HtmlView extends BaseHtmlView
      */
     public function getShowHide($showIt, $showIt_phrase, $i): string
     {
-        // End Switch
-        if ($this->params->get('landing' . $showIt . 'limit')) {
-            $showHide_tmp = Cwmimages::getShowHide();
-
-            $showHideAll = "<div id='showhide" . $i . "'>";
-
-            $buttonLink = "\n\t" . '<a class="showhideheadingbutton" href="javascript:ReverseDisplay2(' . "'showhide"
-                . $showIt . "'" . ')">';
-            $labelLink  = "\n\t" . '<a class="showhideheadinglabel" href="javascript:ReverseDisplay2(' . "'showhide"
-                . $showIt . "'" . ')">';
-
-            switch ($this->params->get('landing_hide', 0)) {
-                case 0: // Image only
-                    $showHideAll .= $buttonLink;
-
-                    $showHideAll .= "\n\t\t" . '<img src="' . Uri::base() . $showHide_tmp->path . '" alt="' . $showIt_phrase . '" title="' . $showIt_phrase . '" border="0" width="';
-                    $showHideAll .= $showHide_tmp->width . '" height="' . $showHide_tmp->height . '" />';
-                    $showHideAll .= '<i class="fas fa-arrow-down" title="x"></i>';
-
-                    // Spacer
-                    $showHideAll .= ' ';
-                    $showHideAll .= "\n\t" . '</a>';
-                    break;
-
-                case 1: // Image and label
-                    $showHideAll .= $buttonLink;
-                    $showHideAll .= '<i class="fas fa-arrow-down" title="x"></i>';
-
-                    // Spacer
-                    $showHideAll .= ' ';
-                    $showHideAll .= "\n\t" . '</a>';
-                    $showHideAll .= $labelLink;
-                    $showHideAll .= "\n\t\t" . '<span id="landing_label">' . $this->params->get(
-                        'landing_hidelabel'
-                    ) . '</span>';
-                    $showHideAll .= "\n\t" . '</a>';
-                    break;
-
-                case 2: // Label only
-                    $showHideAll .= $labelLink;
-                    $showHideAll .= "\n\t\t" . '<span id="landing_label">' . $this->params->get(
-                        'landing_hidelabel'
-                    ) . '</span>';
-                    $showHideAll .= "\n\t" . '</a>';
-                    break;
-            }
-
-            $showHideAll .= "\n" . '</div> <!-- end div id="showhide" for ' . $i . ' -->' . "\n";
-
-            return $showHideAll;
+        if (!$this->params->get('landing' . $showIt . 'limit')) {
+            return '';
         }
 
-        return '';
+        $data = [
+            'showIt'        => $showIt,
+            'showIt_phrase' => $showIt_phrase,
+            'i'             => $i,
+            'params'        => $this->params,
+            'image'         => Cwmimages::getShowHide(),
+        ];
+
+        // Example: Referencing a layout located in the Administrator component folder
+        return LayoutHelper::render(
+            'landing.showhide',
+            $data,
+            JPATH_ADMINISTRATOR . '/components/com_proclaim/layouts'
+        );
     }
 }

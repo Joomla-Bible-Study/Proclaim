@@ -128,6 +128,9 @@ describe('template-lazyload.es6.js', () => {
         });
 
         test('should handle fetch errors gracefully', async () => {
+            // Mock console.error to suppress expected error output
+            const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+            
             global.fetch = jest.fn(() => Promise.reject(new Error('Network error')));
 
             require('../../build/media_source/js/template-lazyload.es6.js');
@@ -137,6 +140,11 @@ describe('template-lazyload.es6.js', () => {
 
             const container = document.querySelector('[data-lazy-fieldset="study_details"] .accordion-body');
             expect(container.innerHTML).toContain('Error loading content');
+            
+            // Verify error was logged (even if suppressed)
+            expect(consoleSpy).toHaveBeenCalled();
+            
+            consoleSpy.mockRestore();
         });
     });
 });

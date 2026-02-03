@@ -17,14 +17,17 @@ namespace CWM\Component\Proclaim\Site\View\Cwmsermons;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
+use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcastsubscribe;
+use CWM\Component\Proclaim\Site\Helper\Cwmteacher;
 use CWM\Component\Proclaim\Site\Model\CwmsermonsModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
 
 /**
@@ -35,126 +38,212 @@ use Joomla\Registry\Registry;
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var object
+    /** @var object|null
      *
      * @since 7.0
      */
     public $document;
+
     /**
      * Form object for search filters
      *
-     * @var  Form
+     * @var  Form|null
      * @since 9.1.4
      */
     public $filterForm;
+
     /**
      * The active search filters
      *
-     * @var  array
+     * @var  array|null
      * @since 9.1.4
      */
     public $activeFilters;
-    /** @var object
+
+    /** @var array|null
      *
      * @since 7.0
      */
     protected $items = null;
-    /** @var object
+
+    /** @var object|null
      *
      * @since 7.0
      */
     protected $pagination = null;
-    /** @var Registry
+
+    /** @var Registry|null
      *
      * @since 7.0
      */
     protected $state = null;
+
     /**
-     * @var object
+     * @var object|null
      *
      * @since 7.0
      */
     protected $admin;
-    /** @var Registry
+
+    /** @var Registry|null
      *
      * @since 7.0
      */
     protected $params;
-    /** @var object
+
+    /** @var object|null
      *
      * @since 7.0
      */
     protected $study;
-    /** @var string
+
+    /** @var string|null
      *
      * @since 7.0
      */
     protected $subscribe;
-    /** @var string
+
+    /** @var string|null
      *
      * @since 7.0
      */
     protected $series;
-    /** @var string
+
+    /** @var string|null
      *
      * @since 7.0
      */
     protected $teachers;
-    /** @var string
+
+    /** @var string|null
      *
      * @since 7.0
      */
     protected $messageTypes;
-    /** @var string
+
+    /** @var string|null
      *
      * @since 7.0
      */
     protected $years;
-    /** @var string
+
+    /** @var string|null
      *
      * @since 7.0
      */
     protected $locations;
-    /** @var string
+
+    /** @var string|null
      *
      * @since 7.0
      */
     protected $topics;
-    /** @var string
+
+    /** @var string|null
      *
      * @since 7.0
      */
     protected $orders;
-    /** @var string
+
+    /** @var string|null
      *
      * @since 7.0
      */
     protected $books;
-    /** @var object
+
+    /** @var object|null
      *
      * @since 7.0
      */
     protected $template;
-    /** @var array
+
+    /** @var array|null
      *
      * @since 7.0
      */
     protected $topic;
-    /** @var object
+
+    /** @var object|null
      *
      * @since 7.0
      */
     protected $main;
-    /** @var object
+
+    /** @var object|null
      *
      * @since 7.0
      */
     protected $page;
-    /** @var string
+
+    /** @var string|null
      *
      * @since 7.0
      */
     protected $request_url;
+
+    /**
+     * Pagination limit box HTML
+     *
+     * @var string|null
+     * @since 7.0
+     */
+    protected $limitbox;
+
+    /**
+     * Main image HTML string
+     *
+     * @var string
+     * @since 10.0.0
+     */
+    public string $mainimage = '';
+
+    /**
+     * Listing helper instance for template use
+     *
+     * @var Cwmlisting|null
+     * @since 10.0.0
+     */
+    public ?Cwmlisting $listing = null;
+
+    /**
+     * Studies element CSS class
+     *
+     * @var string
+     * @since 10.0.0
+     */
+    public string $classelement = '';
+
+    /**
+     * Pre-calculated teacher data for fluid display
+     *
+     * @var array
+     * @since 10.0.0
+     */
+    public array $teachersFluid = [];
+
+    /**
+     * Rotating images folder files for simple2 template
+     *
+     * @var array
+     * @since 10.0.0
+     */
+    public array $rotatingImages = [];
+
+    /**
+     * Count of rotating images
+     *
+     * @var int
+     * @since 10.0.0
+     */
+    public int $rotatingImageCount = 0;
+
+    /**
+     * Current menu item ID
+     *
+     * @var int
+     * @since 10.0.0
+     */
+    public int $itemid = 0;
 
     /**
      * Execute and display a template script.
@@ -265,12 +354,28 @@ class HtmlView extends BaseHtmlView
 
         $uri = new Uri();
 
-        $this->pagination  = &$pagination;
+        $this->pagination  = $pagination;
         $this->limitbox    = $this->pagination->getLimitBox();
-        $this->items       = &$items;
+        $this->items       = $items;
         $stringuri         = $uri->toString();
         $this->request_url = $stringuri;
-        $this->params      = &$params;
+        $this->params      = $params;
+
+        // Pre-calculate values for templates to avoid helper instantiation in templates
+        $this->listing      = new Cwmlisting();
+        $this->classelement = $this->listing->createelement($params->get('studies_element'));
+        $this->itemid       = (int) $mainframe->input->get('Itemid', 0);
+
+        // Pre-calculate teacher data for default_main template
+        $cwmTeacher          = new Cwmteacher();
+        $this->teachersFluid = $cwmTeacher->getTeachersFluid($params);
+
+        // Pre-calculate rotating images for default_simple2 template
+        $rotatingPath = 'media/com_proclaim/images/rotating';
+        if (is_dir(JPATH_ROOT . '/' . $rotatingPath)) {
+            $this->rotatingImages     = Folder::files(JPATH_ROOT . '/' . $rotatingPath);
+            $this->rotatingImageCount = \count($this->rotatingImages);
+        }
 
         $this->updateFilters();
 

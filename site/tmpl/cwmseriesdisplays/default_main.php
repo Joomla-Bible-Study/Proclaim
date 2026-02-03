@@ -16,30 +16,29 @@
 
 /** @var CWM\Component\Proclaim\Site\View\Cwmseriesdisplays\HtmlView $this */
 
-use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
-use CWM\Component\Proclaim\Site\Helper\Cwmserieslist;
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
-use Joomla\Input\Input;
 
-$input         = new Input();
+// Use pre-created values from HtmlView
+$input         = Factory::getApplication()->getInput();
 $option        = $input->get('option', '', 'cmd');
-$CWMSerieslist = new Cwmserieslist();
-$series_menu   = $this->params->get('series_id', 1);
+$CWMSerieslist = $this->serieslist;
+$series_menu   = $this->seriesMenu;
 
 $params       = $this->params;
 $url          = $params->get('stylesheet');
-$listing      = new Cwmlisting();
-$classelement = $listing->createelement($this->params->get('series_element'));
+$listing      = $this->listing;
+$classelement = $this->classelement;
 
 if ($url) {
     HTMLHelper::_('stylesheet', $url);
 }
 ?>
-<form action="<?php Route::_('index.php?option=com_proclaim&view=cwmseriesdisplay') ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmseriesdisplays'); ?>" method="post" name="adminForm" id="adminForm">
     <div class="container proclaim-main-content" id="proclaim-main-content" role="main">
         <div class="row">
             <div class="col1-12">

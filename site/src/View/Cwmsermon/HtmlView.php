@@ -41,91 +41,131 @@ use Joomla\Registry\Registry;
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var object Item
+    /** @var object|null Item
      *
      * @since 7.0
      */
-    protected $item;
+    protected ?object $item = null;
 
-    /** @var Registry Params
+    /** @var Registry|null Params
      *
      * @since 7.0
      */
-    protected $params;
+    protected ?Registry $params = null;
 
-    /** @var  string Print
+    /** @var  string|null Print
      *
      * @since 7.0
      */
-    protected $print;
+    protected ?string $print = null;
 
-    /** @var Registry State
+    /** @var Registry|null State
      *
      * @since 7.0
      */
-    protected $state;
+    protected ?Registry $state = null;
 
-    /** @var  string User
+    /** @var  \Joomla\CMS\User\User|null User
      *
      * @since 7.0
      */
     protected $user;
 
-    /** @var  string Passage
+    /** @var  string|null Passage
      *
      * @since 7.0
      */
-    protected $passage;
+    protected ?string $passage = null;
 
-    /** @var  string Related
+    /** @var  string|null Related
      *
      * @since 7.0
      */
-    protected $related;
+    protected ?string $related = null;
 
-    /** @var  string Subscribe
+    /** @var  string|null Subscribe
      *
      * @since 7.0
      */
-    protected $subscribe;
+    protected ?string $subscribe = null;
 
-    /** @var  int Menu ID
+    /** @var  int|null Menu ID
      *
      * @since 7.0
      */
-    protected $menuid;
+    protected ?int $menuid = null;
 
-    /** @var  string Details Link
+    /** @var  string|null Details Link
      *
      * @since 7.0
      */
-    protected $detailslink;
+    protected ?string $detailslink = null;
 
-    /** @var  string Page
+    /** @var  \stdClass|null Page
      *
      * @since 7.0
      */
-    protected $page;
+    protected ?\stdClass $page = null;
 
-    /** @var  string Article
+    /** @var  \stdClass|null Article
      *
      * @since 7.0
      */
-    protected $article;
+    protected ?\stdClass $article = null;
 
-    /** @var  array Article
+    /** @var  array|null Comments
      *
      * @since 7.0
      */
-    protected $comments;
+    protected ?array $comments = null;
 
     /**
      * Simple Mode object
      *
-     * @var object
+     * @var object|null
      * @since 9.2.3
      */
-    protected $simple;
+    protected ?object $simple = null;
+
+    /**
+     * Form for comments
+     *
+     * @var \Joomla\CMS\Form\Form|null
+     * @since 9.2.3
+     */
+    public $form;
+
+    /**
+     * Captcha enabled flag
+     *
+     * @var bool
+     * @since 9.2.3
+     */
+    public bool $captchaEnabled = false;
+
+    /**
+     * Template object
+     *
+     * @var object|null
+     * @since 9.2.3
+     */
+    protected ?object $template = null;
+
+    /**
+     * Listing helper instance
+     *
+     * @var Cwmlisting|null
+     * @since 10.0.0
+     */
+    protected ?Cwmlisting $listing = null;
+
+    /**
+     * Pre-calculated fluid listing HTML for the sermon
+     *
+     * @var string
+     * @since 10.0.0
+     */
+    public string $fluidListing = '';
 
     /**
      * Execute and display a template script.
@@ -160,7 +200,7 @@ class HtmlView extends BaseHtmlView
         }
 
         // Create a shortcut for $item.
-        $item = &$this->item;
+        $item = $this->item;
 
         if (!$item) {
             return;
@@ -407,9 +447,6 @@ class HtmlView extends BaseHtmlView
             $this->item->studytext = $article->text;
         }
 
-        $Biblepassage  = new Cwmshowscripture();
-        $this->passage = $Biblepassage->buildPassage($this->item, $this->item->params);
-
         // Prepares a link string for use in social networking
         $u                 = Uri::getInstance();
         $detailslink       = htmlspecialchars($u->toString());
@@ -422,6 +459,19 @@ class HtmlView extends BaseHtmlView
         // End process prepares content plugins
         $this->template = $this->state->get('template');
         $this->article  = $article;
+
+        // Store listing helper for template use and pre-calculate fluid listing
+        $this->listing = $CWMListing;
+        try {
+            $this->fluidListing = $CWMListing->getFluidListing(
+                $this->item,
+                $this->item->params,
+                $this->template,
+                'sermon'
+            );
+        } catch (\Exception $e) {
+            $this->fluidListing = '';
+        }
 
         // Increment the hit counter of the Sermon.
         if ($offset === 0 && !$this->params->get('intro_only')) {

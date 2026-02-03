@@ -33,7 +33,7 @@ class CwmmessagetypeTable extends Table
     /**
      * Primary Key
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
@@ -42,7 +42,7 @@ class CwmmessagetypeTable extends Table
     /**
      * Topic text
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
@@ -60,22 +60,40 @@ class CwmmessagetypeTable extends Table
     /**
      * Params
      *
-     * @var string
+     * @var string|Registry|null
      *
      * @since 9.0.0
      */
-    public mixed $params = null;
+    public string|Registry|null $params = null;
 
+    /**
+     * Asset ID
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
     public ?int $asset_id = null;
 
+    /**
+     * Language
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
     public ?string $language = null;
 
+    /**
+     * Access Level
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
     public ?int $access = null;
 
     /**
      * Created date
      *
-     * @var string
+     * @var string|null
      * @since 10.1.0
      */
     public ?string $created = null;
@@ -83,7 +101,7 @@ class CwmmessagetypeTable extends Table
     /**
      * Created by user ID
      *
-     * @var int
+     * @var int|null
      * @since 10.1.0
      */
     public ?int $created_by = null;
@@ -99,7 +117,7 @@ class CwmmessagetypeTable extends Table
     /**
      * Modified date
      *
-     * @var string
+     * @var string|null
      * @since 10.1.0
      */
     public ?string $modified = null;
@@ -107,7 +125,7 @@ class CwmmessagetypeTable extends Table
     /**
      * Modified by user ID
      *
-     * @var int
+     * @var int|null
      * @since 10.1.0
      */
     public ?int $modified_by = null;

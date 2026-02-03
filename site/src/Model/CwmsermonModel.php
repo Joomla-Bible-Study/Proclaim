@@ -24,6 +24,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\FormModel;
 use Joomla\CMS\User\User;
+use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 
 /**
@@ -56,10 +57,13 @@ class CwmsermonModel extends FormModel
      */
     public function hit(?int $pk = null): bool
     {
-        $pk    = $pk ?? (int)$this->getState('study.id');
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $pk    = $pk ?? (int) $this->getState('study.id');
+        $db    = $this->getDatabase();
         $query = $db->getQuery(true);
-        $query->update('#__bsms_studies')->set('hits = hits  + 1')->where('id = ' . (int)$pk);
+        $query->update($db->quoteName('#__bsms_studies'))
+            ->set($db->quoteName('hits') . ' = ' . $db->quoteName('hits') . ' + 1')
+            ->where($db->quoteName('id') . ' = :id')
+            ->bind(':id', $pk, ParameterType::INTEGER);
         $db->setQuery($query);
         $db->execute();
 
@@ -82,11 +86,11 @@ class CwmsermonModel extends FormModel
         $user = Factory::getApplication()->getIdentity();
 
         // Initialise variables.
-        $pk = $pk ?? (int)$this->getState('study.id');
+        $pk = $pk ?? (int) $this->getState('study.id');
 
         if (!isset($this->_item[$pk])) {
             try {
-                $db    = Factory::getContainer()->get('DatabaseDriver');
+                $db    = $this->getDatabase();
                 $query = $db->getQuery(true);
                 $query->select(
                     $this->getState(
@@ -262,17 +266,22 @@ class CwmsermonModel extends FormModel
     public function getComments(): array
     {
         $app = Factory::getApplication();
-        $id  = $app->input->get('id', '', 'int');
+        $id  = $app->input->get('id', 0, 'int');
 
         if (empty($id)) {
-            return false;
+            return [];
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = $this->getDatabase();
         $query = $db->getQuery(true);
-        $query->select('c.*')->from('#__bsms_comments AS c')->where('c.published = 1')->where(
-            'c.study_id = ' . $id
-        )->order('c.comment_date asc');
+        $published = 1;
+        $query->select($db->quoteName('c') . '.*')
+            ->from($db->quoteName('#__bsms_comments', 'c'))
+            ->where($db->quoteName('c.published') . ' = :published')
+            ->where($db->quoteName('c.study_id') . ' = :studyId')
+            ->bind(':published', $published, ParameterType::INTEGER)
+            ->bind(':studyId', $id, ParameterType::INTEGER)
+            ->order($db->quoteName('c.comment_date') . ' ASC');
         $db->setQuery($query);
 
         return $db->loadObjectList();

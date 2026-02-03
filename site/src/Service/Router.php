@@ -121,6 +121,16 @@ class Router extends RouterView
         $podcastDisplay->setKey('id')->setParent($podcastList);
         $this->registerView($podcastDisplay);
 
+        // Series Podcast list view (parent for single series podcast display)
+        $seriesPodcastList = new RouterViewConfiguration('cwmseriespodcastlist');
+        $this->registerView($seriesPodcastList);
+
+        // Series Podcast display view - child of series podcast list
+        // URL: /series-podcasts-menu/series-alias (instead of /series-podcasts-menu/cwmseriespodcastdisplay/series-alias)
+        $seriesPodcastDisplay = new RouterViewConfiguration('cwmseriespodcastdisplay');
+        $seriesPodcastDisplay->setKey('id')->setParent($seriesPodcastList);
+        $this->registerView($seriesPodcastDisplay);
+
         // Popup view
         $popup = new RouterViewConfiguration('cwmpopup');
         $this->registerView($popup);
@@ -458,5 +468,49 @@ class Router extends RouterView
         }
 
         return (int)$segment;
+    }
+
+    /**
+     * Method to get the segment(s) for a series podcast
+     *
+     * @param   mixed   $id     ID of the article form to retrieve the segments for
+     * @param   array   $query  The request that is built right now
+     *
+     * @return  array  The segments of this item
+     *
+     * @since   10.0.0
+     */
+    public function getCWMSeriesPodcastDisplaySegment(mixed $id, array $query): array
+    {
+        return $this->getCWMSeriesDisplaySegment($id, $query);
+    }
+
+    /**
+     * @Method to get the segment(s) for a series podcast
+     *
+     * @param   string  $segment  Segment to retrieve the ID for
+     * @param   array   $query    The request that is parsed right now
+     *
+     * @return  mixed   The id of this item or false
+     * @since  10.0.0
+     */
+    public function getCWMSeriesPodcastDisplayId(string $segment, array $query): mixed
+    {
+        return $this->getCWMSeriesDisplayId($segment, $query);
+    }
+
+    /**
+     * Method to get the segment(s) for a series podcast list
+     *
+     * @param   mixed   $id     ID of the article form to retrieve the segments for
+     * @param   array   $query  The request that is built right now
+     *
+     * @return  array  The segments of this item
+     *
+     * @since   10.0.0
+     */
+    public function getCWMSeriesPodcastListSegment(mixed $id, array $query): array
+    {
+        return [];
     }
 }

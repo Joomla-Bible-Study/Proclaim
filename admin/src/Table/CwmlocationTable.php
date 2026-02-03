@@ -33,10 +33,10 @@ class CwmlocationTable extends Table
     /**
      * Primary Key
      *
-     * @var int
+     * @var int|null
      * @since    7.0.0
      */
-    public $id = null;
+    public ?int $id = null;
 
     /**
      * Published
@@ -44,31 +44,63 @@ class CwmlocationTable extends Table
      * @var int
      * @since    7.0.0
      */
-    public $published = 1;
+    public int $published = 1;
 
     /**
      * Location Text
      *
-     * @var string
+     * @var string|null
      * @since    7.0.0
      */
-    public $location_text = null;
+    public ?string $location_text = null;
+
+    /**
+     * Asset ID
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $asset_id = null;
+
+    /**
+     * Access Level
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $access = null;
+
+    /**
+     * Language
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    public ?string $language = null;
+
+    /**
+     * Params
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    public ?string $params = null;
 
     /**
      * Created date
      *
-     * @var string
+     * @var string|null
      * @since    10.0.0
      */
-    public $created = null;
+    public ?string $created = null;
 
     /**
      * Created by user ID
      *
-     * @var int
+     * @var int|null
      * @since    10.0.0
      */
-    public $created_by = null;
+    public ?int $created_by = null;
 
     /**
      * Created by alias
@@ -76,23 +108,23 @@ class CwmlocationTable extends Table
      * @var string
      * @since    10.0.0
      */
-    public $created_by_alias = '';
+    public string $created_by_alias = '';
 
     /**
      * Modified date
      *
-     * @var string
+     * @var string|null
      * @since    10.0.0
      */
-    public $modified = null;
+    public ?string $modified = null;
 
     /**
      * Modified by user ID
      *
-     * @var int
+     * @var int|null
      * @since    10.0.0
      */
-    public $modified_by = null;
+    public ?int $modified_by = null;
 
     /**
      * Constructor

@@ -17,7 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 // Always load Proclaim API if it exists.
 $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
-if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
+if (!\defined('CWM_LOADED')) {
     require_once $api;
 }
 // phpcs:enable PSR1.Files.SideEffects

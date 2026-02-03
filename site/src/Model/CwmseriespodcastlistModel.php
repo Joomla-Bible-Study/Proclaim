@@ -22,6 +22,7 @@ use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseQuery;
+use Joomla\Database\ParameterType;
 
 /**
  * Model class for MessageList
@@ -29,7 +30,7 @@ use Joomla\Database\DatabaseQuery;
  * @package  Proclaim.Site
  * @since    8.0.0
  */
-class CwmpodcastlistModel extends ListModel
+class CwmseriespodcastlistModel extends ListModel
 {
     /**
      * Method to get a list of sermons.
@@ -42,7 +43,13 @@ class CwmpodcastlistModel extends ListModel
      */
     public function getItems(): mixed
     {
-        $items  = parent::getItems();
+        $items = parent::getItems();
+
+        // Return empty array if query failed
+        if ($items === false) {
+            return [];
+        }
+
         $user   = Factory::getApplication()->getIdentity();
         $userId = $user->get('id');
         $guest  = $user->get('guest');
@@ -71,15 +78,11 @@ class CwmpodcastlistModel extends ListModel
             $access = $this->getState('filter.access');
 
             if ($access) {
-                // If the access filter has been set, we already have only the articles this user can view.
+                // If the access filter has been set, we already have only the series this user can view.
                 $item->params->set('access-view', true);
-            } elseif ($item->catid == 0 || $item->category_access === null) {
-                $item->params->set('access-view', \in_array($item->access, $groups));
             } else {
-                $item->params->set(
-                    'access-view',
-                    \in_array($item->access, $groups) && \in_array($item->category_access, $groups)
-                );
+                // Series don't have categories, just check item access level
+                $item->params->set('access-view', \in_array($item->access, $groups));
             }
 
             // Get the tags
@@ -196,58 +199,67 @@ class CwmpodcastlistModel extends ListModel
     protected function getListQuery(): DatabaseQuery
     {
         // Get the current user for authorization checks
-        $user = Factory::getApplication()->getIdentity();
+        $user = $this->getCurrentUser();
 
         // Create a new query object.
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = $this->getDatabase();
         $query = $db->getQuery(true);
 
+        // Select only the columns we need for performance
         $query->select(
             $this->getState(
                 'list.select',
-                '*'
+                $db->quoteName(
+                    ['a.id', 'a.series_text', 'a.alias', 'a.series_thumbnail', 'a.access', 'a.created_by', 'a.published']
+                )
             )
         );
+
+        $query->from($db->quoteName('#__bsms_series', 'a'));
 
         // Filter by published state based on show_archived parameter
         $showArchived = $this->getState('filter.show_archived', '0');
         switch ($showArchived) {
             case '1': // Archived only
-                $query->where('a.published = 2');
+                $archived = 2;
+                $query->where($db->quoteName('a.published') . ' = :published')
+                    ->bind(':published', $archived, ParameterType::INTEGER);
                 break;
             case '2': // Both published and archived
-                $query->where('a.published IN (1, 2)');
+                $query->whereIn($db->quoteName('a.published'), [1, 2]);
                 break;
             default: // Published only (backward compatible)
-                $query->where('a.published = 1');
+                $published = 1;
+                $query->where($db->quoteName('a.published') . ' = :published')
+                    ->bind(':published', $published, ParameterType::INTEGER);
                 break;
         }
 
         // Filter by access level.
-        if ($access = $this->getState('filter.access')) {
-            $groups = implode(',', $user->getAuthorisedViewLevels());
-            $query->where('a.access IN (' . $groups . ')');
+        if ($this->getState('filter.access')) {
+            $groups = $user->getAuthorisedViewLevels();
+            $query->whereIn($db->quoteName('a.access'), $groups);
         }
 
         $pc_show = $this->getState('filter.pc_show');
 
         if (is_numeric($pc_show)) {
-            $query->where('pc_show = ' . $pc_show);
+            $pc_show = (int) $pc_show;
+            $query->where($db->quoteName('pc_show') . ' = :pcShow')
+                ->bind(':pcShow', $pc_show, ParameterType::INTEGER);
         }
 
         // Filter by language
         if ($this->getState('filter.language')) {
-            $query->where(
-                'a.language in (' . $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote(
-                    '*'
-                ) . ')'
-            );
+            $langTag = Factory::getApplication()->getLanguage()->getTag();
+            $query->whereIn($db->quoteName('a.language'), [$langTag, '*'], ParameterType::STRING);
         }
 
-        $query->from('#__bsms_series as a');
-
         // Add the list ordering clause.
-        $query->order($this->getState('list.ordering', 'a.id') . ' ' . $this->getState('list.direction', 'ASC'));
+        $query->order(
+            $db->escape($this->getState('list.ordering', 'a.id')) . ' ' .
+            $db->escape($this->getState('list.direction', 'ASC'))
+        );
 
         return $query;
     }

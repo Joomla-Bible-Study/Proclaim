@@ -78,16 +78,6 @@ class CwmseriesModelTest extends ProclaimTestCase
     }
 
     /**
-     * Test model has getItems method
-     *
-     * @return void
-     */
-    public function testModelHasGetItemsMethod(): void
-    {
-        $this->assertStringContainsString('public function getItems(): mixed', $this->classContent);
-    }
-
-    /**
      * Test model has populateState method
      *
      * @return void

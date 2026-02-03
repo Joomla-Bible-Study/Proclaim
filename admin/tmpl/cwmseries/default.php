@@ -28,25 +28,15 @@ $wa->useScript('table.columns')
     ->useScript('multiselect');
 
 $app       = Factory::getApplication();
-$user      = $app->getIdentity();
+$user      = $this->getCurrentUser();
 $userId    = $user->id;
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
-$archived  = $this->state->get('filter.published') == 2;
-$trashed   = $this->state->get('filter.published') == -2;
-$saveOrder = $listOrder === 'series.ordering';
-$columns   = 7;
+$orderName = 'series.ordering';
+$saveOrder = $listOrder == $orderName;
 
-if ($saveOrder) {
-    $saveOrderingUrl = 'index.php?option=com_proclaim&task=cwmseries.saveOrderAjax&tmpl=component';
-    HTMLHelper::_('sortablelist.sortable', 'seriesList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
-}
-
-$sortFields = $this->getSortFields();
 ?>
-<form action="<?php
-echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post" name="adminForm"
-      id="adminForm">
+<form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post" name="adminForm" id="adminForm">
     <div class="row">
         <div class="col-md-12">
             <div id="j-main-container" class="j-main-container">
@@ -66,8 +56,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post"
                         <thead>
                         <tr>
                             <th class="w-1 text-center d-none d-md-table-cell">
-                                <?php
-                                echo HTMLHelper::_('grid.checkall'); ?>
+                                <?php echo HTMLHelper::_('grid.checkall'); ?>
                             </th>
                             <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
@@ -125,25 +114,16 @@ echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post"
                             </th>
                         </tr>
                         </thead>
-                        <tfoot>
-                        <tr>
-                            <td colspan="<?php
-                            echo $columns; ?>">
-                            </td>
-                        </tr>
-                        </tfoot>
-                        <tbody>
+                        <tbody
                         <?php
                         foreach ($this->items as $i => $item) :
-                            $item->max_ordering = 0; //??
-                            $ordering           = ($listOrder === 'series.ordering');
+                            $item->max_ordering = 0;
                             $canCreate          = $user->authorise('core.create');
                             $canEdit            = $user->authorise('core.edit', 'com_proclaim.serie.' . $item->id);
                             $canEditOwn         = $user->authorise('core.edit.own', 'com_proclaim.serie.' . $item->id);
                             $canChange          = $user->authorise('core.edit.state', 'com_proclaim.serie.' . $item->id);
                             ?>
-                            <tr class="row<?php
-                            echo $i % 2; ?>">
+                            <tr class="row<?php echo $i % 2; ?>">
                                 <td class="center d-none d-md-table-cell">
                                     <?php
                                     echo HTMLHelper::_('grid.id', $i, $item->id); ?>
@@ -161,7 +141,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post"
                                 <td class="nowrap has-context">
                                     <div class="float-left">
                                         <?php
-                                if ($item->language == '*'): ?>
+                                if ($item->language === '*'): ?>
                                             <?php
                                     $language = Text::alt('JALL', 'language'); ?>
                                         <?php else: ?>
@@ -178,16 +158,16 @@ echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post"
                                                 'index.php?option=com_proclaim&task=cwmserie.edit&id=' . (int)$item->id
                                             ); ?>"
                                                title="<?php
-                                               echo Text::_('JACTION_EDIT'); ?>">
+                                                       echo Text::_('JACTION_EDIT'); ?>">
                                                 <?php
-                                                echo $this->escape($item->series_text); ?></a>
+                                                        echo $this->escape($item->series_text); ?></a>
                                         <?php else : ?>
                                             <span
                                                     title="<?php
-                                                    echo Text::sprintf(
-                                                        'JFIELD_ALIAS_LABEL',
-                                                        $this->escape($item->alias)
-                                                    ); ?>"><?php
+                                                            echo Text::sprintf(
+                                                                'JFIELD_ALIAS_LABEL',
+                                                                $this->escape($item->alias)
+                                                            ); ?>"><?php
                                                 echo $this->escape($item->series_text); ?></span>
                                         <?php
                                         endif; ?>
@@ -215,6 +195,8 @@ echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post"
                         </tbody>
                     </table>
                     <?php
+                    echo $this->pagination->getListFooter(); ?>
+                    <?php
                     // Load the batch processing form.?>
                     <?php
                     if ($user->authorise('core.create', 'com_proclaim')
@@ -226,25 +208,16 @@ echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post"
                             'bootstrap.renderModal',
                             'collapseModal',
                             [
-                                    'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
-                                    'footer' => $this->loadTemplate('batch_footer'),
-                                ],
+                                        'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
+                                        'footer' => $this->loadTemplate('batch_footer'),
+                                    ],
                             $this->loadTemplate('batch_body')
                         ); ?>
                     <?php
                     endif; ?>
                 <?php
                 endif; ?>
-
-                <?php
-                echo $this->pagination->getListFooter(); ?>
-                <?php
-                //Load the batch processing form.?>
-
-                <input type="hidden" name="task" value=""/>
-                <input type="hidden" name="boxchecked" value="0"/>
-                <?php
-                echo HTMLHelper::_('form.token'); ?>
+                <?php echo $this->filterForm->renderControlFields(); ?>
             </div>
         </div>
     </div>
