@@ -74,6 +74,14 @@ class HtmlView extends BaseHtmlView
     public ?Cwmlanding $landing = null;
 
     /**
+     * Pre-fetched landing page data
+     *
+     * @var array
+     * @since 10.1.0
+     */
+    public array $landingData = [];
+
+    /**
      * Execute and display a template script.
      *
      * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
@@ -117,6 +125,35 @@ class HtmlView extends BaseHtmlView
 
         // Pre-create landing helper for template use
         $this->landing = new Cwmlanding();
+
+        // Fetch all landing data in a single query
+        $this->landingData = $this->landing->getLandingData($this->params);
+
+        // Add the show/hide javascript
+        $js = <<<JS
+    function ReverseDisplay2(d) {
+        var el = document.getElementById(d);
+        if (el) {
+            // Legacy/Table layout support
+            if (el.style.display == "none") {
+                el.style.display = "contents";
+            } else {
+                el.style.display = "none";
+            }
+        } else {
+            // Grid layout support (class toggling)
+            var elements = document.getElementsByClassName('landing-hidden-' + d);
+            for (var i = 0; i < elements.length; i++) {
+                if (elements[i].style.display == "none") {
+                    elements[i].style.display = "";
+                } else {
+                    elements[i].style.display = "none";
+                }
+            }
+        }
+    }
+JS;
+        $document->addScriptDeclaration($js);
 
         parent::display($tpl);
     }

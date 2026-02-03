@@ -58,45 +58,48 @@ if ($this->params->get('landing_show_page_title') > 0) {
             $heading       = null;
             $showIt_phrase = null;
 
+            // Get pre-fetched items for this section if available
+            $items = $this->landingData[$showIt] ?? null;
+
             switch ($showIt) {
                 case 'teachers':
-                    $heading       = $CWMLanding->getTeacherLandingPage($params, $id = 0);
+                    $heading       = $CWMLanding->getTeacherLandingPage($params, 0, $items);
                     $showIt_phrase = Text::_('JBS_CMN_TEACHERS');
                     $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
                     break;
 
                 case 'series':
-                    $heading       = $CWMLanding->getSeriesLandingPage($params, $id = 0);
+                    $heading       = $CWMLanding->getSeriesLandingPage($params, 0, $items);
                     $showIt_phrase = Text::_('JBS_CMN_SERIES');
                     $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
                     break;
 
                 case 'locations':
-                    $heading       = $CWMLanding->getLocationsLandingPage($params, $id = 0);
+                    $heading       = $CWMLanding->getLocationsLandingPage($params, 0, $items);
                     $showIt_phrase = Text::_('JBS_CMN_LOCATIONS');
                     $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
                     break;
 
                 case 'messagetypes':
-                    $heading       = $CWMLanding->getMessageTypesLandingPage($params, $id = 0);
+                    $heading       = $CWMLanding->getMessageTypesLandingPage($params, 0, $items);
                     $showIt_phrase = Text::_('JBS_CMN_MESSAGETYPES');
                     $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
                     break;
 
                 case 'topics':
-                    $heading       = $CWMLanding->getTopicsLandingPage($params, $id = 0);
+                    $heading       = $CWMLanding->getTopicsLandingPage($params, 0, $items);
                     $showIt_phrase = Text::_('JBS_CMN_TOPICS');
                     $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
                     break;
 
                 case 'books':
-                    $heading       = $CWMLanding->getBooksLandingPage($params, $id = 0);
+                    $heading       = $CWMLanding->getBooksLandingPage($params, 0, $items);
                     $showIt_phrase = Text::_('JBS_CMN_BOOKS');
                     $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
                     break;
 
                 case 'years':
-                    $heading       = $CWMLanding->getYearsLandingPage($params, $id = 0);
+                    $heading       = $CWMLanding->getYearsLandingPage($params, 0, $items);
                     $showIt_phrase = Text::_('JBS_CMN_YEARS');
                     $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
                     break;
