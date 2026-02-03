@@ -696,9 +696,17 @@
                 const editorId = textarea.id;
                 if (!editorId) { return; }
 
-                // Skip if already initialized
-                if (window.tinymce.get(editorId)) {
-                    return;
+                // Check if already initialized
+                const existingEditor = window.tinymce.get(editorId);
+                if (existingEditor) {
+                    // If the editor's container is detached or different, remove it
+                    const editorContainer = existingEditor.getContainer();
+                    if (!editorContainer || !document.body.contains(editorContainer)) {
+                        existingEditor.remove();
+                    } else {
+                        // Editor is valid, skip
+                        return;
+                    }
                 }
 
                 // Simple config that works
