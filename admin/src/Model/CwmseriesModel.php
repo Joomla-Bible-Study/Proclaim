@@ -218,24 +218,17 @@ class CwmseriesModel extends ListModel
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $search = (int) substr($search, 3);
-                $query->where($db->quoteName('series.id') . ' = :search')
-                    ->bind(':search', $search, ParameterType::INTEGER);
+                $searchId = (int) substr($search, 3);
+                $query->where($db->quoteName('series.id') . ' = :searchId')
+                    ->bind(':searchId', $searchId, ParameterType::INTEGER);
             } else {
-                $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where('(series.series_text LIKE ' . $search . ' OR series.alias LIKE ' . $search . ')');
-                $search = '%' . str_replace(' ', '%', trim($search)) . '%';
+                $searchTerm = '%' . str_replace(' ', '%', trim($search)) . '%';
                 $query->where(
-                    '(' . $db->quoteName('series.series_text') . ' LIKE :search1 OR ' . $db->quoteName('series.alias') . ' LIKE :search2)'
+                    '(' . $db->quoteName('series.series_text') . ' LIKE :search1 OR ' .
+                    $db->quoteName('series.alias') . ' LIKE :search2)'
                 )
-                    ->bind([':search1', ':search2'], $search);
+                    ->bind([':search1', ':search2'], $searchTerm);
             }
-        }
-
-        // Filter on the language.
-        if ($language = $this->getState('filter.language')) {
-            $query->where($db->quoteName('series.language ') . ' = :language')
-                ->bind(':language', $language);
         }
 
         // Add the list ordering clause

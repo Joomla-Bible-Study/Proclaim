@@ -31,33 +31,45 @@ class CwmstudytopicsTable extends Table
     /**
      * ID
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $id = null;
+    public ?int $id = null;
 
     /**
      * Study ID
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $study_id = null;
+    public ?int $study_id = null;
 
     /**
      * Topic ID
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $topic_id = null;
+    public ?int $topic_id = null;
 
-    public $asset_id;
+    /**
+     * Asset ID
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $asset_id = null;
 
-    public $access;
+    /**
+     * Access Level
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $access = null;
 
     /**
      * Object constructor to set table and key fields.  In most cases this will

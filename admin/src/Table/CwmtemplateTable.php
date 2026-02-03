@@ -103,9 +103,25 @@ class CwmtemplateTable extends Table
     public ?string $pdf = null;
 
     /**
+     * Asset ID
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $asset_id = null;
+
+    /**
+     * Access Level
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $access = null;
+
+    /**
      * Created date
      *
-     * @var string
+     * @var string|null
      * @since 10.1.0
      */
     public ?string $created = null;
@@ -113,7 +129,7 @@ class CwmtemplateTable extends Table
     /**
      * Created by user ID
      *
-     * @var int
+     * @var int|null
      * @since 10.1.0
      */
     public ?int $created_by = null;
@@ -129,7 +145,7 @@ class CwmtemplateTable extends Table
     /**
      * Modified date
      *
-     * @var string
+     * @var string|null
      * @since 10.1.0
      */
     public ?string $modified = null;
@@ -137,7 +153,7 @@ class CwmtemplateTable extends Table
     /**
      * Modified by user ID
      *
-     * @var int
+     * @var int|null
      * @since 10.1.0
      */
     public ?int $modified_by = null;

@@ -33,20 +33,20 @@ class CwmtopicTable extends Table
     /**
      * Primary Key
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $id = null;
+    public ?int $id = null;
 
     /**
      * Topic text
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $topic_text = null;
+    public ?string $topic_text = null;
 
     /**
      * Published
@@ -55,38 +55,56 @@ class CwmtopicTable extends Table
      *
      * @since 9.0.0
      */
-    public $published = 1;
+    public int $published = 1;
 
     /**
      * Params
      *
-     * @var string
+     * @var string|Registry|null
      *
      * @since 9.0.0
      */
-    public $params = null;
+    public string|Registry|null $params = null;
 
-    public $asset_id;
+    /**
+     * Asset ID
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $asset_id = null;
 
-    public $language;
+    /**
+     * Language
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    public ?string $language = null;
 
-    public $access;
+    /**
+     * Access Level
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $access = null;
 
     /**
      * Created date
      *
-     * @var string
+     * @var string|null
      * @since 10.1.0
      */
-    public $created = null;
+    public ?string $created = null;
 
     /**
      * Created by user ID
      *
-     * @var int
+     * @var int|null
      * @since 10.1.0
      */
-    public $created_by = null;
+    public ?int $created_by = null;
 
     /**
      * Created by alias
@@ -94,23 +112,23 @@ class CwmtopicTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public $created_by_alias = '';
+    public string $created_by_alias = '';
 
     /**
      * Modified date
      *
-     * @var string
+     * @var string|null
      * @since 10.1.0
      */
-    public $modified = null;
+    public ?string $modified = null;
 
     /**
      * Modified by user ID
      *
-     * @var int
+     * @var int|null
      * @since 10.1.0
      */
-    public $modified_by = null;
+    public ?int $modified_by = null;
 
     /**
      * Constructor

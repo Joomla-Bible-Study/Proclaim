@@ -59,7 +59,7 @@ class CwmadminTable extends Table
      * @var int
      * @since    7.0.0
      */
-    public $asset_id = 0;
+    public int $asset_id = 0;
 
     /**
      * Access Level
@@ -67,7 +67,7 @@ class CwmadminTable extends Table
      * @var int
      * @since    7.0.0
      */
-    public $access = 0;
+    public int $access = 0;
 
     /**
      * Install State

@@ -32,49 +32,55 @@ class CwmserieTable extends Table
     /**
      * Primary Key
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $id = null;
+    public ?int $id = null;
 
     /**
      * Series Text
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $series_text = null;
+    public ?string $series_text = null;
 
-    public $alias;
+    /**
+     * Alias
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    public ?string $alias = null;
 
     /**
      * Teacher
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $teacher = null;
+    public ?string $teacher = null;
 
     /**
      * Description
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $description = null;
+    public ?string $description = null;
 
     /**
      * Series Thumbnail
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $series_thumbnail = null;
+    public ?string $series_thumbnail = null;
 
     /**
      * Publish state
@@ -83,33 +89,63 @@ class CwmserieTable extends Table
      *
      * @since 9.0.0
      */
-    public $published = 1;
+    public int $published = 1;
 
-    public $asset_id;
+    /**
+     * Asset ID
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $asset_id = null;
 
-    public $ordering;
+    /**
+     * Ordering
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $ordering = null;
 
-    public $access;
+    /**
+     * Access Level
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $access = null;
 
-    public $language;
+    /**
+     * Language
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    public ?string $language = null;
 
-    public $landing_show;
+    /**
+     * Landing Show
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $landing_show = null;
 
     /**
      * Created date
      *
-     * @var string
+     * @var string|null
      * @since 10.1.0
      */
-    public $created = null;
+    public ?string $created = null;
 
     /**
      * Created by user ID
      *
-     * @var int
+     * @var int|null
      * @since 10.1.0
      */
-    public $created_by = null;
+    public ?int $created_by = null;
 
     /**
      * Created by alias
@@ -117,23 +153,31 @@ class CwmserieTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public $created_by_alias = '';
+    public string $created_by_alias = '';
 
     /**
      * Modified date
      *
-     * @var string
+     * @var string|null
      * @since 10.1.0
      */
-    public $modified = null;
+    public ?string $modified = null;
 
     /**
      * Modified by user ID
      *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $modified_by = null;
+
+    /**
+     * Podcast Show
+     *
      * @var int
      * @since 10.1.0
      */
-    public $modified_by = null;
+    public int $podcast_show = 0;
 
     /**
      * Constructor

@@ -33,114 +33,186 @@ class CwmmediafileTable extends Table
     /**
      * Primary Key
      *
-     * @var int
+     * @var int|null
      * @since    7.0.0
      */
-    public $id = null;
+    public ?int $id = null;
 
     /**
      * Study id
      *
-     * @var int
+     * @var int|null
      * @since    7.0.0
      */
-    public $study_id = null;
+    public ?int $study_id = null;
 
     /**
      * Server id
      *
-     * @var int
+     * @var int|null
      * @since    7.0.0
      */
-    public $server_id = null;
+    public ?int $server_id = null;
 
     /**
      * Podcast ID
      *
-     * @var string
+     * @var string|null
      * @since    7.0.0
      */
-    public $podcast_id = null;
+    public ?string $podcast_id = null;
 
     /**
      * Hold transitive data (i.e statistics)
      *
-     * @var null
+     * @var string|null
      * @since    7.0.0
      */
-    public $metadata = '';
+    public ?string $metadata = '';
 
     /**
      * Ordering
      *
-     * @var string
+     * @var string|null
      * @since    7.0.0
      */
-    public $ordering = null;
+    public ?string $ordering = null;
 
     /**
      * Create Date
      *
-     * @var string
+     * @var string|null
      * @since    7.0.0
      */
-    public $createdate = null;
+    public ?string $createdate = null;
 
-    public $hits = 0;
+    /**
+     * Hits
+     *
+     * @var int
+     * @since 9.0.0
+     */
+    public int $hits = 0;
 
     /**
      * Published
      *
-     * @var string
+     * @var int
      * @since    7.0.0
      */
-    public $published = 1;
+    public int $published = 1;
 
     /**
      * Comment Text
      *
-     * @var string
+     * @var string|null
      * @since    7.0.0
      */
-    public $comment = null;
+    public ?string $comment = null;
 
-    public $downloads = 0;
+    /**
+     * Downloads
+     *
+     * @var int
+     * @since 9.0.0
+     */
+    public int $downloads = 0;
 
-    public $plays = 0;
+    /**
+     * Plays
+     *
+     * @var int
+     * @since 9.0.0
+     */
+    public int $plays = 0;
 
     /**
      * Media configuration
      *
-     * @var string
+     * @var string|null
      * @since    7.0.0
      */
-    public $params = null;
+    public ?string $params = null;
 
-    public $asset_id;
+    /**
+     * Asset ID
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $asset_id = null;
 
-    public $access;
+    /**
+     * Access Level
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $access = null;
 
-    public $language;
+    /**
+     * Language
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    public ?string $language = null;
 
     /**
      * Created date
      *
-     * @var string
+     * @var string|null
      * @since    10.0.0
      */
-    public $created = null;
+    public ?string $created = null;
 
-    public $created_by;
+    /**
+     * Created by user ID
+     *
+     * @var int|null
+     * @since 10.0.0
+     */
+    public ?int $created_by = null;
 
-    public $created_by_alias;
+    /**
+     * Created by alias
+     *
+     * @var string
+     * @since 10.0.0
+     */
+    public string $created_by_alias = '';
 
-    public $modified;
+    /**
+     * Modified date
+     *
+     * @var string|null
+     * @since 10.0.0
+     */
+    public ?string $modified = null;
 
-    public $modified_by;
+    /**
+     * Modified by user ID
+     *
+     * @var int|null
+     * @since 10.0.0
+     */
+    public ?int $modified_by = null;
 
-    public $checked_out;
+    /**
+     * Checked Out
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $checked_out = null;
 
-    public $checked_out_time;
+    /**
+     * Checked Out Time
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    public ?string $checked_out_time = null;
 
     /**
      * Constructor
