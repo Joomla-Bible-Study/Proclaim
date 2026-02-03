@@ -94,6 +94,9 @@
                         Joomla.initCustomSelect(container);
                     }
 
+                    // Initialize TinyMCE editors in loaded content
+                    initTinyMCEEditors(container);
+
                     // Trigger custom event for any additional initialization
                     container.dispatchEvent(new CustomEvent('fieldsetLoaded', {
                         bubbles: true,
@@ -111,6 +114,84 @@
                 container.innerHTML = '<div class="alert alert-danger">Error loading content: ' + error.message + '</div>';
                 console.error('Fieldset load error:', error);
                 reject(error);
+            });
+        });
+    }
+
+    /**
+     * Initialize TinyMCE editors in dynamically loaded content
+     * @param {HTMLElement} container - Container with editor textareas
+     */
+    function initTinyMCEEditors(container) {
+        if (typeof window.tinymce === 'undefined') {
+            return;
+        }
+
+        const textareas = container.querySelectorAll('textarea.mce_editable');
+
+        textareas.forEach(function(textarea) {
+            const editorId = textarea.id;
+            if (!editorId) { return; }
+
+            // Check if already initialized
+            const existingEditor = window.tinymce.get(editorId);
+            if (existingEditor) {
+                // If the editor's container is detached, remove it
+                const editorContainer = existingEditor.getContainer();
+                if (!editorContainer || !document.body.contains(editorContainer)) {
+                    existingEditor.remove();
+                } else {
+                    return;
+                }
+            }
+
+            // Simple config for editors
+            const config = {
+                target: textarea,
+                menubar: true,
+                toolbar: 'undo redo | bold italic underline | bullist numlist | link',
+                plugins: 'link lists',
+                branding: false,
+                promotion: false,
+                height: 300,
+                setup: function(editor) {
+                    editor.on('change', function() {
+                        editor.save();
+                    });
+                }
+            };
+
+            // Initialize TinyMCE
+            window.tinymce.init(config).then(function(editors) {
+                if (editors && editors[0]) {
+                    const editor = editors[0];
+
+                    // Enable the toggle button
+                    const wrapper = textarea.closest('.js-editor-tinymce');
+                    const toggleBtn = wrapper ? wrapper.querySelector('.js-tiny-toggler-button') : null;
+                    if (toggleBtn) {
+                        toggleBtn.disabled = false;
+                        toggleBtn.addEventListener('click', function() {
+                            if (editor.isHidden()) {
+                                editor.show();
+                            } else {
+                                editor.hide();
+                            }
+                        });
+                    }
+
+                    // Register with Joomla's editor system
+                    if (window.Joomla && window.Joomla.editors && window.Joomla.editors.instances) {
+                        window.Joomla.editors.instances[editorId] = {
+                            id: editorId,
+                            getValue: function() { return editor.getContent(); },
+                            setValue: function(val) { editor.setContent(val); },
+                            getSelection: function() { return editor.selection.getContent(); },
+                            replaceSelection: function(val) { editor.execCommand('mceInsertContent', false, val); },
+                            disable: function(state) { editor.mode.set(state ? 'readonly' : 'design'); }
+                        };
+                    }
+                }
             });
         });
     }

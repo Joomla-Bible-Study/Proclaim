@@ -36,7 +36,7 @@
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
-            <field name="terms" type="editor" height="300" width="800"
+            <field name="terms" type="editor" height="300"
                    label="JBS_CMN_TERMS" description="JBS_CMN_TERMS_DESC" filter="raw"
                    buttons="true"/>
         </fieldset>
