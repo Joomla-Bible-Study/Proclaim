@@ -50,7 +50,7 @@ class CwmpodcastsController extends AdminController
 
         $podcasts = new Cwmpodcast();
         $result   = $podcasts->makePodcasts();
-        $this->setRedirect('index.php?option=com_proclaim&view=Cwmpodcasts&' . Session::getFormToken() . '=1', $result);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmpodcasts', $result);
     }
 
     /**
