@@ -21,6 +21,7 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 use PHPMailer\PHPMailer\Exception;
 
@@ -223,7 +224,7 @@ class CwmsermonController extends FormController
     /**
      * Redirect back to the sermon page
      *
-     * @param   \Joomla\Input\Input  $input  Input object
+     * @param   Input  $input  Input object
      * @param   int                  $t      Template ID
      *
      * @return void
