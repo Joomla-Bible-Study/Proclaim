@@ -924,6 +924,114 @@
 }
 
 /* ==========================================================================
+   Landing Page Context (Order-Only Mode)
+   ========================================================================== */
+.landing-page-canvas {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.landing-page-header {
+    margin-bottom: 0;
+}
+
+.landing-section-list {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.landing-section-card {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .75rem 1rem;
+    background: var(--layout-bg-primary);
+    border: 1px solid var(--layout-border-color);
+    border-radius: .375rem;
+    transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.landing-section-card:hover {
+    border-color: var(--layout-accent);
+}
+
+.landing-section-card:focus {
+    outline: none;
+    box-shadow: var(--layout-focus-ring);
+}
+
+.landing-section-card.disabled {
+    opacity: 0.6;
+    background: var(--layout-bg-tertiary);
+}
+
+.landing-section-card.disabled .section-name {
+    text-decoration: line-through;
+    color: var(--layout-text-muted);
+}
+
+.landing-section-card .section-handle {
+    cursor: grab;
+    color: var(--layout-text-muted);
+    padding: .25rem;
+}
+
+.landing-section-card .section-handle:active {
+    cursor: grabbing;
+}
+
+.landing-section-card .section-name {
+    flex: 1;
+    font-weight: 500;
+    color: var(--layout-text-primary);
+}
+
+.landing-section-card .section-toggle {
+    display: flex;
+    align-items: center;
+}
+
+.landing-section-card .section-toggle .form-check {
+    margin-bottom: 0;
+}
+
+.landing-section-card .section-toggle .form-check-input {
+    width: 2.5em;
+    height: 1.25em;
+    cursor: pointer;
+}
+
+.landing-section-card .btn-section-settings {
+    padding: .375rem .5rem;
+}
+
+.landing-section-card .btn-section-settings.disabled,
+.landing-section-card .btn-section-settings:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Landing page sortable states */
+.landing-section-card.sortable-ghost {
+    opacity: 0.4;
+}
+
+.landing-section-card.sortable-chosen {
+    background: var(--layout-bg-secondary);
+    box-shadow: var(--layout-shadow-lg);
+}
+
+.landing-section-card.sortable-drag {
+    background: var(--layout-bg-primary);
+    box-shadow: var(--layout-shadow-lg);
+    z-index: 1000;
+}
+
+/* ==========================================================================
    Print Styles - Hide editor in print
    ========================================================================== */
 @media print {

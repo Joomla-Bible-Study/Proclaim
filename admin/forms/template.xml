@@ -1909,45 +1909,19 @@
             <field name="dthumbnaillinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
         </fieldset>
+        <!-- Landing Page: Hidden data field and legacy ordering (managed by Layout Editor) -->
         <fieldset name="LANDINGPAGE" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-            <field name="landing_show_page_title" type="radio" default="1"
-                   label="JBS_TPL_LISTITEMS_SHOW_PAGE_TITLE"
-                   layout="joomla.form.field.radio.switcher">
-                <option value="0">JNO</option>
-                <option value="1">JYES</option>
-            </field>
-            <field name="landing_show_page_image" type="radio" default="1"
-                   label="JBS_TPL_FP_SHOW_PAGE_IMAGE"
-                   layout="joomla.form.field.radio.switcher">
-                <option value="0">JNO</option>
-                <option value="1">JYES</option>
-            </field>
-            <field name="landing_page_title" type="text" default=""
-                   label="JBS_TPL_PAGE_TITLE"/>
-            <field name="landing_intro" type="editor" height="300" width="500"
-                   label="JBS_TPL_LISTITEMS_LIST_INTRO" filter="raw"
-                   buttons="true"/>
-            <field name="landing_intro_show" type="radio" default="1"
-                   label="JBS_TPL_LISTITEMS_INTRO_SHOW" description="JBS_TPL_LISTITEMS_INTRO_SHOW_DESC"
-                   layout="joomla.form.field.radio.switcher">
-                <option value="0">JNO</option>
-                <option value="1">JYES</option>
-            </field>
-            <field type="list" name="landing_hide" default="0"
-                   label="JBS_TPL_LANDINGPAGE_LANDING_HIDE" description="JBS_TPL_LANDINGPAGE_LANDING_HIDE_DESC">
-                <option value="0">JBS_TPL_BUTTON_ONLY</option>
-                <option value="1">JBS_TPL_BUTTON_LABEL</option>
-                <option value="2">JBS_TPL_LABEL_ONLY</option>
-            </field>
-            <field name="landing_default_order" type="radio" default="ASC"
-                   label="JBS_TPL_FILTERS_DEFAULTORDER" description="JBS_TPL_FILTERS_DEFAULTORDER_DESC"
-                   layout="joomla.form.field.radio.switcher">
-                <option value="DESC">JBS_CMN_DESCENDING</option>
-                <option value="ASC">JBS_CMN_ASCENDING</option>
-            </field>
-            <field type="text" name="landing_hidelabel" size="100"
-                   default="Show/Hide All" label="JBS_TPL_LANDINGPAGE_LANDING_HIDELABEL"
-                   description="JBS_TPL_LANDINGPAGE_LANDING_HIDELABEL_DESC"/>
+            <field name="landing_layout" type="hidden" default="" filter="raw"
+                   description="JSON structure for landing page section order and enabled states"/>
+            <!-- Section visibility flags - managed by Layout Editor toggle switches -->
+            <field name="showteachers" type="hidden" default="1"/>
+            <field name="showseries" type="hidden" default="1"/>
+            <field name="showbooks" type="hidden" default="1"/>
+            <field name="showtopics" type="hidden" default="1"/>
+            <field name="showlocations" type="hidden" default="1"/>
+            <field name="showmessagetypes" type="hidden" default="1"/>
+            <field name="showyears" type="hidden" default="1"/>
+            <!-- Legacy headingorder fields - now managed by Layout Editor drag-and-drop -->
             <field type="list" name="headingorder_1" default="teachers"
                    label="JBS_TPL_LANDINGPAGE_HEADINGORDER_1" description="JBS_TPL_LANDINGPAGE_HEADINGORDER_DESC">
                 <option value="teachers">JBS_CMN_TEACHERS</option>
@@ -2018,13 +1992,55 @@
                 <option value="messagetypes">JBS_CMN_MESSAGETYPES</option>
                 <option value="years">JBS_CMN_YEARS</option>
             </field>
+        </fieldset>
 
-            <field name="showteachers" type="radio" default="1"
-                   label="JBS_TPL_LANDINGPAGE_SHOWTEACHERS"
+        <!-- Landing Page: Page Settings -->
+        <fieldset name="LANDINGPAGE_PAGESETTINGS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
+                  label="JBS_TPL_LANDINGPAGE_DISPLAY_SETTINGS">
+            <field name="landing_show_page_title" type="radio" default="1"
+                   label="JBS_TPL_LISTITEMS_SHOW_PAGE_TITLE"
                    layout="joomla.form.field.radio.switcher">
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
+            <field name="landing_show_page_image" type="radio" default="1"
+                   label="JBS_TPL_FP_SHOW_PAGE_IMAGE"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field name="landing_page_title" type="text" default=""
+                   label="JBS_TPL_PAGE_TITLE"/>
+            <field name="landing_intro" type="editor" height="300" width="500"
+                   label="JBS_TPL_LISTITEMS_LIST_INTRO" filter="raw"
+                   buttons="true"/>
+            <field name="landing_intro_show" type="radio" default="1"
+                   label="JBS_TPL_LISTITEMS_INTRO_SHOW" description="JBS_TPL_LISTITEMS_INTRO_SHOW_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field type="list" name="landing_hide" default="0"
+                   label="JBS_TPL_LANDINGPAGE_LANDING_HIDE" description="JBS_TPL_LANDINGPAGE_LANDING_HIDE_DESC">
+                <option value="0">JBS_TPL_BUTTON_ONLY</option>
+                <option value="1">JBS_TPL_BUTTON_LABEL</option>
+                <option value="2">JBS_TPL_LABEL_ONLY</option>
+            </field>
+            <field name="landing_default_order" type="radio" default="ASC"
+                   label="JBS_TPL_FILTERS_DEFAULTORDER" description="JBS_TPL_FILTERS_DEFAULTORDER_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="DESC">JBS_CMN_DESCENDING</option>
+                <option value="ASC">JBS_CMN_ASCENDING</option>
+            </field>
+            <field type="text" name="landing_hidelabel" size="100"
+                   default="Show/Hide All" label="JBS_TPL_LANDINGPAGE_LANDING_HIDELABEL"
+                   description="JBS_TPL_LANDINGPAGE_LANDING_HIDELABEL_DESC"/>
+        </fieldset>
+
+        <!-- Landing Page: Section Content Settings -->
+        <!-- Landing Page: Teachers Section Settings -->
+        <fieldset name="LANDINGPAGE_TEACHERS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
+                  label="JBS_CMN_TEACHERS">
             <field name="landingteachersuselimit" type="radio" label="JBS_TPL_USE_TEACHERS_LIMIT"
                    description="JBS_TPL_USE_LIMIT_DESC" default="0"
                    layout="joomla.form.field.radio.switcher">
@@ -2041,11 +2057,20 @@
                 <option value="0">JBS_TPL_LINK_STUDIES_LIST</option>
                 <option value="1">JBS_TPL_LINK_TEACHER_DETAILS</option>
             </field>
-            <field name="showseries" type="radio" label="JBS_TPL_LANDINGPAGE_SHOWSERIES" default="1"
-                   layout="joomla.form.field.radio.switcher">
-                <option value="0">JNO</option>
-                <option value="1">JYES</option>
+            <field name="teachers_order"
+                   type="list"
+                   label="JBS_CMN_TEACHERS_ORDERING"
+                   description="JBS_CMN_TEACHER_ORDERING_DESC"
+                   default="2">
+                <option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
+                <option value="1">JBS_CMN_DESCENDING</option>
+                <option value="2">JBS_CMN_ASCENDING</option>
             </field>
+        </fieldset>
+
+        <!-- Landing Page: Series Section Settings -->
+        <fieldset name="LANDINGPAGE_SERIES" addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
+                  label="JBS_CMN_SERIES">
             <field name="landingseriesuselimit" type="radio" label="JBS_TPL_USE_SERIES_LIMIT"
                    description="JBS_TPL_USE_LIMIT_DESC" default="0"
                    layout="joomla.form.field.radio.switcher">
@@ -2062,31 +2087,58 @@
                 <option value="0">JBS_TPL_LINK_STUDIES_LIST</option>
                 <option value="1">JBS_TPL_LINK_SERIES_DETAILS</option>
             </field>
-            <field name="showbooks" type="radio" label="JBS_TPL_LANDINGPAGE_SHOWBOOKS"
-                   default="1" layout="joomla.form.field.radio.switcher">
-                <option value="0">JNO</option>
-                <option value="1">JYES</option>
+            <field name="series_order"
+                   type="list"
+                   label="JBS_CMN_SERIES_ORDERING"
+                   description="JBS_CMN_ORDERING_DESC"
+                   default="2">
+                <option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
+                <option value="1">JBS_CMN_DESCENDING</option>
+                <option value="2">JBS_CMN_ASCENDING</option>
             </field>
+        </fieldset>
+
+        <!-- Landing Page: Books Section Settings -->
+        <fieldset name="LANDINGPAGE_BOOKS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
+                  label="JBS_CMN_BOOKS">
             <field name="landingbookslimit" type="int"
                    label="JBS_TPL_LANDINGPAGE_LANDINGBOOKSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
                    size="5"/>
             <field name="bookslabel" type="text" label="JBS_TPL_LANDINGPAGE_BOOKSLABEL"
                    default="Books" size="45"/>
-            <field name="showtopics" type="radio" label="JBS_TPL_LANDINGPAGE_SHOWTOPICS"
-                   default="1" layout="joomla.form.field.radio.switcher">
-                <option value="0">JNO</option>
-                <option value="1">JYES</option>
+            <field name="books_order"
+                   type="list"
+                   label="JBS_CMN_BOOKS_ORDERING"
+                   description="JBS_CMN_ORDERING_DESC"
+                   default="2">
+                <option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
+                <option value="1">JBS_CMN_DESCENDING</option>
+                <option value="2">JBS_CMN_ASCENDING</option>
             </field>
+        </fieldset>
+
+        <!-- Landing Page: Topics Section Settings -->
+        <fieldset name="LANDINGPAGE_TOPICS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
+                  label="JBS_CMN_TOPICS">
             <field name="landingtopicslimit" type="int"
                    label="JBS_TPL_LANDINGPAGE_LANDINGTOPICSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
                    size="5"/>
             <field name="topicslabel" type="text"
                    label="JBS_TPL_LANDINGPAGE_TOPICSLABEL" default="Topics" size="45"/>
-            <field name="showlocations" type="radio" label="JBS_TPL_LANDINGPAGE_SHOWLOCATIONS"
-                   default="1" layout="joomla.form.field.radio.switcher">
-                <option value="0">JNO</option>
-                <option value="1">JYES</option>
+            <field name="topics_order"
+                   type="list"
+                   label="JBS_CMN_TOPICS_ORDERING"
+                   description="JBS_CMN_ORDERING_DESC"
+                   default="2">
+                <option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
+                <option value="1">JBS_CMN_DESCENDING</option>
+                <option value="2">JBS_CMN_ASCENDING</option>
             </field>
+        </fieldset>
+
+        <!-- Landing Page: Locations Section Settings -->
+        <fieldset name="LANDINGPAGE_LOCATIONS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
+                  label="JBS_CMN_LOCATIONS">
             <field name="landinglocationsuselimit" type="radio" label="JBS_TPL_USE_LOCATIONS_LIMIT"
                    description="JBS_TPL_USE_LIMIT_DESC" default="0"
                    layout="joomla.form.field.radio.switcher">
@@ -2099,11 +2151,20 @@
                    size="5"/>
             <field name="locationslabel" type="text"
                    label="JBS_TPL_LANDINGPAGE_LOCATIONSLABEL" default="Locations" size="45"/>
-            <field name="showmessagetypes" type="radio" label="JBS_TPL_LANDINGPAGE_SHOWMESSAGETYPES"
-                   default="1" layout="joomla.form.field.radio.switcher">
-                <option value="0">JNO</option>
-                <option value="1">JYES</option>
+            <field name="locations_order"
+                   type="list"
+                   label="JBS_CMN_LOCATIONS_ORDERING"
+                   description="JBS_CMN_ORDERING_DESC"
+                   default="2">
+                <option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
+                <option value="1">JBS_CMN_DESCENDING</option>
+                <option value="2">JBS_CMN_ASCENDING</option>
             </field>
+        </fieldset>
+
+        <!-- Landing Page: Message Types Section Settings -->
+        <fieldset name="LANDINGPAGE_MESSAGETYPES" addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
+                  label="JBS_CMN_MESSAGETYPES">
             <field name="landingmessagetypeuselimit" type="radio" label="JBS_TPL_USE_MESSAGETYPE_LIMIT"
                    description="JBS_TPL_USE_LIMIT_DESC" default="0"
                    layout="joomla.form.field.radio.switcher">
@@ -2117,75 +2178,30 @@
             <field name="messagetypeslabel" type="text"
                    label="JBS_TPL_LANDINGPAGE_MESSAGETYPESLABEL" default="Message Types"
                    size="45"/>
-            <field name="showyears" type="radio" label="JBS_TPL_LANDINGPAGE_SHOWYEARS"
-                   default="1" layout="joomla.form.field.radio.switcher">
-                <option value="0">JNO</option>
-                <option value="1">JYES</option>
-            </field>
-            <field name="landingyearslimit" type="int"
-                   label="JBS_TPL_LANDINGPAGE_LANDINGYEARSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
-                   size="5"/>
-            <field name="yearslabel" type="text" label="JBS_TPL_LANDINGPAGE_YEARSLABEL"
-                   default="Years" size="45"/>
-            <field name="series_order"
-                   type="list"
-                   label="JBS_CMN_SERIES_ORDERING"
-                   description="JBS_CMN_ORDERING_DESC"
-                   default="2">
-                <option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
-                <option value="1">JBS_CMN_DESCENDING</option>
-                <option value="2">JBS_CMN_ASCENDING</option>
-            </field>
-            <field name="books_order"
-                   type="list"
-                   label="JBS_CMN_BOOKS_ORDERING"
-                   description="JBS_CMN_ORDERING_DESC"
-                   default="2">
-                <option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
-                <option value="1">JBS_CMN_DESCENDING</option>
-                <option value="2">JBS_CMN_ASCENDING</option>
-            </field>
-            <field name="teachers_order"
-                   type="list"
-                   label="JBS_CMN_TEACHERS_ORDERING"
-                   description="JBS_CMN_TEACHER_ORDERING_DESC"
-                   default="2">
-                <option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
-                <option value="1">JBS_CMN_DESCENDING</option>
-                <option value="2">JBS_CMN_ASCENDING</option>
-            </field>
-            <field name="years_order"
-                   type="list"
-                   label="JBS_CMN_YEARS_ORDERING"
-                   description="JBS_CMN_ORDERING_DESC"
-                   default="1">
-                <option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
-                <option value="1">JBS_CMN_DESCENDING</option>
-                <option value="2">JBS_CMN_ASCENDING</option>
-            </field>
-            <field name="topics_order"
-                   type="list"
-                   label="JBS_CMN_TOPICS_ORDERING"
-                   description="JBS_CMN_ORDERING_DESC"
-                   default="2">
-                <option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
-                <option value="1">JBS_CMN_DESCENDING</option>
-                <option value="2">JBS_CMN_ASCENDING</option>
-            </field>
-            <field name="locations_order"
-                   type="list"
-                   label="JBS_CMN_LOCATIONS_ORDERING"
-                   description="JBS_CMN_ORDERING_DESC"
-                   default="2">
-                <option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
-                <option value="1">JBS_CMN_DESCENDING</option>
-                <option value="2">JBS_CMN_ASCENDING</option>
-            </field>
             <field name="messagetypes_order"
                    type="list"
                    label="JBS_CMN_MESSAGETYPE_ORDERING"
                    description="JBS_CMN_ORDERING_DESC"
                    default="2">
+                <option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
+                <option value="1">JBS_CMN_DESCENDING</option>
+                <option value="2">JBS_CMN_ASCENDING</option>
+            </field>
+        </fieldset>
+
+        <!-- Landing Page: Years Section Settings -->
+        <fieldset name="LANDINGPAGE_YEARS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
+                  label="JBS_CMN_YEARS">
+            <field name="landingyearslimit" type="int"
+                   label="JBS_TPL_LANDINGPAGE_LANDINGYEARSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
+                   size="5"/>
+            <field name="yearslabel" type="text" label="JBS_TPL_LANDINGPAGE_YEARSLABEL"
+                   default="Years" size="45"/>
+            <field name="years_order"
+                   type="list"
+                   label="JBS_CMN_YEARS_ORDERING"
+                   description="JBS_CMN_ORDERING_DESC"
+                   default="1">
                 <option value="0">JBS_TPL_FILTERS_DEFAULTORDER</option>
                 <option value="1">JBS_CMN_DESCENDING</option>
                 <option value="2">JBS_CMN_ASCENDING</option>

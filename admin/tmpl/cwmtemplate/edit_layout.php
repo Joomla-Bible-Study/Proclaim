@@ -41,6 +41,7 @@ Text::script('JBS_TPL_TEACHERS_LIST');
 Text::script('JBS_TPL_TEACHER_DETAILS');
 Text::script('JBS_TPL_SERIES_LIST');
 Text::script('JBS_TPL_SERIES_DETAILS');
+Text::script('JBS_TPL_LANDING_PAGE');
 Text::script('JBS_TPL_COLSPAN');
 Text::script('JBS_TPL_COLSPAN_DESC');
 Text::script('JBS_TPL_ELEMENT');
@@ -119,6 +120,18 @@ Text::script('JBS_CMN_THUMBNAIL');
 Text::script('JBS_CMN_CUSTOM');
 Text::script('JBS_CMN_DESCRIPTION');
 
+// Landing page section labels
+Text::script('JBS_CMN_TEACHERS');
+Text::script('JBS_CMN_SERIES');
+Text::script('JBS_CMN_BOOKS');
+Text::script('JBS_CMN_TOPICS');
+Text::script('JBS_CMN_LOCATIONS');
+Text::script('JBS_CMN_MESSAGETYPES');
+Text::script('JBS_CMN_YEARS');
+Text::script('JBS_TPL_DRAG_TO_REORDER');
+Text::script('JBS_TPL_TOGGLE_SECTION');
+Text::script('JBS_TPL_SECTION_DISABLED');
+
 // Pass template params to JavaScript for initial loading
 // The form fields are lazy-loaded, so we need to provide the data directly
 $params = $this->item->params;
@@ -163,8 +176,23 @@ $settingsConfig = [
     'seriesDetails' => [
         ['fieldset' => 'SERIESDETAIL', 'label' => Text::_('JBS_TPL_SERIESDETAILS')],
     ],
+    'landingPage' => [
+        ['fieldset' => 'LANDINGPAGE_PAGESETTINGS', 'label' => Text::_('JBS_TPL_LANDINGPAGE_DISPLAY_SETTINGS')],
+    ],
 ];
 $document->addScriptOptions('com_proclaim.settingsConfig', $settingsConfig);
+
+// Landing page section-specific fieldsets (for gear button on each section card)
+$landingSectionSettings = [
+    'teachers' => 'LANDINGPAGE_TEACHERS',
+    'series' => 'LANDINGPAGE_SERIES',
+    'books' => 'LANDINGPAGE_BOOKS',
+    'topics' => 'LANDINGPAGE_TOPICS',
+    'locations' => 'LANDINGPAGE_LOCATIONS',
+    'messagetypes' => 'LANDINGPAGE_MESSAGETYPES',
+    'years' => 'LANDINGPAGE_YEARS',
+];
+$document->addScriptOptions('com_proclaim.landingSectionSettings', $landingSectionSettings);
 ?>
 
 <div id="layout-editor-container" data-context="messages">
@@ -178,4 +206,9 @@ $document->addScriptOptions('com_proclaim.settingsConfig', $settingsConfig);
 <div class="alert alert-info mt-3">
     <span class="icon-info-circle" aria-hidden="true"></span>
     <?php echo Text::_('JBS_TPL_LAYOUT_CLASSIC_NOTE'); ?>
+</div>
+
+<!-- Hidden fields for Landing Page backward compatibility (managed by Layout Editor) -->
+<div style="display: none;">
+    <?php echo $this->form->renderFieldset('LANDINGPAGE'); ?>
 </div>

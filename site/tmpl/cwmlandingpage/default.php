@@ -50,88 +50,94 @@ if ($this->params->get('landing_show_page_title') > 0) {
     <!-- End div id="bsms_header" -->
 
     <?php
-    for ($i = 1; $i <= 7; $i++) {
-        $showIt = $params->get('headingorder_' . $i);
+    // Get section order from new format or legacy fields
+    $sections = $CWMLanding->getSectionOrder($params);
+    $sectionIndex = 0;
 
-        if ((int)$params->get('show' . $showIt) === 1) {
-            $heading_call  = null;
-            $heading       = null;
-            $showIt_phrase = null;
+    foreach ($sections as $section) {
+        $sectionIndex++;
+        $showIt = $section->id;
 
-            // Get pre-fetched items for this section if available
-            $items = $this->landingData[$showIt] ?? null;
+        // Skip disabled sections
+        if (!$section->enabled) {
+            continue;
+        }
 
-            switch ($showIt) {
-                case 'teachers':
-                    $heading       = $CWMLanding->getTeacherLandingPage($params, 0, $items);
-                    $showIt_phrase = Text::_('JBS_CMN_TEACHERS');
-                    $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
-                    break;
+        $heading       = null;
+        $showIt_phrase = null;
+        $showhideall   = null;
 
-                case 'series':
-                    $heading       = $CWMLanding->getSeriesLandingPage($params, 0, $items);
-                    $showIt_phrase = Text::_('JBS_CMN_SERIES');
-                    $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
-                    break;
+        // Get pre-fetched items for this section if available
+        $items = $this->landingData[$showIt] ?? null;
 
-                case 'locations':
-                    $heading       = $CWMLanding->getLocationsLandingPage($params, 0, $items);
-                    $showIt_phrase = Text::_('JBS_CMN_LOCATIONS');
-                    $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
-                    break;
+        switch ($showIt) {
+            case 'teachers':
+                $heading       = $CWMLanding->getTeacherLandingPage($params, 0, $items);
+                $showIt_phrase = Text::_('JBS_CMN_TEACHERS');
+                $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $sectionIndex);
+                break;
 
-                case 'messagetypes':
-                    $heading       = $CWMLanding->getMessageTypesLandingPage($params, 0, $items);
-                    $showIt_phrase = Text::_('JBS_CMN_MESSAGETYPES');
-                    $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
-                    break;
+            case 'series':
+                $heading       = $CWMLanding->getSeriesLandingPage($params, 0, $items);
+                $showIt_phrase = Text::_('JBS_CMN_SERIES');
+                $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $sectionIndex);
+                break;
 
-                case 'topics':
-                    $heading       = $CWMLanding->getTopicsLandingPage($params, 0, $items);
-                    $showIt_phrase = Text::_('JBS_CMN_TOPICS');
-                    $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
-                    break;
+            case 'locations':
+                $heading       = $CWMLanding->getLocationsLandingPage($params, 0, $items);
+                $showIt_phrase = Text::_('JBS_CMN_LOCATIONS');
+                $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $sectionIndex);
+                break;
 
-                case 'books':
-                    $heading       = $CWMLanding->getBooksLandingPage($params, 0, $items);
-                    $showIt_phrase = Text::_('JBS_CMN_BOOKS');
-                    $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
-                    break;
+            case 'messagetypes':
+                $heading       = $CWMLanding->getMessageTypesLandingPage($params, 0, $items);
+                $showIt_phrase = Text::_('JBS_CMN_MESSAGETYPES');
+                $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $sectionIndex);
+                break;
 
-                case 'years':
-                    $heading       = $CWMLanding->getYearsLandingPage($params, 0, $items);
-                    $showIt_phrase = Text::_('JBS_CMN_YEARS');
-                    $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $i);
-                    break;
-            }
+            case 'topics':
+                $heading       = $CWMLanding->getTopicsLandingPage($params, 0, $items);
+                $showIt_phrase = Text::_('JBS_CMN_TOPICS');
+                $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $sectionIndex);
+                break;
+
+            case 'books':
+                $heading       = $CWMLanding->getBooksLandingPage($params, 0, $items);
+                $showIt_phrase = Text::_('JBS_CMN_BOOKS');
+                $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $sectionIndex);
+                break;
+
+            case 'years':
+                $heading       = $CWMLanding->getYearsLandingPage($params, 0, $items);
+                $showIt_phrase = Text::_('JBS_CMN_YEARS');
+                $showhideall   = $this->getShowHide($showIt, $showIt_phrase, $sectionIndex);
+                break;
+        }
+
+        // Only render if there's content
+        if (!empty($heading)) {
             ?>
             <!-- Wrap each in a DIV... -->
             <div class="landing_item">
                 <div class="landing_title">
-                    <?php
-                    if (!empty($heading)) {
-                        echo $params->get($showIt . 'label');
-                    }
-            ?>
+                    <?php echo $params->get($showIt . 'label'); ?>
                 </div>
                 <!-- end div id="landing_title" -->
                 <div class="landinglist container">
                     <div class="row">
                     <?php
-            if (isset($showhideall)) {
-                echo $showhideall;
-            }
+                    if (isset($showhideall)) {
+                        echo $showhideall;
+                    }
 
-            if (isset($heading)) {
-                echo $heading;
-            }
-            ?>
+                    echo $heading;
+                    ?>
                     </div>
                 </div>
                 <!-- end div class="landinglist" -->
             </div><!-- end div class="landing_item" -->
             <?php
         }
-    } // End Loop for the landing items
+    } // End foreach sections
 ?>
 </div><!-- end div id="proclaim_landing" -->

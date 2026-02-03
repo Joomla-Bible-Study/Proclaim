@@ -136,6 +136,21 @@
                 { id: 'custom', label: 'Custom', langKey: 'JBS_CMN_CUSTOM' }
             ],
             prefix: 'sd'
+        },
+        // Landing Page (order-only mode - no row/col/colspan)
+        landingPage: {
+            label: 'Landing Page',
+            isOrderOnly: true,
+            elements: [
+                { id: 'teachers', label: 'Teachers', langKey: 'JBS_CMN_TEACHERS', showParam: 'showteachers', labelParam: 'teacherslabel' },
+                { id: 'series', label: 'Series', langKey: 'JBS_CMN_SERIES', showParam: 'showseries', labelParam: 'serieslabel' },
+                { id: 'books', label: 'Books', langKey: 'JBS_CMN_BOOKS', showParam: 'showbooks', labelParam: 'bookslabel' },
+                { id: 'topics', label: 'Topics', langKey: 'JBS_CMN_TOPICS', showParam: 'showtopics', labelParam: 'topicslabel' },
+                { id: 'locations', label: 'Locations', langKey: 'JBS_CMN_LOCATIONS', showParam: 'showlocations', labelParam: 'locationslabel' },
+                { id: 'messagetypes', label: 'Message Types', langKey: 'JBS_CMN_MESSAGETYPES', showParam: 'showmessagetypes', labelParam: 'messagetypeslabel' },
+                { id: 'years', label: 'Years', langKey: 'JBS_CMN_YEARS', showParam: 'showyears', labelParam: 'yearslabel' }
+            ],
+            prefix: ''
         }
     };
 
@@ -302,6 +317,9 @@
 
             // Create view settings modal
             this.createViewSettingsModal();
+
+            // Create section settings modal (for landing page section gear buttons)
+            this.createSectionSettingsModal();
         }
 
         /**
@@ -314,7 +332,8 @@
                 { id: 'teachers', label: this.trans('JBS_TPL_TEACHERS_LIST') || 'Teachers List' },
                 { id: 'teacherDetails', label: this.trans('JBS_TPL_TEACHER_DETAILS') || 'Teacher Details' },
                 { id: 'series', label: this.trans('JBS_TPL_SERIES_LIST') || 'Series List' },
-                { id: 'seriesDetails', label: this.trans('JBS_TPL_SERIES_DETAILS') || 'Series Details' }
+                { id: 'seriesDetails', label: this.trans('JBS_TPL_SERIES_DETAILS') || 'Series Details' },
+                { id: 'landingPage', label: this.trans('JBS_TPL_LANDING_PAGE') || 'Landing Page' }
             ];
 
             contexts.forEach(ctx => {
@@ -352,12 +371,48 @@
             this.state.clear();
             this.destroySortables();
 
-            // Reinitialize for new context
-            this.initSidebar();
-            this.initCanvas();
-            this.loadFromParams();
-            this.initSortable();
+            // Check if this is an order-only context (like landing page)
+            const contextDef = ELEMENT_DEFINITIONS[context];
+            const isOrderOnly = contextDef?.isOrderOnly || false;
 
+            // Update toolbar visibility for order-only contexts
+            this.updateToolbarForContext(isOrderOnly);
+
+            // Reinitialize for new context
+            if (isOrderOnly) {
+                this.initLandingPageSidebar();
+                this.initLandingPageCanvas();
+                this.loadLandingPageFromParams();
+                this.initLandingPageSortable();
+            } else {
+                this.initSidebar();
+                this.initCanvas();
+                this.loadFromParams();
+                this.initSortable();
+            }
+
+        }
+
+        /**
+         * Update toolbar visibility based on context type
+         * @param {boolean} isOrderOnly - Whether this is an order-only context
+         */
+        updateToolbarForContext(isOrderOnly) {
+            if (!this.toolbar) { return; }
+
+            // Hide grid button and view toggle for order-only contexts
+            const gridBtn = this.toolbar.querySelector('.btn-grid');
+            const visualBtn = this.toolbar.querySelector('.btn-view-visual');
+            const classicBtn = this.toolbar.querySelector('.btn-view-classic');
+
+            if (gridBtn) { gridBtn.style.display = isOrderOnly ? 'none' : ''; }
+            if (visualBtn) { visualBtn.style.display = isOrderOnly ? 'none' : ''; }
+            if (classicBtn) { classicBtn.style.display = isOrderOnly ? 'none' : ''; }
+
+            // Ensure visual mode when switching to order-only
+            if (isOrderOnly && this.viewMode === 'classic') {
+                this.switchView('visual');
+            }
         }
 
         // =====================================================================
@@ -601,6 +656,621 @@
                 container.innerHTML = `<div class="alert alert-danger">Error loading content: ${error.message}</div>`;
                 console.error('Fieldset load error:', error);
             });
+        }
+
+        // =====================================================================
+        // Landing Page Context Methods (Order-Only Mode)
+        // =====================================================================
+
+        /**
+         * Initialize the sidebar for landing page context (hidden)
+         */
+        initLandingPageSidebar() {
+            // Hide the sidebar for landing page - all sections are shown in canvas
+            if (this.sidebar) {
+                this.sidebar.style.display = 'none';
+            }
+        }
+
+        /**
+         * Initialize the canvas for landing page context
+         * Shows a single-column sortable list of sections with toggle switches
+         */
+        initLandingPageCanvas() {
+            if (!this.canvas) { return; }
+
+            // Show sidebar (in case it was hidden)
+            if (this.sidebar) {
+                this.sidebar.style.display = 'none';
+            }
+
+            this.canvas.innerHTML = '';
+            this.canvas.classList.add('landing-page-canvas');
+
+            // Create header with instructions
+            const header = document.createElement('div');
+            header.className = 'landing-page-header alert alert-info';
+            header.innerHTML = `
+                <span class="icon-info-circle" aria-hidden="true"></span>
+                ${this.trans('JBS_TPL_DRAG_TO_REORDER') || 'Drag sections to reorder. Toggle visibility with the switch.'}
+            `;
+            this.canvas.appendChild(header);
+
+            // Create sortable section list
+            const sectionList = document.createElement('div');
+            sectionList.className = 'landing-section-list';
+            sectionList.id = 'landing-section-list';
+
+            const contextDef = ELEMENT_DEFINITIONS.landingPage;
+            if (contextDef && contextDef.elements) {
+                // Initially add all sections - will be reordered by loadLandingPageFromParams
+                contextDef.elements.forEach(element => {
+                    const card = this.createLandingSectionCard(element);
+                    sectionList.appendChild(card);
+                });
+            }
+
+            this.canvas.appendChild(sectionList);
+            this.landingSectionList = sectionList;
+        }
+
+        /**
+         * Create a landing page section card
+         * @param {Object} element - Section element definition
+         * @param {boolean} enabled - Whether section is enabled
+         * @returns {HTMLElement}
+         */
+        createLandingSectionCard(element, enabled = true) {
+            const card = document.createElement('div');
+            card.className = 'landing-section-card' + (enabled ? '' : ' disabled');
+            card.dataset.section = element.id;
+            card.tabIndex = 0;
+
+            const label = this.trans(element.langKey) || element.label;
+            const toggleId = `landing-toggle-${element.id}`;
+
+            card.innerHTML = `
+                <span class="section-handle">
+                    <span class="icon-menu" aria-hidden="true"></span>
+                </span>
+                <span class="section-name">${label}</span>
+                <div class="section-toggle">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="${toggleId}"
+                               ${enabled ? 'checked' : ''} role="switch"
+                               aria-label="${this.trans('JBS_TPL_TOGGLE_SECTION') || 'Toggle section visibility'}">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-sm btn-secondary btn-section-settings"
+                        title="${this.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Settings'}">
+                    <span class="icon-options" aria-hidden="true"></span>
+                </button>
+            `;
+
+            // Add toggle event listener
+            const toggle = card.querySelector('.form-check-input');
+            if (toggle) {
+                toggle.addEventListener('change', () => {
+                    const isEnabled = toggle.checked;
+                    card.classList.toggle('disabled', !isEnabled);
+                    this.updateLandingSectionState(element.id, isEnabled);
+                });
+            }
+
+            // Add settings button event listener
+            const settingsBtn = card.querySelector('.btn-section-settings');
+            if (settingsBtn) {
+                settingsBtn.addEventListener('click', () => {
+                    this.openLandingSectionSettings(element.id);
+                });
+            }
+
+            return card;
+        }
+
+        /**
+         * Update landing section state in internal state map and sync to form field
+         * @param {string} sectionId - Section ID
+         * @param {boolean} enabled - Whether enabled
+         */
+        updateLandingSectionState(sectionId, enabled) {
+            let data = this.state.get(sectionId);
+            if (!data) {
+                data = { enabled: enabled, order: this.state.size + 1 };
+                this.state.set(sectionId, data);
+            } else {
+                data.enabled = enabled;
+            }
+
+            // Immediately sync to form field (e.g., showteachers, showseries)
+            const contextDef = ELEMENT_DEFINITIONS.landingPage;
+            const element = contextDef?.elements?.find(el => el.id === sectionId);
+            if (element?.showParam) {
+                this.syncShowParamToForm(element.showParam, enabled);
+            }
+
+            // Update settings button state on the card
+            this.updateSectionSettingsButton(sectionId, enabled);
+        }
+
+        /**
+         * Sync a show* param to its hidden form field
+         * @param {string} showParam - Parameter name (e.g., 'showteachers')
+         * @param {boolean} enabled - Whether enabled
+         */
+        syncShowParamToForm(showParam, enabled) {
+            const fieldName = `${this.options.paramsPrefix}[${showParam}]`;
+            const field = document.querySelector(`[name="${fieldName}"]`);
+
+            if (field) {
+                field.value = enabled ? '1' : '0';
+            }
+        }
+
+        /**
+         * Read a show* param value from its hidden form field
+         * @param {string} showParam - Parameter name (e.g., 'showteachers')
+         * @returns {boolean} Whether the section is enabled
+         */
+        readShowParamFromForm(showParam) {
+            const fieldName = `${this.options.paramsPrefix}[${showParam}]`;
+            const field = document.querySelector(`[name="${fieldName}"]`);
+
+            if (field) {
+                return field.value === '1';
+            }
+
+            return true; // Default to enabled if field not found
+        }
+
+        /**
+         * Update the settings button state based on section enabled state
+         * @param {string} sectionId - Section ID
+         * @param {boolean} enabled - Whether enabled
+         */
+        updateSectionSettingsButton(sectionId, enabled) {
+            if (!this.landingSectionList) { return; }
+
+            const card = this.landingSectionList.querySelector(
+                `.landing-section-card[data-section="${sectionId}"]`
+            );
+            if (!card) { return; }
+
+            const settingsBtn = card.querySelector('.btn-section-settings');
+            if (settingsBtn) {
+                settingsBtn.disabled = !enabled;
+                settingsBtn.classList.toggle('disabled', !enabled);
+                settingsBtn.title = enabled ?
+                    (this.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Settings') :
+                    (this.trans('JBS_TPL_SECTION_DISABLED') || 'Enable section to edit settings');
+            }
+        }
+
+        /**
+         * Create the section settings modal for landing page sections
+         */
+        createSectionSettingsModal() {
+            // Check if modal already exists
+            if (document.getElementById('sectionSettingsModal')) {
+                this.sectionSettingsModal = document.getElementById('sectionSettingsModal');
+                return;
+            }
+
+            const modal = document.createElement('div');
+            modal.className = 'modal fade section-settings-modal';
+            modal.id = 'sectionSettingsModal';
+            modal.tabIndex = -1;
+            modal.setAttribute('aria-labelledby', 'sectionSettingsModalLabel');
+            modal.inert = true;
+
+            modal.innerHTML = `
+                <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="sectionSettingsModalLabel">
+                                <span class="icon-cog" aria-hidden="true"></span>
+                                ${this.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Section Settings'}
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="${this.trans('JCLOSE') || 'Close'}"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="sectionSettingsContent"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${this.trans('JCLOSE') || 'Close'}</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            this.sectionSettingsModal = modal;
+            this.sectionSettingsContent = modal.querySelector('#sectionSettingsContent');
+            this.bsSectionSettingsModal = null;
+        }
+
+        /**
+         * Get or create Bootstrap modal instance for section settings
+         * @returns {Object|null}
+         */
+        getSectionSettingsModalInstance() {
+            if (this.bsSectionSettingsModal) {
+                return this.bsSectionSettingsModal;
+            }
+
+            if (!this.sectionSettingsModal) {
+                return null;
+            }
+
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                this.bsSectionSettingsModal = new bootstrap.Modal(this.sectionSettingsModal);
+                return this.bsSectionSettingsModal;
+            }
+
+            return null;
+        }
+
+        /**
+         * Open settings modal for a landing page section
+         * @param {string} sectionId - Section ID (teachers, series, books, etc.)
+         */
+        openLandingSectionSettings(sectionId) {
+            // Get section-specific fieldset from config
+            const sectionSettings = (window.Joomla?.getOptions?.('com_proclaim.landingSectionSettings')) || {};
+            const fieldsetName = sectionSettings[sectionId];
+
+            if (!fieldsetName) {
+                console.warn('No fieldset configured for section:', sectionId);
+                return;
+            }
+
+            // Create modal if needed
+            if (!this.sectionSettingsModal) {
+                this.createSectionSettingsModal();
+            }
+
+            // Update modal title with section name
+            const elementDef = ELEMENT_DEFINITIONS.landingPage?.elements?.find(e => e.id === sectionId);
+            const sectionLabel = elementDef ?
+                (this.trans(elementDef.langKey) || elementDef.label) :
+                sectionId;
+            const modalTitle = this.sectionSettingsModal?.querySelector('.modal-title');
+            if (modalTitle) {
+                modalTitle.innerHTML = `
+                    <span class="icon-cog" aria-hidden="true"></span>
+                    ${sectionLabel} ${this.trans('JBS_TPL_SETTINGS_PANEL') || 'Settings'}
+                `;
+            }
+
+            // Load fieldset content
+            const container = this.sectionSettingsContent;
+            if (container) {
+                const templateId = parseInt(document.querySelector('input[name="jform[id]"]')?.value || '0', 10);
+
+                // Use ProclaimLazyLoad if available
+                if (window.ProclaimLazyLoad?.loadFieldset) {
+                    window.ProclaimLazyLoad.loadFieldset(fieldsetName, container, templateId)
+                        .catch(err => {
+                            console.error('Error loading section settings:', err);
+                        });
+                } else {
+                    // Fallback: load directly via fetch
+                    this.loadSectionFieldset(fieldsetName, container, templateId);
+                }
+            }
+
+            // Show modal
+            const modalInstance = this.getSectionSettingsModalInstance();
+            if (modalInstance) {
+                if (this.sectionSettingsModal) {
+                    this.sectionSettingsModal.inert = false;
+                }
+                modalInstance.show();
+            }
+        }
+
+        /**
+         * Load section fieldset via AJAX (fallback if ProclaimLazyLoad not available)
+         * @param {string} fieldsetName - Fieldset name to load
+         * @param {HTMLElement} container - Container to populate
+         * @param {number} templateId - Template ID
+         */
+        loadSectionFieldset(fieldsetName, container, templateId) {
+            container.innerHTML = '<div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> Loading...</div>';
+
+            const url = 'index.php?option=com_proclaim&task=cwmtemplate.loadFieldset&format=json' +
+                '&fieldset=' + encodeURIComponent(fieldsetName) +
+                '&id=' + templateId +
+                '&' + (window.Joomla?.getOptions?.('csrf.token') || '') + '=1';
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    container.innerHTML = data.html;
+                    // Initialize any Joomla form elements
+                    if (typeof Joomla !== 'undefined' && Joomla.initCustomSelect) {
+                        Joomla.initCustomSelect(container);
+                    }
+                } else {
+                    container.innerHTML = '<div class="alert alert-danger">' + (data.error || 'Failed to load settings') + '</div>';
+                }
+            })
+            .catch(error => {
+                container.innerHTML = '<div class="alert alert-danger">Error loading settings: ' + error.message + '</div>';
+                console.error('Section fieldset load error:', error);
+            });
+        }
+
+        /**
+         * Initialize sortable for landing page sections
+         */
+        initLandingPageSortable() {
+            if (typeof Sortable === 'undefined' || !this.landingSectionList) {
+                return;
+            }
+
+            const self = this;
+
+            this.landingPageSortable = Sortable.create(this.landingSectionList, {
+                animation: 150,
+                handle: '.section-handle',
+                ghostClass: 'sortable-ghost',
+                chosenClass: 'sortable-chosen',
+                dragClass: 'sortable-drag',
+                onStart: function () {
+                    self.saveStateForUndo();
+                },
+                onEnd: function () {
+                    self.updateLandingPageOrder();
+                }
+            });
+        }
+
+        /**
+         * Update landing page section order after drag
+         */
+        updateLandingPageOrder() {
+            if (!this.landingSectionList) { return; }
+
+            const cards = this.landingSectionList.querySelectorAll('.landing-section-card');
+            cards.forEach((card, index) => {
+                const sectionId = card.dataset.section;
+                let data = this.state.get(sectionId);
+                if (!data) {
+                    const toggle = card.querySelector('.form-check-input');
+                    data = { enabled: toggle?.checked ?? true, order: index + 1 };
+                    this.state.set(sectionId, data);
+                } else {
+                    data.order = index + 1;
+                }
+            });
+        }
+
+        /**
+         * Load landing page state from params
+         */
+        loadLandingPageFromParams() {
+            const contextDef = ELEMENT_DEFINITIONS.landingPage;
+            if (!contextDef) { return; }
+
+            // Get params from Joomla script options
+            const templateParams = (window.Joomla?.getOptions?.('com_proclaim.templateParams')) || {};
+
+            // Try to load from new landing_layout JSON field first
+            const landingLayoutJson = templateParams.landing_layout;
+            let landingLayout = null;
+
+            if (landingLayoutJson) {
+                try {
+                    landingLayout = (typeof landingLayoutJson === 'string') ?
+                        JSON.parse(landingLayoutJson) :
+                        landingLayoutJson;
+                } catch (e) {
+                    console.warn('Failed to parse landing_layout JSON:', e);
+                }
+            }
+
+            if (landingLayout && Array.isArray(landingLayout) && landingLayout.length > 0) {
+                // Use new format
+                this.loadLandingPageFromNewFormat(landingLayout);
+            } else {
+                // Fall back to legacy headingorder_* fields
+                this.loadLandingPageFromLegacyFormat(templateParams);
+            }
+
+            // Reorder cards in DOM to match state order
+            this.reorderLandingPageCards();
+        }
+
+        /**
+         * Load landing page from new JSON format
+         * @param {Array} landingLayout - Array of {id, enabled} objects
+         */
+        loadLandingPageFromNewFormat(landingLayout) {
+            const contextDef = ELEMENT_DEFINITIONS.landingPage;
+
+            landingLayout.forEach((item, index) => {
+                const element = contextDef.elements.find(el => el.id === item.id);
+                if (element) {
+                    this.state.set(item.id, {
+                        enabled: item.enabled !== false,
+                        order: index + 1
+                    });
+                }
+            });
+
+            // Add any missing sections (in case new sections were added)
+            contextDef.elements.forEach((element, index) => {
+                if (!this.state.has(element.id)) {
+                    this.state.set(element.id, {
+                        enabled: false,
+                        order: landingLayout.length + index + 1
+                    });
+                }
+            });
+        }
+
+        /**
+         * Load landing page from legacy headingorder_* format
+         * @param {Object} params - Template params
+         */
+        loadLandingPageFromLegacyFormat(params) {
+            const contextDef = ELEMENT_DEFINITIONS.landingPage;
+            const sectionOrder = [];
+            const usedSections = new Set();
+
+            // Read headingorder_1 through headingorder_7
+            for (let i = 1; i <= 7; i++) {
+                const sectionId = params['headingorder_' + i];
+                if (sectionId && !usedSections.has(sectionId)) {
+                    // Check if section is enabled - prefer form field over params
+                    const element = contextDef.elements.find(el => el.id === sectionId);
+                    const showParam = element?.showParam || ('show' + sectionId);
+
+                    // Try to read from form field first (more accurate), fall back to params
+                    let enabled = this.readShowParamFromForm(showParam);
+                    if (enabled === undefined) {
+                        enabled = parseInt(params[showParam], 10) === 1;
+                    }
+
+                    sectionOrder.push({ id: sectionId, enabled: enabled });
+                    usedSections.add(sectionId);
+                }
+            }
+
+            // Set state for sections in order
+            sectionOrder.forEach((item, index) => {
+                this.state.set(item.id, {
+                    enabled: item.enabled,
+                    order: index + 1
+                });
+            });
+
+            // Add any missing sections at the end (disabled)
+            contextDef.elements.forEach((element, index) => {
+                if (!this.state.has(element.id)) {
+                    this.state.set(element.id, {
+                        enabled: false,
+                        order: sectionOrder.length + index + 1
+                    });
+                }
+            });
+        }
+
+        /**
+         * Reorder landing page cards in DOM based on state
+         */
+        reorderLandingPageCards() {
+            if (!this.landingSectionList) { return; }
+
+            const cards = Array.from(this.landingSectionList.querySelectorAll('.landing-section-card'));
+
+            // Sort cards by order in state
+            cards.sort((a, b) => {
+                const dataA = this.state.get(a.dataset.section);
+                const dataB = this.state.get(b.dataset.section);
+                return (dataA?.order || 999) - (dataB?.order || 999);
+            });
+
+            // Re-append in sorted order and update toggle states
+            cards.forEach(card => {
+                const sectionId = card.dataset.section;
+                const data = this.state.get(sectionId);
+                const enabled = data?.enabled ?? true;
+
+                // Update toggle checkbox
+                const toggle = card.querySelector('.form-check-input');
+                if (toggle) {
+                    toggle.checked = enabled;
+                }
+
+                // Update card class
+                card.classList.toggle('disabled', !enabled);
+
+                // Update settings button state
+                const settingsBtn = card.querySelector('.btn-section-settings');
+                if (settingsBtn) {
+                    settingsBtn.disabled = !enabled;
+                    settingsBtn.classList.toggle('disabled', !enabled);
+                }
+
+                // Re-append to reorder
+                this.landingSectionList.appendChild(card);
+            });
+        }
+
+        /**
+         * Sync landing page state to form
+         */
+        syncLandingPageToForm() {
+            const form = document.getElementById(this.options.formId);
+            if (!form) { return; }
+
+            const contextDef = ELEMENT_DEFINITIONS.landingPage;
+            if (!contextDef) { return; }
+
+            // Build landing_layout JSON array
+            const landingLayout = [];
+            const orderedSections = [];
+
+            this.state.forEach((data, sectionId) => {
+                orderedSections.push({ id: sectionId, ...data });
+            });
+
+            // Sort by order
+            orderedSections.sort((a, b) => (a.order || 999) - (b.order || 999));
+
+            orderedSections.forEach(section => {
+                landingLayout.push({
+                    id: section.id,
+                    enabled: section.enabled
+                });
+            });
+
+            // Write new format to hidden field
+            const landingLayoutField = this.getOrCreateHiddenField(
+                `${this.options.paramsPrefix}[landing_layout]`,
+                form
+            );
+            if (landingLayoutField) {
+                landingLayoutField.value = JSON.stringify(landingLayout);
+            }
+
+            // Also write legacy format for backward compatibility
+            orderedSections.forEach((section, index) => {
+                const headingOrderField = this.getOrCreateHiddenField(
+                    `${this.options.paramsPrefix}[headingorder_${index + 1}]`,
+                    form
+                );
+                if (headingOrderField) {
+                    headingOrderField.value = section.id;
+                }
+            });
+            // Note: show* params are synced immediately via updateLandingSectionState
+            // when toggles change, so no need to sync them here on form submit
+        }
+
+        /**
+         * Helper to get or create a hidden form field
+         * @param {string} name - Field name
+         * @param {HTMLFormElement} form - Form element
+         * @returns {HTMLInputElement|null}
+         */
+        getOrCreateHiddenField(name, form) {
+            let field = document.querySelector(`[name="${name}"]`);
+            if (!field && form) {
+                field = document.createElement('input');
+                field.type = 'hidden';
+                field.name = name;
+                form.appendChild(field);
+            }
+            return field;
         }
 
         /**
@@ -874,8 +1544,22 @@
                 this.paletteSortable.destroy();
                 this.paletteSortable = null;
             }
+            if (this.landingPageSortable) {
+                this.landingPageSortable.destroy();
+                this.landingPageSortable = null;
+            }
             this.sortableInstances.forEach(instance => instance.destroy());
             this.sortableInstances = [];
+
+            // Reset canvas classes
+            if (this.canvas) {
+                this.canvas.classList.remove('landing-page-canvas');
+            }
+
+            // Show sidebar if it was hidden
+            if (this.sidebar) {
+                this.sidebar.style.display = '';
+            }
         }
 
         /**
@@ -1567,6 +2251,12 @@
         syncToForm() {
             const contextDef = ELEMENT_DEFINITIONS[this.currentContext];
             if (!contextDef) { return; }
+
+            // Use landing page sync for order-only contexts
+            if (contextDef.isOrderOnly) {
+                this.syncLandingPageToForm();
+                return;
+            }
 
             const prefix = contextDef.prefix;
             const form = document.getElementById(this.options.formId);

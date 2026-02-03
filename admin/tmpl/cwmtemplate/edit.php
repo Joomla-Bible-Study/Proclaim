@@ -204,11 +204,6 @@ endforeach; ?>
         echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'landing', Text::_('JBS_TPL_LANDING_PAGE')); ?>
-        <?php include __DIR__ . '/edit_landing.php'; ?>
-        <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
-        <?php
         if ($this->canDo->get('core.admin')) : ?>
             <?php
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>

@@ -262,6 +262,96 @@ class Cwmlanding
     }
 
     /**
+     * Get the section order for the landing page
+     *
+     * Reads from the new landing_layout JSON field first, falling back to
+     * legacy headingorder_* fields for backward compatibility.
+     *
+     * @param   Registry  $params  Item Params
+     *
+     * @return array Array of section objects with id and enabled properties
+     * @since 10.3.0
+     */
+    public function getSectionOrder(Registry $params): array
+    {
+        // Try new landing_layout JSON format first
+        $landingLayout = $params->get('landing_layout');
+
+        if (!empty($landingLayout)) {
+            // Parse if string
+            if (\is_string($landingLayout)) {
+                try {
+                    $landingLayout = json_decode($landingLayout, false, 512, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    $landingLayout = null;
+                }
+            }
+
+            if (\is_array($landingLayout) && \count($landingLayout) > 0) {
+                $sections = [];
+                foreach ($landingLayout as $item) {
+                    if (\is_object($item) && isset($item->id)) {
+                        $sections[] = (object) [
+                            'id'      => $item->id,
+                            'enabled' => $item->enabled ?? true,
+                        ];
+                    }
+                }
+
+                if (\count($sections) > 0) {
+                    return $sections;
+                }
+            }
+        }
+
+        // Fall back to legacy headingorder_* fields
+        return $this->getSectionOrderFromLegacy($params);
+    }
+
+    /**
+     * Get section order from legacy headingorder_* fields
+     *
+     * @param   Registry  $params  Item Params
+     *
+     * @return array Array of section objects
+     * @since 10.3.0
+     */
+    private function getSectionOrderFromLegacy(Registry $params): array
+    {
+        $sections = [];
+        $used     = [];
+
+        // Map of section IDs to their show* param names
+        $showParams = [
+            'teachers'     => 'showteachers',
+            'series'       => 'showseries',
+            'books'        => 'showbooks',
+            'topics'       => 'showtopics',
+            'locations'    => 'showlocations',
+            'messagetypes' => 'showmessagetypes',
+            'years'        => 'showyears',
+        ];
+
+        for ($i = 1; $i <= 7; $i++) {
+            $sectionId = $params->get('headingorder_' . $i);
+
+            if ($sectionId && !\in_array($sectionId, $used, true)) {
+                $showParam = $showParams[$sectionId] ?? ('show' . $sectionId);
+                $enabled   = (int) $params->get($showParam) === 1;
+
+                $sections[] = (object) [
+                    'id'      => $sectionId,
+                    'enabled' => $enabled,
+                ];
+
+                $used[] = $sectionId;
+            }
+        }
+
+        return $sections;
+    }
+
+    /**
      * Get all landing data in one query
      *
      * @param   Registry  $params  Item Params
