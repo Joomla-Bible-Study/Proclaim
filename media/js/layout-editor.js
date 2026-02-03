@@ -198,7 +198,7 @@
             constructor(container, options = {}) {
                 this.container = container;
                 this.options = {
-                    numRows: 6,
+                    maxRows: 10,
                     numCols: 12,
                     context: 'messages',
                     formId: 'item-form',
@@ -246,6 +246,7 @@
                 this.initCanvas();
                 this.loadFromParams();
                 this.initSortable();
+                this.cleanupRows(); // Ensure empty drop zone exists
                 this.bindEvents();
             }
 
@@ -391,6 +392,7 @@
                     this.initCanvas();
                     this.loadFromParams();
                     this.initSortable();
+                    this.cleanupRows(); // Ensure empty drop zone exists
                 }
 
             }
@@ -650,6 +652,9 @@
                         if (window.Joomla?.initCustomSelect) {
                             window.Joomla.initCustomSelect(container);
                         }
+
+                        // Reinitialize TinyMCE editors for dynamically loaded content
+                        this.reinitEditors(container);
                     } else {
                         container.innerHTML = `<div class="alert alert-danger">${data.error || 'Failed to load content'}</div>`;
                     }
@@ -658,6 +663,82 @@
                     container.innerHTML = `<div class="alert alert-danger">Error loading content: ${error.message}</div>`;
                     console.error('Fieldset load error:', error);
                 });
+            }
+
+            /**
+             * Reinitialize TinyMCE editors in a container
+             * Needed when editors are loaded via AJAX into hidden containers
+             * @param {HTMLElement} container - Container with editor textareas
+             */
+            reinitEditors(container) {
+                // Find all editor textareas in the container
+                const textareas = container.querySelectorAll('textarea[class*="joomla-editor"], textarea.mce_editable, joomla-editor-tinymce');
+
+                if (textareas.length === 0) {
+                    return;
+                }
+
+                // Check if TinyMCE is available
+                if (typeof window.tinymce !== 'undefined') {
+                    textareas.forEach(textarea => {
+                        // For joomla-editor-tinymce web component
+                        if (textarea.tagName.toLowerCase() === 'joomla-editor-tinymce') {
+                            const innerTextarea = textarea.querySelector('textarea');
+                            if (innerTextarea) {
+                                const editorId = innerTextarea.id;
+                                // Remove existing instance if any
+                                const existingEditor = window.tinymce.get(editorId);
+                                if (existingEditor) {
+                                    existingEditor.remove();
+                                }
+                                // Trigger Joomla's editor initialization
+                                if (window.Joomla?.editors?.instances?.[editorId]) {
+                                    delete window.Joomla.editors.instances[editorId];
+                                }
+                            }
+                            // Trigger custom element re-initialization
+                            textarea.dispatchEvent(new CustomEvent('joomla-editor:init', { bubbles: true }));
+                            return;
+                        }
+
+                        const editorId = textarea.id;
+                        if (!editorId) { return; }
+
+                        // Remove existing TinyMCE instance
+                        const existingEditor = window.tinymce.get(editorId);
+                        if (existingEditor) {
+                            existingEditor.remove();
+                        }
+
+                        // Remove from Joomla's editor registry
+                        if (window.Joomla?.editors?.instances?.[editorId]) {
+                            delete window.Joomla.editors.instances[editorId];
+                        }
+
+                        // Get TinyMCE options from Joomla
+                        const tinyOptions = window.Joomla?.getOptions?.('plg_editor_tinymce', {});
+                        if (tinyOptions.tinyMCE) {
+                            // Clone and customize options for this textarea
+                            const opts = Object.assign({}, tinyOptions.tinyMCE, {
+                                selector: '#' + editorId,
+                                setup: (editor) => {
+                                    editor.on('change', () => {
+                                        editor.save();
+                                    });
+                                }
+                            });
+                            window.tinymce.init(opts);
+                        }
+                    });
+                }
+
+                // Also try triggering Joomla's standard editor initialization
+                if (window.Joomla?.editors) {
+                    container.querySelectorAll('joomla-editor-tinymce').forEach(editorEl => {
+                        // Dispatch event to let Joomla know to initialize
+                        editorEl.dispatchEvent(new Event('DOMContentLoaded', { bubbles: true }));
+                    });
+                }
             }
 
             // =====================================================================
@@ -1341,23 +1422,190 @@
             }
 
             /**
-             * Initialize the canvas with rows
+             * Initialize the canvas with one empty drop zone row
+             * Additional rows are created dynamically as needed
              */
             initCanvas() {
                 this.canvas.innerHTML = '';
+                // Start with one empty row as drop zone
+                this.addRow(1);
+            }
 
-                for (let row = 1; row <= this.options.numRows; row++) {
-                    const rowEl = document.createElement('div');
-                    rowEl.className = 'layout-row';
-                    rowEl.dataset.row = row;
-
-                    rowEl.innerHTML = `
-                    <div class="row-label">${this.trans('JBS_TPL_ROW') || 'Row'} ${row}</div>
-                    <div class="row-elements" data-row="${row}" data-empty-text="${this.trans('JBS_TPL_DROP_ELEMENTS_HERE') || 'Drop elements here'}"></div>
-                `;
-
-                    this.canvas.appendChild(rowEl);
+            /**
+             * Add a new row to the canvas
+             * @param {number} rowNum - The row number to create
+             * @returns {HTMLElement} The created row element
+             */
+            addRow(rowNum) {
+                if (rowNum > this.options.maxRows) {
+                    return null;
                 }
+
+                const rowEl = document.createElement('div');
+                rowEl.className = 'layout-row';
+                rowEl.dataset.row = rowNum;
+
+                rowEl.innerHTML = `
+                <div class="row-label">${this.trans('JBS_TPL_ROW') || 'Row'} ${rowNum}</div>
+                <div class="row-elements" data-row="${rowNum}" data-empty-text="${this.trans('JBS_TPL_DROP_ELEMENTS_HERE') || 'Drop elements here'}"></div>
+            `;
+
+                this.canvas.appendChild(rowEl);
+                return rowEl;
+            }
+
+            /**
+             * Ensure a row exists, creating it if necessary
+             * @param {number} rowNum - The row number to ensure exists
+             * @returns {HTMLElement} The row element
+             */
+            ensureRowExists(rowNum) {
+                let rowEl = this.canvas.querySelector(`.layout-row[data-row="${rowNum}"]`);
+                if (!rowEl && rowNum <= this.options.maxRows) {
+                    // Create any missing rows up to this one
+                    const existingRows = this.canvas.querySelectorAll('.layout-row');
+                    let maxExisting = 0;
+                    existingRows.forEach(r => {
+                        const num = parseInt(r.dataset.row, 10);
+                        if (num > maxExisting) { maxExisting = num; }
+                    });
+
+                    for (let i = maxExisting + 1; i <= rowNum; i++) {
+                        rowEl = this.addRow(i);
+                    }
+                }
+                return rowEl;
+            }
+
+            /**
+             * Get the current number of rows
+             * @returns {number}
+             */
+            getRowCount() {
+                return this.canvas.querySelectorAll('.layout-row').length;
+            }
+
+            /**
+             * Ensure there's always one empty drop zone row at the bottom
+             * Remove empty rows in the middle (but keep at least one row)
+             */
+            cleanupRows() {
+                const rows = this.canvas.querySelectorAll('.layout-row');
+                const emptyRows = [];
+                let hasContent = false;
+
+                // Find empty rows
+                rows.forEach(rowEl => {
+                    const elements = rowEl.querySelector('.row-elements');
+                    const hasElements = elements && elements.querySelectorAll('.element-card').length > 0;
+                    if (hasElements) {
+                        hasContent = true;
+                    } else {
+                        emptyRows.push(rowEl);
+                    }
+                });
+
+                // If we have content, remove all but the last empty row
+                if (hasContent && emptyRows.length > 1) {
+                    // Keep only the last empty row
+                    for (let i = 0; i < emptyRows.length - 1; i++) {
+                        emptyRows[i].remove();
+                    }
+                    // Renumber remaining rows
+                    this.renumberRows();
+                }
+
+                // Ensure there's at least one empty row at the end for dropping
+                const currentRows = this.canvas.querySelectorAll('.layout-row');
+                const lastRow = currentRows[currentRows.length - 1];
+                if (lastRow) {
+                    const lastRowElements = lastRow.querySelector('.row-elements');
+                    const lastRowHasElements = lastRowElements &&
+                        lastRowElements.querySelectorAll('.element-card').length > 0;
+
+                    if (lastRowHasElements && this.getRowCount() < this.options.maxRows) {
+                        // Add a new empty row
+                        const newRowNum = this.getRowCount() + 1;
+                        const newRow = this.addRow(newRowNum);
+                        // Initialize sortable for the new row
+                        if (newRow) {
+                            this.initSortableForRow(newRow.querySelector('.row-elements'));
+                        }
+                    }
+                }
+            }
+
+            /**
+             * Renumber rows after removing empty ones
+             */
+            renumberRows() {
+                const rows = this.canvas.querySelectorAll('.layout-row');
+                rows.forEach((rowEl, index) => {
+                    const newRowNum = index + 1;
+                    const oldRowNum = parseInt(rowEl.dataset.row, 10);
+
+                    if (oldRowNum !== newRowNum) {
+                        rowEl.dataset.row = newRowNum;
+                        const label = rowEl.querySelector('.row-label');
+                        if (label) {
+                            label.textContent = `${this.trans('JBS_TPL_ROW') || 'Row'} ${newRowNum}`;
+                        }
+                        const elements = rowEl.querySelector('.row-elements');
+                        if (elements) {
+                            elements.dataset.row = newRowNum;
+                        }
+
+                        // Update state for elements in this row
+                        this.state.forEach((data, elementId) => {
+                            if (data.row === oldRowNum) {
+                                data.row = newRowNum;
+                            }
+                        });
+                    }
+                });
+            }
+
+            /**
+             * Initialize sortable for a single row element container
+             * @param {HTMLElement} rowEl - The .row-elements container
+             */
+            initSortableForRow(rowEl) {
+                if (!rowEl) { return; }
+
+                const self = this;
+                const sortable = Sortable.create(rowEl, {
+                    group: 'elements',
+                    direction: 'horizontal',
+                    animation: 80,
+                    ghostClass: 'sortable-ghost',
+                    chosenClass: 'sortable-chosen',
+                    dragClass: 'sortable-drag',
+                    handle: '.element-handle',
+                    swapThreshold: 0.5,
+                    invertSwap: true,
+                    delay: 0,
+                    delayOnTouchOnly: true,
+                    touchStartThreshold: 3,
+                    onStart: function () {
+                        self.saveStateForUndo();
+                    },
+                    onAdd: function (evt) {
+                        self.onElementAdded(evt);
+                        evt.item.classList.add('just-dropped');
+                        setTimeout(() => evt.item.classList.remove('just-dropped'), 300);
+                        // Check if we need to add a new drop zone row
+                        self.cleanupRows();
+                    },
+                    onUpdate: function (evt) {
+                        self.onElementMoved(evt);
+                    },
+                    onRemove: function (evt) {
+                        self.onElementRemoved(evt);
+                        // Clean up empty rows
+                        self.cleanupRows();
+                    }
+                });
+                this.sortableInstances.push(sortable);
             }
 
             /**
@@ -1507,34 +1755,7 @@
 
                 // Initialize sortable for each row
                 this.canvas.querySelectorAll('.row-elements').forEach(rowEl => {
-                    const sortable = Sortable.create(rowEl, {
-                        group: 'elements',
-                        animation: 80, // Faster animation for snappier feel
-                        ghostClass: 'sortable-ghost',
-                        chosenClass: 'sortable-chosen',
-                        dragClass: 'sortable-drag',
-                        handle: '.element-handle',
-                        delay: 0,
-                        delayOnTouchOnly: true,
-                        touchStartThreshold: 3,
-                        onStart: function () {
-                            // Save state for undo when drag starts
-                            self.saveStateForUndo();
-                        },
-                        onAdd: function (evt) {
-                            self.onElementAdded(evt);
-                            // Add drop animation
-                            evt.item.classList.add('just-dropped');
-                            setTimeout(() => evt.item.classList.remove('just-dropped'), 300);
-                        },
-                        onUpdate: function (evt) {
-                            self.onElementMoved(evt);
-                        },
-                        onRemove: function (evt) {
-                            self.onElementRemoved(evt);
-                        }
-                    });
-                    this.sortableInstances.push(sortable);
+                    this.initSortableForRow(rowEl);
                 });
             }
 
@@ -2169,6 +2390,9 @@
              * @param {Object} data - Element state data
              */
             addElementToCanvas(element, data) {
+                // Ensure the row exists (creates it if needed)
+                this.ensureRowExists(data.row);
+
                 const rowEl = this.canvas.querySelector(`.row-elements[data-row="${data.row}"]`);
                 if (!rowEl) { return; }
 

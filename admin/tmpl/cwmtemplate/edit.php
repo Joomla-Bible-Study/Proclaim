@@ -14,16 +14,16 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\Registry\Registry;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmtemplate\HtmlView $this */
 
 // Create shortcut to parameters.
-/** @type \Joomla\Registry\Registry $params */
+/** @type Registry $params */
 $params = $this->state->get('params');
 $params = $params->toArray();
 $app    = Factory::getApplication();
@@ -54,107 +54,65 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_GENERAL')); ?>
         <div class="row">
-            <div class="col-lg-9 form-horizontal">
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('title'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('title'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('text'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('text'); ?>
-                    </div>
-                </div>
+            <div class="col-lg-9">
+                <?php echo $this->form->renderField('title'); ?>
+                <?php echo $this->form->renderField('text'); ?>
             </div>
-            <div class="col-lg-2 form-vertical">
-                <h4><?php
-                    echo Text::_('JDETAILS'); ?></h4>
-                <hr/>
-                <div class="control-group">
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getValue('title'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('id'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('id'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('published'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('published'); ?>
+            <div class="col-lg-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><?php echo Text::_('JDETAILS'); ?></h5>
+                        <?php echo $this->form->renderField('published'); ?>
+                        <?php echo $this->form->renderField('id'); ?>
                     </div>
                 </div>
             </div>
         </div>
-        <hr/>
+
+        <hr />
+
         <div class="row">
-            <?php
-            $c     = 0;
-$count             = CwmproclaimHelper::halfarray($this->form->getFieldset('TEMPLATES'));
-foreach ($this->form->getFieldset('TEMPLATES') as $field) :
-    if ($c === 0) {
-        echo '<div class="col-12 col-lg-6">';
-    } elseif ($c === (int)$count->half) {
-        echo '</div><div class="col-12 col-lg-6">';
-    }
-    ?>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-            echo $field->label; ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-            echo $field->input; ?>
-                        <br /> <?php echo Text::_($field->description); ?>
-                    </div>
-                </div>
+            <div class="col-12">
+                <h4><?php echo Text::_('JBS_TPL_TEMPLATES'); ?></h4>
+            </div>
+            <div class="col-lg-6">
                 <?php
-    $c++;
-    if ($c === (int)$count->count) {
-        echo '</div>';
+                $fields = $this->form->getFieldset('TEMPLATES');
+$fieldArray             = iterator_to_array($fields);
+$half                   = (int) ceil(\count($fieldArray) / 2);
+$i                      = 0;
+foreach ($fieldArray as $field) :
+    if ($i === $half) {
+        echo '</div><div class="col-lg-6">';
     }
-endforeach; ?>
+    echo $this->form->renderField($field->fieldname, 'params');
+    $i++;
+endforeach;
+?>
+            </div>
         </div>
-        <hr/>
-        <div class="col-12 col-lg-12">
-            <?php
-foreach ($this->form->getFieldset('TERMS') as $field) : ?>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-            echo $field->label; ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-            echo $field->input; ?>
-                        <br /> <?php echo Text::_($field->description); ?>
+
+        <hr />
+
+        <div class="row">
+            <div class="col-12">
+                <h4><?php echo Text::_('JBS_CMN_TERMS_SETTINGS'); ?></h4>
+            </div>
+            <div class="col-12">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <label for="jform_params_terms" class="form-label mb-0 fw-bold">
+                        <?php echo Text::_('JBS_CMN_TERMS'); ?>
+                    </label>
+                    <div class="d-flex align-items-center gap-2">
+                        <label for="jform_params_useterms" class="form-label mb-0 small text-muted">
+                            <?php echo Text::_('JBS_CMN_USE_TERMS'); ?>
+                        </label>
+                        <?php echo $this->form->getInput('useterms', 'params'); ?>
                     </div>
                 </div>
-                <?php
-endforeach; ?>
+                <?php echo $this->form->getInput('terms', 'params'); ?>
+                <div class="form-text small text-muted"><?php echo Text::_('JBS_CMN_TERMS_DESC'); ?></div>
+            </div>
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
@@ -172,33 +130,21 @@ endforeach; ?>
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'media', Text::_('JBS_CMN_MEDIA')); ?>
         <div class="row">
-            <?php
-$c     = 0;
-$count = CwmproclaimHelper::halfarray($this->form->getFieldset('MEDIA'));
-foreach ($this->form->getFieldset('MEDIA') as $field) :
-    if ($c === 0) {
-        echo '<div class="col-12 col-lg-6">';
-    } elseif ($c === (int)$count->half) {
-        echo '</div><div class="col-12 col-lg-6">';
-    }
-    ?>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-            echo $field->label; ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-            echo $field->input; ?>
-                        <br /> <?php echo Text::_($field->description); ?>
-                    </div>
-                </div>
+            <div class="col-lg-6">
                 <?php
-    (int)$c++;
-    if ($c === (int)$count->count) {
-        echo '</div>';
+$fields     = $this->form->getFieldset('MEDIA');
+$fieldArray = iterator_to_array($fields);
+$half       = (int) ceil(\count($fieldArray) / 2);
+$i          = 0;
+foreach ($fieldArray as $field) :
+    if ($i === $half) {
+        echo '</div><div class="col-lg-6">';
     }
-endforeach; ?>
+    echo $this->form->renderField($field->fieldname, 'params');
+    $i++;
+endforeach;
+?>
+            </div>
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
@@ -209,7 +155,7 @@ endforeach; ?>
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
             <div class="row-fluid">
                 <?php
-                echo $this->form->getInput('rules'); ?>
+echo $this->form->getInput('rules'); ?>
             </div>
             <?php
             echo HTMLHelper::_('uitab.endTab'); ?>
