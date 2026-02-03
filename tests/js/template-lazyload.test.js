@@ -127,24 +127,40 @@ describe('template-lazyload.es6.js', () => {
             expect(global.fetch.mock.calls.length).toBe(callCount);
         });
 
-        test('should handle fetch errors gracefully', async () => {
-            // Mock console.error to suppress expected error output
-            const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-            
-            global.fetch = jest.fn(() => Promise.reject(new Error('Network error')));
+        test('should handle server errors gracefully', async () => {
+            // Set up DOM without pre-shown accordions to avoid immediate loading
+            document.body.innerHTML = `
+                <input name="jform[id]" value="42" />
+                <div data-lazy-fieldset="error_test">
+                    <div class="accordion-collapse collapse">
+                        <div class="accordion-body"></div>
+                    </div>
+                </div>
+            `;
+
+            // Mock fetch to return an error response (not a rejection)
+            global.fetch = jest.fn(() =>
+                Promise.resolve({
+                    json: () => Promise.resolve({
+                        success: false,
+                        error: 'Server error occurred'
+                    })
+                })
+            );
 
             require('../../build/media_source/js/template-lazyload.es6.js');
             document.dispatchEvent(new Event('DOMContentLoaded'));
 
-            await new Promise(resolve => setTimeout(resolve, 0));
+            // Trigger the accordion show to initiate loading
+            const accordion = document.querySelector('[data-lazy-fieldset="error_test"]');
+            const collapse = accordion.querySelector('.accordion-collapse');
+            collapse.dispatchEvent(new Event('show.bs.collapse'));
 
-            const container = document.querySelector('[data-lazy-fieldset="study_details"] .accordion-body');
-            expect(container.innerHTML).toContain('Error loading content');
-            
-            // Verify error was logged (even if suppressed)
-            expect(consoleSpy).toHaveBeenCalled();
-            
-            consoleSpy.mockRestore();
+            // Wait for async operations
+            await new Promise(resolve => setTimeout(resolve, 10));
+
+            const container = document.querySelector('[data-lazy-fieldset="error_test"] .accordion-body');
+            expect(container.innerHTML).toContain('Server error occurred');
         });
     });
 });

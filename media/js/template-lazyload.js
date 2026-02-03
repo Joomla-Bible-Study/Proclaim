@@ -10,45 +10,25 @@
      * Template form lazy-loading functionality
      * Loads fieldsets on-demand when accordion sections are expanded
      */
-    document.addEventListener('DOMContentLoaded', function() {
+
+    (function () {
 
         const loadedFieldsets = new Set();
         const loadingFieldsets = new Set();
+        const fieldsetHtmlCache = new Map();
 
         /**
          * Load a fieldset via AJAX
          * @param {string} fieldsetName - The fieldset name to load
          * @param {HTMLElement} container - The container element to populate
          * @param {number} templateId - The template ID for data binding
+         * @returns {Promise} Promise that resolves when fieldset is loaded
          */
         function loadFieldset(fieldsetName, container, templateId) {
-            if (loadedFieldsets.has(fieldsetName) || loadingFieldsets.has(fieldsetName)) {
-                return;
-            }
-
-            loadingFieldsets.add(fieldsetName);
-
-            // Show loading indicator
-            container.innerHTML = '<div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> Loading...</div>';
-
-            const url = 'index.php?option=com_proclaim&task=cwmtemplate.loadFieldset&format=json' +
-                '&fieldset=' + encodeURIComponent(fieldsetName) +
-                '&id=' + templateId +
-                '&' + Joomla.getOptions('csrf.token', '') + '=1';
-
-            fetch(url, {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                loadingFieldsets.delete(fieldsetName);
-
-                if (data.success) {
-                    loadedFieldsets.add(fieldsetName);
-                    container.innerHTML = data.html;
+            return new Promise((resolve, reject) => {
+                // If already loaded, use cached HTML
+                if (loadedFieldsets.has(fieldsetName) && fieldsetHtmlCache.has(fieldsetName)) {
+                    container.innerHTML = fieldsetHtmlCache.get(fieldsetName);
 
                     // Initialize any Joomla form elements
                     if (typeof Joomla !== 'undefined' && Joomla.initCustomSelect) {
@@ -60,15 +40,99 @@
                         bubbles: true,
                         detail: { fieldset: fieldsetName }
                     }));
-                } else {
-                    container.innerHTML = '<div class="alert alert-danger">' + (data.error || 'Failed to load content') + '</div>';
+
+                    resolve({ alreadyLoaded: true, fieldset: fieldsetName });
+                    return;
                 }
-            })
-            .catch(error => {
-                loadingFieldsets.delete(fieldsetName);
-                container.innerHTML = '<div class="alert alert-danger">Error loading content: ' + error.message + '</div>';
-                console.error('Fieldset load error:', error);
+
+                if (loadingFieldsets.has(fieldsetName)) {
+                    // Wait for existing load to complete
+                    const checkInterval = setInterval(() => {
+                        if (loadedFieldsets.has(fieldsetName) && fieldsetHtmlCache.has(fieldsetName)) {
+                            clearInterval(checkInterval);
+                            container.innerHTML = fieldsetHtmlCache.get(fieldsetName);
+
+                            // Initialize any Joomla form elements
+                            if (typeof Joomla !== 'undefined' && Joomla.initCustomSelect) {
+                                Joomla.initCustomSelect(container);
+                            }
+
+                            resolve({ alreadyLoaded: true, fieldset: fieldsetName });
+                        } else if (!loadingFieldsets.has(fieldsetName)) {
+                            clearInterval(checkInterval);
+                            reject(new Error('Fieldset load was cancelled'));
+                        }
+                    }, 100);
+                    return;
+                }
+
+                loadingFieldsets.add(fieldsetName);
+
+                // Show loading indicator
+                container.innerHTML = '<div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> Loading...</div>';
+
+                const url = 'index.php?option=com_proclaim&task=cwmtemplate.loadFieldset&format=json' +
+                    '&fieldset=' + encodeURIComponent(fieldsetName) +
+                    '&id=' + templateId +
+                    '&' + Joomla.getOptions('csrf.token', '') + '=1';
+
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    loadingFieldsets.delete(fieldsetName);
+
+                    if (data.success) {
+                        loadedFieldsets.add(fieldsetName);
+                        fieldsetHtmlCache.set(fieldsetName, data.html);
+                        container.innerHTML = data.html;
+
+                        // Initialize any Joomla form elements
+                        if (typeof Joomla !== 'undefined' && Joomla.initCustomSelect) {
+                            Joomla.initCustomSelect(container);
+                        }
+
+                        // Trigger custom event for any additional initialization
+                        container.dispatchEvent(new CustomEvent('fieldsetLoaded', {
+                            bubbles: true,
+                            detail: { fieldset: fieldsetName }
+                        }));
+
+                        resolve({ success: true, fieldset: fieldsetName });
+                    } else {
+                        container.innerHTML = '<div class="alert alert-danger">' + (data.error || 'Failed to load content') + '</div>';
+                        reject(new Error(data.error || 'Failed to load content'));
+                    }
+                })
+                .catch(error => {
+                    loadingFieldsets.delete(fieldsetName);
+                    container.innerHTML = '<div class="alert alert-danger">Error loading content: ' + error.message + '</div>';
+                    console.error('Fieldset load error:', error);
+                    reject(error);
+                });
             });
+        }
+
+        /**
+         * Check if a fieldset has been loaded
+         * @param {string} fieldsetName - The fieldset name to check
+         * @returns {boolean}
+         */
+        function isFieldsetLoaded(fieldsetName) {
+            return loadedFieldsets.has(fieldsetName);
+        }
+
+        /**
+         * Check if a fieldset is currently loading
+         * @param {string} fieldsetName - The fieldset name to check
+         * @returns {boolean}
+         */
+        function isFieldsetLoading(fieldsetName) {
+            return loadingFieldsets.has(fieldsetName);
         }
 
         /**
@@ -88,12 +152,16 @@
 
                 // Load when accordion is shown
                 collapseTarget.addEventListener('show.bs.collapse', function() {
-                    loadFieldset(fieldsetName, contentContainer, templateId);
+                    loadFieldset(fieldsetName, contentContainer, templateId).catch(() => {
+                        // Error already displayed in UI
+                    });
                 });
 
                 // If accordion is already shown (first one), load immediately
                 if (collapseTarget.classList.contains('show')) {
-                    loadFieldset(fieldsetName, contentContainer, templateId);
+                    loadFieldset(fieldsetName, contentContainer, templateId).catch(() => {
+                        // Error already displayed in UI
+                    });
                 }
             });
         }
@@ -120,7 +188,9 @@
                     fieldsets.forEach(function(fieldsetName) {
                         const container = tabPane.querySelector('[data-fieldset-container="' + fieldsetName.trim() + '"]');
                         if (container) {
-                            loadFieldset(fieldsetName.trim(), container, templateId);
+                            loadFieldset(fieldsetName.trim(), container, templateId).catch(() => {
+                                // Error already displayed in UI
+                            });
                         }
                     });
                 });
@@ -130,16 +200,32 @@
                     fieldsets.forEach(function(fieldsetName) {
                         const container = tabPane.querySelector('[data-fieldset-container="' + fieldsetName.trim() + '"]');
                         if (container) {
-                            loadFieldset(fieldsetName.trim(), container, templateId);
+                            loadFieldset(fieldsetName.trim(), container, templateId).catch(() => {
+                                // Error already displayed in UI
+                            });
                         }
                     });
                 }
             });
         }
 
-        // Initialize lazy loading
-        initAccordionLazyLoad();
-        initTabLazyLoad();
-    });
+        // Export functions for use by other modules (e.g., layout editor)
+        window.ProclaimLazyLoad = {
+            loadFieldset: loadFieldset,
+            isFieldsetLoaded: isFieldsetLoaded,
+            isFieldsetLoading: isFieldsetLoading
+        };
+
+        // Initialize lazy loading on DOMContentLoaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                initAccordionLazyLoad();
+                initTabLazyLoad();
+            });
+        } else {
+            initAccordionLazyLoad();
+            initTabLazyLoad();
+        }
+    })();
 
 })();

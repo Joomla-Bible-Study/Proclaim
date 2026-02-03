@@ -203,6 +203,7 @@
             // UI state
             this.showGrid = false;
             this.isResizing = false;
+            this.viewSettingsLoaded = new Set();
 
             // Language strings helper
             this.trans = (key) => {
@@ -266,6 +267,10 @@
                             <span class="icon-list" aria-hidden="true"></span>
                             <span class="btn-text">Classic</span>
                         </button>
+                        <button type="button" class="btn btn-secondary btn-view-settings" title="${this.trans('JBS_TPL_VIEW_SETTINGS') || 'View Settings'}">
+                            <span class="icon-cog" aria-hidden="true"></span>
+                            <span class="btn-text">${this.trans('JBS_TPL_VIEW_SETTINGS') || 'View Settings'}</span>
+                        </button>
                     </div>
                 </div>
                 <div class="layout-editor">
@@ -292,8 +297,11 @@
             // Create context tabs
             this.createContextTabs();
 
-            // Create settings modal
+            // Create element settings modal
             this.createSettingsModal();
+
+            // Create view settings modal
+            this.createViewSettingsModal();
         }
 
         /**
@@ -349,6 +357,250 @@
             this.initCanvas();
             this.loadFromParams();
             this.initSortable();
+
+        }
+
+        // =====================================================================
+        // View Settings Modal Methods
+        // =====================================================================
+
+        /**
+         * Create the view settings modal
+         */
+        createViewSettingsModal() {
+            // Check if modal already exists
+            if (document.getElementById('viewSettingsModal')) {
+                this.viewSettingsModal = document.getElementById('viewSettingsModal');
+                return;
+            }
+
+            const modal = document.createElement('div');
+            modal.className = 'modal fade view-settings-modal';
+            modal.id = 'viewSettingsModal';
+            modal.tabIndex = -1;
+            modal.setAttribute('aria-labelledby', 'viewSettingsModalLabel');
+            modal.inert = true;
+
+            modal.innerHTML = `
+                <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="viewSettingsModalLabel">
+                                <span class="icon-cog" aria-hidden="true"></span>
+                                ${this.trans('JBS_TPL_VIEW_SETTINGS') || 'View Settings'}
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="${this.trans('JCLOSE') || 'Close'}"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="accordion" id="viewSettingsAccordion"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${this.trans('JCLOSE') || 'Close'}</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            this.viewSettingsModal = modal;
+            this.viewSettingsAccordion = modal.querySelector('#viewSettingsAccordion');
+            this.bsViewSettingsModal = null;
+        }
+
+        /**
+         * Get or create Bootstrap modal instance for view settings
+         * @returns {Object|null}
+         */
+        getViewSettingsModalInstance() {
+            if (this.bsViewSettingsModal) {
+                return this.bsViewSettingsModal;
+            }
+
+            if (!this.viewSettingsModal) {
+                return null;
+            }
+
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                this.bsViewSettingsModal = new bootstrap.Modal(this.viewSettingsModal);
+                return this.bsViewSettingsModal;
+            }
+
+            return null;
+        }
+
+        /**
+         * Open the view settings modal
+         */
+        openViewSettings() {
+            // Initialize accordion content for current context
+            this.initViewSettingsAccordion();
+
+            // Show modal
+            const modalInstance = this.getViewSettingsModalInstance();
+            if (modalInstance) {
+                if (this.viewSettingsModal) {
+                    this.viewSettingsModal.inert = false;
+                }
+                modalInstance.show();
+            }
+        }
+
+        /**
+         * Initialize the view settings accordion for current context
+         */
+        initViewSettingsAccordion() {
+            if (!this.viewSettingsAccordion) { return; }
+
+            // Get settings configuration from Joomla script options
+            const settingsConfig = (window.Joomla?.getOptions?.('com_proclaim.settingsConfig')) || {};
+            const contextSettings = settingsConfig[this.currentContext] || [];
+
+            // Update modal title to show context
+            const contextDef = ELEMENT_DEFINITIONS[this.currentContext];
+            const modalTitle = this.viewSettingsModal?.querySelector('.modal-title');
+            if (modalTitle && contextDef) {
+                modalTitle.innerHTML = `
+                    <span class="icon-cog" aria-hidden="true"></span>
+                    ${this.trans('JBS_TPL_VIEW_SETTINGS') || 'View Settings'}: ${contextDef.label}
+                `;
+            }
+
+            // Clear existing accordion items and reset loaded tracking
+            this.viewSettingsAccordion.innerHTML = '';
+            this.viewSettingsLoaded.clear();
+
+            if (contextSettings.length === 0) {
+                this.viewSettingsAccordion.innerHTML = `
+                    <div class="alert alert-info mb-0">
+                        <span class="icon-info-circle" aria-hidden="true"></span>
+                        ${this.trans('JBS_TPL_NO_VIEW_SETTINGS') || 'No additional settings available for this view.'}
+                    </div>
+                `;
+                return;
+            }
+
+            // Create accordion items for each fieldset
+            contextSettings.forEach((setting, index) => {
+                const itemId = `view-settings-${this.currentContext}-${index}`;
+                const collapseId = `collapse-${itemId}`;
+                const isFirst = index === 0;
+
+                const accordionItem = document.createElement('div');
+                accordionItem.className = 'accordion-item';
+                accordionItem.dataset.viewSettingsFieldset = setting.fieldset;
+
+                accordionItem.innerHTML = `
+                    <h2 class="accordion-header" id="heading-${itemId}">
+                        <button class="accordion-button${isFirst ? '' : ' collapsed'}" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#${collapseId}"
+                                aria-expanded="${isFirst ? 'true' : 'false'}" aria-controls="${collapseId}">
+                            ${setting.label}
+                        </button>
+                    </h2>
+                    <div id="${collapseId}" class="accordion-collapse collapse${isFirst ? ' show' : ''}"
+                         aria-labelledby="heading-${itemId}" data-bs-parent="#viewSettingsAccordion">
+                        <div class="accordion-body">
+                            <div class="text-center p-4">
+                                <span class="spinner-border spinner-border-sm" role="status"></span>
+                                ${this.trans('JBS_TPL_PLEASE_WAIT') || 'Please wait...'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                this.viewSettingsAccordion.appendChild(accordionItem);
+
+                // Add event listener for lazy loading
+                const collapseEl = accordionItem.querySelector('.accordion-collapse');
+                if (collapseEl) {
+                    collapseEl.addEventListener('show.bs.collapse', () => {
+                        this.loadViewSettingsFieldset(setting.fieldset, accordionItem.querySelector('.accordion-body'));
+                    });
+                }
+
+                // Load first fieldset immediately
+                if (isFirst) {
+                    this.loadViewSettingsFieldset(setting.fieldset, accordionItem.querySelector('.accordion-body'));
+                }
+            });
+        }
+
+        /**
+         * Load a fieldset into the view settings modal
+         * @param {string} fieldsetName - The fieldset name to load
+         * @param {HTMLElement} container - The container to load into
+         */
+        loadViewSettingsFieldset(fieldsetName, container) {
+            // Create a unique key for this context + fieldset combination
+            const loadKey = `${this.currentContext}-${fieldsetName}`;
+
+            // Check if already loaded
+            if (this.viewSettingsLoaded.has(loadKey)) {
+                return;
+            }
+
+            // Get template ID from Joomla options or form
+            const templateId = (window.Joomla?.getOptions?.('com_proclaim.templateId')) ||
+                parseInt(document.querySelector('input[name="jform[id]"]')?.value || '0', 10);
+
+            // Use the global ProclaimLazyLoad if available
+            if (window.ProclaimLazyLoad && typeof window.ProclaimLazyLoad.loadFieldset === 'function') {
+                window.ProclaimLazyLoad.loadFieldset(fieldsetName, container, templateId)
+                    .then(() => {
+                        this.viewSettingsLoaded.add(loadKey);
+                    })
+                    .catch(error => {
+                        console.error('Failed to load view settings fieldset:', error);
+                    });
+            } else {
+                // Fallback: load directly via fetch
+                this.loadFieldsetDirect(fieldsetName, container, templateId);
+            }
+        }
+
+        /**
+         * Direct fieldset loading (fallback if ProclaimLazyLoad is not available)
+         * @param {string} fieldsetName - The fieldset name to load
+         * @param {HTMLElement} container - The container to load into
+         * @param {number} templateId - The template ID
+         */
+        loadFieldsetDirect(fieldsetName, container, templateId) {
+            container.innerHTML = `
+                <div class="text-center p-4">
+                    <span class="spinner-border spinner-border-sm" role="status"></span>
+                    ${this.trans('JBS_TPL_LOADING') || 'Loading...'}
+                </div>
+            `;
+
+            const csrfToken = (window.Joomla?.getOptions?.('csrf.token')) || '';
+            const url = 'index.php?option=com_proclaim&task=cwmtemplate.loadFieldset&format=json' +
+                '&fieldset=' + encodeURIComponent(fieldsetName) +
+                '&id=' + templateId +
+                '&' + csrfToken + '=1';
+
+            fetch(url, {
+                method: 'GET',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const loadKey = `${this.currentContext}-${fieldsetName}`;
+                    this.viewSettingsLoaded.add(loadKey);
+                    container.innerHTML = data.html;
+
+                    // Initialize Joomla form elements
+                    if (window.Joomla?.initCustomSelect) {
+                        window.Joomla.initCustomSelect(container);
+                    }
+                } else {
+                    container.innerHTML = `<div class="alert alert-danger">${data.error || 'Failed to load content'}</div>`;
+                }
+            })
+            .catch(error => {
+                container.innerHTML = `<div class="alert alert-danger">Error loading content: ${error.message}</div>`;
+                console.error('Fieldset load error:', error);
+            });
         }
 
         /**
@@ -936,11 +1188,15 @@
                 // View toggle buttons
                 const visualBtn = this.toolbar.querySelector('.btn-view-visual');
                 const classicBtn = this.toolbar.querySelector('.btn-view-classic');
+                const viewSettingsBtn = this.toolbar.querySelector('.btn-view-settings');
                 if (visualBtn) {
                     visualBtn.addEventListener('click', () => this.switchView('visual'));
                 }
                 if (classicBtn) {
                     classicBtn.addEventListener('click', () => this.switchView('classic'));
+                }
+                if (viewSettingsBtn) {
+                    viewSettingsBtn.addEventListener('click', () => this.openViewSettings());
                 }
             }
 
@@ -1919,6 +2175,13 @@
             if ((e.ctrlKey && e.key === 'y') || (e.ctrlKey && e.shiftKey && e.key === 'z')) {
                 e.preventDefault();
                 this.redo();
+                return;
+            }
+
+            // Open view settings: Ctrl+Shift+S
+            if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 's') {
+                e.preventDefault();
+                this.openViewSettings();
                 return;
             }
 

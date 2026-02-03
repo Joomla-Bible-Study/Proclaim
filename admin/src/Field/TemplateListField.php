@@ -40,7 +40,7 @@ class TemplateListField extends ListField
      *
      * @since 9.0.0
      */
-    protected $type = 'Templates';
+    protected $type = 'TemplateList';
 
     /**
      * Method to get a list of options for a list input.

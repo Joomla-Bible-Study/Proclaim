@@ -790,6 +790,117 @@
 }
 
 /* ==========================================================================
+   View Settings Modal
+   ========================================================================== */
+.view-settings-modal .modal-dialog {
+    max-width: 800px;
+}
+
+.view-settings-modal .modal-header {
+    background: var(--layout-bg-secondary);
+    border-bottom: 1px solid var(--layout-border-color);
+}
+
+.view-settings-modal .modal-title {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-weight: 600;
+}
+
+.view-settings-modal .modal-body {
+    padding: 0;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.view-settings-modal .accordion {
+    --bs-accordion-border-width: 0;
+    --bs-accordion-border-radius: 0;
+    --bs-accordion-inner-border-radius: 0;
+}
+
+.view-settings-modal .accordion-item {
+    border-bottom: 1px solid var(--layout-border-color);
+}
+
+.view-settings-modal .accordion-item:last-child {
+    border-bottom: none;
+}
+
+.view-settings-modal .accordion-button {
+    padding: 1rem 1.25rem;
+    font-weight: 500;
+    background: var(--layout-bg-primary);
+    color: var(--layout-text-primary);
+}
+
+.view-settings-modal .accordion-button:not(.collapsed) {
+    background: var(--layout-bg-secondary);
+    box-shadow: none;
+}
+
+.view-settings-modal .accordion-button:focus {
+    box-shadow: var(--layout-focus-ring);
+    z-index: 1;
+}
+
+.view-settings-modal .accordion-body {
+    padding: 1.25rem;
+    background: var(--layout-bg-primary);
+}
+
+/* Form field styling within view settings modal */
+.view-settings-modal .control-group {
+    margin-bottom: 1.25rem;
+}
+
+.view-settings-modal .control-group:last-child {
+    margin-bottom: 0;
+}
+
+.view-settings-modal .control-label {
+    margin-bottom: .5rem;
+}
+
+.view-settings-modal .control-label label {
+    font-weight: 500;
+    color: var(--layout-text-primary);
+}
+
+.view-settings-modal .controls {
+    margin-bottom: .25rem;
+}
+
+/* Description text below form fields */
+.view-settings-modal .controls > br + * {
+    font-size: 0.875rem;
+    color: var(--layout-text-muted);
+    line-height: 1.4;
+    margin-top: .25rem;
+}
+
+/* Two-column layout for form fields on larger screens */
+@media (min-width: 768px) {
+    .view-settings-modal .accordion-body {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem 2rem;
+    }
+
+    .view-settings-modal .control-group {
+        margin-bottom: 0;
+    }
+
+    /* Full-width elements (editors, textareas) */
+    .view-settings-modal .control-group:has(textarea),
+    .view-settings-modal .control-group:has(.editor),
+    .view-settings-modal .control-group:has([type="editor"]) {
+        grid-column: 1 / -1;
+    }
+}
+
+/* ==========================================================================
    Responsive Adjustments
    ========================================================================== */
 @media (max-width: 992px) {

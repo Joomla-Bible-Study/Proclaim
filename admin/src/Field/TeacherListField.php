@@ -35,7 +35,7 @@ class TeacherListField extends ListField
      *
      * @since 9.0.0
      */
-    protected $type = 'TeachersList';
+    protected $type = 'TeacherList';
 
     /**
      * Method to get a list of options for a list input.

@@ -53,17 +53,24 @@ Text::script('JCLOSE');
 Text::script('JCANCEL');
 Text::script('JAPPLY');
 
-// Link type options (matches LinkOptionsField.php)
-Text::script('JBS_TPL_NO_LINK');
-Text::script('JBS_TPL_LINK_TO_DETAILS');
-Text::script('JBS_TPL_LINK_TO_DETAILS_TOOLTIP');
-Text::script('JBS_TPL_LINK_TO_MEDIA');
-Text::script('JBS_TPL_LINK_TO_DOWNLOAD');
-Text::script('JBS_TPL_LINK_TO_MEDIA_TOOLTIP');
-Text::script('JBS_TPL_LINK_TO_TEACHERS_PROFILE');
-Text::script('JBS_TPL_LINK_TO_FIRST_ARTICLE');
-Text::script('JBS_TPL_LINK_TO_VIRTUEMART');
-Text::script('JBS_TPL_LINK_TO_DOCMAN');
+// Settings panel language strings
+Text::script('JBS_TPL_SETTINGS_PANEL');
+Text::script('JBS_TPL_TOGGLE_SETTINGS');
+Text::script('JBS_TPL_VERSES_DATES_CSS');
+Text::script('JBS_TPL_LIST_ITEMS');
+Text::script('JBS_TPL_FILTERS');
+Text::script('JBS_TPL_TOOLTIP');
+Text::script('JBS_TPL_STUDY_DETAILS_VIEW');
+Text::script('JBS_TPL_TEACHERDETAILS');
+Text::script('JBS_TPL_TEACHER');
+Text::script('JBS_TPL_TEACHERDISPLAY');
+Text::script('JBS_TPL_TEACHERDETAILSDISPLAY');
+Text::script('JBS_TPL_SERIESLIST');
+Text::script('JBS_TPL_SERIESLISTDISPLAY');
+Text::script('JBS_TPL_SERIESDETAILS');
+Text::script('JBS_TPL_SERIESDETAILSDISPLAY');
+Text::script('JBS_TPL_PLEASE_WAIT');
+Text::script('JBS_TPL_LOADING');
 
 // Link type options (matches LinkOptionsField.php)
 Text::script('JBS_TPL_NO_LINK');
@@ -76,6 +83,7 @@ Text::script('JBS_TPL_LINK_TO_TEACHERS_PROFILE');
 Text::script('JBS_TPL_LINK_TO_FIRST_ARTICLE');
 Text::script('JBS_TPL_LINK_TO_VIRTUEMART');
 Text::script('JBS_TPL_LINK_TO_DOCMAN');
+Text::script('JBS_TPL_VIEW_SETTINGS');
 
 // Element options (matches ElementOptionsField.php)
 Text::script('JBS_CMN_NONE');
@@ -124,6 +132,39 @@ if (\is_string($params)) {
 
 $document = $this->getDocument();
 $document->addScriptOptions('com_proclaim.templateParams', $paramsArray);
+
+// Pass template ID for lazy-loading fieldsets
+$templateId = (int) $this->item->id;
+$document->addScriptOptions('com_proclaim.templateId', $templateId);
+
+// Settings panel fieldsets configuration by context
+// Note: DISPLAY fieldsets (TEACHERDISPLAY, SERIESDISPALY, etc.) are excluded
+// because they contain row/col/colspan settings handled by the visual Layout Editor
+$settingsConfig = [
+    'messages' => [
+        ['fieldset' => 'VERSES', 'label' => Text::_('JBS_TPL_VERSES_DATES_CSS')],
+        ['fieldset' => 'LISTITEMS', 'label' => Text::_('JBS_TPL_LIST_ITEMS')],
+        ['fieldset' => 'FILTERS', 'label' => Text::_('JBS_TPL_FILTERS')],
+        ['fieldset' => 'TOOLTIP', 'label' => Text::_('JBS_TPL_TOOLTIP')],
+    ],
+    'details' => [
+        ['fieldset' => 'DETAILS', 'label' => Text::_('JBS_TPL_STUDY_DETAILS_VIEW')],
+    ],
+    'teachers' => [
+        ['fieldset' => 'TEACHERDETAILS', 'label' => Text::_('JBS_TPL_TEACHERDETAILS')],
+        ['fieldset' => 'TEACHER', 'label' => Text::_('JBS_TPL_TEACHER')],
+    ],
+    'teacherDetails' => [
+        ['fieldset' => 'TEACHERDETAILS', 'label' => Text::_('JBS_TPL_TEACHERDETAILS')],
+    ],
+    'series' => [
+        ['fieldset' => 'SERIES', 'label' => Text::_('JBS_TPL_SERIESLIST')],
+    ],
+    'seriesDetails' => [
+        ['fieldset' => 'SERIESDETAIL', 'label' => Text::_('JBS_TPL_SERIESDETAILS')],
+    ],
+];
+$document->addScriptOptions('com_proclaim.settingsConfig', $settingsConfig);
 ?>
 
 <div id="layout-editor-container" data-context="messages">
