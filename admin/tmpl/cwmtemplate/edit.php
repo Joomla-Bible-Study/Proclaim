@@ -205,35 +205,7 @@ endforeach; ?>
 
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'landing', Text::_('JBS_TPL_LANDING_PAGE')); ?>
-        <div class="row">
-            <?php
-$c     = 0;
-$count = CwmproclaimHelper::halfarray($this->form->getFieldset('LANDINGPAGE'));
-foreach ($this->form->getFieldset('LANDINGPAGE') as $field) :
-    if ($c === 0) {
-        echo '<div class="col-12 col-lg-7">';
-    } elseif ($c === $count->half) {
-        echo '</div><div class="col-12 col-lg-5">';
-    }
-    ?>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-            echo $field->label; ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-            echo $field->input; ?>
-                        <br /> <?php echo Text::_($field->description); ?>
-                    </div>
-                </div>
-                <?php
-    $c++;
-    if ($c === $count->count) {
-        echo '</div>';
-    }
-endforeach; ?>
-        </div>
+        <?php include __DIR__ . '/edit_landing.php'; ?>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
         <?php
