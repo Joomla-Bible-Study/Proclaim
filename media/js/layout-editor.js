@@ -257,6 +257,8 @@
                     this.isDirty = false;
                     this.beforeUnloadHandler = null;
                     this.originalModalValues = null; // Stores values when modal opens for change detection
+                    this.viewSettingsHasChanges = false; // Tracks if View Settings modal has unsaved changes
+                    this.sectionSettingsHasChanges = false; // Tracks if Section Settings modal has unsaved changes
 
                     // Language strings helper
                     this.trans = (key) => {
@@ -490,6 +492,28 @@
                     if (applyBtn) {
                         applyBtn.addEventListener('click', () => this.applyViewSettings());
                     }
+
+                    // Track changes in the modal
+                    modal.addEventListener('input', () => {
+                        this.viewSettingsHasChanges = true;
+                    });
+                    modal.addEventListener('change', () => {
+                        this.viewSettingsHasChanges = true;
+                    });
+
+                    // Intercept modal close to warn about unsaved changes
+                    modal.addEventListener('hide.bs.modal', (e) => {
+                        // Check if we have unsaved changes (changes without clicking Apply)
+                        if (this.viewSettingsHasChanges) {
+                            const message = this.trans('JBS_TPL_MODAL_UNSAVED_CHANGES') || 'You have unsaved changes in this dialog. Discard changes?';
+                            if (!window.confirm(message)) {
+                                e.preventDefault();
+                                return;
+                            }
+                        }
+                        // Reset flag when modal closes
+                        this.viewSettingsHasChanges = false;
+                    });
                 }
 
                 /**
@@ -509,6 +533,9 @@
 
                     // Mark as dirty since view settings were changed
                     this.markDirty();
+
+                    // Clear the modal changes flag since we're applying changes
+                    this.viewSettingsHasChanges = false;
 
                     // Close the modal
                     const modalInstance = this.getViewSettingsModalInstance();
@@ -542,6 +569,9 @@
                  * Open the view settings modal
                  */
                 openViewSettings() {
+                    // Reset change tracking flag
+                    this.viewSettingsHasChanges = false;
+
                     // Initialize accordion content for current context
                     this.initViewSettingsAccordion();
 
@@ -1061,6 +1091,26 @@
                     if (applyBtn) {
                         applyBtn.addEventListener('click', () => this.applySectionSettings());
                     }
+
+                    // Track changes in the modal
+                    modal.addEventListener('input', () => {
+                        this.sectionSettingsHasChanges = true;
+                    });
+                    modal.addEventListener('change', () => {
+                        this.sectionSettingsHasChanges = true;
+                    });
+
+                    // Intercept modal close to warn about unsaved changes
+                    modal.addEventListener('hide.bs.modal', (e) => {
+                        if (this.sectionSettingsHasChanges) {
+                            const message = this.trans('JBS_TPL_MODAL_UNSAVED_CHANGES') || 'You have unsaved changes in this dialog. Discard changes?';
+                            if (!window.confirm(message)) {
+                                e.preventDefault();
+                                return;
+                            }
+                        }
+                        this.sectionSettingsHasChanges = false;
+                    });
                 }
 
                 /**
@@ -1080,6 +1130,9 @@
 
                     // Mark as dirty since section settings were changed
                     this.markDirty();
+
+                    // Clear the modal changes flag since we're applying changes
+                    this.sectionSettingsHasChanges = false;
 
                     // Close the modal
                     const modalInstance = this.getSectionSettingsModalInstance();
@@ -1114,6 +1167,9 @@
                  * @param {string} sectionId - Section ID (teachers, series, books, etc.)
                  */
                 openLandingSectionSettings(sectionId) {
+                    // Reset section settings change tracking
+                    this.sectionSettingsHasChanges = false;
+
                     // Get section-specific fieldset from config
                     const sectionSettings = (window.Joomla?.getOptions?.('com_proclaim.landingSectionSettings')) || {};
                     const sectionConfig = sectionSettings[sectionId];
