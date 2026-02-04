@@ -218,11 +218,11 @@
                 <option value="FALSE">JBS_TPL_NO_SHARE</option>
                 <option value="TRUE">JBS_TPL_SHOW_SHARE</option>
             </field>
-            <field name="backcolor" type="color" default="0x287585"
+            <field name="backcolor" type="ColorPicker" default="#287585"
                    label="JBS_TPL_MEDIA_BACKCOLOR" description="JBS_TPL_MEDIA_BACKCOLOR_DESC"/>
-            <field name="frontcolor" type="color" default="0xFFFFFF"
+            <field name="frontcolor" type="ColorPicker" default="white"
                    label="JBS_TPL_MEDIA_FRONTCOLOR" description="JBS_TPL_MEDIA_FRONTCOLOR_DESC"/>
-            <field name="lightcolor" type="color" default="0x000000"
+            <field name="lightcolor" type="ColorPicker" default="black"
                    label="JBS_TPL_MEDIA_LIGHTCOLOR" description="JBS_TPL_MEDIA_LIGHTCOLOR_DESC"/>
             <field name="screencolor" type="ColorPicker" default="black"
                    label="JBS_TPL_MEDIA_SCREENCOLOR" description="JBS_TPL_MEDIA_SCREENCOLOR_DESC"/>
@@ -1058,8 +1058,8 @@
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
-            <field name="teacherdisplay_color" type="color" label="JBS_TPL_SERIESDISPLAY_COLOR"
-                   description="JBS_TPL_SERIESDISPLAY_COLOR"/>
+            <field name="teacherdisplay_color" type="ColorPicker" default="black"
+                   label="JBS_TPL_SERIESDISPLAY_COLOR" description="JBS_TPL_SERIESDISPLAY_COLOR"/>
         </fieldset>
         <fieldset name="TEACHERDETAILSDISPLAY" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="tdteacherrow" type="RowOptions" size="1" default="1" label="JBS_CMN_TEACHER"
@@ -1410,8 +1410,8 @@
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
-            <field name="seriesdisplay_color" type="color" label="JBS_TPL_SERIESDISPLAY_COLOR"
-                   description="JBS_TPL_SERIESDISPLAY_COLOR"/>
+            <field name="seriesdisplay_color" type="ColorPicker" default="black"
+                   label="JBS_TPL_SERIESDISPLAY_COLOR" description="JBS_TPL_SERIESDISPLAY_COLOR"/>
             <field name="use_header_seriesdisplay" type="radio" default="1"
                    label="JBS_TPL_SERIESDISPLAY_USE_HEADER"
                    description="JBS_TPL_SERIESDISPLAY_USE_HEADER_DESC"
