@@ -387,11 +387,11 @@
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_TPL_SHOW_ALWAYS</option>
             </field>
-            <field name="booklist" type="radio" default="0"
+            <field name="booklist" type="radio" default="1"
                    label="JBS_TPL_LISTITEMS_BOOKLIST" description="JBS_TPL_LISTITEMS_BOOKLIST_DESC"
                    layout="joomla.form.field.radio.switcher">
-                <option value="0">JBS_TPL_SHOW_ALL_BOOKS</option>
                 <option value="1">JBS_TPL_SHOW_BOOKS_W_STUDIES</option>
+                <option value="0">JBS_TPL_SHOW_ALL_BOOKS</option>
             </field>
             <field name="show_teacher_search" type="radio" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_TEACHER_SEARCH"
