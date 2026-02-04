@@ -209,8 +209,13 @@ class ColorPickerField extends FormField
         $readonly = $this->readonly ? ' readonly' : '';
         $required = $this->required ? ' required' : '';
 
+        // Convert legacy 0x format to # hex format (e.g., 0x287585 -> #287585)
+        if (preg_match('/^0x([0-9A-Fa-f]{6})$/', $value, $matches)) {
+            $value = '#' . strtoupper($matches[1]);
+        }
+
         // Determine if current value is a named color or custom hex
-        $isNamedColor = array_key_exists(strtolower($value), self::CSS_COLORS);
+        $isNamedColor = \array_key_exists(strtolower($value), self::CSS_COLORS);
 
         // Get hex value for color preview
         $hexValue = $isNamedColor ? self::CSS_COLORS[strtolower($value)] : ($value ?: '#000000');
