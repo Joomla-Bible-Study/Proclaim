@@ -36,8 +36,8 @@
                 default="1"
                 layout="joomla.form.field.radio.switcher"
                 label="JBS_ADM_FIELD_RESTRICT_UPLOADS_LABEL">
-            <option value="1">JYES</option>
             <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
 
         <field
@@ -47,8 +47,8 @@
                 default="1"
                 label="JBS_ADM_FIELD_CHECK_MIME_LABEL"
                 layout="joomla.form.field.radio.switcher">
-            <option value="1">JYES</option>
             <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
 
         <field
@@ -92,8 +92,8 @@
                 layout="joomla.form.field.radio.switcher"
                 label="JBS_ADM_ENABLE_VIRTUEMART_LABEL"
                 description="JBS_ADM_ENABLE_VIRTUEMART_DESC">
-            <option value="1">JYES</option>
             <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
         <field
                 name="enable_docman"
@@ -102,8 +102,8 @@
                 layout="joomla.form.field.radio.switcher"
                 label="JBS_ADM_ENABLE_DOCMAN_LABEL"
                 description="JBS_ADM_ENABLE_DOCMAN_DESC">
-            <option value="1">JYES</option>
             <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
     </fieldset>
     <fieldset name="permissions" label="JCONFIG_PERMISSIONS_LABEL"
