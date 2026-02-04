@@ -172,6 +172,30 @@
             }
         },
         {
+            "name": "com_proclaim.cwmadmin-duration-fix",
+            "type": "script",
+            "uri": "com_proclaim/cwmadmin-duration-fix.min.js",
+            "dependencies": [
+                "core",
+                "bootstrap.modal"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.cwmadmin-metadata-fix",
+            "type": "script",
+            "uri": "com_proclaim/cwmadmin-metadata-fix.min.js",
+            "dependencies": [
+                "core",
+                "bootstrap.modal"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.cwmcore",
             "type": "style",
             "uri": "com_proclaim/cwmcore.min.css",

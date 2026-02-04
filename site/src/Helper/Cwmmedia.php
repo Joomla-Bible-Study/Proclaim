@@ -54,6 +54,17 @@ class Cwmmedia
      */
     public static function isExternal(string $url): bool
     {
+        // Check for URLs stored without protocol (e.g., www.example.org/path or example.org/path)
+        if (preg_match('/^(www\.)?[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z]{2,})+\//i', $url)) {
+            // Looks like a domain - check if it's not the local site
+            $root = parse_url(Uri::root());
+            $urlHost = preg_replace('/^(www\.)?/', '', explode('/', $url)[0]);
+            $rootHost = preg_replace('/^(www\.)?/', '', $root['host'] ?? '');
+
+            // If it's a different host, it's external
+            return strcasecmp($urlHost, $rootHost) !== 0;
+        }
+
         // Check if the URL contains a website string, since it may just be a path to a local file.
         if (str_contains($url, "http") || str_contains($url, "https") || str_contains($url, "//")) {
             $components = parse_url($url);
