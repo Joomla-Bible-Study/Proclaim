@@ -254,6 +254,8 @@
                     this.showGrid = false;
                     this.isResizing = false;
                     this.viewSettingsLoaded = new Set();
+                    this.isDirty = false;
+                    this.beforeUnloadHandler = null;
 
                     // Language strings helper
                     this.trans = (key) => {
@@ -503,6 +505,9 @@
                             }
                         });
                     }
+
+                    // Mark as dirty since view settings were changed
+                    this.markDirty();
 
                     // Close the modal
                     const modalInstance = this.getViewSettingsModalInstance();
@@ -1071,6 +1076,9 @@
                             }
                         });
                     }
+
+                    // Mark as dirty since section settings were changed
+                    this.markDirty();
 
                     // Close the modal
                     const modalInstance = this.getSectionSettingsModalInstance();
@@ -1954,6 +1962,9 @@
                     this.updateElementInfo(evt.item);
                     // Auto-distribute colspans in the target row
                     this.distributeColspans(evt.to);
+
+                    // Mark as dirty since we added an element
+                    this.markDirty();
                 }
 
                 /**
@@ -1966,6 +1977,9 @@
                     if (evt.from !== evt.to) {
                         this.distributeColspans(evt.from);
                     }
+
+                    // Mark as dirty since we moved an element
+                    this.markDirty();
                 }
 
                 /**
@@ -2174,17 +2188,21 @@
                         observer.observe(this.modal, { attributes: true, attributeFilter: ['aria-hidden'] });
                     }
 
-                    // Form submit - sync state to form fields
+                    // Form submit - sync state to form fields and mark clean
                     const form = document.getElementById(this.options.formId);
                     if (form) {
-                        form.addEventListener('submit', () => this.syncToForm());
+                        form.addEventListener('submit', () => {
+                            this.syncToForm();
+                            this.markClean(); // Clear dirty state on save
+                        });
                     }
 
-                    // Also sync before Joomla toolbar actions
+                    // Also sync before Joomla toolbar actions (Save, Apply, Save & New, Save as Copy)
                     document.addEventListener('click', (e) => {
                         const toolbarBtn = e.target.closest('.button-apply, .button-save, .button-save-new, .button-save-copy');
                         if (toolbarBtn) {
                             this.syncToForm();
+                            this.markClean(); // Clear dirty state on save
                         }
                     });
 
@@ -2236,6 +2254,48 @@
                     // Redistribute colspans for remaining elements
                     if (rowEl) {
                         this.distributeColspans(rowEl);
+                    }
+
+                    // Mark as dirty since we removed an element
+                    this.markDirty();
+                }
+
+                /**
+                 * Mark the editor as having unsaved changes
+                 * Adds a beforeunload warning to prevent accidental navigation
+                 */
+                markDirty() {
+                    if (this.isDirty) {
+                        return; // Already dirty
+                    }
+
+                    this.isDirty = true;
+
+                    // Add beforeunload handler to warn about unsaved changes
+                    if (!this.beforeUnloadHandler) {
+                        this.beforeUnloadHandler = (e) => {
+                            if (this.isDirty) {
+                                const message = this.trans('JBS_TPL_UNSAVED_CHANGES') || 'You have unsaved changes. Are you sure you want to leave?';
+                                e.preventDefault();
+                                e.returnValue = message; // Required for Chrome
+                                return message;
+                            }
+                        };
+                        window.addEventListener('beforeunload', this.beforeUnloadHandler);
+                    }
+                }
+
+                /**
+                 * Mark the editor as clean (no unsaved changes)
+                 * Removes the beforeunload warning
+                 */
+                markClean() {
+                    this.isDirty = false;
+
+                    // Remove beforeunload handler
+                    if (this.beforeUnloadHandler) {
+                        window.removeEventListener('beforeunload', this.beforeUnloadHandler);
+                        this.beforeUnloadHandler = null;
                     }
                 }
 
@@ -2373,6 +2433,9 @@
                             this.recalculateColumns(rowEl);
                         }
                     }
+
+                    // Mark as dirty since settings were changed
+                    this.markDirty();
 
                     // Close modal - global event listeners in bindEvents() handle focus and inert
                     const modalInstance = this.getModalInstance();
