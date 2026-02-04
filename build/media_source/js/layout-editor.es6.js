@@ -459,7 +459,11 @@
                             <div class="accordion" id="viewSettingsAccordion"></div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${this.trans('JCLOSE') || 'Close'}</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${this.trans('JCANCEL') || 'Cancel'}</button>
+                            <button type="button" class="btn btn-success view-settings-apply" id="viewSettingsApply">
+                                <span class="icon-check" aria-hidden="true"></span>
+                                ${this.trans('JAPPLY') || 'Apply'}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -469,6 +473,34 @@
                 this.viewSettingsModal = modal;
                 this.viewSettingsAccordion = modal.querySelector('#viewSettingsAccordion');
                 this.bsViewSettingsModal = null;
+
+                // Add Apply button event handler
+                const applyBtn = modal.querySelector('#viewSettingsApply');
+                if (applyBtn) {
+                    applyBtn.addEventListener('click', () => this.applyViewSettings());
+                }
+            }
+
+            /**
+             * Apply view settings and close modal
+             * Syncs TinyMCE editors and closes the modal
+             */
+            applyViewSettings() {
+                // Sync all TinyMCE editors to their textareas before closing
+                if (typeof window.tinymce !== 'undefined' && this.viewSettingsModal) {
+                    this.viewSettingsModal.querySelectorAll('textarea.mce_editable').forEach(textarea => {
+                        const editor = window.tinymce.get(textarea.id);
+                        if (editor) {
+                            editor.save();
+                        }
+                    });
+                }
+
+                // Close the modal
+                const modalInstance = this.getViewSettingsModalInstance();
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
             }
 
             /**
@@ -989,7 +1021,11 @@
                             <div id="sectionSettingsContent"></div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${this.trans('JCLOSE') || 'Close'}</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${this.trans('JCANCEL') || 'Cancel'}</button>
+                            <button type="button" class="btn btn-success section-settings-apply" id="sectionSettingsApply">
+                                <span class="icon-check" aria-hidden="true"></span>
+                                ${this.trans('JAPPLY') || 'Apply'}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -999,6 +1035,34 @@
                 this.sectionSettingsModal = modal;
                 this.sectionSettingsContent = modal.querySelector('#sectionSettingsContent');
                 this.bsSectionSettingsModal = null;
+
+                // Add Apply button event handler
+                const applyBtn = modal.querySelector('#sectionSettingsApply');
+                if (applyBtn) {
+                    applyBtn.addEventListener('click', () => this.applySectionSettings());
+                }
+            }
+
+            /**
+             * Apply section settings and close modal
+             * Syncs TinyMCE editors and closes the modal
+             */
+            applySectionSettings() {
+                // Sync all TinyMCE editors to their textareas before closing
+                if (typeof window.tinymce !== 'undefined' && this.sectionSettingsModal) {
+                    this.sectionSettingsModal.querySelectorAll('textarea.mce_editable').forEach(textarea => {
+                        const editor = window.tinymce.get(textarea.id);
+                        if (editor) {
+                            editor.save();
+                        }
+                    });
+                }
+
+                // Close the modal
+                const modalInstance = this.getSectionSettingsModalInstance();
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
             }
 
             /**
