@@ -71,8 +71,8 @@ class FilesizeField extends ListField
      */
     private function sizeConverter(): string
     {
-        return "<button data-toggle=\"modal\" onclick=\"jQuery( '#collapseModal' ).modal('show'); return true;\" class=\"btn btn-primary\">
-	<span class=\"icon-checkbox-partial\" aria-hidden=\"true\"></span> " . Text::_('JBS_MED_FILESIZE_CONVERTER') .
-            "</button>";
+        return '<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#collapseModal">
+            <span class="icon-checkbox-partial" aria-hidden="true"></span> ' . Text::_('JBS_MED_FILESIZE_CONVERTER') .
+            '</button>';
     }
 }
