@@ -36,8 +36,8 @@
                 default="1"
                 layout="joomla.form.field.radio.switcher"
                 label="JBS_ADM_FIELD_RESTRICT_UPLOADS_LABEL">
-            <option value="1">JYES</option>
             <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
 
         <field
@@ -47,8 +47,8 @@
                 default="1"
                 label="JBS_ADM_FIELD_CHECK_MIME_LABEL"
                 layout="joomla.form.field.radio.switcher">
-            <option value="1">JYES</option>
             <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
 
         <field
@@ -82,6 +82,32 @@
                 default="text/html"
                 label="JBS_ADM_FIELD_ILLEGAL_MIME_TYPES_LABEL"
                 description="JBS_ADM_FIELD_ILLEGAL_MIME_TYPES_DESC"/>
+    </fieldset>
+    <fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
+              name="integrations" label="JBS_ADM_INTEGRATIONS_LABEL"
+              description="JBS_ADM_INTEGRATIONS_DESC">
+        <field
+                name="enable_virtuemart"
+                type="IntegrationToggle"
+                extension="com_virtuemart"
+                default="0"
+                layout="joomla.form.field.radio.switcher"
+                label="JBS_ADM_ENABLE_VIRTUEMART_LABEL"
+                description="JBS_ADM_ENABLE_VIRTUEMART_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field
+                name="enable_docman"
+                type="IntegrationToggle"
+                extension="com_docman"
+                default="0"
+                layout="joomla.form.field.radio.switcher"
+                label="JBS_ADM_ENABLE_DOCMAN_LABEL"
+                description="JBS_ADM_ENABLE_DOCMAN_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
     </fieldset>
     <fieldset name="permissions" label="JCONFIG_PERMISSIONS_LABEL"
               description="JCONFIG_PERMISSIONS_DESC">

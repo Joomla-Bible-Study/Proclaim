@@ -80,8 +80,8 @@
             <option value="5">JBS_CMN_CUSTOM</option>
         </field>
 
-        <field name="custom" type="textarea" label="JBS_CMN_CUSTOM"
-               description="JBS_PDC_EPISODES_CUSTOM_DESC" size="20" cols="48" rows="2"/>
+        <field name="custom" type="Custom" codeset="podcast" input="textarea"
+               label="JBS_CMN_CUSTOM" description="JBS_PDC_EPISODES_CUSTOM_DESC" cols="48" rows="2"/>
 
         <field name="episodesubtitle" type="list" default="0"
                label="JBS_PDC_EPISODE_SUBTITLE">
@@ -102,8 +102,8 @@
             <option value="2">JBS_PDC_LINK_MEDIA_PLAYER</option>
         </field>
 
-        <field name="customsubtitle" type="textarea" label="JBS_CMN_CUSTOM"
-               description="JBS_PDC_EPISODES_CUSTOM_DESC" size="20" cols="48" rows="2"/>
+        <field name="customsubtitle" type="Custom" codeset="podcast" input="textarea"
+               label="JBS_CMN_CUSTOM" description="JBS_PDC_EPISODES_CUSTOM_DESC" cols="48" rows="2"/>
 
         <field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
                translate_label="true" filter="rules" component="com_proclaim"

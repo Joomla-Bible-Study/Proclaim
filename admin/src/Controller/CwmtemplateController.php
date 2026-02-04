@@ -198,6 +198,101 @@ class CwmtemplateController extends FormController
     }
 
     /**
+     * AJAX handler to load the Layout Editor tab content
+     * This enables lazy-loading of the Layout Editor for faster initial page load
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
+    public function loadLayoutEditor(): void
+    {
+        $app   = Factory::getApplication();
+        $input = $app->input;
+        $id    = $input->getInt('id', 0);
+
+        try {
+            /** @var \CWM\Component\Proclaim\Administrator\Model\CwmtemplateModel $model */
+            $model = $this->getModel('Cwmtemplate');
+
+            // Load the form
+            $form = $model->getForm([], true);
+
+            if (!$form) {
+                echo '<div class="alert alert-danger">Could not load form</div>';
+                $app->close();
+
+                return;
+            }
+
+            // Load the item data
+            $item = $model->getItem($id);
+
+            if ($item && $id > 0) {
+                $form->bind($item);
+            }
+
+            // Create a simple object to act as view context for edit_layout.php
+            $viewContext       = new \stdClass();
+            $viewContext->form = $form;
+            $viewContext->item = $item ?: (object) ['id' => 0, 'params' => '{}'];
+
+            // Capture output from edit_layout.php
+            ob_start();
+
+            // Make $this available in the included file by using extract
+            // edit_layout.php expects: $this->form, $this->item, $this->getDocument()
+            $layoutFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/tmpl/cwmtemplate/edit_layout.php';
+
+            if (file_exists($layoutFile)) {
+                // Create a closure to provide the expected context
+                $renderLayout = function ($filePath, $form, $item) use ($app) {
+                    // Provide the variables that edit_layout.php expects
+                    $this->form = $form;
+                    $this->item = $item;
+
+                    include $filePath;
+                };
+
+                // Bind to an anonymous class that provides getDocument()
+                $context = new class ($app, $form, $item) {
+                    public $form;
+                    public $item;
+                    private $app;
+
+                    public function __construct($app, $form, $item)
+                    {
+                        $this->app  = $app;
+                        $this->form = $form;
+                        $this->item = $item;
+                    }
+
+                    public function getDocument()
+                    {
+                        return $this->app->getDocument();
+                    }
+                };
+
+                // Include the layout file with proper context
+                (function ($filePath) {
+                    include $filePath;
+                })->call($context, $layoutFile);
+            } else {
+                echo '<div class="alert alert-danger">Layout file not found</div>';
+            }
+
+            $html = ob_get_clean();
+
+            // Output the HTML
+            echo $html;
+        } catch (\Exception $e) {
+            echo '<div class="alert alert-danger">' . htmlspecialchars($e->getMessage()) . '</div>';
+        }
+
+        $app->close();
+    }
+
+    /**
      * Method to run batch operations.
      *
      * @param   CwmtemplateModel  $model  The model.

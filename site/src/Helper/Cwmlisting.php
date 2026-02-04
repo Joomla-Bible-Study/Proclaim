@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Application\CMSApplicationInterface;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
@@ -1276,7 +1277,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_CMN_STUDY_DATE');
                 } else {
-                    isset($item->studydate) ? $data = $this->getStudyDate($params, $item->studydate) : $data;
+                    isset($item->studydate) ? $data = $this->getStudyDate($params, $item->studydate, $row) : $data;
                 }
                 break;
             case $extra . 'teacher':
@@ -1972,20 +1973,27 @@ class Cwmlisting
     /**
      * Get StudyDate
      *
-     * @param   Registry  $params     Item Params
-     * @param   string    $studydate  Study Date
+     * @param   Registry     $params     Item Params
+     * @param   string       $studydate  Study Date
+     * @param   object|null  $row        Element row settings (optional, for element-specific date format)
      *
      * @return string
      *
      * @since 7.0
      */
-    public function getStudyDate(Registry $params, string $studydate): string
+    public function getStudyDate(Registry $params, string $studydate, ?object $row = null): string
     {
         $customDate = $params->get('custom_date_format');
 
+        // Check for element-specific date format (empty string means use global)
+        $dateFormat = $params->get('date_format');
+        if ($row !== null && isset($row->date_format) && $row->date_format !== '') {
+            $dateFormat = $row->date_format;
+        }
+
         if (empty($customDate)) {
             try {
-                switch ($params->get('date_format')) {
+                switch ($dateFormat) {
                     case 0:
                         $date = HTMLHelper::_('date', $studydate, "M j, Y", null);
                         break;
@@ -2141,13 +2149,21 @@ class Cwmlisting
                 break;
 
             case 7:
-                // Case 7 is for Virtuemart
-                $column .= '<a href="' . $this->getOtherlinks($id3, $islink, $params) . '">';
+                // Case 7 is for Virtuemart - only if integration is enabled
+                $componentParams = ComponentHelper::getParams('com_proclaim');
+                if ((int) $componentParams->get('enable_virtuemart', 0)) {
+                    $column .= '<a href="' . $this->getOtherlinks($id3, $islink, $params) . '">';
+                }
+                // If integration disabled, no link is created (fallback to plain text)
                 break;
 
             case 8:
-                // Case 8 is for Docman
-                $column .= '<a href="' . $this->getOtherlinks($id3, $islink, $params) . '">';
+                // Case 8 is for Docman - only if integration is enabled
+                $componentParams = ComponentHelper::getParams('com_proclaim');
+                if ((int) $componentParams->get('enable_docman', 0)) {
+                    $column .= '<a href="' . $this->getOtherlinks($id3, $islink, $params) . '">';
+                }
+                // If integration disabled, no link is created (fallback to plain text)
                 break;
 
             case 9:
@@ -2206,14 +2222,18 @@ class Cwmlisting
                         break;
 
                     case 7:
-                        if ($media->virtueMart_id > 0) {
+                        // VirtueMart - only if integration is enabled
+                        $componentParams = ComponentHelper::getParams('com_proclaim');
+                        if ((int) $componentParams->get('enable_virtuemart', 0) && $media->virtueMart_id > 0) {
                             $link = 'index.php?option=com_virtuemart&page=shop.product_details&flypage='
                                 . $params->get('store_page', 'flypage.tpl') . '&product_id=' . $media->virtueMart_id;
                         }
                         break;
 
                     case 8:
-                        if ($media->docMan_id > 0) {
+                        // DOCman - only if integration is enabled
+                        $componentParams = ComponentHelper::getParams('com_proclaim');
+                        if ((int) $componentParams->get('enable_docman', 0) && $media->docMan_id > 0) {
                             $link = 'index.php?option=com_docman&task=doc_download&gid=' . $media->docMan_id;
                         }
                         break;

@@ -66,6 +66,28 @@ class CwmtemplatemigrationHelper
     ];
 
     /**
+     * Array of parameter renames keyed by version.
+     * Each rename defines old_name => new_name mappings.
+     *
+     * Format:
+     * [
+     *     '10.2.1' => [
+     *         'old_param_name' => 'new_param_name',
+     *     ],
+     * ]
+     *
+     * @var array
+     * @since 10.2.1
+     */
+    protected array $renames = [
+        '10.2.1' => [
+            // Fix search filter param names to match PHP code expectations
+            'show_type_search'      => 'show_messagetype_search',
+            'show_locations_search' => 'show_location_search',
+        ],
+    ];
+
+    /**
      * Constructor
      *
      * @since 10.2.0
@@ -88,10 +110,26 @@ class CwmtemplatemigrationHelper
     {
         $updatedCount = 0;
 
+        // First, run any parameter renames
+        $renamesToRun = $this->getRenamesAfterVersion($fromVersion);
+
+        if (!empty($renamesToRun)) {
+            $paramsToRename = [];
+
+            foreach ($renamesToRun as $version => $renames) {
+                foreach ($renames as $oldName => $newName) {
+                    $paramsToRename[$oldName] = $newName;
+                }
+                Log::add('Including template param renames for version ' . $version, Log::INFO, 'com_proclaim');
+            }
+
+            $updatedCount += $this->renameParamsInTemplates($paramsToRename);
+        }
+
         // Get all migrations that should run (versions greater than fromVersion)
         $migrationsToRun = $this->getMigrationsAfterVersion($fromVersion);
 
-        if (empty($migrationsToRun)) {
+        if (empty($migrationsToRun) && empty($renamesToRun)) {
             Log::add('No template migrations to run from version ' . $fromVersion, Log::INFO, 'com_proclaim');
             return 0;
         }
@@ -107,7 +145,9 @@ class CwmtemplatemigrationHelper
         }
 
         // Apply merged parameters to all templates
-        $updatedCount = $this->applyParamsToTemplates($paramsToAdd);
+        if (!empty($paramsToAdd)) {
+            $updatedCount += $this->applyParamsToTemplates($paramsToAdd);
+        }
 
         Log::add('Template migration complete. Updated ' . $updatedCount . ' templates.', Log::INFO, 'com_proclaim');
 
@@ -166,6 +206,87 @@ class CwmtemplatemigrationHelper
         uksort($result, 'version_compare');
 
         return $result;
+    }
+
+    /**
+     * Get renames that should run for versions after the specified version.
+     *
+     * @param   string  $fromVersion  Version to compare against
+     *
+     * @return  array  Array of renames to run
+     *
+     * @since   10.2.1
+     */
+    protected function getRenamesAfterVersion(string $fromVersion): array
+    {
+        $result = [];
+
+        foreach ($this->renames as $version => $renames) {
+            if (version_compare($version, $fromVersion, '>')) {
+                $result[$version] = $renames;
+            }
+        }
+
+        // Sort by version
+        uksort($result, 'version_compare');
+
+        return $result;
+    }
+
+    /**
+     * Rename parameters in all templates.
+     *
+     * @param   array  $renames  Array of old_name => new_name pairs
+     *
+     * @return  int  Number of templates updated
+     *
+     * @since   10.2.1
+     */
+    protected function renameParamsInTemplates(array $renames): int
+    {
+        $updatedCount = 0;
+
+        // Get all templates
+        $query = $this->db->getQuery(true)
+            ->select(['id', 'params', 'title'])
+            ->from($this->db->quoteName('#__bsms_templates'));
+        $this->db->setQuery($query);
+        $templates = $this->db->loadObjectList();
+
+        foreach ($templates as $template) {
+            $updated  = false;
+            $registry = new Registry();
+
+            if (!empty($template->params)) {
+                $registry->loadString($template->params);
+            }
+
+            // Rename each parameter if old name exists
+            foreach ($renames as $oldName => $newName) {
+                $oldValue = $registry->get($oldName);
+
+                if ($oldValue !== null) {
+                    // Copy value to new name
+                    $registry->set($newName, $oldValue);
+                    // Remove old name
+                    $registry->remove($oldName);
+                    $updated = true;
+                    Log::add(
+                        'Renamed parameter "' . $oldName . '" to "' . $newName . '" in template "' . $template->title . '"',
+                        Log::INFO,
+                        'com_proclaim'
+                    );
+                }
+            }
+
+            // Save if any parameters were renamed
+            if ($updated) {
+                $this->updateTemplateParams($template->id, $registry->toString());
+                $updatedCount++;
+            }
+        }
+
+        return $updatedCount;
     }
 
     /**

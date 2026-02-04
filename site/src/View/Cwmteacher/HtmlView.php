@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Site\View\Cwmteacher;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
@@ -64,11 +63,11 @@ class HtmlView extends BaseHtmlView
      */
     protected ?Registry $params = null;
 
-    /** @var  CwmtemplateTable|null Template Info
+    /** @var  object|null Template Info
      *
      * @since 7.0
      */
-    protected ?CwmtemplateTable $template = null;
+    protected ?object $template = null;
 
     /** @var  array|null Template Studies
      *

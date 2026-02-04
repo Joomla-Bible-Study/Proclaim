@@ -147,7 +147,8 @@ class CwmseriesdisplayModel extends ItemModel
             $db->quoteName('teacher.teachername', 'teachername') . ', ' .
             $db->quoteName('teacher.title', 'teachertitle') . ', ' .
             $db->quoteName('teacher.teacher_thumbnail', 'thumb') . ', ' .
-            $db->quoteName(['teacher.thumbh', 'teacher.thumbw'])
+            $db->quoteName('teacher.thumbh') . ', ' .
+            $db->quoteName('teacher.thumbw')
         );
         $query->join('LEFT', $db->quoteName('#__bsms_teachers', 'teacher') . ' ON teacher.id = study.teacher_id');
 
