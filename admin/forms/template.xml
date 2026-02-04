@@ -374,13 +374,19 @@
                    label="JBS_TPL_SUBSCRIBE_INTRO" description="JBS_TPL_SUBSCRIBE_INTRO_DESC"/>
             <field name="details_text" type="text" default="Study Details"
                    size="50" label="JBS_TPL_LISTITEMS_DETAILS_TEXT" description="JBS_TPL_LISTITEMS_DETAILS_TEXT_DESC"/>
+            <field name="show_pagination" type="list" default="1"
+                   label="JBS_TPL_LISTITEMS_SHOW_PAGINATION" description="JBS_TPL_LISTITEMS_SHOW_PAGINATION_DESC">
+                <option value="1">JBS_TPL_LISTITEMS_SHOW_TOP</option>
+                <option value="2">JBS_TPL_LISTITEMS_SHOW_BOTTOM</option>
+            </field>
+        </fieldset>
+        <fieldset name="SEARCHFILTERS" label="JBS_TPL_SEARCH_FILTERS" layoutContext="messages">
             <field name="show_book_search" type="radio" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_BOOK_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_BOOK_SEARCH_DESC"
                    layout="joomla.form.field.radio.switcher">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_TPL_SHOW_ALWAYS</option>
             </field>
-
             <field name="booklist" type="radio" default="0"
                    label="JBS_TPL_LISTITEMS_BOOKLIST" description="JBS_TPL_LISTITEMS_BOOKLIST_DESC"
                    layout="joomla.form.field.radio.switcher">
@@ -394,50 +400,30 @@
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_TPL_SHOW_ALWAYS</option>
             </field>
-
-            <field name="show_fullordering_search" type="radio" default="1"
-                   label="JBS_TPL_LISTITEMS_SHOW_SORTBY_SEARCH"
-                   description="JBS_TPL_LISTITEMS_SHOW_SORTBY_SEARCH_DESC"
-                   layout="joomla.form.field.radio.switcher">
-                <option value="0">JBS_CMN_HIDE</option>
-                <option value="1">JBS_TPL_SHOW_ALWAYS</option>
-            </field>
-
             <field name="show_series_search" type="radio" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_SERIES_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_SERIES_SEARCH_DESC"
                    layout="joomla.form.field.radio.switcher">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_TPL_SHOW_ALWAYS</option>
             </field>
-
             <field name="show_messagetype_search" type="radio" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_TYPE_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_TYPE_SEARCH_DESC"
                    layout="joomla.form.field.radio.switcher">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_TPL_SHOW_ALWAYS</option>
             </field>
-
             <field name="show_year_search" type="radio" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_YEAR_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_YEAR_SEARCH_DESC"
                    layout="joomla.form.field.radio.switcher">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
-
-            <field name="show_order_search" type="radio" default="1"
-                   label="JBS_TPL_LISTITEMS_SHOW_ORDER_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_ORDER_SEARCH_DESC"
-                   layout="joomla.form.field.radio.switcher">
-                <option value="0">JBS_CMN_HIDE</option>
-                <option value="1">JBS_CMN_SHOW</option>
-            </field>
-
             <field name="show_topic_search" type="radio" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_TOPIC_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_TOPIC_SEARCH_DESC"
                    layout="joomla.form.field.radio.switcher">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_TPL_SHOW_ALWAYS</option>
             </field>
-
             <field name="show_location_search" type="radio" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_LOCATIONS_SEARCH"
                    description="JBS_TPL_LISTITEMS_SHOW_LOCATIONS_SEARCH_DESC"
@@ -445,7 +431,13 @@
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_TPL_SHOW_ALWAYS</option>
             </field>
-
+            <field name="show_fullordering_search" type="radio" default="1"
+                   label="JBS_TPL_LISTITEMS_SHOW_SORTBY_SEARCH"
+                   description="JBS_TPL_LISTITEMS_SHOW_SORTBY_SEARCH_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="0">JBS_CMN_HIDE</option>
+                <option value="1">JBS_TPL_SHOW_ALWAYS</option>
+            </field>
             <field name="show_limit_search" type="radio" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_LIMIT_SEARCH"
                    description="JBS_TPL_LISTITEMS_SHOW_LIMIT_SEARCH_DESC"
@@ -453,18 +445,11 @@
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_TPL_SHOW_ALWAYS</option>
             </field>
-
             <field name="listlanguage" type="radio" label="JBS_CMN_USE_LANGUAGE_LIST"
                    description="JBS_CMN_USE_LANGUAGE_LIST_DESC"
                    layout="joomla.form.field.radio.switcher">
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
-            </field>
-
-            <field name="show_pagination" type="list" default="1"
-                   label="JBS_TPL_LISTITEMS_SHOW_PAGINATION" description="JBS_TPL_LISTITEMS_SHOW_PAGINATION_DESC">
-                <option value="1">JBS_TPL_LISTITEMS_SHOW_TOP</option>
-                <option value="2">JBS_TPL_LISTITEMS_SHOW_BOTTOM</option>
             </field>
         </fieldset>
         <fieldset name="DISPLAYELEMENTS1" label="JBS_TPL_MESSAGES_LIST"
