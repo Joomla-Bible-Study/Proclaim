@@ -16,19 +16,17 @@
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmmediafile\HtmlView $this */
 
 ?>
-<div class="row-fluid">
-    <div class="control-group">
-        <div class="controls">
-            <input name="size_converter" type=text ID="Text1" onChange="decOnly(this);" size=5>
-        </div>
+<div class="row g-3">
+    <div class="col-auto">
+        <label for="Text1" class="visually-hidden">Size</label>
+        <input type="text" class="form-control" name="size_converter" id="Text1" onchange="decOnly(this);" size="5" placeholder="Size">
     </div>
-    <div class="control-group">
-        <div class="controls">
-            <select name="sel" ID="Select1">
-                <option value="KB">KB</option>
-                <option value="MB" selected>MB</option>
-                <option value="GB">GB</option>
-            </select>
-        </div>
+    <div class="col-auto">
+        <label for="Select1" class="visually-hidden">Unit</label>
+        <select class="form-select" name="sel" id="Select1">
+            <option value="KB">KB</option>
+            <option value="MB" selected>MB</option>
+            <option value="GB">GB</option>
+        </select>
     </div>
 </div>

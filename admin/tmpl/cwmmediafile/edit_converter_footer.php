@@ -18,13 +18,10 @@ use Joomla\CMS\Language\Text;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmmediafile\HtmlView $this */
 
-$published = $this->state->get('filter.published');
 ?>
-<a class="btn" type="button" data-dismiss="modal">
-    <?php
-    echo Text::_('JCANCEL'); ?>
-</a>
-<button class="btn btn-success" type="button" onclick="transferFileSize()" data-dismiss="modal">
-    <?php
-    echo Text::_('JBS_MED_CONVERTER'); ?>
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+    <?php echo Text::_('JCANCEL'); ?>
+</button>
+<button type="button" class="btn btn-success" onclick="transferFileSize()" data-bs-dismiss="modal">
+    <?php echo Text::_('JBS_MED_CONVERTER'); ?>
 </button>
