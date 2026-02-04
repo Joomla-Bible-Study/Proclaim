@@ -156,13 +156,12 @@
                     return phpOptions;
                 }
             }
-            // Fallback (English only) - full options
+            // Fallback (English only) - core options (VirtueMart/DOCman require PHP config)
             return [
                 { value: '0', label: 'No Link' }, { value: '1', label: 'Link to Details' },
                 { value: '4', label: 'Link to Details (Tooltip)' }, { value: '2', label: 'Link to Media' },
                 { value: '9', label: 'Link to Download' }, { value: '5', label: 'Link to Media (Tooltip)' },
-                { value: '3', label: "Link to Teacher's Profile" }, { value: '6', label: 'Link to First Article' },
-                { value: '7', label: 'Link to VirtueMart' }, { value: '8', label: 'Link to DocMan' }
+                { value: '3', label: "Link to Teacher's Profile" }, { value: '6', label: 'Link to First Article' }
             ];
         };
 

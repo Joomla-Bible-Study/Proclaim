@@ -94,6 +94,11 @@ $document->addScriptOptions('com_proclaim.dateFormatOptions', $dateFormatOptions
 
 // Link type options (pre-translated) - different options for different contexts
 // Full options for Messages List and Study Details
+// VirtueMart and DOCman options only shown if enabled in component settings
+$componentParams = \Joomla\CMS\Component\ComponentHelper::getParams('com_proclaim');
+$enableVirtuemart = (int) $componentParams->get('enable_virtuemart', 0);
+$enableDocman     = (int) $componentParams->get('enable_docman', 0);
+
 $linkTypeOptions = [
     ['value' => '0', 'label' => Text::_('JBS_TPL_NO_LINK')],
     ['value' => '1', 'label' => Text::_('JBS_TPL_LINK_TO_DETAILS')],
@@ -103,9 +108,18 @@ $linkTypeOptions = [
     ['value' => '5', 'label' => Text::_('JBS_TPL_LINK_TO_MEDIA_TOOLTIP')],
     ['value' => '3', 'label' => Text::_('JBS_TPL_LINK_TO_TEACHERS_PROFILE')],
     ['value' => '6', 'label' => Text::_('JBS_TPL_LINK_TO_FIRST_ARTICLE')],
-    ['value' => '7', 'label' => Text::_('JBS_TPL_LINK_TO_VIRTUEMART')],
-    ['value' => '8', 'label' => Text::_('JBS_TPL_LINK_TO_DOCMAN')],
 ];
+
+// Add VirtueMart option only if enabled
+if ($enableVirtuemart) {
+    $linkTypeOptions[] = ['value' => '7', 'label' => Text::_('JBS_TPL_LINK_TO_VIRTUEMART')];
+}
+
+// Add DOCman option only if enabled
+if ($enableDocman) {
+    $linkTypeOptions[] = ['value' => '8', 'label' => Text::_('JBS_TPL_LINK_TO_DOCMAN')];
+}
+
 $document->addScriptOptions('com_proclaim.linkTypeOptions', $linkTypeOptions);
 
 // Teacher-specific link options (for Teachers List and Teacher Details)
