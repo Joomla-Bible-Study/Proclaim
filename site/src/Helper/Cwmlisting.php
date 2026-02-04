@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Application\CMSApplicationInterface;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
@@ -2148,13 +2149,21 @@ class Cwmlisting
                 break;
 
             case 7:
-                // Case 7 is for Virtuemart
-                $column .= '<a href="' . $this->getOtherlinks($id3, $islink, $params) . '">';
+                // Case 7 is for Virtuemart - only if integration is enabled
+                $componentParams = ComponentHelper::getParams('com_proclaim');
+                if ((int) $componentParams->get('enable_virtuemart', 0)) {
+                    $column .= '<a href="' . $this->getOtherlinks($id3, $islink, $params) . '">';
+                }
+                // If integration disabled, no link is created (fallback to plain text)
                 break;
 
             case 8:
-                // Case 8 is for Docman
-                $column .= '<a href="' . $this->getOtherlinks($id3, $islink, $params) . '">';
+                // Case 8 is for Docman - only if integration is enabled
+                $componentParams = ComponentHelper::getParams('com_proclaim');
+                if ((int) $componentParams->get('enable_docman', 0)) {
+                    $column .= '<a href="' . $this->getOtherlinks($id3, $islink, $params) . '">';
+                }
+                // If integration disabled, no link is created (fallback to plain text)
                 break;
 
             case 9:
@@ -2213,14 +2222,18 @@ class Cwmlisting
                         break;
 
                     case 7:
-                        if ($media->virtueMart_id > 0) {
+                        // VirtueMart - only if integration is enabled
+                        $componentParams = ComponentHelper::getParams('com_proclaim');
+                        if ((int) $componentParams->get('enable_virtuemart', 0) && $media->virtueMart_id > 0) {
                             $link = 'index.php?option=com_virtuemart&page=shop.product_details&flypage='
                                 . $params->get('store_page', 'flypage.tpl') . '&product_id=' . $media->virtueMart_id;
                         }
                         break;
 
                     case 8:
-                        if ($media->docMan_id > 0) {
+                        // DOCman - only if integration is enabled
+                        $componentParams = ComponentHelper::getParams('com_proclaim');
+                        if ((int) $componentParams->get('enable_docman', 0) && $media->docMan_id > 0) {
                             $link = 'index.php?option=com_docman&task=doc_download&gid=' . $media->docMan_id;
                         }
                         break;
