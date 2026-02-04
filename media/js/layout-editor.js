@@ -472,8 +472,11 @@
             `;
 
                     // Append modal to the main form so fields are submitted with form
-                    // Falls back to body if form not found
-                    const mainForm = document.getElementById('adminForm') || document.body;
+                    // Joomla 5 uses id="item-form" name="adminForm", older versions use id="adminForm"
+                    const mainForm = document.getElementById('item-form')
+                        || document.getElementById('adminForm')
+                        || document.querySelector('form[name="adminForm"]')
+                        || document.body;
                     mainForm.appendChild(modal);
                     this.viewSettingsModal = modal;
                     this.viewSettingsAccordion = modal.querySelector('#viewSettingsAccordion');
@@ -1037,7 +1040,11 @@
             `;
 
                     // Append modal to the main form so fields are submitted with form
-                    const mainForm = document.getElementById('adminForm') || document.body;
+                    // Joomla 5 uses id="item-form" name="adminForm", older versions use id="adminForm"
+                    const mainForm = document.getElementById('item-form')
+                        || document.getElementById('adminForm')
+                        || document.querySelector('form[name="adminForm"]')
+                        || document.body;
                     mainForm.appendChild(modal);
                     this.sectionSettingsModal = modal;
                     this.sectionSettingsContent = modal.querySelector('#sectionSettingsContent');
