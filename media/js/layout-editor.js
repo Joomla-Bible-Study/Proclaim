@@ -120,17 +120,45 @@
             };
 
             /**
-             * Get link type options from PHP or use fallback
-             * @returns {Array} Link type options
+             * Get link type options from PHP based on context
+             * @param {string} context - Current context (messages, details, teachers, teacherDetails, series, seriesDetails)
+             * @returns {Array} Link type options appropriate for the context
              */
-            const getLinkTypeOptions = () => {
+            const getLinkTypeOptions = (context) => {
                 if (window.Joomla && typeof Joomla.getOptions === 'function') {
+                    // Teachers List and Teacher Details use limited options
+                    if (context === 'teachers' || context === 'teacherDetails') {
+                        const teacherOptions = Joomla.getOptions('com_proclaim.teacherLinkTypeOptions');
+                        if (teacherOptions && Array.isArray(teacherOptions)) {
+                            return teacherOptions;
+                        }
+                        // Fallback for teachers
+                        return [
+                            { value: '0', label: 'No Link' },
+                            { value: '3', label: "Link to Teacher's Profile" }
+                        ];
+                    }
+
+                    // Series List and Series Details use limited options
+                    if (context === 'series' || context === 'seriesDetails') {
+                        const seriesOptions = Joomla.getOptions('com_proclaim.seriesLinkTypeOptions');
+                        if (seriesOptions && Array.isArray(seriesOptions)) {
+                            return seriesOptions;
+                        }
+                        // Fallback for series
+                        return [
+                            { value: '0', label: 'No Link' },
+                            { value: '1', label: 'Link to Details' }
+                        ];
+                    }
+
+                    // Messages List and Study Details use full options
                     const phpOptions = Joomla.getOptions('com_proclaim.linkTypeOptions');
                     if (phpOptions && Array.isArray(phpOptions)) {
                         return phpOptions;
                     }
                 }
-                // Fallback (English only)
+                // Fallback (English only) - full options
                 return [
                     { value: '0', label: 'No Link' }, { value: '1', label: 'Link to Details' },
                     { value: '4', label: 'Link to Details (Tooltip)' }, { value: '2', label: 'Link to Media' },
@@ -2171,6 +2199,14 @@
                     const customClassEl = document.getElementById('layout-custom-class');
                     const dateFormatEl = document.getElementById('layout-date-format');
                     const dateFormatGroup = document.getElementById('layout-date-format-group');
+
+                    // Rebuild link type options based on current context
+                    if (linkTypeEl) {
+                        const contextLinkOptions = getLinkTypeOptions(this.currentContext);
+                        linkTypeEl.innerHTML = contextLinkOptions.map(opt =>
+                            `<option value="${opt.value}">${opt.label}</option>`
+                        ).join('');
+                    }
 
                     if (colspanEl) { colspanEl.value = String(data.colspan) || '1'; }
                     if (elementTypeEl) { elementTypeEl.value = String(data.element) || '1'; }

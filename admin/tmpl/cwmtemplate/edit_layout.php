@@ -89,7 +89,8 @@ $dateFormatOptions = [
 ];
 $document->addScriptOptions('com_proclaim.dateFormatOptions', $dateFormatOptions);
 
-// Link type options (pre-translated)
+// Link type options (pre-translated) - different options for different contexts
+// Full options for Messages List and Study Details
 $linkTypeOptions = [
     ['value' => '0', 'label' => Text::_('JBS_TPL_NO_LINK')],
     ['value' => '1', 'label' => Text::_('JBS_TPL_LINK_TO_DETAILS')],
@@ -103,6 +104,20 @@ $linkTypeOptions = [
     ['value' => '8', 'label' => Text::_('JBS_TPL_LINK_TO_DOCMAN')],
 ];
 $document->addScriptOptions('com_proclaim.linkTypeOptions', $linkTypeOptions);
+
+// Teacher-specific link options (for Teachers List and Teacher Details)
+$teacherLinkTypeOptions = [
+    ['value' => '0', 'label' => Text::_('JBS_TPL_NO_LINK')],
+    ['value' => '3', 'label' => Text::_('JBS_TPL_LINK_TO_TEACHERS_PROFILE')],
+];
+$document->addScriptOptions('com_proclaim.teacherLinkTypeOptions', $teacherLinkTypeOptions);
+
+// Series-specific link options (for Series List and Series Details)
+$seriesLinkTypeOptions = [
+    ['value' => '0', 'label' => Text::_('JBS_TPL_NO_LINK')],
+    ['value' => '1', 'label' => Text::_('JBS_TPL_LINK_TO_DETAILS')],
+];
+$document->addScriptOptions('com_proclaim.seriesLinkTypeOptions', $seriesLinkTypeOptions);
 
 // Element type options (HTML wrapper elements, pre-translated)
 $elementTypeOptions = [
