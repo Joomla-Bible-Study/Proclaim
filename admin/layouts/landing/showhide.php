@@ -34,7 +34,7 @@ $hideMode = (int) $params->get('landing_hide', 0);
             <i class="fas fa-arrow-down" title="x"></i>
         </a>
 
-    <?php // Case 1: Image and Label?>
+        <?php // Case 1: Image and Label?>
     <?php elseif ($hideMode === 1) : ?>
         <a class="showhideheadingbutton" href="<?php echo $link; ?>">
             <i class="fas fa-arrow-down" title="x"></i>
@@ -43,7 +43,7 @@ $hideMode = (int) $params->get('landing_hide', 0);
             <span id="landing_label"><?php echo $params->get('landing_hidelabel'); ?></span>
         </a>
 
-    <?php // Case 2: Label only?>
+        <?php // Case 2: Label only?>
     <?php elseif ($hideMode === 2) : ?>
         <a class="showhideheadinglabel" href="<?php echo $link; ?>">
             <span id="landing_label"><?php echo $params->get('landing_hidelabel'); ?></span>

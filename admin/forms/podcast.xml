@@ -16,8 +16,9 @@
         <field name="title" type="text" label="JBS_PDC_PODCAST_NAME"
                description="JBS_PDC_PODCAST_NAME_DESC" size="65" required="true"/>
 
-        <field name="description" type="textarea" label="JBS_PDC_PODCAST_DESCRIPTION"
-               size="20" cols="60" rows="5"/>
+        <field name="description" type="editor" label="JBS_PDC_PODCAST_DESCRIPTION"
+               description="JBS_PDC_PODCAST_DESCRIPTION_DESC" height="200"
+               buttons="true" filter="safehtml"/>
 
         <field name="subtitle" type="textarea" label="JBS_PDC_PODCAST_SUBTITLE"
                description="JBS_PDC_PODCAST_SUBTITLE_DESC"
