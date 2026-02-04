@@ -134,6 +134,5 @@ $wa->useScript('keepalive')
 
     <input type="hidden" name="task" value=""/>
     <input type="hidden" name="return" value="<?php echo $input->getBase64('return'); ?>"/>
-    <?php echo $this->form->getInput('id'); ?>
     <?php echo HTMLHelper::_('form.token'); ?>
 </form>
