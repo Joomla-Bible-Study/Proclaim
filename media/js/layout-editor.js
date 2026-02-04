@@ -256,6 +256,7 @@
                     this.viewSettingsLoaded = new Set();
                     this.isDirty = false;
                     this.beforeUnloadHandler = null;
+                    this.originalModalValues = null; // Stores values when modal opens for change detection
 
                     // Language strings helper
                     this.trans = (key) => {
@@ -2363,6 +2364,15 @@
                     if (customClassEl) { customClassEl.value = data.custom || ''; }
                     if (dateFormatEl) { dateFormatEl.value = data.date_format || ''; }
 
+                    // Store original values for change detection when modal closes
+                    this.originalModalValues = {
+                        colspan: colspanEl ? colspanEl.value : '',
+                        element: elementTypeEl ? elementTypeEl.value : '',
+                        linktype: linkTypeEl ? linkTypeEl.value : '',
+                        custom: customClassEl ? customClassEl.value : '',
+                        date_format: dateFormatEl ? dateFormatEl.value : ''
+                    };
+
                     // Show date format field only for date-related elements
                     const isDateElement = elementId.toLowerCase().includes('date') ||
                         elementId.toLowerCase().includes('studydate');
@@ -2485,6 +2495,17 @@
                  * Close settings modal without saving (for close button)
                  */
                 closeSettingsModal() {
+                    // Check if any values have changed
+                    if (this.originalModalValues && this.hasModalChanges()) {
+                        const message = this.trans('JBS_TPL_MODAL_UNSAVED_CHANGES') || 'You have unsaved changes in this dialog. Discard changes?';
+                        if (!window.confirm(message)) {
+                            return; // User cancelled, keep modal open
+                        }
+                    }
+
+                    // Clear original values
+                    this.originalModalValues = null;
+
                     // Close modal - global event listeners in bindEvents() handle focus and inert
                     const modalInstance = this.getModalInstance();
                     if (modalInstance) {
@@ -2516,6 +2537,37 @@
 
                         this.currentSettingsElement = null;
                     }
+                }
+
+                /**
+                 * Check if modal field values have changed from original
+                 * @returns {boolean}
+                 */
+                hasModalChanges() {
+                    if (!this.originalModalValues) {
+                        return false;
+                    }
+
+                    const colspanEl = document.getElementById('layout-colspan');
+                    const elementTypeEl = document.getElementById('layout-element-type');
+                    const linkTypeEl = document.getElementById('layout-link-type');
+                    const customClassEl = document.getElementById('layout-custom-class');
+                    const dateFormatEl = document.getElementById('layout-date-format');
+
+                    const current = {
+                        colspan: colspanEl ? colspanEl.value : '',
+                        element: elementTypeEl ? elementTypeEl.value : '',
+                        linktype: linkTypeEl ? linkTypeEl.value : '',
+                        custom: customClassEl ? customClassEl.value : '',
+                        date_format: dateFormatEl ? dateFormatEl.value : ''
+                    };
+
+                    // Compare each field
+                    return current.colspan !== this.originalModalValues.colspan ||
+                        current.element !== this.originalModalValues.element ||
+                        current.linktype !== this.originalModalValues.linktype ||
+                        current.custom !== this.originalModalValues.custom ||
+                        current.date_format !== this.originalModalValues.date_format;
                 }
 
                 /**
