@@ -1276,7 +1276,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_CMN_STUDY_DATE');
                 } else {
-                    isset($item->studydate) ? $data = $this->getStudyDate($params, $item->studydate) : $data;
+                    isset($item->studydate) ? $data = $this->getStudyDate($params, $item->studydate, $row) : $data;
                 }
                 break;
             case $extra . 'teacher':
@@ -1972,20 +1972,27 @@ class Cwmlisting
     /**
      * Get StudyDate
      *
-     * @param   Registry  $params     Item Params
-     * @param   string    $studydate  Study Date
+     * @param   Registry     $params     Item Params
+     * @param   string       $studydate  Study Date
+     * @param   object|null  $row        Element row settings (optional, for element-specific date format)
      *
      * @return string
      *
      * @since 7.0
      */
-    public function getStudyDate(Registry $params, string $studydate): string
+    public function getStudyDate(Registry $params, string $studydate, ?object $row = null): string
     {
         $customDate = $params->get('custom_date_format');
 
+        // Check for element-specific date format (empty string means use global)
+        $dateFormat = $params->get('date_format');
+        if ($row !== null && isset($row->date_format) && $row->date_format !== '') {
+            $dateFormat = $row->date_format;
+        }
+
         if (empty($customDate)) {
             try {
-                switch ($params->get('date_format')) {
+                switch ($dateFormat) {
                     case 0:
                         $date = HTMLHelper::_('date', $studydate, "M j, Y", null);
                         break;

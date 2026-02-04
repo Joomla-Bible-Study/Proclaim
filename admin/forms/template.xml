@@ -1,4 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Template Form Definition for Proclaim Layout Editor
+    ====================================================
+
+    CUSTOM FIELDSET ATTRIBUTES FOR LAYOUT EDITOR:
+
+    1. label="JBS_*" - Translated label shown in the Layout Editor UI
+       Used for: context tab names, settings panel headers
+
+    2. layoutContext="contextId" - Links fieldset to a Layout Editor context
+       Values: messages, details, teachers, teacherDetails, series, seriesDetails, landingPage
+       Multiple contexts: Use comma-separated values (e.g., "teachers,teacherDetails")
+       Purpose: Fieldsets with this attribute appear in "View Settings" panel for that context
+
+    3. landingSection="sectionId" - Links fieldset to a Landing Page section
+       Values: teachers, series, books, topics, locations, messagetypes, years
+       Purpose: Fieldsets with this attribute provide settings for the gear button on each section card
+
+    ELEMENT FIELDSETS (provide drag-and-drop elements):
+    - DISPLAYELEMENTS1-6: Messages List elements (prefix: none)
+    - DDISPLAYELEMENTS1-6: Study Details elements (prefix: d)
+    - TEACHERDISPLAY: Teachers List elements (prefix: ts)
+    - TEACHERDETAILSDISPLAY: Teacher Details elements (prefix: td)
+    - SERIESDISPLAY: Series List elements (prefix: s)
+    - SERIESDETAILDISPLAY: Series Details elements (prefix: sd)
+
+    ADDING NEW ELEMENTS:
+    1. Add field group to appropriate DISPLAY fieldset (e.g., DISPLAYELEMENTS1)
+    2. Use naming pattern: {prefix}{elementId}row, {prefix}{elementId}col, etc.
+    3. The "row" field's label attribute becomes the element's display name
+
+    ADDING NEW SETTINGS FIELDSET:
+    1. Create fieldset with name, label, and layoutContext attributes
+    2. The fieldset will automatically appear in View Settings for that context
+-->
 <form addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
     <fieldset name="GENERAL">
         <field name="published"
@@ -105,7 +140,8 @@
                 <option value="1">JYES</option>
             </field>
         </fieldset>
-        <fieldset name="FILTERS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+        <fieldset name="FILTERS" label="JBS_TPL_FILTERS" layoutContext="messages"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="lteacher_id" type="TeacherList" default="-1" multiple="true"
                    size="10" label="JBS_CMN_FILTERS_TEACHER" description="JBS_CMN_FILTERS_DESC">
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
@@ -135,7 +171,7 @@
                 <option value="-1">JBS_CMN_SHOW_ALL</option>
             </field>
         </fieldset>
-        <fieldset name="VERSES">
+        <fieldset name="VERSES" label="JBS_TPL_VERSES_DATES_CSS" layoutContext="messages">
             <field name="show_verses" type="list" default="0"
                    label="JBS_TPL_VERSES_SHOW_VERSES" description="JBS_TPL_VERSES_SHOW_VERSES_DESC">
                 <option value="0">JBS_TPL_SHOW_ONLY_CHAPTERS</option>
@@ -266,7 +302,8 @@
                 <option value="1">JBS_CMN_YES</option>
             </field>
         </fieldset>
-        <fieldset name="LISTITEMS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+        <fieldset name="LISTITEMS" label="JBS_TPL_LIST_ITEMS" layoutContext="messages"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="default_order" type="radio" default="DESC"
                    label="JBS_TPL_FILTERS_DEFAULTORDER" description="JBS_TPL_FILTERS_DEFAULTORDER_DESC"
                    layout="joomla.form.field.radio.switcher">
@@ -430,7 +467,8 @@
                 <option value="2">JBS_TPL_LISTITEMS_SHOW_BOTTOM</option>
             </field>
         </fieldset>
-        <fieldset name="DISPLAYELEMENTS1" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+        <fieldset name="DISPLAYELEMENTS1" label="JBS_TPL_MESSAGES_LIST"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="scripture1row" type="RowOptions" default="0" label="JBS_CMN_SCRIPTURE"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="scripture1col" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -615,7 +653,7 @@
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="submittedlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-            <field name="hitsrow" type="RowOptions" size="1" default="0" label="JBS_CMN_HITS"
+            <field name="hitsrow" type="RowOptions" size="1" default="0" label="JBS_STY_HITS"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="hitscol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
                    description="JBS_TPL_COLUMN_DESC"/>
@@ -717,7 +755,8 @@
                    description="JBS_TPL_CUSTOM_TEXT_DESC"/>
 
         </fieldset>
-        <fieldset name="DETAILS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+        <fieldset name="DETAILS" label="JBS_TPL_STUDY_DETAILS_VIEW" layoutContext="details"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="details_show_header" type="list" default="1"
                    label="JBS_TPL_DETAILS_SHOW_HEADER"
                    description="JBS_TPL_DETAILS_SHOW_HEADER_DESC">
@@ -894,7 +933,8 @@
             <field name="body" type="text" default="Comments entered."
                    size="40" label="JBS_TPL_DETAILS_BODY"/>
         </fieldset>
-        <fieldset name="TEACHER" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+        <fieldset name="TEACHER" label="JBS_TPL_TEACHER" layoutContext="teachers"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="teacher_title" type="text" default="Our Teachers"
                    label="JBS_TPL_TEACHER_TEACHER_TITLE" description="JBS_TPL_TEACHER_TEACHER_TITLE_DESC"/>
             <field name="teachers_element" type="ElementOptions" default="1" translate="true" multiple="false"
@@ -906,7 +946,8 @@
                 <option value="1">JBS_TPL_USE_HEADER_ROW</option>
             </field>
         </fieldset>
-        <fieldset name="TEACHERDISPLAY" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+        <fieldset name="TEACHERDISPLAY" label="JBS_TPL_TEACHERS_LIST"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="tsteacherrow" type="RowOptions" size="1" default="1" label="JBS_CMN_TEACHER"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="tsteachercol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -1035,7 +1076,8 @@
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
 
         </fieldset>
-        <fieldset name="TEACHERDETAILS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+        <fieldset name="TEACHERDETAILS" label="JBS_TPL_TEACHERDETAILS" layoutContext="teachers,teacherDetails"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 
             <field name="show_teacher_studies" type="list" default="1"
                    label="JBS_TPL_TEACHER_SHOW_TEACHER_STUDIES" description="JBS_TPL_TEACHER_SHOW_TEACHER_STUDIES_DESC">
@@ -1061,7 +1103,8 @@
             <field name="teacherdisplay_color" type="ColorPicker" default="black"
                    label="JBS_TPL_SERIESDISPLAY_COLOR" description="JBS_TPL_SERIESDISPLAY_COLOR"/>
         </fieldset>
-        <fieldset name="TEACHERDETAILSDISPLAY" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+        <fieldset name="TEACHERDETAILSDISPLAY" label="JBS_TPL_TEACHER_DETAILS"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="tdteacherrow" type="RowOptions" size="1" default="1" label="JBS_CMN_TEACHER"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="tdteachercol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -1246,7 +1289,8 @@
             <field name="tdteacherallinonecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
         </fieldset>
-        <fieldset name="SERIES" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+        <fieldset name="SERIES" label="JBS_TPL_SERIESLIST" layoutContext="series"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 
             <field name="series_title" default="Our Series" type="text"
                    label="JBS_TPL_PAGE_TITLE"/>
@@ -1299,7 +1343,8 @@
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
         </fieldset>
-        <fieldset name="SERIESDISPALY" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+        <fieldset name="SERIESDISPLAY" label="JBS_TPL_SERIES_LIST"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="sseriesrow" type="RowOptions" size="1" default="2" label="JBS_TPL_SERIESTITLE"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="sseriescol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -1384,7 +1429,7 @@
                    description="JBS_TPL_CUSTOM_TEXT_DESC"/>
 
         </fieldset>
-        <fieldset name="SERIESDETAIL"
+        <fieldset name="SERIESDETAIL" label="JBS_TPL_SERIESDETAILS" layoutContext="seriesDetails"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="series_detail_sort" default="1" type="list"
                    label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_SORT"
@@ -1420,7 +1465,7 @@
                 <option value="1">JYES</option>
             </field>
         </fieldset>
-        <fieldset name="SERIESDETAILDISPALY"
+        <fieldset name="SERIESDETAILDISPLAY" label="JBS_TPL_SERIES_DETAILS"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="sdseriesrow" type="RowOptions" size="1" default="2" label="JBS_TPL_SERIESTITLE"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1507,7 +1552,8 @@
                    description="JBS_TPL_CUSTOM_TEXT_DESC"/>
 
         </fieldset>
-        <fieldset name="TOOLTIP" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+        <fieldset name="TOOLTIP" label="JBS_TPL_TOOLTIP" layoutContext="messages"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="tip_title" type="text" default="Sermon Information"
                    size="100" label="JBS_TPL_TOOLTIP_TIP_TITLE" description="JBS_TPL_TOOLTIP_TIP_TITLE_DESC"/>
             <field name="tooltip" type="radio" default="1"
@@ -1622,7 +1668,8 @@
                 <option value="series_text">JBS_SER_SERIES_NAME</option>
             </field>
         </fieldset>
-        <fieldset name="DDISPLAYELEMENTS1" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+        <fieldset name="DDISPLAYELEMENTS1" label="JBS_TPL_STUDY_DETAILS"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="dscripture1row" type="RowOptions" default="1" label="JBS_CMN_SCRIPTURE"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="dscripture1col" type="SpanOptions" default="0" label="JBS_TPL_COLUMN"
@@ -1910,7 +1957,8 @@
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
         </fieldset>
         <!-- Landing Page: Hidden data field and legacy ordering (managed by Layout Editor) -->
-        <fieldset name="LANDINGPAGE" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+        <fieldset name="LANDINGPAGE" label="JBS_TPL_LANDING_PAGE"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="landing_layout" type="hidden" default="" filter="raw"
                    description="JSON structure for landing page section order and enabled states"/>
             <!-- Section visibility flags - managed by Layout Editor toggle switches -->
@@ -1995,8 +2043,9 @@
         </fieldset>
 
         <!-- Landing Page: Page Settings -->
-        <fieldset name="LANDINGPAGE_PAGESETTINGS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
-                  label="JBS_TPL_LANDINGPAGE_DISPLAY_SETTINGS">
+        <fieldset name="LANDINGPAGE_PAGESETTINGS" label="JBS_TPL_LANDINGPAGE_DISPLAY_SETTINGS"
+                  layoutContext="landingPage"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="landing_show_page_title" type="radio" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_PAGE_TITLE"
                    layout="joomla.form.field.radio.switcher">
@@ -2039,8 +2088,8 @@
 
         <!-- Landing Page: Section Content Settings -->
         <!-- Landing Page: Teachers Section Settings -->
-        <fieldset name="LANDINGPAGE_TEACHERS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
-                  label="JBS_CMN_TEACHERS">
+        <fieldset name="LANDINGPAGE_TEACHERS" label="JBS_TPL_SETTINGS_PANEL" landingSection="teachers"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="landingteachersuselimit" type="radio" label="JBS_TPL_USE_TEACHERS_LIMIT"
                    description="JBS_TPL_USE_LIMIT_DESC" default="0"
                    layout="joomla.form.field.radio.switcher">
@@ -2069,8 +2118,8 @@
         </fieldset>
 
         <!-- Landing Page: Series Section Settings -->
-        <fieldset name="LANDINGPAGE_SERIES" addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
-                  label="JBS_CMN_SERIES">
+        <fieldset name="LANDINGPAGE_SERIES" label="JBS_TPL_SETTINGS_PANEL" landingSection="series"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="landingseriesuselimit" type="radio" label="JBS_TPL_USE_SERIES_LIMIT"
                    description="JBS_TPL_USE_LIMIT_DESC" default="0"
                    layout="joomla.form.field.radio.switcher">
@@ -2099,8 +2148,8 @@
         </fieldset>
 
         <!-- Landing Page: Books Section Settings -->
-        <fieldset name="LANDINGPAGE_BOOKS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
-                  label="JBS_CMN_BOOKS">
+        <fieldset name="LANDINGPAGE_BOOKS" label="JBS_TPL_SETTINGS_PANEL" landingSection="books"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="landingbookslimit" type="int"
                    label="JBS_TPL_LANDINGPAGE_LANDINGBOOKSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
                    size="5"/>
@@ -2118,8 +2167,8 @@
         </fieldset>
 
         <!-- Landing Page: Topics Section Settings -->
-        <fieldset name="LANDINGPAGE_TOPICS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
-                  label="JBS_CMN_TOPICS">
+        <fieldset name="LANDINGPAGE_TOPICS" label="JBS_TPL_SETTINGS_PANEL" landingSection="topics"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="landingtopicslimit" type="int"
                    label="JBS_TPL_LANDINGPAGE_LANDINGTOPICSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
                    size="5"/>
@@ -2137,8 +2186,8 @@
         </fieldset>
 
         <!-- Landing Page: Locations Section Settings -->
-        <fieldset name="LANDINGPAGE_LOCATIONS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
-                  label="JBS_CMN_LOCATIONS">
+        <fieldset name="LANDINGPAGE_LOCATIONS" label="JBS_TPL_SETTINGS_PANEL" landingSection="locations"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="landinglocationsuselimit" type="radio" label="JBS_TPL_USE_LOCATIONS_LIMIT"
                    description="JBS_TPL_USE_LIMIT_DESC" default="0"
                    layout="joomla.form.field.radio.switcher">
@@ -2163,8 +2212,8 @@
         </fieldset>
 
         <!-- Landing Page: Message Types Section Settings -->
-        <fieldset name="LANDINGPAGE_MESSAGETYPES" addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
-                  label="JBS_CMN_MESSAGETYPES">
+        <fieldset name="LANDINGPAGE_MESSAGETYPES" label="JBS_TPL_SETTINGS_PANEL" landingSection="messagetypes"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="landingmessagetypeuselimit" type="radio" label="JBS_TPL_USE_MESSAGETYPE_LIMIT"
                    description="JBS_TPL_USE_LIMIT_DESC" default="0"
                    layout="joomla.form.field.radio.switcher">
@@ -2190,8 +2239,8 @@
         </fieldset>
 
         <!-- Landing Page: Years Section Settings -->
-        <fieldset name="LANDINGPAGE_YEARS" addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
-                  label="JBS_CMN_YEARS">
+        <fieldset name="LANDINGPAGE_YEARS" label="JBS_TPL_SETTINGS_PANEL" landingSection="years"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="landingyearslimit" type="int"
                    label="JBS_TPL_LANDINGPAGE_LANDINGYEARSLIMIT" description="JBS_TPL_LANDINGPAGE_LANDING_LIMIT_DESC"
                    size="5"/>

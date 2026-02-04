@@ -12,177 +12,182 @@
 (function () {
     'use strict';
 
-    /**
-     * Display elements configuration by context
-         * Each element has: id, label, and language key
+    // =====================================================================
+        // Configuration Loading Functions
+        // All options are loaded from PHP via Joomla.getOptions() for automatic
+        // translation support. Fallback to English if PHP options not available.
+        // =====================================================================
+
+        /**
+         * Get element definitions from PHP or use fallback
+         * @returns {Object} Element definitions by context
          */
-        const ELEMENT_DEFINITIONS = {
-            // Messages List (no prefix)
-            messages: {
-                label: 'Messages List',
-                elements: [
-                    { id: 'scripture1', label: 'Scripture 1', langKey: 'JBS_CMN_SCRIPTURE' },
-                    { id: 'scripture2', label: 'Scripture 2', langKey: 'JBS_CMN_SCRIPTURE2' },
-                    { id: 'title', label: 'Title', langKey: 'JBS_CMN_TITLE' },
-                    { id: 'date', label: 'Date', langKey: 'JBS_CMN_DATE' },
-                    { id: 'teacher', label: 'Teacher', langKey: 'JBS_CMN_TEACHER' },
-                    { id: 'teacherimage', label: 'Teacher Image', langKey: 'JBS_CMN_TEACHER_IMAGE' },
-                    { id: 'teacher-title', label: 'Teacher Title', langKey: 'JBS_CMN_TEACHER_TITLE' },
-                    { id: 'duration', label: 'Duration', langKey: 'JBS_CMN_DURATION' },
-                    { id: 'studyintro', label: 'Study Intro', langKey: 'JBS_CMN_STUDYINTRO' },
-                    { id: 'series', label: 'Series', langKey: 'JBS_CMN_SERIES' },
-                    { id: 'seriesthumbnail', label: 'Series Thumbnail', langKey: 'JBS_CMN_SERIES_THUMBNAIL' },
-                    { id: 'seriesdescription', label: 'Series Description', langKey: 'JBS_CMN_SERIES_DESCRIPTION' },
-                    { id: 'jbsmedia', label: 'Media', langKey: 'JBS_CMN_MEDIA' },
-                    { id: 'topic', label: 'Topics', langKey: 'JBS_CMN_TOPICS' },
-                    { id: 'locations', label: 'Locations', langKey: 'JBS_CMN_LOCATIONS' },
-                    { id: 'hits', label: 'Hits', langKey: 'JBS_CMN_HITS' },
-                    { id: 'downloads', label: 'Downloads', langKey: 'JBS_CMN_DOWNLOADS' },
-                    { id: 'studynumber', label: 'Study Number', langKey: 'JBS_CMN_STUDYNUMBER' },
-                    { id: 'messagetype', label: 'Message Type', langKey: 'JBS_CMN_MESSAGETYPE' },
-                    { id: 'thumbnail', label: 'Thumbnail', langKey: 'JBS_CMN_THUMBNAIL' },
-                    { id: 'custom', label: 'Custom', langKey: 'JBS_CMN_CUSTOM' }
-                ],
-                prefix: ''
-            },
-            // Study Details (d prefix)
-            details: {
-                label: 'Study Details',
-                elements: [
-                    { id: 'scripture1', label: 'Scripture 1', langKey: 'JBS_CMN_SCRIPTURE' },
-                    { id: 'scripture2', label: 'Scripture 2', langKey: 'JBS_CMN_SCRIPTURE2' },
-                    { id: 'title', label: 'Title', langKey: 'JBS_CMN_TITLE' },
-                    { id: 'date', label: 'Date', langKey: 'JBS_CMN_DATE' },
-                    { id: 'teacher', label: 'Teacher', langKey: 'JBS_CMN_TEACHER' },
-                    { id: 'teacherimage', label: 'Teacher Image', langKey: 'JBS_CMN_TEACHER_IMAGE' },
-                    { id: 'teacher-title', label: 'Teacher Title', langKey: 'JBS_CMN_TEACHER_TITLE' },
-                    { id: 'duration', label: 'Duration', langKey: 'JBS_CMN_DURATION' },
-                    { id: 'studyintro', label: 'Study Intro', langKey: 'JBS_CMN_STUDYINTRO' },
-                    { id: 'series', label: 'Series', langKey: 'JBS_CMN_SERIES' },
-                    { id: 'seriesthumbnail', label: 'Series Thumbnail', langKey: 'JBS_CMN_SERIES_THUMBNAIL' },
-                    { id: 'seriesdescription', label: 'Series Description', langKey: 'JBS_CMN_SERIES_DESCRIPTION' },
-                    { id: 'jbsmedia', label: 'Media', langKey: 'JBS_CMN_MEDIA' },
-                    { id: 'topic', label: 'Topics', langKey: 'JBS_CMN_TOPICS' },
-                    { id: 'locations', label: 'Locations', langKey: 'JBS_CMN_LOCATIONS' },
-                    { id: 'hits', label: 'Hits', langKey: 'JBS_CMN_HITS' },
-                    { id: 'downloads', label: 'Downloads', langKey: 'JBS_CMN_DOWNLOADS' },
-                    { id: 'studynumber', label: 'Study Number', langKey: 'JBS_CMN_STUDYNUMBER' },
-                    { id: 'messagetype', label: 'Message Type', langKey: 'JBS_CMN_MESSAGETYPE' },
-                    { id: 'thumbnail', label: 'Thumbnail', langKey: 'JBS_CMN_THUMBNAIL' },
-                    { id: 'custom', label: 'Custom', langKey: 'JBS_CMN_CUSTOM' }
-                ],
-                prefix: 'd'
-            },
-            // Teachers List (ts prefix)
-            teachers: {
-                label: 'Teachers List',
-                elements: [
-                    { id: 'teacher', label: 'Teacher Name', langKey: 'JBS_CMN_TEACHER' },
-                    { id: 'teacherimage', label: 'Teacher Image', langKey: 'JBS_CMN_TEACHER_IMAGE' },
-                    { id: 'teacher-title', label: 'Teacher Title', langKey: 'JBS_CMN_TEACHER_TITLE' },
-                    { id: 'teacheremail', label: 'Email', langKey: 'JBS_CMN_EMAIL' },
-                    { id: 'teacherweb', label: 'Website', langKey: 'JBS_CMN_WEBSITE' },
-                    { id: 'teacherphone', label: 'Phone', langKey: 'JBS_CMN_PHONE' },
-                    { id: 'teacherfb', label: 'Facebook', langKey: 'JBS_CMN_FACEBOOK' },
-                    { id: 'teachertw', label: 'Twitter', langKey: 'JBS_CMN_TWITTER' },
-                    { id: 'teacherblog', label: 'Blog', langKey: 'JBS_CMN_BLOG' },
-                    { id: 'teachershort', label: 'Short Bio', langKey: 'JBS_CMN_SHORTBIO' },
-                    { id: 'teacherallinone', label: 'All in One', langKey: 'JBS_CMN_ALLINONE' },
-                    { id: 'custom', label: 'Custom', langKey: 'JBS_CMN_CUSTOM' }
-                ],
-                prefix: 'ts'
-            },
-            // Teacher Details (td prefix)
-            teacherDetails: {
-                label: 'Teacher Details',
-                elements: [
-                    { id: 'teacher', label: 'Teacher Name', langKey: 'JBS_CMN_TEACHER' },
-                    { id: 'teacherimage', label: 'Teacher Image', langKey: 'JBS_CMN_TEACHER_IMAGE' },
-                    { id: 'teacher-title', label: 'Teacher Title', langKey: 'JBS_CMN_TEACHER_TITLE' },
-                    { id: 'teacheremail', label: 'Email', langKey: 'JBS_CMN_EMAIL' },
-                    { id: 'teacherweb', label: 'Website', langKey: 'JBS_CMN_WEBSITE' },
-                    { id: 'teacherphone', label: 'Phone', langKey: 'JBS_CMN_PHONE' },
-                    { id: 'teacherfb', label: 'Facebook', langKey: 'JBS_CMN_FACEBOOK' },
-                    { id: 'teachertw', label: 'Twitter', langKey: 'JBS_CMN_TWITTER' },
-                    { id: 'teacherblog', label: 'Blog', langKey: 'JBS_CMN_BLOG' },
-                    { id: 'teachershort', label: 'Short Bio', langKey: 'JBS_CMN_SHORTBIO' },
-                    { id: 'teacherlong', label: 'Full Bio', langKey: 'JBS_CMN_LONGBIO' },
-                    { id: 'teacherlargeimage', label: 'Large Image', langKey: 'JBS_CMN_LARGEIMAGE' },
-                    { id: 'teacherallinone', label: 'All in One', langKey: 'JBS_CMN_ALLINONE' },
-                    { id: 'custom', label: 'Custom', langKey: 'JBS_CMN_CUSTOM' }
-                ],
-                prefix: 'td'
-            },
-            // Series List (s prefix)
-            series: {
-                label: 'Series List',
-                elements: [
-                    { id: 'series', label: 'Series Title', langKey: 'JBS_CMN_TITLE' },
-                    { id: 'description', label: 'Description', langKey: 'JBS_CMN_DESCRIPTION' },
-                    { id: 'seriesthumbnail', label: 'Thumbnail', langKey: 'JBS_CMN_THUMBNAIL' },
-                    { id: 'teacher', label: 'Teacher', langKey: 'JBS_CMN_TEACHER' },
-                    { id: 'dcustom', label: 'Custom', langKey: 'JBS_CMN_CUSTOM' }
-                ],
-                prefix: 's'
-            },
-            // Series Details (sd prefix)
-            seriesDetails: {
-                label: 'Series Details',
-                elements: [
-                    { id: 'series', label: 'Series Title', langKey: 'JBS_CMN_TITLE' },
-                    { id: 'description', label: 'Description', langKey: 'JBS_CMN_DESCRIPTION' },
-                    { id: 'seriesthumbnail', label: 'Thumbnail', langKey: 'JBS_CMN_THUMBNAIL' },
-                    { id: 'teacher', label: 'Teacher', langKey: 'JBS_CMN_TEACHER' },
-                    { id: 'custom', label: 'Custom', langKey: 'JBS_CMN_CUSTOM' }
-                ],
-                prefix: 'sd'
-            },
-            // Landing Page (order-only mode - no row/col/colspan)
-            landingPage: {
-                label: 'Landing Page',
-                isOrderOnly: true,
-                elements: [
-                    { id: 'teachers', label: 'Teachers', langKey: 'JBS_CMN_TEACHERS', showParam: 'showteachers', labelParam: 'teacherslabel' },
-                    { id: 'series', label: 'Series', langKey: 'JBS_CMN_SERIES', showParam: 'showseries', labelParam: 'serieslabel' },
-                    { id: 'books', label: 'Books', langKey: 'JBS_CMN_BOOKS', showParam: 'showbooks', labelParam: 'bookslabel' },
-                    { id: 'topics', label: 'Topics', langKey: 'JBS_CMN_TOPICS', showParam: 'showtopics', labelParam: 'topicslabel' },
-                    { id: 'locations', label: 'Locations', langKey: 'JBS_CMN_LOCATIONS', showParam: 'showlocations', labelParam: 'locationslabel' },
-                    { id: 'messagetypes', label: 'Message Types', langKey: 'JBS_CMN_MESSAGETYPES', showParam: 'showmessagetypes', labelParam: 'messagetypeslabel' },
-                    { id: 'years', label: 'Years', langKey: 'JBS_CMN_YEARS', showParam: 'showyears', labelParam: 'yearslabel' }
-                ],
-                prefix: ''
+        const getElementDefinitions = () => {
+            if (window.Joomla && typeof Joomla.getOptions === 'function') {
+                const phpOptions = Joomla.getOptions('com_proclaim.elementDefinitions');
+                if (phpOptions && typeof phpOptions === 'object') {
+                    return phpOptions;
+                }
             }
+            // Fallback (English only)
+            return {
+                messages: {
+                    label: 'Messages List', prefix: '',
+                    elements: [
+                        { id: 'scripture1', label: 'Scripture 1' }, { id: 'scripture2', label: 'Scripture 2' },
+                        { id: 'title', label: 'Title' }, { id: 'date', label: 'Date' },
+                        { id: 'teacher', label: 'Teacher' }, { id: 'teacherimage', label: 'Teacher Image' },
+                        { id: 'teacher-title', label: 'Teacher Title + Name' }, { id: 'duration', label: 'Duration' },
+                        { id: 'studyintro', label: 'Study Intro' }, { id: 'series', label: 'Series' },
+                        { id: 'seriesthumbnail', label: 'Series Thumbnail' }, { id: 'seriesdescription', label: 'Series Description' },
+                        { id: 'jbsmedia', label: 'Media' }, { id: 'topic', label: 'Topics' },
+                        { id: 'locations', label: 'Locations' }, { id: 'hits', label: 'Hits' },
+                        { id: 'downloads', label: 'Downloads' }, { id: 'studynumber', label: 'Study Number' },
+                        { id: 'messagetype', label: 'Message Type' }, { id: 'thumbnail', label: 'Thumbnail' },
+                        { id: 'custom', label: 'Custom' }
+                    ]
+                },
+                details: {
+                    label: 'Study Details', prefix: 'd',
+                    elements: [
+                        { id: 'scripture1', label: 'Scripture 1' }, { id: 'scripture2', label: 'Scripture 2' },
+                        { id: 'title', label: 'Title' }, { id: 'date', label: 'Date' },
+                        { id: 'teacher', label: 'Teacher' }, { id: 'teacherimage', label: 'Teacher Image' },
+                        { id: 'teacher-title', label: 'Teacher Title + Name' }, { id: 'duration', label: 'Duration' },
+                        { id: 'studyintro', label: 'Study Intro' }, { id: 'series', label: 'Series' },
+                        { id: 'seriesthumbnail', label: 'Series Thumbnail' }, { id: 'seriesdescription', label: 'Series Description' },
+                        { id: 'jbsmedia', label: 'Media' }, { id: 'topic', label: 'Topics' },
+                        { id: 'locations', label: 'Locations' }, { id: 'hits', label: 'Hits' },
+                        { id: 'downloads', label: 'Downloads' }, { id: 'studynumber', label: 'Study Number' },
+                        { id: 'messagetype', label: 'Message Type' }, { id: 'thumbnail', label: 'Thumbnail' },
+                        { id: 'custom', label: 'Custom' }
+                    ]
+                },
+                teachers: {
+                    label: 'Teachers List', prefix: 'ts',
+                    elements: [
+                        { id: 'teacher', label: 'Teacher Name' }, { id: 'teacherimage', label: 'Teacher Image' },
+                        { id: 'teacher-title', label: 'Teacher Title + Name' }, { id: 'teacheremail', label: 'Email' },
+                        { id: 'teacherweb', label: 'Website' }, { id: 'teacherphone', label: 'Phone' },
+                        { id: 'teacherfb', label: 'Facebook' }, { id: 'teachertw', label: 'Twitter' },
+                        { id: 'teacherblog', label: 'Blog' }, { id: 'teachershort', label: 'Short Bio' },
+                        { id: 'teacherallinone', label: 'All in One' }, { id: 'custom', label: 'Custom' }
+                    ]
+                },
+                teacherDetails: {
+                    label: 'Teacher Details', prefix: 'td',
+                    elements: [
+                        { id: 'teacher', label: 'Teacher Name' }, { id: 'teacherimage', label: 'Teacher Image' },
+                        { id: 'teacher-title', label: 'Teacher Title + Name' }, { id: 'teacheremail', label: 'Email' },
+                        { id: 'teacherweb', label: 'Website' }, { id: 'teacherphone', label: 'Phone' },
+                        { id: 'teacherfb', label: 'Facebook' }, { id: 'teachertw', label: 'Twitter' },
+                        { id: 'teacherblog', label: 'Blog' }, { id: 'teachershort', label: 'Short Bio' },
+                        { id: 'teacherlong', label: 'Full Bio' }, { id: 'teacherlargeimage', label: 'Large Image' },
+                        { id: 'teacherallinone', label: 'All in One' }, { id: 'custom', label: 'Custom' }
+                    ]
+                },
+                series: {
+                    label: 'Series List', prefix: 's',
+                    elements: [
+                        { id: 'series', label: 'Series Title' }, { id: 'description', label: 'Description' },
+                        { id: 'seriesthumbnail', label: 'Thumbnail' }, { id: 'teacher', label: 'Teacher' },
+                        { id: 'dcustom', label: 'Custom' }
+                    ]
+                },
+                seriesDetails: {
+                    label: 'Series Details', prefix: 'sd',
+                    elements: [
+                        { id: 'series', label: 'Series Title' }, { id: 'description', label: 'Description' },
+                        { id: 'seriesthumbnail', label: 'Thumbnail' }, { id: 'teacher', label: 'Teacher' },
+                        { id: 'custom', label: 'Custom' }
+                    ]
+                },
+                landingPage: {
+                    label: 'Landing Page', prefix: '', isOrderOnly: true,
+                    elements: [
+                        { id: 'teachers', label: 'Teachers', showParam: 'showteachers', labelParam: 'teacherslabel' },
+                        { id: 'series', label: 'Series', showParam: 'showseries', labelParam: 'serieslabel' },
+                        { id: 'books', label: 'Books', showParam: 'showbooks', labelParam: 'bookslabel' },
+                        { id: 'topics', label: 'Topics', showParam: 'showtopics', labelParam: 'topicslabel' },
+                        { id: 'locations', label: 'Locations', showParam: 'showlocations', labelParam: 'locationslabel' },
+                        { id: 'messagetypes', label: 'Message Types', showParam: 'showmessagetypes', labelParam: 'messagetypeslabel' },
+                        { id: 'years', label: 'Years', showParam: 'showyears', labelParam: 'yearslabel' }
+                    ]
+                }
+            };
         };
 
         /**
-         * Link type options (matches LinkOptionsField.php)
+         * Get link type options from PHP or use fallback
+         * @returns {Array} Link type options
          */
-        const LINK_TYPES = [
-            { value: '0', labelKey: 'JBS_TPL_NO_LINK', label: 'No Link' },
-            { value: '1', labelKey: 'JBS_TPL_LINK_TO_DETAILS', label: 'Link to Details' },
-            { value: '4', labelKey: 'JBS_TPL_LINK_TO_DETAILS_TOOLTIP', label: 'Link to Details (Tooltip)' },
-            { value: '2', labelKey: 'JBS_TPL_LINK_TO_MEDIA', label: 'Link to Media' },
-            { value: '9', labelKey: 'JBS_TPL_LINK_TO_DOWNLOAD', label: 'Link to Download' },
-            { value: '5', labelKey: 'JBS_TPL_LINK_TO_MEDIA_TOOLTIP', label: 'Link to Media (Tooltip)' },
-            { value: '3', labelKey: 'JBS_TPL_LINK_TO_TEACHERS_PROFILE', label: 'Link to Teacher\'s Profile' },
-            { value: '6', labelKey: 'JBS_TPL_LINK_TO_FIRST_ARTICLE', label: 'Link to First Article' },
-            { value: '7', labelKey: 'JBS_TPL_LINK_TO_VIRTUEMART', label: 'Link to VirtueMart' },
-            { value: '8', labelKey: 'JBS_TPL_LINK_TO_DOCMAN', label: 'Link to DocMan' }
-        ];
+        const getLinkTypeOptions = () => {
+            if (window.Joomla && typeof Joomla.getOptions === 'function') {
+                const phpOptions = Joomla.getOptions('com_proclaim.linkTypeOptions');
+                if (phpOptions && Array.isArray(phpOptions)) {
+                    return phpOptions;
+                }
+            }
+            // Fallback (English only)
+            return [
+                { value: '0', label: 'No Link' }, { value: '1', label: 'Link to Details' },
+                { value: '4', label: 'Link to Details (Tooltip)' }, { value: '2', label: 'Link to Media' },
+                { value: '9', label: 'Link to Download' }, { value: '5', label: 'Link to Media (Tooltip)' },
+                { value: '3', label: "Link to Teacher's Profile" }, { value: '6', label: 'Link to First Article' },
+                { value: '7', label: 'Link to VirtueMart' }, { value: '8', label: 'Link to DocMan' }
+            ];
+        };
 
         /**
-         * Element type options (matches ElementOptionsField.php)
+         * Get element type options (HTML wrapper) from PHP or use fallback
+         * @returns {Array} Element type options
          */
-        const ELEMENT_TYPES = [
-            { value: '0', labelKey: 'JBS_CMN_NONE', label: 'None' },
-            { value: '1', labelKey: 'JBS_TPL_PARAGRAPH', label: 'Paragraph' },
-            { value: '2', labelKey: 'JBS_TPL_HEADER1', label: 'Header 1' },
-            { value: '3', labelKey: 'JBS_TPL_HEADER2', label: 'Header 2' },
-            { value: '4', labelKey: 'JBS_TPL_HEADER3', label: 'Header 3' },
-            { value: '5', labelKey: 'JBS_TPL_HEADER4', label: 'Header 4' },
-            { value: '6', labelKey: 'JBS_TPL_HEADER5', label: 'Header 5' },
-            { value: '7', labelKey: 'JBS_TPL_BLOCKQUOTE', label: 'Blockquote' }
-        ];
+        const getElementTypeOptions = () => {
+            if (window.Joomla && typeof Joomla.getOptions === 'function') {
+                const phpOptions = Joomla.getOptions('com_proclaim.elementTypeOptions');
+                if (phpOptions && Array.isArray(phpOptions)) {
+                    return phpOptions;
+                }
+            }
+            // Fallback (English only)
+            return [
+                { value: '0', label: 'None' }, { value: '1', label: 'Paragraph' },
+                { value: '2', label: 'Header 1' }, { value: '3', label: 'Header 2' },
+                { value: '4', label: 'Header 3' }, { value: '5', label: 'Header 4' },
+                { value: '6', label: 'Header 5' }, { value: '7', label: 'Blockquote' }
+            ];
+        };
+
+        /**
+         * Get date format options from PHP or use fallback
+         * @returns {Array} Date format options
+         */
+        const getDateFormatOptions = () => {
+            if (window.Joomla && typeof Joomla.getOptions === 'function') {
+                const phpOptions = Joomla.getOptions('com_proclaim.dateFormatOptions');
+                if (phpOptions && Array.isArray(phpOptions)) {
+                    return phpOptions;
+                }
+            }
+            // Fallback (English only)
+            return [
+                { value: '', label: 'Use Global Setting' }, { value: '0', label: 'Sep 1, 2012' },
+                { value: '1', label: 'Sep 1' }, { value: '2', label: '9/1/2012' },
+                { value: '3', label: '9/1' }, { value: '4', label: 'Saturday, September 1, 2010' },
+                { value: '5', label: 'September 1, 2012' }, { value: '6', label: '1 September 2012' },
+                { value: '7', label: '1/9/2010' }, { value: '8', label: 'Use Joomla Global' },
+                { value: '9', label: '2012/09/01' }
+            ];
+        };
+
+        // Cache the loaded configurations (loaded once on first use)
+        let ELEMENT_DEFINITIONS = null;
+        const getElementDefs = () => {
+            if (!ELEMENT_DEFINITIONS) {
+                ELEMENT_DEFINITIONS = getElementDefinitions();
+            }
+            return ELEMENT_DEFINITIONS;
+        };
 
         /**
          * Layout Editor Class
@@ -275,14 +280,6 @@
                     </div>
                     <div class="layout-toolbar-group layout-toolbar-spacer"></div>
                     <div class="layout-toolbar-group">
-                        <button type="button" class="btn btn-primary btn-view-visual" title="Visual Editor">
-                            <span class="icon-image" aria-hidden="true"></span>
-                            <span class="btn-text">Visual</span>
-                        </button>
-                        <button type="button" class="btn btn-secondary btn-view-classic" title="Classic View">
-                            <span class="icon-list" aria-hidden="true"></span>
-                            <span class="btn-text">Classic</span>
-                        </button>
                         <button type="button" class="btn btn-secondary btn-view-settings" title="${this.trans('JBS_TPL_VIEW_SETTINGS') || 'View Settings'}">
                             <span class="icon-cog" aria-hidden="true"></span>
                             <span class="btn-text">${this.trans('JBS_TPL_VIEW_SETTINGS') || 'View Settings'}</span>
@@ -296,7 +293,6 @@
                     </aside>
                     <main class="layout-canvas"></main>
                 </div>
-                <div class="layout-classic" style="display: none;"></div>
             `;
 
                 this.sidebar = this.container.querySelector('.layout-sidebar');
@@ -305,10 +301,6 @@
                 this.contextTabs = this.container.querySelector('.layout-context-tabs');
                 this.toolbar = this.container.querySelector('.layout-toolbar');
                 this.editor = this.container.querySelector('.layout-editor');
-                this.classicView = this.container.querySelector('.layout-classic');
-
-                // Current view mode
-                this.viewMode = 'visual';
 
                 // Create context tabs
                 this.createContextTabs();
@@ -325,26 +317,23 @@
 
             /**
              * Create context selector tabs
+             * Labels come from PHP-provided elementDefinitions for automatic translation
              */
             createContextTabs() {
-                const contexts = [
-                    { id: 'messages', label: this.trans('JBS_TPL_MESSAGES_LIST') || 'Messages List' },
-                    { id: 'details', label: this.trans('JBS_TPL_STUDY_DETAILS') || 'Study Details' },
-                    { id: 'teachers', label: this.trans('JBS_TPL_TEACHERS_LIST') || 'Teachers List' },
-                    { id: 'teacherDetails', label: this.trans('JBS_TPL_TEACHER_DETAILS') || 'Teacher Details' },
-                    { id: 'series', label: this.trans('JBS_TPL_SERIES_LIST') || 'Series List' },
-                    { id: 'seriesDetails', label: this.trans('JBS_TPL_SERIES_DETAILS') || 'Series Details' },
-                    { id: 'landingPage', label: this.trans('JBS_TPL_LANDING_PAGE') || 'Landing Page' }
-                ];
+                const defs = getElementDefs();
+                const contextOrder = ['messages', 'details', 'teachers', 'teacherDetails', 'series', 'seriesDetails', 'landingPage'];
 
-                contexts.forEach(ctx => {
+                contextOrder.forEach(contextId => {
+                    const contextDef = defs[contextId];
+                    if (!contextDef) { return; }
+
                     const tab = document.createElement('button');
                     tab.type = 'button';
-                    const isActive = ctx.id === this.currentContext;
+                    const isActive = contextId === this.currentContext;
                     tab.className = 'btn layout-context-tab ' + (isActive ? 'btn-primary' : 'btn-secondary');
-                    tab.dataset.context = ctx.id;
-                    tab.textContent = ctx.label;
-                    tab.addEventListener('click', () => this.switchContext(ctx.id));
+                    tab.dataset.context = contextId;
+                    tab.textContent = contextDef.label;
+                    tab.addEventListener('click', () => this.switchContext(contextId));
                     this.contextTabs.appendChild(tab);
                 });
             }
@@ -373,7 +362,7 @@
                 this.destroySortables();
 
                 // Check if this is an order-only context (like landing page)
-                const contextDef = ELEMENT_DEFINITIONS[context];
+                const contextDef = getElementDefs()[context];
                 const isOrderOnly = contextDef?.isOrderOnly || false;
 
                 // Update toolbar visibility for order-only contexts
@@ -402,19 +391,9 @@
             updateToolbarForContext(isOrderOnly) {
                 if (!this.toolbar) { return; }
 
-                // Hide grid button and view toggle for order-only contexts
+                // Hide grid button for order-only contexts (like Landing Page)
                 const gridBtn = this.toolbar.querySelector('.btn-grid');
-                const visualBtn = this.toolbar.querySelector('.btn-view-visual');
-                const classicBtn = this.toolbar.querySelector('.btn-view-classic');
-
                 if (gridBtn) { gridBtn.style.display = isOrderOnly ? 'none' : ''; }
-                if (visualBtn) { visualBtn.style.display = isOrderOnly ? 'none' : ''; }
-                if (classicBtn) { classicBtn.style.display = isOrderOnly ? 'none' : ''; }
-
-                // Ensure visual mode when switching to order-only
-                if (isOrderOnly && this.viewMode === 'classic') {
-                    this.switchView('visual');
-                }
             }
 
             // =====================================================================
@@ -513,7 +492,7 @@
                 const contextSettings = settingsConfig[this.currentContext] || [];
 
                 // Update modal title to show context
-                const contextDef = ELEMENT_DEFINITIONS[this.currentContext];
+                const contextDef = getElementDefs()[this.currentContext];
                 const modalTitle = this.viewSettingsModal?.querySelector('.modal-title');
                 if (modalTitle && contextDef) {
                     modalTitle.innerHTML = `
@@ -831,7 +810,7 @@
                 card.dataset.section = element.id;
                 card.tabIndex = 0;
 
-                const label = this.trans(element.langKey) || element.label;
+                const label = element.label;
                 const toggleId = `landing-toggle-${element.id}`;
 
                 card.innerHTML = `
@@ -1022,7 +1001,11 @@
             openLandingSectionSettings(sectionId) {
                 // Get section-specific fieldset from config
                 const sectionSettings = (window.Joomla?.getOptions?.('com_proclaim.landingSectionSettings')) || {};
-                const fieldsetName = sectionSettings[sectionId];
+                const sectionConfig = sectionSettings[sectionId];
+
+                // Handle both object format {fieldset, label} and legacy string format
+                const fieldsetName = typeof sectionConfig === 'object' ? sectionConfig.fieldset : sectionConfig;
+                const settingsLabel = typeof sectionConfig === 'object' ? sectionConfig.label : 'Settings';
 
                 if (!fieldsetName) {
                     console.warn('No fieldset configured for section:', sectionId);
@@ -1035,15 +1018,13 @@
                 }
 
                 // Update modal title with section name
-                const elementDef = ELEMENT_DEFINITIONS.landingPage?.elements?.find(e => e.id === sectionId);
-                const sectionLabel = elementDef ?
-                    (this.trans(elementDef.langKey) || elementDef.label) :
-                    sectionId;
+                const elementDef = getElementDefs().landingPage?.elements?.find(e => e.id === sectionId);
+                const sectionLabel = elementDef ? elementDef.label : sectionId;
                 const modalTitle = this.sectionSettingsModal?.querySelector('.modal-title');
                 if (modalTitle) {
                     modalTitle.innerHTML = `
                     <span class="icon-cog" aria-hidden="true"></span>
-                    ${sectionLabel} ${this.trans('JBS_TPL_SETTINGS_PANEL') || 'Settings'}
+                    ${sectionLabel} ${settingsLabel}
                 `;
                 }
 
@@ -1382,7 +1363,7 @@
              * Initialize the sidebar with available elements
              */
             initSidebar() {
-                const contextDef = ELEMENT_DEFINITIONS[this.currentContext];
+                const contextDef = getElementDefs()[this.currentContext];
                 if (!contextDef || !this.palette) {
                     return;
                 }
@@ -1666,14 +1647,14 @@
                             <div class="form-group">
                                 <label class="form-label" for="layout-element-type">${this.trans('JBS_TPL_ELEMENT') || 'Element Type'}</label>
                                 <select class="form-select" id="layout-element-type">
-                                    ${ELEMENT_TYPES.map(opt => `<option value="${opt.value}">${this.trans(opt.labelKey) || opt.label}</option>`).join('')}
+                                    ${getElementTypeOptions().map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
                                 </select>
                                 <div class="form-text">${this.trans('JBS_TPL_ELEMENT_DESC') || 'HTML element type to wrap this content'}</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label" for="layout-link-type">${this.trans('JBS_TPL_TYPE_OF_LINK') || 'Link Type'}</label>
                                 <select class="form-select" id="layout-link-type">
-                                    ${LINK_TYPES.map(opt => `<option value="${opt.value}">${this.trans(opt.labelKey) || opt.label}</option>`).join('')}
+                                    ${getLinkTypeOptions().map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
                                 </select>
                                 <div class="form-text">${this.trans('JBS_TPL_TYPE_OF_LINK_DESC') || 'How this element should link to the detail view'}</div>
                             </div>
@@ -1681,6 +1662,13 @@
                                 <label class="form-label" for="layout-custom-class">${this.trans('JBS_TPL_CUSTOMCLASS') || 'Custom CSS Class'}</label>
                                 <input type="text" class="form-control" id="layout-custom-class" placeholder="e.g., my-custom-class">
                                 <div class="form-text">${this.trans('JBS_TPL_CUSTOMCLASS_DESC') || 'Additional CSS class to apply to this element'}</div>
+                            </div>
+                            <div class="form-group" id="layout-date-format-group" style="display:none;">
+                                <label class="form-label" for="layout-date-format">${this.trans('JBS_TPL_DATE_FORMAT') || 'Date Format'}</label>
+                                <select class="form-select" id="layout-date-format">
+                                    ${getDateFormatOptions().map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
+                                </select>
+                                <div class="form-text">${this.trans('JBS_TPL_DATE_FORMAT_DESC') || 'Choose a date format for this element, or use global template setting'}</div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -2007,7 +1995,7 @@
              * @returns {Object|null}
              */
             getElementDefinition(elementId) {
-                const contextDef = ELEMENT_DEFINITIONS[this.currentContext];
+                const contextDef = getElementDefs()[this.currentContext];
                 if (!contextDef) { return null; }
                 return contextDef.elements.find(el => el.id === elementId) || null;
             }
@@ -2114,16 +2102,8 @@
                         gridBtn.addEventListener('click', () => this.toggleGrid());
                     }
 
-                    // View toggle buttons
-                    const visualBtn = this.toolbar.querySelector('.btn-view-visual');
-                    const classicBtn = this.toolbar.querySelector('.btn-view-classic');
+                    // View settings button
                     const viewSettingsBtn = this.toolbar.querySelector('.btn-view-settings');
-                    if (visualBtn) {
-                        visualBtn.addEventListener('click', () => this.switchView('visual'));
-                    }
-                    if (classicBtn) {
-                        classicBtn.addEventListener('click', () => this.switchView('classic'));
-                    }
                     if (viewSettingsBtn) {
                         viewSettingsBtn.addEventListener('click', () => this.openViewSettings());
                     }
@@ -2169,7 +2149,8 @@
                         colspan: '1',
                         element: '1',
                         custom: '',
-                        linktype: '0'
+                        linktype: '0',
+                        date_format: ''
                     };
                     this.state.set(elementId, data);
                 }
@@ -2178,8 +2159,7 @@
                 const elementDef = this.getElementDefinition(elementId);
                 const modalTitle = document.getElementById('layoutSettingsModalLabel');
                 if (modalTitle && elementDef) {
-                    const elementLabel = this.trans(elementDef.langKey) || elementDef.label;
-                    modalTitle.textContent = `${this.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Element Settings'}: ${elementLabel}`;
+                    modalTitle.textContent = `${this.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Element Settings'}: ${elementDef.label}`;
                 }
 
                 // Populate modal fields
@@ -2187,11 +2167,21 @@
                 const elementTypeEl = document.getElementById('layout-element-type');
                 const linkTypeEl = document.getElementById('layout-link-type');
                 const customClassEl = document.getElementById('layout-custom-class');
+                const dateFormatEl = document.getElementById('layout-date-format');
+                const dateFormatGroup = document.getElementById('layout-date-format-group');
 
                 if (colspanEl) { colspanEl.value = String(data.colspan) || '1'; }
                 if (elementTypeEl) { elementTypeEl.value = String(data.element) || '1'; }
                 if (linkTypeEl) { linkTypeEl.value = String(data.linktype) || '0'; }
                 if (customClassEl) { customClassEl.value = data.custom || ''; }
+                if (dateFormatEl) { dateFormatEl.value = data.date_format || ''; }
+
+                // Show date format field only for date-related elements
+                const isDateElement = elementId.toLowerCase().includes('date') ||
+                    elementId.toLowerCase().includes('studydate');
+                if (dateFormatGroup) {
+                    dateFormatGroup.style.display = isDateElement ? 'block' : 'none';
+                }
 
                 // Show modal
                 const modalInstance = this.getModalInstance();
@@ -2256,6 +2246,7 @@
                 data.element = document.getElementById('layout-element-type').value;
                 data.linktype = document.getElementById('layout-link-type').value;
                 data.custom = document.getElementById('layout-custom-class').value;
+                data.date_format = document.getElementById('layout-date-format').value;
 
                 // Update visual display
                 const card = this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"]`);
@@ -2341,7 +2332,7 @@
              * Load state from existing form params
              */
             loadFromParams() {
-                const contextDef = ELEMENT_DEFINITIONS[this.currentContext];
+                const contextDef = getElementDefs()[this.currentContext];
                 if (!contextDef) { return; }
 
                 const prefix = contextDef.prefix;
@@ -2363,6 +2354,7 @@
                     }
                     let custom = templateParams[fieldPrefix + 'custom'] || '';
                     let linktype = templateParams[fieldPrefix + 'linktype'] || '0';
+                    let dateFormat = templateParams[fieldPrefix + 'date_format'] || '';
 
                     // Try form fields as fallback (in case they're loaded)
                     const rowField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}row]"]`);
@@ -2373,12 +2365,14 @@
                         const elementField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}element]"]`);
                         const customField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}custom]"]`);
                         const linktypeField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}linktype]"]`);
+                        const dateFormatField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}date_format]"]`);
 
                         if (colField) { col = parseInt(colField.value, 10) || col; }
                         if (colspanField) { colspan = colspanField.value || colspan; }
                         if (elementField) { elementType = elementField.value || elementType; }
                         if (customField) { custom = customField.value || custom; }
                         if (linktypeField) { linktype = linktypeField.value || linktype; }
+                        if (dateFormatField) { dateFormat = dateFormatField.value || dateFormat; }
                     }
 
                     // Only add to canvas if row > 0 (element is visible)
@@ -2389,7 +2383,8 @@
                             colspan: colspan,
                             element: elementType,
                             custom: custom,
-                            linktype: linktype
+                            linktype: linktype,
+                            date_format: dateFormat
                         };
 
                         this.state.set(element.id, data);
@@ -2497,7 +2492,7 @@
              * Sync state to hidden form fields before save
              */
             syncToForm() {
-                const contextDef = ELEMENT_DEFINITIONS[this.currentContext];
+                const contextDef = getElementDefs()[this.currentContext];
                 if (!contextDef) { return; }
 
                 // Use landing page sync for order-only contexts
@@ -2520,7 +2515,8 @@
                         colspan: `${this.options.paramsPrefix}[${fieldPrefix}colspan]`,
                         element: `${this.options.paramsPrefix}[${fieldPrefix}element]`,
                         custom: `${this.options.paramsPrefix}[${fieldPrefix}custom]`,
-                        linktype: `${this.options.paramsPrefix}[${fieldPrefix}linktype]`
+                        linktype: `${this.options.paramsPrefix}[${fieldPrefix}linktype]`,
+                        date_format: `${this.options.paramsPrefix}[${fieldPrefix}date_format]`
                     };
 
                     // Helper to get or create a hidden input field
@@ -2547,6 +2543,7 @@
                         getOrCreateField(fieldNames.element, data.element);
                         getOrCreateField(fieldNames.custom, data.custom);
                         getOrCreateField(fieldNames.linktype, data.linktype);
+                        getOrCreateField(fieldNames.date_format, data.date_format || '');
                     } else {
                         // Element not in layout - set row to 0 (hidden)
                         getOrCreateField(fieldNames.row, '0');
@@ -2645,7 +2642,7 @@
                 });
 
                 // Re-add elements from state
-                const contextDef = ELEMENT_DEFINITIONS[this.currentContext];
+                const contextDef = getElementDefs()[this.currentContext];
                 if (!contextDef) { return; }
 
                 this.state.forEach((data, elementId) => {
@@ -2693,136 +2690,6 @@
                     gridBtn.classList.toggle('btn-primary', this.showGrid);
                     gridBtn.classList.toggle('btn-secondary', !this.showGrid);
                 }
-            }
-
-            // =====================================================================
-            // View Toggle (Visual/Classic)
-            // =====================================================================
-
-            /**
-             * Switch between visual and classic view modes
-             * @param {string} mode - 'visual' or 'classic'
-             */
-            switchView(mode) {
-                if (this.viewMode === mode) { return; }
-
-                this.viewMode = mode;
-
-                // Update button states - swap primary/secondary classes
-                const visualBtn = this.toolbar?.querySelector('.btn-view-visual');
-                const classicBtn = this.toolbar?.querySelector('.btn-view-classic');
-                if (visualBtn) {
-                    visualBtn.classList.toggle('btn-primary', mode === 'visual');
-                    visualBtn.classList.toggle('btn-secondary', mode !== 'visual');
-                }
-                if (classicBtn) {
-                    classicBtn.classList.toggle('btn-primary', mode === 'classic');
-                    classicBtn.classList.toggle('btn-secondary', mode !== 'classic');
-                }
-
-                // Toggle views
-                if (mode === 'visual') {
-                    if (this.editor) { this.editor.style.display = ''; }
-                    if (this.classicView) { this.classicView.style.display = 'none'; }
-                } else {
-                    if (this.editor) { this.editor.style.display = 'none'; }
-                    if (this.classicView) {
-                        this.classicView.style.display = '';
-                        this.renderClassicView();
-                    }
-                }
-            }
-
-            /**
-             * Render classic view with element list
-             */
-            renderClassicView() {
-                const contextDef = ELEMENT_DEFINITIONS[this.currentContext];
-                if (!contextDef || !this.classicView) { return; }
-
-                // Get elements in layout (row > 0) sorted by row then col
-                const placedElements = [];
-                this.state.forEach((data, elementId) => {
-                    if (data.row > 0) {
-                        const element = contextDef.elements.find(el => el.id === elementId);
-                        if (element) {
-                            placedElements.push({ element, data });
-                        }
-                    }
-                });
-
-                placedElements.sort((a, b) => {
-                    if (a.data.row !== b.data.row) { return a.data.row - b.data.row; }
-                    return a.data.col - b.data.col;
-                });
-
-                // Render as a simple table
-                let html = `
-                <div class="classic-view-container">
-                    <table class="table table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th>Element</th>
-                                <th>Row</th>
-                                <th>Col</th>
-                                <th>Colspan</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-
-                if (placedElements.length === 0) {
-                    html += `
-                    <tr>
-                        <td colspan="5" class="text-center text-muted">
-                            No elements in layout. Switch to Visual view to add elements.
-                        </td>
-                    </tr>
-                `;
-                } else {
-                    placedElements.forEach(({ element, data }) => {
-                        html += `
-                        <tr data-element="${element.id}">
-                            <td><strong>${element.label}</strong></td>
-                            <td>${data.row}</td>
-                            <td>${data.col}</td>
-                            <td>${data.colspan}</td>
-                            <td>
-                                <button type="button" class="btn btn-secondary btn-classic-edit" data-element="${element.id}">
-                                    <span class="icon-options" aria-hidden="true"></span>
-                                </button>
-                                <button type="button" class="btn btn-danger btn-classic-remove" data-element="${element.id}">
-                                    <span class="icon-cancel" aria-hidden="true"></span>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                    });
-                }
-
-                html += `
-                        </tbody>
-                    </table>
-                </div>
-            `;
-
-                this.classicView.innerHTML = html;
-
-                // Bind classic view events
-                this.classicView.querySelectorAll('.btn-classic-edit').forEach(btn => {
-                    btn.addEventListener('click', () => this.openSettings(btn.dataset.element));
-                });
-
-                this.classicView.querySelectorAll('.btn-classic-remove').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        this.saveStateForUndo();
-                        const elementId = btn.dataset.element;
-                        this.state.delete(elementId);
-                        this.rebuildCanvas();
-                        this.renderClassicView();
-                    });
-                });
             }
 
             // =====================================================================

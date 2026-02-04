@@ -615,31 +615,6 @@
 }
 
 /* ==========================================================================
-   Classic View
-   ========================================================================== */
-.layout-classic {
-    background: var(--bs-body-bg);
-    border: 1px solid var(--bs-border-color);
-    border-radius: .25rem;
-    padding: 1rem;
-}
-
-.classic-view-container .table {
-    margin-bottom: 0;
-    --bs-table-bg: transparent;
-}
-
-.classic-view-container .table th {
-    background: var(--bs-tertiary-bg);
-    font-weight: 600;
-    border-bottom-width: 2px;
-}
-
-.classic-view-container .table td {
-    vertical-align: middle;
-}
-
-/* ==========================================================================
    Sortable Ghost & Drag States
    ========================================================================== */
 .sortable-ghost {
@@ -838,26 +813,35 @@
 /* ==========================================================================
    View Settings Modal
    ========================================================================== */
-.view-settings-modal .modal-dialog {
+.view-settings-modal .modal-dialog,
+.section-settings-modal .modal-dialog {
     max-width: 800px;
 }
 
-.view-settings-modal .modal-header {
+.view-settings-modal .modal-header,
+.section-settings-modal .modal-header {
     background: var(--layout-bg-secondary);
     border-bottom: 1px solid var(--layout-border-color);
 }
 
-.view-settings-modal .modal-title {
+.view-settings-modal .modal-title,
+.section-settings-modal .modal-title {
     display: flex;
     align-items: center;
     gap: .5rem;
     font-weight: 600;
 }
 
-.view-settings-modal .modal-body {
-    padding: 0;
+.view-settings-modal .modal-body,
+.section-settings-modal .modal-body {
+    padding: 1.25rem;
     max-height: 60vh;
     overflow-y: auto;
+}
+
+/* Remove padding when using accordion (accordion has its own padding) */
+.view-settings-modal .modal-body:has(.accordion) {
+    padding: 0;
 }
 
 .view-settings-modal .accordion {
@@ -896,20 +880,24 @@
     background: var(--layout-bg-primary);
 }
 
-/* Form field styling within view settings modal */
-.view-settings-modal .control-group {
+/* Form field styling within view/section settings modals */
+.view-settings-modal .control-group,
+.section-settings-modal .control-group {
     margin-bottom: 1.25rem;
 }
 
-.view-settings-modal .control-group:last-child {
+.view-settings-modal .control-group:last-child,
+.section-settings-modal .control-group:last-child {
     margin-bottom: 0;
 }
 
-.view-settings-modal .control-label {
+.view-settings-modal .control-label,
+.section-settings-modal .control-label {
     margin-bottom: .5rem;
 }
 
-.view-settings-modal .control-label label {
+.view-settings-modal .control-label label,
+.section-settings-modal .control-label label {
     font-weight: 500;
     color: var(--layout-text-primary);
 }

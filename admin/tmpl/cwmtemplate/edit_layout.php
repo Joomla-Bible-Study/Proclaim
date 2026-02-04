@@ -28,20 +28,16 @@ use Joomla\CMS\Language\Text;
  * - Syncs changes back to the form fields on save
  */
 
-// Register language strings for JavaScript
+// =====================================================================
+// UI Language Strings (used directly via Joomla.Text._() in JavaScript)
+// These are for dynamic UI elements that aren't part of option arrays
+// =====================================================================
 Text::script('JBS_TPL_LAYOUT_HELP');
 Text::script('JBS_TPL_AVAILABLE_ELEMENTS');
 Text::script('JBS_TPL_ROW');
 Text::script('JBS_TPL_DROP_ELEMENTS_HERE');
 Text::script('JBS_TPL_ELEMENT_SETTINGS');
 Text::script('JBS_TPL_REMOVE_ELEMENT');
-Text::script('JBS_TPL_MESSAGES_LIST');
-Text::script('JBS_TPL_STUDY_DETAILS');
-Text::script('JBS_TPL_TEACHERS_LIST');
-Text::script('JBS_TPL_TEACHER_DETAILS');
-Text::script('JBS_TPL_SERIES_LIST');
-Text::script('JBS_TPL_SERIES_DETAILS');
-Text::script('JBS_TPL_LANDING_PAGE');
 Text::script('JBS_TPL_COLSPAN');
 Text::script('JBS_TPL_COLSPAN_DESC');
 Text::script('JBS_TPL_ELEMENT');
@@ -50,87 +46,17 @@ Text::script('JBS_TPL_TYPE_OF_LINK');
 Text::script('JBS_TPL_TYPE_OF_LINK_DESC');
 Text::script('JBS_TPL_CUSTOMCLASS');
 Text::script('JBS_TPL_CUSTOMCLASS_DESC');
-Text::script('JCLOSE');
-Text::script('JCANCEL');
-Text::script('JAPPLY');
-
-// Settings panel language strings
-Text::script('JBS_TPL_SETTINGS_PANEL');
-Text::script('JBS_TPL_TOGGLE_SETTINGS');
-Text::script('JBS_TPL_VERSES_DATES_CSS');
-Text::script('JBS_TPL_LIST_ITEMS');
-Text::script('JBS_TPL_FILTERS');
-Text::script('JBS_TPL_TOOLTIP');
-Text::script('JBS_TPL_STUDY_DETAILS_VIEW');
-Text::script('JBS_TPL_TEACHERDETAILS');
-Text::script('JBS_TPL_TEACHER');
-Text::script('JBS_TPL_TEACHERDISPLAY');
-Text::script('JBS_TPL_TEACHERDETAILSDISPLAY');
-Text::script('JBS_TPL_SERIESLIST');
-Text::script('JBS_TPL_SERIESLISTDISPLAY');
-Text::script('JBS_TPL_SERIESDETAILS');
-Text::script('JBS_TPL_SERIESDETAILSDISPLAY');
-Text::script('JBS_TPL_PLEASE_WAIT');
-Text::script('JBS_TPL_LOADING');
-
-// Link type options (matches LinkOptionsField.php)
-Text::script('JBS_TPL_NO_LINK');
-Text::script('JBS_TPL_LINK_TO_DETAILS');
-Text::script('JBS_TPL_LINK_TO_DETAILS_TOOLTIP');
-Text::script('JBS_TPL_LINK_TO_MEDIA');
-Text::script('JBS_TPL_LINK_TO_DOWNLOAD');
-Text::script('JBS_TPL_LINK_TO_MEDIA_TOOLTIP');
-Text::script('JBS_TPL_LINK_TO_TEACHERS_PROFILE');
-Text::script('JBS_TPL_LINK_TO_FIRST_ARTICLE');
-Text::script('JBS_TPL_LINK_TO_VIRTUEMART');
-Text::script('JBS_TPL_LINK_TO_DOCMAN');
+Text::script('JBS_TPL_DATE_FORMAT');
+Text::script('JBS_TPL_DATE_FORMAT_DESC');
 Text::script('JBS_TPL_VIEW_SETTINGS');
-
-// Element options (matches ElementOptionsField.php)
-Text::script('JBS_CMN_NONE');
-Text::script('JBS_TPL_PARAGRAPH');
-Text::script('JBS_TPL_HEADER1');
-Text::script('JBS_TPL_HEADER2');
-Text::script('JBS_TPL_HEADER3');
-Text::script('JBS_TPL_HEADER4');
-Text::script('JBS_TPL_HEADER5');
-Text::script('JBS_TPL_BLOCKQUOTE');
-
-// Element labels
-Text::script('JBS_CMN_SCRIPTURE');
-Text::script('JBS_CMN_SCRIPTURE2');
-Text::script('JBS_CMN_TITLE');
-Text::script('JBS_CMN_DATE');
-Text::script('JBS_CMN_TEACHER');
-Text::script('JBS_CMN_TEACHER_IMAGE');
-Text::script('JBS_CMN_TEACHER_TITLE');
-Text::script('JBS_CMN_DURATION');
-Text::script('JBS_CMN_STUDYINTRO');
-Text::script('JBS_CMN_SERIES');
-Text::script('JBS_CMN_SERIES_THUMBNAIL');
-Text::script('JBS_CMN_SERIES_DESCRIPTION');
-Text::script('JBS_CMN_MEDIA');
-Text::script('JBS_CMN_TOPICS');
-Text::script('JBS_CMN_LOCATIONS');
-Text::script('JBS_CMN_HITS');
-Text::script('JBS_CMN_DOWNLOADS');
-Text::script('JBS_CMN_STUDYNUMBER');
-Text::script('JBS_CMN_MESSAGETYPE');
-Text::script('JBS_CMN_THUMBNAIL');
-Text::script('JBS_CMN_CUSTOM');
-Text::script('JBS_CMN_DESCRIPTION');
-
-// Landing page section labels
-Text::script('JBS_CMN_TEACHERS');
-Text::script('JBS_CMN_SERIES');
-Text::script('JBS_CMN_BOOKS');
-Text::script('JBS_CMN_TOPICS');
-Text::script('JBS_CMN_LOCATIONS');
-Text::script('JBS_CMN_MESSAGETYPES');
-Text::script('JBS_CMN_YEARS');
 Text::script('JBS_TPL_DRAG_TO_REORDER');
 Text::script('JBS_TPL_TOGGLE_SECTION');
 Text::script('JBS_TPL_SECTION_DISABLED');
+Text::script('JBS_TPL_PLEASE_WAIT');
+Text::script('JBS_TPL_LOADING');
+Text::script('JCLOSE');
+Text::script('JCANCEL');
+Text::script('JAPPLY');
 
 // Pass template params to JavaScript for initial loading
 // The form fields are lazy-loaded, so we need to provide the data directly
@@ -146,52 +72,253 @@ if (\is_string($params)) {
 $document = $this->getDocument();
 $document->addScriptOptions('com_proclaim.templateParams', $paramsArray);
 
+// Pass pre-translated date format options to JavaScript
+// This is more maintainable than duplicating strings in JS and registering via Text::script
+$dateFormatOptions = [
+    ['value' => '', 'label' => Text::_('JBS_TPL_USE_GLOBAL_SETTING')],
+    ['value' => '0', 'label' => Text::_('JBS_TPL_DATE_FORMAT_MMM_D_YYYY')],
+    ['value' => '1', 'label' => Text::_('JBS_TPL_DATE_FORMAT_MMM_D')],
+    ['value' => '2', 'label' => Text::_('JBS_TPL_DATE_FORMAT_M_D_YYYY')],
+    ['value' => '3', 'label' => Text::_('JBS_TPL_DATE_FORMAT_M_D')],
+    ['value' => '4', 'label' => Text::_('JBS_TPL_DATE_FORMAT_WD_MMMM_D_YYYY')],
+    ['value' => '5', 'label' => Text::_('JBS_TPL_DATE_FORMAT_MMMM_D_YYYY')],
+    ['value' => '6', 'label' => Text::_('JBS_TPL_DATE_FORMAT_D_MMMM_YYYY')],
+    ['value' => '7', 'label' => Text::_('JBS_TPL_DATE_FORMAT_D_M_YYYY')],
+    ['value' => '8', 'label' => Text::_('JBS_TPL_DATE_FORMAT_USE_GLOBAL')],
+    ['value' => '9', 'label' => Text::_('JBS_TPL_DATE_FORMAT_YYYY_MM_DD')],
+];
+$document->addScriptOptions('com_proclaim.dateFormatOptions', $dateFormatOptions);
+
+// Link type options (pre-translated)
+$linkTypeOptions = [
+    ['value' => '0', 'label' => Text::_('JBS_TPL_NO_LINK')],
+    ['value' => '1', 'label' => Text::_('JBS_TPL_LINK_TO_DETAILS')],
+    ['value' => '4', 'label' => Text::_('JBS_TPL_LINK_TO_DETAILS_TOOLTIP')],
+    ['value' => '2', 'label' => Text::_('JBS_TPL_LINK_TO_MEDIA')],
+    ['value' => '9', 'label' => Text::_('JBS_TPL_LINK_TO_DOWNLOAD')],
+    ['value' => '5', 'label' => Text::_('JBS_TPL_LINK_TO_MEDIA_TOOLTIP')],
+    ['value' => '3', 'label' => Text::_('JBS_TPL_LINK_TO_TEACHERS_PROFILE')],
+    ['value' => '6', 'label' => Text::_('JBS_TPL_LINK_TO_FIRST_ARTICLE')],
+    ['value' => '7', 'label' => Text::_('JBS_TPL_LINK_TO_VIRTUEMART')],
+    ['value' => '8', 'label' => Text::_('JBS_TPL_LINK_TO_DOCMAN')],
+];
+$document->addScriptOptions('com_proclaim.linkTypeOptions', $linkTypeOptions);
+
+// Element type options (HTML wrapper elements, pre-translated)
+$elementTypeOptions = [
+    ['value' => '0', 'label' => Text::_('JBS_CMN_NONE')],
+    ['value' => '1', 'label' => Text::_('JBS_TPL_PARAGRAPH')],
+    ['value' => '2', 'label' => Text::_('JBS_TPL_HEADER1')],
+    ['value' => '3', 'label' => Text::_('JBS_TPL_HEADER2')],
+    ['value' => '4', 'label' => Text::_('JBS_TPL_HEADER3')],
+    ['value' => '5', 'label' => Text::_('JBS_TPL_HEADER4')],
+    ['value' => '6', 'label' => Text::_('JBS_TPL_HEADER5')],
+    ['value' => '7', 'label' => Text::_('JBS_TPL_BLOCKQUOTE')],
+];
+$document->addScriptOptions('com_proclaim.elementTypeOptions', $elementTypeOptions);
+
+// =====================================================================
+// Element definitions extracted from template.xml (single source of truth)
+// This ensures Layout Editor elements match the form XML definitions
+// =====================================================================
+$form = $this->form;
+
+/**
+ * Get translated label from a fieldset's XML label attribute.
+ *
+ * @param string $fieldsetName The fieldset name to get the label from
+ *
+ * @return string|null Translated label or null if not found
+ */
+$getFieldsetLabel = function (string $fieldsetName) use ($form): ?string {
+    $fieldsets = $form->getFieldsets();
+
+    if (isset($fieldsets[$fieldsetName]) && !empty($fieldsets[$fieldsetName]->label)) {
+        return Text::_($fieldsets[$fieldsetName]->label);
+    }
+
+    return null;
+};
+
+/**
+ * Extract element definitions from form fieldsets by finding '*row' fields.
+ * The label attribute on row fields defines the element's display name.
+ *
+ * @param array  $fieldsetNames Array of fieldset names to parse
+ * @param string $prefix        Prefix to strip from field names (e.g., 'ts', 'd')
+ *
+ * @return array Array of ['id' => elementId, 'label' => translatedLabel]
+ */
+$extractElements = function (array $fieldsetNames, string $prefix) use ($form): array {
+    $elements = [];
+    $seen     = [];
+
+    foreach ($fieldsetNames as $fieldsetName) {
+        $fields = $form->getFieldset($fieldsetName);
+
+        foreach ($fields as $field) {
+            $name = $field->fieldname;
+
+            // Only fields ending with 'row' define element positions
+            if (!str_ends_with($name, 'row')) {
+                continue;
+            }
+
+            // Extract element ID: remove prefix and 'row' suffix
+            $elementId = substr($name, \strlen($prefix), -3);
+
+            // Skip duplicates (same element may appear in multiple fieldsets)
+            if (isset($seen[$elementId])) {
+                continue;
+            }
+            $seen[$elementId] = true;
+
+            // Get translated label from field's XML label attribute
+            $labelKey = $field->getAttribute('label');
+
+            $elements[] = [
+                'id'    => $elementId,
+                'label' => Text::_($labelKey),
+            ];
+        }
+    }
+
+    return $elements;
+};
+
+// Build element definitions dynamically from form XML fieldsets
+// Fieldset mappings follow the template.xml structure
+// Context labels are read from the first fieldset's label attribute
+$elementDefinitions = [
+    'messages' => [
+        'label'    => $getFieldsetLabel('DISPLAYELEMENTS1') ?? Text::_('JBS_TPL_MESSAGES_LIST'),
+        'prefix'   => '',
+        'elements' => $extractElements(
+            ['DISPLAYELEMENTS1', 'DISPLAYELEMENTS2', 'DISPLAYELEMENTS3',
+             'DISPLAYELEMENTS4', 'DISPLAYELEMENTS5', 'DISPLAYELEMENTS6'],
+            ''
+        ),
+    ],
+    'details' => [
+        'label'    => $getFieldsetLabel('DDISPLAYELEMENTS1') ?? Text::_('JBS_TPL_STUDY_DETAILS'),
+        'prefix'   => 'd',
+        'elements' => $extractElements(
+            ['DDISPLAYELEMENTS1', 'DDISPLAYELEMENTS2', 'DDISPLAYELEMENTS3',
+             'DDISPLAYELEMENTS4', 'DDISPLAYELEMENTS5', 'DDISPLAYELEMENTS6'],
+            'd'
+        ),
+    ],
+    'teachers' => [
+        'label'    => $getFieldsetLabel('TEACHERDISPLAY') ?? Text::_('JBS_TPL_TEACHERS_LIST'),
+        'prefix'   => 'ts',
+        'elements' => $extractElements(['TEACHERDISPLAY'], 'ts'),
+    ],
+    'teacherDetails' => [
+        'label'    => $getFieldsetLabel('TEACHERDETAILSDISPLAY') ?? Text::_('JBS_TPL_TEACHER_DETAILS'),
+        'prefix'   => 'td',
+        'elements' => $extractElements(['TEACHERDETAILSDISPLAY'], 'td'),
+    ],
+    'series' => [
+        'label'    => $getFieldsetLabel('SERIESDISPLAY') ?? Text::_('JBS_TPL_SERIES_LIST'),
+        'prefix'   => 's',
+        'elements' => $extractElements(['SERIESDISPLAY'], 's'),
+    ],
+    'seriesDetails' => [
+        'label'    => $getFieldsetLabel('SERIESDETAILDISPLAY') ?? Text::_('JBS_TPL_SERIES_DETAILS'),
+        'prefix'   => 'sd',
+        'elements' => $extractElements(['SERIESDETAILDISPLAY'], 'sd'),
+    ],
+    'landingPage' => [
+        'label'       => $getFieldsetLabel('LANDINGPAGE') ?? Text::_('JBS_TPL_LANDING_PAGE'),
+        'prefix'      => '',
+        'isOrderOnly' => true,
+        // Landing page sections extracted from headingorder list field options
+        // Each option value is the section ID, option text is the language key
+        'elements'    => (function () use ($form): array {
+            $sections = [];
+
+            // Get the headingorder_1 field which has all sections as options
+            $field = $form->getField('headingorder_1', 'params');
+
+            if ($field) {
+                // Access the XML element's options
+                $element = $field->element ?? null;
+
+                if ($element) {
+                    foreach ($element->option as $option) {
+                        $sectionId = (string) $option['value'];
+                        $labelKey  = (string) $option;
+
+                        $sections[] = [
+                            'id'         => $sectionId,
+                            'label'      => Text::_($labelKey),
+                            'showParam'  => 'show' . $sectionId,
+                            'labelParam' => $sectionId . 'label',
+                        ];
+                    }
+                }
+            }
+
+            // Fallback if field parsing fails
+            if (empty($sections)) {
+                $sections = [
+                    ['id' => 'teachers', 'label' => Text::_('JBS_CMN_TEACHERS'), 'showParam' => 'showteachers', 'labelParam' => 'teacherslabel'],
+                    ['id' => 'series', 'label' => Text::_('JBS_CMN_SERIES'), 'showParam' => 'showseries', 'labelParam' => 'serieslabel'],
+                    ['id' => 'books', 'label' => Text::_('JBS_CMN_BOOKS'), 'showParam' => 'showbooks', 'labelParam' => 'bookslabel'],
+                    ['id' => 'topics', 'label' => Text::_('JBS_CMN_TOPICS'), 'showParam' => 'showtopics', 'labelParam' => 'topicslabel'],
+                    ['id' => 'locations', 'label' => Text::_('JBS_CMN_LOCATIONS'), 'showParam' => 'showlocations', 'labelParam' => 'locationslabel'],
+                    ['id' => 'messagetypes', 'label' => Text::_('JBS_CMN_MESSAGETYPES'), 'showParam' => 'showmessagetypes', 'labelParam' => 'messagetypeslabel'],
+                    ['id' => 'years', 'label' => Text::_('JBS_CMN_YEARS'), 'showParam' => 'showyears', 'labelParam' => 'yearslabel'],
+                ];
+            }
+
+            return $sections;
+        })(),
+    ],
+];
+$document->addScriptOptions('com_proclaim.elementDefinitions', $elementDefinitions);
+
 // Pass template ID for lazy-loading fieldsets
 $templateId = (int) $this->item->id;
 $document->addScriptOptions('com_proclaim.templateId', $templateId);
 
-// Settings panel fieldsets configuration by context
-// Note: DISPLAY fieldsets (TEACHERDISPLAY, SERIESDISPALY, etc.) are excluded
-// because they contain row/col/colspan settings handled by the visual Layout Editor
-$settingsConfig = [
-    'messages' => [
-        ['fieldset' => 'VERSES', 'label' => Text::_('JBS_TPL_VERSES_DATES_CSS')],
-        ['fieldset' => 'LISTITEMS', 'label' => Text::_('JBS_TPL_LIST_ITEMS')],
-        ['fieldset' => 'FILTERS', 'label' => Text::_('JBS_TPL_FILTERS')],
-        ['fieldset' => 'TOOLTIP', 'label' => Text::_('JBS_TPL_TOOLTIP')],
-    ],
-    'details' => [
-        ['fieldset' => 'DETAILS', 'label' => Text::_('JBS_TPL_STUDY_DETAILS_VIEW')],
-    ],
-    'teachers' => [
-        ['fieldset' => 'TEACHERDETAILS', 'label' => Text::_('JBS_TPL_TEACHERDETAILS')],
-        ['fieldset' => 'TEACHER', 'label' => Text::_('JBS_TPL_TEACHER')],
-    ],
-    'teacherDetails' => [
-        ['fieldset' => 'TEACHERDETAILS', 'label' => Text::_('JBS_TPL_TEACHERDETAILS')],
-    ],
-    'series' => [
-        ['fieldset' => 'SERIES', 'label' => Text::_('JBS_TPL_SERIESLIST')],
-    ],
-    'seriesDetails' => [
-        ['fieldset' => 'SERIESDETAIL', 'label' => Text::_('JBS_TPL_SERIESDETAILS')],
-    ],
-    'landingPage' => [
-        ['fieldset' => 'LANDINGPAGE_PAGESETTINGS', 'label' => Text::_('JBS_TPL_LANDINGPAGE_DISPLAY_SETTINGS')],
-    ],
-];
-$document->addScriptOptions('com_proclaim.settingsConfig', $settingsConfig);
+// =====================================================================
+// Settings panel configuration extracted from XML fieldsets
+// Fieldsets with layoutContext attribute appear in View Settings panel
+// Fieldsets with landingSection attribute provide section-specific settings
+// =====================================================================
+$fieldsets      = $form->getFieldsets();
+$settingsConfig = [];
+$landingSectionSettings = [];
 
-// Landing page section-specific fieldsets (for gear button on each section card)
-$landingSectionSettings = [
-    'teachers' => 'LANDINGPAGE_TEACHERS',
-    'series' => 'LANDINGPAGE_SERIES',
-    'books' => 'LANDINGPAGE_BOOKS',
-    'topics' => 'LANDINGPAGE_TOPICS',
-    'locations' => 'LANDINGPAGE_LOCATIONS',
-    'messagetypes' => 'LANDINGPAGE_MESSAGETYPES',
-    'years' => 'LANDINGPAGE_YEARS',
-];
+foreach ($fieldsets as $fieldsetName => $fieldset) {
+    // Check for layoutContext attribute (View Settings panel)
+    if (!empty($fieldset->layoutContext)) {
+        $contexts = array_map('trim', explode(',', $fieldset->layoutContext));
+        $label    = !empty($fieldset->label) ? Text::_($fieldset->label) : $fieldsetName;
+
+        foreach ($contexts as $context) {
+            if (!isset($settingsConfig[$context])) {
+                $settingsConfig[$context] = [];
+            }
+            $settingsConfig[$context][] = [
+                'fieldset' => $fieldsetName,
+                'label'    => $label,
+            ];
+        }
+    }
+
+    // Check for landingSection attribute (Landing Page section settings)
+    if (!empty($fieldset->landingSection)) {
+        $label = !empty($fieldset->label) ? Text::_($fieldset->label) : $fieldsetName;
+        $landingSectionSettings[$fieldset->landingSection] = [
+            'fieldset' => $fieldsetName,
+            'label'    => $label,
+        ];
+    }
+}
+
+$document->addScriptOptions('com_proclaim.settingsConfig', $settingsConfig);
 $document->addScriptOptions('com_proclaim.landingSectionSettings', $landingSectionSettings);
 ?>
 
