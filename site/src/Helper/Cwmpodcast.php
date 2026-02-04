@@ -2636,9 +2636,8 @@ class Cwmpodcast
         // Check for Vorbis
         if (strlen($packet) >= 30 && substr($packet, 1, 6) === 'vorbis') {
             $sampleRate = unpack('V', substr($packet, 12, 4))[1];
-        }
-        // Check for Opus
-        elseif (strlen($packet) >= 19 && substr($packet, 0, 8) === 'OpusHead') {
+        } elseif (strlen($packet) >= 19 && substr($packet, 0, 8) === 'OpusHead') {
+            // Opus format
             $sampleRate = 48000; // Opus always uses 48kHz internally
         }
 
