@@ -83,11 +83,13 @@
                 label="JBS_ADM_FIELD_ILLEGAL_MIME_TYPES_LABEL"
                 description="JBS_ADM_FIELD_ILLEGAL_MIME_TYPES_DESC"/>
     </fieldset>
-    <fieldset name="integrations" label="JBS_ADM_INTEGRATIONS_LABEL"
+    <fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
+              name="integrations" label="JBS_ADM_INTEGRATIONS_LABEL"
               description="JBS_ADM_INTEGRATIONS_DESC">
         <field
                 name="enable_virtuemart"
-                type="radio"
+                type="IntegrationToggle"
+                extension="com_virtuemart"
                 default="0"
                 layout="joomla.form.field.radio.switcher"
                 label="JBS_ADM_ENABLE_VIRTUEMART_LABEL"
@@ -97,7 +99,8 @@
         </field>
         <field
                 name="enable_docman"
-                type="radio"
+                type="IntegrationToggle"
+                extension="com_docman"
                 default="0"
                 layout="joomla.form.field.radio.switcher"
                 label="JBS_ADM_ENABLE_DOCMAN_LABEL"
