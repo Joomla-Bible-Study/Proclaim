@@ -3366,6 +3366,12 @@
         if (container && !container.dataset.initialized) {
             container.dataset.initialized = 'true';
 
+            // Remove loading placeholder
+            const loadingEl = document.getElementById('layout-editor-loading');
+            if (loadingEl) {
+                loadingEl.remove();
+            }
+
             // Get initial context from data attribute or default to 'messages'
             const initialContext = container.dataset.context || 'messages';
 
@@ -3375,11 +3381,32 @@
         }
     }
 
-    // Auto-initialize when DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initLayoutEditor);
+    /**
+     * Setup async initialization - loads after page is fully rendered
+     * This ensures the page is interactive before heavy DOM manipulation starts
+     */
+    function setupAsyncInit() {
+        const container = document.getElementById('layout-editor-container');
+        if (!container) {
+            // Container doesn't exist yet (will be loaded via AJAX)
+            return;
+        }
+
+        // Use requestIdleCallback for best performance (with fallback for older browsers)
+        const scheduleInit = window.requestIdleCallback || ((cb) => setTimeout(cb, 50));
+
+        // Schedule initialization during browser idle time
+        scheduleInit(() => {
+            initLayoutEditor();
+        }, { timeout: 2000 }); // Max delay of 2 seconds
+    }
+
+    // Wait for page to be fully loaded before scheduling async init
+    if (document.readyState === 'complete') {
+        // Page already loaded
+        setupAsyncInit();
     } else {
-        // DOM is already ready
-        initLayoutEditor();
+        // Wait for load event (fires after all resources including images are loaded)
+        window.addEventListener('load', setupAsyncInit);
     }
 })();

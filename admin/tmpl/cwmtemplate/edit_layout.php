@@ -13,6 +13,7 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmtemplate\HtmlView $this */
@@ -360,6 +361,13 @@ $document->addScriptOptions('com_proclaim.landingSectionSettings', $landingSecti
             <?php echo Text::_('JBS_TPL_LAYOUT_REQUIRES_JS'); ?>
         </div>
     </noscript>
+    <!-- Loading placeholder - replaced when Layout Editor initializes -->
+    <div id="layout-editor-loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden"><?php echo Text::_('JLIB_HTML_BEHAVIOR_LOADING'); ?></span>
+        </div>
+        <p class="mt-3 text-muted"><?php echo Text::_('JBS_TPL_LAYOUT_LOADING'); ?></p>
+    </div>
 </div>
 
 <div class="alert alert-info mt-3">
@@ -371,3 +379,78 @@ $document->addScriptOptions('com_proclaim.landingSectionSettings', $landingSecti
 <div style="display: none;">
     <?php echo $this->form->renderFieldset('LANDINGPAGE'); ?>
 </div>
+
+<?php
+// When loaded via AJAX, we need to provide script options and language strings inline
+// since addScriptOptions() and Text::script() won't work for AJAX-loaded content
+$isAjax = Factory::getApplication()->input->get('format') === 'raw';
+
+if ($isAjax) :
+    // Collect all the options that were set via addScriptOptions
+    $scriptOptions = [
+        'com_proclaim.templateParams'         => $paramsArray,
+        'com_proclaim.dateFormatOptions'      => $dateFormatOptions,
+        'com_proclaim.linkTypeOptions'        => $linkTypeOptions,
+        'com_proclaim.teacherLinkTypeOptions' => $teacherLinkTypeOptions,
+        'com_proclaim.seriesLinkTypeOptions'  => $seriesLinkTypeOptions,
+        'com_proclaim.elementTypeOptions'     => $elementTypeOptions,
+        'com_proclaim.elementDefinitions'     => $elementDefinitions,
+        'com_proclaim.templateId'             => $templateId,
+        'com_proclaim.settingsConfig'         => $settingsConfig,
+        'com_proclaim.landingSectionSettings' => $landingSectionSettings,
+    ];
+
+    // Collect language strings that were registered via Text::script()
+    $languageStrings = [
+        'JBS_TPL_LAYOUT_HELP'             => Text::_('JBS_TPL_LAYOUT_HELP'),
+        'JBS_TPL_AVAILABLE_ELEMENTS'      => Text::_('JBS_TPL_AVAILABLE_ELEMENTS'),
+        'JBS_TPL_ROW'                     => Text::_('JBS_TPL_ROW'),
+        'JBS_TPL_DROP_ELEMENTS_HERE'      => Text::_('JBS_TPL_DROP_ELEMENTS_HERE'),
+        'JBS_TPL_ELEMENT_SETTINGS'        => Text::_('JBS_TPL_ELEMENT_SETTINGS'),
+        'JBS_TPL_REMOVE_ELEMENT'          => Text::_('JBS_TPL_REMOVE_ELEMENT'),
+        'JBS_TPL_COLSPAN'                 => Text::_('JBS_TPL_COLSPAN'),
+        'JBS_TPL_COLSPAN_DESC'            => Text::_('JBS_TPL_COLSPAN_DESC'),
+        'JBS_TPL_ELEMENT'                 => Text::_('JBS_TPL_ELEMENT'),
+        'JBS_TPL_ELEMENT_DESC'            => Text::_('JBS_TPL_ELEMENT_DESC'),
+        'JBS_TPL_TYPE_OF_LINK'            => Text::_('JBS_TPL_TYPE_OF_LINK'),
+        'JBS_TPL_TYPE_OF_LINK_DESC'       => Text::_('JBS_TPL_TYPE_OF_LINK_DESC'),
+        'JBS_TPL_CUSTOMCLASS'             => Text::_('JBS_TPL_CUSTOMCLASS'),
+        'JBS_TPL_CUSTOMCLASS_DESC'        => Text::_('JBS_TPL_CUSTOMCLASS_DESC'),
+        'JBS_TPL_DATE_FORMAT'             => Text::_('JBS_TPL_DATE_FORMAT'),
+        'JBS_TPL_DATE_FORMAT_DESC'        => Text::_('JBS_TPL_DATE_FORMAT_DESC'),
+        'JBS_TPL_VIEW_SETTINGS'           => Text::_('JBS_TPL_VIEW_SETTINGS'),
+        'JBS_TPL_DRAG_TO_REORDER'         => Text::_('JBS_TPL_DRAG_TO_REORDER'),
+        'JBS_TPL_TOGGLE_SECTION'          => Text::_('JBS_TPL_TOGGLE_SECTION'),
+        'JBS_TPL_SECTION_DISABLED'        => Text::_('JBS_TPL_SECTION_DISABLED'),
+        'JBS_TPL_PLEASE_WAIT'             => Text::_('JBS_TPL_PLEASE_WAIT'),
+        'JBS_TPL_LOADING'                 => Text::_('JBS_TPL_LOADING'),
+        'JBS_TPL_UNSAVED_CHANGES'         => Text::_('JBS_TPL_UNSAVED_CHANGES'),
+        'JBS_TPL_UNSAVED_CHANGES_CONFIRM' => Text::_('JBS_TPL_UNSAVED_CHANGES_CONFIRM'),
+        'JBS_TPL_MODAL_UNSAVED_CHANGES'   => Text::_('JBS_TPL_MODAL_UNSAVED_CHANGES'),
+        'JCLOSE'                          => Text::_('JCLOSE'),
+        'JCANCEL'                         => Text::_('JCANCEL'),
+        'JAPPLY'                          => Text::_('JAPPLY'),
+    ];
+    ?>
+    <script>
+    // Merge script options and language strings for AJAX-loaded content
+    (function() {
+        var options = <?php echo json_encode($scriptOptions, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+        var strings = <?php echo json_encode($languageStrings, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+
+        // Merge script options
+        if (typeof Joomla !== 'undefined' && Joomla.optionsStorage) {
+            Object.keys(options).forEach(function(key) {
+                Joomla.optionsStorage[key] = options[key];
+            });
+        }
+
+        // Merge language strings
+        if (typeof Joomla !== 'undefined' && Joomla.Text && Joomla.Text.strings) {
+            Object.keys(strings).forEach(function(key) {
+                Joomla.Text.strings[key] = strings[key];
+            });
+        }
+    })();
+    </script>
+<?php endif; ?>

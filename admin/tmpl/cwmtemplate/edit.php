@@ -121,7 +121,16 @@ endforeach;
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'layout', Text::_('JBS_TPL_LAYOUT_EDITOR')); ?>
         <div class="row">
             <div class="col-12">
-                <?php include __DIR__ . '/edit_layout.php'; ?>
+                <!-- Layout Editor loads via AJAX when tab is shown for faster initial page load -->
+                <div id="layout-editor-ajax-container"
+                     data-load-url="<?php echo Route::_('index.php?option=com_proclaim&task=cwmtemplate.loadLayoutEditor&format=raw&id=' . (int) $this->item->id); ?>">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden"><?php echo Text::_('JLIB_HTML_BEHAVIOR_LOADING'); ?></span>
+                        </div>
+                        <p class="mt-3 text-muted"><?php echo Text::_('JBS_TPL_LAYOUT_LOADING'); ?></p>
+                    </div>
+                </div>
             </div>
         </div>
         <?php

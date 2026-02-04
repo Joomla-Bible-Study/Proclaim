@@ -290,11 +290,129 @@
             });
         }
 
+        /**
+         * Initialize lazy loading for the Layout Editor tab
+         * Loads the layout editor content via AJAX when the tab is first shown
+         */
+        function initLayoutEditorLazyLoad() {
+            const container = document.getElementById('layout-editor-ajax-container');
+            if (!container) {
+                return;
+            }
+
+            const loadUrl = container.dataset.loadUrl;
+            if (!loadUrl) {
+                return;
+            }
+
+            // Find the tab element containing the container
+            // Joomla 5 uses <joomla-tab-element> web components, not Bootstrap .tab-pane
+            const tabElement = container.closest('joomla-tab-element');
+
+            if (!tabElement) {
+                // Not in a tab, load immediately
+                loadLayoutEditorContent(container, loadUrl);
+                return;
+            }
+
+            // Check if tab is already active
+            if (tabElement.hasAttribute('active')) {
+                loadLayoutEditorContent(container, loadUrl);
+                return;
+            }
+
+            // Find the parent joomla-tab and listen for tab changes
+            const joomlaTab = tabElement.closest('joomla-tab');
+
+            if (!joomlaTab) {
+                // Can't find tab container, load immediately
+                loadLayoutEditorContent(container, loadUrl);
+                return;
+            }
+
+            // Load when tab is shown for the first time
+            // joomla-tab fires 'joomla.tab.shown' event when a tab is activated
+            const loadOnShow = function(event) {
+                // Check if the shown tab is our tab
+                if (event.target === tabElement || tabElement.hasAttribute('active')) {
+                    loadLayoutEditorContent(container, loadUrl);
+                    joomlaTab.removeEventListener('joomla.tab.shown', loadOnShow);
+                }
+            };
+            joomlaTab.addEventListener('joomla.tab.shown', loadOnShow);
+        }
+
+        /**
+         * Load the Layout Editor content via AJAX
+         * @param {HTMLElement} container - The container to populate
+         * @param {string} url - The URL to fetch content from
+         */
+        function loadLayoutEditorContent(container, url) {
+            // Already loaded?
+            if (container.dataset.loaded === 'true') {
+                return;
+            }
+
+            container.dataset.loaded = 'true';
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                container.innerHTML = html;
+
+                // Execute any inline scripts in the loaded content
+                // (script tags don't execute automatically when set via innerHTML)
+                container.querySelectorAll('script').forEach(function(oldScript) {
+                    const newScript = document.createElement('script');
+                    // Copy attributes
+                    Array.from(oldScript.attributes).forEach(function(attr) {
+                        newScript.setAttribute(attr.name, attr.value);
+                    });
+                    // Copy content
+                    newScript.textContent = oldScript.textContent;
+                    // Replace old script with new one to trigger execution
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                });
+
+                // Dispatch a custom event to signal that layout editor content is loaded
+                container.dispatchEvent(new CustomEvent('layoutEditorLoaded', {
+                    bubbles: true
+                }));
+
+                // If layout editor script is already loaded, trigger initialization
+                if (typeof window.LayoutEditor !== 'undefined') {
+                    const editorContainer = container.querySelector('#layout-editor-container');
+                    if (editorContainer && !editorContainer.dataset.initialized) {
+                        // Remove the loading placeholder if present
+                        const loadingEl = document.getElementById('layout-editor-loading');
+                        if (loadingEl) {
+                            loadingEl.remove();
+                        }
+
+                        editorContainer.dataset.initialized = 'true';
+                        const initialContext = editorContainer.dataset.context || 'messages';
+                        window.proclaimLayoutEditor = new window.LayoutEditor(editorContainer, {
+                            context: initialContext
+                        });
+                    }
+                }
+            })
+            .catch(error => {
+                container.innerHTML = '<div class="alert alert-danger">Failed to load Layout Editor: ' + error.message + '</div>';
+            });
+        }
+
         // Export functions for use by other modules (e.g., layout editor)
         window.ProclaimLazyLoad = {
             loadFieldset: loadFieldset,
             isFieldsetLoaded: isFieldsetLoaded,
-            isFieldsetLoading: isFieldsetLoading
+            isFieldsetLoading: isFieldsetLoading,
+            loadLayoutEditorContent: loadLayoutEditorContent
         };
 
         // Initialize lazy loading on DOMContentLoaded
@@ -302,10 +420,12 @@
             document.addEventListener('DOMContentLoaded', function() {
                 initAccordionLazyLoad();
                 initTabLazyLoad();
+                initLayoutEditorLazyLoad();
             });
         } else {
             initAccordionLazyLoad();
             initTabLazyLoad();
+            initLayoutEditorLazyLoad();
         }
     })();
 
