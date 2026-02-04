@@ -410,7 +410,7 @@
                 <option value="1">JBS_TPL_SHOW_ALWAYS</option>
             </field>
 
-            <field name="show_type_search" type="radio" default="1"
+            <field name="show_messagetype_search" type="radio" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_TYPE_SEARCH" description="JBS_TPL_LISTITEMS_SHOW_TYPE_SEARCH_DESC"
                    layout="joomla.form.field.radio.switcher">
                 <option value="0">JBS_CMN_HIDE</option>
@@ -438,7 +438,7 @@
                 <option value="1">JBS_TPL_SHOW_ALWAYS</option>
             </field>
 
-            <field name="show_locations_search" type="radio" default="1"
+            <field name="show_location_search" type="radio" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_LOCATIONS_SEARCH"
                    description="JBS_TPL_LISTITEMS_SHOW_LOCATIONS_SEARCH_DESC"
                    layout="joomla.form.field.radio.switcher">
