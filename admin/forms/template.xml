@@ -226,9 +226,9 @@
                    label="JBS_TPL_MEDIA_LIGHTCOLOR" description="JBS_TPL_MEDIA_LIGHTCOLOR_DESC"/>
             <field name="screencolor" type="color" default="0x000000"
                    label="JBS_TPL_MEDIA_SCREENCOLOR" description="JBS_TPL_MEDIA_SCREENCOLOR_DESC"/>
-            <field name="popuptitle" type="PopupCode" size="75" default="{{title}}"
+            <field name="popuptitle" type="Custom" codeset="template" input="text" size="75" default="{{title}}"
                    label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_DESC"/>
-            <field name="popupfooter" type="PopupCode" size="75" default=""
+            <field name="popupfooter" type="Custom" codeset="template" input="text" size="75" default=""
                    label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_DESC"/>
             <field name="popupmargin" type="int" default="50"
                    label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_TPL_MEDIA_POPUPMARGIN_DESC"/>
