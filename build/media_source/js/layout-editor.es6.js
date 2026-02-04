@@ -2204,6 +2204,19 @@
                     }
                 });
 
+                // Intercept Close/Cancel button to warn about unsaved changes
+                document.addEventListener('click', (e) => {
+                    const cancelBtn = e.target.closest('.button-cancel');
+                    if (cancelBtn && this.isDirty) {
+                        const message = this.trans('JBS_TPL_UNSAVED_CHANGES_CONFIRM') || 'You have unsaved changes. Are you sure you want to leave without saving?';
+                        if (!window.confirm(message)) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            e.stopImmediatePropagation();
+                        }
+                    }
+                }, true); // Use capture phase to intercept before Joomla's handler
+
                 // Toolbar buttons
                 if (this.toolbar) {
                     // Undo button
