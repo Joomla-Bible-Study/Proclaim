@@ -469,7 +469,10 @@
                 </div>
             `;
 
-                document.body.appendChild(modal);
+                // Append modal to the main form so fields are submitted with form
+                // Falls back to body if form not found
+                const mainForm = document.getElementById('adminForm') || document.body;
+                mainForm.appendChild(modal);
                 this.viewSettingsModal = modal;
                 this.viewSettingsAccordion = modal.querySelector('#viewSettingsAccordion');
                 this.bsViewSettingsModal = null;
@@ -1031,7 +1034,9 @@
                 </div>
             `;
 
-                document.body.appendChild(modal);
+                // Append modal to the main form so fields are submitted with form
+                const mainForm = document.getElementById('adminForm') || document.body;
+                mainForm.appendChild(modal);
                 this.sectionSettingsModal = modal;
                 this.sectionSettingsContent = modal.querySelector('#sectionSettingsContent');
                 this.bsSectionSettingsModal = null;
