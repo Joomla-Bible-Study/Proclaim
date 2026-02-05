@@ -96,7 +96,7 @@ switch ($this->params->get('series_wrapcode')) {
         break;
 }
 ?>
-            <div class="listingfooter">
+            <div class="listingfooter pagination-centered">
                 <?php
     echo $this->pagination->getPagesLinks();
 echo $this->pagination->getPagesCounter();

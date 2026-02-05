@@ -56,7 +56,7 @@ foreach ($this->items as $study) {
     </div>
     <?php
 } ?>
-<div class="row-fluid col-lg-12 pagination">
+<div class="row-fluid col-lg-12 pagination pagination-centered">
     <?php
     echo $this->pagination->getPageslinks(); ?>
 </div>

@@ -144,7 +144,7 @@ if (!empty($this->items)) : ?>
             'show_pagination'
         ) === '1'))
     ) : ?>
-                    <div class="pagination">
+                    <div class="pagination pagination-centered">
                         <?php
             if ($this->params->def('show_pagination_results', 1)) : ?>
                             <p class="counter float-right">
@@ -186,7 +186,7 @@ if (!empty($this->items)) : ?>
                             </div>
                         <?php endif; ?>
                     </nav>
-                    <div class="pagination" style="display: flex; justify-content: center;">
+                    <div class="pagination pagination-centered">
                         <?php echo $this->pagination->getPagesLinks(); ?>
                     </div>
                 <?php endif; ?>

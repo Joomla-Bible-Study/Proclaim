@@ -77,7 +77,7 @@ if ($this->items) {
     echo '<h4>' . Text::_('JBS_CMN_SERIES_NOT_FOUND') . '</h4>';
 }
 ?>
-                <div class="pagination">
+                <div class="pagination pagination-centered">
                     <?php
     if ((int) $this->params->get('series_list_show_pagination') === 2) {
         echo '<span class="display-limit">' . Text::_(
