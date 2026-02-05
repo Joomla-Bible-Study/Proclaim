@@ -61,11 +61,11 @@ class CwmmessageTable extends Table
     /**
      * Study Number
      *
-     * @var int|null
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public ?int $studynumber = null;
+    public ?string $studynumber = null;
 
     /**
      * Book Number
@@ -169,34 +169,34 @@ class CwmmessageTable extends Table
     /**
      * Prod DVD
      *
-     * @var int|null
+     * @var string|null
      * @since 9.0.0
      */
-    public ?int $prod_dvd = null;
+    public ?string $prod_dvd = null;
 
     /**
      * Prod CD
      *
-     * @var int|null
+     * @var string|null
      * @since 9.0.0
      */
-    public ?int $prod_cd = null;
+    public ?string $prod_cd = null;
 
     /**
      * Server CD
      *
-     * @var int|null
+     * @var string|null
      * @since 9.0.0
      */
-    public ?int $server_cd = null;
+    public ?string $server_cd = null;
 
     /**
      * Server DVD
      *
-     * @var int|null
+     * @var string|null
      * @since 9.0.0
      */
-    public ?int $server_dvd = null;
+    public ?string $server_dvd = null;
 
     /**
      * Image CD
@@ -261,11 +261,11 @@ class CwmmessageTable extends Table
     /**
      * Show Level
      *
-     * @var int|null
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public ?int $show_level = null;
+    public ?string $show_level = null;
 
     /**
      * Location ID
