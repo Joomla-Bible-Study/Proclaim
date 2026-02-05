@@ -56,10 +56,10 @@ class CwmadminTable extends Table
     /**
      * Asset ID
      *
-     * @var int
+     * @var int|null
      * @since    7.0.0
      */
-    public int $asset_id = 0;
+    public ?int $asset_id = null;
 
     /**
      * Access Level
@@ -113,66 +113,11 @@ class CwmadminTable extends Table
     #[\Override]
     public function bind($array, $ignore = ''): bool
     {
-        $params = [];
-
         // For Saving the page.
         if (isset($array['params']) && \is_array($array['params'])) {
             $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = (string)$registry;
-        }
-
-        // For loading the administrator page
-        if (isset($array['params']) && \is_string($array['params'])) {
-            // Convert the params field to a string.
-            $parameter = new Registry();
-            $parameter->loadString($array['params']);
-            $params = $parameter->toArray();
-        }
-
-        // If simple mode, check and rename some files to hide menus
-        $views   = [];
-        $views[] = 'landingpage';
-        $views[] = 'podcastdisplay';
-        $views[] = 'podcastlist';
-        $views[] = 'seriesdisplay';
-        $views[] = 'seriesdisplays';
-        $views[] = 'sermon';
-        $views[] = 'teacher';
-        $views[] = 'teachers';
-
-        if ($params['simple_mode'] === 1) {
-            // Go through each folder and change content of default.xml to add the hidden value to the layout tag
-            foreach ($views as $view) {
-                $filecontents = file_get_contents(
-                    JPATH_ROOT . DIRECTORY_SEPARATOR .
-                    'components/com_proclaim/views/' . $view . '/tmpl/default.xml'
-                );
-
-                if (!substr_count($filecontents, '<layout hidden=\"true\" ')) {
-                    $filecontents = str_replace('<layout ', '<layout hidden=\"true\" ', $filecontents);
-                    file_put_contents(
-                        JPATH_ROOT . DIRECTORY_SEPARATOR .
-                        'components/com_proclaim/views/' . $view . '/tmpl/default.xml',
-                        $filecontents
-                    );
-                }
-            }
-        }
-
-        // Remove the hidden value from the layout tag
-        if ($params['simple_mode'] === 0) {
-            foreach ($views as $view) {
-                $filecontents = file_get_contents(
-                    JPATH_ROOT . DIRECTORY_SEPARATOR .
-                    'components/com_proclaim/views/' . $view . '/tmpl/default.xml'
-                );
-                $filecontents = str_replace('hidden=\"true \" ', '', $filecontents);
-                file_put_contents(
-                    JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/' . $view . '/tmpl/default.xml',
-                    $filecontents
-                );
-            }
         }
 
         // Bind the rules.

@@ -2,7 +2,7 @@
 <form>
     <field name="id" type="text" readonly="readonly" class="inputbox hidden"/>
     <fields name="params" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-        <field name="simple_mode" type="radio" class="form-select-color" default="1" label="JBS_ADM_SIMPLE_MODE"
+        <field name="simple_mode" type="radio" class="form-select-color" default="0" label="JBS_ADM_SIMPLE_MODE"
                description="JBS_ADM_SIMPLE_MODE_DESC" labelclass="control-label"
                layout="joomla.form.field.radio.switcher">
             <option value="0">JNO</option>

@@ -28,7 +28,7 @@ use Joomla\Registry\Registry;
  * to existing templates during component upgrades.
  *
  * @package  Proclaim.Admin
- * @since    10.2.0
+ * @since    10.1.0
  */
 class CwmtemplatemigrationHelper
 {
@@ -36,7 +36,7 @@ class CwmtemplatemigrationHelper
      * Database driver
      *
      * @var DatabaseInterface
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected DatabaseInterface $db;
 
@@ -46,20 +46,20 @@ class CwmtemplatemigrationHelper
      *
      * Format:
      * [
-     *     '10.2.0' => [
+     *     '10.1.0' => [
      *         'parameter_name' => 'default_value',
      *         'another_param' => '1',
      *     ],
-     *     '10.3.0' => [
+     *     '10.2.0' => [
      *         'new_feature_enabled' => '0',
      *     ],
      * ]
      *
      * @var array
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected array $migrations = [
-        '10.2.0' => [
+        '10.1.0' => [
             'default_show_archived'      => '2',
             'default_show_archive_badge' => '1',
         ],
@@ -71,16 +71,16 @@ class CwmtemplatemigrationHelper
      *
      * Format:
      * [
-     *     '10.2.1' => [
+     *     '10.1.0' => [
      *         'old_param_name' => 'new_param_name',
      *     ],
      * ]
      *
      * @var array
-     * @since 10.2.1
+     * @since 10.1.0
      */
     protected array $renames = [
-        '10.2.1' => [
+        '10.1.0' => [
             // Fix search filter param names to match PHP code expectations
             'show_type_search'      => 'show_messagetype_search',
             'show_locations_search' => 'show_location_search',
@@ -88,9 +88,37 @@ class CwmtemplatemigrationHelper
     ];
 
     /**
+     * Array of color field conversions keyed by version.
+     * Each conversion lists parameter names that should have legacy 0x format converted to #.
+     *
+     * Format:
+     * [
+     *     '10.1.0' => [
+     *         'backcolor',
+     *         'frontcolor',
+     *     ],
+     * ]
+     *
+     * @var array
+     * @since 10.1.0
+     */
+    protected array $colorConversions = [
+        '10.1.0' => [
+            // Template color params that may have legacy 0x format
+            'backcolor',
+            'frontcolor',
+            'lightcolor',
+            'screencolor',
+            'popupbackground',
+            'teacherdisplay_color',
+            'seriesdisplay_color',
+        ],
+    ];
+
+    /**
      * Constructor
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function __construct()
     {
@@ -126,10 +154,30 @@ class CwmtemplatemigrationHelper
             $updatedCount += $this->renameParamsInTemplates($paramsToRename);
         }
 
+        // Run any color field conversions (0x format to # format)
+        $colorConversionsToRun = $this->getColorConversionsAfterVersion($fromVersion);
+
+        if (!empty($colorConversionsToRun)) {
+            $colorFields = [];
+
+            foreach ($colorConversionsToRun as $version => $fields) {
+                foreach ($fields as $field) {
+                    $colorFields[$field] = true;
+                }
+                Log::add('Including color field conversions for version ' . $version, Log::INFO, 'com_proclaim');
+            }
+
+            $colorFieldNames = array_keys($colorFields);
+            $updatedCount   += $this->convertColorFieldsInTemplates($colorFieldNames);
+
+            // Also convert admin table color fields
+            $updatedCount += $this->convertColorFieldsInAdmin();
+        }
+
         // Get all migrations that should run (versions greater than fromVersion)
         $migrationsToRun = $this->getMigrationsAfterVersion($fromVersion);
 
-        if (empty($migrationsToRun) && empty($renamesToRun)) {
+        if (empty($migrationsToRun) && empty($renamesToRun) && empty($colorConversionsToRun)) {
             Log::add('No template migrations to run from version ' . $fromVersion, Log::INFO, 'com_proclaim');
             return 0;
         }
@@ -231,6 +279,149 @@ class CwmtemplatemigrationHelper
         uksort($result, 'version_compare');
 
         return $result;
+    }
+
+    /**
+     * Get color conversions that should run for versions after the specified version.
+     *
+     * @param   string  $fromVersion  Version to compare against
+     *
+     * @return  array  Array of color field names to convert
+     *
+     * @since   10.2.1
+     */
+    protected function getColorConversionsAfterVersion(string $fromVersion): array
+    {
+        $result = [];
+
+        foreach ($this->colorConversions as $version => $fields) {
+            if (version_compare($version, $fromVersion, '>')) {
+                $result[$version] = $fields;
+            }
+        }
+
+        // Sort by version
+        uksort($result, 'version_compare');
+
+        return $result;
+    }
+
+    /**
+     * Convert legacy 0x color format to # hex format in all templates.
+     *
+     * @param   array  $colorFields  Array of color field names to convert
+     *
+     * @return  int  Number of templates updated
+     *
+     * @since   10.2.1
+     */
+    protected function convertColorFieldsInTemplates(array $colorFields): int
+    {
+        $updatedCount = 0;
+
+        // Get all templates
+        $query = $this->db->getQuery(true)
+            ->select(['id', 'params', 'title'])
+            ->from($this->db->quoteName('#__bsms_templates'));
+        $this->db->setQuery($query);
+        $templates = $this->db->loadObjectList();
+
+        foreach ($templates as $template) {
+            $updated  = false;
+            $registry = new Registry();
+
+            if (!empty($template->params)) {
+                $registry->loadString($template->params);
+            }
+
+            // Convert each color field if it has legacy 0x format
+            foreach ($colorFields as $fieldName) {
+                $value = $registry->get($fieldName);
+
+                if ($value !== null && preg_match('/^0x([0-9A-Fa-f]{6})$/i', $value, $matches)) {
+                    $newValue = '#' . strtoupper($matches[1]);
+                    $registry->set($fieldName, $newValue);
+                    $updated = true;
+                    Log::add(
+                        'Converted color field "' . $fieldName . '" from "' . $value . '" to "' . $newValue
+                        . '" in template "' . $template->title . '"',
+                        Log::INFO,
+                        'com_proclaim'
+                    );
+                }
+            }
+
+            // Save if any parameters were converted
+            if ($updated) {
+                $this->updateTemplateParams($template->id, $registry->toString());
+                $updatedCount++;
+            }
+        }
+
+        return $updatedCount;
+    }
+
+    /**
+     * Convert legacy 0x color format to # hex format in admin table.
+     *
+     * @return  int  Number of admin records updated
+     *
+     * @since   10.2.1
+     */
+    protected function convertColorFieldsInAdmin(): int
+    {
+        $updatedCount = 0;
+
+        // Admin color fields stored in params column
+        $adminColorFields = [
+            'download_button_color',
+            'media_button_color',
+        ];
+
+        // Get admin record (usually just one row)
+        $query = $this->db->getQuery(true)
+            ->select(['id', 'params'])
+            ->from($this->db->quoteName('#__bsms_admin'));
+        $this->db->setQuery($query);
+        $adminRecords = $this->db->loadObjectList();
+
+        foreach ($adminRecords as $admin) {
+            $updated  = false;
+            $registry = new Registry();
+
+            if (!empty($admin->params)) {
+                $registry->loadString($admin->params);
+            }
+
+            // Convert each color field if it has legacy 0x format
+            foreach ($adminColorFields as $fieldName) {
+                $value = $registry->get($fieldName);
+
+                if ($value !== null && preg_match('/^0x([0-9A-Fa-f]{6})$/i', $value, $matches)) {
+                    $newValue = '#' . strtoupper($matches[1]);
+                    $registry->set($fieldName, $newValue);
+                    $updated = true;
+                    Log::add(
+                        'Converted admin color field "' . $fieldName . '" from "' . $value . '" to "' . $newValue . '"',
+                        Log::INFO,
+                        'com_proclaim'
+                    );
+                }
+            }
+
+            // Save if any parameters were converted
+            if ($updated) {
+                $updateQuery = $this->db->getQuery(true)
+                    ->update($this->db->quoteName('#__bsms_admin'))
+                    ->set($this->db->quoteName('params') . ' = ' . $this->db->quote($registry->toString()))
+                    ->where($this->db->quoteName('id') . ' = ' . (int) $admin->id);
+                $this->db->setQuery($updateQuery);
+                $this->db->execute();
+                $updatedCount++;
+            }
+        }
+
+        return $updatedCount;
     }
 
     /**
