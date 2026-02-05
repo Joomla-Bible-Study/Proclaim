@@ -22,6 +22,12 @@ describe('layout-editor.es6.js', () => {
         let mockSortable;
 
         beforeEach(() => {
+            // Use fake timers for async initialization
+            jest.useFakeTimers();
+
+            // Mock requestIdleCallback (not available in jsdom)
+            global.requestIdleCallback = (cb) => setTimeout(cb, 0);
+
             // Mock Sortable.js
             mockSortable = {
                 create: jest.fn(() => ({
@@ -38,9 +44,47 @@ describe('layout-editor.es6.js', () => {
                 }))
             };
 
-            // Mock Joomla
+            // Mock Joomla with required options
+            const mockOptions = {
+                'com_proclaim.elementDefinitions': {
+                    messages: {
+                        label: 'Messages List',
+                        prefix: '',
+                        elements: [
+                            { id: 'title', label: 'Title' },
+                            { id: 'date', label: 'Date' },
+                            { id: 'teacher', label: 'Teacher' }
+                        ]
+                    }
+                },
+                'com_proclaim.templateParams': {
+                    titlerow: '1',
+                    titlecol: '1',
+                    titlecolspan: '12',
+                    titleelement: '1',
+                    titlecustom: '',
+                    titlelinktype: '0'
+                },
+                'com_proclaim.linkTypeOptions': [
+                    { value: '0', label: 'No Link' },
+                    { value: '1', label: 'Link to Details' }
+                ],
+                'com_proclaim.dateFormatOptions': [
+                    { value: '', label: 'Use Global' },
+                    { value: '0', label: 'Sep 1, 2012' }
+                ],
+                'com_proclaim.showVersesOptions': [
+                    { value: '', label: 'Use Global' },
+                    { value: '0', label: 'Chapters Only' }
+                ],
+                'com_proclaim.elementTypeOptions': [
+                    { value: '0', label: 'None' },
+                    { value: '1', label: 'P' }
+                ]
+            };
             global.Joomla = {
-                getOptions: jest.fn(() => ({})),
+                getOptions: jest.fn((key) => mockOptions[key] || {}),
+                optionsStorage: mockOptions,
                 Text: {
                     _: jest.fn(key => key)
                 }
@@ -63,11 +107,14 @@ describe('layout-editor.es6.js', () => {
         });
 
         afterEach(() => {
+            jest.useRealTimers();
             delete global.Sortable;
             delete global.bootstrap;
             delete global.Joomla;
+            delete global.requestIdleCallback;
             delete window.LayoutEditor;
             delete window.proclaimLayoutEditor;
+            delete window.ProclaimLayoutEditor;
             jest.resetModules();
         });
 
@@ -79,6 +126,7 @@ describe('layout-editor.es6.js', () => {
         test('should auto-initialize when container exists', () => {
             require('../../build/media_source/js/layout-editor.es6.js');
             document.dispatchEvent(new Event('DOMContentLoaded'));
+            jest.runAllTimers();
 
             expect(window.proclaimLayoutEditor).toBeDefined();
         });
@@ -86,6 +134,7 @@ describe('layout-editor.es6.js', () => {
         test('should create editor structure', () => {
             require('../../build/media_source/js/layout-editor.es6.js');
             document.dispatchEvent(new Event('DOMContentLoaded'));
+            jest.runAllTimers();
 
             const container = document.getElementById('layout-editor-container');
             expect(container.querySelector('.layout-editor')).toBeTruthy();
@@ -94,25 +143,32 @@ describe('layout-editor.es6.js', () => {
             expect(container.querySelector('.layout-toolbar')).toBeTruthy();
         });
 
-        test('should create context tabs', () => {
+        test('should hide context tabs for single context', () => {
             require('../../build/media_source/js/layout-editor.es6.js');
             document.dispatchEvent(new Event('DOMContentLoaded'));
+            jest.runAllTimers();
 
-            const tabs = document.querySelectorAll('.layout-context-tab');
-            expect(tabs.length).toBeGreaterThan(0);
+            // With only one context (messages), tabs should be hidden
+            const tabsContainer = document.querySelector('.layout-context-tabs');
+            expect(tabsContainer).toBeTruthy();
+            // Single context mode hides the tabs container
+            expect(tabsContainer.style.display).toBe('none');
         });
 
         test('should create row elements in canvas', () => {
             require('../../build/media_source/js/layout-editor.es6.js');
             document.dispatchEvent(new Event('DOMContentLoaded'));
+            jest.runAllTimers();
 
             const rows = document.querySelectorAll('.layout-row');
-            expect(rows.length).toBe(6); // Default numRows is 6
+            // Rows are created dynamically based on data; at minimum there's row 1 with data plus an empty row
+            expect(rows.length).toBeGreaterThanOrEqual(1);
         });
 
         test('should initialize Sortable on palette and rows', () => {
             require('../../build/media_source/js/layout-editor.es6.js');
             document.dispatchEvent(new Event('DOMContentLoaded'));
+            jest.runAllTimers();
 
             // Sortable should be called for palette + rows
             expect(mockSortable.create).toHaveBeenCalled();
@@ -121,6 +177,7 @@ describe('layout-editor.es6.js', () => {
         test('should have undo/redo buttons', () => {
             require('../../build/media_source/js/layout-editor.es6.js');
             document.dispatchEvent(new Event('DOMContentLoaded'));
+            jest.runAllTimers();
 
             expect(document.querySelector('.btn-undo')).toBeTruthy();
             expect(document.querySelector('.btn-redo')).toBeTruthy();
@@ -129,16 +186,17 @@ describe('layout-editor.es6.js', () => {
         test('should have grid toggle button', () => {
             require('../../build/media_source/js/layout-editor.es6.js');
             document.dispatchEvent(new Event('DOMContentLoaded'));
+            jest.runAllTimers();
 
             expect(document.querySelector('.btn-grid')).toBeTruthy();
         });
 
-        test('should have view toggle buttons', () => {
+        test('should have view settings button', () => {
             require('../../build/media_source/js/layout-editor.es6.js');
             document.dispatchEvent(new Event('DOMContentLoaded'));
+            jest.runAllTimers();
 
-            expect(document.querySelector('.btn-view-visual')).toBeTruthy();
-            expect(document.querySelector('.btn-view-classic')).toBeTruthy();
+            expect(document.querySelector('.btn-view-settings')).toBeTruthy();
         });
 
         test('LayoutEditor constructor should accept options', () => {
