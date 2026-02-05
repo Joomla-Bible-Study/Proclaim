@@ -13,11 +13,14 @@ use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
 use Joomla\CMS\Component\Router\RouterFactoryInterface;
 use Joomla\CMS\Dispatcher\ComponentDispatcherFactoryInterface;
 use Joomla\CMS\Extension\ComponentInterface;
+use Joomla\CMS\Extension\MVCComponent;
 use Joomla\CMS\Extension\Service\Provider\CategoryFactory;
 use Joomla\CMS\Extension\Service\Provider\ComponentDispatcherFactory;
 use Joomla\CMS\Extension\Service\Provider\MVCFactory;
 use Joomla\CMS\Extension\Service\Provider\RouterFactory;
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\Registry;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
@@ -47,6 +50,32 @@ return new class () implements ServiceProviderInterface {
         $container->set(
             ComponentInterface::class,
             function (Container $container) {
+                // Gate: Proclaim requires PHP 8.3+. If running on an older version,
+                // return a minimal stub so the site doesn't crash with a parse error.
+                if (version_compare(PHP_VERSION, '8.3.0', '<')) {
+                    try {
+                        $app = Factory::getApplication();
+                        $app->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
+                        $app->enqueueMessage(
+                            Text::sprintf(
+                                'COM_PROCLAIM_ERROR_PHP_VERSION',
+                                '8.3.0',
+                                PHP_VERSION
+                            ),
+                            'error'
+                        );
+                    } catch (\Exception $e) {
+                        // Silently fail if we can't enqueue the message
+                    }
+
+                    // Return a bare MVCComponent that won't trigger PHP 8.3 syntax errors
+                    $stub = new MVCComponent($container->get(ComponentDispatcherFactoryInterface::class));
+                    $stub->setRegistry($container->get(Registry::class));
+                    $stub->setMVCFactory($container->get(MVCFactoryInterface::class));
+
+                    return $stub;
+                }
+
                 $component = new ProclaimComponent($container->get(ComponentDispatcherFactoryInterface::class));
 
                 $component->setRegistry($container->get(Registry::class));
