@@ -133,38 +133,38 @@ class CwmmessageTable extends Table
     /**
      * Chapter Begin2
      *
-     * @var int|null
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public ?int $chapter_begin2 = null;
+    public ?string $chapter_begin2 = null;
 
     /**
      * Verse Begin2
      *
-     * @var int|null
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public ?int $verse_begin2 = null;
+    public ?string $verse_begin2 = null;
 
     /**
      * Chapter End2
      *
-     * @var int|null
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public ?int $chapter_end2 = null;
+    public ?string $chapter_end2 = null;
 
     /**
      * Verse End2
      *
-     * @var int|null
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public ?int $verse_end2 = null;
+    public ?string $verse_end2 = null;
 
     /**
      * Prod DVD
