@@ -509,3 +509,19 @@ table.fbstat .col2 {
   align-items: center;
   gap: 0.5rem;
 }
+
+/* Pagination Container - Modern styling with subtle separation */
+/* Uses --proclaim-accent-color if set by template, falls back to --color-accent */
+.pagination-container {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: linear-gradient(to bottom, var(--color-background-light), var(--color-white));
+  border-top: 3px solid var(--proclaim-accent-color, var(--color-accent));
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 8px var(--color-shadow-light);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}

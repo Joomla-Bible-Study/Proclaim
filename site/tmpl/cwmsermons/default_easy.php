@@ -19,6 +19,11 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 
+// Add template accent color for pagination
+$accentColor = $this->params->get('backcolor', '#287585');
+$wa = $this->getDocument()->getWebAssetManager();
+$wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
+
 ?>
 <style>img {
         border-radius: 4px;
@@ -70,12 +75,6 @@ foreach ($this->items as $study) {
     </div>
     <?php
 } ?>
-<div class="row-fluid col-lg-12 pagination pagelinks" style="background-color: #A9A9A9;
-    margin: 0 -5px;
-    padding: 8px 8px;
-    border: 1px solid #C5C1BE;
-    position: relative;
-    -webkit-border-radius: 9px;">
-    <?php
-    echo $this->pagination->getPageslinks(); ?>
+<div class="pagination-container pagelinks">
+    <?php echo $this->pagination->getPageslinks(); ?>
 </div>

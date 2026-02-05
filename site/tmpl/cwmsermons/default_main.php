@@ -21,6 +21,11 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
+// Add template accent color for pagination
+$accentColor = $this->params->get('backcolor', '#287585');
+$wa = $this->getDocument()->getWebAssetManager();
+$wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
+
 // Use pre-calculated values from HtmlView
 $teachers     = $this->teachersFluid;
 $listing      = $this->listing;
