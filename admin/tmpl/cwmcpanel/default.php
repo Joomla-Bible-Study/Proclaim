@@ -44,9 +44,6 @@ $simple = Cwmhelper::getSimpleView();
 $tourHelper = new CwmguidedtourHelper();
 $hasTour    = false;
 
-// Ensure tours and messages are registered
-$tourHelper->registerAll();
-
 $tourId = $tourHelper->getTourId('com_proclaim_whats_new_10_1');
 if ($tourId) {
     $hasTour = true;

@@ -411,10 +411,13 @@ class CwminstallModel extends ListModel
      */
     private function postinstallclenup(): void
     {
-        // Post Install Messages Cleanup for Component
+        // Remove only legacy post-install messages that used hardcoded English strings
+        // (from 10.0.0 era). Preserve messages managed by CwmguidedtourHelper which use
+        // proper language keys (COM_PROCLAIM_*) and should retain their enabled/hidden state.
         $query = $this->_db->getQuery(true);
         $query->delete('#__postinstall_messages')
-            ->where($this->_db->qn('language_extension') . ' = ' . $this->_db->q('com_proclaim'));
+            ->where($this->_db->qn('language_extension') . ' = ' . $this->_db->q('com_proclaim'))
+            ->where($this->_db->qn('title_key') . ' NOT LIKE ' . $this->_db->q('COM_PROCLAIM_%'));
         $this->_db->setQuery($query);
         $this->_db->execute();
         Log::add('PostInstallCleanup', Log::INFO, 'com_proclaim');

@@ -290,6 +290,7 @@ class CwmguidedtourHelper
 
     /**
      * Register a specific post-install message by key.
+     * Skips if the message already exists to preserve its current state.
      *
      * @param   string  $key  Message key
      *
@@ -304,7 +305,13 @@ class CwmguidedtourHelper
             return false;
         }
 
-        return $this->insertPostInstallMessage($this->postInstallMessages[$key]);
+        $message = $this->postInstallMessages[$key];
+
+        if ($this->postInstallMessageExists($message['title_key'])) {
+            return false;
+        }
+
+        return $this->insertPostInstallMessage($message);
     }
 
     /**
@@ -431,6 +438,8 @@ class CwmguidedtourHelper
 
     /**
      * Check if a post-install message already exists.
+     * Checks by title_key only (not extension_id) to prevent re-creating
+     * messages that the user has already hidden, even if the extension_id changes.
      *
      * @param   string  $titleKey  Message title key
      *
@@ -443,8 +452,7 @@ class CwmguidedtourHelper
         $query = $this->db->getQuery(true)
             ->select('COUNT(*)')
             ->from($this->db->quoteName('#__postinstall_messages'))
-            ->where($this->db->quoteName('title_key') . ' = ' . $this->db->quote($titleKey))
-            ->where($this->db->quoteName('extension_id') . ' = ' . $this->extensionId);
+            ->where($this->db->quoteName('title_key') . ' = ' . $this->db->quote($titleKey));
         $this->db->setQuery($query);
 
         return (int) $this->db->loadResult() > 0;
