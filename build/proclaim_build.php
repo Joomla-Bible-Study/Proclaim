@@ -182,25 +182,36 @@ function getExternalLinks(string $joomlaPath): array
 function ask(string $question, string|null $default = null, int $timeout = 0): string|null
 {
     $prompt = $question . ($default ? " [$default]" : '');
-    if ($timeout > 0 && $default !== null) {
-        $prompt .= " ({$timeout}s)";
-    }
-    echo $prompt . ': ';
 
-    // Use timeout via shell read on Unix when requested
-    if ($timeout > 0 && $default !== null && PHP_OS_FAMILY !== 'Windows') {
-        $line = '';
-        exec("bash -c 'read -t $timeout input && echo \$input' 2>/dev/null", $output, $ret);
-        if (!empty($output)) {
-            $line = trim($output[0]);
+    // Countdown timer with single-keypress detection
+    if ($timeout > 0 && $default !== null && stream_isatty(STDIN)) {
+        $oldStty = trim((string) shell_exec('stty -g 2>/dev/null'));
+        system('stty cbreak -echo 2>/dev/null');
+
+        for ($remaining = $timeout; $remaining > 0; $remaining--) {
+            // Overwrite line with updated countdown
+            echo "\r" . $prompt . " ({$remaining}s): ";
+
+            $read   = [STDIN];
+            $write  = null;
+            $except = null;
+            $ready  = @stream_select($read, $write, $except, 1);
+
+            if ($ready > 0) {
+                $char = fread(STDIN, 1);
+                system('stty ' . escapeshellarg($oldStty) . ' 2>/dev/null');
+                echo "\r" . $prompt . ': ' . $char . "    \n";
+                return $char === '' ? $default : $char;
+            }
         }
-        if ($line === '') {
-            echo "$default (auto)\n";
-            return $default;
-        }
-        echo "\n";
-        return $line;
+
+        // Timeout — no input
+        system('stty ' . escapeshellarg($oldStty) . ' 2>/dev/null');
+        echo "\r" . $prompt . ': ' . $default . " (auto)\n";
+        return $default;
     }
+
+    echo $prompt . ': ';
 
     $handle = fopen('php://stdin', 'rb');
     $line   = fgets($handle);
@@ -442,7 +453,7 @@ function doBuild(bool $verbose = false): void
         echo "  [2] Date Version ($dateVersion)\n";
         echo "  [3] Custom Version\n";
 
-        $choice = ask('Enter choice [1-3]', '1', 5);
+        $choice = ask('Enter choice [1-3]', '1', 10);
 
         switch ($choice) {
             case '2':
