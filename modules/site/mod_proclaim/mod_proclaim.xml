@@ -32,34 +32,50 @@
                        key_field="filename" value_field="filename">
                     <option value="0">JBS_CMN_USE_DEFAULT</option>
                 </field>
-                <field name="simple_mode" type="radio" class="btn-group" default="0"
+                <field name="simple_mode" type="radio"
+                       layout="joomla.form.field.radio.switcher"
+                       default="0"
                        label="JBS_MDL_SIMPLE_MODE"
-                       description="JBS_MDL_SIMPLE_MODE_DESC" labelclass="control-label">
+                       description="JBS_MDL_SIMPLE_MODE_DESC">
                     <option value="1">JYES</option>
                     <option value="0">JNO</option>
                 </field>
-                <field name="show_media" type="radio" class="btn-group" default="1"
+                <field name="show_media" type="radio"
+                       layout="joomla.form.field.radio.switcher"
+                       default="1"
                        label="JBS_MDL_SHOW_MEDIA"
-                       description="JBS_MDL_SHOW_MEDIA_DESC" labelclass="control-label">
+                       description="JBS_MDL_SHOW_MEDIA_DESC">
                     <option value="1">JYES</option>
                     <option value="0">JNO</option>
                 </field>
-                <field name="moduleitems" label="JBS_MDL_ITEMS"
-                       description="JBS_MDL_ITEMS_DESC" default="5" type="text" size="10"/>
-                <field name="use_headers_list" type="radio" class="btn-group" default="1"
+                <field name="moduleitems" type="number"
+                       default="5"
+                       min="1"
+                       max="100"
+                       class="form-control"
+                       label="JBS_MDL_ITEMS"
+                       description="JBS_MDL_ITEMS_DESC"/>
+                <field name="use_headers_list" type="radio"
+                       layout="joomla.form.field.radio.switcher"
+                       default="1"
                        label="JBS_MDL_USE_LIST_HEADER"
-                       description="JBS_MDL_USE_LIST_HEADER_DESC" labelclass="control-label">
+                       description="JBS_MDL_USE_LIST_HEADER_DESC">
                     <option value="1">JYES</option>
                     <option value="0">JNO</option>
                 </field>
-                <field name="show_link" type="radio" class="btn-group" default="1"
-                       label="JBS_MDL_SHOW_COMPONENT" description="JBS_MDL_SHOW_COMPONENT_DESC"
-                       labelclass="control-label">
+                <field name="show_link" type="radio"
+                       layout="joomla.form.field.radio.switcher"
+                       default="1"
+                       label="JBS_MDL_SHOW_COMPONENT"
+                       description="JBS_MDL_SHOW_COMPONENT_DESC">
                     <option value="1">JSHOW</option>
                     <option value="0">JHIDE</option>
                 </field>
-                <field name="pagetext" type="text" size="50" default="More Bible Studies"
-                       label="JBS_MDL_LINK_TEXT" description="JBS_MDL_LINK_TEXT_DESC"/>
+                <field name="pagetext" type="text"
+                       default="More Bible Studies"
+                       class="form-control"
+                       label="JBS_MDL_LINK_TEXT"
+                       description="JBS_MDL_LINK_TEXT_DESC"/>
                 <field name="show_verses" type="list" default="0" class="form-select"
                        label="JBS_TPL_VERSES_SHOW_VERSES" description="JBS_TPL_VERSES_SHOW_VERSES_DESC">
                     <option value="0">JBS_TPL_SHOW_ONLY_CHAPTERS</option>
@@ -175,43 +191,83 @@
                     <option value="2">JBS_CMN_INLINE</option>
                     <option value="3">JBS_CMN_SQUEEZEBOX</option>
                 </field>
-                <field name="player_width" type="text" default="400"
-                       label="JBS_TPL_MEDIA_PLAYER_WIDTH" description="JBS_TPL_MEDIA_PLAYER_WIDTH_DESC"/>
-                <field name="player_height" type="text" default="300"
-                       label="JBS_TPL_MEDIA_PLAYER_HEIGHT" description="JBS_TPL_MEDIA_PLAYER_HEIGHT_DESC"/>
+                <field name="player_width" type="number"
+                       default="400"
+                       min="100"
+                       max="1920"
+                       class="form-control"
+                       label="JBS_TPL_MEDIA_PLAYER_WIDTH"
+                       description="JBS_TPL_MEDIA_PLAYER_WIDTH_DESC"/>
+                <field name="player_height" type="number"
+                       default="300"
+                       min="100"
+                       max="1080"
+                       class="form-control"
+                       label="JBS_TPL_MEDIA_PLAYER_HEIGHT"
+                       description="JBS_TPL_MEDIA_PLAYER_HEIGHT_DESC"/>
                 <field name="embedshare" default="" type="list" class="form-select"
                        label="JBS_TPL_MEDIA_EMBEDSHARE" description="JBS_TPL_MEDIA_EMBEDSHARE_DESC">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
                     <option value="FALSE">JBS_TPL_NO_SHARE</option>
                     <option value="TRUE">JBS_TPL_SHOW_SHARE</option>
                 </field>
-                <field name="backcolor" type="color" default="0x287585"
-                       label="JBS_TPL_MEDIA_BACKCOLOR" description="JBS_TPL_MEDIA_BACKCOLOR_DESC"/>
-                <field name="frontcolor" type="color" default="0xFFFFFF"
-                       label="JBS_TPL_MEDIA_FRONTCOLOR" description="JBS_TPL_MEDIA_FRONTCOLOR_DESC"/>
-                <field name="lightcolor" type="color" default="0x000000"
-                       label="JBS_TPL_MEDIA_LIGHTCOLOR" description="JBS_TPL_MEDIA_LIGHTCOLOR_DESC"/>
-                <field name="screencolor" type="color" default="0x000000"
-                       label="JBS_TPL_MEDIA_SCREENCOLOR" description="JBS_TPL_MEDIA_SCREENCOLOR_DESC"/>
-                <field name="popuptitle" type="text" size="150" default="{{title}}"
-                       label="JBS_MED_MEDIA_POPUPTITLE" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_DESC"/>
-                <field name="popupfooter" type="text" size="150" default=""
-                       label="JBS_MED_MEDIA_POPUPFOOTER" description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_DESC"/>
-                <field name="popupmargin" type="text" default="50"
-                       label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_TPL_MEDIA_POPUPMARGIN_DESC"/>
-                <field name="popupbackground" type="text" default="black"
-                       label="JBS_TPL_MEDIA_POPUPBACKGROUND" description="JBS_TPL_MEDIA_POPUPBACKGROUND_DESC"/>
-                <field name="popupimage" type="text" size="150"
-                       default="media/com_proclaim/images/speaker24.png" label="JBS_TPL_MEDIA_POPUPIMAGE"
+                <field name="backcolor" type="ColorPicker"
+                       default="#287585"
+                       label="JBS_TPL_MEDIA_BACKCOLOR"
+                       description="JBS_TPL_MEDIA_BACKCOLOR_DESC"/>
+                <field name="frontcolor" type="ColorPicker"
+                       default="white"
+                       label="JBS_TPL_MEDIA_FRONTCOLOR"
+                       description="JBS_TPL_MEDIA_FRONTCOLOR_DESC"/>
+                <field name="lightcolor" type="ColorPicker"
+                       default="black"
+                       label="JBS_TPL_MEDIA_LIGHTCOLOR"
+                       description="JBS_TPL_MEDIA_LIGHTCOLOR_DESC"/>
+                <field name="screencolor" type="ColorPicker"
+                       default="black"
+                       label="JBS_TPL_MEDIA_SCREENCOLOR"
+                       description="JBS_TPL_MEDIA_SCREENCOLOR_DESC"/>
+                <field name="popuptitle" type="text"
+                       default="{{title}}"
+                       class="form-control"
+                       label="JBS_MED_MEDIA_POPUPTITLE"
+                       description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_DESC"/>
+                <field name="popupfooter" type="text"
+                       default=""
+                       class="form-control"
+                       label="JBS_MED_MEDIA_POPUPFOOTER"
+                       description="JBS_TPL_MEDIA_POPUPTITLE_FOOTER_DESC"/>
+                <field name="popupmargin" type="number"
+                       default="50"
+                       min="0"
+                       max="200"
+                       class="form-control"
+                       label="JBS_MED_MEDIA_POPUPMARGIN"
+                       description="JBS_TPL_MEDIA_POPUPMARGIN_DESC"/>
+                <field name="popupbackground" type="ColorPicker"
+                       default="black"
+                       label="JBS_TPL_MEDIA_POPUPBACKGROUND"
+                       description="JBS_TPL_MEDIA_POPUPBACKGROUND_DESC"/>
+                <field name="popupimage" type="text"
+                       default="media/com_proclaim/images/speaker24.png"
+                       class="form-control"
+                       label="JBS_TPL_MEDIA_POPUPIMAGE"
                        description="JBS_TPL_MEDIA_POPUPIMAGE_DESC"/>
-                <field name="media_popout_yes" type="radio" default="1" class="btn-group"
-                       label="JBS_MED_MEDIA_POPOUT_YES" description="JBS_MED_MEDIA_POPOUT_YES_DESC">
+                <field name="media_popout_yes" type="list"
+                       default="1"
+                       class="form-select"
+                       label="JBS_MED_MEDIA_POPOUT_YES"
+                       description="JBS_MED_MEDIA_POPOUT_YES_DESC">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
-                <field name="media_popout_text" type="text" default="" placeholder="Text to use for pop out button"
-                       label="JBS_MED_MEDIA_POPOUT_TEXT" description="JBS_MED_MEDIA_POPOUT_TEXT_DESC"/>
+                <field name="media_popout_text" type="text"
+                       default=""
+                       class="form-control"
+                       placeholder="Text to use for pop out button"
+                       label="JBS_MED_MEDIA_POPOUT_TEXT"
+                       description="JBS_MED_MEDIA_POPOUT_TEXT_DESC"/>
                 <field name="show_filesize" type="list" default="" class="form-select"
                        label="JBS_TPL_MEDIA_SHOW_FILESIZE" description="JBS_TPL_MEDIA_SHOW_FILESIZE_DESC">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
@@ -220,8 +276,11 @@
                     <option value="2">JBS_TPL_SHOW_COMMENT</option>
                     <option value="3">JBS_TPL_SHOW_COMMENT_OR_FILESIZE</option>
                 </field>
-                <field name="protocol" type="text" size="10" default="https://"
-                       label="JBS_TPL_MEDIA_PROTOCOL" description="JBS_TPL_MEDIA_PROTOCOL_DESC"/>
+                <field name="protocol" type="text"
+                       default="https://"
+                       class="form-control"
+                       label="JBS_TPL_MEDIA_PROTOCOL"
+                       description="JBS_TPL_MEDIA_PROTOCOL_DESC"/>
             </fieldset>
             <fieldset name="JBS_MDL_MORE_SETTINGS" label="JBS_MDL_MORE_SETTINGS">
                 <field name="use_headers_module" type="list" default="" class="form-select"
@@ -237,11 +296,16 @@
                     <option value="1">JBS_TPL_HOURS_MIN_SEC_SLASH</option>
                     <option value="2">JBS_TPL_HOURS_MIN_SEC_COLON</option>
                 </field>
-                <field name="details_text" type="text" default="Study Details"
-                       size="50" label="JBS_TPL_LISTITEMS_DETAILS_TEXT"
+                <field name="details_text" type="text"
+                       default="Study Details"
+                       class="form-control"
+                       label="JBS_TPL_LISTITEMS_DETAILS_TEXT"
                        description="JBS_TPL_LISTITEMS_DETAILS_TEXT_DESC"/>
-                <field name="stylesheet" type="text" size="50" default=""
-                       label="JBS_TPL_VERSES_STYLESHEET" description="JBS_TPL_VERSES_STYLESHEET_DESC"/>
+                <field name="stylesheet" type="text"
+                       default=""
+                       class="form-control"
+                       label="JBS_TPL_VERSES_STYLESHEET"
+                       description="JBS_TPL_VERSES_STYLESHEET_DESC"/>
                 <field name="date_format" type="list" default="" class="form-select"
                        label="JBS_TPL_VERSES_DATE_FORMAT" description="JBS_TPL_VERSES_DATE_FORMAT_DESC">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
@@ -257,311 +321,155 @@
                     <option value="9">JBS_TPL_DATE_FORMAT_YYYY_MM_DD</option>
                 </field>
             </fieldset>
-            <fieldset name="JBS_TPL_DISPLAY_ITEMS1" label="JBS_TPL_DISPLAY_ITEMS1">
-                <field name="scripture1row" type="RowOptions" class="form-select" default="1" label="JBS_CMN_SCRIPTURE"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="scripture1col" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="scripture1colspan" type="SpanOptions" class="form-select" default="0" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="scripture1element" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="scripture1custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="scripture1linktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-                <field type="spacer" name="myspacer1" hr="true"/>
-                <field name="scripture2row" type="RowOptions" class="form-select" size="1" default="0" label="JBS_CMN_SCRIPTURE2"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="scripture2col" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="scripture2colspan" type="SpanOptions" class="form-select" default="0" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="scripture2element" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="scripture2custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="scripture2linktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-                <field type="spacer" name="myspacer2" hr="true"/>
-                <field name="secondaryrow" type="RowOptions" class="form-select" size="1" default="0" label="JBS_CMN_SECONDARY_REFERENCES"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="secondarycol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="secondarycolspan" type="SpanOptions" class="form-select" default="0" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="secondaryelement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="secondarycustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="secondarylinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-                <field type="spacer" name="myspacer3" hr="true"/>
-                <field name="jbsmediarow" type="RowOptions" class="form-select" size="1" default="1" label="JBS_CMN_MEDIA"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="jbsmediacol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="jbsmediacolspan" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="jbsmediaelement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="jbsmediacustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="jbsmedialinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-            </fieldset>
-            <fieldset name="JBS_TPL_DISPLAY_ITEMS2" label="JBS_TPL_DISPLAY_ITEMS2">
-                <field name="titlerow" type="RowOptions" class="form-select" size="1" default="1" label="JBS_CMN_TITLE"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="titlecol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="titlecolspan" type="SpanOptions" class="form-select" default="2" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="titleelement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="titlelinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-                <field type="spacer" name="myspacer4" hr="true"/>
-                <field name="daterow" type="RowOptions" class="form-select" size="1" default="1" label="JBS_CMN_DATE"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="datecol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="datecolspan" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="dateelement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="datecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="datelinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-                <field type="spacer" name="myspacer5" hr="true"/>
-                <field name="teacherrow" type="RowOptions" class="form-select" size="1" default="0" label="JBS_CMN_TEACHER"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="teachercol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="teachercolspan" type="SpanOptions" class="form-select" default="0" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="teacherelement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="teachercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="teacherlinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-                <field type="spacer" name="myspacer6" hr="true"/>
-                <field name="teacherimagerow" type="RowOptions" class="form-select" size="1" default="0" label="JBS_CMN_TEACHER_IMAGE"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="teacherimagecol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="teacherimagecolspan" type="SpanOptions" class="form-select" default="0" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="teacherimageelement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="teacherimagecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="teacherimagelinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-                <field type="spacer" name="myspacer7" hr="true"/>
-                <field name="teacher-titlerow" type="RowOptions" class="form-select" size="1" default="0" label="JBS_CMN_TEACHER_TITLE"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="teacher-titlecol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="teacher-titlecolspan" type="SpanOptions" class="form-select" default="0" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="teacher-titleelement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="teacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="teacher-titlelinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-            </fieldset>
-            <fieldset name="JBS_TPL_DISPLAY_ITEMS3" label="JBS_TPL_DISPLAY_ITEMS3">
-                <field name="durationrow" type="RowOptions" class="form-select" size="1" default="0" label="JBS_CMN_DURATION"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="durationcol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="durationcolspan" type="SpanOptions" class="form-select" default="0" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="durationelement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="durationcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="durationlinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-                <field type="spacer" name="myspacer8" hr="true"/>
-                <field name="studyintrorow" type="RowOptions" class="form-select" size="1" default="2" label="JBS_CMN_STUDY_INTRO"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="studyintrocol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="studyintrocolspan" type="SpanOptions" class="form-select" default="6" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="studyintroelement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="studyintrocustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="studyintrolinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-                <field type="spacer" name="myspacer9" hr="true"/>
-                <field name="seriesrow" type="RowOptions" class="form-select" size="1" default="0" label="JBS_CMN_SERIES"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="seriescol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="seriescolspan" type="SpanOptions" class="form-select" default="0" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="serieselement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="seriescustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="serieslinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-                <field type="spacer" name="myspacer10" hr="true"/>
-                <field name="seriesthumbnailrow" type="RowOptions" class="form-select" size="1" default="0" label="JBS_CMN_SERIES_THUMBNAIL"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="seriesthumbnailcol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="seriesthumbnailcolspan" type="SpanOptions" class="form-select" default="0" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="seriesthumbnailelement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="seriesthumbnailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="seriesthumbnaillinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-                <field type="spacer" name="myspacer11" hr="true"/>
-                <field name="seriesdescriptionrow" type="RowOptions" class="form-select" size="1" default="0"
-                       label="JBS_CMN_SERIES_DESCRIPTION" description="JBS_TPL_ROW_DESC"/>
-                <field name="seriesdescriptioncol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="seriesdescriptioncolspan" type="SpanOptions" class="form-select" default="0" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="seriesdescriptionelement" type="ElementOptions" class="form-select" default="1" translate="true"
-                       multiple="false" label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="seriesdescriptioncustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="seriesdescriptionlinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-            </fieldset>
-            <fieldset name="JBS_TPL_DISPLAY_ITEMS4" label="JBS_TPL_DISPLAY_ITEMS4">
-                <field name="submittedrow" type="RowOptions" class="form-select" size="1" default="0" label="JBS_CMN_SUBMITTED_BY"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="submittedcol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="submittedcolspan" type="SpanOptions" class="form-select" default="0" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="submittedelement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="submittedcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="submittedlinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-                <field type="spacer" name="myspacer12" hr="true"/>
-                <field name="hitsrow" type="RowOptions" class="form-select" size="1" default="0" label="JBS_CMN_HITS"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="hitscol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="hitscolspan" type="SpanOptions" class="form-select" default="6" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="hitselement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="hitscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="hitslinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-                <field type="spacer" name="myspacer13" hr="true"/>
-                <field name="downloadsrow" type="RowOptions" class="form-select" size="1" default="0" label="JBS_CMN_DOWNLOADS"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="downloadscol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="downloadscolspan" type="SpanOptions" class="form-select" default="0" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="downloadselement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="downloadscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="downloadslinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-            </fieldset>
-            <fieldset name="JBS_TPL_DISPLAY_ITEMS5" label="JBS_TPL_DISPLAY_ITEMS5">
-                <field name="studynumberrow" type="RowOptions" class="form-select" size="1" default="0" label="JBS_CMN_STUDYNUMBER"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="studynumbercol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="studynumbercolspan" type="SpanOptions" class="form-select" default="0" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="studynumberelement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="studynumbercustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="studynumberlinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-                <field type="spacer" name="myspacer14" hr="true"/>
-                <field name="topicrow" type="RowOptions" class="form-select" size="1" default="0" label="JBS_CMN_TOPICS"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="topiccol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="topiccolspan" type="SpanOptions" class="form-select" default="6" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="topicelement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="topiccustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="topiclinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-                <field type="spacer" name="myspacer15" hr="true"/>
-                <field name="locationsrow" type="RowOptions" class="form-select" size="1" default="0" label="JBS_CMN_LOCATION"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="locationscol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="locationscolspan" type="SpanOptions" class="form-select" default="0" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="locationselement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="locationscustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="locationslinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-            </fieldset>
-            <fieldset name="JBS_TPL_DISPLAY_ITEMS6" label="JBS_TPL_DISPLAY_ITEMS6">
-                <field name="messagetyperow" type="RowOptions" class="form-select" size="1" default="0" label="JBS_CMN_MESSAGETYPE"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="messagetypecol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="messagetypecolspan" type="SpanOptions" class="form-select" default="6" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="messagetypeelement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="messagetypecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="messagetypelinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-                <field type="spacer" name="myspacer16" hr="true"/>
-                <field name="thumbnailrow" type="RowOptions" class="form-select" size="1" default="0" label="JBS_CMN_THUMBNAIL"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="thumbnailcol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="thumbnailcolspan" type="SpanOptions" class="form-select" default="0" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="thumbnailelement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="thumbnailcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="thumbnaillinktype" type="LinkOptions" class="form-select" default="0" label="JBS_TPL_TYPE_OF_LINK"
-                       description="JBS_TPL_TYPE_OF_LINK_DESC"/>
-                <field type="spacer" name="myspacer17" hr="true"/>
-                <field name="customrow" type="RowOptions" class="form-select" size="1" default="" label="JBS_TPL_CUSTOM_TEXT"
-                       description="JBS_TPL_ROW_DESC"/>
-                <field name="customcol" type="SpanOptions" class="form-select" default="1" label="JBS_TPL_COLUMN"
-                       description="JBS_TPL_COLUMN_DESC"/>
-                <field name="customcolspan" type="SpanOptions" class="form-select" default="0" label="JBS_TPL_COLSPAN"
-                       description="JBS_TPL_COLSPAN_DESC"/>
-                <field name="customelement" type="ElementOptions" class="form-select" default="1" translate="true" multiple="false"
-                       label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
-                <field name="customcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
-                       description="JBS_TPL_CUSTOMCLASS_DESC"/>
-                <field name="customtext" type="text" size="100" default="" label="JBS_TPL_CUSTOM_TEXT"
-                       description="JBS_TPL_CUSTOM_TEXT_DESC"/>
-
+            <fieldset name="JBS_MDL_LAYOUT_EDITOR" label="JBS_MDL_LAYOUT_EDITOR">
+                <field name="layout_editor" type="LayoutEditor"
+                       context="messages"
+                       show-view-settings="false"
+                       hiddenLabel="true"/>
+                <!-- Hidden fields for layout data storage - managed by Layout Editor -->
+                <field name="scripture1row" type="hidden" default="1"/>
+                <field name="scripture1col" type="hidden" default="1"/>
+                <field name="scripture1colspan" type="hidden" default="0"/>
+                <field name="scripture1element" type="hidden" default="1"/>
+                <field name="scripture1custom" type="hidden" default=""/>
+                <field name="scripture1linktype" type="hidden" default="0"/>
+                <field name="scripture2row" type="hidden" default="0"/>
+                <field name="scripture2col" type="hidden" default="1"/>
+                <field name="scripture2colspan" type="hidden" default="0"/>
+                <field name="scripture2element" type="hidden" default="1"/>
+                <field name="scripture2custom" type="hidden" default=""/>
+                <field name="scripture2linktype" type="hidden" default="0"/>
+                <field name="secondaryrow" type="hidden" default="0"/>
+                <field name="secondarycol" type="hidden" default="1"/>
+                <field name="secondarycolspan" type="hidden" default="0"/>
+                <field name="secondaryelement" type="hidden" default="1"/>
+                <field name="secondarycustom" type="hidden" default=""/>
+                <field name="secondarylinktype" type="hidden" default="0"/>
+                <field name="jbsmediarow" type="hidden" default="1"/>
+                <field name="jbsmediacol" type="hidden" default="1"/>
+                <field name="jbsmediacolspan" type="hidden" default="1"/>
+                <field name="jbsmediaelement" type="hidden" default="1"/>
+                <field name="jbsmediacustom" type="hidden" default=""/>
+                <field name="jbsmedialinktype" type="hidden" default="0"/>
+                <!-- Title, Date, Teacher fields -->
+                <field name="titlerow" type="hidden" default="1"/>
+                <field name="titlecol" type="hidden" default="1"/>
+                <field name="titlecolspan" type="hidden" default="2"/>
+                <field name="titleelement" type="hidden" default="1"/>
+                <field name="titlecustom" type="hidden" default=""/>
+                <field name="titlelinktype" type="hidden" default="0"/>
+                <field name="daterow" type="hidden" default="1"/>
+                <field name="datecol" type="hidden" default="1"/>
+                <field name="datecolspan" type="hidden" default="1"/>
+                <field name="dateelement" type="hidden" default="1"/>
+                <field name="datecustom" type="hidden" default=""/>
+                <field name="datelinktype" type="hidden" default="0"/>
+                <field name="teacherrow" type="hidden" default="0"/>
+                <field name="teachercol" type="hidden" default="1"/>
+                <field name="teachercolspan" type="hidden" default="0"/>
+                <field name="teacherelement" type="hidden" default="1"/>
+                <field name="teachercustom" type="hidden" default=""/>
+                <field name="teacherlinktype" type="hidden" default="0"/>
+                <field name="teacherimagerow" type="hidden" default="0"/>
+                <field name="teacherimagecol" type="hidden" default="1"/>
+                <field name="teacherimagecolspan" type="hidden" default="0"/>
+                <field name="teacherimageelement" type="hidden" default="1"/>
+                <field name="teacherimagecustom" type="hidden" default=""/>
+                <field name="teacherimagelinktype" type="hidden" default="0"/>
+                <field name="teacher-titlerow" type="hidden" default="0"/>
+                <field name="teacher-titlecol" type="hidden" default="1"/>
+                <field name="teacher-titlecolspan" type="hidden" default="0"/>
+                <field name="teacher-titleelement" type="hidden" default="1"/>
+                <field name="teacher-titlecustom" type="hidden" default=""/>
+                <field name="teacher-titlelinktype" type="hidden" default="0"/>
+                <!-- Duration, Study Intro, Series fields -->
+                <field name="durationrow" type="hidden" default="0"/>
+                <field name="durationcol" type="hidden" default="1"/>
+                <field name="durationcolspan" type="hidden" default="0"/>
+                <field name="durationelement" type="hidden" default="1"/>
+                <field name="durationcustom" type="hidden" default=""/>
+                <field name="durationlinktype" type="hidden" default="0"/>
+                <field name="studyintrorow" type="hidden" default="2"/>
+                <field name="studyintrocol" type="hidden" default="1"/>
+                <field name="studyintrocolspan" type="hidden" default="6"/>
+                <field name="studyintroelement" type="hidden" default="1"/>
+                <field name="studyintrocustom" type="hidden" default=""/>
+                <field name="studyintrolinktype" type="hidden" default="0"/>
+                <field name="seriesrow" type="hidden" default="0"/>
+                <field name="seriescol" type="hidden" default="1"/>
+                <field name="seriescolspan" type="hidden" default="0"/>
+                <field name="serieselement" type="hidden" default="1"/>
+                <field name="seriescustom" type="hidden" default=""/>
+                <field name="serieslinktype" type="hidden" default="0"/>
+                <field name="seriesthumbnailrow" type="hidden" default="0"/>
+                <field name="seriesthumbnailcol" type="hidden" default="1"/>
+                <field name="seriesthumbnailcolspan" type="hidden" default="0"/>
+                <field name="seriesthumbnailelement" type="hidden" default="1"/>
+                <field name="seriesthumbnailcustom" type="hidden" default=""/>
+                <field name="seriesthumbnaillinktype" type="hidden" default="0"/>
+                <field name="seriesdescriptionrow" type="hidden" default="0"/>
+                <field name="seriesdescriptioncol" type="hidden" default="1"/>
+                <field name="seriesdescriptioncolspan" type="hidden" default="0"/>
+                <field name="seriesdescriptionelement" type="hidden" default="1"/>
+                <field name="seriesdescriptioncustom" type="hidden" default=""/>
+                <field name="seriesdescriptionlinktype" type="hidden" default="0"/>
+                <!-- Submitted, Hits, Downloads fields -->
+                <field name="submittedrow" type="hidden" default="0"/>
+                <field name="submittedcol" type="hidden" default="1"/>
+                <field name="submittedcolspan" type="hidden" default="0"/>
+                <field name="submittedelement" type="hidden" default="1"/>
+                <field name="submittedcustom" type="hidden" default=""/>
+                <field name="submittedlinktype" type="hidden" default="0"/>
+                <field name="hitsrow" type="hidden" default="0"/>
+                <field name="hitscol" type="hidden" default="1"/>
+                <field name="hitscolspan" type="hidden" default="6"/>
+                <field name="hitselement" type="hidden" default="1"/>
+                <field name="hitscustom" type="hidden" default=""/>
+                <field name="hitslinktype" type="hidden" default="0"/>
+                <field name="downloadsrow" type="hidden" default="0"/>
+                <field name="downloadscol" type="hidden" default="1"/>
+                <field name="downloadscolspan" type="hidden" default="0"/>
+                <field name="downloadselement" type="hidden" default="1"/>
+                <field name="downloadscustom" type="hidden" default=""/>
+                <field name="downloadslinktype" type="hidden" default="0"/>
+                <!-- Study Number, Topic, Locations fields -->
+                <field name="studynumberrow" type="hidden" default="0"/>
+                <field name="studynumbercol" type="hidden" default="1"/>
+                <field name="studynumbercolspan" type="hidden" default="0"/>
+                <field name="studynumberelement" type="hidden" default="1"/>
+                <field name="studynumbercustom" type="hidden" default=""/>
+                <field name="studynumberlinktype" type="hidden" default="0"/>
+                <field name="topicrow" type="hidden" default="0"/>
+                <field name="topiccol" type="hidden" default="1"/>
+                <field name="topiccolspan" type="hidden" default="6"/>
+                <field name="topicelement" type="hidden" default="1"/>
+                <field name="topiccustom" type="hidden" default=""/>
+                <field name="topiclinktype" type="hidden" default="0"/>
+                <field name="locationsrow" type="hidden" default="0"/>
+                <field name="locationscol" type="hidden" default="1"/>
+                <field name="locationscolspan" type="hidden" default="0"/>
+                <field name="locationselement" type="hidden" default="1"/>
+                <field name="locationscustom" type="hidden" default=""/>
+                <field name="locationslinktype" type="hidden" default="0"/>
+                <!-- Message Type, Thumbnail, Custom fields -->
+                <field name="messagetyperow" type="hidden" default="0"/>
+                <field name="messagetypecol" type="hidden" default="1"/>
+                <field name="messagetypecolspan" type="hidden" default="6"/>
+                <field name="messagetypeelement" type="hidden" default="1"/>
+                <field name="messagetypecustom" type="hidden" default=""/>
+                <field name="messagetypelinktype" type="hidden" default="0"/>
+                <field name="thumbnailrow" type="hidden" default="0"/>
+                <field name="thumbnailcol" type="hidden" default="1"/>
+                <field name="thumbnailcolspan" type="hidden" default="0"/>
+                <field name="thumbnailelement" type="hidden" default="1"/>
+                <field name="thumbnailcustom" type="hidden" default=""/>
+                <field name="thumbnaillinktype" type="hidden" default="0"/>
+                <field name="customrow" type="hidden" default="0"/>
+                <field name="customcol" type="hidden" default="1"/>
+                <field name="customcolspan" type="hidden" default="0"/>
+                <field name="customelement" type="hidden" default="1"/>
+                <field name="customcustom" type="hidden" default=""/>
+                <field name="customtext" type="hidden" default=""/>
             </fieldset>
             <fieldset name="advanced">
                 <field
