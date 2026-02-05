@@ -1849,13 +1849,6 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label class="form-label" for="layout-colspan">${this.trans('JBS_TPL_COLSPAN') || 'Column Span'}</label>
-                                <select class="form-select" id="layout-colspan">
-                                    ${Array.from({ length: 12 }, (_, i) => `<option value="${i + 1}">${i + 1} ${i === 0 ? 'column' : 'columns'}</option>`).join('')}
-                                </select>
-                                <div class="form-text">${this.trans('JBS_TPL_COLSPAN_DESC') || 'Number of columns this element should span (1-12)'}</div>
-                            </div>
-                            <div class="form-group">
                                 <label class="form-label" for="layout-element-type">${this.trans('JBS_TPL_ELEMENT') || 'Element Type'}</label>
                                 <select class="form-select" id="layout-element-type">
                                     ${getElementTypeOptions().map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
@@ -2439,7 +2432,6 @@
                 }
 
                 // Populate modal fields
-                const colspanEl = document.getElementById('layout-colspan');
                 const elementTypeEl = document.getElementById('layout-element-type');
                 const linkTypeEl = document.getElementById('layout-link-type');
                 const customClassEl = document.getElementById('layout-custom-class');
@@ -2454,7 +2446,6 @@
                     ).join('');
                 }
 
-                if (colspanEl) { colspanEl.value = String(data.colspan) || '1'; }
                 if (elementTypeEl) { elementTypeEl.value = String(data.element) || '1'; }
                 if (linkTypeEl) { linkTypeEl.value = String(data.linktype) || '0'; }
                 if (customClassEl) { customClassEl.value = data.custom || ''; }
@@ -2462,7 +2453,6 @@
 
                 // Store original values for change detection when modal closes
                 this.originalModalValues = {
-                    colspan: colspanEl ? colspanEl.value : '',
                     element: elementTypeEl ? elementTypeEl.value : '',
                     linktype: linkTypeEl ? linkTypeEl.value : '',
                     custom: customClassEl ? customClassEl.value : '',
@@ -2524,18 +2514,7 @@
                 const data = this.state.get(this.currentSettingsElement);
                 if (!data) { return; }
 
-                // Get values from modal
-                let newColspan = parseInt(document.getElementById('layout-colspan').value, 10) || 1;
-
-                // Validate colspan is within bounds (1-12)
-                newColspan = Math.max(1, Math.min(this.options.numCols, newColspan));
-
-                // Mark colspan as manually set if changed by user
-                if (data.colspan !== String(newColspan)) {
-                    data.manualColspan = true;
-                }
-
-                data.colspan = String(newColspan);
+                // Get values from modal (colspan is managed by drag resizing, not the modal)
                 data.element = document.getElementById('layout-element-type').value;
                 data.linktype = document.getElementById('layout-link-type').value;
                 data.custom = document.getElementById('layout-custom-class').value;
@@ -2644,23 +2623,20 @@
                     return false;
                 }
 
-                const colspanEl = document.getElementById('layout-colspan');
                 const elementTypeEl = document.getElementById('layout-element-type');
                 const linkTypeEl = document.getElementById('layout-link-type');
                 const customClassEl = document.getElementById('layout-custom-class');
                 const dateFormatEl = document.getElementById('layout-date-format');
 
                 const current = {
-                    colspan: colspanEl ? colspanEl.value : '',
                     element: elementTypeEl ? elementTypeEl.value : '',
                     linktype: linkTypeEl ? linkTypeEl.value : '',
                     custom: customClassEl ? customClassEl.value : '',
                     date_format: dateFormatEl ? dateFormatEl.value : ''
                 };
 
-                // Compare each field
-                return current.colspan !== this.originalModalValues.colspan ||
-                    current.element !== this.originalModalValues.element ||
+                // Compare each field (colspan is managed by drag resizing, not the modal)
+                return current.element !== this.originalModalValues.element ||
                     current.linktype !== this.originalModalValues.linktype ||
                     current.custom !== this.originalModalValues.custom ||
                     current.date_format !== this.originalModalValues.date_format;
