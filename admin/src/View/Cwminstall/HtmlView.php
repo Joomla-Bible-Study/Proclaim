@@ -142,16 +142,7 @@ class HtmlView extends BaseHtmlView
 
         $this->percentage = $percent;
 
-        if ($this->more) {
-            $doc = $this->getDocument();
-            $wa  = $doc->getWebAssetManager();
-            $wa->useScript('form.validate')
-                ->addInlineScript(
-                    "setTimeout(function(){
-                                    jQuery('#adminForm').submit()
-								}, 3000);"
-                );
-        }
+        // Note: Auto-submit is now handled in the template for better control
 
         if ($this->more === false) {
             $this->setLayout('install_finished');
