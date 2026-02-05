@@ -69,10 +69,10 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             return;
         }
 
-        $this->getApplication()->getLanguage()->load('plg_system_proclaim', JPATH_ADMINISTRATOR);
+        $this->getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
         $this->getApplication()->enqueueMessage(
-            Text::sprintf('PLG_SYSTEM_PROCLAIM_PHP_VERSION_WARNING', self::MIN_PHP, PHP_VERSION),
+            Text::sprintf('COM_PROCLAIM_ERROR_PHP_VERSION', self::MIN_PHP, PHP_VERSION),
             'error'
         );
     }
