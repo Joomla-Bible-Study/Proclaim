@@ -12,6 +12,7 @@ const BUILD_DIR       = BASE_DIR . '/build';
 const PROPERTIES_FILE = BASE_DIR . '/build.properties';
 
 $command = $argv[1] ?? 'help';
+$verbose = \in_array('--verbose', $argv, true) || \in_array('-v', $argv, true);
 
 try {
     switch ($command) {
@@ -19,10 +20,10 @@ try {
             doSetup();
             break;
         case 'link':
-            doLink();
+            doLink(verbose: $verbose);
             break;
         case 'clean':
-            doClean();
+            doClean($verbose);
             break;
         case 'build':
             doBuild();
@@ -64,6 +65,8 @@ function showHelp(): void
     echo "  install-joomla  Download and install Joomla\n";
     echo "  joomla-latest   Show latest available Joomla version\n";
     echo "  lint-syntax     Check PHP syntax errors\n";
+    echo "\nOptions:\n";
+    echo "  -v, --verbose   Show detailed output (e.g., each symlink path)\n";
     echo "\nMultiple Joomla paths are supported via builder.joomla_paths (comma-separated)\n";
     echo "in build.properties. The singular builder.joomla_path is also supported.\n";
 }
@@ -262,9 +265,9 @@ function doSetup(): void
  * @throws Exception If no Joomla paths are configured.
  * @since 10.1.0
  */
-function doLink(bool $quiet = false): void
+function doLink(bool $quiet = false, bool $verbose = false): void
 {
-    $props      = getProperties();
+    $props       = getProperties();
     $joomlaPaths = getJoomlaPaths($props);
 
     if (\count($joomlaPaths) === 0) {
@@ -272,11 +275,9 @@ function doLink(bool $quiet = false): void
     }
 
     // Internal links (dev.init) — run once
-    if (!$quiet) {
-        echo "Creating internal links...\n";
-    }
-    symlink_force(BASE_DIR . '/proclaim.xml', BASE_DIR . '/admin/proclaim.xml', $quiet);
-    symlink_force(BASE_DIR . '/proclaim.script.php', BASE_DIR . '/admin/proclaim.script.php', $quiet);
+    $silent = !$verbose;
+    symlink_force(BASE_DIR . '/proclaim.xml', BASE_DIR . '/admin/proclaim.xml', $silent);
+    symlink_force(BASE_DIR . '/proclaim.script.php', BASE_DIR . '/admin/proclaim.script.php', $silent);
     if (
         !is_dir(BASE_DIR . '/media/css/site') && !mkdir(
             $concurrentDirectory = BASE_DIR . '/media/css/site',
@@ -286,26 +287,39 @@ function doLink(bool $quiet = false): void
     ) {
         throw new \RuntimeException(\sprintf('Directory "%s" was not created', $concurrentDirectory));
     }
-    symlink_force(BASE_DIR . '/media/css/cwmcore.css', BASE_DIR . '/media/css/site/cwmcore.css', $quiet);
+    symlink_force(BASE_DIR . '/media/css/cwmcore.css', BASE_DIR . '/media/css/site/cwmcore.css', $silent);
+
+    if (!$quiet) {
+        echo "Internal links created.\n";
+    }
 
     // External links — iterate all Joomla paths
+    $linked = 0;
     foreach ($joomlaPaths as $joomlaPath) {
         if (!is_dir($joomlaPath)) {
-            echo "WARNING: Joomla path does not exist, skipping: $joomlaPath\n";
+            echo "WARNING: Path not found, skipping: $joomlaPath\n";
             continue;
         }
 
         if (!$quiet) {
-            echo "\nLinking to Joomla at: $joomlaPath\n";
+            echo "\nLinked to: $joomlaPath\n";
         }
 
         foreach (getExternalLinks($joomlaPath) as $target => $link) {
-            symlink_force($target, $link, $quiet);
+            symlink_force($target, $link, $silent);
         }
+
+        if (!$quiet && !$verbose) {
+            echo "  Component:  admin, site, media\n";
+            echo "  Modules:    mod_proclaim, mod_proclaimicon, mod_proclaim_podcast, mod_proclaim_youtube\n";
+            echo "  Plugins:    finder, system, task\n";
+            echo "  Language:   en-GB.com_proclaim.ini, en-GB.com_proclaim.sys.ini\n";
+        }
+        $linked++;
     }
 
     if (!$quiet) {
-        echo "\nSymlinks created successfully.\n";
+        echo "\nDone! Symlinks created for $linked Joomla installation" . ($linked !== 1 ? 's' : '') . ".\n";
     }
 }
 
@@ -614,10 +628,12 @@ function doInstallJoomla(): void
 /**
  * Removes all symbolic links created by the link command.
  *
+ * @param   bool  $verbose  If true, prints each removed path.
+ *
  * @return void
  * @since 10.1.0
  */
-function doClean(): void
+function doClean(bool $verbose = false): void
 {
     echo "Cleaning up development state...\n";
 
@@ -628,12 +644,17 @@ function doClean(): void
         BASE_DIR . '/media/css/site/cwmcore.css',
     ];
 
+    $removed = 0;
     foreach ($internalLinks as $link) {
         if (is_link($link) || file_exists($link)) {
             unlink($link);
-            echo "Removed: $link\n";
+            $removed++;
+            if ($verbose) {
+                echo "Removed: $link\n";
+            }
         }
     }
+    echo "Internal links removed ($removed).\n";
 
     // External symlinks — remove from ALL configured Joomla paths
     if (file_exists(PROPERTIES_FILE)) {
@@ -646,14 +667,17 @@ function doClean(): void
                     continue;
                 }
 
-                echo "\nCleaning symlinks from: $joomlaPath\n";
-
+                $count = 0;
                 foreach (getExternalLinks($joomlaPath) as $link) {
                     if (is_link($link)) {
                         unlink($link);
-                        echo "Removed: $link\n";
+                        $count++;
+                        if ($verbose) {
+                            echo "  Removed: $link\n";
+                        }
                     }
                 }
+                echo "\nCleaned: $joomlaPath ($count symlinks)\n";
             }
         } catch (Exception $e) {
             // Ignore if properties can't be read
