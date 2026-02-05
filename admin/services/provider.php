@@ -70,7 +70,6 @@ return new class () implements ServiceProviderInterface {
 
                     // Return a bare MVCComponent that won't trigger PHP 8.3 syntax errors
                     $stub = new MVCComponent($container->get(ComponentDispatcherFactoryInterface::class));
-                    $stub->setRegistry($container->get(Registry::class));
                     $stub->setMVCFactory($container->get(MVCFactoryInterface::class));
 
                     return $stub;
