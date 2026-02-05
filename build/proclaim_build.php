@@ -26,7 +26,7 @@ try {
             doClean($verbose);
             break;
         case 'build':
-            doBuild();
+            doBuild($verbose);
             break;
         case 'install-joomla':
             doInstallJoomla();
@@ -35,7 +35,7 @@ try {
             doJoomlaLatest();
             break;
         case 'lint-syntax':
-            doLintSyntax();
+            doLintSyntax($verbose);
             break;
         case 'help':
         default:
@@ -174,13 +174,34 @@ function getExternalLinks(string $joomlaPath): array
  *
  * @param   string       $question  The question to ask.
  * @param   string|null  $default   The default value if no input is provided.
+ * @param   int          $timeout   Seconds to wait before auto-accepting the default (0 = no timeout).
  *
  * @return string|null The user's input or the default value.
  * @since 10.1.0
  */
-function ask(string $question, string|null $default = null): string|null
+function ask(string $question, string|null $default = null, int $timeout = 0): string|null
 {
-    echo $question . ($default ? " [$default]" : '') . ': ';
+    $prompt = $question . ($default ? " [$default]" : '');
+    if ($timeout > 0 && $default !== null) {
+        $prompt .= " ({$timeout}s)";
+    }
+    echo $prompt . ': ';
+
+    // Use timeout via shell read on Unix when requested
+    if ($timeout > 0 && $default !== null && PHP_OS_FAMILY !== 'Windows') {
+        $line = '';
+        exec("bash -c 'read -t $timeout input && echo \$input' 2>/dev/null", $output, $ret);
+        if (!empty($output)) {
+            $line = trim($output[0]);
+        }
+        if ($line === '') {
+            echo "$default (auto)\n";
+            return $default;
+        }
+        echo "\n";
+        return $line;
+    }
+
     $handle = fopen('php://stdin', 'rb');
     $line   = fgets($handle);
     fclose($handle);
@@ -387,11 +408,13 @@ function symlink_force(string $target, string $link, bool $quiet = false): void
 /**
  * Builds the component package (ZIP file).
  *
+ * @param   bool  $verbose  If true, lists each file added to the package.
+ *
  * @return void
  * @throws Exception If asset build fails or ZIP creation fails.
  * @since 10.1.0
  */
-function doBuild(): void
+function doBuild(bool $verbose = false): void
 {
     // Build assets first
     echo "Building frontend assets...\n";
@@ -419,7 +442,7 @@ function doBuild(): void
         echo "  [2] Date Version ($dateVersion)\n";
         echo "  [3] Custom Version\n";
 
-        $choice = ask('Enter choice [1-3]', '1');
+        $choice = ask('Enter choice [1-3]', '1', 5);
 
         switch ($choice) {
             case '2':
@@ -478,6 +501,7 @@ function doBuild(): void
     $includes    = ['admin/', 'media/', 'modules/', 'plugins/', 'site/', 'libraries/'];
     $includeExts = ['php', 'xml', 'txt', 'md'];
 
+    $fileCount = 0;
     foreach ($files as $name => $file) {
         if ($file->isDir()) {
             continue;
@@ -547,18 +571,17 @@ function doBuild(): void
 
         if ($shouldInclude) {
             $zip->addFile($filePath, $relativePath);
+            $fileCount++;
+            if ($verbose) {
+                echo "  + $relativePath\n";
+            }
         }
     }
 
     $zip->close();
 
-    echo "\n" . str_repeat('=', 50) . "\n";
-    echo "  BUILD COMPLETE\n";
-    echo str_repeat('=', 50) . "\n";
-    echo "  Version:  $version\n";
-    echo '  Package:  ' . basename($zipFile) . "\n";
-    echo "  Location: $zipFile\n";
-    echo str_repeat('=', 50) . "\n";
+    echo "\nBuild complete: com_proclaim-$version.zip ($fileCount files)\n";
+    echo "Location: $zipFile\n";
 }
 
 /**
@@ -581,17 +604,16 @@ function doInstallJoomla(): void
     }
 
     foreach ($joomlaPaths as $installPath) {
-        echo "\n--- Joomla installation for: $installPath ---\n";
+        echo "\nInstall target: $installPath\n";
 
-        $version = ask("  Joomla version to install at $installPath", $defaultVersion);
+        $version = ask("  Joomla version", $defaultVersion);
 
         if (is_dir($installPath)) {
-            $reinstall = ask("  Directory $installPath already exists. Remove and reinstall? (y/n)", 'n');
+            $reinstall = ask("  Directory exists. Remove and reinstall? (y/n)", 'n');
             if (strtolower($reinstall) !== 'y') {
-                echo "  Skipping $installPath.\n";
+                echo "  Skipped.\n";
                 continue;
             }
-            echo "  Removing $installPath...\n";
             if (PHP_OS_FAMILY === 'Windows') {
                 exec('rmdir /s /q ' . escapeshellarg($installPath));
             } else {
@@ -600,24 +622,23 @@ function doInstallJoomla(): void
         }
 
         if (!is_dir($installPath) && !mkdir($installPath, 0777, true) && !is_dir($installPath)) {
-            echo "  ERROR: Failed to create directory $installPath\n";
+            echo "  ERROR: Failed to create directory.\n";
             continue;
         }
 
         $url     = "https://github.com/joomla/joomla-cms/releases/download/$version/Joomla_$version-Stable-Full_Package.zip";
         $zipFile = BUILD_DIR . "/joomla-$version.zip";
 
-        echo "  Downloading Joomla $version...\n";
+        echo "  Downloading Joomla $version...";
         copy($url, $zipFile);
 
-        echo "  Extracting to $installPath...\n";
         $zip = new ZipArchive();
         if ($zip->open($zipFile) === true) {
             $zip->extractTo($installPath);
             $zip->close();
-            echo "  Joomla $version installed at $installPath.\n";
+            echo " installed.\n";
         } else {
-            echo "  Failed to extract Joomla.\n";
+            echo " FAILED to extract.\n";
         }
         if (file_exists($zipFile)) {
             unlink($zipFile);
@@ -727,10 +748,12 @@ function doJoomlaLatest(): void
 /**
  * Checks all PHP files in the project for syntax errors.
  *
+ * @param   bool  $verbose  If true, prints each file as it is checked.
+ *
  * @return void
  * @since 10.1.0
  */
-function doLintSyntax(): void
+function doLintSyntax(bool $verbose = false): void
 {
     echo "Checking PHP syntax...\n";
 
@@ -753,8 +776,13 @@ function doLintSyntax(): void
                 continue;
             }
 
-            $filePath = $file->getRealPath();
+            $filePath     = $file->getRealPath();
+            $relativePath = str_replace(BASE_DIR . '/', '', $filePath);
             $fileCount++;
+
+            if ($verbose) {
+                echo "  $relativePath\n";
+            }
 
             // Run php -l on the file
             $output    = [];
@@ -763,17 +791,15 @@ function doLintSyntax(): void
 
             if ($returnVar !== 0) {
                 $errors[] = [
-                    'file'  => str_replace(BASE_DIR . '/', '', $filePath),
+                    'file'  => $relativePath,
                     'error' => implode("\n", $output),
                 ];
             }
         }
     }
 
-    echo "Checked $fileCount files.\n";
-
     if (\count($errors) > 0) {
-        echo "\nSyntax errors found:\n";
+        echo "\nSyntax errors found in $fileCount files checked:\n";
         echo str_repeat('-', 60) . "\n";
         foreach ($errors as $error) {
             echo "File: {$error['file']}\n";
@@ -782,6 +808,6 @@ function doLintSyntax(): void
         exit(1);
     }
 
-    echo "No syntax errors detected.\n";
+    echo "No syntax errors in $fileCount files.\n";
 }
 // phpcs:enable PSR1.Files.SideEffects
