@@ -1029,9 +1029,8 @@ class CwminstallModel extends ListModel
                 // No break
             default:
                 $app->enqueueMessage(
-                    '' . Text::_('JBS_CMN_OPERATION_SUCCESSFUL') .
-                    Text::_('SIMPLEMODEMESSAGE_BODY') .
-                    Text::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE')
+                    Text::_('JBS_CMN_OPERATION_SUCCESSFUL') .
+                    ' ' . Text::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE')
                 );
                 break;
         }

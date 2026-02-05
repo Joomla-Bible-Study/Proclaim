@@ -198,6 +198,17 @@ class CwmguidedtourHelper
             'condition_method'   => 'admin_postinstall_archivedmessages_condition',
             'version_introduced' => '10.1.0',
         ],
+        'simple_mode' => [
+            'title_key'          => 'COM_PROCLAIM_POSTINSTALL_SIMPLEMODE_TITLE',
+            'description_key'    => 'COM_PROCLAIM_POSTINSTALL_SIMPLEMODE_DESC',
+            'action_key'         => 'COM_PROCLAIM_POSTINSTALL_SIMPLEMODE_ACTION',
+            'type'               => 'action',
+            'action_file'        => 'admin://components/com_proclaim/postinstall/simplemode.php',
+            'action'             => 'admin_postinstall_simplemode_action',
+            'condition_file'     => 'admin://components/com_proclaim/postinstall/simplemode.php',
+            'condition_method'   => 'admin_postinstall_simplemode_condition',
+            'version_introduced' => '10.1.0',
+        ],
         'whats_new_tour' => [
             'title_key'          => 'COM_PROCLAIM_TOUR_WHATS_NEW_TITLE',
             'description_key'    => 'COM_PROCLAIM_TOUR_WHATS_NEW_DESC',
