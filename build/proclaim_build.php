@@ -58,12 +58,14 @@ function showHelp(): void
     echo "Usage: php build/proclaim_build.php [command]\n\n";
     echo "Commands:\n";
     echo "  setup           Interactive setup wizard for build.properties\n";
-    echo "  link            Setup symbolic links to local Joomla installation\n";
+    echo "  link            Setup symbolic links to local Joomla installation(s)\n";
     echo "  clean           Remove symbolic links (clean dev state)\n";
     echo "  build           Build component package (zip)\n";
     echo "  install-joomla  Download and install Joomla\n";
     echo "  joomla-latest   Show latest available Joomla version\n";
     echo "  lint-syntax     Check PHP syntax errors\n";
+    echo "\nMultiple Joomla paths are supported via builder.joomla_paths (comma-separated)\n";
+    echo "in build.properties. The singular builder.joomla_path is also supported.\n";
 }
 
 /**
@@ -91,6 +93,77 @@ function getProperties(): array
         $props[trim($key)] = trim($value);
     }
     return $props;
+}
+
+/**
+ * Returns an array of Joomla installation paths from build.properties.
+ *
+ * Checks `builder.joomla_paths` (plural, comma-separated) first, then falls
+ * back to `builder.joomla_path` (singular) for backward compatibility.
+ * Appends `builder.joomla_dir` to each path if set.
+ *
+ * @param   array  $props  Properties array from getProperties().
+ *
+ * @return array List of resolved Joomla paths.
+ * @since 10.1.0
+ */
+function getJoomlaPaths(array $props): array
+{
+    $raw = '';
+
+    // Prefer plural form (comma-separated), fall back to singular
+    if (!empty($props['builder.joomla_paths'])) {
+        $raw = $props['builder.joomla_paths'];
+    } elseif (!empty($props['builder.joomla_path'])) {
+        $raw = $props['builder.joomla_path'];
+    }
+
+    if ($raw === '') {
+        return [];
+    }
+
+    $dir   = trim($props['builder.joomla_dir'] ?? '', '/');
+    $paths = [];
+
+    foreach (explode(',', $raw) as $entry) {
+        $entry = trim($entry);
+        if ($entry === '') {
+            continue;
+        }
+        $path = rtrim($entry, '/');
+        if ($dir !== '') {
+            $path .= '/' . $dir;
+        }
+        $paths[] = $path;
+    }
+
+    return $paths;
+}
+
+/**
+ * Returns the list of external symlink mappings for a given Joomla path.
+ *
+ * @param   string  $joomlaPath  The resolved Joomla installation path.
+ *
+ * @return array Associative array of target => link.
+ * @since 10.1.0
+ */
+function getExternalLinks(string $joomlaPath): array
+{
+    return [
+        BASE_DIR . '/media'                                           => "$joomlaPath/media/com_proclaim",
+        BASE_DIR . '/admin'                                           => "$joomlaPath/administrator/components/com_proclaim",
+        BASE_DIR . '/site'                                            => "$joomlaPath/components/com_proclaim",
+        BASE_DIR . '/modules/site/mod_proclaim'                       => "$joomlaPath/modules/mod_proclaim",
+        BASE_DIR . '/modules/admin/mod_proclaimicon'                  => "$joomlaPath/administrator/modules/mod_proclaimicon",
+        BASE_DIR . '/modules/site/mod_proclaim_podcast'               => "$joomlaPath/modules/mod_proclaim_podcast",
+        BASE_DIR . '/modules/site/mod_proclaim_youtube'               => "$joomlaPath/modules/mod_proclaim_youtube",
+        BASE_DIR . '/plugins/finder/proclaim'                         => "$joomlaPath/plugins/finder/proclaim",
+        BASE_DIR . '/plugins/system/proclaim'                         => "$joomlaPath/plugins/system/proclaim",
+        BASE_DIR . '/plugins/task/proclaim'                           => "$joomlaPath/plugins/task/proclaim",
+        BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.ini'     => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.ini",
+        BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.sys.ini' => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.sys.ini",
+    ];
 }
 
 /**
@@ -125,19 +198,56 @@ function doSetup(): void
 
     $currentProps = file_exists(PROPERTIES_FILE) ? getProperties() : [];
 
-    $joomlaPath    = ask('Enter the full path to your Joomla installation', $currentProps['builder.joomla_path'] ?? '');
+    // Collect multiple Joomla paths
+    $existingPaths = '';
+    if (!empty($currentProps['builder.joomla_paths'])) {
+        $existingPaths = $currentProps['builder.joomla_paths'];
+    } elseif (!empty($currentProps['builder.joomla_path'])) {
+        $existingPaths = $currentProps['builder.joomla_path'];
+    }
+
+    echo "Enter Joomla installation paths (one per prompt, blank when done):\n";
+    if ($existingPaths !== '') {
+        echo "  Current: $existingPaths\n";
+    }
+
+    $existing = $existingPaths !== ''
+        ? array_map('trim', explode(',', $existingPaths))
+        : [];
+
+    $paths = [];
+    $i     = 1;
+    while (true) {
+        $default = $existing[$i - 1] ?? null;
+        $label   = "  Joomla path #$i";
+        if ($default === null && $i > 1) {
+            $label .= ' (blank to finish)';
+        }
+        $path = ask($label, $default);
+        if ($path === null || $path === '') {
+            break;
+        }
+        $paths[] = $path;
+        $i++;
+    }
+
+    if (\count($paths) === 0) {
+        echo "No paths entered. At least one Joomla path is required.\n";
+        return;
+    }
+
     $joomlaDir     = ask('Enter subdirectory within Joomla path (leave empty if none)', $currentProps['builder.joomla_dir'] ?? '');
-    $joomlaVersion = ask('Enter the Joomla version for testing', $currentProps['joomla.version'] ?? '5.4.2');
+    $joomlaVersion = ask('Enter the default Joomla version for testing', $currentProps['joomla.version'] ?? '5.4.2');
 
     $content = "# Build properties\n";
-    $content .= "builder.joomla_path=$joomlaPath\n";
+    $content .= 'builder.joomla_paths=' . implode(',', $paths) . "\n";
     $content .= "builder.joomla_dir=$joomlaDir\n";
     $content .= "joomla.version=$joomlaVersion\n";
 
     file_put_contents(PROPERTIES_FILE, $content);
     echo "\nConfiguration saved to build.properties\n";
 
-    $install = ask("Do you want to download and install Joomla $joomlaVersion? (y/n)", "n");
+    $install = ask('Do you want to download and install Joomla? (y/n)', 'n');
     if (strtolower($install) === 'y') {
         doInstallJoomla();
     }
@@ -149,25 +259,22 @@ function doSetup(): void
  * @param   bool  $quiet  If true, suppresses non-error output.
  *
  * @return void
- * @throws Exception If the Joomla path does not exist.
- * @since 10.1.0
+ * @throws Exception If no Joomla paths are configured.
  * @since 10.1.0
  */
 function doLink(bool $quiet = false): void
 {
     $props      = getProperties();
-    $joomlaPath = rtrim($props['builder.joomla_path'], '/') . '/' . trim($props['builder.joomla_dir'], '/');
-    $joomlaPath = rtrim($joomlaPath, '/');
+    $joomlaPaths = getJoomlaPaths($props);
 
-    if (!is_dir($joomlaPath)) {
-        throw new \RuntimeException("Joomla path does not exist: $joomlaPath");
+    if (\count($joomlaPaths) === 0) {
+        throw new \RuntimeException('No Joomla paths configured. Run \'composer setup\' first.');
     }
 
+    // Internal links (dev.init) — run once
     if (!$quiet) {
-        echo "Linking to Joomla at: $joomlaPath\n";
+        echo "Creating internal links...\n";
     }
-
-    // Internal links (dev.init)
     symlink_force(BASE_DIR . '/proclaim.xml', BASE_DIR . '/admin/proclaim.xml', $quiet);
     symlink_force(BASE_DIR . '/proclaim.script.php', BASE_DIR . '/admin/proclaim.script.php', $quiet);
     if (
@@ -181,28 +288,24 @@ function doLink(bool $quiet = false): void
     }
     symlink_force(BASE_DIR . '/media/css/cwmcore.css', BASE_DIR . '/media/css/site/cwmcore.css', $quiet);
 
-    // External links
-    $links = [
-        BASE_DIR . '/media'                                           => "$joomlaPath/media/com_proclaim",
-        BASE_DIR . '/admin'                                           => "$joomlaPath/administrator/components/com_proclaim",
-        BASE_DIR . '/site'                                            => "$joomlaPath/components/com_proclaim",
-        BASE_DIR . '/modules/site/mod_proclaim'                       => "$joomlaPath/modules/mod_proclaim",
-        BASE_DIR . '/modules/admin/mod_proclaimicon'                  => "$joomlaPath/administrator/modules/mod_proclaimicon",
-        BASE_DIR . '/modules/site/mod_proclaim_podcast'               => "$joomlaPath/modules/mod_proclaim_podcast",
-        BASE_DIR . '/modules/site/mod_proclaim_youtube'               => "$joomlaPath/modules/mod_proclaim_youtube",
-        BASE_DIR . '/plugins/finder/proclaim'                         => "$joomlaPath/plugins/finder/proclaim",
-        BASE_DIR . '/plugins/system/proclaim'                         => "$joomlaPath/plugins/system/proclaim",
-        BASE_DIR . '/plugins/task/proclaim'                           => "$joomlaPath/plugins/task/proclaim",
-        BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.ini'     => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.ini",
-        BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.sys.ini' => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.sys.ini",
-    ];
+    // External links — iterate all Joomla paths
+    foreach ($joomlaPaths as $joomlaPath) {
+        if (!is_dir($joomlaPath)) {
+            echo "WARNING: Joomla path does not exist, skipping: $joomlaPath\n";
+            continue;
+        }
 
-    foreach ($links as $target => $link) {
-        symlink_force($target, $link, $quiet);
+        if (!$quiet) {
+            echo "\nLinking to Joomla at: $joomlaPath\n";
+        }
+
+        foreach (getExternalLinks($joomlaPath) as $target => $link) {
+            symlink_force($target, $link, $quiet);
+        }
     }
 
     if (!$quiet) {
-        echo "Symlinks created successfully.\n";
+        echo "\nSymlinks created successfully.\n";
     }
 }
 
@@ -214,7 +317,6 @@ function doLink(bool $quiet = false): void
  * @param   bool    $quiet   If true, suppresses success messages.
  *
  * @return void
- * @since 10.1.0
  * @since 10.1.0
  */
 function symlink_force(string $target, string $link, bool $quiet = false): void
@@ -454,45 +556,59 @@ function doBuild(): void
  */
 function doInstallJoomla(): void
 {
-    $props       = getProperties();
-    $version     = $props['joomla.version'] ?? '5.4.2';
-    $installPath = rtrim($props['builder.joomla_path'], '/') . '/' . trim($props['builder.joomla_dir'], '/');
-    $installPath = rtrim($installPath, '/');
+    $props          = getProperties();
+    $defaultVersion = $props['joomla.version'] ?? '5.4.2';
+    $joomlaPaths    = getJoomlaPaths($props);
 
-    if (is_dir($installPath)) {
-        $reinstall = ask("Directory $installPath already exists. Remove and reinstall? (y/n)", "n");
-        if (strtolower($reinstall) !== 'y') {
-            echo "Skipping installation.\n";
-            return;
+    if (\count($joomlaPaths) === 0) {
+        // Fallback for legacy config without paths
+        $joomlaPaths = [rtrim($props['builder.joomla_path'] ?? '', '/') . '/' . trim($props['builder.joomla_dir'] ?? '', '/')];
+        $joomlaPaths = [rtrim($joomlaPaths[0], '/')];
+    }
+
+    foreach ($joomlaPaths as $installPath) {
+        echo "\n--- Joomla installation for: $installPath ---\n";
+
+        $version = ask("  Joomla version to install at $installPath", $defaultVersion);
+
+        if (is_dir($installPath)) {
+            $reinstall = ask("  Directory $installPath already exists. Remove and reinstall? (y/n)", 'n');
+            if (strtolower($reinstall) !== 'y') {
+                echo "  Skipping $installPath.\n";
+                continue;
+            }
+            echo "  Removing $installPath...\n";
+            if (PHP_OS_FAMILY === 'Windows') {
+                exec('rmdir /s /q ' . escapeshellarg($installPath));
+            } else {
+                exec('rm -rf ' . escapeshellarg($installPath));
+            }
         }
-        echo "Removing $installPath...\n";
-        if (PHP_OS_FAMILY === 'Windows') {
-            exec('rmdir /s /q ' . escapeshellarg($installPath));
+
+        if (!is_dir($installPath) && !mkdir($installPath, 0777, true) && !is_dir($installPath)) {
+            echo "  ERROR: Failed to create directory $installPath\n";
+            continue;
+        }
+
+        $url     = "https://github.com/joomla/joomla-cms/releases/download/$version/Joomla_$version-Stable-Full_Package.zip";
+        $zipFile = BUILD_DIR . "/joomla-$version.zip";
+
+        echo "  Downloading Joomla $version...\n";
+        copy($url, $zipFile);
+
+        echo "  Extracting to $installPath...\n";
+        $zip = new ZipArchive();
+        if ($zip->open($zipFile) === true) {
+            $zip->extractTo($installPath);
+            $zip->close();
+            echo "  Joomla $version installed at $installPath.\n";
         } else {
-            exec('rm -rf ' . escapeshellarg($installPath));
+            echo "  Failed to extract Joomla.\n";
+        }
+        if (file_exists($zipFile)) {
+            unlink($zipFile);
         }
     }
-
-    if (!is_dir($installPath) && !mkdir($installPath, 0777, true) && !is_dir($installPath)) {
-        throw new \RuntimeException(\sprintf('Directory "%s" was not created', $installPath));
-    }
-
-    $url     = "https://github.com/joomla/joomla-cms/releases/download/$version/Joomla_$version-Stable-Full_Package.zip";
-    $zipFile = BUILD_DIR . "/joomla-$version.zip";
-
-    echo "Downloading Joomla $version...\n";
-    copy($url, $zipFile);
-
-    echo "Extracting to $installPath...\n";
-    $zip = new ZipArchive();
-    if ($zip->open($zipFile) === true) {
-        $zip->extractTo($installPath);
-        $zip->close();
-        echo "Joomla installed.\n";
-    } else {
-        echo "Failed to extract Joomla.\n";
-    }
-    unlink($zipFile);
 }
 
 /**
@@ -519,33 +635,20 @@ function doClean(): void
         }
     }
 
-    // Try to get a Joomla path for external links
+    // External symlinks — remove from ALL configured Joomla paths
     if (file_exists(PROPERTIES_FILE)) {
         try {
-            $props      = getProperties();
-            $joomlaPath = rtrim($props['builder.joomla_path'] ?? '', '/');
-            if (!empty($props['builder.joomla_dir'])) {
-                $joomlaPath .= '/' . trim($props['builder.joomla_dir'], '/');
-            }
-            $joomlaPath = rtrim($joomlaPath, '/');
+            $props       = getProperties();
+            $joomlaPaths = getJoomlaPaths($props);
 
-            if (!empty($joomlaPath) && is_dir($joomlaPath)) {
-                $externalLinks = [
-                    "$joomlaPath/media/com_proclaim",
-                    "$joomlaPath/administrator/components/com_proclaim",
-                    "$joomlaPath/components/com_proclaim",
-                    "$joomlaPath/modules/mod_proclaim",
-                    "$joomlaPath/administrator/modules/mod_proclaimicon",
-                    "$joomlaPath/modules/mod_proclaim_podcast",
-                    "$joomlaPath/modules/mod_proclaim_youtube",
-                    "$joomlaPath/plugins/finder/proclaim",
-                    "$joomlaPath/plugins/system/proclaim",
-                    "$joomlaPath/plugins/task/proclaim",
-                    "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.ini",
-                    "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.sys.ini",
-                ];
+            foreach ($joomlaPaths as $joomlaPath) {
+                if (!is_dir($joomlaPath)) {
+                    continue;
+                }
 
-                foreach ($externalLinks as $link) {
+                echo "\nCleaning symlinks from: $joomlaPath\n";
+
+                foreach (getExternalLinks($joomlaPath) as $link) {
                     if (is_link($link)) {
                         unlink($link);
                         echo "Removed: $link\n";
@@ -557,7 +660,7 @@ function doClean(): void
         }
     }
 
-    echo "Clean complete.\n";
+    echo "\nClean complete.\n";
 }
 
 /**
