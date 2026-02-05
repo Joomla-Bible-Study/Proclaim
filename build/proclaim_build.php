@@ -334,15 +334,18 @@ function doBuild(): void
         throw new \RuntimeException("Cannot open <$zipFile>");
     }
 
+    // Resolve BASE_DIR to a real path so it matches getRealPath() output
+    $resolvedBase = realpath(BASE_DIR);
+
     $files = new RecursiveIteratorIterator(
-        new RecursiveDirectoryIterator(BASE_DIR, FilesystemIterator::SKIP_DOTS),
+        new RecursiveDirectoryIterator($resolvedBase, FilesystemIterator::SKIP_DOTS),
         RecursiveIteratorIterator::LEAVES_ONLY
     );
 
     $excludes = [
         'build.xml', 'build.properties', 'build.dist.properties', 'phpunit.xml', 'phpunit.xml.bak',
         '.php-cs-fixer.dist.php', 'CLAUDE.md', 'GEMINI.md', 'SECURITY.md', '_config.yml',
-        '.git', '.vscode', '.idea', '.ds_store', 'node_modules', 'composer.json', 'composer.lock',
+        '.git', '.vscode', '.idea', '.DS_Store', 'node_modules', 'composer.json', 'composer.lock',
         'package.json', 'package-lock.json', 'build', 'tests', '.jshintrc',
         // Exclude internal symlinks created by doLink
         'admin/proclaim.xml',
@@ -365,7 +368,7 @@ function doBuild(): void
 
         $filePath     = $file->getRealPath();
         // Normalize path separators to forward slashes
-        $relativePath = str_replace('\\', '/', substr($filePath, \strlen(BASE_DIR) + 1));
+        $relativePath = str_replace('\\', '/', substr($filePath, \strlen($resolvedBase) + 1));
 
         // Check excludes
         $excludeFile = false;
