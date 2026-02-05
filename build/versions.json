@@ -1,0 +1,21 @@
+{
+    "_comment": "Development version tracking file - used by Claude Code and build scripts",
+    "_updated": "2026-02-04",
+
+    "current": {
+        "version": "10.0.1",
+        "description": "Last stable release"
+    },
+
+    "next": {
+        "minor": "10.1.0",
+        "major": "11.0.0",
+        "description": "Use 'minor' for @since tags and migrations in development"
+    },
+
+    "notes": {
+        "migrations": "All new migrations should use 'next.minor' version",
+        "since_tags": "New code should use 'next.minor' for @since annotations",
+        "after_release": "Update 'current.version' to match released version"
+    }
+}
