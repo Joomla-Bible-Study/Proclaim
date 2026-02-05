@@ -321,23 +321,6 @@ class CwmpodcastDurationTest extends ProclaimTestCase
     }
 
     /**
-     * Test backward compatibility of getDuration alias
-     */
-    public function testGetDurationAliasWorks(): void
-    {
-        $tempFile = $this->fixturesPath . 'test_alias.mp3';
-        file_put_contents($tempFile, 'test');
-
-        // Both methods should return the same result
-        $result1 = $this->podcast->getDuration($tempFile);
-        $result2 = $this->podcast->getMediaDuration($tempFile);
-
-        $this->assertEquals($result1, $result2);
-
-        @unlink($tempFile);
-    }
-
-    /**
      * Test YouTube URL detection
      *
      * @dataProvider youtubeUrlProvider

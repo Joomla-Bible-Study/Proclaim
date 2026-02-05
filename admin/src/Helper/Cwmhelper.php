@@ -74,31 +74,6 @@ class Cwmhelper
     }
 
     /**
-     * Get ShowHide.
-     *
-     * @return string
-     *
-     * @deprecated 7.1.8
-     *
-     * @since      8.2.0
-     */
-    public static function getShowhide(): string
-    {
-        return '
-        function HideContent(d) {
-        document.getElementById(d).style.display = "none";
-        }
-        function ShowContent(d) {
-        document.getElementById(d).style.display = "block";
-        }
-        function ReverseDisplay(d) {
-        if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
-        else { document.getElementById(d).style.display = "none"; }
-        }
-        ';
-    }
-
-    /**
      * Method to get file size
      *
      * @param   string  $url  URL
