@@ -352,6 +352,9 @@ function doBuild(): void
         'media/js/joomla.d.ts',
     ];
 
+    // File extensions to exclude (dev/debug files)
+    $excludeExts = ['map'];
+
     $includes    = ['admin/', 'media/', 'modules/', 'plugins/', 'site/', 'libraries/'];
     $includeExts = ['php', 'xml', 'txt', 'md'];
 
@@ -393,6 +396,15 @@ function doBuild(): void
                 break;
             }
         }
+
+        // Check excluded extensions (e.g., .map files for source maps)
+        if (!$excludeFile) {
+            $ext = pathinfo($relativePath, PATHINFO_EXTENSION);
+            if (\in_array($ext, $excludeExts, true)) {
+                $excludeFile = true;
+            }
+        }
+
         if ($excludeFile) {
             continue;
         }
