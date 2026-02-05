@@ -55,15 +55,18 @@ return new class () implements ServiceProviderInterface {
                 if (version_compare(PHP_VERSION, '8.3.0', '<')) {
                     try {
                         $app = Factory::getApplication();
-                        $app->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
-                        $app->enqueueMessage(
-                            Text::sprintf(
-                                'COM_PROCLAIM_ERROR_PHP_VERSION',
-                                '8.3.0',
-                                PHP_VERSION
-                            ),
-                            'error'
-                        );
+
+                        if ($app->isClient('administrator')) {
+                            $app->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
+                            $app->enqueueMessage(
+                                Text::sprintf(
+                                    'COM_PROCLAIM_ERROR_PHP_VERSION',
+                                    '8.3.0',
+                                    PHP_VERSION
+                                ),
+                                'error'
+                            );
+                        }
                     } catch (\Exception $e) {
                         // Silently fail if we can't enqueue the message
                     }
