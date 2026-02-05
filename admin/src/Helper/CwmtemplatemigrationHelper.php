@@ -28,7 +28,7 @@ use Joomla\Registry\Registry;
  * to existing templates during component upgrades.
  *
  * @package  Proclaim.Admin
- * @since    10.2.0
+ * @since    10.1.0
  */
 class CwmtemplatemigrationHelper
 {
@@ -36,7 +36,7 @@ class CwmtemplatemigrationHelper
      * Database driver
      *
      * @var DatabaseInterface
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected DatabaseInterface $db;
 
@@ -46,20 +46,20 @@ class CwmtemplatemigrationHelper
      *
      * Format:
      * [
-     *     '10.2.0' => [
+     *     '10.1.0' => [
      *         'parameter_name' => 'default_value',
      *         'another_param' => '1',
      *     ],
-     *     '10.3.0' => [
+     *     '10.2.0' => [
      *         'new_feature_enabled' => '0',
      *     ],
      * ]
      *
      * @var array
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected array $migrations = [
-        '10.2.0' => [
+        '10.1.0' => [
             'default_show_archived'      => '2',
             'default_show_archive_badge' => '1',
         ],
@@ -71,16 +71,16 @@ class CwmtemplatemigrationHelper
      *
      * Format:
      * [
-     *     '10.2.1' => [
+     *     '10.1.0' => [
      *         'old_param_name' => 'new_param_name',
      *     ],
      * ]
      *
      * @var array
-     * @since 10.2.1
+     * @since 10.1.0
      */
     protected array $renames = [
-        '10.2.1' => [
+        '10.1.0' => [
             // Fix search filter param names to match PHP code expectations
             'show_type_search'      => 'show_messagetype_search',
             'show_locations_search' => 'show_location_search',
@@ -93,17 +93,17 @@ class CwmtemplatemigrationHelper
      *
      * Format:
      * [
-     *     '10.2.1' => [
+     *     '10.1.0' => [
      *         'backcolor',
      *         'frontcolor',
      *     ],
      * ]
      *
      * @var array
-     * @since 10.2.1
+     * @since 10.1.0
      */
     protected array $colorConversions = [
-        '10.2.1' => [
+        '10.1.0' => [
             // Template color params that may have legacy 0x format
             'backcolor',
             'frontcolor',
@@ -118,7 +118,7 @@ class CwmtemplatemigrationHelper
     /**
      * Constructor
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function __construct()
     {
