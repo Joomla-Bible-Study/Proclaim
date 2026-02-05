@@ -235,8 +235,19 @@
                         context: 'messages',
                         formId: 'item-form',
                         paramsPrefix: 'jform[params]',
+                        // New options for module integration
+                        contexts: null,           // Array of context IDs to show, null = all contexts
+                        showViewSettings: true,   // Whether to show View Settings button
+                        showContextTabs: true,    // Whether to show context tabs (auto-hidden if single context)
+                        elementDefinitions: null, // Custom element definitions (overrides PHP options)
                         ...options
                     };
+
+                    // If single context specified via contexts array, use it as default
+                    if (this.options.contexts && this.options.contexts.length === 1) {
+                        this.options.context = this.options.contexts[0];
+                        this.options.showContextTabs = false; // Auto-hide tabs for single context
+                    }
 
                     // State: Map<elementId, {row, col, colspan, element, custom, linktype}>
                     this.state = new Map();
@@ -272,6 +283,20 @@
                     this.endResize = this.endResize.bind(this);
 
                     this.init();
+                }
+
+                /**
+                 * Get element definitions - uses custom definitions from options if provided,
+                 * otherwise falls back to global getElementDefinitions()
+                 * @returns {Object} Element definitions by context
+                 */
+                getElementDefs() {
+                    // Use custom definitions if provided via options
+                    if (this.options.elementDefinitions) {
+                        return this.options.elementDefinitions;
+                    }
+                    // Fall back to global function (loads from PHP options or fallback)
+                    return getElementDefs();
                 }
 
                 /**
@@ -313,7 +338,7 @@
                         </button>
                     </div>
                     <div class="layout-toolbar-group layout-toolbar-spacer"></div>
-                    <div class="layout-toolbar-group">
+                    <div class="layout-toolbar-group"${this.options.showViewSettings ? '' : ' style="display:none"'}>
                         <button type="button" class="btn btn-secondary btn-view-settings" title="${this.trans('JBS_TPL_VIEW_SETTINGS') || 'View Settings'}">
                             <span class="icon-cog" aria-hidden="true"></span>
                             <span class="btn-text">${this.trans('JBS_TPL_VIEW_SETTINGS') || 'View Settings'}</span>
@@ -354,10 +379,28 @@
                  * Labels come from PHP-provided elementDefinitions for automatic translation
                  */
                 createContextTabs() {
-                    const defs = getElementDefs();
-                    const contextOrder = ['messages', 'details', 'teachers', 'teacherDetails', 'series', 'seriesDetails', 'landingPage'];
+                    // Hide context tabs container if showContextTabs is false
+                    if (!this.options.showContextTabs) {
+                        this.contextTabs.style.display = 'none';
+                        return;
+                    }
 
-                    contextOrder.forEach(contextId => {
+                    const defs = this.getElementDefs();
+                    const defaultOrder = ['messages', 'details', 'teachers', 'teacherDetails', 'series', 'seriesDetails', 'landingPage'];
+
+                    // Use custom contexts array if provided, otherwise use default order
+                    const contextOrder = this.options.contexts || defaultOrder;
+
+                    // Filter to only contexts that exist in definitions
+                    const validContexts = contextOrder.filter(contextId => defs[contextId]);
+
+                    // Hide tabs if only one context
+                    if (validContexts.length <= 1) {
+                        this.contextTabs.style.display = 'none';
+                        return;
+                    }
+
+                    validContexts.forEach(contextId => {
                         const contextDef = defs[contextId];
                         if (!contextDef) { return; }
 
@@ -396,7 +439,7 @@
                     this.destroySortables();
 
                     // Check if this is an order-only context (like landing page)
-                    const contextDef = getElementDefs()[context];
+                    const contextDef = this.getElementDefs()[context];
                     const isOrderOnly = contextDef?.isOrderOnly || false;
 
                     // Update toolbar visibility for order-only contexts
@@ -595,7 +638,7 @@
                     const contextSettings = settingsConfig[this.currentContext] || [];
 
                     // Update modal title to show context
-                    const contextDef = getElementDefs()[this.currentContext];
+                    const contextDef = this.getElementDefs()[this.currentContext];
                     const modalTitle = this.viewSettingsModal?.querySelector('.modal-title');
                     if (modalTitle && contextDef) {
                         modalTitle.innerHTML = `
@@ -1188,7 +1231,7 @@
                     }
 
                     // Update modal title with section name
-                    const elementDef = getElementDefs().landingPage?.elements?.find(e => e.id === sectionId);
+                    const elementDef = this.getElementDefs().landingPage?.elements?.find(e => e.id === sectionId);
                     const sectionLabel = elementDef ? elementDef.label : sectionId;
                     const modalTitle = this.sectionSettingsModal?.querySelector('.modal-title');
                     if (modalTitle) {
@@ -1533,7 +1576,7 @@
                  * Initialize the sidebar with available elements
                  */
                 initSidebar() {
-                    const contextDef = getElementDefs()[this.currentContext];
+                    const contextDef = this.getElementDefs()[this.currentContext];
                     if (!contextDef || !this.palette) {
                         return;
                     }
@@ -2171,7 +2214,7 @@
                  * @returns {Object|null}
                  */
                 getElementDefinition(elementId) {
-                    const contextDef = getElementDefs()[this.currentContext];
+                    const contextDef = this.getElementDefs()[this.currentContext];
                     if (!contextDef) { return null; }
                     return contextDef.elements.find(el => el.id === elementId) || null;
                 }
@@ -2629,7 +2672,7 @@
                  * Load state from existing form params
                  */
                 loadFromParams() {
-                    const contextDef = getElementDefs()[this.currentContext];
+                    const contextDef = this.getElementDefs()[this.currentContext];
                     if (!contextDef) { return; }
 
                     const prefix = contextDef.prefix;
@@ -2789,7 +2832,7 @@
                  * Sync state to hidden form fields before save
                  */
                 syncToForm() {
-                    const contextDef = getElementDefs()[this.currentContext];
+                    const contextDef = this.getElementDefs()[this.currentContext];
                     if (!contextDef) { return; }
 
                     // Use landing page sync for order-only contexts
@@ -2939,7 +2982,7 @@
                     });
 
                     // Re-add elements from state
-                    const contextDef = getElementDefs()[this.currentContext];
+                    const contextDef = this.getElementDefs()[this.currentContext];
                     if (!contextDef) { return; }
 
                     this.state.forEach((data, elementId) => {
@@ -3359,6 +3402,45 @@
 
             // Export to global scope
         window.LayoutEditor = LayoutEditor;
+
+        /**
+         * Factory function for creating LayoutEditor instances
+         * Useful for module integration where custom configuration is needed
+         *
+         * @example
+         * // Create single-context editor for module
+         * const editor = ProclaimLayoutEditor.create('#my-container', {
+         *     contexts: ['messages'],
+         *     showViewSettings: false,
+         *     formId: 'module-form',
+         *     paramsPrefix: 'jform[params]'
+         * });
+         */
+        window.ProclaimLayoutEditor = {
+            /**
+             * Create a new LayoutEditor instance
+             * @param {string|HTMLElement} container - Container element or selector
+             * @param {Object} options - Configuration options
+             * @returns {LayoutEditor} The created instance
+             */
+            create: function(container, options = {}) {
+                const el = typeof container === 'string'
+                    ? document.querySelector(container)
+                    : container;
+
+                if (!el) {
+                    console.error('ProclaimLayoutEditor: Container not found:', container);
+                    return null;
+                }
+
+                return new LayoutEditor(el, options);
+            },
+
+            /**
+             * LayoutEditor class reference for direct instantiation
+             */
+            LayoutEditor: LayoutEditor
+        };
 
         /**
          * Initialize the layout editor
