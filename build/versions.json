@@ -1,21 +1,26 @@
 {
-    "_comment": "Development version tracking file - used by Claude Code and build scripts",
+    "_comment": "Development version tracking - semantic versioning: major.minor.patch",
     "_updated": "2026-02-04",
 
     "current": {
         "version": "10.0.1",
-        "description": "Last stable release"
+        "description": "Last stable release (from GitHub releases)"
     },
 
     "next": {
+        "patch": "10.0.2",
         "minor": "10.1.0",
-        "major": "11.0.0",
-        "description": "Use 'minor' for @since tags and migrations in development"
+        "major": "11.0.0"
+    },
+
+    "active_development": {
+        "version": "10.1.0",
+        "description": "Use this for @since tags and migrations"
     },
 
     "notes": {
-        "migrations": "All new migrations should use 'next.minor' version",
-        "since_tags": "New code should use 'next.minor' for @since annotations",
-        "after_release": "Update 'current.version' to match released version"
+        "patch": "Bug fixes only, no new features",
+        "minor": "New features, backward compatible",
+        "major": "Breaking changes"
     }
 }
