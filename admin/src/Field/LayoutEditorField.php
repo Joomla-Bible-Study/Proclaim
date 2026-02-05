@@ -94,8 +94,9 @@ class LayoutEditorField extends FormField
         // Get configuration from XML attributes
         $context          = (string) ($this->element['context'] ?? 'messages');
         $showViewSettings = filter_var($this->element['show-view-settings'] ?? 'false', FILTER_VALIDATE_BOOLEAN);
+        $lazyLoad         = filter_var($this->element['lazy'] ?? 'false', FILTER_VALIDATE_BOOLEAN);
 
-        // Load assets
+        // Load assets - for lazy loading, we still need them but initialization is deferred
         /** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
         $wa->useScript('com_proclaim.sortable')
@@ -118,17 +119,18 @@ class LayoutEditorField extends FormField
         // The Layout Editor reads/writes to the existing XML-defined form fields
         $html = [];
 
-        $html[] = '<div class="layout-editor-field-wrapper">';
-        $html[] = '<div id="' . $editorId . '" class="layout-editor-container" data-context="' . $context . '">';
-        $html[] = '    <div id="layout-editor-loading" class="text-center py-4">';
-        $html[] = '        <span class="spinner-border spinner-border-sm" role="status"></span>';
-        $html[] = '        <span class="ms-2">' . Text::_('JBS_TPL_LOADING') . '</span>';
-        $html[] = '    </div>';
-        $html[] = '</div>';
-        $html[] = '</div>';
+        $html[]   = '<div class="layout-editor-field-wrapper">';
+        $lazyAttr = $lazyLoad ? ' data-lazy-init="true"' : '';
+        $html[]   = '<div id="' . $editorId . '" class="layout-editor-container" data-context="' . $context . '"' . $lazyAttr . '>';
+        $html[]   = '    <div id="layout-editor-loading" class="text-center py-4">';
+        $html[]   = '        <span class="spinner-border spinner-border-sm" role="status"></span>';
+        $html[]   = '        <span class="ms-2">' . Text::_('JBS_TPL_LOADING') . '</span>';
+        $html[]   = '    </div>';
+        $html[]   = '</div>';
+        $html[]   = '</div>';
 
         // Inline script to initialize the Layout Editor
-        $html[] = $this->renderInitScript($editorId, $context, $showViewSettings, $elementDefinitions, $params);
+        $html[] = $this->renderInitScript($editorId, $context, $showViewSettings, $elementDefinitions, $params, $lazyLoad);
 
         return implode("\n", $html);
     }
@@ -232,6 +234,7 @@ class LayoutEditorField extends FormField
      * @param   bool    $showViewSettings  Whether to show View Settings button
      * @param   array   $elementDefs       Element definitions
      * @param   array   $params            Current parameters
+     * @param   bool    $lazyLoad          Whether to defer initialization until tab is visible
      *
      * @return  string
      *
@@ -242,7 +245,8 @@ class LayoutEditorField extends FormField
         string $context,
         bool $showViewSettings,
         array $elementDefs,
-        array $params
+        array $params,
+        bool $lazyLoad = false
     ): string {
         $elementDefsJson = json_encode($elementDefs, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT);
         $paramsJson      = json_encode($params, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT);
@@ -289,10 +293,14 @@ class LayoutEditorField extends FormField
         ];
         $elementTypeOptionsJson = json_encode($elementTypeOptions, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT);
 
+        $lazyLoadJs = $lazyLoad ? 'true' : 'false';
+
         return <<<SCRIPT
 <script>
 (function() {
     'use strict';
+
+    var lazyLoad = {$lazyLoadJs};
 
     // Store options for the Layout Editor
     if (typeof Joomla !== 'undefined' && Joomla.optionsStorage) {
@@ -342,12 +350,102 @@ class LayoutEditorField extends FormField
         }
     }
 
+    /**
+     * Check if the container is in a visible/active tab
+     */
+    function isContainerVisible(container) {
+        // Check for Joomla 5 joomla-tab-element
+        var tabElement = container.closest('joomla-tab-element');
+        if (tabElement) {
+            return tabElement.hasAttribute('active');
+        }
+
+        // Check for Bootstrap tab-pane
+        var tabPane = container.closest('.tab-pane');
+        if (tabPane) {
+            return tabPane.classList.contains('active') || tabPane.classList.contains('show');
+        }
+
+        // Check for Bootstrap accordion
+        var accordion = container.closest('.accordion-collapse');
+        if (accordion) {
+            return accordion.classList.contains('show');
+        }
+
+        // Not in a tab/accordion, assume visible
+        return true;
+    }
+
+    /**
+     * Set up lazy loading - wait for tab to be shown before initializing
+     */
+    function setupLazyInit() {
+        var container = document.getElementById('{$editorId}');
+        if (!container) {
+            return;
+        }
+
+        // If already visible, initialize now
+        if (isContainerVisible(container)) {
+            initModuleLayoutEditor();
+            return;
+        }
+
+        // Listen for Joomla 5 tab events
+        var joomlaTab = container.closest('joomla-tab');
+        if (joomlaTab) {
+            var tabElement = container.closest('joomla-tab-element');
+            var initOnShow = function(event) {
+                if (tabElement && (event.target === tabElement || tabElement.hasAttribute('active'))) {
+                    initModuleLayoutEditor();
+                    joomlaTab.removeEventListener('joomla.tab.shown', initOnShow);
+                }
+            };
+            joomlaTab.addEventListener('joomla.tab.shown', initOnShow);
+            return;
+        }
+
+        // Listen for Bootstrap tab events
+        var tabPane = container.closest('.tab-pane');
+        if (tabPane && tabPane.id) {
+            var tabButton = document.querySelector('[data-bs-target="#' + tabPane.id + '"], [href="#' + tabPane.id + '"]');
+            if (tabButton) {
+                tabButton.addEventListener('shown.bs.tab', function() {
+                    initModuleLayoutEditor();
+                }, { once: true });
+                return;
+            }
+        }
+
+        // Listen for Bootstrap accordion events
+        var accordion = container.closest('.accordion-collapse');
+        if (accordion) {
+            accordion.addEventListener('shown.bs.collapse', function() {
+                initModuleLayoutEditor();
+            }, { once: true });
+            return;
+        }
+
+        // Fallback: just initialize
+        initModuleLayoutEditor();
+    }
+
     // Initialize when DOM is ready
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initModuleLayoutEditor);
+        document.addEventListener('DOMContentLoaded', function() {
+            if (lazyLoad) {
+                setupLazyInit();
+            } else {
+                initModuleLayoutEditor();
+            }
+        });
     } else {
-        var scheduleInit = window.requestIdleCallback || function(cb) { setTimeout(cb, 100); };
-        scheduleInit(initModuleLayoutEditor, { timeout: 2000 });
+        if (lazyLoad) {
+            setupLazyInit();
+        } else {
+            var scheduleInit = window.requestIdleCallback || function(cb) { setTimeout(cb, 100); };
+            scheduleInit(initModuleLayoutEditor, { timeout: 2000 });
+        }
     }
 })();
 </script>

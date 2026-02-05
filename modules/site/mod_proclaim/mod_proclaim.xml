@@ -333,6 +333,7 @@
                 <field name="layout_editor" type="LayoutEditor"
                        context="messages"
                        show-view-settings="false"
+                       lazy="true"
                        hiddenLabel="true"/>
                 <!-- Hidden fields for layout data storage - managed by Layout Editor -->
                 <field name="scripture1row" type="hidden" default="1"/>
