@@ -163,7 +163,7 @@ $CWMedia = new Cwmmedia();
                     <?php
                     // Add pagination
                     if ($this->pagination->pagesTotal > 1) : ?>
-                        <div class="pagination">
+                        <div class="pagination pagination-centered">
                             <?php echo $this->pagination->getPagesLinks(); ?>
                         </div>
                     <?php endif; ?>

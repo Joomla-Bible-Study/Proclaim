@@ -29,14 +29,6 @@ use Joomla\CMS\MVC\Controller\BaseController;
 class CwmsermonsController extends BaseController
 {
     /**
-     * Media Code
-     *
-     * @var string
-     * @since 7.0
-     */
-    public string $mediaCode;
-
-    /**
      * Download?
      *
      * @return void
@@ -53,25 +45,6 @@ class CwmsermonsController extends BaseController
         if ($task === 'download') {
             $downloader = new Cwmdownload();
             $downloader->download($mid);
-        }
-    }
-
-    /**
-     * Avplayer
-     *
-     * @return void
-     *
-     * @throws \Exception
-     * @since      7.0
-     * @deprecated 10.0.0
-     */
-    public function avplayer(): void
-    {
-        $input = Factory::getApplication()->getInput();
-        $task  = $input->get('task');
-
-        if ($task === 'avplayer') {
-            $this->mediaCode = $input->get('code', '', 'string');
         }
     }
 

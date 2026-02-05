@@ -149,6 +149,11 @@ position: absolute;
    opacity:.7;
 }"
 );
+
+// Add template accent color for pagination
+$accentColor = $this->params->get('backcolor', '#287585');
+$wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
+
 $app       = Factory::getApplication();
 $user      = $app->getIdentity();
 $userId    = $user->id;
@@ -188,7 +193,7 @@ $count   = $this->rotatingImageCount;
         }
         if ($params->get('studyimage') !== -1) {
             //clean up extra data in the image
-            $hash = str_contains($params->get('studyimage'), '#');
+            $hash = str_contains((string) $params->get('studyimage'), '#');
             if ($hash == 1) {
                 $imageparam   = $params->get('studyimage');
                 $hashlocation = strpos($imageparam, '#');
@@ -257,12 +262,6 @@ $count   = $this->rotatingImageCount;
         </div>
     </div>
 </div>
-<div class="row-fluid col-sm-12 pagination pagelinks" style="background-color: #A9A9A9;
-    margin: 0 -5px;
-    padding: 8px 8px;
-    border: 1px solid #C5C1BE;
-    position: relative;
-    -webkit-border-radius: 9px;">
-    <?php
-    echo $this->pagination->getPageslinks(); ?>
+<div class="pagination-container pagelinks">
+    <?php echo $this->pagination->getPageslinks(); ?>
 </div>

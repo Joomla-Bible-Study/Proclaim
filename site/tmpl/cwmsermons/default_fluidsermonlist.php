@@ -15,6 +15,11 @@
 
 /** @var CWM\Component\Proclaim\Site\View\Cwmsermons\HtmlView $this */
 
+// Add template accent color for pagination
+$accentColor = $this->params->get('backcolor', '#287585');
+$wa = $this->getDocument()->getWebAssetManager();
+$wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
+
 ?>
 
 
@@ -56,7 +61,6 @@ foreach ($this->items as $study) {
     </div>
     <?php
 } ?>
-<div class="row-fluid col-lg-12 pagination">
-    <?php
-    echo $this->pagination->getPageslinks(); ?>
+<div class="pagination-container pagelinks">
+    <?php echo $this->pagination->getPageslinks(); ?>
 </div>

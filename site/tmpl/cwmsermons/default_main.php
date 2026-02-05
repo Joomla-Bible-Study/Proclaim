@@ -21,6 +21,11 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
+// Add template accent color for pagination
+$accentColor = $this->params->get('backcolor', '#287585');
+$wa = $this->getDocument()->getWebAssetManager();
+$wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
+
 // Use pre-calculated values from HtmlView
 $teachers     = $this->teachersFluid;
 $listing      = $this->listing;
@@ -144,7 +149,7 @@ if (!empty($this->items)) : ?>
             'show_pagination'
         ) === '1'))
     ) : ?>
-                    <div class="pagination">
+                    <div class="pagination pagination-centered">
                         <?php
             if ($this->params->def('show_pagination_results', 1)) : ?>
                             <p class="counter float-right">
@@ -186,7 +191,7 @@ if (!empty($this->items)) : ?>
                             </div>
                         <?php endif; ?>
                     </nav>
-                    <div class="pagination" style="display: flex; justify-content: center;">
+                    <div class="pagination pagination-centered">
                         <?php echo $this->pagination->getPagesLinks(); ?>
                     </div>
                 <?php endif; ?>

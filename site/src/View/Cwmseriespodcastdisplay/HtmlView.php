@@ -150,7 +150,7 @@ class HtmlView extends BaseHtmlView
                         $reg->loadString($rowMedia->params);
                         $rowParams = $reg;
 
-                        if ($this->endsWith($rowParams->get('filename', ''), '.mp3') === true) {
+                        if (str_ends_with($rowParams->get('filename', ''), '.mp3')) {
                             $media[] = $rowMedia;
                         }
                     }
@@ -194,24 +194,4 @@ class HtmlView extends BaseHtmlView
         parent::display($tpl);
     }
 
-    /**
-     * Find Ends With
-     *
-     * @param   string  $haystack  Search string
-     * @param   string  $needle    What to search for.
-     *
-     * @return bool
-     *
-     * @since version
-     */
-    private function endsWith(string $haystack, string $needle): bool
-    {
-        $length = \strlen($needle);
-
-        if ($length === 0) {
-            return true;
-        }
-
-        return substr($haystack, -$length) === $needle;
-    }
 }

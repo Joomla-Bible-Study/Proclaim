@@ -32,35 +32,6 @@ class CwmhelperTest extends ProclaimTestCase
     }
 
     /**
-     * Test getShowhide method exists and returns string
-     *
-     * @return void
-     */
-    public function testGetShowhideMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(Cwmhelper::class, 'getShowhide');
-
-        $this->assertTrue($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
-    }
-
-    /**
-     * Test getShowhide returns JavaScript code
-     *
-     * @return void
-     */
-    public function testGetShowhideReturnsJavaScript(): void
-    {
-        $result = Cwmhelper::getShowhide();
-
-        $this->assertIsString($result);
-        $this->assertStringContainsString('function HideContent', $result);
-        $this->assertStringContainsString('function ShowContent', $result);
-        $this->assertStringContainsString('function ReverseDisplay', $result);
-    }
-
-    /**
      * Test getRemoteFileSize method signature
      *
      * @return void

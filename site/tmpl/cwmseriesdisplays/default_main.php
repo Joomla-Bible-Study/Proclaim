@@ -23,6 +23,11 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
+// Add template accent color for pagination
+$accentColor = $this->params->get('seriesdisplay_color', $this->params->get('backcolor', '#287585'));
+$wa = $this->getDocument()->getWebAssetManager();
+$wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
+
 // Use pre-created values from HtmlView
 $input         = Factory::getApplication()->getInput();
 $option        = $input->get('option', '', 'cmd');
@@ -77,7 +82,7 @@ if ($this->items) {
     echo '<h4>' . Text::_('JBS_CMN_SERIES_NOT_FOUND') . '</h4>';
 }
 ?>
-                <div class="pagination">
+                <div class="pagination-container pagelinks">
                     <?php
     if ((int) $this->params->get('series_list_show_pagination') === 2) {
         echo '<span class="display-limit">' . Text::_(

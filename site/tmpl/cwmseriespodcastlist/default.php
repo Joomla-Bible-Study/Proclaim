@@ -94,7 +94,7 @@ $imgAttribs = array_merge($this->attribs ?? [], ['loading' => 'lazy']);
     </div>
     <div class="clearfix"></div>
     <?php if ($this->params->get('show_pagination', 2)) : ?>
-        <nav class="pagination" aria-label="<?php echo Text::_('JLIB_HTML_PAGINATION'); ?>">
+        <nav class="pagination pagination-centered" aria-label="<?php echo Text::_('JLIB_HTML_PAGINATION'); ?>">
             <?php if ($this->params->def('show_pagination_results', 1)) : ?>
                 <p class="counter pt-2">
                     <?php echo $this->pagination->getPagesCounter(); ?>

@@ -61,44 +61,6 @@ class CwmproclaimHelperTest extends ProclaimTestCase
     }
 
     /**
-     * Test addSubmenu method exists
-     *
-     * @return void
-     */
-    public function testAddSubmenuMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(CwmproclaimHelper::class, 'addSubmenu');
-
-        $this->assertTrue($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('void', $reflection->getReturnType()->getName());
-
-        $params = $reflection->getParameters();
-        $this->assertCount(1, $params);
-        $this->assertEquals('vName', $params[0]->getName());
-    }
-
-    /**
-     * Test rendermenu method exists
-     *
-     * @return void
-     */
-    public function testRendermenuMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(CwmproclaimHelper::class, 'rendermenu');
-
-        $this->assertTrue($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('void', $reflection->getReturnType()->getName());
-
-        $params = $reflection->getParameters();
-        $this->assertCount(3, $params);
-        $this->assertEquals('text', $params[0]->getName());
-        $this->assertEquals('url', $params[1]->getName());
-        $this->assertEquals('vName', $params[2]->getName());
-    }
-
-    /**
      * Test filterText method signature
      *
      * @return void
@@ -167,30 +129,6 @@ class CwmproclaimHelperTest extends ProclaimTestCase
         $this->assertEquals('Alice', $arr[0]['name']);
         $this->assertEquals('Bob', $arr[1]['name']);
         $this->assertEquals('Charlie', $arr[2]['name']);
-    }
-
-    /**
-     * Test startsWith method (deprecated but still available)
-     *
-     * @return void
-     */
-    public function testStartsWithMethod(): void
-    {
-        $this->assertTrue(CwmproclaimHelper::startsWith('Hello World', 'Hello'));
-        $this->assertFalse(CwmproclaimHelper::startsWith('Hello World', 'World'));
-        $this->assertTrue(CwmproclaimHelper::startsWith('Hello', ''));
-    }
-
-    /**
-     * Test endsWith method (deprecated but still available)
-     *
-     * @return void
-     */
-    public function testEndsWithMethod(): void
-    {
-        $this->assertTrue(CwmproclaimHelper::endsWith('Hello World', 'World'));
-        $this->assertFalse(CwmproclaimHelper::endsWith('Hello World', 'Hello'));
-        $this->assertTrue(CwmproclaimHelper::endsWith('Hello', ''));
     }
 
     /**

@@ -2358,21 +2358,6 @@ class Cwmpodcast
     }
 
     /**
-     * Alias for getMediaDuration for backward compatibility
-     *
-     * @param   string  $filename  File name of media
-     *
-     * @return int
-     *
-     * @since 9.2.4
-     * @deprecated Use getMediaDuration() instead
-     */
-    public function getDuration(string $filename): int
-    {
-        return $this->getMediaDuration($filename);
-    }
-
-    /**
      * Get duration using FFprobe (supports all formats)
      *
      * @param   string  $filename  File path

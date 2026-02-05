@@ -92,26 +92,4 @@ class CwmhelperrouteTest extends ProclaimTestCase
         $this->assertTrue(method_exists(Cwmhelperroute::class, 'getTeacherRoute'));
     }
 
-    /**
-     * Test class uses Joomla Factory
-     *
-     * @return void
-     */
-    public function testClassUsesJoomlaFactory(): void
-    {
-        $filePath = JPATH_ROOT . '/site/src/Helper/Cwmhelperroute.php';
-        $content  = file_get_contents($filePath);
-
-        $this->assertStringContainsString('use Joomla\CMS\Factory;', $content);
-    }
-
-    /**
-     * Test addScheme method exists
-     *
-     * @return void
-     */
-    public function testAddSchemeMethodExists(): void
-    {
-        $this->assertTrue(method_exists(Cwmhelperroute::class, 'addScheme'));
-    }
 }

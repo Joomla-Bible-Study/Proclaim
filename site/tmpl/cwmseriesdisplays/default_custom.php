@@ -33,6 +33,11 @@ if ($url) {
     $wa->registerAndUseStyle($url);
 }
 
+// Add template accent color for pagination
+$accentColor = $this->params->get('seriesdisplay_color', $this->params->get('backcolor', '#287585'));
+$wa = $document->getWebAssetManager();
+$wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
+
 $CWMSerieslist = new Cwmserieslist();
 ?>
 <form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmseriesdisplays'); ?>" method="post" name="adminForm">
@@ -96,7 +101,7 @@ switch ($this->params->get('series_wrapcode')) {
         break;
 }
 ?>
-            <div class="listingfooter">
+            <div class="pagination-container pagelinks">
                 <?php
     echo $this->pagination->getPagesLinks();
 echo $this->pagination->getPagesCounter();
