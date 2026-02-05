@@ -166,10 +166,30 @@
         };
 
         /**
+         * Check if an element is an image element
+         * @param {string} elementId - The element ID to check
+         * @returns {boolean} True if the element is an image element
+         */
+        const isImageElement = (elementId) => {
+            const imageElements = ['teacherimage', 'thumbnail', 'seriesthumbnail'];
+            return imageElements.includes(elementId.toLowerCase());
+        };
+
+        /**
          * Get element type options (HTML wrapper) from PHP or use fallback
+         * @param {string} elementId - Optional element ID to filter options for image elements
          * @returns {Array} Element type options
          */
-        const getElementTypeOptions = () => {
+        const getElementTypeOptions = (elementId) => {
+            // For image elements, limit to sensible options (None, P, DIV)
+            if (elementId && isImageElement(elementId)) {
+                return [
+                    { value: '0', label: 'None' },
+                    { value: '1', label: 'P' },
+                    { value: '8', label: 'DIV' }
+                ];
+            }
+
             if (window.Joomla && typeof Joomla.getOptions === 'function') {
                 const phpOptions = Joomla.getOptions('com_proclaim.elementTypeOptions');
                 if (phpOptions && Array.isArray(phpOptions)) {
@@ -207,6 +227,35 @@
             ];
         };
 
+        /**
+         * Get show verses options from PHP or use fallback
+         * @returns {Array} Show verses options
+         */
+        const getShowVersesOptions = () => {
+            if (window.Joomla && typeof Joomla.getOptions === 'function') {
+                const phpOptions = Joomla.getOptions('com_proclaim.showVersesOptions');
+                if (phpOptions && Array.isArray(phpOptions)) {
+                    return phpOptions;
+                }
+            }
+            // Fallback (English only)
+            return [
+                { value: '', label: 'Use Template Setting' },
+                { value: '0', label: 'Show Only Chapters' },
+                { value: '1', label: 'Show Verses and Chapters' }
+            ];
+        };
+
+        /**
+         * Check if an element is a scripture element
+         * @param {string} elementId - The element identifier
+         * @returns {boolean} True if scripture element
+         */
+        const isScriptureElement = (elementId) => {
+            const id = elementId.toLowerCase();
+            return id.includes('scripture') || id.includes('secondary');
+        };
+
         // Cache the loaded configurations (loaded once on first use)
         let ELEMENT_DEFINITIONS = null;
         const getElementDefs = () => {
@@ -233,8 +282,19 @@
                     context: 'messages',
                     formId: 'item-form',
                     paramsPrefix: 'jform[params]',
+                    // New options for module integration
+                    contexts: null,           // Array of context IDs to show, null = all contexts
+                    showViewSettings: true,   // Whether to show View Settings button
+                    showContextTabs: true,    // Whether to show context tabs (auto-hidden if single context)
+                    elementDefinitions: null, // Custom element definitions (overrides PHP options)
                     ...options
                 };
+
+                // If single context specified via contexts array, use it as default
+                if (this.options.contexts && this.options.contexts.length === 1) {
+                    this.options.context = this.options.contexts[0];
+                    this.options.showContextTabs = false; // Auto-hide tabs for single context
+                }
 
                 // State: Map<elementId, {row, col, colspan, element, custom, linktype}>
                 this.state = new Map();
@@ -270,6 +330,20 @@
                 this.endResize = this.endResize.bind(this);
 
                 this.init();
+            }
+
+            /**
+             * Get element definitions - uses custom definitions from options if provided,
+             * otherwise falls back to global getElementDefinitions()
+             * @returns {Object} Element definitions by context
+             */
+            getElementDefs() {
+                // Use custom definitions if provided via options
+                if (this.options.elementDefinitions) {
+                    return this.options.elementDefinitions;
+                }
+                // Fall back to global function (loads from PHP options or fallback)
+                return getElementDefs();
             }
 
             /**
@@ -311,7 +385,7 @@
                         </button>
                     </div>
                     <div class="layout-toolbar-group layout-toolbar-spacer"></div>
-                    <div class="layout-toolbar-group">
+                    <div class="layout-toolbar-group"${this.options.showViewSettings ? '' : ' style="display:none"'}>
                         <button type="button" class="btn btn-secondary btn-view-settings" title="${this.trans('JBS_TPL_VIEW_SETTINGS') || 'View Settings'}">
                             <span class="icon-cog" aria-hidden="true"></span>
                             <span class="btn-text">${this.trans('JBS_TPL_VIEW_SETTINGS') || 'View Settings'}</span>
@@ -352,10 +426,28 @@
              * Labels come from PHP-provided elementDefinitions for automatic translation
              */
             createContextTabs() {
-                const defs = getElementDefs();
-                const contextOrder = ['messages', 'details', 'teachers', 'teacherDetails', 'series', 'seriesDetails', 'landingPage'];
+                // Hide context tabs container if showContextTabs is false
+                if (!this.options.showContextTabs) {
+                    this.contextTabs.style.display = 'none';
+                    return;
+                }
 
-                contextOrder.forEach(contextId => {
+                const defs = this.getElementDefs();
+                const defaultOrder = ['messages', 'details', 'teachers', 'teacherDetails', 'series', 'seriesDetails', 'landingPage'];
+
+                // Use custom contexts array if provided, otherwise use default order
+                const contextOrder = this.options.contexts || defaultOrder;
+
+                // Filter to only contexts that exist in definitions
+                const validContexts = contextOrder.filter(contextId => defs[contextId]);
+
+                // Hide tabs if only one context
+                if (validContexts.length <= 1) {
+                    this.contextTabs.style.display = 'none';
+                    return;
+                }
+
+                validContexts.forEach(contextId => {
                     const contextDef = defs[contextId];
                     if (!contextDef) { return; }
 
@@ -394,7 +486,7 @@
                 this.destroySortables();
 
                 // Check if this is an order-only context (like landing page)
-                const contextDef = getElementDefs()[context];
+                const contextDef = this.getElementDefs()[context];
                 const isOrderOnly = contextDef?.isOrderOnly || false;
 
                 // Update toolbar visibility for order-only contexts
@@ -475,10 +567,10 @@
 
                 // Append modal to the main form so fields are submitted with form
                 // Joomla 5 uses id="item-form" name="adminForm", older versions use id="adminForm"
-                const mainForm = document.getElementById('item-form')
-                    || document.getElementById('adminForm')
-                    || document.querySelector('form[name="adminForm"]')
-                    || document.body;
+                const mainForm = document.getElementById('item-form') ||
+                    document.getElementById('adminForm') ||
+                    document.querySelector('form[name="adminForm"]') ||
+                    document.body;
                 mainForm.appendChild(modal);
                 this.viewSettingsModal = modal;
                 this.viewSettingsAccordion = modal.querySelector('#viewSettingsAccordion');
@@ -593,7 +685,7 @@
                 const contextSettings = settingsConfig[this.currentContext] || [];
 
                 // Update modal title to show context
-                const contextDef = getElementDefs()[this.currentContext];
+                const contextDef = this.getElementDefs()[this.currentContext];
                 const modalTitle = this.viewSettingsModal?.querySelector('.modal-title');
                 if (modalTitle && contextDef) {
                     modalTitle.innerHTML = `
@@ -1074,10 +1166,10 @@
 
                 // Append modal to the main form so fields are submitted with form
                 // Joomla 5 uses id="item-form" name="adminForm", older versions use id="adminForm"
-                const mainForm = document.getElementById('item-form')
-                    || document.getElementById('adminForm')
-                    || document.querySelector('form[name="adminForm"]')
-                    || document.body;
+                const mainForm = document.getElementById('item-form') ||
+                    document.getElementById('adminForm') ||
+                    document.querySelector('form[name="adminForm"]') ||
+                    document.body;
                 mainForm.appendChild(modal);
                 this.sectionSettingsModal = modal;
                 this.sectionSettingsContent = modal.querySelector('#sectionSettingsContent');
@@ -1186,7 +1278,7 @@
                 }
 
                 // Update modal title with section name
-                const elementDef = getElementDefs().landingPage?.elements?.find(e => e.id === sectionId);
+                const elementDef = this.getElementDefs().landingPage?.elements?.find(e => e.id === sectionId);
                 const sectionLabel = elementDef ? elementDef.label : sectionId;
                 const modalTitle = this.sectionSettingsModal?.querySelector('.modal-title');
                 if (modalTitle) {
@@ -1531,7 +1623,7 @@
              * Initialize the sidebar with available elements
              */
             initSidebar() {
-                const contextDef = getElementDefs()[this.currentContext];
+                const contextDef = this.getElementDefs()[this.currentContext];
                 if (!contextDef || !this.palette) {
                     return;
                 }
@@ -1727,7 +1819,7 @@
                         }
 
                         // Update state for elements in this row
-                        this.state.forEach((data, elementId) => {
+                        this.state.forEach((data) => {
                             if (data.row === oldRowNum) {
                                 data.row = newRowNum;
                             }
@@ -1806,13 +1898,6 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label class="form-label" for="layout-colspan">${this.trans('JBS_TPL_COLSPAN') || 'Column Span'}</label>
-                                <select class="form-select" id="layout-colspan">
-                                    ${Array.from({ length: 12 }, (_, i) => `<option value="${i + 1}">${i + 1} ${i === 0 ? 'column' : 'columns'}</option>`).join('')}
-                                </select>
-                                <div class="form-text">${this.trans('JBS_TPL_COLSPAN_DESC') || 'Number of columns this element should span (1-12)'}</div>
-                            </div>
-                            <div class="form-group">
                                 <label class="form-label" for="layout-element-type">${this.trans('JBS_TPL_ELEMENT') || 'Element Type'}</label>
                                 <select class="form-select" id="layout-element-type">
                                     ${getElementTypeOptions().map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
@@ -1837,6 +1922,13 @@
                                     ${getDateFormatOptions().map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
                                 </select>
                                 <div class="form-text">${this.trans('JBS_TPL_DATE_FORMAT_DESC') || 'Choose a date format for this element, or use global template setting'}</div>
+                            </div>
+                            <div class="form-group" id="layout-show-verses-group" style="display:none;">
+                                <label class="form-label" for="layout-show-verses">${this.trans('JBS_TPL_VERSES_SHOW_VERSES') || 'Chapters/Verses'}</label>
+                                <select class="form-select" id="layout-show-verses">
+                                    ${getShowVersesOptions().map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
+                                </select>
+                                <div class="form-text">${this.trans('JBS_TPL_VERSES_SHOW_VERSES_DESC') || 'Choose whether just chapter(s) of Bible message book shown or verses too'}</div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -1980,11 +2072,13 @@
                     data.col = col;
                 } else {
                     // Add new element with default values
+                    // Image elements default to None (0), others to Paragraph (1)
+                    const defaultElement = isImageElement(elementId) ? '0' : '1';
                     this.state.set(elementId, {
                         row: row,
                         col: col,
                         colspan: '1',
-                        element: '1', // Default: Paragraph
+                        element: defaultElement,
                         custom: '',
                         linktype: '0' // Default: No link
                     });
@@ -2169,7 +2263,7 @@
              * @returns {Object|null}
              */
             getElementDefinition(elementId) {
-                const contextDef = getElementDefs()[this.currentContext];
+                const contextDef = this.getElementDefs()[this.currentContext];
                 if (!contextDef) { return null; }
                 return contextDef.elements.find(el => el.id === elementId) || null;
             }
@@ -2396,12 +2490,13 @@
                 }
 
                 // Populate modal fields
-                const colspanEl = document.getElementById('layout-colspan');
                 const elementTypeEl = document.getElementById('layout-element-type');
                 const linkTypeEl = document.getElementById('layout-link-type');
                 const customClassEl = document.getElementById('layout-custom-class');
                 const dateFormatEl = document.getElementById('layout-date-format');
                 const dateFormatGroup = document.getElementById('layout-date-format-group');
+                const showVersesEl = document.getElementById('layout-show-verses');
+                const showVersesGroup = document.getElementById('layout-show-verses-group');
 
                 // Rebuild link type options based on current context
                 if (linkTypeEl) {
@@ -2411,19 +2506,27 @@
                     ).join('');
                 }
 
-                if (colspanEl) { colspanEl.value = String(data.colspan) || '1'; }
+                // Rebuild element type options (limited for image elements)
+                if (elementTypeEl) {
+                    const elementOptions = getElementTypeOptions(elementId);
+                    elementTypeEl.innerHTML = elementOptions.map(opt =>
+                        `<option value="${opt.value}">${opt.label}</option>`
+                    ).join('');
+                }
+
                 if (elementTypeEl) { elementTypeEl.value = String(data.element) || '1'; }
                 if (linkTypeEl) { linkTypeEl.value = String(data.linktype) || '0'; }
                 if (customClassEl) { customClassEl.value = data.custom || ''; }
                 if (dateFormatEl) { dateFormatEl.value = data.date_format || ''; }
+                if (showVersesEl) { showVersesEl.value = data.show_verses || ''; }
 
                 // Store original values for change detection when modal closes
                 this.originalModalValues = {
-                    colspan: colspanEl ? colspanEl.value : '',
                     element: elementTypeEl ? elementTypeEl.value : '',
                     linktype: linkTypeEl ? linkTypeEl.value : '',
                     custom: customClassEl ? customClassEl.value : '',
-                    date_format: dateFormatEl ? dateFormatEl.value : ''
+                    date_format: dateFormatEl ? dateFormatEl.value : '',
+                    show_verses: showVersesEl ? showVersesEl.value : ''
                 };
 
                 // Show date format field only for date-related elements
@@ -2431,6 +2534,11 @@
                     elementId.toLowerCase().includes('studydate');
                 if (dateFormatGroup) {
                     dateFormatGroup.style.display = isDateElement ? 'block' : 'none';
+                }
+
+                // Show show_verses field only for scripture elements
+                if (showVersesGroup) {
+                    showVersesGroup.style.display = isScriptureElement(elementId) ? 'block' : 'none';
                 }
 
                 // Show modal
@@ -2481,22 +2589,12 @@
                 const data = this.state.get(this.currentSettingsElement);
                 if (!data) { return; }
 
-                // Get values from modal
-                let newColspan = parseInt(document.getElementById('layout-colspan').value, 10) || 1;
-
-                // Validate colspan is within bounds (1-12)
-                newColspan = Math.max(1, Math.min(this.options.numCols, newColspan));
-
-                // Mark colspan as manually set if changed by user
-                if (data.colspan !== String(newColspan)) {
-                    data.manualColspan = true;
-                }
-
-                data.colspan = String(newColspan);
+                // Get values from modal (colspan is managed by drag resizing, not the modal)
                 data.element = document.getElementById('layout-element-type').value;
                 data.linktype = document.getElementById('layout-link-type').value;
                 data.custom = document.getElementById('layout-custom-class').value;
                 data.date_format = document.getElementById('layout-date-format').value;
+                data.show_verses = document.getElementById('layout-show-verses').value;
 
                 // Update visual display
                 const card = this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"]`);
@@ -2601,33 +2699,33 @@
                     return false;
                 }
 
-                const colspanEl = document.getElementById('layout-colspan');
                 const elementTypeEl = document.getElementById('layout-element-type');
                 const linkTypeEl = document.getElementById('layout-link-type');
                 const customClassEl = document.getElementById('layout-custom-class');
                 const dateFormatEl = document.getElementById('layout-date-format');
+                const showVersesEl = document.getElementById('layout-show-verses');
 
                 const current = {
-                    colspan: colspanEl ? colspanEl.value : '',
                     element: elementTypeEl ? elementTypeEl.value : '',
                     linktype: linkTypeEl ? linkTypeEl.value : '',
                     custom: customClassEl ? customClassEl.value : '',
-                    date_format: dateFormatEl ? dateFormatEl.value : ''
+                    date_format: dateFormatEl ? dateFormatEl.value : '',
+                    show_verses: showVersesEl ? showVersesEl.value : ''
                 };
 
-                // Compare each field
-                return current.colspan !== this.originalModalValues.colspan ||
-                    current.element !== this.originalModalValues.element ||
+                // Compare each field (colspan is managed by drag resizing, not the modal)
+                return current.element !== this.originalModalValues.element ||
                     current.linktype !== this.originalModalValues.linktype ||
                     current.custom !== this.originalModalValues.custom ||
-                    current.date_format !== this.originalModalValues.date_format;
+                    current.date_format !== this.originalModalValues.date_format ||
+                    current.show_verses !== this.originalModalValues.show_verses;
             }
 
             /**
              * Load state from existing form params
              */
             loadFromParams() {
-                const contextDef = getElementDefs()[this.currentContext];
+                const contextDef = this.getElementDefs()[this.currentContext];
                 if (!contextDef) { return; }
 
                 const prefix = contextDef.prefix;
@@ -2650,6 +2748,7 @@
                     let custom = templateParams[fieldPrefix + 'custom'] || '';
                     let linktype = templateParams[fieldPrefix + 'linktype'] || '0';
                     let dateFormat = templateParams[fieldPrefix + 'date_format'] || '';
+                    let showVerses = templateParams[fieldPrefix + 'show_verses'] || '';
 
                     // Try form fields as fallback (in case they're loaded)
                     const rowField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}row]"]`);
@@ -2661,6 +2760,7 @@
                         const customField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}custom]"]`);
                         const linktypeField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}linktype]"]`);
                         const dateFormatField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}date_format]"]`);
+                        const showVersesField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}show_verses]"]`);
 
                         if (colField) { col = parseInt(colField.value, 10) || col; }
                         if (colspanField) { colspan = colspanField.value || colspan; }
@@ -2668,6 +2768,7 @@
                         if (customField) { custom = customField.value || custom; }
                         if (linktypeField) { linktype = linktypeField.value || linktype; }
                         if (dateFormatField) { dateFormat = dateFormatField.value || dateFormat; }
+                        if (showVersesField) { showVerses = showVersesField.value || showVerses; }
                     }
 
                     // Only add to canvas if row > 0 (element is visible)
@@ -2679,7 +2780,8 @@
                             element: elementType,
                             custom: custom,
                             linktype: linktype,
-                            date_format: dateFormat
+                            date_format: dateFormat,
+                            show_verses: showVerses
                         };
 
                         this.state.set(element.id, data);
@@ -2787,7 +2889,7 @@
              * Sync state to hidden form fields before save
              */
             syncToForm() {
-                const contextDef = getElementDefs()[this.currentContext];
+                const contextDef = this.getElementDefs()[this.currentContext];
                 if (!contextDef) { return; }
 
                 // Use landing page sync for order-only contexts
@@ -2811,7 +2913,8 @@
                         element: `${this.options.paramsPrefix}[${fieldPrefix}element]`,
                         custom: `${this.options.paramsPrefix}[${fieldPrefix}custom]`,
                         linktype: `${this.options.paramsPrefix}[${fieldPrefix}linktype]`,
-                        date_format: `${this.options.paramsPrefix}[${fieldPrefix}date_format]`
+                        date_format: `${this.options.paramsPrefix}[${fieldPrefix}date_format]`,
+                        show_verses: `${this.options.paramsPrefix}[${fieldPrefix}show_verses]`
                     };
 
                     // Helper to get or create a hidden input field
@@ -2839,6 +2942,7 @@
                         getOrCreateField(fieldNames.custom, data.custom);
                         getOrCreateField(fieldNames.linktype, data.linktype);
                         getOrCreateField(fieldNames.date_format, data.date_format || '');
+                        getOrCreateField(fieldNames.show_verses, data.show_verses || '');
                     } else {
                         // Element not in layout - set row to 0 (hidden)
                         getOrCreateField(fieldNames.row, '0');
@@ -2937,7 +3041,7 @@
                 });
 
                 // Re-add elements from state
-                const contextDef = getElementDefs()[this.currentContext];
+                const contextDef = this.getElementDefs()[this.currentContext];
                 if (!contextDef) { return; }
 
                 this.state.forEach((data, elementId) => {
@@ -3357,6 +3461,45 @@
 
         // Export to global scope
     window.LayoutEditor = LayoutEditor;
+
+    /**
+     * Factory function for creating LayoutEditor instances
+     * Useful for module integration where custom configuration is needed
+     *
+     * @example
+     * // Create single-context editor for module
+     * const editor = ProclaimLayoutEditor.create('#my-container', {
+     *     contexts: ['messages'],
+     *     showViewSettings: false,
+     *     formId: 'module-form',
+     *     paramsPrefix: 'jform[params]'
+     * });
+     */
+    window.ProclaimLayoutEditor = {
+        /**
+         * Create a new LayoutEditor instance
+         * @param {string|HTMLElement} container - Container element or selector
+         * @param {Object} options - Configuration options
+         * @returns {LayoutEditor} The created instance
+         */
+        create: function(container, options = {}) {
+            const el = typeof container === 'string' ?
+                document.querySelector(container) :
+                container;
+
+            if (!el) {
+                console.error('ProclaimLayoutEditor: Container not found:', container);
+                return null;
+            }
+
+            return new LayoutEditor(el, options);
+        },
+
+        /**
+         * LayoutEditor class reference for direct instantiation
+         */
+        LayoutEditor: LayoutEditor
+    };
 
     /**
      * Initialize the layout editor

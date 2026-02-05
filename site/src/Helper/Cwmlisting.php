@@ -524,13 +524,15 @@ class Cwmlisting
             $l->row = $this->params->get($paramtext . 'row');
         }
 
-        $l->col        = $this->params->get($paramtext . 'col');
-        $l->colspan    = $this->params->get($paramtext . 'colspan');
-        $l->element    = $this->params->get($paramtext . 'element');
-        $l->custom     = $this->params->get($paramtext . 'custom');
-        $l->linktype   = $this->params->get($paramtext . 'linktype');
-        $l->name       = $paramtext;
-        $l->customtext = (string) $this->params->get($paramtext . 'text', '');
+        $l->col         = $this->params->get($paramtext . 'col');
+        $l->colspan     = $this->params->get($paramtext . 'colspan');
+        $l->element     = $this->params->get($paramtext . 'element');
+        $l->custom      = $this->params->get($paramtext . 'custom');
+        $l->linktype    = $this->params->get($paramtext . 'linktype');
+        $l->name        = $paramtext;
+        $l->customtext   = (string) $this->params->get($paramtext . 'text', '');
+        $l->date_format  = $this->params->get($paramtext . 'date_format', '');
+        $l->show_verses  = $this->params->get($paramtext . 'show_verses', '');
 
         return $l;
     }
@@ -1228,7 +1230,8 @@ class Cwmlisting
                         $params,
                         $item,
                         $esv,
-                        $scripturerow
+                        $scripturerow,
+                        $row
                     ) : $data);
                 }
                 break;
@@ -1243,7 +1246,8 @@ class Cwmlisting
                         $params,
                         $item,
                         $esv,
-                        $scripturerow
+                        $scripturerow,
+                        $row
                     ) : $data);
                 }
                 break;
@@ -1810,8 +1814,13 @@ class Cwmlisting
      *
      * @since 7.0
      */
-    public function getScripture(Registry $params, object $row, int $esv, int $scripturerow): string
-    {
+    public function getScripture(
+        Registry $params,
+        object $row,
+        int $esv,
+        int $scripturerow,
+        ?object $elementConfig = null
+    ): string {
         if (!isset($row->id)) {
             return '';
         }
@@ -1846,8 +1855,12 @@ class Cwmlisting
             return '';
         }
 
-        // Book only for non-standard books (>166) or show_verses mode 2
-        $show_verses = (int) $params->get('show_verses');
+        // Check for element-specific show_verses (empty string means use global)
+        // Default to 0 (chapters only) if not found in params
+        $show_verses = (int) $params->get('show_verses', 0);
+        if ($elementConfig !== null && isset($elementConfig->show_verses) && $elementConfig->show_verses !== '') {
+            $show_verses = (int) $elementConfig->show_verses;
+        }
 
         if ($bookNum > 166 || $show_verses === 2) {
             return $book;
@@ -1986,7 +1999,8 @@ class Cwmlisting
         $customDate = $params->get('custom_date_format');
 
         // Check for element-specific date format (empty string means use global)
-        $dateFormat = $params->get('date_format');
+        // Default to 0 (Sep 1, 2012 format) if not found in params
+        $dateFormat = $params->get('date_format', 0);
         if ($row !== null && isset($row->date_format) && $row->date_format !== '') {
             $dateFormat = $row->date_format;
         }
@@ -2071,6 +2085,9 @@ class Cwmlisting
                 break;
             case 7:
                 $classelement = 'blockquote';
+                break;
+            case 8:
+                $classelement = 'div';
                 break;
             default:
                 $classelement = 'span';

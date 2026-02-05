@@ -274,6 +274,18 @@
             }
         },
         {
+            "name": "com_proclaim.layout-editor-field",
+            "type": "script",
+            "uri": "com_proclaim/layout-editor-field.js",
+            "dependencies": [
+                "core",
+                "com_proclaim.layout-editor"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.layout-editor",
             "type": "style",
             "uri": "com_proclaim/layout-editor.css"

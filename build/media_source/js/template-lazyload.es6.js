@@ -16,6 +16,84 @@
     const fieldsetHtmlCache = new Map();
 
     /**
+     * Initialize TinyMCE editors in dynamically loaded content
+     * @param {HTMLElement} container - Container with editor textareas
+     */
+    function initTinyMCEEditors(container) {
+        if (typeof window.tinymce === 'undefined') {
+            return;
+        }
+
+        const textareas = container.querySelectorAll('textarea.mce_editable');
+
+        textareas.forEach(function(textarea) {
+            const editorId = textarea.id;
+            if (!editorId) { return; }
+
+            // Check if already initialized
+            const existingEditor = window.tinymce.get(editorId);
+            if (existingEditor) {
+                // If the editor's container is detached, remove it
+                const editorContainer = existingEditor.getContainer();
+                if (!editorContainer || !document.body.contains(editorContainer)) {
+                    existingEditor.remove();
+                } else {
+                    return;
+                }
+            }
+
+            // Simple config for editors
+            const config = {
+                target: textarea,
+                menubar: true,
+                toolbar: 'undo redo | bold italic underline | bullist numlist | link',
+                plugins: 'link lists',
+                branding: false,
+                promotion: false,
+                height: 300,
+                setup: function(editor) {
+                    editor.on('change', function() {
+                        editor.save();
+                    });
+                }
+            };
+
+            // Initialize TinyMCE
+            window.tinymce.init(config).then(function(editors) {
+                if (editors && editors[0]) {
+                    const editor = editors[0];
+
+                    // Enable the toggle button
+                    const wrapper = textarea.closest('.js-editor-tinymce');
+                    const toggleBtn = wrapper ? wrapper.querySelector('.js-tiny-toggler-button') : null;
+                    if (toggleBtn) {
+                        toggleBtn.disabled = false;
+                        toggleBtn.addEventListener('click', function() {
+                            if (editor.isHidden()) {
+                                editor.show();
+                            } else {
+                                editor.hide();
+                            }
+                        });
+                    }
+
+                    // Register with Joomla's editor system
+                    if (window.Joomla && window.Joomla.editors && window.Joomla.editors.instances) {
+                        window.Joomla.editors.instances[editorId] = {
+                            id: editorId,
+                            getValue: function() { return editor.getContent(); },
+                            setValue: function(val) { editor.setContent(val); },
+                            getSelection: function() { return editor.selection.getContent(); },
+                            replaceSelection: function(val) { editor.execCommand('mceInsertContent', false, val); },
+                            disable: function(state) { editor.mode.set(state ? 'readonly' : 'design'); }
+                        };
+                    }
+                }
+            });
+        });
+    }
+
+    /**
      * Load a fieldset via AJAX
      * @param {string} fieldsetName - The fieldset name to load
      * @param {HTMLElement} container - The container element to populate
@@ -119,84 +197,6 @@
     }
 
     /**
-     * Initialize TinyMCE editors in dynamically loaded content
-     * @param {HTMLElement} container - Container with editor textareas
-     */
-    function initTinyMCEEditors(container) {
-        if (typeof window.tinymce === 'undefined') {
-            return;
-        }
-
-        const textareas = container.querySelectorAll('textarea.mce_editable');
-
-        textareas.forEach(function(textarea) {
-            const editorId = textarea.id;
-            if (!editorId) { return; }
-
-            // Check if already initialized
-            const existingEditor = window.tinymce.get(editorId);
-            if (existingEditor) {
-                // If the editor's container is detached, remove it
-                const editorContainer = existingEditor.getContainer();
-                if (!editorContainer || !document.body.contains(editorContainer)) {
-                    existingEditor.remove();
-                } else {
-                    return;
-                }
-            }
-
-            // Simple config for editors
-            const config = {
-                target: textarea,
-                menubar: true,
-                toolbar: 'undo redo | bold italic underline | bullist numlist | link',
-                plugins: 'link lists',
-                branding: false,
-                promotion: false,
-                height: 300,
-                setup: function(editor) {
-                    editor.on('change', function() {
-                        editor.save();
-                    });
-                }
-            };
-
-            // Initialize TinyMCE
-            window.tinymce.init(config).then(function(editors) {
-                if (editors && editors[0]) {
-                    const editor = editors[0];
-
-                    // Enable the toggle button
-                    const wrapper = textarea.closest('.js-editor-tinymce');
-                    const toggleBtn = wrapper ? wrapper.querySelector('.js-tiny-toggler-button') : null;
-                    if (toggleBtn) {
-                        toggleBtn.disabled = false;
-                        toggleBtn.addEventListener('click', function() {
-                            if (editor.isHidden()) {
-                                editor.show();
-                            } else {
-                                editor.hide();
-                            }
-                        });
-                    }
-
-                    // Register with Joomla's editor system
-                    if (window.Joomla && window.Joomla.editors && window.Joomla.editors.instances) {
-                        window.Joomla.editors.instances[editorId] = {
-                            id: editorId,
-                            getValue: function() { return editor.getContent(); },
-                            setValue: function(val) { editor.setContent(val); },
-                            getSelection: function() { return editor.selection.getContent(); },
-                            replaceSelection: function(val) { editor.execCommand('mceInsertContent', false, val); },
-                            disable: function(state) { editor.mode.set(state ? 'readonly' : 'design'); }
-                        };
-                    }
-                }
-            });
-        });
-    }
-
-    /**
      * Check if a fieldset has been loaded
      * @param {string} fieldsetName - The fieldset name to check
      * @returns {boolean}
@@ -289,58 +289,6 @@
     }
 
     /**
-     * Initialize lazy loading for the Layout Editor tab
-     * Loads the layout editor content via AJAX when the tab is first shown
-     */
-    function initLayoutEditorLazyLoad() {
-        const container = document.getElementById('layout-editor-ajax-container');
-        if (!container) {
-            return;
-        }
-
-        const loadUrl = container.dataset.loadUrl;
-        if (!loadUrl) {
-            return;
-        }
-
-        // Find the tab element containing the container
-        // Joomla 5 uses <joomla-tab-element> web components, not Bootstrap .tab-pane
-        const tabElement = container.closest('joomla-tab-element');
-
-        if (!tabElement) {
-            // Not in a tab, load immediately
-            loadLayoutEditorContent(container, loadUrl);
-            return;
-        }
-
-        // Check if tab is already active
-        if (tabElement.hasAttribute('active')) {
-            loadLayoutEditorContent(container, loadUrl);
-            return;
-        }
-
-        // Find the parent joomla-tab and listen for tab changes
-        const joomlaTab = tabElement.closest('joomla-tab');
-
-        if (!joomlaTab) {
-            // Can't find tab container, load immediately
-            loadLayoutEditorContent(container, loadUrl);
-            return;
-        }
-
-        // Load when tab is shown for the first time
-        // joomla-tab fires 'joomla.tab.shown' event when a tab is activated
-        const loadOnShow = function(event) {
-            // Check if the shown tab is our tab
-            if (event.target === tabElement || tabElement.hasAttribute('active')) {
-                loadLayoutEditorContent(container, loadUrl);
-                joomlaTab.removeEventListener('joomla.tab.shown', loadOnShow);
-            }
-        };
-        joomlaTab.addEventListener('joomla.tab.shown', loadOnShow);
-    }
-
-    /**
      * Load the Layout Editor content via AJAX
      * @param {HTMLElement} container - The container to populate
      * @param {string} url - The URL to fetch content from
@@ -403,6 +351,58 @@
         .catch(error => {
             container.innerHTML = '<div class="alert alert-danger">Failed to load Layout Editor: ' + error.message + '</div>';
         });
+    }
+
+    /**
+     * Initialize lazy loading for the Layout Editor tab
+     * Loads the layout editor content via AJAX when the tab is first shown
+     */
+    function initLayoutEditorLazyLoad() {
+        const container = document.getElementById('layout-editor-ajax-container');
+        if (!container) {
+            return;
+        }
+
+        const loadUrl = container.dataset.loadUrl;
+        if (!loadUrl) {
+            return;
+        }
+
+        // Find the tab element containing the container
+        // Joomla 5 uses <joomla-tab-element> web components, not Bootstrap .tab-pane
+        const tabElement = container.closest('joomla-tab-element');
+
+        if (!tabElement) {
+            // Not in a tab, load immediately
+            loadLayoutEditorContent(container, loadUrl);
+            return;
+        }
+
+        // Check if tab is already active
+        if (tabElement.hasAttribute('active')) {
+            loadLayoutEditorContent(container, loadUrl);
+            return;
+        }
+
+        // Find the parent joomla-tab and listen for tab changes
+        const joomlaTab = tabElement.closest('joomla-tab');
+
+        if (!joomlaTab) {
+            // Can't find tab container, load immediately
+            loadLayoutEditorContent(container, loadUrl);
+            return;
+        }
+
+        // Load when tab is shown for the first time
+        // joomla-tab fires 'joomla.tab.shown' event when a tab is activated
+        const loadOnShow = function(event) {
+            // Check if the shown tab is our tab
+            if (event.target === tabElement || tabElement.hasAttribute('active')) {
+                loadLayoutEditorContent(container, loadUrl);
+                joomlaTab.removeEventListener('joomla.tab.shown', loadOnShow);
+            }
+        };
+        joomlaTab.addEventListener('joomla.tab.shown', loadOnShow);
     }
 
     // Export functions for use by other modules (e.g., layout editor)
