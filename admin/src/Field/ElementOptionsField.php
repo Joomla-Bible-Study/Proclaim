@@ -55,6 +55,7 @@ class ElementOptionsField extends ListField
         $options[] = HTMLHelper::_('select.option', '5', Text::_('JBS_TPL_HEADER4'));
         $options[] = HTMLHelper::_('select.option', '6', Text::_('JBS_TPL_HEADER5'));
         $options[] = HTMLHelper::_('select.option', '7', Text::_('JBS_TPL_BLOCKQUOTE'));
+        $options[] = HTMLHelper::_('select.option', '8', Text::_('JBS_TPL_DIV'));
 
         return array_merge(parent::getOptions(), $options);
     }

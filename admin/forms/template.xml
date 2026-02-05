@@ -195,12 +195,6 @@
             </field>
             <field name="custom_date_format" type="text" size="25" default=""
                    label="JBS_TPL_VERSES_CUSTOM_DATE_FORMAT" description="JBS_TPL_VERSES_CUSTOM_DATE_FORMAT_DESC"/>
-            <field name="duration_type" type="radio" default="2"
-                   label="JBS_TPL_VERSES_DURATION_TYPE" description="JBS_TPL_VERSES_DURATION_TYPE_DESC"
-                   layout="joomla.form.field.radio.switcher">
-                <option value="1">JBS_TPL_HOURS_MIN_SEC_SLASH</option>
-                <option value="2">JBS_TPL_HOURS_MIN_SEC_COLON</option>
-            </field>
         </fieldset>
         <fieldset name="MEDIA" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="protocol" type="list" default="https://"
@@ -372,8 +366,6 @@
             </field>
             <field name="subscribeintro" type="text" default="Our Podcasts" size="50"
                    label="JBS_TPL_SUBSCRIBE_INTRO" description="JBS_TPL_SUBSCRIBE_INTRO_DESC"/>
-            <field name="details_text" type="text" default="Study Details"
-                   size="50" label="JBS_TPL_LISTITEMS_DETAILS_TEXT" description="JBS_TPL_LISTITEMS_DETAILS_TEXT_DESC"/>
             <field name="show_pagination" type="list" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_PAGINATION" description="JBS_TPL_LISTITEMS_SHOW_PAGINATION_DESC">
                 <option value="1">JBS_TPL_LISTITEMS_SHOW_TOP</option>
@@ -466,6 +458,7 @@
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="scripture1linktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="scripture1show_verses" type="hidden" default=""/>
             <field name="scripture2row" type="RowOptions" size="1" default="0" label="JBS_CMN_SCRIPTURE2"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="scripture2col" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -478,6 +471,7 @@
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="scripture2linktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="scripture2show_verses" type="hidden" default=""/>
             <field name="secondaryrow" type="RowOptions" size="1" default="0" label="JBS_CMN_SECONDARY_REFERENCES"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="secondarycol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -490,6 +484,7 @@
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="secondarylinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="secondaryshow_verses" type="hidden" default=""/>
             <field name="jbsmediarow" type="RowOptions" size="1" default="1" label="JBS_CMN_MEDIA"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="jbsmediacol" type="SpanOptions" default="3" label="JBS_TPL_COLUMN"
@@ -1676,6 +1671,7 @@
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dscripture1linktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="dscripture1show_verses" type="hidden" default=""/>
             <field name="dscripture2row" type="RowOptions" size="1" default="0" label="JBS_CMN_SCRIPTURE2"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="dscripture2col" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -1688,6 +1684,7 @@
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dscripture2linktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="dscripture2show_verses" type="hidden" default=""/>
             <field name="dsecondaryrow" type="RowOptions" size="1" default="0" label="JBS_CMN_SECONDARY_REFERENCES"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="dsecondarycol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -1700,6 +1697,7 @@
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dsecondarylinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="dsecondaryshow_verses" type="hidden" default=""/>
             <field name="djbsmediarow" type="RowOptions" size="1" default="1" label="JBS_CMN_MEDIA"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="djbsmediacol" type="SpanOptions" default="3" label="JBS_TPL_COLUMN"

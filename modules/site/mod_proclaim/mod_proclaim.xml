@@ -76,11 +76,6 @@
                        class="form-control"
                        label="JBS_MDL_LINK_TEXT"
                        description="JBS_MDL_LINK_TEXT_DESC"/>
-                <field name="show_verses" type="list" default="0" class="form-select"
-                       label="JBS_TPL_VERSES_SHOW_VERSES" description="JBS_TPL_VERSES_SHOW_VERSES_DESC">
-                    <option value="0">JBS_TPL_SHOW_ONLY_CHAPTERS</option>
-                    <option value="1">JBS_TPL_SHOW_VERSES_AND_CHAPTERS</option>
-                </field>
             </fieldset>
             <fieldset name="JBS_MDL_FILTERS" label="JBS_MDL_FILTERS">
                 <field name="order"
@@ -92,6 +87,15 @@
                     <option value="">JGLOBAL_USE_GLOBAL</option>
                     <option value="1">JBS_CMN_DESCENDING</option>
                     <option value="2">JBS_CMN_ASCENDING</option>
+                </field>
+                <field name="condition"
+                       type="list"
+                       label="JBS_MDL_AND_OR"
+                       description="JBS_MDL_AND_OR_DESC"
+                       class="form-select"
+                       default="0">
+                    <option value="0">JBS_MDL_OR</option>
+                    <option value="1">JBS_MDL_AND</option>
                 </field>
                 <field name="language" type="contentlanguage" class="form-select"
                        label="JFIELD_LANGUAGE_LABEL" description="JBS_MDL_LANGUAGE_DESC">
@@ -149,31 +153,6 @@
                     <option value="">JGLOBAL_USE_GLOBAL</option>
                     <option value="-1">JBS_CMN_SHOW_ALL</option>
                 </field>
-                <field name="studieslisttemplateid" type="sql" default=""
-                       class="form-select"
-                       label="JBS_TPL_TEMPLATE_STUDIES_LIST" description="JBS_TPL_TEMPLATE_STUDIES_LIST_DESC"
-                       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY title ASC"
-                       key_field="id" value_field="title" required="true"/>
-                <field name="detailstemplateid" type="sql" default=""
-                       class="form-select"
-                       label="JBS_TPL_TEMPLATE_STUDY_DETAIL" description="JBS_TPL_TEMPLATE_STUDY_DETAIL_DESC"
-                       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY title ASC"
-                       key_field="id" value_field="title" required="true"/>
-                <field name="teachertemplateid" type="sql" default=""
-                       class="form-select"
-                       label="JBS_TPL_TEMPLATE_TEACHER" description="JBS_TPL_TEMPLATE_TEACHER_DESC"
-                       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY title ASC"
-                       key_field="id" value_field="title" required="true"/>
-                <field name="serieslisttemplateid" type="sql" default=""
-                       class="form-select"
-                       label="JBS_TPL_TEMPLATE_SERIES_LIST" description="JBS_TPL_TEMPLATE_SERIES_LIST_DESC"
-                       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY title ASC"
-                       key_field="id" value_field="title" required="true"/>
-                <field name="seriesdetailtemplateid" type="sql" default=""
-                       class="form-select"
-                       label="JBS_TPL_TEMPLATE_SERIES_DETAIL" description="JBS_TPL_TEMPLATE_SERIES_DETAIL_DESC"
-                       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY title ASC"
-                       key_field="id" value_field="title" required="true"/>
             </fieldset>
             <fieldset name="JBS_MDL_MEDIA" label="JBS_MDL_MEDIA">
                 <field name="player" type="list" label="JBS_MED_PLAYER"
@@ -278,17 +257,6 @@
                     <option value="2">JBS_TPL_SHOW_COMMENT</option>
                     <option value="3">JBS_TPL_SHOW_COMMENT_OR_FILESIZE</option>
                 </field>
-                <field name="protocol" type="list"
-                       default="https://"
-                       class="form-select"
-                       label="JBS_TPL_MEDIA_PROTOCOL"
-                       description="JBS_TPL_MEDIA_PROTOCOL_DESC">
-                    <option value="http://">http://</option>
-                    <option value="https://">https://</option>
-                    <option value="ftp://">ftp://</option>
-                    <option value="icy://">icy://</option>
-                    <option value="rtmpt://">rtmpt://</option>
-                </field>
             </fieldset>
             <fieldset name="JBS_MDL_MORE_SETTINGS" label="JBS_MDL_MORE_SETTINGS">
                 <field name="use_headers_module" type="list" default="" class="form-select"
@@ -298,36 +266,11 @@
                 </field>
                 <field name="pageheader" filter="raw" type="editor" rows="10" buttons="true"
                        cols="75" label="JBS_MDL_HEADER_TEXT" description="JBS_MDL_HEADER_TEXT_DESC"/>
-                <field name="duration_type" type="list" default="" class="form-select"
-                       label="JBS_TPL_VERSES_DURATION_TYPE" description="JBS_TPL_VERSES_DURATION_TYPE_DESC">
-                    <option value="">JGLOBAL_USE_GLOBAL</option>
-                    <option value="1">JBS_TPL_HOURS_MIN_SEC_SLASH</option>
-                    <option value="2">JBS_TPL_HOURS_MIN_SEC_COLON</option>
-                </field>
-                <field name="details_text" type="text"
-                       default="Study Details"
-                       class="form-control"
-                       label="JBS_TPL_LISTITEMS_DETAILS_TEXT"
-                       description="JBS_TPL_LISTITEMS_DETAILS_TEXT_DESC"/>
                 <field name="stylesheet" type="text"
                        default=""
                        class="form-control"
                        label="JBS_TPL_VERSES_STYLESHEET"
                        description="JBS_TPL_VERSES_STYLESHEET_DESC"/>
-                <field name="date_format" type="list" default="" class="form-select"
-                       label="JBS_TPL_VERSES_DATE_FORMAT" description="JBS_TPL_VERSES_DATE_FORMAT_DESC">
-                    <option value="">JGLOBAL_USE_GLOBAL</option>
-                    <option value="0">JBS_TPL_DATE_FORMAT_MMM_D_YYYY</option>
-                    <option value="1">JBS_TPL_DATE_FORMAT_MMM_D</option>
-                    <option value="2">JBS_TPL_DATE_FORMAT_M_D_YYYY</option>
-                    <option value="3">JBS_TPL_DATE_FORMAT_M_D</option>
-                    <option value="4">JBS_TPL_DATE_FORMAT_WD_MMMM_D_YYYY</option>
-                    <option value="5">JBS_TPL_DATE_FORMAT_MMMM_D_YYYY</option>
-                    <option value="6">JBS_TPL_DATE_FORMAT_D_MMMM_YYYY</option>
-                    <option value="7">JBS_TPL_DATE_FORMAT_D_M_YYYY</option>
-                    <option value="8">JBS_TPL_DATE_FORMAT_USE_GLOBAL</option>
-                    <option value="9">JBS_TPL_DATE_FORMAT_YYYY_MM_DD</option>
-                </field>
             </fieldset>
             <fieldset name="JBS_MDL_LAYOUT_EDITOR" label="JBS_MDL_LAYOUT_EDITOR">
                 <field name="layout_editor" type="LayoutEditor"
@@ -342,18 +285,21 @@
                 <field name="scripture1element" type="hidden" default="1"/>
                 <field name="scripture1custom" type="hidden" default=""/>
                 <field name="scripture1linktype" type="hidden" default="0"/>
+                <field name="scripture1show_verses" type="hidden" default=""/>
                 <field name="scripture2row" type="hidden" default="0"/>
                 <field name="scripture2col" type="hidden" default="1"/>
                 <field name="scripture2colspan" type="hidden" default="0"/>
                 <field name="scripture2element" type="hidden" default="1"/>
                 <field name="scripture2custom" type="hidden" default=""/>
                 <field name="scripture2linktype" type="hidden" default="0"/>
+                <field name="scripture2show_verses" type="hidden" default=""/>
                 <field name="secondaryrow" type="hidden" default="0"/>
                 <field name="secondarycol" type="hidden" default="1"/>
                 <field name="secondarycolspan" type="hidden" default="0"/>
                 <field name="secondaryelement" type="hidden" default="1"/>
                 <field name="secondarycustom" type="hidden" default=""/>
                 <field name="secondarylinktype" type="hidden" default="0"/>
+                <field name="secondaryshow_verses" type="hidden" default=""/>
                 <field name="jbsmediarow" type="hidden" default="1"/>
                 <field name="jbsmediacol" type="hidden" default="1"/>
                 <field name="jbsmediacolspan" type="hidden" default="1"/>
@@ -373,6 +319,7 @@
                 <field name="dateelement" type="hidden" default="1"/>
                 <field name="datecustom" type="hidden" default=""/>
                 <field name="datelinktype" type="hidden" default="0"/>
+                <field name="datedate_format" type="hidden" default=""/>
                 <field name="teacherrow" type="hidden" default="0"/>
                 <field name="teachercol" type="hidden" default="1"/>
                 <field name="teachercolspan" type="hidden" default="0"/>

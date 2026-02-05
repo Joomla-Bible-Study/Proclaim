@@ -160,6 +160,8 @@ class LayoutEditorField extends FormField
         Text::script('JBS_TPL_CUSTOMCLASS_DESC');
         Text::script('JBS_TPL_DATE_FORMAT');
         Text::script('JBS_TPL_DATE_FORMAT_DESC');
+        Text::script('JBS_TPL_VERSES_SHOW_VERSES');
+        Text::script('JBS_TPL_VERSES_SHOW_VERSES_DESC');
         Text::script('JBS_TPL_VIEW_SETTINGS');
         Text::script('JBS_TPL_DRAG_TO_REORDER');
         Text::script('JBS_TPL_UNSAVED_CHANGES');
@@ -280,6 +282,14 @@ class LayoutEditorField extends FormField
         ];
         $dateFormatOptionsJson = json_encode($dateFormatOptions, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT);
 
+        // Show verses options (for scripture elements)
+        $showVersesOptions = [
+            ['value' => '', 'label' => Text::_('JBS_TPL_USE_GLOBAL_SETTING')],
+            ['value' => '0', 'label' => Text::_('JBS_TPL_SHOW_ONLY_CHAPTERS')],
+            ['value' => '1', 'label' => Text::_('JBS_TPL_SHOW_VERSES_AND_CHAPTERS')],
+        ];
+        $showVersesOptionsJson = json_encode($showVersesOptions, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT);
+
         // Element type options (HTML wrapper)
         $elementTypeOptions = [
             ['value' => '0', 'label' => Text::_('JNONE')],
@@ -290,6 +300,7 @@ class LayoutEditorField extends FormField
             ['value' => '5', 'label' => 'H4'],
             ['value' => '6', 'label' => 'H5'],
             ['value' => '7', 'label' => 'Blockquote'],
+            ['value' => '8', 'label' => 'DIV'],
         ];
         $elementTypeOptionsJson = json_encode($elementTypeOptions, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT);
 
@@ -308,6 +319,7 @@ class LayoutEditorField extends FormField
         Joomla.optionsStorage['com_proclaim.templateParams'] = {$paramsJson};
         Joomla.optionsStorage['com_proclaim.linkTypeOptions'] = {$linkTypeOptionsJson};
         Joomla.optionsStorage['com_proclaim.dateFormatOptions'] = {$dateFormatOptionsJson};
+        Joomla.optionsStorage['com_proclaim.showVersesOptions'] = {$showVersesOptionsJson};
         Joomla.optionsStorage['com_proclaim.elementTypeOptions'] = {$elementTypeOptionsJson};
     }
 

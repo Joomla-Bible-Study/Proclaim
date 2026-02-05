@@ -166,10 +166,30 @@
         };
 
         /**
+         * Check if an element is an image element
+         * @param {string} elementId - The element ID to check
+         * @returns {boolean} True if the element is an image element
+         */
+        const isImageElement = (elementId) => {
+            const imageElements = ['teacherimage', 'thumbnail', 'seriesthumbnail'];
+            return imageElements.includes(elementId.toLowerCase());
+        };
+
+        /**
          * Get element type options (HTML wrapper) from PHP or use fallback
+         * @param {string} elementId - Optional element ID to filter options for image elements
          * @returns {Array} Element type options
          */
-        const getElementTypeOptions = () => {
+        const getElementTypeOptions = (elementId) => {
+            // For image elements, limit to sensible options (None, P, DIV)
+            if (elementId && isImageElement(elementId)) {
+                return [
+                    { value: '0', label: 'None' },
+                    { value: '1', label: 'P' },
+                    { value: '8', label: 'DIV' }
+                ];
+            }
+
             if (window.Joomla && typeof Joomla.getOptions === 'function') {
                 const phpOptions = Joomla.getOptions('com_proclaim.elementTypeOptions');
                 if (phpOptions && Array.isArray(phpOptions)) {
@@ -205,6 +225,35 @@
                 { value: '7', label: '1/9/2010' }, { value: '8', label: 'Use Joomla Global' },
                 { value: '9', label: '2012/09/01' }
             ];
+        };
+
+        /**
+         * Get show verses options from PHP or use fallback
+         * @returns {Array} Show verses options
+         */
+        const getShowVersesOptions = () => {
+            if (window.Joomla && typeof Joomla.getOptions === 'function') {
+                const phpOptions = Joomla.getOptions('com_proclaim.showVersesOptions');
+                if (phpOptions && Array.isArray(phpOptions)) {
+                    return phpOptions;
+                }
+            }
+            // Fallback (English only)
+            return [
+                { value: '', label: 'Use Template Setting' },
+                { value: '0', label: 'Show Only Chapters' },
+                { value: '1', label: 'Show Verses and Chapters' }
+            ];
+        };
+
+        /**
+         * Check if an element is a scripture element
+         * @param {string} elementId - The element identifier
+         * @returns {boolean} True if scripture element
+         */
+        const isScriptureElement = (elementId) => {
+            const id = elementId.toLowerCase();
+            return id.includes('scripture') || id.includes('secondary');
         };
 
         // Cache the loaded configurations (loaded once on first use)
@@ -1874,6 +1923,13 @@
                                 </select>
                                 <div class="form-text">${this.trans('JBS_TPL_DATE_FORMAT_DESC') || 'Choose a date format for this element, or use global template setting'}</div>
                             </div>
+                            <div class="form-group" id="layout-show-verses-group" style="display:none;">
+                                <label class="form-label" for="layout-show-verses">${this.trans('JBS_TPL_VERSES_SHOW_VERSES') || 'Chapters/Verses'}</label>
+                                <select class="form-select" id="layout-show-verses">
+                                    ${getShowVersesOptions().map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
+                                </select>
+                                <div class="form-text">${this.trans('JBS_TPL_VERSES_SHOW_VERSES_DESC') || 'Choose whether just chapter(s) of Bible message book shown or verses too'}</div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">${this.trans('JCANCEL') || 'Cancel'}</button>
@@ -2016,11 +2072,13 @@
                     data.col = col;
                 } else {
                     // Add new element with default values
+                    // Image elements default to None (0), others to Paragraph (1)
+                    const defaultElement = isImageElement(elementId) ? '0' : '1';
                     this.state.set(elementId, {
                         row: row,
                         col: col,
                         colspan: '1',
-                        element: '1', // Default: Paragraph
+                        element: defaultElement,
                         custom: '',
                         linktype: '0' // Default: No link
                     });
@@ -2437,6 +2495,8 @@
                 const customClassEl = document.getElementById('layout-custom-class');
                 const dateFormatEl = document.getElementById('layout-date-format');
                 const dateFormatGroup = document.getElementById('layout-date-format-group');
+                const showVersesEl = document.getElementById('layout-show-verses');
+                const showVersesGroup = document.getElementById('layout-show-verses-group');
 
                 // Rebuild link type options based on current context
                 if (linkTypeEl) {
@@ -2446,17 +2506,27 @@
                     ).join('');
                 }
 
+                // Rebuild element type options (limited for image elements)
+                if (elementTypeEl) {
+                    const elementOptions = getElementTypeOptions(elementId);
+                    elementTypeEl.innerHTML = elementOptions.map(opt =>
+                        `<option value="${opt.value}">${opt.label}</option>`
+                    ).join('');
+                }
+
                 if (elementTypeEl) { elementTypeEl.value = String(data.element) || '1'; }
                 if (linkTypeEl) { linkTypeEl.value = String(data.linktype) || '0'; }
                 if (customClassEl) { customClassEl.value = data.custom || ''; }
                 if (dateFormatEl) { dateFormatEl.value = data.date_format || ''; }
+                if (showVersesEl) { showVersesEl.value = data.show_verses || ''; }
 
                 // Store original values for change detection when modal closes
                 this.originalModalValues = {
                     element: elementTypeEl ? elementTypeEl.value : '',
                     linktype: linkTypeEl ? linkTypeEl.value : '',
                     custom: customClassEl ? customClassEl.value : '',
-                    date_format: dateFormatEl ? dateFormatEl.value : ''
+                    date_format: dateFormatEl ? dateFormatEl.value : '',
+                    show_verses: showVersesEl ? showVersesEl.value : ''
                 };
 
                 // Show date format field only for date-related elements
@@ -2464,6 +2534,11 @@
                     elementId.toLowerCase().includes('studydate');
                 if (dateFormatGroup) {
                     dateFormatGroup.style.display = isDateElement ? 'block' : 'none';
+                }
+
+                // Show show_verses field only for scripture elements
+                if (showVersesGroup) {
+                    showVersesGroup.style.display = isScriptureElement(elementId) ? 'block' : 'none';
                 }
 
                 // Show modal
@@ -2519,6 +2594,7 @@
                 data.linktype = document.getElementById('layout-link-type').value;
                 data.custom = document.getElementById('layout-custom-class').value;
                 data.date_format = document.getElementById('layout-date-format').value;
+                data.show_verses = document.getElementById('layout-show-verses').value;
 
                 // Update visual display
                 const card = this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"]`);
@@ -2627,19 +2703,22 @@
                 const linkTypeEl = document.getElementById('layout-link-type');
                 const customClassEl = document.getElementById('layout-custom-class');
                 const dateFormatEl = document.getElementById('layout-date-format');
+                const showVersesEl = document.getElementById('layout-show-verses');
 
                 const current = {
                     element: elementTypeEl ? elementTypeEl.value : '',
                     linktype: linkTypeEl ? linkTypeEl.value : '',
                     custom: customClassEl ? customClassEl.value : '',
-                    date_format: dateFormatEl ? dateFormatEl.value : ''
+                    date_format: dateFormatEl ? dateFormatEl.value : '',
+                    show_verses: showVersesEl ? showVersesEl.value : ''
                 };
 
                 // Compare each field (colspan is managed by drag resizing, not the modal)
                 return current.element !== this.originalModalValues.element ||
                     current.linktype !== this.originalModalValues.linktype ||
                     current.custom !== this.originalModalValues.custom ||
-                    current.date_format !== this.originalModalValues.date_format;
+                    current.date_format !== this.originalModalValues.date_format ||
+                    current.show_verses !== this.originalModalValues.show_verses;
             }
 
             /**
@@ -2669,6 +2748,7 @@
                     let custom = templateParams[fieldPrefix + 'custom'] || '';
                     let linktype = templateParams[fieldPrefix + 'linktype'] || '0';
                     let dateFormat = templateParams[fieldPrefix + 'date_format'] || '';
+                    let showVerses = templateParams[fieldPrefix + 'show_verses'] || '';
 
                     // Try form fields as fallback (in case they're loaded)
                     const rowField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}row]"]`);
@@ -2680,6 +2760,7 @@
                         const customField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}custom]"]`);
                         const linktypeField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}linktype]"]`);
                         const dateFormatField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}date_format]"]`);
+                        const showVersesField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}show_verses]"]`);
 
                         if (colField) { col = parseInt(colField.value, 10) || col; }
                         if (colspanField) { colspan = colspanField.value || colspan; }
@@ -2687,6 +2768,7 @@
                         if (customField) { custom = customField.value || custom; }
                         if (linktypeField) { linktype = linktypeField.value || linktype; }
                         if (dateFormatField) { dateFormat = dateFormatField.value || dateFormat; }
+                        if (showVersesField) { showVerses = showVersesField.value || showVerses; }
                     }
 
                     // Only add to canvas if row > 0 (element is visible)
@@ -2698,7 +2780,8 @@
                             element: elementType,
                             custom: custom,
                             linktype: linktype,
-                            date_format: dateFormat
+                            date_format: dateFormat,
+                            show_verses: showVerses
                         };
 
                         this.state.set(element.id, data);
@@ -2830,7 +2913,8 @@
                         element: `${this.options.paramsPrefix}[${fieldPrefix}element]`,
                         custom: `${this.options.paramsPrefix}[${fieldPrefix}custom]`,
                         linktype: `${this.options.paramsPrefix}[${fieldPrefix}linktype]`,
-                        date_format: `${this.options.paramsPrefix}[${fieldPrefix}date_format]`
+                        date_format: `${this.options.paramsPrefix}[${fieldPrefix}date_format]`,
+                        show_verses: `${this.options.paramsPrefix}[${fieldPrefix}show_verses]`
                     };
 
                     // Helper to get or create a hidden input field
@@ -2858,6 +2942,7 @@
                         getOrCreateField(fieldNames.custom, data.custom);
                         getOrCreateField(fieldNames.linktype, data.linktype);
                         getOrCreateField(fieldNames.date_format, data.date_format || '');
+                        getOrCreateField(fieldNames.show_verses, data.show_verses || '');
                     } else {
                         // Element not in layout - set row to 0 (hidden)
                         getOrCreateField(fieldNames.row, '0');
