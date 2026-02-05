@@ -567,10 +567,10 @@
 
                 // Append modal to the main form so fields are submitted with form
                 // Joomla 5 uses id="item-form" name="adminForm", older versions use id="adminForm"
-                const mainForm = document.getElementById('item-form')
-                    || document.getElementById('adminForm')
-                    || document.querySelector('form[name="adminForm"]')
-                    || document.body;
+                const mainForm = document.getElementById('item-form') ||
+                    document.getElementById('adminForm') ||
+                    document.querySelector('form[name="adminForm"]') ||
+                    document.body;
                 mainForm.appendChild(modal);
                 this.viewSettingsModal = modal;
                 this.viewSettingsAccordion = modal.querySelector('#viewSettingsAccordion');
@@ -1166,10 +1166,10 @@
 
                 // Append modal to the main form so fields are submitted with form
                 // Joomla 5 uses id="item-form" name="adminForm", older versions use id="adminForm"
-                const mainForm = document.getElementById('item-form')
-                    || document.getElementById('adminForm')
-                    || document.querySelector('form[name="adminForm"]')
-                    || document.body;
+                const mainForm = document.getElementById('item-form') ||
+                    document.getElementById('adminForm') ||
+                    document.querySelector('form[name="adminForm"]') ||
+                    document.body;
                 mainForm.appendChild(modal);
                 this.sectionSettingsModal = modal;
                 this.sectionSettingsContent = modal.querySelector('#sectionSettingsContent');
@@ -1819,7 +1819,7 @@
                         }
 
                         // Update state for elements in this row
-                        this.state.forEach((data, elementId) => {
+                        this.state.forEach((data) => {
                             if (data.row === oldRowNum) {
                                 data.row = newRowNum;
                             }
@@ -3483,9 +3483,9 @@
          * @returns {LayoutEditor} The created instance
          */
         create: function(container, options = {}) {
-            const el = typeof container === 'string'
-                ? document.querySelector(container)
-                : container;
+            const el = typeof container === 'string' ?
+                document.querySelector(container) :
+                container;
 
             if (!el) {
                 console.error('ProclaimLayoutEditor: Container not found:', container);

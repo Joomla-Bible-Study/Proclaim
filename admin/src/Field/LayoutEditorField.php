@@ -101,6 +101,7 @@ class LayoutEditorField extends FormField
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
         $wa->useScript('com_proclaim.sortable')
            ->useScript('com_proclaim.layout-editor')
+           ->useScript('com_proclaim.layout-editor-field')
            ->useStyle('com_proclaim.layout-editor');
 
         // Load language strings for JavaScript
@@ -115,22 +116,25 @@ class LayoutEditorField extends FormField
         // Generate unique ID for this instance
         $editorId = 'layout-editor-' . $this->id;
 
-        // Build the HTML - just the container, no hidden fields
-        // The Layout Editor reads/writes to the existing XML-defined form fields
+        // Pass configuration to JavaScript via Joomla options
+        $this->setJavaScriptOptions($elementDefinitions, $params);
+
+        // Build the HTML with data attributes for the external JS to read
         $html = [];
 
-        $html[]   = '<div class="layout-editor-field-wrapper">';
-        $lazyAttr = $lazyLoad ? ' data-lazy-init="true"' : '';
-        $html[]   = '<div id="' . $editorId . '" class="layout-editor-container" data-context="' . $context . '"' . $lazyAttr . '>';
-        $html[]   = '    <div id="layout-editor-loading" class="text-center py-4">';
-        $html[]   = '        <span class="spinner-border spinner-border-sm" role="status"></span>';
-        $html[]   = '        <span class="ms-2">' . Text::_('JBS_TPL_LOADING') . '</span>';
-        $html[]   = '    </div>';
-        $html[]   = '</div>';
-        $html[]   = '</div>';
-
-        // Inline script to initialize the Layout Editor
-        $html[] = $this->renderInitScript($editorId, $context, $showViewSettings, $elementDefinitions, $params, $lazyLoad);
+        $html[] = '<div class="layout-editor-field-wrapper">';
+        $html[] = '<div id="' . $editorId . '" class="layout-editor-container"'
+            . ' data-layout-editor-field="true"'
+            . ' data-context="' . htmlspecialchars($context) . '"'
+            . ' data-show-view-settings="' . ($showViewSettings ? 'true' : 'false') . '"'
+            . ' data-lazy-init="' . ($lazyLoad ? 'true' : 'false') . '"'
+            . ' data-params-prefix="jform[params]">';
+        $html[] = '    <div id="layout-editor-loading" class="text-center py-4">';
+        $html[] = '        <span class="spinner-border spinner-border-sm" role="status"></span>';
+        $html[] = '        <span class="ms-2">' . Text::_('JBS_TPL_LOADING') . '</span>';
+        $html[] = '    </div>';
+        $html[] = '</div>';
+        $html[] = '</div>';
 
         return implode("\n", $html);
     }
@@ -229,30 +233,20 @@ class LayoutEditorField extends FormField
     }
 
     /**
-     * Render the initialization script
+     * Set JavaScript options for the Layout Editor
      *
-     * @param   string  $editorId          The editor container ID
-     * @param   string  $context           The layout context
-     * @param   bool    $showViewSettings  Whether to show View Settings button
-     * @param   array   $elementDefs       Element definitions
-     * @param   array   $params            Current parameters
-     * @param   bool    $lazyLoad          Whether to defer initialization until tab is visible
+     * Uses Joomla's addScriptOptions to pass configuration to the external JS file.
      *
-     * @return  string
+     * @param   array  $elementDefs  Element definitions
+     * @param   array  $params       Current parameters
+     *
+     * @return  void
      *
      * @since   10.1.0
      */
-    protected function renderInitScript(
-        string $editorId,
-        string $context,
-        bool $showViewSettings,
-        array $elementDefs,
-        array $params,
-        bool $lazyLoad = false
-    ): string {
-        $elementDefsJson = json_encode($elementDefs, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT);
-        $paramsJson      = json_encode($params, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT);
-        $showSettings    = $showViewSettings ? 'true' : 'false';
+    protected function setJavaScriptOptions(array $elementDefs, array $params): void
+    {
+        $document = Factory::getApplication()->getDocument();
 
         // Build link type options (matching LinkOptionsField values)
         $linkTypeOptions = [
@@ -264,7 +258,6 @@ class LayoutEditorField extends FormField
             ['value' => '5', 'label' => Text::_('JBS_TPL_LINK_TO_MEDIA_TOOLTIP')],
             ['value' => '3', 'label' => Text::_('JBS_TPL_LINK_TO_TEACHERS_PROFILE')],
         ];
-        $linkTypeOptionsJson = json_encode($linkTypeOptions, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT);
 
         // Date format options
         $dateFormatOptions = [
@@ -280,7 +273,6 @@ class LayoutEditorField extends FormField
             ['value' => '8', 'label' => Text::_('JBS_TPL_DATE_FORMAT_USE_GLOBAL')],
             ['value' => '9', 'label' => Text::_('JBS_TPL_DATE_FORMAT_YYYY_MM_DD')],
         ];
-        $dateFormatOptionsJson = json_encode($dateFormatOptions, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT);
 
         // Show verses options (for scripture elements)
         $showVersesOptions = [
@@ -288,7 +280,6 @@ class LayoutEditorField extends FormField
             ['value' => '0', 'label' => Text::_('JBS_TPL_SHOW_ONLY_CHAPTERS')],
             ['value' => '1', 'label' => Text::_('JBS_TPL_SHOW_VERSES_AND_CHAPTERS')],
         ];
-        $showVersesOptionsJson = json_encode($showVersesOptions, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT);
 
         // Element type options (HTML wrapper)
         $elementTypeOptions = [
@@ -302,165 +293,13 @@ class LayoutEditorField extends FormField
             ['value' => '7', 'label' => 'Blockquote'],
             ['value' => '8', 'label' => 'DIV'],
         ];
-        $elementTypeOptionsJson = json_encode($elementTypeOptions, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT);
 
-        $lazyLoadJs = $lazyLoad ? 'true' : 'false';
-
-        return <<<SCRIPT
-<script>
-(function() {
-    'use strict';
-
-    var lazyLoad = {$lazyLoadJs};
-
-    // Store options for the Layout Editor
-    if (typeof Joomla !== 'undefined' && Joomla.optionsStorage) {
-        Joomla.optionsStorage['com_proclaim.elementDefinitions'] = {$elementDefsJson};
-        Joomla.optionsStorage['com_proclaim.templateParams'] = {$paramsJson};
-        Joomla.optionsStorage['com_proclaim.linkTypeOptions'] = {$linkTypeOptionsJson};
-        Joomla.optionsStorage['com_proclaim.dateFormatOptions'] = {$dateFormatOptionsJson};
-        Joomla.optionsStorage['com_proclaim.showVersesOptions'] = {$showVersesOptionsJson};
-        Joomla.optionsStorage['com_proclaim.elementTypeOptions'] = {$elementTypeOptionsJson};
-    }
-
-    function initModuleLayoutEditor() {
-        var container = document.getElementById('{$editorId}');
-        if (!container || container.dataset.initialized) {
-            return;
-        }
-
-        container.dataset.initialized = 'true';
-
-        // Remove loading indicator
-        var loading = container.querySelector('#layout-editor-loading');
-        if (loading) {
-            loading.remove();
-        }
-
-        // Initialize the Layout Editor
-        // It reads/writes to the existing jform[params][fieldname] fields defined in XML
-        if (typeof window.ProclaimLayoutEditor !== 'undefined') {
-            window.proclaimLayoutEditor = window.ProclaimLayoutEditor.create(container, {
-                context: '{$context}',
-                contexts: ['{$context}'],
-                showViewSettings: {$showSettings},
-                showContextTabs: false,
-                formId: container.closest('form')?.id || 'module-form',
-                paramsPrefix: 'jform[params]'
-            });
-        } else if (typeof window.LayoutEditor !== 'undefined') {
-            window.proclaimLayoutEditor = new window.LayoutEditor(container, {
-                context: '{$context}',
-                contexts: ['{$context}'],
-                showViewSettings: {$showSettings},
-                showContextTabs: false,
-                formId: container.closest('form')?.id || 'module-form',
-                paramsPrefix: 'jform[params]'
-            });
-        } else {
-            console.error('Layout Editor not loaded');
-        }
-    }
-
-    /**
-     * Check if the container is in a visible/active tab
-     */
-    function isContainerVisible(container) {
-        // Check for Joomla 5 joomla-tab-element
-        var tabElement = container.closest('joomla-tab-element');
-        if (tabElement) {
-            return tabElement.hasAttribute('active');
-        }
-
-        // Check for Bootstrap tab-pane
-        var tabPane = container.closest('.tab-pane');
-        if (tabPane) {
-            return tabPane.classList.contains('active') || tabPane.classList.contains('show');
-        }
-
-        // Check for Bootstrap accordion
-        var accordion = container.closest('.accordion-collapse');
-        if (accordion) {
-            return accordion.classList.contains('show');
-        }
-
-        // Not in a tab/accordion, assume visible
-        return true;
-    }
-
-    /**
-     * Set up lazy loading - wait for tab to be shown before initializing
-     */
-    function setupLazyInit() {
-        var container = document.getElementById('{$editorId}');
-        if (!container) {
-            return;
-        }
-
-        // If already visible, initialize now
-        if (isContainerVisible(container)) {
-            initModuleLayoutEditor();
-            return;
-        }
-
-        // Listen for Joomla 5 tab events
-        var joomlaTab = container.closest('joomla-tab');
-        if (joomlaTab) {
-            var tabElement = container.closest('joomla-tab-element');
-            var initOnShow = function(event) {
-                if (tabElement && (event.target === tabElement || tabElement.hasAttribute('active'))) {
-                    initModuleLayoutEditor();
-                    joomlaTab.removeEventListener('joomla.tab.shown', initOnShow);
-                }
-            };
-            joomlaTab.addEventListener('joomla.tab.shown', initOnShow);
-            return;
-        }
-
-        // Listen for Bootstrap tab events
-        var tabPane = container.closest('.tab-pane');
-        if (tabPane && tabPane.id) {
-            var tabButton = document.querySelector('[data-bs-target="#' + tabPane.id + '"], [href="#' + tabPane.id + '"]');
-            if (tabButton) {
-                tabButton.addEventListener('shown.bs.tab', function() {
-                    initModuleLayoutEditor();
-                }, { once: true });
-                return;
-            }
-        }
-
-        // Listen for Bootstrap accordion events
-        var accordion = container.closest('.accordion-collapse');
-        if (accordion) {
-            accordion.addEventListener('shown.bs.collapse', function() {
-                initModuleLayoutEditor();
-            }, { once: true });
-            return;
-        }
-
-        // Fallback: just initialize
-        initModuleLayoutEditor();
-    }
-
-    // Initialize when DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-            if (lazyLoad) {
-                setupLazyInit();
-            } else {
-                initModuleLayoutEditor();
-            }
-        });
-    } else {
-        if (lazyLoad) {
-            setupLazyInit();
-        } else {
-            var scheduleInit = window.requestIdleCallback || function(cb) { setTimeout(cb, 100); };
-            scheduleInit(initModuleLayoutEditor, { timeout: 2000 });
-        }
-    }
-})();
-</script>
-SCRIPT;
+        // Add all options to the document
+        $document->addScriptOptions('com_proclaim.elementDefinitions', $elementDefs);
+        $document->addScriptOptions('com_proclaim.templateParams', $params);
+        $document->addScriptOptions('com_proclaim.linkTypeOptions', $linkTypeOptions);
+        $document->addScriptOptions('com_proclaim.dateFormatOptions', $dateFormatOptions);
+        $document->addScriptOptions('com_proclaim.showVersesOptions', $showVersesOptions);
+        $document->addScriptOptions('com_proclaim.elementTypeOptions', $elementTypeOptions);
     }
 }
