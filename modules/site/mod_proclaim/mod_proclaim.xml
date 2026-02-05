@@ -37,16 +37,16 @@
                        default="0"
                        label="JBS_MDL_SIMPLE_MODE"
                        description="JBS_MDL_SIMPLE_MODE_DESC">
-                    <option value="1">JYES</option>
                     <option value="0">JNO</option>
+                    <option value="1">JYES</option>
                 </field>
                 <field name="show_media" type="radio"
                        layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="JBS_MDL_SHOW_MEDIA"
                        description="JBS_MDL_SHOW_MEDIA_DESC">
-                    <option value="1">JYES</option>
                     <option value="0">JNO</option>
+                    <option value="1">JYES</option>
                 </field>
                 <field name="moduleitems" type="number"
                        default="5"
@@ -60,16 +60,16 @@
                        default="1"
                        label="JBS_MDL_USE_LIST_HEADER"
                        description="JBS_MDL_USE_LIST_HEADER_DESC">
-                    <option value="1">JYES</option>
                     <option value="0">JNO</option>
+                    <option value="1">JYES</option>
                 </field>
                 <field name="show_link" type="radio"
                        layout="joomla.form.field.radio.switcher"
                        default="1"
                        label="JBS_MDL_SHOW_COMPONENT"
                        description="JBS_MDL_SHOW_COMPONENT_DESC">
-                    <option value="1">JSHOW</option>
                     <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
                 </field>
                 <field name="pagetext" type="text"
                        default="More Bible Studies"
