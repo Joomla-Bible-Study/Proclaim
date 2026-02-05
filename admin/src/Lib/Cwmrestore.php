@@ -16,12 +16,10 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Controller\DisplayController;
-use http\Exception\RuntimeException;
+use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\InstallerHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Session\Session;
 use Joomla\Component\Installer\Administrator\Model\DatabaseModel;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
@@ -168,7 +166,6 @@ class Cwmrestore
         $input         = Factory::getApplication()->getInput();
         $installtype   = $input->getPath('install_directory');
         $backuprestore = $input->getWord('backuprestore', '');
-        $controlser    = new DisplayController();
         $this->dbo     = Factory::getContainer()->get('DatabaseDriver');
 
         // Restore form prior backup files located on the server.
@@ -208,25 +205,33 @@ class Cwmrestore
 
             $result = self::installdb($tmp_src, $parent);
 
-            // Get Proclaim extension ID
-            $query      = $this->dbo->getQuery(true);
-            $query->select('extension_id');
-            $query->from('#__extensions');
-            $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_proclaim'));
-            $this->dbo->setQuery($query);
-            $cid           = (int) $this->dbo->loadResult();
+            if ($result) {
+                // Get Proclaim extension ID
+                $query = $this->dbo->getQuery(true);
+                $query->select('extension_id');
+                $query->from('#__extensions');
+                $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_proclaim'));
+                $this->dbo->setQuery($query);
+                $cid = (int) $this->dbo->loadResult();
 
-            // Fix the Proclaim Database after restore
-            $DatabaseModel = new DatabaseModel();
-            $DatabaseModel->fix([$cid]);
+                // Fix the Proclaim Database schema after restore
+                $DatabaseModel = new DatabaseModel();
+                $DatabaseModel->fix([$cid]);
 
-            /** @var \Joomla\Component\Joomlaupdate\Administrator\Model\UpdateModel $updateModel */
-            $updateModel = Factory::getApplication()->bootComponent('com_joomlaupdate')
-                ->getMVCFactory()->createModel('Update', 'Administrator', ['ignore_request' => true]);
-            $updateModel->purge();
+                // Fix Proclaim assets (ACL permissions)
+                self::fixAssetsAfterRestore();
 
-            // Refresh versionable assets cache
-            Factory::getApplication()->flushAssets();
+                // Fix object ownership for migrated data
+                self::fixOwnershipAfterRestore();
+
+                /** @var \Joomla\Component\Joomlaupdate\Administrator\Model\UpdateModel $updateModel */
+                $updateModel = Factory::getApplication()->bootComponent('com_joomlaupdate')
+                    ->getMVCFactory()->createModel('Update', 'Administrator', ['ignore_request' => true]);
+                $updateModel->purge();
+
+                // Refresh versionable assets cache
+                Factory::getApplication()->flushAssets();
+            }
 
             // Clean up the installation files.
             if (!is_file($uploadresults['packagefile'])) {
@@ -235,11 +240,6 @@ class Cwmrestore
             }
 
             InstallerHelper::cleanupInstall($uploadresults['packagefile'], $uploadresults['extractdir']);
-
-            // Redirect to the fixassets after restore
-            $controlser->setRedirect('index.php?option=com_proclaim&task=cwmassets.browse&' . Session::getFormToken(
-            ) . '=1');
-            $controlser->redirect();
         }
 
         return $result;
@@ -322,7 +322,7 @@ class Cwmrestore
 
         // Did you give us a valid directory?
         if (!is_dir($p_dir)) {
-            throw new RuntimeException(Text::_('COM_INSTALLER_MSG_INSTALL_PLEASE_ENTER_A_PACKAGE_DIRECTORY'), '502');
+            throw new \RuntimeException(Text::_('COM_INSTALLER_MSG_INSTALL_PLEASE_ENTER_A_PACKAGE_DIRECTORY'), 502);
         }
 
         $package['packagefile'] = null;
@@ -413,7 +413,7 @@ class Cwmrestore
             // Unpack the downloaded package file.
             $package         = InstallerHelper::unpack($tmp_dest, true);
             if (!isset($package['dir'])) {
-                throw new RuntimeException('Compressed file did not extract.', 'error');
+                throw new \RuntimeException('Compressed file did not extract.', 500);
             }
             $package['type'] = 'dir';
         } else {
@@ -508,5 +508,108 @@ class Cwmrestore
         }
 
         return true;
+    }
+
+    /**
+     * Fix Proclaim assets after database restore
+     *
+     * This method rebuilds the asset relationships for all Proclaim tables
+     * to ensure ACL permissions work correctly after a restore.
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    protected static function fixAssetsAfterRestore(): void
+    {
+        $app = Factory::getApplication();
+
+        try {
+            // Build the asset fix queue
+            $fix     = new Cwmassets();
+            $results = $fix->build();
+
+            // Process all assets synchronously
+            foreach ($results->query as $key => $items) {
+                foreach ($items as $item) {
+                    Cwmassets::fixAssets($key, $item);
+                }
+            }
+
+            $app->enqueueMessage(Text::_('JBS_IBM_ASSETS_FIXED'), 'info');
+        } catch (\Exception $e) {
+            // Asset fix failed - user can run it manually from control panel
+            $app->enqueueMessage(
+                Text::_('JBS_IBM_ASSETS_FIX_MANUAL') . ' ' . $e->getMessage(),
+                'warning'
+            );
+        }
+    }
+
+    /**
+     * Fix object ownership after database restore
+     *
+     * When restoring a database from another site, created_by and modified_by
+     * fields may reference user IDs that don't exist. This method updates
+     * those fields to use the current user's ID.
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    protected static function fixOwnershipAfterRestore(): void
+    {
+        $app = Factory::getApplication();
+        $db  = Factory::getContainer()->get('DatabaseDriver');
+
+        // Get the current user ID (the person doing the restore)
+        $currentUserId = $app->getIdentity()->id;
+
+        if (!$currentUserId) {
+            return;
+        }
+
+        // Tables with ownership fields
+        $tablesWithOwnership = [
+            '#__bsms_studies',
+            '#__bsms_teachers',
+            '#__bsms_series',
+            '#__bsms_mediafiles',
+            '#__bsms_servers',
+            '#__bsms_podcast',
+        ];
+
+        $totalFixed = 0;
+
+        foreach ($tablesWithOwnership as $table) {
+            try {
+                // Fix created_by where user doesn't exist
+                $query = $db->getQuery(true);
+                $query->update($db->quoteName($table))
+                    ->set($db->quoteName('created_by') . ' = ' . (int) $currentUserId)
+                    ->where($db->quoteName('created_by') . ' NOT IN (SELECT id FROM #__users)')
+                    ->where($db->quoteName('created_by') . ' != 0');
+                $db->setQuery($query);
+                $db->execute();
+                $totalFixed += $db->getAffectedRows();
+
+                // Fix modified_by where user doesn't exist
+                $query = $db->getQuery(true);
+                $query->update($db->quoteName($table))
+                    ->set($db->quoteName('modified_by') . ' = ' . (int) $currentUserId)
+                    ->where($db->quoteName('modified_by') . ' NOT IN (SELECT id FROM #__users)')
+                    ->where($db->quoteName('modified_by') . ' != 0');
+                $db->setQuery($query);
+                $db->execute();
+                $totalFixed += $db->getAffectedRows();
+            } catch (\Exception $e) {
+                // Table might not have the column, skip it
+                continue;
+            }
+        }
+
+        if ($totalFixed > 0) {
+            $app->enqueueMessage(Text::sprintf('JBS_IBM_OWNERSHIP_FIXED', $totalFixed), 'info');
+        }
     }
 }

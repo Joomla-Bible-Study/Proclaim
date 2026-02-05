@@ -16,7 +16,6 @@ use CWM\Component\Proclaim\Administrator\Model\CwmadminModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -151,42 +150,5 @@ class HtmlView extends BaseHtmlView
         ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
         ToolbarHelper::divider();
         ToolbarHelper::help('proclaim', true);
-    }
-
-    /**
-     * Added for SermonSpeaker and PreachIt.
-     *
-     * @param   string  $component  The Component it is coming from
-     *
-     * @return bool
-     *
-     * @since 7.1.0
-     * @deprecated 10.0.2 Code isn't used.
-     */
-    protected function versionXML(string $component): bool
-    {
-        switch ($component) {
-            case 'sermonspeaker':
-                $data = Installer::parseXMLInstallFile(
-                    JPATH_ADMINISTRATOR . '/components/com_sermonspeaker/sermonspeaker.xml'
-                );
-
-                if ($data) {
-                    return $data['version'];
-                }
-
-                return false;
-
-            case 'preachit':
-                $data = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_preachit/preachit.xml');
-
-                if ($data) {
-                    return $data['version'];
-                }
-
-                return false;
-        }
-
-        return false;
     }
 }
