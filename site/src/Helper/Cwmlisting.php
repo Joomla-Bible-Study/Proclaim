@@ -1713,7 +1713,7 @@ class Cwmlisting
 
                 if ($params->get('studyimage', '-1') !== '-1') {
                     // Clean up extra data in the image
-                    $hash = str_contains($params->get('studyimage'), '#');
+                    $hash = str_contains((string) $params->get('studyimage'), '#');
 
                     if ($hash) {
                         $imageparam   = $params->get('studyimage');

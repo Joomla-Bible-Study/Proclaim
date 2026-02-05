@@ -188,7 +188,7 @@ $count   = $this->rotatingImageCount;
         }
         if ($params->get('studyimage') !== -1) {
             //clean up extra data in the image
-            $hash = str_contains($params->get('studyimage'), '#');
+            $hash = str_contains((string) $params->get('studyimage'), '#');
             if ($hash == 1) {
                 $imageparam   = $params->get('studyimage');
                 $hashlocation = strpos($imageparam, '#');
