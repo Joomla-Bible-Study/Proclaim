@@ -547,6 +547,18 @@ class Cwmrestore
     }
 
     /**
+     * Public wrapper for ownership fix (used by AJAX controller)
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    public static function fixOwnershipPublic(): void
+    {
+        self::fixOwnershipAfterRestore();
+    }
+
+    /**
      * Fix object ownership after database restore
      *
      * When restoring a database from another site, created_by and modified_by

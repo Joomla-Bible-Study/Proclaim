@@ -26,132 +26,179 @@ use Joomla\CMS\Utility\Utility;
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
-    ->addInlineScript(
-        "
-		Joomla.submitbutton = function(task)
-		{
-			var form = document.getElementById('item-assets');
-			if (task == 'cwmadmin.back' || document.formvalidator.isValid(form))
-			{
-				Joomla.submitform(task, form);
-			}
-			elseif (task == 'cwmadmin.doimport' || document.formvalidator.isValid(form))
-			{
-				Joomla.submitform(task, form);
-			}
-		};
-"
+    ->useScript('bootstrap.modal')
+    ->registerAndUseScript(
+        'proclaim.backup-restore',
+        'com_proclaim/backup-restore.min.js',
+        ['version' => 'auto'],
+        ['defer' => true],
+        ['core']
     );
+
+// Add language strings for JavaScript
+Text::script('JBS_IBM_PROCESSING');
+Text::script('JBS_IBM_EXPORTING_DATABASE');
+Text::script('JBS_IBM_GETTING_TABLES');
+Text::script('JBS_IBM_EXPORTING_TABLE');
+Text::script('JBS_IBM_FINALIZING');
+Text::script('JBS_IBM_EXPORT_COMPLETE');
+Text::script('JBS_IBM_BACKUP_SAVED');
+Text::script('JBS_IBM_IMPORTING_DATABASE');
+Text::script('JBS_IBM_PREPARING_IMPORT');
+Text::script('JBS_IBM_ANALYZING_FILE');
+Text::script('JBS_IBM_IMPORTING_DATA');
+Text::script('JBS_IBM_BATCH');
+Text::script('JBS_IBM_FIXING_ASSETS');
+Text::script('JBS_IBM_IMPORT_COMPLETE');
+Text::script('JBS_IBM_COMPLETE');
+Text::script('JBS_IBM_FAILED');
+Text::script('JBS_CMN_NO_FILE_SELECTED');
+Text::script('JCANCEL');
+Text::script('JCLOSE');
 
 $maxSize = HTMLHelper::_('number.bytes', Utility::getMaxUploadSize());
 ?>
-<form action="<?php
-echo Route::_('index.php?option=com_proclaim&view=cwmbackup'); ?>" enctype="multipart/form-data"
-      method="post" name="adminForm" id="adminForm">
-    <div class="row">
-        <div class="col-12 col-lg-6 form-horizontal">
-            <h3><?php
-                echo Text::_('JBS_CMN_EXPORT'); ?></h3>
+<div class="row">
+    <!-- Export Section -->
+    <div class="col-12 col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-download me-2"></i><?php echo Text::_('JBS_CMN_EXPORT'); ?>
+                </h3>
+            </div>
+            <div class="card-body">
+                <p class="text-muted"><?php echo Text::_('JBS_IBM_EXPORT_DESC'); ?></p>
 
-            <div class="control-group">
-                <div class="control-label">
-                    <img src="<?php
-                    echo Uri::base() . '../media/com_proclaim/images/icons/export.png'; ?>"
-                         alt="Export" height="48" width="48"/></div>
-                <div class="controls">
-                    <!--suppress HtmlUnknownTarget -->
-                    <a href="<?php
-                    echo Route::_(
-                        "index.php?option=com_proclaim&task=cwmadmin.export&run=1&" .
-                        Session::getFormToken() . "=1"
-                    ); ?>" class="btn btn-primary">
-                        <?php
-                        echo Text::_('JBS_CMN_EXPORT'); ?>
-                    </a>
-                    <?php
-                    echo '<br /><br />'; ?>
-                    <!--suppress HtmlUnknownTarget -->
-                    <a href="index.php?option=com_proclaim&task=cwmadmin.export&run=2&<?php
-                    echo Session::getFormToken(); ?>=1"
-                       class="btn btn-secondary">
-                        <?php
-                        echo Text::_('JBS_IBM_SAVE_DB'); ?>
-                    </a>
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-primary btn-lg" data-proclaim-export="download">
+                        <i class="fas fa-download me-2"></i><?php echo Text::_('JBS_CMN_EXPORT'); ?>
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-proclaim-export="save">
+                        <i class="fas fa-save me-2"></i><?php echo Text::_('JBS_IBM_SAVE_DB'); ?>
+                    </button>
                 </div>
-            </div>
-            <hr/>
-            <h3><?php
-                echo Text::_('JBS_CMN_IMPORT'); ?></h3>
-            <p>
-                <?php
-                echo Text::_('JBS_IBM_MAX_UPLOAD') . ': ' . \ini_get('upload_max_filesize'); ?><br/>
-                <?php
-                echo Text::_('JBS_IBM_MAX_EXECUTION_TIME') . ': ' . \ini_get('max_execution_time'); ?><br/>
-            </p>
-            <div class="control-group">
-                <div class="control-label">
-                    <img src="<?php
-                    echo Uri::base() . '../media/com_proclaim/images/icons/import.png'; ?>"
-                         alt="Import" height="48" width="48"/>
-                </div>
-                <div class="controls">
-                    <div style="position:relative;">
-                        <label for="importdb" class="hidden">Import File Selection Button</label>
-                        <input type="file"
-                               name="importdb"
-                               id="importdb"
-                               size="40"
-                               accept="sql"
-                               class="form-control"
-                               onchange='jQuery("#upload-file-info").html(jQuery(this).val());'><br>
-                        <?php
-                        echo Text::sprintf('JGLOBAL_MAXIMUM_UPLOAD_SIZE_LIMIT', $maxSize); ?>
-                    </div>
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="control-label">
-                    <img src="<?php
-                    echo Uri::base() . '../media/com_proclaim/images/icons/backuprestore.png'; ?>"
-                         alt="Backup Folder" height="48" width="48"/>
 
-                </div>
-                <div class="controls">
-                    <label for="backuprestore"><?php
-                        echo ' - ' . Text::_('JBS_IBM_IMPORT_FROM_BACKUP_FOLDER') ?>
-                    </label>
-                    <?php
-                    echo $this->lists['backedupfiles']; ?>
-                </div>
+                <?php if (!empty($this->lists['backedupfiles'])): ?>
+                <hr>
+                <h5><?php echo Text::_('JBS_IBM_EXISTING_BACKUPS'); ?></h5>
+                <p class="small text-muted"><?php echo Text::_('JBS_IBM_EXISTING_BACKUPS_DESC'); ?></p>
+                <?php endif; ?>
             </div>
-            <div class="control-group">
-                <div class="control-label">
-                    <img src="<?php
-                    echo Uri::base() . '../media/com_proclaim/images/icons/folder.png'; ?>"
-                         alt="Tmp Folder" height="48" width="48"/>
-                </div>
-                <div class="controls">
-                    <label for="install_directory"><?php
-                        echo ' - ' . Text::_('JBS_IBM_IMPORT_FROM_TMP_FOLDER'); ?>
-                    </label><input type="text" id="install_directory" name="install_directory"
-                                   class="form-control inputbox valid form-control-success"
-                                   value="<?php
-                                    echo $this->tmp_dest . DIRECTORY_SEPARATOR; ?>"/>
-                </div>
+        </div>
+
+        <!-- Media Backup Help Section -->
+        <div class="card mb-4">
+            <div class="card-header bg-warning">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i><?php echo Text::_('JBS_IBM_MEDIA_BACKUP_TITLE'); ?>
+                </h5>
             </div>
-            <div class="control-group">
-                <button class="btn btn-primary" type="submit" name="submit"><?php
-                    echo Text::_('JBS_CMN_SUBMIT'); ?></button>&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="index.php?option=com_proclaim&task=cwmadmin.edit&id=1">
-                    <button type="button" class="button-cancel btn btn-danger btn-dark btn-outline-light"><?php
-                        echo Text::_('JTOOLBAR_BACK'); ?></button>
-                </a>
+            <div class="card-body">
+                <p><?php echo Text::_('JBS_IBM_MEDIA_BACKUP_DESC'); ?></p>
+                <div class="alert alert-info">
+                    <strong><?php echo Text::_('JBS_IBM_MEDIA_LOCATION'); ?>:</strong>
+                    <code>/media/com_proclaim/</code>
+                </div>
+                <ul class="mb-0">
+                    <li><?php echo Text::_('JBS_IBM_MEDIA_BACKUP_TIP1'); ?></li>
+                    <li><?php echo Text::_('JBS_IBM_MEDIA_BACKUP_TIP2'); ?></li>
+                    <li><?php echo Text::_('JBS_IBM_MEDIA_BACKUP_TIP3'); ?></li>
+                </ul>
             </div>
         </div>
     </div>
-    <input type="hidden" name="option" value="com_proclaim"/>
-    <input type="hidden" name="task" value="cwmadmin.doimport"/>
-    <input type="hidden" name="controller" value="admin"/>
-    <?php
-    echo HTMLHelper::_('form.token'); ?>
-</form>
+
+    <!-- Import Section -->
+    <div class="col-12 col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-upload me-2"></i><?php echo Text::_('JBS_CMN_IMPORT'); ?>
+                </h3>
+            </div>
+            <div class="card-body">
+                <form id="proclaim-import-form" enctype="multipart/form-data">
+                    <!-- Server Info -->
+                    <div class="alert alert-secondary small">
+                        <i class="fas fa-info-circle me-1"></i>
+                        <?php echo Text::_('JBS_IBM_MAX_UPLOAD') . ': ' . \ini_get('upload_max_filesize'); ?>
+                        &nbsp;|&nbsp;
+                        <?php echo Text::_('JBS_IBM_MAX_EXECUTION_TIME') . ': ' . \ini_get('max_execution_time') . 's'; ?>
+                    </div>
+
+                    <!-- Upload File -->
+                    <div class="mb-4">
+                        <label for="importdb" class="form-label fw-bold">
+                            <i class="fas fa-file-upload me-1"></i>
+                            <?php echo Text::_('JBS_IBM_UPLOAD_FILE'); ?>
+                        </label>
+                        <input type="file"
+                               name="importdb"
+                               id="importdb"
+                               accept=".sql,.zip"
+                               class="form-control">
+                        <div class="form-text">
+                            <?php echo Text::sprintf('JGLOBAL_MAXIMUM_UPLOAD_SIZE_LIMIT', $maxSize); ?>
+                            - <?php echo Text::_('JBS_IBM_ACCEPTS_SQL_ZIP'); ?>
+                        </div>
+                    </div>
+
+                    <!-- From Backup Folder -->
+                    <div class="mb-4">
+                        <label for="backuprestore" class="form-label fw-bold">
+                            <i class="fas fa-folder-open me-1"></i>
+                            <?php echo Text::_('JBS_IBM_IMPORT_FROM_BACKUP_FOLDER'); ?>
+                        </label>
+                        <?php echo $this->lists['backedupfiles']; ?>
+                    </div>
+
+                    <!-- From Tmp Folder -->
+                    <div class="mb-4">
+                        <label for="install_directory" class="form-label fw-bold">
+                            <i class="fas fa-folder me-1"></i>
+                            <?php echo Text::_('JBS_IBM_IMPORT_FROM_TMP_FOLDER'); ?>
+                        </label>
+                        <input type="text"
+                               id="install_directory"
+                               name="install_directory"
+                               class="form-control"
+                               value="<?php echo $this->tmp_dest . DIRECTORY_SEPARATOR; ?>">
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-success btn-lg" type="submit">
+                            <i class="fas fa-upload me-2"></i><?php echo Text::_('JBS_CMN_IMPORT'); ?>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Migration Notes -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2"></i><?php echo Text::_('JBS_IBM_MIGRATION_NOTES'); ?>
+                </h5>
+            </div>
+            <div class="card-body">
+                <p><?php echo Text::_('JBS_IBM_MIGRATION_DESC'); ?></p>
+                <ul class="mb-0">
+                    <li><?php echo Text::_('JBS_IBM_MIGRATION_TIP1'); ?></li>
+                    <li><?php echo Text::_('JBS_IBM_MIGRATION_TIP2'); ?></li>
+                    <li><?php echo Text::_('JBS_IBM_MIGRATION_TIP3'); ?></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Back Button -->
+<div class="mt-3">
+    <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmcpanel'); ?>" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i><?php echo Text::_('JTOOLBAR_BACK'); ?>
+    </a>
+</div>
+
+<?php echo HTMLHelper::_('form.token'); ?>
