@@ -359,15 +359,16 @@ class Cwmmedia
 
         /**
          * @desc Players - from Template:
-         * First, we check to see if in the template the user has set to use the internal player for all media. This can be overridden by itemparams
+         * First, we check to see if in the template the user has set to use the HTML5 player for all media. This can be overridden by itemparams
          * popuptype = whether AVR should be a window or a lightbox (handled in AVR code)
-         * internal_popup = whether direct or internal player should be a popup/new window or inline
+         * internal_popup = whether direct or HTML5 player should be a popup/new window or inline
          * From media file:
-         * player 0 = direct, 1 = internal, 2 = AVR, 3 = AV 7 = legacy internal player (from JBS 6.2.2)
+         * player 0 = direct link (browser handles), 1 = HTML5 player, 4 = Docman, 5 = article, 6 = Virtuemart, 8 = embed code, 100 = use global
          * internal_popup 0 = inline, 1 = popup, 2 = global settings
          *
-         * Get the $player->player: 0 = direct, 1 = internal, 2 = AVR (no longer supported),
-         * 3 = All Videos or JPlayer, 4 = Docman, 5 = article, 6 = Virtuemart, 7 = legacy player, 8 = embed code
+         * Deprecated players (migrated to 1 on install): 3 = AV plugin, 7 = legacy
+         * Get the $player->player: 0 = direct link, 1 = HTML5 player, 2 = AVR (no longer supported),
+         * 4 = Docman, 5 = article, 6 = Virtuemart, 8 = embed code
          * $player->type 0 = inline, 1 = popup/new window 3 = Use Global Settings (from params)
          * In 6.2.3 we changed inline = 2
          */

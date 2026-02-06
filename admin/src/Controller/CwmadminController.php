@@ -24,6 +24,7 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Administrator\Lib\CwmpIconvert;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmrestore;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmssconvert;
+use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use CWM\Component\Proclaim\Administrator\Model\CwmarchiveModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -1081,6 +1082,410 @@ class CwmadminController extends FormController
         $result = CwmImageCleanup::deleteOrphans($paths);
 
         echo json_encode($result, JSON_THROW_ON_ERROR);
+
+        $app->close();
+    }
+
+    /**
+     * Get player statistics XHR - returns player stats HTML as JSON for lazy loading
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function getPlayerStatsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        try {
+            $html = Cwmstats::getPlayers();
+
+            echo json_encode([
+                'success' => true,
+                'data'    => ['html' => $html],
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Get popup statistics XHR - returns popup stats HTML as JSON for lazy loading
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function getPopupStatsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        try {
+            $html = Cwmstats::getPopups();
+
+            echo json_encode([
+                'success' => true,
+                'data'    => ['html' => $html],
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Archive Old Messages and Media XHR - AJAX version with JSON response
+     *
+     * @return void
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public function doArchiveXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        // Check for request forgeries
+        if (!Session::checkToken('get')) {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::_('JINVALID_TOKEN'),
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $model = new CwmarchiveModel();
+            $msg   = $model->doArchive();
+
+            echo json_encode([
+                'success' => true,
+                'message' => $msg,
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Alias Update XHR - AJAX version with JSON response
+     *
+     * @return void
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public function aliasUpdateXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        // Check for request forgeries
+        if (!Session::checkToken('get')) {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::_('JINVALID_TOKEN'),
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $count = Cwmalias::updateAlias();
+
+            echo json_encode([
+                'success' => true,
+                'count'   => $count,
+                'message' => Text::_('JBS_ADM_ALIAS_ROWS') . $count,
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Change Players XHR - AJAX version with optimized batch update
+     *
+     * @return void
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public function changePlayersXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $input    = $app->getInput();
+
+        $document->setMimeEncoding('application/json');
+
+        // Check for request forgeries
+        if (!Session::checkToken('get')) {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::_('JINVALID_TOKEN'),
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $from = $input->getCmd('from', 'x');
+        $to   = $input->getCmd('to', 'x');
+
+        if ($from === 'x' || $to === 'x') {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::_('JBS_ADM_ERROR_OCCURED') . ': ' . Text::_('JBS_ADM_SELECT_FROM_TO'),
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $db = Factory::getContainer()->get('DatabaseDriver');
+
+            // Use optimized batch update with JSON functions
+            // This replaces the N+1 query pattern with a single UPDATE
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__bsms_mediafiles'))
+                ->set($db->quoteName('params') . ' = REPLACE(' . $db->quoteName('params') . ', '
+                    . $db->quote('"player":"' . $from . '"') . ', '
+                    . $db->quote('"player":"' . $to . '"') . ')')
+                ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%"player":"' . $from . '"%'));
+
+            $db->setQuery($query);
+            $db->execute();
+            $count = $db->getAffectedRows();
+
+            echo json_encode([
+                'success' => true,
+                'count'   => $count,
+                'message' => Text::sprintf('JBS_ADM_PLAYER_CHANGED', $count),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Change Popup XHR - AJAX version with optimized batch update
+     *
+     * @return void
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public function changePopupXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $input    = $app->getInput();
+
+        $document->setMimeEncoding('application/json');
+
+        // Check for request forgeries
+        if (!Session::checkToken('get')) {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::_('JINVALID_TOKEN'),
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $from = $input->getCmd('from', 'x');
+        $to   = $input->getCmd('to', 'x');
+
+        if ($from === 'x' || $to === 'x') {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::_('JBS_ADM_ERROR_OCCURED') . ': ' . Text::_('JBS_ADM_SELECT_FROM_TO'),
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $db = Factory::getContainer()->get('DatabaseDriver');
+
+            // Handle legacy value mapping (100 = 0, etc.)
+            $searchFrom = $from;
+            $searchFrom2 = null;
+
+            if ($from === '100') {
+                $searchFrom = '0';
+                $searchFrom2 = '100';
+            }
+
+            $replaceTo = $to === '100' ? '' : $to;
+
+            // Use optimized batch update
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__bsms_mediafiles'))
+                ->set($db->quoteName('params') . ' = REPLACE(' . $db->quoteName('params') . ', '
+                    . $db->quote('"popup":"' . $searchFrom . '"') . ', '
+                    . $db->quote('"popup":"' . $replaceTo . '"') . ')')
+                ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%"popup":"' . $searchFrom . '"%'));
+
+            $db->setQuery($query);
+            $db->execute();
+            $count = $db->getAffectedRows();
+
+            // If there's a secondary search pattern (for legacy 100 value)
+            if ($searchFrom2 !== null) {
+                $query = $db->getQuery(true)
+                    ->update($db->quoteName('#__bsms_mediafiles'))
+                    ->set($db->quoteName('params') . ' = REPLACE(' . $db->quoteName('params') . ', '
+                        . $db->quote('"popup":"' . $searchFrom2 . '"') . ', '
+                        . $db->quote('"popup":"' . $replaceTo . '"') . ')')
+                    ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%"popup":"' . $searchFrom2 . '"%'));
+
+                $db->setQuery($query);
+                $db->execute();
+                $count += $db->getAffectedRows();
+            }
+
+            echo json_encode([
+                'success' => true,
+                'count'   => $count,
+                'message' => Text::sprintf('JBS_ADM_POPUP_CHANGED', $count),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Change Player by Media Type XHR - AJAX version with optimized batch update
+     *
+     * @return void
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public function changePlayerByMediaTypeXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $input    = $app->getInput();
+
+        $document->setMimeEncoding('application/json');
+
+        // Check for request forgeries
+        if (!Session::checkToken('get')) {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::_('JINVALID_TOKEN'),
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $mediaType = $input->getInt('mediatype', 0);
+        $player    = $input->getCmd('player', 'x');
+
+        if ($mediaType === 0 || $player === 'x') {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::_('JBS_ADM_ERROR_OCCURED') . ': ' . Text::_('JBS_ADM_SELECT_MEDIATYPE_PLAYER'),
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $db = Factory::getContainer()->get('DatabaseDriver');
+
+            // Get all media files with matching media type
+            $query = $db->getQuery(true)
+                ->select([$db->quoteName('id'), $db->quoteName('params')])
+                ->from($db->quoteName('#__bsms_mediafiles'))
+                ->where($db->quoteName('media_image') . ' = ' . $mediaType);
+
+            $db->setQuery($query);
+            $mediaFiles = $db->loadObjectList();
+
+            $count = 0;
+
+            foreach ($mediaFiles as $media) {
+                $reg = new Registry();
+                $reg->loadString($media->params);
+                $reg->set('player', $player);
+
+                $updateQuery = $db->getQuery(true)
+                    ->update($db->quoteName('#__bsms_mediafiles'))
+                    ->set($db->quoteName('params') . ' = ' . $db->quote($reg->toString()))
+                    ->where($db->quoteName('id') . ' = ' . (int) $media->id);
+
+                $db->setQuery($updateQuery);
+                $db->execute();
+                $count++;
+            }
+
+            echo json_encode([
+                'success' => true,
+                'count'   => $count,
+                'message' => Text::sprintf('JBS_ADM_PLAYER_BY_MEDIATYPE_CHANGED', $count),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
 
         $app->close();
     }

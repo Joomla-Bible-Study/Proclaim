@@ -76,13 +76,20 @@ class CwmarchiveModel extends AdminModel
         $studies    = 0;
         $mediafiles = 0;
 
-        $data = Factory::getApplication()->getInput()->get('jform', [], 'array');
+        $input = Factory::getApplication()->getInput();
 
-        // Used this field to show how long back to archive.
-        $timeframe = (int)$data['timeframe'];
+        // Support both form POST (jform array) and AJAX GET (direct params)
+        $data = $input->get('jform', [], 'array');
 
-        // Use this to field (year, month, day)
-        $switch = $data['switch'];
+        if (!empty($data['timeframe'])) {
+            // Form POST mode
+            $timeframe = (int) $data['timeframe'];
+            $switch = $data['switch'];
+        } else {
+            // AJAX GET mode
+            $timeframe = $input->getInt('timeframe', 0);
+            $switch = $input->getCmd('switch', 'year');
+        }
 
         // Fields to update.
         $fields = [

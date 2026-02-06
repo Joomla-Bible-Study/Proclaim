@@ -172,6 +172,18 @@
             }
         },
         {
+            "name": "com_proclaim.cwmadmin",
+            "type": "script",
+            "uri": "com_proclaim/cwmadmin.min.js",
+            "dependencies": [
+                "core",
+                "bootstrap.modal"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.cwmadmin-duration-fix",
             "type": "script",
             "uri": "com_proclaim/cwmadmin-duration-fix.min.js",

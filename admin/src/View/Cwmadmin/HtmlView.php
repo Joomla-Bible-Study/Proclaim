@@ -18,7 +18,6 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmadmin;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Helper\ContentHelper;
@@ -233,9 +232,10 @@ class HtmlView extends BaseHtmlView
         // End for a database
         $this->tmp_dest = $app->get('tmp_path');
 
-        $this->playerstats = Cwmstats::getPlayers();
+        // Stats are now loaded via AJAX for better page load performance
+        $this->playerstats = '';
         $this->assets      = $app->input->get('checkassets', null, 'get');
-        $this->popups      = Cwmstats::getPopups();
+        $this->popups      = '';
 
         // Get the list of backup files
         $path = JPATH_SITE . '/media/com_proclaim/backup';

@@ -264,6 +264,7 @@ class CwminstallModel extends ListModel
             'fixmenus',
             'fixemptyaccess',
             'fixemptylanguage',
+            'migratedeprecatedplayers',
             'updatetemplatedefaults',
             'registerguidedtours',
             'rmoldurl',
@@ -937,6 +938,10 @@ class CwminstallModel extends ListModel
             case 'fixemptylanguage':
                 $run           = CwmmigrationHelper::fixemptylanguage();
                 $this->running = 'Fix Empty Language';
+                break;
+            case 'migratedeprecatedplayers':
+                $updated       = CwmmigrationHelper::migrateDeprecatedPlayers();
+                $this->running = 'Migrate Deprecated Players (' . $updated . ' records updated)';
                 break;
             case 'updatetemplatedefaults':
                 $migration     = new CwmtemplatemigrationHelper();

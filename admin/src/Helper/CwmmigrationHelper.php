@@ -264,4 +264,50 @@ class CwmmigrationHelper
             log::add('Bad error for PostInstall Message', Log::NOTICE, 'com_proclaim');
         }
     }
+
+    /**
+     * Migrate deprecated player types to HTML5 Player
+     *
+     * Converts legacy player types (3=AVPlugin, 7=LegacyAudio) to player 1 (HTML5 Player)
+     * Note: Direct Link (0) is NOT deprecated - it offloads playback to the browser.
+     * This is a one-time migration that runs on component install/update.
+     *
+     * @return int Number of records updated
+     *
+     * @since 10.1.0
+     */
+    public static function migrateDeprecatedPlayers(): int
+    {
+        $db = Factory::getContainer()->get('DatabaseDriver');
+        $totalUpdated = 0;
+
+        // Deprecated player values to migrate to HTML5 Player (1)
+        // 3 = AV Plugin (no longer supported), 7 = Legacy Audio Player
+        // Note: 0 = Direct Link is still valid and NOT deprecated
+        $deprecatedPlayers = ['3', '7'];
+
+        foreach ($deprecatedPlayers as $oldPlayer) {
+            // Update using REPLACE on the JSON params field
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__bsms_mediafiles'))
+                ->set($db->quoteName('params') . ' = REPLACE(' . $db->quoteName('params') . ', '
+                    . $db->quote('"player":"' . $oldPlayer . '"') . ', '
+                    . $db->quote('"player":"1"') . ')')
+                ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%"player":"' . $oldPlayer . '"%'));
+
+            $db->setQuery($query);
+            $db->execute();
+            $totalUpdated += $db->getAffectedRows();
+        }
+
+        if ($totalUpdated > 0) {
+            Log::add(
+                'Migrated ' . $totalUpdated . ' media files from deprecated players to HTML5 Player',
+                Log::INFO,
+                'com_proclaim'
+            );
+        }
+
+        return $totalUpdated;
+    }
 }

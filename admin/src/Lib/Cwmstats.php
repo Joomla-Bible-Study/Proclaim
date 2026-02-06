@@ -577,14 +577,29 @@ class Cwmstats
             return '';
         }
 
-        return '<br /><strong>' . Text::_('JBS_CMN_TOTAL_PLAYERS') . ': ' . $stats['total'] . '</strong>' .
-            '<br /><strong>' . Text::_('JBS_CMN_INTERNAL_PLAYER') . ': </strong>' . (int)$stats['player_internal'] .
-            '<br /><strong><a href="http://extensions.joomla.org/extensions/extension/multimedia/multimedia-players/allvideos" target="blank">' .
-            Text::_('JBS_CMN_AVPLUGIN') . '</a>: </strong>' . (int)$stats['player_av'] . '<br /><strong>' .
-            Text::_('JBS_CMN_LEGACY_PLAYER') . ': </strong>' . (int)$stats['player_legacy'] . '<br /><strong>' .
-            Text::_('JBS_CMN_NO_PLAYER_TREATED_DIRECT') . ': </strong>' . (int)$stats['player_none'] . '<br /><strong>' .
-            Text::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . (int)$stats['player_global'] . '<br /><strong>' .
-            Text::_('JBS_CMN_EMBED_CODE') . ': </strong>' . (int)$stats['player_embed'];
+        // Count deprecated players that may still exist (AV Plugin and Legacy only)
+        $deprecatedCount = (int) $stats['player_av'] + (int) $stats['player_legacy'];
+
+        $output = '<br /><strong>' . Text::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $stats['total'] . '</strong>' .
+            '<br /><strong>' . Text::_('JBS_CMN_DIRECT_LINK') . ': </strong>' . (int) $stats['player_none'] .
+            '<br /><strong>' . Text::_('JBS_CMN_INTERNAL_PLAYER') . ': </strong>' . (int) $stats['player_internal'] .
+            '<br /><strong>' . Text::_('JBS_CMN_EMBED_CODE') . ': </strong>' . (int) $stats['player_embed'] .
+            '<br /><strong>' . Text::_('JBS_CMN_USE_GLOBAL') . ': </strong>' . (int) $stats['player_global'];
+
+        // Only show deprecated section if there are any deprecated players remaining
+        if ($deprecatedCount > 0) {
+            $output .= '<br /><br /><em>' . Text::_('JBS_ADM_DEPRECATED_PLAYERS') . ':</em>';
+
+            if ((int) $stats['player_av'] > 0) {
+                $output .= '<br /><strong>' . Text::_('JBS_CMN_AVPLUGIN') . ': </strong>' . (int) $stats['player_av'];
+            }
+
+            if ((int) $stats['player_legacy'] > 0) {
+                $output .= '<br /><strong>' . Text::_('JBS_CMN_LEGACY_PLAYER') . ': </strong>' . (int) $stats['player_legacy'];
+            }
+        }
+
+        return $output;
     }
 
     /**

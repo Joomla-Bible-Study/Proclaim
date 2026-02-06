@@ -26,165 +26,98 @@ use Joomla\CMS\Session\Session;
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
-    ->addInlineScript(
-        "
-	jQuery.submitbutton3 = function () {
-		jQuery('[name=tooltype]').val('players')
-		jQuery('[name=task]').val('cwmadmin.tools')
-		jQuery('#item-admin').submit()
-	}
+    ->useScript('com_proclaim.cwmadmin')
+    ->useStyle('com_proclaim.general');
 
-	jQuery.submitbutton4 = function () {
-		jQuery('[name=tooltype]').val('popups')
-		jQuery('[name=task]').val('cwmadmin.tools')
-		jQuery('#item-admin').submit()
-	}
-	jQuery.submitbutton5 = function () {
-		jQuery('[name=tooltype]').val('mediaimages')
-		jQuery('[name=task]').val('cwmadmin.mediaimages')
-		jQuery('#item-admin').submit()
-	}
-	jQuery.submitbutton6 = function () {
-		jQuery('[name=tooltype]').val('playerbymediatype')
-		jQuery('[name=task]').val('cwmadmin.tools')
-		jQuery('#item-admin').submit()
-	}
-	jQuery.submitbutton7 = function () {
-		jQuery('[name=tooltype]').val('preachitconvert')
-		jQuery('[name=task]').val('cwmadmin.convertPreachIt')
-		jQuery('#item-admin').submit()
-	}
-
-	Joomla.submitbutton = function (task) {
-		if (task === 'cwmadmin.cancel' || task === 'cwmadmin.resetHits' || task === 'cwmadmin.resetDownloads' || task ===
-			'cwmadmin.resetPlays' || task === 'cwmadmin.aliasUpdate')
-		{
-			Joomla.submitform(task, document.getElementById('item-admin'))
-		}
-		else
-		{
-			if (document.formvalidator.isValid(document.getElementById('item-admin')))
-			{
-				if (task === 'cwmadmin.save' || task === 'cwmadmin.apply')
-				{
-					// Confirm thumbnail changes
-					var thumbnail_changes = []
-					var thumbnail_teacher_size_old = jQuery('#thumbnail_teacher_size_old')
-					var thumbnail_series_size_old = jQuery('#thumbnail_series_size_old')
-					var thumbnail_study_size_old = jQuery('#thumbnail_study_size_old')
-					if (thumbnail_teacher_size_old.val() !== jQuery('#jform_params_thumbnail_teacher_size').val() &&
-						thumbnail_teacher_size_old.val() !== '')
-					{
-						thumbnail_changes.push('teachers')
-					}
-					if (thumbnail_series_size_old.val() !== jQuery('#jform_params_thumbnail_series_size').val() &&
-						thumbnail_series_size_old.val() !== '')
-					{
-						thumbnail_changes.push('series')
-					}
-					if (thumbnail_study_size_old.val() !== jQuery('#jform_params_thumbnail_study_size').val() &&
-						thumbnail_study_size_old.val() !== '')
-					{
-						thumbnail_changes.push('studies')
-					}
-					if (thumbnail_changes.length > 0)
-					{
-						var resize_thumbnails = confirm('You modified the default thumbnail size(s).' +
-							'Thumbnails will be recreated for: ' + thumbnail_changes.toString() + '. Click OK to continue.')
-						if (resize_thumbnails)
-						{
-							jQuery.getJSON(
-								'index.php?option=com_proclaim&task=cwmadmin.getThumbnailListXHR&" . Session::getFormToken(
-        ) . "=1',
-								{ images: thumbnail_changes }, function (response) {
-									jQuery('#dialog_thumbnail_resize').modal({ backdrop: 'static', keyboard: false })
-									var total_paths = response.total
-									var counter = 0
-									var progress = 0
-									if (total_paths)
-									{
-										jQuery.each(response.paths, function () {
-											var type = this[0].type
-											if (this[0].images)
-											{
-												jQuery.each(this[0].images, function () {
-														console.log(this)
-														var new_size
-														switch (type)
-														{
-															case 'teachers':
-																new_size = jQuery('#jform_params_thumbnail_teacher_size').val()
-																break
-															case 'studies':
-																new_size = jQuery('#jform_params_thumbnail_study_size').val()
-																break
-															case 'series':
-																new_size = jQuery('#jform_params_thumbnail_series_size').val()
-																break
-															default:
-																new_size = 100
-																break
-														}
-														jQuery.getJSON(
-															'index.php?option=com_proclaim&task=cwmadmin.createThumbnailXHR&" . Session::getFormToken(
-        ) . "=1',
-															{
-																image_path: this,
-																new_size: new_size,
-															}, function (response) {
-																counter++
-																progress += 100 / total_paths
-																jQuery('#dialog_thumbnail_resize .bar').width(progress + '%')
-																if (counter === total_paths)
-																{
-																	// Continue and save the rest of the form now.
-																	Joomla.submitform(task, document.getElementById('item-admin'))
-																}
-															})
-													},
-												)
-											}
-											else
-											{
-												Joomla.submitform(task, document.getElementById('item-admin'))
-											}
-										})
-									}
-									else
-									{
-										Joomla.submitform(task, document.getElementById('item-admin'))
-									}
-								},
-							)
-						}
-					}
-					else
-					{
-						Joomla.submitform(task, document.getElementById('item-admin'))
-					}
-				}
-			}
-			else
-			{
-				alert('" . Text::_('JGLOBAL_VALIDATION_FORM_FAILED') . "')
-
-			}
-		}
-	}"
-    );
+// Make language strings available to JavaScript
+Text::script('JBS_ADM_STATS_LOADED');
+Text::script('JBS_ADM_ALIAS_UPDATING');
+Text::script('JBS_ADM_ALIAS_COMPLETE');
+Text::script('JBS_ADM_ALIAS_NONE');
+Text::script('JBS_ADM_ERROR');
+Text::script('JBS_ADM_SELECT_FROM_TO');
+Text::script('JBS_ADM_PLAYER_TOOLS_PROCESSING');
+Text::script('JBS_ADM_PLAYER_TOOLS_COMPLETE');
+Text::script('JBS_ADM_THUMBNAIL_RESIZE_CONFIRM');
+Text::script('JGLOBAL_VALIDATION_FORM_FAILED');
 
 $app   = Factory::getApplication();
 $input = $app->input;
 
 $this->useCoreUI = true;
 ?>
-<div class="modal hide fade" id="dialog_thumbnail_resize">
-    <div class="modal-header">
-        <h3>Creating Thumbnails...</h3>
+<!-- Bootstrap 5 Modal for Thumbnail Resize -->
+<div class="modal fade" id="dialog_thumbnail_resize" tabindex="-1"
+     aria-labelledby="thumbnailModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="thumbnailModalLabel"><?php echo Text::_('JBS_ADM_CREATING_THUMBNAILS'); ?></h5>
+            </div>
+            <div class="modal-body">
+                <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="<?php echo Text::_('JBS_ADM_THUMBNAIL_PROGRESS'); ?>">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%">0%</div>
+                </div>
+                <p class="status-text text-center mt-2 mb-0" aria-live="polite"></p>
+            </div>
+        </div>
     </div>
-    <div class="modal-body">
-        <div class="progress">
-            <div class="bar" style="width: 0;"></div>
+</div>
+
+<!-- Bootstrap 5 Modal for Alias Update -->
+<div class="modal fade" id="alias-update-modal" tabindex="-1"
+     aria-labelledby="aliasModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="aliasModalLabel">
+                    <i class="icon-tree-2 me-2" aria-hidden="true"></i>
+                    <?php echo Text::_('JBS_ADM_ALIAS_UPDATE'); ?>
+                </h5>
+            </div>
+            <div class="modal-body text-center">
+                <div class="alias-spinner mb-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden"><?php echo Text::_('JBS_ADM_LOADING'); ?></span>
+                    </div>
+                </div>
+                <p class="alias-status-text fw-bold mb-2" aria-live="polite"><?php echo Text::_('JBS_ADM_ALIAS_UPDATING'); ?></p>
+                <p class="alias-result-text text-muted small mb-0"></p>
+            </div>
+            <div class="modal-footer justify-content-center" style="display: none;">
+                <button type="button" class="btn btn-success btn-close-alias-modal">
+                    <i class="icon-checkmark me-1" aria-hidden="true"></i><?php echo Text::_('JCLOSE'); ?>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap 5 Modal for Player Tools -->
+<div class="modal fade" id="player-tools-modal" tabindex="-1"
+     aria-labelledby="playerToolsModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="playerToolsModalLabel">
+                    <i class="icon-cog me-2" aria-hidden="true"></i>
+                    <span class="modal-title-text"><?php echo Text::_('JBS_ADM_PLAYER_TOOLS_TITLE'); ?></span>
+                </h5>
+            </div>
+            <div class="modal-body text-center">
+                <div class="player-tools-spinner mb-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden"><?php echo Text::_('JBS_ADM_LOADING'); ?></span>
+                    </div>
+                </div>
+                <p class="player-tools-status-text fw-bold mb-2" aria-live="polite"><?php echo Text::_('JBS_ADM_PLAYER_TOOLS_PROCESSING'); ?></p>
+                <p class="player-tools-result-text text-muted small mb-0"></p>
+            </div>
+            <div class="modal-footer justify-content-center" style="display: none;">
+                <button type="button" class="btn btn-success btn-close-player-tools-modal">
+                    <i class="icon-checkmark me-1" aria-hidden="true"></i><?php echo Text::_('JCLOSE'); ?>
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -207,48 +140,42 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
         <div class="row">
             <div class="col-12 col-lg-12">
                 <div class="well well-small">
-                    <div id="dashboard-icons" class="btn-group" style="white-space: normal;">
+                    <div class="cwmadmin-dashboard-cards">
                         <a href="<?php
                         echo Route::_(
                             'index.php?option=com_proclaim&view=cwmassets&task=cwmassets.checkassets&' .
                             Session::getFormToken() . '=1'
                         ); ?>"
-                           title="<?php
-                            echo Text::_('JBS_ADM_ASSET_CHECK'); ?>" class="btn"> <i
-                                    class="icon-big icon-list"> </i>
-                            <span><br/> <?php
-                                echo Text::_('JBS_ADM_ASSET_CHECK'); ?> </span></a>
-                        <a href="<?php
-                        echo Route::_('index.php?option=com_proclaim&view=cwmbackup'); ?>"
-                           title="<?php
-                            echo Text::_('JBS_ADM_BACKUP_RESTORE'); ?>" class="btn"> <i
-                                    class="icon-big icon-database"></i>
-                            <span><br/> <?php
-                                echo Text::_('JBS_ADM_BACKUP_RESTORE'); ?> </span></a>
-                        <a href="<?php
-                        echo Route::_('index.php?option=com_proclaim&view=cwmarchive'); ?>"
-                           title="<?php
-                            echo Text::_('JBS_ADM_ARCHIVE'); ?>" class="btn"> <i
-                                    class="icon-archive icon-big"></i>
-                            <span><br/> <?php
-                                echo Text::_('JBS_ADM_ARCHIVE'); ?> </span></a>
-                        <a href="<?php
-                        echo Route::_(
-                            'index.php?option=com_proclaim&view=cwmadmin&task=cwmadmin.aliasUpdate&' .
-                            Session::getFormToken() . '=1'
-                        ) ?>"
-                           title="<?php
-                            echo Text::_('JBS_ADM_RESET_ALIAS'); ?>" class="btn"> <i
-                                    class="icon-big icon-tree-2"></i>
-                            <span><br/> <?php
-                                echo Text::_('JBS_ADM_RESET_ALIAS'); ?> </span></a>
-                        <a href="<?php
-                        echo Route::_('index.php?option=com_installer&view=database'); ?>"
-                           title="<?php
-                            echo Text::_('JBS_ADM_DATABASE'); ?>" class="btn"> <i
-                                    class="icon-database icon-big"></i>
-                            <span><br/> <?php
-                                echo Text::_('JBS_ADM_DATABASE'); ?> </span></a>
+                           class="cwmadmin-action-card"
+                           title="<?php echo Text::_('JBS_ADM_ASSET_CHECK'); ?>">
+                            <i class="icon-list" aria-hidden="true"></i>
+                            <span><?php echo Text::_('JBS_ADM_ASSET_CHECK'); ?></span>
+                        </a>
+                        <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmbackup'); ?>"
+                           class="cwmadmin-action-card"
+                           title="<?php echo Text::_('JBS_ADM_BACKUP_RESTORE'); ?>">
+                            <i class="icon-database" aria-hidden="true"></i>
+                            <span><?php echo Text::_('JBS_ADM_BACKUP_RESTORE'); ?></span>
+                        </a>
+                        <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmarchive'); ?>"
+                           class="cwmadmin-action-card"
+                           title="<?php echo Text::_('JBS_ADM_ARCHIVE'); ?>">
+                            <i class="icon-archive" aria-hidden="true"></i>
+                            <span><?php echo Text::_('JBS_ADM_ARCHIVE'); ?></span>
+                        </a>
+                        <button type="button"
+                           class="cwmadmin-action-card"
+                           id="btn-alias-update"
+                           title="<?php echo Text::_('JBS_ADM_RESET_ALIAS'); ?>">
+                            <i class="icon-tree-2" aria-hidden="true"></i>
+                            <span><?php echo Text::_('JBS_ADM_RESET_ALIAS'); ?></span>
+                        </button>
+                        <a href="<?php echo Route::_('index.php?option=com_installer&view=database'); ?>"
+                           class="cwmadmin-action-card"
+                           title="<?php echo Text::_('JBS_ADM_DATABASE'); ?>">
+                            <i class="icon-database" aria-hidden="true"></i>
+                            <span><?php echo Text::_('JBS_ADM_DATABASE'); ?></span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -662,100 +589,106 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'playersettings', Text::_('JBS_ADM_PLAYER_SETTINGS')); ?>
         <div class="row" id="playersettings">
-            <div class="col-4" style="border: ridge; padding: 10px">
-                <h3 class="tab-description"><?php
-                    echo Text::_('JBS_CMN_MEDIA_FILES'); ?></h3>
+            <div class="col-12 col-lg-4">
+                <div class="cwmadmin-panel">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_CMN_MEDIA_FILES'); ?></h3>
 
-                <div class="control-group">
-                    <?php
-                    echo Text::_('JBS_ADM_MEDIA_PLAYER_STAT'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->playerstats; ?>
+                    <div class="control-group">
+                        <label><?php echo Text::_('JBS_ADM_MEDIA_PLAYER_STAT'); ?></label>
+                        <div id="player-stats-container" class="cwmadmin-stats-container">
+                            <div class="cwmadmin-stats-loading">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <span><?php echo Text::_('JLIB_HTML_BEHAVIOR_LOADING'); ?></span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('from', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('from', 'params'); ?>
+                    <div class="control-group">
+                        <?php echo $this->form->getLabel('from', 'params'); ?>
+                        <div class="controls">
+                            <?php echo $this->form->getInput('from', 'params'); ?>
+                        </div>
                     </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('to', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('to', 'params'); ?>
+                    <div class="control-group">
+                        <?php echo $this->form->getLabel('to', 'params'); ?>
+                        <div class="controls">
+                            <?php echo $this->form->getInput('to', 'params'); ?>
+                        </div>
                     </div>
-                </div>
-                <div class="control-group">
-                    <button type="button" class="btn btn-primary" onclick="jQuery.submitbutton3(task)">
-                        <i class="icon-user icon-white"></i> <?php
-                        echo Text::_('JBS_CMN_SUBMIT'); ?>
-                    </button>
+                    <div class="control-group">
+                        <button type="button" class="btn btn-primary"
+                                data-player-tool="players"
+                                data-from-field="jform_params_from"
+                                data-to-field="jform_params_to"
+                                data-title="<?php echo Text::_('JBS_ADM_CHANGE_PLAYERS'); ?>">
+                            <i class="icon-cog icon-white" aria-hidden="true"></i>
+                            <?php echo Text::_('JBS_CMN_SUBMIT'); ?>
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="col-4" style="border: ridge; padding: 10px">
-                <h3 class="tab-description"><?php
-                    echo Text::_('JBS_ADM_POPUP_OPTIONS'); ?></h3>
+            <div class="col-12 col-lg-4">
+                <div class="cwmadmin-panel">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_POPUP_OPTIONS'); ?></h3>
 
-                <div class="control-group">
-                    <?php
-                    echo Text::_('JBS_ADM_MEDIA_PLAYER_POPUP_STAT'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->popups; ?>
+                    <div class="control-group">
+                        <label><?php echo Text::_('JBS_ADM_MEDIA_PLAYER_POPUP_STAT'); ?></label>
+                        <div id="popup-stats-container" class="cwmadmin-stats-container">
+                            <div class="cwmadmin-stats-loading">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <span><?php echo Text::_('JLIB_HTML_BEHAVIOR_LOADING'); ?></span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('pFrom', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('pFrom', 'params'); ?>
+                    <div class="control-group">
+                        <?php echo $this->form->getLabel('pFrom', 'params'); ?>
+                        <div class="controls">
+                            <?php echo $this->form->getInput('pFrom', 'params'); ?>
+                        </div>
                     </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('pTo', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('pTo', 'params'); ?>
+                    <div class="control-group">
+                        <?php echo $this->form->getLabel('pTo', 'params'); ?>
+                        <div class="controls">
+                            <?php echo $this->form->getInput('pTo', 'params'); ?>
+                        </div>
                     </div>
-                </div>
-                <div class="control-group">
-                    <button type="button" class="btn btn-primary" onclick="jQuery.submitbutton4(task)">
-                        <i class="icon-user icon-white"></i> <?php
-                        echo Text::_('JBS_CMN_SUBMIT'); ?>
-                    </button>
+                    <div class="control-group">
+                        <button type="button" class="btn btn-primary"
+                                data-player-tool="popups"
+                                data-from-field="jform_params_pFrom"
+                                data-to-field="jform_params_pTo"
+                                data-title="<?php echo Text::_('JBS_ADM_CHANGE_POPUP'); ?>">
+                            <i class="icon-cog icon-white" aria-hidden="true"></i>
+                            <?php echo Text::_('JBS_CMN_SUBMIT'); ?>
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="col-4" style="border: ridge; padding: 10px">
-                <h3 class="tab-description"><?php
-                    echo Text::_('JBS_ADM_MEDIATYPES_OPTIONS'); ?></h3>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('mtFrom', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('mtFrom', 'params'); ?>
+            <div class="col-12 col-lg-4">
+                <div class="cwmadmin-panel">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_MEDIATYPES_OPTIONS'); ?></h3>
+
+                    <div class="control-group">
+                        <?php echo $this->form->getLabel('mtFrom', 'params'); ?>
+                        <div class="controls">
+                            <?php echo $this->form->getInput('mtFrom', 'params'); ?>
+                        </div>
                     </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('mtTo', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('mtTo', 'params'); ?>
+                    <div class="control-group">
+                        <?php echo $this->form->getLabel('mtTo', 'params'); ?>
+                        <div class="controls">
+                            <?php echo $this->form->getInput('mtTo', 'params'); ?>
+                        </div>
                     </div>
-                </div>
-                <div class="control-group">
-                    <button type="button" class="btn btn-primary" onclick="jQuery.submitbutton6(task)">
-                        <i class="icon-user icon-white"></i> <?php
-                        echo Text::_('JBS_CMN_SUBMIT'); ?>
-                    </button>
+                    <div class="control-group">
+                        <button type="button" class="btn btn-primary"
+                                data-player-tool="playerbymediatype"
+                                data-from-field="jform_params_mtFrom"
+                                data-to-field="jform_params_mtTo"
+                                data-title="<?php echo Text::_('JBS_ADM_MEDIATYPES_OPTIONS'); ?>">
+                            <i class="icon-cog icon-white" aria-hidden="true"></i>
+                            <?php echo Text::_('JBS_CMN_SUBMIT'); ?>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -763,30 +696,63 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
         echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'convert', Text::_('JBS_IBM_CONVERT')); ?>
+        echo HTMLHelper::_('uitab.addTab', 'myTab', 'convert', Text::_('JBS_IBM_CONVERT'));
+        // Check if SermonSpeaker or PreachIt is installed
+        $ssInstalled = strpos($this->ss, 'href=') !== false;
+        $piInstalled = strpos($this->pi, 'href=') !== false;
+        ?>
         <div class="row" id="convert">
-            <h4><?php
-                echo Text::_('JBS_IBM_CONVERT'); ?></h4>
-            <a href="<?php
-            echo Route::_(
-                'index.php?option=com_proclaim&view=assets&task=cwmadmin.convertSermonSpeaker&' .
-                Session::getFormToken() . '=1'
-            ); ?>"
-               title="<?php
-                echo Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER'); ?>" class="btn"> <i
-                        class="icon-big icon-book"> </i>
-                <span><br/> <?php
-                    echo Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER'); ?> </span></a>
-            <a href="<?php
-            echo Route::_(
-                'index.php?option=com_proclaim&view=assets&task=cwmadmin.convertPreachIt&' .
-                Session::getFormToken() . '=1'
-            ); ?>"
-               title="<?php
-                echo Text::_('JBS_ADM_PREACHIT'); ?>" class="btn"> <i
-                        class="icon-big icon-list"> </i>
-                <span><br/> <?php
-                    echo Text::_('JBS_ADM_PREACHIT'); ?> </span></a>
+            <div class="col-12">
+                <h4><?php echo Text::_('JBS_IBM_CONVERT'); ?></h4>
+                <p class="text-muted"><?php echo Text::_('JBS_IBM_CONVERT_DESC'); ?></p>
+
+                <?php if (!$ssInstalled && !$piInstalled) : ?>
+                    <div class="alert alert-info">
+                        <i class="icon-info-circle me-2" aria-hidden="true"></i>
+                        <?php echo Text::_('JBS_IBM_NO_CONVERSION_AVAILABLE'); ?>
+                    </div>
+                <?php else : ?>
+                    <div class="cwmadmin-dashboard-cards" style="max-width: 400px;">
+                        <?php if ($ssInstalled) : ?>
+                            <a href="<?php
+                            echo Route::_(
+                                'index.php?option=com_proclaim&view=assets&task=cwmadmin.convertSermonSpeaker&' .
+                                Session::getFormToken() . '=1'
+                            ); ?>"
+                               class="cwmadmin-action-card"
+                               title="<?php echo Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER'); ?>">
+                                <i class="icon-book" aria-hidden="true"></i>
+                                <span><?php echo Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER'); ?></span>
+                            </a>
+                        <?php else : ?>
+                            <div class="cwmadmin-action-card disabled" title="<?php echo Text::_('JBS_IBM_NO_SERMON_SPEAKER_FOUND'); ?>">
+                                <i class="icon-book text-muted" aria-hidden="true"></i>
+                                <span class="text-muted"><?php echo Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER'); ?></span>
+                                <small class="text-danger d-block mt-1"><?php echo Text::_('JBS_IBM_NOT_INSTALLED'); ?></small>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if ($piInstalled) : ?>
+                            <a href="<?php
+                            echo Route::_(
+                                'index.php?option=com_proclaim&view=assets&task=cwmadmin.convertPreachIt&' .
+                                Session::getFormToken() . '=1'
+                            ); ?>"
+                               class="cwmadmin-action-card"
+                               title="<?php echo Text::_('JBS_IBM_CONVERT_PREACH_IT'); ?>">
+                                <i class="icon-list" aria-hidden="true"></i>
+                                <span><?php echo Text::_('JBS_IBM_CONVERT_PREACH_IT'); ?></span>
+                            </a>
+                        <?php else : ?>
+                            <div class="cwmadmin-action-card disabled" title="<?php echo Text::_('JBS_IBM_NO_PREACHIT_FOUND'); ?>">
+                                <i class="icon-list text-muted" aria-hidden="true"></i>
+                                <span class="text-muted"><?php echo Text::_('JBS_IBM_CONVERT_PREACH_IT'); ?></span>
+                                <small class="text-danger d-block mt-1"><?php echo Text::_('JBS_IBM_NOT_INSTALLED'); ?></small>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
@@ -803,17 +769,17 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                     <div class="card-body">
                         <p><?php echo Text::_('JBS_ADM_IMAGE_MIGRATION_DESC'); ?></p>
                         <div id="migration-counts" class="mb-3">
-                            <span class="spinner-border spinner-border-sm" role="status"></span>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             <?php echo Text::_('JBS_ADM_LOADING'); ?>
                         </div>
                         <div id="migration-progress" class="mb-3" style="display:none;">
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar" style="width: 0%"></div>
                             </div>
                             <div class="mt-2" id="migration-status"></div>
                         </div>
                         <button type="button" class="btn btn-primary" id="btn-start-migration" disabled>
-                            <i class="icon-refresh"></i> <?php echo Text::_('JBS_ADM_START_MIGRATION'); ?>
+                            <i class="icon-refresh" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_START_MIGRATION'); ?>
                         </button>
                     </div>
                 </div>
@@ -829,15 +795,15 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                         <p><?php echo Text::_('JBS_ADM_ORPHAN_CLEANUP_DESC'); ?></p>
                         <div id="orphan-status" class="mb-3">
                             <button type="button" class="btn btn-secondary" id="btn-scan-orphans">
-                                <i class="icon-search"></i> <?php echo Text::_('JBS_ADM_SCAN_ORPHANS'); ?>
+                                <i class="icon-search" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_SCAN_ORPHANS'); ?>
                             </button>
                         </div>
                         <div id="orphan-results" class="mb-3" style="display:none;">
                             <div class="alert alert-info" id="orphan-summary"></div>
-                            <div id="orphan-list" class="table-responsive" style="max-height: 300px; overflow-y: auto;"></div>
+                            <div id="orphan-list" class="cwmadmin-orphan-list table-responsive"></div>
                         </div>
                         <button type="button" class="btn btn-danger" id="btn-delete-orphans" style="display:none;">
-                            <i class="icon-trash"></i> <?php echo Text::_('JBS_ADM_DELETE_SELECTED'); ?>
+                            <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_DELETE_SELECTED'); ?>
                         </button>
                     </div>
                 </div>
@@ -951,13 +917,13 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
             document.getElementById('btn-scan-orphans').addEventListener('click', function() {
                 var btn = this;
                 btn.disabled = true;
-                btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> <?php echo Text::_('JBS_ADM_SCANNING'); ?>';
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> <?php echo Text::_('JBS_ADM_SCANNING'); ?>';
 
                 fetch('index.php?option=com_proclaim&task=cwmadmin.getOrphanedFoldersXHR&' + token + '=1')
                     .then(response => response.json())
                     .then(data => {
                         btn.disabled = false;
-                        btn.innerHTML = '<i class="icon-search"></i> <?php echo Text::_('JBS_ADM_SCAN_ORPHANS'); ?>';
+                        btn.innerHTML = '<i class="icon-search" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_SCAN_ORPHANS'); ?>';
 
                         document.getElementById('orphan-results').style.display = 'block';
                         document.getElementById('orphan-summary').innerHTML =
@@ -965,13 +931,13 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
 
                         if (data.totals.folders > 0) {
                             var tableHtml = '<table class="table table-sm table-striped">' +
-                                '<thead><tr><th><input type="checkbox" id="select-all-orphans"></th><th><?php echo Text::_('JBS_ADM_FOLDER'); ?></th><th><?php echo Text::_('JBS_ADM_FILES'); ?></th><th><?php echo Text::_('JBS_ADM_SIZE'); ?></th></tr></thead><tbody>';
+                                '<thead><tr><th><input type="checkbox" id="select-all-orphans" aria-label="<?php echo Text::_('JBS_ADM_SELECT_ALL'); ?>"></th><th><?php echo Text::_('JBS_ADM_FOLDER'); ?></th><th><?php echo Text::_('JBS_ADM_FILES'); ?></th><th><?php echo Text::_('JBS_ADM_SIZE'); ?></th></tr></thead><tbody>';
 
                             ['studies', 'teachers', 'series'].forEach(function(type) {
                                 if (data.orphans[type] && data.orphans[type].length > 0) {
                                     data.orphans[type].forEach(function(orphan) {
                                         tableHtml += '<tr>' +
-                                            '<td><input type="checkbox" class="orphan-checkbox" value="' + orphan.path + '"></td>' +
+                                            '<td><input type="checkbox" class="orphan-checkbox" value="' + orphan.path + '" aria-label="' + orphan.path + '"></td>' +
                                             '<td><small>' + orphan.path + '</small></td>' +
                                             '<td>' + orphan.files + '</td>' +
                                             '<td>' + formatBytes(orphan.size) + '</td>' +
@@ -997,7 +963,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                     })
                     .catch(error => {
                         btn.disabled = false;
-                        btn.innerHTML = '<i class="icon-search"></i> <?php echo Text::_('JBS_ADM_SCAN_ORPHANS'); ?>';
+                        btn.innerHTML = '<i class="icon-search" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_SCAN_ORPHANS'); ?>';
                         alert('<?php echo Text::_('JBS_ADM_ERROR_SCANNING'); ?>');
                     });
             });
