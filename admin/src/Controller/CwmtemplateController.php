@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Model\CwmtemplateModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
@@ -58,60 +57,6 @@ class CwmtemplateController extends FormController
         }
 
         $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $msg, $type);
-    }
-
-    /**
-     * Make Template Default
-     *
-     * @return void
-     *
-     * @throws \Exception
-     * @since 7.0
-     */
-    public function makeDefault(): void
-    {
-        $app   = Factory::getApplication();
-        $input = $app->input;
-        $cid   = $input->get('cid', [0], 'array');
-
-        if (!\is_array($cid) || \count($cid) < 1) {
-            $app->enqueueMessage(Text::_('JBS_CMN_SELECT_ITEM_UNPUBLISH'), 'error');
-        }
-
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates');
-    }
-
-    /**
-     * Get Template Settings
-     *
-     * @param   string  $template  filename
-     *
-     * @return bool|string
-     *
-     * @since      7.0
-     *
-     * @deprecated 8.0.0 Not used in scope bcc
-     */
-    public function getTemplate($template): bool|string
-    {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query->select('tc.id, tc.templatecode,tc.type,tc.filename');
-        $query->from('#__bsms_templatecode as tc');
-        $query->where('tc.filename ="' . $template . '"');
-        $db->setQuery($query);
-
-        if (!$object = $db->loadObject()) {
-            return false;
-        }
-
-        $templatereturn = '
-                        INSERT INTO `#__bsms_templatecode` SET `type` = ' . $db->q($object->type) . ',
-                        `templatecode` = ' . $db->q($object->templatecode) . ',
-                        `filename` = ' . $db->q($template) . ',
-                        `published` = ' . $db->q('1');
-
-        return $templatereturn;
     }
 
     /**
@@ -234,29 +179,14 @@ class CwmtemplateController extends FormController
                 $form->bind($item);
             }
 
-            // Create a simple object to act as view context for edit_layout.php
-            $viewContext       = new \stdClass();
-            $viewContext->form = $form;
-            $viewContext->item = $item ?: (object) ['id' => 0, 'params' => '{}'];
-
             // Capture output from edit_layout.php
             ob_start();
 
-            // Make $this available in the included file by using extract
             // edit_layout.php expects: $this->form, $this->item, $this->getDocument()
             $layoutFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/tmpl/cwmtemplate/edit_layout.php';
 
             if (file_exists($layoutFile)) {
-                // Create a closure to provide the expected context
-                $renderLayout = function ($filePath, $form, $item) use ($app) {
-                    // Provide the variables that edit_layout.php expects
-                    $this->form = $form;
-                    $this->item = $item;
-
-                    include $filePath;
-                };
-
-                // Bind to an anonymous class that provides getDocument()
+                // Bind to an anonymous class that provides the expected context
                 $context = new class ($app, $form, $item) {
                     public $form;
                     public $item;
@@ -297,7 +227,7 @@ class CwmtemplateController extends FormController
     /**
      * Method to run batch operations.
      *
-     * @param   CwmtemplateModel  $model  The model.
+     * @param   object|null  $model  The model.
      *
      * @return  bool     True if successful, false otherwise and internal error is set.
      *
