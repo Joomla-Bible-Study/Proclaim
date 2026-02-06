@@ -57,6 +57,13 @@ Text::script('JCLOSE');
 $maxSize = HTMLHelper::_('number.bytes', Utility::getMaxUploadSize());
 ?>
 
+<!-- Skip Navigation Link (WCAG 2.4.1 AAA) -->
+<a href="#main-content" class="visually-hidden-focusable skip-link position-absolute p-3 bg-primary text-white" style="z-index: 1050; top: 0; left: 0;">
+    <?php echo Text::_('JBS_CMN_SKIP_TO_CONTENT'); ?>
+</a>
+
+<main id="main-content" role="main" aria-label="<?php echo Text::_('JBS_IBM_WELCOME_TITLE'); ?>">
+
 <!-- Welcome Section -->
 <section aria-label="<?php echo Text::_('JBS_IBM_WELCOME_TITLE'); ?>" class="card border-primary mb-4">
     <div class="card-body py-3">
@@ -236,5 +243,7 @@ $maxSize = HTMLHelper::_('number.bytes', Utility::getMaxUploadSize());
         </section>
     </div>
 </div>
+
+</main>
 
 <?php echo HTMLHelper::_('form.token'); ?>

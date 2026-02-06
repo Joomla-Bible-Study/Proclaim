@@ -23,6 +23,8 @@
         this.detailText = null;
         this.cancelBtn = null;
         this.closeBtn = null;
+        this.liveRegion = null;
+        this.triggerElement = null;
         this.isCancelled = false;
         this.token = Joomla.getOptions('csrf.token') || document.querySelector('input[name^="' + Joomla.getOptions('csrf.token', '') + '"]')?.name || '';
       }
@@ -39,6 +41,18 @@
        * Create the progress modal
        */
       createModal() {
+        // Create live region for screen reader announcements (WCAG 4.1.3)
+        if (!document.getElementById('proclaim-live-region')) {
+          const liveRegion = document.createElement('div');
+          liveRegion.id = 'proclaim-live-region';
+          liveRegion.className = 'visually-hidden';
+          liveRegion.setAttribute('aria-live', 'polite');
+          liveRegion.setAttribute('aria-atomic', 'true');
+          liveRegion.setAttribute('role', 'status');
+          document.body.appendChild(liveRegion);
+        }
+        this.liveRegion = document.getElementById('proclaim-live-region');
+
         // Check if modal already exists
         if (document.getElementById('proclaim-backup-modal')) {
           this.modal = document.getElementById('proclaim-backup-modal');
@@ -51,33 +65,33 @@
         }
 
         const modalHtml = `
-        <div class="modal fade" id="proclaim-backup-modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal fade" id="proclaim-backup-modal" tabindex="-1" aria-hidden="true" aria-labelledby="proclaim-modal-title" aria-describedby="proclaim-modal-status" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">
-                  <i class="fas fa-database me-2"></i>
+                <h5 class="modal-title" id="proclaim-modal-title">
+                  <i class="fas fa-database me-2" aria-hidden="true"></i>
                   <span class="title-text">${Joomla.Text._('JBS_IBM_PROCESSING')}</span>
                 </h5>
               </div>
-              <div class="modal-body">
+              <div class="modal-body" id="proclaim-modal-status">
                 <div class="text-center mb-3">
-                  <div class="spinner-border text-primary operation-spinner" role="status">
-                    <span class="visually-hidden">Loading...</span>
+                  <div class="spinner-border text-primary operation-spinner" role="status" aria-label="${Joomla.Text._('JBS_IBM_PROCESSING')}">
+                    <span class="visually-hidden">${Joomla.Text._('JBS_IBM_PROCESSING')}</span>
                   </div>
                 </div>
-                <p class="status-text text-center fw-bold mb-2"></p>
-                <div class="progress mb-3" style="height: 25px;">
-                  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%">0%</div>
+                <p class="status-text text-center fw-bold mb-2" aria-live="polite"></p>
+                <div class="progress mb-3" style="height: 25px;" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="${Joomla.Text._('JBS_IBM_PROCESSING')}">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%">0%</div>
                 </div>
-                <p class="detail-text text-muted small text-center mb-0"></p>
+                <p class="detail-text text-muted small text-center mb-0" aria-live="polite"></p>
               </div>
               <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-danger btn-cancel">
-                  <i class="fas fa-times me-1"></i>${Joomla.Text._('JCANCEL')}
+                <button type="button" class="btn btn-danger btn-cancel" aria-label="${Joomla.Text._('JCANCEL')}">
+                  <i class="fas fa-times me-1" aria-hidden="true"></i>${Joomla.Text._('JCANCEL')}
                 </button>
-                <button type="button" class="btn btn-success btn-close-modal" style="display: none;">
-                  <i class="fas fa-check me-1"></i>${Joomla.Text._('JCLOSE')}
+                <button type="button" class="btn btn-success btn-close-modal" style="display: none;" aria-label="${Joomla.Text._('JCLOSE')}">
+                  <i class="fas fa-check me-1" aria-hidden="true"></i>${Joomla.Text._('JCLOSE')}
                 </button>
               </div>
             </div>
@@ -98,20 +112,22 @@
        * Bind event listeners
        */
       bindEvents() {
-        // Export buttons
+        // Export buttons - store trigger element for focus management (WCAG 2.4.3)
         document.querySelectorAll('[data-proclaim-export]').forEach(btn => {
           btn.addEventListener('click', (e) => {
             e.preventDefault();
+            this.triggerElement = btn;
             const mode = btn.dataset.proclaimExport; // 'download' or 'save'
             this.startExport(mode);
           });
         });
 
-        // Import form
+        // Import form - store trigger element for focus management
         const importForm = document.getElementById('proclaim-import-form');
         if (importForm) {
           importForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            this.triggerElement = importForm.querySelector('button[type="submit"]');
             this.startImport();
           });
         }
@@ -120,6 +136,7 @@
         if (this.cancelBtn) {
           this.cancelBtn.addEventListener('click', () => {
             this.isCancelled = true;
+            this.announceToScreenReader(Joomla.Text._('JCANCEL'));
             this.hideModal();
           });
         }
@@ -132,15 +149,38 @@
             window.location.reload();
           });
         }
+
+        // Return focus to trigger element when modal closes (WCAG 2.4.3)
+        if (this.modal) {
+          this.modal.addEventListener('hidden.bs.modal', () => {
+            if (this.triggerElement && document.body.contains(this.triggerElement)) {
+              this.triggerElement.focus();
+            }
+          });
+        }
       }
 
       /**
-       * Show the progress modal
+       * Announce message to screen readers via live region (WCAG 4.1.3)
+       */
+      announceToScreenReader(message) {
+        if (this.liveRegion && message) {
+          // Clear and set to trigger announcement
+          this.liveRegion.textContent = '';
+          setTimeout(() => {
+            this.liveRegion.textContent = message;
+          }, 50);
+        }
+      }
+
+      /**
+       * Show the progress modal with accessibility support
        */
       showModal(title) {
         this.isCancelled = false;
         this.modal.querySelector('.title-text').textContent = title;
         this.modal.querySelector('.operation-spinner').style.display = 'inline-block';
+        this.modal.querySelector('.operation-spinner').setAttribute('aria-label', title);
         this.progressBar.style.width = '0%';
         this.progressBar.textContent = '0%';
         this.progressBar.classList.remove('bg-success', 'bg-danger');
@@ -150,8 +190,18 @@
         this.cancelBtn.style.display = 'inline-block';
         this.closeBtn.style.display = 'none';
 
+        // Reset progress bar ARIA attributes
+        const progressContainer = this.progressBar.parentElement;
+        if (progressContainer) {
+          progressContainer.setAttribute('aria-valuenow', '0');
+          progressContainer.setAttribute('aria-label', title);
+        }
+
         const bsModal = new bootstrap.Modal(this.modal);
         bsModal.show();
+
+        // Announce to screen readers (WCAG 4.1.3)
+        this.announceToScreenReader(title);
       }
 
       /**
@@ -165,27 +215,58 @@
       }
 
       /**
-       * Update progress display
+       * Update progress display with accessibility support
        */
       updateProgress(percent, status, detail) {
+        const roundedPercent = Math.round(percent);
         this.progressBar.style.width = `${percent}%`;
-        this.progressBar.textContent = `${Math.round(percent)}%`;
+        this.progressBar.textContent = `${roundedPercent}%`;
+
+        // Update ARIA attributes for progress bar (WCAG 4.1.2)
+        const progressContainer = this.progressBar.parentElement;
+        if (progressContainer) {
+          progressContainer.setAttribute('aria-valuenow', roundedPercent);
+        }
+
         if (status) this.statusText.textContent = status;
         if (detail) this.detailText.textContent = detail;
+
+        // Announce significant updates to screen readers (every 25% or status change)
+        if (status && (roundedPercent % 25 === 0 || roundedPercent === 100)) {
+          const announcement = detail ? `${status}: ${detail}` : status;
+          this.announceToScreenReader(announcement);
+        }
       }
 
       /**
-       * Show completion state
+       * Show completion state with accessibility support
        */
       showComplete(success, message) {
         this.modal.querySelector('.operation-spinner').style.display = 'none';
         this.progressBar.classList.remove('progress-bar-animated');
         this.progressBar.classList.add(success ? 'bg-success' : 'bg-danger');
         this.progressBar.style.width = '100%';
-        this.progressBar.textContent = success ? Joomla.Text._('JBS_IBM_COMPLETE') : Joomla.Text._('JBS_IBM_FAILED');
+
+        const statusLabel = success ? Joomla.Text._('JBS_IBM_COMPLETE') : Joomla.Text._('JBS_IBM_FAILED');
+        this.progressBar.textContent = statusLabel;
         this.statusText.textContent = message;
+
+        // Update ARIA for completion state
+        const progressContainer = this.progressBar.parentElement;
+        if (progressContainer) {
+          progressContainer.setAttribute('aria-valuenow', '100');
+          progressContainer.setAttribute('aria-label', statusLabel);
+        }
+
         this.cancelBtn.style.display = 'none';
         this.closeBtn.style.display = 'inline-block';
+
+        // Announce completion to screen readers (WCAG 4.1.3)
+        const announcement = `${statusLabel}: ${message}`;
+        this.announceToScreenReader(announcement);
+
+        // Move focus to close button for keyboard users (WCAG 2.4.3)
+        this.closeBtn.focus();
       }
 
       /**
