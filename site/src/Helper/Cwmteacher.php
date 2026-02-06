@@ -58,8 +58,8 @@ class Cwmteacher extends Cwmlisting
             $database = Factory::getContainer()->get('DatabaseDriver');
             $query    = $database->getQuery(true);
             $query->select('*')
-                ->from('#__bsms_teachers')
-                ->where('id IN (' . implode(',', array_map('intval', $teacherIDs)) . ')');
+                ->from($database->quoteName('#__bsms_teachers'))
+                ->where($database->quoteName('id') . ' IN (' . implode(',', array_map('intval', $teacherIDs)) . ')');
             $database->setQuery($query);
             $results = $database->loadObjectList();
 

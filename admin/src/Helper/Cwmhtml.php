@@ -216,9 +216,9 @@ class Cwmhtml
         $db      = Factory::getContainer()->get('DatabaseDriver');
         $query   = $db->getQuery(true);
 
-        $query->select('id As value, teachername As text');
-        $query->from('#__bsms_teachers AS a');
-        $query->order('a.teachername ASC');
+        $query->select($db->qn('id', 'value') . ', ' . $db->qn('teachername', 'text'));
+        $query->from($db->qn('#__bsms_teachers', 'a'));
+        $query->order($db->qn('a.teachername') . ' ASC');
 
         // Get the options.
         $db->setQuery($query);
@@ -273,9 +273,9 @@ class Cwmhtml
         $db      = Factory::getContainer()->get('DatabaseDriver');
         $query   = $db->getQuery(true);
 
-        $query->select('id As value, message_type As text');
-        $query->from('#__bsms_message_type AS a');
-        $query->order('a.message_type ASC');
+        $query->select($db->qn('id', 'value') . ', ' . $db->qn('message_type', 'text'));
+        $query->from($db->qn('#__bsms_message_type', 'a'));
+        $query->order($db->qn('a.message_type') . ' ASC');
 
         // Get the options.
         $db->setQuery($query);
@@ -330,9 +330,9 @@ class Cwmhtml
         $db      = Factory::getContainer()->get('DatabaseDriver');
         $query   = $db->getQuery(true);
 
-        $query->select('id As value, series_text As text');
-        $query->from('#__bsms_series AS a');
-        $query->order('a.series_text ASC');
+        $query->select($db->qn('id', 'value') . ', ' . $db->qn('series_text', 'text'));
+        $query->from($db->qn('#__bsms_series', 'a'));
+        $query->order($db->qn('a.series_text') . ' ASC');
 
         // Get the options.
         $db->setQuery($query);

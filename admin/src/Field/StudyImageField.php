@@ -49,7 +49,7 @@ class StudyImageField extends MediaField
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query->select('*')
-            ->from('#__extensions')
+            ->from($db->qn('#__extensions'))
             ->where($db->qn('name') . ' = ' . $db->q('plg_filesystem_local'));
         $db->setQuery($query);
         $local   = $db->loadObject();
@@ -67,7 +67,7 @@ class StudyImageField extends MediaField
             }
 
             $query = $db->getQuery(true);
-            $query->update('#__extensions')
+            $query->update($db->qn('#__extensions'))
                 ->set($db->qn('params') . ' = ' . $db->q($newmedia))
                 ->where($db->qn('name') . ' = ' . $db->q('plg_filesystem_local'));
             $db->setQuery($query);

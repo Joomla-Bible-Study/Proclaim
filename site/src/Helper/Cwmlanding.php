@@ -448,71 +448,136 @@ class Cwmlanding
 
         switch ($type) {
             case 'teachers':
-                $query->select('DISTINCT a.id, a.teachername as text, a.landing_show, ' . $null . ' as params, ' . $this->db->quote('teachers') . ' as type')
-                    ->from('#__bsms_teachers a')
-                    ->innerJoin('#__bsms_studies b ON a.id = b.teacher_id')
-                    ->where('b.language IN (' . $language . ')')
-                    ->where('a.published = 1')
-                    ->where('a.landing_show > 0');
+                $query->select(
+                    'DISTINCT ' . $this->db->quoteName('a.id') . ', '
+                    . $this->db->quoteName('a.teachername', 'text') . ', '
+                    . $this->db->quoteName('a.landing_show') . ', '
+                    . $null . ' AS ' . $this->db->quoteName('params') . ', '
+                    . $this->db->quote('teachers') . ' AS ' . $this->db->quoteName('type')
+                )
+                    ->from($this->db->quoteName('#__bsms_teachers', 'a'))
+                    ->innerJoin(
+                        $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                        . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.teacher_id')
+                    )
+                    ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                    ->where($this->db->quoteName('a.published') . ' = 1')
+                    ->where($this->db->quoteName('a.landing_show') . ' > 0');
                 $this->addAccessFilter($query);
                 break;
 
             case 'series':
-                $query->select('DISTINCT a.id, a.series_text as text, a.landing_show, ' . $null . ' as params, ' . $this->db->quote('series') . ' as type')
-                    ->from('#__bsms_series a')
-                    ->innerJoin('#__bsms_studies b ON a.id = b.series_id')
-                    ->where('b.language IN (' . $language . ')')
-                    ->where('b.published = 1');
+                $query->select(
+                    'DISTINCT ' . $this->db->quoteName('a.id') . ', '
+                    . $this->db->quoteName('a.series_text', 'text') . ', '
+                    . $this->db->quoteName('a.landing_show') . ', '
+                    . $null . ' AS ' . $this->db->quoteName('params') . ', '
+                    . $this->db->quote('series') . ' AS ' . $this->db->quoteName('type')
+                )
+                    ->from($this->db->quoteName('#__bsms_series', 'a'))
+                    ->innerJoin(
+                        $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                        . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.series_id')
+                    )
+                    ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                    ->where($this->db->quoteName('b.published') . ' = 1');
                 $this->addAccessFilter($query);
                 break;
 
             case 'locations':
-                $query->select('DISTINCT a.id, a.location_text as text, a.landing_show, ' . $null . ' as params, ' . $this->db->quote('locations') . ' as type')
-                    ->from('#__bsms_locations a')
-                    ->innerJoin('#__bsms_studies b ON a.id = b.location_id')
-                    ->where('b.location_id > 0')
-                    ->where('a.published = 1')
-                    ->where('b.published = 1')
-                    ->where('b.language IN (' . $language . ')')
-                    ->where('a.landing_show > 0');
+                $query->select(
+                    'DISTINCT ' . $this->db->quoteName('a.id') . ', '
+                    . $this->db->quoteName('a.location_text', 'text') . ', '
+                    . $this->db->quoteName('a.landing_show') . ', '
+                    . $null . ' AS ' . $this->db->quoteName('params') . ', '
+                    . $this->db->quote('locations') . ' AS ' . $this->db->quoteName('type')
+                )
+                    ->from($this->db->quoteName('#__bsms_locations', 'a'))
+                    ->innerJoin(
+                        $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                        . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.location_id')
+                    )
+                    ->where($this->db->quoteName('b.location_id') . ' > 0')
+                    ->where($this->db->quoteName('a.published') . ' = 1')
+                    ->where($this->db->quoteName('b.published') . ' = 1')
+                    ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                    ->where($this->db->quoteName('a.landing_show') . ' > 0');
                 $this->addAccessFilter($query);
                 break;
 
             case 'messagetypes':
-                $query->select('DISTINCT a.id, a.message_type as text, a.landing_show, ' . $null . ' as params, ' . $this->db->quote('messagetypes') . ' as type')
-                    ->from('#__bsms_message_type a')
-                    ->innerJoin('#__bsms_studies b ON a.id = b.messagetype')
-                    ->where('b.language IN (' . $language . ')')
-                    ->where('b.published = 1')
-                    ->where('a.landing_show > 0');
+                $query->select(
+                    'DISTINCT ' . $this->db->quoteName('a.id') . ', '
+                    . $this->db->quoteName('a.message_type', 'text') . ', '
+                    . $this->db->quoteName('a.landing_show') . ', '
+                    . $null . ' AS ' . $this->db->quoteName('params') . ', '
+                    . $this->db->quote('messagetypes') . ' AS ' . $this->db->quoteName('type')
+                )
+                    ->from($this->db->quoteName('#__bsms_message_type', 'a'))
+                    ->innerJoin(
+                        $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                        . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.messagetype')
+                    )
+                    ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                    ->where($this->db->quoteName('b.published') . ' = 1')
+                    ->where($this->db->quoteName('a.landing_show') . ' > 0');
                 $this->addAccessFilter($query);
                 break;
 
             case 'topics':
-                $query->select('DISTINCT a.id, a.topic_text as text, 0 as landing_show, a.params as params, ' . $this->db->quote('topics') . ' as type')
-                    ->from('#__bsms_studies b')
-                    ->join('LEFT', '#__bsms_studytopics st ON b.id = st.study_id')
-                    ->join('LEFT', '#__bsms_topics a ON a.id = st.topic_id')
-                    ->where('a.published = 1')
-                    ->where('b.published = 1')
-                    ->where('b.language IN (' . $language . ')');
+                $query->select(
+                    'DISTINCT ' . $this->db->quoteName('a.id') . ', '
+                    . $this->db->quoteName('a.topic_text', 'text') . ', '
+                    . '0 AS ' . $this->db->quoteName('landing_show') . ', '
+                    . $this->db->quoteName('a.params', 'params') . ', '
+                    . $this->db->quote('topics') . ' AS ' . $this->db->quoteName('type')
+                )
+                    ->from($this->db->quoteName('#__bsms_studies', 'b'))
+                    ->join(
+                        'LEFT',
+                        $this->db->quoteName('#__bsms_studytopics', 'st') . ' ON '
+                        . $this->db->quoteName('b.id') . ' = ' . $this->db->quoteName('st.study_id')
+                    )
+                    ->join(
+                        'LEFT',
+                        $this->db->quoteName('#__bsms_topics', 'a') . ' ON '
+                        . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('st.topic_id')
+                    )
+                    ->where($this->db->quoteName('a.published') . ' = 1')
+                    ->where($this->db->quoteName('b.published') . ' = 1')
+                    ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')');
                 $this->addAccessFilter($query, 'b.access');
                 break;
 
             case 'books':
-                $query->select('DISTINCT a.booknumber as id, a.bookname as text, 0 as landing_show, ' . $null . ' as params, ' . $this->db->quote('books') . ' as type')
-                    ->from('#__bsms_books a')
-                    ->innerJoin('#__bsms_studies b ON a.booknumber = b.booknumber')
-                    ->where('b.language IN (' . $language . ')')
-                    ->where('b.published = 1');
+                $query->select(
+                    'DISTINCT ' . $this->db->quoteName('a.booknumber', 'id') . ', '
+                    . $this->db->quoteName('a.bookname', 'text') . ', '
+                    . '0 AS ' . $this->db->quoteName('landing_show') . ', '
+                    . $null . ' AS ' . $this->db->quoteName('params') . ', '
+                    . $this->db->quote('books') . ' AS ' . $this->db->quoteName('type')
+                )
+                    ->from($this->db->quoteName('#__bsms_books', 'a'))
+                    ->innerJoin(
+                        $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                        . $this->db->quoteName('a.booknumber') . ' = ' . $this->db->quoteName('b.booknumber')
+                    )
+                    ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                    ->where($this->db->quoteName('b.published') . ' = 1');
                 $this->addAccessFilter($query);
                 break;
 
             case 'years':
-                $query->select('DISTINCT YEAR(b.studydate) as id, YEAR(b.studydate) as text, 0 as landing_show, ' . $null . ' as params, ' . $this->db->quote('years') . ' as type')
-                    ->from('#__bsms_studies b')
-                    ->where('b.language IN (' . $language . ')')
-                    ->where('b.published = 1');
+                $query->select(
+                    'DISTINCT YEAR(' . $this->db->quoteName('b.studydate') . ') AS ' . $this->db->quoteName('id') . ', '
+                    . 'YEAR(' . $this->db->quoteName('b.studydate') . ') AS ' . $this->db->quoteName('text') . ', '
+                    . '0 AS ' . $this->db->quoteName('landing_show') . ', '
+                    . $null . ' AS ' . $this->db->quoteName('params') . ', '
+                    . $this->db->quote('years') . ' AS ' . $this->db->quoteName('type')
+                )
+                    ->from($this->db->quoteName('#__bsms_studies', 'b'))
+                    ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                    ->where($this->db->quoteName('b.published') . ' = 1');
                 $this->addAccessFilter($query, 'b.access');
                 break;
 
@@ -548,16 +613,19 @@ class Cwmlanding
             $language = $this->getLanguageFilter($params);
 
             $query = $this->db->getQuery(true);
-            $query->select('DISTINCT a.*')
-                ->from('#__bsms_locations a')
-                ->innerJoin('#__bsms_studies b ON a.id = b.location_id')
-                ->where('b.location_id > 0')
-                ->where('a.published = 1')
-                ->where('b.published = 1')
-                ->where('b.language IN (' . $language . ')')
-                ->where('a.landing_show > 0')
-                ->group('a.id')
-                ->order('a.location_text ' . $order);
+            $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
+                ->from($this->db->quoteName('#__bsms_locations', 'a'))
+                ->innerJoin(
+                    $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                    . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.location_id')
+                )
+                ->where($this->db->quoteName('b.location_id') . ' > 0')
+                ->where($this->db->quoteName('a.published') . ' = 1')
+                ->where($this->db->quoteName('b.published') . ' = 1')
+                ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                ->where($this->db->quoteName('a.landing_show') . ' > 0')
+                ->group($this->db->quoteName('a.id'))
+                ->order($this->db->quoteName('a.location_text') . ' ' . $order);
 
             $this->addAccessFilter($query);
             $this->db->setQuery($query);
@@ -618,14 +686,17 @@ class Cwmlanding
             $language = $this->getLanguageFilter($params);
 
             $query = $this->db->getQuery(true);
-            $query->select('DISTINCT a.*')
-                ->from('#__bsms_teachers a')
-                ->innerJoin('#__bsms_studies b ON a.id = b.teacher_id')
-                ->where('b.language IN (' . $language . ')')
-                ->where('a.published = 1')
-                ->where('a.landing_show > 0')
-                ->group('a.id')
-                ->order('a.teachername ' . $order);
+            $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
+                ->from($this->db->quoteName('#__bsms_teachers', 'a'))
+                ->innerJoin(
+                    $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                    . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.teacher_id')
+                )
+                ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                ->where($this->db->quoteName('a.published') . ' = 1')
+                ->where($this->db->quoteName('a.landing_show') . ' > 0')
+                ->group($this->db->quoteName('a.id'))
+                ->order($this->db->quoteName('a.teachername') . ' ' . $order);
 
             $this->addAccessFilter($query);
             $this->db->setQuery($query);
@@ -707,13 +778,16 @@ class Cwmlanding
             $language = $this->getLanguageFilter($params);
 
             $query = $this->db->getQuery(true);
-            $query->select('DISTINCT a.*')
-                ->from('#__bsms_series a')
-                ->innerJoin('#__bsms_studies b ON a.id = b.series_id')
-                ->where('b.language IN (' . $language . ')')
-                ->where('b.published = 1')
-                ->group('a.id')
-                ->order('a.series_text ' . $order);
+            $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
+                ->from($this->db->quoteName('#__bsms_series', 'a'))
+                ->innerJoin(
+                    $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                    . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.series_id')
+                )
+                ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                ->where($this->db->quoteName('b.published') . ' = 1')
+                ->group($this->db->quoteName('a.id'))
+                ->order($this->db->quoteName('a.series_text') . ' ' . $order);
 
             $this->addAccessFilter($query);
             $this->db->setQuery($query);
@@ -773,12 +847,12 @@ class Cwmlanding
             $language = $this->getLanguageFilter($params);
 
             $query = $this->db->getQuery(true);
-            $query->select('DISTINCT YEAR(studydate) as theYear')
-                ->from('#__bsms_studies')
-                ->where('language IN (' . $language . ')')
-                ->where('published = 1')
-                ->group('YEAR(studydate)')
-                ->order('YEAR(studydate) ' . $order);
+            $query->select('DISTINCT YEAR(' . $this->db->quoteName('studydate') . ') AS ' . $this->db->quoteName('theYear'))
+                ->from($this->db->quoteName('#__bsms_studies'))
+                ->where($this->db->quoteName('language') . ' IN (' . $language . ')')
+                ->where($this->db->quoteName('published') . ' = 1')
+                ->group('YEAR(' . $this->db->quoteName('studydate') . ')')
+                ->order('YEAR(' . $this->db->quoteName('studydate') . ') ' . $order);
 
             $this->addAccessFilter($query, 'access');
             $this->db->setQuery($query);
@@ -826,15 +900,27 @@ class Cwmlanding
             $language = $this->getLanguageFilter($params);
 
             $query = $this->db->getQuery(true);
-            $query->select('DISTINCT #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params')
-                ->from('#__bsms_studies')
-                ->join('LEFT', '#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id')
-                ->join('LEFT', '#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id')
-                ->where('#__bsms_topics.published = 1')
-                ->where('#__bsms_studies.published = 1')
-                ->where('#__bsms_studies.language IN (' . $language . ')')
-                ->group('#__bsms_topics.id')
-                ->order('#__bsms_topics.topic_text ' . $order);
+            $query->select(
+                'DISTINCT ' . $this->db->quoteName('#__bsms_topics.id') . ', '
+                . $this->db->quoteName('#__bsms_topics.topic_text') . ', '
+                . $this->db->quoteName('#__bsms_topics.params', 'topic_params')
+            )
+                ->from($this->db->quoteName('#__bsms_studies'))
+                ->join(
+                    'LEFT',
+                    $this->db->quoteName('#__bsms_studytopics') . ' ON '
+                    . $this->db->quoteName('#__bsms_studies.id') . ' = ' . $this->db->quoteName('#__bsms_studytopics.study_id')
+                )
+                ->join(
+                    'LEFT',
+                    $this->db->quoteName('#__bsms_topics') . ' ON '
+                    . $this->db->quoteName('#__bsms_topics.id') . ' = ' . $this->db->quoteName('#__bsms_studytopics.topic_id')
+                )
+                ->where($this->db->quoteName('#__bsms_topics.published') . ' = 1')
+                ->where($this->db->quoteName('#__bsms_studies.published') . ' = 1')
+                ->where($this->db->quoteName('#__bsms_studies.language') . ' IN (' . $language . ')')
+                ->group($this->db->quoteName('#__bsms_topics.id'))
+                ->order($this->db->quoteName('#__bsms_topics.topic_text') . ' ' . $order);
 
             $this->addAccessFilter($query, '#__bsms_studies.access');
             $this->db->setQuery($query);
@@ -888,14 +974,17 @@ class Cwmlanding
             $language = $this->getLanguageFilter($params);
 
             $query = $this->db->getQuery(true);
-            $query->select('DISTINCT a.*')
-                ->from('#__bsms_message_type a')
-                ->innerJoin('#__bsms_studies b ON a.id = b.messagetype')
-                ->where('b.language IN (' . $language . ')')
-                ->where('b.published = 1')
-                ->where('a.landing_show > 0')
-                ->group('a.id')
-                ->order('a.message_type ' . $order);
+            $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
+                ->from($this->db->quoteName('#__bsms_message_type', 'a'))
+                ->innerJoin(
+                    $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                    . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.messagetype')
+                )
+                ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                ->where($this->db->quoteName('b.published') . ' = 1')
+                ->where($this->db->quoteName('a.landing_show') . ' > 0')
+                ->group($this->db->quoteName('a.id'))
+                ->order($this->db->quoteName('a.message_type') . ' ' . $order);
 
             $this->addAccessFilter($query);
             $this->db->setQuery($query);
@@ -953,13 +1042,16 @@ class Cwmlanding
             $language = $this->getLanguageFilter($params);
 
             $query = $this->db->getQuery(true);
-            $query->select('DISTINCT a.*')
-                ->from('#__bsms_books a')
-                ->innerJoin('#__bsms_studies b ON a.booknumber = b.booknumber')
-                ->where('b.language IN (' . $language . ')')
-                ->where('b.published = 1')
-                ->group('a.bookname')
-                ->order('a.booknumber ' . $order);
+            $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
+                ->from($this->db->quoteName('#__bsms_books', 'a'))
+                ->innerJoin(
+                    $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                    . $this->db->quoteName('a.booknumber') . ' = ' . $this->db->quoteName('b.booknumber')
+                )
+                ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                ->where($this->db->quoteName('b.published') . ' = 1')
+                ->group($this->db->quoteName('a.bookname'))
+                ->order($this->db->quoteName('a.booknumber') . ' ' . $order);
 
             $this->addAccessFilter($query);
             $this->db->setQuery($query);

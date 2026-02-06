@@ -112,7 +112,7 @@ class Cwmrelatedstudies
         $query = $db->getQuery(true);
         $query->select($db->quoteName(['s.id', 's.params', 's.access']))
             ->from($db->quoteName('#__bsms_studies', 's'))
-            ->select('GROUP_CONCAT(stp.id SEPARATOR ", ") AS tp_id')
+            ->select('GROUP_CONCAT(' . $db->quoteName('stp.id') . ' SEPARATOR ", ") AS ' . $db->quoteName('tp_id'))
             ->leftJoin($db->quoteName('#__bsms_studytopics', 'tp') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('tp.study_id'))
             ->leftJoin($db->quoteName('#__bsms_topics', 'stp') . ' ON ' . $db->quoteName('stp.id') . ' = ' . $db->quoteName('tp.topic_id'))
             ->where($db->quoteName('s.published') . ' = 1')

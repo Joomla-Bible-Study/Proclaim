@@ -47,8 +47,8 @@ class CwmmigrationHelper
 
         foreach ($replacements as $old => $new) {
             $query = $db->getQuery(true);
-            $query->update('#__menu')
-                ->set('link = REPLACE(' . $db->qn('link') . ', ' . $db->q($old) . ', ' . $db->q($new) . ')')
+            $query->update($db->qn('#__menu'))
+                ->set($db->qn('link') . ' = REPLACE(' . $db->qn('link') . ', ' . $db->q($old) . ', ' . $db->q($new) . ')')
                 ->where($db->qn('menutype') . ' != ' . $db->q('main'))
                 ->where($db->qn('link') . ' LIKE ' . $db->q('%com_proclaim%'))
                 ->where($db->qn('link') . ' LIKE ' . $db->q('%' . $old . '%'));
@@ -90,7 +90,7 @@ class CwmmigrationHelper
         // Correct blank or not set records
         foreach ($tables as $table) {
             $query = $db->getQuery(true);
-            $query->update($table['table'])
+            $query->update($db->qn($table['table']))
                 ->set($db->qn('access') . ' = ' . (int) $id)
                 ->where(
                     '(' . $db->qn('access') . ' = ' . $db->q('0') .
@@ -124,7 +124,7 @@ class CwmmigrationHelper
         // Correct blank records
         foreach ($tables as $table) {
             $query = $db->getQuery(true);
-            $query->update($table['table'])
+            $query->update($db->qn($table['table']))
                 ->set($db->qn('language') . ' = ' . $db->q('*'))
                 ->where($db->qn('language') . ' = ' . $db->q(''));
             $db->setQuery($query);
@@ -175,7 +175,7 @@ class CwmmigrationHelper
         foreach ($tables as $table) {
             if (!str_contains($table['name'], '_bsms_timeset')) {
                 $query = $db->getQuery(true);
-                $query->select('*')->from($table['name']);
+                $query->select('*')->from($db->qn($table['name']));
                 $db->setQuery($query);
                 $data = $db->loadObjectList();
 
@@ -251,8 +251,8 @@ class CwmmigrationHelper
         // Find Extension ID of a component
         $query = $db->getQuery(true);
         $query
-            ->select('extension_id')
-            ->from('#__extensions')
+            ->select($db->qn('extension_id'))
+            ->from($db->qn('#__extensions'))
             ->where($db->qn('name') . ' = ' . $db->q('com_proclaim'));
         $db->setQuery($query);
         $biblestudyEid         = $db->loadResult();

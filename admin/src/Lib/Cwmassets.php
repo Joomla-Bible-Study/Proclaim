@@ -111,10 +111,10 @@ class Cwmassets
 
         // Find the root asset to use as parent
         $query = $db->getQuery(true);
-        $query->select('id')
-            ->from('#__assets')
-            ->where('parent_id = 0')
-            ->where('level = 0');
+        $query->select($db->qn('id'))
+            ->from($db->qn('#__assets'))
+            ->where($db->qn('parent_id') . ' = 0')
+            ->where($db->qn('level') . ' = 0');
         $db->setQuery($query);
         $rootId = (int) $db->loadResult();
 
@@ -126,8 +126,8 @@ class Cwmassets
         $defaultRules = '{"core.admin":{"7":1},"core.manage":{"6":1},"core.create":[],"core.delete":[],"core.edit":[],"core.edit.state":[]}';
 
         $query = $db->getQuery(true);
-        $query->insert('#__assets')
-            ->columns(['parent_id', 'lft', 'rgt', 'level', 'name', 'title', 'rules'])
+        $query->insert($db->qn('#__assets'))
+            ->columns($db->qn(['parent_id', 'lft', 'rgt', 'level', 'name', 'title', 'rules']))
             ->values(
                 (int) $rootId . ', 0, 0, 1, ' .
                 $db->quote('com_proclaim') . ', ' .
@@ -168,9 +168,9 @@ class Cwmassets
 
             // First, get the new parent_id
             $query = $db->getQuery(true);
-            $query->select('id')
-                ->from('#__assets')
-                ->where('name = ' . $db->q('com_proclaim'));
+            $query->select($db->qn('id'))
+                ->from($db->qn('#__assets'))
+                ->where($db->qn('name') . ' = ' . $db->q('com_proclaim'));
             $db->setQuery($query);
             self::$parent_id = $db->loadResult();
         }
@@ -247,8 +247,8 @@ class Cwmassets
         if (isset($data->asset_id)) {
             if ((int)$data->asset_id >= 2 && (int)$data->asset_id !== self::$parent_id) {
                 $query = $db->getQuery(true);
-                $query->delete('#__assets')
-                    ->where('id = ' . $db->quote($data->asset_id));
+                $query->delete($db->qn('#__assets'))
+                    ->where($db->qn('id') . ' = ' . $db->quote($data->asset_id));
                 $db->setQuery($query);
                 $db->execute();
             }
@@ -278,9 +278,15 @@ class Cwmassets
             // Put the table into the return array
             // Get the total number of rows and collect the table into a query
             $query = $db->getQuery(true);
-            $query->select('j.id, j.asset_id, a.id as aid, a.parent_id, a.rules')
-                ->from($db->qn($object['name']) . ' as j')
-                ->leftJoin('#__assets as a ON (a.id = j.asset_id)');
+            $query->select(
+                $db->qn('j.id') . ', ' .
+                    $db->qn('j.asset_id') . ', ' .
+                    $db->qn('a.id', 'aid') . ', ' .
+                    $db->qn('a.parent_id') . ', ' .
+                    $db->qn('a.rules')
+            )
+                ->from($db->qn($object['name'], 'j'))
+                ->leftJoin($db->qn('#__assets', 'a') . ' ON (' . $db->qn('a.id') . ' = ' . $db->qn('j.asset_id') . ')');
             $db->setQuery($query);
             $results     = $db->loadObjectList();
             self::$count += \count($results);

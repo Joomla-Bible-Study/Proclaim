@@ -52,9 +52,9 @@ class Cwmdownload
 
         // Get the template so we can find a protocol
         $query = $db->getQuery(true);
-        $query->select('id, params')
-            ->from('#__bsms_templates')
-            ->where('id = ' . $templateId);
+        $query->select($db->quoteName(['id', 'params']))
+            ->from($db->quoteName('#__bsms_templates'))
+            ->where($db->quoteName('id') . ' = ' . $templateId);
         $db->setQuery($query);
         $template = $db->loadObject();
 
@@ -69,12 +69,15 @@ class Cwmdownload
 
         $query = $db->getQuery(true);
         $query->select(
-            '#__bsms_mediafiles.*,'
-            . ' #__bsms_servers.id AS ssid, #__bsms_servers.params AS sparams'
+            $db->quoteName('#__bsms_mediafiles') . '.*,'
+            . $db->quoteName('#__bsms_servers.id', 'ssid') . ', ' . $db->quoteName('#__bsms_servers.params', 'sparams')
         )
-            ->from('#__bsms_mediafiles')
-            ->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)')
-            ->where('#__bsms_mediafiles.id = ' . $mid);
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->leftJoin(
+                $db->quoteName('#__bsms_servers') . ' ON ('
+                . $db->quoteName('#__bsms_servers.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.server_id') . ')'
+            )
+            ->where($db->quoteName('#__bsms_mediafiles.id') . ' = ' . $mid);
         $db->setQuery($query, 0, 1);
 
         $media = $db->loadObject();
@@ -225,9 +228,9 @@ class Cwmdownload
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->update('#__bsms_mediafiles')
-            ->set('downloads = downloads + 1 ')
-            ->where('id = ' . $mid);
+        $query->update($db->quoteName('#__bsms_mediafiles'))
+            ->set($db->quoteName('downloads') . ' = ' . $db->quoteName('downloads') . ' + 1')
+            ->where($db->quoteName('id') . ' = ' . $mid);
         $db->setQuery($query);
 
         if (!$db->execute()) {

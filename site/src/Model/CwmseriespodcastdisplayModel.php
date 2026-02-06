@@ -76,7 +76,7 @@ class CwmseriespodcastdisplayModel extends ItemModel
                         ['tid', null, 'teachertitle', null, null, null, null]
                     )
                 );
-                $query->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON se.teacher = t.id');
+                $query->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON ' . $db->quoteName('se.teacher') . ' = ' . $db->quoteName('t.id'));
                 $query->where($db->quoteName('se.id') . ' = :id')
                     ->bind(':id', $pk, ParameterType::INTEGER);
                 $db->setQuery($query);
@@ -143,7 +143,7 @@ class CwmseriespodcastdisplayModel extends ItemModel
 
         // Join over Message Types
         $query->select($db->quoteName('messageType.message_type', 'message_type'));
-        $query->join('LEFT', $db->quoteName('#__bsms_message_type', 'messageType') . ' ON messageType.id = study.messagetype');
+        $query->join('LEFT', $db->quoteName('#__bsms_message_type', 'messageType') . ' ON ' . $db->quoteName('messageType.id') . ' = ' . $db->quoteName('study.messagetype'));
 
         // Join over Teachers
         $query->select(
@@ -153,7 +153,7 @@ class CwmseriespodcastdisplayModel extends ItemModel
             $db->quoteName('teacher.thumbh') . ', ' .
             $db->quoteName('teacher.thumbw')
         );
-        $query->join('LEFT', $db->quoteName('#__bsms_teachers', 'teacher') . ' ON teacher.id = study.teacher_id');
+        $query->join('LEFT', $db->quoteName('#__bsms_teachers', 'teacher') . ' ON ' . $db->quoteName('teacher.id') . ' = ' . $db->quoteName('study.teacher_id'));
 
         // Join over Series
         $query->select(
@@ -162,14 +162,14 @@ class CwmseriespodcastdisplayModel extends ItemModel
                 [null, null, 'sdescription', 'series_access']
             )
         );
-        $query->join('LEFT', $db->quoteName('#__bsms_series', 'series') . ' ON series.id = study.series_id');
+        $query->join('LEFT', $db->quoteName('#__bsms_series', 'series') . ' ON ' . $db->quoteName('series.id') . ' = ' . $db->quoteName('study.series_id'));
 
         // Join over Books
         $query->select($db->quoteName('book.bookname'));
-        $query->join('LEFT', $db->quoteName('#__bsms_books', 'book') . ' ON book.booknumber = study.booknumber');
+        $query->join('LEFT', $db->quoteName('#__bsms_books', 'book') . ' ON ' . $db->quoteName('book.booknumber') . ' = ' . $db->quoteName('study.booknumber'));
 
         $query->select($db->quoteName('book2.bookname', 'bookname2'));
-        $query->join('LEFT', $db->quoteName('#__bsms_books', 'book2') . ' ON book2.booknumber = study.booknumber2');
+        $query->join('LEFT', $db->quoteName('#__bsms_books', 'book2') . ' ON ' . $db->quoteName('book2.booknumber') . ' = ' . $db->quoteName('study.booknumber2'));
 
         // Join over Plays/Downloads
         $query->select(
@@ -177,20 +177,20 @@ class CwmseriespodcastdisplayModel extends ItemModel
             'SUM(' . $db->quoteName('mediafile.downloads') . ') AS totaldownloads, ' .
             $db->quoteName('mediafile.study_id')
         );
-        $query->join('LEFT', $db->quoteName('#__bsms_mediafiles', 'mediafile') . ' ON mediafile.study_id = study.id');
+        $query->join('LEFT', $db->quoteName('#__bsms_mediafiles', 'mediafile') . ' ON ' . $db->quoteName('mediafile.study_id') . ' = ' . $db->quoteName('study.id'));
 
         // Join over Locations
         $query->select($db->quoteName('locations.location_text'));
-        $query->join('LEFT', $db->quoteName('#__bsms_locations', 'locations') . ' ON study.location_id = locations.id');
+        $query->join('LEFT', $db->quoteName('#__bsms_locations', 'locations') . ' ON ' . $db->quoteName('study.location_id') . ' = ' . $db->quoteName('locations.id'));
 
         // Join over users
         $query->select($db->quoteName('users.name', 'submitted'));
-        $query->join('LEFT', $db->quoteName('#__users', 'users') . ' ON study.user_id = users.id');
+        $query->join('LEFT', $db->quoteName('#__users', 'users') . ' ON ' . $db->quoteName('study.user_id') . ' = ' . $db->quoteName('users.id'));
 
         $query->group($db->quoteName('study.id'));
 
         $query->select('GROUP_CONCAT(DISTINCT ' . $db->quoteName('m.id') . ') AS mids');
-        $query->join('LEFT', $db->quoteName('#__bsms_mediafiles', 'm') . ' ON study.id = m.study_id');
+        $query->join('LEFT', $db->quoteName('#__bsms_mediafiles', 'm') . ' ON ' . $db->quoteName('study.id') . ' = ' . $db->quoteName('m.study_id'));
 
         // Filter only for authorized view
         $query->whereIn($db->quoteName('study.access'), $groups);

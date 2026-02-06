@@ -149,42 +149,58 @@ class CwmpodcastsModel extends ListModel
         $query->select(
             $this->getState(
                 'list.select',
-                'podcast.id, podcast.published, podcast.title, podcast.description, podcast.filename, podcast.language, podcast.access'
+                implode(', ', $db->qn(
+                    [
+                        'podcast.id',
+                        'podcast.published',
+                        'podcast.title',
+                        'podcast.description',
+                        'podcast.filename',
+                        'podcast.language',
+                        'podcast.access',
+                    ]
+                ))
             )
         );
-        $query->from('#__bsms_podcast AS podcast');
+        $query->from($db->qn('#__bsms_podcast', 'podcast'));
 
         // Join over the language
-        $query->select('l.title AS language_title');
-        $query->join('LEFT', $db->qn('#__languages') . ' AS l ON l.lang_code = podcast.language');
+        $query->select($db->qn('l.title', 'language_title'));
+        $query->join(
+            'LEFT',
+            $db->qn('#__languages', 'l') . ' ON ' . $db->qn('l.lang_code') . ' = ' . $db->qn('podcast.language')
+        );
 
         // Join over the asset groups.
-        $query->select('ag.title AS access_level')
-            ->join('LEFT', '#__viewlevels AS ag ON ag.id = podcast.access');
+        $query->select($db->qn('ag.title', 'access_level'))
+            ->join(
+                'LEFT',
+                $db->qn('#__viewlevels', 'ag') . ' ON ' . $db->qn('ag.id') . ' = ' . $db->qn('podcast.access')
+            );
 
         // Filter by access level.
         if ($access = $this->getState('filter.access')) {
-            $query->where('podcast.access = ' . (int)$access);
+            $query->where($db->qn('podcast.access') . ' = ' . (int) $access);
         }
 
         // Implement View Level Access
         if (!$user->authorise('core.cwmadmin')) {
             $groups = implode(',', $user->getAuthorisedViewLevels());
-            $query->where('podcast.access IN (' . $groups . ')');
+            $query->where($db->qn('podcast.access') . ' IN (' . $groups . ')');
         }
 
         // Filter by published state
         $published = $this->getState('filter.published');
 
         if (is_numeric($published)) {
-            $query->where('podcast.published = ' . (int)$published);
+            $query->where($db->qn('podcast.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(podcast.published = 0 OR podcast.published = 1)');
+            $query->where('(' . $db->qn('podcast.published') . ' = 0 OR ' . $db->qn('podcast.published') . ' = 1)');
         }
 
         // Filter on the language.
         if ($language = $this->getState('filter.language')) {
-            $query->where('podcast.language = ' . $db->quote($language));
+            $query->where($db->qn('podcast.language') . ' = ' . $db->quote($language));
         }
 
         // Filter by search in filename or study title
@@ -192,10 +208,10 @@ class CwmpodcastsModel extends ListModel
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where('podcast.id = ' . (int)substr($search, 3));
+                $query->where($db->qn('podcast.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where('(podcast.title LIKE ' . $search . ' OR podcast.description LIKE ' . $search . ')');
+                $query->where('(' . $db->qn('podcast.title') . ' LIKE ' . $search . ' OR ' . $db->qn('podcast.description') . ' LIKE ' . $search . ')');
             }
         }
 

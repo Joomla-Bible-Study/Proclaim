@@ -140,26 +140,26 @@ class CwmlandingpageModel extends ListModel
         $query->select(
             $db->quoteName(['t.id', 't.teachername', 't.title', 't.language'], ['tid', 'teachertitle', null, null])
         );
-        $query->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON s.teacher_id = t.id');
+        $query->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON ' . $db->quoteName('s.teacher_id') . ' = ' . $db->quoteName('t.id'));
         $query->select(
             $db->quoteName(
                 ['se.id', 'se.series_text', 'se.description', 'se.series_thumbnail'],
                 ['sid', null, 'sdescription', null]
             )
         );
-        $query->join('LEFT', $db->quoteName('#__bsms_series', 'se') . ' ON s.series_id = se.id');
+        $query->join('LEFT', $db->quoteName('#__bsms_series', 'se') . ' ON ' . $db->quoteName('s.series_id') . ' = ' . $db->quoteName('se.id'));
         $query->select($db->quoteName(['m.id', 'm.message_type'], ['mid', null]));
-        $query->join('LEFT', $db->quoteName('#__bsms_message_type', 'm') . ' ON s.messagetype = m.id');
+        $query->join('LEFT', $db->quoteName('#__bsms_message_type', 'm') . ' ON ' . $db->quoteName('s.messagetype') . ' = ' . $db->quoteName('m.id'));
         $query->select('GROUP_CONCAT(DISTINCT ' . $db->quoteName('st.topic_id') . ')');
-        $query->join('LEFT', $db->quoteName('#__bsms_studytopics', 'st') . ' ON s.id = st.study_id');
+        $query->join('LEFT', $db->quoteName('#__bsms_studytopics', 'st') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('st.study_id'));
         $query->select(
             'GROUP_CONCAT(DISTINCT ' . $db->quoteName('tp.id') . '), ' .
             'GROUP_CONCAT(DISTINCT ' . $db->quoteName('tp.topic_text') . ') as topics_text, ' .
             'GROUP_CONCAT(DISTINCT ' . $db->quoteName('tp.params') . ')'
         );
-        $query->join('LEFT', $db->quoteName('#__bsms_topics', 'tp') . ' ON tp.id = st.topic_id');
+        $query->join('LEFT', $db->quoteName('#__bsms_topics', 'tp') . ' ON ' . $db->quoteName('tp.id') . ' = ' . $db->quoteName('st.topic_id'));
         $query->select($db->quoteName(['l.id', 'l.location_text'], ['lid', null]));
-        $query->join('LEFT', $db->quoteName('#__bsms_locations', 'l') . ' ON s.location_id = l.id');
+        $query->join('LEFT', $db->quoteName('#__bsms_locations', 'l') . ' ON ' . $db->quoteName('s.location_id') . ' = ' . $db->quoteName('l.id'));
 
         $rightnow = date('Y-m-d H:i:s');
 

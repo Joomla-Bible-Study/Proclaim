@@ -373,7 +373,7 @@ class Cwmstats
             ->join('INNER', $db->quoteName('#__bsms_mediafiles', 'mf') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
             ->where($db->quoteName('mf.published') . ' = 1')
             ->group($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits']))
-            ->order('added DESC');
+            ->order($db->qn('added') . ' DESC');
 
         $db->setQuery($query, 0, 10); // Get more to account for re-sorting if hits are included
         $results = $db->loadObjectList();

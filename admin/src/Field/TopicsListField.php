@@ -52,12 +52,22 @@ class TopicsListField extends ListField
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select('DISTINCT #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params as topic_params')
-            ->from('#__bsms_studies')
-            ->leftJoin('#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id')
-            ->leftJoin('#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id')
-            ->where('#__bsms_topics.published = 1')
-            ->order('#__bsms_topics.topic_text ASC');
+        $query->select(
+            'DISTINCT ' . $db->qn('#__bsms_topics.id') . ', '
+                . $db->qn('#__bsms_topics.topic_text') . ', '
+                . $db->qn('#__bsms_topics.params', 'topic_params')
+        )
+            ->from($db->qn('#__bsms_studies'))
+            ->leftJoin(
+                $db->qn('#__bsms_studytopics') . ' ON '
+                    . $db->qn('#__bsms_studies.id') . ' = ' . $db->qn('#__bsms_studytopics.study_id')
+            )
+            ->leftJoin(
+                $db->qn('#__bsms_topics') . ' ON '
+                    . $db->qn('#__bsms_topics.id') . ' = ' . $db->qn('#__bsms_studytopics.topic_id')
+            )
+            ->where($db->qn('#__bsms_topics.published') . ' = 1')
+            ->order($db->qn('#__bsms_topics.topic_text') . ' ASC');
         $db->setQuery($query);
         $topics  = $db->loadObjectList();
         $options = [];

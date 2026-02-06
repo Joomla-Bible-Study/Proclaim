@@ -104,7 +104,7 @@ class Cwmpodcast
 
             // Check if there's any media file associated
             $query = $db->getQuery(true);
-            $query->select('id')
+            $query->select($db->quoteName('id'))
                 ->from($db->quoteName('#__bsms_mediafiles'))
                 ->where('FIND_IN_SET(' . (int) $podinfo->id . ', ' . $db->quoteName('podcast_id') . ')')
                 ->where($db->quoteName('published') . ' = 1');
@@ -852,7 +852,7 @@ class Cwmpodcast
         $db = Factory::getContainer()->get('DatabaseDriver');
 
         $query = $db->getQuery(true);
-        $query->select(['mf.id', 'mf.params', 's.studytitle', 's.studyintro'])
+        $query->select($db->quoteName(['mf.id', 'mf.params', 's.studytitle', 's.studyintro']))
             ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
             ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
             ->where('FIND_IN_SET(' . $podcastId . ', ' . $db->quoteName('mf.podcast_id') . ')')
@@ -1073,7 +1073,7 @@ class Cwmpodcast
 
         // Get media files with missing duration
         $query = $db->getQuery(true);
-        $query->select(['mf.id', 'mf.params', 'mf.server_id', 's.studytitle'])
+        $query->select($db->quoteName(['mf.id', 'mf.params', 'mf.server_id', 's.studytitle']))
             ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
             ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
             ->where($db->quoteName('mf.published') . ' = 1');
@@ -1103,7 +1103,7 @@ class Cwmpodcast
 
             // Get server path
             $serverQuery = $db->getQuery(true);
-            $serverQuery->select('params')
+            $serverQuery->select($db->quoteName('params'))
                 ->from($db->quoteName('#__bsms_servers'))
                 ->where($db->quoteName('id') . ' = ' . (int) $media->server_id);
             $db->setQuery($serverQuery);
@@ -1344,9 +1344,9 @@ class Cwmpodcast
         $db = Factory::getContainer()->get('DatabaseDriver');
 
         $query = $db->getQuery(true);
-        $query->select(['mf.id', 'mf.params', 's.studytitle'])
+        $query->select($db->quoteName(['mf.id', 'mf.params', 's.studytitle']))
             ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
-            ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON s.id = mf.study_id')
+            ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
             ->where($db->quoteName('mf.published') . ' = 1');
 
         if ($podcastId !== null) {
@@ -1395,9 +1395,9 @@ class Cwmpodcast
 
         // Get the media file
         $query = $db->getQuery(true);
-        $query->select(['mf.id', 'mf.params', 'mf.server_id', 's.studytitle'])
+        $query->select($db->quoteName(['mf.id', 'mf.params', 'mf.server_id', 's.studytitle']))
             ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
-            ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON s.id = mf.study_id')
+            ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
             ->where($db->quoteName('mf.id') . ' = ' . $mediaId);
 
         $db->setQuery($query);
@@ -1416,7 +1416,7 @@ class Cwmpodcast
 
         // Get server path
         $serverQuery = $db->getQuery(true);
-        $serverQuery->select('params')
+        $serverQuery->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('id') . ' = ' . (int) $media->server_id);
         $db->setQuery($serverQuery);
@@ -1627,9 +1627,9 @@ class Cwmpodcast
         $db = Factory::getContainer()->get('DatabaseDriver');
 
         $query = $db->getQuery(true);
-        $query->select(['mf.id', 'mf.params', 's.studytitle'])
+        $query->select($db->quoteName(['mf.id', 'mf.params', 's.studytitle']))
             ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
-            ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON s.id = mf.study_id')
+            ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
             ->where($db->quoteName('mf.published') . ' = 1');
 
         if ($podcastId !== null) {
@@ -1699,9 +1699,9 @@ class Cwmpodcast
 
         // Get the media file
         $query = $db->getQuery(true);
-        $query->select(['mf.id', 'mf.params', 'mf.server_id', 's.studytitle'])
+        $query->select($db->quoteName(['mf.id', 'mf.params', 'mf.server_id', 's.studytitle']))
             ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
-            ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON s.id = mf.study_id')
+            ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
             ->where($db->quoteName('mf.id') . ' = ' . $mediaId);
 
         $db->setQuery($query);
@@ -1736,7 +1736,7 @@ class Cwmpodcast
 
         // Get server path
         $serverQuery = $db->getQuery(true);
-        $serverQuery->select('params')
+        $serverQuery->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('id') . ' = ' . (int) $media->server_id);
         $db->setQuery($serverQuery);

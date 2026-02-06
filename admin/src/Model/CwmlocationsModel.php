@@ -76,9 +76,11 @@ class CwmlocationsModel extends ListModel
     public function getDeletes(): array
     {
         if (empty($this->deletes)) {
-            $query         = 'SELECT allow_deletes'
-                . ' FROM #__bsms_admin'
-                . ' WHERE id = 1';
+            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $query = $db->getQuery(true);
+            $query->select($db->qn('allow_deletes'))
+                ->from($db->qn('#__bsms_admin'))
+                ->where($db->qn('id') . ' = 1');
             $this->deletes = $this->_getList($query);
         }
 
@@ -194,24 +196,27 @@ class CwmlocationsModel extends ListModel
         $query->select(
             $this->getState(
                 'list.select',
-                'location.id, location.published, location.access, location.location_text'
+                implode(', ', $db->qn(['location.id', 'location.published', 'location.access', 'location.location_text']))
             )
         );
-        $query->from('`#__bsms_locations` AS location');
+        $query->from($db->qn('#__bsms_locations', 'location'));
 
         // Join over the asset groups.
-        $query->select('ag.title AS access_level');
-        $query->join('LEFT', '#__viewlevels AS ag ON ag.id = location.access');
+        $query->select($db->qn('ag.title', 'access_level'));
+        $query->join(
+            'LEFT',
+            $db->qn('#__viewlevels', 'ag') . ' ON ' . $db->qn('ag.id') . ' = ' . $db->qn('location.access')
+        );
 
         // Filter by access level.
         if ($access = $this->getState('filter.access')) {
-            $query->where('location.access = ' . (int)$access);
+            $query->where($db->qn('location.access') . ' = ' . (int) $access);
         }
 
         // Implement View Level Access
         if (!$user->authorise('core.cwmadmin')) {
             $groups = implode(',', $user->getAuthorisedViewLevels());
-            $query->where('location.access IN (' . $groups . ')');
+            $query->where($db->qn('location.access') . ' IN (' . $groups . ')');
         }
 
         // Filter by search in title.
@@ -219,10 +224,10 @@ class CwmlocationsModel extends ListModel
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where('location.id = ' . (int)substr($search, 3));
+                $query->where($db->qn('location.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where('location.location_text LIKE ' . $search);
+                $query->where($db->qn('location.location_text') . ' LIKE ' . $search);
             }
         }
 
@@ -230,9 +235,9 @@ class CwmlocationsModel extends ListModel
         $published = $this->getState('filter.published');
 
         if (is_numeric($published)) {
-            $query->where('location.published = ' . (int)$published);
+            $query->where($db->qn('location.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(location.published = 0 OR location.published = 1)');
+            $query->where('(' . $db->qn('location.published') . ' = 0 OR ' . $db->qn('location.published') . ' = 1)');
         }
 
         // Add the list ordering clause

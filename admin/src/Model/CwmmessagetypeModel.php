@@ -138,7 +138,7 @@ class CwmmessagetypeModel extends AdminModel
             if (empty($table->ordering)) {
                 $db    = Factory::getContainer()->get('DatabaseDriver');
                 $query = $db->getQuery(true);
-                $query->select('MAX(ordering)')->from('#__bsms_message_type');
+                $query->select('MAX(' . $db->qn('ordering') . ')')->from($db->qn('#__bsms_message_type'));
                 $db->setQuery($query);
                 $max = $db->loadResult();
 

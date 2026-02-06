@@ -186,7 +186,7 @@ class CwmadminModel extends AdminModel
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query->select('*');
-        $query->from('#__bsms_mediafiles');
+        $query->from($db->qn('#__bsms_mediafiles'));
         $db->setQuery($query->__toString());
         $mediafiles = $db->loadObjectList();
 
@@ -310,8 +310,8 @@ class CwmadminModel extends AdminModel
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select('extension_id')->from($db->qn('#__extensions'))
-            ->where('element = ' . $db->q('com_proclaim'));
+        $query->select($db->qn('extension_id'))->from($db->qn('#__extensions'))
+            ->where($db->qn('element') . ' = ' . $db->q('com_proclaim'));
         $db->setQuery($query);
         $result = $db->loadResult();
 
@@ -335,8 +335,8 @@ class CwmadminModel extends AdminModel
         $db              = Factory::getContainer()->get('DatabaseDriver');
         $query           = $db->getQuery(true);
         $extensionresult = $this->getExtentionId();
-        $query->select('version_id')->from($db->qn('#__schemas'))
-            ->where('extension_id = ' . $db->q($extensionresult));
+        $query->select($db->qn('version_id'))->from($db->qn('#__schemas'))
+            ->where($db->qn('extension_id') . ' = ' . $db->q($extensionresult));
         $db->setQuery($query);
 
         return $db->loadResult();
@@ -473,7 +473,7 @@ class CwmadminModel extends AdminModel
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select('extension_id, name, element')->from('#__extensions');
+        $query->select($db->qn(['extension_id', 'name', 'element']))->from($db->qn('#__extensions'));
         $db->setQuery($query);
 
         return $db->loadObjectList();
@@ -514,9 +514,9 @@ class CwmadminModel extends AdminModel
         }
 
         $query = $db->getQuery(true);
-        $query->select('id, params')
-            ->from('#__bsms_mediafiles')
-            ->where('published = ' . $db->q('1'));
+        $query->select($db->qn(['id', 'params']))
+            ->from($db->qn('#__bsms_mediafiles'))
+            ->where($db->qn('published') . ' = ' . $db->q('1'));
         $db->setQuery($query);
 
         foreach ($db->loadObjectList() as $media) {
@@ -564,9 +564,9 @@ class CwmadminModel extends AdminModel
                 $reg->set('player', $to);
 
                 $query = $db->getQuery(true);
-                $query->update('#__bsms_mediafiles')
-                    ->set('params = ' . $db->q($reg->toString()))
-                    ->where('id = ' . (int)$media->id);
+                $query->update($db->qn('#__bsms_mediafiles'))
+                    ->set($db->qn('params') . ' = ' . $db->q($reg->toString()))
+                    ->where($db->qn('id') . ' = ' . (int)$media->id);
                 $db->setQuery($query);
 
                 if (!$db->execute()) {

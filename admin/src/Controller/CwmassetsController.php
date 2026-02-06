@@ -243,9 +243,12 @@ class CwmassetsController extends BaseController
 
         // Load a batch of records
         $query = $db->getQuery(true);
-        $query->select('j.id, j.asset_id, a.id as aid, a.parent_id, a.rules')
-            ->from($db->qn($tableName) . ' as j')
-            ->leftJoin('#__assets as a ON (a.id = j.asset_id)')
+        $query->select(
+            $db->qn('j.id') . ', ' . $db->qn('j.asset_id') . ', '
+            . $db->qn('a.id', 'aid') . ', ' . $db->qn('a.parent_id') . ', ' . $db->qn('a.rules')
+        )
+            ->from($db->qn($tableName, 'j'))
+            ->leftJoin($db->qn('#__assets', 'a') . ' ON (' . $db->qn('a.id') . ' = ' . $db->qn('j.asset_id') . ')')
             ->setLimit($batchSize, $offset);
         $db->setQuery($query);
         $results = $db->loadObjectList();
@@ -295,9 +298,9 @@ class CwmassetsController extends BaseController
         if (empty($item->asset_id) || $item->asset_id == 0 || !$assetExists) {
             // Check if asset already exists by name
             $query = $db->getQuery(true);
-            $query->select('id')
-                ->from('#__assets')
-                ->where('name = ' . $db->quote($assetFullName));
+            $query->select($db->qn('id'))
+                ->from($db->qn('#__assets'))
+                ->where($db->qn('name') . ' = ' . $db->quote($assetFullName));
             $db->setQuery($query);
             $existingAssetId = $db->loadResult();
 
@@ -305,15 +308,15 @@ class CwmassetsController extends BaseController
                 // Asset exists, just update the record's asset_id
                 $query = $db->getQuery(true);
                 $query->update($db->qn($tableName))
-                    ->set('asset_id = ' . (int) $existingAssetId)
-                    ->where('id = ' . (int) $item->id);
+                    ->set($db->qn('asset_id') . ' = ' . (int) $existingAssetId)
+                    ->where($db->qn('id') . ' = ' . (int) $item->id);
                 $db->setQuery($query);
                 $db->execute();
             } else {
                 // Create a new asset
                 $query = $db->getQuery(true);
-                $query->insert('#__assets')
-                    ->columns(['parent_id', 'level', 'name', 'title', 'rules'])
+                $query->insert($db->qn('#__assets'))
+                    ->columns($db->qn(['parent_id', 'level', 'name', 'title', 'rules']))
                     ->values(
                         (int) $parentId . ', 4, ' . $db->quote($assetFullName) . ', ' .
                         $db->quote($assetName . ' ' . $item->id) . ', ' .
@@ -326,8 +329,8 @@ class CwmassetsController extends BaseController
                 // Update the record with new asset_id
                 $query = $db->getQuery(true);
                 $query->update($db->qn($tableName))
-                    ->set('asset_id = ' . (int) $newAssetId)
-                    ->where('id = ' . (int) $item->id);
+                    ->set($db->qn('asset_id') . ' = ' . (int) $newAssetId)
+                    ->where($db->qn('id') . ' = ' . (int) $item->id);
                 $db->setQuery($query);
                 $db->execute();
             }
@@ -338,15 +341,15 @@ class CwmassetsController extends BaseController
         // Case 2: Has valid asset_id with existing asset but parent_id mismatch or empty rules
         if ($item->parent_id != $parentId || empty($item->rules)) {
             $query = $db->getQuery(true);
-            $query->update('#__assets')
-                ->set('parent_id = ' . (int) $parentId)
-                ->set('name = ' . $db->quote($assetFullName));
+            $query->update($db->qn('#__assets'))
+                ->set($db->qn('parent_id') . ' = ' . (int) $parentId)
+                ->set($db->qn('name') . ' = ' . $db->quote($assetFullName));
 
             if (empty($item->rules)) {
-                $query->set('rules = ' . $db->quote($defaultRules));
+                $query->set($db->qn('rules') . ' = ' . $db->quote($defaultRules));
             }
 
-            $query->where('id = ' . (int) $item->asset_id);
+            $query->where($db->qn('id') . ' = ' . (int) $item->asset_id);
             $db->setQuery($query);
             $db->execute();
 

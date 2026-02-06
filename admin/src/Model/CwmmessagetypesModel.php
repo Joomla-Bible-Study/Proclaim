@@ -74,9 +74,11 @@ class CwmmessagetypesModel extends ListModel
     public function getDeletes(): array
     {
         if (empty($this->deletes)) {
-            $query         = 'SELECT allowdeletes'
-                . ' FROM #__bsms_admin'
-                . ' WHERE id = 1';
+            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $query = $db->getQuery(true);
+            $query->select($db->qn('allowdeletes'))
+                ->from($db->qn('#__bsms_admin'))
+                ->where($db->qn('id') . ' = 1');
             $this->deletes = $this->_getList($query);
         }
 
@@ -192,25 +194,33 @@ class CwmmessagetypesModel extends ListModel
         $query->select(
             $this->getState(
                 'list.select',
-                'messagetype.id, messagetype.published, messagetype.message_type, ' .
-                'messagetype.ordering, messagetype.access, messagetype.alias'
+                implode(', ', $db->qn(
+                    [
+                        'messagetype.id',
+                        'messagetype.published',
+                        'messagetype.message_type',
+                        'messagetype.ordering',
+                        'messagetype.access',
+                        'messagetype.alias',
+                    ]
+                ))
             )
         );
 
-        $query->from('#__bsms_message_type AS messagetype');
+        $query->from($db->qn('#__bsms_message_type', 'messagetype'));
 
         // Filter by published state
         $published = $this->getState('filter.published');
 
         // Filter by access level.
         if ($access = $this->getState('filter.access')) {
-            $query->where('messagetype.access = ' . (int)$access);
+            $query->where($db->qn('messagetype.access') . ' = ' . (int) $access);
         }
 
         // Implement View Level Access
         if (!$user->authorise('core.cwmadmin')) {
             $groups = implode(',', $user->getAuthorisedViewLevels());
-            $query->where('messagetype.access IN (' . $groups . ')');
+            $query->where($db->qn('messagetype.access') . ' IN (' . $groups . ')');
         }
 
         // Filter by search in title.
@@ -218,17 +228,17 @@ class CwmmessagetypesModel extends ListModel
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where('messagetype.id = ' . (int)substr($search, 3));
+                $query->where($db->qn('messagetype.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where('messagetype.message_type LIKE ' . $search);
+                $query->where($db->qn('messagetype.message_type') . ' LIKE ' . $search);
             }
         }
 
         if (is_numeric($published)) {
-            $query->where('messagetype.published = ' . (int)$published);
+            $query->where($db->qn('messagetype.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(messagetype.published = 0 OR messagetype.published = 1)');
+            $query->where('(' . $db->qn('messagetype.published') . ' = 0 OR ' . $db->qn('messagetype.published') . ' = 1)');
         }
 
         // Add the list ordering clause.

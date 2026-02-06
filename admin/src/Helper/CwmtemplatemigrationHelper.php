@@ -321,7 +321,7 @@ class CwmtemplatemigrationHelper
 
         // Get all templates
         $query = $this->db->getQuery(true)
-            ->select(['id', 'params', 'title'])
+            ->select($this->db->quoteName(['id', 'params', 'title']))
             ->from($this->db->quoteName('#__bsms_templates'));
         $this->db->setQuery($query);
         $templates = $this->db->loadObjectList();
@@ -380,7 +380,7 @@ class CwmtemplatemigrationHelper
 
         // Get admin record (usually just one row)
         $query = $this->db->getQuery(true)
-            ->select(['id', 'params'])
+            ->select($this->db->quoteName(['id', 'params']))
             ->from($this->db->quoteName('#__bsms_admin'));
         $this->db->setQuery($query);
         $adminRecords = $this->db->loadObjectList();
@@ -439,7 +439,7 @@ class CwmtemplatemigrationHelper
 
         // Get all templates
         $query = $this->db->getQuery(true)
-            ->select(['id', 'params', 'title'])
+            ->select($this->db->quoteName(['id', 'params', 'title']))
             ->from($this->db->quoteName('#__bsms_templates'));
         $this->db->setQuery($query);
         $templates = $this->db->loadObjectList();
@@ -495,7 +495,7 @@ class CwmtemplatemigrationHelper
 
         // Get all templates
         $query = $this->db->getQuery(true)
-            ->select(['id', 'params', 'title'])
+            ->select($this->db->quoteName(['id', 'params', 'title']))
             ->from($this->db->quoteName('#__bsms_templates'));
         $this->db->setQuery($query);
         $templates = $this->db->loadObjectList();
@@ -576,7 +576,7 @@ class CwmtemplatemigrationHelper
     public function parameterExistsInTemplates(string $paramName): bool
     {
         $query = $this->db->getQuery(true)
-            ->select('params')
+            ->select($this->db->quoteName('params'))
             ->from($this->db->quoteName('#__bsms_templates'));
         $this->db->setQuery($query);
         $templates = $this->db->loadColumn();

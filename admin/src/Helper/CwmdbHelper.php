@@ -344,7 +344,7 @@ class CwmdbHelper
         // Start by getting existing Style
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select('*')->from('#__bsms_styles');
+        $query->select('*')->from($db->qn('#__bsms_styles'));
 
         if ($filename) {
             $query->where($db->qn('filename') . ' = ' . $db->q($filename));
@@ -391,7 +391,7 @@ class CwmdbHelper
         // No apply the new css back to the table
 
         $query = $db->getQuery(true);
-        $query->update('#__bsms_styles')->set($db->qn('stylecode') . ' = ' . $db->q($newcss));
+        $query->update($db->qn('#__bsms_styles'))->set($db->qn('stylecode') . ' = ' . $db->q($newcss));
 
         if ($filename) {
             $query->where($db->qn('filename') . ' = ' . $db->q($filename));
@@ -515,8 +515,8 @@ class CwmdbHelper
 
         // Remove old assets.
         $query = $db->getQuery(true);
-        $query->delete('#__assets')
-            ->where('name LIKE ' . $db->q('com_proclaim.%'));
+        $query->delete($db->qn('#__assets'))
+            ->where($db->qn('name') . ' LIKE ' . $db->q('com_proclaim.%'));
         $db->setQuery($query);
         $db->execute();
 
@@ -541,14 +541,14 @@ class CwmdbHelper
         $app   = Factory::getApplication();
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select('id')->from('#__bsms_studies');
+        $query->select($db->qn('id'))->from($db->qn('#__bsms_studies'));
         $db->setQuery($query);
         $results = $db->loadObjectList();
 
         foreach ($results as $result) {
             $query = $db->getQuery(true);
             $query->select($db->qn(['id', 'topic_id']))
-                ->from('#__bsms_studytopics')
+                ->from($db->qn('#__bsms_studytopics'))
                 ->where($db->qn('study_id') . ' = ' . (int) $result->id);
             $db->setQuery($query);
             $resulta = $db->loadObjectList();
@@ -560,7 +560,7 @@ class CwmdbHelper
                 foreach ($resulta as $study_topics) {
                     $query = $db->getQuery(true);
                     $query->select($db->qn('id'))
-                        ->from('#__bsms_studytopics')
+                        ->from($db->qn('#__bsms_studytopics'))
                         ->where($db->qn('study_id') . ' = ' . (int) $result->id)
                         ->where($db->qn('topic_id') . ' = ' . (int) $study_topics->topic_id)
                         ->order($db->qn('id') . ' DESC');
@@ -572,7 +572,7 @@ class CwmdbHelper
                         foreach ($results as $id) {
                             if ($t < $records) {
                                 $query = $db->getQuery(true);
-                                $query->delete('#__bsms_studytopics')
+                                $query->delete($db->qn('#__bsms_studytopics'))
                                     ->where($db->qn('id') . ' = ' . (int) $id->id);
                                 $db->setQuery($query);
 

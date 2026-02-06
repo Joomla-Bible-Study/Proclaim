@@ -112,8 +112,8 @@ class Cwmalias
 
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select('id, alias, ' . $title)
-            ->from($table);
+        $query->select($db->qn('id') . ', ' . $db->qn('alias') . ', ' . $db->qn($title))
+            ->from($db->qn($table));
         $db->setQuery($query);
         $results = $db->loadObjectList();
 

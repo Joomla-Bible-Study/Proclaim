@@ -408,10 +408,13 @@ class HtmlView extends BaseHtmlView
         // Added database queries from the default template - moved here instead
         $database = Factory::getContainer()->get('DatabaseDriver');
         $query    = $database->getQuery(true);
-        $query->select('id')->from('#__menu')->where(
-            'link =' .
-            $database->q('index.php?option=com_proclaim&view=cwmsermons')
-        )->where('published = 1');
+        $query->select($database->quoteName('id'))
+            ->from($database->quoteName('#__menu'))
+            ->where(
+                $database->quoteName('link') . ' = '
+                . $database->quote('index.php?option=com_proclaim&view=cwmsermons')
+            )
+            ->where($database->quoteName('published') . ' = 1');
         $database->setQuery($query);
         $menuid       = $database->loadResult();
         $this->menuid = $menuid;

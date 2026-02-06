@@ -119,9 +119,13 @@ class CwmnotificationHelper
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true)
-            ->select('s.studytitle, s.studydate, b.bookname')
+            ->select($db->quoteName(['s.studytitle', 's.studydate', 'b.bookname']))
             ->from($db->quoteName('#__bsms_studies', 's'))
-            ->join('LEFT', $db->quoteName('#__bsms_books', 'b') . ' ON b.booknumber = s.booknumber')
+            ->join(
+                'LEFT',
+                $db->quoteName('#__bsms_books', 'b') . ' ON '
+                . $db->quoteName('b.booknumber') . ' = ' . $db->quoteName('s.booknumber')
+            )
             ->where($db->quoteName('s.id') . ' = ' . (int) $studyId);
         $db->setQuery($query);
 

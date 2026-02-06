@@ -220,9 +220,9 @@ class CwmserverModel extends AdminModel
 
         if (!empty($data) && !empty($data['id'])) {
             $query = $db->getQuery(true);
-            $query->select('id, params')
-                ->from('#__bsms_mediafiles')
-                ->where($db->quoteName('server_id') . ' = :serverId')
+            $query->select($db->qn(['id', 'params']))
+                ->from($db->qn('#__bsms_mediafiles'))
+                ->where($db->qn('server_id') . ' = :serverId')
                 ->bind(':serverId', $data['id'], \Joomla\Database\ParameterType::INTEGER);
             $db->setQuery($query);
             $studies = $db->loadObjectList();

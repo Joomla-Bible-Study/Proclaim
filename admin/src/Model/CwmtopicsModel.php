@@ -134,19 +134,22 @@ class CwmtopicsModel extends ListModel
         $query = $db->getQuery(true);
 
         $query->select(
-            $this->getState('list.select', 'topic.id, topic.topic_text, topic.published, topic.params AS topic_params')
+            $this->getState(
+                'list.select',
+                implode(', ', $db->qn(['topic.id', 'topic.topic_text', 'topic.published'])) . ', ' . $db->qn('topic.params', 'topic_params')
+            )
         );
-        $query->from('#__bsms_topics AS topic');
+        $query->from($db->qn('#__bsms_topics', 'topic'));
 
         // Filter by search in title.
         $search = $this->getState('filter.search');
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where('topic.id = ' . (int)substr($search, 3));
+                $query->where($db->qn('topic.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where('(topic.topic_text LIKE ' . $search . ')');
+                $query->where('(' . $db->qn('topic.topic_text') . ' LIKE ' . $search . ')');
             }
         }
 
@@ -154,9 +157,9 @@ class CwmtopicsModel extends ListModel
         $published = $this->getState('filter.published');
 
         if (is_numeric($published)) {
-            $query->where('topic.published = ' . (int)$published);
+            $query->where($db->qn('topic.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(topic.published = 0 OR topic.published = 1)');
+            $query->where('(' . $db->qn('topic.published') . ' = 0 OR ' . $db->qn('topic.published') . ' = 1)');
         }
 
         // Add the list ordering clause
