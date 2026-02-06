@@ -59,6 +59,13 @@ class CwmadminController extends FormController
      */
     public function tools(): void
     {
+        // Check for request forgeries.
+        if (!Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
+        }
+
         $tool = Factory::getApplication()->getInput()->get('tooltype', '', 'post');
 
         $model = $this->getModel();
@@ -206,6 +213,13 @@ class CwmadminController extends FormController
      */
     public function mediaimages(): void
     {
+        // Check for request forgeries.
+        if (!Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
+        }
+
         $post    = $this->input->post->get('jform', [], 'raw');
         $decoded = json_decode($post['mediaimage'], true, 512, JSON_THROW_ON_ERROR);
         $db      = Factory::getContainer()->get('DatabaseDriver');
@@ -806,6 +820,13 @@ class CwmadminController extends FormController
 
         $document->setMimeEncoding('application/json');
 
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
         $image_types = $input->get('images', null, 'array');
         $count       = 0;
 
@@ -840,6 +861,13 @@ class CwmadminController extends FormController
         $input    = $app->getInput();
 
         $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
 
         $image_path = $input->get('image_path', null, 'string');
         $new_size   = $input->get('new_size', null, 'integer');
@@ -946,6 +974,13 @@ class CwmadminController extends FormController
 
         $document->setMimeEncoding('application/json');
 
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
         $counts = CwmImageMigration::getMigrationCounts();
 
         echo json_encode($counts, JSON_THROW_ON_ERROR);
@@ -969,6 +1004,13 @@ class CwmadminController extends FormController
         $input    = $app->getInput();
 
         $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
 
         $type  = $input->get('type', 'studies', 'string');
         $limit = $input->get('limit', 10, 'int');
@@ -996,6 +1038,13 @@ class CwmadminController extends FormController
         $input    = $app->getInput();
 
         $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
 
         $type    = $input->get('type', '', 'string');
         $id      = $input->get('id', 0, 'int');
@@ -1035,6 +1084,13 @@ class CwmadminController extends FormController
 
         $document->setMimeEncoding('application/json');
 
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
         $orphans = CwmImageCleanup::findOrphanedFolders();
         $totals  = CwmImageCleanup::getTotals($orphans);
 
@@ -1062,6 +1118,13 @@ class CwmadminController extends FormController
         $input    = $app->getInput();
 
         $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
 
         $paths = $input->get('paths', [], 'array');
 
@@ -1098,6 +1161,13 @@ class CwmadminController extends FormController
 
         $document->setMimeEncoding('application/json');
 
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
         try {
             $html = Cwmstats::getPlayers();
 
@@ -1130,6 +1200,13 @@ class CwmadminController extends FormController
         $document = $app->getDocument();
 
         $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
 
         try {
             $html = Cwmstats::getPopups();

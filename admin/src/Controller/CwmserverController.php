@@ -14,8 +14,10 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Model\CwmserverModel;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -124,6 +126,12 @@ class CwmserverController extends FormController
      */
     public function addonAjax(): void
     {
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            CWMAddon::outputJson(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+
+            return;
+        }
+
         $app       = Factory::getApplication();
         $addonType = $app->input->getString('addon', '');
         $action    = $app->input->getString('action', '');

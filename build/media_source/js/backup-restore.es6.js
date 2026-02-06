@@ -289,6 +289,14 @@
       const response = await fetch(url, { ...defaultOptions, ...options });
 
       if (!response.ok) {
+        if (response.status === 403 || response.status === 401) {
+          Joomla.renderMessages({
+            error: [Joomla.Text._('JLIB_ENVIRONMENT_SESSION_EXPIRED')
+              || 'Your session has expired. Please log in again.']
+          });
+          setTimeout(() => { window.location.reload(); }, 3000);
+          throw new Error('Session expired');
+        }
         // Try to get the response body for debugging
         let errorDetail = '';
         try {
@@ -428,6 +436,15 @@
             method: 'POST',
             body: formData
           });
+
+          if (response.status === 403 || response.status === 401) {
+            Joomla.renderMessages({
+              error: [Joomla.Text._('JLIB_ENVIRONMENT_SESSION_EXPIRED')
+                || 'Your session has expired. Please log in again.']
+            });
+            setTimeout(() => { window.location.reload(); }, 3000);
+            throw new Error('Session expired');
+          }
 
           const uploadResult = await response.json();
 

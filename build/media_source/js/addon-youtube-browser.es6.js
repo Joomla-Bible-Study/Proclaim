@@ -250,7 +250,15 @@
             url += '&' + Joomla.getOptions('csrf.token') + '=1';
 
             fetch(url)
-                .then(function(response) { return response.json(); })
+                .then(function(response) {
+                    if (response.status === 403 || response.status === 401) {
+                        var expiredMsg = Joomla.Text._('JLIB_ENVIRONMENT_SESSION_EXPIRED') || 'Your session has expired. Please log in again.';
+                        Joomla.renderMessages({ error: [expiredMsg] });
+                        setTimeout(function() { window.location.reload(); }, 3000);
+                        throw new Error('Session expired');
+                    }
+                    return response.json();
+                })
                 .then(function(data) {
                     if (data.success && data.playlists) {
                         self.playlists = data.playlists;
@@ -324,7 +332,15 @@
             }
 
             fetch(url)
-                .then(function(response) { return response.json(); })
+                .then(function(response) {
+                    if (response.status === 403 || response.status === 401) {
+                        var expiredMsg = Joomla.Text._('JLIB_ENVIRONMENT_SESSION_EXPIRED') || 'Your session has expired. Please log in again.';
+                        Joomla.renderMessages({ error: [expiredMsg] });
+                        setTimeout(function() { window.location.reload(); }, 3000);
+                        throw new Error('Session expired');
+                    }
+                    return response.json();
+                })
                 .then(function(data) {
                     loading.style.display = 'none';
 
