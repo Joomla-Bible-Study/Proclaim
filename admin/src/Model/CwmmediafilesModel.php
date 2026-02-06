@@ -79,7 +79,9 @@ class CwmmediafilesModel extends ListModel
 
         try {
             // This is to load the server model into the Media Files Variable.
-            $serverModel = new CwmserverModel();
+            /** @var CwmserverModel $serverModel */
+            $serverModel = Factory::getApplication()->bootComponent('com_proclaim')
+                ->getMVCFactory()->createModel('Cwmserver', 'Administrator');
 
             $items = $this->_getList($this->_getListQuery(), $this->getStart(), $this->getState('list.limit'));
 

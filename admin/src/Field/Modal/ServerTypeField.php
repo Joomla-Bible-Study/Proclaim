@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\Field\Modal;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Model\CwmserversModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -126,7 +125,9 @@ class ServerTypeField extends FormField
         }
 
         // Get a reverse lookup of the endpoint type to endpoint name
-        $model    = new CwmserversModel();
+        /** @var \CWM\Component\Proclaim\Administrator\Model\CwmserversModel $model */
+        $model    = Factory::getApplication()->bootComponent('com_proclaim')
+            ->getMVCFactory()->createModel('Cwmservers', 'Administrator');
         $rlu_type = $model->getTypeReverseLookup();
 
         $text = (string)ArrayHelper::getValue($rlu_type, $this->value);
