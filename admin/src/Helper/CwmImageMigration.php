@@ -43,27 +43,36 @@ class CwmImageMigration
 
         switch ($type) {
             case 'studies':
-                $query->select('id, studytitle, alias, thumbnailm as image_path')
-                    ->from('#__bsms_studies')
-                    ->where('thumbnailm IS NOT NULL')
-                    ->where('thumbnailm != ' . $db->q(''))
-                    ->where('thumbnailm NOT LIKE ' . $db->q('images/biblestudy/studies/%-%/%'));
+                $query->select(
+                    $db->qn('id') . ', ' . $db->qn('studytitle') . ', ' . $db->qn('alias') . ', '
+                    . $db->qn('thumbnailm', 'image_path')
+                )
+                    ->from($db->qn('#__bsms_studies'))
+                    ->where($db->qn('thumbnailm') . ' IS NOT NULL')
+                    ->where($db->qn('thumbnailm') . ' != ' . $db->q(''))
+                    ->where($db->qn('thumbnailm') . ' NOT LIKE ' . $db->q('images/biblestudy/studies/%-%/%'));
                 break;
 
             case 'teachers':
-                $query->select('id, teachername, alias, teacher_thumbnail as image_path')
-                    ->from('#__bsms_teachers')
-                    ->where('teacher_thumbnail IS NOT NULL')
-                    ->where('teacher_thumbnail != ' . $db->q(''))
-                    ->where('teacher_thumbnail NOT LIKE ' . $db->q('images/biblestudy/teachers/%-%/%'));
+                $query->select(
+                    $db->qn('id') . ', ' . $db->qn('teachername') . ', ' . $db->qn('alias') . ', '
+                    . $db->qn('teacher_thumbnail', 'image_path')
+                )
+                    ->from($db->qn('#__bsms_teachers'))
+                    ->where($db->qn('teacher_thumbnail') . ' IS NOT NULL')
+                    ->where($db->qn('teacher_thumbnail') . ' != ' . $db->q(''))
+                    ->where($db->qn('teacher_thumbnail') . ' NOT LIKE ' . $db->q('images/biblestudy/teachers/%-%/%'));
                 break;
 
             case 'series':
-                $query->select('id, series_text as title, alias, series_thumbnail as image_path')
-                    ->from('#__bsms_series')
-                    ->where('series_thumbnail IS NOT NULL')
-                    ->where('series_thumbnail != ' . $db->q(''))
-                    ->where('series_thumbnail NOT LIKE ' . $db->q('images/biblestudy/series/%-%/%'));
+                $query->select(
+                    $db->qn('id') . ', ' . $db->qn('series_text', 'title') . ', ' . $db->qn('alias') . ', '
+                    . $db->qn('series_thumbnail', 'image_path')
+                )
+                    ->from($db->qn('#__bsms_series'))
+                    ->where($db->qn('series_thumbnail') . ' IS NOT NULL')
+                    ->where($db->qn('series_thumbnail') . ' != ' . $db->q(''))
+                    ->where($db->qn('series_thumbnail') . ' NOT LIKE ' . $db->q('images/biblestudy/series/%-%/%'));
                 break;
 
             default:
@@ -151,14 +160,14 @@ class CwmImageMigration
 
         switch ($type) {
             case 'studies':
-                $query->update('#__bsms_studies')
+                $query->update($db->qn('#__bsms_studies'))
                     ->set($db->qn('thumbnailm') . ' = ' . $db->q($result['thumbnail']))
                     ->set($db->qn('image') . ' = ' . $db->q($result['image']))
                     ->where($db->qn('id') . ' = ' . (int) $id);
                 break;
 
             case 'teachers':
-                $query->update('#__bsms_teachers')
+                $query->update($db->qn('#__bsms_teachers'))
                     ->set($db->qn('teacher_thumbnail') . ' = ' . $db->q($result['thumbnail']))
                     ->set($db->qn('teacher_image') . ' = ' . $db->q($result['image']))
                     ->set($db->qn('image') . ' = ' . $db->q($result['image']))
@@ -166,7 +175,7 @@ class CwmImageMigration
                 break;
 
             case 'series':
-                $query->update('#__bsms_series')
+                $query->update($db->qn('#__bsms_series'))
                     ->set($db->qn('series_thumbnail') . ' = ' . $db->q($result['thumbnail']))
                     ->set($db->qn('image') . ' = ' . $db->q($result['image']))
                     ->where($db->qn('id') . ' = ' . (int) $id);

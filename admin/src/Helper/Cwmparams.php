@@ -74,7 +74,7 @@ class Cwmparams
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
             $query->select('*')
-                ->from('#__bsms_admin')
+                ->from($db->qn('#__bsms_admin'))
                 ->where($db->qn('id') . ' = ' . 1);
             $db->setQuery($query);
             $admin = $db->loadObject();
@@ -125,7 +125,7 @@ class Cwmparams
             self::$templateId = $pk;
             $query            = $db->getQuery(true);
             $query->select('*')
-                ->from('#__bsms_templates')
+                ->from($db->qn('#__bsms_templates'))
                 ->where($db->qn('published') . ' = 1')
                 ->where($db->qn('id') . ' = ' . (int) self::$templateId);
             $db->setQuery($query);
@@ -136,7 +136,7 @@ class Cwmparams
                 self::$templateId = 1;
                 $query            = $db->getQuery(true);
                 $query->select('*')
-                    ->from('#__bsms_templates')
+                    ->from($db->qn('#__bsms_templates'))
                     ->where($db->qn('published') . ' = 1')
                     ->where($db->qn('id') . ' = ' . (int) self::$templateId);
                 $db->setQuery($query);
@@ -175,7 +175,7 @@ class Cwmparams
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
             $query->select($db->qn('params'))
-                ->from('#__extensions')
+                ->from($db->qn('#__extensions'))
                 ->where($db->qn('name') . ' = ' . $db->q('com_proclaim'));
             $db->setQuery($query);
             $params = json_decode($db->loadResult(), true, 512, JSON_THROW_ON_ERROR);
@@ -188,7 +188,7 @@ class Cwmparams
             // Store the combined new and existing values back as a JSON string
             $paramsString = json_encode($params, JSON_THROW_ON_ERROR);
             $query->clear();
-            $query->update('#__extensions')
+            $query->update($db->qn('#__extensions'))
                 ->set($db->qn('params') . ' = ' . $db->q($paramsString))
                 ->where($db->qn('name') . ' = ' . $db->q('com_proclaim'));
             $db->setQuery($query);

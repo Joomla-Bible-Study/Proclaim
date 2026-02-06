@@ -81,7 +81,7 @@ class CwmteachersModel extends ListModel
         );
         $query->from($db->quoteName('#__bsms_teachers', 'teachers'));
         $query->select($db->quoteName('s.id', 'sid'));
-        $query->join('LEFT', $db->quoteName('#__bsms_studies', 's') . ' ON teachers.id = s.teacher_id');
+        $query->join('LEFT', $db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('teachers.id') . ' = ' . $db->quoteName('s.teacher_id'));
 
         // Filter by language
         if (isset($item->language) && $item->language !== '*') {

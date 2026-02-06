@@ -113,8 +113,8 @@ class CwmadminController extends FormController
 
         if ($from !== 'x' && $to !== 'x') {
             $query = $db->getQuery(true);
-            $query->select('id, params')
-                ->from('#__bsms_mediafiles');
+            $query->select($db->qn(['id', 'params']))
+                ->from($db->qn('#__bsms_mediafiles'));
             $db->setQuery($query);
 
             foreach ($db->loadObjectList() as $media) {
@@ -125,9 +125,9 @@ class CwmadminController extends FormController
                     $reg->set('player', $to);
 
                     $query = $db->getQuery(true);
-                    $query->update('#__bsms_mediafiles')
-                        ->set('params = ' . $db->q($reg->toString()))
-                        ->where('id = ' . (int)$media->id);
+                    $query->update($db->qn('#__bsms_mediafiles'))
+                        ->set($db->qn('params') . ' = ' . $db->q($reg->toString()))
+                        ->where($db->qn('id') . ' = ' . (int)$media->id);
                     $db->setQuery($query);
 
                     if (!$db->execute()) {
@@ -169,8 +169,8 @@ class CwmadminController extends FormController
         $to    = $reg->get('pTo', 'x');
         $msg   = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
         $query = $db->getQuery(true);
-        $query->select('id, params')
-            ->from('#__bsms_mediafiles');
+        $query->select($db->qn(['id', 'params']))
+            ->from($db->qn('#__bsms_mediafiles'));
         $db->setQuery($query);
 
         foreach ($db->loadObjectList() as $media) {
@@ -188,9 +188,9 @@ class CwmadminController extends FormController
                 $reg->set('popup', $to);
 
                 $query = $db->getQuery(true);
-                $query->update('#__bsms_mediafiles')
-                    ->set('params = ' . $db->q($reg->toString()))
-                    ->where('id = ' . (int)$media->id);
+                $query->update($db->qn('#__bsms_mediafiles'))
+                    ->set($db->qn('params') . ' = ' . $db->q($reg->toString()))
+                    ->where($db->qn('id') . ' = ' . (int)$media->id);
                 $db->setQuery($query);
 
                 if (!$db->execute()) {
@@ -224,8 +224,8 @@ class CwmadminController extends FormController
         $decoded = json_decode($post['mediaimage'], true, 512, JSON_THROW_ON_ERROR);
         $db      = Factory::getContainer()->get('DatabaseDriver');
         $query   = $db->getQuery(true);
-        $query->select('id, params')
-            ->from('#__bsms_mediafiles');
+        $query->select($db->qn(['id', 'params']))
+            ->from($db->qn('#__bsms_mediafiles'));
         $db->setQuery($query);
         $images    = $db->loadObjectList();
         $error     = 0;
@@ -264,9 +264,9 @@ class CwmadminController extends FormController
                         $db->setQuery($query);
 
                         try {
-                            $query->update('#__bsms_mediafiles')
-                                ->set('params = ' . $db->q($reg->toString()))
-                                ->where('id = ' . (int)$media->id);
+                            $query->update($db->qn('#__bsms_mediafiles'))
+                                ->set($db->qn('params') . ' = ' . $db->q($reg->toString()))
+                                ->where($db->qn('id') . ' = ' . (int)$media->id);
                             $db->execute();
                             $rows  = $db->getAffectedRows();
                             $added = $added + $rows;
@@ -303,9 +303,9 @@ class CwmadminController extends FormController
                         $db->setQuery($query);
 
                         try {
-                            $query->update('#__bsms_mediafiles')
-                                ->set('params = ' . $db->q($reg->toString()))
-                                ->where('id = ' . (int)$media->id);
+                            $query->update($db->qn('#__bsms_mediafiles'))
+                                ->set($db->qn('params') . ' = ' . $db->q($reg->toString()))
+                                ->where($db->qn('id') . ' = ' . (int)$media->id);
                             $db->execute();
                             $rows  = $db->getAffectedRows();
                             $added = $added + $rows;
@@ -346,9 +346,9 @@ class CwmadminController extends FormController
                         $db->setQuery($query);
 
                         try {
-                            $query->update('#__bsms_mediafiles')
-                                ->set('params = ' . $db->q($reg->toString()))
-                                ->where('id = ' . (int)$media->id);
+                            $query->update($db->qn('#__bsms_mediafiles'))
+                                ->set($db->qn('params') . ' = ' . $db->q($reg->toString()))
+                                ->where($db->qn('id') . ' = ' . (int)$media->id);
                             $db->execute();
                             $rows  = $db->getAffectedRows();
                             $added = $added + $rows;
@@ -393,9 +393,9 @@ class CwmadminController extends FormController
 
                         try {
                             $db->setQuery($query);
-                            $query->update('#__bsms_mediafiles')
-                                ->set('params = ' . $db->q($reg->toString()))
-                                ->where('id = ' . (int)$media->id);
+                            $query->update($db->qn('#__bsms_mediafiles'))
+                                ->set($db->qn('params') . ' = ' . $db->q($reg->toString()))
+                                ->where($db->qn('id') . ' = ' . (int)$media->id);
                             $db->execute();
                             $rows  = $db->getAffectedRows();
                             $added += $rows;
@@ -439,9 +439,9 @@ class CwmadminController extends FormController
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $msg   = null;
         $query = $db->getQuery(true);
-        $query->update('#__bsms_mediafiles')
-            ->set('hits = ' . 0)
-            ->where('hits != 0');
+        $query->update($db->qn('#__bsms_mediafiles'))
+            ->set($db->qn('hits') . ' = 0')
+            ->where($db->qn('hits') . ' != 0');
         $db->setQuery($query);
 
         if (!$db->execute()) {
@@ -473,9 +473,9 @@ class CwmadminController extends FormController
         $msg   = null;
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->update('#__bsms_mediafiles')
-            ->set('downloads = ' . 0)
-            ->where('downloads != 0');
+        $query->update($db->qn('#__bsms_mediafiles'))
+            ->set($db->qn('downloads') . ' = 0')
+            ->where($db->qn('downloads') . ' != 0');
         $db->setQuery($query);
 
         if (!$db->execute()) {
@@ -508,9 +508,9 @@ class CwmadminController extends FormController
         $msg   = null;
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->update('#__bsms_mediafiles')
-            ->set('plays = ' . 0)
-            ->where('plays != 0');
+        $query->update($db->qn('#__bsms_mediafiles'))
+            ->set($db->qn('plays') . ' = 0')
+            ->where($db->qn('plays') . ' != 0');
         $db->setQuery($query);
 
         if (!$db->execute()) {

@@ -98,10 +98,10 @@ class HtmlView extends BaseHtmlView
         $this->params       = $template->params;
         $this->termstext    = $this->params->get('terms');
         $db                 = Factory::getContainer()->get('DatabaseDriver');
-        $query              = $db->getQuery('true');
+        $query              = $db->getQuery(true);
         $query->select('*');
-        $query->from('#__bsms_mediafiles');
-        $query->where('id= ' . (int)$mid);
+        $query->from($db->quoteName('#__bsms_mediafiles'));
+        $query->where($db->quoteName('id') . ' = ' . (int) $mid);
         $db->setQuery($query);
         $this->media = $db->loadObject();
 

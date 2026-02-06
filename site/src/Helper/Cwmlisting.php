@@ -450,14 +450,30 @@ class Cwmlisting
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query->select(
-            '#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.params AS sparams, #__bsms_servers.media AS smedia,'
-            . ' s.studytitle, s.studydate, s.studyintro, s.teacher_id,'
-            . ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro'
+            $db->quoteName('#__bsms_mediafiles') . '.*, '
+            . $db->quoteName('#__bsms_servers.id', 'ssid') . ', '
+            . $db->quoteName('#__bsms_servers.params', 'sparams') . ', '
+            . $db->quoteName('#__bsms_servers.media', 'smedia') . ','
+            . $db->quoteName('s.studytitle') . ', ' . $db->quoteName('s.studydate') . ', '
+            . $db->quoteName('s.studyintro') . ', ' . $db->quoteName('s.teacher_id') . ','
+            . $db->quoteName('s.booknumber') . ', ' . $db->quoteName('s.chapter_begin') . ', '
+            . $db->quoteName('s.chapter_end') . ', ' . $db->quoteName('s.verse_begin') . ', '
+            . $db->quoteName('s.verse_end') . ', ' . $db->quoteName('t.teachername') . ', '
+            . $db->quoteName('t.id', 'tid') . ', ' . $db->quoteName('s.id', 'sid')
         );
-        $query->from('#__bsms_mediafiles');
-        $query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)');
-        $query->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)');
-        $query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
+        $query->from($db->quoteName('#__bsms_mediafiles'));
+        $query->leftJoin(
+            $db->quoteName('#__bsms_servers') . ' ON ('
+            . $db->quoteName('#__bsms_servers.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.server_id') . ')'
+        );
+        $query->leftJoin(
+            $db->quoteName('#__bsms_studies', 's') . ' ON ('
+            . $db->quoteName('s.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.study_id') . ')'
+        );
+        $query->leftJoin(
+            $db->quoteName('#__bsms_teachers', 't') . ' ON ('
+            . $db->quoteName('t.id') . ' = ' . $db->quoteName('s.teacher_id') . ')'
+        );
 
         $ids = [];
 
@@ -475,7 +491,7 @@ class Cwmlisting
             return [];
         }
 
-        $query->where('#__bsms_mediafiles.id IN (' . implode(',', array_unique($ids)) . ')');
+        $query->where($db->quoteName('#__bsms_mediafiles.id') . ' IN (' . implode(',', array_unique($ids)) . ')');
 
         // Include archived media when showing archived messages
         $showArchived = '0';
@@ -486,16 +502,16 @@ class Cwmlisting
             }
         }
         if ($showArchived === '1' || $showArchived === '2') {
-            $query->where('#__bsms_mediafiles.published IN (1, 2)');
+            $query->where($db->quoteName('#__bsms_mediafiles.published') . ' IN (1, 2)');
         } else {
-            $query->where('#__bsms_mediafiles.published = 1');
+            $query->where($db->quoteName('#__bsms_mediafiles.published') . ' = 1');
         }
 
         $query->where(
-            '#__bsms_mediafiles.language in ('
+            $db->quoteName('#__bsms_mediafiles.language') . ' IN ('
             . $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*') . ')'
         );
-        $query->order('ordering ASC');
+        $query->order($db->quoteName('ordering') . ' ASC');
         $db->setQuery($query);
 
         return $db->loadObjectList();
@@ -2208,9 +2224,9 @@ class Cwmlisting
         $link  = '';
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select('#__bsms_mediafiles.*')
-            ->from('#__bsms_mediafiles')
-            ->where('study_id = ' . $db->q($id3));
+        $query->select($db->quoteName('#__bsms_mediafiles') . '.*')
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('study_id') . ' = ' . $db->quote($id3));
 
         // Include archived media when showing archived messages
         $showArchived = $params->get('show_archived', '');
@@ -2218,9 +2234,9 @@ class Cwmlisting
             $showArchived = $params->get('default_show_archived', '0');
         }
         if ($showArchived === '1' || $showArchived === '2') {
-            $query->where('#__bsms_mediafiles.published IN (1, 2)');
+            $query->where($db->quoteName('#__bsms_mediafiles.published') . ' IN (1, 2)');
         } else {
-            $query->where('#__bsms_mediafiles.published = 1');
+            $query->where($db->quoteName('#__bsms_mediafiles.published') . ' = 1');
         }
 
         $db->setQuery($query);

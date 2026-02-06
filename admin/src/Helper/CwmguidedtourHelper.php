@@ -242,7 +242,7 @@ class CwmguidedtourHelper
     protected function getExtensionId(): int
     {
         $query = $this->db->getQuery(true)
-            ->select('extension_id')
+            ->select($this->db->quoteName('extension_id'))
             ->from($this->db->quoteName('#__extensions'))
             ->where($this->db->quoteName('element') . ' = ' . $this->db->quote('com_proclaim'))
             ->where($this->db->quoteName('type') . ' = ' . $this->db->quote('component'));
@@ -404,7 +404,7 @@ class CwmguidedtourHelper
         }
 
         $query = $this->db->getQuery(true)
-            ->select('id')
+            ->select($this->db->quoteName('id'))
             ->from($this->db->quoteName('#__guidedtours'))
             ->where($this->db->quoteName('uid') . ' = ' . $this->db->quote($uid));
         $this->db->setQuery($query);
@@ -671,7 +671,7 @@ class CwmguidedtourHelper
 
         foreach ($this->tours as $tour) {
             $query = $this->db->getQuery(true)
-                ->select('id')
+                ->select($this->db->quoteName('id'))
                 ->from($this->db->quoteName('#__guidedtours'))
                 ->where($this->db->quoteName('uid') . ' = ' . $this->db->quote($tour['uid']));
             $this->db->setQuery($query);

@@ -49,9 +49,9 @@ class LocationListField extends ListField
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select('id,location_text');
-        $query->from('#__bsms_locations');
-        $query->order('location_text');
+        $query->select($db->qn('id') . ', ' . $db->qn('location_text'));
+        $query->from($db->qn('#__bsms_locations'));
+        $query->order($db->qn('location_text'));
         $db->setQuery((string)$query);
         $messages = $db->loadObjectList();
         $options  = [];

@@ -81,7 +81,7 @@ class CwmmessageModel extends AdminModel
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query->select('*')
-            ->from('#__bsms_studytopics')
+            ->from($db->qn('#__bsms_studytopics'))
             ->where($db->qn('study_id') . ' = ' . (int) $study_id)
             ->where($db->qn('topic_id') . ' = ' . (int) $topic_id);
         $db->setQuery($query);
@@ -117,11 +117,11 @@ class CwmmessageModel extends AdminModel
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
 
-            $query->select('topic.id, topic.topic_text, topic.params AS topic_params');
-            $query->from('#__bsms_studytopics AS studytopics');
+            $query->select($db->qn('topic.id') . ', ' . $db->qn('topic.topic_text') . ', ' . $db->qn('topic.params', 'topic_params'));
+            $query->from($db->qn('#__bsms_studytopics', 'studytopics'));
 
-            $query->join('LEFT', '#__bsms_topics AS topic ON topic.id = studytopics.topic_id');
-            $query->where('studytopics.study_id = ' . (int)$id);
+            $query->join('LEFT', $db->qn('#__bsms_topics', 'topic') . ' ON ' . $db->qn('topic.id') . ' = ' . $db->qn('studytopics.topic_id'));
+            $query->where($db->qn('studytopics.study_id') . ' = ' . (int)$id);
 
             $db->setQuery($query->__toString());
             $topics = $db->loadObjectList();
@@ -153,8 +153,8 @@ class CwmmessageModel extends AdminModel
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
 
-        $query->select('topic.id, topic.topic_text, topic.params AS topic_params');
-        $query->from('#__bsms_topics AS topic');
+        $query->select($db->qn('topic.id') . ', ' . $db->qn('topic.topic_text') . ', ' . $db->qn('topic.params', 'topic_params'));
+        $query->from($db->qn('#__bsms_topics', 'topic'));
 
         $db->setQuery($query->__toString());
         $topics         = $db->loadObjectList();
@@ -185,15 +185,19 @@ class CwmmessageModel extends AdminModel
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
 
-        $query->select('m.id, m.language, m.published, m.createdate, m.params, m.access');
-        $query->from('#__bsms_mediafiles AS m');
+        $query->select(
+            $db->qn(
+                ['m.id', 'm.language', 'm.published', 'm.createdate', 'm.params', 'm.access']
+            )
+        );
+        $query->from($db->qn('#__bsms_mediafiles', 'm'));
         $query->where($db->qn('m.study_id') . ' = ' . (int) $this->getItem()->id);
         $query->where('(' . $db->qn('m.published') . ' = 0 OR ' . $db->qn('m.published') . ' = 1)');
-        $query->order('m.createdate DESC');
+        $query->order($db->qn('m.createdate') . ' DESC');
 
         // Join over the asset groups.
-        $query->select('ag.title AS access_level');
-        $query->join('LEFT', '#__viewlevels AS ag ON ag.id = m.access');
+        $query->select($db->qn('ag.title', 'access_level'));
+        $query->join('LEFT', $db->qn('#__viewlevels', 'ag') . ' ON ' . $db->qn('ag.id') . ' = ' . $db->qn('m.access'));
 
         $db->setQuery($query->__toString());
         $mediafiles = $db->loadObjectList();
@@ -683,8 +687,8 @@ class CwmmessageModel extends AdminModel
             if (empty($table->ordering)) {
                 $db    = Factory::getContainer()->get('DatabaseDriver');
                 $query = $db->getQuery(true)
-                    ->select('MAX(ordering)')
-                    ->from($db->quoteName('#__bsms_studies'));
+                    ->select('MAX(' . $db->qn('ordering') . ')')
+                    ->from($db->qn('#__bsms_studies'));
                 $db->setQuery($query);
                 $max = $db->loadResult();
 

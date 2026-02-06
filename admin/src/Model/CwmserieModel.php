@@ -151,9 +151,11 @@ class CwmserieModel extends AdminModel
     public function getTeacher(): mixed
     {
         if (empty($this->teacher)) {
-            $query         = 'SELECT id AS value, teachername AS text'
-                . ' FROM #__bsms_teachers'
-                . ' WHERE published = 1';
+            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $query = $db->getQuery(true)
+                ->select($db->qn('id', 'value') . ', ' . $db->qn('teachername', 'text'))
+                ->from($db->qn('#__bsms_teachers'))
+                ->where($db->qn('published') . ' = 1');
             $this->teacher = $this->_getList($query);
         }
 
@@ -466,7 +468,7 @@ class CwmserieModel extends AdminModel
             if (empty($table->ordering)) {
                 $db    = Factory::getContainer()->get('DatabaseDriver');
                 $query = $db->getQuery(true);
-                $query->select('MAX(ordering)')->from('#__bsms_series');
+                $query->select('MAX(' . $db->qn('ordering') . ')')->from($db->qn('#__bsms_series'));
                 $db->setQuery($query);
                 $max = $db->loadResult();
 
@@ -480,7 +482,8 @@ class CwmserieModel extends AdminModel
 
         if ($table->ordering == 0) {
             $table->ordering = 1;
-            $table->reorder('id = ' . (int)$table->id);
+            $db = Factory::getContainer()->get('DatabaseDriver');
+            $table->reorder($db->qn('id') . ' = ' . (int)$table->id);
         }
     }
 

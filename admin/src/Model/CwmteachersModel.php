@@ -149,35 +149,41 @@ class CwmteachersModel extends ListModel
         $query = $db->getQuery(true);
         $user  = Factory::getApplication()->getIdentity();
 
-        $query->select($this->getState('list.select', 'teacher.*'));
-        $query->from('#__bsms_teachers AS teacher');
+        $query->select($this->getState('list.select', $db->qn('teacher') . '.*'));
+        $query->from($db->qn('#__bsms_teachers', 'teacher'));
 
         // Join over the language
-        $query->select('l.title AS language_title');
-        $query->join('LEFT', '`#__languages` AS l ON l.lang_code = teacher.language');
+        $query->select($db->qn('l.title', 'language_title'));
+        $query->join(
+            'LEFT',
+            $db->qn('#__languages', 'l') . ' ON ' . $db->qn('l.lang_code') . ' = ' . $db->qn('teacher.language')
+        );
 
         // Join over the asset groups.
-        $query->select('ag.title AS access_level');
-        $query->join('LEFT', '#__viewlevels AS ag ON ag.id = teacher.access');
+        $query->select($db->qn('ag.title', 'access_level'));
+        $query->join(
+            'LEFT',
+            $db->qn('#__viewlevels', 'ag') . ' ON ' . $db->qn('ag.id') . ' = ' . $db->qn('teacher.access')
+        );
 
         // Filter by access level.
         if ($access = $this->getState('filter.access')) {
-            $query->where('teacher.access = ' . (int)$access);
+            $query->where($db->qn('teacher.access') . ' = ' . (int) $access);
         }
 
         // Implement View Level Access
         if (!$user->authorise('core.cwmadmin')) {
             $groups = implode(',', $user->getAuthorisedViewLevels());
-            $query->where('teacher.access IN (' . $groups . ')');
+            $query->where($db->qn('teacher.access') . ' IN (' . $groups . ')');
         }
 
         // Filter by published state
         $published = $this->getState('filter.published');
 
         if (is_numeric($published)) {
-            $query->where('teacher.published = ' . (int)$published);
+            $query->where($db->qn('teacher.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(teacher.published = 0 OR teacher.published = 1)');
+            $query->where('(' . $db->qn('teacher.published') . ' = 0 OR ' . $db->qn('teacher.published') . ' = 1)');
         }
 
         // Filter by search in title.
@@ -185,10 +191,10 @@ class CwmteachersModel extends ListModel
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where('teacher.id = ' . (int)substr($search, 3));
+                $query->where($db->qn('teacher.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where('(teacher.teachername LIKE ' . $search . ' OR teacher.alias LIKE ' . $search . ')');
+                $query->where('(' . $db->qn('teacher.teachername') . ' LIKE ' . $search . ' OR ' . $db->qn('teacher.alias') . ' LIKE ' . $search . ')');
             }
         }
 

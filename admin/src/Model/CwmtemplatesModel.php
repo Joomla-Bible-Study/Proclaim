@@ -70,7 +70,13 @@ class CwmtemplatesModel extends ListModel
     public function getTemplates(): array
     {
         if (empty($this->templates)) {
-            $query           = 'SELECT id as value, title as text FROM `#__bsms_templates` WHERE published = 1 ORDER BY id ASC';
+            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $query = $db->getQuery(true);
+            $query->select($db->qn('id', 'value'))
+                ->select($db->qn('title', 'text'))
+                ->from($db->qn('#__bsms_templates'))
+                ->where($db->qn('published') . ' = 1')
+                ->order($db->qn('id') . ' ASC');
             $this->templates = $this->_getList($query);
         }
 
@@ -89,10 +95,10 @@ class CwmtemplatesModel extends ListModel
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
 
-        $query->select('template.type AS text');
-        $query->from('#__bsms_templates AS template');
-        $query->group('template.type');
-        $query->order('template.type');
+        $query->select($db->qn('template.type', 'text'));
+        $query->from($db->qn('#__bsms_templates', 'template'));
+        $query->group($db->qn('template.type'));
+        $query->order($db->qn('template.type'));
 
         $db->setQuery($query->__toString());
 
@@ -147,18 +153,18 @@ class CwmtemplatesModel extends ListModel
         $query->select(
             $this->getState(
                 'list.select',
-                'template.id, template.published, template.title'
+                implode(', ', $db->qn(['template.id', 'template.published', 'template.title']))
             )
         );
-        $query->from('#__bsms_templates AS template');
+        $query->from($db->qn('#__bsms_templates', 'template'));
 
         // Filter by published state
         $published = $this->getState('filter.published');
 
         if (is_numeric($published)) {
-            $query->where('template.published = ' . (int)$published);
+            $query->where($db->qn('template.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(template.published = 0 OR template.published = 1)');
+            $query->where('(' . $db->qn('template.published') . ' = 0 OR ' . $db->qn('template.published') . ' = 1)');
         }
 
         // Filter by search in filename or study title
@@ -166,10 +172,10 @@ class CwmtemplatesModel extends ListModel
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where('template.id = ' . (int)substr($search, 3));
+                $query->where($db->qn('template.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where('template.title LIKE ' . $search);
+                $query->where($db->qn('template.title') . ' LIKE ' . $search);
             }
         }
 

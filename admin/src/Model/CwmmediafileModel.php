@@ -95,7 +95,9 @@ class CwmmediafileModel extends AdminModel
             return false;
         }
 
-        if (!$row->move($direction, ' study_id = ' . (int)$row->study_id . ' AND published >= 0 ')) {
+        $db = Factory::getContainer()->get('DatabaseDriver');
+
+        if (!$row->move($direction, $db->qn('study_id') . ' = ' . (int)$row->study_id . ' AND ' . $db->qn('published') . ' >= 0')) {
             return false;
         }
 
@@ -969,7 +971,7 @@ class CwmmediafileModel extends AdminModel
             if (empty($table->ordering)) {
                 $db    = Factory::getContainer()->get('DatabaseDriver');
                 $query = $db->getQuery(true);
-                $query->select('MAX(ordering)')->from('#__bsms_mediafiles');
+                $query->select('MAX(' . $db->qn('ordering') . ')')->from($db->qn('#__bsms_mediafiles'));
                 $db->setQuery($query);
                 $max = $db->loadResult();
 
@@ -1025,8 +1027,9 @@ class CwmmediafileModel extends AdminModel
      */
     protected function getReorderConditions($table): array
     {
+        $db          = Factory::getContainer()->get('DatabaseDriver');
         $condition   = [];
-        $condition[] = 'study_id = ' . (int)$table->study_id;
+        $condition[] = $db->qn('study_id') . ' = ' . (int)$table->study_id;
 
         return $condition;
     }

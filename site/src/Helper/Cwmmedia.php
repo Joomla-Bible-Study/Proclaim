@@ -1017,9 +1017,9 @@ class Cwmmedia
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->update('#__bsms_mediafiles')
-            ->set('plays = plays + 1')
-            ->where('id = ' . $db->q($id));
+        $query->update($db->quoteName('#__bsms_mediafiles'))
+            ->set($db->quoteName('plays') . ' = ' . $db->quoteName('plays') . ' + 1')
+            ->where($db->quoteName('id') . ' = ' . (int) $id);
         $db->setQuery($query);
 
         if ($db->execute()) {
@@ -1045,22 +1045,43 @@ class Cwmmedia
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query->select(
-            '#__bsms_mediafiles.*, #__bsms_servers.params AS sparams,'
-            . ' s.studyintro, s.series_id, s.studytitle, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin,'
-            . ' s.verse_end, t.teachername, t.teacher_thumbnail, t.teacher_image, t.thumb, t.image, t.id as tid, s.id as sid, s.studyintro,'
-            . ' se.id as seriesid, se.series_text, se.series_thumbnail'
+            $db->quoteName('#__bsms_mediafiles') . '.*, ' . $db->quoteName('#__bsms_servers.params', 'sparams') . ','
+            . $db->quoteName('s.studyintro') . ', ' . $db->quoteName('s.series_id') . ', '
+            . $db->quoteName('s.studytitle') . ', ' . $db->quoteName('s.studydate') . ', '
+            . $db->quoteName('s.teacher_id') . ', ' . $db->quoteName('s.booknumber') . ', '
+            . $db->quoteName('s.chapter_begin') . ', ' . $db->quoteName('s.chapter_end') . ', '
+            . $db->quoteName('s.verse_begin') . ', ' . $db->quoteName('s.verse_end') . ', '
+            . $db->quoteName('t.teachername') . ', ' . $db->quoteName('t.teacher_thumbnail') . ', '
+            . $db->quoteName('t.teacher_image') . ', ' . $db->quoteName('t.thumb') . ', '
+            . $db->quoteName('t.image') . ', ' . $db->quoteName('t.id', 'tid') . ', '
+            . $db->quoteName('s.id', 'sid') . ', '
+            . $db->quoteName('se.id', 'seriesid') . ', ' . $db->quoteName('se.series_text') . ', '
+            . $db->quoteName('se.series_thumbnail')
         )
-            ->from('#__bsms_mediafiles')
-            ->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)')
-            ->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)')
-            ->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
-            ->leftJoin('#__bsms_series AS se ON (s.series_id = se.id)')
-            ->where('#__bsms_mediafiles.id = ' . (int)$id)
-            ->where('#__bsms_mediafiles.published IN (1, 2)')
-            ->where(
-                '#__bsms_mediafiles.language in (' . $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*') . ')'
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->leftJoin(
+                $db->quoteName('#__bsms_servers') . ' ON ('
+                . $db->quoteName('#__bsms_servers.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.server_id') . ')'
             )
-            ->order('ordering asc');
+            ->leftJoin(
+                $db->quoteName('#__bsms_studies', 's') . ' ON ('
+                . $db->quoteName('s.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.study_id') . ')'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_teachers', 't') . ' ON ('
+                . $db->quoteName('t.id') . ' = ' . $db->quoteName('s.teacher_id') . ')'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_series', 'se') . ' ON ('
+                . $db->quoteName('s.series_id') . ' = ' . $db->quoteName('se.id') . ')'
+            )
+            ->where($db->quoteName('#__bsms_mediafiles.id') . ' = ' . (int) $id)
+            ->where($db->quoteName('#__bsms_mediafiles.published') . ' IN (1, 2)')
+            ->where(
+                $db->quoteName('#__bsms_mediafiles.language') . ' IN ('
+                . $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*') . ')'
+            )
+            ->order($db->quoteName('ordering') . ' ASC');
         $db->setQuery($query);
         $media = $db->loadObject();
 

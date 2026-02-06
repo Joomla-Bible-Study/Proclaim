@@ -170,11 +170,21 @@ class FiltersField extends FormField
 
         // Get the user groups from the database.
         $query = $db->getQuery(true);
-        $query->select('a.id AS value, a.title AS text, COUNT(DISTINCT b.id) AS level, a.parent_id as parent');
-        $query->from('#__usergroups AS a');
-        $query->join('LEFT', '#__usergroups AS b on a.lft > b.lft AND a.rgt < b.rgt');
-        $query->group('a.id, a.title, a.lft');
-        $query->order('a.lft ASC');
+        $query->select(
+            $db->qn('a.id', 'value') . ', '
+                . $db->qn('a.title', 'text') . ', '
+                . 'COUNT(DISTINCT ' . $db->qn('b.id') . ') AS ' . $db->qn('level') . ', '
+                . $db->qn('a.parent_id', 'parent')
+        );
+        $query->from($db->qn('#__usergroups', 'a'));
+        $query->join(
+            'LEFT',
+            $db->qn('#__usergroups', 'b') . ' ON '
+                . $db->qn('a.lft') . ' > ' . $db->qn('b.lft') . ' AND '
+                . $db->qn('a.rgt') . ' < ' . $db->qn('b.rgt')
+        );
+        $query->group($db->qn(['a.id', 'a.title', 'a.lft']));
+        $query->order($db->qn('a.lft') . ' ASC');
         $db->setQuery($query);
 
         return $db->loadObjectList();

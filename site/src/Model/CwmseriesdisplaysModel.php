@@ -92,7 +92,7 @@ class CwmseriesdisplaysModel extends ListModel
         $query->select($db->quoteName(['t.id', 't.teachername'], ['value', 'text']));
         $query->from($db->quoteName('#__bsms_teachers', 't'));
         $query->select($db->quoteName('series.access'));
-        $query->join('INNER', $db->quoteName('#__bsms_series', 'series') . ' ON t.id = series.teacher');
+        $query->join('INNER', $db->quoteName('#__bsms_series', 'series') . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('series.teacher'));
         $query->group($db->quoteName('t.id'));
         $query->order($db->quoteName('t.teachername') . ' ASC');
 
@@ -115,8 +115,8 @@ class CwmseriesdisplaysModel extends ListModel
         $query->select('YEAR(' . $db->quoteName('s.studydate') . ') as text');
         $query->from($db->quoteName('#__bsms_studies', 's'));
         $query->select($db->quoteName('series.access'));
-        $query->join('INNER', $db->quoteName('#__bsms_series', 'series') . ' ON s.series_id = series.id');
-        $query->order('value');
+        $query->join('INNER', $db->quoteName('#__bsms_series', 'series') . ' ON ' . $db->quoteName('s.series_id') . ' = ' . $db->quoteName('series.id'));
+        $query->order($db->quoteName('value'));
 
         $db->setQuery($query);
 
@@ -137,7 +137,7 @@ class CwmseriesdisplaysModel extends ListModel
 
         $query->select($db->quoteName(['series.id', 'series.series_text', 'series.access'], ['value', 'text', 'access']));
         $query->from($db->quoteName('#__bsms_series', 'series'));
-        $query->join('INNER', $db->quoteName('#__bsms_studies', 'study') . ' ON study.series_id = series.id');
+        $query->join('INNER', $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.series_id') . ' = ' . $db->quoteName('series.id'));
         $query->group($db->quoteName('series.id'));
         $query->order($db->quoteName('series.series_text'));
 
@@ -332,14 +332,28 @@ class CwmseriesdisplaysModel extends ListModel
                 'se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END as slug'
             )
         );
-        $query->from('#__bsms_series as se');
+        $query->from($db->quoteName('#__bsms_series', 'se'));
         $query->select(
-            't.id as tid, t.teachername, t.title as teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail'
+            $db->quoteName('t.id', 'tid') . ', ' . $db->quoteName('t.teachername') . ', '
+            . $db->quoteName('t.title', 'teachertitle') . ', ' . $db->quoteName('t.thumb') . ', '
+            . $db->quoteName('t.thumbh') . ', ' . $db->quoteName('t.thumbw') . ', '
+            . $db->quoteName('t.teacher_thumbnail')
         );
-        $query->join('LEFT', '#__bsms_teachers as t on se.teacher = t.id');
-        $query->select('s.id as sid, s.series_id, s.studydate');
-        $query->join('INNER', '#__bsms_studies as s on s.series_id = se.id');
-        $query->group('se.id');
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_teachers', 't') . ' ON '
+            . $db->quoteName('se.teacher') . ' = ' . $db->quoteName('t.id')
+        );
+        $query->select(
+            $db->quoteName('s.id', 'sid') . ', ' . $db->quoteName('s.series_id') . ', '
+            . $db->quoteName('s.studydate')
+        );
+        $query->join(
+            'INNER',
+            $db->quoteName('#__bsms_studies', 's') . ' ON '
+            . $db->quoteName('s.series_id') . ' = ' . $db->quoteName('se.id')
+        );
+        $query->group($db->quoteName('se.id'));
 
         // Filter by access level.
         if ($this->getState('filter.access', true)) {
@@ -350,7 +364,7 @@ class CwmseriesdisplaysModel extends ListModel
         $search = $this->getState('filter.search');
         if (!empty($search)) {
             $like = $db->quote('%' . $search . '%');
-            $query->where('se.description LIKE ' . $like);
+            $query->where($db->quoteName('se.description') . ' LIKE ' . $like);
         }
 
         // Filter by language
@@ -374,13 +388,13 @@ class CwmseriesdisplaysModel extends ListModel
         $showArchived = $this->getState('filter.show_archived', '0');
         switch ($showArchived) {
             case '1': // Archived only
-                $query->where('se.published = 2');
+                $query->where($db->quoteName('se.published') . ' = 2');
                 break;
             case '2': // Both published and archived
-                $query->where('se.published IN (1, 2)');
+                $query->where($db->quoteName('se.published') . ' IN (1, 2)');
                 break;
             default: // Published only (backward compatible)
-                $query->where('se.published = 1');
+                $query->where($db->quoteName('se.published') . ' = 1');
                 break;
         }
 

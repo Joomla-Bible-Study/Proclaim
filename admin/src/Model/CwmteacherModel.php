@@ -234,10 +234,10 @@ class CwmteacherModel extends AdminModel
 
         if (!empty($record) && $this->getState('task') === 'trash') {
             $query = $db->getQuery(true);
-            $query->select('id, studytitle')
-                ->from('#__bsms_studies')
-                ->where('teacher_id = ' . $record->id)
-                ->where('published != ' . $db->q('-2'));
+            $query->select($db->qn(['id', 'studytitle']))
+                ->from($db->qn('#__bsms_studies'))
+                ->where($db->qn('teacher_id') . ' = ' . (int) $record->id)
+                ->where($db->qn('published') . ' != ' . $db->q('-2'));
             $db->setQuery($query, 10);
             $studies = $db->loadObjectList();
 
@@ -366,9 +366,9 @@ class CwmteacherModel extends AdminModel
 
         // Iterate the items to delete each one.
         $query = $db->getQuery(true);
-        $query->select('id, studytitle')
-            ->from('#__bsms_studies')
-            ->where('teacher_id = ' . $record->id);
+        $query->select($db->qn(['id', 'studytitle']))
+            ->from($db->qn('#__bsms_studies'))
+            ->where($db->qn('teacher_id') . ' = ' . (int) $record->id);
         $db->setQuery($query);
         $studies = $db->loadObjectList();
 
@@ -440,7 +440,7 @@ class CwmteacherModel extends AdminModel
             if (empty($table->ordering)) {
                 $db    = Factory::getContainer()->get('DatabaseDriver');
                 $query = $db->getQuery(true);
-                $query->select('MAX(ordering)')->from('#__bsms_teachers');
+                $query->select('MAX(' . $db->qn('ordering') . ')')->from($db->qn('#__bsms_teachers'));
                 $db->setQuery($query);
                 $max = $db->loadResult();
 

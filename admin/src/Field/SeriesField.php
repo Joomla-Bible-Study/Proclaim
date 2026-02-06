@@ -48,10 +48,10 @@ class SeriesField extends ListField
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select('id,series_text');
-        $query->from('#__bsms_series');
-        $query->where('published = 1');
-        $query->order('series_text');
+        $query->select($db->qn('id') . ', ' . $db->qn('series_text'));
+        $query->from($db->qn('#__bsms_series'));
+        $query->where($db->qn('published') . ' = 1');
+        $query->order($db->qn('series_text'));
         $db->setQuery((string)$query);
         $messages = $db->loadObjectList();
         $options  = [];

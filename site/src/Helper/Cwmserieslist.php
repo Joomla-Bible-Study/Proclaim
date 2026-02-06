@@ -190,29 +190,59 @@ class Cwmserieslist extends Cwmlisting
         $groups = implode(',', $user->getAuthorisedViewLevels());
         $query  = $db->getQuery(true);
         $query->select(
-            's.*, se.id AS seid, t.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, '
-            . ' t.teacher_thumbnail, se.series_text, se.description AS sdescription, '
-            . ' se.series_thumbnail, #__bsms_message_type.id AS mid,'
-            . ' #__bsms_message_type.message_type AS message_type, #__bsms_books.bookname,'
-            . ' group_concat(#__bsms_topics.id separator ", ") AS tp_id, group_concat(#__bsms_topics.topic_text separator ", ")'
-            . ' as topic_text, group_concat(#__bsms_topics.params separator ", ") as topic_params, '
-            . ' #__bsms_locations.id AS lid, #__bsms_locations.location_text '
+            $db->quoteName('s') . '.*, '
+            . $db->quoteName('se.id', 'seid') . ', '
+            . $db->quoteName('t.id', 'tid') . ', ' . $db->quoteName('t.teachername') . ', '
+            . $db->quoteName('t.title', 'teachertitle') . ', ' . $db->quoteName('t.thumb') . ', '
+            . $db->quoteName('t.thumbh') . ', ' . $db->quoteName('t.thumbw') . ', '
+            . $db->quoteName('t.teacher_thumbnail') . ', ' . $db->quoteName('se.series_text') . ', '
+            . $db->quoteName('se.description', 'sdescription') . ', '
+            . $db->quoteName('se.series_thumbnail') . ', '
+            . $db->quoteName('#__bsms_message_type.id', 'mid') . ', '
+            . $db->quoteName('#__bsms_message_type.message_type', 'message_type') . ', '
+            . $db->quoteName('#__bsms_books.bookname') . ', '
+            . 'GROUP_CONCAT(' . $db->quoteName('#__bsms_topics.id') . ' SEPARATOR ", ") AS ' . $db->quoteName('tp_id') . ', '
+            . 'GROUP_CONCAT(' . $db->quoteName('#__bsms_topics.topic_text') . ' SEPARATOR ", ") AS ' . $db->quoteName('topic_text') . ', '
+            . 'GROUP_CONCAT(' . $db->quoteName('#__bsms_topics.params') . ' SEPARATOR ", ") AS ' . $db->quoteName('topic_params') . ', '
+            . $db->quoteName('#__bsms_locations.id', 'lid') . ', '
+            . $db->quoteName('#__bsms_locations.location_text')
         )
-            ->from('#__bsms_studies AS s')
-            ->leftJoin('#__bsms_series AS se ON (s.series_id = se.id)')
-            ->leftJoin('#__bsms_teachers AS t ON (s.teacher_id = t.id)')
-            ->leftJoin('#__bsms_books ON (s.booknumber = #__bsms_books.booknumber)')
-            ->leftJoin('#__bsms_message_type ON (s.messagetype = #__bsms_message_type.id)')
-            ->leftJoin('#__bsms_studytopics ON (#__bsms_studytopics.study_id = s.id)')
-            ->leftJoin('#__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)')
-            ->leftJoin('#__bsms_locations ON (s.location_id = #__bsms_locations.id)')
-            ->where('s.series_id = ' . (int) $id)
-            ->where('s.published = ' . 1)
-            ->where('s.language in (' . $language . ')')
-            ->where('s.access IN (' . $groups . ')')
-            ->group('s.id')
+            ->from($db->quoteName('#__bsms_studies', 's'))
+            ->leftJoin(
+                $db->quoteName('#__bsms_series', 'se') . ' ON ('
+                . $db->quoteName('s.series_id') . ' = ' . $db->quoteName('se.id') . ')'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_teachers', 't') . ' ON ('
+                . $db->quoteName('s.teacher_id') . ' = ' . $db->quoteName('t.id') . ')'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_books') . ' ON ('
+                . $db->quoteName('s.booknumber') . ' = ' . $db->quoteName('#__bsms_books.booknumber') . ')'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_message_type') . ' ON ('
+                . $db->quoteName('s.messagetype') . ' = ' . $db->quoteName('#__bsms_message_type.id') . ')'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_studytopics') . ' ON ('
+                . $db->quoteName('#__bsms_studytopics.study_id') . ' = ' . $db->quoteName('s.id') . ')'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_topics') . ' ON ('
+                . $db->quoteName('#__bsms_topics.id') . ' = ' . $db->quoteName('#__bsms_studytopics.topic_id') . ')'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_locations') . ' ON ('
+                . $db->quoteName('s.location_id') . ' = ' . $db->quoteName('#__bsms_locations.id') . ')'
+            )
+            ->where($db->quoteName('s.series_id') . ' = ' . (int) $id)
+            ->where($db->quoteName('s.published') . ' = 1')
+            ->where($db->quoteName('s.language') . ' IN (' . $language . ')')
+            ->where($db->quoteName('s.access') . ' IN (' . $groups . ')')
+            ->group($db->quoteName('s.id'))
             ->order(
-                $params->get('series_detail_sort', 'studydate') . ' ' . $params->get('series_detail_order', 'desc')
+                $db->quoteName($params->get('series_detail_sort', 'studydate')) . ' ' . $params->get('series_detail_order', 'DESC')
             );
 
         $db->setQuery($query, 0, $limit);

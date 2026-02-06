@@ -98,47 +98,95 @@ class CwmsermonModel extends FormModel
                         's.*,CASE WHEN CHAR_LENGTH(s.alias) THEN CONCAT_WS(\':\', s.id, s.alias) ELSE s.id END as slug'
                     )
                 );
-                $query->from('#__bsms_studies AS s');
+                $query->from($db->quoteName('#__bsms_studies', 's'));
 
                 // Join over teachers
                 $query->select(
-                    't.id AS tid, t.teachername AS teachername, t.title AS teachertitle, t.image, t.imagew, t.imageh,' .
-                    't.teacher_thumbnail as thumb, t.thumbw, t.thumbh'
+                    $db->quoteName('t.id', 'tid') . ', '
+                    . $db->quoteName('t.teachername', 'teachername') . ', '
+                    . $db->quoteName('t.title', 'teachertitle') . ', '
+                    . $db->quoteName('t.image') . ', ' . $db->quoteName('t.imagew') . ', ' . $db->quoteName('t.imageh') . ', '
+                    . $db->quoteName('t.teacher_thumbnail', 'thumb') . ', '
+                    . $db->quoteName('t.thumbw') . ', ' . $db->quoteName('t.thumbh')
                 );
 
-                $query->join('LEFT', '#__bsms_teachers as t on s.teacher_id = t.id');
+                $query->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_teachers', 't') . ' ON '
+                    . $db->quoteName('s.teacher_id') . ' = ' . $db->quoteName('t.id')
+                );
 
                 // Join over series
-                $query->select('se.id AS sid, se.series_text, se.series_thumbnail, se.description as sdescription');
-                $query->join('LEFT', '#__bsms_series as se on s.series_id = se.id');
+                $query->select(
+                    $db->quoteName('se.id', 'sid') . ', ' . $db->quoteName('se.series_text') . ', '
+                    . $db->quoteName('se.series_thumbnail') . ', ' . $db->quoteName('se.description', 'sdescription')
+                );
+                $query->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_series', 'se') . ' ON '
+                    . $db->quoteName('s.series_id') . ' = ' . $db->quoteName('se.id')
+                );
 
                 // Join over message type
-                $query->select('mt.id as mid, mt.message_type');
-                $query->join('LEFT', '#__bsms_message_type as mt on s.messagetype = mt.id');
+                $query->select($db->quoteName('mt.id', 'mid') . ', ' . $db->quoteName('mt.message_type'));
+                $query->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_message_type', 'mt') . ' ON '
+                    . $db->quoteName('s.messagetype') . ' = ' . $db->quoteName('mt.id')
+                );
 
                 // Join over books
-                $query->select('b.bookname as bookname');
-                $query->join('LEFT', '#__bsms_books as b on s.booknumber = b.booknumber');
+                $query->select($db->quoteName('b.bookname', 'bookname'));
+                $query->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_books', 'b') . ' ON '
+                    . $db->quoteName('s.booknumber') . ' = ' . $db->quoteName('b.booknumber')
+                );
 
-                $query->select('book2.bookname as bookname2');
-                $query->join('LEFT', '#__bsms_books AS book2 ON book2.booknumber = s.booknumber2');
+                $query->select($db->quoteName('book2.bookname', 'bookname2'));
+                $query->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_books', 'book2') . ' ON '
+                    . $db->quoteName('book2.booknumber') . ' = ' . $db->quoteName('s.booknumber2')
+                );
 
                 // Join over locations
-                $query->select('l.id as lid, l.location_text');
-                $query->join('LEFT', '#__bsms_locations as l on s.location_id = l.id');
+                $query->select($db->quoteName('l.id', 'lid') . ', ' . $db->quoteName('l.location_text'));
+                $query->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_locations', 'l') . ' ON '
+                    . $db->quoteName('s.location_id') . ' = ' . $db->quoteName('l.id')
+                );
 
                 // Join over topics
                 $query->select(
-                    'group_concat(stp.id separator ", ") AS tp_id, group_concat(stp.topic_text separator ", ")
-					 as topic_text, group_concat(stp.params separator ", ") as topic_params'
+                    'GROUP_CONCAT(' . $db->quoteName('stp.id') . ' SEPARATOR ", ") AS ' . $db->quoteName('tp_id') . ', '
+                    . 'GROUP_CONCAT(' . $db->quoteName('stp.topic_text') . ' SEPARATOR ", ") AS ' . $db->quoteName('topic_text') . ', '
+                    . 'GROUP_CONCAT(' . $db->quoteName('stp.params') . ' SEPARATOR ", ") AS ' . $db->quoteName('topic_params')
                 );
-                $query->join('LEFT', '#__bsms_studytopics as tp on s.id = tp.study_id');
-                $query->join('LEFT', '#__bsms_topics as stp on stp.id = tp.topic_id');
+                $query->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_studytopics', 'tp') . ' ON '
+                    . $db->quoteName('s.id') . ' = ' . $db->quoteName('tp.study_id')
+                );
+                $query->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_topics', 'stp') . ' ON '
+                    . $db->quoteName('stp.id') . ' = ' . $db->quoteName('tp.topic_id')
+                );
 
                 // Join over media files
-                $query->select('sum(m.plays) AS totalplays, sum(m.downloads) AS totaldownloads, m.id');
-                $query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
-                $query->join('LEFT', '#__bsms_mediafiles AS m on s.id = m.study_id');
+                $query->select(
+                    'SUM(' . $db->quoteName('m.plays') . ') AS ' . $db->quoteName('totalplays') . ', '
+                    . 'SUM(' . $db->quoteName('m.downloads') . ') AS ' . $db->quoteName('totaldownloads') . ', '
+                    . $db->quoteName('m.id')
+                );
+                $query->select('GROUP_CONCAT(DISTINCT ' . $db->quoteName('m.id') . ') AS ' . $db->quoteName('mids'));
+                $query->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_mediafiles', 'm') . ' ON '
+                    . $db->quoteName('s.id') . ' = ' . $db->quoteName('m.study_id')
+                );
 
                 if (
                     (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
@@ -159,7 +207,7 @@ class CwmsermonModel extends FormModel
                 // Implement View Level Access
                 if (!$user->authorise('core.cwmadmin')) {
                     $groups = implode(',', $user->getAuthorisedViewLevels());
-                    $query->where('s.access IN (' . $groups . ')');
+                    $query->where($db->quoteName('s.access') . ' IN (' . $groups . ')');
                 }
 
                 // Filter by published state.
@@ -167,11 +215,11 @@ class CwmsermonModel extends FormModel
                 $archived  = $this->getState('filter.archived');
 
                 if (is_numeric($published)) {
-                    $query->where('(s.published = ' . (int)$published . ' OR s.published =' . (int)$archived . ')');
+                    $query->where('(' . $db->quoteName('s.published') . ' = ' . (int) $published . ' OR ' . $db->quoteName('s.published') . ' = ' . (int) $archived . ')');
                 }
 
-                $query->group('s.id');
-                $query->where('s.id = ' . (int)$pk);
+                $query->group($db->quoteName('s.id'));
+                $query->where($db->quoteName('s.id') . ' = ' . (int) $pk);
                 $db->setQuery($query);
                 $data = $db->loadObject();
 

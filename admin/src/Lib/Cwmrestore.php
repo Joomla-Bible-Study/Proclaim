@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\InstallerHelper;
 use Joomla\CMS\Language\Text;
@@ -48,29 +47,29 @@ class Cwmrestore
 
         foreach ($backuptables as $backuptable) {
             if (substr_count($backuptable['name'], 'studies')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext BLOB';
+                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('studytext') . ' BLOB';
                 $db->setQuery($query);
                 $db->execute();
 
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext2 BLOB';
+                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('studytext2') . ' BLOB';
                 $db->setQuery($query);
                 $db->execute();
             }
 
             if (substr_count($backuptable['name'], 'podcast')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description BLOB';
+                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('description') . ' BLOB';
                 $db->setQuery($query);
                 $db->execute();
             }
 
             if (substr_count($backuptable['name'], 'series')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description BLOB';
+                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('description') . ' BLOB';
                 $db->setQuery($query);
                 $db->execute();
             }
 
             if (substr_count($backuptable['name'], 'teachers')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY information BLOB';
+                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('information') . ' BLOB';
                 $db->setQuery($query);
                 $db->execute();
             }
@@ -120,29 +119,29 @@ class Cwmrestore
 
         foreach ($backuptables as $backuptable) {
             if (substr_count($backuptable['name'], 'studies')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext TEXT';
+                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('studytext') . ' TEXT';
                 $db->setQuery($query);
                 $db->execute();
 
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext2 TEXT';
+                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('studytext2') . ' TEXT';
                 $db->setQuery($query);
                 $db->execute();
             }
 
             if (substr_count($backuptable['name'], 'podcast')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description TEXT';
+                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('description') . ' TEXT';
                 $db->setQuery($query);
                 $db->execute();
             }
 
             if (substr_count($backuptable['name'], 'series')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description TEXT';
+                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('description') . ' TEXT';
                 $db->setQuery($query);
                 $db->execute();
             }
 
             if (substr_count($backuptable['name'], 'teachers')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY information TEXT';
+                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('information') . ' TEXT';
                 $db->setQuery($query);
                 $db->execute();
             }
@@ -208,9 +207,9 @@ class Cwmrestore
             if ($result) {
                 // Get Proclaim extension ID
                 $query = $this->dbo->getQuery(true);
-                $query->select('extension_id');
-                $query->from('#__extensions');
-                $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_proclaim'));
+                $query->select($this->dbo->qn('extension_id'));
+                $query->from($this->dbo->qn('#__extensions'));
+                $query->where($this->dbo->qn('element') . ' = ' . $this->dbo->q('com_proclaim'));
                 $this->dbo->setQuery($query);
                 $cid = (int) $this->dbo->loadResult();
 
@@ -479,7 +478,7 @@ class Cwmrestore
         $objects = self::getObjects();
 
         foreach ($objects as $object) {
-            $dropper = 'DROP TABLE IF EXISTS ' . $object['name'] . ';';
+            $dropper = 'DROP TABLE IF EXISTS ' . $db->qn($object['name']);
             $db->setQuery($dropper);
             $db->execute();
         }
@@ -598,7 +597,7 @@ class Cwmrestore
                 $query = $db->getQuery(true);
                 $query->update($db->quoteName($table))
                     ->set($db->quoteName('created_by') . ' = ' . (int) $currentUserId)
-                    ->where($db->quoteName('created_by') . ' NOT IN (SELECT id FROM #__users)')
+                    ->where($db->quoteName('created_by') . ' NOT IN (SELECT ' . $db->qn('id') . ' FROM ' . $db->qn('#__users') . ')')
                     ->where($db->quoteName('created_by') . ' != 0');
                 $db->setQuery($query);
                 $db->execute();
@@ -608,7 +607,7 @@ class Cwmrestore
                 $query = $db->getQuery(true);
                 $query->update($db->quoteName($table))
                     ->set($db->quoteName('modified_by') . ' = ' . (int) $currentUserId)
-                    ->where($db->quoteName('modified_by') . ' NOT IN (SELECT id FROM #__users)')
+                    ->where($db->quoteName('modified_by') . ' NOT IN (SELECT ' . $db->qn('id') . ' FROM ' . $db->qn('#__users') . ')')
                     ->where($db->quoteName('modified_by') . ' != 0');
                 $db->setQuery($query);
                 $db->execute();

@@ -134,11 +134,14 @@ class Cwmtranslated
         if ($topicItem && $topicItem->tp_id) {
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
-            $query->select('#__bsms_topics.topic_text, #__bsms_topics.params AS topic_params')
-                ->from('#__bsms_topics')
-                ->leftJoin('#__bsms_studytopics ON (#__bsms_studytopics.study_id = ' . $db->q($topicItem->id) . ') ')
-                ->where('published = ' . 1)
-                ->where('#__bsms_topics.id = #__bsms_studytopics.topic_id');
+            $query->select($db->qn('#__bsms_topics.topic_text') . ', ' . $db->qn('#__bsms_topics.params', 'topic_params'))
+                ->from($db->qn('#__bsms_topics'))
+                ->leftJoin(
+                    $db->qn('#__bsms_studytopics') . ' ON (' . $db->qn('#__bsms_studytopics.study_id')
+                    . ' = ' . $db->q($topicItem->id) . ')'
+                )
+                ->where($db->qn('published') . ' = 1')
+                ->where($db->qn('#__bsms_topics.id') . ' = ' . $db->qn('#__bsms_studytopics.topic_id'));
             $db->setQuery($query);
             $results = $db->loadObjectList();
             $output  = '';

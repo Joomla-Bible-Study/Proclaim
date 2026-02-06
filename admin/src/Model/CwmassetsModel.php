@@ -367,9 +367,15 @@ class CwmassetsModel extends ListModel
             // Put the table into the return array
             // Get the total number of rows and collect the table into a query
             $query = $db->getQuery(true);
-            $query->select('j.id as jid, j.asset_id as jasset_id, a.id as aid, a.rules as arules, a.parent_id')
-                ->from($db->qn($object['name']) . ' as j')
-                ->leftJoin('#__assets as a ON (a.id = j.asset_id)');
+            $query->select(
+                $db->qn('j.id', 'jid') . ', '
+                . $db->qn('j.asset_id', 'jasset_id') . ', '
+                . $db->qn('a.id', 'aid') . ', '
+                . $db->qn('a.rules', 'arules') . ', '
+                . $db->qn('a.parent_id')
+            )
+                ->from($db->qn($object['name'], 'j'))
+                ->leftJoin($db->qn('#__assets', 'a') . ' ON (' . $db->qn('a.id') . ' = ' . $db->qn('j.asset_id') . ')');
             $db->setQuery($query);
             $results     = $db->loadObjectList();
             $nullrows    = 0;

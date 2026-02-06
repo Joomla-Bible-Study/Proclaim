@@ -160,7 +160,7 @@ class CwmseriesModel extends ListModel
         $query->select(
             $this->getState(
                 'list.select',
-                [
+                implode(', ', [
                     $db->quoteName('series.id'),
                     $db->quoteName('series.series_text'),
                     $db->quoteName('series.published'),
@@ -168,7 +168,7 @@ class CwmseriesModel extends ListModel
                     $db->quoteName('series.language'),
                     $db->quoteName('series.access'),
                     $db->quoteName('series.ordering'),
-                ]
+                ])
             )
         )
             ->select(
