@@ -306,13 +306,11 @@ class CwmserieModel extends AdminModel
             if (!$table->load($pk)) {
                 if ($error = $table->getError()) {
                     // Fatal error
-                    $app->enqueueMessage($error, 'error');
-
-                    return false;
+                    throw new \RuntimeException($error);
                 }
 
                 // Not fatal error
-                $app->enqueueMessage(Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
+                $app->enqueueMessage(Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk), 'warning');
                 continue;
             }
 
@@ -326,16 +324,12 @@ class CwmserieModel extends AdminModel
 
             // Check the row.
             if (!$table->check()) {
-                $app->enqueueMessage($table->getError(), 'error');
-
-                return false;
+                throw new \RuntimeException($table->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
             }
 
             // Store the row.
             if (!$table->store()) {
-                $app->enqueueMessage($table->getError(), 'error');
-
-                return false;
+                throw new \RuntimeException($table->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
             }
 
             // Get the new item ID

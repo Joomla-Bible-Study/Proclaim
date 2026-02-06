@@ -215,8 +215,8 @@ class CwmpIconvert
             $reg->set('path', $url);
             $query = $db->getQuery(true);
             $query->update('#__bsms_servers')
-                ->set('params = ' . $db->q($reg->toString()))
-                ->where('id = ' . (int)$server->id);
+                ->set($db->qn('params') . ' = ' . $db->q($reg->toString()))
+                ->where($db->qn('id') . ' = ' . (int) $server->id);
             $db->setQuery($query);
             $db->execute();
         }

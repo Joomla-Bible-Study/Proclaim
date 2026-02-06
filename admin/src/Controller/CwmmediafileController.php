@@ -193,8 +193,7 @@ class CwmmediafileController extends FormController
             if ($checkin) {
                 if ($model->checkin($recordId) === false) {
                     // Check-in failed, go back to the record and display a notice.
-                    $this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
-                    $this->setMessage($this->getError(), 'error');
+                    $this->setMessage(Text::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', ''), 'error');
 
                     $this->setRedirect(
                         Route::_(

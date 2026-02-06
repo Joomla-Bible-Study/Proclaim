@@ -153,9 +153,7 @@ class CwmcommentModel extends AdminModel
         $user = Factory::getApplication()->getIdentity();
 
         if (!$user->authorise('core.create', $extension)) {
-            $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
-
-            return false;
+            throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
         }
 
         // Parent exists so we let's proceed
@@ -169,13 +167,14 @@ class CwmcommentModel extends AdminModel
             if (!$table->load($pk)) {
                 if ($error = $table->getError()) {
                     // Fatal error
-                    $this->setError($error);
-
-                    return false;
+                    throw new \RuntimeException($error);
                 }
 
                 // Not fatal error
-                $this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
+                Factory::getApplication()->enqueueMessage(
+                    Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk),
+                    'warning'
+                );
                 continue;
             }
 
@@ -187,16 +186,12 @@ class CwmcommentModel extends AdminModel
 
             // Check the row.
             if (!$table->check()) {
-                $this->setError($table->getError());
-
-                return false;
+                throw new \RuntimeException($table->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
             }
 
             // Store the row.
             if (!$table->store()) {
-                $this->setError($table->getError());
-
-                return false;
+                throw new \RuntimeException($table->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
             }
 
             // Get the new item ID

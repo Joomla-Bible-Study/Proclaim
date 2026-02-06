@@ -59,7 +59,7 @@ class CwmmediafilesController extends AdminController
 
         if ($return === false) {
             // Checkin failed.
-            $message = Text::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError());
+            $message = Text::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', '');
             $this->setRedirect(
                 Route::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false),
                 $message,

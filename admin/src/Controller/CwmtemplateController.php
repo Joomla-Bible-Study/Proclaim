@@ -49,10 +49,11 @@ class CwmtemplateController extends FormController
         $baseDatabaseModel = $this->getModel('template');
         $model             = &$baseDatabaseModel;
 
-        if ($model->copy($cid)) {
+        try {
+            $model->copy($cid);
             $msg = Text::_('JBS_TPL_TEMPLATE_COPIED');
-        } else {
-            $msg = $model->getError();
+        } catch (\RuntimeException $e) {
+            $msg = $e->getMessage();
         }
 
         $this->setRedirect('index.php?option=com_proclaim&view=templates', $msg);
