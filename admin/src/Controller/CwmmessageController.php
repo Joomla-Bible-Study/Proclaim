@@ -22,7 +22,7 @@ use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
-use Joomla\Input\Input;
+
 
 /**
  * Controller for Message
@@ -58,7 +58,7 @@ class CwmmessageController extends FormController
         }
 
         $msg   = null;
-        $input = new Input();
+        $input = $this->input;
         $id    = $input->get('id', 0, 'int');
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);

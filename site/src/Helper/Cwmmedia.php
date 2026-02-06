@@ -27,7 +27,7 @@ use Joomla\CMS\Image\Image;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
-use Joomla\Input\Input;
+
 use Joomla\Registry\Registry;
 
 /**
@@ -456,7 +456,7 @@ class Cwmmedia
         $params = clone $params;
         $params->merge($media->params);
 
-        $input      = new Input();
+        $input      = Factory::getApplication()->getInput();
         $template   = $input->getInt('t', '1');
         $youtube    = new CWMAddonYoutube();
         $colorStyle = ($media->params->get("media_button_color")) ? ' style="color:' . $media->params->get("media_button_color") . '"' : '';

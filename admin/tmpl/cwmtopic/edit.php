@@ -20,7 +20,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
-use Joomla\Input\Input;
+use Joomla\CMS\Factory;
 
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
@@ -55,7 +55,7 @@ $wa->useScript('keepalive')
 /** @type Joomla\Registry\Registry $params */
 $params = $this->state->get('params');
 $params = $params->toArray();
-$input  = new Input();
+$input  = Factory::getApplication()->getInput();
 ?>
 <form action="<?php
 echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item->id); ?>"

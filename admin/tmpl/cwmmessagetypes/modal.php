@@ -13,7 +13,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
-use Joomla\Input\Input;
+use Joomla\CMS\Factory;
 
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
@@ -21,7 +21,7 @@ use Joomla\Input\Input;
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmmediafiles\HtmlView $this */
 
 HTMLHelper::_('behavior.multiselect');
-$input     = new Input();
+$input     = Factory::getApplication()->getInput();
 $function  = $input->get('function', 'jSelectMessagetype', 'cmd');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));

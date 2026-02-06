@@ -20,7 +20,6 @@ use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Path;
-use Joomla\Input\Input;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -62,7 +61,7 @@ class CwmuploadController extends AdminController
             error_reporting(0);
         }
 
-        $input   = new Input();
+        $input   = $this->input;
         $params  = ComponentHelper::getParams('com_proclaim');
         $app     = Factory::getApplication();
         $session = $app->getSession();

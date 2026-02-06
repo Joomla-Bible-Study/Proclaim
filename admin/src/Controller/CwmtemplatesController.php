@@ -25,7 +25,7 @@ use Joomla\CMS\Session\Session;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Filesystem\File;
 use Joomla\Input\Files;
-use Joomla\Input\Input;
+
 use Joomla\Registry\Registry;
 
 /**
@@ -276,7 +276,7 @@ class CwmtemplatesController extends AdminController
             throw new \Exception(Text::_('JINVALID_TOKEN'));
         }
 
-        $input          = new Input();
+        $input          = $this->input;
         $data           = $input->get('template_export');
         $exporttemplate = $data;
 

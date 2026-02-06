@@ -24,7 +24,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\Input\Input;
+
 use Joomla\Registry\Registry;
 
 /**
@@ -108,7 +108,7 @@ class HtmlView extends BaseHtmlView
         $this->form       = $this->get("Form");
         $this->item       = $this->get("Item");
         $this->canDo      = ContentHelper::getActions('com_proclaim', 'message', (int)$this->item->id);
-        $input            = new Input();
+        $input            = Factory::getApplication()->getInput();
         $option           = $input->get('option', '', 'cmd');
         $this->mediafiles = $this->get('MediaFiles');
         $this->state      = $this->get('State');

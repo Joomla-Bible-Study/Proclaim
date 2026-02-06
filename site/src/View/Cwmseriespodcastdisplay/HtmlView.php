@@ -23,7 +23,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Uri\Uri;
-use Joomla\Input\Input;
+
 use Joomla\Registry\Registry;
 
 /**
@@ -103,7 +103,7 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $input = new Input();
+        $input = Factory::getApplication()->getInput();
 
         // Get the menu item object
         // Load the Admin settings and params from the template

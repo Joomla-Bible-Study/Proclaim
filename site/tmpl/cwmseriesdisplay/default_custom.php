@@ -20,10 +20,8 @@ use CWM\Component\Proclaim\Site\Helper\Cwmserieslist;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-use Joomla\Input\Input;
-
 $mainframe = Factory::getApplication();
-$input     = new Input();
+$input     = $mainframe->getInput();
 $option    = $input->get('option', '', 'cmd');
 $document  = $mainframe->getDocument();
 $params    = $this->params;

@@ -19,10 +19,8 @@
 use CWM\Component\Proclaim\Site\Helper\Cwmserieslist;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
-use Joomla\Input\Input;
-
 $app         = Factory::getApplication();
-$input       = new Input();
+$input       = $app->getInput();
 $option      = $input->get('option', '', 'cmd');
 $series_menu = (int) $this->params->get('series_id', 1);
 $document    = $app->getDocument();
