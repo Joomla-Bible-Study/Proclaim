@@ -301,6 +301,17 @@
             "name": "com_proclaim.layout-editor",
             "type": "style",
             "uri": "com_proclaim/layout-editor.css"
+        },
+        {
+            "name": "com_proclaim.templatecode-snippets",
+            "type": "script",
+            "uri": "com_proclaim/templatecode-snippets.min.js",
+            "dependencies": [
+                "form.validate"
+            ],
+            "attributes": {
+                "defer": true
+            }
         }
     ]
 }
