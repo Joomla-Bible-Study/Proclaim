@@ -618,10 +618,10 @@ class Cwmstats
         }
 
         return '<br /><strong>' . Text::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $stats['total'] . '</strong>' .
-            '<br /><strong>' . Text::_('JBS_CMN_INLINE') . ': </strong>' . (int)$stats['popup_inline'] . '<br /><strong>' .
-            Text::_('JBS_CMN_POPUP') . ': </strong>' . (int)$stats['popup_popup'] . '<br /><strong>' .
-            Text::_('JBS_CMN_SQUEEZEBOX') . ': </strong>' . (int)$stats['popup_squeezebox'] . '<br /><strong>' .
-            Text::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL') . ': </strong>' . (int)$stats['popup_none'];
+            '<br /><strong>' . Text::_('JBS_CMN_INLINE') . ': </strong>' . (int) $stats['popup_inline'] .
+            '<br /><strong>' . Text::_('JBS_CMN_POPUP') . ': </strong>' . (int) $stats['popup_popup'] .
+            '<br /><strong>' . Text::_('JBS_CMN_SQUEEZEBOX') . ': </strong>' . (int) $stats['popup_squeezebox'] .
+            '<br /><strong>' . Text::_('JBS_CMN_USE_GLOBAL') . ': </strong>' . (int) $stats['popup_none'];
     }
 
     /**
