@@ -552,6 +552,12 @@ class CwmbackupController extends FormController
      */
     public function finalizeImportXHR(): void
     {
+        // Suppress error display and capture any output
+        $previousErrorReporting = error_reporting(E_ALL);
+        $previousDisplayErrors = ini_get('display_errors');
+        ini_set('display_errors', '0');
+        ob_start();
+
         // Register shutdown handler to catch fatal errors
         register_shutdown_function(function () {
             $error = error_get_last();
@@ -668,14 +674,22 @@ class CwmbackupController extends FormController
     {
         $app = Factory::getApplication();
 
-        // Clear any output buffers
+        // Capture and log any stray output (PHP errors, warnings, etc.)
+        $strayOutput = '';
+
         while (ob_get_level()) {
-            ob_end_clean();
+            $strayOutput .= ob_get_clean();
         }
 
-        // Set JSON headers directly
-        header('Content-Type: application/json; charset=utf-8');
-        header('Cache-Control: no-cache, must-revalidate');
+        if (!empty($strayOutput)) {
+            Log::add('Stray output captured: ' . substr($strayOutput, 0, 500), Log::WARNING, 'com_proclaim');
+        }
+
+        // Set JSON headers directly (only if headers not already sent)
+        if (!headers_sent()) {
+            header('Content-Type: application/json; charset=utf-8');
+            header('Cache-Control: no-cache, must-revalidate');
+        }
 
         $response = [
             'success' => $success,
