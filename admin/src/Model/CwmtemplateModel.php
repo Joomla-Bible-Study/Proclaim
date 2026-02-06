@@ -87,8 +87,8 @@ class CwmtemplateModel extends AdminModel
                 ->getMVCFactory()->createTable('Cwmtemplate', 'Administrator');
 
             $tmplCurr->load($id);
-            $tmplCurr->id    = '';
-            $tmplCurr->title .= " - copy";
+            $tmplCurr->id    = 0;
+            $tmplCurr->title .= ' - copy';
 
             if (!$tmplCurr->store()) {
                 throw new \RuntimeException($tmplCurr->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));

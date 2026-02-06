@@ -143,6 +143,10 @@ class HtmlView extends BaseHtmlView
 
         if ($this->canDo->get('core.create')) {
             ToolbarHelper::addNew('cwmtemplate.add');
+
+            $toolbar->standardButton('copy', 'JBS_TPL_DUPLICATE', 'cwmtemplate.copy')
+                ->icon('icon-copy')
+                ->listCheck(true);
         }
 
         $dropdown = $toolbar->dropdownButton('status-group')

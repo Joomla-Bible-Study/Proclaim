@@ -21,8 +21,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
 $wa = $this->getDocument()->getWebAssetManager();
-$wa->useScript('table.columns')
-    ->useScript('multiselect');
+$wa->useScript('table.columns');
 
 // $templates is used to generate the export list.
 $templates       = $this->get('templates');

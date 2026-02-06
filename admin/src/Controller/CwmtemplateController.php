@@ -46,17 +46,18 @@ class CwmtemplateController extends FormController
         $cid   = $input->get('cid', '', 'array');
         ArrayHelper::toInteger($cid);
 
-        $baseDatabaseModel = $this->getModel('template');
-        $model             = &$baseDatabaseModel;
+        $model = $this->getModel('Cwmtemplate');
 
         try {
             $model->copy($cid);
-            $msg = Text::_('JBS_TPL_TEMPLATE_COPIED');
+            $msg  = Text::_('JBS_TPL_TEMPLATE_COPIED');
+            $type = 'message';
         } catch (\RuntimeException $e) {
-            $msg = $e->getMessage();
+            $msg  = $e->getMessage();
+            $type = 'error';
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=templates', $msg);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $msg, $type);
     }
 
     /**
