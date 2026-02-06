@@ -552,23 +552,40 @@ class CwmbackupController extends FormController
      */
     public function finalizeImportXHR(): void
     {
-        // Check for request forgeries
-        if (!Session::checkToken('get') && !Session::checkToken()) {
-            $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
+        // Register shutdown handler to catch fatal errors
+        register_shutdown_function(function () {
+            $error = error_get_last();
 
-            return;
-        }
-
-        $app       = Factory::getApplication();
-        $input     = $app->getInput();
-        $sessionId = $input->get('sessionId', '', 'string');
-        $session   = $app->getSession();
-
-        // Clean up session data
-        $session->set('proclaim_import_' . $sessionId, '', 'CWM');
-        $session->set('proclaim_import_queries_' . $sessionId, '', 'CWM');
+            if ($error !== null && \in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) {
+                while (ob_get_level()) {
+                    ob_end_clean();
+                }
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'PHP Fatal: ' . $error['message'] . ' in ' . $error['file'] . ':' . $error['line'],
+                    'data'    => [],
+                ]);
+            }
+        });
 
         try {
+            // Check for request forgeries
+            if (!Session::checkToken('get') && !Session::checkToken()) {
+                $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
+
+                return;
+            }
+
+            $app       = Factory::getApplication();
+            $input     = $app->getInput();
+            $sessionId = $input->get('sessionId', '', 'string');
+            $session   = $app->getSession();
+
+            // Clean up session data
+            $session->set('proclaim_import_' . $sessionId, '', 'CWM');
+            $session->set('proclaim_import_queries_' . $sessionId, '', 'CWM');
+
             // Get Proclaim extension ID and fix database
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
@@ -578,33 +595,56 @@ class CwmbackupController extends FormController
             $db->setQuery($query);
             $cid = (int) $db->loadResult();
 
-            $DatabaseModel = new DatabaseModel();
-            $DatabaseModel->fix([$cid]);
+            // Fix database schema
+            try {
+                $DatabaseModel = new DatabaseModel();
+                $DatabaseModel->fix([$cid]);
+            } catch (\Exception $e) {
+                Log::add('Database fix error: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+            }
 
             // Fix assets
-            $fix     = new Cwmassets();
-            $results = $fix->build();
+            try {
+                $fix     = new Cwmassets();
+                $results = $fix->build();
 
-            foreach ($results->query as $key => $items) {
-                foreach ($items as $item) {
-                    Cwmassets::fixAssets($key, $item);
+                if (isset($results->query) && \is_array($results->query)) {
+                    foreach ($results->query as $key => $items) {
+                        foreach ($items as $item) {
+                            Cwmassets::fixAssets($key, $item);
+                        }
+                    }
                 }
+            } catch (\Exception $e) {
+                Log::add('Asset fix error: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
             }
 
             // Fix ownership
-            Cwmrestore::fixOwnershipPublic();
+            try {
+                Cwmrestore::fixOwnershipPublic();
+            } catch (\Exception $e) {
+                Log::add('Ownership fix error: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+            }
 
             // Purge update cache
-            $updateModel = $app->bootComponent('com_joomlaupdate')
-                ->getMVCFactory()->createModel('Update', 'Administrator', ['ignore_request' => true]);
-            $updateModel->purge();
+            try {
+                $updateModel = $app->bootComponent('com_joomlaupdate')
+                    ->getMVCFactory()->createModel('Update', 'Administrator', ['ignore_request' => true]);
+                $updateModel->purge();
+            } catch (\Exception $e) {
+                Log::add('Update cache purge error: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+            }
 
             // Flush assets
-            $app->flushAssets();
+            try {
+                $app->flushAssets();
+            } catch (\Exception $e) {
+                Log::add('Flush assets error: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+            }
 
             $this->sendJsonResponse(true, Text::_('JBS_CMN_OPERATION_SUCCESSFUL'));
         } catch (\Exception $e) {
-            $this->sendJsonResponse(false, $e->getMessage());
+            $this->sendJsonResponse(false, 'Import finalize error: ' . $e->getMessage());
         }
     }
 
