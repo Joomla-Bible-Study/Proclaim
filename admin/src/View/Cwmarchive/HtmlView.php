@@ -69,8 +69,7 @@ class HtmlView extends BaseHtmlView
         Factory::getApplication()->getInput()->set('hidemainmenu', true);
 
         ToolbarHelper::title(Text::_('JBS_CMN_ARCHIVE'), 'archive');
-        ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
         ToolbarHelper::custom('administration.back', 'back', 'back', 'JTOOLBAR_BACK', false);
-        ToolbarHelper::help('proclaim', true);
+        ToolbarHelper::help('archive', true);
     }
 }
