@@ -616,7 +616,7 @@ class CwmmediafileModel extends AdminModel
             $id = $input->get('id', 0);
         }
 
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing article.
         // Modify the form based on Edit State access controls.
@@ -652,7 +652,7 @@ class CwmmediafileModel extends AdminModel
     protected function batchPlayer($value, $pks, $contexts): bool
     {
         // Set the variables
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
         /** @type CwmmediafileTable $table */
         $table = $this->getTable();
 
@@ -713,7 +713,7 @@ class CwmmediafileModel extends AdminModel
     protected function batchLinkType($value, $pks, $contexts): bool
     {
         // Set the variables
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
         /** @type CwmmediafileTable $table */
         $table = $this->getTable();
 
@@ -759,7 +759,7 @@ class CwmmediafileModel extends AdminModel
     protected function batchMimetype($value, $pks, $contexts): bool
     {
         // Set the variables
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
         /** @type CwmmediafileTable $table */
         $table = $this->getTable();
 
@@ -805,7 +805,7 @@ class CwmmediafileModel extends AdminModel
     protected function batchMediatype($value, $pks, $contexts): bool
     {
         // Set the variables
-        $user  = Factory::getApplication()->getSession()->get('user');
+        $user  = Factory::getApplication()->getIdentity();
         $table = $this->getTable();
 
         foreach ($pks as $pk) {
@@ -850,7 +850,7 @@ class CwmmediafileModel extends AdminModel
     protected function batchPopup($value, $pks, $contexts): bool
     {
         // Set the variables
-        $user  = Factory::getApplication()->getSession()->get('user');
+        $user  = Factory::getApplication()->getIdentity();
         $table = $this->getTable();
 
         foreach ($pks as $pk) {
@@ -937,7 +937,7 @@ class CwmmediafileModel extends AdminModel
                 return false;
             }
 
-            return Factory::getApplication()->getSession()->get('user')->authorise(
+            return Factory::getApplication()->getIdentity()->authorise(
                 'core.delete',
                 'com_proclaim.mediafile.' . (int)$record->id
             );

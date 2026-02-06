@@ -147,7 +147,7 @@ class CwmteachersModel extends ListModel
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $user  = Factory::getApplication()->getSession()->get('user');
+        $user  = Factory::getApplication()->getIdentity();
 
         $query->select($this->getState('list.select', 'teacher.*'));
         $query->from('#__bsms_teachers AS teacher');

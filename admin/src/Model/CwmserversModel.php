@@ -179,7 +179,7 @@ class CwmserversModel extends ListModel
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $user  = Factory::getApplication()->getSession()->get('user');
+        $user  = Factory::getApplication()->getIdentity();
 
         $query->select($this->getState('list.select', 'server.id, server.published, server.server_name, server.type'));
         $query->from($db->quoteName('#__bsms_servers', 'server'));

@@ -589,7 +589,7 @@ class CwmadminController extends FormController
      */
     public function dbReset(): void
     {
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
         if ($user->authorise('core.admin')) {
             CwmdbHelper::resetdb();
