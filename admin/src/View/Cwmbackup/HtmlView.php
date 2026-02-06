@@ -163,8 +163,7 @@ class HtmlView extends BaseHtmlView
             ->icon('fas fa-arrow-left')
             ->listCheck(false);
 
-        ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
         ToolbarHelper::divider();
-        ToolbarHelper::help('proclaim', true);
+        ToolbarHelper::help('cwmbackup', true);
     }
 }
