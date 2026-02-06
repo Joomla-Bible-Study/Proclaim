@@ -208,7 +208,23 @@
       const response = await fetch(url, { ...defaultOptions, ...options });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // Try to get the response body for debugging
+        let errorDetail = '';
+        try {
+          const text = await response.text();
+          console.error('Server response:', text);
+          // Try to parse as JSON for structured error
+          try {
+            const json = JSON.parse(text);
+            errorDetail = json.message || json.error || text.substring(0, 200);
+          } catch {
+            // Not JSON, use text (truncated)
+            errorDetail = text.substring(0, 500);
+          }
+        } catch {
+          errorDetail = 'Could not read response';
+        }
+        throw new Error(`HTTP ${response.status}: ${errorDetail}`);
       }
 
       return response.json();
@@ -221,7 +237,7 @@
       this.showModal(Joomla.Text._('JBS_IBM_EXPORTING_DATABASE'));
 
       try {
-        // Step 1: Get list of tables
+        // Step 1: Get list of tables and export ID
         this.updateProgress(5, Joomla.Text._('JBS_IBM_GETTING_TABLES'), '');
 
         const tablesUrl = `index.php?option=com_proclaim&task=cwmbackup.getExportTablesXHR&format=json&${Joomla.getOptions('csrf.token')}=1`;
@@ -232,6 +248,7 @@
         }
 
         const tables = tablesResult.data.tables;
+        const exportId = tablesResult.data.exportId;
         const totalTables = tables.length;
 
         // Step 2: Export each table
@@ -249,7 +266,7 @@
             `${table} (${i + 1}/${totalTables})`
           );
 
-          const exportUrl = `index.php?option=com_proclaim&task=cwmbackup.exportTableXHR&format=json&table=${encodeURIComponent(table)}&${Joomla.getOptions('csrf.token')}=1`;
+          const exportUrl = `index.php?option=com_proclaim&task=cwmbackup.exportTableXHR&format=json&table=${encodeURIComponent(table)}&exportId=${encodeURIComponent(exportId)}&${Joomla.getOptions('csrf.token')}=1`;
           const exportResult = await this.fetchJson(exportUrl);
 
           if (!exportResult.success) {
@@ -260,7 +277,7 @@
         // Step 3: Finalize export
         this.updateProgress(95, Joomla.Text._('JBS_IBM_FINALIZING'), '');
 
-        const finalizeUrl = `index.php?option=com_proclaim&task=cwmbackup.finalizeExportXHR&format=json&mode=${mode}&${Joomla.getOptions('csrf.token')}=1`;
+        const finalizeUrl = `index.php?option=com_proclaim&task=cwmbackup.finalizeExportXHR&format=json&mode=${mode}&exportId=${encodeURIComponent(exportId)}&${Joomla.getOptions('csrf.token')}=1`;
         const finalizeResult = await this.fetchJson(finalizeUrl);
 
         if (!finalizeResult.success) {

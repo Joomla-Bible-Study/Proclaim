@@ -16,9 +16,6 @@
 
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Router\Route;
-use Joomla\CMS\Session\Session;
-use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Utility\Utility;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmbackup\HtmlView $this */
@@ -27,6 +24,7 @@ $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->useScript('bootstrap.modal')
+    ->useScript('bootstrap.collapse')
     ->registerAndUseScript(
         'proclaim.backup-restore',
         'com_proclaim/backup-restore.min.js',
@@ -60,161 +58,183 @@ $maxSize = HTMLHelper::_('number.bytes', Utility::getMaxUploadSize());
 ?>
 
 <!-- Welcome Section -->
-<div class="card bg-light mb-4">
-    <div class="card-body">
+<section aria-label="<?php echo Text::_('JBS_IBM_WELCOME_TITLE'); ?>" class="card border-primary mb-4">
+    <div class="card-body py-3">
         <div class="row align-items-center">
-            <div class="col-auto">
-                <i class="fas fa-database fa-3x text-primary"></i>
+            <div class="col-auto d-none d-md-block" aria-hidden="true">
+                <span class="fa-stack fa-2x text-primary">
+                    <i class="fas fa-circle fa-stack-2x" style="opacity: 0.1;"></i>
+                    <i class="fas fa-database fa-stack-1x"></i>
+                </span>
             </div>
             <div class="col">
-                <h2 class="card-title mb-1"><?php echo Text::_('JBS_IBM_WELCOME_TITLE'); ?></h2>
-                <p class="card-text text-muted mb-0"><?php echo Text::_('JBS_IBM_WELCOME_DESC'); ?></p>
+                <h1 class="h4 mb-1 text-primary"><?php echo Text::_('JBS_IBM_WELCOME_TITLE'); ?></h1>
+                <p class="text-muted mb-0 small"><?php echo Text::_('JBS_IBM_WELCOME_DESC'); ?></p>
             </div>
         </div>
     </div>
-</div>
+</section>
 
 <div class="row">
     <!-- Export Section -->
-    <div class="col-12 col-lg-6">
-        <div class="card mb-4">
+    <div class="col-12 col-lg-6 mb-4">
+        <section aria-labelledby="export-heading" class="card h-100">
             <div class="card-header bg-primary text-white">
-                <h3 class="card-title mb-0">
-                    <i class="fas fa-download me-2"></i><?php echo Text::_('JBS_CMN_EXPORT'); ?>
-                </h3>
+                <h2 id="export-heading" class="card-title h5 mb-0">
+                    <i class="fas fa-download me-2" aria-hidden="true"></i><?php echo Text::_('JBS_CMN_EXPORT'); ?>
+                </h2>
             </div>
             <div class="card-body">
-                <p class="text-muted"><?php echo Text::_('JBS_IBM_EXPORT_DESC'); ?></p>
+                <p class="text-muted" id="export-desc"><?php echo Text::_('JBS_IBM_EXPORT_DESC'); ?></p>
 
-                <div class="d-grid gap-2">
-                    <button type="button" class="btn btn-primary btn-lg" data-proclaim-export="download">
-                        <i class="fas fa-download me-2"></i><?php echo Text::_('JBS_CMN_EXPORT'); ?>
+                <div class="d-grid gap-2 mb-3" role="group" aria-label="<?php echo Text::_('JBS_CMN_EXPORT'); ?>">
+                    <button type="button"
+                            class="btn btn-primary"
+                            data-proclaim-export="download"
+                            aria-describedby="export-desc">
+                        <i class="fas fa-download me-2" aria-hidden="true"></i><?php echo Text::_('JBS_IBM_DOWNLOAD_BACKUP'); ?>
                     </button>
-                    <button type="button" class="btn btn-secondary" data-proclaim-export="save">
-                        <i class="fas fa-save me-2"></i><?php echo Text::_('JBS_IBM_SAVE_DB'); ?>
+                    <button type="button"
+                            class="btn btn-outline-primary"
+                            data-proclaim-export="save"
+                            aria-describedby="export-desc">
+                        <i class="fas fa-hdd me-2" aria-hidden="true"></i><?php echo Text::_('JBS_IBM_SAVE_DB'); ?>
                     </button>
                 </div>
 
-                <?php if (!empty($this->lists['backedupfiles'])): ?>
-                <hr>
-                <h5><?php echo Text::_('JBS_IBM_EXISTING_BACKUPS'); ?></h5>
-                <p class="small text-muted"><?php echo Text::_('JBS_IBM_EXISTING_BACKUPS_DESC'); ?></p>
-                <?php endif; ?>
-            </div>
-        </div>
-
-        <!-- Media Backup Help Section -->
-        <div class="card mb-4">
-            <div class="card-header bg-warning">
-                <h5 class="card-title mb-0">
-                    <i class="fas fa-exclamation-triangle me-2"></i><?php echo Text::_('JBS_IBM_MEDIA_BACKUP_TITLE'); ?>
-                </h5>
-            </div>
-            <div class="card-body">
-                <p><?php echo Text::_('JBS_IBM_MEDIA_BACKUP_DESC'); ?></p>
-                <div class="alert alert-info">
-                    <strong><?php echo Text::_('JBS_IBM_MEDIA_LOCATION'); ?>:</strong>
-                    <code>/media/com_proclaim/</code>
+                <!-- Saved Backups Section -->
+                <div class="border-top pt-3">
+                    <h3 class="h6 text-muted mb-2">
+                        <i class="fas fa-folder-open me-1" aria-hidden="true"></i>
+                        <?php echo Text::_('JBS_IBM_EXISTING_BACKUPS'); ?>
+                    </h3>
+                    <p class="small text-muted mb-2" id="backups-desc"><?php echo Text::_('JBS_IBM_EXISTING_BACKUPS_DESC'); ?></p>
+                    <div aria-describedby="backups-desc">
+                        <?php echo $this->lists['backedupfiles']; ?>
+                    </div>
                 </div>
-                <ul class="mb-0">
-                    <li><?php echo Text::_('JBS_IBM_MEDIA_BACKUP_TIP1'); ?></li>
-                    <li><?php echo Text::_('JBS_IBM_MEDIA_BACKUP_TIP2'); ?></li>
-                    <li><?php echo Text::_('JBS_IBM_MEDIA_BACKUP_TIP3'); ?></li>
-                </ul>
             </div>
-        </div>
+        </section>
     </div>
 
     <!-- Import Section -->
-    <div class="col-12 col-lg-6">
-        <div class="card mb-4">
+    <div class="col-12 col-lg-6 mb-4">
+        <section aria-labelledby="import-heading" class="card h-100">
             <div class="card-header bg-success text-white">
-                <h3 class="card-title mb-0">
-                    <i class="fas fa-upload me-2"></i><?php echo Text::_('JBS_CMN_IMPORT'); ?>
-                </h3>
+                <h2 id="import-heading" class="card-title h5 mb-0">
+                    <i class="fas fa-upload me-2" aria-hidden="true"></i><?php echo Text::_('JBS_CMN_IMPORT'); ?>
+                </h2>
             </div>
             <div class="card-body">
-                <form id="proclaim-import-form" enctype="multipart/form-data">
-                    <!-- Server Info -->
-                    <div class="alert alert-secondary small">
-                        <i class="fas fa-info-circle me-1"></i>
-                        <?php echo Text::_('JBS_IBM_MAX_UPLOAD') . ': ' . \ini_get('upload_max_filesize'); ?>
-                        &nbsp;|&nbsp;
-                        <?php echo Text::_('JBS_IBM_MAX_EXECUTION_TIME') . ': ' . \ini_get('max_execution_time') . 's'; ?>
-                    </div>
-
+                <form id="proclaim-import-form" enctype="multipart/form-data" aria-label="<?php echo Text::_('JBS_CMN_IMPORT'); ?>">
                     <!-- Upload File -->
-                    <div class="mb-4">
-                        <label for="importdb" class="form-label fw-bold">
-                            <i class="fas fa-file-upload me-1"></i>
+                    <div class="mb-3">
+                        <label for="importdb" class="form-label fw-semibold">
+                            <i class="fas fa-file-upload me-1 text-muted" aria-hidden="true"></i>
                             <?php echo Text::_('JBS_IBM_UPLOAD_FILE'); ?>
                         </label>
                         <input type="file"
                                name="importdb"
                                id="importdb"
                                accept=".sql,.zip"
-                               class="form-control">
-                        <div class="form-text">
+                               class="form-control"
+                               aria-describedby="importdb-help">
+                        <div class="form-text" id="importdb-help">
                             <?php echo Text::sprintf('JGLOBAL_MAXIMUM_UPLOAD_SIZE_LIMIT', $maxSize); ?>
-                            - <?php echo Text::_('JBS_IBM_ACCEPTS_SQL_ZIP'); ?>
+                            &bull; <?php echo Text::_('JBS_IBM_ACCEPTS_SQL_ZIP'); ?>
                         </div>
                     </div>
 
                     <!-- From Backup Folder -->
-                    <div class="mb-4">
-                        <label for="backuprestore" class="form-label fw-bold">
-                            <i class="fas fa-folder-open me-1"></i>
+                    <div class="mb-3">
+                        <label for="backuprestore" class="form-label fw-semibold">
+                            <i class="fas fa-folder-open me-1 text-muted" aria-hidden="true"></i>
                             <?php echo Text::_('JBS_IBM_IMPORT_FROM_BACKUP_FOLDER'); ?>
                         </label>
                         <?php echo $this->lists['backedupfiles']; ?>
                     </div>
 
-                    <!-- From Tmp Folder -->
-                    <div class="mb-4">
-                        <label for="install_directory" class="form-label fw-bold">
-                            <i class="fas fa-folder me-1"></i>
-                            <?php echo Text::_('JBS_IBM_IMPORT_FROM_TMP_FOLDER'); ?>
-                        </label>
-                        <input type="text"
-                               id="install_directory"
-                               name="install_directory"
-                               class="form-control"
-                               value="<?php echo $this->tmp_dest . DIRECTORY_SEPARATOR; ?>">
+                    <!-- From Tmp Folder - Collapsible -->
+                    <div class="mb-3">
+                        <button type="button"
+                                class="btn btn-link text-decoration-none small p-0"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#advancedImport"
+                                aria-expanded="false"
+                                aria-controls="advancedImport">
+                            <i class="fas fa-chevron-right me-1" aria-hidden="true"></i>
+                            <?php echo Text::_('JBS_IBM_ADVANCED_OPTIONS'); ?>
+                        </button>
+                        <div class="collapse mt-2" id="advancedImport">
+                            <label for="install_directory" class="form-label small">
+                                <?php echo Text::_('JBS_IBM_IMPORT_FROM_TMP_FOLDER'); ?>
+                            </label>
+                            <input type="text"
+                                   id="install_directory"
+                                   name="install_directory"
+                                   class="form-control form-control-sm"
+                                   value="<?php echo $this->tmp_dest . DIRECTORY_SEPARATOR; ?>">
+                        </div>
                     </div>
 
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-success btn-lg" type="submit">
-                            <i class="fas fa-upload me-2"></i><?php echo Text::_('JBS_CMN_IMPORT'); ?>
+                    <div class="d-grid">
+                        <button class="btn btn-success" type="submit">
+                            <i class="fas fa-upload me-2" aria-hidden="true"></i><?php echo Text::_('JBS_IBM_START_IMPORT'); ?>
                         </button>
                     </div>
                 </form>
             </div>
-        </div>
+            <div class="card-footer bg-light small text-muted" role="contentinfo" aria-label="<?php echo Text::_('JBS_CMN_SERVER_INFO'); ?>">
+                <i class="fas fa-server me-1" aria-hidden="true"></i>
+                <?php echo Text::_('JBS_IBM_MAX_UPLOAD'); ?>: <strong><?php echo \ini_get('upload_max_filesize'); ?></strong>
+                <span aria-hidden="true">&nbsp;&bull;&nbsp;</span>
+                <?php echo Text::_('JBS_IBM_TIMEOUT'); ?>: <strong><?php echo \ini_get('max_execution_time'); ?>s</strong>
+            </div>
+        </section>
+    </div>
+</div>
 
-        <!-- Migration Notes -->
-        <div class="card mb-4">
-            <div class="card-header bg-info text-white">
-                <h5 class="card-title mb-0">
-                    <i class="fas fa-info-circle me-2"></i><?php echo Text::_('JBS_IBM_MIGRATION_NOTES'); ?>
-                </h5>
+<!-- Info Cards Row -->
+<div class="row">
+    <!-- Media Backup Help -->
+    <div class="col-12 col-lg-6 mb-4">
+        <section aria-labelledby="media-warning-heading" class="card border-warning" role="alert">
+            <div class="card-header bg-warning bg-opacity-10 border-warning">
+                <h2 id="media-warning-heading" class="card-title h6 mb-0 text-warning">
+                    <i class="fas fa-exclamation-triangle me-2" aria-hidden="true"></i><?php echo Text::_('JBS_IBM_MEDIA_BACKUP_TITLE'); ?>
+                </h2>
             </div>
             <div class="card-body">
-                <p><?php echo Text::_('JBS_IBM_MIGRATION_DESC'); ?></p>
-                <ul class="mb-0">
+                <p class="small mb-2"><?php echo Text::_('JBS_IBM_MEDIA_BACKUP_DESC'); ?></p>
+                <div class="bg-light rounded p-2 mb-2">
+                    <code class="small">/media/com_proclaim/</code>
+                </div>
+                <ul class="small mb-0 ps-3">
+                    <li><?php echo Text::_('JBS_IBM_MEDIA_BACKUP_TIP1'); ?></li>
+                    <li><?php echo Text::_('JBS_IBM_MEDIA_BACKUP_TIP2'); ?></li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <!-- Migration Notes -->
+    <div class="col-12 col-lg-6 mb-4">
+        <section aria-labelledby="migration-heading" class="card border-info">
+            <div class="card-header bg-info bg-opacity-10 border-info">
+                <h2 id="migration-heading" class="card-title h6 mb-0 text-info">
+                    <i class="fas fa-info-circle me-2" aria-hidden="true"></i><?php echo Text::_('JBS_IBM_MIGRATION_NOTES'); ?>
+                </h2>
+            </div>
+            <div class="card-body">
+                <p class="small mb-2"><?php echo Text::_('JBS_IBM_MIGRATION_DESC'); ?></p>
+                <ul class="small mb-0 ps-3">
                     <li><?php echo Text::_('JBS_IBM_MIGRATION_TIP1'); ?></li>
                     <li><?php echo Text::_('JBS_IBM_MIGRATION_TIP2'); ?></li>
                     <li><?php echo Text::_('JBS_IBM_MIGRATION_TIP3'); ?></li>
                 </ul>
             </div>
-        </div>
+        </section>
     </div>
-</div>
-
-<!-- Back Button -->
-<div class="mt-3">
-    <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmcpanel'); ?>" class="btn btn-secondary">
-        <i class="fas fa-arrow-left me-1"></i><?php echo Text::_('JTOOLBAR_BACK'); ?>
-    </a>
 </div>
 
 <?php echo HTMLHelper::_('form.token'); ?>

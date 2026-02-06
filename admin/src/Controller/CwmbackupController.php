@@ -62,10 +62,21 @@ class CwmbackupController extends FormController
             return;
         }
 
-        $tables = CwmdbHelper::getObjects();
+        $app    = Factory::getApplication();
+        $config = $app->getConfig();
+
+        // Create a unique export ID for this session
+        $exportId = md5(uniqid((string) mt_rand(), true));
+        $tmpPath  = $config->get('tmp_path') . '/proclaim_export_' . $exportId . '.sql';
+
+        // Initialize empty file
+        file_put_contents($tmpPath, '');
+
+        $tables     = CwmdbHelper::getObjects();
         $tableNames = array_column($tables, 'name');
 
-        $this->sendJsonResponse(true, '', ['tables' => $tableNames]);
+        // Return the export ID so it can be passed to subsequent calls
+        $this->sendJsonResponse(true, '', ['tables' => $tableNames, 'exportId' => $exportId]);
     }
 
     /**
@@ -85,9 +96,11 @@ class CwmbackupController extends FormController
             return;
         }
 
-        $app   = Factory::getApplication();
-        $input = $app->getInput();
-        $table = $input->get('table', '', 'string');
+        $app      = Factory::getApplication();
+        $input    = $app->getInput();
+        $config   = $app->getConfig();
+        $table    = $input->get('table', '', 'string');
+        $exportId = $input->get('exportId', '', 'string');
 
         if (empty($table)) {
             $this->sendJsonResponse(false, 'No table specified');
@@ -95,20 +108,33 @@ class CwmbackupController extends FormController
             return;
         }
 
-        $session = $app->getSession();
+        if (empty($exportId)) {
+            $this->sendJsonResponse(false, 'No export ID specified');
 
-        // Get or create export data cache
-        $exportData = $session->get('proclaim_export_data', '', 'CWM');
+            return;
+        }
 
-        // Export the table
-        $backup = new Cwmbackup();
+        // Build the temp file path from the export ID
+        $tmpPath = $config->get('tmp_path') . '/proclaim_export_' . $exportId . '.sql';
+
+        if (!is_file($tmpPath)) {
+            $this->sendJsonResponse(false, 'Export file not found. Please start again.');
+
+            return;
+        }
+
+        // Export the table and append directly to file
+        $backup    = new Cwmbackup();
         $tableData = $backup->getExportTableData($table);
 
-        // Append to session cache
-        $exportData .= $tableData;
-        $session->set('proclaim_export_data', $exportData, 'CWM');
+        // Append to temp file
+        if (file_put_contents($tmpPath, $tableData, FILE_APPEND) === false) {
+            $this->sendJsonResponse(false, 'Failed to write export data');
 
-        $this->sendJsonResponse(true, '', ['table' => $table, 'size' => strlen($tableData)]);
+            return;
+        }
+
+        $this->sendJsonResponse(true, '', ['table' => $table, 'size' => \strlen($tableData)]);
     }
 
     /**
@@ -121,73 +147,106 @@ class CwmbackupController extends FormController
      */
     public function finalizeExportXHR(): void
     {
-        // Check for request forgeries
-        if (!Session::checkToken('get') && !Session::checkToken()) {
-            $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
+        // Register shutdown handler to catch fatal errors
+        register_shutdown_function(function () {
+            $error = error_get_last();
 
-            return;
-        }
-
-        $app     = Factory::getApplication();
-        $input   = $app->getInput();
-        $mode    = $input->get('mode', 'download', 'string');
-        $session = $app->getSession();
-
-        // Get export data from session
-        $exportData = $session->get('proclaim_export_data', '', 'CWM');
-
-        if (empty($exportData)) {
-            $this->sendJsonResponse(false, 'No export data found');
-
-            return;
-        }
-
-        // Generate filename using standardized method
-        $filename = Cwmbackup::generateBackupFilename();
-        $config   = $app->getConfig();
-
-        if ($mode === 'save') {
-            // Save to backup folder
-            $backupDir = JPATH_SITE . '/media/com_proclaim/backup/';
-
-            if (!is_dir($backupDir)) {
-                Folder::create($backupDir);
+            if ($error !== null && \in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) {
+                while (ob_get_level()) {
+                    ob_end_clean();
+                }
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'PHP Fatal: ' . $error['message'] . ' in ' . $error['file'] . ':' . $error['line'],
+                    'data'    => [],
+                ]);
             }
+        });
 
-            $path = $backupDir . $filename;
-
-            if (!file_put_contents($path, $exportData)) {
-                $this->sendJsonResponse(false, 'Failed to write backup file');
+        try {
+            // Check for request forgeries
+            if (!Session::checkToken('get') && !Session::checkToken()) {
+                $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
 
                 return;
             }
 
-            // Clean up old backups
-            $backup = new Cwmbackup();
-            $backup->updatefiles(Cwmparams::getAdmin()->params);
+            $app      = Factory::getApplication();
+            $input    = $app->getInput();
+            $mode     = $input->get('mode', 'download', 'string');
+            $exportId = $input->get('exportId', '', 'string');
+            $session  = $app->getSession();
+            $config   = $app->getConfig();
 
-            // Clear session data
-            $session->set('proclaim_export_data', '', 'CWM');
-
-            $this->sendJsonResponse(true, '', ['filename' => $filename, 'path' => $path]);
-        } else {
-            // Save to tmp for download
-            $tmpPath = $config->get('tmp_path') . '/' . $filename;
-
-            if (!file_put_contents($tmpPath, $exportData)) {
-                $this->sendJsonResponse(false, 'Failed to write temp file');
+            if (empty($exportId)) {
+                $this->sendJsonResponse(false, 'No export ID specified');
 
                 return;
             }
 
-            // Store path in session for download
-            $session->set('proclaim_download_file', $tmpPath, 'CWM');
-            $session->set('proclaim_export_data', '', 'CWM');
+            // Build the temp file path from the export ID
+            $tmpExportPath = $config->get('tmp_path') . '/proclaim_export_' . $exportId . '.sql';
 
-            // Return URL for download
-            $downloadUrl = Route::_('index.php?option=com_proclaim&task=cwmbackup.downloadExportXHR&' . Session::getFormToken() . '=1', false);
+            if (!is_file($tmpExportPath)) {
+                $this->sendJsonResponse(false, 'Export file not found. Please start again.');
 
-            $this->sendJsonResponse(true, '', ['filename' => $filename, 'downloadUrl' => $downloadUrl]);
+                return;
+            }
+
+            // Generate filename using standardized method
+            $filename = Cwmbackup::generateBackupFilename();
+
+            if ($mode === 'save') {
+                // Save to backup folder
+                $backupDir = JPATH_SITE . '/media/com_proclaim/backup/';
+
+                if (!is_dir($backupDir)) {
+                    Folder::create($backupDir);
+                }
+
+                $path = $backupDir . $filename;
+
+                // Move the temp file to backup location
+                if (!rename($tmpExportPath, $path)) {
+                    // Fallback to copy + delete
+                    if (!copy($tmpExportPath, $path)) {
+                        $this->sendJsonResponse(false, 'Failed to write backup file');
+
+                        return;
+                    }
+                    File::delete($tmpExportPath);
+                }
+
+                // Clean up old backups
+                $backup = new Cwmbackup();
+                $backup->updatefiles(Cwmparams::getAdmin()->params);
+
+                $this->sendJsonResponse(true, '', ['filename' => $filename, 'path' => $path]);
+            } else {
+                // Rename temp file for download
+                $downloadPath = $config->get('tmp_path') . '/' . $filename;
+
+                if (!rename($tmpExportPath, $downloadPath)) {
+                    // Fallback to copy + delete
+                    if (!copy($tmpExportPath, $downloadPath)) {
+                        $this->sendJsonResponse(false, 'Failed to prepare download file');
+
+                        return;
+                    }
+                    File::delete($tmpExportPath);
+                }
+
+                // Store path in session for download (needed for the download redirect)
+                $session->set('proclaim_download_file', $downloadPath, 'CWM');
+
+                // Return URL for download
+                $downloadUrl = Route::_('index.php?option=com_proclaim&task=cwmbackup.downloadExportXHR&' . Session::getFormToken() . '=1', false);
+
+                $this->sendJsonResponse(true, '', ['filename' => $filename, 'downloadUrl' => $downloadUrl]);
+            }
+        } catch (\Exception $e) {
+            $this->sendJsonResponse(false, 'Export error: ' . $e->getMessage());
         }
     }
 
@@ -567,10 +626,16 @@ class CwmbackupController extends FormController
      */
     private function sendJsonResponse(bool $success, string $message = '', array $data = []): void
     {
-        $app      = Factory::getApplication();
-        $document = $app->getDocument();
+        $app = Factory::getApplication();
 
-        $document->setMimeEncoding('application/json');
+        // Clear any output buffers
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        // Set JSON headers directly
+        header('Content-Type: application/json; charset=utf-8');
+        header('Cache-Control: no-cache, must-revalidate');
 
         $response = [
             'success' => $success,

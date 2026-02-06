@@ -18,6 +18,7 @@ use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
@@ -147,6 +148,21 @@ class HtmlView extends BaseHtmlView
         Factory::getApplication()->getInput()->set('hidemainmenu', true);
 
         ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'administration');
+
+        $toolbar = Toolbar::getInstance();
+
+        // Add back to cpanel button
+        $toolbar->linkButton('home', 'JBS_CMN_HOME')
+            ->url('index.php?option=com_proclaim&view=cwmcpanel')
+            ->icon('fas fa-home')
+            ->listCheck(false);
+
+        // Add back to Joomla admin button
+        $toolbar->linkButton('back', 'JTOOLBAR_BACK')
+            ->url('index.php')
+            ->icon('fas fa-arrow-left')
+            ->listCheck(false);
+
         ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
         ToolbarHelper::divider();
         ToolbarHelper::help('proclaim', true);
