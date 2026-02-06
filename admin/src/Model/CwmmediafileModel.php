@@ -458,7 +458,9 @@ class CwmmediafileModel extends AdminModel
         }
 
         // Reverse lookup server_id to server type
-        $model       = new CwmserverModel();
+        /** @var CwmserverModel $model */
+        $model       = Factory::getApplication()->bootComponent('com_proclaim')
+            ->getMVCFactory()->createModel('Cwmserver', 'Administrator');
         $s_item      = $model->getItem($server_id);
         $server_type = $s_item->type;
 

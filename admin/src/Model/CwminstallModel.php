@@ -779,7 +779,9 @@ class CwminstallModel extends ListModel
             && empty($this->allupdates)
             && empty($this->subFiles)
         ) {
-            $admin = new CwmadminModel();
+            /** @var CwmadminModel $admin */
+            $admin = Factory::getApplication()->bootComponent('com_proclaim')
+                ->getMVCFactory()->createModel('Cwmadmin', 'Administrator');
             $admin->fix();
 
             // Just finished

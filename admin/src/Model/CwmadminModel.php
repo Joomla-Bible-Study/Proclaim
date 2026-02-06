@@ -216,7 +216,9 @@ class CwmadminModel extends AdminModel
         $changeSet->fix();
         $this->fixSchemaVersion($changeSet);
         $this->fixUpdateVersion();
-        $installer = new CwminstallModel();
+        /** @var CwminstallModel $installer */
+        $installer = Factory::getApplication()->bootComponent('com_proclaim')
+            ->getMVCFactory()->createModel('Cwminstall', 'Administrator');
         $installer->fixMenus();
         $installer->fixemptyaccess();
         $installer->fixemptylanguage();

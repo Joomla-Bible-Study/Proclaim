@@ -12,8 +12,8 @@
 namespace CWM\Component\Proclaim\Administrator\View\Cwmcpanel;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
-use CWM\Component\Proclaim\Administrator\Model\CwmcpanelModel;
 use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -81,7 +81,9 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $model       = new CwmcpanelModel();
+        /** @var \CWM\Component\Proclaim\Administrator\Model\CwmcpanelModel $model */
+        $model       = Factory::getApplication()->bootComponent('com_proclaim')
+            ->getMVCFactory()->createModel('Cwmcpanel', 'Administrator');
         $component   = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
         $this->state = $this->get('State');
 

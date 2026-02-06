@@ -12,7 +12,6 @@
 namespace CWM\Component\Proclaim\Administrator\View\Cwmbackup;
 
 // Check to ensure this file is included in Joomla!
-use CWM\Component\Proclaim\Administrator\Model\CwmadminModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -85,7 +84,9 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $model = new CwmadminModel();
+        /** @var \CWM\Component\Proclaim\Administrator\Model\CwmadminModel $model */
+        $model = Factory::getApplication()->bootComponent('com_proclaim')
+            ->getMVCFactory()->createModel('Cwmadmin', 'Administrator');
         $this->setModel($model, true);
 
         // Get data from the model
