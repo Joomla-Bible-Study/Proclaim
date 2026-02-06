@@ -70,13 +70,13 @@ $maxSize = HTMLHelper::_('number.bytes', Utility::getMaxUploadSize());
         <div class="row align-items-center">
             <div class="col-auto d-none d-md-block" aria-hidden="true">
                 <span class="fa-stack fa-2x text-primary">
-                    <i class="fas fa-circle fa-stack-2x" style="opacity: 0.1;"></i>
+                    <i class="fas fa-circle fa-stack-2x" style="opacity: 0.2;"></i>
                     <i class="fas fa-database fa-stack-1x"></i>
                 </span>
             </div>
             <div class="col">
-                <h1 class="h4 mb-1 text-primary"><?php echo Text::_('JBS_IBM_WELCOME_TITLE'); ?></h1>
-                <p class="text-muted mb-0 small"><?php echo Text::_('JBS_IBM_WELCOME_DESC'); ?></p>
+                <h1 class="h4 mb-1"><?php echo Text::_('JBS_IBM_WELCOME_TITLE'); ?></h1>
+                <p class="mb-0 small"><?php echo Text::_('JBS_IBM_WELCOME_DESC'); ?></p>
             </div>
         </div>
     </div>
@@ -92,7 +92,7 @@ $maxSize = HTMLHelper::_('number.bytes', Utility::getMaxUploadSize());
                 </h2>
             </div>
             <div class="card-body">
-                <p class="text-muted" id="export-desc"><?php echo Text::_('JBS_IBM_EXPORT_DESC'); ?></p>
+                <p id="export-desc"><?php echo Text::_('JBS_IBM_EXPORT_DESC'); ?></p>
 
                 <div class="d-grid gap-2 mb-3" role="group" aria-label="<?php echo Text::_('JBS_CMN_EXPORT'); ?>">
                     <button type="button"
@@ -102,7 +102,7 @@ $maxSize = HTMLHelper::_('number.bytes', Utility::getMaxUploadSize());
                         <i class="fas fa-download me-2" aria-hidden="true"></i><?php echo Text::_('JBS_IBM_DOWNLOAD_BACKUP'); ?>
                     </button>
                     <button type="button"
-                            class="btn btn-outline-primary"
+                            class="btn btn-secondary"
                             data-proclaim-export="save"
                             aria-describedby="export-desc">
                         <i class="fas fa-hdd me-2" aria-hidden="true"></i><?php echo Text::_('JBS_IBM_SAVE_DB'); ?>
@@ -111,11 +111,11 @@ $maxSize = HTMLHelper::_('number.bytes', Utility::getMaxUploadSize());
 
                 <!-- Saved Backups Section -->
                 <div class="border-top pt-3">
-                    <h3 class="h6 text-muted mb-2">
+                    <h3 class="h6 mb-2">
                         <i class="fas fa-folder-open me-1" aria-hidden="true"></i>
                         <?php echo Text::_('JBS_IBM_EXISTING_BACKUPS'); ?>
                     </h3>
-                    <p class="small text-muted mb-2" id="backups-desc"><?php echo Text::_('JBS_IBM_EXISTING_BACKUPS_DESC'); ?></p>
+                    <p class="small mb-2" id="backups-desc"><?php echo Text::_('JBS_IBM_EXISTING_BACKUPS_DESC'); ?></p>
                     <div aria-describedby="backups-desc">
                         <?php echo $this->lists['backedupfiles']; ?>
                     </div>
@@ -137,7 +137,7 @@ $maxSize = HTMLHelper::_('number.bytes', Utility::getMaxUploadSize());
                     <!-- Upload File -->
                     <div class="mb-3">
                         <label for="importdb" class="form-label fw-semibold">
-                            <i class="fas fa-file-upload me-1 text-muted" aria-hidden="true"></i>
+                            <i class="fas fa-file-upload me-1" aria-hidden="true"></i>
                             <?php echo Text::_('JBS_IBM_UPLOAD_FILE'); ?>
                         </label>
                         <input type="file"
@@ -146,7 +146,7 @@ $maxSize = HTMLHelper::_('number.bytes', Utility::getMaxUploadSize());
                                accept=".sql,.zip"
                                class="form-control"
                                aria-describedby="importdb-help">
-                        <div class="form-text" id="importdb-help">
+                        <div class="small" id="importdb-help">
                             <?php echo Text::sprintf('JGLOBAL_MAXIMUM_UPLOAD_SIZE_LIMIT', $maxSize); ?>
                             &bull; <?php echo Text::_('JBS_IBM_ACCEPTS_SQL_ZIP'); ?>
                         </div>
@@ -155,7 +155,7 @@ $maxSize = HTMLHelper::_('number.bytes', Utility::getMaxUploadSize());
                     <!-- From Backup Folder -->
                     <div class="mb-3">
                         <label for="backuprestore" class="form-label fw-semibold">
-                            <i class="fas fa-folder-open me-1 text-muted" aria-hidden="true"></i>
+                            <i class="fas fa-folder-open me-1" aria-hidden="true"></i>
                             <?php echo Text::_('JBS_IBM_IMPORT_FROM_BACKUP_FOLDER'); ?>
                         </label>
                         <?php echo $this->lists['backedupfiles']; ?>
@@ -192,7 +192,7 @@ $maxSize = HTMLHelper::_('number.bytes', Utility::getMaxUploadSize());
                 </form>
             </div>
             <div class="card-footer small" role="contentinfo" aria-label="<?php echo Text::_('JBS_CMN_SERVER_INFO'); ?>">
-                <i class="fas fa-server me-1 text-muted" aria-hidden="true"></i>
+                <i class="fas fa-server me-1" aria-hidden="true"></i>
                 <?php echo Text::_('JBS_IBM_MAX_UPLOAD'); ?>: <strong><?php echo \ini_get('upload_max_filesize'); ?></strong>
                 <span aria-hidden="true">&nbsp;&bull;&nbsp;</span>
                 <?php echo Text::_('JBS_IBM_TIMEOUT'); ?>: <strong><?php echo \ini_get('max_execution_time'); ?>s</strong>
@@ -213,8 +213,8 @@ $maxSize = HTMLHelper::_('number.bytes', Utility::getMaxUploadSize());
             </div>
             <div class="card-body">
                 <p class="small mb-2"><?php echo Text::_('JBS_IBM_MEDIA_BACKUP_DESC'); ?></p>
-                <div class="bg-light rounded p-2 mb-2">
-                    <code class="small">/media/com_proclaim/</code>
+                <div class="border rounded p-2 mb-2">
+                    <code class="small text-body">/media/com_proclaim/</code>
                 </div>
                 <ul class="small mb-0 ps-3">
                     <li><?php echo Text::_('JBS_IBM_MEDIA_BACKUP_TIP1'); ?></li>
