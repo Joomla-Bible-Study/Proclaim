@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Registry\Registry;
@@ -244,6 +245,31 @@ class CwmtemplateTable extends Table
         }
 
         return parent::store($updateNulls);
+    }
+
+    /**
+     * Method to delete a row from the database table by primary key value.
+     * Prevents deletion of the default template (ID 1).
+     *
+     * @param   mixed  $pk  An optional primary key value to delete.
+     *
+     * @return  bool  True on success.
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function delete($pk = null): bool
+    {
+        $k  = $this->_tbl_key;
+        $pk = $pk ?? $this->$k;
+
+        if ((int) $pk === 1) {
+            $this->setError(Text::_('JBS_TPL_DEFAULT_ERROR'));
+
+            return false;
+        }
+
+        return parent::delete($pk);
     }
 
     /**
