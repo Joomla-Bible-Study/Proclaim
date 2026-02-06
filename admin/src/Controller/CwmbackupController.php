@@ -592,9 +592,34 @@ class CwmbackupController extends FormController
             $session->set('proclaim_import_' . $sessionId, '', 'CWM');
             $session->set('proclaim_import_queries_' . $sessionId, '', 'CWM');
 
-            // Skip all heavy post-import operations to avoid memory exhaustion
-            // User can run "Fix Assets" from admin panel if needed
-            // The import itself should have restored all data correctly
+            // Fix assets table by table to avoid memory exhaustion
+            $db = Factory::getContainer()->get('DatabaseDriver');
+            $parentId = Cwmassets::parentId();
+
+            // Process each asset table individually to manage memory
+            $assetTables = Cwmassets::getAssetObjects();
+
+            foreach ($assetTables as $tableInfo) {
+                try {
+                    // Query one table at a time
+                    $query = $db->getQuery(true);
+                    $query->select('j.id, j.asset_id, a.id as aid, a.parent_id, a.rules')
+                        ->from($db->qn($tableInfo['name']) . ' as j')
+                        ->leftJoin('#__assets as a ON (a.id = j.asset_id)');
+                    $db->setQuery($query);
+                    $results = $db->loadObjectList();
+
+                    // Process this table's assets
+                    foreach ($results as $item) {
+                        Cwmassets::fixAssets($tableInfo['assetname'], $item);
+                    }
+
+                    // Free memory
+                    unset($results);
+                } catch (\Exception $e) {
+                    Log::add('Asset fix error for ' . $tableInfo['name'] . ': ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+                }
+            }
 
             $this->sendJsonResponse(true, Text::_('JBS_CMN_OPERATION_SUCCESSFUL'));
         } catch (\Exception $e) {
