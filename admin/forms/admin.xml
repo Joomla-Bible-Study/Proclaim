@@ -210,6 +210,7 @@
         </field>
         <field name="to" type="list" label="" labelclass="control-label">
             <option value="x">JBS_ADM_SELECT_NEW_PLAYER</option>
+            <option value="0">JBS_CMN_DIRECT_LINK</option>
             <option value="1">JBS_CMN_INTERNAL_PLAYER</option>
             <option value="8">JBS_CMN_EMBED_CODE</option>
             <option value="100">JBS_CMN_USE_GLOBAL</option>
@@ -236,6 +237,7 @@
         </field>
         <field name="mtTo" type="list" label="" labelclass="control-label">
             <option value="x">JBS_ADM_SELECT_NEW_PLAYER</option>
+            <option value="0">JBS_CMN_DIRECT_LINK</option>
             <option value="1">JBS_CMN_INTERNAL_PLAYER</option>
             <option value="8">JBS_CMN_EMBED_CODE</option>
             <option value="100">JBS_CMN_USE_GLOBAL</option>
