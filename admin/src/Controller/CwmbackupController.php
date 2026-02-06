@@ -28,7 +28,6 @@ use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
-use Joomla\CMS\Uri\Uri;
 use Joomla\Component\Installer\Administrator\Model\DatabaseModel;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
@@ -143,12 +142,9 @@ class CwmbackupController extends FormController
             return;
         }
 
-        // Generate filename
-        $date     = date('Y_F_j');
-        $site     = Uri::root();
-        $filename = strtolower(trim(preg_replace('#\W+#', '_', $site), '_')) . '_jbs-db-backup_' . $date . '_' . time() . '.sql';
-
-        $config = $app->getConfig();
+        // Generate filename using standardized method
+        $filename = Cwmbackup::generateBackupFilename();
+        $config   = $app->getConfig();
 
         if ($mode === 'save') {
             // Save to backup folder

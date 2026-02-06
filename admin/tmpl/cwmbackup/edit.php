@@ -58,6 +58,22 @@ Text::script('JCLOSE');
 
 $maxSize = HTMLHelper::_('number.bytes', Utility::getMaxUploadSize());
 ?>
+
+<!-- Welcome Section -->
+<div class="card bg-light mb-4">
+    <div class="card-body">
+        <div class="row align-items-center">
+            <div class="col-auto">
+                <i class="fas fa-database fa-3x text-primary"></i>
+            </div>
+            <div class="col">
+                <h2 class="card-title mb-1"><?php echo Text::_('JBS_IBM_WELCOME_TITLE'); ?></h2>
+                <p class="card-text text-muted mb-0"><?php echo Text::_('JBS_IBM_WELCOME_DESC'); ?></p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row">
     <!-- Export Section -->
     <div class="col-12 col-lg-6">

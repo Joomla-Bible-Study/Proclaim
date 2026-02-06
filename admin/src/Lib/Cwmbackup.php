@@ -57,6 +57,39 @@ class Cwmbackup
     protected string $saveAsName = '';
 
     /**
+     * Generate a standardized backup filename
+     *
+     * Format: proclaim-backup_SiteName_YYYY-MM-DD_vX.X.X.sql
+     *
+     * @return string The generated filename
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public static function generateBackupFilename(): string
+    {
+        $app    = Factory::getApplication();
+        $config = $app->getConfig();
+
+        // Get site name and sanitize it
+        $siteName = $config->get('sitename', 'site');
+        $siteName = strtolower(trim(preg_replace('#[^a-zA-Z0-9]+#', '-', $siteName), '-'));
+
+        // Limit site name length
+        if (\strlen($siteName) > 30) {
+            $siteName = substr($siteName, 0, 30);
+        }
+
+        // Get current date in ISO format
+        $date = date('Y-m-d');
+
+        // Get Proclaim version
+        $version = Cwmparams::getVersion();
+
+        return sprintf('proclaim-backup_%s_%s_v%s.sql', $siteName, $date, $version);
+    }
+
+    /**
      * Export DB//
      *
      * @param   int  $run  ID
@@ -68,11 +101,7 @@ class Cwmbackup
      */
     public function exportdb(int $run): bool
     {
-        $date             = date('Y_F_j');
-        $site             = Uri::root();
-        $this->saveAsName = strtolower(
-            trim(preg_replace('#\W+#', '_', $site), '_')
-        ) . '_jbs-db-backup_' . $date . '_' . time() . '.sql';
+        $this->saveAsName = self::generateBackupFilename();
         $objects          = CwmdbHelper::getObjects();
         $config           = Factory::getApplication()->getConfig();
         $path             = $config->get('tmp_path') . '/' . $this->saveAsName;
