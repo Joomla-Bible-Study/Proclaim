@@ -19,7 +19,6 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
-use CWM\Component\Proclaim\Administrator\Table\CwmmessageTable;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
@@ -437,8 +436,8 @@ class CwmmessageModel extends AdminModel
      */
     public function saveorder($pks = null, $order = null): mixed
     {
-        $db         = Factory::getContainer()->get('DatabaseDriver');
-        $row        = new CwmmessageTable($db);
+        $row        = Factory::getApplication()->bootComponent('com_proclaim')
+            ->getMVCFactory()->createTable('Cwmmessage', 'Administrator');
         $conditions = [];
 
         // Update ordering values

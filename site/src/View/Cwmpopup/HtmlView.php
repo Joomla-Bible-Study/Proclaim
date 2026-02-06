@@ -242,8 +242,8 @@ class HtmlView extends BaseHtmlView
             $this->template = $template;
         } else {
             // Handle case where template is not of expected type, maybe create a default or throw error
-            $db             = Factory::getContainer()->get('DatabaseDriver');
-            $this->template = new CwmtemplateTable($db);
+            $this->template = Factory::getApplication()->bootComponent('com_proclaim')
+                ->getMVCFactory()->createTable('Cwmtemplate', 'Administrator');
         }
 
 

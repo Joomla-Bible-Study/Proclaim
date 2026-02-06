@@ -924,8 +924,7 @@ class CwminstallModel extends ListModel
                 break;
             case 'fixassets':
                 // Final step is to fix assets by building what needs to be fixed.
-                $assets             = new Cwmassets();
-                $string             = $assets->build();
+                $string             = Cwmassets::build();
                 $this->installQuery = $string->query;
                 $this->totalSteps += $string->count;
                 break;

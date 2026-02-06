@@ -17,8 +17,6 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplatecodeTable;
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
@@ -133,7 +131,8 @@ class CwmtemplatesController extends AdminController
                         $tc++;
 
                         // Store new Recorded so it can be seen.
-                        $table = new CwmtemplatecodeTable($db);
+                        $table = Factory::getApplication()->bootComponent('com_proclaim')
+                            ->getMVCFactory()->createTable('Cwmtemplatecode', 'Administrator');
 
                         try {
                             $table->load($data->id);
@@ -215,7 +214,8 @@ class CwmtemplatesController extends AdminController
         $data = $db->loadObject();
 
         // Load Table Data.
-        $table = new CwmtemplateTable($db);
+        $table = Factory::getApplication()->bootComponent('com_proclaim')
+            ->getMVCFactory()->createTable('Cwmtemplate', 'Administrator');
 
         try {
             $table->load($data->id);

@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -84,8 +83,8 @@ class CwmtemplateModel extends AdminModel
     public function copy(array $cid): bool
     {
         foreach ($cid as $id) {
-            $db       = Factory::getContainer()->get('DatabaseDriver');
-            $tmplCurr = new CwmtemplateTable($db);
+            $tmplCurr = Factory::getApplication()->bootComponent('com_proclaim')
+                ->getMVCFactory()->createTable('Cwmtemplate', 'Administrator');
 
             $tmplCurr->load($id);
             $tmplCurr->id    = '';

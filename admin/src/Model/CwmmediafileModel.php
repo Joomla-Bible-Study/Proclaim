@@ -19,7 +19,6 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
-use CWM\Component\Proclaim\Administrator\Table\CwmserverTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Date\Date;
@@ -138,8 +137,8 @@ class CwmmediafileModel extends AdminModel
             $params = new Registry();
             $params->loadArray($data['params']);
 
-            $jdb   = Factory::getContainer()->get('DatabaseDriver');
-            $table = new CwmserverTable($jdb);
+            $table = Factory::getApplication()->bootComponent('com_proclaim')
+                ->getMVCFactory()->createTable('Cwmserver', 'Administrator');
             $table->load($data['server_id']);
 
             $path = new Registry();

@@ -266,7 +266,7 @@ class Cwmassets
      *
      * @since 9.0.0
      */
-    public function build(): object
+    public static function build(): object
     {
         $db = Factory::getContainer()->get('DatabaseDriver');
 

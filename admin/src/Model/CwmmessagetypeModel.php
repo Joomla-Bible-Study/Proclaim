@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Table\CwmmessageTable;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
@@ -43,7 +42,8 @@ class CwmmessagetypeModel extends AdminModel
      */
     public function store(): bool
     {
-        $row   = new CwmmessageTable($this->_db);
+        $row   = Factory::getApplication()->bootComponent('com_proclaim')
+            ->getMVCFactory()->createTable('Cwmmessage', 'Administrator');
         $input = new Input();
         $data  = $input->get('post');
 

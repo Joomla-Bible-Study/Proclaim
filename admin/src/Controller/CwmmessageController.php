@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Table\CwmstudytopicsTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
@@ -161,7 +160,8 @@ class CwmmessageController extends FormController
             if (is_numeric($aTag)) {
                 // It's an existing tag.  Add it
                 if ($aTag != "") {
-                    $tagRow           = new CwmstudytopicsTable($db);
+                    $tagRow = Factory::getApplication()->bootComponent('com_proclaim')
+                        ->getMVCFactory()->createTable('Cwmstudytopics', 'Administrator');
                     $tagRow->study_id = $data['id'];
                     $tagRow->topic_id = $aTag;
 
@@ -177,7 +177,8 @@ class CwmmessageController extends FormController
                     $model->save(['topic_text' => $aTag, 'language' => $data['language']]);
 
                     // Gotta somehow make sure this isn't a duplicate...
-                    $tagRow           = new CwmstudytopicsTable($db);
+                    $tagRow = Factory::getApplication()->bootComponent('com_proclaim')
+                        ->getMVCFactory()->createTable('Cwmstudytopics', 'Administrator');
                     $tagRow->study_id = $data['id'];
                     $tagRow->topic_id = $model->getState('topic.id');
 

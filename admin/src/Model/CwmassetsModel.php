@@ -181,8 +181,7 @@ class CwmassetsModel extends ListModel
      */
     private function getSteps(): void
     {
-        $fix     = new Cwmassets();
-        $results = $fix->build();
+        $results = Cwmassets::build();
 
         $this->versionStack = $results->query;
         $this->totalSteps   = $results->count;

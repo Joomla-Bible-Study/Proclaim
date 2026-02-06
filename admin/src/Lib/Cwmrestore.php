@@ -526,8 +526,7 @@ class Cwmrestore
 
         try {
             // Build the asset fix queue
-            $fix     = new Cwmassets();
-            $results = $fix->build();
+            $results = Cwmassets::build();
 
             // Process all assets synchronously
             foreach ($results->query as $key => $items) {
