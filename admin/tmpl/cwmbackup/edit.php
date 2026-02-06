@@ -191,8 +191,8 @@ $maxSize = HTMLHelper::_('number.bytes', Utility::getMaxUploadSize());
                     </div>
                 </form>
             </div>
-            <div class="card-footer bg-light small text-muted" role="contentinfo" aria-label="<?php echo Text::_('JBS_CMN_SERVER_INFO'); ?>">
-                <i class="fas fa-server me-1" aria-hidden="true"></i>
+            <div class="card-footer small" role="contentinfo" aria-label="<?php echo Text::_('JBS_CMN_SERVER_INFO'); ?>">
+                <i class="fas fa-server me-1 text-muted" aria-hidden="true"></i>
                 <?php echo Text::_('JBS_IBM_MAX_UPLOAD'); ?>: <strong><?php echo \ini_get('upload_max_filesize'); ?></strong>
                 <span aria-hidden="true">&nbsp;&bull;&nbsp;</span>
                 <?php echo Text::_('JBS_IBM_TIMEOUT'); ?>: <strong><?php echo \ini_get('max_execution_time'); ?>s</strong>
@@ -206,8 +206,8 @@ $maxSize = HTMLHelper::_('number.bytes', Utility::getMaxUploadSize());
     <!-- Media Backup Help -->
     <div class="col-12 col-lg-6 mb-4">
         <section aria-labelledby="media-warning-heading" class="card border-warning" role="alert">
-            <div class="card-header bg-warning bg-opacity-10 border-warning">
-                <h2 id="media-warning-heading" class="card-title h6 mb-0 text-warning">
+            <div class="card-header bg-warning text-dark border-warning">
+                <h2 id="media-warning-heading" class="card-title h6 mb-0">
                     <i class="fas fa-exclamation-triangle me-2" aria-hidden="true"></i><?php echo Text::_('JBS_IBM_MEDIA_BACKUP_TITLE'); ?>
                 </h2>
             </div>
@@ -227,8 +227,8 @@ $maxSize = HTMLHelper::_('number.bytes', Utility::getMaxUploadSize());
     <!-- Migration Notes -->
     <div class="col-12 col-lg-6 mb-4">
         <section aria-labelledby="migration-heading" class="card border-info">
-            <div class="card-header bg-info bg-opacity-10 border-info">
-                <h2 id="migration-heading" class="card-title h6 mb-0 text-info">
+            <div class="card-header bg-info text-white border-info">
+                <h2 id="migration-heading" class="card-title h6 mb-0">
                     <i class="fas fa-info-circle me-2" aria-hidden="true"></i><?php echo Text::_('JBS_IBM_MIGRATION_NOTES'); ?>
                 </h2>
             </div>
