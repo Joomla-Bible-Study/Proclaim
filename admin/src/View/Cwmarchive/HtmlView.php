@@ -15,6 +15,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmarchive;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -69,7 +70,15 @@ class HtmlView extends BaseHtmlView
         Factory::getApplication()->getInput()->set('hidemainmenu', true);
 
         ToolbarHelper::title(Text::_('JBS_CMN_ARCHIVE'), 'archive');
-        ToolbarHelper::custom('administration.back', 'back', 'back', 'JTOOLBAR_BACK', false);
-        ToolbarHelper::help('archive', true);
+
+        $toolbar = Toolbar::getInstance();
+
+        // Add back to admin tools button
+        $toolbar->linkButton('back', 'JTOOLBAR_BACK')
+            ->url('index.php?option=com_proclaim&view=cwmadmin')
+            ->icon('fas fa-arrow-left')
+            ->listCheck(false);
+
+        ToolbarHelper::help('cwmarchive', true);
     }
 }

@@ -163,7 +163,6 @@ class HtmlView extends BaseHtmlView
             ->icon('fas fa-arrow-left')
             ->listCheck(false);
 
-        ToolbarHelper::divider();
         ToolbarHelper::help('cwmbackup', true);
     }
 }
