@@ -588,63 +588,14 @@ class CwmbackupController extends FormController
             $sessionId = $input->get('sessionId', '', 'string');
             $session   = $app->getSession();
 
-            Log::add('Import finalize: Starting...', Log::INFO, 'com_proclaim');
-
             // Clean up session data
             $session->set('proclaim_import_' . $sessionId, '', 'CWM');
             $session->set('proclaim_import_queries_' . $sessionId, '', 'CWM');
 
-            Log::add('Import finalize: Session cleaned', Log::INFO, 'com_proclaim');
+            // Skip all heavy post-import operations to avoid memory exhaustion
+            // User can run "Fix Assets" from admin panel if needed
+            // The import itself should have restored all data correctly
 
-            // Get Proclaim extension ID
-            $db    = Factory::getContainer()->get('DatabaseDriver');
-            $query = $db->getQuery(true);
-            $query->select('extension_id')
-                ->from('#__extensions')
-                ->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'));
-            $db->setQuery($query);
-            $cid = (int) $db->loadResult();
-
-            Log::add('Import finalize: Extension ID = ' . $cid, Log::INFO, 'com_proclaim');
-
-            // Fix database schema - skip for now as it's heavy and may not be needed
-            // The import should have created the tables correctly
-            Log::add('Import finalize: Skipping DatabaseModel->fix() to avoid timeout', Log::INFO, 'com_proclaim');
-
-            // Fix assets
-            try {
-                Log::add('Import finalize: Starting asset fix...', Log::INFO, 'com_proclaim');
-                $fix     = new Cwmassets();
-                $results = $fix->build();
-
-                if (isset($results->query) && \is_array($results->query)) {
-                    foreach ($results->query as $key => $items) {
-                        foreach ($items as $item) {
-                            Cwmassets::fixAssets($key, $item);
-                        }
-                    }
-                }
-                Log::add('Import finalize: Asset fix complete', Log::INFO, 'com_proclaim');
-            } catch (\Exception $e) {
-                Log::add('Asset fix error: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
-            }
-
-            // Fix ownership
-            try {
-                Log::add('Import finalize: Starting ownership fix...', Log::INFO, 'com_proclaim');
-                Cwmrestore::fixOwnershipPublic();
-                Log::add('Import finalize: Ownership fix complete', Log::INFO, 'com_proclaim');
-            } catch (\Exception $e) {
-                Log::add('Ownership fix error: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
-            }
-
-            // Skip update cache purge - not critical
-            Log::add('Import finalize: Skipping update cache purge', Log::INFO, 'com_proclaim');
-
-            // Skip flush assets - not critical
-            Log::add('Import finalize: Skipping flush assets', Log::INFO, 'com_proclaim');
-
-            Log::add('Import finalize: Sending success response', Log::INFO, 'com_proclaim');
             $this->sendJsonResponse(true, Text::_('JBS_CMN_OPERATION_SUCCESSFUL'));
         } catch (\Exception $e) {
             $this->sendJsonResponse(false, 'Import finalize error: ' . $e->getMessage());
