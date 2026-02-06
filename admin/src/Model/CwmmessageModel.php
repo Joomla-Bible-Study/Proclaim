@@ -451,7 +451,7 @@ class CwmmessageModel extends AdminModel
                 $row->ordering = $order[$i];
 
                 if (!$row->store()) {
-                    $this->setError($this->_db->getErrorMsg());
+                    $this->setError($row->getError());
 
                     return false;
                 }

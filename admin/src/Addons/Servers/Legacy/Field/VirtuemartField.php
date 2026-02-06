@@ -56,8 +56,6 @@ class VirtuemartField extends ListField
         \define('VMLANG', $lang);
 
         // Check to see if component installed
-        jimport('joomla.filesystem.folder');
-
         if (
             !is_dir(JPATH_ADMINISTRATOR . '/components/com_virtuemart')
         ) {

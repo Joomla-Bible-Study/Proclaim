@@ -21,7 +21,6 @@ use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
-use Joomla\Input\Input;
 
 /**
  * MessageType model class
@@ -31,46 +30,6 @@ use Joomla\Input\Input;
  */
 class CwmmessagetypeModel extends AdminModel
 {
-    /**
-     * Method to store a record
-     *
-     * @access    public
-     * @return    bool    True on success
-     *
-     * @throws \Exception
-     * @since     7.0.0
-     */
-    public function store(): bool
-    {
-        $row   = Factory::getApplication()->bootComponent('com_proclaim')
-            ->getMVCFactory()->createTable('Cwmmessage', 'Administrator');
-        $input = new Input();
-        $data  = $input->get('post');
-
-        // Bind the form fields to the hello table
-        if (!$row->bind($data)) {
-            $this->setError($this->_db->getErrorMsg());
-
-            return false;
-        }
-
-        // Make sure the record is valid
-        if (!$row->check()) {
-            $this->setError($this->_db->getErrorMsg());
-
-            return false;
-        }
-
-        // Store the table in the database
-        if (!$row->store()) {
-            $this->setError($this->_db->getErrorMsg());
-
-            return false;
-        }
-
-        return true;
-    }
-
     /**
      * Abstract method for getting the form from the model.
      *
@@ -154,8 +113,6 @@ class CwmmessagetypeModel extends AdminModel
      */
     protected function prepareTable($table): void
     {
-        jimport('joomla.filter.output');
-
         $date = new Date();
         $user = Factory::getApplication()->getIdentity();
 

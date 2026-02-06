@@ -447,8 +447,6 @@ class CwmserieModel extends AdminModel
      */
     protected function prepareTable($table): void
     {
-        jimport('joomla.filter.output');
-
         $date = new Date();
         $user = Factory::getApplication()->getIdentity();
 

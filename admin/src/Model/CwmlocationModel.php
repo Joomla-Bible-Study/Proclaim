@@ -22,7 +22,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
-use Joomla\Input\Input;
 
 /**
  * Location model class
@@ -32,45 +31,6 @@ use Joomla\Input\Input;
  */
 class CwmlocationModel extends AdminModel
 {
-    /**
-     * Method to store a record
-     *
-     * @access    public
-     * @return    bool    True on success
-     *
-     * @throws \Exception
-     * @since     7.0
-     */
-    public function store(): bool
-    {
-        $row   = $this->getTable();
-        $input = new Input();
-        $data  = $input->get('post');
-
-        // Bind the form fields to the table
-        if (!$row->bind($data)) {
-            $this->setError($this->_db->getErrorMsg());
-
-            return false;
-        }
-
-        // Make sure the record is valid
-        if (!$row->check()) {
-            $this->setError($this->_db->getErrorMsg());
-
-            return false;
-        }
-
-        // Store the web link table to the database
-        if (!$row->store()) {
-            $this->setError($this->_db->getErrorMsg());
-
-            return false;
-        }
-
-        return true;
-    }
-
     /**
      * Method to get a table object, load it if necessary.
      *
