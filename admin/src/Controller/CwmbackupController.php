@@ -20,7 +20,6 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
-use CWM\Component\Proclaim\Administrator\Lib\Cwmrestore;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\InstallerHelper;
 use Joomla\CMS\Language\Text;
@@ -28,7 +27,6 @@ use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
-use Joomla\Component\Installer\Administrator\Model\DatabaseModel;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Filesystem\Path;
@@ -467,10 +465,10 @@ class CwmbackupController extends FormController
 
         // Calculate batches (50 queries per batch)
         $batchSize    = 50;
-        $totalBatches = (int) ceil(count($queries) / $batchSize);
+        $totalBatches = (int) ceil(\count($queries) / $batchSize);
 
         $this->sendJsonResponse(true, '', [
-            'totalQueries' => count($queries),
+            'totalQueries' => \count($queries),
             'totalBatches' => $totalBatches,
             'batchSize'    => $batchSize,
         ]);
@@ -507,9 +505,9 @@ class CwmbackupController extends FormController
             return;
         }
 
-        $batchSize = 50;
-        $start     = $batch * $batchSize;
-        $batchQueries = array_slice($queries, $start, $batchSize);
+        $batchSize    = 50;
+        $start        = $batch * $batchSize;
+        $batchQueries = \array_slice($queries, $start, $batchSize);
 
         $db = Factory::getContainer()->get('DatabaseDriver');
 
@@ -539,7 +537,7 @@ class CwmbackupController extends FormController
             }
         }
 
-        $this->sendJsonResponse(true, '', ['batch' => $batch, 'processed' => count($batchQueries)]);
+        $this->sendJsonResponse(true, '', ['batch' => $batch, 'processed' => \count($batchQueries)]);
     }
 
     /**
@@ -554,7 +552,7 @@ class CwmbackupController extends FormController
     {
         // Try to increase memory limit (best-effort, may fail on shared hosting)
         $currentLimit = $this->getMemoryLimitBytes();
-        $targetLimit = 512 * 1024 * 1024; // 512M
+        $targetLimit  = 512 * 1024 * 1024; // 512M
 
         if ($currentLimit > 0 && $currentLimit < $targetLimit) {
             // Try progressive increases - some hosts allow modest increases but not large ones
@@ -565,7 +563,7 @@ class CwmbackupController extends FormController
 
         // Suppress error display and capture any output
         $previousErrorReporting = error_reporting(E_ALL);
-        $previousDisplayErrors = ini_get('display_errors');
+        $previousDisplayErrors  = \ini_get('display_errors');
         ini_set('display_errors', '0');
         ob_start();
 
@@ -611,7 +609,12 @@ class CwmbackupController extends FormController
                 Log::add('Asset fix skipped (testing mode)', Log::INFO, 'com_proclaim');
             }
 
-            $this->sendJsonResponse(true, Text::_('JBS_CMN_OPERATION_SUCCESSFUL'));
+            // Recreate templatecode PHP files from database records
+            $templatecodesCreated = $this->recreateTemplatecodeFiles();
+
+            $this->sendJsonResponse(true, Text::_('JBS_CMN_OPERATION_SUCCESSFUL'), [
+                'templatecodes_created' => $templatecodesCreated,
+            ]);
         } catch (\Exception $e) {
             $this->sendJsonResponse(false, 'Import finalize error: ' . $e->getMessage());
         }
@@ -648,7 +651,7 @@ class CwmbackupController extends FormController
 
         // Adjust batch size based on available memory (smaller batches for constrained environments)
         $memoryLimit = $this->getMemoryLimitBytes();
-        $batchSize = 100;
+        $batchSize   = 100;
 
         if ($memoryLimit > 0 && $memoryLimit < 128 * 1024 * 1024) {
             $batchSize = 25; // Very constrained (< 128M)
@@ -719,7 +722,7 @@ class CwmbackupController extends FormController
      */
     private function fixSingleAssetDirect(object $db, array $tableInfo, object $item, int $parentId): void
     {
-        $assetName = 'com_proclaim.' . $tableInfo['assetname'] . '.' . $item->id;
+        $assetName    = 'com_proclaim.' . $tableInfo['assetname'] . '.' . $item->id;
         $defaultRules = '{"core.delete":[],"core.edit":[],"core.edit.state":[]}';
 
         // Case 1: No asset_id OR asset_id points to non-existent asset (aid is NULL from LEFT JOIN)
@@ -868,14 +871,14 @@ class CwmbackupController extends FormController
      */
     private function getMemoryLimitBytes(): int
     {
-        $limit = ini_get('memory_limit');
+        $limit = \ini_get('memory_limit');
 
         if ($limit === '-1') {
             return -1; // Unlimited
         }
 
         $value = (int) $limit;
-        $unit = strtoupper(substr($limit, -1));
+        $unit  = strtoupper(substr($limit, -1));
 
         switch ($unit) {
             case 'G':
@@ -890,6 +893,91 @@ class CwmbackupController extends FormController
         }
 
         return $value;
+    }
+
+    /**
+     * Recreate templatecode PHP files from database records
+     *
+     * After import, the templatecode table has the PHP code but the actual
+     * template files in the tmpl directories don't exist. This method
+     * recreates them from the database records.
+     *
+     * @return int Number of templatecode files created
+     *
+     * @since 10.1.0
+     */
+    private function recreateTemplatecodeFiles(): int
+    {
+        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $created = 0;
+
+        try {
+            // Get all templatecode records
+            $query = $db->getQuery(true);
+            $query->select('id, type, filename, templatecode')
+                ->from('#__bsms_templatecode')
+                ->where('published = 1');
+            $db->setQuery($query);
+            $records = $db->loadObjectList();
+
+            if (empty($records)) {
+                Log::add('No templatecode records to recreate', Log::INFO, 'com_proclaim');
+
+                return 0;
+            }
+
+            // Type to path mapping (matches CwmtemplatecodeTable::store())
+            $typePaths = [
+                1 => JPATH_ROOT . '/components/com_proclaim/tmpl/Cwmsermons/',
+                2 => JPATH_ROOT . '/components/com_proclaim/tmpl/Cwmsermon/',
+                3 => JPATH_ROOT . '/components/com_proclaim/tmpl/Cwmteachers/',
+                4 => JPATH_ROOT . '/components/com_proclaim/tmpl/Cwmteacher/',
+                5 => JPATH_ROOT . '/components/com_proclaim/tmpl/Cwmseriesdisplays/',
+                6 => JPATH_ROOT . '/components/com_proclaim/tmpl/Cwmseriesdisplay/',
+                7 => JPATH_ROOT . '/modules/mod_proclaim/tmpl/',
+            ];
+
+            foreach ($records as $record) {
+                $type = (int) $record->type;
+
+                if (!isset($typePaths[$type])) {
+                    Log::add('Unknown templatecode type: ' . $type . ' for ID ' . $record->id, Log::WARNING, 'com_proclaim');
+                    continue;
+                }
+
+                $directory = $typePaths[$type];
+                $filename  = 'default_' . $record->filename . '.php';
+                $filepath  = $directory . $filename;
+
+                // Ensure directory exists
+                if (!is_dir($directory)) {
+                    Log::add('Templatecode directory does not exist: ' . $directory, Log::WARNING, 'com_proclaim');
+                    continue;
+                }
+
+                // Prepare content - ensure security check is present
+                $content       = $record->templatecode;
+                $securityCheck = "defined('_JEXEC') or die;";
+
+                if (strpos($content, $securityCheck) === false) {
+                    $content = "<?php\n" . $securityCheck . "\n" . $content;
+                }
+
+                // Write the file
+                if (File::write($filepath, $content)) {
+                    $created++;
+                    Log::add('Created templatecode file: ' . $filepath, Log::INFO, 'com_proclaim');
+                } else {
+                    Log::add('Failed to create templatecode file: ' . $filepath, Log::WARNING, 'com_proclaim');
+                }
+            }
+
+            Log::add('Recreated ' . $created . ' templatecode files', Log::INFO, 'com_proclaim');
+        } catch (\Exception $e) {
+            Log::add('Error recreating templatecode files: ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
+        }
+
+        return $created;
     }
 
     /**
