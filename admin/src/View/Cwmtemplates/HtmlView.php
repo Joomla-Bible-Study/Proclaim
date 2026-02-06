@@ -178,25 +178,9 @@ class HtmlView extends BaseHtmlView
                 ->listCheck(true);
         }
 
-        $url = Route::_('index.php?option=com_proclaim&view=templates&layout=default_export');
+        $url = Route::_('index.php?option=com_proclaim&view=cwmtemplates&layout=default_export');
         $toolbar->appendButton('Link', 'export', 'JBS_TPL_IMPORT_EXPORT_TEMPLATE', $url);
 
         ToolbarHelper::help('templates', true);
-    }
-
-    /**
-     * Returns an array of fields that the table can be sorted by
-     *
-     * @return  array  Array containing the field name to sort by as the key and display text as the value
-     *
-     * @since   3.0
-     */
-    protected function getSortFields(): array
-    {
-        return [
-            'template.title'     => Text::_('JBS_TPL_TEMPLATE_ID'),
-            'template.published' => Text::_('JSTATUS'),
-            'template.id'        => Text::_('JGRID_HEADING_ID'),
-        ];
     }
 }

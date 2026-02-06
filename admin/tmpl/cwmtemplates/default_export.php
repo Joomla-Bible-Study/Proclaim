@@ -18,11 +18,11 @@
 
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\Router\Route;
+use Joomla\CMS\Router\Route;
 
-HTMLHelper::_('bootstrap.framework');
-HTMLHelper::_('behavior.multiselect');
-HTMLHelper::_('formbehavior.chosen', 'select');
+$wa = $this->getDocument()->getWebAssetManager();
+$wa->useScript('table.columns')
+    ->useScript('multiselect');
 
 // $templates is used to generate the export list.
 $templates       = $this->get('templates');
@@ -32,56 +32,48 @@ $this->templates = HTMLHelper::_(
     'select.genericlist',
     $types,
     'template_export',
-    'class="input box" size="1" ',
+    'class="form-select w-auto d-inline-block" ',
     'value',
     'text',
     '$'
 );
-
-/**
- * View class for Templates
- *
- * @package  Proclaim.Admin
- * @since    7.0.0
- */
 ?>
 <form enctype="multipart/form-data" action="<?php
-echo Route::_('index.php?option=com_proclaim&view=templates'); ?>"
+echo Route::_('index.php?option=com_proclaim&view=cwmtemplates'); ?>"
       method="post" name="adminForm" id="adminForm">
-    <?php
-    if (!empty($this->sidebar)) : ?>
-    <div id="j-sidebar-container" class="col-2">
-        <?php
-        echo $this->sidebar; ?>
-        <hr/>
-    </div>
-    <div id="j-main-container" class="col-10">
-        <?php else : ?>
-        <div id="j-main-container">
-            <?php
-        endif; ?>
-            <div class="col-6">
-                <h2><?php
-                        echo Text::_('JBS_CMN_EXPORT'); ?></h2>
-                <span class="btn btn-default"><?php
-                        echo $this->templates; ?>
-                    <input type="submit" class="btn btn-default" value="<?php
-                        echo Text::_('JBS_CMN_SUBMIT'); ?>"
-                           onclick="Joomla.submitbutton('templates.templateExport')"/></span>
+    <div id="j-main-container">
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title"><?php echo Text::_('JBS_CMN_EXPORT'); ?></h2>
+                        <div class="d-flex align-items-center gap-2">
+                            <?php echo $this->templates; ?>
+                            <button type="submit" class="btn btn-primary"
+                                    onclick="Joomla.submitbutton('cwmtemplates.templateExport')">
+                                <?php echo Text::_('JBS_CMN_SUBMIT'); ?>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="input-append col-6">
-                <h2><?php
-                        echo Text::_('JBS_CMN_IMPORT'); ?></h2>
-                <span class="btn btn-default btn-file">
-                        <input class="file" id="template_import" name="template_import" type="file" size="57"/>
-                            <input type="submit" class="btn btn-default"
-                                   value="<?php
-                                        echo Text::_('JBS_CMN_SUBMIT'); ?>"
-                                   onclick="Joomla.submitbutton('templates.templateImport')"/>
-                </span>
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title"><?php echo Text::_('JBS_CMN_IMPORT'); ?></h2>
+                        <div class="d-flex align-items-center gap-2">
+                            <input class="form-control w-auto" id="template_import"
+                                   name="template_import" type="file" />
+                            <button type="submit" class="btn btn-primary"
+                                    onclick="Joomla.submitbutton('cwmtemplates.templateImport')">
+                                <?php echo Text::_('JBS_CMN_SUBMIT'); ?>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <input type="hidden" name="task" value=""/>
-            <?php
-                echo HTMLHelper::_('form.token'); ?>
         </div>
+        <input type="hidden" name="task" value=""/>
+        <?php echo HTMLHelper::_('form.token'); ?>
+    </div>
 </form>
