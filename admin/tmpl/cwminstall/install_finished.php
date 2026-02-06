@@ -1,7 +1,7 @@
 <?php
 
 /**
- * View html
+ * Migration Finished Template
  *
  * @package    Proclaim.Admin
  * @copyright  (C) 2026 CWM Team All rights reserved
@@ -16,6 +16,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwminstall\HtmlView $this */
 
@@ -23,146 +24,223 @@ use Joomla\CMS\Language\Text;
 $session = Factory::getApplication()->getSession();
 $session->set('migration_stack', '', 'CWM');
 ?>
-<?php
-if (!empty($errors)) : ?>
-    <!--suppress HtmlUnknownTarget -->
-    <div style="background-color: #900; color: #fff; font-size: large;">
-        <h1>MySQL errors during installation</h1>
 
-        <p>The installation script detected a MySQL error, which will
-            prevent the component from working properly. We suggest uninstalling
-            any previous version of Proclaim and trying a clean installation.
-        </p>
-
-        <p>
-            The MySQL errors were:
-        </p>
-
-        <p style="font-size: initial;">
-            <?php
-            echo implode("<br/>", $errors); ?>
-        </p>
+<div class="row">
+    <!-- Success Header -->
+    <div class="col-12 mb-4">
+        <?php if (!empty($errors)): ?>
+        <!-- Error State -->
+        <div class="alert alert-danger">
+            <h4 class="alert-heading">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <?php echo Text::_('JBS_MIG_MYSQL_ERRORS'); ?>
+            </h4>
+            <p><?php echo Text::_('JBS_MIG_MYSQL_ERRORS_DESC'); ?></p>
+            <hr>
+            <div class="small">
+                <?php echo implode('<br>', $errors); ?>
+            </div>
+        </div>
+        <?php else: ?>
+        <!-- Success State -->
+        <div class="card bg-success text-white">
+            <div class="card-body text-center py-4">
+                <i class="fas fa-check-circle mb-3" style="font-size: 4rem;"></i>
+                <h2 class="card-title mb-2">
+                    <?php echo Text::sprintf('JBS_INS_INSTALLATION_RESULTS', Text::_('JBS_MIG_MIGRATION_DONE')); ?>
+                </h2>
+                <p class="card-text mb-0">
+                    <?php echo Text::_('JBS_MIG_SUCCESS_DESC'); ?>
+                </p>
+            </div>
+        </div>
+        <?php endif; ?>
     </div>
-    <?php
-endif; ?>
 
-<h1>
-    <img src="../media/com_proclaim/images/openbible.png" alt="Proclaim Study System" class="float: left"/>
-    <?php
-    echo Text::sprintf('JBS_INS_INSTALLATION_RESULTS', Text::_('JBS_MIG_MIGRATION_DONE')); ?>
-</h1>
+    <!-- Extension Status -->
+    <div class="col-12 col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-puzzle-piece me-2"></i>
+                    <?php echo Text::_('JBS_MIG_EXTENSION_STATUS'); ?>
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-striped mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th><?php echo Text::_('JBS_MIG_EXTENSION'); ?></th>
+                            <th><?php echo Text::_('JBS_MIG_TYPE'); ?></th>
+                            <th class="text-center"><?php echo Text::_('JSTATUS'); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Component -->
+                        <tr>
+                            <td>
+                                <i class="fas fa-cube me-2 text-primary"></i>
+                                Proclaim Component
+                            </td>
+                            <td><span class="badge bg-primary">Component</span></td>
+                            <td class="text-center">
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check me-1"></i><?php echo Text::_('JBS_MIG_INSTALLED'); ?>
+                                </span>
+                            </td>
+                        </tr>
 
-<?php
-$rows = 0; ?>
-<div class="clearfix"></div>
+                        <!-- Modules -->
+                        <?php if (\count($this->status->cwmmodules)): ?>
+                            <?php foreach ($this->status->cwmmodules as $module): ?>
+                            <tr>
+                                <td>
+                                    <i class="fas fa-th-large me-2 text-info"></i>
+                                    <?php echo Text::_(strtoupper($module['name'])); ?>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">Module</span>
+                                    <small class="text-muted">(<?php echo ucfirst($module['client']); ?>)</small>
+                                </td>
+                                <td class="text-center">
+                                    <?php if ($module['result']): ?>
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check me-1"></i><?php echo Text::_('JBS_MIG_INSTALLED'); ?>
+                                    </span>
+                                    <?php else: ?>
+                                    <span class="badge bg-danger">
+                                        <i class="fas fa-times me-1"></i><?php echo Text::_('JBS_MIG_NOT_INSTALLED'); ?>
+                                    </span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
 
-<table class="table table-striped adminlist" id="install">
-    <thead>
-    <tr>
-        <th class="title" colspan="2">Extension</th>
-        <th style="width: 30%;">Status</th>
-    </tr>
-    </thead>
-    <tfoot>
-    <tr>
-        <td colspan="3"></td>
-    </tr>
-    </tfoot>
-    <tbody>
-    <tr class="row0">
-        <td class="key" colspan="2">Proclaim Component</td>
-        <td><strong>Installed</strong></td>
-    </tr>
-    <?php
-    if (\count($this->status->cwmmodules)) : ?>
-        <tr>
-            <th>Module</th>
-            <th>Client</th>
-            <th></th>
-        </tr>
-        <?php
-        foreach ($this->status->cwmmodules as $module) : ?>
-            <tr class="row<?php
-            echo ++$rows % 2; ?>">
-                <td class="key"><?php
-                    echo Text::_(strtoupper($module['name'])); ?></td>
-                <td class="key"><?php
-                    echo ucfirst($module['client']); ?></td>
-                <td><strong
-                            style="color: <?php
-                            echo ($module['result']) ? "green" : "red" ?>;"><?php
-                        echo ($module['result']) ? 'Installed' : 'Not installed'; ?></strong>
-                </td>
-            </tr>
-            <?php
-        endforeach; ?>
-        <?php
-    endif; ?>
-    <?php
-    if (\count($this->status->cwmplugins)) : ?>
-        <tr>
-            <th>Plugin</th>
-            <th>Group</th>
-            <th></th>
-        </tr>
-        <?php
-        foreach ($this->status->cwmplugins as $plugin) : ?>
-            <tr class="row<?php
-            echo ++$rows % 2; ?>">
-                <td class="key"><?php
-                    echo Text::_(strtoupper($plugin['name'])); ?></td>
-                <td class="key"><?php
-                    echo ucfirst($plugin['group']); ?></td>
-                <td><strong
-                            style="color: <?php
-                            echo ($plugin['result']) ? "green" : "red" ?>;"><?php
-                        echo ($plugin['result']) ? 'Installed' : 'Not installed'; ?></strong>
-                </td>
-            </tr>
-            <?php
-        endforeach; ?>
-        <?php
-    endif; ?>
-    </tbody>
-</table>
-<table class="table table-striped adminlist" id="install">
-    <tbody>
-    <tr>
-        <td>
+                        <!-- Plugins -->
+                        <?php if (\count($this->status->cwmplugins)): ?>
+                            <?php foreach ($this->status->cwmplugins as $plugin): ?>
+                            <tr>
+                                <td>
+                                    <i class="fas fa-plug me-2 text-warning"></i>
+                                    <?php echo Text::_(strtoupper($plugin['name'])); ?>
+                                </td>
+                                <td>
+                                    <span class="badge bg-warning text-dark">Plugin</span>
+                                    <small class="text-muted">(<?php echo ucfirst($plugin['group']); ?>)</small>
+                                </td>
+                                <td class="text-center">
+                                    <?php if ($plugin['result']): ?>
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check me-1"></i><?php echo Text::_('JBS_MIG_INSTALLED'); ?>
+                                    </span>
+                                    <?php else: ?>
+                                    <span class="badge bg-danger">
+                                        <i class="fas fa-times me-1"></i><?php echo Text::_('JBS_MIG_NOT_INSTALLED'); ?>
+                                    </span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-            <a href="index.php?option=com_proclaim">
-                <img src="../media/com_proclaim/images/done-icon.jpg" alt="Done"/>
+        <!-- Next Steps Card -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-tasks me-2"></i>
+                    <?php echo Text::_('JBS_MIG_NEXT_STEPS'); ?>
+                </h5>
+            </div>
+            <div class="card-body">
+                <ol class="mb-0">
+                    <li class="mb-2"><?php echo Text::_('JBS_MIG_NEXT_STEP1'); ?></li>
+                    <li class="mb-2"><?php echo Text::_('JBS_MIG_NEXT_STEP2'); ?></li>
+                    <li class="mb-2"><?php echo Text::_('JBS_MIG_NEXT_STEP3'); ?></li>
+                    <li><?php echo Text::_('JBS_MIG_NEXT_STEP4'); ?></li>
+                </ol>
+            </div>
+        </div>
 
-                <h3 style="text-align: left;"><?php
-                    echo Text::_('JBS_INS_CLICK_TO_FINISH'); ?></h3>
+        <!-- Action Button -->
+        <div class="d-grid gap-2 mb-4">
+            <a href="<?php echo Route::_('index.php?option=com_proclaim'); ?>" class="btn btn-primary btn-lg">
+                <i class="fas fa-home me-2"></i>
+                <?php echo Text::_('JBS_INS_CLICK_TO_FINISH'); ?>
             </a>
+        </div>
+    </div>
 
-        </td>
+    <!-- Support & Resources Sidebar -->
+    <div class="col-12 col-lg-4">
+        <!-- Support Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-life-ring me-2"></i>
+                    <?php echo Text::_('JBS_MIG_SUPPORT'); ?>
+                </h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-3">
+                        <a href="https://www.christianwebministries.org/support/user-help-forum.html"
+                           target="_blank"
+                           class="text-decoration-none">
+                            <i class="fas fa-comments me-2 text-primary"></i>
+                            <?php echo Text::_('JBS_INS_VISIT_FORUM'); ?>
+                            <i class="fas fa-external-link-alt ms-1 small"></i>
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a href="https://www.christianwebministries.org/documentation.html"
+                           target="_blank"
+                           class="text-decoration-none">
+                            <i class="fas fa-book me-2 text-success"></i>
+                            <?php echo Text::_('JBS_INS_VISIT_DOCUMENTATION'); ?>
+                            <i class="fas fa-external-link-alt ms-1 small"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.christianwebministries.org"
+                           target="_blank"
+                           class="text-decoration-none">
+                            <i class="fas fa-globe me-2 text-info"></i>
+                            <?php echo Text::_('JBS_INS_GET_MORE_HELP'); ?>
+                            <i class="fas fa-external-link-alt ms-1 small"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
-    </tr>
+        <!-- Post-Install Notice -->
+        <div class="card border-warning">
+            <div class="card-header bg-warning">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-bell me-2"></i>
+                    <?php echo Text::_('JBS_MIG_POST_INSTALL_NOTICE'); ?>
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="small mb-0">
+                    <?php echo Text::_('JBS_MIG_POST_INSTALL_DESC'); ?>
+                </p>
+            </div>
+        </div>
 
-    <tr>
-        <td>
-            <p><a href="https://www.christianwebministries.org/support/user-help-forum.html"
-                  target="_blank"><?php
-                    echo Text::_('JBS_INS_VISIT_FORUM'); ?></a></p>
-
-            <p><a href="https://www.christianwebministries.org"
-                  target="_blank"><?php
-                    echo Text::_('JBS_INS_GET_MORE_HELP'); ?></a></p>
-
-            <p><a href="https://www.christianwebministries.org/documentation.html"
-                  target="_blank"><?php
-                    echo Text::_('JBS_INS_VISIT_DOCUMENTATION'); ?></a></p>
-
-            <p><?php
-                echo Text::_('JBS_INS_TITLE'); ?> &copy; by <a href="https://www.christianwebministries.org"
-                                                               target="_blank">www.ChristianWebMinistries.org</a>
-                All rights reserved.</p>
-
-        </td>
-    </tr>
-    </tbody>
-</table>
-
-
+        <!-- Copyright -->
+        <div class="text-center mt-4 text-muted small">
+            <p class="mb-0">
+                <?php echo Text::_('JBS_INS_TITLE'); ?> &copy;
+                <a href="https://www.christianwebministries.org" target="_blank" class="text-decoration-none">
+                    ChristianWebMinistries.org
+                </a>
+            </p>
+        </div>
+    </div>
+</div>

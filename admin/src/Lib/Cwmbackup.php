@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\Version;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Filesystem\File;
@@ -57,6 +58,40 @@ class Cwmbackup
     protected string $saveAsName = '';
 
     /**
+     * Generate a standardized backup filename
+     *
+     * Format: proclaim-backup_SiteName_YYYY-MM-DD_vX.X.X.sql
+     *
+     * @return string The generated filename
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public static function generateBackupFilename(): string
+    {
+        $app    = Factory::getApplication();
+        $config = $app->getConfig();
+
+        // Get site name and sanitize it
+        $siteName = $config->get('sitename', 'site');
+        $siteName = strtolower(trim(preg_replace('#[^a-zA-Z0-9]+#', '-', $siteName), '-'));
+
+        // Limit site name length
+        if (\strlen($siteName) > 30) {
+            $siteName = substr($siteName, 0, 30);
+        }
+
+        // Get current date in ISO format
+        $date = date('Y-m-d');
+
+        // Get Proclaim version
+        $versionHelper = new Version();
+        $version       = $versionHelper->getShortVersion();
+
+        return sprintf('proclaim-backup_%s_%s_v%s.sql', $siteName, $date, $version);
+    }
+
+    /**
      * Export DB//
      *
      * @param   int  $run  ID
@@ -68,11 +103,7 @@ class Cwmbackup
      */
     public function exportdb(int $run): bool
     {
-        $date             = date('Y_F_j');
-        $site             = Uri::root();
-        $this->saveAsName = strtolower(
-            trim(preg_replace('#\W+#', '_', $site), '_')
-        ) . '_jbs-db-backup_' . $date . '_' . time() . '.sql';
+        $this->saveAsName = self::generateBackupFilename();
         $objects          = CwmdbHelper::getObjects();
         $config           = Factory::getApplication()->getConfig();
         $path             = $config->get('tmp_path') . '/' . $this->saveAsName;
@@ -147,6 +178,82 @@ class Cwmbackup
         File::delete($this->dumpFile);
 
         return $path1;
+    }
+
+    /**
+     * Get Export Table Data as string (for AJAX export)
+     *
+     * @param   string  $table  Table name
+     *
+     * @return string The SQL export data for the table
+     *
+     * @since 10.1.0
+     */
+    public function getExportTableData(string $table): string
+    {
+        if (!$table) {
+            return '';
+        }
+
+        // Reset the execution time limit for long-running exports
+        if (\function_exists('set_time_limit')) {
+            set_time_limit(\ini_get('max_execution_time'));
+        }
+
+        $db = Factory::getContainer()->get('DatabaseDriver');
+
+        // Get the prefix
+        $prefix = $db->getPrefix();
+        $export = '';
+
+        // Start of Tables
+        $export .= "--\n-- Table structure for table " . $db->qn($table) . "\n--\n\n";
+
+        // Drop the existing table
+        $export .= 'DROP TABLE IF EXISTS ' . $db->qn($table) . ";\n";
+
+        // Create a new table definition based on the incoming database
+        $query = 'SHOW CREATE TABLE ' . $db->qn($table);
+        $db->setQuery($query);
+        $table_def = $db->loadObject();
+
+        foreach ($table_def as $value) {
+            if (substr_count($value, 'CREATE')) {
+                $export .= str_replace($prefix, '#__', $value) . ";\n";
+                $export = str_replace('TYPE=', 'ENGINE=', $export);
+            }
+        }
+
+        $export .= "\n\n--\n-- Dumping data for table " . $db->qn($table) . "\n--\n\n";
+
+        // Get the table rows and create insert statements from them
+        $query = $db->getQuery(true);
+        $query->select('*')
+            ->from($db->qn($table));
+        $db->setQuery($query);
+        $results = $db->loadObjectList();
+
+        if ($results) {
+            foreach ($results as $result) {
+                $data   = [];
+                $export .= 'INSERT INTO ' . $db->qn($table) . ' SET ';
+
+                foreach ($result as $key => $value) {
+                    if ($value === null) {
+                        $data[] = $db->qn($key) . "=NULL";
+                    } else {
+                        $data[] = $db->qn($key) . "=" . $db->q(trim(str_replace(["\r\n", "\r"], "\n", $value)));
+                    }
+                }
+
+                $export .= implode(',', $data);
+                $export .= ";\n";
+            }
+        }
+
+        $export .= "\n-- --------------------------------------------------------\n\n";
+
+        return $export;
     }
 
     /**

@@ -423,7 +423,7 @@ class CwmassetsModel extends ListModel
     }
 
     /**
-     * Set Parent ID
+     * Set Parent ID (ensures parent asset exists)
      *
      * @return void
      *
@@ -431,6 +431,7 @@ class CwmassetsModel extends ListModel
      */
     public function parentId(): void
     {
-        $this->parent_id = Cwmassets::parentId();
+        // Use ensureParentAsset to create if missing
+        $this->parent_id = Cwmassets::ensureParentAsset();
     }
 }

@@ -16,9 +16,9 @@ use CWM\Component\Proclaim\Administrator\Model\CwmadminModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
@@ -148,45 +148,22 @@ class HtmlView extends BaseHtmlView
         Factory::getApplication()->getInput()->set('hidemainmenu', true);
 
         ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'administration');
-        ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
+
+        $toolbar = Toolbar::getInstance();
+
+        // Add home button to cpanel
+        $toolbar->linkButton('home', 'JBS_CMN_HOME')
+            ->url('index.php?option=com_proclaim&view=cwmcpanel')
+            ->icon('fas fa-home')
+            ->listCheck(false);
+
+        // Add back to admin tools button
+        $toolbar->linkButton('back', 'JTOOLBAR_BACK')
+            ->url('index.php?option=com_proclaim&view=cwmadmin')
+            ->icon('fas fa-arrow-left')
+            ->listCheck(false);
+
         ToolbarHelper::divider();
-        ToolbarHelper::help('proclaim', true);
-    }
-
-    /**
-     * Added for SermonSpeaker and PreachIt.
-     *
-     * @param   string  $component  The Component it is coming from
-     *
-     * @return bool
-     *
-     * @since 7.1.0
-     * @deprecated 10.0.2 Code isn't used.
-     */
-    protected function versionXML(string $component): bool
-    {
-        switch ($component) {
-            case 'sermonspeaker':
-                $data = Installer::parseXMLInstallFile(
-                    JPATH_ADMINISTRATOR . '/components/com_sermonspeaker/sermonspeaker.xml'
-                );
-
-                if ($data) {
-                    return $data['version'];
-                }
-
-                return false;
-
-            case 'preachit':
-                $data = Installer::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_preachit/preachit.xml');
-
-                if ($data) {
-                    return $data['version'];
-                }
-
-                return false;
-        }
-
-        return false;
+        ToolbarHelper::help('cwmbackup', true);
     }
 }

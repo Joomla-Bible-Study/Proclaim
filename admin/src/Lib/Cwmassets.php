@@ -52,17 +52,33 @@ class Cwmassets
      */
     public static function fixAssets(string $key, ?object $result): bool
     {
-        $result_object   = (object)$result;
-        self::$parent_id = self::parentid();
+        $result_object   = (object) $result;
+        self::$parent_id = self::ensureParentAsset();
 
-        // If there is no asset_id it means that this has not been set and should be
-        if (!$result_object->asset_id) {
-            self::setAsset($result_object, $key);
-            Log::add('Set Asset Under Key: ' . $key, Log::NOTICE, 'com_proclaim');
+        if (!self::$parent_id) {
+            Log::add('Could not find or create parent asset', Log::WARNING, 'com_proclaim');
+
+            return false;
         }
 
-        // If there is a asset_id but no match to the parent_id then a mismatch has occurred
-        if ((self::$parent_id !== $result_object->parent_id || $result_object->rules === "") && $result_object->asset_id) {
+        // Check if the asset actually exists (aid comes from LEFT JOIN with #__assets)
+        $assetExists = !empty($result_object->aid);
+
+        // Case 1: No asset_id OR asset_id points to non-existent asset
+        if (!$result_object->asset_id || !$assetExists) {
+            // Delete stale asset_id reference if it exists but asset is missing
+            if ($result_object->asset_id && !$assetExists) {
+                Log::add('Stale asset_id ' . $result_object->asset_id . ' for ' . $key . ' ID ' . $result_object->id, Log::NOTICE, 'com_proclaim');
+            }
+
+            self::setAsset($result_object, $key);
+            Log::add('Set Asset Under Key: ' . $key, Log::NOTICE, 'com_proclaim');
+
+            return true;
+        }
+
+        // Case 2: Asset exists but parent_id mismatch or empty rules
+        if ((self::$parent_id !== (int) $result_object->parent_id || $result_object->rules === "") && $result_object->asset_id) {
             Log::add('Reset Asset ID: ' . $result_object->asset_id, Log::NOTICE, 'com_proclaim');
             $deletasset = self::deleteAsset($result_object);
 
@@ -72,6 +88,70 @@ class Cwmassets
         }
 
         return true;
+    }
+
+    /**
+     * Ensure the com_proclaim parent asset exists, create if missing
+     *
+     * @return int Parent asset ID, or 0 on failure
+     *
+     * @since 10.1.0
+     */
+    public static function ensureParentAsset(): int
+    {
+        // First try to find existing asset
+        $parentId = self::parentId();
+
+        if ($parentId) {
+            return $parentId;
+        }
+
+        // Parent asset doesn't exist - need to create it
+        $db = Factory::getContainer()->get('DatabaseDriver');
+
+        // Find the root asset to use as parent
+        $query = $db->getQuery(true);
+        $query->select('id')
+            ->from('#__assets')
+            ->where('parent_id = 0')
+            ->where('level = 0');
+        $db->setQuery($query);
+        $rootId = (int) $db->loadResult();
+
+        if (!$rootId) {
+            $rootId = 1; // Fallback to id 1
+        }
+
+        // Create the com_proclaim parent asset
+        $defaultRules = '{"core.admin":{"7":1},"core.manage":{"6":1},"core.create":[],"core.delete":[],"core.edit":[],"core.edit.state":[]}';
+
+        $query = $db->getQuery(true);
+        $query->insert('#__assets')
+            ->columns(['parent_id', 'lft', 'rgt', 'level', 'name', 'title', 'rules'])
+            ->values(
+                (int) $rootId . ', 0, 0, 1, ' .
+                $db->quote('com_proclaim') . ', ' .
+                $db->quote('com_proclaim') . ', ' .
+                $db->quote($defaultRules)
+            );
+
+        try {
+            $db->setQuery($query);
+            $db->execute();
+            self::$parent_id = (int) $db->insertid();
+
+            // Rebuild the asset tree to fix lft/rgt values
+            $assetTable = new \Joomla\CMS\Table\Asset($db);
+            $assetTable->rebuild();
+
+            Log::add('Created com_proclaim parent asset with ID: ' . self::$parent_id, Log::INFO, 'com_proclaim');
+
+            return self::$parent_id;
+        } catch (\Exception $e) {
+            Log::add('Failed to create parent asset: ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
+
+            return 0;
+        }
     }
 
     /**

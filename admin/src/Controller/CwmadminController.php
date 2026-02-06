@@ -633,8 +633,6 @@ class CwmadminController extends FormController
             return;
         }
 
-        $alt         = '';
-
         // This should be where the form administrator/form_migrate comes to with either the file select box or the tmp folder input field
         $app   = Factory::getApplication();
         $input = $app->getInput();
@@ -646,13 +644,26 @@ class CwmadminController extends FormController
         if ($oldprefix) {
             if (!($this->copyTables($oldprefix))) {
                 $app->enqueueMessage(Text::_('JBS_CMN_DATABASE_NOT_COPIED'), 'warning');
+                $this->setRedirect('index.php?option=com_proclaim&view=cwmbackup');
+
+                return;
             }
+
+            $app->enqueueMessage(Text::_('JBS_CMN_OPERATION_SUCCESSFUL'), 'success');
         } else {
             $import = new Cwmrestore();
-            $import->importdb($parent);
+            $result = $import->importdb($parent);
+
+            if ($result === true) {
+                $app->enqueueMessage(Text::_('JBS_CMN_OPERATION_SUCCESSFUL'), 'success');
+            } elseif ($result === false) {
+                // Error messages already enqueued by importdb()
+            } else {
+                $app->enqueueMessage((string) $result, 'warning');
+            }
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel');
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmbackup');
     }
 
     /**
