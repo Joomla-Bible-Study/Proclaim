@@ -20,9 +20,6 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
-$wa = $this->getDocument()->getWebAssetManager();
-$wa->useScript('table.columns');
-
 // Build the export template dropdown
 $templates      = $this->get('templates');
 $types          = [HTMLHelper::_('select.option', '0', Text::_('JBS_CMN_SELECT_TEMPLATE'))];
