@@ -920,7 +920,7 @@ class CwmadminController extends FormController
         $form  = $model->getForm('', false);
 
         if (!$form) {
-            $app->enqueueMessage($model->getError(), 'error');
+            $app->enqueueMessage(Text::_('JLIB_APPLICATION_ERROR_FORM_LOAD'), 'error');
 
             return false;
         }
@@ -933,6 +933,7 @@ class CwmadminController extends FormController
         $validData = $model->validate($form, $data);
 
         if ($validData === false) {
+            // @todo getErrors() is used by Joomla's FormModel::validate() internally; remove when Joomla drops it
             $errors = $model->getErrors();
 
             foreach ($errors as $error) {

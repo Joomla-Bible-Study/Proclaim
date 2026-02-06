@@ -91,7 +91,7 @@ class CwmmigrationHelper
         foreach ($tables as $table) {
             $query = $db->getQuery(true);
             $query->update($table['table'])
-                ->set('access = ' . $id)
+                ->set($db->qn('access') . ' = ' . (int) $id)
                 ->where(
                     '(' . $db->qn('access') . ' = ' . $db->q('0') .
                     ' OR ' . $db->qn('access') . ' = ' . $db->q(' ') . ')'
@@ -125,8 +125,8 @@ class CwmmigrationHelper
         foreach ($tables as $table) {
             $query = $db->getQuery(true);
             $query->update($table['table'])
-                ->set('language = ' . $db->q('*'))
-                ->where('language = ' . $db->q(''));
+                ->set($db->qn('language') . ' = ' . $db->q('*'))
+                ->where($db->qn('language') . ' = ' . $db->q(''));
             $db->setQuery($query);
             $db->execute();
         }

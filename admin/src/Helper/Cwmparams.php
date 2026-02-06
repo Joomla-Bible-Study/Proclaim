@@ -126,8 +126,8 @@ class Cwmparams
             $query            = $db->getQuery(true);
             $query->select('*')
                 ->from('#__bsms_templates')
-                ->where('published = ' . (int)1)
-                ->where('id = ' . (int)self::$templateId);
+                ->where($db->qn('published') . ' = 1')
+                ->where($db->qn('id') . ' = ' . (int) self::$templateId);
             $db->setQuery($query);
             $template = $db->loadObject();
 
@@ -137,8 +137,8 @@ class Cwmparams
                 $query            = $db->getQuery(true);
                 $query->select('*')
                     ->from('#__bsms_templates')
-                    ->where('published = ' . (int)1)
-                    ->where('id = ' . (int)self::$templateId);
+                    ->where($db->qn('published') . ' = 1')
+                    ->where($db->qn('id') . ' = ' . (int) self::$templateId);
                 $db->setQuery($query);
                 $template = $db->loadObject();
             }
@@ -174,9 +174,9 @@ class Cwmparams
             // Read the existing component value(s)
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
-            $query->select('params')
+            $query->select($db->qn('params'))
                 ->from('#__extensions')
-                ->where('name = ' . $db->q('com_proclaim'));
+                ->where($db->qn('name') . ' = ' . $db->q('com_proclaim'));
             $db->setQuery($query);
             $params = json_decode($db->loadResult(), true, 512, JSON_THROW_ON_ERROR);
 
@@ -189,8 +189,8 @@ class Cwmparams
             $paramsString = json_encode($params, JSON_THROW_ON_ERROR);
             $query->clear();
             $query->update('#__extensions')
-                ->set('params = ' . $db->q($paramsString))
-                ->where('name = ' . $db->q('com_proclaim'));
+                ->set($db->qn('params') . ' = ' . $db->q($paramsString))
+                ->where($db->qn('name') . ' = ' . $db->q('com_proclaim'));
             $db->setQuery($query);
             $db->execute();
         }

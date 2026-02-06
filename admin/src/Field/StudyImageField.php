@@ -50,7 +50,7 @@ class StudyImageField extends MediaField
         $query = $db->getQuery(true);
         $query->select('*')
             ->from('#__extensions')
-            ->where('name = "plg_filesystem_local"');
+            ->where($db->qn('name') . ' = ' . $db->q('plg_filesystem_local'));
         $db->setQuery($query);
         $local   = $db->loadObject();
         $pparams = $local->params;
@@ -66,12 +66,10 @@ class StudyImageField extends MediaField
                 $newmedia  = $getstring . ', "directories' . $dircount . '":{"directory":"media"}}}';
             }
 
-            $newmedia = addslashes($newmedia);
-
             $query = $db->getQuery(true);
             $query->update('#__extensions')
-                ->set('params = "' . $newmedia . '"')
-                ->where('name = "plg_filesystem_local"');
+                ->set($db->qn('params') . ' = ' . $db->q($newmedia))
+                ->where($db->qn('name') . ' = ' . $db->q('plg_filesystem_local'));
             $db->setQuery($query);
             $db->execute();
         }

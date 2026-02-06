@@ -210,9 +210,7 @@ class CwmteacherModel extends AdminModel
             $table = $this->getTable();
 
             if ($table->load(['alias' => $data['alias']])) {
-                $this->setError(Text::_('JBS_TCH_DUPLICATE'));
-
-                return false;
+                throw new \RuntimeException(Text::_('JBS_TCH_DUPLICATE'));
             }
         }
 

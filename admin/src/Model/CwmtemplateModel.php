@@ -91,9 +91,7 @@ class CwmtemplateModel extends AdminModel
             $tmplCurr->title .= " - copy";
 
             if (!$tmplCurr->store()) {
-                Factory::getApplication()->enqueueMessage($tmplCurr->getError(), 'error');
-
-                return false;
+                throw new \RuntimeException($tmplCurr->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
             }
         }
 

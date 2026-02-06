@@ -108,7 +108,7 @@ class CwmmediafilesModel extends ListModel
 
             $this->cache[$store] = $items;
         } catch (\RuntimeException $e) {
-            $this->setError($e->getMessage());
+            Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
 
             return false;
         }

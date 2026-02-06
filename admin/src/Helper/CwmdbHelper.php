@@ -391,7 +391,7 @@ class CwmdbHelper
         // No apply the new css back to the table
 
         $query = $db->getQuery(true);
-        $query->update('#__bsms_styles')->set('stylecode="' . $newcss . '"');
+        $query->update('#__bsms_styles')->set($db->qn('stylecode') . ' = ' . $db->q($newcss));
 
         if ($filename) {
             $query->where($db->qn('filename') . ' = ' . $db->q($filename));
@@ -547,7 +547,9 @@ class CwmdbHelper
 
         foreach ($results as $result) {
             $query = $db->getQuery(true);
-            $query->select('id, topic_id')->from('#__bsms_studytopics')->where('study_id = ' . $result->id);
+            $query->select($db->qn(['id', 'topic_id']))
+                ->from('#__bsms_studytopics')
+                ->where($db->qn('study_id') . ' = ' . (int) $result->id);
             $db->setQuery($query);
             $resulta = $db->loadObjectList();
             $c       = \count($resulta);
@@ -557,11 +559,11 @@ class CwmdbHelper
 
                 foreach ($resulta as $study_topics) {
                     $query = $db->getQuery(true);
-                    $query->select('id')
+                    $query->select($db->qn('id'))
                         ->from('#__bsms_studytopics')
-                        ->where('study_id = ' . $result->id)
-                        ->where('topic_id = ' . $study_topics->topic_id)
-                        ->order('id desc');
+                        ->where($db->qn('study_id') . ' = ' . (int) $result->id)
+                        ->where($db->qn('topic_id') . ' = ' . (int) $study_topics->topic_id)
+                        ->order($db->qn('id') . ' DESC');
                     $db->setQuery($query);
                     $results = $db->loadObjectList();
                     $records = \count($results);
@@ -571,7 +573,7 @@ class CwmdbHelper
                             if ($t < $records) {
                                 $query = $db->getQuery(true);
                                 $query->delete('#__bsms_studytopics')
-                                    ->where('id = ' . $id->id);
+                                    ->where($db->qn('id') . ' = ' . (int) $id->id);
                                 $db->setQuery($query);
 
                                 if (!$db->execute()) {

@@ -82,8 +82,8 @@ class CwmmessageModel extends AdminModel
         $query = $db->getQuery(true);
         $query->select('*')
             ->from('#__bsms_studytopics')
-            ->where('study_id = ' . $study_id)
-            ->where('topic_id = ' . $topic_id);
+            ->where($db->qn('study_id') . ' = ' . (int) $study_id)
+            ->where($db->qn('topic_id') . ' = ' . (int) $topic_id);
         $db->setQuery($query);
         $tresult = $db->loadObject();
 
@@ -187,8 +187,8 @@ class CwmmessageModel extends AdminModel
 
         $query->select('m.id, m.language, m.published, m.createdate, m.params, m.access');
         $query->from('#__bsms_mediafiles AS m');
-        $query->where('m.study_id = ' . (int)$this->getItem()->id);
-        $query->where('(m.published = 0 OR m.published = 1)');
+        $query->where($db->qn('m.study_id') . ' = ' . (int) $this->getItem()->id);
+        $query->where('(' . $db->qn('m.published') . ' = 0 OR ' . $db->qn('m.published') . ' = 1)');
         $query->order('m.createdate DESC');
 
         // Join over the asset groups.
@@ -451,9 +451,7 @@ class CwmmessageModel extends AdminModel
                 $row->ordering = $order[$i];
 
                 if (!$row->store()) {
-                    $this->setError($row->getError());
-
-                    return false;
+                    throw new \RuntimeException($row->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
 
                 // Remember to reorder within position and client_id
@@ -512,14 +510,10 @@ class CwmmessageModel extends AdminModel
                 $table->teacher_id = (int)$value;
 
                 if (!$table->store()) {
-                    $this->setError($table->getError());
-
-                    return false;
+                    throw new \RuntimeException($table->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
             } else {
-                $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-                return false;
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
             }
         }
 
@@ -572,14 +566,10 @@ class CwmmessageModel extends AdminModel
                 $table->series_id = (int)$value;
 
                 if (!$table->store()) {
-                    $this->setError($table->getError());
-
-                    return false;
+                    throw new \RuntimeException($table->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
             } else {
-                $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-                return false;
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
             }
         }
 
@@ -615,14 +605,10 @@ class CwmmessageModel extends AdminModel
                 $table->messagetype = (int)$value;
 
                 if (!$table->store()) {
-                    $this->setError($table->getError());
-
-                    return false;
+                    throw new \RuntimeException($table->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
             } else {
-                $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-                return false;
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
             }
         }
 

@@ -152,24 +152,24 @@ class CwmImageMigration
         switch ($type) {
             case 'studies':
                 $query->update('#__bsms_studies')
-                    ->set('thumbnailm = ' . $db->q($result['thumbnail']))
-                    ->set('image = ' . $db->q($result['image']))
-                    ->where('id = ' . $id);
+                    ->set($db->qn('thumbnailm') . ' = ' . $db->q($result['thumbnail']))
+                    ->set($db->qn('image') . ' = ' . $db->q($result['image']))
+                    ->where($db->qn('id') . ' = ' . (int) $id);
                 break;
 
             case 'teachers':
                 $query->update('#__bsms_teachers')
-                    ->set('teacher_thumbnail = ' . $db->q($result['thumbnail']))
-                    ->set('teacher_image = ' . $db->q($result['image']))
-                    ->set('image = ' . $db->q($result['image']))
-                    ->where('id = ' . $id);
+                    ->set($db->qn('teacher_thumbnail') . ' = ' . $db->q($result['thumbnail']))
+                    ->set($db->qn('teacher_image') . ' = ' . $db->q($result['image']))
+                    ->set($db->qn('image') . ' = ' . $db->q($result['image']))
+                    ->where($db->qn('id') . ' = ' . (int) $id);
                 break;
 
             case 'series':
                 $query->update('#__bsms_series')
-                    ->set('series_thumbnail = ' . $db->q($result['thumbnail']))
-                    ->set('image = ' . $db->q($result['image']))
-                    ->where('id = ' . $id);
+                    ->set($db->qn('series_thumbnail') . ' = ' . $db->q($result['thumbnail']))
+                    ->set($db->qn('image') . ' = ' . $db->q($result['image']))
+                    ->where($db->qn('id') . ' = ' . (int) $id);
                 break;
         }
 

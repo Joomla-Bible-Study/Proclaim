@@ -61,8 +61,8 @@ class Cwmalias
                     $alias = OutputFilter::stringURLSafe($r['title']);
                     $query = $db->getQuery(true);
                     $query->update($db->qn($r['table']))
-                        ->set('alias=' . $db->q($alias))
-                        ->where('id=' . $db->q($r['id']));
+                        ->set($db->qn('alias') . ' = ' . $db->q($alias))
+                        ->where($db->qn('id') . ' = ' . (int) $r['id']);
                     $db->setQuery($query);
                     $db->execute();
                     $done++;

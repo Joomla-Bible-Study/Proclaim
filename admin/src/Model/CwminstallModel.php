@@ -27,7 +27,6 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseDriver;
-use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Folder;
 
 /**
@@ -155,9 +154,6 @@ class CwminstallModel extends ListModel
     public function __construct($config = [])
     {
         parent::__construct($config);
-
-        // Joomla 4 drop including db driver.
-        $this->_db = Factory::getContainer()->get(DatabaseInterface::class);
 
         $this->name = 'cwminstall';
     }
@@ -301,13 +297,13 @@ class CwminstallModel extends ListModel
             }
 
             // Find Extension ID of Proclaim
-            $query = $this->_db->getQuery(true);
+            $query = $this->getDatabase()->getQuery(true);
             $query
                 ->select('extension_id')
                 ->from('#__extensions')
-                ->where($this->_db->qn('name') . ' = ' . $this->_db->q('com_proclaim'));
-            $this->_db->setQuery($query);
-            $eid                 = $this->_db->loadResult();
+                ->where($this->getDatabase()->qn('name') . ' = ' . $this->getDatabase()->q('com_proclaim'));
+            $this->getDatabase()->setQuery($query);
+            $eid                 = $this->getDatabase()->loadResult();
             $this->biblestudyEid = $eid;
 
             foreach ($files as $i => $value) {
@@ -372,21 +368,21 @@ class CwminstallModel extends ListModel
 
         if ($version && $eid) {
             // Update the database
-            $query = $this->_db->getQuery(true);
+            $query = $this->getDatabase()->getQuery(true);
             $query
                 ->delete()
                 ->from('#__schemas')
                 ->where('extension_id = ' . $eid);
-            $this->_db->setQuery($query);
+            $this->getDatabase()->setQuery($query);
 
-            if ($this->_db->execute()) {
+            if ($this->getDatabase()->execute()) {
                 $query->clear();
-                $query->insert($this->_db->quoteName('#__schemas'));
-                $query->columns([$this->_db->quoteName('extension_id'), $this->_db->quoteName('version_id')]);
-                $query->values($eid . ', ' . $this->_db->quote(substr($version, 0, 20)));
-                $this->_db->setQuery($query);
+                $query->insert($this->getDatabase()->quoteName('#__schemas'));
+                $query->columns([$this->getDatabase()->quoteName('extension_id'), $this->getDatabase()->quoteName('version_id')]);
+                $query->values($eid . ', ' . $this->getDatabase()->quote(substr($version, 0, 20)));
+                $this->getDatabase()->setQuery($query);
 
-                if (!$this->_db->execute()) {
+                if (!$this->getDatabase()->execute()) {
                     $app->enqueueMessage('Error inserting ID', 'Error');
 
                     return false;
@@ -415,12 +411,12 @@ class CwminstallModel extends ListModel
         // Remove only legacy post-install messages that used hardcoded English strings
         // (from 10.0.0 era). Preserve messages managed by CwmguidedtourHelper which use
         // proper language keys (COM_PROCLAIM_*) and should retain their enabled/hidden state.
-        $query = $this->_db->getQuery(true);
+        $query = $this->getDatabase()->getQuery(true);
         $query->delete('#__postinstall_messages')
-            ->where($this->_db->qn('language_extension') . ' = ' . $this->_db->q('com_proclaim'))
-            ->where($this->_db->qn('title_key') . ' NOT LIKE ' . $this->_db->q('COM_PROCLAIM_%'));
-        $this->_db->setQuery($query);
-        $this->_db->execute();
+            ->where($this->getDatabase()->qn('language_extension') . ' = ' . $this->getDatabase()->q('com_proclaim'))
+            ->where($this->getDatabase()->qn('title_key') . ' NOT LIKE ' . $this->getDatabase()->q('COM_PROCLAIM_%'));
+        $this->getDatabase()->setQuery($query);
+        $this->getDatabase()->execute();
         Log::add('PostInstallCleanup', Log::INFO, 'com_proclaim');
     }
 
@@ -843,7 +839,7 @@ class CwminstallModel extends ListModel
                     $this->totalSteps += \count($steps);
 
                     // If Steps build is mandatory.
-                    $migration->build($this->_db);
+                    $migration->build($this->getDatabase());
 
                     if (isset($migration->count)) {
                         $this->totalSteps += (int)$migration->count;
@@ -877,11 +873,11 @@ class CwminstallModel extends ListModel
         $string = trim($string);
 
         if ($string !== '' && $string[0] !== '#') {
-            $this->_db->setQuery($this->_db->convertUtf8mb4QueryToUtf8($string));
+            $this->getDatabase()->setQuery($this->getDatabase()->convertUtf8mb4QueryToUtf8($string));
             $this->doneSteps++;
 
             try {
-                $this->_db->execute();
+                $this->getDatabase()->execute();
             } catch (\RuntimeException $e) {
                 Log::add($e->getMessage(), Log::WARNING, 'com_proclaim');
 
@@ -960,54 +956,54 @@ class CwminstallModel extends ListModel
             case 'rmoldurl':
                 // Removes all other update URLs except the package URL.
                 $conditions = CwmmigrationHelper::rmoldurl();
-                $query      = $this->_db->getQuery(true);
-                $query->delete($this->_db->qn('#__update_sites'));
+                $query      = $this->getDatabase()->getQuery(true);
+                $query->delete($this->getDatabase()->qn('#__update_sites'));
                 $query->where($conditions, $glue = 'OR');
-                $this->_db->setQuery($query);
-                $this->_db->execute();
+                $this->getDatabase()->setQuery($query);
+                $this->getDatabase()->execute();
                 $this->running = 'Remove Old Update URL\'s';
                 break;
             case 'setupdateurl':
                 // Find Extension ID of component
-                $query = $this->_db->getQuery(true);
+                $query = $this->getDatabase()->getQuery(true);
                 $query
                     ->select('extension_id')
                     ->from('#__extensions')
-                    ->where($this->_db->qn('name') . ' = ' . $this->_db->q('com_proclaim'));
-                $this->_db->setQuery($query);
-                $eid = $this->_db->loadResult();
+                    ->where($this->getDatabase()->qn('name') . ' = ' . $this->getDatabase()->q('com_proclaim'));
+                $this->getDatabase()->setQuery($query);
+                $eid = $this->getDatabase()->loadResult();
 
                 $conditions = [
-                    $this->_db->qn('name') . ' = ' .
-                    $this->_db->q('Proclaim Package'),
+                    $this->getDatabase()->qn('name') . ' = ' .
+                    $this->getDatabase()->q('Proclaim Package'),
                 ];
-                $query      = $this->_db->getQuery(true);
-                $query->delete($this->_db->qn('#__update_sites'));
+                $query      = $this->getDatabase()->getQuery(true);
+                $query->delete($this->getDatabase()->qn('#__update_sites'));
                 $query->where($conditions, $glue = 'OR');
-                $this->_db->setQuery($query);
-                $this->_db->execute();
+                $this->getDatabase()->setQuery($query);
+                $this->getDatabase()->execute();
 
                 $conditions = [
-                    $this->_db->qn('extension_id') . ' = ' .
-                    $this->_db->q($eid),
+                    $this->getDatabase()->qn('extension_id') . ' = ' .
+                    $this->getDatabase()->q($eid),
                 ];
-                $query      = $this->_db->getQuery(true);
-                $query->delete($this->_db->qn('#__update_sites_extensions'));
+                $query      = $this->getDatabase()->getQuery(true);
+                $query->delete($this->getDatabase()->qn('#__update_sites_extensions'));
                 $query->where($conditions, $glue = 'OR');
-                $this->_db->setQuery($query);
-                $this->_db->execute();
+                $this->getDatabase()->setQuery($query);
+                $this->getDatabase()->execute();
 
                 $updateurl           = new \stdClass();
                 $updateurl->name     = 'Proclaim Package';
                 $updateurl->type     = 'extension';
                 $updateurl->location = 'https://www.christianwebministries.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;id=2&amp;format=xml';
                 $updateurl->enabled  = '1';
-                $this->_db->insertObject('#__update_sites', $updateurl);
-                $lastid                     = $this->_db->insertid();
+                $this->getDatabase()->insertObject('#__update_sites', $updateurl);
+                $lastid                     = $this->getDatabase()->insertid();
                 $updateurl1                 = new \stdClass();
                 $updateurl1->update_site_id = $lastid;
                 $updateurl1->extension_id   = $eid;
-                $this->_db->insertObject('#__update_sites_extensions', $updateurl1);
+                $this->getDatabase()->insertObject('#__update_sites_extensions', $updateurl1);
                 $this->running = 'Set New Update URL';
                 break;
             case 'podcastlinkmissing':
@@ -1016,20 +1012,20 @@ class CwminstallModel extends ListModel
                 $columnName = 'podcastlink';
 
                 // Get the list of columns for the specified table
-                $tableColumns = $this->_db->getTableColumns($tableName);
+                $tableColumns = $this->getDatabase()->getTableColumns($tableName);
 
                 // Check if the 'podcastlink' column does not exist
                 if (!isset($tableColumns[$columnName])) {
                     // Prepare the ALTER TABLE query to add the new column
                     // You can customize the column definition (e.g., VARCHAR(255) NULL) as needed
-                    $query = $this->_db->getQuery(true)
-                        ->setQuery('ALTER TABLE ' . $this->_db->quoteName($tableName) . ' ADD ' . $this->_db->quoteName($columnName) . ' VARCHAR(255) NULL');
+                    $query = $this->getDatabase()->getQuery(true)
+                        ->setQuery('ALTER TABLE ' . $this->getDatabase()->quoteName($tableName) . ' ADD ' . $this->getDatabase()->quoteName($columnName) . ' VARCHAR(255) NULL');
 
                     // Set the query and execute it
-                    $this->_db->setQuery($query);
+                    $this->getDatabase()->setQuery($query);
 
                     try {
-                        $this->_db->execute();
+                        $this->getDatabase()->execute();
                         log::add('Added podcastlink column to bsms_podcast table', Log::INFO, 'com_proclaim');
                     } catch (\Exception $e) {
                         log::add('Error adding podcastlink column to bsms_podcast table: Could already exist ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
@@ -1058,12 +1054,12 @@ class CwminstallModel extends ListModel
         $return = BIBLESTUDY_VERSION;
 
         // Find the Last updated Version in the Update table
-        $query = $this->_db->getQuery(true);
+        $query = $this->getDatabase()->getQuery(true);
         $query
             ->select('version')
             ->from('#__bsms_update');
-        $this->_db->setQuery($query);
-        $updates = $this->_db->loadObjectList();
+        $this->getDatabase()->setQuery($query);
+        $updates = $this->getDatabase()->loadObjectList();
 
         $lastUpdate = end($updates);
 
@@ -1085,45 +1081,45 @@ class CwminstallModel extends ListModel
     public function uninstall(): bool
     {
         // Check if CWM can be found in the database
-        $table = $this->_db->getPrefix() . 'bsms_admin';
-        $this->_db->setQuery("SHOW TABLES LIKE {$this->_db->quote($table)}");
+        $table = $this->getDatabase()->getPrefix() . 'bsms_admin';
+        $this->getDatabase()->setQuery("SHOW TABLES LIKE {$this->getDatabase()->quote($table)}");
         $drop_result = '';
 
-        if ($this->_db->loadResult()) {
-            $query = $this->_db->getQuery(true);
+        if ($this->getDatabase()->loadResult()) {
+            $query = $this->getDatabase()->getQuery(true);
             $query->select('*')
                 ->from('#__bsms_admin')
                 ->where('id = 1');
-            $this->_db->setQuery($query);
-            $adminsettings = $this->_db->loadObject();
+            $this->getDatabase()->setQuery($query);
+            $adminsettings = $this->getDatabase()->loadObject();
             $drop_tables   = $adminsettings->drop_tables;
 
             if ($drop_tables > 0) {
                 // We must remove the assets manually each time
-                $query = $this->_db->getQuery(true);
+                $query = $this->getDatabase()->getQuery(true);
                 $query->select('id')
                     ->from('#__assets')
-                    ->where('name = ' . $this->_db->q(BIBLESTUDY_COMPONENT_NAME));
-                $this->_db->setQuery($query);
-                $parent_id = $this->_db->loadResult();
-                $query     = $this->_db->getQuery(true);
+                    ->where('name = ' . $this->getDatabase()->q(BIBLESTUDY_COMPONENT_NAME));
+                $this->getDatabase()->setQuery($query);
+                $parent_id = $this->getDatabase()->loadResult();
+                $query     = $this->getDatabase()->getQuery(true);
 
                 if ($parent_id !== '0') {
                     $query->delete()
                         ->from('#__assets')
-                        ->where('parent_id = ' . $this->_db->q($parent_id))
-                        ->where('name != ' . $this->_db->q('root.1'));
-                    $this->_db->setQuery($query);
-                    $this->_db->execute();
+                        ->where('parent_id = ' . $this->getDatabase()->q($parent_id))
+                        ->where('name != ' . $this->getDatabase()->q('root.1'));
+                    $this->getDatabase()->setQuery($query);
+                    $this->getDatabase()->execute();
                 }
 
-                $query = $this->_db->getQuery(true);
+                $query = $this->getDatabase()->getQuery(true);
                 $query->delete()
                     ->from('#__assets')
-                    ->where('name LIKE ' . $this->_db->q(BIBLESTUDY_COMPONENT_NAME))
-                    ->where('name != ' . $this->_db->q('root.1'));
-                $this->_db->setQuery($query);
-                $this->_db->execute();
+                    ->where('name LIKE ' . $this->getDatabase()->q(BIBLESTUDY_COMPONENT_NAME))
+                    ->where('name != ' . $this->getDatabase()->q('root.1'));
+                $this->getDatabase()->setQuery($query);
+                $this->getDatabase()->execute();
                 $buffer = file_get_contents(
                     JPATH_ADMINISTRATOR . '/components/com_proclaim/install/sql/uninstall-dbtables.sql'
                 );
@@ -1140,8 +1136,8 @@ class CwminstallModel extends ListModel
                     $singleQuery = trim($singleQuery);
 
                     if ($singleQuery !== '' && $singleQuery[0] !== '#' && $singleQuery !== '`') {
-                        $this->_db->setQuery($singleQuery);
-                        $this->_db->execute();
+                        $this->getDatabase()->setQuery($singleQuery);
+                        $this->getDatabase()->execute();
                     }
                 }
             }
@@ -1150,11 +1146,11 @@ class CwminstallModel extends ListModel
         }
 
         // Post Install Messages Cleanup for Component
-        $query = $this->_db->getQuery(true);
+        $query = $this->getDatabase()->getQuery(true);
         $query->delete('#__postinstall_messages')
-            ->where($this->_db->qn('language_extension') . ' = ' . $this->_db->q('com_proclaim'));
-        $this->_db->setQuery($query);
-        $this->_db->execute();
+            ->where($this->getDatabase()->qn('language_extension') . ' = ' . $this->getDatabase()->q('com_proclaim'));
+        $this->getDatabase()->setQuery($query);
+        $this->getDatabase()->execute();
         Factory::getApplication()->enqueueMessage(
             '<h2>' . Text::_('JBS_INS_UNINSTALLED') . ' ' .
             BIBLESTUDY_VERSION . '</h2> <div>' . $drop_result . '</div>'

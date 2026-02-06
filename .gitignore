@@ -1,6 +1,10 @@
 # IDE and Editor
 .idea/
+.run/
 *.icloud
+
+# AI tooling
+.ai/
 
 # OS Files
 .DS_Store

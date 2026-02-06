@@ -135,7 +135,7 @@ class CwminstallModelTest extends ProclaimTestCase
             $this->classContent
         );
         $this->assertStringContainsString('use Joomla\CMS\Factory;', $this->classContent);
-        $this->assertStringContainsString('use Joomla\Database\DatabaseInterface;', $this->classContent);
+        $this->assertStringNotContainsString('use Joomla\Database\DatabaseInterface;', $this->classContent);
     }
 
     /**

@@ -206,9 +206,7 @@ class CwmserverModel extends AdminModel
 
             // Additional check for HTML/script injection attempts
             if (preg_match('/<[^>]*>|javascript:|on\w+\s*=/i', $data['server_name'])) {
-                $this->setError(Text::_('JBS_SVR_ILLEGAL_CHARACTERS'));
-
-                return false;
+                throw new \RuntimeException(Text::_('JBS_SVR_ILLEGAL_CHARACTERS'));
             }
         }
 

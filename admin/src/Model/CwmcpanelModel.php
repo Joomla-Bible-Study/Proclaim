@@ -41,7 +41,8 @@ class CwmcpanelModel extends BaseModel
         $query  = $db->getQuery(true);
         $query->select('*');
         $query->from('#__extensions');
-        $query->where('element = "com_proclaim" and type = "component"');
+        $query->where($db->qn('element') . ' = ' . $db->q('com_proclaim'))
+            ->where($db->qn('type') . ' = ' . $db->q('component'));
         $db->setQuery($query);
 
         try {
