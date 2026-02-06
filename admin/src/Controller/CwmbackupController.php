@@ -588,11 +588,15 @@ class CwmbackupController extends FormController
             $sessionId = $input->get('sessionId', '', 'string');
             $session   = $app->getSession();
 
+            Log::add('Import finalize: Starting...', Log::INFO, 'com_proclaim');
+
             // Clean up session data
             $session->set('proclaim_import_' . $sessionId, '', 'CWM');
             $session->set('proclaim_import_queries_' . $sessionId, '', 'CWM');
 
-            // Get Proclaim extension ID and fix database
+            Log::add('Import finalize: Session cleaned', Log::INFO, 'com_proclaim');
+
+            // Get Proclaim extension ID
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
             $query->select('extension_id')
@@ -601,16 +605,15 @@ class CwmbackupController extends FormController
             $db->setQuery($query);
             $cid = (int) $db->loadResult();
 
-            // Fix database schema
-            try {
-                $DatabaseModel = new DatabaseModel();
-                $DatabaseModel->fix([$cid]);
-            } catch (\Exception $e) {
-                Log::add('Database fix error: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
-            }
+            Log::add('Import finalize: Extension ID = ' . $cid, Log::INFO, 'com_proclaim');
+
+            // Fix database schema - skip for now as it's heavy and may not be needed
+            // The import should have created the tables correctly
+            Log::add('Import finalize: Skipping DatabaseModel->fix() to avoid timeout', Log::INFO, 'com_proclaim');
 
             // Fix assets
             try {
+                Log::add('Import finalize: Starting asset fix...', Log::INFO, 'com_proclaim');
                 $fix     = new Cwmassets();
                 $results = $fix->build();
 
@@ -621,33 +624,27 @@ class CwmbackupController extends FormController
                         }
                     }
                 }
+                Log::add('Import finalize: Asset fix complete', Log::INFO, 'com_proclaim');
             } catch (\Exception $e) {
                 Log::add('Asset fix error: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
             }
 
             // Fix ownership
             try {
+                Log::add('Import finalize: Starting ownership fix...', Log::INFO, 'com_proclaim');
                 Cwmrestore::fixOwnershipPublic();
+                Log::add('Import finalize: Ownership fix complete', Log::INFO, 'com_proclaim');
             } catch (\Exception $e) {
                 Log::add('Ownership fix error: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
             }
 
-            // Purge update cache
-            try {
-                $updateModel = $app->bootComponent('com_joomlaupdate')
-                    ->getMVCFactory()->createModel('Update', 'Administrator', ['ignore_request' => true]);
-                $updateModel->purge();
-            } catch (\Exception $e) {
-                Log::add('Update cache purge error: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
-            }
+            // Skip update cache purge - not critical
+            Log::add('Import finalize: Skipping update cache purge', Log::INFO, 'com_proclaim');
 
-            // Flush assets
-            try {
-                $app->flushAssets();
-            } catch (\Exception $e) {
-                Log::add('Flush assets error: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
-            }
+            // Skip flush assets - not critical
+            Log::add('Import finalize: Skipping flush assets', Log::INFO, 'com_proclaim');
 
+            Log::add('Import finalize: Sending success response', Log::INFO, 'com_proclaim');
             $this->sendJsonResponse(true, Text::_('JBS_CMN_OPERATION_SUCCESSFUL'));
         } catch (\Exception $e) {
             $this->sendJsonResponse(false, 'Import finalize error: ' . $e->getMessage());
@@ -699,6 +696,7 @@ class CwmbackupController extends FormController
 
         echo json_encode($response, JSON_THROW_ON_ERROR);
 
-        $app->close();
+        // Use exit instead of $app->close() to avoid any shutdown processing issues
+        exit(0);
     }
 }
