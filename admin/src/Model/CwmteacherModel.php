@@ -27,7 +27,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
-use Joomla\Input\Input;
+
 use Joomla\Registry\Registry;
 
 /**
@@ -137,7 +137,7 @@ class CwmteacherModel extends AdminModel
      */
     public function getItem($pk = null): mixed
     {
-        $jinput = new Input();
+        $jinput = Factory::getApplication()->getInput();
 
         // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
         if ($jinput->get('a_id')) {

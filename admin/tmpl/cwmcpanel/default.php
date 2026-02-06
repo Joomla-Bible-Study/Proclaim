@@ -20,7 +20,7 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-use Joomla\Input\Input;
+use Joomla\CMS\Factory;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmcpanel\HtmlView $this */
 
@@ -31,7 +31,7 @@ $wa->useScript('core')
     ->useStyle('com_proclaim.general');
 
 $msg   = '';
-$input = new Input();
+$input = Factory::getApplication()->getInput();
 $msg   = $input->get('msg');
 
 if ($msg) {

@@ -20,12 +20,12 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
-use Joomla\Input\Input;
+use Joomla\CMS\Factory;
 
 HTMLHelper::_('behavior.framework', true);
 HTMLHelper::_('formbehavior.chosen', 'select');
 
-$input     = new Input();
+$input     = Factory::getApplication()->getInput();
 $function  = $input->getCmd('function', 'jSelectServer');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));

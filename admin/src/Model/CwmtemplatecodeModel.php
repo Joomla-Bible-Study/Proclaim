@@ -23,7 +23,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
-use Joomla\Input\Input;
+
 
 /**
  * HelloWorld Model
@@ -177,7 +177,7 @@ class CwmtemplatecodeModel extends AdminModel
         $key   = $table->getKeyName();
 
         // Get the pk of the record from the request.
-        $input = new Input();
+        $input = Factory::getApplication()->getInput();
         $pk    = $input->get($key, '', 'int');
         $this->setState($this->getName() . '.id', $pk);
 

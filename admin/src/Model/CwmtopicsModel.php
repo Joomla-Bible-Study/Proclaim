@@ -20,7 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\QueryInterface;
-use Joomla\Input\Input;
+
 
 /**
  * Topics model class
@@ -87,7 +87,7 @@ class CwmtopicsModel extends ListModel
     protected function populateState($ordering = 'topic.topic_text', $direction = 'ASC'): void
     {
         // Adjust the context to support modal layouts.
-        $input  = new Input();
+        $input  = Factory::getApplication()->getInput();
         $layout = $input->get('layout');
 
         if ($layout) {

@@ -28,7 +28,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Workflow\Workflow;
-use Joomla\Input\Input;
+
 use Joomla\Registry\Registry;
 
 /**
@@ -105,7 +105,7 @@ class CwmmessageModel extends AdminModel
     public function getTopics(): string
     {
         // Do search in case of present study only, suppress otherwise
-        $input          = new Input();
+        $input          = Factory::getApplication()->getInput();
         $translatedList = [];
         $id             = $input->get('a_id', 0, 'int');
 

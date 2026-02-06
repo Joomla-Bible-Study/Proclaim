@@ -14,7 +14,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
-use Joomla\Input\Input;
+use Joomla\CMS\Factory;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -48,7 +48,7 @@ use Joomla\Input\Input;
 </script>
 <form action="
 <?php
-$input = new Input();
+$input = Factory::getApplication()->getInput();
 if ($input->get('layout', '', 'string') === 'modal') {
     $url = 'index.php?option=com_proclaim&view=cwmupload&tmpl=component&layout=modal';
 } else {

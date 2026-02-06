@@ -20,7 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
-use Joomla\Input\Input;
+
 use Joomla\Registry\Registry;
 
 /**
@@ -46,7 +46,7 @@ class Cwmdownload
         clearstatcache();
 
         $app        = Factory::getApplication();
-        $input      = new Input();
+        $input      = Factory::getApplication()->getInput();
         $templateId = $input->get('t', '1', 'int');
         $db         = Factory::getContainer()->get('DatabaseDriver');
 
