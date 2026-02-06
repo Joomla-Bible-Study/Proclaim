@@ -23,18 +23,18 @@ use Joomla\CMS\Router\Route;
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('table.columns');
 
-// $templates is used to generate the export list.
-$templates       = $this->get('templates');
-$types[]         = HTMLHelper::_('select.option', '0', Text::_('JBS_CMN_SELECT_TEMPLATE'));
-$types           = array_merge($types, $templates);
-$this->templates = HTMLHelper::_(
+// Build the export template dropdown
+$templates      = $this->get('templates');
+$types          = [HTMLHelper::_('select.option', '0', Text::_('JBS_CMN_SELECT_TEMPLATE'))];
+$types          = array_merge($types, $templates);
+$templateSelect = HTMLHelper::_(
     'select.genericlist',
     $types,
     'template_export',
     'class="form-select w-auto d-inline-block" ',
     'value',
     'text',
-    '$'
+    '0'
 );
 ?>
 <form enctype="multipart/form-data" action="<?php
@@ -47,7 +47,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplates'); ?>"
                     <div class="card-body">
                         <h2 class="card-title"><?php echo Text::_('JBS_CMN_EXPORT'); ?></h2>
                         <div class="d-flex align-items-center gap-2">
-                            <?php echo $this->templates; ?>
+                            <?php echo $templateSelect; ?>
                             <button type="submit" class="btn btn-primary"
                                     onclick="Joomla.submitbutton('cwmtemplates.templateExport')">
                                 <?php echo Text::_('JBS_CMN_SUBMIT'); ?>

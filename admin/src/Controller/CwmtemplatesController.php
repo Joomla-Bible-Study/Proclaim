@@ -72,19 +72,19 @@ class CwmtemplatesController extends AdminController
         // Make sure that file uploads are enabled in php
         if (!(bool)\ini_get('file_uploads')) {
             $app->enqueueMessage(Text::_('JBS_CMN_UPLOADS_NOT_ENABLED'), 'warning');
-            $this->setRedirect('index.php?option=com_proclaim&view=templates');
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates');
         }
 
         // If there is no uploaded file, we have a problem...
         if (!\is_array($userfile)) {
             $app->enqueueMessage(Text::_('JBS_CMN_NO_FILE_SELECTED'), 'warning');
-            $this->setRedirect('index.php?option=com_proclaim&view=templates');
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates');
         }
 
         // Check if there was a problem uploading the file.
         if ($userfile['error'] || $userfile['size'] < 1) {
             $app->enqueueMessage(Text::_('JBS_CMN_WARN_INSTALL_UPLOAD_ERROR'), 'warning');
-            $this->setRedirect('index.php?option=com_proclaim&view=templates');
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates');
         }
 
         // Build the appropriate paths
@@ -282,7 +282,7 @@ class CwmtemplatesController extends AdminController
 
         if (!$exporttemplate) {
             $message = Text::_('JBS_TPL_NO_FILE_SELECTED');
-            $this->setRedirect('index.php?option=com_proclaim&view=templates', $message);
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
         }
 
         $db    = Factory::getContainer()->get('DatabaseDriver');
@@ -306,7 +306,7 @@ class CwmtemplatesController extends AdminController
         File::delete($filepath);
         $message = Text::_('JBS_TPL_EXPORT_SUCCESS');
 
-        return $this->setRedirect('index.php?option=com_proclaim&view=templates', $message);
+        return $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
     }
 
     /**
