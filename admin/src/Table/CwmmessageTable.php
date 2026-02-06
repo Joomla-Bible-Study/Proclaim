@@ -397,11 +397,11 @@ class CwmmessageTable extends Table
      */
     public string $publish_up = '0000-00-00 00:00:00';
 
-    /** @var string Publish Down
+    /** @var string|null Publish Down
      *
      * @since 9.0.0
      */
-    public string $publish_down = '0000-00-00 00:00:00';
+    public ?string $publish_down = '0000-00-00 00:00:00';
 
     /**
      * Created date

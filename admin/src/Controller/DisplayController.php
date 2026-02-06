@@ -55,7 +55,7 @@ class DisplayController extends BaseController
      * @param   ?CMSApplicationInterface  $app       The Application for the dispatcher
      * @param   ?Input                    $input     Input
      *
-     * @since   3.0
+     * @since   7.0.0
      */
     public function __construct($config = [], ?MVCFactoryInterface $factory = null, ?CMSApplicationInterface $app = null, ?Input $input = null)
     {

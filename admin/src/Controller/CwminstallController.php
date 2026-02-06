@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
-use CWM\Component\Proclaim\Administrator\Model\CwminstallModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
@@ -32,16 +31,10 @@ use Joomla\CMS\Session\Session;
 class CwminstallController extends BaseController
 {
     /**
-     * @var string
-     * @since 7.0.0
-     */
-    public string $modelName;
-
-    /**
-     * The URL view list variable.
+     * Prevents Joomla's pluralization mechanism from altering the view name.
      *
      * @var    string
-     * @since  12.2
+     * @since  7.0.0
      */
     protected string $view_list = 'cwminstall';
 
@@ -49,14 +42,14 @@ class CwminstallController extends BaseController
      * The default view for the display method.
      *
      * @var    string
-     * @since  3.0
+     * @since  7.0.0
      */
     protected $default_view = 'cwminstall';
 
     /**
-     * Constructor.
+     * Route tasks to allowed methods or fall back to browse.
      *
-     * @param   string  $task  An optional associative array of configuration settings.
+     * @param   string  $task  The task to execute.
      *
      * @return void
      *
@@ -97,7 +90,8 @@ class CwminstallController extends BaseController
             Cwmhelper::clearCache();
             $session->set('migration_stack', '', 'CWM');
 
-            $model = new CwminstallModel();
+            /** @var \CWM\Component\Proclaim\Administrator\Model\CwminstallModel $model */
+            $model = $this->getModel('Cwminstall');
             $state = $model->startScanning();
             $app->input->set('scanstate', $state);
             $app->input->set('view', 'cwminstall');
@@ -125,8 +119,10 @@ class CwminstallController extends BaseController
             return;
         }
 
-        $app   = Factory::getApplication();
-        $model = new CwminstallModel();
+        $app = Factory::getApplication();
+
+        /** @var \CWM\Component\Proclaim\Administrator\Model\CwminstallModel $model */
+        $model = $this->getModel('Cwminstall');
         $state = $model->run();
         $app->input->set('scanstate', $state);
         $app->input->set('view', 'cwminstall');
@@ -152,9 +148,9 @@ class CwminstallController extends BaseController
         }
 
         Cwmhelper::clearCache();
-        $session = Factory::getApplication()->getSession();
+        $app     = Factory::getApplication();
+        $session = $app->getSession();
         $session->set('migration_stack', '', 'CWM');
-        $app = Factory::getApplication();
         $app->input->set('view', 'cwminstall');
 
         $this->display(false);

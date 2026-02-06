@@ -12,6 +12,7 @@ namespace CWM\Component\Proclaim\Tests\Site\Helper;
 
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test class for Cwmpodcast duration detection
@@ -87,9 +88,8 @@ class CwmpodcastDurationTest extends ProclaimTestCase
 
     /**
      * Test formatTime with various durations
-     *
-     * @dataProvider formatTimeProvider
      */
+    #[DataProvider('formatTimeProvider')]
     public function testFormatTime(int $seconds, int $expectedHours, int $expectedMinutes, int $expectedSeconds): void
     {
         $result = $this->podcast->formatTime($seconds);
@@ -322,9 +322,8 @@ class CwmpodcastDurationTest extends ProclaimTestCase
 
     /**
      * Test YouTube URL detection
-     *
-     * @dataProvider youtubeUrlProvider
      */
+    #[DataProvider('youtubeUrlProvider')]
     public function testIsYouTubeUrl(string $url, bool $expected): void
     {
         $result = $this->podcast->isYouTubeUrl($url);
@@ -350,9 +349,8 @@ class CwmpodcastDurationTest extends ProclaimTestCase
 
     /**
      * Test YouTube video ID extraction
-     *
-     * @dataProvider youtubeVideoIdProvider
      */
+    #[DataProvider('youtubeVideoIdProvider')]
     public function testExtractYouTubeVideoId(string $url, ?string $expectedId): void
     {
         $result = $this->podcast->extractYouTubeVideoId($url);
@@ -376,9 +374,8 @@ class CwmpodcastDurationTest extends ProclaimTestCase
 
     /**
      * Test ISO 8601 duration parsing
-     *
-     * @dataProvider iso8601DurationProvider
      */
+    #[DataProvider('iso8601DurationProvider')]
     public function testParseIso8601Duration(string $duration, int $expectedSeconds): void
     {
         $result = $this->podcast->parseIso8601Duration($duration);

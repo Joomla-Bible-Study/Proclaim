@@ -40,7 +40,7 @@ class CwmmediafilesController extends AdminController
      * @return  bool  True on success
      *
      * @throws \Exception
-     * @since   12.2
+     * @since   7.0.0
      */
     public function checkin(): bool
     {

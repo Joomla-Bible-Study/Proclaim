@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
-use CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel;
 use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -35,7 +34,7 @@ use Joomla\CMS\Session\Session;
 class CwmmediafileController extends FormController
 {
     /**
-     * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanism from kicking in
+     * Prevents Joomla's pluralization mechanism from altering the view name.
      *
      * @var string
      * @since 7.0
@@ -46,7 +45,7 @@ class CwmmediafileController extends FormController
      * The URL option for the component.
      *
      * @var    string
-     * @since  12.2
+     * @since  7.0.0
      */
     protected $option = 'com_proclaim';
 
@@ -56,7 +55,7 @@ class CwmmediafileController extends FormController
      * @return  bool  True, if the record can be added, a error object if not.
      *
      * @throws  \Exception
-     * @since   12.2
+     * @since   7.0.0
      */
     public function add(): bool
     {
@@ -146,7 +145,8 @@ class CwmmediafileController extends FormController
         $this->checkToken();
 
         if (!$model) {
-            $model = new CwmmediafileModel();
+            /** @var \CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel $model */
+            $model = $this->getModel('Cwmmediafile', 'Administrator', []);
         }
 
         // Preset the redirect
@@ -165,7 +165,7 @@ class CwmmediafileController extends FormController
      * @return  bool  True if access level checks pass, false otherwise.
      *
      * @throws \Exception
-     * @since   12.2
+     * @since   7.0.0
      */
     public function cancel($key = null): bool
     {
@@ -228,7 +228,7 @@ class CwmmediafileController extends FormController
      *
      * @return  string  The arguments to append to the redirect URL.
      *
-     * @since   12.2
+     * @since   7.0.0
      */
     protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id'): string
     {

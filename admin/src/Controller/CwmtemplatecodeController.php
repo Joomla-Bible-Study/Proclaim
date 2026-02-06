@@ -38,7 +38,7 @@ class CwmtemplatecodeController extends FormController
      * The URL option for the component.
      *
      * @var    string
-     * @since  12.2
+     * @since  7.0.0
      */
     protected $option = 'com_proclaim';
 }

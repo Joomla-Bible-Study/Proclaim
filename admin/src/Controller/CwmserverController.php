@@ -35,7 +35,7 @@ class CwmserverController extends FormController
      * @return  bool  True if the record can be added, an error object if not.
      *
      * @throws \Exception
-     * @since   12.2
+     * @since   7.0.0
      */
     public function add(): bool
     {

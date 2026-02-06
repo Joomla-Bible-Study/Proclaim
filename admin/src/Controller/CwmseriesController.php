@@ -38,7 +38,7 @@ class CwmseriesController extends AdminController
      * @return    void
      *
      * @throws \Exception
-     * @since   3.0
+     * @since   7.0.0
      */
     public function saveOrderAjax(): void
     {

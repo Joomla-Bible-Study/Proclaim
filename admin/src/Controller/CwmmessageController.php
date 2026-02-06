@@ -16,8 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Model\CwmmessagesModel;
-use CWM\Component\Proclaim\Administrator\Model\CwmtopicModel;
 use CWM\Component\Proclaim\Administrator\Table\CwmstudytopicsTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -36,7 +34,7 @@ use Joomla\Input\Input;
 class CwmmessageController extends FormController
 {
     /**
-     * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanism from kicking in
+     * Prevents Joomla's pluralization mechanism from altering the view name.
      *
      * @var   string
      * @since 7.0
@@ -128,7 +126,8 @@ class CwmmessageController extends FormController
             throw new \Exception(Text::_('JINVALID_TOKEN'));
         }
 
-        $model = new CwmtopicModel();
+        /** @var \CWM\Component\Proclaim\Administrator\Model\CwmtopicModel $model */
+        $model = $this->getModel('Cwmtopic');
         $app   = Factory::getApplication();
         $data  = $this->input->post->get('jform', [], 'array');
 

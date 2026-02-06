@@ -44,7 +44,7 @@ class CwmbackupController extends FormController
     // =========================================================================
 
     /**
-     * Get list of tables for AJAX export
+     * Get a list of tables for AJAX export
      *
      * @return void
      *
@@ -56,8 +56,6 @@ class CwmbackupController extends FormController
         // Check for request forgeries
         if (!Session::checkToken('get') && !Session::checkToken()) {
             $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
-
-            return;
         }
 
         $app    = Factory::getApplication();
@@ -67,13 +65,13 @@ class CwmbackupController extends FormController
         $exportId = md5(uniqid((string) mt_rand(), true));
         $tmpPath  = $config->get('tmp_path') . '/proclaim_export_' . $exportId . '.sql';
 
-        // Initialize empty file
+        // Initialize an empty file
         file_put_contents($tmpPath, '');
 
         $tables     = CwmdbHelper::getObjects();
         $tableNames = array_column($tables, 'name');
 
-        // Return the export ID so it can be passed to subsequent calls
+        // Return the export ID so it can be passed to later calls
         $this->sendJsonResponse(true, '', ['tables' => $tableNames, 'exportId' => $exportId]);
     }
 
@@ -90,8 +88,6 @@ class CwmbackupController extends FormController
         // Check for request forgeries
         if (!Session::checkToken('get') && !Session::checkToken()) {
             $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
-
-            return;
         }
 
         $app      = Factory::getApplication();
@@ -102,14 +98,10 @@ class CwmbackupController extends FormController
 
         if (empty($table)) {
             $this->sendJsonResponse(false, 'No table specified');
-
-            return;
         }
 
         if (empty($exportId)) {
             $this->sendJsonResponse(false, 'No export ID specified');
-
-            return;
         }
 
         // Build the temp file path from the export ID
@@ -117,8 +109,6 @@ class CwmbackupController extends FormController
 
         if (!is_file($tmpPath)) {
             $this->sendJsonResponse(false, 'Export file not found. Please start again.');
-
-            return;
         }
 
         // Export the table and append directly to file
@@ -128,15 +118,13 @@ class CwmbackupController extends FormController
         // Append to temp file
         if (file_put_contents($tmpPath, $tableData, FILE_APPEND) === false) {
             $this->sendJsonResponse(false, 'Failed to write export data');
-
-            return;
         }
 
         $this->sendJsonResponse(true, '', ['table' => $table, 'size' => \strlen($tableData)]);
     }
 
     /**
-     * Finalize export and create download file
+     * Finalize export and create a download file
      *
      * @return void
      *
@@ -145,7 +133,7 @@ class CwmbackupController extends FormController
      */
     public function finalizeExportXHR(): void
     {
-        // Register shutdown handler to catch fatal errors
+        // Register a shutdown handler to catch fatal errors
         register_shutdown_function(function () {
             $error = error_get_last();
 
@@ -158,7 +146,7 @@ class CwmbackupController extends FormController
                     'success' => false,
                     'message' => 'PHP Fatal: ' . $error['message'] . ' in ' . $error['file'] . ':' . $error['line'],
                     'data'    => [],
-                ]);
+                ], JSON_THROW_ON_ERROR);
             }
         });
 
@@ -166,8 +154,6 @@ class CwmbackupController extends FormController
             // Check for request forgeries
             if (!Session::checkToken('get') && !Session::checkToken()) {
                 $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
-
-                return;
             }
 
             $app      = Factory::getApplication();
@@ -179,8 +165,6 @@ class CwmbackupController extends FormController
 
             if (empty($exportId)) {
                 $this->sendJsonResponse(false, 'No export ID specified');
-
-                return;
             }
 
             // Build the temp file path from the export ID
@@ -188,15 +172,13 @@ class CwmbackupController extends FormController
 
             if (!is_file($tmpExportPath)) {
                 $this->sendJsonResponse(false, 'Export file not found. Please start again.');
-
-                return;
             }
 
             // Generate filename using standardized method
             $filename = Cwmbackup::generateBackupFilename();
 
             if ($mode === 'save') {
-                // Save to backup folder
+                // Save to back up folder
                 $backupDir = JPATH_SITE . '/media/com_proclaim/backup/';
 
                 if (!is_dir($backupDir)) {
@@ -210,8 +192,6 @@ class CwmbackupController extends FormController
                     // Fallback to copy + delete
                     if (!copy($tmpExportPath, $path)) {
                         $this->sendJsonResponse(false, 'Failed to write backup file');
-
-                        return;
                     }
                     File::delete($tmpExportPath);
                 }
@@ -229,8 +209,6 @@ class CwmbackupController extends FormController
                     // Fallback to copy + delete
                     if (!copy($tmpExportPath, $downloadPath)) {
                         $this->sendJsonResponse(false, 'Failed to prepare download file');
-
-                        return;
                     }
                     File::delete($tmpExportPath);
                 }
@@ -302,8 +280,6 @@ class CwmbackupController extends FormController
         // Check for request forgeries
         if (!Session::checkToken('get') && !Session::checkToken()) {
             $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
-
-            return;
         }
 
         $app      = Factory::getApplication();
@@ -312,8 +288,6 @@ class CwmbackupController extends FormController
 
         if (!\is_array($userfile) || $userfile['error'] || $userfile['size'] < 1) {
             $this->sendJsonResponse(false, Text::_('JBS_IBM_ERROR_UPLOAD_FAILED'));
-
-            return;
         }
 
         // Move uploaded file to tmp
@@ -322,8 +296,6 @@ class CwmbackupController extends FormController
 
         if (!File::upload($userfile['tmp_name'], $tmpPath, false, true)) {
             $this->sendJsonResponse(false, 'Failed to move uploaded file');
-
-            return;
         }
 
         // Handle ZIP files
@@ -332,8 +304,6 @@ class CwmbackupController extends FormController
 
             if (!isset($package['dir'])) {
                 $this->sendJsonResponse(false, 'Failed to extract ZIP file');
-
-                return;
             }
 
             // Find SQL file in extracted directory
@@ -341,14 +311,12 @@ class CwmbackupController extends FormController
 
             if (empty($files)) {
                 $this->sendJsonResponse(false, 'No SQL file found in archive');
-
-                return;
             }
 
             $tmpPath = $files[0];
         }
 
-        // Generate session ID and store file path
+        // Generate session ID and store a file path
         $sessionId = md5(uniqid((string) mt_rand(), true));
         $session   = $app->getSession();
         $session->set('proclaim_import_' . $sessionId, $tmpPath, 'CWM');
@@ -369,8 +337,6 @@ class CwmbackupController extends FormController
         // Check for request forgeries
         if (!Session::checkToken('get') && !Session::checkToken()) {
             $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
-
-            return;
         }
 
         $app    = Factory::getApplication();
@@ -380,8 +346,6 @@ class CwmbackupController extends FormController
 
         if (empty($type) || empty($source)) {
             $this->sendJsonResponse(false, 'Missing type or source parameter');
-
-            return;
         }
 
         $filePath = '';
@@ -396,11 +360,9 @@ class CwmbackupController extends FormController
 
         if (!is_file($filePath)) {
             $this->sendJsonResponse(false, Text::_('JBS_IBM_NOT_DB'));
-
-            return;
         }
 
-        // Generate session ID and store file path
+        // Generate session ID and store a file path
         $sessionId = md5(uniqid((string) mt_rand(), true));
         $session   = $app->getSession();
         $session->set('proclaim_import_' . $sessionId, $filePath, 'CWM');
@@ -421,8 +383,6 @@ class CwmbackupController extends FormController
         // Check for request forgeries
         if (!Session::checkToken('get') && !Session::checkToken()) {
             $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
-
-            return;
         }
 
         $app       = Factory::getApplication();
@@ -434,17 +394,13 @@ class CwmbackupController extends FormController
 
         if (empty($filePath) || !is_file($filePath)) {
             $this->sendJsonResponse(false, 'Import file not found');
-
-            return;
         }
 
-        // Read and validate file
+        // Read and validate a file
         $content = file_get_contents($filePath);
 
         if ($content === false) {
             $this->sendJsonResponse(false, Text::_('JBS_INS_ERROR_SQL_READBUFFER'));
-
-            return;
         }
 
         // Validate it's a Proclaim backup
@@ -452,8 +408,6 @@ class CwmbackupController extends FormController
 
         if ($isnot === 0) {
             $this->sendJsonResponse(false, Text::_('JBS_IBM_NOT_DB'));
-
-            return;
         }
 
         // Split into queries
@@ -487,8 +441,6 @@ class CwmbackupController extends FormController
         // Check for request forgeries
         if (!Session::checkToken('get') && !Session::checkToken()) {
             $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
-
-            return;
         }
 
         $app       = Factory::getApplication();
@@ -501,8 +453,6 @@ class CwmbackupController extends FormController
 
         if (empty($queries)) {
             $this->sendJsonResponse(false, 'No queries found in session');
-
-            return;
         }
 
         $batchSize    = 50;
@@ -511,7 +461,7 @@ class CwmbackupController extends FormController
 
         $db = Factory::getContainer()->get('DatabaseDriver');
 
-        // For first batch, drop existing tables
+        // For the first batch, drop existing tables
         if ($batch === 0) {
             $objects = CwmdbHelper::getObjects();
 
@@ -541,7 +491,7 @@ class CwmbackupController extends FormController
     }
 
     /**
-     * Finalize import - fix assets and ownership
+     * Finalize import-fix assets and ownership
      *
      * @return void
      *
@@ -550,7 +500,7 @@ class CwmbackupController extends FormController
      */
     public function finalizeImportXHR(): void
     {
-        // Try to increase memory limit (best-effort, may fail on shared hosting)
+        // Try to increase the memory limit (best-effort may fail on shared hosting)
         $currentLimit = $this->getMemoryLimitBytes();
         $targetLimit  = 512 * 1024 * 1024; // 512M
 
@@ -567,7 +517,7 @@ class CwmbackupController extends FormController
         ini_set('display_errors', '0');
         ob_start();
 
-        // Register shutdown handler to catch fatal errors
+        // Register a shutdown handler to catch fatal errors
         register_shutdown_function(function () {
             $error = error_get_last();
 
@@ -580,7 +530,7 @@ class CwmbackupController extends FormController
                     'success' => false,
                     'message' => 'PHP Fatal: ' . $error['message'] . ' in ' . $error['file'] . ':' . $error['line'],
                     'data'    => [],
-                ]);
+                ], JSON_THROW_ON_ERROR);
             }
         });
 
@@ -588,8 +538,6 @@ class CwmbackupController extends FormController
             // Check for request forgeries
             if (!Session::checkToken('get') && !Session::checkToken()) {
                 $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
-
-                return;
             }
 
             $app          = Factory::getApplication();
@@ -602,7 +550,7 @@ class CwmbackupController extends FormController
             $session->set('proclaim_import_' . $sessionId, '', 'CWM');
             $session->set('proclaim_import_queries_' . $sessionId, '', 'CWM');
 
-            // Fix assets using lightweight direct SQL approach (unless skipped for testing)
+            // Fix assets using a lightweight direct SQL approach (unless skipped for testing)
             if (!$skipAssetFix) {
                 $this->fixAssetsLightweight();
             } else {
@@ -637,7 +585,7 @@ class CwmbackupController extends FormController
         $db = Factory::getContainer()->get('DatabaseDriver');
 
         // Get or create the com_proclaim parent asset
-        $parentId = $this->ensureParentAsset($db);
+        $parentId = Cwmassets::ensureParentAsset();
 
         if (!$parentId) {
             Log::add('Could not find or create com_proclaim parent asset ID', Log::WARNING, 'com_proclaim');
@@ -793,76 +741,6 @@ class CwmbackupController extends FormController
     // =========================================================================
 
     /**
-     * Ensure the com_proclaim parent asset exists, create if missing
-     *
-     * @param   object  $db  Database driver
-     *
-     * @return int Parent asset ID, or 0 on failure
-     *
-     * @since 10.1.0
-     */
-    private function ensureParentAsset(object $db): int
-    {
-        // First try to find existing asset
-        $query = $db->getQuery(true);
-        $query->select('id')
-            ->from('#__assets')
-            ->where('name = ' . $db->quote('com_proclaim'));
-        $db->setQuery($query);
-        $parentId = (int) $db->loadResult();
-
-        if ($parentId) {
-            return $parentId;
-        }
-
-        // Parent asset doesn't exist - need to create it
-        // First, find the root asset (id=1) to use as parent
-        $query = $db->getQuery(true);
-        $query->select('id')
-            ->from('#__assets')
-            ->where('parent_id = 0')
-            ->where('level = 0');
-        $db->setQuery($query);
-        $rootId = (int) $db->loadResult();
-
-        if (!$rootId) {
-            $rootId = 1; // Fallback to id 1
-        }
-
-        // Create the com_proclaim parent asset
-        $defaultRules = '{"core.admin":{"7":1},"core.manage":{"6":1},"core.create":[],"core.delete":[],"core.edit":[],"core.edit.state":[]}';
-
-        $query = $db->getQuery(true);
-        $query->insert('#__assets')
-            ->columns(['parent_id', 'lft', 'rgt', 'level', 'name', 'title', 'rules'])
-            ->values(
-                (int) $rootId . ', 0, 0, 1, ' .
-                $db->quote('com_proclaim') . ', ' .
-                $db->quote('com_proclaim') . ', ' .
-                $db->quote($defaultRules)
-            );
-
-        try {
-            $db->setQuery($query);
-            $db->execute();
-            $parentId = (int) $db->insertid();
-
-            // Now we need to rebuild the asset tree to fix lft/rgt values
-            // Use Joomla's Table class for this one operation
-            $assetTable = new \Joomla\CMS\Table\Asset($db);
-            $assetTable->rebuild();
-
-            Log::add('Created com_proclaim parent asset with ID: ' . $parentId, Log::INFO, 'com_proclaim');
-
-            return $parentId;
-        } catch (\Exception $e) {
-            Log::add('Failed to create parent asset: ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
-
-            return 0;
-        }
-    }
-
-    /**
      * Get PHP memory limit in bytes
      *
      * @return int Memory limit in bytes, or -1 if unlimited
@@ -981,18 +859,18 @@ class CwmbackupController extends FormController
     }
 
     /**
-     * Send JSON response helper
+     * Send JSON response and terminate.
      *
      * @param   bool    $success  Success status
      * @param   string  $message  Message
      * @param   array   $data     Additional data
      *
-     * @return void
+     * @return never
      *
      * @throws \Exception
      * @since 10.1.0
      */
-    private function sendJsonResponse(bool $success, string $message = '', array $data = []): void
+    private function sendJsonResponse(bool $success, string $message = '', array $data = []): never
     {
         $app = Factory::getApplication();
 

@@ -28,7 +28,7 @@ use Joomla\CMS\Router\Route;
 class CwmteacherController extends FormController
 {
     /**
-     * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
+     * Prevents Joomla's pluralization mechanism from altering the view name.
      *
      * @var   string
      * @since 7.0
@@ -39,7 +39,7 @@ class CwmteacherController extends FormController
      * The URL option for the component.
      *
      * @var    string
-     * @since  12.2
+     * @since  7.0.0
      */
     protected $option = 'com_proclaim';
 

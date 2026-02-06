@@ -19,7 +19,6 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
-use CWM\Component\Proclaim\Administrator\Model\CwmassetsModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
@@ -35,7 +34,7 @@ use Joomla\CMS\Session\Session;
 class CwmassetsController extends BaseController
 {
     /**
-     * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanism from kicking in
+     * Prevents Joomla's pluralization mechanism from altering the view name.
      *
      * @var  string
      *
@@ -47,19 +46,19 @@ class CwmassetsController extends BaseController
      * The default view for the display method.
      *
      * @var    string
-     * @since  3.0
+     * @since  7.0.0
      */
     protected $default_view = 'cwmassets';
 
     /**
-     * Constructor.
+     * Route tasks to allowed methods or fall back to checkassets.
      *
-     * @param   string  $task  An optional associative array of configuration settings.
+     * @param   string  $task  The task to execute.
      *
      * @return void
      *
      * @throws \Exception
-     * @since 1.5
+     * @since 7.0.0
      */
     public function execute($task): void
     {
@@ -70,19 +69,15 @@ class CwmassetsController extends BaseController
             return;
         }
 
-        if ($task !== 'run' && $task !== 'checkassets' && $task !== 'clear') {
-            $task = 'browse';
+        if ($task !== 'checkassets' && $task !== 'clear') {
+            $task = 'checkassets';
         }
 
         parent::execute($task);
     }
 
-    // =========================================================================
-    // Legacy Methods (kept for backwards compatibility)
-    // =========================================================================
-
     /**
-     * Check Assets (legacy - redirects to view)
+     * Check assets and display the asset fix view.
      *
      * @return void
      *
@@ -98,7 +93,8 @@ class CwmassetsController extends BaseController
             return;
         }
 
-        $model      = new CwmassetsModel();
+        /** @var \CWM\Component\Proclaim\Administrator\Model\CwmassetsModel $model */
+        $model      = $this->getModel('Cwmassets');
         $checklists = $model->checkAssets();
         $session    = Factory::getApplication()->getSession();
         $session->set('asset_stack', '', 'CWM');
@@ -106,41 +102,6 @@ class CwmassetsController extends BaseController
         $this->input->set('view', 'Cwmassets');
 
         $this->display(false);
-    }
-
-    /**
-     * Browse - display the asset check view
-     *
-     * @return void
-     *
-     * @throws \Exception
-     * @since 8.0.0
-     */
-    public function browse(): void
-    {
-        // Check for request forgeries.
-        if (!Session::checkToken('get') && !Session::checkToken()) {
-            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
-
-            return;
-        }
-
-        // Just display the view - let AJAX handle the actual fixing
-        $this->checkassets();
-    }
-
-    /**
-     * Run function loop (legacy)
-     *
-     * @return void
-     *
-     * @throws \Exception
-     * @since 8.0.0
-     */
-    public function run(): void
-    {
-        // Redirect to checkassets which will show the modern UI
-        $this->checkassets();
     }
 
     /**
@@ -183,11 +144,10 @@ class CwmassetsController extends BaseController
     {
         if (!Session::checkToken('get') && !Session::checkToken()) {
             $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
-
-            return;
         }
 
-        $model  = new CwmassetsModel();
+        /** @var \CWM\Component\Proclaim\Administrator\Model\CwmassetsModel $model */
+        $model  = $this->getModel('Cwmassets');
         $assets = $model->checkAssets();
 
         // Translate realname values before sending (JS doesn't have these language strings)
@@ -210,11 +170,9 @@ class CwmassetsController extends BaseController
     {
         if (!Session::checkToken('get') && !Session::checkToken()) {
             $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
-
-            return;
         }
 
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db          = Factory::getContainer()->get('DatabaseDriver');
         $assetTables = Cwmassets::getAssetObjects();
 
         // Ensure parent asset exists
@@ -222,11 +180,9 @@ class CwmassetsController extends BaseController
 
         if (!$parentId) {
             $this->sendJsonResponse(false, 'Could not find or create parent asset');
-
-            return;
         }
 
-        $tables = [];
+        $tables       = [];
         $totalRecords = 0;
 
         foreach ($assetTables as $tableInfo) {
@@ -265,8 +221,6 @@ class CwmassetsController extends BaseController
     {
         if (!Session::checkToken('get') && !Session::checkToken()) {
             $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
-
-            return;
         }
 
         $app       = Factory::getApplication();
@@ -278,20 +232,16 @@ class CwmassetsController extends BaseController
 
         if (empty($tableName) || empty($assetName)) {
             $this->sendJsonResponse(false, 'Missing table or assetname parameter');
-
-            return;
         }
 
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db       = Factory::getContainer()->get('DatabaseDriver');
         $parentId = Cwmassets::ensureParentAsset();
 
         if (!$parentId) {
             $this->sendJsonResponse(false, 'Could not find or create parent asset');
-
-            return;
         }
 
-        // Load batch of records
+        // Load a batch of records
         $query = $db->getQuery(true);
         $query->select('j.id, j.asset_id, a.id as aid, a.parent_id, a.rules')
             ->from($db->qn($tableName) . ' as j')
@@ -301,7 +251,7 @@ class CwmassetsController extends BaseController
         $results = $db->loadObjectList();
 
         $processed = 0;
-        $fixed = 0;
+        $fixed     = 0;
 
         foreach ($results as $item) {
             $processed++;
@@ -336,12 +286,12 @@ class CwmassetsController extends BaseController
     private function fixSingleAssetDirect(object $db, string $tableName, string $assetName, object $item, int $parentId): bool
     {
         $assetFullName = 'com_proclaim.' . $assetName . '.' . $item->id;
-        $defaultRules = '{"core.delete":[],"core.edit":[],"core.edit.state":[]}';
+        $defaultRules  = '{"core.delete":[],"core.edit":[],"core.edit.state":[]}';
 
         // Check if asset actually exists (aid comes from LEFT JOIN)
         $assetExists = !empty($item->aid);
 
-        // Case 1: No asset_id OR asset_id points to non-existent asset
+        // Case 1: No asset_id OR asset_id points to a non-existent asset
         if (empty($item->asset_id) || $item->asset_id == 0 || !$assetExists) {
             // Check if asset already exists by name
             $query = $db->getQuery(true);
@@ -360,7 +310,7 @@ class CwmassetsController extends BaseController
                 $db->setQuery($query);
                 $db->execute();
             } else {
-                // Create new asset
+                // Create a new asset
                 $query = $db->getQuery(true);
                 $query->insert('#__assets')
                     ->columns(['parent_id', 'level', 'name', 'title', 'rules'])
@@ -419,12 +369,10 @@ class CwmassetsController extends BaseController
     {
         if (!Session::checkToken('get') && !Session::checkToken()) {
             $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
-
-            return;
         }
 
         try {
-            $db = Factory::getContainer()->get('DatabaseDriver');
+            $db         = Factory::getContainer()->get('DatabaseDriver');
             $assetTable = new \Joomla\CMS\Table\Asset($db);
             $assetTable->rebuild();
 
@@ -437,22 +385,22 @@ class CwmassetsController extends BaseController
     }
 
     /**
-     * Send JSON response helper
+     * Send JSON response and close the application.
      *
      * @param   bool    $success  Success status
      * @param   string  $message  Message
      * @param   array   $data     Additional data
      *
-     * @return void
+     * @return never
      *
+     * @throws \Exception
      * @since 10.1.0
      */
-    private function sendJsonResponse(bool $success, string $message = '', array $data = []): void
+    private function sendJsonResponse(bool $success, string $message = '', array $data = []): never
     {
-        if (!headers_sent()) {
-            header('Content-Type: application/json; charset=utf-8');
-            header('Cache-Control: no-cache, must-revalidate');
-        }
+        $app = Factory::getApplication();
+        $app->setHeader('Content-Type', 'application/json; charset=utf-8');
+        $app->setHeader('Cache-Control', 'no-cache, must-revalidate');
 
         $response = [
             'success' => $success,
@@ -461,6 +409,6 @@ class CwmassetsController extends BaseController
         ];
 
         echo json_encode($response, JSON_THROW_ON_ERROR);
-        exit(0);
+        $app->close();
     }
 }

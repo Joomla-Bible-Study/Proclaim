@@ -30,7 +30,7 @@ use Joomla\CMS\Router\Route;
 class CwmcommentController extends FormController
 {
     /**
-     * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
+     * Prevents Joomla's pluralization mechanism from altering the view name.
      *
      * @var   string
      * @since 7.0

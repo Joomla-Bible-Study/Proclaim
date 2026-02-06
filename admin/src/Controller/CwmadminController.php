@@ -25,7 +25,6 @@ use CWM\Component\Proclaim\Administrator\Lib\CwmpIconvert;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmrestore;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmssconvert;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
-use CWM\Component\Proclaim\Administrator\Model\CwmarchiveModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
@@ -42,7 +41,7 @@ use Joomla\Registry\Registry;
 class CwmadminController extends FormController
 {
     /**
-     * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanism from kicking in
+     * Prevents Joomla's pluralization mechanism from altering the view name.
      *
      * @var  string
      *
@@ -867,12 +866,9 @@ class CwmadminController extends FormController
             return;
         }
 
-        $model = new CwmarchiveModel();
-        try {
-            $msg = $model->doArchive();
-        } catch (\Exception $e) {
-            throw new \RuntimeException($e);
-        }
+        /** @var \CWM\Component\Proclaim\Administrator\Model\CwmarchiveModel $model */
+        $model = $this->getModel('Cwmarchive');
+        $msg   = $model->doArchive();
         $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', $msg);
     }
 
@@ -1179,7 +1175,8 @@ class CwmadminController extends FormController
         }
 
         try {
-            $model = new CwmarchiveModel();
+            /** @var \CWM\Component\Proclaim\Administrator\Model\CwmarchiveModel $model */
+            $model = $this->getModel('Cwmarchive');
             $msg   = $model->doArchive();
 
             echo json_encode([
