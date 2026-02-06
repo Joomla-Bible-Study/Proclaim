@@ -487,7 +487,9 @@
           // Step 4: Finalize import
           this.updateProgress(92, Joomla.Text._('JBS_IBM_FIXING_ASSETS'), '');
 
-          const finalizeUrl = `index.php?option=com_proclaim&task=cwmbackup.finalizeImportXHR&format=json&sessionId=${sessionId}&${Joomla.getOptions('csrf.token')}=1`;
+          // Check if skip asset fix is enabled (dev testing option)
+          const skipAssetFix = document.getElementById('skip_asset_fix')?.checked ? '1' : '0';
+          const finalizeUrl = `index.php?option=com_proclaim&task=cwmbackup.finalizeImportXHR&format=json&sessionId=${sessionId}&skipAssetFix=${skipAssetFix}&${Joomla.getOptions('csrf.token')}=1`;
           const finalizeResult = await this.fetchJson(finalizeUrl);
 
           if (!finalizeResult.success) {

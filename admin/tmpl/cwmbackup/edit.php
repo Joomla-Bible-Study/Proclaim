@@ -179,8 +179,19 @@ $maxSize = HTMLHelper::_('number.bytes', Utility::getMaxUploadSize());
                             <input type="text"
                                    id="install_directory"
                                    name="install_directory"
-                                   class="form-control form-control-sm"
+                                   class="form-control form-control-sm mb-2"
                                    value="<?php echo $this->tmp_dest . DIRECTORY_SEPARATOR; ?>">
+                            <div class="form-check">
+                                <input type="checkbox"
+                                       class="form-check-input"
+                                       id="skip_asset_fix"
+                                       name="skip_asset_fix"
+                                       value="1">
+                                <label class="form-check-label small" for="skip_asset_fix">
+                                    <?php echo Text::_('JBS_IBM_SKIP_ASSET_FIX'); ?>
+                                    <span class="text-muted">(<?php echo Text::_('JBS_IBM_SKIP_ASSET_FIX_DESC'); ?>)</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
 

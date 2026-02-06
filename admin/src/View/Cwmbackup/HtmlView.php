@@ -151,15 +151,15 @@ class HtmlView extends BaseHtmlView
 
         $toolbar = Toolbar::getInstance();
 
-        // Add back to cpanel button
+        // Add home button to cpanel
         $toolbar->linkButton('home', 'JBS_CMN_HOME')
             ->url('index.php?option=com_proclaim&view=cwmcpanel')
             ->icon('fas fa-home')
             ->listCheck(false);
 
-        // Add back to Joomla admin button
+        // Add back to admin tools button
         $toolbar->linkButton('back', 'JTOOLBAR_BACK')
-            ->url('index.php')
+            ->url('index.php?option=com_proclaim&view=cwmadmin')
             ->icon('fas fa-arrow-left')
             ->listCheck(false);
 

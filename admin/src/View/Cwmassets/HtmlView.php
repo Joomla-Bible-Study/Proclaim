@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Assets html
+ * Assets html view
  *
  * @package    Proclaim.Admin
  * @copyright  (C) 2026 CWM Team All rights reserved
@@ -15,168 +15,59 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmassets;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
-
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 /**
- * View class for Admin
+ * View class for Asset management
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var int Total number of Steps
+    /**
+     * Asset check results
      *
+     * @var array
      * @since 9.0.0
      */
-    public int $totalSteps = 0;
-
-    /** @var int Number of Steps already processed
-     *
-     * @since 9.0.0
-     */
-    public int $doneSteps = 0;
-
-    /** @var array Call stack for the Visioning System.
-     *
-     * @since 9.0.0
-     */
-    public array $callstack = [];
-
-    public $version;
-
-    public $step;
-
     public $assets;
 
-    /** @var object Start of installation
+    /**
+     * Model state
      *
+     * @var object
      * @since 9.0.0
      */
     public $state;
 
-    /** @var object Status
-     *
-     * @since 9.0.0
-     */
-    public $status;
-
-    /** @var bool More
-     *
-     * @since 9.0.0
-     */
-    protected bool $more = false;
-
-    /** @var  string Percentage
-     *
-     * @since 9.0.0
-     */
-    protected string $percentage;
-
-    /** @var bool Scan State
-     *
-     * @since 9.0.0
-     */
-    public $scanstate;
-
-    /** @var array The pre-versions to process
-     *
-     * @since 9.0.0
-     */
-    private array $versionStack = [];
-
     /**
      * Execute and display a template script.
      *
-     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     * @param   string  $tpl  The name of the template file to parse
      *
-     * @return  void  A string if successful, otherwise a JError object.
+     * @return  void
      *
      * @throws  \Exception
-     * @since   11.1
-     * @see     fetch()
+     * @since   7.0.0
      */
     #[\Override]
     public function display($tpl = null): void
     {
-        $app             = Factory::getApplication();
-        $this->scanstate = $app->input->get('scanstate', false);
+        $app     = Factory::getApplication();
+        $session = $app->getSession();
 
         // Get data from the model
-        $this->state = $this->get("State");
-        $layout      = $app->input->get('layout', 'edit');
-        $task        = $app->input->get('task', 'checkassets');
+        $this->state  = $this->get("State");
+        $this->assets = $session->get('checklists', [], 'CWM');
 
-        if (str_contains($task, '.')) {
-            $task = explode('.', $task)[1];
-        }
-
-        $session      = $app->getSession();
-        $this->assets = $session->get('checklists', null, 'CWM');
-        $stack        = $session->get('asset_stack', '', 'CWM');
-
-        if (empty($stack)) {
-            $this->versionStack = [];
-            $this->step         = null;
-            $this->totalSteps   = 0;
-            $this->doneSteps    = 0;
-        } else {
-            if (\function_exists('base64_encode') && \function_exists('base64_decode')) {
-                $stack = base64_decode($stack);
-
-                if (\function_exists('gzdeflate') && \function_exists('gzinflate')) {
-                    $stack = gzinflate($stack);
-                }
-            }
-
-            $stack = json_decode($stack, true, 512, JSON_THROW_ON_ERROR);
-
-            $this->versionStack = $stack['version'];
-            $this->step         = $stack['step'];
-            $this->totalSteps   = $stack['total'];
-            $this->doneSteps    = $stack['done'];
-        }
-
-        $percent = 0;
-
-        if ($this->scanstate) {
-            if ($this->totalSteps > 0) {
-                $percent = min(max(round(100 * $this->doneSteps / $this->totalSteps), 1), 100);
-            }
-
-            $more = true;
-        } else {
-            $percent = 100;
-            $more    = false;
-        }
-
-        $this->more = $more;
-        $this->setLayout($layout);
-
-        $this->percentage = (string)$percent;
-
-        if ($this->more) {
-            $doc = $this->getDocument();
-            $wa  = $doc->getWebAssetManager();
-            $wa->useScript('form.validate')
-                ->addInlineScript(
-                    "setTimeout(function(){
-                                    document.getElementById('adminForm').submit();
-								}, 1000);"
-                );
-        }
-
-        if ($task === 'browse' || $task === 'run' || $this->scanstate) {
-            $this->setLayout('fix');
-        } else {
-            $this->setLayout('edit');
-        }
+        $this->setLayout('edit');
 
         // Set the toolbar
         $this->addToolbar();
@@ -197,13 +88,23 @@ class HtmlView extends BaseHtmlView
     {
         Factory::getApplication()->getInput()->set('hidemainmenu', true);
 
-        ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'administration');
-        ToolbarHelper::custom('cwmadmin.back', 'home', 'home', 'JTOOLBAR_BACK', false);
+        ToolbarHelper::title(Text::_('JBS_ADM_ASSET_TABLE_NAME'), 'shield-alt');
 
-        ToolbarHelper::custom('cwmassets.checkassets', 'refresh', 'refresh', 'JBS_ADM_CHECK_ASSETS', false);
+        $toolbar = Toolbar::getInstance();
 
-        ToolbarHelper::custom('cwmassets.browse', 'heart', 'fix', 'JBS_ADM_FIX', false);
+        // Add home button to cpanel
+        $toolbar->linkButton('home', 'JBS_CMN_HOME')
+            ->url('index.php?option=com_proclaim&view=cwmcpanel')
+            ->icon('fas fa-home')
+            ->listCheck(false);
 
-        ToolbarHelper::help('proclaim', true);
+        // Add back to admin tools button
+        $toolbar->linkButton('back', 'JTOOLBAR_BACK')
+            ->url('index.php?option=com_proclaim&view=cwmadmin')
+            ->icon('fas fa-arrow-left')
+            ->listCheck(false);
+
+        ToolbarHelper::divider();
+        ToolbarHelper::help('cwmassets', true);
     }
 }

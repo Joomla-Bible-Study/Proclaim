@@ -552,6 +552,17 @@ class CwmbackupController extends FormController
      */
     public function finalizeImportXHR(): void
     {
+        // Try to increase memory limit (best-effort, may fail on shared hosting)
+        $currentLimit = $this->getMemoryLimitBytes();
+        $targetLimit = 512 * 1024 * 1024; // 512M
+
+        if ($currentLimit > 0 && $currentLimit < $targetLimit) {
+            // Try progressive increases - some hosts allow modest increases but not large ones
+            foreach (['256M', '384M', '512M'] as $tryLimit) {
+                @ini_set('memory_limit', $tryLimit);
+            }
+        }
+
         // Suppress error display and capture any output
         $previousErrorReporting = error_reporting(E_ALL);
         $previousDisplayErrors = ini_get('display_errors');
@@ -583,42 +594,21 @@ class CwmbackupController extends FormController
                 return;
             }
 
-            $app       = Factory::getApplication();
-            $input     = $app->getInput();
-            $sessionId = $input->get('sessionId', '', 'string');
-            $session   = $app->getSession();
+            $app          = Factory::getApplication();
+            $input        = $app->getInput();
+            $sessionId    = $input->get('sessionId', '', 'string');
+            $skipAssetFix = $input->get('skipAssetFix', '0', 'string') === '1';
+            $session      = $app->getSession();
 
             // Clean up session data
             $session->set('proclaim_import_' . $sessionId, '', 'CWM');
             $session->set('proclaim_import_queries_' . $sessionId, '', 'CWM');
 
-            // Fix assets table by table to avoid memory exhaustion
-            $db = Factory::getContainer()->get('DatabaseDriver');
-            $parentId = Cwmassets::parentId();
-
-            // Process each asset table individually to manage memory
-            $assetTables = Cwmassets::getAssetObjects();
-
-            foreach ($assetTables as $tableInfo) {
-                try {
-                    // Query one table at a time
-                    $query = $db->getQuery(true);
-                    $query->select('j.id, j.asset_id, a.id as aid, a.parent_id, a.rules')
-                        ->from($db->qn($tableInfo['name']) . ' as j')
-                        ->leftJoin('#__assets as a ON (a.id = j.asset_id)');
-                    $db->setQuery($query);
-                    $results = $db->loadObjectList();
-
-                    // Process this table's assets
-                    foreach ($results as $item) {
-                        Cwmassets::fixAssets($tableInfo['assetname'], $item);
-                    }
-
-                    // Free memory
-                    unset($results);
-                } catch (\Exception $e) {
-                    Log::add('Asset fix error for ' . $tableInfo['name'] . ': ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
-                }
+            // Fix assets using lightweight direct SQL approach (unless skipped for testing)
+            if (!$skipAssetFix) {
+                $this->fixAssetsLightweight();
+            } else {
+                Log::add('Asset fix skipped (testing mode)', Log::INFO, 'com_proclaim');
             }
 
             $this->sendJsonResponse(true, Text::_('JBS_CMN_OPERATION_SUCCESSFUL'));
@@ -627,9 +617,280 @@ class CwmbackupController extends FormController
         }
     }
 
+    /**
+     * Fix assets using direct SQL to minimize memory usage
+     *
+     * Instead of loading full Table objects for each record, this method:
+     * 1. Gets the parent asset ID for com_proclaim
+     * 2. For each table, processes records in batches
+     * 3. Uses direct SQL INSERT/UPDATE instead of Table objects
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    private function fixAssetsLightweight(): void
+    {
+        $db = Factory::getContainer()->get('DatabaseDriver');
+
+        // Get or create the com_proclaim parent asset
+        $parentId = $this->ensureParentAsset($db);
+
+        if (!$parentId) {
+            Log::add('Could not find or create com_proclaim parent asset ID', Log::WARNING, 'com_proclaim');
+
+            return;
+        }
+
+        Log::add('Using parent asset ID: ' . $parentId, Log::INFO, 'com_proclaim');
+
+        $assetTables = Cwmassets::getAssetObjects();
+
+        // Adjust batch size based on available memory (smaller batches for constrained environments)
+        $memoryLimit = $this->getMemoryLimitBytes();
+        $batchSize = 100;
+
+        if ($memoryLimit > 0 && $memoryLimit < 128 * 1024 * 1024) {
+            $batchSize = 25; // Very constrained (< 128M)
+        } elseif ($memoryLimit > 0 && $memoryLimit < 256 * 1024 * 1024) {
+            $batchSize = 50; // Moderately constrained (< 256M)
+        }
+
+        foreach ($assetTables as $tableInfo) {
+            try {
+                // Get total count for this table
+                $query = $db->getQuery(true);
+                $query->select('COUNT(*)')
+                    ->from($db->qn($tableInfo['name']));
+                $db->setQuery($query);
+                $total = (int) $db->loadResult();
+
+                if ($total === 0) {
+                    continue;
+                }
+
+                // Process in batches
+                $offset = 0;
+
+                while ($offset < $total) {
+                    // Load a batch of records
+                    $query = $db->getQuery(true);
+                    $query->select('j.id, j.asset_id, a.id as aid, a.parent_id, a.rules')
+                        ->from($db->qn($tableInfo['name']) . ' as j')
+                        ->leftJoin('#__assets as a ON (a.id = j.asset_id)')
+                        ->setLimit($batchSize, $offset);
+                    $db->setQuery($query);
+                    $results = $db->loadObjectList();
+
+                    if (empty($results)) {
+                        break;
+                    }
+
+                    // Process each record in this batch
+                    foreach ($results as $item) {
+                        $this->fixSingleAssetDirect($db, $tableInfo, $item, $parentId);
+                    }
+
+                    // Free memory and force garbage collection
+                    unset($results);
+                    gc_collect_cycles();
+
+                    $offset += $batchSize;
+                }
+
+                Log::add('Fixed assets for ' . $tableInfo['name'] . ' (' . $total . ' records)', Log::INFO, 'com_proclaim');
+            } catch (\Exception $e) {
+                Log::add('Asset fix error for ' . $tableInfo['name'] . ': ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+            }
+        }
+    }
+
+    /**
+     * Fix a single asset record using direct SQL
+     *
+     * @param   object  $db         Database driver
+     * @param   array   $tableInfo  Table info from getAssetObjects
+     * @param   object  $item       Record with id, asset_id, aid, parent_id, rules
+     * @param   int     $parentId   Parent asset ID for com_proclaim
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    private function fixSingleAssetDirect(object $db, array $tableInfo, object $item, int $parentId): void
+    {
+        $assetName = 'com_proclaim.' . $tableInfo['assetname'] . '.' . $item->id;
+        $defaultRules = '{"core.delete":[],"core.edit":[],"core.edit.state":[]}';
+
+        // Case 1: No asset_id OR asset_id points to non-existent asset (aid is NULL from LEFT JOIN)
+        // This is the common case after restore - records have stale asset_ids
+        if (empty($item->asset_id) || $item->asset_id == 0 || empty($item->aid)) {
+            // Check if asset already exists by name (in case asset_id just wasn't set)
+            $query = $db->getQuery(true);
+            $query->select('id')
+                ->from('#__assets')
+                ->where('name = ' . $db->quote($assetName));
+            $db->setQuery($query);
+            $existingAssetId = $db->loadResult();
+
+            if ($existingAssetId) {
+                // Asset exists, just update the record's asset_id
+                $query = $db->getQuery(true);
+                $query->update($db->qn($tableInfo['name']))
+                    ->set('asset_id = ' . (int) $existingAssetId)
+                    ->where('id = ' . (int) $item->id);
+                $db->setQuery($query);
+                $db->execute();
+            } else {
+                // Create new asset
+                $query = $db->getQuery(true);
+                $query->insert('#__assets')
+                    ->columns(['parent_id', 'level', 'name', 'title', 'rules'])
+                    ->values(
+                        (int) $parentId . ', 4, ' . $db->quote($assetName) . ', ' .
+                        $db->quote($tableInfo['assetname'] . ' ' . $item->id) . ', ' .
+                        $db->quote($defaultRules)
+                    );
+                $db->setQuery($query);
+                $db->execute();
+                $newAssetId = $db->insertid();
+
+                // Update the record with new asset_id
+                $query = $db->getQuery(true);
+                $query->update($db->qn($tableInfo['name']))
+                    ->set('asset_id = ' . (int) $newAssetId)
+                    ->where('id = ' . (int) $item->id);
+                $db->setQuery($query);
+                $db->execute();
+            }
+
+            return;
+        }
+
+        // Case 2: Has valid asset_id with existing asset but parent_id mismatch or empty rules
+        if ($item->parent_id != $parentId || empty($item->rules)) {
+            // Update the existing asset record
+            $query = $db->getQuery(true);
+            $query->update('#__assets')
+                ->set('parent_id = ' . (int) $parentId)
+                ->set('name = ' . $db->quote($assetName));
+
+            if (empty($item->rules)) {
+                $query->set('rules = ' . $db->quote($defaultRules));
+            }
+
+            $query->where('id = ' . (int) $item->asset_id);
+            $db->setQuery($query);
+            $db->execute();
+        }
+    }
+
     // =========================================================================
     // Helper Methods
     // =========================================================================
+
+    /**
+     * Ensure the com_proclaim parent asset exists, create if missing
+     *
+     * @param   object  $db  Database driver
+     *
+     * @return int Parent asset ID, or 0 on failure
+     *
+     * @since 10.1.0
+     */
+    private function ensureParentAsset(object $db): int
+    {
+        // First try to find existing asset
+        $query = $db->getQuery(true);
+        $query->select('id')
+            ->from('#__assets')
+            ->where('name = ' . $db->quote('com_proclaim'));
+        $db->setQuery($query);
+        $parentId = (int) $db->loadResult();
+
+        if ($parentId) {
+            return $parentId;
+        }
+
+        // Parent asset doesn't exist - need to create it
+        // First, find the root asset (id=1) to use as parent
+        $query = $db->getQuery(true);
+        $query->select('id')
+            ->from('#__assets')
+            ->where('parent_id = 0')
+            ->where('level = 0');
+        $db->setQuery($query);
+        $rootId = (int) $db->loadResult();
+
+        if (!$rootId) {
+            $rootId = 1; // Fallback to id 1
+        }
+
+        // Create the com_proclaim parent asset
+        $defaultRules = '{"core.admin":{"7":1},"core.manage":{"6":1},"core.create":[],"core.delete":[],"core.edit":[],"core.edit.state":[]}';
+
+        $query = $db->getQuery(true);
+        $query->insert('#__assets')
+            ->columns(['parent_id', 'lft', 'rgt', 'level', 'name', 'title', 'rules'])
+            ->values(
+                (int) $rootId . ', 0, 0, 1, ' .
+                $db->quote('com_proclaim') . ', ' .
+                $db->quote('com_proclaim') . ', ' .
+                $db->quote($defaultRules)
+            );
+
+        try {
+            $db->setQuery($query);
+            $db->execute();
+            $parentId = (int) $db->insertid();
+
+            // Now we need to rebuild the asset tree to fix lft/rgt values
+            // Use Joomla's Table class for this one operation
+            $assetTable = new \Joomla\CMS\Table\Asset($db);
+            $assetTable->rebuild();
+
+            Log::add('Created com_proclaim parent asset with ID: ' . $parentId, Log::INFO, 'com_proclaim');
+
+            return $parentId;
+        } catch (\Exception $e) {
+            Log::add('Failed to create parent asset: ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
+
+            return 0;
+        }
+    }
+
+    /**
+     * Get PHP memory limit in bytes
+     *
+     * @return int Memory limit in bytes, or -1 if unlimited
+     *
+     * @since 10.1.0
+     */
+    private function getMemoryLimitBytes(): int
+    {
+        $limit = ini_get('memory_limit');
+
+        if ($limit === '-1') {
+            return -1; // Unlimited
+        }
+
+        $value = (int) $limit;
+        $unit = strtoupper(substr($limit, -1));
+
+        switch ($unit) {
+            case 'G':
+                $value *= 1024 * 1024 * 1024;
+                break;
+            case 'M':
+                $value *= 1024 * 1024;
+                break;
+            case 'K':
+                $value *= 1024;
+                break;
+        }
+
+        return $value;
+    }
 
     /**
      * Send JSON response helper
