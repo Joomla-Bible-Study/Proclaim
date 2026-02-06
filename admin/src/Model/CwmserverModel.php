@@ -342,7 +342,7 @@ class CwmserverModel extends AdminModel
      */
     protected function canDelete($record): bool
     {
-        return Factory::getApplication()->getSession()->get('user')->authorise(
+        return Factory::getApplication()->getIdentity()->authorise(
             'core.delete',
             'com_proclaim.cwmserver.' . (int)$record->id
         );
@@ -361,7 +361,7 @@ class CwmserverModel extends AdminModel
      */
     protected function canEditState($record): bool
     {
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing server record
         if (!empty($record->id)) {

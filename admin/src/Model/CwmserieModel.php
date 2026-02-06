@@ -100,7 +100,7 @@ class CwmserieModel extends AdminModel
             $id = $jinput->get('id', 0);
         }
 
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing article.
         // Modify the form based on Edit State access controls.
@@ -287,7 +287,7 @@ class CwmserieModel extends AdminModel
 
         // Check that the user has create permission for the component
         $extension = $app->input->get('option', '');
-        $user      = $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
         if (!$user->authorise('core.create', $extension)) {
             $app->enqueueMessage(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'), 'error');
@@ -403,7 +403,7 @@ class CwmserieModel extends AdminModel
                 return false;
             }
 
-            return Factory::getApplication()->getSession()->get('user')->authorise(
+            return Factory::getApplication()->getIdentity()->authorise(
                 'core.delete',
                 'com_proclaim.serie.' . (int)$record->id
             );
@@ -424,7 +424,7 @@ class CwmserieModel extends AdminModel
      */
     protected function canEditState($record): bool
     {
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing article.
         if (!empty($record->id)) {

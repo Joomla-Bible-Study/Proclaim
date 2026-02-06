@@ -104,7 +104,7 @@ class CwmteacherModel extends AdminModel
             $id = $jinput->get('id', 0);
         }
 
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing article.
         // Modify the form based on Edit State access controls.

@@ -106,7 +106,7 @@ class CwmcommentModel extends AdminModel
             $id = $jinput->get('id', 0);
         }
 
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing article.
         // Modify the form based on Edit State access controls.
@@ -150,7 +150,7 @@ class CwmcommentModel extends AdminModel
 
         // Check that the user has create permission for the component
         $extension = Factory::getApplication()->getInput()->get('option', '');
-        $user      = $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
         if (!$user->authorise('core.create', $extension)) {
             $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
@@ -263,7 +263,7 @@ class CwmcommentModel extends AdminModel
                 return false;
             }
 
-            return Factory::getApplication()->getSession()->get('user')->authorise(
+            return Factory::getApplication()->getIdentity()->authorise(
                 'core.delete',
                 'com_proclaim.comment.' . (int)$record->id
             );
@@ -284,7 +284,7 @@ class CwmcommentModel extends AdminModel
      */
     protected function canEditState($record): bool
     {
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing article.
         if (!empty($record->id)) {

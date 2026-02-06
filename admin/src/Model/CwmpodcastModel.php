@@ -166,7 +166,7 @@ class CwmpodcastModel extends AdminModel
     protected function batchLinkType($value, $pks, $contexts): bool
     {
         // Set the variables
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
         /** @var CwmpodcastTable $table */
         $table = $this->getTable();
 

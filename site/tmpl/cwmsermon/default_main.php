@@ -22,7 +22,7 @@ use Joomla\CMS\Language\Text;
 // Create shortcuts to some parameters.
 /** @type Joomla\Registry\Registry $params */
 $params  = $this->item->params;
-$user    = Factory::getApplication()->getSession()->get('user');
+$user    = Factory::getApplication()->getIdentity();
 $canEdit = $params->get('access-edit');
 
 $this->loadHelper('title');
