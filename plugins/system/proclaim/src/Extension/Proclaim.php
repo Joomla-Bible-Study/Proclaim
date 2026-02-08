@@ -92,6 +92,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         return [
             'onAfterRoute'   => 'onAfterRoute',
             'onBeforeRender' => 'onBeforeRender',
+            'onAfterRender'  => 'onAfterRender',
         ];
     }
 
@@ -169,6 +170,65 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         $css = implode(",\n", $selectors) . ' { display: none !important; }';
 
         $this->getApplication()->getDocument()->addStyleDeclaration($css);
+    }
+
+    /**
+     * Inject Content-Security-Policy header on frontend com_proclaim pages.
+     *
+     * Only active when the admin setting `enable_csp` is turned on.
+     * Allows YouTube, Vimeo, and any extra domains specified in `csp_extra_sources`.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public function onAfterRender(): void
+    {
+        $app = $this->getApplication();
+
+        // Only apply on frontend com_proclaim pages
+        if ($app->isClient('administrator')) {
+            return;
+        }
+
+        if ($app->getInput()->getCmd('option', '') !== 'com_proclaim') {
+            return;
+        }
+
+        $params = $this->getAdminParams();
+
+        if (empty($params['enable_csp'])) {
+            return;
+        }
+
+        // Build extra sources from admin setting (one domain per line)
+        $extraRaw = trim($params['csp_extra_sources'] ?? '');
+        $extra    = [];
+
+        if ($extraRaw !== '') {
+            foreach (preg_split('/[\r\n]+/', $extraRaw) as $line) {
+                $line = trim($line);
+
+                if ($line !== '') {
+                    $extra[] = $line;
+                }
+            }
+        }
+
+        $extraStr = $extra ? ' ' . implode(' ', $extra) : '';
+
+        $csp = implode('; ', [
+            "default-src 'self'" . $extraStr,
+            "script-src 'self' 'unsafe-inline'" . $extraStr,
+            "style-src 'self' 'unsafe-inline'" . $extraStr,
+            "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com" . $extraStr,
+            "media-src 'self' blob: *",
+            "img-src 'self' data: *",
+            "font-src 'self' data:",
+            "connect-src 'self'" . $extraStr,
+        ]);
+
+        $app->setHeader('Content-Security-Policy', $csp, true);
     }
 
     /**
