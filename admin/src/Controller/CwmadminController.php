@@ -15,6 +15,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Bible\BibleImporter;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageCleanup;
@@ -1606,6 +1607,149 @@ class CwmadminController extends FormController
             echo json_encode([
                 'success'     => true,
                 'local_count' => 0,
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Get list of available translations with install status.
+     *
+     * @return  void
+     *
+     * @since 10.1.0
+     */
+    public function getTranslationsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select($db->quoteName(['abbreviation', 'name', 'language', 'installed', 'verse_count', 'source']))
+                ->from($db->quoteName('#__bsms_bible_translations'))
+                ->order($db->quoteName('name') . ' ASC');
+            $db->setQuery($query);
+            $translations = $db->loadObjectList();
+
+            echo json_encode([
+                'success'      => true,
+                'translations' => $translations,
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Download and install a Bible translation locally.
+     *
+     * @return  void
+     *
+     * @since 10.1.0
+     */
+    public function downloadTranslationXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $abbreviation = $app->getInput()->getCmd('abbreviation', '');
+
+        if (empty($abbreviation)) {
+            echo json_encode(['success' => false, 'message' => 'No abbreviation provided'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $count = BibleImporter::downloadAndImport($abbreviation);
+
+            if ($count < 0) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => Text::sprintf('JBS_ADM_BIBLE_DOWNLOAD_FAILED', strtoupper($abbreviation)),
+                ], JSON_THROW_ON_ERROR);
+            } else {
+                echo json_encode([
+                    'success'     => true,
+                    'verse_count' => $count,
+                    'message'     => Text::sprintf('JBS_ADM_BIBLE_DOWNLOAD_SUCCESS', strtoupper($abbreviation), $count),
+                ], JSON_THROW_ON_ERROR);
+            }
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Remove a locally installed Bible translation.
+     *
+     * @return  void
+     *
+     * @since 10.1.0
+     */
+    public function removeTranslationXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $abbreviation = $app->getInput()->getCmd('abbreviation', '');
+
+        if (empty($abbreviation)) {
+            echo json_encode(['success' => false, 'message' => 'No abbreviation provided'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            BibleImporter::removeTranslation($abbreviation);
+
+            echo json_encode([
+                'success' => true,
+                'message' => Text::sprintf('JBS_ADM_BIBLE_REMOVED', strtoupper($abbreviation)),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
             ], JSON_THROW_ON_ERROR);
         }
 

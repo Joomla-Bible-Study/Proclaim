@@ -1881,7 +1881,7 @@ class Cwmlisting
         }
 
         // Check for element-specific show_version setting
-        $showVersion = (int) $params->get('show_version', 0);
+        $showVersion = (int) $params->get('show_version', 1);
 
         if ($elementConfig !== null && isset($elementConfig->show_version) && $elementConfig->show_version !== '') {
             $showVersion = (int) $elementConfig->show_version;

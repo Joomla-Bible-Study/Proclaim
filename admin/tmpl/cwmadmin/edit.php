@@ -676,8 +676,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                         <p class="text-muted"><?php echo Text::_('JBS_ADM_SCRIPTURE_PROVIDERS_DESC'); ?></p>
 
                         <div class="mb-4">
-                            <?php echo $this->form->renderField('provider_local', 'params'); ?>
-                            <div class="ms-3 mb-2">
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <div class="flex-grow-1">
+                                    <?php echo $this->form->renderField('provider_local', 'params'); ?>
+                                </div>
                                 <span class="badge bg-info" id="local-provider-status">
                                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                 </span>
@@ -685,8 +687,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                         </div>
 
                         <div class="mb-4">
-                            <?php echo $this->form->renderField('provider_getbible', 'params'); ?>
-                            <div class="ms-3 mb-2">
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <div class="flex-grow-1">
+                                    <?php echo $this->form->renderField('provider_getbible', 'params'); ?>
+                                </div>
                                 <span class="badge bg-success">
                                     <i class="icon-checkmark-circle" aria-hidden="true"></i>
                                     <?php echo Text::_('JBS_ADM_PROVIDER_STATUS_READY'); ?>
@@ -695,8 +699,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                         </div>
 
                         <div class="mb-4">
-                            <?php echo $this->form->renderField('provider_biblegateway', 'params'); ?>
-                            <div class="ms-3 mb-2">
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <div class="flex-grow-1">
+                                    <?php echo $this->form->renderField('provider_biblegateway', 'params'); ?>
+                                </div>
                                 <span class="badge bg-secondary">
                                     <i class="icon-info-circle" aria-hidden="true"></i>
                                     <?php echo Text::_('JBS_ADM_PROVIDER_STATUS_IFRAME'); ?>
@@ -719,11 +725,36 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0"><?php echo Text::_('JBS_ADM_LOCAL_TRANSLATIONS'); ?></h4>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-refresh-translations"
+                                title="<?php echo Text::_('JBS_ADM_REFRESH'); ?>">
+                            <i class="icon-refresh" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted"><?php echo Text::_('JBS_ADM_LOCAL_TRANSLATIONS_DESC'); ?></p>
+                        <div id="translations-list">
+                            <div class="text-center py-3">
+                                <span class="spinner-border spinner-border-sm" role="status"></span>
+                                <?php echo Text::_('JLIB_HTML_BEHAVIOR_LOADING'); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script>
         document.addEventListener('DOMContentLoaded', function() {
             var token = '<?php echo Session::getFormToken(); ?>';
+            var baseUrl = 'index.php?option=com_proclaim&task=cwmadmin.';
+
             // Load local provider translation count
-            fetch('index.php?option=com_proclaim&task=cwmadmin.getScriptureStatusXHR&' + token + '=1')
+            fetch(baseUrl + 'getScriptureStatusXHR&' + token + '=1')
                 .then(function(response) { return response.json(); })
                 .then(function(data) {
                     var badge = document.getElementById('local-provider-status');
@@ -742,6 +773,117 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                     badge.className = 'badge bg-secondary';
                     badge.textContent = '<?php echo Text::_('JBS_ADM_PROVIDER_STATUS_UNKNOWN'); ?>';
                 });
+
+            // Local translations management
+            function loadTranslations() {
+                var container = document.getElementById('translations-list');
+                container.innerHTML = '<div class="text-center py-3"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_BEHAVIOR_LOADING'); ?></div>';
+
+                fetch(baseUrl + 'getTranslationsXHR&' + token + '=1')
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        if (!data.success || !data.translations || data.translations.length === 0) {
+                            container.innerHTML = '<p class="text-muted"><?php echo Text::_('JBS_ADM_NO_TRANSLATIONS'); ?></p>';
+                            return;
+                        }
+                        renderTranslations(data.translations);
+                    })
+                    .catch(function() {
+                        container.innerHTML = '<div class="alert alert-warning"><?php echo Text::_('JBS_ADM_PROVIDER_STATUS_UNKNOWN'); ?></div>';
+                    });
+            }
+
+            function renderTranslations(translations) {
+                var container = document.getElementById('translations-list');
+                var html = '<div class="table-responsive"><table class="table table-striped table-sm">';
+                html += '<thead><tr>';
+                html += '<th><?php echo Text::_('JBS_CMN_NAME'); ?></th>';
+                html += '<th><?php echo Text::_('JBS_ADM_ABBREVIATION'); ?></th>';
+                html += '<th><?php echo Text::_('JBS_ADM_SOURCE'); ?></th>';
+                html += '<th><?php echo Text::_('JSTATUS'); ?></th>';
+                html += '<th><?php echo Text::_('JBS_ADM_VERSES'); ?></th>';
+                html += '<th></th>';
+                html += '</tr></thead><tbody>';
+
+                for (var i = 0; i < translations.length; i++) {
+                    var t = translations[i];
+                    var installed = parseInt(t.installed) === 1;
+                    var statusBadge = installed
+                        ? '<span class="badge bg-success"><?php echo Text::_('JBS_ADM_INSTALLED'); ?></span>'
+                        : '<span class="badge bg-secondary"><?php echo Text::_('JBS_ADM_NOT_INSTALLED'); ?></span>';
+                    var verseCount = installed ? t.verse_count : '-';
+                    var actionBtn = installed
+                        ? '<button type="button" class="btn btn-sm btn-outline-danger btn-remove-translation" data-abbr="' + t.abbreviation + '"><?php echo Text::_('JBS_ADM_REMOVE'); ?></button>'
+                        : '<button type="button" class="btn btn-sm btn-outline-primary btn-download-translation" data-abbr="' + t.abbreviation + '"><?php echo Text::_('JBS_ADM_DOWNLOAD'); ?></button>';
+
+                    html += '<tr>';
+                    html += '<td>' + t.name + '</td>';
+                    html += '<td><code>' + t.abbreviation.toUpperCase() + '</code></td>';
+                    html += '<td>' + (t.source || 'getbible') + '</td>';
+                    html += '<td>' + statusBadge + '</td>';
+                    html += '<td>' + verseCount + '</td>';
+                    html += '<td>' + actionBtn + '</td>';
+                    html += '</tr>';
+                }
+
+                html += '</tbody></table></div>';
+                container.innerHTML = html;
+
+                // Bind download buttons
+                container.querySelectorAll('.btn-download-translation').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        var abbr = this.getAttribute('data-abbr');
+                        this.disabled = true;
+                        this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JBS_ADM_DOWNLOADING'); ?>';
+
+                        fetch(baseUrl + 'downloadTranslationXHR&' + token + '=1&abbreviation=' + encodeURIComponent(abbr))
+                            .then(function(r) { return r.json(); })
+                            .then(function(result) {
+                                if (result.success) {
+                                    Joomla.renderMessages({'message': [result.message]});
+                                } else {
+                                    Joomla.renderMessages({'error': [result.message]});
+                                }
+                                loadTranslations();
+                            })
+                            .catch(function() {
+                                Joomla.renderMessages({'error': ['<?php echo Text::_('JBS_ADM_BIBLE_DOWNLOAD_FAILED_GENERIC'); ?>']});
+                                loadTranslations();
+                            });
+                    });
+                });
+
+                // Bind remove buttons
+                container.querySelectorAll('.btn-remove-translation').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        var abbr = this.getAttribute('data-abbr');
+                        if (!confirm('<?php echo Text::_('JBS_ADM_CONFIRM_REMOVE_TRANSLATION'); ?>')) {
+                            return;
+                        }
+                        this.disabled = true;
+
+                        fetch(baseUrl + 'removeTranslationXHR&' + token + '=1&abbreviation=' + encodeURIComponent(abbr))
+                            .then(function(r) { return r.json(); })
+                            .then(function(result) {
+                                if (result.success) {
+                                    Joomla.renderMessages({'message': [result.message]});
+                                } else {
+                                    Joomla.renderMessages({'error': [result.message]});
+                                }
+                                loadTranslations();
+                            })
+                            .catch(function() {
+                                loadTranslations();
+                            });
+                    });
+                });
+            }
+
+            // Refresh button
+            document.getElementById('btn-refresh-translations').addEventListener('click', loadTranslations);
+
+            // Initial load
+            loadTranslations();
         });
         </script>
         <?php
