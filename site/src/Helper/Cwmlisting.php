@@ -1850,19 +1850,21 @@ class Cwmlisting
 
         // Extract scripture data based on which row we're processing
         if ($scripturerow === 2 && $booknumber2 > 1) {
-            $bookNum = $booknumber2;
-            $ch_b    = (int) ($row->chapter_begin2 ?? 0);
-            $ch_e    = (int) ($row->chapter_end2 ?? 0);
-            $v_b     = (int) ($row->verse_begin2 ?? 0);
-            $v_e     = (int) ($row->verse_end2 ?? 0);
-            $book    = Text::_($row->bookname2 ?? '');
+            $bookNum      = $booknumber2;
+            $ch_b         = (int) ($row->chapter_begin2 ?? 0);
+            $ch_e         = (int) ($row->chapter_end2 ?? 0);
+            $v_b          = (int) ($row->verse_begin2 ?? 0);
+            $v_e          = (int) ($row->verse_end2 ?? 0);
+            $book         = Text::_($row->bookname2 ?? '');
+            $bibleVersion = $row->bible_version2 ?? '';
         } elseif ($scripturerow === 1 && $booknumber > 1) {
-            $bookNum = $booknumber;
-            $ch_b    = (int) ($row->chapter_begin ?? 0);
-            $ch_e    = (int) ($row->chapter_end ?? 0);
-            $v_b     = (int) ($row->verse_begin ?? 0);
-            $v_e     = (int) ($row->verse_end ?? 0);
-            $book    = isset($row->bookname) ? Text::_($row->bookname) : $this->getBookNameFromDb($booknumber);
+            $bookNum      = $booknumber;
+            $ch_b         = (int) ($row->chapter_begin ?? 0);
+            $ch_e         = (int) ($row->chapter_end ?? 0);
+            $v_b          = (int) ($row->verse_begin ?? 0);
+            $v_e          = (int) ($row->verse_end ?? 0);
+            $book         = isset($row->bookname) ? Text::_($row->bookname) : $this->getBookNameFromDb($booknumber);
+            $bibleVersion = $row->bible_version ?? '';
         } else {
             return '';
         }
@@ -1878,19 +1880,34 @@ class Cwmlisting
             $show_verses = (int) $elementConfig->show_verses;
         }
 
+        // Check for element-specific show_version setting
+        $showVersion = (int) $params->get('show_version', 0);
+
+        if ($elementConfig !== null && isset($elementConfig->show_version) && $elementConfig->show_version !== '') {
+            $showVersion = (int) $elementConfig->show_version;
+        }
+
+        $versionSuffix = '';
+
+        if ($showVersion === 1 && !empty($bibleVersion)) {
+            $versionSuffix = ' ' . strtoupper($bibleVersion);
+        }
+
         if ($bookNum > 166 || $show_verses === 2) {
-            return $book;
+            return $book . $versionSuffix;
         }
 
         // Chapters only mode (show_verses === 0)
         if ($show_verses === 0) {
-            return $ch_e > $ch_b
+            $ref = $ch_e > $ch_b
                 ? $book . ' ' . $ch_b . '-' . $ch_e
                 : $book . ' ' . $ch_b;
+
+            return $ref . $versionSuffix;
         }
 
         // Full reference with verses (show_verses === 1 or esv mode)
-        return $this->formatScriptureReference($book, $ch_b, $ch_e, $v_b, $v_e);
+        return $this->formatScriptureReference($book, $ch_b, $ch_e, $v_b, $v_e) . $versionSuffix;
     }
 
     /**

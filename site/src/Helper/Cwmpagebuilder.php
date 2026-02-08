@@ -253,7 +253,7 @@ class Cwmpagebuilder
             'study.booknumber', 'study.chapter_begin', 'study.verse_begin',
             'study.chapter_end', 'study.verse_end', 'study.hits', 'study.alias',
             'study.studyintro', 'study.teacher_id', 'study.secondary_reference',
-            'study.booknumber2', 'study.location_id',
+            'study.booknumber2', 'study.bible_version', 'study.bible_version2', 'study.location_id',
         ])));
         // Use studydate as fallback for modified
         $query->select(

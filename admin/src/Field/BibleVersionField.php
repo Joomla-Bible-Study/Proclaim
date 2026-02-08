@@ -74,6 +74,45 @@ class BibleVersionField extends ListField
     ];
 
     /**
+     * Method to attach a Form object to the field.
+     *
+     * Sets the default value from the admin component's default_bible_version
+     * setting when no explicit default is provided in the XML.
+     *
+     * @param   \SimpleXMLElement  $element  The SimpleXMLElement object
+     * @param   mixed              $value    The value of the element
+     * @param   string             $group    The group the field belongs to
+     *
+     * @return  bool  True on success
+     *
+     * @since  10.1.0
+     */
+    public function setup(\SimpleXMLElement $element, $value, $group = null): bool
+    {
+        $result = parent::setup($element, $value, $group);
+
+        // If no value is set (new record), use the admin default
+        if ($result && ($this->value === null || $this->value === '')) {
+            try {
+                $admin  = Cwmparams::getAdmin();
+                $params = $admin->params ?? null;
+
+                if ($params) {
+                    $default = $params->get('default_bible_version', '');
+
+                    if (!empty($default)) {
+                        $this->value = $default;
+                    }
+                }
+            } catch (\Exception $e) {
+                // Ignore — no admin params available
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Get the field options.
      *
      * Aggregates translations from all enabled providers into a single

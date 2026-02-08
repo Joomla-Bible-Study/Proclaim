@@ -354,6 +354,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies`
     `chapter_end2`        VARCHAR(4)                                                DEFAULT NULL,
     `verse_end2`          VARCHAR(4)                                                DEFAULT NULL,
     `bible_version`       VARCHAR(20)                                               DEFAULT NULL,
+    `bible_version2`      VARCHAR(20)                                               DEFAULT NULL,
     `prod_dvd`            VARCHAR(100)                                              DEFAULT NULL,
     `prod_cd`             VARCHAR(100)                                              DEFAULT NULL,
     `server_cd`           VARCHAR(10)                                               DEFAULT NULL,

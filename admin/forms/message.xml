@@ -67,6 +67,8 @@
             <field name="verse_begin" type="text" size="5" label="JBS_STY_VERSE_BEGIN" filter="int"/>
             <field name="chapter_end" type="text" size="5" label="JBS_STY_CHAPTER_END" filter="int"/>
             <field name="verse_end" type="text" size="5" label="JBS_STY_VERSE_END" filter="int"/>
+            <field name="bible_version" type="BibleVersion" default=""
+                   label="JBS_STY_BIBLE_VERSION" description="JBS_STY_BIBLE_VERSION_DESC"/>
 
             <field name="booknumber2" type="BookList" label="JBS_STY_BOOK2">
                 <option value="-1">JBS_CMN_SELECT_BOOK</option>
@@ -76,13 +78,12 @@
             <field name="verse_begin2" type="text" size="5" label="JBS_STY_VERSE_BEGIN2" filter="int"/>
             <field name="chapter_end2" type="text" size="5" label="JBS_STY_CHAPTER_END2" filter="int"/>
             <field name="verse_end2" type="text" size="5" label="JBS_STY_VERSE_END2" filter="int"/>
+            <field name="bible_version2" type="BibleVersion" default=""
+                   label="JBS_STY_BIBLE_VERSION2" description="JBS_STY_BIBLE_VERSION2_DESC"/>
 
             <field name="secondary_reference" type="text" size="100"
                    label="JBS_CMN_SECONDARY_REFERENCES"
                    description="JBS_STY_SECONDARY_REFERENCES_DESC"/>
-
-            <field name="bible_version" type="BibleVersion" default=""
-                   label="JBS_STY_BIBLE_VERSION" description="JBS_STY_BIBLE_VERSION_DESC"/>
         </fieldset>
 
         <field name="teacher_id" type="TeacherList" label="JBS_CMN_TEACHER">

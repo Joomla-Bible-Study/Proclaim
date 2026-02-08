@@ -1930,6 +1930,15 @@
                                 </select>
                                 <div class="form-text">${this.trans('JBS_TPL_VERSES_SHOW_VERSES_DESC') || 'Choose whether just chapter(s) of Bible message book shown or verses too'}</div>
                             </div>
+                            <div class="form-group" id="layout-show-version-group" style="display:none;">
+                                <label class="form-label" for="layout-show-version">${this.trans('JBS_TPL_SHOW_VERSION') || 'Show Bible Version'}</label>
+                                <select class="form-select" id="layout-show-version">
+                                    <option value="">${this.trans('JBS_TPL_USE_GLOBAL') || '- Use Global -'}</option>
+                                    <option value="0">${this.trans('JNO') || 'No'}</option>
+                                    <option value="1">${this.trans('JYES') || 'Yes'}</option>
+                                </select>
+                                <div class="form-text">${this.trans('JBS_TPL_SHOW_VERSION_DESC') || 'Append the Bible version abbreviation to the scripture reference (e.g. Luke 7:36-38 KJV)'}</div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">${this.trans('JCANCEL') || 'Cancel'}</button>
@@ -2497,6 +2506,8 @@
                 const dateFormatGroup = document.getElementById('layout-date-format-group');
                 const showVersesEl = document.getElementById('layout-show-verses');
                 const showVersesGroup = document.getElementById('layout-show-verses-group');
+                const showVersionEl = document.getElementById('layout-show-version');
+                const showVersionGroup = document.getElementById('layout-show-version-group');
 
                 // Rebuild link type options based on current context
                 if (linkTypeEl) {
@@ -2519,6 +2530,7 @@
                 if (customClassEl) { customClassEl.value = data.custom || ''; }
                 if (dateFormatEl) { dateFormatEl.value = data.date_format || ''; }
                 if (showVersesEl) { showVersesEl.value = data.show_verses || ''; }
+                if (showVersionEl) { showVersionEl.value = data.show_version || ''; }
 
                 // Store original values for change detection when modal closes
                 this.originalModalValues = {
@@ -2526,7 +2538,8 @@
                     linktype: linkTypeEl ? linkTypeEl.value : '',
                     custom: customClassEl ? customClassEl.value : '',
                     date_format: dateFormatEl ? dateFormatEl.value : '',
-                    show_verses: showVersesEl ? showVersesEl.value : ''
+                    show_verses: showVersesEl ? showVersesEl.value : '',
+                    show_version: showVersionEl ? showVersionEl.value : ''
                 };
 
                 // Show date format field only for date-related elements
@@ -2536,9 +2549,13 @@
                     dateFormatGroup.style.display = isDateElement ? 'block' : 'none';
                 }
 
-                // Show show_verses field only for scripture elements
+                // Show show_verses and show_version fields only for scripture elements
+                const isScripture = isScriptureElement(elementId);
                 if (showVersesGroup) {
-                    showVersesGroup.style.display = isScriptureElement(elementId) ? 'block' : 'none';
+                    showVersesGroup.style.display = isScripture ? 'block' : 'none';
+                }
+                if (showVersionGroup) {
+                    showVersionGroup.style.display = isScripture ? 'block' : 'none';
                 }
 
                 // Show modal
@@ -2595,6 +2612,7 @@
                 data.custom = document.getElementById('layout-custom-class').value;
                 data.date_format = document.getElementById('layout-date-format').value;
                 data.show_verses = document.getElementById('layout-show-verses').value;
+                data.show_version = document.getElementById('layout-show-version').value;
 
                 // Update visual display
                 const card = this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"]`);
@@ -2704,13 +2722,15 @@
                 const customClassEl = document.getElementById('layout-custom-class');
                 const dateFormatEl = document.getElementById('layout-date-format');
                 const showVersesEl = document.getElementById('layout-show-verses');
+                const showVersionEl = document.getElementById('layout-show-version');
 
                 const current = {
                     element: elementTypeEl ? elementTypeEl.value : '',
                     linktype: linkTypeEl ? linkTypeEl.value : '',
                     custom: customClassEl ? customClassEl.value : '',
                     date_format: dateFormatEl ? dateFormatEl.value : '',
-                    show_verses: showVersesEl ? showVersesEl.value : ''
+                    show_verses: showVersesEl ? showVersesEl.value : '',
+                    show_version: showVersionEl ? showVersionEl.value : ''
                 };
 
                 // Compare each field (colspan is managed by drag resizing, not the modal)
@@ -2718,7 +2738,8 @@
                     current.linktype !== this.originalModalValues.linktype ||
                     current.custom !== this.originalModalValues.custom ||
                     current.date_format !== this.originalModalValues.date_format ||
-                    current.show_verses !== this.originalModalValues.show_verses;
+                    current.show_verses !== this.originalModalValues.show_verses ||
+                    current.show_version !== this.originalModalValues.show_version;
             }
 
             /**
@@ -2749,6 +2770,7 @@
                     let linktype = templateParams[fieldPrefix + 'linktype'] || '0';
                     let dateFormat = templateParams[fieldPrefix + 'date_format'] || '';
                     let showVerses = templateParams[fieldPrefix + 'show_verses'] || '';
+                    let showVersion = templateParams[fieldPrefix + 'show_version'] || '';
 
                     // Try form fields as fallback (in case they're loaded)
                     const rowField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}row]"]`);
@@ -2761,6 +2783,7 @@
                         const linktypeField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}linktype]"]`);
                         const dateFormatField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}date_format]"]`);
                         const showVersesField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}show_verses]"]`);
+                        const showVersionField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}show_version]"]`);
 
                         if (colField) { col = parseInt(colField.value, 10) || col; }
                         if (colspanField) { colspan = colspanField.value || colspan; }
@@ -2769,6 +2792,7 @@
                         if (linktypeField) { linktype = linktypeField.value || linktype; }
                         if (dateFormatField) { dateFormat = dateFormatField.value || dateFormat; }
                         if (showVersesField) { showVerses = showVersesField.value || showVerses; }
+                        if (showVersionField) { showVersion = showVersionField.value || showVersion; }
                     }
 
                     // Only add to canvas if row > 0 (element is visible)
@@ -2781,7 +2805,8 @@
                             custom: custom,
                             linktype: linktype,
                             date_format: dateFormat,
-                            show_verses: showVerses
+                            show_verses: showVerses,
+                            show_version: showVersion
                         };
 
                         this.state.set(element.id, data);
@@ -2914,7 +2939,8 @@
                         custom: `${this.options.paramsPrefix}[${fieldPrefix}custom]`,
                         linktype: `${this.options.paramsPrefix}[${fieldPrefix}linktype]`,
                         date_format: `${this.options.paramsPrefix}[${fieldPrefix}date_format]`,
-                        show_verses: `${this.options.paramsPrefix}[${fieldPrefix}show_verses]`
+                        show_verses: `${this.options.paramsPrefix}[${fieldPrefix}show_verses]`,
+                        show_version: `${this.options.paramsPrefix}[${fieldPrefix}show_version]`
                     };
 
                     // Helper to get or create a hidden input field
@@ -2943,6 +2969,7 @@
                         getOrCreateField(fieldNames.linktype, data.linktype);
                         getOrCreateField(fieldNames.date_format, data.date_format || '');
                         getOrCreateField(fieldNames.show_verses, data.show_verses || '');
+                        getOrCreateField(fieldNames.show_version, data.show_version || '');
                     } else {
                         // Element not in layout - set row to 0 (hidden)
                         getOrCreateField(fieldNames.row, '0');
