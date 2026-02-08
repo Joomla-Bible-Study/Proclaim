@@ -193,7 +193,7 @@ class CwmtemplateTable extends Table
             // For existing records, merge submitted params with existing params
             // This preserves values from lazy-loaded sections that were never expanded
             if (!empty($array['id'])) {
-                $db    = $this->getDbo();
+                $db    = $this->getDatabase();
                 $query = $db->getQuery(true)
                     ->select($db->quoteName('params'))
                     ->from($db->quoteName('#__bsms_templates'))
@@ -264,9 +264,7 @@ class CwmtemplateTable extends Table
         $pk = $pk ?? $this->$k;
 
         if ((int) $pk === 1) {
-            $this->setError(Text::_('JBS_TPL_DEFAULT_ERROR'));
-
-            return false;
+            throw new \RuntimeException(Text::_('JBS_TPL_DEFAULT_ERROR'));
         }
 
         return parent::delete($pk);

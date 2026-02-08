@@ -326,19 +326,20 @@ class CwmmediafileTable extends Table
         }
 
         // Check the row in by primary key.
-        $query = $this->_db->getQuery(true)
+        $db    = $this->getDatabase();
+        $query = $db->getQuery(true)
             ->update($this->_tbl)
-            ->set($this->_db->quoteName($this->getColumnAlias('checked_out')) . ' = 0')
+            ->set($db->quoteName($this->getColumnAlias('checked_out')) . ' = 0')
             ->set(
-                $this->_db->quoteName($this->getColumnAlias('checked_out_time')) . ' = ' . $this->_db->quote(
-                    $this->_db->getNullDate()
+                $db->quoteName($this->getColumnAlias('checked_out_time')) . ' = ' . $db->quote(
+                    $db->getNullDate()
                 )
             );
         $this->appendPrimaryKeys($query, $pk);
-        $this->_db->setQuery($query);
+        $db->setQuery($query);
 
         // Check for a database error.
-        $this->_db->execute();
+        $db->execute();
 
         // Set table values in the object.
         $this->checked_out      = 0;

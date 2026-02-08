@@ -455,7 +455,7 @@ class CwmmessageModel extends AdminModel
                 $row->ordering = $order[$i];
 
                 if (!$row->store()) {
-                    throw new \RuntimeException($row->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
 
                 // Remember to reorder within position and client_id
@@ -514,7 +514,7 @@ class CwmmessageModel extends AdminModel
                 $table->teacher_id = (int)$value;
 
                 if (!$table->store()) {
-                    throw new \RuntimeException($table->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
             } else {
                 throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
@@ -570,7 +570,7 @@ class CwmmessageModel extends AdminModel
                 $table->series_id = (int)$value;
 
                 if (!$table->store()) {
-                    throw new \RuntimeException($table->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
             } else {
                 throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
@@ -609,7 +609,7 @@ class CwmmessageModel extends AdminModel
                 $table->messagetype = (int)$value;
 
                 if (!$table->store()) {
-                    throw new \RuntimeException($table->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
             } else {
                 throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
