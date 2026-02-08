@@ -78,7 +78,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_comments`
     `language`     CHAR(7)          NOT NULL COMMENT 'The language code for the Comments.',
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
-    KEY `idx_access` (`access`)
+    KEY `idx_access` (`access`),
+    KEY `idx_study_published` (`study_id`, `published`, `comment_date`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
@@ -136,7 +137,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_locations`
     `landing_show`     INT(3)                       DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
-    KEY `idx_access` (`access`)
+    KEY `idx_access` (`access`),
+    KEY `idx_published_access` (`published`, `access`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
@@ -176,7 +178,9 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles`
     KEY `idx_study_id` (`study_id`),
     KEY `idx_access` (`access`),
     KEY `idx_checkout` (`checked_out`),
-    KEY `idx_createdby` (`created_by`)
+    KEY `idx_createdby` (`created_by`),
+    KEY `idx_study_published` (`study_id`, `published`, `createdate`),
+    KEY `idx_podcast_published` (`podcast_id`, `published`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
@@ -291,7 +295,9 @@ CREATE TABLE IF NOT EXISTS `#__bsms_series`
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`),
-    KEY `idx_createdby` (`created_by`)
+    KEY `idx_createdby` (`created_by`),
+    KEY `idx_published_access` (`published`, `access`),
+    KEY `idx_teacher_published` (`teacher`, `published`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
@@ -391,7 +397,14 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies`
     KEY `idx_seriesid` (`series_id`),
     KEY `idx_user` (`user_id`),
     KEY `idx_createdby` (`created_by`),
-    KEY `idx_checkout` (`checked_out`)
+    KEY `idx_checkout` (`checked_out`),
+    KEY `idx_published_access_series` (`published`, `access`, `series_id`, `studydate`),
+    KEY `idx_teacher_published` (`teacher_id`, `published`, `studydate`),
+    KEY `idx_location_published` (`location_id`, `published`),
+    KEY `idx_published_dates` (`published`, `publish_up`, `publish_down`),
+    KEY `idx_messagetype_published` (`messagetype`, `published`),
+    KEY `idx_booknumber_published` (`booknumber`, `published`),
+    KEY `idx_language_published` (`language`, `published`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
@@ -412,7 +425,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studytopics`
     PRIMARY KEY (`id`),
     KEY `idx_access` (`access`),
     KEY `idx_study` (`study_id`),
-    KEY `idx_topic` (`topic_id`)
+    KEY `idx_topic` (`topic_id`),
+    KEY `idx_study_topic` (`study_id`, `topic_id`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
@@ -471,7 +485,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers`
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`),
-    KEY `idx_createdby` (`created_by`)
+    KEY `idx_createdby` (`created_by`),
+    KEY `idx_published_access` (`published`, `access`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
@@ -567,7 +582,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_topics`
     `access`           INT(10) UNSIGNED NOT NULL DEFAULT '1',
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
-    KEY `idx_access` (`access`)
+    KEY `idx_access` (`access`),
+    KEY `idx_published_access` (`published`, `access`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
