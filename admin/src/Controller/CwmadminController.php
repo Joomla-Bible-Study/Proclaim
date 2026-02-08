@@ -81,7 +81,7 @@ class CwmadminController extends FormController
 
             case 'playerbymediatype':
                 $msg = $model->playerByMediaType();
-                $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+                $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
                 break;
         }
     }
@@ -132,7 +132,7 @@ class CwmadminController extends FormController
 
                     if (!$db->execute()) {
                         $msg = Text::_('JBS_ADM_ERROR_OCCURED');
-                        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+                        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
                     }
                 }
             }
@@ -140,7 +140,7 @@ class CwmadminController extends FormController
             $msg = Text::_('JBS_ADM_ERROR_OCCURED') . ': Missed setting the From or To';
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
     }
 
     /**
@@ -195,12 +195,12 @@ class CwmadminController extends FormController
 
                 if (!$db->execute()) {
                     $msg = Text::_('JBS_ADM_ERROR_OCCURED');
-                    $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+                    $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
                 }
             }
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
     }
 
     /**
@@ -416,7 +416,7 @@ class CwmadminController extends FormController
                 break;
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
     }
 
     /**
@@ -450,7 +450,7 @@ class CwmadminController extends FormController
             $msg = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
     }
 
     /**
@@ -485,7 +485,7 @@ class CwmadminController extends FormController
             $msg     = Text::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . Text::_('JBS_CMN_ROWS_RESET');
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
     }
 
     /**
@@ -520,7 +520,7 @@ class CwmadminController extends FormController
             $msg     = Text::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . Text::_('JBS_CMN_ROWS_RESET');
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
     }
 
     /**
@@ -532,7 +532,7 @@ class CwmadminController extends FormController
      */
     public function back(): void
     {
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1');
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin');
     }
 
     /**
@@ -554,7 +554,7 @@ class CwmadminController extends FormController
 
         $convert      = new Cwmssconvert();
         $ssconversion = $convert->convertSS();
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $ssconversion);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $ssconversion);
     }
 
     /**
@@ -576,7 +576,7 @@ class CwmadminController extends FormController
 
         $convert      = new CwmpIconvert();
         $piconversion = $convert->convertPI();
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $piconversion);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $piconversion);
     }
 
     /**
@@ -625,7 +625,7 @@ class CwmadminController extends FormController
 
         $update = Cwmalias::updateAlias();
         $this->setMessage(Text::_('JBS_ADM_ALIAS_ROWS') . $update);
-        $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', false));
+        $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmadmin', false));
     }
 
     /**
@@ -954,7 +954,7 @@ class CwmadminController extends FormController
         }
 
         // Redirect back to the form in all cases
-        $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit', false));
+        $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmadmin', false));
 
         return true;
     }

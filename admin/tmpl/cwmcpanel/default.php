@@ -136,7 +136,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                         echo Text::_('JBS_CPANEL_SIMPLE_MODE_DESC'); ?>
                 </p>
                 <a href="<?php
-                    echo Route::_('index.php?option=com_proclaim&task=cwmadmin.edit&id=1'); ?>"
+                    echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                    class="btn btn-primary btn-large" style="color: #FFFFFF">
                     <?php
                         echo Text::_('JBS_CPANEL_SIMPLE_MODE_LINK'); ?>
@@ -185,7 +185,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             <div class="container">
                 <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3 justify-content-center">
                     <div class="col">
-                        <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;task=cwmadmin.edit&amp;id=1'); ?>"
+                        <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmadmin'); ?>"
                            title="<?php echo Text::_('JBS_CMN_ADMINISTRATION'); ?>" class="cpanel-btn">
                             <i class="icon-options fa-3x"></i>
                             <span><?php echo Text::_('JBS_CMN_ADMINISTRATION'); ?></span>

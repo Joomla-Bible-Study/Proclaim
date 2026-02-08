@@ -287,7 +287,7 @@ class ProclaimIconHelper
             if ($params->get('show_admin')) {
                 $tmp = [
                     'image'  => 'icon-big icon-options fa-3x',
-                    'link'   => Route::_('index.php?option=com_proclaim&task=cwmadmin.edit&id=1'),
+                    'link'   => Route::_('index.php?option=com_proclaim&view=cwmadmin'),
                     'name'   => 'JBS_CMN_ADMINISTRATION',
                     'access' => ['core.manage', 'com_proclaim', 'core.create', 'com_proclaim'],
                     'group'  => 'MOD_PROCLAIMICON_SITE',

@@ -639,6 +639,12 @@ class CwmadminModel extends AdminModel
         $app->setUserState('com_proclaim.message', '');
         $app->setUserState('com_proclaim.extension_message', '');
         parent::populateState();
+
+        // Singleton settings page — always use id=1.
+        // Use $this->state directly to avoid getState() re-triggering populateState().
+        if (!$this->state->get($this->getName() . '.id')) {
+            $this->setState($this->getName() . '.id', 1);
+        }
     }
 
     /**
