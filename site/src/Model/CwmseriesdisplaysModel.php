@@ -80,8 +80,6 @@ class CwmseriesdisplaysModel extends ListModel
             ];
         }
 
-        $this->input = Factory::getApplication();
-
         parent::__construct($config);
     }
 
