@@ -41,16 +41,16 @@ class CwmcustomTest extends ProclaimTestCase
         $this->assertCount(5, $params);
         $this->assertEquals('rowid', $params[0]->getName());
         // No type hint in method signature for rowid
-        
+
         $this->assertEquals('custom', $params[1]->getName());
         // No type hint in method signature for custom
-        
+
         $this->assertEquals('row', $params[2]->getName());
         // No type hint in method signature for row
-        
+
         $this->assertEquals('params', $params[3]->getName());
         // No type hint in method signature for params
-        
+
         $this->assertEquals('template', $params[4]->getName());
         // No type hint in method signature for template
     }

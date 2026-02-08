@@ -41,11 +41,11 @@ class CwmrouteHelperTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('id', $params[0]->getName());
         $this->assertParamTypeName('int', $params[0]);
-        
+
         $this->assertEquals('language', $params[1]->getName());
         // Type is int|string, which reflection might show differently
         $this->assertTrue($params[1]->isOptional());
-        
+
         $this->assertEquals('layout', $params[2]->getName());
         $this->assertParamTypeName('string', $params[2]);
         $this->assertTrue($params[2]->allowsNull());
@@ -70,11 +70,11 @@ class CwmrouteHelperTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('seriesid', $params[0]->getName());
         $this->assertParamTypeName('int', $params[0]);
-        
+
         $this->assertEquals('language', $params[1]->getName());
         // Type is int|string, which reflection might show differently
         $this->assertTrue($params[1]->isOptional());
-        
+
         $this->assertEquals('layout', $params[2]->getName());
         $this->assertParamTypeName('string', $params[2]);
         $this->assertTrue($params[2]->allowsNull());
@@ -99,11 +99,11 @@ class CwmrouteHelperTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('seriesid', $params[0]->getName());
         $this->assertParamTypeName('int', $params[0]);
-        
+
         $this->assertEquals('language', $params[1]->getName());
         // Type is int|string, which reflection might show differently
         $this->assertTrue($params[1]->isOptional());
-        
+
         $this->assertEquals('layout', $params[2]->getName());
         $this->assertParamTypeName('string', $params[2]);
         $this->assertTrue($params[2]->allowsNull());
@@ -128,11 +128,11 @@ class CwmrouteHelperTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('id', $params[0]->getName());
         $this->assertParamTypeName('int', $params[0]);
-        
+
         $this->assertEquals('language', $params[1]->getName());
         // Type is int|string, which reflection might show differently
         $this->assertTrue($params[1]->isOptional());
-        
+
         $this->assertEquals('layout', $params[2]->getName());
         $this->assertParamTypeName('string', $params[2]);
         $this->assertTrue($params[2]->allowsNull());

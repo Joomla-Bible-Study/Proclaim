@@ -13,7 +13,6 @@ namespace CWM\Component\Proclaim\Tests\Site\Helper;
 
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use Joomla\Registry\Registry;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
@@ -54,10 +53,10 @@ class CwmpagebuilderTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('item', $params[0]->getName());
         // No type hint in method signature for item
-        
+
         $this->assertEquals('params', $params[1]->getName());
         // No type hint in method signature for params
-        
+
         $this->assertEquals('template', $params[2]->getName());
         // No type hint in method signature for template
     }
@@ -81,21 +80,21 @@ class CwmpagebuilderTest extends ProclaimTestCase
         $this->assertEquals('whereitem', $params[0]->getName());
         $this->assertTrue($params[0]->allowsNull());
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('wherefield', $params[1]->getName());
         $this->assertTrue($params[1]->allowsNull());
         $this->assertTrue($params[1]->isOptional());
-        
+
         $this->assertEquals('params', $params[2]->getName());
         $this->assertTrue($params[2]->allowsNull());
         $this->assertTrue($params[2]->isOptional());
-        
+
         $this->assertEquals('limit', $params[3]->getName());
         $this->assertTrue($params[3]->isOptional());
-        
+
         $this->assertEquals('order', $params[4]->getName());
         $this->assertTrue($params[4]->isOptional());
-        
+
         $this->assertEquals('template', $params[5]->getName());
         $this->assertTrue($params[5]->allowsNull());
         $this->assertTrue($params[5]->isOptional());
@@ -119,7 +118,7 @@ class CwmpagebuilderTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('item', $params[0]->getName());
         $this->assertParamTypeName('object', $params[0]);
-        
+
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('object', $params[1]);
     }

@@ -106,7 +106,7 @@ class LayoutEditorFieldTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('elementDefs', $params[0]->getName());
         $this->assertParamTypeName('array', $params[0]);
-        
+
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('array', $params[1]);
     }

@@ -13,7 +13,6 @@ namespace CWM\Component\Proclaim\Tests\Site\Helper;
 
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use Joomla\Registry\Registry;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
@@ -35,11 +34,11 @@ class CwmmediaTest extends ProclaimTestCase
         // Mock Uri::root() if needed, but for now we rely on default behavior or mock it if possible
         // Since we can't easily mock static methods of Joomla classes without runkit/uopz,
         // we'll test logic that doesn't depend heavily on Uri::root() or assume a default.
-        
+
         // Test absolute URLs
         $this->assertTrue(Cwmmedia::isExternal('http://google.com/image.jpg'));
         $this->assertTrue(Cwmmedia::isExternal('https://example.com/file.mp3'));
-        
+
         // Test relative URLs (should be false)
         $this->assertFalse(Cwmmedia::isExternal('images/local.jpg'));
         $this->assertFalse(Cwmmedia::isExternal('/images/local.jpg'));
@@ -64,10 +63,10 @@ class CwmmediaTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('media', $params[0]->getName());
         $this->assertParamTypeName('object', $params[0]);
-        
+
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
-        
+
         $this->assertEquals('template', $params[2]->getName());
         // No type hint in method signature for template
     }
@@ -91,10 +90,10 @@ class CwmmediaTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('imageparams', $params[0]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[0]);
-        
+
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
-        
+
         $this->assertEquals('media', $params[2]->getName());
         $this->assertParamTypeName('object', $params[2]);
     }
@@ -117,7 +116,7 @@ class CwmmediaTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('path', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
-        
+
         $this->assertEquals('alt', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
     }
@@ -140,7 +139,7 @@ class CwmmediaTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('params', $params[0]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[0]);
-        
+
         $this->assertEquals('media', $params[1]->getName());
         $this->assertParamTypeName('object', $params[1]);
     }
@@ -163,13 +162,13 @@ class CwmmediaTest extends ProclaimTestCase
         $this->assertCount(4, $params);
         $this->assertEquals('params', $params[0]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[0]);
-        
+
         $this->assertEquals('player', $params[1]->getName());
         $this->assertParamTypeName('object', $params[1]);
-        
+
         $this->assertEquals('image', $params[2]->getName());
         $this->assertParamTypeName('string', $params[2]);
-        
+
         $this->assertEquals('media', $params[3]->getName());
         $this->assertParamTypeName('object', $params[3]);
     }
@@ -192,7 +191,7 @@ class CwmmediaTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('media', $params[0]->getName());
         $this->assertParamTypeName('object', $params[0]);
-        
+
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
     }
@@ -215,10 +214,10 @@ class CwmmediaTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('file_size', $params[0]->getName());
         $this->assertParamTypeName('int', $params[0]);
-        
+
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
-        
+
         $this->assertEquals('media', $params[2]->getName());
         $this->assertParamTypeName('object', $params[2]);
     }
@@ -241,19 +240,19 @@ class CwmmediaTest extends ProclaimTestCase
         $this->assertCount(6, $params);
         $this->assertEquals('media', $params[0]->getName());
         $this->assertParamTypeName('object', $params[0]);
-        
+
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
-        
+
         $this->assertEquals('player', $params[2]->getName());
         $this->assertParamTypeName('object', $params[2]);
-        
+
         $this->assertEquals('image', $params[3]->getName());
         $this->assertParamTypeName('string', $params[3]);
-        
+
         $this->assertEquals('path', $params[4]->getName());
         $this->assertParamTypeName('string', $params[4]);
-        
+
         $this->assertEquals('direct', $params[5]->getName());
         $this->assertParamTypeName('bool', $params[5]);
         $this->assertTrue($params[5]->isOptional());
@@ -297,7 +296,7 @@ class CwmmediaTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('mediacode', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
-        
+
         $this->assertEquals('media', $params[1]->getName());
         $this->assertParamTypeName('object', $params[1]);
     }
@@ -320,7 +319,7 @@ class CwmmediaTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('media', $params[0]->getName());
         $this->assertParamTypeName('object', $params[0]);
-        
+
         $this->assertEquals('image', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
     }
@@ -343,7 +342,7 @@ class CwmmediaTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('media', $params[0]->getName());
         $this->assertParamTypeName('object', $params[0]);
-        
+
         $this->assertEquals('image', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
     }
@@ -366,7 +365,7 @@ class CwmmediaTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('media', $params[0]->getName());
         $this->assertParamTypeName('object', $params[0]);
-        
+
         $this->assertEquals('image', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
     }
@@ -389,10 +388,10 @@ class CwmmediaTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('media', $params[0]->getName());
         $this->assertParamTypeName('object', $params[0]);
-        
+
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
-        
+
         $this->assertEquals('template', $params[2]->getName());
         // No type hint in method signature for template
     }
@@ -451,7 +450,7 @@ class CwmmediaTest extends ProclaimTestCase
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
         // Return type is object|bool, which reflection might show differently
-        
+
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
         $this->assertEquals('id', $params[0]->getName());
@@ -546,10 +545,10 @@ class CwmmediaTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('text', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
-        
+
         $this->assertEquals('media', $params[1]->getName());
         $this->assertParamTypeName('object', $params[1]);
-        
+
         $this->assertEquals('params', $params[2]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[2]);
     }
@@ -572,7 +571,7 @@ class CwmmediaTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('media', $params[0]->getName());
         $this->assertParamTypeName('object', $params[0]);
-        
+
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
     }
@@ -595,7 +594,7 @@ class CwmmediaTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('media', $params[0]->getName());
         $this->assertParamTypeName('object', $params[0]);
-        
+
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
     }

@@ -323,8 +323,8 @@ class CwmsermonModel extends FormModel
             return [];
         }
 
-        $db    = $this->getDatabase();
-        $query = $db->getQuery(true);
+        $db        = $this->getDatabase();
+        $query     = $db->getQuery(true);
         $published = 1;
         $query->select($db->quoteName('c') . '.*')
             ->from($db->quoteName('#__bsms_comments', 'c'))

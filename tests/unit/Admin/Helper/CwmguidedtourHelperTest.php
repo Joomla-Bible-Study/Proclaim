@@ -189,12 +189,12 @@ class CwmguidedtourHelperTest extends ProclaimTestCase
         $this->assertNotNull($returnType);
         // In PHP 7.4+ it might be 'self' or the class name depending on how it's defined
         // The method defines it as 'self'
-        
+
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('key', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
-        
+
         $this->assertEquals('tour', $params[1]->getName());
         $this->assertParamTypeName('array', $params[1]);
     }
@@ -211,12 +211,12 @@ class CwmguidedtourHelperTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        
+
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('key', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
-        
+
         $this->assertEquals('message', $params[1]->getName());
         $this->assertParamTypeName('array', $params[1]);
     }

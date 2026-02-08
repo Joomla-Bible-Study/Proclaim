@@ -36,13 +36,13 @@ class CwmarchiveModelTest extends ProclaimTestCase
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
         // Return type is bool|CurrentUserInterface|Form, which reflection might show differently
-        
+
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('data', $params[0]->getName());
         $this->assertParamTypeName('array', $params[0]);
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('loadData', $params[1]->getName());
         $this->assertParamTypeName('bool', $params[1]);
         $this->assertTrue($params[1]->isOptional());

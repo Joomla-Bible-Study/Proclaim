@@ -20,7 +20,6 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Version;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Uri\Uri;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
@@ -88,7 +87,7 @@ class Cwmbackup
         $versionHelper = new Version();
         $version       = $versionHelper->getShortVersion();
 
-        return sprintf('proclaim-backup_%s_%s_v%s.sql', $siteName, $date, $version);
+        return \sprintf('proclaim-backup_%s_%s_v%s.sql', $siteName, $date, $version);
     }
 
     /**

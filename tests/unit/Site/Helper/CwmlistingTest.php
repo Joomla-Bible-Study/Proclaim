@@ -13,7 +13,6 @@ namespace CWM\Component\Proclaim\Tests\Site\Helper;
 
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use Joomla\Registry\Registry;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
@@ -42,13 +41,13 @@ class CwmlistingTest extends ProclaimTestCase
         $this->assertCount(4, $params);
         $this->assertEquals('items', $params[0]->getName());
         // No type hint in method signature for items
-        
+
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
-        
+
         $this->assertEquals('template', $params[2]->getName());
         $this->assertParamTypeName('stdClass', $params[2]);
-        
+
         $this->assertEquals('type', $params[3]->getName());
         $this->assertParamTypeName('string', $params[3]);
     }
@@ -131,10 +130,10 @@ class CwmlistingTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('array', $params[0]->getName());
         $this->assertParamTypeName('array', $params[0]);
-        
+
         $this->assertEquals('property', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
-        
+
         $this->assertEquals('order', $params[2]->getName());
         $this->assertParamTypeName('string', $params[2]);
         $this->assertTrue($params[2]->isOptional());
@@ -158,22 +157,22 @@ class CwmlistingTest extends ProclaimTestCase
         $this->assertCount(7, $params);
         $this->assertEquals('listrows', $params[0]->getName());
         $this->assertParamTypeName('array', $params[0]);
-        
+
         $this->assertEquals('listsorts', $params[1]->getName());
         $this->assertParamTypeName('array', $params[1]);
-        
+
         $this->assertEquals('item', $params[2]->getName());
         $this->assertParamTypeName('object', $params[2]);
-        
+
         $this->assertEquals('params', $params[3]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[3]);
-        
+
         $this->assertEquals('template', $params[4]->getName());
         // No type hint in method signature for template
-        
+
         $this->assertEquals('header', $params[5]->getName());
         $this->assertParamTypeName('int', $params[5]);
-        
+
         $this->assertEquals('type', $params[6]->getName());
         $this->assertParamTypeName('string', $params[6]);
     }
@@ -191,32 +190,32 @@ class CwmlistingTest extends ProclaimTestCase
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
         // Return type is bool|string, which reflection might show differently
-        
+
         $params = $reflection->getParameters();
         $this->assertCount(6, $params);
         $this->assertEquals('path', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
-        
+
         $this->assertEquals('alt', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->allowsNull());
         $this->assertTrue($params[1]->isOptional());
-        
+
         $this->assertEquals('id', $params[2]->getName());
         $this->assertParamTypeName('string', $params[2]);
         $this->assertTrue($params[2]->allowsNull());
         $this->assertTrue($params[2]->isOptional());
-        
+
         $this->assertEquals('width', $params[3]->getName());
         $this->assertParamTypeName('string', $params[3]);
         $this->assertTrue($params[3]->allowsNull());
         $this->assertTrue($params[3]->isOptional());
-        
+
         $this->assertEquals('height', $params[4]->getName());
         $this->assertParamTypeName('string', $params[4]);
         $this->assertTrue($params[4]->allowsNull());
         $this->assertTrue($params[4]->isOptional());
-        
+
         $this->assertEquals('class', $params[5]->getName());
         $this->assertParamTypeName('string', $params[5]);
         $this->assertTrue($params[5]->allowsNull());
@@ -241,19 +240,19 @@ class CwmlistingTest extends ProclaimTestCase
         $this->assertCount(6, $params);
         $this->assertEquals('item', $params[0]->getName());
         $this->assertParamTypeName('object', $params[0]);
-        
+
         $this->assertEquals('row', $params[1]->getName());
         $this->assertParamTypeName('object', $params[1]);
-        
+
         $this->assertEquals('params', $params[2]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[2]);
-        
+
         $this->assertEquals('template', $params[3]->getName());
         $this->assertParamTypeName('stdClass', $params[3]);
-        
+
         $this->assertEquals('header', $params[4]->getName());
         $this->assertParamTypeName('int', $params[4]);
-        
+
         $this->assertEquals('type', $params[5]->getName());
         $this->assertParamTypeName('string', $params[5]);
     }
@@ -276,16 +275,16 @@ class CwmlistingTest extends ProclaimTestCase
         $this->assertCount(5, $params);
         $this->assertEquals('custom', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
-        
+
         $this->assertEquals('item', $params[1]->getName());
         $this->assertParamTypeName('object', $params[1]);
-        
+
         $this->assertEquals('params', $params[2]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[2]);
-        
+
         $this->assertEquals('template', $params[3]->getName());
         // No type hint in method signature for template
-        
+
         $this->assertEquals('type', $params[4]->getName());
         $this->assertParamTypeName('string', $params[4]);
     }
@@ -303,21 +302,21 @@ class CwmlistingTest extends ProclaimTestCase
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
         // Return type is mixed, which reflection might show differently
-        
+
         $params = $reflection->getParameters();
         $this->assertCount(5, $params);
         $this->assertEquals('custom', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
-        
+
         $this->assertEquals('row', $params[1]->getName());
         $this->assertParamTypeName('object', $params[1]);
-        
+
         $this->assertEquals('params', $params[2]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[2]);
-        
+
         $this->assertEquals('template', $params[3]->getName());
         $this->assertParamTypeName('stdClass', $params[3]);
-        
+
         $this->assertEquals('type', $params[4]->getName());
         $this->assertParamTypeName('string', $params[4]);
     }
@@ -340,16 +339,16 @@ class CwmlistingTest extends ProclaimTestCase
         $this->assertCount(5, $params);
         $this->assertEquals('params', $params[0]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[0]);
-        
+
         $this->assertEquals('row', $params[1]->getName());
         $this->assertParamTypeName('object', $params[1]);
-        
+
         $this->assertEquals('esv', $params[2]->getName());
         $this->assertParamTypeName('int', $params[2]);
-        
+
         $this->assertEquals('scripturerow', $params[3]->getName());
         $this->assertParamTypeName('int', $params[3]);
-        
+
         $this->assertEquals('elementConfig', $params[4]->getName());
         $this->assertParamTypeName('object', $params[4]);
         $this->assertTrue($params[4]->allowsNull());
@@ -374,10 +373,10 @@ class CwmlistingTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('item', $params[0]->getName());
         $this->assertParamTypeName('object', $params[0]);
-        
+
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
-        
+
         $this->assertEquals('template', $params[2]->getName());
         $this->assertParamTypeName('stdClass', $params[2]);
     }
@@ -400,10 +399,10 @@ class CwmlistingTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('params', $params[0]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[0]);
-        
+
         $this->assertEquals('studydate', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
-        
+
         $this->assertEquals('row', $params[2]->getName());
         $this->assertParamTypeName('object', $params[2]);
         $this->assertTrue($params[2]->allowsNull());
@@ -448,10 +447,10 @@ class CwmlistingTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('id3', $params[0]->getName());
         // No type hint in method signature for id3
-        
+
         $this->assertEquals('islink', $params[1]->getName());
         // No type hint in method signature for islink
-        
+
         $this->assertEquals('params', $params[2]->getName());
         // No type hint in method signature for params
     }
@@ -474,10 +473,10 @@ class CwmlistingTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('row', $params[0]->getName());
         // No type hint in method signature for row
-        
+
         $this->assertEquals('params', $params[1]->getName());
         // No type hint in method signature for params
-        
+
         $this->assertEquals('template', $params[2]->getName());
         // No type hint in method signature for template
     }
@@ -500,7 +499,7 @@ class CwmlistingTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('params', $params[0]->getName());
         // No type hint in method signature for params
-        
+
         $this->assertEquals('row', $params[1]->getName());
         // No type hint in method signature for row
     }
@@ -524,10 +523,10 @@ class CwmlistingTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('link', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
-        
+
         $this->assertEquals('row', $params[1]->getName());
         $this->assertParamTypeName('object', $params[1]);
-        
+
         $this->assertEquals('params', $params[2]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[2]);
     }
@@ -550,7 +549,7 @@ class CwmlistingTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('item', $params[0]->getName());
         $this->assertParamTypeName('object', $params[0]);
-        
+
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('object', $params[1]);
     }

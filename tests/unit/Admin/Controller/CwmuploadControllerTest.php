@@ -56,12 +56,12 @@ class CwmuploadControllerTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('code', $params[0]->getName());
         $this->assertParamTypeName('int', $params[0]);
-        
+
         $this->assertEquals('msg', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->allowsNull());
         $this->assertTrue($params[1]->isOptional());
-        
+
         $this->assertEquals('error', $params[2]->getName());
         $this->assertParamTypeName('bool', $params[2]);
         $this->assertTrue($params[2]->allowsNull());

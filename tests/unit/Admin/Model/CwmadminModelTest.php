@@ -14,8 +14,6 @@ namespace CWM\Component\Proclaim\Tests\Admin\Model;
 use CWM\Component\Proclaim\Administrator\Model\CwmadminModel;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use Joomla\CMS\Schema\ChangeSet;
-use Joomla\CMS\Table\Table;
-use Joomla\Registry\Registry;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
@@ -45,7 +43,7 @@ class CwmadminModelTest extends ProclaimTestCase
         $this->assertEquals('data', $params[0]->getName());
         $this->assertParamTypeName('array', $params[0]);
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('loadData', $params[1]->getName());
         $this->assertParamTypeName('bool', $params[1]);
         $this->assertTrue($params[1]->isOptional());
@@ -70,11 +68,11 @@ class CwmadminModelTest extends ProclaimTestCase
         $this->assertEquals('name', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('prefix', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->isOptional());
-        
+
         $this->assertEquals('options', $params[2]->getName());
         $this->assertParamTypeName('array', $params[2]);
         $this->assertTrue($params[2]->isOptional());
@@ -113,7 +111,7 @@ class CwmadminModelTest extends ProclaimTestCase
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
         // Return type is bool|int|null, which reflection might show differently
-        
+
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
         $this->assertEquals('pk', $params[0]->getName());

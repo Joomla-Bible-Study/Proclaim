@@ -13,9 +13,6 @@ namespace CWM\Component\Proclaim\Tests\Site\Controller;
 
 use CWM\Component\Proclaim\Site\Controller\DisplayController;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use Joomla\CMS\Application\CMSApplication;
-use Joomla\CMS\Input\Input;
-use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
@@ -51,13 +48,13 @@ class DisplayControllerTest extends ProclaimTestCase
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
         // Return type is DisplayController, which reflection might show differently
-        
+
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('cachable', $params[0]->getName());
         $this->assertParamTypeName('bool', $params[0]);
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('urlparams', $params[1]->getName());
         $this->assertParamTypeName('array', $params[1]);
         $this->assertTrue($params[1]->isOptional());

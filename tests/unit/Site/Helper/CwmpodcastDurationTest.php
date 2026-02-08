@@ -37,8 +37,8 @@ class CwmpodcastDurationTest extends ProclaimTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->podcast = new Cwmpodcast();
-        $this->fixturesPath = dirname(__DIR__, 3) . '/fixtures/media/';
+        $this->podcast      = new Cwmpodcast();
+        $this->fixturesPath = \dirname(__DIR__, 3) . '/fixtures/media/';
 
         // Create fixtures directory if it doesn't exist
         if (!is_dir($this->fixturesPath)) {
@@ -106,13 +106,13 @@ class CwmpodcastDurationTest extends ProclaimTestCase
     public static function formatTimeProvider(): array
     {
         return [
-            'zero seconds' => [0, 0, 0, 0],
-            'one second' => [1, 0, 0, 1],
-            'one minute' => [60, 0, 1, 0],
-            'one hour' => [3600, 1, 0, 0],
-            'mixed time' => [3661, 1, 1, 1],
+            'zero seconds'    => [0, 0, 0, 0],
+            'one second'      => [1, 0, 0, 1],
+            'one minute'      => [60, 0, 1, 0],
+            'one hour'        => [3600, 1, 0, 0],
+            'mixed time'      => [3661, 1, 1, 1],
             'typical podcast' => [1845, 0, 30, 45],
-            'long podcast' => [7384, 2, 3, 4],
+            'long podcast'    => [7384, 2, 3, 4],
         ];
     }
 
@@ -166,7 +166,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
 
         // Use reflection to test protected method directly
         $reflection = new \ReflectionClass($this->podcast);
-        $method = $reflection->getMethod('getWavDuration');
+        $method     = $reflection->getMethod('getWavDuration');
         $method->setAccessible(true);
 
         $result = $method->invoke($this->podcast, $tempFile);
@@ -185,7 +185,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
 
         // Use reflection to test protected method directly
         $reflection = new \ReflectionClass($this->podcast);
-        $method = $reflection->getMethod('getM4aDuration');
+        $method     = $reflection->getMethod('getM4aDuration');
         $method->setAccessible(true);
 
         $result = $method->invoke($this->podcast, $m4aFile);
@@ -207,7 +207,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
 
         // Use reflection to test protected method directly
         $reflection = new \ReflectionClass($this->podcast);
-        $method = $reflection->getMethod('getOggDuration');
+        $method     = $reflection->getMethod('getOggDuration');
         $method->setAccessible(true);
 
         $result = $method->invoke($this->podcast, $tempFile);
@@ -236,7 +236,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
     public function testFindFFprobe(): void
     {
         $reflection = new \ReflectionClass($this->podcast);
-        $method = $reflection->getMethod('findFFprobe');
+        $method     = $reflection->getMethod('findFFprobe');
         $method->setAccessible(true);
 
         $result = $method->invoke($this->podcast);
@@ -256,7 +256,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
     public function testGetDurationWithFFprobeReturnsZeroForNonExistentFile(): void
     {
         $reflection = new \ReflectionClass($this->podcast);
-        $method = $reflection->getMethod('getDurationWithFFprobe');
+        $method     = $reflection->getMethod('getDurationWithFFprobe');
         $method->setAccessible(true);
 
         $result = $method->invoke($this->podcast, '/non/existent/file.mp3');
@@ -274,7 +274,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
         }
 
         $reflection = new \ReflectionClass($this->podcast);
-        $method = $reflection->getMethod('getDurationWithGetID3');
+        $method     = $reflection->getMethod('getDurationWithGetID3');
         $method->setAccessible(true);
 
         $tempFile = $this->fixturesPath . 'test.mp3';
@@ -294,13 +294,13 @@ class CwmpodcastDurationTest extends ProclaimTestCase
         // Create a valid ID3v2 header
         // ID3v2 header: "ID3" + version (2 bytes) + flags (1 byte) + size (4 bytes syncsafe)
         $header = "ID3";
-        $header .= chr(4) . chr(0); // Version 2.4.0
-        $header .= chr(0); // Flags
+        $header .= \chr(4) . \chr(0); // Version 2.4.0
+        $header .= \chr(0); // Flags
         // Size: 1000 bytes (syncsafe encoding)
-        $header .= chr(0) . chr(0) . chr(7) . chr(104); // 1000 in syncsafe
+        $header .= \chr(0) . \chr(0) . \chr(7) . \chr(104); // 1000 in syncsafe
 
         // Pad to 100 bytes
-        $header .= str_repeat("\0", 100 - strlen($header));
+        $header .= str_repeat("\0", 100 - \strlen($header));
 
         $result = $this->podcast->skipID3v2Tag($header);
 
@@ -336,13 +336,13 @@ class CwmpodcastDurationTest extends ProclaimTestCase
     public static function youtubeUrlProvider(): array
     {
         return [
-            'youtu.be short url' => ['youtu.be/JVkaaZxzVXg', true],
-            'youtube.com watch' => ['https://www.youtube.com/watch?v=JVkaaZxzVXg', true],
-            'youtube.com embed' => ['https://youtube.com/embed/JVkaaZxzVXg', true],
-            'youtube.com live' => ['https://www.youtube.com/live/JVkaaZxzVXg', true],
-            'm.youtube.com' => ['m.youtube.com/watch?v=JVkaaZxzVXg', true],
-            'not youtube' => ['https://vimeo.com/12345', false],
-            'local file' => ['images/media/file.mp3', false],
+            'youtu.be short url'   => ['youtu.be/JVkaaZxzVXg', true],
+            'youtube.com watch'    => ['https://www.youtube.com/watch?v=JVkaaZxzVXg', true],
+            'youtube.com embed'    => ['https://youtube.com/embed/JVkaaZxzVXg', true],
+            'youtube.com live'     => ['https://www.youtube.com/live/JVkaaZxzVXg', true],
+            'm.youtube.com'        => ['m.youtube.com/watch?v=JVkaaZxzVXg', true],
+            'not youtube'          => ['https://vimeo.com/12345', false],
+            'local file'           => ['images/media/file.mp3', false],
             'external non-youtube' => ['www.example.com/video.mp4', false],
         ];
     }
@@ -364,11 +364,11 @@ class CwmpodcastDurationTest extends ProclaimTestCase
     {
         return [
             'youtu.be short url' => ['youtu.be/JVkaaZxzVXg', 'JVkaaZxzVXg'],
-            'youtube.com watch' => ['https://www.youtube.com/watch?v=abc123_XYZ', 'abc123_XYZ'],
-            'youtube.com embed' => ['https://youtube.com/embed/test-ID_12', 'test-ID_12'],
-            'youtube.com live' => ['https://www.youtube.com/live/LiveVideo1', 'LiveVideo1'],
-            'with extra params' => ['https://www.youtube.com/watch?v=xyz789&t=120', 'xyz789'],
-            'invalid url' => ['https://example.com/video', null],
+            'youtube.com watch'  => ['https://www.youtube.com/watch?v=abc123_XYZ', 'abc123_XYZ'],
+            'youtube.com embed'  => ['https://youtube.com/embed/test-ID_12', 'test-ID_12'],
+            'youtube.com live'   => ['https://www.youtube.com/live/LiveVideo1', 'LiveVideo1'],
+            'with extra params'  => ['https://www.youtube.com/watch?v=xyz789&t=120', 'xyz789'],
+            'invalid url'        => ['https://example.com/video', null],
         ];
     }
 
@@ -389,11 +389,11 @@ class CwmpodcastDurationTest extends ProclaimTestCase
     {
         return [
             '1 hour 30 min 45 sec' => ['PT1H30M45S', 5445],
-            '45 minutes' => ['PT45M', 2700],
-            '30 seconds' => ['PT30S', 30],
-            '2 hours' => ['PT2H', 7200],
-            '1 hour 5 seconds' => ['PT1H5S', 3605],
-            '10 min 30 sec' => ['PT10M30S', 630],
+            '45 minutes'           => ['PT45M', 2700],
+            '30 seconds'           => ['PT30S', 30],
+            '2 hours'              => ['PT2H', 7200],
+            '1 hour 5 seconds'     => ['PT1H5S', 3605],
+            '10 min 30 sec'        => ['PT10M30S', 630],
         ];
     }
 
@@ -412,9 +412,9 @@ class CwmpodcastDurationTest extends ProclaimTestCase
         $filePath = $this->fixturesPath . 'test_' . uniqid() . '.wav';
 
         $bytesPerSample = $bitsPerSample / 8;
-        $byteRate = $sampleRate * $channels * $bytesPerSample;
-        $blockAlign = $channels * $bytesPerSample;
-        $dataSize = $byteRate * $durationSeconds;
+        $byteRate       = $sampleRate * $channels * $bytesPerSample;
+        $blockAlign     = $channels * $bytesPerSample;
+        $dataSize       = $byteRate * $durationSeconds;
 
         $header = '';
 
@@ -455,34 +455,34 @@ class CwmpodcastDurationTest extends ProclaimTestCase
         $filePath = $this->fixturesPath . 'test_' . uniqid() . '.m4a';
 
         $timescale = 1000; // milliseconds
-        $duration = $durationSeconds * $timescale;
+        $duration  = $durationSeconds * $timescale;
 
         // Create ftyp atom
         $ftyp = 'M4A ';  // Brand
         $ftyp .= pack('N', 0); // Minor version
         $ftyp .= 'M4A '; // Compatible brand
         $ftyp .= 'mp42'; // Compatible brand
-        $ftyp = pack('N', strlen($ftyp) + 8) . 'ftyp' . $ftyp;
+        $ftyp = pack('N', \strlen($ftyp) + 8) . 'ftyp' . $ftyp;
 
         // Create mvhd atom (movie header)
         $mvhd = '';
-        $mvhd .= chr(0); // Version
-        $mvhd .= str_repeat(chr(0), 3); // Flags
+        $mvhd .= \chr(0); // Version
+        $mvhd .= str_repeat(\chr(0), 3); // Flags
         $mvhd .= pack('N', 0); // Creation time
         $mvhd .= pack('N', 0); // Modification time
         $mvhd .= pack('N', $timescale); // Timescale
         $mvhd .= pack('N', $duration); // Duration
         $mvhd .= pack('N', 0x00010000); // Preferred rate (1.0)
         $mvhd .= pack('n', 0x0100); // Preferred volume (1.0)
-        $mvhd .= str_repeat(chr(0), 10); // Reserved
-        $mvhd .= str_repeat(chr(0), 36); // Matrix
-        $mvhd .= str_repeat(chr(0), 24); // Pre-defined
+        $mvhd .= str_repeat(\chr(0), 10); // Reserved
+        $mvhd .= str_repeat(\chr(0), 36); // Matrix
+        $mvhd .= str_repeat(\chr(0), 24); // Pre-defined
         $mvhd .= pack('N', 2); // Next track ID
 
-        $mvhd = pack('N', strlen($mvhd) + 8) . 'mvhd' . $mvhd;
+        $mvhd = pack('N', \strlen($mvhd) + 8) . 'mvhd' . $mvhd;
 
         // Create moov atom containing mvhd
-        $moov = pack('N', strlen($mvhd) + 8) . 'moov' . $mvhd;
+        $moov = pack('N', \strlen($mvhd) + 8) . 'moov' . $mvhd;
 
         // Write file
         file_put_contents($filePath, $ftyp . $moov);
@@ -495,7 +495,7 @@ class CwmpodcastDurationTest extends ProclaimTestCase
      */
     public static function tearDownAfterClass(): void
     {
-        $fixturesPath = dirname(__DIR__, 3) . '/fixtures/media/';
+        $fixturesPath = \dirname(__DIR__, 3) . '/fixtures/media/';
 
         // Remove any leftover test files
         if (is_dir($fixturesPath)) {

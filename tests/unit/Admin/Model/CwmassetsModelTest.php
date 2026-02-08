@@ -13,7 +13,6 @@ namespace CWM\Component\Proclaim\Tests\Admin\Model;
 
 use CWM\Component\Proclaim\Administrator\Model\CwmassetsModel;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**

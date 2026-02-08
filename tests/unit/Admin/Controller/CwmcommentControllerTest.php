@@ -13,7 +13,6 @@ namespace CWM\Component\Proclaim\Tests\Admin\Controller;
 
 use CWM\Component\Proclaim\Administrator\Controller\CwmcommentController;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
@@ -86,7 +85,7 @@ class CwmcommentControllerTest extends ProclaimTestCase
         $this->assertEquals('data', $params[0]->getName());
         $this->assertParamTypeName('array', $params[0]);
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('key', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->isOptional());

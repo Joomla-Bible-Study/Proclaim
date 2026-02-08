@@ -540,12 +540,12 @@ class Cwmlisting
             $l->row = $this->params->get($paramtext . 'row');
         }
 
-        $l->col         = $this->params->get($paramtext . 'col');
-        $l->colspan     = $this->params->get($paramtext . 'colspan');
-        $l->element     = $this->params->get($paramtext . 'element');
-        $l->custom      = $this->params->get($paramtext . 'custom');
-        $l->linktype    = $this->params->get($paramtext . 'linktype');
-        $l->name        = $paramtext;
+        $l->col          = $this->params->get($paramtext . 'col');
+        $l->colspan      = $this->params->get($paramtext . 'colspan');
+        $l->element      = $this->params->get($paramtext . 'element');
+        $l->custom       = $this->params->get($paramtext . 'custom');
+        $l->linktype     = $this->params->get($paramtext . 'linktype');
+        $l->name         = $paramtext;
         $l->customtext   = (string) $this->params->get($paramtext . 'text', '');
         $l->date_format  = $this->params->get($paramtext . 'date_format', '');
         $l->show_verses  = $this->params->get($paramtext . 'show_verses', '');

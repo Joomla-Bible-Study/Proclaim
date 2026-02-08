@@ -13,7 +13,6 @@ namespace CWM\Component\Proclaim\Tests\Site\Model;
 
 use CWM\Component\Proclaim\Site\Model\CwmseriespodcastlistModel;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use Joomla\Database\DatabaseQuery;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
@@ -58,7 +57,7 @@ class CwmseriespodcastlistModelTest extends ProclaimTestCase
         $this->assertEquals('ordering', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('direction', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->isOptional());

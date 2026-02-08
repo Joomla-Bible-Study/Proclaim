@@ -62,10 +62,10 @@ class HtmlViewTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('showIt', $params[0]->getName());
         // No type hint in method signature for showIt
-        
+
         $this->assertEquals('showIt_phrase', $params[1]->getName());
         // No type hint in method signature for showIt_phrase
-        
+
         $this->assertEquals('i', $params[2]->getName());
         // No type hint in method signature for i
     }

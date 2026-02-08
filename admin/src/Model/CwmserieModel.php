@@ -289,7 +289,7 @@ class CwmserieModel extends AdminModel
 
         // Check that the user has create permission for the component
         $extension = $app->input->get('option', '');
-        $user = Factory::getApplication()->getIdentity();
+        $user      = Factory::getApplication()->getIdentity();
 
         if (!$user->authorise('core.create', $extension)) {
             $app->enqueueMessage(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'), 'error');
@@ -476,7 +476,7 @@ class CwmserieModel extends AdminModel
 
         if ($table->ordering == 0) {
             $table->ordering = 1;
-            $db = Factory::getContainer()->get('DatabaseDriver');
+            $db              = Factory::getContainer()->get('DatabaseDriver');
             $table->reorder($db->qn('id') . ' = ' . (int)$table->id);
         }
     }

@@ -13,7 +13,6 @@ namespace CWM\Component\Proclaim\Tests\Admin\Controller;
 
 use CWM\Component\Proclaim\Administrator\Controller\CwmtemplateController;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
@@ -109,7 +108,7 @@ class CwmtemplateControllerTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('model', $params[0]->getName());
         $this->assertParamTypeName('Joomla\CMS\MVC\Model\BaseDatabaseModel', $params[0]);
-        
+
         $this->assertEquals('validData', $params[1]->getName());
         $this->assertParamTypeName('array', $params[1]);
         $this->assertTrue($params[1]->isOptional());

@@ -14,7 +14,6 @@ namespace CWM\Component\Proclaim\Tests\Admin\Model;
 use CWM\Component\Proclaim\Administrator\Model\CwmteacherModel;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use Joomla\CMS\Form\Form;
-use Joomla\CMS\Table\Table;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
@@ -44,7 +43,7 @@ class CwmteacherModelTest extends ProclaimTestCase
         $this->assertEquals('data', $params[0]->getName());
         $this->assertParamTypeName('array', $params[0]);
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('loadData', $params[1]->getName());
         $this->assertParamTypeName('bool', $params[1]);
         $this->assertTrue($params[1]->isOptional());
@@ -105,15 +104,15 @@ class CwmteacherModelTest extends ProclaimTestCase
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
         // Return type is bool|array, which reflection might show differently
-        
+
         $params = $reflection->getParameters();
         $this->assertCount(3, $params);
         $this->assertEquals('form', $params[0]->getName());
         // No type hint in method signature for form
-        
+
         $this->assertEquals('data', $params[1]->getName());
         $this->assertParamTypeName('array', $params[1]);
-        
+
         $this->assertEquals('group', $params[2]->getName());
         $this->assertParamTypeName('string', $params[2]);
         $this->assertTrue($params[2]->isOptional());

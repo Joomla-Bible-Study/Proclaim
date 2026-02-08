@@ -60,7 +60,7 @@ class CwmcountHelperTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('tableName', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
-        
+
         $this->assertEquals('state', $params[1]->getName());
         $this->assertParamTypeName('int', $params[1]);
         $this->assertTrue($params[1]->isOptional());
@@ -105,7 +105,7 @@ class CwmcountHelperTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('tableName', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
-        
+
         $this->assertEquals('langKey', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
     }

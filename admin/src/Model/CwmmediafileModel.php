@@ -187,11 +187,11 @@ class CwmmediafileModel extends AdminModel
         $jbspodcast = new Cwmpodcast();
 
         // Check what needs to be detected
-        $needsSize = empty($params->get('size', 0)) || (int) $params->get('size', 0) < 1000;
+        $needsSize     = empty($params->get('size', 0)) || (int) $params->get('size', 0) < 1000;
         $needsMimeType = empty($params->get('mime_type'));
-        $hours = $params->get('media_hours', '00');
-        $minutes = $params->get('media_minutes', '00');
-        $seconds = $params->get('media_seconds', '00');
+        $hours         = $params->get('media_hours', '00');
+        $minutes       = $params->get('media_minutes', '00');
+        $seconds       = $params->get('media_seconds', '00');
         $needsDuration = ($hours === '00' && $minutes === '00' && $seconds === '00');
 
         // Nothing to detect
@@ -219,9 +219,9 @@ class CwmmediafileModel extends AdminModel
 
         // Build local file path
         $path_server = Cwmhelper::mediaBuildUrl($set_path, $filename, $params, false, false, true);
-        $prefix = Uri::root();
-        $nohttp = $jbspodcast->removeHttp($prefix);
-        $siteinfo = strpos($path_server, $nohttp);
+        $prefix      = Uri::root();
+        $nohttp      = $jbspodcast->removeHttp($prefix);
+        $siteinfo    = strpos($path_server, $nohttp);
 
         if ($siteinfo !== false) {
             $localPath = JPATH_SITE . '/' . substr($path_server, \strlen($nohttp));
@@ -267,7 +267,7 @@ class CwmmediafileModel extends AdminModel
         // Get duration via YouTube API if needed
         if ($needsDuration) {
             $videoId = $jbspodcast->extractYouTubeVideoId($filename);
-            $apiKey = $jbspodcast->getYouTubeApiKey();
+            $apiKey  = $jbspodcast->getYouTubeApiKey();
 
             if ($videoId && $apiKey) {
                 $durationSeconds = $jbspodcast->getYouTubeDuration($videoId, $apiKey);
@@ -315,17 +315,17 @@ class CwmmediafileModel extends AdminModel
             if ($needsMimeType) {
                 $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
                 $mimeTypes = [
-                    'mp3' => 'audio/mpeg',
-                    'mp4' => 'video/mp4',
-                    'm4a' => 'audio/mp4',
-                    'm4v' => 'video/mp4',
-                    'ogg' => 'audio/ogg',
-                    'oga' => 'audio/ogg',
-                    'ogv' => 'video/ogg',
-                    'wav' => 'audio/wav',
+                    'mp3'  => 'audio/mpeg',
+                    'mp4'  => 'video/mp4',
+                    'm4a'  => 'audio/mp4',
+                    'm4v'  => 'video/mp4',
+                    'ogg'  => 'audio/ogg',
+                    'oga'  => 'audio/ogg',
+                    'ogv'  => 'video/ogg',
+                    'wav'  => 'audio/wav',
                     'webm' => 'video/webm',
                     'flac' => 'audio/flac',
-                    'aac' => 'audio/aac',
+                    'aac'  => 'audio/aac',
                 ];
                 if (isset($mimeTypes[$extension])) {
                     $params->set('mime_type', $mimeTypes[$extension]);
@@ -388,7 +388,7 @@ class CwmmediafileModel extends AdminModel
 
             // Try finfo
             if (!$mimeType && class_exists('finfo')) {
-                $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                $finfo    = new \finfo(FILEINFO_MIME_TYPE);
                 $mimeType = $finfo->file($localPath);
                 if ($mimeType === 'application/octet-stream') {
                     $mimeType = null;
@@ -399,18 +399,18 @@ class CwmmediafileModel extends AdminModel
             if (!$mimeType) {
                 $extension = strtolower(pathinfo($localPath, PATHINFO_EXTENSION));
                 $mimeTypes = [
-                    'mp3' => 'audio/mpeg',
-                    'mp4' => 'video/mp4',
-                    'm4a' => 'audio/mp4',
-                    'm4v' => 'video/mp4',
-                    'ogg' => 'audio/ogg',
-                    'oga' => 'audio/ogg',
-                    'ogv' => 'video/ogg',
-                    'wav' => 'audio/wav',
+                    'mp3'  => 'audio/mpeg',
+                    'mp4'  => 'video/mp4',
+                    'm4a'  => 'audio/mp4',
+                    'm4v'  => 'video/mp4',
+                    'ogg'  => 'audio/ogg',
+                    'oga'  => 'audio/ogg',
+                    'ogv'  => 'video/ogg',
+                    'wav'  => 'audio/wav',
                     'webm' => 'video/webm',
                     'flac' => 'audio/flac',
-                    'aac' => 'audio/aac',
-                    'pdf' => 'application/pdf',
+                    'aac'  => 'audio/aac',
+                    'pdf'  => 'application/pdf',
                 ];
                 $mimeType = $mimeTypes[$extension] ?? null;
             }

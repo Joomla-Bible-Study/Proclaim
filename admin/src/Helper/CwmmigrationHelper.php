@@ -35,7 +35,7 @@ class CwmmigrationHelper
      */
     public static function fixMenus(): bool
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db           = Factory::getContainer()->get('DatabaseDriver');
         $replacements = [
             'teacherlist'    => 'cwmteachers',
             'teacherdisplay' => 'cwmteacher',
@@ -169,7 +169,7 @@ class CwmmigrationHelper
      */
     public static function fixImport(): void
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db     = Factory::getContainer()->get('DatabaseDriver');
         $tables = CwmdbHelper::getObjects();
 
         foreach ($tables as $table) {
@@ -255,7 +255,7 @@ class CwmmigrationHelper
             ->from($db->qn('#__extensions'))
             ->where($db->qn('name') . ' = ' . $db->q('com_proclaim'));
         $db->setQuery($query);
-        $biblestudyEid         = $db->loadResult();
+        $biblestudyEid               = $db->loadResult();
         $message->extension_id       = $biblestudyEid;
         $message->language_extension = 'com_proclaim';
         $message->language_client_id = 1;
@@ -278,7 +278,7 @@ class CwmmigrationHelper
      */
     public static function migrateDeprecatedPlayers(): int
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db           = Factory::getContainer()->get('DatabaseDriver');
         $totalUpdated = 0;
 
         // Deprecated player values to migrate to HTML5 Player (1)

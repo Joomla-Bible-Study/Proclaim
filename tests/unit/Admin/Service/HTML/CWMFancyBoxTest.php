@@ -61,7 +61,7 @@ class CWMFancyBoxTest extends ProclaimTestCase
         $this->assertEquals('option', $params[0]->getName());
         $this->assertParamTypeName('bool', $params[0]);
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('mouseweel', $params[1]->getName());
         $this->assertParamTypeName('bool', $params[1]);
         $this->assertTrue($params[1]->isOptional());

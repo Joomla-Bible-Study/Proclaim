@@ -21,7 +21,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\QueryInterface;
 
-
 /**
  * Topics model class
  *

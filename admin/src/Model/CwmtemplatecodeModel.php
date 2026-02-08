@@ -24,7 +24,6 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 
-
 /**
  * HelloWorld Model
  *

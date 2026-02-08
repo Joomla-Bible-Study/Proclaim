@@ -32,7 +32,7 @@ class CwmstudytopicsTableTest extends ProclaimTestCase
      */
     public function testConstructor(): void
     {
-        $db = $this->createMock(DatabaseDriver::class);
+        $db    = $this->createMock(DatabaseDriver::class);
         $table = new CwmstudytopicsTable($db);
         $this->assertInstanceOf(CwmstudytopicsTable::class, $table);
     }
@@ -108,7 +108,7 @@ class CwmstudytopicsTableTest extends ProclaimTestCase
         $this->assertParamTypeName('Joomla\CMS\Table\Table', $params[0]);
         $this->assertTrue($params[0]->allowsNull());
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('id', $params[1]->getName());
         // No type hint in method signature for id
         $this->assertTrue($params[1]->isOptional());

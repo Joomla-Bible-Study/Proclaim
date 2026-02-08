@@ -88,8 +88,8 @@ class VersionTest extends ProclaimTestCase
     public function testIsCompatible(): void
     {
         // Define JVERSION if not already defined (for testing environment)
-        if (!defined('JVERSION')) {
-            define('JVERSION', '4.0.0');
+        if (!\defined('JVERSION')) {
+            \define('JVERSION', '4.0.0');
         }
 
         $version = new Version();
@@ -105,9 +105,9 @@ class VersionTest extends ProclaimTestCase
      */
     public function testGetHelpVersion(): void
     {
-        $version = new Version();
+        $version     = new Version();
         $helpVersion = $version->getHelpVersion();
-        
+
         $this->assertIsString($helpVersion);
         $this->assertStringStartsWith('.', $helpVersion);
         $this->assertStringContainsString((string)Version::MAJOR_VERSION, $helpVersion);
@@ -121,12 +121,12 @@ class VersionTest extends ProclaimTestCase
      */
     public function testGetShortVersion(): void
     {
-        $version = new Version();
+        $version      = new Version();
         $shortVersion = $version->getShortVersion();
-        
+
         $this->assertIsString($shortVersion);
         $this->assertStringContainsString('.', $shortVersion);
-        
+
         $expectedStart = Version::MAJOR_VERSION . '.' . Version::MINOR_VERSION . '.' . Version::PATCH_VERSION;
         $this->assertStringStartsWith($expectedStart, $shortVersion);
     }
@@ -139,9 +139,9 @@ class VersionTest extends ProclaimTestCase
      */
     public function testGetLongVersion(): void
     {
-        $version = new Version();
+        $version     = new Version();
         $longVersion = $version->getLongVersion();
-        
+
         $this->assertIsString($longVersion);
         $this->assertStringContainsString(Version::PRODUCT, $longVersion);
         $this->assertStringContainsString(Version::CODENAME, $longVersion);
@@ -157,16 +157,16 @@ class VersionTest extends ProclaimTestCase
     public function testGetUserAgent(): void
     {
         $version = new Version();
-        
+
         // Test default
         $ua = $version->getUserAgent();
         $this->assertStringContainsString(Version::PRODUCT, $ua);
         $this->assertStringContainsString('Framework', $ua);
-        
+
         // Test with suffix
         $ua = $version->getUserAgent('TestSuffix');
         $this->assertStringContainsString('TestSuffix', $ua);
-        
+
         // Test with mask
         $ua = $version->getUserAgent('', true);
         $this->assertStringStartsWith('Mozilla/5.0', $ua);

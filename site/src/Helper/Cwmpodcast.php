@@ -18,7 +18,6 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Client\ClientHelper;
 use Joomla\CMS\Factory;
@@ -142,7 +141,7 @@ class Cwmpodcast
 
             // Cache sanitized description to avoid processing twice
             $sanitizedDescription = $this->sanitizeHtmlForPodcast($podinfo->description);
-            $escapedTitle = $this->escapeHTML($podinfo->title);
+            $escapedTitle         = $this->escapeHTML($podinfo->title);
 
             $podhead = '<?xml version="1.0" encoding="utf-8"?>
 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/"
@@ -510,7 +509,7 @@ class Cwmpodcast
 
         // Allow only podcast-safe HTML tags
         $allowedTags = '<a><p><ul><ol><li><b><i><strong><em><br>';
-        $string = strip_tags($string, $allowedTags);
+        $string      = strip_tags($string, $allowedTags);
 
         // Clean anchor tags - keep only href attribute
         $string = preg_replace_callback(
@@ -539,7 +538,7 @@ class Cwmpodcast
             $string = mb_substr($string, 0, $maxLength, 'UTF-8');
 
             // If we're inside a tag, back up to before it
-            $lastOpenBracket = strrpos($string, '<');
+            $lastOpenBracket  = strrpos($string, '<');
             $lastCloseBracket = strrpos($string, '>');
             if ($lastOpenBracket !== false && ($lastCloseBracket === false || $lastOpenBracket > $lastCloseBracket)) {
                 $string = substr($string, 0, $lastOpenBracket);
@@ -582,7 +581,7 @@ class Cwmpodcast
             $tag = strtolower($match[1]);
 
             // Skip void elements
-            if (in_array($tag, $voidElements, true)) {
+            if (\in_array($tag, $voidElements, true)) {
                 continue;
             }
 
@@ -654,7 +653,7 @@ class Cwmpodcast
     public function validateAllPodcasts(): array
     {
         $results = [];
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get('DatabaseDriver');
 
         // Get all published podcasts
         $query = $db->getQuery(true);
@@ -683,9 +682,9 @@ class Cwmpodcast
      */
     public function validatePodcast(object $podcast): array
     {
-        $errors = [];
+        $errors   = [];
         $warnings = [];
-        $info = [];
+        $info     = [];
 
         // Required fields
         if (empty($podcast->title)) {
@@ -730,7 +729,7 @@ class Cwmpodcast
         }
 
         // Check for associated media files
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_mediafiles'))
@@ -746,12 +745,12 @@ class Cwmpodcast
 
             // Validate media files
             $mediaValidation = $this->validatePodcastMedia((int) $podcast->id);
-            $warnings = array_merge($warnings, $mediaValidation['warnings']);
+            $warnings        = array_merge($warnings, $mediaValidation['warnings']);
         }
 
         // Check if XML file exists
-        $input = Factory::getApplication()->getInput();
-        $client = ApplicationHelper::getClientInfo($input->get('client', '0', 'int'));
+        $input    = Factory::getApplication()->getInput();
+        $client   = ApplicationHelper::getClientInfo($input->get('client', '0', 'int'));
         $filePath = $client->path . '/' . $podcast->filename;
 
         if (is_file($filePath)) {
@@ -767,14 +766,14 @@ class Cwmpodcast
         }
 
         return [
-            'podcast_id' => $podcast->id,
+            'podcast_id'    => $podcast->id,
             'podcast_title' => $podcast->title,
-            'valid' => empty($errors),
-            'ready' => empty($errors) && $mediaCount > 0,
-            'errors' => $errors,
-            'warnings' => $warnings,
-            'info' => $info,
-            'media_count' => $mediaCount,
+            'valid'         => empty($errors),
+            'ready'         => empty($errors) && $mediaCount > 0,
+            'errors'        => $errors,
+            'warnings'      => $warnings,
+            'info'          => $info,
+            'media_count'   => $mediaCount,
         ];
     }
 
@@ -791,7 +790,7 @@ class Cwmpodcast
      */
     protected function validatePodcastImage(string $imagePath): array
     {
-        $errors = [];
+        $errors   = [];
         $warnings = [];
 
         // Build full path
@@ -830,9 +829,9 @@ class Cwmpodcast
         }
 
         return [
-            'valid' => empty($errors),
-            'errors' => $errors,
-            'warnings' => $warnings,
+            'valid'      => empty($errors),
+            'errors'     => $errors,
+            'warnings'   => $warnings,
             'dimensions' => ['width' => $width, 'height' => $height],
         ];
     }
@@ -849,7 +848,7 @@ class Cwmpodcast
     protected function validatePodcastMedia(int $podcastId): array
     {
         $warnings = [];
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db       = Factory::getContainer()->get('DatabaseDriver');
 
         $query = $db->getQuery(true);
         $query->select($db->quoteName(['mf.id', 'mf.params', 's.studytitle', 's.studyintro']))
@@ -861,8 +860,8 @@ class Cwmpodcast
         $mediaFiles = $db->loadObjectList() ?: [];
 
         foreach ($mediaFiles as $media) {
-            $params = new Registry($media->params);
-            $filename = $params->get('filename');
+            $params    = new Registry($media->params);
+            $filename  = $params->get('filename');
             $isYouTube = $filename && $this->isYouTubeUrl($filename);
 
             // Check for missing file size (skip for YouTube - no file size available)
@@ -880,7 +879,7 @@ class Cwmpodcast
             }
 
             // Check for missing duration
-            $hours = $params->get('media_hours', '00');
+            $hours   = $params->get('media_hours', '00');
             $minutes = $params->get('media_minutes', '00');
             $seconds = $params->get('media_seconds', '00');
             if ($hours === '00' && $minutes === '00' && $seconds === '00') {
@@ -907,7 +906,7 @@ class Cwmpodcast
      */
     public function validatePodcastXml(string $filePath): array
     {
-        $errors = [];
+        $errors   = [];
         $warnings = [];
 
         if (!is_file($filePath)) {
@@ -930,7 +929,7 @@ class Cwmpodcast
 
         // Register iTunes namespace
         $namespaces = $xml->getNamespaces(true);
-        $itunes = isset($namespaces['itunes']) ? $xml->channel->children($namespaces['itunes']) : null;
+        $itunes     = isset($namespaces['itunes']) ? $xml->channel->children($namespaces['itunes']) : null;
 
         // Check required RSS elements
         if (empty($xml->channel->title)) {
@@ -967,7 +966,7 @@ class Cwmpodcast
         }
 
         // Count episodes
-        $episodeCount = count($xml->channel->item ?? []);
+        $episodeCount = \count($xml->channel->item ?? []);
         if ($episodeCount === 0) {
             $errors[] = Text::_('JBS_PDC_VALIDATE_XML_NO_EPISODES');
         }
@@ -985,9 +984,9 @@ class Cwmpodcast
         }
 
         return [
-            'valid' => empty($errors),
-            'errors' => $errors,
-            'warnings' => $warnings,
+            'valid'         => empty($errors),
+            'errors'        => $errors,
+            'warnings'      => $warnings,
             'episode_count' => $episodeCount,
         ];
     }
@@ -1007,7 +1006,7 @@ class Cwmpodcast
 
         foreach ($validationResults as $result) {
             $statusClass = $result['ready'] ? 'success' : ($result['valid'] ? 'warning' : 'danger');
-            $statusIcon = $result['ready'] ? '✓' : ($result['valid'] ? '⚠' : '✗');
+            $statusIcon  = $result['ready'] ? '✓' : ($result['valid'] ? '⚠' : '✗');
 
             $html .= '<div class="card mb-3 border-' . $statusClass . '">';
             $html .= '<div class="card-header bg-' . $statusClass . ' text-white">';
@@ -1064,8 +1063,8 @@ class Cwmpodcast
      */
     public function fixMediaDurations(?int $podcastId = null): array
     {
-        $fixed = 0;
-        $failed = 0;
+        $fixed   = 0;
+        $failed  = 0;
         $skipped = 0;
         $details = [];
 
@@ -1089,10 +1088,10 @@ class Cwmpodcast
 
         foreach ($mediaFiles as $media) {
             $params = new Registry($media->params);
-            $title = $media->studytitle ?: 'ID: ' . $media->id;
+            $title  = $media->studytitle ?: 'ID: ' . $media->id;
 
             // Check if duration is already set
-            $hours = $params->get('media_hours', '00');
+            $hours   = $params->get('media_hours', '00');
             $minutes = $params->get('media_minutes', '00');
             $seconds = $params->get('media_seconds', '00');
 
@@ -1108,7 +1107,7 @@ class Cwmpodcast
                 ->where($db->quoteName('id') . ' = ' . (int) $media->server_id);
             $db->setQuery($serverQuery);
             $serverParams = new Registry($db->loadResult());
-            $serverPath = $serverParams->get('path', '');
+            $serverPath   = $serverParams->get('path', '');
 
             // Build file path
             $filename = $params->get('filename');
@@ -1121,7 +1120,7 @@ class Cwmpodcast
             // Check if this is a YouTube URL - try API first
             if ($this->isYouTubeUrl($filename)) {
                 $videoId = $this->extractYouTubeVideoId($filename);
-                $apiKey = $this->getYouTubeApiKey();
+                $apiKey  = $this->getYouTubeApiKey();
 
                 if ($videoId && $apiKey) {
                     $durationSeconds = $this->getYouTubeDuration($videoId, $apiKey);
@@ -1142,24 +1141,24 @@ class Cwmpodcast
                         try {
                             $db->execute();
                             $fixed++;
-                            $durationStr = sprintf('%02d:%02d:%02d', $duration->hours, $duration->minutes, $duration->seconds);
-                            $details[] = Text::sprintf('JBS_PDC_FIX_DURATION_YOUTUBE_SUCCESS', $title, $durationStr);
+                            $durationStr = \sprintf('%02d:%02d:%02d', $duration->hours, $duration->minutes, $duration->seconds);
+                            $details[]   = Text::sprintf('JBS_PDC_FIX_DURATION_YOUTUBE_SUCCESS', $title, $durationStr);
                         } catch (\Exception $e) {
                             $failed++;
                             $details[] = Text::sprintf('JBS_PDC_FIX_DURATION_DB_ERROR', $title, $e->getMessage());
                         }
                         continue;
-                    } else {
-                        $failed++;
-                        $details[] = Text::sprintf('JBS_PDC_FIX_DURATION_YOUTUBE_API_FAILED', $title);
-                        continue;
                     }
-                } else {
-                    // No API key configured
-                    $skipped++;
-                    $details[] = Text::sprintf('JBS_PDC_FIX_DURATION_YOUTUBE_NO_API', $title);
+                    $failed++;
+                    $details[] = Text::sprintf('JBS_PDC_FIX_DURATION_YOUTUBE_API_FAILED', $title);
                     continue;
+
                 }
+                // No API key configured
+                $skipped++;
+                $details[] = Text::sprintf('JBS_PDC_FIX_DURATION_YOUTUBE_NO_API', $title);
+                continue;
+
             }
 
             // First check if filename is clearly a local path (skip external detection)
@@ -1197,8 +1196,8 @@ class Cwmpodcast
                     try {
                         $db->execute();
                         $fixed++;
-                        $durationStr = sprintf('%02d:%02d:%02d', $duration->hours, $duration->minutes, $duration->seconds);
-                        $details[] = Text::sprintf('JBS_PDC_FIX_DURATION_SUCCESS_REMOTE', $title, $durationStr);
+                        $durationStr = \sprintf('%02d:%02d:%02d', $duration->hours, $duration->minutes, $duration->seconds);
+                        $details[]   = Text::sprintf('JBS_PDC_FIX_DURATION_SUCCESS_REMOTE', $title, $durationStr);
                     } catch (\Exception $e) {
                         $failed++;
                         $details[] = Text::sprintf('JBS_PDC_FIX_DURATION_DB_ERROR', $title, $e->getMessage());
@@ -1218,13 +1217,13 @@ class Cwmpodcast
             }
 
             // Build local file path
-            $prefix = Uri::root();
-            $nohttp = $this->removeHttp($prefix);
+            $prefix     = Uri::root();
+            $nohttp     = $this->removeHttp($prefix);
             $pathServer = Cwmhelper::mediaBuildUrl($serverPath, $filename, $params, false, false, true);
-            $siteinfo = strpos($pathServer, $nohttp);
+            $siteinfo   = strpos($pathServer, $nohttp);
 
             if ($siteinfo !== false) {
-                $localPath = JPATH_SITE . '/' . substr($pathServer, strlen($nohttp));
+                $localPath = JPATH_SITE . '/' . substr($pathServer, \strlen($nohttp));
             } else {
                 $localPath = $pathServer;
             }
@@ -1259,8 +1258,8 @@ class Cwmpodcast
                     try {
                         $db->execute();
                         $fixed++;
-                        $durationStr = sprintf('%02d:%02d:%02d', $duration->hours, $duration->minutes, $duration->seconds);
-                        $details[] = Text::sprintf('JBS_PDC_FIX_DURATION_SUCCESS_REMOTE', $title, $durationStr);
+                        $durationStr = \sprintf('%02d:%02d:%02d', $duration->hours, $duration->minutes, $duration->seconds);
+                        $details[]   = Text::sprintf('JBS_PDC_FIX_DURATION_SUCCESS_REMOTE', $title, $durationStr);
                     } catch (\Exception $e) {
                         $failed++;
                         $details[] = Text::sprintf('JBS_PDC_FIX_DURATION_DB_ERROR', $title, $e->getMessage());
@@ -1312,8 +1311,8 @@ class Cwmpodcast
             try {
                 $db->execute();
                 $fixed++;
-                $durationStr = sprintf('%02d:%02d:%02d', $duration->hours, $duration->minutes, $duration->seconds);
-                $details[] = Text::sprintf('JBS_PDC_FIX_DURATION_SUCCESS', $title, $durationStr);
+                $durationStr = \sprintf('%02d:%02d:%02d', $duration->hours, $duration->minutes, $duration->seconds);
+                $details[]   = Text::sprintf('JBS_PDC_FIX_DURATION_SUCCESS', $title, $durationStr);
             } catch (\Exception $e) {
                 $failed++;
                 $details[] = Text::sprintf('JBS_PDC_FIX_DURATION_DB_ERROR', $title, $e->getMessage());
@@ -1321,10 +1320,10 @@ class Cwmpodcast
         }
 
         return [
-            'fixed' => $fixed,
-            'failed' => $failed,
+            'fixed'   => $fixed,
+            'failed'  => $failed,
             'skipped' => $skipped,
-            'total' => count($mediaFiles),
+            'total'   => \count($mediaFiles),
             'details' => $details,
         ];
     }
@@ -1364,13 +1363,13 @@ class Cwmpodcast
             $params = new Registry($media->params);
 
             // Check if duration is already set
-            $hours = $params->get('media_hours', '00');
+            $hours   = $params->get('media_hours', '00');
             $minutes = $params->get('media_minutes', '00');
             $seconds = $params->get('media_seconds', '00');
 
             if ($hours === '00' && $minutes === '00' && $seconds === '00') {
                 $result[] = [
-                    'id' => (int) $media->id,
+                    'id'    => (int) $media->id,
                     'title' => $media->studytitle ?: 'ID: ' . $media->id,
                 ];
             }
@@ -1405,14 +1404,14 @@ class Cwmpodcast
 
         if (!$media) {
             return [
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => Text::sprintf('JBS_PDC_FIX_DURATION_FILE_NOT_FOUND', 'ID: ' . $mediaId, 'Database'),
-                'type' => 'failed',
+                'type'    => 'failed',
             ];
         }
 
         $params = new Registry($media->params);
-        $title = $media->studytitle ?: 'ID: ' . $media->id;
+        $title  = $media->studytitle ?: 'ID: ' . $media->id;
 
         // Get server path
         $serverQuery = $db->getQuery(true);
@@ -1421,22 +1420,22 @@ class Cwmpodcast
             ->where($db->quoteName('id') . ' = ' . (int) $media->server_id);
         $db->setQuery($serverQuery);
         $serverParams = new Registry($db->loadResult());
-        $serverPath = $serverParams->get('path', '');
+        $serverPath   = $serverParams->get('path', '');
 
         // Build file path
         $filename = $params->get('filename');
         if (empty($filename)) {
             return [
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => Text::sprintf('JBS_PDC_FIX_DURATION_NO_FILENAME', $title),
-                'type' => 'failed',
+                'type'    => 'failed',
             ];
         }
 
         // Check if this is a YouTube URL - try API first
         if ($this->isYouTubeUrl($filename)) {
             $videoId = $this->extractYouTubeVideoId($filename);
-            $apiKey = $this->getYouTubeApiKey();
+            $apiKey  = $this->getYouTubeApiKey();
 
             if ($videoId && $apiKey) {
                 $durationSeconds = $this->getYouTubeDuration($videoId, $apiKey);
@@ -1446,16 +1445,16 @@ class Cwmpodcast
                 }
 
                 return [
-                    'status' => 'error',
+                    'status'  => 'error',
                     'message' => Text::sprintf('JBS_PDC_FIX_DURATION_YOUTUBE_API_FAILED', $title),
-                    'type' => 'failed',
+                    'type'    => 'failed',
                 ];
             }
 
             return [
-                'status' => 'skipped',
+                'status'  => 'skipped',
                 'message' => Text::sprintf('JBS_PDC_FIX_DURATION_YOUTUBE_NO_API', $title),
-                'type' => 'skipped',
+                'type'    => 'skipped',
             ];
         }
 
@@ -1473,13 +1472,13 @@ class Cwmpodcast
         }
 
         // Build local file path
-        $prefix = Uri::root();
-        $nohttp = $this->removeHttp($prefix);
+        $prefix     = Uri::root();
+        $nohttp     = $this->removeHttp($prefix);
         $pathServer = Cwmhelper::mediaBuildUrl($serverPath, $filename, $params, false, false, true);
-        $siteinfo = strpos($pathServer, $nohttp);
+        $siteinfo   = strpos($pathServer, $nohttp);
 
         if ($siteinfo !== false) {
-            $localPath = JPATH_SITE . '/' . substr($pathServer, strlen($nohttp));
+            $localPath = JPATH_SITE . '/' . substr($pathServer, \strlen($nohttp));
         } else {
             $localPath = $pathServer;
         }
@@ -1498,9 +1497,9 @@ class Cwmpodcast
         // Check if file exists
         if (!is_file($localPath)) {
             return [
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => Text::sprintf('JBS_PDC_FIX_DURATION_FILE_NOT_FOUND', $title, $localPath),
-                'type' => 'failed',
+                'type'    => 'failed',
             ];
         }
 
@@ -1509,9 +1508,9 @@ class Cwmpodcast
 
         if ($durationSeconds <= 0) {
             return [
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => Text::sprintf('JBS_PDC_FIX_DURATION_COULD_NOT_READ', $title),
-                'type' => 'failed',
+                'type'    => 'failed',
             ];
         }
 
@@ -1551,16 +1550,16 @@ class Cwmpodcast
         $ffprobe = $this->findFFprobe();
         if ($ffprobe === null) {
             return [
-                'status' => 'skipped',
+                'status'  => 'skipped',
                 'message' => Text::sprintf('JBS_PDC_FIX_DURATION_EXTERNAL_NO_FFPROBE', $title),
-                'type' => 'skipped',
+                'type'    => 'skipped',
             ];
         }
 
         return [
-            'status' => 'error',
+            'status'  => 'error',
             'message' => Text::sprintf('JBS_PDC_FIX_DURATION_EXTERNAL_FAILED', $title, $path),
-            'type' => 'failed',
+            'type'    => 'failed',
         ];
     }
 
@@ -1594,20 +1593,20 @@ class Cwmpodcast
 
         try {
             $db->execute();
-            $durationStr = sprintf('%02d:%02d:%02d', $duration->hours, $duration->minutes, $duration->seconds);
-            $langKey = $isRemote ? 'JBS_PDC_FIX_DURATION_SUCCESS_REMOTE' : 'JBS_PDC_FIX_DURATION_SUCCESS';
+            $durationStr = \sprintf('%02d:%02d:%02d', $duration->hours, $duration->minutes, $duration->seconds);
+            $langKey     = $isRemote ? 'JBS_PDC_FIX_DURATION_SUCCESS_REMOTE' : 'JBS_PDC_FIX_DURATION_SUCCESS';
 
             return [
-                'status' => 'success',
-                'message' => Text::sprintf($langKey, $title, $durationStr),
+                'status'   => 'success',
+                'message'  => Text::sprintf($langKey, $title, $durationStr),
                 'duration' => $durationStr,
-                'type' => 'fixed',
+                'type'     => 'fixed',
             ];
         } catch (\Exception $e) {
             return [
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => Text::sprintf('JBS_PDC_FIX_DURATION_DB_ERROR', $title, $e->getMessage()),
-                'type' => 'failed',
+                'type'    => 'failed',
             ];
         }
     }
@@ -1644,9 +1643,9 @@ class Cwmpodcast
         $result = [];
 
         foreach ($mediaFiles as $media) {
-            $params = new Registry($media->params);
-            $missing = [];
-            $filename = $params->get('filename');
+            $params    = new Registry($media->params);
+            $missing   = [];
+            $filename  = $params->get('filename');
             $isYouTube = $filename && $this->isYouTubeUrl($filename);
 
             // Check for missing file size (skip for YouTube - no file size available)
@@ -1664,7 +1663,7 @@ class Cwmpodcast
             }
 
             // Check for missing duration
-            $hours = $params->get('media_hours', '00');
+            $hours   = $params->get('media_hours', '00');
             $minutes = $params->get('media_minutes', '00');
             $seconds = $params->get('media_seconds', '00');
             if ($hours === '00' && $minutes === '00' && $seconds === '00') {
@@ -1673,8 +1672,8 @@ class Cwmpodcast
 
             if (!empty($missing)) {
                 $result[] = [
-                    'id' => (int) $media->id,
-                    'title' => $media->studytitle ?: 'ID: ' . $media->id,
+                    'id'      => (int) $media->id,
+                    'title'   => $media->studytitle ?: 'ID: ' . $media->id,
                     'missing' => $missing,
                 ];
             }
@@ -1709,28 +1708,28 @@ class Cwmpodcast
 
         if (!$media) {
             return [
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => Text::sprintf('JBS_PDC_FIX_METADATA_FILE_NOT_FOUND', 'ID: ' . $mediaId),
-                'type' => 'failed',
+                'type'    => 'failed',
             ];
         }
 
         $params = new Registry($media->params);
-        $title = $media->studytitle ?: 'ID: ' . $media->id;
+        $title  = $media->studytitle ?: 'ID: ' . $media->id;
 
         // Determine what needs to be fixed
-        $needsSize = empty($params->get('size', 0)) || $params->get('size', 0) < 1000;
+        $needsSize     = empty($params->get('size', 0)) || $params->get('size', 0) < 1000;
         $needsMimeType = empty($params->get('mime_type'));
-        $hours = $params->get('media_hours', '00');
-        $minutes = $params->get('media_minutes', '00');
-        $seconds = $params->get('media_seconds', '00');
+        $hours         = $params->get('media_hours', '00');
+        $minutes       = $params->get('media_minutes', '00');
+        $seconds       = $params->get('media_seconds', '00');
         $needsDuration = ($hours === '00' && $minutes === '00' && $seconds === '00');
 
         if (!$needsSize && !$needsMimeType && !$needsDuration) {
             return [
-                'status' => 'skipped',
+                'status'  => 'skipped',
                 'message' => Text::sprintf('JBS_PDC_FIX_METADATA_ALREADY_SET', $title),
-                'type' => 'skipped',
+                'type'    => 'skipped',
             ];
         }
 
@@ -1741,15 +1740,15 @@ class Cwmpodcast
             ->where($db->quoteName('id') . ' = ' . (int) $media->server_id);
         $db->setQuery($serverQuery);
         $serverParams = new Registry($db->loadResult());
-        $serverPath = $serverParams->get('path', '');
+        $serverPath   = $serverParams->get('path', '');
 
         // Build file path
         $filename = $params->get('filename');
         if (empty($filename)) {
             return [
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => Text::sprintf('JBS_PDC_FIX_METADATA_NO_FILENAME', $title),
-                'type' => 'failed',
+                'type'    => 'failed',
             ];
         }
 
@@ -1769,13 +1768,13 @@ class Cwmpodcast
         }
 
         // Build local file path
-        $prefix = Uri::root();
-        $nohttp = $this->removeHttp($prefix);
+        $prefix     = Uri::root();
+        $nohttp     = $this->removeHttp($prefix);
         $pathServer = Cwmhelper::mediaBuildUrl($serverPath, $filename, $params, false, false, true);
-        $siteinfo = strpos($pathServer, $nohttp);
+        $siteinfo   = strpos($pathServer, $nohttp);
 
         if ($siteinfo !== false) {
-            $localPath = JPATH_SITE . '/' . substr($pathServer, strlen($nohttp));
+            $localPath = JPATH_SITE . '/' . substr($pathServer, \strlen($nohttp));
         } else {
             $localPath = $pathServer;
         }
@@ -1793,9 +1792,9 @@ class Cwmpodcast
         // Check if file exists
         if (!is_file($localPath)) {
             return [
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => Text::sprintf('JBS_PDC_FIX_METADATA_FILE_NOT_FOUND', $title),
-                'type' => 'failed',
+                'type'    => 'failed',
             ];
         }
 
@@ -1834,7 +1833,7 @@ class Cwmpodcast
         // Get duration via YouTube API if needed
         if ($needsDuration) {
             $videoId = $this->extractYouTubeVideoId($params->get('filename'));
-            $apiKey = $this->getYouTubeApiKey();
+            $apiKey  = $this->getYouTubeApiKey();
 
             if ($videoId && $apiKey) {
                 $durationSeconds = $this->getYouTubeDuration($videoId, $apiKey);
@@ -1848,19 +1847,19 @@ class Cwmpodcast
                 }
             }
 
-            if (!in_array('duration', $fixed)) {
+            if (!\in_array('duration', $fixed)) {
                 if (!$apiKey) {
                     return [
-                        'status' => 'skipped',
+                        'status'  => 'skipped',
                         'message' => Text::sprintf('JBS_PDC_FIX_METADATA_YOUTUBE_NO_API', $title),
-                        'type' => 'skipped',
+                        'type'    => 'skipped',
                     ];
                 }
 
                 return [
-                    'status' => 'error',
+                    'status'  => 'error',
                     'message' => Text::sprintf('JBS_PDC_FIX_METADATA_YOUTUBE_API_FAILED', $title),
-                    'type' => 'failed',
+                    'type'    => 'failed',
                 ];
             }
         }
@@ -1934,7 +1933,7 @@ class Cwmpodcast
             $ffprobe = $this->findFFprobe();
 
             return [
-                'status' => 'skipped',
+                'status'  => 'skipped',
                 'message' => Text::sprintf(
                     $ffprobe ? 'JBS_PDC_FIX_METADATA_EXTERNAL_FAILED' : 'JBS_PDC_FIX_METADATA_EXTERNAL_NO_FFPROBE',
                     $title
@@ -1998,9 +1997,9 @@ class Cwmpodcast
 
         if (empty($fixed)) {
             return [
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => Text::sprintf('JBS_PDC_FIX_METADATA_COULD_NOT_READ', $title),
-                'type' => 'failed',
+                'type'    => 'failed',
             ];
         }
 
@@ -2034,15 +2033,15 @@ class Cwmpodcast
 
             // Build success message
             $fixedLabels = [];
-            if (in_array('size', $fixed)) {
+            if (\in_array('size', $fixed)) {
                 $sizeFormatted = $this->formatFileSize($params->get('size', 0));
                 $fixedLabels[] = Text::sprintf('JBS_PDC_FIX_METADATA_SIZE_VALUE', $sizeFormatted);
             }
-            if (in_array('mime_type', $fixed)) {
+            if (\in_array('mime_type', $fixed)) {
                 $fixedLabels[] = Text::sprintf('JBS_PDC_FIX_METADATA_MIME_VALUE', $params->get('mime_type'));
             }
-            if (in_array('duration', $fixed)) {
-                $durationStr = sprintf(
+            if (\in_array('duration', $fixed)) {
+                $durationStr = \sprintf(
                     '%s:%s:%s',
                     $params->get('media_hours', '00'),
                     $params->get('media_minutes', '00'),
@@ -2054,16 +2053,16 @@ class Cwmpodcast
             $langKey = $isRemote ? 'JBS_PDC_FIX_METADATA_SUCCESS_REMOTE' : 'JBS_PDC_FIX_METADATA_SUCCESS';
 
             return [
-                'status' => 'success',
+                'status'  => 'success',
                 'message' => Text::sprintf($langKey, $title, implode(', ', $fixedLabels)),
-                'fixed' => $fixed,
-                'type' => 'fixed',
+                'fixed'   => $fixed,
+                'type'    => 'fixed',
             ];
         } catch (\Exception $e) {
             return [
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => Text::sprintf('JBS_PDC_FIX_METADATA_DB_ERROR', $title, $e->getMessage()),
-                'type' => 'failed',
+                'type'    => 'failed',
             ];
         }
     }
@@ -2097,12 +2096,12 @@ class Cwmpodcast
             return null;
         }
 
-        $headers = [];
+        $headers     = [];
         $headerLines = explode("\r\n", $response);
 
         foreach ($headerLines as $line) {
             if (str_contains($line, ':')) {
-                [$key, $value] = explode(':', $line, 2);
+                [$key, $value]                   = explode(':', $line, 2);
                 $headers[strtolower(trim($key))] = trim($value);
             }
         }
@@ -2122,7 +2121,7 @@ class Cwmpodcast
     protected function detectMimeType(string $filepath): ?string
     {
         // Try mime_content_type first
-        if (function_exists('mime_content_type')) {
+        if (\function_exists('mime_content_type')) {
             $mimeType = mime_content_type($filepath);
             if ($mimeType && $mimeType !== 'application/octet-stream') {
                 return $mimeType;
@@ -2131,7 +2130,7 @@ class Cwmpodcast
 
         // Try finfo
         if (class_exists('finfo')) {
-            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $finfo    = new \finfo(FILEINFO_MIME_TYPE);
             $mimeType = $finfo->file($filepath);
             if ($mimeType && $mimeType !== 'application/octet-stream') {
                 return $mimeType;
@@ -2141,23 +2140,23 @@ class Cwmpodcast
         // Fall back to extension-based detection
         $extension = strtolower(pathinfo($filepath, PATHINFO_EXTENSION));
         $mimeTypes = [
-            'mp3' => 'audio/mpeg',
-            'mp4' => 'video/mp4',
-            'm4a' => 'audio/mp4',
-            'm4v' => 'video/mp4',
-            'ogg' => 'audio/ogg',
-            'oga' => 'audio/ogg',
-            'ogv' => 'video/ogg',
-            'wav' => 'audio/wav',
+            'mp3'  => 'audio/mpeg',
+            'mp4'  => 'video/mp4',
+            'm4a'  => 'audio/mp4',
+            'm4v'  => 'video/mp4',
+            'ogg'  => 'audio/ogg',
+            'oga'  => 'audio/ogg',
+            'ogv'  => 'video/ogg',
+            'wav'  => 'audio/wav',
             'webm' => 'video/webm',
             'flac' => 'audio/flac',
-            'aac' => 'audio/aac',
-            'wma' => 'audio/x-ms-wma',
-            'wmv' => 'video/x-ms-wmv',
-            'avi' => 'video/x-msvideo',
-            'mov' => 'video/quicktime',
-            'mkv' => 'video/x-matroska',
-            'pdf' => 'application/pdf',
+            'aac'  => 'audio/aac',
+            'wma'  => 'audio/x-ms-wma',
+            'wmv'  => 'video/x-ms-wmv',
+            'avi'  => 'video/x-msvideo',
+            'mov'  => 'video/quicktime',
+            'mkv'  => 'video/x-matroska',
+            'pdf'  => 'application/pdf',
         ];
 
         return $mimeTypes[$extension] ?? null;
@@ -2176,9 +2175,9 @@ class Cwmpodcast
     {
         $units = ['B', 'KB', 'MB', 'GB'];
         $index = 0;
-        $size = (float) $bytes;
+        $size  = (float) $bytes;
 
-        while ($size >= 1024 && $index < count($units) - 1) {
+        while ($size >= 1024 && $index < \count($units) - 1) {
             $size /= 1024;
             $index++;
         }
@@ -2301,12 +2300,12 @@ class Cwmpodcast
         }
 
         return [
-            'ffprobe' => $this->findFFprobe() !== null,
-            'native_m4a' => true,  // Always available (PHP)
-            'native_wav' => true,  // Always available (PHP)
-            'native_ogg' => true,  // Always available (PHP)
-            'getid3' => class_exists('getID3') || $this->checkGetID3Available(),
-            'mp3_parser' => true,  // Always available (PHP)
+            'ffprobe'     => $this->findFFprobe() !== null,
+            'native_m4a'  => true,  // Always available (PHP)
+            'native_wav'  => true,  // Always available (PHP)
+            'native_ogg'  => true,  // Always available (PHP)
+            'getid3'      => class_exists('getID3') || $this->checkGetID3Available(),
+            'mp3_parser'  => true,  // Always available (PHP)
             'youtube_api' => $youtubeApiAvailable,
         ];
     }
@@ -2375,7 +2374,7 @@ class Cwmpodcast
         }
 
         // Build command to get duration
-        $cmd = sprintf(
+        $cmd = \sprintf(
             '%s -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 %s 2>/dev/null',
             escapeshellcmd($ffprobe),
             escapeshellarg($filename)
@@ -2448,13 +2447,13 @@ class Cwmpodcast
             return 0;
         }
 
-        $duration = 0;
+        $duration  = 0;
         $timescale = 0;
 
         // Read atoms until we find moov
         while (!feof($fp)) {
             $header = fread($fp, 8);
-            if (strlen($header) < 8) {
+            if (\strlen($header) < 8) {
                 break;
             }
 
@@ -2468,7 +2467,7 @@ class Cwmpodcast
             if ($size === 1) {
                 // Extended size
                 $extSize = fread($fp, 8);
-                if (strlen($extSize) < 8) {
+                if (\strlen($extSize) < 8) {
                     break;
                 }
                 $size = unpack('J', $extSize)[1];
@@ -2485,15 +2484,15 @@ class Cwmpodcast
             if ($type === 'mvhd') {
                 // Movie header atom - contains duration
                 $data = fread($fp, min($size, 120));
-                if (strlen($data) >= 20) {
-                    $version = ord($data[0]);
+                if (\strlen($data) >= 20) {
+                    $version = \ord($data[0]);
                     if ($version === 0) {
                         // 32-bit values
-                        $timescale = unpack('N', substr($data, 12, 4))[1];
+                        $timescale   = unpack('N', substr($data, 12, 4))[1];
                         $durationRaw = unpack('N', substr($data, 16, 4))[1];
                     } else {
                         // 64-bit values
-                        $timescale = unpack('N', substr($data, 20, 4))[1];
+                        $timescale   = unpack('N', substr($data, 20, 4))[1];
                         $durationRaw = unpack('J', substr($data, 24, 8))[1];
                     }
 
@@ -2532,33 +2531,33 @@ class Cwmpodcast
 
         // Read RIFF header
         $header = fread($fp, 12);
-        if (strlen($header) < 12 || substr($header, 0, 4) !== 'RIFF' || substr($header, 8, 4) !== 'WAVE') {
+        if (\strlen($header) < 12 || substr($header, 0, 4) !== 'RIFF' || substr($header, 8, 4) !== 'WAVE') {
             fclose($fp);
             return 0;
         }
 
         $sampleRate = 0;
-        $byteRate = 0;
-        $dataSize = 0;
+        $byteRate   = 0;
+        $dataSize   = 0;
 
         // Read chunks
         while (!feof($fp)) {
             $chunkHeader = fread($fp, 8);
-            if (strlen($chunkHeader) < 8) {
+            if (\strlen($chunkHeader) < 8) {
                 break;
             }
 
-            $chunkId = substr($chunkHeader, 0, 4);
+            $chunkId   = substr($chunkHeader, 0, 4);
             $chunkSize = unpack('V', substr($chunkHeader, 4, 4))[1];
 
             if ($chunkId === 'fmt ') {
                 $fmtData = fread($fp, min($chunkSize, 40));
-                if (strlen($fmtData) >= 16) {
+                if (\strlen($fmtData) >= 16) {
                     $sampleRate = unpack('V', substr($fmtData, 4, 4))[1];
-                    $byteRate = unpack('V', substr($fmtData, 8, 4))[1];
+                    $byteRate   = unpack('V', substr($fmtData, 8, 4))[1];
                 }
                 // Seek past any remaining fmt data
-                $remaining = $chunkSize - strlen($fmtData);
+                $remaining = $chunkSize - \strlen($fmtData);
                 if ($remaining > 0) {
                     fseek($fp, $remaining, SEEK_CUR);
                 }
@@ -2605,23 +2604,23 @@ class Cwmpodcast
 
         // Skip to segment table
         fseek($fp, 26);
-        $numSegments = ord(fread($fp, 1));
-        $segments = fread($fp, $numSegments);
+        $numSegments = \ord(fread($fp, 1));
+        $segments    = fread($fp, $numSegments);
 
         // Calculate page size
         $pageSize = 0;
         for ($i = 0; $i < $numSegments; $i++) {
-            $pageSize += ord($segments[$i]);
+            $pageSize += \ord($segments[$i]);
         }
 
         // Read first packet (Vorbis identification header)
-        $packet = fread($fp, $pageSize);
+        $packet     = fread($fp, $pageSize);
         $sampleRate = 44100; // Default
 
         // Check for Vorbis
-        if (strlen($packet) >= 30 && substr($packet, 1, 6) === 'vorbis') {
+        if (\strlen($packet) >= 30 && substr($packet, 1, 6) === 'vorbis') {
             $sampleRate = unpack('V', substr($packet, 12, 4))[1];
-        } elseif (strlen($packet) >= 19 && substr($packet, 0, 8) === 'OpusHead') {
+        } elseif (\strlen($packet) >= 19 && substr($packet, 0, 8) === 'OpusHead') {
             // Opus format
             $sampleRate = 48000; // Opus always uses 48kHz internally
         }
@@ -2633,11 +2632,11 @@ class Cwmpodcast
 
         // Find last OggS page
         $lastGranule = 0;
-        $pos = strlen($endData) - 4;
+        $pos         = \strlen($endData) - 4;
         while ($pos >= 0) {
             if (substr($endData, $pos, 4) === 'OggS') {
                 // Found a page header, get granule position
-                if ($pos + 14 <= strlen($endData)) {
+                if ($pos + 14 <= \strlen($endData)) {
                     $granule = unpack('P', substr($endData, $pos + 6, 8))[1];
                     if ($granule > $lastGranule) {
                         $lastGranule = $granule;
@@ -2687,7 +2686,7 @@ class Cwmpodcast
         }
 
         try {
-            $getID3 = new \getID3();
+            $getID3   = new \getID3();
             $fileInfo = $getID3->analyze($filename);
 
             if (isset($fileInfo['playtime_seconds'])) {
@@ -3022,7 +3021,7 @@ class Cwmpodcast
         // Fetch from API
         $context = stream_context_create([
             'http' => [
-                'timeout' => 10,
+                'timeout'       => 10,
                 'ignore_errors' => true,
             ],
         ]);

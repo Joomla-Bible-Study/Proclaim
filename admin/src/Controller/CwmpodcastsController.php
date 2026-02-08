@@ -74,13 +74,13 @@ class CwmpodcastsController extends AdminController
         }
 
         $podcasts = new Cwmpodcast();
-        $results = $podcasts->validateAllPodcasts();
+        $results  = $podcasts->validateAllPodcasts();
 
         // Store validation results in session for display
         $this->app->setUserState('com_proclaim.podcasts.validation', $results);
 
         // Count ready vs not ready
-        $ready = 0;
+        $ready    = 0;
         $notReady = 0;
 
         foreach ($results as $result) {
@@ -92,7 +92,7 @@ class CwmpodcastsController extends AdminController
         }
 
         $message = Text::sprintf('JBS_PDC_VALIDATION_COMPLETE', $ready, $notReady);
-        $type = $notReady > 0 ? 'warning' : 'success';
+        $type    = $notReady > 0 ? 'warning' : 'success';
 
         $this->setRedirect('index.php?option=com_proclaim&view=cwmpodcasts&layout=validation', $message, $type);
     }
@@ -116,7 +116,7 @@ class CwmpodcastsController extends AdminController
         }
 
         $podcasts = new Cwmpodcast();
-        $results = $podcasts->fixMediaDurations();
+        $results  = $podcasts->fixMediaDurations();
 
         // Build message
         $message = Text::sprintf(
@@ -155,11 +155,11 @@ class CwmpodcastsController extends AdminController
 
         try {
             $podcasts = new Cwmpodcast();
-            $files = $podcasts->getMediaFilesNeedingDuration();
+            $files    = $podcasts->getMediaFilesNeedingDuration();
 
             echo new JsonResponse([
-                'files' => $files,
-                'total' => count($files),
+                'files'   => $files,
+                'total'   => \count($files),
                 'ffprobe' => $podcasts->getAvailableDurationMethods()['ffprobe'],
             ]);
         } catch (\Exception $e) {
@@ -198,7 +198,7 @@ class CwmpodcastsController extends AdminController
 
         try {
             $podcasts = new Cwmpodcast();
-            $result = $podcasts->fixSingleMediaDuration($mediaId);
+            $result   = $podcasts->fixSingleMediaDuration($mediaId);
 
             echo new JsonResponse($result);
         } catch (\Exception $e) {
@@ -228,13 +228,13 @@ class CwmpodcastsController extends AdminController
 
         try {
             $podcasts = new Cwmpodcast();
-            $files = $podcasts->getMediaFilesNeedingMetadata();
-            $methods = $podcasts->getAvailableDurationMethods();
+            $files    = $podcasts->getMediaFilesNeedingMetadata();
+            $methods  = $podcasts->getAvailableDurationMethods();
 
             echo new JsonResponse([
-                'files' => $files,
-                'total' => count($files),
-                'ffprobe' => $methods['ffprobe'],
+                'files'       => $files,
+                'total'       => \count($files),
+                'ffprobe'     => $methods['ffprobe'],
                 'youtube_api' => $methods['youtube_api'],
             ]);
         } catch (\Exception $e) {
@@ -273,7 +273,7 @@ class CwmpodcastsController extends AdminController
 
         try {
             $podcasts = new Cwmpodcast();
-            $result = $podcasts->fixSingleMediaMetadata($mediaId);
+            $result   = $podcasts->fixSingleMediaMetadata($mediaId);
 
             echo new JsonResponse($result);
         } catch (\Exception $e) {
@@ -307,11 +307,11 @@ class CwmpodcastsController extends AdminController
 
             if ($data) {
                 $results = [
-                    'fixed' => (int) ($data['fixed'] ?? 0),
-                    'failed' => (int) ($data['failed'] ?? 0),
-                    'skipped' => (int) ($data['skipped'] ?? 0),
+                    'fixed'      => (int) ($data['fixed'] ?? 0),
+                    'failed'     => (int) ($data['failed'] ?? 0),
+                    'skipped'    => (int) ($data['skipped'] ?? 0),
                     'fixedItems' => $data['fixedItems'] ?? [],
-                    'errors' => $data['errors'] ?? [],
+                    'errors'     => $data['errors'] ?? [],
                 ];
 
                 $this->app->setUserState('com_proclaim.podcasts.metadata_fix', $results);

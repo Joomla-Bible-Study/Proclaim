@@ -37,7 +37,7 @@ class CwmteacherModelTest extends ProclaimTestCase
         $this->assertTrue($reflection->isPublic());
         $this->assertTrue($reflection->returnsReference());
         // Return type is mixed, which reflection might show differently
-        
+
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
         $this->assertEquals('pk', $params[0]->getName());

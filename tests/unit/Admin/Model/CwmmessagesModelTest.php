@@ -75,7 +75,7 @@ class CwmmessagesModelTest extends ProclaimTestCase
         $this->assertEquals('ordering', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('direction', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->isOptional());

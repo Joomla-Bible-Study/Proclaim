@@ -168,7 +168,7 @@ class CwmtemplatemigrationHelper
             }
 
             $colorFieldNames = array_keys($colorFields);
-            $updatedCount   += $this->convertColorFieldsInTemplates($colorFieldNames);
+            $updatedCount += $this->convertColorFieldsInTemplates($colorFieldNames);
 
             // Also convert admin table color fields
             $updatedCount += $this->convertColorFieldsInAdmin();

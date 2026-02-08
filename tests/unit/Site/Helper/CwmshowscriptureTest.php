@@ -13,7 +13,6 @@ namespace CWM\Component\Proclaim\Tests\Site\Helper;
 
 use CWM\Component\Proclaim\Site\Helper\Cwmshowscripture;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use Joomla\Registry\Registry;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
@@ -37,12 +36,12 @@ class CwmshowscriptureTest extends ProclaimTestCase
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
         // Return type is string|bool, which reflection might show differently
-        
+
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('row', $params[0]->getName());
         // No type hint in method signature for row
-        
+
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
     }
@@ -85,10 +84,10 @@ class CwmshowscriptureTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('reference', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
-        
+
         $this->assertEquals('version', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
-        
+
         $this->assertEquals('params', $params[2]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[2]);
     }

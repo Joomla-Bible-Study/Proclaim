@@ -12,9 +12,7 @@
 namespace CWM\Component\Proclaim\Tests\Admin\Controller;
 
 use CWM\Component\Proclaim\Administrator\Controller\CwmmediafileController;
-use CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use Joomla\CMS\MVC\Model\BaseModel;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
@@ -60,7 +58,7 @@ class CwmmediafileControllerTest extends ProclaimTestCase
         $this->assertParamTypeName('int', $params[0]);
         $this->assertTrue($params[0]->allowsNull());
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('urlVar', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->allowsNull());
@@ -146,7 +144,7 @@ class CwmmediafileControllerTest extends ProclaimTestCase
         $this->assertParamTypeName('int', $params[0]);
         $this->assertTrue($params[0]->allowsNull());
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('urlVar', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->isOptional());
@@ -185,7 +183,7 @@ class CwmmediafileControllerTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('model', $params[0]->getName());
         $this->assertParamTypeName('Joomla\CMS\MVC\Model\BaseModel', $params[0]);
-        
+
         $this->assertEquals('validData', $params[1]->getName());
         $this->assertParamTypeName('array', $params[1]);
         $this->assertTrue($params[1]->isOptional());

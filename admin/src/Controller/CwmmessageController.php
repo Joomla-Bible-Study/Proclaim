@@ -24,7 +24,6 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 
-
 /**
  * Controller for Message
  *

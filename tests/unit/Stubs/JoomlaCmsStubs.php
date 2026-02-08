@@ -187,7 +187,7 @@ namespace Joomla\CMS\MVC\Model {
         class ListModel extends BaseDatabaseModel
         {
             protected $filter_fields = [];
-            protected $context = '';
+            protected $context       = '';
 
             public function getItems()
             {
@@ -877,10 +877,10 @@ namespace Joomla\Component\Content\Administrator\Extension {
     if (!class_exists('Joomla\Component\Content\Administrator\Extension\ContentComponent', false)) {
         class ContentComponent
         {
-            public const CONDITION_PUBLISHED = 1;
+            public const CONDITION_PUBLISHED   = 1;
             public const CONDITION_UNPUBLISHED = 0;
-            public const CONDITION_ARCHIVED = 2;
-            public const CONDITION_TRASHED = -2;
+            public const CONDITION_ARCHIVED    = 2;
+            public const CONDITION_TRASHED     = -2;
         }
     }
 }
@@ -1345,7 +1345,7 @@ namespace Joomla\CMS\Log {
         class Log
         {
             public const int WARNING = 4;
-            public const int INFO = 6;
+            public const int INFO    = 6;
 
             public static function add(string $entry, int $priority = self::INFO, string $category = '', ?string $date = null): void
             {
@@ -1376,10 +1376,10 @@ namespace Joomla\CMS\User {
     if (!class_exists('Joomla\CMS\User\User', false)) {
         class User
         {
-            public int $id = 0;
-            public string $name = '';
+            public int $id          = 0;
+            public string $name     = '';
             public string $username = '';
-            public string $email = '';
+            public string $email    = '';
         }
     }
 }

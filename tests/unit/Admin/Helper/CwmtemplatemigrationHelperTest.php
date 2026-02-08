@@ -86,12 +86,12 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        
+
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('version', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
-        
+
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('array', $params[1]);
     }
