@@ -13,7 +13,7 @@
                filter="int"/>
 
         <field name="message_type" type="text" label="JBS_MST_MESSAGETYPE_TEXT"
-               description="JBS_MST_MESSAGETYPE_DESC" size="75" required="true"/>
+               description="JBS_MST_MESSAGETYPE_DESC" size="75" required="true" filter="trim"/>
 
         <field name="alias"
                type="text"
@@ -49,7 +49,7 @@
 
         <field name="created_by_alias" type="text"
                label="JGLOBAL_FIELD_CREATED_BY_ALIAS_LABEL"
-               size="20"/>
+               size="20" filter="string"/>
 
         <field name="modified" type="calendar"
                label="JGLOBAL_FIELD_MODIFIED_LABEL"

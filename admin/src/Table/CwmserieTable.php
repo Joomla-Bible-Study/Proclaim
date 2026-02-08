@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseDriver;
 
@@ -189,6 +190,25 @@ class CwmserieTable extends Table
     public function __construct(&$db)
     {
         parent::__construct('#__bsms_series', 'id', $db);
+    }
+
+    /**
+     * Perform pre-save checks on the table properties.
+     *
+     * @return  bool  True if checks pass.
+     *
+     * @throws  \UnexpectedValueException
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function check(): bool
+    {
+        if (trim($this->series_text ?? '') === '') {
+            throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_SERIES_NAME_REQUIRED'));
+        }
+
+        return parent::check();
     }
 
     /**

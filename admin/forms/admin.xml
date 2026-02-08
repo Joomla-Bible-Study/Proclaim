@@ -25,9 +25,9 @@
             <option value="1">JYES</option>
         </field>
         <field name="metakey" type="text" size="30" rows="3" label="JBS_STY_METAKEYWORDS"
-               description="JBS_STY_METAKEYWORDS_DESC" useglobal="true"/>
+               description="JBS_STY_METAKEYWORDS_DESC" useglobal="true" filter="string"/>
         <field name="metadesc" type="textarea" cols="30" rows="3" label="JBS_STY_METADESCRIPTION"
-               description="JBS_STY_METADESCRIPTION_DESC"/>
+               description="JBS_STY_METADESCRIPTION_DESC" filter="string"/>
         <field name="compat_mode" type="radio" default="0" label="JBS_ADM_MEDIA_COMPAT_MODE"
                description="JBS_ADM_MEDIA_COMPAT_MODE_DESC"
                layout="joomla.form.field.radio.switcher">
@@ -125,7 +125,7 @@
         <field name="download_custom_icon" type="text" default="" label="JBS_ADDON_CUSTOM_ICON"
                description="JBS_ADDON_CUSTOM_ICON_DESC"/>
         <field name="download_icon_text_size" type="text" default="24" label="JBS_ADDON_FONT_SIZE"
-               description="JBS_ADDON_FONT_SIZE_DESC"/>
+               description="JBS_ADDON_FONT_SIZE_DESC" filter="int"/>
         <field name="default_download_image" type="media" directory="biblestudy" label="JBS_ADM_DOWNLOAD_IMAGE"
                description="JBS_ADM_DOWNLOAD_IMAGE_DESC"/>
 
@@ -250,7 +250,8 @@
             <option value="1">JBS_CMN_YES</option>
         </field>
         <field name="filestokeep" type="text" default="5" rows="1"
-               label="PLG_SYSTEM_PROCLAIMBACKUP_FILES" description="PLG_SYSTEM_PROCLAIMBACKUP_FILES_DESC"/>
+               label="PLG_SYSTEM_PROCLAIMBACKUP_FILES" description="PLG_SYSTEM_PROCLAIMBACKUP_FILES_DESC"
+               filter="int"/>
         <field name="debug" type="radio" default="0"
                label="JBS_ADM_DEBUG_LABEL" description="JBS_ADM_DEBUG_DESC"
                layout="joomla.form.field.radio.switcher">
@@ -295,7 +296,7 @@
         <field name="media_custom_icon" type="text" default="" label="JBS_ADDON_CUSTOM_ICON"
                description="JBS_ADDON_CUSTOM_ICON_DESC"/>
         <field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_FONT_SIZE"
-               description="JBS_ADDON_FONT_SIZE_DESC"/>
+               description="JBS_ADDON_FONT_SIZE_DESC" filter="int"/>
         <field name="media_image" type="media" directory="biblestudy"
                label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
                class="col-6">

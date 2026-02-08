@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Registry\Registry;
@@ -146,6 +147,25 @@ class CwmmessagetypeTable extends Table
     public function __construct(&$db)
     {
         parent::__construct('#__bsms_message_type', 'id', $db);
+    }
+
+    /**
+     * Perform pre-save checks on the table properties.
+     *
+     * @return  bool  True if checks pass.
+     *
+     * @throws  \UnexpectedValueException
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function check(): bool
+    {
+        if (trim($this->message_type ?? '') === '') {
+            throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_MESSAGETYPE_REQUIRED'));
+        }
+
+        return parent::check();
     }
 
     /**

@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rule;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
@@ -120,6 +121,41 @@ class CwmtemplatecodeTable extends Table
     }
 
     /**
+     * Perform pre-save checks on the table properties.
+     *
+     * @return  bool  True if checks pass.
+     *
+     * @throws  \UnexpectedValueException
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function check(): bool
+    {
+        if (trim($this->filename ?? '') === '') {
+            throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_FILENAME_REQUIRED'));
+        }
+
+        if (
+            $this->filename === 'main' ||
+            $this->filename === 'simple' ||
+            $this->filename === 'custom' ||
+            $this->filename === 'formheader' ||
+            $this->filename === 'formfooter'
+        ) {
+            throw new \UnexpectedValueException(Text::_('JBS_STYLE_RESTRICTED_FILE_NAME'));
+        }
+
+        $type = (int) $this->type;
+
+        if ($type < 1 || $type > 7) {
+            throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_INVALID_TEMPLATE_TYPE'));
+        }
+
+        return parent::check();
+    }
+
+    /**
      * Method to bind an associative array or object to the Table instance.This
      * method only binds properties that are publicly accessible and optionally
      * takes an array of properties to ignore when binding.
@@ -157,18 +193,6 @@ class CwmtemplatecodeTable extends Table
     #[\Override]
     public function store($updateNulls = false): bool
     {
-        if (
-            $this->filename === 'main' ||
-            $this->filename === 'simple' ||
-            $this->filename === 'custom' ||
-            $this->filename === 'formheader' ||
-            $this->filename === 'formfooter'
-        ) {
-            Factory::getApplication()->enqueueMessage('JBS_STYLE_RESTRICTED_FILE_NAME', 'error');
-
-            return false;
-        }
-
         // Write the file
         $templateType = $this->type;
         $filename     = 'default_' . $this->filename . '.php';
