@@ -48,6 +48,14 @@ class CwmsermonsModel extends ListModel
     public $context = 'com_proclaim.sermons.list';
 
     /**
+     * Cached filter query results to avoid duplicate queries per request.
+     *
+     * @var array<string, array>
+     * @since 10.1.0
+     */
+    private array $filterCache = [];
+
+    /**
      * Constructor.
      *
      * @param   array  $config  An optional associative array of configuration settings.
@@ -209,6 +217,10 @@ class CwmsermonsModel extends ListModel
      */
     public function getTeachers(): array
     {
+        if (isset($this->filterCache['teachers'])) {
+            return $this->filterCache['teachers'];
+        }
+
         $db    = $this->getDatabase();
         $query = $db->getQuery(true);
         $query->select($db->quoteName(['t.id', 't.teachername'], ['value', 'text']));
@@ -220,7 +232,9 @@ class CwmsermonsModel extends ListModel
 
         $db->setQuery($query);
 
-        return $db->loadObjectList();
+        $this->filterCache['teachers'] = $db->loadObjectList();
+
+        return $this->filterCache['teachers'];
     }
 
     /**
@@ -231,6 +245,10 @@ class CwmsermonsModel extends ListModel
      */
     public function getYears(): array
     {
+        if (isset($this->filterCache['years'])) {
+            return $this->filterCache['years'];
+        }
+
         $db    = $this->getDatabase();
         $query = $db->getQuery(true);
         $query->select('DISTINCT YEAR(' . $db->quoteName('s.studydate') . ') as value');
@@ -242,7 +260,9 @@ class CwmsermonsModel extends ListModel
 
         $db->setQuery($query);
 
-        return $db->loadObjectList();
+        $this->filterCache['years'] = $db->loadObjectList();
+
+        return $this->filterCache['years'];
     }
 
     /**
@@ -254,6 +274,10 @@ class CwmsermonsModel extends ListModel
      */
     public function getSeries(): array
     {
+        if (isset($this->filterCache['series'])) {
+            return $this->filterCache['series'];
+        }
+
         $db    = $this->getDatabase();
         $query = $db->getQuery(true);
 
@@ -281,6 +305,8 @@ class CwmsermonsModel extends ListModel
             }
         }
 
+        $this->filterCache['series'] = $items;
+
         return $items;
     }
 
@@ -292,6 +318,10 @@ class CwmsermonsModel extends ListModel
      */
     public function getBooks(): array
     {
+        if (isset($this->filterCache['books'])) {
+            return $this->filterCache['books'];
+        }
+
         $db    = $this->getDatabase();
         $query = $db->getQuery(true);
 
@@ -306,7 +336,9 @@ class CwmsermonsModel extends ListModel
             $book->text = Text::_($book->text);
         }
 
-        return $books;
+        $this->filterCache['books'] = $books;
+
+        return $this->filterCache['books'];
     }
 
     /**
