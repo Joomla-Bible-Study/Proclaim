@@ -323,6 +323,17 @@
             "attributes": {
                 "defer": true
             }
+        },
+        {
+            "name": "com_proclaim.quickicon-enhanced",
+            "type": "script",
+            "uri": "com_proclaim/quickicon-enhanced.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
         }
     ]
 }

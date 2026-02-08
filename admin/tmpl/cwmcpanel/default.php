@@ -14,6 +14,7 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
@@ -289,80 +290,78 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                 <colgroup>
                     <col class="col1">
                     <col class="col2">
-                    <col class="col1">
+                    <col class="col2">
                     <col class="col2">
                 </colgroup>
                 <thead class="thead-light">
                 <tr>
-                    <th><?php
-                echo Text::_('JBS_CPL_STATISTIC'); ?></th>
-                    <th><?php
-                echo Text::_('JBS_CPL_VALUE'); ?></th>
-                    <th><?php
-                echo Text::_('JBS_CPL_STATISTIC'); ?></th>
-                    <th><?php
-                echo Text::_('JBS_CPL_VALUE'); ?></th>
+                    <th><?php echo Text::_('JBS_CPL_STATISTIC'); ?></th>
+                    <th><?php echo Text::_('JBS_CPL_PUBLISHED'); ?></th>
+                    <th><?php echo Text::_('JBS_CPL_ARCHIVED'); ?></th>
+                    <th><?php echo Text::_('JBS_CPL_TOTAL'); ?></th>
                 </tr>
                 </thead>
                 <?php
         $yesterday = mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"));
 $lastmonth         = mktime(0, 0, 0, date("m") - 1, date("d"), date("Y") - 1);
 $today             = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
+
+// Entity state counts
+$entityStats = [
+    ['label' => 'JBS_CPL_TOTAL_MESSAGES', 'table' => '#__bsms_studies'],
+    ['label' => 'JBS_CPL_TOTAL_MEDIA_FILES', 'table' => '#__bsms_mediafiles'],
+    ['label' => 'JBS_CPL_TOTAL_COMMENTS', 'table' => '#__bsms_comments'],
+    ['label' => 'JBS_CPL_TOTAL_TOPICS', 'table' => '#__bsms_topics'],
+];
 ?>
                 <tbody>
+                <?php foreach ($entityStats as $entity) : ?>
                 <tr>
-                    <td><?php
-        echo Text::_('JBS_CPL_TOTAL_MESSAGES'); ?></td>
-                    <td><strong><?php
-            echo Cwmstats::getTotalMessages(); ?></strong></td>
-                    <td><?php
-        echo Text::_('JBS_CPL_TOTAL_COMMENTS'); ?></td>
-                    <td><strong><?php
-            echo Cwmstats::getTotalComments(); ?></strong></td>
+                    <td><?php echo Text::_($entity['label']); ?></td>
+                    <td><strong><?php echo CwmcountHelper::getCountByState($entity['table'], 1); ?></strong></td>
+                    <td><strong><?php echo CwmcountHelper::getCountByState($entity['table'], 2); ?></strong></td>
+                    <td><strong><?php echo CwmcountHelper::getTotalCount($entity['table']); ?></strong></td>
+                </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+            <table class="table table-striped table-responsive table-hover mt-3">
+                <colgroup>
+                    <col class="col1">
+                    <col class="col2">
+                    <col class="col1">
+                    <col class="col2">
+                </colgroup>
+                <thead class="thead-light">
+                <tr>
+                    <th><?php echo Text::_('JBS_CPL_STATISTIC'); ?></th>
+                    <th><?php echo Text::_('JBS_CPL_VALUE'); ?></th>
+                    <th><?php echo Text::_('JBS_CPL_STATISTIC'); ?></th>
+                    <th><?php echo Text::_('JBS_CPL_VALUE'); ?></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><?php echo Text::_('JBS_CPL_TOP5_STUDIES_HITS'); ?></td>
+                    <td><strong><?php echo Cwmstats::getTopStudies(); ?></strong></td>
+                    <td><?php echo Text::_('JBS_CPL_TOP5_STUDIES_HITS_90DAYS'); ?></td>
+                    <td><strong><?php echo Cwmstats::getTopThirtyDays(); ?></strong></td>
                 </tr>
                 <tr>
-                    <td><?php
-        echo Text::_('JBS_CPL_TOTAL_TOPICS'); ?></td>
-                    <td><strong><?php
-            echo Cwmstats::getTotalTopics(); ?></strong></td>
-                    <td><?php
-        echo Text::_('JBS_CPL_TOTAL_MEDIA_FILES'); ?></td>
-                    <td><strong><?php
-            echo Cwmstats::getTotalMediaFiles(); ?></strong></td>
+                    <td><?php echo Text::_('JBS_CPL_TOTAL_DOWNLOADS'); ?></td>
+                    <td><strong><?php echo Cwmstats::getTotalDownloads(); ?></strong></td>
+                    <td><?php echo Text::_('JBS_CPL_TOP5_DOWNLOADS'); ?></td>
+                    <td><strong><?php echo Cwmstats::getTopDownloads(); ?></strong></td>
                 </tr>
                 <tr>
-                    <td><?php
-        echo Text::_('JBS_CPL_TOP5_STUDIES_HITS'); ?></td>
-                    <td><strong><?php
-            echo Cwmstats::getTopStudies(); ?></strong></td>
-                    <td><?php
-        echo Text::_('JBS_CPL_TOP5_STUDIES_HITS_90DAYS'); ?></td>
-                    <td><strong><?php
-            echo Cwmstats::getTopThirtyDays(); ?></strong></td>
-                </tr>
-                <tr>
-                    <td><?php
-        echo Text::_('JBS_CPL_TOTAL_DOWNLOADS'); ?></td>
-                    <td><strong><?php
-            echo Cwmstats::getTotalDownloads(); ?></strong></td>
-                    <td><?php
-        echo Text::_('JBS_CPL_TOP5_DOWNLOADS'); ?></td>
-                    <td><strong><?php
-            echo Cwmstats::getTopDownloads(); ?></strong></td>
-                </tr>
-                <tr>
-                    <td><?php
-        echo Text::_('JBS_CPL_TOP5_DOWNLOADS_LAST_90DAYS'); ?></td>
-                    <td><strong><?php
-            echo Cwmstats::getDownloadsLastThreeMonths(); ?></strong></td>
+                    <td><?php echo Text::_('JBS_CPL_TOP5_DOWNLOADS_LAST_90DAYS'); ?></td>
+                    <td><strong><?php echo Cwmstats::getDownloadsLastThreeMonths(); ?></strong></td>
                     <td></td>
-                    <td><strong></strong></td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td> <?php
-        echo Text::_('JBS_CPL_TOP_STUDIES_HITS_PLAYS_DOWNLOADS'); ?></td>
-                    <td><strong><?php
-            echo Cwmstats::getTopScore(); ?></strong></td>
+                    <td><?php echo Text::_('JBS_CPL_TOP_STUDIES_HITS_PLAYS_DOWNLOADS'); ?></td>
+                    <td><strong><?php echo Cwmstats::getTopScore(); ?></strong></td>
                     <td></td>
                     <td></td>
                 </tr>

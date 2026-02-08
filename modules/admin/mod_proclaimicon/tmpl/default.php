@@ -23,6 +23,7 @@ $wa->useScript('core')
     ->useScript('bootstrap.dropdown');
 $wa->registerAndUseScript('mod_quickicon', 'mod_quickicon/quickicon.min.js', ['relative' => true, 'version' => 'auto'], ['type' => 'module']);
 $wa->registerAndUseScript('mod_quickicon-es5', 'mod_quickicon/quickicon-es5.min.js', ['relative' => true, 'version' => 'auto'], ['nomodule' => true, 'defer' => true]);
+$wa->useScript('com_proclaim.quickicon-enhanced');
 
 /** @var ProclaimIconHelper $buttons */
 $html = HTMLHelper::_('icons.buttons', $buttons);

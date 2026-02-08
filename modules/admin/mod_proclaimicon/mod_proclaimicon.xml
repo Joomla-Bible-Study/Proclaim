@@ -79,6 +79,7 @@
                 >
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
                 </field>
                 <field
                         name="show_series"
@@ -102,6 +103,7 @@
                 >
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
                 </field>
                 <field
                         name="show_locations"
@@ -113,6 +115,7 @@
                 >
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
                 </field>
                 <field
                         name="show_topics"
@@ -124,6 +127,7 @@
                 >
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
                 </field>
                 <field
                         name="show_comments"
@@ -135,6 +139,7 @@
                 >
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
                 </field>
                 <field
                         name="show_servers"
@@ -146,6 +151,7 @@
                 >
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
                 </field>
                 <field
                         name="show_podcasts"
@@ -157,6 +163,7 @@
                 >
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
                 </field>
                 <field
                         name="show_templates"
@@ -168,6 +175,7 @@
                 >
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
                 </field>
                 <field
                         name="show_templatecode"
@@ -179,6 +187,7 @@
                 >
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
                 </field>
                 <field
                         name="show_admin"
