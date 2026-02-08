@@ -782,10 +782,10 @@ class Cwmlisting
         $row6count2 = 0;
 
         if ($span) {
-            $frow .= '<div class="row-fluid" about="' . $type . '">';
-            $frow .= '<div class="span' . $rowspanitemspan . ' ' . $pull
+            $frow .= '<div class="row" about="' . $type . '">';
+            $frow .= '<div class="col-' . $rowspanitemspan . ' ' . $pull
                 . '" id="jbsmspan-image"><div ' . $headerstyle . '>' . $span . '</div></div>';
-            $frow .= '<div class="span' . $rowspanbalance . '" about="' . $type . '">';
+            $frow .= '<div class="col-' . $rowspanbalance . '" about="' . $type . '">';
         }
 
         foreach ($listsorts as $sort) {

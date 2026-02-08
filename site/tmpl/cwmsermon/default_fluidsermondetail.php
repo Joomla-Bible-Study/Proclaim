@@ -19,7 +19,7 @@
 <div class="container-fluid">
 
 
-    <div class="row-fluid">
+    <div class="row">
         <div class="col-lg-12">
             <h3 style="text-align:right;">
                 Bible Study from Calvary Chapel Newberg

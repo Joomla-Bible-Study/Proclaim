@@ -76,13 +76,7 @@ class CWMAddonLocal extends CWMAddon
         $fields = $media_form->getFieldset('general');
 
         if ($fields) {
-            foreach ($media_form->getFieldset('general') as $field) :
-                $html .= '<div class="control-group">';
-                $html .= '<div class="control-label">';
-                $html .= $field->label;
-                $html .= '</div>';
-                $html .= '<div class="controls">';
-
+            foreach ($fields as $field) :
                 // Way to set defaults on new media
                 if ($new) {
                     $s_name = $field->fieldname;
@@ -92,9 +86,7 @@ class CWMAddonLocal extends CWMAddon
                     }
                 }
 
-                $html .= $field->input;
-                $html .= '</div>';
-                $html .= '</div>';
+                $html .= $field->renderField();
             endforeach;
         }
 
@@ -115,19 +107,13 @@ class CWMAddonLocal extends CWMAddon
     {
         $html = HTMLHelper::_('uitab.addTab', 'myTab', 'options', Text::_('JBS_ADDON_MEDIA_OPTIONS_LABEL'));
 
-        $html .= '<div class="row-fluid">';
+        $html .= '<div class="row">';
 
         foreach ($media_form->getFieldsets('params') as $name => $fieldset) {
             if ($name !== 'general') {
-                $html .= '<div class="span6">';
+                $html .= '<div class="col-6">';
 
                 foreach ($media_form->getFieldset($name) as $field) :
-                    $html .= '<div class="control-group">';
-                    $html .= '<div class="control-label">';
-                    $html .= $field->label;
-                    $html .= '</div>';
-                    $html .= '<div class="controls">';
-
                     // Way to set defaults on new media
                     if ($new) {
                         $s_name = $field->fieldname;
@@ -137,9 +123,7 @@ class CWMAddonLocal extends CWMAddon
                         }
                     }
 
-                    $html .= $field->input;
-                    $html .= '</div>';
-                    $html .= '</div>';
+                    $html .= $field->renderField();
                 endforeach;
 
                 $html .= '</div>';

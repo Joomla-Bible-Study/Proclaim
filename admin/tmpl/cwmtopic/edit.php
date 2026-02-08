@@ -71,15 +71,12 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                 <?php
                 $string = $this->form->getValue('topic_text');
 if (str_starts_with($string, 'JBS')) { ?>
-                    <div class="control-group">
-                        <div class="control-label">
-                            <label id="topic_text-lbl" for="topic_text">Translated:</label>
-                        </div>
-                        <div class="controls">
-                            <?php
-            echo '<input type="text" id="topic_text_translated" name="topic_text_translated" value="' . Text::_($string) . '" class="form-control readonly valid form-control-success" readonly="readonly" data-alt-value="' . Text::_($string) . '" autocomplete="off" aria-invalid="false">';
-    echo "<br/>"; ?>
-                        </div>
+                    <div class="mb-3">
+                        <label id="topic_text-lbl" for="topic_text" class="form-label">Translated:</label>
+                        <?php
+                        echo '<input type="text" id="topic_text_translated" name="topic_text_translated" value="'
+                            . Text::_($string) . '" class="form-control" readonly data-alt-value="'
+                            . Text::_($string) . '" autocomplete="off" aria-invalid="false">'; ?>
                     </div>
                     <?php
 } ?>

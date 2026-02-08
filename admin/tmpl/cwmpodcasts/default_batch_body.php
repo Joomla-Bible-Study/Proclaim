@@ -20,29 +20,18 @@ use Joomla\CMS\Layout\LayoutHelper;
 ?>
 <div class="p-3">
     <div class="row">
-        <?php
-        if (Multilanguage::isEnabled()) : ?>
+        <?php if (Multilanguage::isEnabled()) : ?>
             <div class="form-group col-md-6">
-                <div class="controls">
-                    <?php
-                    echo LayoutHelper::render('joomla.html.batch.language', []); ?>
-                </div>
+                <?php echo LayoutHelper::render('joomla.html.batch.language', []); ?>
             </div>
-        <?php
-        endif; ?>
+        <?php endif; ?>
         <div class="form-group col-md-6">
-            <div class="controls">
-                <?php
-                echo LayoutHelper::render('joomla.html.batch.access', []); ?>
-            </div>
+            <?php echo LayoutHelper::render('joomla.html.batch.access', []); ?>
         </div>
     </div>
     <div class="row">
         <div class="form-group col-md-6">
-            <div class="controls">
-                <?php
-                echo Cwmhtml::linkType(); ?>
-            </div>
+            <?php echo Cwmhtml::linkType(); ?>
         </div>
     </div>
 </div>

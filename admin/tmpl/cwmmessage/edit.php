@@ -222,19 +222,12 @@ echo Route::_(
                 <?php
             } ?>
             <div class="col-lg-5">
-                <div class="control-group">
-                    <div class="control-label">
-                        <label id="jform_hits-lbl" for="jform_hits">
-                            <?php
-                            echo Text::_('JBS_STY_HITS'); ?>
-                        </label>
-                    </div>
-                    <div class="controls">
-                        <input type="text" id="jform_hits" value="<?php
-                        echo $this->item->hits; ?>"
-                               class="form-control field-user-input-name readonly valid form-control-success" size="10"
-                               readonly="" aria-invalid="false">
-                    </div>
+                <div class="mb-3">
+                    <label id="jform_hits-lbl" for="jform_hits" class="form-label">
+                        <?php echo Text::_('JBS_STY_HITS'); ?>
+                    </label>
+                    <input type="text" id="jform_hits" value="<?php echo $this->item->hits; ?>"
+                           class="form-control" size="10" readonly aria-invalid="false">
                 </div>
                 <?php echo $this->form->renderField('published'); ?>
                 <?php echo $this->form->renderField('studydate'); ?>
@@ -244,10 +237,7 @@ echo Route::_(
                 <?php echo $this->form->renderField('teacher_id', null, $teacher_id); ?>
 
                 <?php echo $this->form->renderField('series_id', null, $series_id); ?>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->renderFieldset('scripture'); ?>
-                </div>
+                <?php echo $this->form->renderFieldset('scripture'); ?>
 
             </div>
         </div>

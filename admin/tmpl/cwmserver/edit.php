@@ -120,7 +120,6 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (
                 <div class="row">
                     <div class="accordion" id="accordionlist">
                         <?php
-                        $test = $this->server_form->getFieldsets('media');
                 foreach ($this->server_form->getFieldsets('media') as $name => $fieldset) : ?>
                             <div class="accordion-item">
                                 <h2 class="accordion-heading" id="<?php
@@ -142,16 +141,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (
                                     <div class="accordion-body">
                                         <?php
                                 foreach ($this->server_form->getFieldset($name) as $field) : ?>
-                                            <div class="control-group">
-                                                <div class="control-label">
-                                                    <?php
-                                            echo $field->label; ?>
-                                                </div>
-                                                <div class="controls">
-                                                    <?php
-                                            echo $field->input; ?>
-                                                </div>
-                                            </div>
+                                            <?php echo $field->renderField(); ?>
                                             <?php
                                 endforeach; ?>
                                     </div>

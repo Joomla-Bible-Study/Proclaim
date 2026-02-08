@@ -30,14 +30,14 @@ $wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
     }</style>
 
 
-<div class="row-fluid col-lg-12">
+<div class="row col-lg-12">
     <h2>
         Teachings
     </h2>
 </div>
 
 
-<div class="row-fluid col-lg-12 dropdowns"
+<div class="row col-lg-12 dropdowns"
      style="background-color:#A9A9A9; margin:0 -5px; padding:8px 8px; border:1px solid #C5C1BE; position:relative; -webkit-border-radius:10px;">
 
     <?php

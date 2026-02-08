@@ -267,7 +267,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                 <div class="cwmadmin-panel">
                     <h3 class="tab-description"><?php echo Text::_('JBS_CMN_MEDIA_FILES'); ?></h3>
 
-                    <div class="control-group">
+                    <div class="mb-3">
                         <label><?php echo Text::_('JBS_ADM_MEDIA_PLAYER_STAT'); ?></label>
                         <div id="player-stats-container" class="cwmadmin-stats-container">
                             <div class="cwmadmin-stats-loading">
@@ -278,7 +278,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                     </div>
                     <?php echo $this->form->renderField('from', 'params'); ?>
                     <?php echo $this->form->renderField('to', 'params'); ?>
-                    <div class="control-group">
+                    <div class="mb-3">
                         <button type="button" class="btn btn-primary"
                                 data-player-tool="players"
                                 data-from-field="jform_params_from"
@@ -294,7 +294,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                 <div class="cwmadmin-panel">
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_POPUP_OPTIONS'); ?></h3>
 
-                    <div class="control-group">
+                    <div class="mb-3">
                         <label><?php echo Text::_('JBS_ADM_MEDIA_PLAYER_POPUP_STAT'); ?></label>
                         <div id="popup-stats-container" class="cwmadmin-stats-container">
                             <div class="cwmadmin-stats-loading">
@@ -305,7 +305,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                     </div>
                     <?php echo $this->form->renderField('pFrom', 'params'); ?>
                     <?php echo $this->form->renderField('pTo', 'params'); ?>
-                    <div class="control-group">
+                    <div class="mb-3">
                         <button type="button" class="btn btn-primary"
                                 data-player-tool="popups"
                                 data-from-field="jform_params_pFrom"
@@ -323,7 +323,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
 
                     <?php echo $this->form->renderField('mtFrom', 'params'); ?>
                     <?php echo $this->form->renderField('mtTo', 'params'); ?>
-                    <div class="control-group">
+                    <div class="mb-3">
                         <button type="button" class="btn btn-primary"
                                 data-player-tool="playerbymediatype"
                                 data-from-field="jform_params_mtFrom"

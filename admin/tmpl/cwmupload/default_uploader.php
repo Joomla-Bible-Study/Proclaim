@@ -55,27 +55,9 @@ if ($input->get('layout', '', 'string') === 'modal') {
     $url = 'index.php?option=com_proclaim&view=cwmupload&layout=default';
 }
 echo Route::_($url);
-?>" method="post" name="adminForm" id="item-form" class=" form-horizontal">
-    <div class="control-group">
-        <div class="control-label">
-            <?php
-            echo $this->form->getLabel('server'); ?>
-        </div>
-        <div class="controls">
-            <?php
-            echo $this->form->getInput('server'); ?>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="control-label">
-            <?php
-            echo $this->form->getLabel('path'); ?>
-        </div>
-        <div class="controls">
-            <?php
-            echo $this->form->getInput('path'); ?>
-        </div>
-    </div>
+?>" method="post" name="adminForm" id="item-form">
+    <?php echo $this->form->renderField('server'); ?>
+    <?php echo $this->form->renderField('path'); ?>
 
 
     <div id="uploader">

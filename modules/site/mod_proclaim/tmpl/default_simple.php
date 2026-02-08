@@ -25,7 +25,7 @@ $show_link = $params->get('show_link', 1);
 
 $Listing = new Cwmlisting(); ?>
 
-<div class="row-fluid col-12">
+<div class="row col-12">
     <h5>
         <?php
         echo Text::_('JBS_CMN_TEACHINGS'); ?>
@@ -69,7 +69,7 @@ foreach ($list as $study) {
     <?php
 } ?>
 
-<div class="row-fluid">
+<div class="row">
     <div class="col-12">
         <?php
         if ($params->get('show_link') > 0) {
@@ -81,4 +81,3 @@ foreach ($list as $study) {
 </div>
 <!--end of footer div-->
 <!--end container -->
-<div style="clear: both;"></div>
