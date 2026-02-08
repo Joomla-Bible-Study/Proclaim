@@ -6,27 +6,83 @@
  *
  * Print stylesheet for Proclaim sermon detail view.
  * Hides interactive/non-printable elements and optimizes for paper output.
+ *
+ * Targets Joomla 5 Cassiopeia template structure.
  */
 
 @media print {
-    /* ===== Hide non-printable elements ===== */
 
-    /* Print button itself */
+    /* ==========================================================
+       1. HIDE EVERYTHING OUTSIDE MAIN CONTENT
+       Use the nuclear approach: hide all Cassiopeia grid children,
+       then re-show only the component container.
+       ========================================================== */
+
+    /* Cassiopeia template chrome */
+    .container-header,
+    .container-nav,
+    .container-topbar,
+    .container-below-top,
+    .container-banner,
+    .container-top-a,
+    .container-top-b,
+    .container-sidebar-left,
+    .container-sidebar-right,
+    .container-bottom-a,
+    .container-bottom-b,
+    .container-footer,
+    .back-to-top-link,
+    #back-top {
+        display: none !important;
+    }
+
+    /* Generic Joomla elements that may appear */
+    header.header,
+    footer.footer,
+    .breadcrumb,
+    nav.container-nav,
+    #system-message-container {
+        display: none !important;
+    }
+
+    /* Make component container fill the page */
+    .container-component {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Reset Cassiopeia grid to single column */
+    .site-grid {
+        display: block !important;
+        grid-template-columns: none !important;
+    }
+
+    /* ==========================================================
+       2. HIDE PROCLAIM NON-PRINT ELEMENTS
+       ========================================================== */
+
+    /* Print button */
     .proclaim-print-btn,
     .proclaim-no-print {
         display: none !important;
     }
 
-    /* Social sharing */
-    .proclaim-social-share,
-    .share_links,
-    .jbssociallinks {
+    /* Social sharing (AddToAny) */
+    .proclaim-share,
+    .a2a_kit,
+    .a2a_default_style,
+    [class*="a2a_button_"],
+    .a2a_dd {
         display: none !important;
     }
 
-    /* Comments section */
+    /* Comments section and toggle */
     .proclaim-comments-toggle,
-    #JBScomments {
+    #JBScomments,
+    #commentstable,
+    #commentForm {
         display: none !important;
     }
 
@@ -36,6 +92,17 @@
         display: none !important;
     }
 
+    /* Scripture passage toggle link and icon */
+    .passage a.heading,
+    .passage .fas.fa-bible {
+        display: none !important;
+    }
+
+    /* Show the scripture passage content if it was hidden */
+    .passage div[id][style*="display: none"] {
+        display: block !important;
+    }
+
     /* Navigation elements */
     .proclaim-skip-link,
     .listingfooter,
@@ -43,34 +110,39 @@
         display: none !important;
     }
 
-    /* Media players — hide interactive players, keep static info */
-    .proclaim-media-player,
-    .cwm-fancybox,
-    .fancybox-container,
+    /* Media players and interactive elements */
     iframe,
     video,
     audio,
-    .media-download-btn {
+    .proclaim-media-player,
+    .cwm-fancybox,
+    .fancybox-container,
+    .media-download-btn,
+    .btn-group .dropdown-toggle {
         display: none !important;
     }
 
-    /* Joomla chrome */
-    header,
-    footer,
-    nav,
-    .navbar,
-    .sidebar,
-    #system-message-container,
-    .back-to-top,
-    .breadcrumb {
+    /* YouTube play button icons in fluid listing */
+    a[href*="youtube"] img,
+    a[href*="youtu.be"] img,
+    .fa-youtube {
         display: none !important;
     }
 
-    /* ===== Print-optimized typography ===== */
+    /* Joomla modules rendered in component area */
+    .moduletable,
+    [class*="mod_"],
+    .mod-custom {
+        display: none !important;
+    }
+
+    /* ==========================================================
+       3. PRINT-OPTIMIZED TYPOGRAPHY
+       ========================================================== */
 
     body {
-        font-size: 12pt;
-        line-height: 1.5;
+        font-size: 12pt !important;
+        line-height: 1.5 !important;
         color: #000 !important;
         background: #fff !important;
     }
@@ -82,7 +154,7 @@
     }
 
     h1, .page-header h1 {
-        font-size: 18pt;
+        font-size: 18pt !important;
         color: #000 !important;
         border-bottom: 1pt solid #ccc;
         padding-bottom: 6pt;
@@ -100,7 +172,7 @@
         color: #333 !important;
     }
 
-    /* Archive badge — show in print but as plain text */
+    /* Archive badge - plain text in print */
     .proclaim-archive-badge {
         border: 1pt solid #999;
         color: #666 !important;
@@ -116,7 +188,9 @@
         line-height: 1.6;
     }
 
-    /* ===== Page break control ===== */
+    /* ==========================================================
+       4. PAGE BREAK CONTROL
+       ========================================================== */
 
     .page-header {
         page-break-after: avoid;
@@ -127,30 +201,32 @@
         widows: 3;
     }
 
-    /* ===== Links — show URL in print ===== */
+    /* ==========================================================
+       5. LINKS - show URL in print for external links
+       ========================================================== */
 
-    a[href]::after {
+    .proclaim-main-content a[href^="http"]::after {
         content: " (" attr(href) ")";
         font-size: 9pt;
         color: #666;
         word-break: break-all;
     }
 
-    /* Don't show URL for internal anchors or javascript links */
+    /* Don't show URL for anchors, javascript, or heading links */
     a[href^="#"]::after,
     a[href^="javascript:"]::after,
     .page-header a::after {
-        content: "";
+        content: "" !important;
     }
 
-    /* ===== Images ===== */
+    /* ==========================================================
+       6. IMAGES AND TABLES
+       ========================================================== */
 
     img {
         max-width: 100% !important;
         page-break-inside: avoid;
     }
-
-    /* ===== Tables ===== */
 
     table {
         border-collapse: collapse;
@@ -164,9 +240,17 @@
         padding: 4pt 8pt;
     }
 
-    /* ===== Fluid listing (layout editor output) ===== */
+    /* ==========================================================
+       7. FLUID LISTING (layout editor output)
+       ========================================================== */
 
     .proclaim-listing-row {
         page-break-inside: avoid;
+    }
+
+    /* Fluid listing rows - hide media column content */
+    .fluid-row img[src*="youtube"],
+    .fluid-row .fa-youtube {
+        display: none !important;
     }
 }
