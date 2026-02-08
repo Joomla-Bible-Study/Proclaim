@@ -177,7 +177,7 @@ class CwmpodcastModel extends AdminModel
                 $table->linktype = (int)$value;
 
                 if (!$table->store()) {
-                    throw new \RuntimeException($table->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
             } else {
                 throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));

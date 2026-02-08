@@ -165,12 +165,6 @@ class CwmcommentModel extends AdminModel
 
             // Check that the row actually exists
             if (!$table->load($pk)) {
-                if ($error = $table->getError()) {
-                    // Fatal error
-                    throw new \RuntimeException($error);
-                }
-
-                // Not fatal error
                 Factory::getApplication()->enqueueMessage(
                     Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk),
                     'warning'
@@ -186,12 +180,12 @@ class CwmcommentModel extends AdminModel
 
             // Check the row.
             if (!$table->check()) {
-                throw new \RuntimeException($table->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
             }
 
             // Store the row.
             if (!$table->store()) {
-                throw new \RuntimeException($table->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
             }
 
             // Get the new item ID

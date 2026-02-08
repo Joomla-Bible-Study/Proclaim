@@ -667,7 +667,7 @@ class CwmmediafileModel extends AdminModel
                 $table->player = (int)$value;
 
                 if (!$table->store()) {
-                    throw new \RuntimeException($table->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
             } else {
                 throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
@@ -725,7 +725,7 @@ class CwmmediafileModel extends AdminModel
                 $table->params = $reg->toString();
 
                 if (!$table->store()) {
-                    throw new \RuntimeException($table->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
             } else {
                 throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
@@ -767,7 +767,7 @@ class CwmmediafileModel extends AdminModel
                 $table->params = $reg->toString();
 
                 if (!$table->store()) {
-                    throw new \RuntimeException($table->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
             } else {
                 throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
@@ -808,7 +808,7 @@ class CwmmediafileModel extends AdminModel
                 $table->params = $reg->toString();
 
                 if (!$table->store()) {
-                    throw new \RuntimeException($table->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
             } else {
                 throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
@@ -849,7 +849,7 @@ class CwmmediafileModel extends AdminModel
                 $table->params = $reg->toString();
 
                 if (!$table->store()) {
-                    throw new \RuntimeException($table->getError() ?: Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
             } else {
                 throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
@@ -893,7 +893,7 @@ class CwmmediafileModel extends AdminModel
                     $count++;
                 }
             } else {
-                throw new \RuntimeException($table->getError() ?: Text::_('JLIB_APPLICATION_ERROR_RECORD_NOT_FOUND'));
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_RECORD_NOT_FOUND'));
             }
         }
 
