@@ -45,12 +45,6 @@ composer lint
 # Fix code style via php-cs-fixer
 composer lint:fix
 
-# Run PHPCS (supplementary, used by IDE)
-composer cs
-
-# Fix PHPCS issues
-composer cs:fix
-
 # Run lint + PHP tests
 composer check
 
@@ -176,7 +170,6 @@ This project follows **PSR-12** coding standards. All code must pass PHP CS Fixe
 ### Tools
 
 - PHP CS Fixer config: `.php-cs-fixer.dist.php`
-- PHPCS ruleset: `build/psr12/ruleset.xml`
 - Run `composer lint:fix` before committing
 
 ### Naming Conventions

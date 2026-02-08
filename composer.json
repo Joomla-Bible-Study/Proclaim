@@ -35,9 +35,7 @@
     "github-protocols": [
       "https"
     ],
-    "allow-plugins": {
-      "dealerdirect/phpcodesniffer-composer-installer": true
-    }
+    "allow-plugins": {}
   },
   "support": {
     "issues": "https://www.christianwebministries.org/issues",
@@ -73,8 +71,6 @@
   "require-dev": {
     "phpunit/phpunit": "^11.0",
     "friendsofphp/php-cs-fixer": "^3.0",
-    "squizlabs/php_codesniffer": "^4.0",
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
     "phan/phan": "^5.4",
     "roave/security-advisories": "dev-latest",
     "pdepend/pdepend": "^2.16",
@@ -99,8 +95,6 @@
     "lint:syntax": "php build/proclaim_build.php lint-syntax",
     "lint": "php-cs-fixer fix --dry-run --diff",
     "lint:fix": "php-cs-fixer fix",
-    "cs": "phpcs .",
-    "cs:fix": "phpcbf .",
     "check": ["@lint:syntax", "@lint", "@test"],
     "check:all": ["@lint:syntax", "@lint", "@test:all"],
     "build:assets": "npm ci && npm run build",
@@ -116,11 +110,7 @@
     "sync-languages-force": "python3 build/sync_languages.py --force",
     "sync-languages-setup": "python3 build/sync_languages.py setup",
     "post-install-cmd": [
-      "\"libraries/vendor/bin/phpcs\" --config-set installed_paths libraries/vendor/squizlabs/php_codesniffer/src/Standards",
       "@php -r \"if (!file_exists('build.properties')) { copy('build.dist.properties', 'build.properties'); echo 'Created build.properties from template. Run composer setup to configure.\\n'; }\""
-    ],
-    "post-update-cmd": [
-      "\"libraries/vendor/bin/phpcs\" --config-set installed_paths libraries/vendor/squizlabs/php_codesniffer/src/Standards"
     ]
   }
 }
