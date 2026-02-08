@@ -62,7 +62,7 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
       name="adminForm"
       id="adminForm"
       class="form-validate">
-    <div class="form-horizontal">
+    <div>
         <?php
         echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general']); ?>
 
@@ -71,92 +71,19 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_GENERAL')); ?>
         <div class="row">
             <div class="col-lg-7">
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('study_id'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('study_id', null, $study_id); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('createdate'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('createdate', null, $createdate); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('server_id'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('server_id', null, $this->item->server_id); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('podcast_id'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('podcast_id', null, $podcast_id); ?>
-                    </div>
-                </div>
+                <?php echo $this->form->renderField('study_id', null, $study_id); ?>
+                <?php echo $this->form->renderField('createdate', null, $createdate); ?>
+                <?php echo $this->form->renderField('server_id', null, $this->item->server_id); ?>
+                <?php echo $this->form->renderField('podcast_id', null, $podcast_id); ?>
 
-                <?php
-                echo $this->addon->renderGeneral($this->media_form, $new); ?>
+                <?php echo $this->addon->renderGeneral($this->media_form, $new); ?>
 
             </div>
-            <div class="col-lg-5 form-vertical">
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('published'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('published'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('access'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('access'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('language'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('language'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('comment'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('comment'); ?>
-                    </div>
-                </div>
+            <div class="col-lg-5">
+                <?php echo $this->form->renderField('published'); ?>
+                <?php echo $this->form->renderField('access'); ?>
+                <?php echo $this->form->renderField('language'); ?>
+                <?php echo $this->form->renderField('comment'); ?>
             </div>
         </div>
         <?php
@@ -180,9 +107,8 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
         if ($this->canDo->get('core.admin')) : ?>
             <?php
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
-            <div class="row-fluid">
-                <?php
-                echo $this->form->getInput('rules'); ?>
+            <div class="row">
+                <?php echo $this->form->getInput('rules'); ?>
             </div>
             <?php
             echo HTMLHelper::_('uitab.endTab'); ?>

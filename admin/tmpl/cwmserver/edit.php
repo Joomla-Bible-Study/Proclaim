@@ -59,26 +59,8 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_GENERAL')); ?>
         <div class="row">
             <div class="col-lg-9">
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('server_name'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('server_name'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('type'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('type'); ?>
-                    </div>
-                </div>
+                <?php echo $this->form->renderField('server_name'); ?>
+                <?php echo $this->form->renderField('type'); ?>
             </div>
             <div class="col-lg-3">
                 <?php
@@ -120,16 +102,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (
                         <div class="col-12 col-lg-12">
                             <?php
                             foreach ($this->server_form->getFieldset($fieldsets->name) as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                    </div>
-                                </div>
+                                <?php echo $field->renderField(); ?>
                                 <?php
                             endforeach; ?>
                         </div>
@@ -198,9 +171,8 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (
         if ($this->canDo->get('core.admin')) : ?>
             <?php
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
-            <div class="row-fluid">
-                <?php
-                echo $this->form->getInput('rules'); ?>
+            <div class="row">
+                <?php echo $this->form->getInput('rules'); ?>
             </div>
             <?php
             echo HTMLHelper::_('uitab.endTab'); ?>

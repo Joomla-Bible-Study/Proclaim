@@ -59,75 +59,28 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_GENERAL')); ?>
         <!-- Begin Content -->
         <div class="row">
-            <div class="col-lg-9 form-horizontal">
-                <!-- Begin Tabs -->
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('filename'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('filename'); ?>
-                    </div>
-                </div>
+            <div class="col-lg-9">
+                <?php echo $this->form->renderField('filename'); ?>
 
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('type'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        if ($this->item->id != 0) {
-                            $this->form->setFieldAttribute('type', 'disabled', 'true');
-                        }
-                        echo $this->form->getInput('type');
-                        if ($this->item->id != 0) {
-                            // Disabled fields don't submit; preserve the value
-                            echo '<input type="hidden" name="jform[type]" value="'
-                                . (int) $this->item->type . '">';
-                        }
-                        ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('templatecode'); ?>
-                    </div>
-                    <div class="clr"></div>
-                    <hr/>
-                    <div class="editor-border">
-                        <?php
-                        echo $this->form->getInput('templatecode', null, $templatecode); ?>
-                    </div>
-                </div>
+                <?php
+                if ($this->item->id != 0) {
+                    $this->form->setFieldAttribute('type', 'disabled', 'true');
+                }
+                echo $this->form->renderField('type');
+                if ($this->item->id != 0) {
+                    // Disabled fields don't submit; preserve the value
+                    echo '<input type="hidden" name="jform[type]" value="'
+                        . (int) $this->item->type . '">';
+                }
+                ?>
+                <?php echo $this->form->renderField('templatecode', null, $templatecode); ?>
             </div>
 
             <!-- Begin Sidebar -->
-            <div class="col-lg-3 form-vertical">
+            <div class="col-lg-3">
                 <div style="position: sticky; top: 70px;">
-                    <div class="control-group">
-                        <div class="control-label">
-                            <?php
-                            echo $this->form->getLabel('id'); ?>
-                        </div>
-                        <div class="controls">
-                            <?php
-                            echo $this->form->getInput('id'); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label">
-                            <?php
-                            echo $this->form->getLabel('published'); ?>
-                        </div>
-                        <div class="controls">
-                            <?php
-                            echo $this->form->getInput('published'); ?>
-                        </div>
-                    </div>
+                    <?php echo $this->form->renderField('id'); ?>
+                    <?php echo $this->form->renderField('published'); ?>
 
                     <!-- Code Snippet Insertion Panel -->
                     <div class="card mt-3" id="snippetPanel"
@@ -282,9 +235,8 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         if ($this->canDo->get('core.admin')) : ?>
             <?php
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
-            <div class="row-fluid">
-                <?php
-                echo $this->form->getInput('rules'); ?>
+            <div class="row">
+                <?php echo $this->form->getInput('rules'); ?>
             </div>
             <?php
             echo HTMLHelper::_('uitab.endTab'); ?>
