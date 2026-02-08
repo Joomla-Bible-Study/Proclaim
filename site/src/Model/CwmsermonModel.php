@@ -95,7 +95,10 @@ class CwmsermonModel extends FormModel
                 $query->select(
                     $this->getState(
                         'item.select',
-                        's.*,CASE WHEN CHAR_LENGTH(s.alias) THEN CONCAT_WS(\':\', s.id, s.alias) ELSE s.id END as slug'
+                        $db->quoteName('s') . '.*,'
+                        . 'CASE WHEN CHAR_LENGTH(' . $db->quoteName('s.alias') . ') THEN CONCAT_WS('
+                        . $db->quote(':') . ', ' . $db->quoteName('s.id') . ', ' . $db->quoteName('s.alias')
+                        . ') ELSE ' . $db->quoteName('s.id') . ' END AS ' . $db->quoteName('slug')
                     )
                 );
                 $query->from($db->quoteName('#__bsms_studies', 's'));
@@ -200,8 +203,8 @@ class CwmsermonModel extends FormModel
 
                     $nowDate = $db->quote($date->toSql());
 
-                    $query->where('(s.publish_up = ' . $nullDate . ' OR s.publish_up <= ' . $nowDate . ')')
-                        ->where('(s.publish_down = ' . $nullDate . ' OR s.publish_down >= ' . $nowDate . ')');
+                    $query->where('(' . $db->quoteName('s.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('s.publish_up') . ' <= ' . $nowDate . ')')
+                        ->where('(' . $db->quoteName('s.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('s.publish_down') . ' >= ' . $nowDate . ')');
                 }
 
                 // Implement View Level Access

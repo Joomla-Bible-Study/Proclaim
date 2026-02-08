@@ -309,7 +309,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
     protected function seriesAccessChange(Table $row): void
     {
         $query = clone $this->getStateQuery();
-        $query->where('s.id = ' . (int) $row->id);
+        $query->where($this->db->quoteName('s.id') . ' = ' . (int) $row->id);
 
         // Get the access level.
         $this->db->setQuery($query);
@@ -345,7 +345,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
          */
         foreach ($pks as $pk) {
             $query = clone $this->getStateQuery();
-            $query->where('s.id = ' . (int) $pk);
+            $query->where($this->db->quoteName('s.id') . ' = ' . (int) $pk);
 
             // Get the published states.
             $this->db->setQuery($query);

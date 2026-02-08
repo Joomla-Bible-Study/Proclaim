@@ -119,22 +119,40 @@ class CwmseriesdisplayModel extends ItemModel
         $query->select(
             $this->getState(
                 'list.select',
-                'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
-		                study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.studyintro,
-		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, ' .
-                // Use created if modified is 0
-                'CASE WHEN study.modified = ' . $db->quote($nullDate) .
-                ' THEN study.studydate ELSE study.modified END AS modified, ' .
-                'study.modified_by, user_name AS modified_by_name,' .
-                // Use created if publish_up is 0
-                'CASE WHEN study.publish_up = ' . $db->quote($nullDate) .
-                ' THEN study.studydate ELSE study.publish_up END AS publish_up,' .
-                'study.publish_down,
-		                study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
-		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
-		                study.verse_end2, study.verse_begin2, ' . $query->length('study.studytext') . ' AS readmore,'
+                implode(', ', $db->quoteName([
+                    'study.id', 'study.published', 'study.studydate', 'study.studytitle',
+                    'study.booknumber', 'study.chapter_begin', 'study.verse_begin',
+                    'study.chapter_end', 'study.verse_end', 'study.hits', 'study.alias',
+                    'study.studyintro', 'study.teacher_id', 'study.secondary_reference',
+                    'study.booknumber2', 'study.location_id',
+                ]))
             )
-            . ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END AS slug '
+        );
+        $quotedNullDate = $db->quote($nullDate);
+        // Use studydate as fallback for modified
+        $query->select(
+            'CASE WHEN ' . $db->quoteName('study.modified') . ' = ' . $quotedNullDate
+            . ' THEN ' . $db->quoteName('study.studydate') . ' ELSE ' . $db->quoteName('study.modified')
+            . ' END AS ' . $db->quoteName('modified')
+        );
+        $query->select($db->quoteName('study.modified_by') . ', ' . $db->quoteName('study.user_name', 'modified_by_name'));
+        // Use studydate as fallback for publish_up
+        $query->select(
+            'CASE WHEN ' . $db->quoteName('study.publish_up') . ' = ' . $quotedNullDate
+            . ' THEN ' . $db->quoteName('study.studydate') . ' ELSE ' . $db->quoteName('study.publish_up')
+            . ' END AS ' . $db->quoteName('publish_up')
+        );
+        $query->select(implode(', ', $db->quoteName([
+            'study.publish_down', 'study.series_id', 'study.download_id',
+            'study.thumbnailm', 'study.thumbhm', 'study.thumbwm',
+            'study.access', 'study.user_name', 'study.user_id', 'study.studynumber',
+            'study.chapter_begin2', 'study.chapter_end2', 'study.verse_end2', 'study.verse_begin2',
+        ])));
+        $query->select($query->length($db->quoteName('study.studytext')) . ' AS ' . $db->quoteName('readmore'));
+        $query->select(
+            'CASE WHEN CHAR_LENGTH(' . $db->quoteName('study.alias') . ') THEN CONCAT_WS('
+            . $db->quote(':') . ', ' . $db->quoteName('study.id') . ', ' . $db->quoteName('study.alias')
+            . ') ELSE ' . $db->quoteName('study.id') . ' END AS ' . $db->quoteName('slug')
         );
         $query->from($db->quoteName('#__bsms_studies', 'study'));
 
