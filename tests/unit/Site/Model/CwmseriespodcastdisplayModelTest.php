@@ -13,7 +13,6 @@ namespace CWM\Component\Proclaim\Tests\Site\Model;
 
 use CWM\Component\Proclaim\Site\Model\CwmseriespodcastdisplayModel;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use Joomla\Database\QueryInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**

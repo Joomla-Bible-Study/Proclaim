@@ -44,15 +44,15 @@ class PopupCodeField extends TextField
      * @since 10.2.0
      */
     protected array $codes = [
-        '{{scripture}}' => 'JBS_CMN_SCRIPTURE',
-        '{{title}}' => 'JBS_CMN_TITLE',
-        '{{studydate}}' => 'JBS_CMN_DATE',
-        '{{teacher}}' => 'JBS_CMN_TEACHER',
-        '{{teacherimage}}' => 'JBS_CMN_TEACHER_IMAGE',
-        '{{filename}}' => 'JBS_TPL_MEDIA_FILENAME',
-        '{{description}}' => 'JBS_CMN_DESCRIPTION',
-        '{{length}}' => 'JBS_CMN_DURATION',
-        '{{series}}' => 'JBS_CMN_SERIES',
+        '{{scripture}}'        => 'JBS_CMN_SCRIPTURE',
+        '{{title}}'            => 'JBS_CMN_TITLE',
+        '{{studydate}}'        => 'JBS_CMN_DATE',
+        '{{teacher}}'          => 'JBS_CMN_TEACHER',
+        '{{teacherimage}}'     => 'JBS_CMN_TEACHER_IMAGE',
+        '{{filename}}'         => 'JBS_TPL_MEDIA_FILENAME',
+        '{{description}}'      => 'JBS_CMN_DESCRIPTION',
+        '{{length}}'           => 'JBS_CMN_DURATION',
+        '{{series}}'           => 'JBS_CMN_SERIES',
         '{{series_thumbnail}}' => 'JBS_CMN_SERIES_THUMBNAIL',
     ];
 
@@ -74,7 +74,7 @@ class PopupCodeField extends TextField
 
         foreach ($this->codes as $code => $labelKey) {
             $label = Text::_($labelKey);
-            $buttons .= sprintf(
+            $buttons .= \sprintf(
                 '<button type="button" class="btn btn-outline-secondary btn-sm me-1 mb-1 popup-code-btn" '
                 . 'data-code="%s" data-target="%s" title="%s">%s</button>',
                 htmlspecialchars($code, ENT_QUOTES, 'UTF-8'),

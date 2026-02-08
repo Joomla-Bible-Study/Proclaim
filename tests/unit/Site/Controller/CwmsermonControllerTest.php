@@ -13,7 +13,6 @@ namespace CWM\Component\Proclaim\Tests\Site\Controller;
 
 use CWM\Component\Proclaim\Site\Controller\CwmsermonController;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
@@ -94,7 +93,7 @@ class CwmsermonControllerTest extends ProclaimTestCase
         $this->assertParamTypeName('string', $params[0]);
         $this->assertTrue($params[0]->allowsNull());
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('urlVar', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->isOptional());
@@ -120,7 +119,7 @@ class CwmsermonControllerTest extends ProclaimTestCase
         $this->assertParamTypeName('string', $params[0]);
         $this->assertTrue($params[0]->allowsNull());
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('urlVar', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->isOptional());
@@ -160,11 +159,11 @@ class CwmsermonControllerTest extends ProclaimTestCase
         $this->assertEquals('name', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('prefix', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->isOptional());
-        
+
         $this->assertEquals('config', $params[2]->getName());
         $this->assertParamTypeName('array', $params[2]);
         $this->assertTrue($params[2]->isOptional());
@@ -245,7 +244,7 @@ class CwmsermonControllerTest extends ProclaimTestCase
         $this->assertEquals('data', $params[0]->getName());
         $this->assertParamTypeName('array', $params[0]);
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('key', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->isOptional());
@@ -271,7 +270,7 @@ class CwmsermonControllerTest extends ProclaimTestCase
         $this->assertParamTypeName('int', $params[0]);
         $this->assertTrue($params[0]->allowsNull());
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('urlVar', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->isOptional());

@@ -13,8 +13,6 @@ namespace CWM\Component\Proclaim\Tests\Admin\Model;
 
 use CWM\Component\Proclaim\Administrator\Model\CwmpodcastModel;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use Joomla\CMS\Form\Form;
-use Joomla\CMS\Table\Table;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
@@ -44,7 +42,7 @@ class CwmpodcastModelTest extends ProclaimTestCase
         $this->assertEquals('data', $params[0]->getName());
         $this->assertParamTypeName('array', $params[0]);
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('loadData', $params[1]->getName());
         $this->assertParamTypeName('bool', $params[1]);
         $this->assertTrue($params[1]->isOptional());
@@ -91,11 +89,11 @@ class CwmpodcastModelTest extends ProclaimTestCase
         $this->assertEquals('name', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('prefix', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->isOptional());
-        
+
         $this->assertEquals('options', $params[2]->getName());
         $this->assertParamTypeName('array', $params[2]);
         $this->assertTrue($params[2]->isOptional());
@@ -119,10 +117,10 @@ class CwmpodcastModelTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('value', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
-        
+
         $this->assertEquals('pks', $params[1]->getName());
         $this->assertParamTypeName('array', $params[1]);
-        
+
         $this->assertEquals('contexts', $params[2]->getName());
         $this->assertParamTypeName('array', $params[2]);
     }

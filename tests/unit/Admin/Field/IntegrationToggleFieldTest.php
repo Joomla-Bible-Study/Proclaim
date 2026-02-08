@@ -41,10 +41,10 @@ class IntegrationToggleFieldTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('element', $params[0]->getName());
         $this->assertParamTypeName('SimpleXMLElement', $params[0]);
-        
+
         $this->assertEquals('value', $params[1]->getName());
         $this->assertParamTypeName('mixed', $params[1]);
-        
+
         $this->assertEquals('group', $params[2]->getName());
         $this->assertParamTypeName('string', $params[2]);
         $this->assertTrue($params[2]->isOptional());

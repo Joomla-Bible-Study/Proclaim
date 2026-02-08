@@ -32,7 +32,7 @@ class CwmadminTableTest extends ProclaimTestCase
      */
     public function testConstructor(): void
     {
-        $db = $this->createMock(DatabaseDriver::class);
+        $db    = $this->createMock(DatabaseDriver::class);
         $table = new CwmadminTable($db);
         $this->assertInstanceOf(CwmadminTable::class, $table);
     }
@@ -55,7 +55,7 @@ class CwmadminTableTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('array', $params[0]->getName());
         $this->assertParamTypeName('mixed', $params[0]);
-        
+
         $this->assertEquals('ignore', $params[1]->getName());
         $this->assertParamTypeName('mixed', $params[1]);
         $this->assertTrue($params[1]->isOptional());
@@ -132,7 +132,7 @@ class CwmadminTableTest extends ProclaimTestCase
         $this->assertParamTypeName('Joomla\CMS\Table\Table', $params[0]);
         $this->assertTrue($params[0]->allowsNull());
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('id', $params[1]->getName());
         // No type hint in method signature for id
         $this->assertTrue($params[1]->isOptional());

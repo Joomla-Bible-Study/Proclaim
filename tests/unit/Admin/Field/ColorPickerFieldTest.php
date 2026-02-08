@@ -56,7 +56,7 @@ class ColorPickerFieldTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('value', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
-        
+
         $this->assertEquals('isNamedColor', $params[1]->getName());
         $this->assertParamTypeName('bool', $params[1]);
     }
@@ -79,10 +79,10 @@ class ColorPickerFieldTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('name', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
-        
+
         $this->assertEquals('hex', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
-        
+
         $this->assertEquals('isSelected', $params[2]->getName());
         $this->assertParamTypeName('bool', $params[2]);
     }

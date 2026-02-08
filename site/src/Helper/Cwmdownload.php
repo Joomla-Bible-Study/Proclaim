@@ -20,7 +20,6 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
-
 use Joomla\Registry\Registry;
 
 /**

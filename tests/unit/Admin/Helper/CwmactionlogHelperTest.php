@@ -39,19 +39,19 @@ class CwmactionlogHelperTest extends ProclaimTestCase
 
         $params = $reflection->getParameters();
         $this->assertCount(5, $params);
-        
+
         $this->assertEquals('messageKey', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
-        
+
         $this->assertEquals('title', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
-        
+
         $this->assertEquals('type', $params[2]->getName());
         $this->assertParamTypeName('string', $params[2]);
-        
+
         $this->assertEquals('id', $params[3]->getName());
         $this->assertParamTypeName('int', $params[3]);
-        
+
         $this->assertEquals('extra', $params[4]->getName());
         $this->assertParamTypeName('array', $params[4]);
         $this->assertTrue($params[4]->isOptional());

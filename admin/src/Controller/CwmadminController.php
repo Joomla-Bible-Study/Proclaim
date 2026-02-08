@@ -1430,11 +1430,11 @@ class CwmadminController extends FormController
             $db = Factory::getContainer()->get('DatabaseDriver');
 
             // Handle legacy value mapping (100 = 0, etc.)
-            $searchFrom = $from;
+            $searchFrom  = $from;
             $searchFrom2 = null;
 
             if ($from === '100') {
-                $searchFrom = '0';
+                $searchFrom  = '0';
                 $searchFrom2 = '100';
             }
 

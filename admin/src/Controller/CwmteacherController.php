@@ -13,8 +13,8 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use Joomla\CMS\MVC\Controller\FormController;
-use Joomla\CMS\MVC\Model\BaseModel;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\MVC\Model\BaseModel;
 use Joomla\CMS\Router\Route;
 
 // phpcs:disable PSR1.Files.SideEffects

@@ -96,10 +96,10 @@ class CustomFieldTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('modalId', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
-        
+
         $this->assertEquals('codeset', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
-        
+
         $this->assertEquals('codes', $params[2]->getName());
         $this->assertParamTypeName('array', $params[2]);
     }

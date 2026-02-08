@@ -58,8 +58,8 @@ class Cwmimagelib
             return '';
         }
 
-        $newFileName = $img_base['dirname'] . '/' . $img_base['filename'] . '-200x112.' . $img_base['extension'];
-        $newFilePath = JPATH_ROOT . '/' . $newFileName;
+        $newFileName  = $img_base['dirname'] . '/' . $img_base['filename'] . '-200x112.' . $img_base['extension'];
+        $newFilePath  = JPATH_ROOT . '/' . $newFileName;
         $origFilePath = JPATH_ROOT . '/' . $img;
 
         // Check if original file exists

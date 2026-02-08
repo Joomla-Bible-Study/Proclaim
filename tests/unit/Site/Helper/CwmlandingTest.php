@@ -13,7 +13,6 @@ namespace CWM\Component\Proclaim\Tests\Site\Helper;
 
 use CWM\Component\Proclaim\Site\Helper\Cwmlanding;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use Joomla\Registry\Registry;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
@@ -82,11 +81,11 @@ class CwmlandingTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('params', $params[0]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[0]);
-        
+
         $this->assertEquals('id', $params[1]->getName());
         $this->assertParamTypeName('int', $params[1]);
         $this->assertTrue($params[1]->isOptional());
-        
+
         $this->assertEquals('items', $params[2]->getName());
         $this->assertParamTypeName('array', $params[2]);
         $this->assertTrue($params[2]->allowsNull());
@@ -111,11 +110,11 @@ class CwmlandingTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('params', $params[0]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[0]);
-        
+
         $this->assertEquals('id', $params[1]->getName());
         $this->assertParamTypeName('int', $params[1]);
         $this->assertTrue($params[1]->isOptional());
-        
+
         $this->assertEquals('items', $params[2]->getName());
         $this->assertParamTypeName('array', $params[2]);
         $this->assertTrue($params[2]->allowsNull());
@@ -140,11 +139,11 @@ class CwmlandingTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('params', $params[0]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[0]);
-        
+
         $this->assertEquals('id', $params[1]->getName());
         $this->assertParamTypeName('int', $params[1]);
         $this->assertTrue($params[1]->isOptional());
-        
+
         $this->assertEquals('items', $params[2]->getName());
         $this->assertParamTypeName('array', $params[2]);
         $this->assertTrue($params[2]->allowsNull());
@@ -169,11 +168,11 @@ class CwmlandingTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('params', $params[0]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[0]);
-        
+
         $this->assertEquals('id', $params[1]->getName());
         $this->assertParamTypeName('int', $params[1]);
         $this->assertTrue($params[1]->isOptional());
-        
+
         $this->assertEquals('items', $params[2]->getName());
         $this->assertParamTypeName('array', $params[2]);
         $this->assertTrue($params[2]->allowsNull());
@@ -198,11 +197,11 @@ class CwmlandingTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('params', $params[0]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[0]);
-        
+
         $this->assertEquals('id', $params[1]->getName());
         $this->assertParamTypeName('int', $params[1]);
         $this->assertTrue($params[1]->isOptional());
-        
+
         $this->assertEquals('items', $params[2]->getName());
         $this->assertParamTypeName('array', $params[2]);
         $this->assertTrue($params[2]->allowsNull());
@@ -227,11 +226,11 @@ class CwmlandingTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('params', $params[0]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[0]);
-        
+
         $this->assertEquals('id', $params[1]->getName());
         $this->assertParamTypeName('int', $params[1]);
         $this->assertTrue($params[1]->isOptional());
-        
+
         $this->assertEquals('items', $params[2]->getName());
         $this->assertParamTypeName('array', $params[2]);
         $this->assertTrue($params[2]->allowsNull());
@@ -256,11 +255,11 @@ class CwmlandingTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('params', $params[0]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[0]);
-        
+
         $this->assertEquals('id', $params[1]->getName());
         $this->assertParamTypeName('int', $params[1]);
         $this->assertTrue($params[1]->isOptional());
-        
+
         $this->assertEquals('items', $params[2]->getName());
         $this->assertParamTypeName('array', $params[2]);
         $this->assertTrue($params[2]->allowsNull());

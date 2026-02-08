@@ -18,8 +18,14 @@ composer install --dev
 # Install JS dependencies
 npm install
 
-# Run PHP tests
+# Run all PHP tests (unit + integration)
 composer test
+
+# Run only unit tests
+composer test:unit
+
+# Run only integration tests
+composer test:integration
 
 # Run JS tests
 npm test
@@ -33,14 +39,11 @@ npm test
 # Check PHP syntax errors
 composer lint:syntax
 
-# Check code style (dry-run)
+# Check code style via php-cs-fixer (dry-run)
 composer lint
 
-# Fix code style issues
+# Fix code style via php-cs-fixer
 composer lint:fix
-
-# Run PHPCS
-composer cs
 
 # Run lint + PHP tests
 composer check
@@ -167,7 +170,6 @@ This project follows **PSR-12** coding standards. All code must pass PHP CS Fixe
 ### Tools
 
 - PHP CS Fixer config: `.php-cs-fixer.dist.php`
-- PHPCS ruleset: `build/psr12/ruleset.xml`
 - Run `composer lint:fix` before committing
 
 ### Naming Conventions

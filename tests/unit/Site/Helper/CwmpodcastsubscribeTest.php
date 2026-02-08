@@ -101,7 +101,7 @@ class CwmpodcastsubscribeTest extends ProclaimTestCase
         $this->assertParamTypeName('string', $params[0]);
         $this->assertTrue($params[0]->allowsNull());
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('words', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->allowsNull());

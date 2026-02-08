@@ -84,11 +84,11 @@ class CwmarchiveModel extends AdminModel
         if (!empty($data['timeframe'])) {
             // Form POST mode
             $timeframe = (int) $data['timeframe'];
-            $switch = $data['switch'];
+            $switch    = $data['switch'];
         } else {
             // AJAX GET mode
             $timeframe = $input->getInt('timeframe', 0);
-            $switch = $input->getCmd('switch', 'year');
+            $switch    = $input->getCmd('switch', 'year');
         }
 
         // Fields to update.

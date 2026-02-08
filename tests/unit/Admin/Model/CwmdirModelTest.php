@@ -57,7 +57,7 @@ class CwmdirModelTest extends ProclaimTestCase
         $this->assertEquals('fullPath', $params[0]->getName());
         // No type hint in method signature for fullPath
         $this->assertTrue($params[0]->isOptional());
-        
+
         $this->assertEquals('separator', $params[1]->getName());
         // No type hint in method signature for separator
         $this->assertTrue($params[1]->isOptional());

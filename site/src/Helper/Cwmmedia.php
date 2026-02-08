@@ -27,7 +27,6 @@ use Joomla\CMS\Image\Image;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
-
 use Joomla\Registry\Registry;
 
 /**
@@ -57,8 +56,8 @@ class Cwmmedia
         // Check for URLs stored without protocol (e.g., www.example.org/path or example.org/path)
         if (preg_match('/^(www\.)?[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z]{2,})+\//i', $url)) {
             // Looks like a domain - check if it's not the local site
-            $root = parse_url(Uri::root());
-            $urlHost = preg_replace('/^(www\.)?/', '', explode('/', $url)[0]);
+            $root     = parse_url(Uri::root());
+            $urlHost  = preg_replace('/^(www\.)?/', '', explode('/', $url)[0]);
             $rootHost = preg_replace('/^(www\.)?/', '', $root['host'] ?? '');
 
             // If it's a different host, it's external

@@ -13,7 +13,6 @@ namespace CWM\Component\Proclaim\Tests\Site\Helper;
 
 use CWM\Component\Proclaim\Site\Helper\Cwmteacher;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use Joomla\Registry\Registry;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**

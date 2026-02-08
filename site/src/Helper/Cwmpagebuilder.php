@@ -246,7 +246,7 @@ class Cwmpagebuilder
         $user   = \Joomla\CMS\Factory::getApplication()->getIdentity();
         $groups = implode(',', $user->getAuthorisedViewLevels());
 
-        $query = $db->getQuery(true);
+        $query          = $db->getQuery(true);
         $nullDateQuoted = $db->quote($db->getNullDate());
         $query->select(implode(', ', $db->quoteName([
             'study.id', 'study.published', 'study.studydate', 'study.studytitle',

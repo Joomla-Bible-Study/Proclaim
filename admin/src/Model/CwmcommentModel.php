@@ -150,7 +150,7 @@ class CwmcommentModel extends AdminModel
 
         // Check that the user has create permission for the component
         $extension = Factory::getApplication()->getInput()->get('option', '');
-        $user = Factory::getApplication()->getIdentity();
+        $user      = Factory::getApplication()->getIdentity();
 
         if (!$user->authorise('core.create', $extension)) {
             throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));

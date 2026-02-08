@@ -12,7 +12,6 @@
 namespace CWM\Component\Proclaim\Tests\Admin\Controller;
 
 use CWM\Component\Proclaim\Administrator\Controller\CwmlocationController;
-use CWM\Component\Proclaim\Administrator\Model\CwmlocationModel;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 

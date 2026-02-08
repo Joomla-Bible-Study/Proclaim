@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Site\View\Cwmseriespodcastlist;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Pagination\Pagination;
 use Joomla\Registry\Registry;

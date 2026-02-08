@@ -562,10 +562,10 @@ class CwmsermonsModel extends ListModel
      */
     protected function getListQuery(): QueryInterface|string
     {
-        $user   = $this->getCurrentUser();
-        $groups = $user->getAuthorisedViewLevels();
-        $db     = $this->getDatabase();
-        $query  = parent::getListQuery();
+        $user     = $this->getCurrentUser();
+        $groups   = $user->getAuthorisedViewLevels();
+        $db       = $this->getDatabase();
+        $query    = parent::getListQuery();
         $nullDate = $db->quote($db->getNullDate());
         $query->select(
             $this->getState(

@@ -13,7 +13,6 @@ namespace CWM\Component\Proclaim\Tests\Site\Helper;
 
 use CWM\Component\Proclaim\Site\Helper\Cwmserieslist;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use Joomla\Registry\Registry;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
@@ -63,10 +62,10 @@ class CwmserieslistTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('row', $params[0]->getName());
         $this->assertParamTypeName('object', $params[0]);
-        
+
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
-        
+
         $this->assertEquals('template', $params[2]->getName());
         $this->assertParamTypeName('object', $params[2]);
     }
@@ -89,7 +88,7 @@ class CwmserieslistTest extends ProclaimTestCase
         $this->assertCount(2, $params);
         $this->assertEquals('row', $params[0]->getName());
         $this->assertParamTypeName('object', $params[0]);
-        
+
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
     }
@@ -112,10 +111,10 @@ class CwmserieslistTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('id', $params[0]->getName());
         $this->assertParamTypeName('int', $params[0]);
-        
+
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
-        
+
         $this->assertEquals('template', $params[2]->getName());
         $this->assertParamTypeName('object', $params[2]);
     }
@@ -138,10 +137,10 @@ class CwmserieslistTest extends ProclaimTestCase
         $this->assertCount(3, $params);
         $this->assertEquals('id', $params[0]->getName());
         $this->assertParamTypeName('int', $params[0]);
-        
+
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
-        
+
         $this->assertEquals('limit', $params[2]->getName());
         $this->assertParamTypeName('int', $params[2]);
         $this->assertTrue($params[2]->isOptional());
