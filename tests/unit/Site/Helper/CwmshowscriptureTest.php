@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Tests\Site\Helper;
 
+use CWM\Component\Proclaim\Site\Bible\BiblePassageResult;
 use CWM\Component\Proclaim\Site\Helper\Cwmshowscripture;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -148,22 +149,54 @@ class CwmshowscriptureTest extends ProclaimTestCase
     }
 
     /**
-     * Test bodyOnly method signature
+     * Test renderTextPassage method signature
      *
      * @return void
-     * #[CoversClass(Cwmshowscripture::class)]::bodyOnly
+     * #[CoversClass(Cwmshowscripture::class)]::renderTextPassage
      */
-    public function testBodyOnlyMethodSignature(): void
+    public function testRenderTextPassageMethodSignature(): void
     {
-        $reflection = new \ReflectionMethod(Cwmshowscripture::class, 'bodyOnly');
+        $reflection = new \ReflectionMethod(Cwmshowscripture::class, 'renderTextPassage');
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
         $this->assertReturnTypeName('string', $reflection);
 
         $params = $reflection->getParameters();
-        $this->assertCount(1, $params);
-        $this->assertEquals('html', $params[0]->getName());
+        $this->assertCount(3, $params);
+        $this->assertEquals('result', $params[0]->getName());
+        $this->assertParamTypeName(BiblePassageResult::class, $params[0]);
+
+        $this->assertEquals('choice', $params[1]->getName());
+        $this->assertParamTypeName('int', $params[1]);
+
+        $this->assertEquals('params', $params[2]->getName());
+        $this->assertParamTypeName('Joomla\Registry\Registry', $params[2]);
+    }
+
+    /**
+     * Test renderIframePassage method signature
+     *
+     * @return void
+     * #[CoversClass(Cwmshowscripture::class)]::renderIframePassage
+     */
+    public function testRenderIframePassageMethodSignature(): void
+    {
+        $reflection = new \ReflectionMethod(Cwmshowscripture::class, 'renderIframePassage');
+
+        $this->assertFalse($reflection->isStatic());
+        $this->assertTrue($reflection->isPublic());
+        $this->assertReturnTypeName('string', $reflection);
+
+        $params = $reflection->getParameters();
+        $this->assertCount(3, $params);
+        $this->assertEquals('reference', $params[0]->getName());
         $this->assertParamTypeName('string', $params[0]);
+
+        $this->assertEquals('choice', $params[1]->getName());
+        $this->assertParamTypeName('int', $params[1]);
+
+        $this->assertEquals('params', $params[2]->getName());
+        $this->assertParamTypeName('Joomla\Registry\Registry', $params[2]);
     }
 }

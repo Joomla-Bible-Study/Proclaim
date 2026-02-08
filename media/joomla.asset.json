@@ -246,6 +246,11 @@
             "uri": "com_proclaim/biblegateway-print.min.css"
         },
         {
+            "name": "com_proclaim.scripture-text",
+            "type": "style",
+            "uri": "com_proclaim/scripture-text.css"
+        },
+        {
             "name": "com_proclaim.general",
             "type": "style",
             "uri": "com_proclaim/general.min.css"

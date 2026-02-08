@@ -783,8 +783,18 @@
                 <option value="2">JBS_TPL_SHOW_ALWAYS_NO_HIDE_SHOW_LINK</option>
                 <option value="3">JBS_TPL_SHOW_AS_POPUP</option>
             </field>
+            <field name="scripture_provider" type="list" default="local"
+                   label="JBS_TPL_SCRIPTURE_PROVIDER" description="JBS_TPL_SCRIPTURE_PROVIDER_DESC">
+                <option value="local">JBS_TPL_PROVIDER_LOCAL</option>
+                <option value="getbible">JBS_TPL_PROVIDER_GETBIBLE</option>
+                <option value="biblegateway">JBS_TPL_PROVIDER_BIBLEGATEWAY</option>
+            </field>
+            <field name="bible_translation" type="BibleTranslation" default="kjv"
+                   label="JBS_TPL_BIBLE_TRANSLATION" description="JBS_TPL_BIBLE_TRANSLATION_DESC"
+                   showon="scripture_provider:local,getbible"/>
             <field name="bible_version" type="list" default="51"
-                   label="JBS_TPL_CHOOSE_BIBLE_VERSION" description="JBS_TPL_CHOOSE_BIBLE_VERSION_DESC">
+                   label="JBS_TPL_CHOOSE_BIBLE_VERSION" description="JBS_TPL_CHOOSE_BIBLE_VERSION_DESC"
+                   showon="scripture_provider:biblegateway">
                 <option value="69">1550 Stephanus New Testament (NT)</option>
                 <option value="68">1881 Westcott-Hort New Testament (NT)</option>
                 <option value="70">1894 Scrivener New Testament (NT)</option>

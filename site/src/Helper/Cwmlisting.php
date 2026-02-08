@@ -2338,52 +2338,6 @@ class Cwmlisting
     }
 
     /**
-     * Get Passage
-     *
-     * @param   Registry  $params  Item Params
-     * @param   object    $row     Item Info
-     *
-     * @return string
-     *
-     * @since 7.0
-     */
-    public function getPassage($params, $row): string
-    {
-        $esv          = 1;
-        $scripturerow = 1;
-        $scripture    = $this->getScripture($params, $row, $esv, $scripturerow);
-
-        if ($scripture) {
-            $key      = "IP";
-            $response = "" . $scripture . " (ESV)";
-            $passage  = urlencode($scripture);
-            $options  = "include-passage-references=false";
-            $url      = "http://www.esvapi.org/v2/rest/passageQuery?key=$key&passage=$passage&$options";
-
-            // This tests to see if the curl functions are there. It will return false if curl not installed
-            $p = (get_extension_funcs("curl"));
-
-            if ($p) {
-                // If curl is installed then we go on
-
-                // This will return false if curl is not enabled
-                $ch = curl_init($url);
-
-                if ($ch) {
-                    // This will return false if curl is not enabled
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                    $response .= curl_exec($ch);
-                    curl_close($ch);
-                }
-            }
-        } else {
-            $response = Text::_('JBS_STY_NO_PASSAGE_INCLUDED');
-        }
-
-        return $response;
-    }
-
-    /**
      * Share Helper file
      *
      * @param   string    $link    Link
