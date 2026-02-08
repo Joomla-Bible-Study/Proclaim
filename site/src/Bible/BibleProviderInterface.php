@@ -67,7 +67,7 @@ interface BibleProviderInterface
     /**
      * Get the provider identifier.
      *
-     * @return  string  e.g. "local", "getbible", "biblegateway"
+     * @return  string  e.g. "local", "getbible"
      *
      * @since  10.1.0
      */

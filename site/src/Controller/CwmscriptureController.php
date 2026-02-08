@@ -87,8 +87,6 @@ class CwmscriptureController extends BaseController
                 'text'        => $result->text ?? '',
                 'copyright'   => $result->copyright ?? '',
                 'translation' => $version,
-                'isIframe'    => $result->isIframe,
-                'iframeUrl'   => $result->iframeUrl ?? '',
             ], JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
             echo json_encode([

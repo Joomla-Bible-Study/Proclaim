@@ -14,7 +14,6 @@ namespace CWM\Component\Proclaim\Site\Helper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Site\Bible\BiblePassageResult;
 use CWM\Component\Proclaim\Site\Bible\BibleProviderFactory;
-use CWM\Component\Proclaim\Site\Bible\Provider\BibleGatewayProvider;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
@@ -34,11 +33,6 @@ use Joomla\Registry\Registry;
  */
 class Cwmshowscripture
 {
-    /** @var  string Link
-     * @since 7.1
-     */
-    public string $link;
-
     /**
      * Passage Build system
      *
@@ -73,14 +67,6 @@ class Cwmshowscripture
             $adminParams = new Registry();
         }
 
-        // Legacy: if template still has scripture_provider set (migration period),
-        // honor it for backward compatibility
-        $legacyProvider = $params->get('scripture_provider', '');
-
-        if (!empty($legacyProvider) && $legacyProvider === 'biblegateway') {
-            return $this->renderIframePassage($reference, $choice, $params);
-        }
-
         // Resolve which provider can serve this version
         try {
             $provider = BibleProviderFactory::getProviderForTranslation($version, $adminParams);
@@ -94,16 +80,11 @@ class Cwmshowscripture
 
             $result = $provider->getPassage($reference, $version);
         } catch (\Exception $e) {
-            // Fall back to BibleGateway iframe
-            return $this->renderIframePassage($reference, $choice, $params);
-        }
-
-        if ($result->isIframe) {
-            return $this->renderIframePassage($reference, $choice, $params);
+            return '';
         }
 
         if (!$result->hasText()) {
-            return $this->renderIframePassage($reference, $choice, $params);
+            return '';
         }
 
         $output = $this->renderTextPassage($result, $choice, $params);
@@ -211,48 +192,6 @@ class Cwmshowscripture
     }
 
     /**
-     * Render an iframe-based scripture passage (BibleGateway backward compat).
-     *
-     * @param   string    $reference  The reference string
-     * @param   int       $choice     Display mode
-     * @param   Registry  $params     Template parameters
-     *
-     * @return  string  HTML output
-     *
-     * @since  10.1.0
-     */
-    public function renderIframePassage(string $reference, int $choice, Registry $params): string
-    {
-        $version    = $params->get('bible_version', '77');
-        $this->link = $this->getBiblegateway($reference, $version, $params);
-        $passage    = '';
-        $css        = false;
-
-        switch ($choice) {
-            case 1:
-                $passage = $this->getHideShow($params);
-                $css     = true;
-                break;
-
-            case 2:
-                $passage = $this->getShow();
-                $css     = true;
-                break;
-
-            case 3:
-                $passage = $this->getLink($params);
-                break;
-        }
-
-        if ($css) {
-            Factory::getApplication()->getDocument()->getWebAssetManager()
-                ->useStyle('com_proclaim.biblegateway-print');
-        }
-
-        return $passage;
-    }
-
-    /**
      * Render a Bible version switcher dropdown.
      *
      * @param   object    $row          Message row
@@ -277,21 +216,9 @@ class Cwmshowscripture
             . 'data-message-id="' . (int) ($row->id ?? 0) . '" '
             . 'aria-label="' . Text::_('JBS_STY_BIBLE_VERSION') . '">';
 
-        // Well-known BibleGateway version names
-        $bgNames = [
-            'kjv'  => 'King James Version', 'nlt' => 'New Living Translation',
-            'esv'  => 'English Standard Version', 'niv' => 'New International Version',
-            'nasb' => 'New American Standard Bible', 'nkjv' => 'New King James Version',
-            'asvd' => 'American Standard Version', 'ylt' => "Young's Literal Translation",
-            'hcsb' => 'Holman Christian Standard Bible', 'amp' => 'Amplified Bible',
-            'cev'  => 'Contemporary English Version', 'msg' => 'The Message',
-            'gnt'  => 'Good News Translation', 'web' => 'World English Bible',
-        ];
-
-        // Collect versions keyed by abbreviation to deduplicate
+        // Collect versions from DB
         $versions = [];
 
-        // Get available translations from DB
         try {
             $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
             $query = $db->getQuery(true)
@@ -306,17 +233,6 @@ class Cwmshowscripture
             }
         } catch (\Exception $e) {
             // DB not available
-        }
-
-        // Add BibleGateway versions if that provider is enabled
-        $bgEnabled = (int) $adminParams->get('provider_biblegateway', 1) === 1;
-
-        if ($bgEnabled) {
-            foreach (BibleGatewayProvider::VERSION_MAP as $abbr) {
-                if (!isset($versions[$abbr])) {
-                    $versions[$abbr] = $bgNames[$abbr] ?? strtoupper($abbr);
-                }
-            }
         }
 
         // Fallback if nothing found
@@ -363,90 +279,5 @@ class Cwmshowscripture
         }
 
         return $reference;
-    }
-
-    /**
-     * Get Bible Gateway References
-     *
-     * @param   string    $reference  Search string
-     * @param   string    $version    Bible Version
-     * @param   Registry  $params     Parameters
-     *
-     * @return string
-     *
-     * @since    7.1
-     */
-    public function getBiblegateway($reference, $version, $params): string
-    {
-        return "https://www.biblegateway.com/passage/?search=" . $reference . "&version=" . $version . "&interface=print";
-    }
-
-    /**
-     * Get HideShow
-     *
-     * @param   Registry  $params  Parameters
-     *
-     * @return string
-     *
-     * @since    7.1
-     */
-    public function getHideShow(Registry $params): string
-    {
-        $id      = 'scripture_' . uniqid('', true);
-        $passage = '<div class="fluid-row"><div class="col-12"></div>';
-
-        $passage .= '<a class="heading" href="#" role="button" aria-expanded="false" aria-controls="' . $id . '" onclick="var e = document.getElementById(\'' . $id . '\'); var isHidden = e.style.display == \'none\'; e.style.display = (isHidden ? \'block\' : \'none\'); this.setAttribute(\'aria-expanded\', isHidden); return false;">';
-
-        if ((int) $params->get('showpassage_icon') === 1) {
-            $passage .= '<i class="fas fa-bible fa-3x" aria-hidden="true" style="display: flex; margin-right: 10px;"></i>';
-        }
-
-        $passage .= Text::_('JBS_CMN_SHOW_HIDE_SCRIPTURE') . '</a>';
-        $passage .= '<div id="' . $id . '" style="display: none;">';
-        $passage .= '<iframe src="' . $this->link . '" width="100%" height="400" style="border:0;" title="' . Text::_('JBS_CMN_BIBLE_PASSAGE') . '"></iframe>';
-        $passage .= '</div>';
-        $passage .= '</div>';
-
-        return $passage;
-    }
-
-    /**
-     * Get Show
-     *
-     * @return string
-     *
-     * @since    7.1
-     */
-    public function getShow(): string
-    {
-        return '<div class="passage"><iframe src="' . $this->link . '" width="100%" height="400" style="border:0;" title="' . Text::_('JBS_CMN_BIBLE_PASSAGE') . '"></iframe></div>';
-    }
-
-    /**
-     * Get Link
-     *
-     * @param   Registry  $params  Parameters
-     *
-     * @return string
-     *
-     * @since    7.1
-     */
-    public function getLink(Registry $params): string
-    {
-        $passage = '<div class="passage">';
-        $passage .= '<a href="' . $this->link . '" ';
-        $passage .= "onclick=\"window.open(this.href,'mywindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,";
-        $passage .= "resizable=yes,width=800,height=500'); return false;\"";
-        $passage .= ' title="' . Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE') . '">';
-
-        if ((int) $params->get('showpassage_icon') === 1) {
-            $passage .= '<i class="fas fa-bible fa-3x" aria-hidden="true" style="display: flex; margin-right: 10px;"></i>';
-        } elseif ($params->get('showpassage_icon') > 0) {
-            $passage .= Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE');
-        }
-
-        $passage .= '</a></div>';
-
-        return $passage;
     }
 }

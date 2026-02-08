@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageCleanup;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Administrator\Lib\CwmpIconvert;
@@ -27,6 +28,7 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmrestore;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmssconvert;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
@@ -1636,15 +1638,30 @@ class CwmadminController extends FormController
         try {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
-                ->select($db->quoteName(['abbreviation', 'name', 'language', 'installed', 'verse_count', 'source']))
-                ->from($db->quoteName('#__bsms_bible_translations'))
-                ->order($db->quoteName('name') . ' ASC');
+                ->select($db->quoteName(['t.abbreviation', 't.name', 't.language', 't.installed', 't.verse_count', 't.source', 't.bundled', 't.estimated_size']))
+                ->select('COALESCE(SUM(LENGTH(' . $db->quoteName('v.text') . ')), 0) AS ' . $db->quoteName('data_size'))
+                ->from($db->quoteName('#__bsms_bible_translations', 't'))
+                ->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_bible_verses', 'v')
+                    . ' ON ' . $db->quoteName('v.translation') . ' = ' . $db->quoteName('t.abbreviation')
+                )
+                ->group($db->quoteName('t.id'))
+                ->order($db->quoteName('t.name') . ' ASC');
             $db->setQuery($query);
             $translations = $db->loadObjectList();
+
+            // Calculate total size
+            $totalSize = 0;
+
+            foreach ($translations as $t) {
+                $totalSize += (int) $t->data_size;
+            }
 
             echo json_encode([
                 'success'      => true,
                 'translations' => $translations,
+                'total_size'   => $totalSize,
             ], JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
             echo json_encode([
@@ -1686,6 +1703,9 @@ class CwmadminController extends FormController
         }
 
         try {
+            // Downloading 66 books can take a while
+            @set_time_limit(600);
+
             $count = BibleImporter::downloadAndImport($abbreviation);
 
             if ($count < 0) {
@@ -1745,6 +1765,190 @@ class CwmadminController extends FormController
             echo json_encode([
                 'success' => true,
                 'message' => Text::sprintf('JBS_ADM_BIBLE_REMOVED', strtoupper($abbreviation)),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Remove all installed translations and their verses.
+     *
+     * @return  void
+     *
+     * @since  10.1.0
+     */
+    public function removeAllTranslationsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $count = BibleImporter::removeAllTranslations();
+
+            echo json_encode([
+                'success' => true,
+                'message' => Text::sprintf('JBS_ADM_BIBLE_REMOVED_ALL', $count),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Sync translations from API.Bible using the configured API key.
+     *
+     * Fetches available Bibles from the API.Bible endpoint and upserts them
+     * into the bible_translations table with source='api_bible'.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since  10.1.0
+     */
+    public function syncApiBibleTranslationsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $admin  = Cwmparams::getAdmin();
+            $params = $admin->params;
+            $apiKey = (string) $params->get('api_bible_api_key', '');
+
+            if (empty($apiKey)) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => Text::_('JBS_ADM_API_BIBLE_KEY_DESC'),
+                ], JSON_THROW_ON_ERROR);
+                $app->close();
+
+                return;
+            }
+
+            // Fetch available Bibles from API.Bible
+            $http     = HttpFactory::getHttp();
+            $response = $http->get(
+                'https://api.scripture.api.bible/v1/bibles',
+                ['api-key' => $apiKey],
+                30
+            );
+
+            if ($response->code !== 200) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => Text::_('JBS_ADM_SYNC_FAILED'),
+                ], JSON_THROW_ON_ERROR);
+                $app->close();
+
+                return;
+            }
+
+            $data = json_decode($response->body, true);
+
+            if (!\is_array($data) || !isset($data['data'])) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => Text::_('JBS_ADM_SYNC_FAILED'),
+                ], JSON_THROW_ON_ERROR);
+                $app->close();
+
+                return;
+            }
+
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $count = 0;
+
+            foreach ($data['data'] as $bible) {
+                $bibleId     = $bible['id'] ?? '';
+                $name        = $bible['name'] ?? ($bible['nameLocal'] ?? '');
+                $abbr        = strtolower($bible['abbreviation'] ?? $bible['abbreviationLocal'] ?? '');
+                $language    = $bible['language']['id'] ?? 'en';
+
+                if (empty($bibleId) || empty($abbr) || empty($name)) {
+                    continue;
+                }
+
+                // Truncate abbreviation to fit VARCHAR(20) column
+                $abbr = substr($abbr, 0, 20);
+
+                // Check if this abbreviation already exists with a different source
+                $query = $db->getQuery(true)
+                    ->select($db->quoteName(['id', 'source']))
+                    ->from($db->quoteName('#__bsms_bible_translations'))
+                    ->where($db->quoteName('abbreviation') . ' = :abbr')
+                    ->bind(':abbr', $abbr);
+                $db->setQuery($query);
+                $existing = $db->loadObject();
+
+                if ($existing && $existing->source !== 'api_bible') {
+                    // Don't overwrite local/getbible entries
+                    continue;
+                }
+
+                if ($existing) {
+                    // Update existing api_bible entry
+                    $query = $db->getQuery(true)
+                        ->update($db->quoteName('#__bsms_bible_translations'))
+                        ->set($db->quoteName('name') . ' = :name')
+                        ->set($db->quoteName('language') . ' = :lang')
+                        ->set($db->quoteName('provider_id') . ' = :pid')
+                        ->where($db->quoteName('id') . ' = ' . (int) $existing->id)
+                        ->bind(':name', $name)
+                        ->bind(':lang', $language)
+                        ->bind(':pid', $bibleId);
+                    $db->setQuery($query);
+                    $db->execute();
+                } else {
+                    // Insert new entry
+                    $source = 'api_bible';
+                    $query  = $db->getQuery(true)
+                        ->insert($db->quoteName('#__bsms_bible_translations'))
+                        ->columns($db->quoteName(['abbreviation', 'name', 'language', 'source', 'provider_id']))
+                        ->values(':abbr2, :name2, :lang2, :source2, :pid2')
+                        ->bind(':abbr2', $abbr)
+                        ->bind(':name2', $name)
+                        ->bind(':lang2', $language)
+                        ->bind(':source2', $source)
+                        ->bind(':pid2', $bibleId);
+                    $db->setQuery($query);
+                    $db->execute();
+                }
+
+                $count++;
+            }
+
+            echo json_encode([
+                'success' => true,
+                'count'   => $count,
+                'message' => Text::sprintf('JBS_ADM_SYNC_COMPLETE', $count),
             ], JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
             echo json_encode([

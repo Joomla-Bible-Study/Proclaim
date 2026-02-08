@@ -63,22 +63,6 @@ class BiblePassageResult
     public bool $isHtml;
 
     /**
-     * Whether this result is an iframe reference (BibleGateway fallback).
-     *
-     * @var  bool
-     * @since  10.1.0
-     */
-    public bool $isIframe;
-
-    /**
-     * The iframe URL when isIframe is true.
-     *
-     * @var  string
-     * @since  10.1.0
-     */
-    public string $iframeUrl;
-
-    /**
      * Constructor.
      *
      * @param   string  $text         The passage text
@@ -86,8 +70,6 @@ class BiblePassageResult
      * @param   string  $translation  The translation abbreviation
      * @param   string  $copyright    Copyright notice
      * @param   bool    $isHtml       Whether text contains HTML
-     * @param   bool    $isIframe     Whether this is an iframe result
-     * @param   string  $iframeUrl    The iframe URL (if applicable)
      *
      * @since  10.1.0
      */
@@ -96,17 +78,13 @@ class BiblePassageResult
         string $reference = '',
         string $translation = '',
         string $copyright = '',
-        bool $isHtml = false,
-        bool $isIframe = false,
-        string $iframeUrl = ''
+        bool $isHtml = false
     ) {
         $this->text        = $text;
         $this->reference   = $reference;
         $this->translation = $translation;
         $this->copyright   = $copyright;
         $this->isHtml      = $isHtml;
-        $this->isIframe    = $isIframe;
-        $this->iframeUrl   = $iframeUrl;
     }
 
     /**

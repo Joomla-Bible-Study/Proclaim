@@ -12,7 +12,6 @@
 namespace CWM\Component\Proclaim\Administrator\Field;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use CWM\Component\Proclaim\Site\Bible\Provider\BibleGatewayProvider;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\Database\DatabaseInterface;
@@ -128,28 +127,38 @@ class BibleVersionField extends ListField
         $versions = [];
 
         // Determine which providers are enabled from admin params
-        $providerLocal        = true;
-        $providerGetbible     = true;
-        $providerBiblegateway = true;
+        $providerGetbible = true;
+        $providerApiBible = false;
 
         try {
             $admin  = Cwmparams::getAdmin();
             $params = $admin->params ?? null;
 
             if ($params) {
-                $providerLocal        = (int) $params->get('provider_local', 1) === 1;
-                $providerGetbible     = (int) $params->get('provider_getbible', 1) === 1;
-                $providerBiblegateway = (int) $params->get('provider_biblegateway', 1) === 1;
+                $gdprMode         = (int) $params->get('gdpr_mode', 0) === 1;
+                $providerGetbible = !$gdprMode && (int) $params->get('provider_getbible', 1) === 1;
+                $providerApiBible = !$gdprMode && (int) $params->get('provider_api_bible', 0) === 1;
             }
         } catch (\Exception $e) {
             // Defaults apply
         }
 
-        // Load translations from database (covers local + getbible sources)
+        // Detect current site/admin language to prioritize native-language versions
+        $currentLang = 'en';
+
+        try {
+            $currentLang = substr(Factory::getApplication()->getLanguage()->getTag(), 0, 2);
+        } catch (\Exception $e) {
+            // Default to English
+        }
+
+        // Load translations from database (covers local + getbible + api_bible sources)
+        $languages = [];
+
         try {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
-                ->select($db->quoteName(['abbreviation', 'name', 'installed', 'source']))
+                ->select($db->quoteName(['abbreviation', 'name', 'installed', 'source', 'language']))
                 ->from($db->quoteName('#__bsms_bible_translations'))
                 ->order($db->quoteName('name') . ' ASC');
             $db->setQuery($query);
@@ -159,13 +168,14 @@ class BibleVersionField extends ListField
                 foreach ($translations as $row) {
                     $isInstalled = (int) $row->installed === 1;
                     $isGetbible  = $row->source === 'getbible';
+                    $isApiBible  = $row->source === 'api_bible';
 
-                    // Skip if the only provider that can serve this is disabled
-                    if ($isInstalled && !$providerLocal && !($isGetbible && $providerGetbible)) {
+                    // Skip if the provider that can serve this is disabled
+                    if (!$isInstalled && $isGetbible && !$providerGetbible) {
                         continue;
                     }
 
-                    if (!$isInstalled && $isGetbible && !$providerGetbible) {
+                    if (!$isInstalled && $isApiBible && !$providerApiBible) {
                         continue;
                     }
 
@@ -173,21 +183,13 @@ class BibleVersionField extends ListField
 
                     // Only add if not already collected (first occurrence wins — DB has richer names)
                     if (!isset($versions[$abbr])) {
-                        $versions[$abbr] = $row->name;
+                        $versions[$abbr]  = $row->name;
+                        $languages[$abbr] = $row->language ?? '';
                     }
                 }
             }
         } catch (\Exception $e) {
             // Database table might not exist yet during install
-        }
-
-        // Add BibleGateway versions if enabled
-        if ($providerBiblegateway) {
-            foreach (BibleGatewayProvider::VERSION_MAP as $abbr) {
-                if (!isset($versions[$abbr])) {
-                    $versions[$abbr] = self::VERSION_NAMES[$abbr] ?? strtoupper($abbr);
-                }
-            }
         }
 
         // If no translations found at all, provide common defaults
@@ -200,13 +202,34 @@ class BibleVersionField extends ListField
             ];
         }
 
-        // Sort alphabetically by name
-        asort($versions);
-
-        // Build option objects — show "Name (ABBR)" for clarity
-        $options = [];
+        // Sort: browser language versions first (alphabetically), then others (alphabetically)
+        $nativeVersions = [];
+        $otherVersions  = [];
 
         foreach ($versions as $abbr => $name) {
+            $lang = substr($languages[$abbr] ?? '', 0, 2);
+
+            if ($lang === $currentLang) {
+                $nativeVersions[$abbr] = $name;
+            } else {
+                $otherVersions[$abbr] = $name;
+            }
+        }
+
+        asort($nativeVersions);
+        asort($otherVersions);
+
+        // Build option objects — native language first, then others
+        $options = [];
+
+        foreach ($nativeVersions as $abbr => $name) {
+            $options[] = (object) [
+                'value' => $abbr,
+                'text'  => $name . ' (' . strtoupper($abbr) . ')',
+            ];
+        }
+
+        foreach ($otherVersions as $abbr => $name) {
             $options[] = (object) [
                 'value' => $abbr,
                 'text'  => $name . ' (' . strtoupper($abbr) . ')',

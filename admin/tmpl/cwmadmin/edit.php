@@ -27,6 +27,7 @@ $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->useScript('com_proclaim.cwmadmin')
+    ->useScript('com_proclaim.bible-translations')
     ->useStyle('com_proclaim.general');
 
 // Make language strings available to JavaScript
@@ -206,6 +207,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                 <?php echo $this->form->renderField('character_filter', 'params'); ?>
                 <?php echo $this->form->renderField('format_popular', 'params'); ?>
                 <?php echo $this->form->renderField('debug'); ?>
+                <?php echo $this->form->renderField('gdpr_mode', 'params'); ?>
             </div>
         </div>
         <?php
@@ -272,7 +274,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                         <div id="player-stats-container" class="cwmadmin-stats-container">
                             <div class="cwmadmin-stats-loading">
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                <span><?php echo Text::_('JLIB_HTML_BEHAVIOR_LOADING'); ?></span>
+                                <span><?php echo Text::_('JBS_ADM_LOADING'); ?></span>
                             </div>
                         </div>
                     </div>
@@ -299,7 +301,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                         <div id="popup-stats-container" class="cwmadmin-stats-container">
                             <div class="cwmadmin-stats-loading">
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                <span><?php echo Text::_('JLIB_HTML_BEHAVIOR_LOADING'); ?></span>
+                                <span><?php echo Text::_('JBS_ADM_LOADING'); ?></span>
                             </div>
                         </div>
                     </div>
@@ -341,10 +343,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
 
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'convert', Text::_('JBS_IBM_CONVERT'));
-        // Check if SermonSpeaker or PreachIt is installed
-        $ssInstalled = strpos($this->ss, 'href=') !== false;
-        $piInstalled = strpos($this->pi, 'href=') !== false;
-        ?>
+// Check if SermonSpeaker or PreachIt is installed
+$ssInstalled = strpos($this->ss, 'href=') !== false;
+$piInstalled = strpos($this->pi, 'href=') !== false;
+?>
         <div class="row" id="convert">
             <div class="col-12">
                 <h4><?php echo Text::_('JBS_IBM_CONVERT'); ?></h4>
@@ -359,10 +361,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                     <div class="cwmadmin-dashboard-cards" style="max-width: 400px;">
                         <?php if ($ssInstalled) : ?>
                             <a href="<?php
-                            echo Route::_(
-                                'index.php?option=com_proclaim&view=assets&task=cwmadmin.convertSermonSpeaker&' .
-                                Session::getFormToken() . '=1'
-                            ); ?>"
+                    echo Route::_(
+                        'index.php?option=com_proclaim&view=assets&task=cwmadmin.convertSermonSpeaker&' .
+                        Session::getFormToken() . '=1'
+                    ); ?>"
                                class="cwmadmin-action-card"
                                title="<?php echo Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER'); ?>">
                                 <i class="icon-book" aria-hidden="true"></i>
@@ -378,10 +380,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
 
                         <?php if ($piInstalled) : ?>
                             <a href="<?php
-                            echo Route::_(
-                                'index.php?option=com_proclaim&view=assets&task=cwmadmin.convertPreachIt&' .
-                                Session::getFormToken() . '=1'
-                            ); ?>"
+                    echo Route::_(
+                        'index.php?option=com_proclaim&view=assets&task=cwmadmin.convertPreachIt&' .
+                        Session::getFormToken() . '=1'
+                    ); ?>"
                                class="cwmadmin-action-card"
                                title="<?php echo Text::_('JBS_IBM_CONVERT_PREACH_IT'); ?>">
                                 <i class="icon-list" aria-hidden="true"></i>
@@ -675,9 +677,16 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                     <div class="card-body">
                         <p class="text-muted"><?php echo Text::_('JBS_ADM_SCRIPTURE_PROVIDERS_DESC'); ?></p>
 
-                        <?php echo $this->form->renderField('provider_local', 'params'); ?>
                         <?php echo $this->form->renderField('provider_getbible', 'params'); ?>
-                        <?php echo $this->form->renderField('provider_biblegateway', 'params'); ?>
+                        <?php echo $this->form->renderField('provider_api_bible', 'params'); ?>
+                        <?php echo $this->form->renderField('api_bible_api_key', 'params'); ?>
+                        <div id="api-bible-sync-row" class="mb-3" style="display:none;">
+                            <button type="button" class="btn btn-sm btn-outline-primary" id="btn-sync-api-bible">
+                                <i class="icon-refresh" aria-hidden="true"></i>
+                                <?php echo Text::_('JBS_ADM_SYNC_TRANSLATIONS'); ?>
+                            </button>
+                            <span id="api-bible-sync-status" class="ms-2 small"></span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -698,18 +707,26 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
             <div class="col-12">
                 <div class="card mb-3">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="mb-0"><?php echo Text::_('JBS_ADM_LOCAL_TRANSLATIONS'); ?></h4>
-                        <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-refresh-translations"
-                                title="<?php echo Text::_('JBS_ADM_REFRESH'); ?>">
-                            <i class="icon-refresh" aria-hidden="true"></i>
-                        </button>
+                        <div class="d-flex align-items-center gap-2" id="translations-card-header">
+                            <h4 class="mb-0"><?php echo Text::_('JBS_ADM_LOCAL_TRANSLATIONS'); ?></h4>
+                        </div>
+                        <div class="btn-group btn-group-sm">
+                            <button type="button" class="btn btn-outline-danger d-none" id="btn-remove-all-translations"
+                                    title="<?php echo Text::_('JBS_ADM_REMOVE_ALL'); ?>">
+                                <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_REMOVE_ALL'); ?>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" id="btn-refresh-translations"
+                                    title="<?php echo Text::_('JBS_ADM_REFRESH'); ?>">
+                                <i class="icon-refresh" aria-hidden="true"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="card-body">
                         <p class="text-muted"><?php echo Text::_('JBS_ADM_LOCAL_TRANSLATIONS_DESC'); ?></p>
                         <div id="translations-list">
                             <div class="text-center py-3">
                                 <span class="spinner-border spinner-border-sm" role="status"></span>
-                                <?php echo Text::_('JLIB_HTML_BEHAVIOR_LOADING'); ?>
+                                <?php echo Text::_('JBS_ADM_LOADING'); ?>
                             </div>
                         </div>
                     </div>
@@ -717,180 +734,40 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
             </div>
         </div>
 
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var token = '<?php echo Session::getFormToken(); ?>';
-            var baseUrl = 'index.php?option=com_proclaim&task=cwmadmin.';
-
-            // Helper: inject a badge inline with a provider switcher field
-            function injectBadge(fieldId, badgeHtml) {
-                var field = document.getElementById(fieldId);
-                if (!field) { return; }
-                // Walk up to the .controls div that wraps the switcher
-                var controls = field.closest('.controls') || field.closest('fieldset')?.parentElement;
-                if (!controls) { return; }
-                controls.style.display = 'flex';
-                controls.style.alignItems = 'center';
-                controls.style.gap = '0.75rem';
-                var badge = document.createElement('span');
-                badge.innerHTML = badgeHtml;
-                controls.appendChild(badge.firstElementChild || badge);
-            }
-
-            // Static badges for getbible and biblegateway
-            injectBadge('params_provider_getbible0',
-                '<span class="badge bg-success"><i class="icon-checkmark-circle" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_PROVIDER_STATUS_READY'); ?></span>');
-            injectBadge('params_provider_biblegateway0',
-                '<span class="badge bg-secondary"><i class="icon-info-circle" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_PROVIDER_STATUS_IFRAME'); ?></span>');
-
-            // Dynamic badge for local provider (load count via AJAX)
-            var localBadge = document.createElement('span');
-            localBadge.id = 'local-provider-status';
-            localBadge.className = 'badge bg-info';
-            localBadge.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
-            var localField = document.getElementById('params_provider_local0');
-            if (localField) {
-                var localControls = localField.closest('.controls') || localField.closest('fieldset')?.parentElement;
-                if (localControls) {
-                    localControls.style.display = 'flex';
-                    localControls.style.alignItems = 'center';
-                    localControls.style.gap = '0.75rem';
-                    localControls.appendChild(localBadge);
-                }
-            }
-
-            fetch(baseUrl + 'getScriptureStatusXHR&' + token + '=1')
-                .then(function(response) { return response.json(); })
-                .then(function(data) {
-                    var badge = document.getElementById('local-provider-status');
-                    if (data.local_count > 0) {
-                        badge.className = 'badge bg-success';
-                        badge.innerHTML = '<i class="icon-checkmark-circle" aria-hidden="true"></i> '
-                            + data.local_count + ' <?php echo Text::_('JBS_ADM_PROVIDER_STATUS_INSTALLED'); ?>';
-                    } else {
-                        badge.className = 'badge bg-warning text-dark';
-                        badge.innerHTML = '<i class="icon-warning" aria-hidden="true"></i> '
-                            + '<?php echo Text::_('JBS_ADM_PROVIDER_STATUS_NONE'); ?>';
-                    }
-                })
-                .catch(function() {
-                    var badge = document.getElementById('local-provider-status');
-                    badge.className = 'badge bg-secondary';
-                    badge.textContent = '<?php echo Text::_('JBS_ADM_PROVIDER_STATUS_UNKNOWN'); ?>';
-                });
-
-            // Local translations management
-            function loadTranslations() {
-                var container = document.getElementById('translations-list');
-                container.innerHTML = '<div class="text-center py-3"><span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JLIB_HTML_BEHAVIOR_LOADING'); ?></div>';
-
-                fetch(baseUrl + 'getTranslationsXHR&' + token + '=1')
-                    .then(function(r) { return r.json(); })
-                    .then(function(data) {
-                        if (!data.success || !data.translations || data.translations.length === 0) {
-                            container.innerHTML = '<p class="text-muted"><?php echo Text::_('JBS_ADM_NO_TRANSLATIONS'); ?></p>';
-                            return;
-                        }
-                        renderTranslations(data.translations);
-                    })
-                    .catch(function() {
-                        container.innerHTML = '<div class="alert alert-warning"><?php echo Text::_('JBS_ADM_PROVIDER_STATUS_UNKNOWN'); ?></div>';
-                    });
-            }
-
-            function renderTranslations(translations) {
-                var container = document.getElementById('translations-list');
-                var html = '<div class="table-responsive"><table class="table table-striped table-sm">';
-                html += '<thead><tr>';
-                html += '<th><?php echo Text::_('JBS_CMN_NAME'); ?></th>';
-                html += '<th><?php echo Text::_('JBS_ADM_ABBREVIATION'); ?></th>';
-                html += '<th><?php echo Text::_('JBS_ADM_SOURCE'); ?></th>';
-                html += '<th><?php echo Text::_('JSTATUS'); ?></th>';
-                html += '<th><?php echo Text::_('JBS_ADM_VERSES'); ?></th>';
-                html += '<th></th>';
-                html += '</tr></thead><tbody>';
-
-                for (var i = 0; i < translations.length; i++) {
-                    var t = translations[i];
-                    var installed = parseInt(t.installed) === 1;
-                    var statusBadge = installed
-                        ? '<span class="badge bg-success"><?php echo Text::_('JBS_ADM_INSTALLED'); ?></span>'
-                        : '<span class="badge bg-secondary"><?php echo Text::_('JBS_ADM_NOT_INSTALLED'); ?></span>';
-                    var verseCount = installed ? t.verse_count : '-';
-                    var actionBtn = installed
-                        ? '<button type="button" class="btn btn-sm btn-outline-danger btn-remove-translation" data-abbr="' + t.abbreviation + '"><?php echo Text::_('JBS_ADM_REMOVE'); ?></button>'
-                        : '<button type="button" class="btn btn-sm btn-outline-primary btn-download-translation" data-abbr="' + t.abbreviation + '"><?php echo Text::_('JBS_ADM_DOWNLOAD'); ?></button>';
-
-                    html += '<tr>';
-                    html += '<td>' + t.name + '</td>';
-                    html += '<td><code>' + t.abbreviation.toUpperCase() + '</code></td>';
-                    html += '<td>' + (t.source || 'getbible') + '</td>';
-                    html += '<td>' + statusBadge + '</td>';
-                    html += '<td>' + verseCount + '</td>';
-                    html += '<td>' + actionBtn + '</td>';
-                    html += '</tr>';
-                }
-
-                html += '</tbody></table></div>';
-                container.innerHTML = html;
-
-                // Bind download buttons
-                container.querySelectorAll('.btn-download-translation').forEach(function(btn) {
-                    btn.addEventListener('click', function() {
-                        var abbr = this.getAttribute('data-abbr');
-                        this.disabled = true;
-                        this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> <?php echo Text::_('JBS_ADM_DOWNLOADING'); ?>';
-
-                        fetch(baseUrl + 'downloadTranslationXHR&' + token + '=1&abbreviation=' + encodeURIComponent(abbr))
-                            .then(function(r) { return r.json(); })
-                            .then(function(result) {
-                                if (result.success) {
-                                    Joomla.renderMessages({'message': [result.message]});
-                                } else {
-                                    Joomla.renderMessages({'error': [result.message]});
-                                }
-                                loadTranslations();
-                            })
-                            .catch(function() {
-                                Joomla.renderMessages({'error': ['<?php echo Text::_('JBS_ADM_BIBLE_DOWNLOAD_FAILED_GENERIC'); ?>']});
-                                loadTranslations();
-                            });
-                    });
-                });
-
-                // Bind remove buttons
-                container.querySelectorAll('.btn-remove-translation').forEach(function(btn) {
-                    btn.addEventListener('click', function() {
-                        var abbr = this.getAttribute('data-abbr');
-                        if (!confirm('<?php echo Text::_('JBS_ADM_CONFIRM_REMOVE_TRANSLATION'); ?>')) {
-                            return;
-                        }
-                        this.disabled = true;
-
-                        fetch(baseUrl + 'removeTranslationXHR&' + token + '=1&abbreviation=' + encodeURIComponent(abbr))
-                            .then(function(r) { return r.json(); })
-                            .then(function(result) {
-                                if (result.success) {
-                                    Joomla.renderMessages({'message': [result.message]});
-                                } else {
-                                    Joomla.renderMessages({'error': [result.message]});
-                                }
-                                loadTranslations();
-                            })
-                            .catch(function() {
-                                loadTranslations();
-                            });
-                    });
-                });
-            }
-
-            // Refresh button
-            document.getElementById('btn-refresh-translations').addEventListener('click', loadTranslations);
-
-            // Initial load
-            loadTranslations();
-        });
-        </script>
+        <div id="bible-translations-config" class="d-none"
+             data-gdpr-mode="<?php echo (int) ($this->item->params['gdpr_mode'] ?? 0); ?>"
+             data-token="<?php echo Session::getFormToken(); ?>"
+             data-str-loading="<?php echo Text::_('JBS_ADM_LOADING'); ?>"
+             data-str-no-translations="<?php echo Text::_('JBS_ADM_NO_TRANSLATIONS'); ?>"
+             data-str-load-error="<?php echo Text::_('JBS_ADM_PROVIDER_STATUS_UNKNOWN'); ?>"
+             data-str-title="<?php echo Text::_('JGLOBAL_TITLE'); ?>"
+             data-str-abbreviation="<?php echo Text::_('JBS_ADM_ABBREVIATION'); ?>"
+             data-str-source="<?php echo Text::_('JBS_ADM_SOURCE'); ?>"
+             data-str-status="<?php echo Text::_('JSTATUS'); ?>"
+             data-str-verses="<?php echo Text::_('JBS_ADM_VERSES'); ?>"
+             data-str-installed="<?php echo Text::_('JBS_ADM_INSTALLED'); ?>"
+             data-str-not-installed="<?php echo Text::_('JBS_ADM_NOT_INSTALLED'); ?>"
+             data-str-download="<?php echo Text::_('JBS_ADM_DOWNLOAD'); ?>"
+             data-str-downloading="<?php echo Text::_('JBS_ADM_DOWNLOADING'); ?>"
+             data-str-remove="<?php echo Text::_('JBS_ADM_REMOVE'); ?>"
+             data-str-download-failed="<?php echo Text::_('JBS_ADM_BIBLE_DOWNLOAD_FAILED_GENERIC'); ?>"
+             data-str-confirm-remove="<?php echo Text::_('JBS_ADM_CONFIRM_REMOVE_TRANSLATION'); ?>"
+             data-str-bundled-done="<?php echo Text::_('JBS_ADM_BUNDLED_AUTO_DOWNLOADED'); ?>"
+             data-str-status-ready="<?php echo Text::_('JBS_ADM_PROVIDER_STATUS_READY'); ?>"
+             data-str-status-installed="<?php echo Text::_('JBS_ADM_PROVIDER_STATUS_INSTALLED'); ?>"
+             data-str-status-none="<?php echo Text::_('JBS_ADM_PROVIDER_STATUS_NONE'); ?>"
+             data-str-status-unknown="<?php echo Text::_('JBS_ADM_PROVIDER_STATUS_UNKNOWN'); ?>"
+             data-str-remove-all="<?php echo Text::_('JBS_ADM_REMOVE_ALL'); ?>"
+             data-str-confirm-remove-all="<?php echo Text::_('JBS_ADM_CONFIRM_REMOVE_ALL'); ?>"
+             data-str-size="<?php echo Text::_('JBS_ADM_SIZE'); ?>"
+             data-str-total-size="<?php echo Text::_('JBS_ADM_TOTAL_SIZE'); ?>"
+             data-str-syncing="<?php echo Text::_('JBS_ADM_SYNCING'); ?>"
+             data-str-sync-complete="<?php echo Text::_('JBS_ADM_SYNC_COMPLETE'); ?>"
+             data-str-sync-failed="<?php echo Text::_('JBS_ADM_SYNC_FAILED'); ?>"
+             data-str-gdpr-disabled="<?php echo Text::_('JBS_ADM_GDPR_PROVIDERS_DISABLED'); ?>"
+             data-str-online="<?php echo Text::_('JBS_ADM_ONLINE'); ?>"
+             data-str-language="<?php echo Text::_('JBS_ADM_LANGUAGE'); ?>"
+        ></div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
 

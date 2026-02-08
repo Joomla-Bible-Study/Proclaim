@@ -241,11 +241,6 @@
             ]
         },
         {
-            "name": "com_proclaim.biblegateway-print",
-            "type": "style",
-            "uri": "com_proclaim/biblegateway-print.min.css"
-        },
-        {
             "name": "com_proclaim.scripture-text",
             "type": "style",
             "uri": "com_proclaim/scripture-text.css"
@@ -353,6 +348,17 @@
             "name": "com_proclaim.scripture-switcher",
             "type": "script",
             "uri": "com_proclaim/scripture-switcher.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.bible-translations",
+            "type": "script",
+            "uri": "com_proclaim/bible-translations.js",
             "dependencies": [
                 "core"
             ],

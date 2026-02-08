@@ -13,7 +13,7 @@ namespace CWM\Component\Proclaim\Tests\Site\Bible;
 
 use CWM\Component\Proclaim\Site\Bible\BibleProviderFactory;
 use CWM\Component\Proclaim\Site\Bible\BibleProviderInterface;
-use CWM\Component\Proclaim\Site\Bible\Provider\BibleGatewayProvider;
+use CWM\Component\Proclaim\Site\Bible\Provider\ApiBibleProvider;
 use CWM\Component\Proclaim\Site\Bible\Provider\GetBibleProvider;
 use CWM\Component\Proclaim\Site\Bible\Provider\LocalProvider;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
@@ -61,19 +61,19 @@ class BibleProviderFactoryTest extends ProclaimTestCase
     }
 
     /**
-     * Test getProvider returns BibleGatewayProvider
+     * Test getProvider returns ApiBibleProvider
      *
      * @return void
      */
-    public function testGetBibleGatewayProvider(): void
+    public function testGetApiBibleProvider(): void
     {
         BibleProviderFactory::reset();
-        $provider = BibleProviderFactory::getProvider('biblegateway');
+        $provider = BibleProviderFactory::getProvider('api_bible', 'test-key');
 
         $this->assertInstanceOf(BibleProviderInterface::class, $provider);
-        $this->assertInstanceOf(BibleGatewayProvider::class, $provider);
-        $this->assertSame('biblegateway', $provider->getName());
-        $this->assertFalse($provider->returnsText());
+        $this->assertInstanceOf(ApiBibleProvider::class, $provider);
+        $this->assertSame('api_bible', $provider->getName());
+        $this->assertTrue($provider->returnsText());
         $this->assertFalse($provider->isOfflineCapable());
     }
 
@@ -98,8 +98,8 @@ class BibleProviderFactoryTest extends ProclaimTestCase
     public function testProviderInstanceCaching(): void
     {
         BibleProviderFactory::reset();
-        $provider1 = BibleProviderFactory::getProvider('biblegateway');
-        $provider2 = BibleProviderFactory::getProvider('biblegateway');
+        $provider1 = BibleProviderFactory::getProvider('getbible');
+        $provider2 = BibleProviderFactory::getProvider('getbible');
 
         $this->assertSame($provider1, $provider2);
     }
@@ -115,7 +115,7 @@ class BibleProviderFactoryTest extends ProclaimTestCase
 
         $this->assertContains('local', $names);
         $this->assertContains('getbible', $names);
-        $this->assertContains('biblegateway', $names);
+        $this->assertContains('api_bible', $names);
         $this->assertCount(3, $names);
     }
 
@@ -126,15 +126,15 @@ class BibleProviderFactoryTest extends ProclaimTestCase
      */
     public function testResetClearsCache(): void
     {
-        $provider1 = BibleProviderFactory::getProvider('biblegateway');
+        $provider1 = BibleProviderFactory::getProvider('getbible');
         BibleProviderFactory::reset();
-        $provider2 = BibleProviderFactory::getProvider('biblegateway');
+        $provider2 = BibleProviderFactory::getProvider('getbible');
 
         $this->assertNotSame($provider1, $provider2);
     }
 
     /**
-     * Test getProviderForTranslation falls back to biblegateway when all providers enabled
+     * Test getProviderForTranslation falls back to getbible when all providers enabled
      * but no DB available (unit test environment).
      *
      * @return void
@@ -144,33 +144,12 @@ class BibleProviderFactoryTest extends ProclaimTestCase
         BibleProviderFactory::reset();
 
         $params = new Registry([
-            'provider_local'        => 1,
-            'provider_getbible'     => 1,
-            'provider_biblegateway' => 1,
+            'provider_getbible' => 1,
         ]);
 
-        // Without DB access, local/getbible checks fail and it falls to biblegateway
+        // Without DB access, local/getbible checks fail and it falls to getbible
         $provider = BibleProviderFactory::getProviderForTranslation('kjv', $params);
         $this->assertInstanceOf(BibleProviderInterface::class, $provider);
-    }
-
-    /**
-     * Test getProviderForTranslation with only biblegateway enabled
-     *
-     * @return void
-     */
-    public function testGetProviderForTranslationBiblegatewayOnly(): void
-    {
-        BibleProviderFactory::reset();
-
-        $params = new Registry([
-            'provider_local'        => 0,
-            'provider_getbible'     => 0,
-            'provider_biblegateway' => 1,
-        ]);
-
-        $provider = BibleProviderFactory::getProviderForTranslation('niv', $params);
-        $this->assertInstanceOf(BibleGatewayProvider::class, $provider);
     }
 
     /**
@@ -183,13 +162,49 @@ class BibleProviderFactoryTest extends ProclaimTestCase
         BibleProviderFactory::reset();
 
         $params = new Registry([
-            'provider_local'        => 0,
-            'provider_getbible'     => 1,
-            'provider_biblegateway' => 0,
+            'provider_getbible' => 1,
         ]);
 
         // Without DB, getbible check fails, but getbible is still the fallback
         $provider = BibleProviderFactory::getProviderForTranslation('kjv', $params);
         $this->assertInstanceOf(BibleProviderInterface::class, $provider);
+    }
+
+    /**
+     * Test getProviderForTranslation with getbible disabled falls back to local
+     *
+     * @return void
+     */
+    public function testGetProviderForTranslationLocalFallback(): void
+    {
+        BibleProviderFactory::reset();
+
+        $params = new Registry([
+            'provider_getbible' => 0,
+        ]);
+
+        $provider = BibleProviderFactory::getProviderForTranslation('kjv', $params);
+        $this->assertInstanceOf(LocalProvider::class, $provider);
+    }
+
+    /**
+     * Test getProviderForTranslation with GDPR mode falls back to local
+     *
+     * @return void
+     */
+    public function testGetProviderForTranslationGdprMode(): void
+    {
+        BibleProviderFactory::reset();
+
+        $params = new Registry([
+            'gdpr_mode'          => 1,
+            'provider_getbible'  => 1,
+            'provider_api_bible' => 1,
+            'api_bible_api_key'  => 'test-key',
+        ]);
+
+        // GDPR mode disables all external providers, falls back to local
+        $provider = BibleProviderFactory::getProviderForTranslation('kjv', $params);
+        $this->assertInstanceOf(LocalProvider::class, $provider);
     }
 }

@@ -11,7 +11,7 @@
 
 namespace CWM\Component\Proclaim\Site\Bible;
 
-use CWM\Component\Proclaim\Site\Bible\Provider\BibleGatewayProvider;
+use CWM\Component\Proclaim\Site\Bible\Provider\ApiBibleProvider;
 use CWM\Component\Proclaim\Site\Bible\Provider\GetBibleProvider;
 use CWM\Component\Proclaim\Site\Bible\Provider\LocalProvider;
 use Joomla\CMS\Factory;
@@ -40,7 +40,8 @@ class BibleProviderFactory
     /**
      * Get a Bible provider by name.
      *
-     * @param   string  $name  Provider name: "local", "getbible", or "biblegateway"
+     * @param   string  $name    Provider name: "local", "getbible", or "api_bible"
+     * @param   string  $apiKey  Optional API key (required for api_bible)
      *
      * @return  BibleProviderInterface
      *
@@ -48,17 +49,17 @@ class BibleProviderFactory
      *
      * @since  10.1.0
      */
-    public static function getProvider(string $name): BibleProviderInterface
+    public static function getProvider(string $name, string $apiKey = ''): BibleProviderInterface
     {
         if (isset(self::$instances[$name])) {
             return self::$instances[$name];
         }
 
         $provider = match ($name) {
-            'local'        => new LocalProvider(),
-            'getbible'     => new GetBibleProvider(),
-            'biblegateway' => new BibleGatewayProvider(),
-            default        => throw new \InvalidArgumentException(
+            'local'     => new LocalProvider(),
+            'getbible'  => new GetBibleProvider(),
+            'api_bible' => new ApiBibleProvider($apiKey),
+            default     => throw new \InvalidArgumentException(
                 \sprintf('Unknown Bible provider: %s', $name)
             ),
         };
@@ -71,8 +72,11 @@ class BibleProviderFactory
     /**
      * Find a suitable provider for a given Bible translation abbreviation.
      *
-     * Checks enabled providers in priority order: local first (offline),
-     * then getbible (API), then biblegateway (iframe fallback).
+     * Checks enabled providers in priority order:
+     *   1. Local (always enabled, offline)
+     *   2. API.Bible (if enabled and translation has source='api_bible')
+     *   3. GetBible (if enabled and translation has source='getbible')
+     *   4. Fallback: first enabled external provider, then local
      *
      * @param   string    $version      Translation abbreviation (e.g. "kjv", "nlt")
      * @param   Registry  $adminParams  Admin component params with provider_* settings
@@ -83,30 +87,49 @@ class BibleProviderFactory
      */
     public static function getProviderForTranslation(string $version, Registry $adminParams): BibleProviderInterface
     {
-        $localEnabled        = (int) $adminParams->get('provider_local', 1) === 1;
-        $getbibleEnabled     = (int) $adminParams->get('provider_getbible', 1) === 1;
-        $biblegatewayEnabled = (int) $adminParams->get('provider_biblegateway', 1) === 1;
+        $gdprMode        = (int) $adminParams->get('gdpr_mode', 0) === 1;
+        $getbibleEnabled = !$gdprMode && (int) $adminParams->get('provider_getbible', 1) === 1;
+        $apiBibleEnabled = !$gdprMode && (int) $adminParams->get('provider_api_bible', 0) === 1;
+        $apiBibleKey     = (string) $adminParams->get('api_bible_api_key', '');
 
-        // Check if version is locally installed
-        if ($localEnabled) {
+        // Check if version is locally installed (Local is always enabled)
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select('COUNT(*)')
+                ->from($db->quoteName('#__bsms_bible_verses'))
+                ->where($db->quoteName('translation') . ' = :version')
+                ->bind(':version', $version);
+            $db->setQuery($query);
+
+            if ((int) $db->loadResult() > 0) {
+                return self::getProvider('local');
+            }
+        } catch (\Throwable $e) {
+            // Fall through to next provider
+        }
+
+        // Check if api_bible supports this version
+        if ($apiBibleEnabled && !empty($apiBibleKey)) {
             try {
                 $db    = Factory::getContainer()->get(DatabaseInterface::class);
                 $query = $db->getQuery(true)
                     ->select('COUNT(*)')
-                    ->from($db->quoteName('#__bsms_bible_verses'))
-                    ->where($db->quoteName('translation') . ' = :version')
+                    ->from($db->quoteName('#__bsms_bible_translations'))
+                    ->where($db->quoteName('abbreviation') . ' = :version')
+                    ->where($db->quoteName('source') . ' = ' . $db->quote('api_bible'))
                     ->bind(':version', $version);
                 $db->setQuery($query);
 
                 if ((int) $db->loadResult() > 0) {
-                    return self::getProvider('local');
+                    return self::getProvider('api_bible', $apiBibleKey);
                 }
             } catch (\Throwable $e) {
                 // Fall through to next provider
             }
         }
 
-        // Check if getbible supports this version
+        // Check if getbible supports this version (online API)
         if ($getbibleEnabled) {
             try {
                 $db    = Factory::getContainer()->get(DatabaseInterface::class);
@@ -122,22 +145,16 @@ class BibleProviderFactory
                     return self::getProvider('getbible');
                 }
             } catch (\Throwable $e) {
-                // Fall through to next provider
+                // Fall through to fallback
             }
         }
 
-        // Fall back to BibleGateway iframe if enabled
-        if ($biblegatewayEnabled) {
-            return self::getProvider('biblegateway');
-        }
-
-        // If nothing else, try getbible as a general fallback
+        // Fallback: use getbible if enabled, otherwise local
         if ($getbibleEnabled) {
             return self::getProvider('getbible');
         }
 
-        // Last resort: biblegateway even if disabled
-        return self::getProvider('biblegateway');
+        return self::getProvider('local');
     }
 
     /**
@@ -149,7 +166,7 @@ class BibleProviderFactory
      */
     public static function getProviderNames(): array
     {
-        return ['local', 'getbible', 'biblegateway'];
+        return ['local', 'getbible', 'api_bible'];
     }
 
     /**

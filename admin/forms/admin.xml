@@ -258,25 +258,31 @@
                description="JBS_ADM_CSP_EXTRA_SOURCES_DESC"
                rows="3" cols="60" filter="string"/>
 
-        <!-- Scripture Provider Settings -->
-        <field name="provider_local" type="radio" default="1"
-               label="JBS_ADM_PROVIDER_LOCAL" description="JBS_ADM_PROVIDER_LOCAL_DESC"
-               layout="joomla.form.field.radio.switcher">
-            <option value="0">JNO</option>
-            <option value="1">JYES</option>
-        </field>
+        <!-- Scripture Provider Settings (Local is always enabled as the primary built-in provider) -->
         <field name="provider_getbible" type="radio" default="1"
                label="JBS_ADM_PROVIDER_GETBIBLE" description="JBS_ADM_PROVIDER_GETBIBLE_DESC"
                layout="joomla.form.field.radio.switcher">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
-        <field name="provider_biblegateway" type="radio" default="1"
-               label="JBS_ADM_PROVIDER_BIBLEGATEWAY" description="JBS_ADM_PROVIDER_BIBLEGATEWAY_DESC"
+        <field name="gdpr_mode" type="radio" default="0"
+               label="JBS_ADM_GDPR_MODE" description="JBS_ADM_GDPR_MODE_DESC"
                layout="joomla.form.field.radio.switcher">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
+        <field name="provider_api_bible" type="radio" default="0"
+               label="JBS_ADM_PROVIDER_API_BIBLE"
+               description="JBS_ADM_PROVIDER_API_BIBLE_DESC"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="api_bible_api_key" type="text" default=""
+               label="JBS_ADM_API_BIBLE_KEY"
+               description="JBS_ADM_API_BIBLE_KEY_DESC"
+               filter="string"
+               showon="provider_api_bible:1"/>
         <field name="scripture_cache_days" type="number" default="30" min="1" max="365"
                label="JBS_ADM_SCRIPTURE_CACHE_DAYS" description="JBS_ADM_SCRIPTURE_CACHE_DAYS_DESC"
                filter="int"/>

@@ -79,10 +79,10 @@ class BibleTranslationField extends ListField
         // If no translations found, provide common defaults
         if (empty($options)) {
             $defaults = [
-                'kjv' => 'King James Version',
-                'web' => 'World English Bible',
+                'kjv'  => 'King James Version',
+                'web'  => 'World English Bible',
                 'asvd' => 'American Standard Version',
-                'ylt' => "Young's Literal Translation",
+                'ylt'  => "Young's Literal Translation",
             ];
 
             foreach ($defaults as $abbr => $name) {

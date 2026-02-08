@@ -35,8 +35,6 @@ class BiblePassageResultTest extends ProclaimTestCase
         $this->assertSame('', $result->translation);
         $this->assertSame('', $result->copyright);
         $this->assertFalse($result->isHtml);
-        $this->assertFalse($result->isIframe);
-        $this->assertSame('', $result->iframeUrl);
     }
 
     /**
@@ -51,9 +49,7 @@ class BiblePassageResultTest extends ProclaimTestCase
             reference: 'Genesis+1:1',
             translation: 'kjv',
             copyright: 'Public Domain',
-            isHtml: true,
-            isIframe: false,
-            iframeUrl: ''
+            isHtml: true
         );
 
         $this->assertSame('In the beginning...', $result->text);
@@ -61,7 +57,6 @@ class BiblePassageResultTest extends ProclaimTestCase
         $this->assertSame('kjv', $result->translation);
         $this->assertSame('Public Domain', $result->copyright);
         $this->assertTrue($result->isHtml);
-        $this->assertFalse($result->isIframe);
     }
 
     /**
@@ -84,24 +79,5 @@ class BiblePassageResultTest extends ProclaimTestCase
     {
         $result = new BiblePassageResult();
         $this->assertFalse($result->hasText());
-    }
-
-    /**
-     * Test iframe result
-     *
-     * @return void
-     */
-    public function testIframeResult(): void
-    {
-        $result = new BiblePassageResult(
-            reference: 'John+3:16',
-            translation: '51',
-            isIframe: true,
-            iframeUrl: 'https://www.biblegateway.com/passage/?search=John+3:16&version=51'
-        );
-
-        $this->assertTrue($result->isIframe);
-        $this->assertFalse($result->hasText());
-        $this->assertStringContainsString('biblegateway.com', $result->iframeUrl);
     }
 }
