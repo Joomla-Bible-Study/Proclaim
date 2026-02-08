@@ -15,6 +15,31 @@
  * to hide it in print output.
  */
 
+/* ==========================================================
+   POPUP WINDOW STYLES (screen)
+   When the sermon is opened in the print popup (tmpl=component
+   with print=1), these rules hide interactive elements that
+   don't belong in a print-oriented view, even before the user
+   clicks Print.
+   ========================================================== */
+
+.proclaim-print-mode iframe,
+.proclaim-print-mode video,
+.proclaim-print-mode audio,
+.proclaim-print-mode .proclaim-media-player,
+.proclaim-print-mode .cwm-fancybox,
+.proclaim-print-mode .media-download-btn,
+.proclaim-print-mode .btn-group .dropdown-toggle,
+.proclaim-print-mode .fa-youtube,
+.proclaim-print-mode a[href*="youtube"] img,
+.proclaim-print-mode a[href*="youtu.be"] img {
+    display: none !important;
+}
+
+/* ==========================================================
+   PRINT STYLES (@media print)
+   ========================================================== */
+
 @media print {
 
     /* ==========================================================

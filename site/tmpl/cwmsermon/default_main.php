@@ -104,7 +104,12 @@ if ($isPrint && !empty($row->bookname)) {
             $bookRef .= ':' . $row->verse_begin;
         }
         if (!empty($row->chapter_end) && !empty($row->verse_end)) {
-            $bookRef .= '-' . $row->chapter_end . ':' . $row->verse_end;
+            // Only include chapter number if it differs from chapter_begin
+            if ($row->chapter_end !== $row->chapter_begin) {
+                $bookRef .= '-' . $row->chapter_end . ':' . $row->verse_end;
+            } else {
+                $bookRef .= '-' . $row->verse_end;
+            }
         } elseif (!empty($row->verse_end)) {
             $bookRef .= '-' . $row->verse_end;
         }

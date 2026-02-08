@@ -25,7 +25,7 @@ use Joomla\CMS\Uri\Uri;
 $isPrint = !empty($this->print);
 ?>
 <a href="#proclaim-main-content" class="proclaim-skip-link"><?php echo Text::_('JBS_CMN_SKIP_TO_CONTENT'); ?></a>
-<div class="container-fluid proclaim-main-content" id="proclaim-main-content" role="main">
+<div class="container-fluid proclaim-main-content<?php echo $isPrint ? ' proclaim-print-mode' : ''; ?>" id="proclaim-main-content" role="main">
 <?php if (!$isPrint) : ?>
     <?php
     $printUrl = Uri::getInstance();
