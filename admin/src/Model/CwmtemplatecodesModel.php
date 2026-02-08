@@ -98,21 +98,28 @@ class CwmtemplatecodesModel extends ListModel
         $query->select(
             $this->getState(
                 'list.select',
-                'templatecode.id, templatecode.published, templatecode.filename, templatecode.templatecode, templatecode.type'
+                implode(', ', $db->quoteName([
+                    'templatecode.id',
+                    'templatecode.published',
+                    'templatecode.filename',
+                    'templatecode.templatecode',
+                    'templatecode.type',
+                ]))
             )
         );
-        $query->from('`#__bsms_templatecode` AS templatecode');
+        $query->from($db->quoteName('#__bsms_templatecode', 'templatecode'));
 
         // Filter by search in filename or study title
         $search = $this->getState('filter.search');
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where('podcast.id = ' . (int)substr($search, 3));
+                $query->where($db->quoteName('templatecode.id') . ' = ' . (int)substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
                 $query->where(
-                    '(templatecode.filename LIKE ' . $search . ' OR templatecode.templatecode LIKE ' . $search . ')'
+                    '(' . $db->quoteName('templatecode.filename') . ' LIKE ' . $search
+                    . ' OR ' . $db->quoteName('templatecode.templatecode') . ' LIKE ' . $search . ')'
                 );
             }
         }
@@ -121,15 +128,15 @@ class CwmtemplatecodesModel extends ListModel
         $published = $this->getState('filter.published');
 
         if (is_numeric($published)) {
-            $query->where('templatecode.published = ' . (int)$published);
+            $query->where($db->quoteName('templatecode.published') . ' = ' . (int)$published);
         } elseif ($published === '') {
-            $query->where('(templatecode.published = 0 OR templatecode.published = 1)');
+            $query->where('(' . $db->quoteName('templatecode.published') . ' = 0 OR ' . $db->quoteName('templatecode.published') . ' = 1)');
         }
 
         // Add the list ordering clause
         $orderCol  = $this->state->get('list.ordering', 'templatecode.filename');
         $orderDirn = $this->state->get('list.direction', 'ASC');
-        $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+        $query->order($db->quoteName($orderCol) . ' ' . $db->escape($orderDirn));
 
         return $query;
     }

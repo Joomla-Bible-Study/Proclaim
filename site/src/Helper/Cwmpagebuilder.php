@@ -247,24 +247,38 @@ class Cwmpagebuilder
         $groups = implode(',', $user->getAuthorisedViewLevels());
 
         $query = $db->getQuery(true);
+        $nullDateQuoted = $db->quote($db->getNullDate());
+        $query->select(implode(', ', $db->quoteName([
+            'study.id', 'study.published', 'study.studydate', 'study.studytitle',
+            'study.booknumber', 'study.chapter_begin', 'study.verse_begin',
+            'study.chapter_end', 'study.verse_end', 'study.hits', 'study.alias',
+            'study.studyintro', 'study.teacher_id', 'study.secondary_reference',
+            'study.booknumber2', 'study.location_id',
+        ])));
+        // Use studydate as fallback for modified
         $query->select(
-            'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
-		                study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.studyintro,
-		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, ' .
-            // Use created if modified is 0
-            'CASE WHEN study.modified = ' . $db->quote(
-                $db->getNullDate()
-            ) . ' THEN study.studydate ELSE study.modified END as modified, ' .
-            'study.modified_by, uam.name as modified_by_name,' .
-            // Use created if publish_up is 0
-            'CASE WHEN study.publish_up = ' . $db->quote(
-                $db->getNullDate()
-            ) . ' THEN study.studydate ELSE study.publish_up END as publish_up,' .
-            'study.publish_down,
-		                study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
-		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
-		                study.verse_end2, study.verse_begin2, ' . $query->length('study.studytext') . ' AS readmore ,'
-            . ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug '
+            'CASE WHEN ' . $db->quoteName('study.modified') . ' = ' . $nullDateQuoted
+            . ' THEN ' . $db->quoteName('study.studydate') . ' ELSE ' . $db->quoteName('study.modified')
+            . ' END AS ' . $db->quoteName('modified')
+        );
+        $query->select($db->quoteName('study.modified_by') . ', ' . $db->quoteName('uam.name', 'modified_by_name'));
+        // Use studydate as fallback for publish_up
+        $query->select(
+            'CASE WHEN ' . $db->quoteName('study.publish_up') . ' = ' . $nullDateQuoted
+            . ' THEN ' . $db->quoteName('study.studydate') . ' ELSE ' . $db->quoteName('study.publish_up')
+            . ' END AS ' . $db->quoteName('publish_up')
+        );
+        $query->select(implode(', ', $db->quoteName([
+            'study.publish_down', 'study.series_id', 'study.download_id',
+            'study.thumbnailm', 'study.thumbhm', 'study.thumbwm',
+            'study.access', 'study.user_name', 'study.user_id', 'study.studynumber',
+            'study.chapter_begin2', 'study.chapter_end2', 'study.verse_end2', 'study.verse_begin2',
+        ])));
+        $query->select($query->length($db->quoteName('study.studytext')) . ' AS ' . $db->quoteName('readmore'));
+        $query->select(
+            'CASE WHEN CHAR_LENGTH(' . $db->quoteName('study.alias') . ') THEN CONCAT_WS('
+            . $db->quote(':') . ', ' . $db->quoteName('study.id') . ', ' . $db->quoteName('study.alias')
+            . ') ELSE ' . $db->quoteName('study.id') . ' END AS ' . $db->quoteName('slug')
         );
         $query->from($db->quoteName('#__bsms_studies', 'study'));
 
@@ -393,8 +407,8 @@ class Cwmpagebuilder
                 'com_proclaim'
             ))
         ) {
-            $query->where('(study.publish_up = ' . $nullDate . ' OR study.publish_up <= ' . $nowDate . ')')
-                ->where('(study.publish_down = ' . $nullDate . ' OR study.publish_down >= ' . $nowDate . ')');
+            $query->where('(' . $db->quoteName('study.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('study.publish_up') . ' <= ' . $nowDate . ')')
+                ->where('(' . $db->quoteName('study.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('study.publish_down') . ' >= ' . $nowDate . ')');
         }
 
         // Filter by language
