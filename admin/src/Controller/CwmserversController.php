@@ -11,10 +11,9 @@
 
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
-use Joomla\CMS\Language\Text;
+use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
-use Joomla\CMS\Response\JsonResponse;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -29,27 +28,15 @@ use Joomla\CMS\Response\JsonResponse;
 class CwmserversController extends AdminController
 {
     /**
-     * Method to get the JSON-encoded amount of published articles
+     * Method to get the JSON-encoded counts for Servers
      *
      * @return  void
      *
-     * @since   4.0.0
+     * @since   10.0.0
      */
-    public function getQuickiconContent(): void
+    public function getQuickIconServers(): void
     {
-        $model = $this->getModel('cwmservers');
-
-        $model->setState('filter.published', 1);
-
-        $amount = (int)$model->getTotal();
-
-        $result = [];
-
-        $result['amount'] = $amount;
-        $result['sronly'] = Text::plural('COM_PROCLAIM_N_SERVERS_SRONLY', $amount);
-        $result['name']   = Text::plural('COM_PROCLAIM_N_SERVERS', $amount);
-
-        echo new JsonResponse($result);
+        CwmcountHelper::sendQuickIconResponse('#__bsms_servers', 'COM_PROCLAIM_N_QUICKICON_SERVERS');
     }
 
     /**

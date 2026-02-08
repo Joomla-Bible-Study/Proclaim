@@ -16,9 +16,11 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\Utilities\ArrayHelper;
@@ -240,5 +242,25 @@ class CwmtemplateController extends FormController
         );
 
         return parent::batch($this->getModel());
+    }
+
+    /**
+     * Method to run after a successful save.
+     *
+     * @param   BaseDatabaseModel  $model      The model.
+     * @param   array              $validData  The validated data.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    protected function postSaveHook(BaseDatabaseModel $model, $validData = []): void
+    {
+        $id    = (int) $model->getState('cwmtemplate.id');
+        $isNew = empty($validData['id']);
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_TEMPLATE_ADDED' : 'COM_PROCLAIM_ACTION_LOG_TEMPLATE_UPDATED';
+        $title = $validData['title'] ?? '';
+
+        CwmactionlogHelper::log($key, $title, 'template', $id);
     }
 }

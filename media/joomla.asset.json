@@ -312,6 +312,17 @@
             "attributes": {
                 "defer": true
             }
+        },
+        {
+            "name": "com_proclaim.admin-shortcuts",
+            "type": "script",
+            "uri": "com_proclaim/cwmadmin-shortcuts.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
         }
     ]
 }

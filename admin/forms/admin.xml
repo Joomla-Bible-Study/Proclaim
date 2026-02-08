@@ -240,6 +240,12 @@
         </field>
         <field name="uploadpath" type="text" default="/images/biblestudy/media/" label="JBS_ADM_UPLOAD_PATH"
                description="JBS_ADM_UPLOAD_PATH_DESC"/>
+        <field name="rate_limit_max" type="number" default="10" min="0" max="100"
+               label="JBS_ADM_RATE_LIMIT_MAX"
+               description="JBS_ADM_RATE_LIMIT_MAX_DESC" filter="int"/>
+        <field name="rate_limit_window" type="number" default="60" min="10" max="600"
+               label="JBS_ADM_RATE_LIMIT_WINDOW"
+               description="JBS_ADM_RATE_LIMIT_WINDOW_DESC" filter="int"/>
     </fields>
     <fieldset>
         <field name="drop_tables" type="radio" default="0"

@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
@@ -338,5 +339,17 @@ class CwmpodcastsController extends AdminController
     public function getModel($name = 'Cwmpodcast', $prefix = 'Administrator', $config = ['ignore_request' => true]): BaseDatabaseModel
     {
         return parent::getModel($name, $prefix, $config);
+    }
+
+    /**
+     * Method to get the JSON-encoded counts for Podcasts
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public function getQuickIconPodcasts(): void
+    {
+        CwmcountHelper::sendQuickIconResponse('#__bsms_podcast', 'COM_PROCLAIM_N_QUICKICON_PODCASTS');
     }
 }

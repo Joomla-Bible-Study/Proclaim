@@ -16,12 +16,10 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Model\CwmseriesModel;
+use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
-use Joomla\CMS\Response\JsonResponse;
 use Joomla\Utilities\ArrayHelper;
 
 /**
@@ -80,7 +78,7 @@ class CwmseriesController extends AdminController
     }
 
     /**
-     * Method to get the JSON-encoded number of published Series
+     * Method to get the JSON-encoded counts for Series
      *
      * @return  void
      *
@@ -88,19 +86,6 @@ class CwmseriesController extends AdminController
      */
     public function getQuickIconSeries(): void
     {
-        /** @var CwmseriesModel $model */
-        $model = $this->getModel('cwmseries');
-
-        $model->setState('filter.published', 1);
-
-        $amount = (int) $model->getTotal();
-
-        $result = [];
-
-        $result['amount'] = $amount;
-        $result['sronly'] = Text::plural('COM_PROCLAIM_N_QUICKICON_SERIES_SRONLY', $amount);
-        $result['name']   = Text::plural('COM_PROCLAIM_N_QUICKICON_SERIES', $amount);
-
-        echo new JsonResponse($result);
+        CwmcountHelper::sendQuickIconResponse('#__bsms_series', 'COM_PROCLAIM_N_QUICKICON_SERIES');
     }
 }

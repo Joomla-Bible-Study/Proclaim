@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -84,6 +85,11 @@ class Cwmstats
      */
     public static function getTotalMessages(string $start = '', string $end = ''): int
     {
+        // Delegate to CwmcountHelper for simple published count (no date filtering)
+        if (empty($start) && empty($end)) {
+            return CwmcountHelper::getCountByState('#__bsms_studies', 1);
+        }
+
         if ($start !== self::$total_messages_start || $end !== self::$total_messages_end || !self::$total_messages) {
             self::$total_messages_start = $start;
             self::$total_messages_end   = $end;
@@ -183,15 +189,7 @@ class Cwmstats
      */
     public static function getTotalComments(): int
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query
-            ->select('COUNT(*)')
-            ->from($db->quoteName('#__bsms_comments'))
-            ->where($db->quoteName('published') . ' = 1');
-        $db->setQuery($query);
-
-        return (int) $db->loadResult();
+        return CwmcountHelper::getCountByState('#__bsms_comments', 1);
     }
 
     /**
@@ -240,15 +238,7 @@ class Cwmstats
      */
     public static function getTotalMediaFiles(): int
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query
-            ->select('COUNT(*)')
-            ->from($db->quoteName('#__bsms_mediafiles'))
-            ->where($db->quoteName('published') . ' = 1');
-        $db->setQuery($query);
-
-        return (int) $db->loadResult();
+        return CwmcountHelper::getCountByState('#__bsms_mediafiles', 1);
     }
 
     /**

@@ -17,6 +17,7 @@ namespace CWM\Plugin\System\Proclaim\Extension;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Router\Route;
 use Joomla\Event\SubscriberInterface;
 
 /**
@@ -25,6 +26,8 @@ use Joomla\Event\SubscriberInterface;
  * - Displays a PHP version warning across all admin pages when the server
  *   does not meet the minimum requirement.
  * - Hides admin submenu items when Simple Mode is enabled.
+ * - Rate-limits rapid POST submissions to com_proclaim controllers.
+ * - Loads keyboard shortcuts on com_proclaim admin pages.
  *
  * @since  10.1.0
  */
@@ -37,6 +40,22 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @since 10.1.0
      */
     private const MIN_PHP = '8.3.0';
+
+    /**
+     * Default maximum POST submissions per window.
+     *
+     * @var int
+     * @since 10.1.0
+     */
+    private const DEFAULT_RATE_LIMIT_MAX = 10;
+
+    /**
+     * Default rate limit window in seconds.
+     *
+     * @var int
+     * @since 10.1.0
+     */
+    private const DEFAULT_RATE_LIMIT_WINDOW = 60;
 
     /**
      * Views hidden from the admin submenu when Simple Mode is enabled.
@@ -77,7 +96,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     }
 
     /**
-     * Check PHP version after routing and enqueue a warning if too low.
+     * Check PHP version after routing, enforce rate limiting for POST requests.
      *
      * @return  void
      *
@@ -85,28 +104,31 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      */
     public function onAfterRoute(): void
     {
+        $app = $this->getApplication();
+
         // Only check in the administrator application
-        if (!$this->getApplication()->isClient('administrator')) {
+        if (!$app->isClient('administrator')) {
             return;
         }
 
-        // PHP version meets requirement — nothing to do
-        if (version_compare(PHP_VERSION, self::MIN_PHP, '>=')) {
+        // PHP version warning
+        if (version_compare(PHP_VERSION, self::MIN_PHP, '<')) {
+            $app->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
+
+            $app->enqueueMessage(
+                Text::sprintf('COM_PROCLAIM_ERROR_PHP_VERSION', self::MIN_PHP, PHP_VERSION),
+                'error'
+            );
+
             return;
         }
 
-        $this->getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
-
-        $this->getApplication()->enqueueMessage(
-            Text::sprintf('COM_PROCLAIM_ERROR_PHP_VERSION', self::MIN_PHP, PHP_VERSION),
-            'error'
-        );
+        // Rate limiting for POST requests to com_proclaim
+        $this->checkRateLimit();
     }
 
     /**
-     * Inject CSS to hide admin submenu items when Simple Mode is enabled.
-     *
-     * Uses display:none on sidebar links matching hidden views.
+     * Inject CSS/JS on admin pages: Simple Mode sidebar hiding + keyboard shortcuts.
      *
      * @return  void
      *
@@ -122,6 +144,15 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         // Component must be functional (PHP >= 8.3)
         if (version_compare(PHP_VERSION, self::MIN_PHP, '<')) {
             return;
+        }
+
+        // Load keyboard shortcuts on any com_proclaim admin page
+        $option = $this->getApplication()->getInput()->getCmd('option', '');
+
+        if ($option === 'com_proclaim') {
+            $this->getApplication()->getDocument()
+                ->getWebAssetManager()
+                ->useScript('com_proclaim.admin-shortcuts');
         }
 
         if (!$this->isSimpleModeEnabled()) {
@@ -141,6 +172,92 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     }
 
     /**
+     * Enforce session-based rate limiting for POST requests to com_proclaim.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function checkRateLimit(): void
+    {
+        $app   = $this->getApplication();
+        $input = $app->getInput();
+
+        // Only throttle POST requests to com_proclaim
+        if ($input->getMethod() !== 'POST' || $input->getCmd('option', '') !== 'com_proclaim') {
+            return;
+        }
+
+        // Skip AJAX/JSON requests — these are typically QuickIcon counts, not form submissions
+        if ($input->getCmd('format', '') === 'json') {
+            return;
+        }
+
+        $params = $this->getAdminParams();
+        $max    = (int) ($params['rate_limit_max'] ?? self::DEFAULT_RATE_LIMIT_MAX);
+        $window = (int) ($params['rate_limit_window'] ?? self::DEFAULT_RATE_LIMIT_WINDOW);
+
+        // Rate limiting disabled if max is 0
+        if ($max <= 0) {
+            return;
+        }
+
+        $session = $app->getSession();
+        $now     = time();
+        $key     = 'com_proclaim.rate_limit';
+
+        /** @var array $timestamps */
+        $timestamps = $session->get($key, []);
+
+        // Clean up expired entries
+        $timestamps = array_filter($timestamps, function (int $ts) use ($now, $window) {
+            return ($now - $ts) < $window;
+        });
+
+        if (\count($timestamps) >= $max) {
+            $app->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
+
+            $app->enqueueMessage(
+                Text::sprintf('COM_PROCLAIM_RATE_LIMIT_EXCEEDED', $max, $window),
+                'warning'
+            );
+
+            // Redirect back to prevent form processing
+            $app->redirect(Route::_('index.php?option=com_proclaim', false));
+
+            return;
+        }
+
+        // Record this submission
+        $timestamps[] = $now;
+        $session->set($key, $timestamps);
+    }
+
+    /**
+     * Get admin params as an associative array.
+     *
+     * @return  array
+     *
+     * @since   10.1.0
+     */
+    private function getAdminParams(): array
+    {
+        try {
+            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('params'))
+                ->from($db->quoteName('#__bsms_admin'))
+                ->where($db->quoteName('id') . ' = 1');
+            $db->setQuery($query);
+            $json = $db->loadResult();
+
+            return $json ? (json_decode($json, true) ?: []) : [];
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
      * Read the Simple Mode setting from the database.
      *
      * Reads directly from `#__bsms_admin` to avoid depending on
@@ -156,24 +273,8 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             return $this->simpleMode;
         }
 
-        $this->simpleMode = false;
-
-        try {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
-            $query = $db->getQuery(true)
-                ->select($db->quoteName('params'))
-                ->from($db->quoteName('#__bsms_admin'))
-                ->where($db->quoteName('id') . ' = 1');
-            $db->setQuery($query);
-            $json = $db->loadResult();
-
-            if ($json) {
-                $params           = json_decode($json, true);
-                $this->simpleMode = !empty($params['simple_mode']);
-            }
-        } catch (\Exception $e) {
-            // Table may not exist (fresh install in progress) — default to off
-        }
+        $params           = $this->getAdminParams();
+        $this->simpleMode = !empty($params['simple_mode']);
 
         return $this->simpleMode;
     }
