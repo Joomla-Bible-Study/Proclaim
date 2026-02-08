@@ -25,7 +25,7 @@ $t       = $this->template;
 ?>
 <!-- Begin Fluid layout -->
 <div class="container-fluid">
-    <div class="row-fluid">
+    <div class="row">
         <div class="col-lg-12">
             <?php
 $list = $listing->getFluidListing($this->items, $this->params, $t, $type = 'seriesdisplay');
@@ -33,7 +33,7 @@ echo $list;
 ?>
         </div>
     </div>
-    <div class="row-fluid">
+    <div class="row">
         <div class="col-lg-12">
             <?php
 if (!empty($this->seriesstudies)) {
@@ -46,7 +46,7 @@ if (!empty($this->seriesstudies)) {
         </div>
     </div>
     <hr/>
-    <div class="row-fluid">
+    <div class="row">
         <div class="col-lg-12">
             <?php
 if ($this->params->get('series_list_return') > 0) {

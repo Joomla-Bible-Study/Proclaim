@@ -22,7 +22,7 @@
 
         <field name="comment_date" type="calendar" label="JBS_CMT_CREATE_DATE"
                description="JBS_CMT_CREATE_DATE_DESC" translateformat="true"
-               showtime="true" filter="user_utc" labelclass="control-label" required="true"/>
+               showtime="true" filter="user_utc" required="true"/>
 
         <field name="full_name" type="text" label="JBS_CMT_FULL_NAME"
                size="30"/>

@@ -129,11 +129,7 @@ class CwmtemplateController extends FormController
             $html = '';
 
             foreach ($fields as $field) {
-                $html .= '<div class="control-group">';
-                $html .= '<div class="control-label">' . $field->label . '</div>';
-                $html .= '<div class="controls">' . $field->input;
-                $html .= '<br />' . Text::_($field->description);
-                $html .= '</div></div>';
+                $html .= $field->renderField();
             }
 
             echo json_encode(['success' => true, 'html' => $html], JSON_THROW_ON_ERROR);

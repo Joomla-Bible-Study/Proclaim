@@ -78,8 +78,8 @@ class UploadField extends FormField
 
         $required = 'requires="' . $this->getAttribute('required') . '"';
 
-        $html = '<div class="control-group">
-                        <div class="input-append">
+        $html = '<div class="mb-3">
+                        <div class="input-group">
                         <input type="text" placeholder="Enter the upload path" class="' . $class . '" name="' . $this->name .
             '" id="' . $this->id . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' . $required . '/>
 			<input id="uploader-file" placeholder="Choose a media file" style="border-left: 0; border-radius: 0;" class="col-7" type="text" disabled>

@@ -58,60 +58,13 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_DETAILS')); ?>
         <div class="row">
             <div class="col-lg-9">
-                <br>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('message_type'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('message_type'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('alias'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('alias'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('landing_show'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('landing_show'); ?>
-                    </div>
-                </div>
+                <?php echo $this->form->renderField('message_type'); ?>
+                <?php echo $this->form->renderField('alias'); ?>
+                <?php echo $this->form->renderField('landing_show'); ?>
             </div>
-
-            <div class="col-lg-2 form-vertical">
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('id'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('id'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('published'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('published'); ?>
-                    </div>
-                </div>
+            <div class="col-lg-3">
+                <?php echo $this->form->renderField('id'); ?>
+                <?php echo $this->form->renderField('published'); ?>
             </div>
         </div>
         <?php
@@ -132,9 +85,8 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         if ($this->canDo->get('core.admin')) : ?>
             <?php
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
-            <div class="row-fluid">
-                <?php
-                echo $this->form->getInput('rules'); ?>
+            <div class="row">
+                <?php echo $this->form->getInput('rules'); ?>
             </div>
             <?php
             echo HTMLHelper::_('uitab.endTab'); ?>

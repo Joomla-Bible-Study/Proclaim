@@ -215,120 +215,29 @@ echo Route::_(
             if (!$this->simple->mode) { ?>
                 <div class="col-lg-7">
                     <div>
-                        <fieldset class="adminform">
-                            <?php
-    echo $this->form->getLabel('studyintro'); ?>
-                            <?php
-    echo $this->form->getInput('studyintro'); ?>
-                        </fieldset>
-                        <fieldset class="adminform">
-                            <?php
-    echo $this->form->getLabel('studytext'); ?>
-                            <?php
-    echo $this->form->getInput('studytext'); ?>
-                        </fieldset>
+                        <?php echo $this->form->renderField('studyintro'); ?>
+                        <?php echo $this->form->renderField('studytext'); ?>
                     </div>
                 </div>
                 <?php
             } ?>
             <div class="col-lg-5">
-                <div class="control-group">
-                    <div class="control-label">
-                        <label id="jform_hits-lbl" for="jform_hits">
-                            <?php
-                            echo Text::_('JBS_STY_HITS'); ?>
-                        </label>
-                    </div>
-                    <div class="controls">
-                        <input type="text" id="jform_hits" value="<?php
-                        echo $this->item->hits; ?>"
-                               class="form-control field-user-input-name readonly valid form-control-success" size="10"
-                               readonly="" aria-invalid="false">
-                    </div>
+                <div class="mb-3">
+                    <label id="jform_hits-lbl" for="jform_hits" class="form-label">
+                        <?php echo Text::_('JBS_STY_HITS'); ?>
+                    </label>
+                    <input type="text" id="jform_hits" value="<?php echo $this->item->hits; ?>"
+                           class="form-control" size="10" readonly aria-invalid="false">
                 </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('published'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('published'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('studydate'); ?>
-                    </div>
-                    <div class="controls col-10 small">
-                        <?php
-                        echo $this->form->getInput('studydate'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('image'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('image', null, $thumbnailm); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('studyimage', 'params'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('studyimage', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('nooverlaysimplemode', 'params'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('nooverlaysimplemode', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('teacher_id'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput(
-                            'teacher_id',
-                            null,
-                            $teacher_id
-                        ); ?>
-                    </div>
-                </div>
+                <?php echo $this->form->renderField('published'); ?>
+                <?php echo $this->form->renderField('studydate'); ?>
+                <?php echo $this->form->renderField('image', null, $thumbnailm); ?>
+                <?php echo $this->form->renderField('studyimage', 'params'); ?>
+                <?php echo $this->form->renderField('nooverlaysimplemode', 'params'); ?>
+                <?php echo $this->form->renderField('teacher_id', null, $teacher_id); ?>
 
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('series_id'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput(
-                            'series_id',
-                            null,
-                            $series_id
-                        ); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->renderFieldset('scripture'); ?>
-                </div>
+                <?php echo $this->form->renderField('series_id', null, $series_id); ?>
+                <?php echo $this->form->renderFieldset('scripture'); ?>
 
             </div>
         </div>
@@ -340,99 +249,14 @@ echo Route::_(
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'info', Text::_('JBS_CMN_INFO')); ?>
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="control-group">
-                        <div class="control-label">
-                            <?php
-                            echo $this->form->getLabel('location_id'); ?>
-                        </div>
-                        <div class="controls">
-                            <?php
-                            echo $this->form->getInput(
-                                'location_id',
-                                null,
-                                $location_id
-                            ); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label">
-                            <?php
-                            echo $this->form->getLabel('studynumber'); ?>
-                        </div>
-                        <div class="controls">
-                            <?php
-                            echo $this->form->getInput('studynumber'); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label">
-                            <?php
-                            echo $this->form->getLabel('comments'); ?>
-                        </div>
-                        <div class="controls">
-                            <?php
-                            echo $this->form->getInput('comments'); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label">
-                            <?php
-                            echo $this->form->getLabel('access'); ?>
-                        </div>
-                        <div class="controls">
-                            <?php
-                            echo $this->form->getInput('access'); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label">
-                            <?php
-                            echo $this->form->getLabel('language'); ?>
-                        </div>
-                        <div class="controls">
-                            <?php
-                            echo $this->form->getInput('language'); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label">
-                            <?php
-                            echo $this->form->getLabel('topics'); ?>
-                        </div>
-                        <div class="clr"></div>
-                        <div class="controls">
-                            <?php
-                            echo $this->form->getInput('topics'); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label">
-                            <?php
-                            echo $this->form->getLabel('messagetype'); ?>
-                        </div>
-                        <div class="controls">
-                            <?php
-                            echo $this->form->getInput(
-                                'messagetype',
-                                null,
-                                $messagetype
-                            ) ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label">
-                            <?php
-                            echo $this->form->getLabel('thumbnailm'); ?>
-                        </div>
-                        <div class="controls">
-                            <?php
-                            echo $this->form->getInput(
-                                'thumbnailm',
-                                null,
-                                $thumbnailm
-                            ); ?>
-                        </div>
-                    </div>
+                    <?php echo $this->form->renderField('location_id', null, $location_id); ?>
+                    <?php echo $this->form->renderField('studynumber'); ?>
+                    <?php echo $this->form->renderField('comments'); ?>
+                    <?php echo $this->form->renderField('access'); ?>
+                    <?php echo $this->form->renderField('language'); ?>
+                    <?php echo $this->form->renderField('topics'); ?>
+                    <?php echo $this->form->renderField('messagetype', null, $messagetype); ?>
+                    <?php echo $this->form->renderField('thumbnailm', null, $thumbnailm); ?>
                 </div>
             </div>
             <?php
@@ -448,28 +272,8 @@ echo Route::_(
                 echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
             </div>
             <div class="col-6">
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('metakey', 'params'); ?>
-                    </div>
-                    <div class="clr"></div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('metakey', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('metadesc', 'params'); ?>
-                    </div>
-                    <div class="clr"></div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('metadesc', 'params'); ?>
-                    </div>
-                </div>
+                <?php echo $this->form->renderField('metakey', 'params'); ?>
+                <?php echo $this->form->renderField('metadesc', 'params'); ?>
                 <?php
                 echo LayoutHelper::render('joomla.edit.metadata', $this); ?>
             </div>
@@ -481,7 +285,7 @@ echo Route::_(
         if ($this->canDo->get('core.admin')) : ?>
             <?php
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
-            <div class="row-fluid">
+            <div class="row">
                 <?php
                 echo $this->form->getInput('rules'); ?>
             </div>

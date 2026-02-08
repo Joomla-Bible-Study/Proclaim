@@ -43,13 +43,13 @@ $wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
 <style>img {
         border-radius: 4px;
     }</style>
-<div class="row-fluid col-12">
+<div class="row col-12">
     <h4>
         <?php
         echo Text::_('JBS_CMN_TEACHINGS'); ?>
     </h4>
 </div>
-<div class="row-fluid col-lg-12 dropdowns"
+<div class="row col-lg-12 dropdowns"
      style="background-color:#A9A9A9; margin:0 -5px; padding:4px 4px; border:1px solid #C5C1BE; position:relative; -webkit-border-radius:10px;">
 </div>
 <?php

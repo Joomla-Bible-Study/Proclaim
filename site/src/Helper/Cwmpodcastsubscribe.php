@@ -119,7 +119,7 @@ class Cwmpodcastsubscribe
 
         if (!empty($podcast->podcast_image_subscribe)) {
             $image = $this->buildPodcastImage($podcast->podcast_image_subscribe, $podcast->podcast_subscribe_desc);
-            $html .= '<div class="image"><a href="' . $link . '">' . $image . '</a></div><div class="clr"></div>';
+            $html .= '<div class="image"><a href="' . $link . '">' . $image . '</a></div>';
         }
 
         $html .= '<div class="text"><a href="' . $link . '">' . $name . '</a></div>';
@@ -167,7 +167,7 @@ class Cwmpodcastsubscribe
 
         if (!empty($podcast->alternateimage)) {
             $image = $this->buildPodcastImage($podcast->alternateimage, $podcast->alternatewords);
-            $html .= '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image . '</a></div><div class="clr"></div>';
+            $html .= '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image . '</a></div>';
         }
 
         $html .= '<div class="text"><a href="' . $podcast->alternatelink . '">' . $podcast->alternatewords . '</a></div>';

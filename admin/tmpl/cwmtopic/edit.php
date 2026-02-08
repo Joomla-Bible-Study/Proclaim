@@ -71,65 +71,24 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                 <?php
                 $string = $this->form->getValue('topic_text');
 if (str_starts_with($string, 'JBS')) { ?>
-                    <div class="control-group">
-                        <div class="control-label">
-                            <label id="topic_text-lbl" for="topic_text">Translated:</label>
-                        </div>
-                        <div class="controls">
-                            <?php
-            echo '<input type="text" id="topic_text_translated" name="topic_text_translated" value="' . Text::_($string) . '" class="form-control readonly valid form-control-success" readonly="readonly" data-alt-value="' . Text::_($string) . '" autocomplete="off" aria-invalid="false">';
-    echo "<br/>"; ?>
-                        </div>
+                    <div class="mb-3">
+                        <label id="topic_text-lbl" for="topic_text" class="form-label">Translated:</label>
+                        <?php
+                        echo '<input type="text" id="topic_text_translated" name="topic_text_translated" value="'
+                            . Text::_($string) . '" class="form-control" readonly data-alt-value="'
+                            . Text::_($string) . '" autocomplete="off" aria-invalid="false">'; ?>
                     </div>
                     <?php
 } ?>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-        echo $this->form->getLabel('topic_text'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-        echo $this->form->getInput('topic_text'); ?>
-                    </div>
-                </div>
-                <?php
-foreach ($this->form->getFieldset('params') as $field) : ?>
-                    <div class="control-group">
-                        <div class="control-label">
-                            <?php
-            echo $field->label; ?>
-                        </div>
-                        <div class="controls">
-                            <?php
-            echo $field->input; ?>
-                        </div>
-                    </div>
-                    <?php
-endforeach; ?>
+                <?php echo $this->form->renderField('topic_text'); ?>
+                <?php foreach ($this->form->getFieldset('params') as $field) :
+                    echo $field->renderField();
+                endforeach; ?>
             </div>
 
             <div class="col-lg-3">
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-        echo $this->form->getLabel('published'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-        echo $this->form->getInput('published'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-        echo $this->form->getLabel('language'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-        echo $this->form->getInput('language'); ?>
-                    </div>
-                </div>
+                <?php echo $this->form->renderField('published'); ?>
+                <?php echo $this->form->renderField('language'); ?>
             </div>
         </div>
         <?php
@@ -150,9 +109,8 @@ echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
         if ($this->canDo->get('core.admin')) : ?>
             <?php
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
-            <div class="row-fluid">
-                <?php
-echo $this->form->getInput('rules'); ?>
+            <div class="row">
+                <?php echo $this->form->getInput('rules'); ?>
             </div>
             <?php
             echo HTMLHelper::_('uitab.endTab'); ?>

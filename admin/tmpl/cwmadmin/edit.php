@@ -130,7 +130,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
       class="form-validate">
     <?php
     echo LayoutHelper::render('joomla.edit.title_alias', $this); ?>
-    <div class="row-fluid">
+    <div class="row">
         <?php
         echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'cpanl', 'recall' => true, 'breakpoint' => 768]); ?>
 
@@ -139,7 +139,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
         <!-- Begin Tabs -->
         <div class="row">
             <div class="col-12 col-lg-12">
-                <div class="well well-small">
+                <div class="card card-body">
                     <div class="cwmadmin-dashboard-cards">
                         <a href="<?php
                         echo Route::_(
@@ -186,148 +186,26 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'administrator', Text::_('JBS_ADM_ADMIN_PARAMS')); ?>
         <div class="row">
-            <h3 class="tab-description"><?php
-                echo Text::_('JBS_ADM_COMPONENT_SETTINGS'); ?></h3>
+            <h3 class="tab-description"><?php echo Text::_('JBS_ADM_COMPONENT_SETTINGS'); ?></h3>
             <div class="col-12 col-lg-6">
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('simple_mode', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('simple_mode', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('simple_mode_template', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('simple_mode_template', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('simplegridtextoverlay', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('simplegridtextoverlay', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('simple_mode_display', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('simple_mode_display', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('users', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('users', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('metakey', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('metakey', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('metadesc', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('metadesc', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('compat_mode', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('compat_mode', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('drop_tables'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('drop_tables'); ?>
-                    </div>
-                </div>
+                <?php echo $this->form->renderField('simple_mode', 'params'); ?>
+                <?php echo $this->form->renderField('simple_mode_template', 'params'); ?>
+                <?php echo $this->form->renderField('simplegridtextoverlay', 'params'); ?>
+                <?php echo $this->form->renderField('simple_mode_display', 'params'); ?>
+                <?php echo $this->form->renderField('users', 'params'); ?>
+                <?php echo $this->form->renderField('metakey', 'params'); ?>
+                <?php echo $this->form->renderField('metadesc', 'params'); ?>
+                <?php echo $this->form->renderField('compat_mode', 'params'); ?>
+                <?php echo $this->form->renderField('drop_tables'); ?>
             </div>
             <div class="col-12 col-lg-6">
-
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('filestokeep'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('filestokeep'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('studylistlimit', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('studylistlimit', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('uploadtype', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('uploadtype', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('show_location_media', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('show_location_media', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('popular_limit', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('popular_limit', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('character_filter', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('character_filter', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('format_popular', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('format_popular', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('debug'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('debug'); ?>
-                    </div>
-                </div>
+                <?php echo $this->form->renderField('filestokeep'); ?>
+                <?php echo $this->form->renderField('studylistlimit', 'params'); ?>
+                <?php echo $this->form->renderField('show_location_media', 'params'); ?>
+                <?php echo $this->form->renderField('popular_limit', 'params'); ?>
+                <?php echo $this->form->renderField('character_filter', 'params'); ?>
+                <?php echo $this->form->renderField('format_popular', 'params'); ?>
+                <?php echo $this->form->renderField('debug'); ?>
             </div>
         </div>
         <?php
@@ -337,250 +215,46 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'defaults', Text::_('JBS_ADM_SYSTEM_DEFAULTS')); ?>
         <div class="row">
             <div class="col-12 col-lg-6">
-                <h3 class="tab-description"><?php
-                    echo Text::_('JBS_ADM_AUTO_FILL_STUDY_REC'); ?></h3>
-
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('location_id', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('location_id', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('teacher_id', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('teacher_id', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('series_id', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('series_id', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('booknumber', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('booknumber', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('messagetype', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('messagetype', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('main_image_icon_or_image', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('main_image_icon_or_image', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('default_study_image', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('default_study_image', 'params'); ?>
-                    </div>
-                </div>
+                <h3 class="tab-description"><?php echo Text::_('JBS_ADM_AUTO_FILL_STUDY_REC'); ?></h3>
+                <?php echo $this->form->renderField('location_id', 'params'); ?>
+                <?php echo $this->form->renderField('teacher_id', 'params'); ?>
+                <?php echo $this->form->renderField('series_id', 'params'); ?>
+                <?php echo $this->form->renderField('booknumber', 'params'); ?>
+                <?php echo $this->form->renderField('messagetype', 'params'); ?>
+                <?php echo $this->form->renderField('main_image_icon_or_image', 'params'); ?>
+                <?php echo $this->form->renderField('default_study_image', 'params'); ?>
             </div>
             <div class="col-12 col-lg-6">
-                <h3 class="tab-description"><?php
-                    echo Text::_('JBS_ADM_AUTO_FILL_MEDIA_REC'); ?></h3>
-
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('download', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('download', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('target', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('target', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('server', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('server', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('podcast', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('podcast', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('uploadpath', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('uploadpath', 'params'); ?>
-                    </div>
-                </div>
+                <h3 class="tab-description"><?php echo Text::_('JBS_ADM_AUTO_FILL_MEDIA_REC'); ?></h3>
+                <?php echo $this->form->renderField('download', 'params'); ?>
+                <?php echo $this->form->renderField('target', 'params'); ?>
+                <?php echo $this->form->renderField('server', 'params'); ?>
+                <?php echo $this->form->renderField('podcast', 'params'); ?>
+                <?php echo $this->form->renderField('uploadpath', 'params'); ?>
             </div>
         </div>
         <div class="row">
             <div class="col-12 col-lg-6">
-                <h3 class="tab-description"><?php
-                    echo Text::_('JBS_CMN_DEFAULT_IMAGES'); ?></h3>
-
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('default_main_image', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('default_main_image', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('default_series_image', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('default_series_image', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('default_teacher_image', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('default_teacher_image', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('download_show', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('download_show', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('download_use_button_icon', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('download_use_button_icon', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('default_download_image', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('default_download_image', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('download_button_text', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('download_button_text', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('download_button_type', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('download_button_type', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('download_button_color', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('download_button_color', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('download_icon_type', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('download_icon_type', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('download_custom_icon', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('download_custom_icon', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('download_icon_text_size', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('download_icon_text_size', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('default_showHide_image', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('default_showHide_image', 'params'); ?>
-                    </div>
-                </div>
+                <h3 class="tab-description"><?php echo Text::_('JBS_CMN_DEFAULT_IMAGES'); ?></h3>
+                <?php echo $this->form->renderField('default_main_image', 'params'); ?>
+                <?php echo $this->form->renderField('default_series_image', 'params'); ?>
+                <?php echo $this->form->renderField('default_teacher_image', 'params'); ?>
+                <?php echo $this->form->renderField('download_show', 'params'); ?>
+                <?php echo $this->form->renderField('download_use_button_icon', 'params'); ?>
+                <?php echo $this->form->renderField('default_download_image', 'params'); ?>
+                <?php echo $this->form->renderField('download_button_text', 'params'); ?>
+                <?php echo $this->form->renderField('download_button_type', 'params'); ?>
+                <?php echo $this->form->renderField('download_button_color', 'params'); ?>
+                <?php echo $this->form->renderField('download_icon_type', 'params'); ?>
+                <?php echo $this->form->renderField('download_custom_icon', 'params'); ?>
+                <?php echo $this->form->renderField('download_icon_text_size', 'params'); ?>
+                <?php echo $this->form->renderField('default_showHide_image', 'params'); ?>
             </div>
             <div class="col-12 col-lg-6">
-                <h3 class="tab-description"><?php
-                    echo Text::_('JBS_CMN_DEFAULT_IMAGES_SIZES'); ?></h3>
-
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('thumbnail_teacher_size', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('thumbnail_teacher_size', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('thumbnail_series_size', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('thumbnail_series_size', 'params'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <?php
-                    echo $this->form->getLabel('thumbnail_study_size', 'params'); ?>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('thumbnail_study_size', 'params'); ?>
-                    </div>
-                </div>
+                <h3 class="tab-description"><?php echo Text::_('JBS_CMN_DEFAULT_IMAGES_SIZES'); ?></h3>
+                <?php echo $this->form->renderField('thumbnail_teacher_size', 'params'); ?>
+                <?php echo $this->form->renderField('thumbnail_series_size', 'params'); ?>
+                <?php echo $this->form->renderField('thumbnail_study_size', 'params'); ?>
             </div>
         </div>
         <?php
@@ -593,7 +267,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                 <div class="cwmadmin-panel">
                     <h3 class="tab-description"><?php echo Text::_('JBS_CMN_MEDIA_FILES'); ?></h3>
 
-                    <div class="control-group">
+                    <div class="mb-3">
                         <label><?php echo Text::_('JBS_ADM_MEDIA_PLAYER_STAT'); ?></label>
                         <div id="player-stats-container" class="cwmadmin-stats-container">
                             <div class="cwmadmin-stats-loading">
@@ -602,19 +276,9 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                             </div>
                         </div>
                     </div>
-                    <div class="control-group">
-                        <?php echo $this->form->getLabel('from', 'params'); ?>
-                        <div class="controls">
-                            <?php echo $this->form->getInput('from', 'params'); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <?php echo $this->form->getLabel('to', 'params'); ?>
-                        <div class="controls">
-                            <?php echo $this->form->getInput('to', 'params'); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
+                    <?php echo $this->form->renderField('from', 'params'); ?>
+                    <?php echo $this->form->renderField('to', 'params'); ?>
+                    <div class="mb-3">
                         <button type="button" class="btn btn-primary"
                                 data-player-tool="players"
                                 data-from-field="jform_params_from"
@@ -630,7 +294,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                 <div class="cwmadmin-panel">
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_POPUP_OPTIONS'); ?></h3>
 
-                    <div class="control-group">
+                    <div class="mb-3">
                         <label><?php echo Text::_('JBS_ADM_MEDIA_PLAYER_POPUP_STAT'); ?></label>
                         <div id="popup-stats-container" class="cwmadmin-stats-container">
                             <div class="cwmadmin-stats-loading">
@@ -639,19 +303,9 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                             </div>
                         </div>
                     </div>
-                    <div class="control-group">
-                        <?php echo $this->form->getLabel('pFrom', 'params'); ?>
-                        <div class="controls">
-                            <?php echo $this->form->getInput('pFrom', 'params'); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <?php echo $this->form->getLabel('pTo', 'params'); ?>
-                        <div class="controls">
-                            <?php echo $this->form->getInput('pTo', 'params'); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
+                    <?php echo $this->form->renderField('pFrom', 'params'); ?>
+                    <?php echo $this->form->renderField('pTo', 'params'); ?>
+                    <div class="mb-3">
                         <button type="button" class="btn btn-primary"
                                 data-player-tool="popups"
                                 data-from-field="jform_params_pFrom"
@@ -667,19 +321,9 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                 <div class="cwmadmin-panel">
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_MEDIATYPES_OPTIONS'); ?></h3>
 
-                    <div class="control-group">
-                        <?php echo $this->form->getLabel('mtFrom', 'params'); ?>
-                        <div class="controls">
-                            <?php echo $this->form->getInput('mtFrom', 'params'); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <?php echo $this->form->getLabel('mtTo', 'params'); ?>
-                        <div class="controls">
-                            <?php echo $this->form->getInput('mtTo', 'params'); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
+                    <?php echo $this->form->renderField('mtFrom', 'params'); ?>
+                    <?php echo $this->form->renderField('mtTo', 'params'); ?>
+                    <div class="mb-3">
                         <button type="button" class="btn btn-primary"
                                 data-player-tool="playerbymediatype"
                                 data-from-field="jform_params_mtFrom"

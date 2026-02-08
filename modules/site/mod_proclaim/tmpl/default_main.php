@@ -28,7 +28,7 @@ $Listing = new Cwmlisting();
     <?php
     if ($params->get('pageheader')) {
         ?>
-        <div class="row-fluid">
+        <div class="row">
             <div class="col-12">
                 <?php
                 echo HTMLHelper::_('content.prepare', $params->get('pageheader'), '', 'com_proclaim.module'); ?>
@@ -37,7 +37,7 @@ $Listing = new Cwmlisting();
         <?php
     }
     ?>
-    <div class="row-fluid">
+    <div class="row">
         <div class="col-12">
             <?php
     /** @var stdClass $list */
@@ -51,7 +51,7 @@ $Listing = new Cwmlisting();
         </div>
     </div>
 
-    <div class="row-fluid">
+    <div class="row">
         <div class="col-12">
             <?php
             if ($params->get('show_link') > 0) {
@@ -63,4 +63,3 @@ $Listing = new Cwmlisting();
     </div>
     <!--end of footer div-->
 </div> <!--end container -->
-<div style="clear: both;"></div>

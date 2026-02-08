@@ -62,86 +62,16 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_DETAILS')); ?>
         <div class="row">
             <div class="col-lg-9">
-                <div>
-                    <fieldset class="adminform">
-                        <?php
-                        echo $this->form->getLabel('description'); ?>
-                        <?php
-                        echo $this->form->getInput('description'); ?>
-                    </fieldset>
-                </div>
+                <?php echo $this->form->renderField('description'); ?>
             </div>
             <div class="col-lg-3">
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('teacher'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('teacher'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('landing_show'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('landing_show'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('pc_show'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('pc_show'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('image'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('image', null, $series_thumbnail); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('published'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('published'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('access'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('access'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('language'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('language'); ?>
-                    </div>
-                </div>
+                <?php echo $this->form->renderField('teacher'); ?>
+                <?php echo $this->form->renderField('landing_show'); ?>
+                <?php echo $this->form->renderField('pc_show'); ?>
+                <?php echo $this->form->renderField('image', null, $series_thumbnail); ?>
+                <?php echo $this->form->renderField('published'); ?>
+                <?php echo $this->form->renderField('access'); ?>
+                <?php echo $this->form->renderField('language'); ?>
             </div>
         </div>
         <?php
