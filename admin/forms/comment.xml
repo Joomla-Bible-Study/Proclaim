@@ -18,7 +18,8 @@
                showtime="true" filter="user_utc" required="true"/>
         <field name="full_name" type="text" label="JBS_CMT_FULL_NAME"
                size="30"/>
-        <field name="user_email" type="text" label="JBS_CMT_EMAIL" size="40"/>
+        <field name="user_email" type="email" label="JBS_CMT_EMAIL" size="40"
+               validate="email"/>
         <field name="comment_text" type="editor" label="JBS_CMN_COMMENT"
                rows="10" cols="50" filter="CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper::filterText" buttons="true"/>
         <field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"

@@ -40,7 +40,8 @@
 
         <field name="user_id" type="user" label="JBS_CMN_SUBMITTED_BY"/>
 
-        <field name="studytitle" type="text" size="60" label="JBS_CMN_TITLE" required="true"/>
+        <field name="studytitle" type="text" size="60" label="JBS_CMN_TITLE" required="true"
+               filter="trim"/>
 
         <field name="alias"
                type="text"
@@ -61,18 +62,20 @@
                 <option value="-1">JBS_CMN_SELECT_BOOK</option>
             </field>
 
-            <field name="chapter_begin" type="text" class="jbsscript" size="5" label="JBS_STY_CHAPTER_BEGIN"/>
-            <field name="verse_begin" type="text" size="5" label="JBS_STY_VERSE_BEGIN"/>
-            <field name="chapter_end" type="text" size="5" label="JBS_STY_CHAPTER_END"/>
-            <field name="verse_end" type="text" size="5" label="JBS_STY_VERSE_END"/>
+            <field name="chapter_begin" type="text" class="jbsscript" size="5" label="JBS_STY_CHAPTER_BEGIN"
+                   filter="int"/>
+            <field name="verse_begin" type="text" size="5" label="JBS_STY_VERSE_BEGIN" filter="int"/>
+            <field name="chapter_end" type="text" size="5" label="JBS_STY_CHAPTER_END" filter="int"/>
+            <field name="verse_end" type="text" size="5" label="JBS_STY_VERSE_END" filter="int"/>
 
             <field name="booknumber2" type="BookList" label="JBS_STY_BOOK2">
                 <option value="-1">JBS_CMN_SELECT_BOOK</option>
             </field>
-            <field name="chapter_begin2" type="text" size="5" label="JBS_STY_CHAPTER_BEGIN2"/>
-            <field name="verse_begin2" type="text" size="5" label="JBS_STY_VERSE_BEGIN2"/>
-            <field name="chapter_end2" type="text" size="5" label="JBS_STY_CHAPTER_END2"/>
-            <field name="verse_end2" type="text" size="5" label="JBS_STY_VERSE_END2"/>
+            <field name="chapter_begin2" type="text" size="5" label="JBS_STY_CHAPTER_BEGIN2"
+                   filter="int"/>
+            <field name="verse_begin2" type="text" size="5" label="JBS_STY_VERSE_BEGIN2" filter="int"/>
+            <field name="chapter_end2" type="text" size="5" label="JBS_STY_CHAPTER_END2" filter="int"/>
+            <field name="verse_end2" type="text" size="5" label="JBS_STY_VERSE_END2" filter="int"/>
 
             <field name="secondary_reference" type="text" size="100"
                    label="JBS_CMN_SECONDARY_REFERENCES"
@@ -117,7 +120,7 @@
                filter="unset"/>
         <field name="created_by_alias" type="text"
                label="JGLOBAL_FIELD_CREATED_BY_ALIAS_LABEL"
-               size="20"/>
+               size="20" filter="string"/>
 
         <field name="modified" type="calendar"
                label="JGLOBAL_FIELD_MODIFIED_LABEL"
@@ -165,9 +168,9 @@
                 <option value="yes">JBS_CMN_YES</option>
             </field>
             <field name="metakey" type="textarea" label="JBS_STY_METAKEYWORDS"
-                   description="JBS_STY_METAKEYWORDS_DESC" rows="3" size="30"/>
+                   description="JBS_STY_METAKEYWORDS_DESC" rows="3" size="30" filter="string"/>
             <field name="metadesc" type="textarea" label="JBS_STY_METADESCRIPTION"
-                   description="JBS_STY_METADESCRIPTION_DESC" cols="30" rows="3"/>
+                   description="JBS_STY_METADESCRIPTION_DESC" cols="30" rows="3" filter="string"/>
         </fieldset>
     </fields>
 </form>
