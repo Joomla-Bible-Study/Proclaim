@@ -68,7 +68,7 @@ class CwmpodcastTest extends ProclaimTestCase
         $reflection = new \ReflectionMethod(Cwmpodcast::class, 'makePodcasts');
 
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
     }
 
     /**

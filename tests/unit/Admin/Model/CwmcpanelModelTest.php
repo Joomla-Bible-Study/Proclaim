@@ -35,7 +35,7 @@ class CwmcpanelModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('object', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('object', $reflection);
         $this->assertTrue($reflection->getReturnType()->allowsNull());
     }
 
@@ -51,6 +51,6 @@ class CwmcpanelModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('bool', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
     }
 }

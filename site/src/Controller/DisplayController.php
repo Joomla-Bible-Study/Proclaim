@@ -65,7 +65,7 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
      *
      * @since   3.0
      */
-    public function display($cachable = true, $urlparams = []): DisplayController
+    public function display($cachable = true, $urlparams = []): static
     {
         /*
         Set the default view name and format from the Request.

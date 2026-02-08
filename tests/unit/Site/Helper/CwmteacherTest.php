@@ -36,11 +36,11 @@ class CwmteacherTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('array', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('array', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
         $this->assertEquals('params', $params[0]->getName());
-        $this->assertEquals('Joomla\Registry\Registry', $params[0]->getType()->getName());
+        $this->assertParamTypeName('Joomla\Registry\Registry', $params[0]);
     }
 }

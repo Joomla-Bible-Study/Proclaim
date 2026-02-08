@@ -35,6 +35,6 @@ class BookListFieldTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isProtected());
-        $this->assertEquals('array', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('array', $reflection);
     }
 }

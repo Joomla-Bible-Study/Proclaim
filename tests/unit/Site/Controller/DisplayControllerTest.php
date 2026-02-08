@@ -55,11 +55,11 @@ class DisplayControllerTest extends ProclaimTestCase
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('cachable', $params[0]->getName());
-        $this->assertEquals('bool', $params[0]->getType()->getName());
+        $this->assertParamTypeName('bool', $params[0]);
         $this->assertTrue($params[0]->isOptional());
         
         $this->assertEquals('urlparams', $params[1]->getName());
-        $this->assertEquals('array', $params[1]->getType()->getName());
+        $this->assertParamTypeName('array', $params[1]);
         $this->assertTrue($params[1]->isOptional());
     }
 }

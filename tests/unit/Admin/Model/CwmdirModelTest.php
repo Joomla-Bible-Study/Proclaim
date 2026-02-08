@@ -35,7 +35,7 @@ class CwmdirModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('array', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('array', $reflection);
     }
 
     /**
@@ -50,7 +50,7 @@ class CwmdirModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPrivate());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
@@ -75,7 +75,7 @@ class CwmdirModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPrivate());
-        $this->assertEquals('void', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('void', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
@@ -95,7 +95,7 @@ class CwmdirModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('array', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('array', $reflection);
     }
 
     /**
@@ -110,7 +110,7 @@ class CwmdirModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPrivate());
-        $this->assertEquals('array', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('array', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
@@ -130,7 +130,7 @@ class CwmdirModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('array', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('array', $reflection);
     }
 
     /**
@@ -145,7 +145,7 @@ class CwmdirModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPrivate());
-        $this->assertEquals('array', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('array', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);

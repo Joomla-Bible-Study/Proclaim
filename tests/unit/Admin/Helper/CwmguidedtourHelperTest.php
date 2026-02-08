@@ -49,7 +49,7 @@ class CwmguidedtourHelperTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('void', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('void', $reflection);
     }
 
     /**
@@ -64,12 +64,12 @@ class CwmguidedtourHelperTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('bool', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
         $this->assertEquals('key', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertParamTypeName('string', $params[0]);
     }
 
     /**
@@ -84,12 +84,12 @@ class CwmguidedtourHelperTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('bool', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
         $this->assertEquals('key', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertParamTypeName('string', $params[0]);
     }
 
     /**
@@ -104,7 +104,7 @@ class CwmguidedtourHelperTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('int', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('int', $reflection);
     }
 
     /**
@@ -119,7 +119,7 @@ class CwmguidedtourHelperTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('int', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('int', $reflection);
     }
 
     /**
@@ -134,7 +134,7 @@ class CwmguidedtourHelperTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('bool', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
     }
 
     /**
@@ -149,12 +149,12 @@ class CwmguidedtourHelperTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('int', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('int', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
         $this->assertEquals('uid', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertParamTypeName('string', $params[0]);
     }
 
     /**
@@ -169,7 +169,7 @@ class CwmguidedtourHelperTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('int', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('int', $reflection);
     }
 
     /**
@@ -193,10 +193,10 @@ class CwmguidedtourHelperTest extends ProclaimTestCase
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('key', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertParamTypeName('string', $params[0]);
         
         $this->assertEquals('tour', $params[1]->getName());
-        $this->assertEquals('array', $params[1]->getType()->getName());
+        $this->assertParamTypeName('array', $params[1]);
     }
 
     /**
@@ -215,9 +215,9 @@ class CwmguidedtourHelperTest extends ProclaimTestCase
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('key', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertParamTypeName('string', $params[0]);
         
         $this->assertEquals('message', $params[1]->getName());
-        $this->assertEquals('array', $params[1]->getType()->getName());
+        $this->assertParamTypeName('array', $params[1]);
     }
 }

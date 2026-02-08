@@ -36,12 +36,12 @@ class CwmserieslistTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('int', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('int', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
         $this->assertEquals('subcustom', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertParamTypeName('string', $params[0]);
         $this->assertTrue($params[0]->allowsNull());
     }
 
@@ -57,18 +57,18 @@ class CwmserieslistTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(3, $params);
         $this->assertEquals('row', $params[0]->getName());
-        $this->assertEquals('object', $params[0]->getType()->getName());
+        $this->assertParamTypeName('object', $params[0]);
         
         $this->assertEquals('params', $params[1]->getName());
-        $this->assertEquals('Joomla\Registry\Registry', $params[1]->getType()->getName());
+        $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
         
         $this->assertEquals('template', $params[2]->getName());
-        $this->assertEquals('object', $params[2]->getType()->getName());
+        $this->assertParamTypeName('object', $params[2]);
     }
 
     /**
@@ -83,15 +83,15 @@ class CwmserieslistTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('row', $params[0]->getName());
-        $this->assertEquals('object', $params[0]->getType()->getName());
+        $this->assertParamTypeName('object', $params[0]);
         
         $this->assertEquals('params', $params[1]->getName());
-        $this->assertEquals('Joomla\Registry\Registry', $params[1]->getType()->getName());
+        $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
     }
 
     /**
@@ -106,18 +106,18 @@ class CwmserieslistTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(3, $params);
         $this->assertEquals('id', $params[0]->getName());
-        $this->assertEquals('int', $params[0]->getType()->getName());
+        $this->assertParamTypeName('int', $params[0]);
         
         $this->assertEquals('params', $params[1]->getName());
-        $this->assertEquals('Joomla\Registry\Registry', $params[1]->getType()->getName());
+        $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
         
         $this->assertEquals('template', $params[2]->getName());
-        $this->assertEquals('object', $params[2]->getType()->getName());
+        $this->assertParamTypeName('object', $params[2]);
     }
 
     /**
@@ -132,18 +132,18 @@ class CwmserieslistTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('array', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('array', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(3, $params);
         $this->assertEquals('id', $params[0]->getName());
-        $this->assertEquals('int', $params[0]->getType()->getName());
+        $this->assertParamTypeName('int', $params[0]);
         
         $this->assertEquals('params', $params[1]->getName());
-        $this->assertEquals('Joomla\Registry\Registry', $params[1]->getType()->getName());
+        $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
         
         $this->assertEquals('limit', $params[2]->getName());
-        $this->assertEquals('int', $params[2]->getType()->getName());
+        $this->assertParamTypeName('int', $params[2]);
         $this->assertTrue($params[2]->isOptional());
     }
 }

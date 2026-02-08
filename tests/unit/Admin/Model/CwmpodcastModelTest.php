@@ -37,16 +37,16 @@ class CwmpodcastModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('Joomla\CMS\Form\Form', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('Joomla\CMS\Form\Form', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('data', $params[0]->getName());
-        $this->assertEquals('array', $params[0]->getType()->getName());
+        $this->assertParamTypeName('array', $params[0]);
         $this->assertTrue($params[0]->isOptional());
         
         $this->assertEquals('loadData', $params[1]->getName());
-        $this->assertEquals('bool', $params[1]->getType()->getName());
+        $this->assertParamTypeName('bool', $params[1]);
         $this->assertTrue($params[1]->isOptional());
     }
 
@@ -62,7 +62,7 @@ class CwmpodcastModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('int', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('int', $reflection);
         $this->assertTrue($reflection->getReturnType()->allowsNull());
 
         $params = $reflection->getParameters();
@@ -84,20 +84,20 @@ class CwmpodcastModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('Joomla\CMS\Table\Table', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('Joomla\CMS\Table\Table', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(3, $params);
         $this->assertEquals('name', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertParamTypeName('string', $params[0]);
         $this->assertTrue($params[0]->isOptional());
         
         $this->assertEquals('prefix', $params[1]->getName());
-        $this->assertEquals('string', $params[1]->getType()->getName());
+        $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->isOptional());
         
         $this->assertEquals('options', $params[2]->getName());
-        $this->assertEquals('array', $params[2]->getType()->getName());
+        $this->assertParamTypeName('array', $params[2]);
         $this->assertTrue($params[2]->isOptional());
     }
 
@@ -113,17 +113,17 @@ class CwmpodcastModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isProtected());
-        $this->assertEquals('bool', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(3, $params);
         $this->assertEquals('value', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertParamTypeName('string', $params[0]);
         
         $this->assertEquals('pks', $params[1]->getName());
-        $this->assertEquals('array', $params[1]->getType()->getName());
+        $this->assertParamTypeName('array', $params[1]);
         
         $this->assertEquals('contexts', $params[2]->getName());
-        $this->assertEquals('array', $params[2]->getType()->getName());
+        $this->assertParamTypeName('array', $params[2]);
     }
 }

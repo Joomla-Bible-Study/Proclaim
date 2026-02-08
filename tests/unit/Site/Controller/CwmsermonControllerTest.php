@@ -36,7 +36,7 @@ class CwmsermonControllerTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('void', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
     }
 
     /**
@@ -51,7 +51,7 @@ class CwmsermonControllerTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isProtected());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
     }
 
     /**
@@ -66,12 +66,11 @@ class CwmsermonControllerTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('void', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
         $this->assertEquals('key', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
         $this->assertTrue($params[0]->isOptional());
     }
 
@@ -87,17 +86,17 @@ class CwmsermonControllerTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('bool', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('key', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertParamTypeName('string', $params[0]);
         $this->assertTrue($params[0]->allowsNull());
         $this->assertTrue($params[0]->isOptional());
         
         $this->assertEquals('urlVar', $params[1]->getName());
-        $this->assertEquals('string', $params[1]->getType()->getName());
+        $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->isOptional());
     }
 
@@ -113,17 +112,17 @@ class CwmsermonControllerTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('bool', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('key', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertParamTypeName('string', $params[0]);
         $this->assertTrue($params[0]->allowsNull());
         $this->assertTrue($params[0]->isOptional());
         
         $this->assertEquals('urlVar', $params[1]->getName());
-        $this->assertEquals('string', $params[1]->getType()->getName());
+        $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->isOptional());
     }
 
@@ -139,7 +138,7 @@ class CwmsermonControllerTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('void', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('void', $reflection);
     }
 
     /**
@@ -154,20 +153,20 @@ class CwmsermonControllerTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('Joomla\CMS\MVC\Model\BaseDatabaseModel', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('Joomla\CMS\MVC\Model\BaseDatabaseModel', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(3, $params);
         $this->assertEquals('name', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertParamTypeName('string', $params[0]);
         $this->assertTrue($params[0]->isOptional());
         
         $this->assertEquals('prefix', $params[1]->getName());
-        $this->assertEquals('string', $params[1]->getType()->getName());
+        $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->isOptional());
         
         $this->assertEquals('config', $params[2]->getName());
-        $this->assertEquals('array', $params[2]->getType()->getName());
+        $this->assertParamTypeName('array', $params[2]);
         $this->assertTrue($params[2]->isOptional());
     }
 
@@ -183,7 +182,7 @@ class CwmsermonControllerTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('void', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('void', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
@@ -203,7 +202,7 @@ class CwmsermonControllerTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('void', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('void', $reflection);
     }
 
     /**
@@ -218,12 +217,12 @@ class CwmsermonControllerTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isProtected());
-        $this->assertEquals('bool', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
         $this->assertEquals('data', $params[0]->getName());
-        $this->assertEquals('array', $params[0]->getType()->getName());
+        $this->assertParamTypeName('array', $params[0]);
         $this->assertTrue($params[0]->isOptional());
     }
 
@@ -239,16 +238,16 @@ class CwmsermonControllerTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isProtected());
-        $this->assertEquals('bool', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('data', $params[0]->getName());
-        $this->assertEquals('array', $params[0]->getType()->getName());
+        $this->assertParamTypeName('array', $params[0]);
         $this->assertTrue($params[0]->isOptional());
         
         $this->assertEquals('key', $params[1]->getName());
-        $this->assertEquals('string', $params[1]->getType()->getName());
+        $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->isOptional());
     }
 
@@ -264,17 +263,17 @@ class CwmsermonControllerTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isProtected());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('recordId', $params[0]->getName());
-        $this->assertEquals('int', $params[0]->getType()->getName());
+        $this->assertParamTypeName('int', $params[0]);
         $this->assertTrue($params[0]->allowsNull());
         $this->assertTrue($params[0]->isOptional());
         
         $this->assertEquals('urlVar', $params[1]->getName());
-        $this->assertEquals('string', $params[1]->getType()->getName());
+        $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->isOptional());
     }
 }

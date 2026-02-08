@@ -47,16 +47,16 @@ class CwmtemplatecodesModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isProtected());
-        $this->assertEquals('void', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('void', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('ordering', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertParamTypeName('string', $params[0]);
         $this->assertTrue($params[0]->isOptional());
         
         $this->assertEquals('direction', $params[1]->getName());
-        $this->assertEquals('string', $params[1]->getType()->getName());
+        $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->isOptional());
     }
 
@@ -72,6 +72,6 @@ class CwmtemplatecodesModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isProtected());
-        $this->assertEquals('mixed', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('mixed', $reflection);
     }
 }

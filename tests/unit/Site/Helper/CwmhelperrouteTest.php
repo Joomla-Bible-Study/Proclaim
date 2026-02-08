@@ -69,7 +69,7 @@ class CwmhelperrouteTest extends ProclaimTestCase
 
         $this->assertTrue($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
     }
 
     /**

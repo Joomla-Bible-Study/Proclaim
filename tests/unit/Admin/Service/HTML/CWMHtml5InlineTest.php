@@ -36,25 +36,25 @@ class CWMHtml5InlineTest extends ProclaimTestCase
 
         $this->assertTrue($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(5, $params);
         $this->assertEquals('media', $params[0]->getName());
-        $this->assertEquals('object', $params[0]->getType()->getName());
+        $this->assertParamTypeName('object', $params[0]);
         
         $this->assertEquals('params', $params[1]->getName());
         // No type hint in method signature for params
         
         $this->assertEquals('player', $params[2]->getName());
-        $this->assertEquals('object', $params[2]->getType()->getName());
+        $this->assertParamTypeName('object', $params[2]);
         
         $this->assertEquals('popup', $params[3]->getName());
-        $this->assertEquals('bool', $params[3]->getType()->getName());
+        $this->assertParamTypeName('bool', $params[3]);
         $this->assertTrue($params[3]->isOptional());
         
         $this->assertEquals('t', $params[4]->getName());
-        $this->assertEquals('int', $params[4]->getType()->getName());
+        $this->assertParamTypeName('int', $params[4]);
         $this->assertTrue($params[4]->allowsNull());
         $this->assertTrue($params[4]->isOptional());
     }
@@ -71,14 +71,14 @@ class CWMHtml5InlineTest extends ProclaimTestCase
 
         $this->assertTrue($reflection->isStatic());
         $this->assertTrue($reflection->isPrivate());
-        $this->assertEquals('bool', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('mimeType', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertParamTypeName('string', $params[0]);
         
         $this->assertEquals('mimeArray', $params[1]->getName());
-        $this->assertEquals('array', $params[1]->getType()->getName());
+        $this->assertParamTypeName('array', $params[1]);
     }
 }

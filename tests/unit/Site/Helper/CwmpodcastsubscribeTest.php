@@ -35,12 +35,12 @@ class CwmpodcastsubscribeTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
         $this->assertEquals('introtext', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertParamTypeName('string', $params[0]);
         $this->assertTrue($params[0]->allowsNull());
         $this->assertTrue($params[0]->isOptional());
     }
@@ -57,7 +57,7 @@ class CwmpodcastsubscribeTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('array', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('array', $reflection);
     }
 
     /**
@@ -72,12 +72,12 @@ class CwmpodcastsubscribeTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
         $this->assertEquals('podcast', $params[0]->getName());
-        $this->assertEquals('object', $params[0]->getType()->getName());
+        $this->assertParamTypeName('object', $params[0]);
     }
 
     /**
@@ -92,18 +92,18 @@ class CwmpodcastsubscribeTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
         $this->assertTrue($reflection->getReturnType()->allowsNull());
 
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('podcastimagefromdb', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertParamTypeName('string', $params[0]);
         $this->assertTrue($params[0]->allowsNull());
         $this->assertTrue($params[0]->isOptional());
         
         $this->assertEquals('words', $params[1]->getName());
-        $this->assertEquals('string', $params[1]->getType()->getName());
+        $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->allowsNull());
         $this->assertTrue($params[1]->isOptional());
     }
@@ -120,11 +120,11 @@ class CwmpodcastsubscribeTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
         $this->assertEquals('podcast', $params[0]->getName());
-        $this->assertEquals('object', $params[0]->getType()->getName());
+        $this->assertParamTypeName('object', $params[0]);
     }
 }

@@ -36,7 +36,7 @@ class CwmseriespodcastdisplayModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('mixed', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('mixed', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
@@ -57,7 +57,7 @@ class CwmseriespodcastdisplayModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isProtected());
-        $this->assertEquals('Joomla\Database\QueryInterface', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('Joomla\Database\QueryInterface', $reflection);
     }
 
     /**
@@ -72,7 +72,7 @@ class CwmseriespodcastdisplayModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('array', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('array', $reflection);
     }
 
     /**
@@ -87,7 +87,7 @@ class CwmseriespodcastdisplayModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('int', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('int', $reflection);
     }
 
     /**
@@ -102,6 +102,6 @@ class CwmseriespodcastdisplayModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isProtected());
-        $this->assertEquals('void', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('void', $reflection);
     }
 }

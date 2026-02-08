@@ -36,7 +36,7 @@ class CwmsermonModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('bool', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
@@ -57,28 +57,13 @@ class CwmsermonModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('mixed', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('mixed', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
         $this->assertEquals('pk', $params[0]->getName());
         // No type hint in method signature for pk
         $this->assertTrue($params[0]->isOptional());
-    }
-
-    /**
-     * Test getMediaFiles method signature
-     *
-     * @return void
-     * #[CoversClass(CwmsermonModel::class)]::getMediaFiles
-     */
-    public function testGetMediaFilesMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(CwmsermonModel::class, 'getMediaFiles');
-
-        $this->assertFalse($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('array', $reflection->getReturnType()->getName());
     }
 
     /**
@@ -93,7 +78,7 @@ class CwmsermonModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('array', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('array', $reflection);
     }
 
     /**
@@ -108,7 +93,7 @@ class CwmsermonModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('bool', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
     }
 
     /**
@@ -128,11 +113,11 @@ class CwmsermonModelTest extends ProclaimTestCase
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('data', $params[0]->getName());
-        $this->assertEquals('array', $params[0]->getType()->getName());
+        $this->assertParamTypeName('array', $params[0]);
         $this->assertTrue($params[0]->isOptional());
         
         $this->assertEquals('loadData', $params[1]->getName());
-        $this->assertEquals('bool', $params[1]->getType()->getName());
+        $this->assertParamTypeName('bool', $params[1]);
         $this->assertTrue($params[1]->isOptional());
     }
 
@@ -148,6 +133,6 @@ class CwmsermonModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isProtected());
-        $this->assertEquals('void', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('void', $reflection);
     }
 }

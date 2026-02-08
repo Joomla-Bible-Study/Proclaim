@@ -37,12 +37,12 @@ class CwmmediafileModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('bool', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
         $this->assertEquals('direction', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertParamTypeName('string', $params[0]);
     }
 
     /**
@@ -57,20 +57,20 @@ class CwmmediafileModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('Joomla\CMS\Table\Table', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('Joomla\CMS\Table\Table', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(3, $params);
         $this->assertEquals('name', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertParamTypeName('string', $params[0]);
         $this->assertTrue($params[0]->isOptional());
         
         $this->assertEquals('prefix', $params[1]->getName());
-        $this->assertEquals('string', $params[1]->getType()->getName());
+        $this->assertParamTypeName('string', $params[1]);
         $this->assertTrue($params[1]->isOptional());
         
         $this->assertEquals('options', $params[2]->getName());
-        $this->assertEquals('array', $params[2]->getType()->getName());
+        $this->assertParamTypeName('array', $params[2]);
         $this->assertTrue($params[2]->isOptional());
     }
 
@@ -86,7 +86,7 @@ class CwmmediafileModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('bool', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
@@ -106,21 +106,21 @@ class CwmmediafileModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isProtected());
-        $this->assertEquals('void', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('void', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(4, $params);
         $this->assertEquals('params', $params[0]->getName());
-        $this->assertEquals('Joomla\Registry\Registry', $params[0]->getType()->getName());
+        $this->assertParamTypeName('Joomla\Registry\Registry', $params[0]);
         
         $this->assertEquals('server', $params[1]->getName());
-        $this->assertEquals('object', $params[1]->getType()->getName());
+        $this->assertParamTypeName('object', $params[1]);
         
         $this->assertEquals('set_path', $params[2]->getName());
-        $this->assertEquals('string', $params[2]->getType()->getName());
+        $this->assertParamTypeName('string', $params[2]);
         
         $this->assertEquals('path', $params[3]->getName());
-        $this->assertEquals('Joomla\Registry\Registry', $params[3]->getType()->getName());
+        $this->assertParamTypeName('Joomla\Registry\Registry', $params[3]);
     }
 
     /**
@@ -135,7 +135,7 @@ class CwmmediafileModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('mixed', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('mixed', $reflection);
     }
 
     /**
@@ -150,7 +150,7 @@ class CwmmediafileModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('mixed', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('mixed', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
@@ -176,11 +176,11 @@ class CwmmediafileModelTest extends ProclaimTestCase
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('data', $params[0]->getName());
-        $this->assertEquals('array', $params[0]->getType()->getName());
+        $this->assertParamTypeName('array', $params[0]);
         $this->assertTrue($params[0]->isOptional());
         
         $this->assertEquals('loadData', $params[1]->getName());
-        $this->assertEquals('bool', $params[1]->getType()->getName());
+        $this->assertParamTypeName('bool', $params[1]);
         $this->assertTrue($params[1]->isOptional());
     }
 
@@ -201,7 +201,7 @@ class CwmmediafileModelTest extends ProclaimTestCase
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
         $this->assertEquals('pks', $params[0]->getName());
-        $this->assertEquals('mixed', $params[0]->getType()->getName());
+        $this->assertParamTypeName('mixed', $params[0]);
         $this->assertTrue($params[0]->isOptional());
     }
 }

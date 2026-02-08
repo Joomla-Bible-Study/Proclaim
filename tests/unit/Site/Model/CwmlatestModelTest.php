@@ -35,7 +35,7 @@ class CwmlatestModelTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('int', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('int', $reflection);
         $this->assertTrue($reflection->getReturnType()->allowsNull());
     }
 }

@@ -68,7 +68,7 @@ class CwmbackupTest extends ProclaimTestCase
         $reflection = new \ReflectionMethod(Cwmbackup::class, 'exportdb');
 
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('bool', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
     }
 
     /**

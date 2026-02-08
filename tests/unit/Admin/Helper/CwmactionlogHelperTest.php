@@ -35,25 +35,25 @@ class CwmactionlogHelperTest extends ProclaimTestCase
 
         $this->assertTrue($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('void', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('void', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(5, $params);
         
         $this->assertEquals('messageKey', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertParamTypeName('string', $params[0]);
         
         $this->assertEquals('title', $params[1]->getName());
-        $this->assertEquals('string', $params[1]->getType()->getName());
+        $this->assertParamTypeName('string', $params[1]);
         
         $this->assertEquals('type', $params[2]->getName());
-        $this->assertEquals('string', $params[2]->getType()->getName());
+        $this->assertParamTypeName('string', $params[2]);
         
         $this->assertEquals('id', $params[3]->getName());
-        $this->assertEquals('int', $params[3]->getType()->getName());
+        $this->assertParamTypeName('int', $params[3]);
         
         $this->assertEquals('extra', $params[4]->getName());
-        $this->assertEquals('array', $params[4]->getType()->getName());
+        $this->assertParamTypeName('array', $params[4]);
         $this->assertTrue($params[4]->isOptional());
         $this->assertEquals([], $params[4]->getDefaultValue());
     }

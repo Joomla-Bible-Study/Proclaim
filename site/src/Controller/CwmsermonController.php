@@ -56,17 +56,21 @@ class CwmsermonController extends FormController
     /**
      * Method to add a new record.
      *
-     * @return    void  True if the article can be added, false if not.
+     * @return    bool  True if the article can be added, false if not.
      *
      * @throws \Exception
      * @since    1.6
      */
-    public function add(): void
+    public function add(): bool
     {
-        if (!parent::add()) {
+        $result = parent::add();
+
+        if (!$result) {
             // Redirect to the return page.
             $this->setRedirect($this->getReturnPage());
         }
+
+        return $result;
     }
 
     /**
@@ -95,17 +99,19 @@ class CwmsermonController extends FormController
      *
      * @param   string  $key  The name of the primary key of the URL variable.
      *
-     * @return    void  True if access level checks pass, false otherwise.
+     * @return    bool  True if access level checks pass, false otherwise.
      *
      * @throws \Exception
      * @since    1.6
      */
-    public function cancel($key = 'a_id'): void
+    public function cancel($key = 'a_id'): bool
     {
-        parent::cancel($key);
+        $result = parent::cancel($key);
 
         // Redirect to the return page.
         $this->setRedirect($this->getReturnPage());
+
+        return $result;
     }
 
     /**

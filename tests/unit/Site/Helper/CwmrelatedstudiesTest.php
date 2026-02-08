@@ -41,10 +41,10 @@ class CwmrelatedstudiesTest extends ProclaimTestCase
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('row', $params[0]->getName());
-        $this->assertEquals('object', $params[0]->getType()->getName());
+        $this->assertParamTypeName('object', $params[0]);
         
         $this->assertEquals('params', $params[1]->getName());
-        $this->assertEquals('Joomla\Registry\Registry', $params[1]->getType()->getName());
+        $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
     }
 
     /**
@@ -59,7 +59,7 @@ class CwmrelatedstudiesTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('array', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('array', $reflection);
     }
 
     /**
@@ -74,18 +74,18 @@ class CwmrelatedstudiesTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('void', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('void', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(3, $params);
         $this->assertEquals('source', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertParamTypeName('string', $params[0]);
         
         $this->assertEquals('compare', $params[1]->getName());
-        $this->assertEquals('string', $params[1]->getType()->getName());
+        $this->assertParamTypeName('string', $params[1]);
         
         $this->assertEquals('id', $params[2]->getName());
-        $this->assertEquals('int', $params[2]->getType()->getName());
+        $this->assertParamTypeName('int', $params[2]);
     }
 
     /**
@@ -100,11 +100,11 @@ class CwmrelatedstudiesTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
         $this->assertEquals('id', $params[0]->getName());
-        $this->assertEquals('int', $params[0]->getType()->getName());
+        $this->assertParamTypeName('int', $params[0]);
     }
 }

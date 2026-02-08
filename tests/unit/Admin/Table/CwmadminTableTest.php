@@ -49,15 +49,15 @@ class CwmadminTableTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('bool', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('array', $params[0]->getName());
-        $this->assertEquals('mixed', $params[0]->getType()->getName());
+        $this->assertParamTypeName('mixed', $params[0]);
         
         $this->assertEquals('ignore', $params[1]->getName());
-        $this->assertEquals('mixed', $params[1]->getType()->getName());
+        $this->assertParamTypeName('mixed', $params[1]);
         $this->assertTrue($params[1]->isOptional());
     }
 
@@ -73,12 +73,12 @@ class CwmadminTableTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('bool', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
         $this->assertEquals('updateNulls', $params[0]->getName());
-        $this->assertEquals('bool', $params[0]->getType()->getName());
+        $this->assertParamTypeName('bool', $params[0]);
         $this->assertTrue($params[0]->isOptional());
     }
 
@@ -94,7 +94,7 @@ class CwmadminTableTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isProtected());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
     }
 
     /**
@@ -109,7 +109,7 @@ class CwmadminTableTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isProtected());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
     }
 
     /**
@@ -124,12 +124,12 @@ class CwmadminTableTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isProtected());
-        $this->assertEquals('int', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('int', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('table', $params[0]->getName());
-        $this->assertEquals('Joomla\CMS\Table\Table', $params[0]->getType()->getName());
+        $this->assertParamTypeName('Joomla\CMS\Table\Table', $params[0]);
         $this->assertTrue($params[0]->allowsNull());
         $this->assertTrue($params[0]->isOptional());
         

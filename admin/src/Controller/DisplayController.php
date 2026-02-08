@@ -73,12 +73,12 @@ class DisplayController extends BaseController
      * @param   bool   $cachable   If true, the view output will be cached
      * @param   array  $urlparams  An array of safe URL parameters and their variable types, for valid values see {@link FilterInput::clean()}.
      *
-     * @return  BaseController|bool  This object to support chaining.
+     * @return  static  This object to support chaining.
      *
      * @throws \Exception
      * @since   1.5
      */
-    public function display($cachable = false, $urlparams = []): BaseController|bool
+    public function display($cachable = false, $urlparams = []): static
     {
         // Set the default view name and format from the Request.
         $vName   = $this->input->get('view', 'cwmcpanel');
@@ -94,7 +94,7 @@ class DisplayController extends BaseController
 
             $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmmessages', false));
 
-            return false;
+            return $this;
         }
 
         $safeurlparams = [

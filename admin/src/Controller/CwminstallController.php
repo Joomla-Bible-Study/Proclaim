@@ -51,18 +51,18 @@ class CwminstallController extends BaseController
      *
      * @param   string  $task  The task to execute.
      *
-     * @return void
+     * @return mixed
      *
      * @throws \Exception
      * @since 9.0.0
      */
-    public function execute($task): void
+    public function execute($task): mixed
     {
         if ($task !== 'run' && $task !== 'clear' && $task !== 'browse') {
             $task = 'browse';
         }
 
-        parent::execute($task);
+        return parent::execute($task);
     }
 
     /**

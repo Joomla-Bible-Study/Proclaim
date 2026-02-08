@@ -41,7 +41,7 @@ class StudyImageField extends MediaField
      * @since 7.0.0
      */
     #[\Override]
-    public function getInput(): string
+    protected function getInput(): string
     {
         // Code that returns HTML that will be shown as the form field
         $form = FormHelper::loadFieldClass('media');

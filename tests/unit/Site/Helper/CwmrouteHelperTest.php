@@ -35,19 +35,19 @@ class CwmrouteHelperTest extends ProclaimTestCase
 
         $this->assertTrue($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(3, $params);
         $this->assertEquals('id', $params[0]->getName());
-        $this->assertEquals('int', $params[0]->getType()->getName());
+        $this->assertParamTypeName('int', $params[0]);
         
         $this->assertEquals('language', $params[1]->getName());
         // Type is int|string, which reflection might show differently
         $this->assertTrue($params[1]->isOptional());
         
         $this->assertEquals('layout', $params[2]->getName());
-        $this->assertEquals('string', $params[2]->getType()->getName());
+        $this->assertParamTypeName('string', $params[2]);
         $this->assertTrue($params[2]->allowsNull());
         $this->assertTrue($params[2]->isOptional());
     }
@@ -64,19 +64,19 @@ class CwmrouteHelperTest extends ProclaimTestCase
 
         $this->assertTrue($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(3, $params);
         $this->assertEquals('seriesid', $params[0]->getName());
-        $this->assertEquals('int', $params[0]->getType()->getName());
+        $this->assertParamTypeName('int', $params[0]);
         
         $this->assertEquals('language', $params[1]->getName());
         // Type is int|string, which reflection might show differently
         $this->assertTrue($params[1]->isOptional());
         
         $this->assertEquals('layout', $params[2]->getName());
-        $this->assertEquals('string', $params[2]->getType()->getName());
+        $this->assertParamTypeName('string', $params[2]);
         $this->assertTrue($params[2]->allowsNull());
         $this->assertTrue($params[2]->isOptional());
     }
@@ -93,19 +93,19 @@ class CwmrouteHelperTest extends ProclaimTestCase
 
         $this->assertTrue($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(3, $params);
         $this->assertEquals('seriesid', $params[0]->getName());
-        $this->assertEquals('int', $params[0]->getType()->getName());
+        $this->assertParamTypeName('int', $params[0]);
         
         $this->assertEquals('language', $params[1]->getName());
         // Type is int|string, which reflection might show differently
         $this->assertTrue($params[1]->isOptional());
         
         $this->assertEquals('layout', $params[2]->getName());
-        $this->assertEquals('string', $params[2]->getType()->getName());
+        $this->assertParamTypeName('string', $params[2]);
         $this->assertTrue($params[2]->allowsNull());
         $this->assertTrue($params[2]->isOptional());
     }
@@ -122,19 +122,19 @@ class CwmrouteHelperTest extends ProclaimTestCase
 
         $this->assertTrue($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(3, $params);
         $this->assertEquals('id', $params[0]->getName());
-        $this->assertEquals('int', $params[0]->getType()->getName());
+        $this->assertParamTypeName('int', $params[0]);
         
         $this->assertEquals('language', $params[1]->getName());
         // Type is int|string, which reflection might show differently
         $this->assertTrue($params[1]->isOptional());
         
         $this->assertEquals('layout', $params[2]->getName());
-        $this->assertEquals('string', $params[2]->getType()->getName());
+        $this->assertParamTypeName('string', $params[2]);
         $this->assertTrue($params[2]->allowsNull());
         $this->assertTrue($params[2]->isOptional());
     }
@@ -151,11 +151,11 @@ class CwmrouteHelperTest extends ProclaimTestCase
 
         $this->assertTrue($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('string', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('string', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(1, $params);
         $this->assertEquals('id', $params[0]->getName());
-        $this->assertEquals('int', $params[0]->getType()->getName());
+        $this->assertParamTypeName('int', $params[0]);
     }
 }

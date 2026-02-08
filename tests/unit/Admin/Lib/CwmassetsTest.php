@@ -62,7 +62,7 @@ class CwmassetsTest extends ProclaimTestCase
 
         $this->assertTrue($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('bool', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
@@ -81,7 +81,7 @@ class CwmassetsTest extends ProclaimTestCase
 
         $this->assertTrue($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('int', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('int', $reflection);
     }
 
     /**
@@ -94,7 +94,7 @@ class CwmassetsTest extends ProclaimTestCase
         $reflection = new \ReflectionMethod(Cwmassets::class, 'build');
 
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('object', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('object', $reflection);
     }
 
     /**
@@ -108,7 +108,7 @@ class CwmassetsTest extends ProclaimTestCase
 
         $this->assertTrue($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('array', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('array', $reflection);
     }
 
     /**
