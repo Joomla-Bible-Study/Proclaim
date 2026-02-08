@@ -115,6 +115,20 @@ spl_autoload_register(function ($class) {
         }
     }
 
+    // Autoload integration test classes
+    $prefix  = 'CWM\\Component\\Proclaim\\Tests\\Integration\\';
+    $baseDir = JPATH_ROOT . '/tests/integration/';
+
+    $len = \strlen($prefix);
+    if (strncmp($prefix, $class, $len) === 0) {
+        $relativeClass = substr($class, $len);
+        $file          = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
+        if (file_exists($file)) {
+            require $file;
+            return true;
+        }
+    }
+
     return false;
 });
 

@@ -4,6 +4,9 @@
     <testsuite name="Proclaim Unit Tests">
       <directory suffix="Test.php">tests/unit</directory>
     </testsuite>
+    <testsuite name="Proclaim Integration Tests">
+      <directory suffix="Test.php">tests/integration</directory>
+    </testsuite>
   </testsuites>
   <php>
     <const name="JPATH_BASE" value="."/>

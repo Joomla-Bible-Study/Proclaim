@@ -406,8 +406,30 @@ namespace Joomla\CMS\Table {
     if (!class_exists('Joomla\CMS\Table\Table', false)) {
         class Table
         {
+            /**
+             * @var string Name of the database table
+             */
+            protected string $_tbl = '';
+
+            /**
+             * @var string|array Name of the primary key field(s)
+             */
+            protected $_tbl_key = 'id';
+
+            /**
+             * @var array Array of primary key field names
+             */
+            protected array $_tbl_keys = [];
+
+            /**
+             * @var \Joomla\CMS\Access\Rules|null ACL rules
+             */
+            protected $_rules;
+
             public function __construct($table = '', $key = 'id', $db = null, $dispatcher = null)
             {
+                $this->_tbl     = $table;
+                $this->_tbl_key = $key;
             }
 
             public function bind($src, $ignore = ''): bool
@@ -1185,7 +1207,10 @@ namespace Joomla\CMS\Application {
 
             public function getIdentity()
             {
-                return null;
+                $user     = new \Joomla\CMS\User\User();
+                $user->id = 42;
+
+                return $user;
             }
 
             public function isClient(string $identifier): bool
@@ -1264,6 +1289,97 @@ namespace Joomla\Component\Actionlogs\Administrator\Helper {
             public static function addLog($messages, $messageLanguageKey, $context, $userId = null): void
             {
             }
+        }
+    }
+}
+
+// ============================================================================
+// Filesystem stubs — Joomla\Filesystem (for Cwmthumbnail integration tests)
+// ============================================================================
+
+namespace Joomla\Filesystem {
+
+    if (!class_exists('Joomla\Filesystem\Path', false)) {
+        class Path
+        {
+            public static function clean(string $path, string $ds = DIRECTORY_SEPARATOR): string
+            {
+                return str_replace(['/', '\\'], $ds, $path);
+            }
+        }
+    }
+
+    if (!class_exists('Joomla\Filesystem\Folder', false)) {
+        class Folder
+        {
+            public static function delete(string $path): bool
+            {
+                return true;
+            }
+
+            public static function create(string $path, int $mode = 0755): bool
+            {
+                return true;
+            }
+        }
+    }
+
+    if (!class_exists('Joomla\Filesystem\File', false)) {
+        class File
+        {
+            public static function delete(string $file): bool
+            {
+                return true;
+            }
+        }
+    }
+}
+
+// ============================================================================
+// Log stub — Joomla\CMS\Log
+// ============================================================================
+
+namespace Joomla\CMS\Log {
+
+    if (!class_exists('Joomla\CMS\Log\Log', false)) {
+        class Log
+        {
+            public const int WARNING = 4;
+            public const int INFO = 6;
+
+            public static function add(string $entry, int $priority = self::INFO, string $category = '', ?string $date = null): void
+            {
+            }
+        }
+    }
+}
+
+// ============================================================================
+// Image stub — Joomla\CMS\Image
+// ============================================================================
+
+namespace Joomla\CMS\Image {
+
+    if (!class_exists('Joomla\CMS\Image\Image', false)) {
+        class Image
+        {
+        }
+    }
+}
+
+// ============================================================================
+// User stub — Joomla\CMS\User
+// ============================================================================
+
+namespace Joomla\CMS\User {
+
+    if (!class_exists('Joomla\CMS\User\User', false)) {
+        class User
+        {
+            public int $id = 0;
+            public string $name = '';
+            public string $username = '';
+            public string $email = '';
         }
     }
 }

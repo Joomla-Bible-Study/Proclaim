@@ -92,6 +92,7 @@
   },
   "scripts": {
     "test": "phpunit",
+    "test:integration": "phpunit --testsuite 'Proclaim Integration Tests'",
     "test:js": "npm test",
     "test:all": ["@test", "@test:js"],
     "lint:syntax": "php build/proclaim_build.php lint-syntax",
