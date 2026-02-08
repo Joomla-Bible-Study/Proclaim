@@ -224,8 +224,7 @@
                 "defer": true
             },
             "dependencies": [
-                "core",
-                "jquery-noconflict"
+                "core"
             ]
         },
         {
