@@ -2,7 +2,7 @@
 <form>
     <fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
         <field name="server" type="ServerList" label="JBS_CMN_SERVER"
-               description="JBS_MED_SERVER_DESC" class="inputbox" default="-1">
+               description="JBS_MED_SERVER_DESC" default="-1">
             <option value="-1">JBS_CMN_SELECT_SERVER</option>
         </field>
     </fieldset>

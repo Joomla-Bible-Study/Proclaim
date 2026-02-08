@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fieldset name="details" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-        <field name="id" type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
+        <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
                description="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
                readonly="true"/>
 
@@ -29,7 +29,7 @@
 
         <field name="studydate" type="calendar" label="JBS_CMN_STUDY_DATE"
                description="JBS_STY_CREATE_DATE_DESC" translateformat="true"
-               showtime="true" filter="user_utc" required="true" labelclass="control-label"/>
+               showtime="true" filter="user_utc" required="true"/>
 
         <field name="comments" type="list" label="JBS_CMN_COMMENTS"
                description="JBS_STY_COMMENTS_DESC"
@@ -106,28 +106,26 @@
                translate_label="false" filter="rules" component="com_proclaim"
                section="message" validate="rules"/>
 
-        <field name="created" type="calendar" class="readonly"
+        <field name="created" type="calendar"
                label="JGLOBAL_FIELD_CREATED_LABEL"
                readonly="true" translateformat="true"
                showtime="true"
                filter="user_utc"/>
         <field name="created_by" type="user"
                label="JGLOBAL_FIELD_CREATED_BY_LABEL"
-               class="readonly"
                readonly="true"
                filter="unset"/>
         <field name="created_by_alias" type="text"
                label="JGLOBAL_FIELD_CREATED_BY_ALIAS_LABEL"
                size="20"/>
 
-        <field name="modified" type="calendar" class="readonly"
+        <field name="modified" type="calendar"
                label="JGLOBAL_FIELD_MODIFIED_LABEL"
                readonly="true" translateformat="true"
                showtime="true"
                filter="user_utc"/>
         <field name="modified_by" type="user"
                label="JGLOBAL_FIELD_MODIFIED_BY_LABEL"
-               class="readonly"
                readonly="true"
                filter="unset"/>
 
