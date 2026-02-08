@@ -80,6 +80,9 @@
             <field name="secondary_reference" type="text" size="100"
                    label="JBS_CMN_SECONDARY_REFERENCES"
                    description="JBS_STY_SECONDARY_REFERENCES_DESC"/>
+
+            <field name="bible_version" type="BibleVersion" default=""
+                   label="JBS_STY_BIBLE_VERSION" description="JBS_STY_BIBLE_VERSION_DESC"/>
         </fieldset>
 
         <field name="teacher_id" type="TeacherList" label="JBS_CMN_TEACHER">

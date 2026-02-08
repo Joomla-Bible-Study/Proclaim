@@ -93,7 +93,7 @@ class BibleImporter
     {
         $data = json_decode($json, true);
 
-        if (!is_array($data)) {
+        if (!\is_array($data)) {
             return -1;
         }
 
@@ -105,7 +105,7 @@ class BibleImporter
         self::removeTranslationVerses($abbreviation);
 
         foreach ($data as $bookKey => $bookData) {
-            if (!is_array($bookData) || !isset($bookData['chapters'])) {
+            if (!\is_array($bookData) || !isset($bookData['chapters'])) {
                 continue;
             }
 
@@ -117,14 +117,14 @@ class BibleImporter
             }
 
             foreach ($bookData['chapters'] as $chapterKey => $chapterData) {
-                if (!is_array($chapterData) || !isset($chapterData['verses'])) {
+                if (!\is_array($chapterData) || !isset($chapterData['verses'])) {
                     continue;
                 }
 
                 $chapterNumber = (int) $chapterKey;
 
                 foreach ($chapterData['verses'] as $verseData) {
-                    if (!is_array($verseData) || !isset($verseData['verse'], $verseData['text'])) {
+                    if (!\is_array($verseData) || !isset($verseData['verse'], $verseData['text'])) {
                         continue;
                     }
 
@@ -136,9 +136,9 @@ class BibleImporter
                         'text'        => $verseData['text'],
                     ];
 
-                    if (count($batch) >= self::BATCH_SIZE) {
+                    if (\count($batch) >= self::BATCH_SIZE) {
                         self::insertBatch($db, $batch);
-                        $totalCount += count($batch);
+                        $totalCount += \count($batch);
                         $batch = [];
                     }
                 }
@@ -148,7 +148,7 @@ class BibleImporter
         // Insert remaining
         if (!empty($batch)) {
             self::insertBatch($db, $batch);
-            $totalCount += count($batch);
+            $totalCount += \count($batch);
         }
 
         // Update translation record
@@ -275,7 +275,7 @@ class BibleImporter
 
         // GetBible v2 JSON has translation info at the root level or in any book
         foreach ($data as $bookData) {
-            if (is_array($bookData)) {
+            if (\is_array($bookData)) {
                 if (isset($bookData['translation'])) {
                     $name = $bookData['translation'];
                 }

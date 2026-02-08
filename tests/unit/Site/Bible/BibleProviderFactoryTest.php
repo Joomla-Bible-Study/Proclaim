@@ -17,6 +17,7 @@ use CWM\Component\Proclaim\Site\Bible\Provider\BibleGatewayProvider;
 use CWM\Component\Proclaim\Site\Bible\Provider\GetBibleProvider;
 use CWM\Component\Proclaim\Site\Bible\Provider\LocalProvider;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
+use Joomla\Registry\Registry;
 
 /**
  * Test class for BibleProviderFactory
@@ -130,5 +131,65 @@ class BibleProviderFactoryTest extends ProclaimTestCase
         $provider2 = BibleProviderFactory::getProvider('biblegateway');
 
         $this->assertNotSame($provider1, $provider2);
+    }
+
+    /**
+     * Test getProviderForTranslation falls back to biblegateway when all providers enabled
+     * but no DB available (unit test environment).
+     *
+     * @return void
+     */
+    public function testGetProviderForTranslationFallback(): void
+    {
+        BibleProviderFactory::reset();
+
+        $params = new Registry([
+            'provider_local'        => 1,
+            'provider_getbible'     => 1,
+            'provider_biblegateway' => 1,
+        ]);
+
+        // Without DB access, local/getbible checks fail and it falls to biblegateway
+        $provider = BibleProviderFactory::getProviderForTranslation('kjv', $params);
+        $this->assertInstanceOf(BibleProviderInterface::class, $provider);
+    }
+
+    /**
+     * Test getProviderForTranslation with only biblegateway enabled
+     *
+     * @return void
+     */
+    public function testGetProviderForTranslationBiblegatewayOnly(): void
+    {
+        BibleProviderFactory::reset();
+
+        $params = new Registry([
+            'provider_local'        => 0,
+            'provider_getbible'     => 0,
+            'provider_biblegateway' => 1,
+        ]);
+
+        $provider = BibleProviderFactory::getProviderForTranslation('niv', $params);
+        $this->assertInstanceOf(BibleGatewayProvider::class, $provider);
+    }
+
+    /**
+     * Test getProviderForTranslation with only getbible enabled
+     *
+     * @return void
+     */
+    public function testGetProviderForTranslationGetbibleOnly(): void
+    {
+        BibleProviderFactory::reset();
+
+        $params = new Registry([
+            'provider_local'        => 0,
+            'provider_getbible'     => 1,
+            'provider_biblegateway' => 0,
+        ]);
+
+        // Without DB, getbible check fails, but getbible is still the fallback
+        $provider = BibleProviderFactory::getProviderForTranslation('kjv', $params);
+        $this->assertInstanceOf(BibleProviderInterface::class, $provider);
     }
 }

@@ -40,18 +40,18 @@ class BibleGatewayProvider extends AbstractBibleProvider
      * @since  10.1.0
      */
     public const VERSION_MAP = [
-        9   => 'kjv',
-        51  => 'nlt',
-        47  => 'esv',
-        31  => 'niv',
-        49  => 'nasb',
-        50  => 'nkjv',
-        8   => 'asvd',
-        15  => 'ylt',
-        77  => 'hcsb',
-        45  => 'amp',
-        46  => 'cev',
-        65  => 'msg',
+        9     => 'kjv',
+        51    => 'nlt',
+        47    => 'esv',
+        31    => 'niv',
+        49    => 'nasb',
+        50    => 'nkjv',
+        8     => 'asvd',
+        15    => 'ylt',
+        77    => 'hcsb',
+        45    => 'amp',
+        46    => 'cev',
+        65    => 'msg',
         'GNT' => 'gnt',
     ];
 

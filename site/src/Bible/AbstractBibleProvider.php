@@ -58,9 +58,9 @@ abstract class AbstractBibleProvider implements BibleProviderInterface
      * @since  10.1.0
      */
     protected const BOOK_NAMES = [
-        1 => 'Genesis', 2 => 'Exodus', 3 => 'Leviticus', 4 => 'Numbers',
-        5 => 'Deuteronomy', 6 => 'Joshua', 7 => 'Judges', 8 => 'Ruth',
-        9 => '1 Samuel', 10 => '2 Samuel', 11 => '1 Kings', 12 => '2 Kings',
+        1  => 'Genesis', 2 => 'Exodus', 3 => 'Leviticus', 4 => 'Numbers',
+        5  => 'Deuteronomy', 6 => 'Joshua', 7 => 'Judges', 8 => 'Ruth',
+        9  => '1 Samuel', 10 => '2 Samuel', 11 => '1 Kings', 12 => '2 Kings',
         13 => '1 Chronicles', 14 => '2 Chronicles', 15 => 'Ezra',
         16 => 'Nehemiah', 17 => 'Esther', 18 => 'Job', 19 => 'Psalms',
         20 => 'Proverbs', 21 => 'Ecclesiastes', 22 => 'Song of Solomon',
@@ -80,12 +80,26 @@ abstract class AbstractBibleProvider implements BibleProviderInterface
     ];
 
     /**
-     * Default cache TTL in seconds (24 hours).
+     * Cache TTL in seconds. Default 24 hours; configurable via admin params.
      *
      * @var  int
      * @since  10.1.0
      */
     protected int $cacheTtl = 86400;
+
+    /**
+     * Set the cache TTL in seconds.
+     *
+     * @param   int  $seconds  TTL in seconds
+     *
+     * @return  void
+     *
+     * @since  10.1.0
+     */
+    public function setCacheTtl(int $seconds): void
+    {
+        $this->cacheTtl = max(3600, $seconds);
+    }
 
     /**
      * Get the database driver.

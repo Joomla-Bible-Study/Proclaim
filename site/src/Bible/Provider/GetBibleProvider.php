@@ -64,7 +64,7 @@ class GetBibleProvider extends AbstractBibleProvider
 
         $data = json_decode($body, true);
 
-        if (!is_array($data) || empty($data)) {
+        if (!\is_array($data) || empty($data)) {
             return new BiblePassageResult(
                 reference: $reference,
                 translation: $translation
@@ -77,7 +77,7 @@ class GetBibleProvider extends AbstractBibleProvider
         $copyright = '';
 
         foreach ($data as $passage) {
-            if (!is_array($passage) || !isset($passage['verses'])) {
+            if (!\is_array($passage) || !isset($passage['verses'])) {
                 continue;
             }
 
@@ -88,7 +88,7 @@ class GetBibleProvider extends AbstractBibleProvider
             }
 
             foreach ($passage['verses'] as $verse) {
-                $verseNum = $verse['verse'] ?? '';
+                $verseNum  = $verse['verse'] ?? '';
                 $verseText = $verse['text'] ?? '';
                 $text .= '<sup>' . htmlspecialchars((string) $verseNum) . '</sup>'
                     . htmlspecialchars(trim($verseText)) . ' ';

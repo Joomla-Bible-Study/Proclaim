@@ -11,8 +11,10 @@
 
 namespace CWM\Component\Proclaim\Site\Helper;
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Site\Bible\BiblePassageResult;
 use CWM\Component\Proclaim\Site\Bible\BibleProviderFactory;
+use CWM\Component\Proclaim\Site\Bible\Provider\BibleGatewayProvider;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
@@ -25,7 +27,7 @@ use Joomla\Registry\Registry;
  * Scripture Show class.
  *
  * Renders scripture passages using the configured Bible provider.
- * Supports text-based providers (local, getbible) and iframe fallback (biblegateway).
+ * Bible version is read from the message record; provider resolution uses admin params.
  *
  * @package  Proclaim.Site
  * @since    7.1.0
@@ -40,8 +42,8 @@ class Cwmshowscripture
     /**
      * Passage Build system
      *
-     * @param   object    $row     Item Info
-     * @param   Registry  $params  Item Params
+     * @param   object    $row     Item Info (message row with bible_version property)
+     * @param   Registry  $params  Template Params (display settings)
      *
      * @return string|bool
      *
@@ -54,22 +56,45 @@ class Cwmshowscripture
         }
 
         $reference = $this->formReference($row);
-        $provider  = $params->get('scripture_provider', '');
         $choice    = (int) $params->get('show_passage_view');
 
-        // If no provider is set, use BibleGateway iframe for backward compatibility
-        if (empty($provider) || $provider === 'biblegateway') {
+        // Read Bible version from message row (new), fallback to template params (legacy compat)
+        $version = $row->bible_version ?? $params->get('bible_translation', '');
+
+        if (empty($version)) {
+            $version = 'kjv';
+        }
+
+        // Get admin params for provider configuration
+        try {
+            $admin       = Cwmparams::getAdmin();
+            $adminParams = $admin->params ?? new Registry();
+        } catch (\Exception $e) {
+            $adminParams = new Registry();
+        }
+
+        // Legacy: if template still has scripture_provider set (migration period),
+        // honor it for backward compatibility
+        $legacyProvider = $params->get('scripture_provider', '');
+
+        if (!empty($legacyProvider) && $legacyProvider === 'biblegateway') {
             return $this->renderIframePassage($reference, $choice, $params);
         }
 
-        // Text-based provider (local or getbible)
-        $translation = $params->get('bible_translation', 'kjv');
-
+        // Resolve which provider can serve this version
         try {
-            $bibleProvider = BibleProviderFactory::getProvider($provider);
-            $result        = $bibleProvider->getPassage($reference, $translation);
+            $provider = BibleProviderFactory::getProviderForTranslation($version, $adminParams);
+
+            // Configure cache TTL from admin params
+            $cacheDays = (int) $adminParams->get('scripture_cache_days', 30);
+
+            if ($cacheDays > 0 && method_exists($provider, 'setCacheTtl')) {
+                $provider->setCacheTtl($cacheDays * 86400);
+            }
+
+            $result = $provider->getPassage($reference, $version);
         } catch (\Exception $e) {
-            // Fall back to BibleGateway if provider fails
+            // Fall back to BibleGateway iframe
             return $this->renderIframePassage($reference, $choice, $params);
         }
 
@@ -78,11 +103,17 @@ class Cwmshowscripture
         }
 
         if (!$result->hasText()) {
-            // No text available; fall back to iframe
             return $this->renderIframePassage($reference, $choice, $params);
         }
 
-        return $this->renderTextPassage($result, $choice, $params);
+        $output = $this->renderTextPassage($result, $choice, $params);
+
+        // Add version switcher dropdown if enabled in template
+        if ((int) $params->get('allow_version_switch', 0) === 1) {
+            $output = $this->renderVersionSwitcher($row, $version, $adminParams) . $output;
+        }
+
+        return $output;
     }
 
     /**
@@ -219,6 +250,92 @@ class Cwmshowscripture
         }
 
         return $passage;
+    }
+
+    /**
+     * Render a Bible version switcher dropdown.
+     *
+     * @param   object    $row          Message row
+     * @param   string    $version      Current Bible version abbreviation
+     * @param   Registry  $adminParams  Admin params with provider settings
+     *
+     * @return  string  HTML select element
+     *
+     * @since  10.1.0
+     */
+    public function renderVersionSwitcher(object $row, string $version, Registry $adminParams): string
+    {
+        $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+        $wa->useScript('com_proclaim.scripture-switcher');
+
+        // Build reference for AJAX calls
+        $reference = $this->formReference($row);
+
+        $html  = '<div class="scripture-version-switcher">';
+        $html .= '<select class="scripture-version-select form-select form-select-sm" '
+            . 'data-reference="' . htmlspecialchars($reference) . '" '
+            . 'data-message-id="' . (int) ($row->id ?? 0) . '" '
+            . 'aria-label="' . Text::_('JBS_STY_BIBLE_VERSION') . '">';
+
+        // Well-known BibleGateway version names
+        $bgNames = [
+            'kjv'  => 'King James Version', 'nlt' => 'New Living Translation',
+            'esv'  => 'English Standard Version', 'niv' => 'New International Version',
+            'nasb' => 'New American Standard Bible', 'nkjv' => 'New King James Version',
+            'asvd' => 'American Standard Version', 'ylt' => "Young's Literal Translation",
+            'hcsb' => 'Holman Christian Standard Bible', 'amp' => 'Amplified Bible',
+            'cev'  => 'Contemporary English Version', 'msg' => 'The Message',
+            'gnt'  => 'Good News Translation', 'web' => 'World English Bible',
+        ];
+
+        // Collect versions keyed by abbreviation to deduplicate
+        $versions = [];
+
+        // Get available translations from DB
+        try {
+            $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select($db->quoteName(['abbreviation', 'name']))
+                ->from($db->quoteName('#__bsms_bible_translations'))
+                ->order($db->quoteName('name') . ' ASC');
+            $db->setQuery($query);
+            $translations = $db->loadObjectList();
+
+            foreach ($translations as $trans) {
+                $versions[$trans->abbreviation] = $trans->name;
+            }
+        } catch (\Exception $e) {
+            // DB not available
+        }
+
+        // Add BibleGateway versions if that provider is enabled
+        $bgEnabled = (int) $adminParams->get('provider_biblegateway', 1) === 1;
+
+        if ($bgEnabled) {
+            foreach (BibleGatewayProvider::VERSION_MAP as $abbr) {
+                if (!isset($versions[$abbr])) {
+                    $versions[$abbr] = $bgNames[$abbr] ?? strtoupper($abbr);
+                }
+            }
+        }
+
+        // Fallback if nothing found
+        if (empty($versions)) {
+            $versions[$version] = strtoupper($version);
+        }
+
+        // Sort alphabetically and render
+        asort($versions);
+
+        foreach ($versions as $abbr => $name) {
+            $selected = ($abbr === $version) ? ' selected' : '';
+            $html .= '<option value="' . htmlspecialchars((string) $abbr) . '"' . $selected . '>'
+                . htmlspecialchars($name) . '</option>';
+        }
+
+        $html .= '</select></div>';
+
+        return $html;
     }
 
     /**

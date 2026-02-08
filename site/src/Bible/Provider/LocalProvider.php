@@ -95,7 +95,7 @@ class LocalProvider extends AbstractBibleProvider
         }
 
         // Build verse text with superscript verse numbers
-        $text          = '';
+        $text           = '';
         $currentChapter = 0;
 
         foreach ($verses as $verse) {
@@ -239,20 +239,20 @@ class LocalProvider extends AbstractBibleProvider
 
         // Try common abbreviations
         $abbreviations = [
-            'gen' => 1, 'ex' => 2, 'lev' => 3, 'num' => 4, 'deut' => 5,
-            'josh' => 6, 'judg' => 7, '1 sam' => 9, '2 sam' => 10,
-            '1 kgs' => 11, '2 kgs' => 12, '1 chr' => 13, '2 chr' => 14,
-            'neh' => 16, 'est' => 17, 'ps' => 19, 'prov' => 20,
-            'eccl' => 21, 'song' => 22, 'isa' => 23, 'jer' => 24,
-            'lam' => 25, 'ezek' => 26, 'dan' => 27, 'hos' => 28,
-            'hab' => 35, 'zeph' => 36, 'hag' => 37, 'zech' => 38,
-            'mal' => 39, 'matt' => 40, 'mk' => 41, 'lk' => 42,
-            'jn' => 43, 'rom' => 45, '1 cor' => 46, '2 cor' => 47,
-            'gal' => 48, 'eph' => 49, 'phil' => 50, 'col' => 51,
+            'gen'     => 1, 'ex' => 2, 'lev' => 3, 'num' => 4, 'deut' => 5,
+            'josh'    => 6, 'judg' => 7, '1 sam' => 9, '2 sam' => 10,
+            '1 kgs'   => 11, '2 kgs' => 12, '1 chr' => 13, '2 chr' => 14,
+            'neh'     => 16, 'est' => 17, 'ps' => 19, 'prov' => 20,
+            'eccl'    => 21, 'song' => 22, 'isa' => 23, 'jer' => 24,
+            'lam'     => 25, 'ezek' => 26, 'dan' => 27, 'hos' => 28,
+            'hab'     => 35, 'zeph' => 36, 'hag' => 37, 'zech' => 38,
+            'mal'     => 39, 'matt' => 40, 'mk' => 41, 'lk' => 42,
+            'jn'      => 43, 'rom' => 45, '1 cor' => 46, '2 cor' => 47,
+            'gal'     => 48, 'eph' => 49, 'phil' => 50, 'col' => 51,
             '1 thess' => 52, '2 thess' => 53, '1 tim' => 54, '2 tim' => 55,
-            'tit' => 56, 'phlm' => 57, 'heb' => 58, 'jas' => 59,
-            '1 pet' => 60, '2 pet' => 61, '1 jn' => 62, '2 jn' => 63,
-            '3 jn' => 64, 'rev' => 66,
+            'tit'     => 56, 'phlm' => 57, 'heb' => 58, 'jas' => 59,
+            '1 pet'   => 60, '2 pet' => 61, '1 jn' => 62, '2 jn' => 63,
+            '3 jn'    => 64, 'rev' => 66,
         ];
 
         return $abbreviations[$normalized] ?? 0;

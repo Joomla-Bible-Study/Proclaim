@@ -30,6 +30,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
 
@@ -1559,6 +1560,52 @@ class CwmadminController extends FormController
             echo json_encode([
                 'success' => false,
                 'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Get scripture provider status XHR - returns count of locally installed translations
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function getScriptureStatusXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select('COUNT(*)')
+                ->from($db->quoteName('#__bsms_bible_translations'))
+                ->where($db->quoteName('installed') . ' = 1');
+            $db->setQuery($query);
+            $localCount = (int) $db->loadResult();
+
+            echo json_encode([
+                'success'     => true,
+                'local_count' => $localCount,
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success'     => true,
+                'local_count' => 0,
             ], JSON_THROW_ON_ERROR);
         }
 
