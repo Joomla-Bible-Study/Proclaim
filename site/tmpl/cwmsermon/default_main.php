@@ -95,7 +95,27 @@ echo $this->fluidListing;
     <!-- End Fluid Layout -->
 
 <?php
-echo $this->passage;
+if ($isPrint && !empty($row->bookname)) {
+    // Print mode: show scripture reference as text instead of iframe
+    $bookRef = Text::_($row->bookname);
+    if (!empty($row->chapter_begin)) {
+        $bookRef .= ' ' . $row->chapter_begin;
+        if (!empty($row->verse_begin)) {
+            $bookRef .= ':' . $row->verse_begin;
+        }
+        if (!empty($row->chapter_end) && !empty($row->verse_end)) {
+            $bookRef .= '-' . $row->chapter_end . ':' . $row->verse_end;
+        } elseif (!empty($row->verse_end)) {
+            $bookRef .= '-' . $row->verse_end;
+        }
+    }
+    echo '<div class="passage-print">';
+    echo '<h3>' . Text::_('JBS_CMN_BIBLE_PASSAGE') . '</h3>';
+    echo '<p><strong>' . htmlspecialchars($bookRef) . '</strong></p>';
+    echo '</div>';
+} else {
+    echo $this->passage;
+}
 ?>
     <hr/> <?php
 

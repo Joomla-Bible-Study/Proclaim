@@ -20,13 +20,25 @@ declare(strict_types=1);
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
 
 $isPrint = !empty($this->print);
 ?>
 <a href="#proclaim-main-content" class="proclaim-skip-link"><?php echo Text::_('JBS_CMN_SKIP_TO_CONTENT'); ?></a>
 <div class="container-fluid proclaim-main-content" id="proclaim-main-content" role="main">
 <?php if (!$isPrint) : ?>
+    <?php
+    $printUrl = Uri::getInstance();
+    $printUrl->setVar('tmpl', 'component');
+    $printUrl->setVar('print', '1');
+    ?>
     <div class="proclaim-print-btn text-end mb-2">
+        <a href="<?php echo htmlspecialchars($printUrl->toString()); ?>" onclick="window.open(this.href,'printWindow','width=800,height=600,menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes');return false;" class="btn btn-sm btn-outline-secondary" title="<?php echo Text::_('JBS_CMN_PRINT'); ?>">
+            <span class="fas fa-print" aria-hidden="true"></span> <?php echo Text::_('JBS_CMN_PRINT'); ?>
+        </a>
+    </div>
+<?php else : ?>
+    <div class="proclaim-print-btn text-end mb-2 proclaim-no-print">
         <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.print();return false;" title="<?php echo Text::_('JBS_CMN_PRINT'); ?>">
             <span class="fas fa-print" aria-hidden="true"></span> <?php echo Text::_('JBS_CMN_PRINT'); ?>
         </button>

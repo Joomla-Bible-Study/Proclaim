@@ -5,71 +5,29 @@
  * @link       https://www.christianwebministries.org
  *
  * Print stylesheet for Proclaim sermon detail view.
- * Hides interactive/non-printable elements and optimizes for paper output.
  *
- * Targets Joomla 5 Cassiopeia template structure.
+ * Works with the tmpl=component popup window approach:
+ * the Joomla template chrome (header, footer, sidebar, modules)
+ * is already stripped by tmpl=component, so this stylesheet only
+ * needs to handle Proclaim-specific elements and print optimization.
+ *
+ * Add the CSS class "proclaim-no-print" to any custom element
+ * to hide it in print output.
  */
 
 @media print {
 
     /* ==========================================================
-       1. HIDE EVERYTHING OUTSIDE MAIN CONTENT
-       Use the nuclear approach: hide all Cassiopeia grid children,
-       then re-show only the component container.
+       1. HIDE PROCLAIM NON-PRINT ELEMENTS
        ========================================================== */
 
-    /* Cassiopeia template chrome */
-    .container-header,
-    .container-nav,
-    .container-topbar,
-    .container-below-top,
-    .container-banner,
-    .container-top-a,
-    .container-top-b,
-    .container-sidebar-left,
-    .container-sidebar-right,
-    .container-bottom-a,
-    .container-bottom-b,
-    .container-footer,
-    .back-to-top-link,
-    #back-top {
-        display: none !important;
-    }
-
-    /* Generic Joomla elements that may appear */
-    header.header,
-    footer.footer,
-    .breadcrumb,
-    nav.container-nav,
-    #system-message-container {
-        display: none !important;
-    }
-
-    /* Make component container fill the page */
-    .container-component {
-        width: 100% !important;
-        max-width: 100% !important;
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-
-    /* Reset Cassiopeia grid to single column */
-    .site-grid {
-        display: block !important;
-        grid-template-columns: none !important;
-    }
-
-    /* ==========================================================
-       2. HIDE PROCLAIM NON-PRINT ELEMENTS
-       ========================================================== */
-
-    /* Print button */
+    /* Print button (in popup window) */
     .proclaim-print-btn,
     .proclaim-no-print {
         display: none !important;
     }
 
-    /* Social sharing (AddToAny) */
+    /* Social sharing (AddToAny) - CSS fallback for custom templates */
     .proclaim-share,
     .a2a_kit,
     .a2a_default_style,
@@ -78,7 +36,7 @@
         display: none !important;
     }
 
-    /* Comments section and toggle */
+    /* Comments section */
     .proclaim-comments-toggle,
     #JBScomments,
     #commentstable,
@@ -89,26 +47,6 @@
     /* Podcast subscribe */
     .podcast_subscribe,
     .proclaim-podcast-subscribe {
-        display: none !important;
-    }
-
-    /* Scripture passage: hide the toggle link/icon but show the passage */
-    .fluid-row > .col-12 > a.heading,
-    a.heading > .fas.fa-bible,
-    a.heading > i.fas.fa-bible {
-        display: none !important;
-    }
-
-    /* Force-show hidden scripture passage content for print */
-    .passage,
-    .passage div[id],
-    .fluid-row div[id][style*="display: none"],
-    div[id][style*="display: none"] {
-        display: block !important;
-    }
-
-    /* Style the scripture passage nicely for print */
-    .passage iframe {
         display: none !important;
     }
 
@@ -131,19 +69,44 @@
         display: none !important;
     }
 
-    /* YouTube play button icons in fluid listing */
+    /* YouTube thumbnails and icons */
     a[href*="youtube"] img,
     a[href*="youtu.be"] img,
     .fa-youtube {
         display: none !important;
     }
 
-    /* Joomla modules rendered in component area */
-    .moduletable,
-    .main-bottom,
-    [class*="mod_"],
-    .mod-custom {
+    /* ==========================================================
+       2. SCRIPTURE PASSAGE
+       The PHP template renders a text-only version of the
+       passage in print mode (.passage-print), so the interactive
+       toggle + iframe version is not output. These rules style
+       the print-friendly passage block.
+       ========================================================== */
+
+    /* Hide the original interactive passage elements (fallback) */
+    .fluid-row > .col-12 > a.heading,
+    a.heading > .fas.fa-bible,
+    a.heading > i.fas.fa-bible {
         display: none !important;
+    }
+
+    .passage,
+    .passage iframe {
+        display: none !important;
+    }
+
+    /* Style the print-friendly passage reference */
+    .passage-print {
+        margin: 12pt 0;
+        padding: 8pt 0;
+        border-top: 1pt solid #ccc;
+        border-bottom: 1pt solid #ccc;
+    }
+
+    .passage-print h3 {
+        font-size: 14pt;
+        margin-bottom: 4pt;
     }
 
     /* ==========================================================
@@ -258,7 +221,7 @@
         page-break-inside: avoid;
     }
 
-    /* Fluid listing rows - hide media column content */
+    /* Fluid listing rows - hide YouTube media content */
     .fluid-row img[src*="youtube"],
     .fluid-row .fa-youtube {
         display: none !important;
