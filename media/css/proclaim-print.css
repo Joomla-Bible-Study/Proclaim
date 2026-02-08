@@ -92,15 +92,24 @@
         display: none !important;
     }
 
-    /* Scripture passage toggle link and icon */
-    .passage a.heading,
-    .passage .fas.fa-bible {
+    /* Scripture passage: hide the toggle link/icon but show the passage */
+    .fluid-row > .col-12 > a.heading,
+    a.heading > .fas.fa-bible,
+    a.heading > i.fas.fa-bible {
         display: none !important;
     }
 
-    /* Show the scripture passage content if it was hidden */
-    .passage div[id][style*="display: none"] {
+    /* Force-show hidden scripture passage content for print */
+    .passage,
+    .passage div[id],
+    .fluid-row div[id][style*="display: none"],
+    div[id][style*="display: none"] {
         display: block !important;
+    }
+
+    /* Style the scripture passage nicely for print */
+    .passage iframe {
+        display: none !important;
     }
 
     /* Navigation elements */
@@ -131,6 +140,7 @@
 
     /* Joomla modules rendered in component area */
     .moduletable,
+    .main-bottom,
     [class*="mod_"],
     .mod-custom {
         display: none !important;
