@@ -418,16 +418,12 @@ p.popupfooter {
 }
 
 /* JBSM Layout */
-.JBSM [class*="span"] {
-  margin-left: 0;
-  display: inline-table;
-}
 #jbsmspan-image {
   padding-right: 20px;
 }
 .jbsmimg {
-  width: 200px;
-  height: 113px;
+  max-width: 200px;
+  height: auto;
 }
 .jbsmimg img {
   border: none;
@@ -468,8 +464,8 @@ div.JBSM .img-rounded {
 .effects .jbsmimg-wrapper {
   position: relative;
   overflow: hidden;
-  width: 200px;
-  height: 113px;
+  max-width: 200px;
+  height: auto;
 }
 .effects .jbsmimg-title {
   display: block;
@@ -739,3 +735,182 @@ a:not([class]) {
 }
 
 /* .proclaim-archived class is added to archived message rows for custom styling */
+
+/* ==========================================================================
+   Mobile Responsive Breakpoints
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  /* Fix white-space: nowrap for text wrapping on mobile */
+  #bsm_teachertable .bsm_teachername,
+  .bsms_media_contaner .date,
+  .bsms_media_contaner .scripture1,
+  .bsms_media_contaner .scripture2,
+  .bsms_media_contaner .series_text,
+  .bsms_media_contaner .duration,
+  .bsms_media_contaner .teacher,
+  .bsms_media_contaner .location_text,
+  .bsms_media_contaner .topic_text,
+  .bsms_media_contaner .message_type,
+  .bsms_media_contaner .jbsmedia,
+  .bsms_media_contaner .store,
+  .bsms_media_contaner .details-text,
+  .bsms_media_contaner .details-pdf,
+  .bsms_media_contaner .details-text-pdf,
+  .bsms_media_contaner .secondary_reference,
+  .bsms_media_contaner .teacher-title-name,
+  .bsms_media_contaner .submitted,
+  .bsms_media_contaner .hits,
+  .bsms_media_contaner .studynumber,
+  .bsms_media_contaner .filesize,
+  .bsms_media_contaner .custom,
+  .bsms_media_contaner .thumbnail,
+  #bsmsmoduletable .date,
+  #bsmsmoduletable .scripture1,
+  #bsmsmoduletable .scripture2,
+  #bsmsmoduletable .series_text,
+  #bsmsmoduletable .duration,
+  #bsmsmoduletable .teacher,
+  #bsmsmoduletable .location_text,
+  #bsmsmoduletable .topic_text,
+  #bsmsmoduletable .message_type,
+  #bsmsmoduletable .jbsmedia,
+  #bsmsmoduletable .store,
+  #bsmsmoduletable .details-text,
+  #bsmsmoduletable .details-pdf,
+  #bsmsmoduletable .details-text-pdf,
+  #bsmsmoduletable .secondary_reference,
+  #bsmsmoduletable .teacher-title-name,
+  #bsmsmoduletable .submitted,
+  #bsmsmoduletable .hits,
+  #bsmsmoduletable .studynumber,
+  #bsmsmoduletable .filesize,
+  #bsmsmoduletable .custom,
+  #bsmsmoduletable .thumbnail {
+    white-space: normal;
+  }
+
+  /* Landing page table - stack columns on mobile */
+  #landing_td {
+    width: 100%;
+    display: block;
+  }
+
+  /* Teacher table - make responsive */
+  #bsm_teachertable {
+    display: block;
+    width: 100%;
+  }
+
+  #bsm_teachertable thead,
+  #bsm_teachertable tbody,
+  #bsm_teachertable tr,
+  #bsm_teachertable th,
+  #bsm_teachertable td {
+    display: block;
+    width: 100%;
+  }
+
+  #bsm_teachertable tr {
+    margin-bottom: 1rem;
+    border: 1px solid var(--color-gray-light);
+    border-radius: 4px;
+    padding: 0.5rem;
+  }
+
+  #bsm_teachertable td {
+    text-align: left;
+    padding: 0.25rem 0.5rem;
+    border: none;
+  }
+
+  /* Media container - card layout on mobile */
+  .bsms_media_contaner,
+  #bsmsmoduletable {
+    display: block;
+    width: 100%;
+  }
+
+  .bsms_media_contaner thead,
+  .bsms_media_contaner tbody,
+  .bsms_media_contaner tr,
+  .bsms_media_contaner th,
+  .bsms_media_contaner td,
+  #bsmsmoduletable thead,
+  #bsmsmoduletable tbody,
+  #bsmsmoduletable tr,
+  #bsmsmoduletable th,
+  #bsmsmoduletable td {
+    display: block;
+    width: 100%;
+  }
+
+  .bsms_media_contaner tr,
+  #bsmsmoduletable tr {
+    margin-bottom: 1rem;
+    border: 1px solid var(--color-gray-border);
+    border-radius: 4px;
+    padding: 0.5rem;
+  }
+
+  .bsms_media_contaner td,
+  #bsmsmoduletable td {
+    text-align: left;
+    padding: 0.25rem 0.5rem;
+    border: none;
+  }
+
+  /* Hide non-essential columns on mobile */
+  .bsms_media_contaner .filesize,
+  .bsms_media_contaner .custom,
+  #bsmsmoduletable .filesize,
+  #bsmsmoduletable .custom {
+    display: none;
+  }
+
+  /* List table - responsive */
+  .bslisttable {
+    display: block;
+    width: 100%;
+  }
+
+  .bslisttable thead,
+  .bslisttable tbody,
+  .bslisttable tr,
+  .bslisttable th,
+  .bslisttable td {
+    display: block;
+    width: 100%;
+  }
+
+  .bslisttable tr {
+    margin-bottom: 1rem;
+    border: 1px solid var(--color-gray-border);
+    border-radius: 4px;
+    padding: 0.5rem;
+  }
+
+  .bslisttable td,
+  .bslisttable th {
+    text-align: left;
+    padding: 0.25rem 0.5rem;
+    border: none;
+  }
+
+  /* Landing table - stack cells */
+  .landingtable {
+    display: block;
+    width: 100%;
+  }
+
+  .landingrow {
+    display: block;
+    width: 100%;
+  }
+
+  .landingcell {
+    display: block;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+}

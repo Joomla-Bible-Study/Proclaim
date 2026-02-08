@@ -23,13 +23,13 @@ $wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
 ?>
 
 
-<div class="row col-lg-12">
+<div class="row">
     <h2>
         Bible Studies
     </h2>
 </div>
 
-<div class="row col-lg-12"><p>
+<div class="row"><p>
 
         <?php
         echo $this->params->get('list_intro'); ?> </p></div>
@@ -38,26 +38,26 @@ $wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
 <?php
 foreach ($this->items as $study) {
     ?>
-    <div class="row col-lg-12">
-        <div class="col-lg-3">
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-3">
 
             <strong> <?php
                 echo $study->scripture1; ?></strong>
         </div>
-        <div class="col-lg-4">
+        <div class="col-12 col-md-6 col-lg-4">
             <a href="<?php
             echo $study->detailslink; ?>"><strong><?php
                     echo $study->studytitle; ?></strong></a>
         </div>
-        <div class="col-lg-4">
+        <div class="col-12 col-lg-4">
             <?php
             echo $study->media; ?>
         </div>
-        <div class="col-lg-12" style="margin-left: -2px;">
+        <div class="col-12">
             <p><?php
                 echo $study->studyintro; ?></p>
         </div>
-        <hr class="col-lg-12 sermon-list-separator"/>
+        <hr class="col-12 sermon-list-separator"/>
     </div>
     <?php
 } ?>
