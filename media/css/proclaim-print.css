@@ -1,0 +1,172 @@
+/**
+ * @package    Proclaim.Media
+ * @copyright  (C) 2026 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @link       https://www.christianwebministries.org
+ *
+ * Print stylesheet for Proclaim sermon detail view.
+ * Hides interactive/non-printable elements and optimizes for paper output.
+ */
+
+@media print {
+    /* ===== Hide non-printable elements ===== */
+
+    /* Print button itself */
+    .proclaim-print-btn,
+    .proclaim-no-print {
+        display: none !important;
+    }
+
+    /* Social sharing */
+    .proclaim-social-share,
+    .share_links,
+    .jbssociallinks {
+        display: none !important;
+    }
+
+    /* Comments section */
+    .proclaim-comments-toggle,
+    #JBScomments {
+        display: none !important;
+    }
+
+    /* Podcast subscribe */
+    .podcast_subscribe,
+    .proclaim-podcast-subscribe {
+        display: none !important;
+    }
+
+    /* Navigation elements */
+    .proclaim-skip-link,
+    .listingfooter,
+    .proclaim-footer-link {
+        display: none !important;
+    }
+
+    /* Media players — hide interactive players, keep static info */
+    .proclaim-media-player,
+    .cwm-fancybox,
+    .fancybox-container,
+    iframe,
+    video,
+    audio,
+    .media-download-btn {
+        display: none !important;
+    }
+
+    /* Joomla chrome */
+    header,
+    footer,
+    nav,
+    .navbar,
+    .sidebar,
+    #system-message-container,
+    .back-to-top,
+    .breadcrumb {
+        display: none !important;
+    }
+
+    /* ===== Print-optimized typography ===== */
+
+    body {
+        font-size: 12pt;
+        line-height: 1.5;
+        color: #000 !important;
+        background: #fff !important;
+    }
+
+    .proclaim-main-content {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    h1, .page-header h1 {
+        font-size: 18pt;
+        color: #000 !important;
+        border-bottom: 1pt solid #ccc;
+        padding-bottom: 6pt;
+        margin-bottom: 12pt;
+    }
+
+    h2, h3, h4 {
+        color: #000 !important;
+        page-break-after: avoid;
+    }
+
+    /* Scripture references */
+    .article-info,
+    .article-info dd {
+        color: #333 !important;
+    }
+
+    /* Archive badge — show in print but as plain text */
+    .proclaim-archive-badge {
+        border: 1pt solid #999;
+        color: #666 !important;
+        background: none !important;
+        padding: 1pt 4pt;
+        font-size: 9pt;
+    }
+
+    /* Study text / main content */
+    .com-content-article__body,
+    [itemprop="articleBody"] {
+        font-size: 12pt;
+        line-height: 1.6;
+    }
+
+    /* ===== Page break control ===== */
+
+    .page-header {
+        page-break-after: avoid;
+    }
+
+    p, li, dd {
+        orphans: 3;
+        widows: 3;
+    }
+
+    /* ===== Links — show URL in print ===== */
+
+    a[href]::after {
+        content: " (" attr(href) ")";
+        font-size: 9pt;
+        color: #666;
+        word-break: break-all;
+    }
+
+    /* Don't show URL for internal anchors or javascript links */
+    a[href^="#"]::after,
+    a[href^="javascript:"]::after,
+    .page-header a::after {
+        content: "";
+    }
+
+    /* ===== Images ===== */
+
+    img {
+        max-width: 100% !important;
+        page-break-inside: avoid;
+    }
+
+    /* ===== Tables ===== */
+
+    table {
+        border-collapse: collapse;
+    }
+
+    table, th, td {
+        border: 1pt solid #ccc;
+    }
+
+    th, td {
+        padding: 4pt 8pt;
+    }
+
+    /* ===== Fluid listing (layout editor output) ===== */
+
+    .proclaim-listing-row {
+        page-break-inside: avoid;
+    }
+}

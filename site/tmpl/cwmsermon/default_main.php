@@ -27,13 +27,14 @@ $canEdit = $params->get('access-edit');
 
 $this->loadHelper('title');
 $this->loadHelper('teacher');
-$row = $this->item;
+$row     = $this->item;
+$isPrint = !empty($this->print);
 ?>
 
 <?php
-if ($this->item->params->get('showpodcastsubscribedetails') === '1') {
+if (!$isPrint && $this->item->params->get('showpodcastsubscribedetails') === '1') {
     ?>
-    <div class="row">
+    <div class="row proclaim-podcast-subscribe">
         <div class="col-lg-12">
             <?php
             echo $this->subscribe; ?>
@@ -80,9 +81,7 @@ if ($this->item->params->get('showrelated') === '1') {
 
 <?php
 // Social Networking begins here
-if ($this->item->params->get('socialnetworking') > 0) {
-    ?>
-    <?php
+if (!$isPrint && $this->item->params->get('socialnetworking') > 0) {
     echo $this->page->social;
 }
 // End Social Networking

@@ -21,9 +21,18 @@ declare(strict_types=1);
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 
+$isPrint = !empty($this->print);
 ?>
 <a href="#proclaim-main-content" class="proclaim-skip-link"><?php echo Text::_('JBS_CMN_SKIP_TO_CONTENT'); ?></a>
-<div class="container-fluid proclaim-main-content" id="proclaim-main-content" role="main"><?php
+<div class="container-fluid proclaim-main-content" id="proclaim-main-content" role="main">
+<?php if (!$isPrint) : ?>
+    <div class="proclaim-print-btn text-end mb-2">
+        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.print();return false;" title="<?php echo Text::_('JBS_CMN_PRINT'); ?>">
+            <span class="icon-print" aria-hidden="true"></span> <?php echo Text::_('JBS_CMN_PRINT'); ?>
+        </button>
+    </div>
+<?php endif; ?>
+<?php
 
 if ($this->item->params->get('sermontemplate') && !$this->simple->mode) {
     echo $this->loadTemplate($this->item->params->get('sermontemplate'));
@@ -33,19 +42,21 @@ if ($this->item->params->get('sermontemplate') && !$this->simple->mode) {
     echo '<div>' . $this->loadTemplate('main') . '</div>';
 }
 
-$show_comments = $this->item->params->get('show_comments');
+if (!$isPrint) {
+    $show_comments = $this->item->params->get('show_comments');
 
-if ($show_comments >= 1) {
-    $user   = Factory::getApplication()->getIdentity();
-    $groups = $user->getAuthorisedViewLevels();
+    if ($show_comments >= 1) {
+        $user   = Factory::getApplication()->getIdentity();
+        $groups = $user->getAuthorisedViewLevels();
 
-    if (\in_array($show_comments, $groups, false)) {
-        echo '<div style="padding-top: 10px; margin: auto;">' . $this->loadTemplate('commentsform') . '</div>';
+        if (\in_array($show_comments, $groups, false)) {
+            echo '<div style="padding-top: 10px; margin: auto;">' . $this->loadTemplate('commentsform') . '</div>';
+        }
     }
-}
 
-echo $this->loadTemplate('footer');
-echo $this->loadTemplate('footerlink');
+    echo $this->loadTemplate('footer');
+    echo $this->loadTemplate('footerlink');
+}
 
 ?>
 </div><!--end of container fluid-->
