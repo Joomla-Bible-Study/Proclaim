@@ -28,7 +28,7 @@ $isPrint = !empty($this->print);
 <?php if (!$isPrint) : ?>
     <div class="proclaim-print-btn text-end mb-2">
         <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.print();return false;" title="<?php echo Text::_('JBS_CMN_PRINT'); ?>">
-            <span class="icon-print" aria-hidden="true"></span> <?php echo Text::_('JBS_CMN_PRINT'); ?>
+            <span class="fas fa-print" aria-hidden="true"></span> <?php echo Text::_('JBS_CMN_PRINT'); ?>
         </button>
     </div>
 <?php endif; ?>

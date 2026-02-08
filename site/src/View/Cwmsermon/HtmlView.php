@@ -487,8 +487,7 @@ class HtmlView extends BaseHtmlView
         $this->print = $app->getInput()->getString('print', '');
 
         // Load print stylesheet
-        $wa = $this->getDocument()->getWebAssetManager();
-        $wa->registerAndUseStyle('com_proclaim.print', 'media/css/proclaim-print.css');
+        HTMLHelper::_('stylesheet', 'media/css/proclaim-print.css');
 
         $this->prepareDocument();
 
