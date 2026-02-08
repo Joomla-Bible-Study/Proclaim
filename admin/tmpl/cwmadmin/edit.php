@@ -675,40 +675,9 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                     <div class="card-body">
                         <p class="text-muted"><?php echo Text::_('JBS_ADM_SCRIPTURE_PROVIDERS_DESC'); ?></p>
 
-                        <div class="mb-4">
-                            <div class="d-flex align-items-center gap-2 flex-wrap">
-                                <div class="flex-grow-1">
-                                    <?php echo $this->form->renderField('provider_local', 'params'); ?>
-                                </div>
-                                <span class="badge bg-info" id="local-provider-status">
-                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <div class="d-flex align-items-center gap-2 flex-wrap">
-                                <div class="flex-grow-1">
-                                    <?php echo $this->form->renderField('provider_getbible', 'params'); ?>
-                                </div>
-                                <span class="badge bg-success">
-                                    <i class="icon-checkmark-circle" aria-hidden="true"></i>
-                                    <?php echo Text::_('JBS_ADM_PROVIDER_STATUS_READY'); ?>
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <div class="d-flex align-items-center gap-2 flex-wrap">
-                                <div class="flex-grow-1">
-                                    <?php echo $this->form->renderField('provider_biblegateway', 'params'); ?>
-                                </div>
-                                <span class="badge bg-secondary">
-                                    <i class="icon-info-circle" aria-hidden="true"></i>
-                                    <?php echo Text::_('JBS_ADM_PROVIDER_STATUS_IFRAME'); ?>
-                                </span>
-                            </div>
-                        </div>
+                        <?php echo $this->form->renderField('provider_local', 'params'); ?>
+                        <?php echo $this->form->renderField('provider_getbible', 'params'); ?>
+                        <?php echo $this->form->renderField('provider_biblegateway', 'params'); ?>
                     </div>
                 </div>
             </div>
@@ -753,7 +722,43 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
             var token = '<?php echo Session::getFormToken(); ?>';
             var baseUrl = 'index.php?option=com_proclaim&task=cwmadmin.';
 
-            // Load local provider translation count
+            // Helper: inject a badge inline with a provider switcher field
+            function injectBadge(fieldId, badgeHtml) {
+                var field = document.getElementById(fieldId);
+                if (!field) { return; }
+                // Walk up to the .controls div that wraps the switcher
+                var controls = field.closest('.controls') || field.closest('fieldset')?.parentElement;
+                if (!controls) { return; }
+                controls.style.display = 'flex';
+                controls.style.alignItems = 'center';
+                controls.style.gap = '0.75rem';
+                var badge = document.createElement('span');
+                badge.innerHTML = badgeHtml;
+                controls.appendChild(badge.firstElementChild || badge);
+            }
+
+            // Static badges for getbible and biblegateway
+            injectBadge('params_provider_getbible0',
+                '<span class="badge bg-success"><i class="icon-checkmark-circle" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_PROVIDER_STATUS_READY'); ?></span>');
+            injectBadge('params_provider_biblegateway0',
+                '<span class="badge bg-secondary"><i class="icon-info-circle" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_PROVIDER_STATUS_IFRAME'); ?></span>');
+
+            // Dynamic badge for local provider (load count via AJAX)
+            var localBadge = document.createElement('span');
+            localBadge.id = 'local-provider-status';
+            localBadge.className = 'badge bg-info';
+            localBadge.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+            var localField = document.getElementById('params_provider_local0');
+            if (localField) {
+                var localControls = localField.closest('.controls') || localField.closest('fieldset')?.parentElement;
+                if (localControls) {
+                    localControls.style.display = 'flex';
+                    localControls.style.alignItems = 'center';
+                    localControls.style.gap = '0.75rem';
+                    localControls.appendChild(localBadge);
+                }
+            }
+
             fetch(baseUrl + 'getScriptureStatusXHR&' + token + '=1')
                 .then(function(response) { return response.json(); })
                 .then(function(data) {
