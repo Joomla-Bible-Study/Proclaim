@@ -11,8 +11,10 @@
 
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseModel;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -60,5 +62,25 @@ class CwmteacherController extends FormController
         );
 
         return parent::batch($this->getModel());
+    }
+
+    /**
+     * Method to run after a successful save.
+     *
+     * @param   BaseDatabaseModel  $model      The model.
+     * @param   array              $validData  The validated data.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    protected function postSaveHook(BaseDatabaseModel $model, $validData = []): void
+    {
+        $id    = (int) $model->getState('cwmteacher.id');
+        $isNew = empty($validData['id']);
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_TEACHER_ADDED' : 'COM_PROCLAIM_ACTION_LOG_TEACHER_UPDATED';
+        $title = trim(($validData['teachername'] ?? '') . ' ' . ($validData['title'] ?? ''));
+
+        CwmactionlogHelper::log($key, $title, 'teacher', $id);
     }
 }

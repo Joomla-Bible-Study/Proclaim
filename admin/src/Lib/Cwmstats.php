@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -31,6 +32,14 @@ use Joomla\Registry\Registry;
  */
 class Cwmstats
 {
+    /**
+     * Static cache for query results within the same request.
+     *
+     * @var array<string, mixed>
+     * @since 10.1.0
+     */
+    private static array $cache = [];
+
     /** @var int used to store the query of messages
      *
      * @since 9.0.0
@@ -84,6 +93,11 @@ class Cwmstats
      */
     public static function getTotalMessages(string $start = '', string $end = ''): int
     {
+        // Delegate to CwmcountHelper for simple published count (no date filtering)
+        if (empty($start) && empty($end)) {
+            return CwmcountHelper::getCountByState('#__bsms_studies', 1);
+        }
+
         if ($start !== self::$total_messages_start || $end !== self::$total_messages_end || !self::$total_messages) {
             self::$total_messages_start = $start;
             self::$total_messages_end   = $end;
@@ -122,6 +136,12 @@ class Cwmstats
      */
     public static function getTotalTopics(string $start = '', string $end = ''): int
     {
+        $key = 'totalTopics:' . $start . ':' . $end;
+
+        if (isset(self::$cache[$key])) {
+            return self::$cache[$key];
+        }
+
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query
@@ -141,7 +161,9 @@ class Cwmstats
 
         $db->setQuery($query);
 
-        return (int) $db->loadResult();
+        self::$cache[$key] = (int) $db->loadResult();
+
+        return self::$cache[$key];
     }
 
     /**
@@ -153,6 +175,10 @@ class Cwmstats
      */
     public static function getTopStudies(): string
     {
+        if (isset(self::$cache['topStudies'])) {
+            return self::$cache['topStudies'];
+        }
+
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query
@@ -171,6 +197,8 @@ class Cwmstats
                 htmlspecialchars($result->studytitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
         }
 
+        self::$cache['topStudies'] = $top_studies;
+
         return $top_studies;
     }
 
@@ -183,15 +211,7 @@ class Cwmstats
      */
     public static function getTotalComments(): int
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query
-            ->select('COUNT(*)')
-            ->from($db->quoteName('#__bsms_comments'))
-            ->where($db->quoteName('published') . ' = 1');
-        $db->setQuery($query);
-
-        return (int) $db->loadResult();
+        return CwmcountHelper::getCountByState('#__bsms_comments', 1);
     }
 
     /**
@@ -203,6 +223,10 @@ class Cwmstats
      */
     public static function getTopThirtyDays(): string
     {
+        if (isset(self::$cache['topThirtyDays'])) {
+            return self::$cache['topThirtyDays'];
+        }
+
         $month      = mktime(0, 0, 0, (int) date("m") - 1, (int) date("d"), (int) date("Y"));
         $last_month = date("Y-m-d 00:00:01", $month);
         $db         = Factory::getContainer()->get('DatabaseDriver');
@@ -228,6 +252,8 @@ class Cwmstats
             }
         }
 
+        self::$cache['topThirtyDays'] = $top_studies;
+
         return $top_studies;
     }
 
@@ -240,15 +266,7 @@ class Cwmstats
      */
     public static function getTotalMediaFiles(): int
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query
-            ->select('COUNT(*)')
-            ->from($db->quoteName('#__bsms_mediafiles'))
-            ->where($db->quoteName('published') . ' = 1');
-        $db->setQuery($query);
-
-        return (int) $db->loadResult();
+        return CwmcountHelper::getCountByState('#__bsms_mediafiles', 1);
     }
 
     /**
@@ -260,6 +278,10 @@ class Cwmstats
      */
     public static function getTopDownloads(): string
     {
+        if (isset(self::$cache['topDownloads'])) {
+            return self::$cache['topDownloads'];
+        }
+
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query
@@ -284,6 +306,8 @@ class Cwmstats
                 '<br>';
         }
 
+        self::$cache['topDownloads'] = $top_studies;
+
         return $top_studies;
     }
 
@@ -296,6 +320,10 @@ class Cwmstats
      */
     public static function getDownloadsLastThreeMonths(): string
     {
+        if (isset(self::$cache['downloadsLast3Months'])) {
+            return self::$cache['downloadsLast3Months'];
+        }
+
         $month     = mktime(0, 0, 0, (int) date("m") - 3, (int) date("d"), (int) date("Y"));
         $lastmonth = date("Y-m-d 00:00:01", $month);
         $db        = Factory::getContainer()->get('DatabaseDriver');
@@ -326,6 +354,8 @@ class Cwmstats
             }
         }
 
+        self::$cache['downloadsLast3Months'] = $top_studies;
+
         return $top_studies;
     }
 
@@ -338,6 +368,10 @@ class Cwmstats
      */
     public static function getTotalDownloads(): int
     {
+        if (isset(self::$cache['totalDownloads'])) {
+            return self::$cache['totalDownloads'];
+        }
+
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query
@@ -347,7 +381,9 @@ class Cwmstats
             ->where($db->quoteName('downloads') . ' > 0');
         $db->setQuery($query);
 
-        return (int) $db->loadResult();
+        self::$cache['totalDownloads'] = (int) $db->loadResult();
+
+        return self::$cache['totalDownloads'];
     }
 
     /**
@@ -362,6 +398,10 @@ class Cwmstats
      */
     public static function getTopScore(): string
     {
+        if (isset(self::$cache['topScore'])) {
+            return self::$cache['topScore'];
+        }
+
         $admin  = Cwmparams::getAdmin();
         $format = (int) $admin->params->get('format_popular', 0);
         $db     = Factory::getContainer()->get('DatabaseDriver');
@@ -400,6 +440,8 @@ class Cwmstats
         foreach ($final as $item) {
             $top_score_table .= (string) $item['total'] . ' ' . $item['link'];
         }
+
+        self::$cache['topScore'] = $top_score_table;
 
         return $top_score_table;
     }
@@ -633,6 +675,10 @@ class Cwmstats
      */
     public static function getPodcastTaskState(): string
     {
+        if (isset(self::$cache['podcastTaskState'])) {
+            return self::$cache['podcastTaskState'];
+        }
+
         $states = new \stdClass();
 
         $db    = Factory::getContainer()->get('DatabaseDriver');
@@ -681,6 +727,8 @@ class Cwmstats
 
         $return .= '</a>';
         $return .= '</div>';
+
+        self::$cache['podcastTaskState'] = $return;
 
         return $return;
     }

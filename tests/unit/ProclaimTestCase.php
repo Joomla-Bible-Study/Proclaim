@@ -174,6 +174,47 @@ abstract class ProclaimTestCase extends TestCase
     }
 
     /**
+     * Assert method return type name, skipping if no return type is declared.
+     *
+     * Many Joomla base class methods do not declare return types. When our code
+     * inherits without redeclaring, getReturnType() returns null. This helper
+     * checks the type only when one is declared.
+     *
+     * @param   string             $expected    Expected type name
+     * @param   \ReflectionMethod  $method      Reflected method
+     *
+     * @return void
+     */
+    protected function assertReturnTypeName(string $expected, \ReflectionMethod $method): void
+    {
+        $type = $method->getReturnType();
+
+        if ($type !== null) {
+            $this->assertEquals($expected, $type->getName());
+        }
+    }
+
+    /**
+     * Assert parameter type name, skipping if no type is declared.
+     *
+     * Many Joomla base class method parameters are untyped. This helper checks
+     * the type only when one is declared.
+     *
+     * @param   string                $expected  Expected type name
+     * @param   \ReflectionParameter  $param     Reflected parameter
+     *
+     * @return void
+     */
+    protected function assertParamTypeName(string $expected, \ReflectionParameter $param): void
+    {
+        $type = $param->getType();
+
+        if ($type !== null) {
+            $this->assertEquals($expected, $type->getName());
+        }
+    }
+
+    /**
      * Create a temporary file for testing
      *
      * @param string $content File content

@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -443,5 +444,17 @@ class CwmtemplatesController extends AdminController
     public function getModel($name = 'Cwmtemplate', $prefix = 'Administrator', $config = ['ignore_request' => true]): BaseDatabaseModel
     {
         return parent::getModel($name, $prefix, $config);
+    }
+
+    /**
+     * Method to get the JSON-encoded counts for Templates
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public function getQuickIconTemplates(): void
+    {
+        CwmcountHelper::sendQuickIconResponse('#__bsms_templates', 'COM_PROCLAIM_N_QUICKICON_TEMPLATES');
     }
 }

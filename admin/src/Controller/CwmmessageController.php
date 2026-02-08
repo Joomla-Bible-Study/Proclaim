@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
@@ -192,6 +193,26 @@ class CwmmessageController extends FormController
         }
 
         return parent::save($key, $urlVar);
+    }
+
+    /**
+     * Method to run after a successful save.
+     *
+     * @param   BaseDatabaseModel  $model      The model.
+     * @param   array              $validData  The validated data.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    protected function postSaveHook(BaseDatabaseModel $model, $validData = []): void
+    {
+        $id    = (int) $model->getState('cwmmessage.id');
+        $isNew = (bool) $validData['id'] === 0 || empty($validData['id']);
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_MESSAGE_ADDED' : 'COM_PROCLAIM_ACTION_LOG_MESSAGE_UPDATED';
+        $title = $validData['studytitle'] ?? '';
+
+        CwmactionlogHelper::log($key, $title, 'message', $id);
     }
 
     /**

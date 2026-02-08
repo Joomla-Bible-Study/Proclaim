@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
@@ -40,5 +41,17 @@ class CwmcommentsController extends AdminController
     public function getModel($name = 'Cwmcomment', $prefix = 'Administrator', $config = ['ignore_request' => true]): BaseDatabaseModel
     {
         return parent::getModel($name, $prefix, $config);
+    }
+
+    /**
+     * Method to get the JSON-encoded counts for Comments
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public function getQuickIconComments(): void
+    {
+        CwmcountHelper::sendQuickIconResponse('#__bsms_comments', 'COM_PROCLAIM_N_QUICKICON_COMMENTS');
     }
 }

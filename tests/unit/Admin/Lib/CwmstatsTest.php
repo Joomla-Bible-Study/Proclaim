@@ -69,7 +69,7 @@ class CwmstatsTest extends ProclaimTestCase
 
         $this->assertTrue($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('int', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('int', $reflection);
     }
 
     /**
@@ -93,7 +93,7 @@ class CwmstatsTest extends ProclaimTestCase
 
         $this->assertTrue($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('int', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('int', $reflection);
     }
 
     /**

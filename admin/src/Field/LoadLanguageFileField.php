@@ -17,7 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 // Always load Proclaim API if it exists.
 $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
-if (!\defined('CWM_LOADED')) {
+if (!\defined('CWM_LOADED') && file_exists($api)) {
     require_once $api;
 }
 // phpcs:enable PSR1.Files.SideEffects

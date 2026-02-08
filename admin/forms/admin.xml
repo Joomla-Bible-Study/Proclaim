@@ -240,6 +240,23 @@
         </field>
         <field name="uploadpath" type="text" default="/images/biblestudy/media/" label="JBS_ADM_UPLOAD_PATH"
                description="JBS_ADM_UPLOAD_PATH_DESC"/>
+        <field name="rate_limit_max" type="number" default="10" min="0" max="100"
+               label="JBS_ADM_RATE_LIMIT_MAX"
+               description="JBS_ADM_RATE_LIMIT_MAX_DESC" filter="int"/>
+        <field name="rate_limit_window" type="number" default="60" min="10" max="600"
+               label="JBS_ADM_RATE_LIMIT_WINDOW"
+               description="JBS_ADM_RATE_LIMIT_WINDOW_DESC" filter="int"/>
+        <field name="enable_csp" type="radio" default="0"
+               label="JBS_ADM_ENABLE_CSP"
+               description="JBS_ADM_ENABLE_CSP_DESC"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="csp_extra_sources" type="textarea" default=""
+               label="JBS_ADM_CSP_EXTRA_SOURCES"
+               description="JBS_ADM_CSP_EXTRA_SOURCES_DESC"
+               rows="3" cols="60" filter="string"/>
     </fields>
     <fieldset>
         <field name="drop_tables" type="radio" default="0"

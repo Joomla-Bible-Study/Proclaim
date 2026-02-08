@@ -1979,7 +1979,7 @@ class Cwmlisting
      * @throws \Exception
      * @since 9.0.0
      */
-    public function getFluidMediaFiles(object $item, Registry $params, $template): string
+    public function getFluidMediaFiles(object $item, Registry $params, \stdClass $template): string
     {
         $med = new Cwmmedia();
 

@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
@@ -74,5 +75,17 @@ class CwmlocationsController extends AdminController
     public function getModel($name = 'Cwmlocation', $prefix = 'Administrator', $config = ['ignore_request' => true]): BaseDatabaseModel
     {
         return parent::getModel($name, $prefix, $config);
+    }
+
+    /**
+     * Method to get the JSON-encoded counts for Locations
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public function getQuickIconLocations(): void
+    {
+        CwmcountHelper::sendQuickIconResponse('#__bsms_locations', 'COM_PROCLAIM_N_QUICKICON_LOCATIONS');
     }
 }

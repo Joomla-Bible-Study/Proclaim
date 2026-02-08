@@ -55,25 +55,23 @@ class CwmassetsController extends BaseController
      *
      * @param   string  $task  The task to execute.
      *
-     * @return void
+     * @return mixed
      *
      * @throws \Exception
      * @since 7.0.0
      */
-    public function execute($task): void
+    public function execute($task): mixed
     {
         // Allow XHR tasks through without redirect
         if (str_ends_with($task, 'XHR')) {
-            parent::execute($task);
-
-            return;
+            return parent::execute($task);
         }
 
         if ($task !== 'checkassets' && $task !== 'clear') {
             $task = 'checkassets';
         }
 
-        parent::execute($task);
+        return parent::execute($task);
     }
 
     /**

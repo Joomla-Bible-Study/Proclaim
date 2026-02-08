@@ -12,10 +12,12 @@
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use CWM\Component\Proclaim\Administrator\Model\CwmserverModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 
@@ -171,5 +173,25 @@ class CwmserverController extends FormController
         );
 
         return parent::batch($this->getModel());
+    }
+
+    /**
+     * Method to run after a successful save.
+     *
+     * @param   BaseDatabaseModel  $model      The model.
+     * @param   array              $validData  The validated data.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    protected function postSaveHook(BaseDatabaseModel $model, $validData = []): void
+    {
+        $id    = (int) $model->getState('cwmserver.id');
+        $isNew = empty($validData['id']);
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_SERVER_ADDED' : 'COM_PROCLAIM_ACTION_LOG_SERVER_UPDATED';
+        $title = $validData['server_name'] ?? '';
+
+        CwmactionlogHelper::log($key, $title, 'server', $id);
     }
 }

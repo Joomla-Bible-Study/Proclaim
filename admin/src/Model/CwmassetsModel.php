@@ -81,6 +81,11 @@ class CwmassetsModel extends ListModel
      */
     private string $versionSwitch = '';
 
+    /** @var string Model name
+     * @since 7.0
+     */
+    protected string $name = '';
+
     /**
      * Constructor.
      *

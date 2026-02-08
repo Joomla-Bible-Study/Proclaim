@@ -35,6 +35,14 @@ use Joomla\Database\QueryInterface;
 class CwmseriesdisplaysModel extends ListModel
 {
     /**
+     * Instance cache for filter dropdown queries within the same request.
+     *
+     * @var array<string, array>
+     * @since 10.1.0
+     */
+    private array $filterCache = [];
+
+    /**
      * Constructor.
      *
      * @param   array  $config  An optional associative array of configuration settings.
@@ -72,8 +80,6 @@ class CwmseriesdisplaysModel extends ListModel
             ];
         }
 
-        $this->input = Factory::getApplication();
-
         parent::__construct($config);
     }
 
@@ -87,6 +93,10 @@ class CwmseriesdisplaysModel extends ListModel
      */
     public function getTeachers(): array
     {
+        if (isset($this->filterCache['teachers'])) {
+            return $this->filterCache['teachers'];
+        }
+
         $db    = $this->getDatabase();
         $query = $db->getQuery(true);
         $query->select($db->quoteName(['t.id', 't.teachername'], ['value', 'text']));
@@ -98,7 +108,9 @@ class CwmseriesdisplaysModel extends ListModel
 
         $db->setQuery($query);
 
-        return $db->loadObjectList();
+        $this->filterCache['teachers'] = $db->loadObjectList();
+
+        return $this->filterCache['teachers'];
     }
 
     /**
@@ -109,6 +121,10 @@ class CwmseriesdisplaysModel extends ListModel
      */
     public function getYears(): array
     {
+        if (isset($this->filterCache['years'])) {
+            return $this->filterCache['years'];
+        }
+
         $db    = $this->getDatabase();
         $query = $db->getQuery(true);
         $query->select('DISTINCT YEAR(' . $db->quoteName('s.studydate') . ') as value');
@@ -120,7 +136,9 @@ class CwmseriesdisplaysModel extends ListModel
 
         $db->setQuery($query);
 
-        return $db->loadObjectList();
+        $this->filterCache['years'] = $db->loadObjectList();
+
+        return $this->filterCache['years'];
     }
 
     /**
@@ -132,6 +150,10 @@ class CwmseriesdisplaysModel extends ListModel
      */
     public function getSeries(): array
     {
+        if (isset($this->filterCache['series'])) {
+            return $this->filterCache['series'];
+        }
+
         $db    = $this->getDatabase();
         $query = $db->getQuery(true);
 
@@ -159,7 +181,9 @@ class CwmseriesdisplaysModel extends ListModel
             }
         }
 
-        return $items;
+        $this->filterCache['series'] = $items;
+
+        return $this->filterCache['series'];
     }
 
     /**

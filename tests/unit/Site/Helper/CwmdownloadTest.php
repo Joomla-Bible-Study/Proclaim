@@ -68,7 +68,7 @@ class CwmdownloadTest extends ProclaimTestCase
         $reflection = new \ReflectionMethod(Cwmdownload::class, 'download');
 
         $this->assertTrue($reflection->isPublic());
-        $this->assertEquals('void', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('void', $reflection);
 
         $params = $reflection->getParameters();
         $this->assertGreaterThanOrEqual(1, \count($params));
@@ -95,7 +95,7 @@ class CwmdownloadTest extends ProclaimTestCase
         $reflection = new \ReflectionMethod(Cwmdownload::class, 'hitDownloads');
 
         $this->assertTrue($reflection->isProtected());
-        $this->assertEquals('bool', $reflection->getReturnType()->getName());
+        $this->assertReturnTypeName('bool', $reflection);
     }
 
     /**

@@ -61,6 +61,12 @@ if (!\defined('JDEBUG')) {
     \define('JDEBUG', false);
 }
 
+// Load Joomla CMS stubs BEFORE Composer autoloader so they are available
+// when our source classes (which extend Joomla base classes) are loaded.
+// These stubs provide minimal class/interface/trait definitions that satisfy
+// PHP's autoloader without requiring the full Joomla CMS framework.
+require_once __DIR__ . '/Stubs/JoomlaCmsStubs.php';
+
 // Load Composer autoloader
 $composerAutoload = JPATH_ROOT . '/libraries/vendor/autoload.php';
 if (file_exists($composerAutoload)) {
