@@ -1,0 +1,113 @@
+<?php
+
+/**
+ * Unit tests for CwmlocationsModel
+ *
+ * @package    Proclaim.UnitTest
+ * @copyright  (C) 2026 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @link       https://www.christianwebministries.org
+ */
+
+namespace CWM\Component\Proclaim\Tests\Admin\Model;
+
+use CWM\Component\Proclaim\Administrator\Model\CwmlocationsModel;
+use CWM\Component\Proclaim\Tests\ProclaimTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+/**
+ * Test class for CwmlocationsModel
+ *
+ * #[CoversClass(CwmlocationsModel::class)]
+ * @since  10.0.0
+ */
+class CwmlocationsModelTest extends ProclaimTestCase
+{
+    /**
+     * Test constructor
+     *
+     * @return void
+     * #[CoversClass(CwmlocationsModel::class)]::__construct
+     */
+    public function testConstructor(): void
+    {
+        $model = new CwmlocationsModel();
+        $this->assertInstanceOf(CwmlocationsModel::class, $model);
+    }
+
+    /**
+     * Test getDeletes method signature
+     *
+     * @return void
+     * #[CoversClass(CwmlocationsModel::class)]::getDeletes
+     */
+    public function testGetDeletesMethodSignature(): void
+    {
+        $reflection = new \ReflectionMethod(CwmlocationsModel::class, 'getDeletes');
+
+        $this->assertFalse($reflection->isStatic());
+        $this->assertTrue($reflection->isPublic());
+        $this->assertEquals('array', $reflection->getReturnType()->getName());
+    }
+
+    /**
+     * Test getStoreId method signature
+     *
+     * @return void
+     * #[CoversClass(CwmlocationsModel::class)]::getStoreId
+     */
+    public function testGetStoreIdMethodSignature(): void
+    {
+        $reflection = new \ReflectionMethod(CwmlocationsModel::class, 'getStoreId');
+
+        $this->assertFalse($reflection->isStatic());
+        $this->assertTrue($reflection->isProtected());
+        $this->assertEquals('string', $reflection->getReturnType()->getName());
+
+        $params = $reflection->getParameters();
+        $this->assertCount(1, $params);
+        $this->assertEquals('id', $params[0]->getName());
+        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertTrue($params[0]->isOptional());
+    }
+
+    /**
+     * Test populateState method signature
+     *
+     * @return void
+     * #[CoversClass(CwmlocationsModel::class)]::populateState
+     */
+    public function testPopulateStateMethodSignature(): void
+    {
+        $reflection = new \ReflectionMethod(CwmlocationsModel::class, 'populateState');
+
+        $this->assertFalse($reflection->isStatic());
+        $this->assertTrue($reflection->isProtected());
+        $this->assertEquals('void', $reflection->getReturnType()->getName());
+
+        $params = $reflection->getParameters();
+        $this->assertCount(2, $params);
+        $this->assertEquals('ordering', $params[0]->getName());
+        $this->assertEquals('string', $params[0]->getType()->getName());
+        $this->assertTrue($params[0]->isOptional());
+        
+        $this->assertEquals('direction', $params[1]->getName());
+        $this->assertEquals('string', $params[1]->getType()->getName());
+        $this->assertTrue($params[1]->isOptional());
+    }
+
+    /**
+     * Test getListQuery method signature
+     *
+     * @return void
+     * #[CoversClass(CwmlocationsModel::class)]::getListQuery
+     */
+    public function testGetListQueryMethodSignature(): void
+    {
+        $reflection = new \ReflectionMethod(CwmlocationsModel::class, 'getListQuery');
+
+        $this->assertFalse($reflection->isStatic());
+        $this->assertTrue($reflection->isProtected());
+        $this->assertEquals('mixed', $reflection->getReturnType()->getName());
+    }
+}
