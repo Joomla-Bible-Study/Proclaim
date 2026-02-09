@@ -251,6 +251,11 @@
             "uri": "com_proclaim/general.min.css"
         },
         {
+            "name": "com_proclaim.print",
+            "type": "style",
+            "uri": "com_proclaim/proclaim-print.css"
+        },
+        {
             "name": "com_proclaim.podcast",
             "type": "style",
             "uri": "com_proclaim/podcast.min.css"

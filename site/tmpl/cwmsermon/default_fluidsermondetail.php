@@ -33,9 +33,10 @@
         </div>
     </div>
     <?php
-    echo $this->print;
-echo $this->page->social;
-//echo $this->related;
+$isPrint = !empty($this->print);
+if (!$isPrint) {
+    echo $this->page->social;
+}
 ?>
     <br/>
     <h2 style="text-align:center;">
