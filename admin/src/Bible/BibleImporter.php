@@ -263,16 +263,43 @@ class BibleImporter
     }
 
     /**
+     * Check whether a translation is a protected core translation.
+     *
+     * Core translations (KJV, WEB) are bundled with the component and
+     * cannot be removed by the user.
+     *
+     * @param   string  $abbreviation  Translation abbreviation
+     *
+     * @return  bool
+     *
+     * @since  10.1.0
+     */
+    public static function isCoreTranslation(string $abbreviation): bool
+    {
+        return \in_array(strtolower($abbreviation), ['kjv', 'web'], true);
+    }
+
+    /**
      * Remove a translation and its verses.
+     *
+     * Core (bundled) translations cannot be removed.
      *
      * @param   string  $abbreviation  Translation abbreviation
      *
      * @return  void
      *
+     * @throws  \RuntimeException  If the translation is a core translation
+     *
      * @since  10.1.0
      */
     public static function removeTranslation(string $abbreviation): void
     {
+        if (self::isCoreTranslation($abbreviation)) {
+            throw new \RuntimeException(
+                \sprintf('Cannot remove core translation %s', strtoupper($abbreviation))
+            );
+        }
+
         self::removeTranslationVerses($abbreviation);
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
@@ -287,7 +314,9 @@ class BibleImporter
     }
 
     /**
-     * Remove all installed translations and their verses.
+     * Remove all installed translations and their verses, except core translations.
+     *
+     * Core (bundled) translations (KJV, WEB) are preserved.
      *
      * @return  int  Number of translations removed
      *
@@ -297,27 +326,74 @@ class BibleImporter
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        // Delete all verses
-        $query = $db->getQuery(true)->delete($db->quoteName('#__bsms_bible_verses'));
+        // Delete verses for non-core translations only
+        $query = $db->getQuery(true)
+            ->delete($db->quoteName('#__bsms_bible_verses'))
+            ->where($db->quoteName('translation') . ' NOT IN (' . implode(',', array_map([$db, 'quote'], ['kjv', 'web'])) . ')');
         $db->setQuery($query);
         $db->execute();
 
-        // Count installed before resetting
+        // Count installed non-core before resetting
         $query = $db->getQuery(true)
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_bible_translations'))
-            ->where($db->quoteName('installed') . ' = 1');
+            ->where($db->quoteName('installed') . ' = 1')
+            ->where($db->quoteName('bundled') . ' = 0');
         $db->setQuery($query);
         $count = (int) $db->loadResult();
 
-        // Reset all translation records
+        // Reset non-core translation records
         $query = $db->getQuery(true)
             ->update($db->quoteName('#__bsms_bible_translations'))
             ->set($db->quoteName('installed') . ' = 0')
             ->set($db->quoteName('verse_count') . ' = 0')
-            ->where($db->quoteName('installed') . ' = 1');
+            ->where($db->quoteName('installed') . ' = 1')
+            ->where($db->quoteName('bundled') . ' = 0');
         $db->setQuery($query);
         $db->execute();
+
+        return $count;
+    }
+
+    /**
+     * Remove non-installed translation records from a specific provider source.
+     *
+     * Used when disabling a provider to clean up synced entries that were
+     * never downloaded locally. Installed translations and bundled entries
+     * are preserved.
+     *
+     * @param   string  $source  Provider source identifier (e.g. 'api_bible', 'getbible')
+     *
+     * @return  int  Number of records removed
+     *
+     * @since  10.1.0
+     */
+    public static function removeProviderEntries(string $source): int
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Count entries that will be removed
+        $query = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_bible_translations'))
+            ->where($db->quoteName('source') . ' = :source')
+            ->where($db->quoteName('installed') . ' = 0')
+            ->where($db->quoteName('bundled') . ' = 0')
+            ->bind(':source', $source);
+        $db->setQuery($query);
+        $count = (int) $db->loadResult();
+
+        if ($count > 0) {
+            // Delete non-installed, non-bundled records from this provider
+            $query = $db->getQuery(true)
+                ->delete($db->quoteName('#__bsms_bible_translations'))
+                ->where($db->quoteName('source') . ' = :source')
+                ->where($db->quoteName('installed') . ' = 0')
+                ->where($db->quoteName('bundled') . ' = 0')
+                ->bind(':source', $source);
+            $db->setQuery($query);
+            $db->execute();
+        }
 
         return $count;
     }

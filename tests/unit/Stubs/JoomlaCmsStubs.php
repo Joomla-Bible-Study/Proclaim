@@ -1344,10 +1344,16 @@ namespace Joomla\CMS\Log {
     if (!class_exists('Joomla\CMS\Log\Log', false)) {
         class Log
         {
+            public const int ALL     = 0;
+            public const int ERROR   = 2;
             public const int WARNING = 4;
             public const int INFO    = 6;
 
             public static function add(string $entry, int $priority = self::INFO, string $category = '', ?string $date = null): void
+            {
+            }
+
+            public static function addLogger(array $options, int $priorities = self::ALL, array $categories = []): void
             {
             }
         }

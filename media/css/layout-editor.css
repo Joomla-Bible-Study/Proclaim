@@ -171,13 +171,20 @@
 
 /* Element Group in Sidebar */
 .element-group {
-    margin-bottom: 1rem;
+    margin-bottom: .75rem;
+}
+
+.element-group + .element-group {
+    padding-top: .25rem;
 }
 
 .element-group-title {
+    font-size: .75rem;
     font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .05em;
     color: var(--layout-text-secondary);
-    margin-bottom: .5rem;
+    margin-bottom: .375rem;
     padding-bottom: .25rem;
     border-bottom: 1px solid var(--layout-border-color-subtle);
 }

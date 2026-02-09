@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\Registry\Registry;
 
 /**
@@ -104,9 +105,6 @@ class LayoutEditorField extends FormField
            ->useScript('com_proclaim.layout-editor-field')
            ->useStyle('com_proclaim.layout-editor');
 
-        // Load language strings for JavaScript
-        $this->loadLanguageStrings();
-
         // Get current params from the form (these come from the XML-defined fields)
         $params = $this->getLayoutParams();
 
@@ -116,8 +114,8 @@ class LayoutEditorField extends FormField
         // Generate unique ID for this instance
         $editorId = 'layout-editor-' . $this->id;
 
-        // Pass configuration to JavaScript via Joomla options
-        $this->setJavaScriptOptions($elementDefinitions, $params);
+        // Register all Layout Editor script options via centralized layout
+        $this->registerScriptOptions($elementDefinitions, $params);
 
         // Build the HTML with data attributes for the external JS to read
         $html = [];
@@ -140,40 +138,23 @@ class LayoutEditorField extends FormField
     }
 
     /**
-     * Load language strings needed by JavaScript
+     * Register all Layout Editor script options via centralized layout
+     *
+     * @param   array  $elementDefs  Element definitions
+     * @param   array  $params       Current parameters
      *
      * @return  void
      *
      * @since   10.1.0
      */
-    protected function loadLanguageStrings(): void
+    protected function registerScriptOptions(array $elementDefs, array $params): void
     {
-        Text::script('JBS_TPL_LAYOUT_HELP');
-        Text::script('JBS_TPL_AVAILABLE_ELEMENTS');
-        Text::script('JBS_TPL_ROW');
-        Text::script('JBS_TPL_DROP_ELEMENTS_HERE');
-        Text::script('JBS_TPL_ELEMENT_SETTINGS');
-        Text::script('JBS_TPL_REMOVE_ELEMENT');
-        Text::script('JBS_TPL_COLSPAN');
-        Text::script('JBS_TPL_COLSPAN_DESC');
-        Text::script('JBS_TPL_ELEMENT');
-        Text::script('JBS_TPL_ELEMENT_DESC');
-        Text::script('JBS_TPL_TYPE_OF_LINK');
-        Text::script('JBS_TPL_TYPE_OF_LINK_DESC');
-        Text::script('JBS_TPL_CUSTOMCLASS');
-        Text::script('JBS_TPL_CUSTOMCLASS_DESC');
-        Text::script('JBS_TPL_DATE_FORMAT');
-        Text::script('JBS_TPL_DATE_FORMAT_DESC');
-        Text::script('JBS_TPL_VERSES_SHOW_VERSES');
-        Text::script('JBS_TPL_VERSES_SHOW_VERSES_DESC');
-        Text::script('JBS_TPL_VIEW_SETTINGS');
-        Text::script('JBS_TPL_DRAG_TO_REORDER');
-        Text::script('JBS_TPL_UNSAVED_CHANGES');
-        Text::script('JBS_TPL_UNSAVED_CHANGES_CONFIRM');
-        Text::script('JBS_TPL_MODAL_UNSAVED_CHANGES');
-        Text::script('JCLOSE');
-        Text::script('JCANCEL');
-        Text::script('JAPPLY');
+        LayoutHelper::render('layouteditor.scriptoptions', [
+            'form'               => $this->form,
+            'templateParams'     => $params,
+            'elementDefinitions' => $elementDefs,
+            'prependInherit'     => true,
+        ], JPATH_ADMINISTRATOR . '/components/com_proclaim/layouts');
     }
 
     /**
@@ -232,74 +213,4 @@ class LayoutEditorField extends FormField
         ];
     }
 
-    /**
-     * Set JavaScript options for the Layout Editor
-     *
-     * Uses Joomla's addScriptOptions to pass configuration to the external JS file.
-     *
-     * @param   array  $elementDefs  Element definitions
-     * @param   array  $params       Current parameters
-     *
-     * @return  void
-     *
-     * @since   10.1.0
-     */
-    protected function setJavaScriptOptions(array $elementDefs, array $params): void
-    {
-        $document = Factory::getApplication()->getDocument();
-
-        // Build link type options (matching LinkOptionsField values)
-        $linkTypeOptions = [
-            ['value' => '0', 'label' => Text::_('JBS_TPL_NO_LINK')],
-            ['value' => '1', 'label' => Text::_('JBS_TPL_LINK_TO_DETAILS')],
-            ['value' => '4', 'label' => Text::_('JBS_TPL_LINK_TO_DETAILS_TOOLTIP')],
-            ['value' => '2', 'label' => Text::_('JBS_TPL_LINK_TO_MEDIA')],
-            ['value' => '9', 'label' => Text::_('JBS_TPL_LINK_TO_DOWNLOAD')],
-            ['value' => '5', 'label' => Text::_('JBS_TPL_LINK_TO_MEDIA_TOOLTIP')],
-            ['value' => '3', 'label' => Text::_('JBS_TPL_LINK_TO_TEACHERS_PROFILE')],
-        ];
-
-        // Date format options
-        $dateFormatOptions = [
-            ['value' => '', 'label' => Text::_('JBS_TPL_USE_GLOBAL_SETTING')],
-            ['value' => '0', 'label' => Text::_('JBS_TPL_DATE_FORMAT_MMM_D_YYYY')],
-            ['value' => '1', 'label' => Text::_('JBS_TPL_DATE_FORMAT_MMM_D')],
-            ['value' => '2', 'label' => Text::_('JBS_TPL_DATE_FORMAT_M_D_YYYY')],
-            ['value' => '3', 'label' => Text::_('JBS_TPL_DATE_FORMAT_M_D')],
-            ['value' => '4', 'label' => Text::_('JBS_TPL_DATE_FORMAT_WD_MMMM_D_YYYY')],
-            ['value' => '5', 'label' => Text::_('JBS_TPL_DATE_FORMAT_MMMM_D_YYYY')],
-            ['value' => '6', 'label' => Text::_('JBS_TPL_DATE_FORMAT_D_MMMM_YYYY')],
-            ['value' => '7', 'label' => Text::_('JBS_TPL_DATE_FORMAT_D_M_YYYY')],
-            ['value' => '8', 'label' => Text::_('JBS_TPL_DATE_FORMAT_USE_GLOBAL')],
-            ['value' => '9', 'label' => Text::_('JBS_TPL_DATE_FORMAT_YYYY_MM_DD')],
-        ];
-
-        // Show verses options (for scripture elements)
-        $showVersesOptions = [
-            ['value' => '', 'label' => Text::_('JBS_TPL_USE_GLOBAL_SETTING')],
-            ['value' => '0', 'label' => Text::_('JBS_TPL_SHOW_ONLY_CHAPTERS')],
-            ['value' => '1', 'label' => Text::_('JBS_TPL_SHOW_VERSES_AND_CHAPTERS')],
-        ];
-
-        // Element type options (HTML wrapper)
-        $elementTypeOptions = [
-            ['value' => '0', 'label' => Text::_('JNONE')],
-            ['value' => '1', 'label' => 'P'],
-            ['value' => '2', 'label' => 'H1'],
-            ['value' => '3', 'label' => 'H2'],
-            ['value' => '4', 'label' => 'H3'],
-            ['value' => '5', 'label' => 'H4'],
-            ['value' => '6', 'label' => 'H5'],
-            ['value' => '7', 'label' => 'Blockquote'],
-            ['value' => '8', 'label' => 'DIV'],
-        ];
-
-        // Add all options to the document
-        $document->addScriptOptions('com_proclaim.elementDefinitions', $elementDefs);
-        $document->addScriptOptions('com_proclaim.templateParams', $params);
-        $document->addScriptOptions('com_proclaim.linkTypeOptions', $linkTypeOptions);
-        $document->addScriptOptions('com_proclaim.dateFormatOptions', $dateFormatOptions);
-        $document->addScriptOptions('com_proclaim.showVersesOptions', $showVersesOptions);
-        $document->addScriptOptions('com_proclaim.elementTypeOptions', $elementTypeOptions);
-    }
 }

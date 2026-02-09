@@ -29,77 +29,118 @@
                     return phpOptions;
                 }
             }
-            // Fallback (English only)
+            // Fallback (English only) — sorted by section then name
             return {
                 messages: {
                     label: 'Messages List', prefix: '',
                     elements: [
-                        { id: 'scripture1', label: 'Scripture 1' }, { id: 'scripture2', label: 'Scripture 2' },
-                        { id: 'title', label: 'Title' }, { id: 'date', label: 'Date' },
-                        { id: 'teacher', label: 'Teacher' }, { id: 'teacherimage', label: 'Teacher Image' },
-                        { id: 'teacher-title', label: 'Teacher Title + Name' }, { id: 'duration', label: 'Duration' },
-                        { id: 'studyintro', label: 'Study Intro' }, { id: 'series', label: 'Series' },
-                        { id: 'seriesthumbnail', label: 'Series Thumbnail' }, { id: 'seriesdescription', label: 'Series Description' },
-                        { id: 'jbsmedia', label: 'Media' }, { id: 'topic', label: 'Topics' },
-                        { id: 'locations', label: 'Locations' }, { id: 'hits', label: 'Hits' },
-                        { id: 'downloads', label: 'Downloads' }, { id: 'studynumber', label: 'Study Number' },
-                        { id: 'messagetype', label: 'Message Type' }, { id: 'thumbnail', label: 'Thumbnail' },
-                        { id: 'custom', label: 'Custom' }
+                        { id: 'custom', label: 'Custom', section: 'Custom' },
+                        { id: 'downloads', label: 'Downloads', section: 'Media' },
+                        { id: 'jbsmedia', label: 'Media', section: 'Media' },
+                        { id: 'thumbnail', label: 'Thumbnail', section: 'Media' },
+                        { id: 'date', label: 'Date', section: 'Message' },
+                        { id: 'duration', label: 'Duration', section: 'Message' },
+                        { id: 'studyintro', label: 'Study Intro', section: 'Message' },
+                        { id: 'studynumber', label: 'Study Number', section: 'Message' },
+                        { id: 'title', label: 'Title', section: 'Message' },
+                        { id: 'hits', label: 'Hits', section: 'Metadata' },
+                        { id: 'locations', label: 'Locations', section: 'Metadata' },
+                        { id: 'messagetype', label: 'Message Type', section: 'Metadata' },
+                        { id: 'topic', label: 'Topics', section: 'Metadata' },
+                        { id: 'scripture1', label: 'Scripture 1', section: 'Scripture' },
+                        { id: 'scripture2', label: 'Scripture 2', section: 'Scripture' },
+                        { id: 'series', label: 'Series', section: 'Series' },
+                        { id: 'seriesdescription', label: 'Series Description', section: 'Series' },
+                        { id: 'seriesthumbnail', label: 'Series Thumbnail', section: 'Series' },
+                        { id: 'teacher', label: 'Teacher', section: 'Teacher' },
+                        { id: 'teacherimage', label: 'Teacher Image', section: 'Teacher' },
+                        { id: 'teacher-title', label: 'Teacher Title + Name', section: 'Teacher' }
                     ]
                 },
                 details: {
                     label: 'Study Details', prefix: 'd',
                     elements: [
-                        { id: 'scripture1', label: 'Scripture 1' }, { id: 'scripture2', label: 'Scripture 2' },
-                        { id: 'title', label: 'Title' }, { id: 'date', label: 'Date' },
-                        { id: 'teacher', label: 'Teacher' }, { id: 'teacherimage', label: 'Teacher Image' },
-                        { id: 'teacher-title', label: 'Teacher Title + Name' }, { id: 'duration', label: 'Duration' },
-                        { id: 'studyintro', label: 'Study Intro' }, { id: 'series', label: 'Series' },
-                        { id: 'seriesthumbnail', label: 'Series Thumbnail' }, { id: 'seriesdescription', label: 'Series Description' },
-                        { id: 'jbsmedia', label: 'Media' }, { id: 'topic', label: 'Topics' },
-                        { id: 'locations', label: 'Locations' }, { id: 'hits', label: 'Hits' },
-                        { id: 'downloads', label: 'Downloads' }, { id: 'studynumber', label: 'Study Number' },
-                        { id: 'messagetype', label: 'Message Type' }, { id: 'thumbnail', label: 'Thumbnail' },
-                        { id: 'custom', label: 'Custom' }
+                        { id: 'custom', label: 'Custom', section: 'Custom' },
+                        { id: 'downloads', label: 'Downloads', section: 'Media' },
+                        { id: 'jbsmedia', label: 'Media', section: 'Media' },
+                        { id: 'thumbnail', label: 'Thumbnail', section: 'Media' },
+                        { id: 'date', label: 'Date', section: 'Message' },
+                        { id: 'duration', label: 'Duration', section: 'Message' },
+                        { id: 'studyintro', label: 'Study Intro', section: 'Message' },
+                        { id: 'studynumber', label: 'Study Number', section: 'Message' },
+                        { id: 'title', label: 'Title', section: 'Message' },
+                        { id: 'hits', label: 'Hits', section: 'Metadata' },
+                        { id: 'locations', label: 'Locations', section: 'Metadata' },
+                        { id: 'messagetype', label: 'Message Type', section: 'Metadata' },
+                        { id: 'topic', label: 'Topics', section: 'Metadata' },
+                        { id: 'scripture1', label: 'Scripture 1', section: 'Scripture' },
+                        { id: 'scripture2', label: 'Scripture 2', section: 'Scripture' },
+                        { id: 'series', label: 'Series', section: 'Series' },
+                        { id: 'seriesdescription', label: 'Series Description', section: 'Series' },
+                        { id: 'seriesthumbnail', label: 'Series Thumbnail', section: 'Series' },
+                        { id: 'teacher', label: 'Teacher', section: 'Teacher' },
+                        { id: 'teacherimage', label: 'Teacher Image', section: 'Teacher' },
+                        { id: 'teacher-title', label: 'Teacher Title + Name', section: 'Teacher' }
                     ]
                 },
                 teachers: {
                     label: 'Teachers List', prefix: 'ts',
                     elements: [
-                        { id: 'teacher', label: 'Teacher Name' }, { id: 'teacherimage', label: 'Teacher Image' },
-                        { id: 'teacher-title', label: 'Teacher Title + Name' }, { id: 'teacheremail', label: 'Email' },
-                        { id: 'teacherweb', label: 'Website' }, { id: 'teacherphone', label: 'Phone' },
-                        { id: 'teacherfb', label: 'Facebook' }, { id: 'teachertw', label: 'Twitter' },
-                        { id: 'teacherblog', label: 'Blog' }, { id: 'teachershort', label: 'Short Bio' },
-                        { id: 'teacherallinone', label: 'All in One' }, { id: 'custom', label: 'Custom' }
+                        { id: 'teacheremail', label: 'Email', section: 'Contact' },
+                        { id: 'teacherphone', label: 'Phone', section: 'Contact' },
+                        { id: 'teacherweb', label: 'Website', section: 'Contact' },
+                        { id: 'custom', label: 'Custom', section: 'Custom' },
+                        { id: 'teacherfb', label: 'Facebook', section: 'Social' },
+                        { id: 'teacherblog', label: 'Blog', section: 'Social' },
+                        { id: 'teachertw', label: 'Twitter', section: 'Social' },
+                        { id: 'teacherallinone', label: 'All in One', section: 'Teacher' },
+                        { id: 'teachershort', label: 'Short Bio', section: 'Teacher' },
+                        { id: 'teacher', label: 'Teacher Name', section: 'Teacher' },
+                        { id: 'teacherimage', label: 'Teacher Image', section: 'Teacher' },
+                        { id: 'teacher-title', label: 'Teacher Title + Name', section: 'Teacher' }
                     ]
                 },
                 teacherDetails: {
                     label: 'Teacher Details', prefix: 'td',
                     elements: [
-                        { id: 'teacher', label: 'Teacher Name' }, { id: 'teacherimage', label: 'Teacher Image' },
-                        { id: 'teacher-title', label: 'Teacher Title + Name' }, { id: 'teacheremail', label: 'Email' },
-                        { id: 'teacherweb', label: 'Website' }, { id: 'teacherphone', label: 'Phone' },
-                        { id: 'teacherfb', label: 'Facebook' }, { id: 'teachertw', label: 'Twitter' },
-                        { id: 'teacherblog', label: 'Blog' }, { id: 'teachershort', label: 'Short Bio' },
-                        { id: 'teacherlong', label: 'Full Bio' }, { id: 'teacherlargeimage', label: 'Large Image' },
-                        { id: 'teacherallinone', label: 'All in One' }, { id: 'custom', label: 'Custom' }
+                        { id: 'teacheremail', label: 'Email', section: 'Contact' },
+                        { id: 'teacherphone', label: 'Phone', section: 'Contact' },
+                        { id: 'teacherweb', label: 'Website', section: 'Contact' },
+                        { id: 'custom', label: 'Custom', section: 'Custom' },
+                        { id: 'teacherfb', label: 'Facebook', section: 'Social' },
+                        { id: 'teacherblog', label: 'Blog', section: 'Social' },
+                        { id: 'teachertw', label: 'Twitter', section: 'Social' },
+                        { id: 'teacherallinone', label: 'All in One', section: 'Teacher' },
+                        { id: 'teacherlong', label: 'Full Bio', section: 'Teacher' },
+                        { id: 'teacherlargeimage', label: 'Large Image', section: 'Teacher' },
+                        { id: 'teachershort', label: 'Short Bio', section: 'Teacher' },
+                        { id: 'teacher', label: 'Teacher Name', section: 'Teacher' },
+                        { id: 'teacherimage', label: 'Teacher Image', section: 'Teacher' },
+                        { id: 'teacher-title', label: 'Teacher Title + Name', section: 'Teacher' }
                     ]
                 },
                 series: {
                     label: 'Series List', prefix: 's',
                     elements: [
-                        { id: 'series', label: 'Series Title' }, { id: 'description', label: 'Description' },
-                        { id: 'seriesthumbnail', label: 'Thumbnail' }, { id: 'teacher', label: 'Teacher' },
-                        { id: 'dcustom', label: 'Custom' }
+                        { id: 'custom', label: 'Custom', section: 'Custom' },
+                        { id: 'description', label: 'Description', section: 'Series' },
+                        { id: 'series', label: 'Series Title', section: 'Series' },
+                        { id: 'seriesthumbnail', label: 'Thumbnail', section: 'Series' },
+                        { id: 'teacher', label: 'Teacher', section: 'Teacher' },
+                        { id: 'teacherimage', label: 'Teacher Image', section: 'Teacher' },
+                        { id: 'teacher-title', label: 'Teacher Title + Name', section: 'Teacher' }
                     ]
                 },
                 seriesDetails: {
                     label: 'Series Details', prefix: 'sd',
                     elements: [
-                        { id: 'series', label: 'Series Title' }, { id: 'description', label: 'Description' },
-                        { id: 'seriesthumbnail', label: 'Thumbnail' }, { id: 'teacher', label: 'Teacher' },
-                        { id: 'custom', label: 'Custom' }
+                        { id: 'custom', label: 'Custom', section: 'Custom' },
+                        { id: 'description', label: 'Description', section: 'Series' },
+                        { id: 'series', label: 'Series Title', section: 'Series' },
+                        { id: 'seriesthumbnail', label: 'Thumbnail', section: 'Series' },
+                        { id: 'teacher', label: 'Teacher', section: 'Teacher' },
+                        { id: 'teacherimage', label: 'Teacher Image', section: 'Teacher' },
+                        { id: 'teacher-title', label: 'Teacher Title + Name', section: 'Teacher' }
                     ]
                 },
                 landingPage: {
@@ -247,6 +288,25 @@
         };
 
         /**
+         * Get show version options from PHP or use fallback
+         * @returns {Array} Show version options
+         */
+        const getShowVersionOptions = () => {
+            if (window.Joomla && typeof Joomla.getOptions === 'function') {
+                const phpOptions = Joomla.getOptions('com_proclaim.showVersionOptions');
+                if (phpOptions && Array.isArray(phpOptions)) {
+                    return phpOptions;
+                }
+            }
+            // Fallback (English only)
+            return [
+                { value: '', label: 'Use Global Setting' },
+                { value: '0', label: 'No' },
+                { value: '1', label: 'Yes' }
+            ];
+        };
+
+        /**
          * Check if an element is a scripture element
          * @param {string} elementId - The element identifier
          * @returns {boolean} True if scripture element
@@ -300,6 +360,7 @@
                 this.state = new Map();
                 this.currentContext = this.options.context;
                 this.sortableInstances = [];
+                this.paletteSortables = [];
                 this.paletteSortable = null;
 
                 // Undo/Redo history
@@ -1620,7 +1681,7 @@
             }
 
             /**
-             * Initialize the sidebar with available elements
+             * Initialize the sidebar with available elements grouped by section
              */
             initSidebar() {
                 const contextDef = this.getElementDefs()[this.currentContext];
@@ -1630,26 +1691,45 @@
 
                 this.palette.innerHTML = '';
 
-                // Group elements into categories (simplified - all in one group for MVP)
-                const group = document.createElement('div');
-                group.className = 'element-group';
-
-                const groupTitle = document.createElement('div');
-                groupTitle.className = 'element-group-title';
-                groupTitle.textContent = contextDef.label;
-                group.appendChild(groupTitle);
-
-                const paletteItems = document.createElement('div');
-                paletteItems.className = 'element-palette-items';
-                paletteItems.dataset.sortableGroup = 'elements';
+                // Group elements by section, preserving order from PHP sort
+                const sections = new Map();
 
                 contextDef.elements.forEach(element => {
-                    const card = this.createElementCard(element, true);
-                    paletteItems.appendChild(card);
+                    const sectionName = element.section || contextDef.label;
+
+                    if (!sections.has(sectionName)) {
+                        sections.set(sectionName, []);
+                    }
+                    sections.get(sectionName).push(element);
                 });
 
-                group.appendChild(paletteItems);
-                this.palette.appendChild(group);
+                // Sort elements alphabetically within each section
+                sections.forEach(elements => {
+                    elements.sort((a, b) => a.label.localeCompare(b.label));
+                });
+
+                // Render each section as a collapsible group
+                sections.forEach((elements, sectionName) => {
+                    const group = document.createElement('div');
+                    group.className = 'element-group';
+
+                    const groupTitle = document.createElement('div');
+                    groupTitle.className = 'element-group-title';
+                    groupTitle.textContent = sectionName;
+                    group.appendChild(groupTitle);
+
+                    const paletteItems = document.createElement('div');
+                    paletteItems.className = 'element-palette-items';
+                    paletteItems.dataset.sortableGroup = 'elements';
+
+                    elements.forEach(element => {
+                        const card = this.createElementCard(element, true);
+                        paletteItems.appendChild(card);
+                    });
+
+                    group.appendChild(paletteItems);
+                    this.palette.appendChild(group);
+                });
             }
 
             /**
@@ -1933,9 +2013,7 @@
                             <div class="form-group" id="layout-show-version-group" style="display:none;">
                                 <label class="form-label" for="layout-show-version">${this.trans('JBS_TPL_SHOW_VERSION') || 'Show Bible Version'}</label>
                                 <select class="form-select" id="layout-show-version">
-                                    <option value="">${this.trans('JBS_TPL_USE_GLOBAL') || '- Use Global -'}</option>
-                                    <option value="0">${this.trans('JNO') || 'No'}</option>
-                                    <option value="1">${this.trans('JYES') || 'Yes'}</option>
+                                    ${getShowVersionOptions().map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
                                 </select>
                                 <div class="form-text">${this.trans('JBS_TPL_SHOW_VERSION_DESC') || 'Append the Bible version abbreviation to the scripture reference (e.g. Luke 7:36-38 KJV)'}</div>
                             </div>
@@ -1943,6 +2021,7 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">${this.trans('JCANCEL') || 'Cancel'}</button>
                             <button type="button" class="btn btn-success" id="layout-settings-save">${this.trans('JAPPLY') || 'Apply'}</button>
+                            <button type="button" class="btn btn-primary" id="layout-settings-save-apply" title="${this.trans('JBS_TPL_SAVE_APPLY_DESC') || 'Save element settings and save the template'}">${this.trans('JBS_TPL_SAVE_APPLY') || 'Save & Apply'}</button>
                         </div>
                     </div>
                 </div>
@@ -2002,10 +2081,10 @@
 
                 const self = this;
 
-                // Initialize sortable for palette items (clone mode)
-                const paletteItems = this.palette.querySelector('.element-palette-items');
-                if (paletteItems) {
-                    this.paletteSortable = Sortable.create(paletteItems, {
+                // Initialize sortable for all palette item containers (one per section group)
+                this.paletteSortables = [];
+                this.palette.querySelectorAll('.element-palette-items').forEach(paletteItems => {
+                    const sortable = Sortable.create(paletteItems, {
                         group: {
                             name: 'elements',
                             pull: 'clone',
@@ -2030,7 +2109,8 @@
                             clone.dataset.paletteItem = 'true';
                         }
                     });
-                }
+                    this.paletteSortables.push(sortable);
+                });
 
                 // Initialize sortable for each row
                 this.canvas.querySelectorAll('.row-elements').forEach(rowEl => {
@@ -2042,6 +2122,11 @@
              * Destroy all Sortable instances
              */
             destroySortables() {
+                if (this.paletteSortables) {
+                    this.paletteSortables.forEach(s => s.destroy());
+                    this.paletteSortables = [];
+                }
+                // Legacy single-instance cleanup
                 if (this.paletteSortable) {
                     this.paletteSortable.destroy();
                     this.paletteSortable = null;
@@ -2301,10 +2386,27 @@
                     }
                 });
 
-                // Settings modal save
+                // Settings modal save (Apply - keeps page, closes modal)
                 const saveBtn = document.getElementById('layout-settings-save');
                 if (saveBtn) {
                     saveBtn.addEventListener('click', () => this.saveSettings());
+                }
+
+                // Save & Apply - save element settings, then trigger Joomla toolbar Apply
+                const saveApplyBtn = document.getElementById('layout-settings-save-apply');
+                if (saveApplyBtn) {
+                    saveApplyBtn.addEventListener('click', () => {
+                        this.saveSettings();
+                        // Trigger the Joomla toolbar Apply button after modal closes
+                        setTimeout(() => {
+                            const applyBtn = document.querySelector('.button-apply button, .button-apply a, .button-apply');
+                            if (applyBtn) {
+                                applyBtn.click();
+                            } else if (typeof Joomla !== 'undefined' && Joomla.submitbutton) {
+                                Joomla.submitbutton('cwmtemplate.apply');
+                            }
+                        }, 100);
+                    });
                 }
 
                 // Settings modal close (for fallback when Bootstrap modal not available)

@@ -28,14 +28,13 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmrestore;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmssconvert;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
-
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Folder;
-use Joomla\CMS\Http\HttpFactory;
 use Joomla\Registry\Registry;
 
 /**
@@ -1638,6 +1637,7 @@ class CwmadminController extends FormController
 
         try {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
+
             $query = $db->getQuery(true)
                 ->select($db->quoteName(['t.abbreviation', 't.name', 't.language', 't.installed', 't.verse_count', 't.source', 't.bundled', 't.estimated_size']))
                 ->select('COALESCE(SUM(LENGTH(' . $db->quoteName('v.text') . ')), 0) AS ' . $db->quoteName('data_size'))
@@ -1652,11 +1652,45 @@ class CwmadminController extends FormController
             $db->setQuery($query);
             $translations = $db->loadObjectList();
 
-            // Calculate total size
+            // Build usage counts from studies table (separate query, fail-safe)
+            $usageCounts = [];
+
+            try {
+                $query = $db->getQuery(true)
+                    ->select($db->quoteName('bible_version') . ' AS ' . $db->quoteName('abbr'))
+                    ->select('COUNT(*) AS ' . $db->quoteName('cnt'))
+                    ->from($db->quoteName('#__bsms_studies'))
+                    ->where($db->quoteName('bible_version') . ' IS NOT NULL')
+                    ->where($db->quoteName('bible_version') . ' != ' . $db->quote(''))
+                    ->group($db->quoteName('bible_version'));
+                $db->setQuery($query);
+
+                foreach ($db->loadObjectList() as $row) {
+                    $usageCounts[$row->abbr] = (int) $row->cnt;
+                }
+
+                $query = $db->getQuery(true)
+                    ->select($db->quoteName('bible_version2') . ' AS ' . $db->quoteName('abbr'))
+                    ->select('COUNT(*) AS ' . $db->quoteName('cnt'))
+                    ->from($db->quoteName('#__bsms_studies'))
+                    ->where($db->quoteName('bible_version2') . ' IS NOT NULL')
+                    ->where($db->quoteName('bible_version2') . ' != ' . $db->quote(''))
+                    ->group($db->quoteName('bible_version2'));
+                $db->setQuery($query);
+
+                foreach ($db->loadObjectList() as $row) {
+                    $usageCounts[$row->abbr] = ($usageCounts[$row->abbr] ?? 0) + (int) $row->cnt;
+                }
+            } catch (\Exception) {
+                // bible_version columns may not exist yet — usage counts stay empty
+            }
+
+            // Calculate total size and attach usage counts
             $totalSize = 0;
 
             foreach ($translations as $t) {
                 $totalSize += (int) $t->data_size;
+                $t->usage_count = $usageCounts[$t->abbreviation] ?? 0;
             }
 
             echo json_encode([
@@ -1980,6 +2014,56 @@ class CwmadminController extends FormController
                     0,
                     $e->getMessage()
                 ),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Remove non-installed translation records from a provider.
+     *
+     * Called when a provider is disabled to clean up synced entries that
+     * were never downloaded locally.
+     *
+     * @return  void
+     *
+     * @since  10.1.0
+     */
+    public function cleanupProviderXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $source = $app->getInput()->getCmd('source', '');
+
+        if (empty($source)) {
+            echo json_encode(['success' => false, 'message' => 'No source provided'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $count = BibleImporter::removeProviderEntries($source);
+
+            echo json_encode([
+                'success' => true,
+                'count'   => $count,
+                'message' => Text::sprintf('JBS_ADM_PROVIDER_CLEANUP_DONE', $count),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
             ], JSON_THROW_ON_ERROR);
         }
 

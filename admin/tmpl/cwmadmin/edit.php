@@ -680,6 +680,13 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                         <?php echo $this->form->renderField('provider_getbible', 'params'); ?>
                         <?php echo $this->form->renderField('provider_api_bible', 'params'); ?>
                         <?php echo $this->form->renderField('api_bible_api_key', 'params'); ?>
+                        <div id="api-bible-key-row" class="mb-3" style="display:none;">
+                            <a href="https://api.bible/sign-in" target="_blank" rel="noopener noreferrer"
+                               class="btn btn-sm btn-outline-secondary">
+                                <i class="icon-key" aria-hidden="true"></i>
+                                <?php echo Text::_('JBS_ADM_API_BIBLE_GET_KEY'); ?>
+                            </a>
+                        </div>
                         <div id="api-bible-sync-row" class="mb-3" style="display:none;">
                             <button type="button" class="btn btn-sm btn-primary" id="btn-sync-api-bible">
                                 <i class="icon-refresh" aria-hidden="true"></i>
@@ -767,6 +774,24 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
              data-str-gdpr-disabled="<?php echo Text::_('JBS_ADM_GDPR_PROVIDERS_DISABLED'); ?>"
              data-str-online="<?php echo Text::_('JBS_ADM_ONLINE'); ?>"
              data-str-language="<?php echo Text::_('JBS_ADM_LANGUAGE'); ?>"
+             data-str-all-languages="<?php echo Text::_('JBS_ADM_ALL_LANGUAGES'); ?>"
+             data-str-filter-all="<?php echo Text::_('JBS_ADM_FILTER_STATUS_ALL'); ?>"
+             data-str-filter-installed="<?php echo Text::_('JBS_ADM_FILTER_STATUS_INSTALLED'); ?>"
+             data-str-filter-not-installed="<?php echo Text::_('JBS_ADM_FILTER_STATUS_NOT_INSTALLED'); ?>"
+             data-str-filter-in-use="<?php echo Text::_('JBS_ADM_FILTER_STATUS_IN_USE'); ?>"
+             data-str-search-placeholder="<?php echo Text::_('JBS_ADM_SEARCH_TRANSLATIONS'); ?>"
+             data-str-usage-count="<?php echo Text::_('JBS_ADM_USAGE_COUNT'); ?>"
+             data-str-usage-badge="<?php echo Text::_('JBS_ADM_USAGE_BADGE'); ?>"
+             data-str-suggested="<?php echo Text::_('JBS_ADM_SUGGESTED'); ?>"
+             data-str-showing-count="<?php echo Text::_('JBS_ADM_SHOWING_COUNT'); ?>"
+             data-admin-language="<?php echo Factory::getApplication()->getLanguage()->getTag(); ?>"
+             data-str-core-translation="<?php echo Text::_('JBS_ADM_CORE_TRANSLATION'); ?>"
+             data-str-core-cannot-remove="<?php echo Text::_('JBS_ADM_CORE_CANNOT_REMOVE'); ?>"
+             data-str-suggested-desc="<?php echo Text::_('JBS_ADM_SUGGESTED_DESC'); ?>"
+             data-str-online-only="<?php echo Text::_('JBS_ADM_ONLINE_ONLY'); ?>"
+             data-str-online-only-desc="<?php echo Text::_('JBS_ADM_ONLINE_ONLY_DESC'); ?>"
+             data-str-provider-disable-confirm="<?php echo Text::_('JBS_ADM_PROVIDER_DISABLE_CONFIRM'); ?>"
+             data-str-provider-cleanup-done="<?php echo Text::_('JBS_ADM_PROVIDER_CLEANUP_DONE'); ?>"
         ></div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>

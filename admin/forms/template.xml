@@ -296,6 +296,7 @@
                 <option value="1">JBS_CMN_YES</option>
             </field>
         </fieldset>
+        <!-- Messages: Page & Sorting -->
         <fieldset name="LISTITEMS" label="JBS_TPL_LIST_ITEMS" layoutContext="messages"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="default_order" type="radio" default="DESC"
@@ -342,6 +343,15 @@
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
+            <field name="show_pagination" type="list" default="1"
+                   label="JBS_TPL_LISTITEMS_SHOW_PAGINATION" description="JBS_TPL_LISTITEMS_SHOW_PAGINATION_DESC">
+                <option value="1">JBS_TPL_LISTITEMS_SHOW_TOP</option>
+                <option value="2">JBS_TPL_LISTITEMS_SHOW_BOTTOM</option>
+            </field>
+        </fieldset>
+        <!-- Messages: Teacher Display -->
+        <fieldset name="LISTTEACHER" label="JBS_TPL_LIST_TEACHER" layoutContext="messages"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="list_teacher_show" type="radio" default="1"
                    label="JBS_TPL_LISTITEMS_LIST_TEACHER_SHOW" description="JBS_TPL_LISTITEMS_LIST_TEACHER_SHOW_DESC"
                    layout="joomla.form.field.radio.switcher">
@@ -358,6 +368,10 @@
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
+        </fieldset>
+        <!-- Messages: Podcast Subscribe -->
+        <fieldset name="LISTPODCAST" label="JBS_TPL_LIST_PODCAST" layoutContext="messages"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="showpodcastsubscribelist" type="list" default="0"
                    label="JBS_TPL_PODCAST_SHOW" description="JBS_TPL_PODCAST_SHOW_DESC">
                 <option value="0">JBS_CMN_HIDE</option>
@@ -366,11 +380,6 @@
             </field>
             <field name="subscribeintro" type="text" default="Our Podcasts" size="50"
                    label="JBS_TPL_SUBSCRIBE_INTRO" description="JBS_TPL_SUBSCRIBE_INTRO_DESC"/>
-            <field name="show_pagination" type="list" default="1"
-                   label="JBS_TPL_LISTITEMS_SHOW_PAGINATION" description="JBS_TPL_LISTITEMS_SHOW_PAGINATION_DESC">
-                <option value="1">JBS_TPL_LISTITEMS_SHOW_TOP</option>
-                <option value="2">JBS_TPL_LISTITEMS_SHOW_BOTTOM</option>
-            </field>
         </fieldset>
         <fieldset name="SEARCHFILTERS" label="JBS_TPL_SEARCH_FILTERS" layoutContext="messages">
             <field name="show_book_search" type="radio" default="1"
@@ -739,6 +748,7 @@
                    description="JBS_TPL_CUSTOM_TEXT_DESC"/>
 
         </fieldset>
+        <!-- Details: Page & Navigation -->
         <fieldset name="DETAILS" label="JBS_TPL_STUDY_DETAILS_VIEW" layoutContext="details"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="details_show_header" type="list" default="1"
@@ -751,21 +761,31 @@
             <field name="link_text" type="text" size="75"
                    default="Return to Studies List" label="JBS_TPL_DETAILS_LINK_TEXT"
                    description="JBS_TPL_DETAILS_LINK_TEXT_DESC"/>
-
             <field name="showrelated" type="list" default="1"
                    label="JBS_TPL_SHOW_RELATED" description="JBS_TPL_SHOW_RELATED_DESC">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_TPL_RELATED_TOP</option>
                 <option value="2">JBS_TPL_RELATED_BOTTOM</option>
             </field>
-
             <field name="showpodcastsubscribedetails" type="list" default="1"
                    label="JBS_TPL_PODCAST_SHOW" description="JBS_TPL_PODCAST_SHOW_DESC">
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_TPL_SHOW_PODCAST_SUBSCRIBE_TOP</option>
                 <option value="2">JBS_TPL_SHOW_PODCAST_SUBSCRIBE_BOTTOM</option>
-
             </field>
+            <field name="socialnetworking"
+                   type="radio"
+                   default="1"
+                   label="JBS_ADM_SOCIALNETWORKING"
+                   description="JBS_ADM_SOCIALNETWORKING_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="0">JBS_CMN_HIDE</option>
+                <option value="1">JBS_CMN_SHOW</option>
+            </field>
+        </fieldset>
+        <!-- Details: Scripture Display -->
+        <fieldset name="DETAILS_SCRIPTURE" label="JBS_TPL_DETAILS_SCRIPTURE_SETTINGS" layoutContext="details"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="show_scripture_link" type="radio" default="0"
                    label="JBS_TPL_DETAILS_SHOW_SCRIPTURE_LINK" description="JBS_TPL_DETAILS_SHOW_SCRIPTURE_LINK_DESC"
                    layout="joomla.form.field.radio.switcher">
@@ -791,15 +811,10 @@
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
-            <field name="socialnetworking"
-                   type="radio"
-                   default="1"
-                   label="JBS_ADM_SOCIALNETWORKING"
-                   description="JBS_ADM_SOCIALNETWORKING_DESC"
-                   layout="joomla.form.field.radio.switcher">
-                <option value="0">JBS_CMN_HIDE</option>
-                <option value="1">JBS_CMN_SHOW</option>
-            </field>
+        </fieldset>
+        <!-- Details: Comments -->
+        <fieldset name="DETAILS_COMMENTS" label="JBS_TPL_DETAILS_COMMENTS_SETTINGS" layoutContext="details"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="show_comments" type="accesslevel" default=""
                    label="JBS_TPL_DETAILS_SHOW_COMMENTS" description="JBS_TPL_DETAILS_SHOW_COMMENTS_DESC">
                 <option value="0">JBS_CMN_HIDE</option>

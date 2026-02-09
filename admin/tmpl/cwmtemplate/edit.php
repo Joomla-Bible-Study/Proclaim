@@ -42,6 +42,211 @@ $wa->useScript('bootstrap.modal')
     ->useScript('com_proclaim.sortable')
     ->useScript('com_proclaim.layout-editor')
     ->useStyle('com_proclaim.layout-editor');
+
+// =====================================================================
+// Layout Editor: ALL script options and language strings are registered
+// HERE because the layout tab is lazy-loaded via AJAX (format=raw).
+// addScriptOptions() and Text::script() in AJAX context don't reach
+// the main page — they must be on the parent page before AJAX loads.
+// =====================================================================
+
+// Template params for initial loading
+$tplParams = $this->item->params;
+
+if (\is_string($tplParams)) {
+    $paramsArray = json_decode($tplParams, true, 512, JSON_THROW_ON_ERROR) ?: [];
+} elseif (\is_object($tplParams)) {
+    $paramsArray = $tplParams->toArray();
+} else {
+    $paramsArray = (array) $tplParams;
+}
+
+// Element definitions extracted from template.xml (single source of truth)
+$form = $this->form;
+
+$getFieldsetLabel = function (string $fieldsetName) use ($form): ?string {
+    $fieldsets = $form->getFieldsets();
+
+    if (isset($fieldsets[$fieldsetName]) && !empty($fieldsets[$fieldsetName]->label)) {
+        return Text::_($fieldsets[$fieldsetName]->label);
+    }
+
+    return null;
+};
+
+$elementSectionMap = [
+    'scripture1'        => 'JBS_TPL_SECTION_SCRIPTURE', 'scripture2' => 'JBS_TPL_SECTION_SCRIPTURE',
+    'secondary'         => 'JBS_TPL_SECTION_SCRIPTURE',
+    'title'             => 'JBS_TPL_SECTION_MESSAGE', 'date' => 'JBS_TPL_SECTION_MESSAGE',
+    'studyintro'        => 'JBS_TPL_SECTION_MESSAGE', 'studynumber' => 'JBS_TPL_SECTION_MESSAGE',
+    'duration'          => 'JBS_TPL_SECTION_MESSAGE',
+    'teacher'           => 'JBS_TPL_SECTION_TEACHER', 'teacherimage' => 'JBS_TPL_SECTION_TEACHER',
+    'teacher-title'     => 'JBS_TPL_SECTION_TEACHER', 'teachershort' => 'JBS_TPL_SECTION_TEACHER',
+    'teacherlong'       => 'JBS_TPL_SECTION_TEACHER', 'teacherlargeimage' => 'JBS_TPL_SECTION_TEACHER',
+    'teacherallinone'   => 'JBS_TPL_SECTION_TEACHER',
+    'teacheremail'      => 'JBS_TPL_SECTION_CONTACT', 'teacherweb' => 'JBS_TPL_SECTION_CONTACT',
+    'teacherphone'      => 'JBS_TPL_SECTION_CONTACT',
+    'teacherfb'         => 'JBS_TPL_SECTION_SOCIAL', 'teachertw' => 'JBS_TPL_SECTION_SOCIAL',
+    'teacherblog'       => 'JBS_TPL_SECTION_SOCIAL',
+    'series'            => 'JBS_TPL_SECTION_SERIES', 'seriesthumbnail' => 'JBS_TPL_SECTION_SERIES',
+    'seriesdescription' => 'JBS_TPL_SECTION_SERIES', 'description' => 'JBS_TPL_SECTION_SERIES',
+    'jbsmedia'          => 'JBS_TPL_SECTION_MEDIA', 'thumbnail' => 'JBS_TPL_SECTION_MEDIA',
+    'downloads'         => 'JBS_TPL_SECTION_MEDIA',
+    'topic'             => 'JBS_TPL_SECTION_METADATA', 'locations' => 'JBS_TPL_SECTION_METADATA',
+    'messagetype'       => 'JBS_TPL_SECTION_METADATA', 'hits' => 'JBS_TPL_SECTION_METADATA',
+    'custom'            => 'JBS_TPL_SECTION_CUSTOM', 'dcustom' => 'JBS_TPL_SECTION_CUSTOM',
+];
+
+$extractElements = function (array $fieldsetNames, string $prefix) use ($form, $elementSectionMap): array {
+    $elements = [];
+    $seen     = [];
+
+    foreach ($fieldsetNames as $fieldsetName) {
+        foreach ($form->getFieldset($fieldsetName) as $field) {
+            $name = $field->fieldname;
+
+            if (!str_ends_with($name, 'row')) {
+                continue;
+            }
+
+            $elementId = substr($name, \strlen($prefix), -3);
+
+            if (isset($seen[$elementId])) {
+                continue;
+            }
+            $seen[$elementId] = true;
+
+            $elements[] = [
+                'id'      => $elementId,
+                'label'   => Text::_($field->getAttribute('label')),
+                'section' => Text::_($elementSectionMap[$elementId] ?? 'JBS_TPL_SECTION_OTHER'),
+            ];
+        }
+    }
+
+    usort($elements, function ($a, $b) {
+        $cmp = strcmp($a['section'], $b['section']);
+
+        return $cmp !== 0 ? $cmp : strcmp($a['label'], $b['label']);
+    });
+
+    return $elements;
+};
+
+$elementDefinitions = [
+    'messages' => [
+        'label'    => $getFieldsetLabel('DISPLAYELEMENTS1') ?? Text::_('JBS_TPL_MESSAGES_LIST'),
+        'prefix'   => '',
+        'elements' => $extractElements(
+            ['DISPLAYELEMENTS1', 'DISPLAYELEMENTS2', 'DISPLAYELEMENTS3',
+             'DISPLAYELEMENTS4', 'DISPLAYELEMENTS5', 'DISPLAYELEMENTS6'],
+            ''
+        ),
+    ],
+    'details' => [
+        'label'    => $getFieldsetLabel('DDISPLAYELEMENTS1') ?? Text::_('JBS_TPL_STUDY_DETAILS'),
+        'prefix'   => 'd',
+        'elements' => $extractElements(
+            ['DDISPLAYELEMENTS1', 'DDISPLAYELEMENTS2', 'DDISPLAYELEMENTS3',
+             'DDISPLAYELEMENTS4', 'DDISPLAYELEMENTS5', 'DDISPLAYELEMENTS6'],
+            'd'
+        ),
+    ],
+    'teachers' => [
+        'label'    => $getFieldsetLabel('TEACHERDISPLAY') ?? Text::_('JBS_TPL_TEACHERS_LIST'),
+        'prefix'   => 'ts',
+        'elements' => $extractElements(['TEACHERDISPLAY'], 'ts'),
+    ],
+    'teacherDetails' => [
+        'label'    => $getFieldsetLabel('TEACHERDETAILSDISPLAY') ?? Text::_('JBS_TPL_TEACHER_DETAILS'),
+        'prefix'   => 'td',
+        'elements' => $extractElements(['TEACHERDETAILSDISPLAY'], 'td'),
+    ],
+    'series' => [
+        'label'    => $getFieldsetLabel('SERIESDISPLAY') ?? Text::_('JBS_TPL_SERIES_LIST'),
+        'prefix'   => 's',
+        'elements' => $extractElements(['SERIESDISPLAY'], 's'),
+    ],
+    'seriesDetails' => [
+        'label'    => $getFieldsetLabel('SERIESDETAILDISPLAY') ?? Text::_('JBS_TPL_SERIES_DETAILS'),
+        'prefix'   => 'sd',
+        'elements' => $extractElements(['SERIESDETAILDISPLAY'], 'sd'),
+    ],
+    'landingPage' => [
+        'label'       => $getFieldsetLabel('LANDINGPAGE') ?? Text::_('JBS_TPL_LANDING_PAGE'),
+        'prefix'      => '',
+        'isOrderOnly' => true,
+        'elements'    => (function () use ($form): array {
+            $field    = $form->getField('headingorder_1', 'params');
+            $sections = [];
+
+            if ($field && ($element = $field->element ?? null)) {
+                foreach ($element->option as $option) {
+                    $sections[] = [
+                        'id'         => (string) $option['value'],
+                        'label'      => Text::_((string) $option),
+                        'showParam'  => 'show' . (string) $option['value'],
+                        'labelParam' => (string) $option['value'] . 'label',
+                    ];
+                }
+            }
+
+            if (empty($sections)) {
+                $sections = [
+                    ['id' => 'teachers', 'label' => Text::_('JBS_CMN_TEACHERS'), 'showParam' => 'showteachers', 'labelParam' => 'teacherslabel'],
+                    ['id' => 'series', 'label' => Text::_('JBS_CMN_SERIES'), 'showParam' => 'showseries', 'labelParam' => 'serieslabel'],
+                    ['id' => 'books', 'label' => Text::_('JBS_CMN_BOOKS'), 'showParam' => 'showbooks', 'labelParam' => 'bookslabel'],
+                    ['id' => 'topics', 'label' => Text::_('JBS_CMN_TOPICS'), 'showParam' => 'showtopics', 'labelParam' => 'topicslabel'],
+                    ['id' => 'locations', 'label' => Text::_('JBS_CMN_LOCATIONS'), 'showParam' => 'showlocations', 'labelParam' => 'locationslabel'],
+                    ['id' => 'messagetypes', 'label' => Text::_('JBS_CMN_MESSAGETYPES'), 'showParam' => 'showmessagetypes', 'labelParam' => 'messagetypeslabel'],
+                    ['id' => 'years', 'label' => Text::_('JBS_CMN_YEARS'), 'showParam' => 'showyears', 'labelParam' => 'yearslabel'],
+                ];
+            }
+
+            return $sections;
+        })(),
+    ],
+];
+// Settings panel and landing section config from form fieldsets
+$fieldsets              = $form->getFieldsets();
+$settingsConfig         = [];
+$landingSectionSettings = [];
+
+foreach ($fieldsets as $fieldsetName => $fieldset) {
+    if (!empty($fieldset->layoutContext)) {
+        $contexts = array_map('trim', explode(',', $fieldset->layoutContext));
+        $label    = !empty($fieldset->label) ? Text::_($fieldset->label) : $fieldsetName;
+
+        foreach ($contexts as $context) {
+            if (!isset($settingsConfig[$context])) {
+                $settingsConfig[$context] = [];
+            }
+            $settingsConfig[$context][] = [
+                'fieldset' => $fieldsetName,
+                'label'    => $label,
+            ];
+        }
+    }
+
+    if (!empty($fieldset->landingSection)) {
+        $label                                             = !empty($fieldset->label) ? Text::_($fieldset->label) : $fieldsetName;
+        $landingSectionSettings[$fieldset->landingSection] = [
+            'fieldset' => $fieldsetName,
+            'label'    => $label,
+        ];
+    }
+}
+
+// Register all Layout Editor script options via centralized layout
+\Joomla\CMS\Layout\LayoutHelper::render('layouteditor.scriptoptions', [
+    'form'                   => $this->form,
+    'templateId'             => (int) $this->item->id,
+    'templateParams'         => $paramsArray,
+    'elementDefinitions'     => $elementDefinitions,
+    'settingsConfig'         => $settingsConfig,
+    'landingSectionSettings' => $landingSectionSettings,
+    'prependInherit'         => false,
+], JPATH_COMPONENT_ADMINISTRATOR . '/layouts');
 ?>
 
 <form action="<?php

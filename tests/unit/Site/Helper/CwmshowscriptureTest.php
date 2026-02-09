@@ -76,7 +76,7 @@ class CwmshowscriptureTest extends ProclaimTestCase
         $this->assertReturnTypeName('string', $reflection);
 
         $params = $reflection->getParameters();
-        $this->assertCount(3, $params);
+        $this->assertCount(4, $params);
         $this->assertEquals('result', $params[0]->getName());
         $this->assertParamTypeName(BiblePassageResult::class, $params[0]);
 
@@ -85,6 +85,11 @@ class CwmshowscriptureTest extends ProclaimTestCase
 
         $this->assertEquals('params', $params[2]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[2]);
+
+        $this->assertEquals('switcherHtml', $params[3]->getName());
+        $this->assertParamTypeName('string', $params[3]);
+        $this->assertTrue($params[3]->isDefaultValueAvailable());
+        $this->assertEquals('', $params[3]->getDefaultValue());
     }
 
     /**

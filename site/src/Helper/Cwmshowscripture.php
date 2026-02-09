@@ -18,6 +18,7 @@ use CWM\Component\Proclaim\Site\Bible\BibleProviderFactory;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
+use Joomla\CMS\Router\Route;
 use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -96,12 +97,14 @@ class Cwmshowscripture
             return '';
         }
 
-        $output = $this->renderTextPassage($result, $choice, $params);
+        // Build version switcher HTML (injected inside the passage container)
+        $switcherHtml = '';
 
-        // Add version switcher dropdown if enabled in template
         if ((int) $params->get('allow_version_switch', 0) === 1) {
-            $output = $this->renderVersionSwitcher($row, $version, $adminParams) . $output;
+            $switcherHtml = $this->renderVersionSwitcher($row, $version, $adminParams);
         }
+
+        $output = $this->renderTextPassage($result, $choice, $params, $switcherHtml);
 
         return $output;
     }
@@ -109,15 +112,16 @@ class Cwmshowscripture
     /**
      * Render a text-based scripture passage (from local or API provider).
      *
-     * @param   BiblePassageResult  $result  The passage result
-     * @param   int                 $choice  Display mode (0=hide, 1=toggle, 2=always, 3=popup)
-     * @param   Registry            $params  Template parameters
+     * @param   BiblePassageResult  $result       The passage result
+     * @param   int                 $choice       Display mode (0=hide, 1=toggle, 2=always, 3=popup)
+     * @param   Registry            $params       Template parameters
+     * @param   string              $switcherHtml Version switcher HTML to embed inside the passage
      *
      * @return  string  HTML output
      *
      * @since  10.1.0
      */
-    public function renderTextPassage(BiblePassageResult $result, int $choice, Registry $params): string
+    public function renderTextPassage(BiblePassageResult $result, int $choice, Registry $params, string $switcherHtml = ''): string
     {
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
         $wa->useStyle('com_proclaim.scripture-text');
@@ -152,6 +156,7 @@ class Cwmshowscripture
                 $passage .= '<div id="' . $id . '" class="scripture-text" style="display: none;">';
                 $passage .= '<div class="scripture-body">' . $result->text . '</div>';
                 $passage .= $copyrightHtml;
+                $passage .= $switcherHtml;
                 $passage .= '</div></div>';
                 break;
 
@@ -161,6 +166,7 @@ class Cwmshowscripture
                 $passage .= '<div class="scripture-text">';
                 $passage .= '<div class="scripture-body">' . $result->text . '</div>';
                 $passage .= $copyrightHtml;
+                $passage .= $switcherHtml;
                 $passage .= '</div></div>';
                 break;
 
@@ -189,6 +195,7 @@ class Cwmshowscripture
                     . 'aria-label="' . Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '">&times;</button>';
                 $passage .= '<div class="scripture-body">' . $result->text . '</div>';
                 $passage .= $copyrightHtml;
+                $passage .= $switcherHtml;
                 $passage .= '</div></div></div>';
                 break;
 
@@ -211,54 +218,225 @@ class Cwmshowscripture
      *
      * @since  10.1.0
      */
+    /**
+     * ISO 639-1 language code to language name mapping.
+     *
+     * @var array<string, string>
+     * @since 10.1.0
+     */
+    private static array $languageNames = [
+        'af' => 'Afrikaans', 'ar' => 'Arabic', 'cs' => 'Czech', 'da' => 'Danish',
+        'de' => 'German', 'el' => 'Greek', 'en' => 'English', 'es' => 'Spanish',
+        'fi' => 'Finnish', 'fr' => 'French', 'he' => 'Hebrew', 'hi' => 'Hindi',
+        'hu' => 'Hungarian', 'it' => 'Italian', 'ja' => 'Japanese', 'ko' => 'Korean',
+        'la' => 'Latin', 'nl' => 'Dutch', 'no' => 'Norwegian', 'pl' => 'Polish',
+        'pt' => 'Portuguese', 'ro' => 'Romanian', 'ru' => 'Russian', 'sv' => 'Swedish',
+        'sw' => 'Swahili', 'th' => 'Thai', 'tl' => 'Tagalog', 'tr' => 'Turkish',
+        'uk' => 'Ukrainian', 'vi' => 'Vietnamese', 'zh' => 'Chinese',
+    ];
+
+    /**
+     * Render the Bible version switcher dropdown.
+     *
+     * Displays a searchable dropdown grouped by language. The site language
+     * group appears first, followed by other languages alphabetically.
+     * Always includes bundled/default translations.
+     *
+     * @param   object    $row          Message row
+     * @param   string    $version      Current Bible version abbreviation
+     * @param   Registry  $adminParams  Admin parameters
+     *
+     * @return  string  HTML for the version switcher
+     *
+     * @since   10.1.0
+     */
     public function renderVersionSwitcher(object $row, string $version, Registry $adminParams): string
     {
-        $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+        $app = Factory::getApplication();
+        $wa  = $app->getDocument()->getWebAssetManager();
         $wa->useScript('com_proclaim.scripture-switcher');
+        $wa->useStyle('com_proclaim.scripture-switcher-css');
+
+        // Provide the AJAX endpoint URL to JS (SEF-safe, avoids redirect)
+        $ajaxUrl = Route::_('index.php?option=com_proclaim&task=cwmscripture.getPassageXHR&format=raw', false);
+        $app->getDocument()->addScriptOptions('com_proclaim.scripture', [
+            'ajaxUrl' => $ajaxUrl,
+        ]);
 
         // Build reference for AJAX calls
         $reference = $this->formReference($row);
 
-        $html  = '<div class="scripture-version-switcher">';
-        $html .= '<select class="scripture-version-select form-select form-select-sm" '
-            . 'data-reference="' . htmlspecialchars($reference) . '" '
-            . 'data-message-id="' . (int) ($row->id ?? 0) . '" '
-            . 'aria-label="' . Text::_('JBS_STY_BIBLE_VERSION') . '">';
+        // Detect the site's active language (ISO 2-letter code)
+        $siteLang = substr(Factory::getApplication()->getLanguage()->getTag(), 0, 2);
 
-        // Collect versions from DB
-        $versions = [];
+        // Collect translations from DB with language info
+        $translations = [];
 
         try {
             $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
             $query = $db->getQuery(true)
-                ->select($db->quoteName(['abbreviation', 'name']))
+                ->select($db->quoteName(['abbreviation', 'name', 'language']))
                 ->from($db->quoteName('#__bsms_bible_translations'))
-                ->order($db->quoteName('name') . ' ASC');
+                ->order($db->quoteName('language') . ' ASC, ' . $db->quoteName('name') . ' ASC');
             $db->setQuery($query);
-            $translations = $db->loadObjectList();
-
-            foreach ($translations as $trans) {
-                $versions[$trans->abbreviation] = $trans->name;
-            }
+            $translations = $db->loadObjectList() ?: [];
         } catch (\Exception $e) {
             // DB not available
         }
 
         // Fallback if nothing found
-        if (empty($versions)) {
-            $versions[$version] = strtoupper($version);
+        if (empty($translations)) {
+            $obj = (object) ['abbreviation' => $version, 'name' => strtoupper($version), 'language' => $siteLang];
+            $translations = [$obj];
         }
 
-        // Sort alphabetically and render
-        asort($versions);
+        // Group translations by language
+        $siteGroup  = []; // Site language translations (shown first)
+        $otherGroup = []; // Other languages, keyed by language name
 
-        foreach ($versions as $abbr => $name) {
-            $selected = ($abbr === $version) ? ' selected' : '';
-            $html .= '<option value="' . htmlspecialchars((string) $abbr) . '"' . $selected . '>'
-                . htmlspecialchars($name) . '</option>';
+        foreach ($translations as $trans) {
+            $langCode = substr($trans->language ?? 'en', 0, 2);
+            $langName = self::$languageNames[$langCode] ?? ucfirst($langCode);
+
+            $item = [
+                'abbr' => $trans->abbreviation,
+                'name' => $trans->name,
+                'lang' => $langCode,
+            ];
+
+            if ($langCode === $siteLang) {
+                $siteGroup[] = $item;
+            } else {
+                $otherGroup[$langName][] = $item;
+            }
         }
 
-        $html .= '</select></div>';
+        // Sort other groups alphabetically by language name
+        ksort($otherGroup);
+
+        // Build the searchable dropdown HTML
+        $messageId = (int) ($row->id ?? 0);
+        $siteLangName = self::$languageNames[$siteLang] ?? ucfirst($siteLang);
+
+        // Find current version name for display
+        $currentName = strtoupper($version);
+
+        foreach ($translations as $trans) {
+            if ($trans->abbreviation === $version) {
+                $currentName = $trans->name;
+
+                break;
+            }
+        }
+
+        $html = '<div class="scripture-version-switcher scripture-searchable-switcher" '
+            . 'data-reference="' . htmlspecialchars($reference) . '" '
+            . 'data-message-id="' . $messageId . '">';
+
+        // Hidden select for form data / fallback
+        $html .= '<select class="scripture-version-select" '
+            . 'data-reference="' . htmlspecialchars($reference) . '" '
+            . 'data-message-id="' . $messageId . '" '
+            . 'aria-label="' . Text::_('JBS_STY_BIBLE_VERSION') . '" '
+            . 'style="display:none;">';
+
+        // Site language group first
+        if (!empty($siteGroup)) {
+            $html .= '<optgroup label="' . htmlspecialchars($siteLangName) . '">';
+
+            foreach ($siteGroup as $item) {
+                $selected = ($item['abbr'] === $version) ? ' selected' : '';
+                $html .= '<option value="' . htmlspecialchars($item['abbr']) . '"'
+                    . ' data-lang="' . htmlspecialchars($item['lang']) . '"' . $selected . '>'
+                    . htmlspecialchars($item['name']) . '</option>';
+            }
+
+            $html .= '</optgroup>';
+        }
+
+        // Other language groups
+        foreach ($otherGroup as $langName => $items) {
+            $html .= '<optgroup label="' . htmlspecialchars((string) $langName) . '">';
+
+            foreach ($items as $item) {
+                $selected = ($item['abbr'] === $version) ? ' selected' : '';
+                $html .= '<option value="' . htmlspecialchars($item['abbr']) . '"'
+                    . ' data-lang="' . htmlspecialchars($item['lang']) . '"' . $selected . '>'
+                    . htmlspecialchars($item['name']) . '</option>';
+            }
+
+            $html .= '</optgroup>';
+        }
+
+        $html .= '</select>';
+
+        // Custom searchable dropdown UI (enhanced by JS)
+        $html .= '<div class="scripture-dropdown">';
+        $html .= '<button type="button" class="scripture-dropdown-toggle" '
+            . 'aria-haspopup="listbox" aria-expanded="false">'
+            . '<span class="scripture-dropdown-text">' . htmlspecialchars($currentName) . '</span>'
+            . '</button>';
+        $html .= '<div class="scripture-dropdown-menu" role="listbox" style="display:none;">';
+
+        // Search input (fixed at top via flex-shrink:0)
+        $html .= '<div class="scripture-dropdown-search">'
+            . '<input type="text" class="form-control form-control-sm" '
+            . 'placeholder="' . htmlspecialchars(Text::_('JBS_STY_SEARCH_VERSIONS')) . '" '
+            . 'aria-label="' . htmlspecialchars(Text::_('JBS_STY_SEARCH_VERSIONS')) . '">'
+            . '</div>';
+
+        // Scrollable items area
+        $html .= '<div class="scripture-dropdown-items">';
+
+        // Site language section
+        if (!empty($siteGroup)) {
+            $html .= '<div class="scripture-dropdown-group" data-lang="' . htmlspecialchars($siteLang) . '">';
+            $html .= '<div class="scripture-dropdown-header">' . htmlspecialchars($siteLangName) . '</div>';
+
+            foreach ($siteGroup as $item) {
+                $active = ($item['abbr'] === $version) ? ' active' : '';
+                $html .= '<div class="scripture-dropdown-item' . $active . '" '
+                    . 'role="option" data-value="' . htmlspecialchars($item['abbr']) . '" '
+                    . 'data-lang="' . htmlspecialchars($item['lang']) . '">'
+                    . htmlspecialchars($item['name']) . '</div>';
+            }
+
+            $html .= '</div>';
+        }
+
+        // Other language groups (initially hidden, inside the scrollable area)
+        if (!empty($otherGroup)) {
+            foreach ($otherGroup as $langName => $items) {
+                $langCode = $items[0]['lang'];
+                $html .= '<div class="scripture-dropdown-group scripture-other-lang" '
+                    . 'data-lang="' . htmlspecialchars($langCode) . '" style="display:none;">';
+                $html .= '<div class="scripture-dropdown-header">'
+                    . htmlspecialchars((string) $langName) . '</div>';
+
+                foreach ($items as $item) {
+                    $active = ($item['abbr'] === $version) ? ' active' : '';
+                    $html .= '<div class="scripture-dropdown-item' . $active . '" '
+                        . 'role="option" data-value="' . htmlspecialchars($item['abbr']) . '" '
+                        . 'data-lang="' . htmlspecialchars($item['lang']) . '">'
+                        . htmlspecialchars($item['name']) . '</div>';
+                }
+
+                $html .= '</div>';
+            }
+        }
+
+        $html .= '</div>'; // end .scripture-dropdown-items
+
+        // Footer with "Show All Languages" (fixed at bottom via flex-shrink:0)
+        if (!empty($otherGroup)) {
+            $html .= '<div class="scripture-dropdown-footer">';
+            $html .= '<button type="button" class="scripture-dropdown-show-all" '
+                . 'data-hide-text="' . htmlspecialchars(Text::_('JBS_STY_HIDE_OTHER_LANGUAGES')) . '">'
+                . Text::_('JBS_STY_SHOW_ALL_LANGUAGES') . '</button>';
+            $html .= '</div>';
+        }
+
+        $html .= '</div></div></div>'; // end menu, dropdown, switcher
 
         return $html;
     }
