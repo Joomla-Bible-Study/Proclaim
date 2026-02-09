@@ -163,6 +163,13 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                             <i class="icon-archive" aria-hidden="true"></i>
                             <span><?php echo Text::_('JBS_ADM_ARCHIVE'); ?></span>
                         </a>
+                        <!-- New: Scheduled Tasks Button -->
+                        <a href="<?php echo Route::_('index.php?option=com_scheduler&view=tasks&filter[search]=proclaim'); ?>"
+                           class="cwmadmin-action-card"
+                           title="<?php echo Text::_('JBS_ADM_SCHEDULED_TASKS'); ?>">
+                            <i class="icon-calendar" aria-hidden="true"></i>
+                            <span><?php echo Text::_('JBS_ADM_SCHEDULED_TASKS'); ?></span>
+                        </a>
                         <button type="button"
                            class="cwmadmin-action-card"
                            id="btn-alias-update"
@@ -341,10 +348,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
 
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'convert', Text::_('JBS_IBM_CONVERT'));
-        // Check if SermonSpeaker or PreachIt is installed
-        $ssInstalled = strpos($this->ss, 'href=') !== false;
-        $piInstalled = strpos($this->pi, 'href=') !== false;
-        ?>
+// Check if SermonSpeaker or PreachIt is installed
+$ssInstalled = strpos($this->ss, 'href=') !== false;
+$piInstalled = strpos($this->pi, 'href=') !== false;
+?>
         <div class="row" id="convert">
             <div class="col-12">
                 <h4><?php echo Text::_('JBS_IBM_CONVERT'); ?></h4>
@@ -359,10 +366,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                     <div class="cwmadmin-dashboard-cards" style="max-width: 400px;">
                         <?php if ($ssInstalled) : ?>
                             <a href="<?php
-                            echo Route::_(
-                                'index.php?option=com_proclaim&view=assets&task=cwmadmin.convertSermonSpeaker&' .
-                                Session::getFormToken() . '=1'
-                            ); ?>"
+                    echo Route::_(
+                        'index.php?option=com_proclaim&view=assets&task=cwmadmin.convertSermonSpeaker&' .
+                        Session::getFormToken() . '=1'
+                    ); ?>"
                                class="cwmadmin-action-card"
                                title="<?php echo Text::_('JBS_IBM_CONVERT_SERMON_SPEAKER'); ?>">
                                 <i class="icon-book" aria-hidden="true"></i>
@@ -378,10 +385,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
 
                         <?php if ($piInstalled) : ?>
                             <a href="<?php
-                            echo Route::_(
-                                'index.php?option=com_proclaim&view=assets&task=cwmadmin.convertPreachIt&' .
-                                Session::getFormToken() . '=1'
-                            ); ?>"
+                    echo Route::_(
+                        'index.php?option=com_proclaim&view=assets&task=cwmadmin.convertPreachIt&' .
+                        Session::getFormToken() . '=1'
+                    ); ?>"
                                class="cwmadmin-action-card"
                                title="<?php echo Text::_('JBS_IBM_CONVERT_PREACH_IT'); ?>">
                                 <i class="icon-list" aria-hidden="true"></i>
@@ -468,7 +475,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=' . (i
                         var countsHtml = '<ul class="list-unstyled">' +
                             '<li><strong><?php echo Text::_('JBS_CMN_STUDIES'); ?>:</strong> ' + data.studies + '</li>' +
                             '<li><strong><?php echo Text::_('JBS_CMN_TEACHERS'); ?>:</strong> ' + data.teachers + '</li>' +
-                            '<li><strong><?php echo Text::_('JBS_CMN_SERIES'); ?>:</strong> ' + data.series + '</li>' +
+                            '<li><strong><?php echo Text::_('JBS_CMN_SERIES'); ?>:</b> ' + data.series + '</li>' +
                             '<li><strong><?php echo Text::_('JBS_CMN_TOTAL'); ?>:</strong> ' + data.total + '</li>' +
                             '</ul>';
                         document.getElementById('migration-counts').innerHTML = countsHtml;
