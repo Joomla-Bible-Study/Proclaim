@@ -11,7 +11,7 @@
 
 namespace CWM\Component\Proclaim\Site\Helper;
 
-use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
 
@@ -72,7 +72,8 @@ class Cwmshowscripture
         }
 
         if ($css) {
-            HTMLHelper::_('stylesheet', 'media/com_proclaim/css/biblegateway-print.css', ['relative' => true]);
+            Factory::getApplication()->getDocument()->getWebAssetManager()
+                ->useStyle('com_proclaim.biblegateway-print');
         }
 
         return $passage;

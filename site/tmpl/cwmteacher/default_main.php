@@ -34,7 +34,7 @@ echo $teacherdisplay;
 if ($this->params->get('show_teacher_studies') > 0) {
     ?>
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-12">
                 <?php
             $teacherstudies = $listing->getFluidListing(
                 $this->teacherstudies,
@@ -51,7 +51,7 @@ if ($this->params->get('show_teacher_studies') > 0) {
     <hr/>
 
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-12">
             <a href="<?php
         echo Route::_('index.php?option=com_proclaim&view=cwmteachers&t=' . $this->template->id) ?>">
                 <button class="btn btn-primary"><?php
