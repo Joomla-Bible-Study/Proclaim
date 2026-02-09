@@ -35,7 +35,7 @@ $isPrint = !empty($this->print);
 if (!$isPrint && $this->item->params->get('showpodcastsubscribedetails') === '1') {
     ?>
     <div class="row proclaim-podcast-subscribe">
-        <div class="col-lg-12">
+        <div class="col-12">
             <?php
             echo $this->subscribe; ?>
         </div>
@@ -69,7 +69,7 @@ if (!$isPrint && $this->item->params->get('showpodcastsubscribedetails') === '1'
 if ($this->item->params->get('showrelated') === '1') {
     ?>
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-12">
             <?php
             echo $this->related; ?>
         </div>

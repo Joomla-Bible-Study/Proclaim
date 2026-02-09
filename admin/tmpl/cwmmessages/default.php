@@ -46,8 +46,7 @@ $workflow_featured = false;
 
 if ($workflow_enabled) :
     $wa->getRegistry()->addExtensionRegistryFile('com_workflow');
-    $wa->useScript('com_workflow.admin-items-workflow-buttons')
-        ->useScript('com_proclaim.messages-status');
+    $wa->useScript('com_workflow.admin-items-workflow-buttons');
 
     $workflow_state    = Factory::getApplication()->bootComponent('com_proclaim')->isFunctionalityUsed('core.state', 'com_proclaim.message');
     $workflow_featured = Factory::getApplication()->bootComponent('com_proclaim')->isFunctionalityUsed('core.featured', 'com_proclaim.messages');

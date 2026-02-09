@@ -224,17 +224,26 @@
                 "defer": true
             },
             "dependencies": [
-                "core",
-                "jquery-noconflict"
+                "core"
             ]
         },
         {
-            "name": "com_proclaim.cwmpodcast",
+            "name": "com_proclaim.fancybox",
             "type": "style",
-            "uri": "com_proclaim/cwmpodcast.min.css",
+            "uri": "com_proclaim/fancybox/fancybox.min.css"
+        },
+        {
+            "name": "com_proclaim.cwm-fancybox",
+            "type": "style",
+            "uri": "com_proclaim/cwm.fancybox.min.css",
             "dependencies": [
-                "com_proclaim.cwmcore"
+                "com_proclaim.fancybox"
             ]
+        },
+        {
+            "name": "com_proclaim.biblegateway-print",
+            "type": "style",
+            "uri": "com_proclaim/biblegateway-print.min.css"
         },
         {
             "name": "com_proclaim.general",

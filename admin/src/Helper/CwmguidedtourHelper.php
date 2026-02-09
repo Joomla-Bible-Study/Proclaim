@@ -178,6 +178,128 @@ class CwmguidedtourHelper
                 ],
             ],
         ],
+        'getting_started' => [
+            'title'       => 'COM_PROCLAIM_TOUR_GETTING_STARTED_TITLE',
+            'description' => 'COM_PROCLAIM_TOUR_GETTING_STARTED_DESC',
+            'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+            'extensions'  => ['com_proclaim'],
+            'published'   => 1,
+            'access'      => 1,
+            'language'    => '*',
+            'note'        => '',
+            'uid'         => 'com_proclaim_getting_started',
+            'autostart'   => false,
+            'steps'       => [
+                // Step 1: Welcome
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_WELCOME_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_WELCOME_DESC',
+                    'position'    => 'center',
+                    'target'      => '',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+                ],
+                // Step 2: Control Panel overview
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_CPANEL_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_CPANEL_DESC',
+                    'position'    => 'top',
+                    'target'      => '.cpanel-buttons',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+                ],
+                // Step 3: Navigate to Teachers
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_TEACHERS_NAV_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_TEACHERS_NAV_DESC',
+                    'position'    => 'right',
+                    'target'      => 'a[href*="view=cwmteachers"]',
+                    'type'        => 1,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+                ],
+                // Step 4: Teachers list
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_TEACHERS_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_TEACHERS_DESC',
+                    'position'    => 'top',
+                    'target'      => '#adminForm',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmteachers',
+                ],
+                // Step 5: Navigate to Series
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_SERIES_NAV_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_SERIES_NAV_DESC',
+                    'position'    => 'right',
+                    'target'      => 'a[href*="view=cwmseries"]',
+                    'type'        => 1,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmteachers',
+                ],
+                // Step 6: Series list
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_SERIES_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_SERIES_DESC',
+                    'position'    => 'top',
+                    'target'      => '#adminForm',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmseries',
+                ],
+                // Step 7: Navigate to Messages
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_MESSAGES_NAV_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_MESSAGES_NAV_DESC',
+                    'position'    => 'right',
+                    'target'      => 'a[href*="view=cwmmessages"]',
+                    'type'        => 1,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmseries',
+                ],
+                // Step 8: Messages overview
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_MESSAGES_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_MESSAGES_DESC',
+                    'position'    => 'top',
+                    'target'      => '#adminForm',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmmessages',
+                ],
+                // Step 9: Navigate to Templates
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_TEMPLATES_NAV_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_TEMPLATES_NAV_DESC',
+                    'position'    => 'right',
+                    'target'      => 'a[href*="view=cwmtemplates"]',
+                    'type'        => 1,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmmessages',
+                ],
+                // Step 10: Templates overview
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_TEMPLATES_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_TEMPLATES_DESC',
+                    'position'    => 'top',
+                    'target'      => '#adminForm',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmtemplates',
+                ],
+                // Step 11: Menu Item tip
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_MENU_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_MENU_DESC',
+                    'position'    => 'center',
+                    'target'      => '',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmtemplates',
+                ],
+                // Step 12: Tour Complete
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_COMPLETE_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_COMPLETE_DESC',
+                    'position'    => 'center',
+                    'target'      => '',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+                ],
+            ],
+        ],
     ];
 
     /**
@@ -217,6 +339,16 @@ class CwmguidedtourHelper
             'action'             => 'index.php?option=com_proclaim&view=cwmcpanel&startTour=1',
             'condition_file'     => 'admin://components/com_proclaim/postinstall/whatsnewtour.php',
             'condition_method'   => 'admin_postinstall_whatsnewtour_condition',
+            'version_introduced' => '10.1.0',
+        ],
+        'getting_started_tour' => [
+            'title_key'          => 'COM_PROCLAIM_TOUR_GETTING_STARTED_TITLE',
+            'description_key'    => 'COM_PROCLAIM_TOUR_GETTING_STARTED_DESC',
+            'action_key'         => 'COM_PROCLAIM_TOUR_START_BUTTON',
+            'type'               => 'link',
+            'action'             => 'index.php?option=com_proclaim&view=cwmcpanel&startTour=getting_started',
+            'condition_file'     => 'admin://components/com_proclaim/postinstall/gettingstarted.php',
+            'condition_method'   => 'admin_postinstall_gettingstarted_condition',
             'version_introduced' => '10.1.0',
         ],
     ];
