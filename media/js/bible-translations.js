@@ -365,7 +365,7 @@
             <div class="input-group input-group-sm">
                 <span class="input-group-text"><i class="icon-search" aria-hidden="true"></i></span>
                 <input type="text" class="form-control" id="translations-search"
-                       placeholder="${strings.searchPlaceholder}" value="${filters.search}">
+                       placeholder="${esc(strings.searchPlaceholder)}" value="${esc(filters.search)}">
             </div>`;
             toolbar.appendChild(searchCol);
 
