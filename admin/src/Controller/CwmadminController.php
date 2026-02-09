@@ -28,13 +28,14 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmrestore;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmssconvert;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
+
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Folder;
+use Joomla\CMS\Http\HttpFactory;
 use Joomla\Registry\Registry;
 
 /**
@@ -1856,15 +1857,29 @@ class CwmadminController extends FormController
             // Fetch available Bibles from API.Bible
             $http     = HttpFactory::getHttp();
             $response = $http->get(
-                'https://api.scripture.api.bible/v1/bibles',
+                'https://rest.api.bible/v1/bibles',
                 ['api-key' => $apiKey],
                 30
             );
 
             if ($response->code !== 200) {
+                // Parse API error message if available
+                $apiError = '';
+                $decoded  = json_decode($response->body ?? '', true);
+
+                if (\is_array($decoded) && isset($decoded['message'])) {
+                    $apiError = $decoded['message'];
+                } elseif (\is_array($decoded) && isset($decoded['error'])) {
+                    $apiError = $decoded['error'];
+                }
+
+                $detail = $apiError
+                    ? Text::sprintf('JBS_ADM_SYNC_FAILED_DETAIL', $response->code, $apiError)
+                    : Text::sprintf('JBS_ADM_SYNC_FAILED_CODE', $response->code);
+
                 echo json_encode([
                     'success' => false,
-                    'message' => Text::_('JBS_ADM_SYNC_FAILED'),
+                    'message' => $detail,
                 ], JSON_THROW_ON_ERROR);
                 $app->close();
 
@@ -1874,9 +1889,16 @@ class CwmadminController extends FormController
             $data = json_decode($response->body, true);
 
             if (!\is_array($data) || !isset($data['data'])) {
+                // Log the actual response for debugging
+                $snippet = substr($response->body ?? '', 0, 200);
+
                 echo json_encode([
                     'success' => false,
-                    'message' => Text::_('JBS_ADM_SYNC_FAILED'),
+                    'message' => Text::sprintf(
+                        'JBS_ADM_SYNC_FAILED_DETAIL',
+                        $response->code,
+                        'Unexpected response format: ' . $snippet
+                    ),
                 ], JSON_THROW_ON_ERROR);
                 $app->close();
 
@@ -1953,7 +1975,11 @@ class CwmadminController extends FormController
         } catch (\Exception $e) {
             echo json_encode([
                 'success' => false,
-                'message' => $e->getMessage(),
+                'message' => Text::sprintf(
+                    'JBS_ADM_SYNC_FAILED_DETAIL',
+                    0,
+                    $e->getMessage()
+                ),
             ], JSON_THROW_ON_ERROR);
         }
 

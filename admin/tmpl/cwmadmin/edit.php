@@ -681,7 +681,7 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                         <?php echo $this->form->renderField('provider_api_bible', 'params'); ?>
                         <?php echo $this->form->renderField('api_bible_api_key', 'params'); ?>
                         <div id="api-bible-sync-row" class="mb-3" style="display:none;">
-                            <button type="button" class="btn btn-sm btn-outline-primary" id="btn-sync-api-bible">
+                            <button type="button" class="btn btn-sm btn-primary" id="btn-sync-api-bible">
                                 <i class="icon-refresh" aria-hidden="true"></i>
                                 <?php echo Text::_('JBS_ADM_SYNC_TRANSLATIONS'); ?>
                             </button>
@@ -711,7 +711,7 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                             <h4 class="mb-0"><?php echo Text::_('JBS_ADM_LOCAL_TRANSLATIONS'); ?></h4>
                         </div>
                         <div class="btn-group btn-group-sm">
-                            <button type="button" class="btn btn-outline-danger d-none" id="btn-remove-all-translations"
+                            <button type="button" class="btn btn-danger d-none" id="btn-remove-all-translations"
                                     title="<?php echo Text::_('JBS_ADM_REMOVE_ALL'); ?>">
                                 <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_REMOVE_ALL'); ?>
                             </button>

@@ -932,8 +932,7 @@ VALUES (1, 'JBS_TOP_ABORTION', 1, NULL, 7491, '*', 1),
 -- Table structure for table `#__bsms_bible_translations`
 --
 
-CREATE TABLE IF NOT EXISTS `#__bsms_bible_translations`
-(
+CREATE TABLE IF NOT EXISTS `#__bsms_bible_translations` (
     `id`           INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `abbreviation` VARCHAR(20)      NOT NULL COMMENT 'Short code e.g. kjv, web, nlt',
     `name`         VARCHAR(255)     NOT NULL COMMENT 'Full name e.g. King James Version',
@@ -959,8 +958,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_bible_translations`
 -- Table structure for table `#__bsms_bible_verses`
 --
 
-CREATE TABLE IF NOT EXISTS `#__bsms_bible_verses`
-(
+CREATE TABLE IF NOT EXISTS `#__bsms_bible_verses` (
     `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `translation` VARCHAR(20)     NOT NULL COMMENT 'FK to bible_translations.abbreviation',
     `book`        TINYINT UNSIGNED NOT NULL COMMENT 'Standard book number 1-66',
@@ -980,8 +978,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_bible_verses`
 -- Table structure for table `#__bsms_scripture_cache`
 --
 
-CREATE TABLE IF NOT EXISTS `#__bsms_scripture_cache`
-(
+CREATE TABLE IF NOT EXISTS `#__bsms_scripture_cache` (
     `id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `provider`    VARCHAR(50)      NOT NULL COMMENT 'Provider name: getbible, bolls, etc.',
     `translation` VARCHAR(20)      NOT NULL,

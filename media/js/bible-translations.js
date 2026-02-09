@@ -158,13 +158,14 @@
                             Joomla.renderMessages({'message': [result.message]});
                             loadTranslations(true);
                         } else {
-                            statusEl.innerHTML = `<span class="text-danger">${strings.syncFailed}</span>`;
-                            Joomla.renderMessages({'error': [result.message || strings.syncFailed]});
+                            const errMsg = result.message || strings.syncFailed;
+                            statusEl.innerHTML = `<span class="text-danger">${errMsg}</span>`;
+                            Joomla.renderMessages({'error': [errMsg]});
                         }
                     })
-                    .catch(() => {
+                    .catch((err) => {
                         syncBtn.disabled = false;
-                        statusEl.innerHTML = `<span class="text-danger">${strings.syncFailed}</span>`;
+                        statusEl.innerHTML = `<span class="text-danger">${strings.syncFailed}: ${err.message || 'Network error'}</span>`;
                     });
             });
         }
@@ -313,7 +314,7 @@
                 // Insert language group header
                 if (lang !== currentLang) {
                     currentLang = lang;
-                    html += `<tr class="table-light"><td colspan="7"><strong>${lang}</strong></td></tr>`;
+                    html += `<tr class="table-active"><td colspan="7"><strong>${lang}</strong></td></tr>`;
                 }
 
                 const isInstalled = parseInt(t.installed) === 1;

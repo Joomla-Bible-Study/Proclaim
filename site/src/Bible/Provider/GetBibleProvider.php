@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Site\Bible\Provider;
 
 use CWM\Component\Proclaim\Site\Bible\AbstractBibleProvider;
 use CWM\Component\Proclaim\Site\Bible\BiblePassageResult;
+use Joomla\CMS\Log\Log;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -56,6 +57,8 @@ class GetBibleProvider extends AbstractBibleProvider
         $body    = $this->httpGet($url, 15);
 
         if ($body === null) {
+            Log::add('GetBible: API returned no data for "' . $apiRef . '" (' . $translation . ')', Log::WARNING, 'com_proclaim.bible');
+
             return new BiblePassageResult(
                 reference: $reference,
                 translation: $translation
@@ -65,6 +68,8 @@ class GetBibleProvider extends AbstractBibleProvider
         $data = json_decode($body, true);
 
         if (!\is_array($data) || empty($data)) {
+            Log::add('GetBible: Invalid JSON response for "' . $apiRef . '" (' . $translation . ')', Log::ERROR, 'com_proclaim.bible');
+
             return new BiblePassageResult(
                 reference: $reference,
                 translation: $translation

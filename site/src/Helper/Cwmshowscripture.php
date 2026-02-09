@@ -12,10 +12,12 @@
 namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Site\Bible\AbstractBibleProvider;
 use CWM\Component\Proclaim\Site\Bible\BiblePassageResult;
 use CWM\Component\Proclaim\Site\Bible\BibleProviderFactory;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
 use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -45,6 +47,8 @@ class Cwmshowscripture
      */
     public function buildPassage($row, Registry $params): string|bool
     {
+        AbstractBibleProvider::registerLogger();
+
         if (empty($row->bookname)) {
             return false;
         }
@@ -64,6 +68,7 @@ class Cwmshowscripture
             $admin       = Cwmparams::getAdmin();
             $adminParams = $admin->params ?? new Registry();
         } catch (\Exception $e) {
+            Log::add('Failed to load admin params: ' . $e->getMessage(), Log::WARNING, 'com_proclaim.bible');
             $adminParams = new Registry();
         }
 
@@ -80,10 +85,14 @@ class Cwmshowscripture
 
             $result = $provider->getPassage($reference, $version);
         } catch (\Exception $e) {
+            Log::add('Provider error for "' . $reference . '" (' . $version . '): ' . $e->getMessage(), Log::ERROR, 'com_proclaim.bible');
+
             return '';
         }
 
         if (!$result->hasText()) {
+            Log::add('No text returned for "' . $reference . '" (' . $version . ') via ' . ($provider->getName() ?? 'unknown'), Log::WARNING, 'com_proclaim.bible');
+
             return '';
         }
 

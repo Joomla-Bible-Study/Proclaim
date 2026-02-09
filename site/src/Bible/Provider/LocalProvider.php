@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Site\Bible\Provider;
 
 use CWM\Component\Proclaim\Site\Bible\AbstractBibleProvider;
 use CWM\Component\Proclaim\Site\Bible\BiblePassageResult;
+use Joomla\CMS\Log\Log;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -36,6 +37,8 @@ class LocalProvider extends AbstractBibleProvider
         $parsed = $this->parseReference($reference);
 
         if (!$parsed) {
+            Log::add('Local: Failed to parse reference "' . $reference . '"', Log::WARNING, 'com_proclaim.bible');
+
             return new BiblePassageResult(
                 reference: $reference,
                 translation: $translation
@@ -88,6 +91,8 @@ class LocalProvider extends AbstractBibleProvider
         $verses = $db->loadObjectList();
 
         if (empty($verses)) {
+            Log::add('Local: No verses found for "' . $reference . '" (' . $translation . '), book=' . $parsed['book'], Log::WARNING, 'com_proclaim.bible');
+
             return new BiblePassageResult(
                 reference: $reference,
                 translation: $translation

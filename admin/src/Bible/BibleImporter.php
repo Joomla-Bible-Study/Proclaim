@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Bible;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Http\HttpFactory;
+use Joomla\CMS\Log\Log;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
@@ -71,6 +72,12 @@ class BibleImporter
      */
     public static function downloadAndImport(string $abbreviation): int
     {
+        Log::addLogger(
+            ['text_file' => 'com_proclaim.bible.php'],
+            Log::ALL,
+            ['com_proclaim.bible']
+        );
+
         $http = HttpFactory::getHttp();
 
         // Fetch list of books for this translation
@@ -80,15 +87,21 @@ class BibleImporter
             $response = $http->get($booksUrl, [], self::HTTP_TIMEOUT);
 
             if ($response->code !== 200) {
+                Log::add('BibleImporter: HTTP ' . $response->code . ' fetching book list for "' . $abbreviation . '"', Log::ERROR, 'com_proclaim.bible');
+
                 return -1;
             }
 
             $books = json_decode($response->body, true);
 
             if (!\is_array($books) || empty($books)) {
+                Log::add('BibleImporter: Invalid or empty book list for "' . $abbreviation . '"', Log::ERROR, 'com_proclaim.bible');
+
                 return -1;
             }
         } catch (\Exception $e) {
+            Log::add('BibleImporter: Error fetching book list for "' . $abbreviation . '": ' . $e->getMessage(), Log::ERROR, 'com_proclaim.bible');
+
             return -1;
         }
 

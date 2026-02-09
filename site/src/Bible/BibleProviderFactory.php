@@ -15,6 +15,7 @@ use CWM\Component\Proclaim\Site\Bible\Provider\ApiBibleProvider;
 use CWM\Component\Proclaim\Site\Bible\Provider\GetBibleProvider;
 use CWM\Component\Proclaim\Site\Bible\Provider\LocalProvider;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Log\Log;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
@@ -106,7 +107,7 @@ class BibleProviderFactory
                 return self::getProvider('local');
             }
         } catch (\Throwable $e) {
-            // Fall through to next provider
+            Log::add('DB error checking local verses: ' . $e->getMessage(), Log::ERROR, 'com_proclaim.bible');
         }
 
         // Check if api_bible supports this version
@@ -125,7 +126,7 @@ class BibleProviderFactory
                     return self::getProvider('api_bible', $apiBibleKey);
                 }
             } catch (\Throwable $e) {
-                // Fall through to next provider
+                Log::add('DB error checking api_bible: ' . $e->getMessage(), Log::ERROR, 'com_proclaim.bible');
             }
         }
 
@@ -145,11 +146,13 @@ class BibleProviderFactory
                     return self::getProvider('getbible');
                 }
             } catch (\Throwable $e) {
-                // Fall through to fallback
+                Log::add('DB error checking getbible: ' . $e->getMessage(), Log::ERROR, 'com_proclaim.bible');
             }
         }
 
-        // Fallback: use getbible if enabled, otherwise local
+        // Fallback: no specific provider matched this translation
+        Log::add('No provider matched "' . $version . '", falling back to ' . ($getbibleEnabled ? 'getbible' : 'local'), Log::WARNING, 'com_proclaim.bible');
+
         if ($getbibleEnabled) {
             return self::getProvider('getbible');
         }

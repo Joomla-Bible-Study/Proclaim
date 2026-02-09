@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Site\Bible\Provider;
 use CWM\Component\Proclaim\Site\Bible\AbstractBibleProvider;
 use CWM\Component\Proclaim\Site\Bible\BiblePassageResult;
 use Joomla\CMS\Http\HttpFactory;
+use Joomla\CMS\Log\Log;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -29,7 +30,7 @@ use Joomla\CMS\Http\HttpFactory;
  * Privacy: All requests are server-side. Visitor IPs are never exposed.
  * FUMS tracking is done via server-side ping (no client-side JS).
  *
- * API docs: https://scripture.api.bible/docs
+ * API docs: https://docs.api.bible/
  *
  * @since  10.1.0
  */
@@ -41,7 +42,7 @@ class ApiBibleProvider extends AbstractBibleProvider
      * @var  string
      * @since  10.1.0
      */
-    private const API_BASE = 'https://api.scripture.api.bible/v1';
+    private const API_BASE = 'https://rest.api.bible/v1';
 
     /**
      * FUMS tracking base URL for server-side pings.
@@ -101,6 +102,8 @@ class ApiBibleProvider extends AbstractBibleProvider
     public function getPassage(string $reference, string $translation): BiblePassageResult
     {
         if (empty($this->apiKey)) {
+            Log::add('ApiBible: No API key configured — cannot fetch "' . $reference . '"', Log::WARNING, 'com_proclaim.bible');
+
             return new BiblePassageResult(
                 reference: $reference,
                 translation: $translation
@@ -118,16 +121,20 @@ class ApiBibleProvider extends AbstractBibleProvider
         $bibleId = $this->getBibleId($translation);
 
         if (empty($bibleId)) {
+            Log::add('ApiBible: No Bible ID (provider_id) for translation "' . $translation . '"', Log::WARNING, 'com_proclaim.bible');
+
             return new BiblePassageResult(
                 reference: $reference,
                 translation: $translation
             );
         }
 
-        // Parse reference (e.g. "John+3:16-18" or "Genesis+1:1")
+        // Parse reference (e.g. "John+3:16-18" or "Luke+1:20-2:5")
         $passageId = $this->buildPassageId($reference);
 
         if (empty($passageId)) {
+            Log::add('ApiBible: Failed to parse reference "' . $reference . '" into OSIS passage ID', Log::WARNING, 'com_proclaim.bible');
+
             return new BiblePassageResult(
                 reference: $reference,
                 translation: $translation
@@ -150,6 +157,8 @@ class ApiBibleProvider extends AbstractBibleProvider
         $data = json_decode($body, true);
 
         if (!\is_array($data) || !isset($data['data'])) {
+            Log::add('ApiBible: Invalid JSON response for "' . $reference . '" (' . $translation . ')', Log::ERROR, 'com_proclaim.bible');
+
             return new BiblePassageResult(
                 reference: $reference,
                 translation: $translation
@@ -272,8 +281,10 @@ class ApiBibleProvider extends AbstractBibleProvider
      *
      * Converts "John+3:16-18" to "JHN.3.16-JHN.3.18"
      * Converts "Genesis+1:1" to "GEN.1.1"
+     * Converts "Luke+7:36-7:38" to "LUK.7.36-LUK.7.38"
+     * Converts "Isaiah+52:13-53:12" to "ISA.52.13-ISA.53.12"
      *
-     * @param   string  $reference  Reference string like "John+3:16-18"
+     * @param   string  $reference  Reference string like "John+3:16-18" or "Luke+7:36-7:38"
      *
      * @return  string  OSIS passage ID or empty string on failure
      *
@@ -284,15 +295,16 @@ class ApiBibleProvider extends AbstractBibleProvider
         // Normalize: replace + with space
         $ref = str_replace('+', ' ', trim($reference));
 
-        // Match "Book Chapter:Verse[-EndVerse]"
-        if (!preg_match('/^(.+?)\s+(\d+):(\d+)(?:\s*-\s*(\d+))?$/i', $ref, $m)) {
+        // Match "Book Chapter:Verse[-[EndChapter:]EndVerse]"
+        if (!preg_match('/^(.+?)\s+(\d+):(\d+)(?:\s*-\s*(?:(\d+):)?(\d+))?$/i', $ref, $m)) {
             return '';
         }
 
         $bookName    = trim($m[1]);
         $chapter     = (int) $m[2];
         $verseStart  = (int) $m[3];
-        $verseEnd    = isset($m[4]) ? (int) $m[4] : null;
+        $chapterEnd  = !empty($m[4]) ? (int) $m[4] : $chapter;
+        $verseEnd    = !empty($m[5]) ? (int) $m[5] : null;
 
         // Find the OSIS code by matching book name
         $osisCode = $this->resolveBookToOsis($bookName);
@@ -303,8 +315,8 @@ class ApiBibleProvider extends AbstractBibleProvider
 
         $passageId = $osisCode . '.' . $chapter . '.' . $verseStart;
 
-        if ($verseEnd !== null && $verseEnd > $verseStart) {
-            $passageId .= '-' . $osisCode . '.' . $chapter . '.' . $verseEnd;
+        if ($verseEnd !== null && ($chapterEnd > $chapter || $verseEnd > $verseStart)) {
+            $passageId .= '-' . $osisCode . '.' . $chapterEnd . '.' . $verseEnd;
         }
 
         return $passageId;
@@ -351,8 +363,10 @@ class ApiBibleProvider extends AbstractBibleProvider
             if ($response->code === 200) {
                 return $response->body;
             }
+
+            Log::add('ApiBible: HTTP ' . $response->code . ' from ' . strtok($url, '?'), Log::ERROR, 'com_proclaim.bible');
         } catch (\Exception $e) {
-            // Silently fail
+            Log::add('ApiBible: HTTP error: ' . $e->getMessage(), Log::ERROR, 'com_proclaim.bible');
         }
 
         return null;

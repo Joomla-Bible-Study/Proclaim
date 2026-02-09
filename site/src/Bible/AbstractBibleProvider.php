@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Site\Bible;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Http\HttpFactory;
+use Joomla\CMS\Log\Log;
 use Joomla\Database\DatabaseInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -80,6 +81,14 @@ abstract class AbstractBibleProvider implements BibleProviderInterface
     ];
 
     /**
+     * Whether the Joomla logger has been registered for our category.
+     *
+     * @var  bool
+     * @since  10.1.0
+     */
+    private static bool $loggerRegistered = false;
+
+    /**
      * Cache TTL in seconds. Default 24 hours; configurable via admin params.
      *
      * @var  int
@@ -96,6 +105,27 @@ abstract class AbstractBibleProvider implements BibleProviderInterface
      *
      * @since  10.1.0
      */
+    /**
+     * Register the Joomla logger for the com_proclaim.bible category.
+     *
+     * Call once before any Log::add() calls. Safe to call multiple times.
+     *
+     * @return  void
+     *
+     * @since  10.1.0
+     */
+    public static function registerLogger(): void
+    {
+        if (!self::$loggerRegistered) {
+            Log::addLogger(
+                ['text_file' => 'com_proclaim.bible.php'],
+                Log::ALL,
+                ['com_proclaim.bible']
+            );
+            self::$loggerRegistered = true;
+        }
+    }
+
     public function setCacheTtl(int $seconds): void
     {
         $this->cacheTtl = max(3600, $seconds);
@@ -267,8 +297,10 @@ abstract class AbstractBibleProvider implements BibleProviderInterface
             if ($response->code === 200) {
                 return $response->body;
             }
+
+            Log::add('HTTP ' . $response->code . ' from ' . strtok($url, '?'), Log::WARNING, 'com_proclaim.bible');
         } catch (\Exception $e) {
-            // Silently fail; caller should handle null return
+            Log::add('HTTP request failed: ' . $e->getMessage(), Log::ERROR, 'com_proclaim.bible');
         }
 
         return null;
