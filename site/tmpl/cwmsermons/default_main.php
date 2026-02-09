@@ -59,7 +59,7 @@ if ($showArchived === '1') : ?>
     if ($this->params->get('intro_show') > 0) {
         if ($this->params->get('listteachers') && $this->params->get('list_teacher_show') > 0) {
             ?>
-            <div class="hero-unit" style="padding-top:30px; padding-bottom:20px;">
+            <div class="hero-unit pt-4 pb-3">
                 <div class="row">
 
                     <?php

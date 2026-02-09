@@ -34,7 +34,7 @@ $row = $this->item;
 if ($this->item->params->get('showpodcastsubscribedetails') === '1') {
     ?>
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-12">
             <?php
             echo $this->subscribe; ?>
         </div>
@@ -68,7 +68,7 @@ if ($this->item->params->get('showpodcastsubscribedetails') === '1') {
 if ($this->item->params->get('showrelated') === '1') {
     ?>
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-12">
             <?php
             echo $this->related; ?>
         </div>

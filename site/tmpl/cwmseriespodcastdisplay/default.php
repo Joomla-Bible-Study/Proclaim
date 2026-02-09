@@ -82,7 +82,7 @@ $CWMedia = new Cwmmedia();
 <form action="<?php echo htmlspecialchars(Uri::getInstance()->toString()); ?>" method="post" name="adminForm" id="adminForm">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-12 col-lg-6">
                 <?php
                 echo $this->item->image; ?>
                 <h2><?php
@@ -94,7 +94,7 @@ $CWMedia = new Cwmmedia();
             <?php
             if (!empty($this->media)) {
                 ?>
-                <div class="col-lg-6">
+                <div class="col-12 col-lg-6">
                     <?php
                     $this->params->set('player_width', ''); ?>
                     
@@ -170,7 +170,7 @@ $CWMedia = new Cwmmedia();
                 </div>
                 <?php
             } else { ?>
-                <div class="col-lg-6">
+                <div class="col-12 col-lg-6">
                     <p><?php
                         echo Text::_('JBS_CMN_NO_PODCASTS'); ?></p>
                 </div>
