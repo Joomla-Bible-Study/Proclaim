@@ -21,6 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const token = config.dataset.token;
     const baseUrl = 'index.php?option=com_proclaim&task=cwmadmin.';
+
+    // Escape HTML to prevent XSS when interpolating external data into innerHTML
+    const esc = (str) => {
+        const el = document.createElement('span');
+        el.textContent = String(str ?? '');
+        return el.innerHTML;
+    };
     const adminLanguage = (config.dataset.adminLanguage || 'en-GB').substring(0, 2).toLowerCase();
 
     // Translated strings from data attributes
@@ -238,18 +245,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     syncBtn.disabled = false;
 
                     if (result.success) {
-                        statusEl.innerHTML = `<span class="text-success">${strings.syncComplete.replace('%s', result.count)}</span>`;
+                        statusEl.innerHTML = `<span class="text-success">${esc(strings.syncComplete.replace('%s', result.count))}</span>`;
                         Joomla.renderMessages({'message': [result.message]});
                         loadTranslations(true);
                     } else {
                         const errMsg = result.message || strings.syncFailed;
-                        statusEl.innerHTML = `<span class="text-danger">${errMsg}</span>`;
+                        statusEl.innerHTML = `<span class="text-danger">${esc(errMsg)}</span>`;
                         Joomla.renderMessages({'error': [errMsg]});
                     }
                 })
                 .catch((err) => {
                     syncBtn.disabled = false;
-                    statusEl.innerHTML = `<span class="text-danger">${strings.syncFailed}: ${err.message || 'Network error'}</span>`;
+                    statusEl.innerHTML = `<span class="text-danger">${esc(strings.syncFailed)}: ${esc(err.message || 'Network error')}</span>`;
                 });
         });
     }
@@ -653,7 +660,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Insert language group header (only when not filtering by single language)
             if (showGroupHeaders && !filters.language && lang !== currentLang) {
                 currentLang = lang;
-                html += `<tr class="table-active"><td colspan="7"><strong>${lang}</strong></td></tr>`;
+                html += `<tr class="table-active"><td colspan="7"><strong>${esc(lang)}</strong></td></tr>`;
             }
 
             const isInstalled = parseInt(t.installed) === 1;
@@ -698,18 +705,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Core translations cannot be removed
                 actionBtn = `<span class="text-muted small" title="${strings.coreCannotRemove}"><i class="icon-lock" aria-hidden="true"></i></span>`;
             } else if (isInstalled) {
-                actionBtn = `<button type="button" class="btn btn-sm btn-danger btn-remove-translation" data-abbr="${t.abbreviation}">${strings.remove}</button>`;
+                actionBtn = `<button type="button" class="btn btn-sm btn-danger btn-remove-translation" data-abbr="${esc(t.abbreviation)}">${strings.remove}</button>`;
             } else if (isOnlineOnly) {
                 // API.Bible translations are online-only, cannot be downloaded locally
-                actionBtn = `<span class="badge bg-light text-dark border" title="${strings.onlineOnlyDesc}"><i class="icon-globe" aria-hidden="true"></i> ${strings.onlineOnly}</span>`;
+                actionBtn = `<span class="badge bg-light text-dark border" title="${esc(strings.onlineOnlyDesc)}"><i class="icon-globe" aria-hidden="true"></i> ${strings.onlineOnly}</span>`;
             } else {
-                actionBtn = `<button type="button" class="btn btn-sm btn-primary btn-download-translation" data-abbr="${t.abbreviation}">${strings.download}</button>`;
+                actionBtn = `<button type="button" class="btn btn-sm btn-primary btn-download-translation" data-abbr="${esc(t.abbreviation)}">${strings.download}</button>`;
             }
 
             html += '<tr>';
-            html += `<td>${t.name}</td>`;
-            html += `<td><code>${t.abbreviation.toUpperCase()}</code></td>`;
-            html += `<td>${t.source || 'getbible'}</td>`;
+            html += `<td>${esc(t.name)}</td>`;
+            html += `<td><code>${esc(t.abbreviation.toUpperCase())}</code></td>`;
+            html += `<td>${esc(t.source || 'getbible')}</td>`;
             html += `<td>${statusBadge}</td>`;
             html += `<td>${verseCount}</td>`;
             html += `<td>${dataSize}</td>`;
@@ -810,7 +817,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const container = document.getElementById('translations-list');
 
         pending.forEach((t) => {
-            const btn = container.querySelector(`.btn-download-translation[data-abbr="${t.abbreviation}"]`);
+            const btn = container.querySelector(`.btn-download-translation[data-abbr="${CSS.escape(t.abbreviation)}"]`);
 
             if (btn) {
                 btn.disabled = true;
