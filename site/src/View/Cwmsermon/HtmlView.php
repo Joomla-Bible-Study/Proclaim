@@ -483,6 +483,12 @@ class HtmlView extends BaseHtmlView
             $model->hit();
         }
 
+        // Set print mode from request
+        $this->print = $app->getInput()->getString('print', '');
+
+        // Load print stylesheet
+        $this->getDocument()->getWebAssetManager()->useStyle('com_proclaim.print');
+
         $this->prepareDocument();
 
         parent::display($tpl);

@@ -30,14 +30,14 @@ $wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
     }</style>
 
 
-<div class="row col-lg-12">
+<div class="row">
     <h2>
         Teachings
     </h2>
 </div>
 
 
-<div class="row col-lg-12 dropdowns"
+<div class="row dropdowns"
      style="background-color:#A9A9A9; margin:0 -5px; padding:8px 8px; border:1px solid #C5C1BE; position:relative; -webkit-border-radius:10px;">
 
     <?php
@@ -50,7 +50,7 @@ echo $this->page->series;
 foreach ($this->items as $study) {
     ?>
     <div style="width:100%;">
-        <div class="col-lg-3">
+        <div class="col-12 col-md-6 col-lg-3">
             <div style="padding:12px 8px;line-height:22px;height:200px;">
                 <?php
                 if ($study->study_thumbnail) {

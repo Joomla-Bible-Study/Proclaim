@@ -20,22 +20,23 @@
 
 
     <div class="row">
-        <div class="col-lg-12">
-            <h3 style="text-align:right;">
+        <div class="col-12">
+            <h3 class="text-end">
                 Bible Study from Calvary Chapel Newberg
             </h3>
         </div>
-        <div class="col-lg-12">
-            <h4 style="text-align:right;">
+        <div class="col-12">
+            <h4 class="text-end">
                 with <?php
                 echo $this->item->teachername; ?>
             </h4>
         </div>
     </div>
     <?php
-    echo $this->print;
-echo $this->page->social;
-//echo $this->related;
+$isPrint = !empty($this->print);
+if (!$isPrint) {
+    echo $this->page->social;
+}
 ?>
     <br/>
     <h2 style="text-align:center;">

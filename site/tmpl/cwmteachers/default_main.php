@@ -24,7 +24,7 @@ $listing      = $this->listing;
 $classelement = $this->classelement;
 ?>
 <div class="container proclaim-main-content" id="proclaim-main-content" role="main">
-    <div class="hero-unit" style="padding-top:30px; padding-bottom:20px;"> <!-- This div is the header container -->
+    <div class="hero-unit pt-4 pb-3"> <!-- This div is the header container -->
         <?php
         if ($classelement) : ?>
             <<?php
