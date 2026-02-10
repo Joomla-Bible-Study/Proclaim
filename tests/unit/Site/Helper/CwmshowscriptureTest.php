@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Tests\Site\Helper;
 
+use CWM\Component\Proclaim\Site\Bible\BiblePassageResult;
 use CWM\Component\Proclaim\Site\Helper\Cwmshowscripture;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -27,7 +28,6 @@ class CwmshowscriptureTest extends ProclaimTestCase
      * Test buildPassage method signature
      *
      * @return void
-     * #[CoversClass(Cwmshowscripture::class)]::buildPassage
      */
     public function testBuildPassageMethodSignature(): void
     {
@@ -35,13 +35,10 @@ class CwmshowscriptureTest extends ProclaimTestCase
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
-        // Return type is string|bool, which reflection might show differently
 
         $params = $reflection->getParameters();
         $this->assertCount(2, $params);
         $this->assertEquals('row', $params[0]->getName());
-        // No type hint in method signature for row
-
         $this->assertEquals('params', $params[1]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[1]);
     }
@@ -50,7 +47,6 @@ class CwmshowscriptureTest extends ProclaimTestCase
      * Test formReference method signature
      *
      * @return void
-     * #[CoversClass(Cwmshowscripture::class)]::formReference
      */
     public function testFormReferenceMethodSignature(): void
     {
@@ -67,14 +63,43 @@ class CwmshowscriptureTest extends ProclaimTestCase
     }
 
     /**
-     * Test getBiblegateway method signature
+     * Test renderTextPassage method signature
      *
      * @return void
-     * #[CoversClass(Cwmshowscripture::class)]::getBiblegateway
      */
-    public function testGetBiblegatewayMethodSignature(): void
+    public function testRenderTextPassageMethodSignature(): void
     {
-        $reflection = new \ReflectionMethod(Cwmshowscripture::class, 'getBiblegateway');
+        $reflection = new \ReflectionMethod(Cwmshowscripture::class, 'renderTextPassage');
+
+        $this->assertFalse($reflection->isStatic());
+        $this->assertTrue($reflection->isPublic());
+        $this->assertReturnTypeName('string', $reflection);
+
+        $params = $reflection->getParameters();
+        $this->assertCount(4, $params);
+        $this->assertEquals('result', $params[0]->getName());
+        $this->assertParamTypeName(BiblePassageResult::class, $params[0]);
+
+        $this->assertEquals('choice', $params[1]->getName());
+        $this->assertParamTypeName('int', $params[1]);
+
+        $this->assertEquals('params', $params[2]->getName());
+        $this->assertParamTypeName('Joomla\Registry\Registry', $params[2]);
+
+        $this->assertEquals('switcherHtml', $params[3]->getName());
+        $this->assertParamTypeName('string', $params[3]);
+        $this->assertTrue($params[3]->isDefaultValueAvailable());
+        $this->assertEquals('', $params[3]->getDefaultValue());
+    }
+
+    /**
+     * Test renderVersionSwitcher method signature
+     *
+     * @return void
+     */
+    public function testRenderVersionSwitcherMethodSignature(): void
+    {
+        $reflection = new \ReflectionMethod(Cwmshowscripture::class, 'renderVersionSwitcher');
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isPublic());
@@ -82,88 +107,13 @@ class CwmshowscriptureTest extends ProclaimTestCase
 
         $params = $reflection->getParameters();
         $this->assertCount(3, $params);
-        $this->assertEquals('reference', $params[0]->getName());
-        $this->assertParamTypeName('string', $params[0]);
+        $this->assertEquals('row', $params[0]->getName());
+        $this->assertParamTypeName('object', $params[0]);
 
         $this->assertEquals('version', $params[1]->getName());
         $this->assertParamTypeName('string', $params[1]);
 
-        $this->assertEquals('params', $params[2]->getName());
+        $this->assertEquals('adminParams', $params[2]->getName());
         $this->assertParamTypeName('Joomla\Registry\Registry', $params[2]);
-    }
-
-    /**
-     * Test getHideShow method signature
-     *
-     * @return void
-     * #[CoversClass(Cwmshowscripture::class)]::getHideShow
-     */
-    public function testGetHideShowMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(Cwmshowscripture::class, 'getHideShow');
-
-        $this->assertFalse($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-        $this->assertReturnTypeName('string', $reflection);
-
-        $params = $reflection->getParameters();
-        $this->assertCount(1, $params);
-        $this->assertEquals('params', $params[0]->getName());
-        $this->assertParamTypeName('Joomla\Registry\Registry', $params[0]);
-    }
-
-    /**
-     * Test getShow method signature
-     *
-     * @return void
-     * #[CoversClass(Cwmshowscripture::class)]::getShow
-     */
-    public function testGetShowMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(Cwmshowscripture::class, 'getShow');
-
-        $this->assertFalse($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-        $this->assertReturnTypeName('string', $reflection);
-    }
-
-    /**
-     * Test getLink method signature
-     *
-     * @return void
-     * #[CoversClass(Cwmshowscripture::class)]::getLink
-     */
-    public function testGetLinkMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(Cwmshowscripture::class, 'getLink');
-
-        $this->assertFalse($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-        $this->assertReturnTypeName('string', $reflection);
-
-        $params = $reflection->getParameters();
-        $this->assertCount(1, $params);
-        $this->assertEquals('params', $params[0]->getName());
-        $this->assertParamTypeName('Joomla\Registry\Registry', $params[0]);
-    }
-
-    /**
-     * Test bodyOnly method signature
-     *
-     * @return void
-     * #[CoversClass(Cwmshowscripture::class)]::bodyOnly
-     */
-    public function testBodyOnlyMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(Cwmshowscripture::class, 'bodyOnly');
-
-        $this->assertFalse($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-        $this->assertReturnTypeName('string', $reflection);
-
-        $params = $reflection->getParameters();
-        $this->assertCount(1, $params);
-        $this->assertEquals('html', $params[0]->getName());
-        $this->assertParamTypeName('string', $params[0]);
     }
 }

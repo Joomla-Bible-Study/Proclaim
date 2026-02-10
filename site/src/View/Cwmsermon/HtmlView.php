@@ -391,7 +391,7 @@ class HtmlView extends BaseHtmlView
         $podcast         = new Cwmpodcastsubscribe();
         $this->subscribe = $podcast->buildSubscribeTable($this->item->params->get('subscribeintro', 'Our Podcasts'));
 
-        // Passage link to BibleGateway
+        // Scripture links plugin
         $plugin = PluginHelper::getPlugin('content', 'scripturelinks');
 
         if ($plugin) {

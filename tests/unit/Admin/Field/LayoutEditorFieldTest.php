@@ -39,18 +39,26 @@ class LayoutEditorFieldTest extends ProclaimTestCase
     }
 
     /**
-     * Test loadLanguageStrings method signature
+     * Test registerScriptOptions method signature
      *
      * @return void
-     * #[CoversClass(LayoutEditorField::class)]::loadLanguageStrings
+     * #[CoversClass(LayoutEditorField::class)]::registerScriptOptions
      */
-    public function testLoadLanguageStringsMethodSignature(): void
+    public function testRegisterScriptOptionsMethodSignature(): void
     {
-        $reflection = new \ReflectionMethod(LayoutEditorField::class, 'loadLanguageStrings');
+        $reflection = new \ReflectionMethod(LayoutEditorField::class, 'registerScriptOptions');
 
         $this->assertFalse($reflection->isStatic());
         $this->assertTrue($reflection->isProtected());
         $this->assertReturnTypeName('void', $reflection);
+
+        $params = $reflection->getParameters();
+        $this->assertCount(2, $params);
+        $this->assertEquals('elementDefs', $params[0]->getName());
+        $this->assertParamTypeName('array', $params[0]);
+
+        $this->assertEquals('params', $params[1]->getName());
+        $this->assertParamTypeName('array', $params[1]);
     }
 
     /**
@@ -88,26 +96,4 @@ class LayoutEditorFieldTest extends ProclaimTestCase
         $this->assertParamTypeName('string', $params[0]);
     }
 
-    /**
-     * Test setJavaScriptOptions method signature
-     *
-     * @return void
-     * #[CoversClass(LayoutEditorField::class)]::setJavaScriptOptions
-     */
-    public function testSetJavaScriptOptionsMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(LayoutEditorField::class, 'setJavaScriptOptions');
-
-        $this->assertFalse($reflection->isStatic());
-        $this->assertTrue($reflection->isProtected());
-        $this->assertReturnTypeName('void', $reflection);
-
-        $params = $reflection->getParameters();
-        $this->assertCount(2, $params);
-        $this->assertEquals('elementDefs', $params[0]->getName());
-        $this->assertParamTypeName('array', $params[0]);
-
-        $this->assertEquals('params', $params[1]->getName());
-        $this->assertParamTypeName('array', $params[1]);
-    }
 }

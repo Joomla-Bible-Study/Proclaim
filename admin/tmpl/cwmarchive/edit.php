@@ -104,7 +104,7 @@ $wa->useScript('keepalive')
                     <hr class="my-4">
 
                     <div class="d-flex gap-2 justify-content-between">
-                        <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1'); ?>"
+                        <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                            class="btn btn-secondary">
                             <i class="icon-arrow-left me-1" aria-hidden="true"></i>
                             <?php echo Text::_('JTOOLBAR_BACK'); ?>
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Joomla submitbutton for toolbar
     Joomla.submitbutton = function(task) {
         if (task === 'cwmadmin.back' || task === 'administration.back') {
-            window.location.href = '<?php echo Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', false); ?>';
+            window.location.href = '<?php echo Route::_('index.php?option=com_proclaim&view=cwmadmin', false); ?>';
             return;
         }
         var form = document.getElementById('adminForm');

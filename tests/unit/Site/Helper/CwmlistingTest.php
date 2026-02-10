@@ -482,29 +482,6 @@ class CwmlistingTest extends ProclaimTestCase
     }
 
     /**
-     * Test getPassage method signature
-     *
-     * @return void
-     * #[CoversClass(Cwmlisting::class)]::getPassage
-     */
-    public function testGetPassageMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(Cwmlisting::class, 'getPassage');
-
-        $this->assertFalse($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-        $this->assertReturnTypeName('string', $reflection);
-
-        $params = $reflection->getParameters();
-        $this->assertCount(2, $params);
-        $this->assertEquals('params', $params[0]->getName());
-        // No type hint in method signature for params
-
-        $this->assertEquals('row', $params[1]->getName());
-        // No type hint in method signature for row
-    }
-
-    /**
      * Test getShare method signature
      *
      * @return void

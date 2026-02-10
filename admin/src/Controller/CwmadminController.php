@@ -15,10 +15,12 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Bible\BibleImporter;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageCleanup;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Administrator\Lib\CwmpIconvert;
@@ -26,10 +28,12 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmrestore;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmssconvert;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
 
@@ -81,7 +85,7 @@ class CwmadminController extends FormController
 
             case 'playerbymediatype':
                 $msg = $model->playerByMediaType();
-                $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+                $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
                 break;
         }
     }
@@ -132,7 +136,7 @@ class CwmadminController extends FormController
 
                     if (!$db->execute()) {
                         $msg = Text::_('JBS_ADM_ERROR_OCCURED');
-                        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+                        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
                     }
                 }
             }
@@ -140,7 +144,7 @@ class CwmadminController extends FormController
             $msg = Text::_('JBS_ADM_ERROR_OCCURED') . ': Missed setting the From or To';
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
     }
 
     /**
@@ -195,12 +199,12 @@ class CwmadminController extends FormController
 
                 if (!$db->execute()) {
                     $msg = Text::_('JBS_ADM_ERROR_OCCURED');
-                    $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+                    $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
                 }
             }
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
     }
 
     /**
@@ -416,7 +420,7 @@ class CwmadminController extends FormController
                 break;
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
     }
 
     /**
@@ -450,7 +454,7 @@ class CwmadminController extends FormController
             $msg = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
     }
 
     /**
@@ -485,7 +489,7 @@ class CwmadminController extends FormController
             $msg     = Text::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . Text::_('JBS_CMN_ROWS_RESET');
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
     }
 
     /**
@@ -520,7 +524,7 @@ class CwmadminController extends FormController
             $msg     = Text::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . Text::_('JBS_CMN_ROWS_RESET');
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
     }
 
     /**
@@ -532,7 +536,7 @@ class CwmadminController extends FormController
      */
     public function back(): void
     {
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1');
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin');
     }
 
     /**
@@ -554,7 +558,7 @@ class CwmadminController extends FormController
 
         $convert      = new Cwmssconvert();
         $ssconversion = $convert->convertSS();
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $ssconversion);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $ssconversion);
     }
 
     /**
@@ -576,7 +580,7 @@ class CwmadminController extends FormController
 
         $convert      = new CwmpIconvert();
         $piconversion = $convert->convertPI();
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $piconversion);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $piconversion);
     }
 
     /**
@@ -625,7 +629,7 @@ class CwmadminController extends FormController
 
         $update = Cwmalias::updateAlias();
         $this->setMessage(Text::_('JBS_ADM_ALIAS_ROWS') . $update);
-        $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', false));
+        $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmadmin', false));
     }
 
     /**
@@ -954,7 +958,7 @@ class CwmadminController extends FormController
         }
 
         // Redirect back to the form in all cases
-        $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit', false));
+        $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmadmin', false));
 
         return true;
     }
@@ -1554,6 +1558,507 @@ class CwmadminController extends FormController
                 'success' => true,
                 'count'   => $count,
                 'message' => Text::sprintf('JBS_ADM_PLAYER_BY_MEDIATYPE_CHANGED', $count),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Get scripture provider status XHR - returns count of locally installed translations
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function getScriptureStatusXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select('COUNT(*)')
+                ->from($db->quoteName('#__bsms_bible_translations'))
+                ->where($db->quoteName('installed') . ' = 1');
+            $db->setQuery($query);
+            $localCount = (int) $db->loadResult();
+
+            echo json_encode([
+                'success'     => true,
+                'local_count' => $localCount,
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success'     => true,
+                'local_count' => 0,
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Get list of available translations with install status.
+     *
+     * @return  void
+     *
+     * @since 10.1.0
+     */
+    public function getTranslationsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+
+            $query = $db->getQuery(true)
+                ->select($db->quoteName(['t.abbreviation', 't.name', 't.language', 't.installed', 't.verse_count', 't.source', 't.bundled', 't.estimated_size']))
+                ->select('COALESCE(SUM(LENGTH(' . $db->quoteName('v.text') . ')), 0) AS ' . $db->quoteName('data_size'))
+                ->from($db->quoteName('#__bsms_bible_translations', 't'))
+                ->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_bible_verses', 'v')
+                    . ' ON ' . $db->quoteName('v.translation') . ' = ' . $db->quoteName('t.abbreviation')
+                )
+                ->group($db->quoteName('t.id'))
+                ->order($db->quoteName('t.name') . ' ASC');
+            $db->setQuery($query);
+            $translations = $db->loadObjectList();
+
+            // Build usage counts from studies table (separate query, fail-safe)
+            $usageCounts = [];
+
+            try {
+                $query = $db->getQuery(true)
+                    ->select($db->quoteName('bible_version') . ' AS ' . $db->quoteName('abbr'))
+                    ->select('COUNT(*) AS ' . $db->quoteName('cnt'))
+                    ->from($db->quoteName('#__bsms_studies'))
+                    ->where($db->quoteName('bible_version') . ' IS NOT NULL')
+                    ->where($db->quoteName('bible_version') . ' != ' . $db->quote(''))
+                    ->group($db->quoteName('bible_version'));
+                $db->setQuery($query);
+
+                foreach ($db->loadObjectList() as $row) {
+                    $usageCounts[$row->abbr] = (int) $row->cnt;
+                }
+
+                $query = $db->getQuery(true)
+                    ->select($db->quoteName('bible_version2') . ' AS ' . $db->quoteName('abbr'))
+                    ->select('COUNT(*) AS ' . $db->quoteName('cnt'))
+                    ->from($db->quoteName('#__bsms_studies'))
+                    ->where($db->quoteName('bible_version2') . ' IS NOT NULL')
+                    ->where($db->quoteName('bible_version2') . ' != ' . $db->quote(''))
+                    ->group($db->quoteName('bible_version2'));
+                $db->setQuery($query);
+
+                foreach ($db->loadObjectList() as $row) {
+                    $usageCounts[$row->abbr] = ($usageCounts[$row->abbr] ?? 0) + (int) $row->cnt;
+                }
+            } catch (\Exception) {
+                // bible_version columns may not exist yet — usage counts stay empty
+            }
+
+            // Calculate total size and attach usage counts
+            $totalSize = 0;
+
+            foreach ($translations as $t) {
+                $totalSize += (int) $t->data_size;
+                $t->usage_count = $usageCounts[$t->abbreviation] ?? 0;
+            }
+
+            echo json_encode([
+                'success'      => true,
+                'translations' => $translations,
+                'total_size'   => $totalSize,
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Download and install a Bible translation locally.
+     *
+     * @return  void
+     *
+     * @since 10.1.0
+     */
+    public function downloadTranslationXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $abbreviation = $app->getInput()->getCmd('abbreviation', '');
+
+        if (empty($abbreviation)) {
+            echo json_encode(['success' => false, 'message' => 'No abbreviation provided'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            // Downloading 66 books can take a while
+            @set_time_limit(600);
+
+            $count = BibleImporter::downloadAndImport($abbreviation);
+
+            if ($count < 0) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => Text::sprintf('JBS_ADM_BIBLE_DOWNLOAD_FAILED', strtoupper($abbreviation)),
+                ], JSON_THROW_ON_ERROR);
+            } else {
+                echo json_encode([
+                    'success'     => true,
+                    'verse_count' => $count,
+                    'message'     => Text::sprintf('JBS_ADM_BIBLE_DOWNLOAD_SUCCESS', strtoupper($abbreviation), $count),
+                ], JSON_THROW_ON_ERROR);
+            }
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Remove a locally installed Bible translation.
+     *
+     * @return  void
+     *
+     * @since 10.1.0
+     */
+    public function removeTranslationXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $abbreviation = $app->getInput()->getCmd('abbreviation', '');
+
+        if (empty($abbreviation)) {
+            echo json_encode(['success' => false, 'message' => 'No abbreviation provided'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            BibleImporter::removeTranslation($abbreviation);
+
+            echo json_encode([
+                'success' => true,
+                'message' => Text::sprintf('JBS_ADM_BIBLE_REMOVED', strtoupper($abbreviation)),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Remove all installed translations and their verses.
+     *
+     * @return  void
+     *
+     * @since  10.1.0
+     */
+    public function removeAllTranslationsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $count = BibleImporter::removeAllTranslations();
+
+            echo json_encode([
+                'success' => true,
+                'message' => Text::sprintf('JBS_ADM_BIBLE_REMOVED_ALL', $count),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Sync translations from API.Bible using the configured API key.
+     *
+     * Fetches available Bibles from the API.Bible endpoint and upserts them
+     * into the bible_translations table with source='api_bible'.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since  10.1.0
+     */
+    public function syncApiBibleTranslationsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $admin  = Cwmparams::getAdmin();
+            $params = $admin->params;
+            $apiKey = (string) $params->get('api_bible_api_key', '');
+
+            if (empty($apiKey)) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => Text::_('JBS_ADM_API_BIBLE_KEY_DESC'),
+                ], JSON_THROW_ON_ERROR);
+                $app->close();
+
+                return;
+            }
+
+            // Fetch available Bibles from API.Bible
+            $http     = HttpFactory::getHttp();
+            $response = $http->get(
+                'https://rest.api.bible/v1/bibles',
+                ['api-key' => $apiKey],
+                30
+            );
+
+            if ($response->code !== 200) {
+                // Parse API error message if available
+                $apiError = '';
+                $decoded  = json_decode($response->body ?? '', true);
+
+                if (\is_array($decoded) && isset($decoded['message'])) {
+                    $apiError = $decoded['message'];
+                } elseif (\is_array($decoded) && isset($decoded['error'])) {
+                    $apiError = $decoded['error'];
+                }
+
+                $detail = $apiError
+                    ? Text::sprintf('JBS_ADM_SYNC_FAILED_DETAIL', $response->code, $apiError)
+                    : Text::sprintf('JBS_ADM_SYNC_FAILED_CODE', $response->code);
+
+                echo json_encode([
+                    'success' => false,
+                    'message' => $detail,
+                ], JSON_THROW_ON_ERROR);
+                $app->close();
+
+                return;
+            }
+
+            $data = json_decode($response->body, true);
+
+            if (!\is_array($data) || !isset($data['data'])) {
+                // Log the actual response for debugging
+                $snippet = substr($response->body ?? '', 0, 200);
+
+                echo json_encode([
+                    'success' => false,
+                    'message' => Text::sprintf(
+                        'JBS_ADM_SYNC_FAILED_DETAIL',
+                        $response->code,
+                        'Unexpected response format: ' . $snippet
+                    ),
+                ], JSON_THROW_ON_ERROR);
+                $app->close();
+
+                return;
+            }
+
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $count = 0;
+
+            foreach ($data['data'] as $bible) {
+                $bibleId     = $bible['id'] ?? '';
+                $name        = $bible['name'] ?? ($bible['nameLocal'] ?? '');
+                $abbr        = strtolower($bible['abbreviation'] ?? $bible['abbreviationLocal'] ?? '');
+                $language    = $bible['language']['id'] ?? 'en';
+
+                if (empty($bibleId) || empty($abbr) || empty($name)) {
+                    continue;
+                }
+
+                // Truncate abbreviation to fit VARCHAR(20) column
+                $abbr = substr($abbr, 0, 20);
+
+                // Check if this abbreviation already exists with a different source
+                $query = $db->getQuery(true)
+                    ->select($db->quoteName(['id', 'source']))
+                    ->from($db->quoteName('#__bsms_bible_translations'))
+                    ->where($db->quoteName('abbreviation') . ' = :abbr')
+                    ->bind(':abbr', $abbr);
+                $db->setQuery($query);
+                $existing = $db->loadObject();
+
+                if ($existing && $existing->source !== 'api_bible') {
+                    // Don't overwrite local/getbible entries
+                    continue;
+                }
+
+                if ($existing) {
+                    // Update existing api_bible entry
+                    $query = $db->getQuery(true)
+                        ->update($db->quoteName('#__bsms_bible_translations'))
+                        ->set($db->quoteName('name') . ' = :name')
+                        ->set($db->quoteName('language') . ' = :lang')
+                        ->set($db->quoteName('provider_id') . ' = :pid')
+                        ->where($db->quoteName('id') . ' = ' . (int) $existing->id)
+                        ->bind(':name', $name)
+                        ->bind(':lang', $language)
+                        ->bind(':pid', $bibleId);
+                    $db->setQuery($query);
+                    $db->execute();
+                } else {
+                    // Insert new entry
+                    $source = 'api_bible';
+                    $query  = $db->getQuery(true)
+                        ->insert($db->quoteName('#__bsms_bible_translations'))
+                        ->columns($db->quoteName(['abbreviation', 'name', 'language', 'source', 'provider_id']))
+                        ->values(':abbr2, :name2, :lang2, :source2, :pid2')
+                        ->bind(':abbr2', $abbr)
+                        ->bind(':name2', $name)
+                        ->bind(':lang2', $language)
+                        ->bind(':source2', $source)
+                        ->bind(':pid2', $bibleId);
+                    $db->setQuery($query);
+                    $db->execute();
+                }
+
+                $count++;
+            }
+
+            echo json_encode([
+                'success' => true,
+                'count'   => $count,
+                'message' => Text::sprintf('JBS_ADM_SYNC_COMPLETE', $count),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::sprintf(
+                    'JBS_ADM_SYNC_FAILED_DETAIL',
+                    0,
+                    $e->getMessage()
+                ),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Remove non-installed translation records from a provider.
+     *
+     * Called when a provider is disabled to clean up synced entries that
+     * were never downloaded locally.
+     *
+     * @return  void
+     *
+     * @since  10.1.0
+     */
+    public function cleanupProviderXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $source = $app->getInput()->getCmd('source', '');
+
+        if (empty($source)) {
+            echo json_encode(['success' => false, 'message' => 'No source provided'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $count = BibleImporter::removeProviderEntries($source);
+
+            echo json_encode([
+                'success' => true,
+                'count'   => $count,
+                'message' => Text::sprintf('JBS_ADM_PROVIDER_CLEANUP_DONE', $count),
             ], JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
             echo json_encode([

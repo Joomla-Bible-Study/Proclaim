@@ -241,9 +241,9 @@
             ]
         },
         {
-            "name": "com_proclaim.biblegateway-print",
+            "name": "com_proclaim.scripture-text",
             "type": "style",
-            "uri": "com_proclaim/biblegateway-print.min.css"
+            "uri": "com_proclaim/scripture-text.css"
         },
         {
             "name": "com_proclaim.general",
@@ -342,6 +342,34 @@
             "name": "com_proclaim.quickicon-enhanced",
             "type": "script",
             "uri": "com_proclaim/quickicon-enhanced.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.scripture-switcher-css",
+            "type": "style",
+            "uri": "com_proclaim/scripture-switcher.css"
+        },
+        {
+
+            "name": "com_proclaim.scripture-switcher",
+            "type": "script",
+            "uri": "com_proclaim/scripture-switcher.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.bible-translations",
+            "type": "script",
+            "uri": "com_proclaim/bible-translations.js",
             "dependencies": [
                 "core"
             ],

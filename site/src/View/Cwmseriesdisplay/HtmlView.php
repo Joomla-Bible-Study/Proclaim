@@ -260,7 +260,7 @@ class HtmlView extends BaseHtmlView
 
         $input->set('returnid', $items->id);
 
-        // Passage link to BibleGateway
+        // Scripture links plugin
         $plugin = PluginHelper::getPlugin('content', 'scripturelinks');
 
         if ($plugin) {
