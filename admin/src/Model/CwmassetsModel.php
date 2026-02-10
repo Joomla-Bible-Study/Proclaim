@@ -84,7 +84,7 @@ class CwmassetsModel extends ListModel
     /** @var string Model name
      * @since 7.0
      */
-    protected string $name = '';
+    protected $name = '';
 
     /**
      * Constructor.
