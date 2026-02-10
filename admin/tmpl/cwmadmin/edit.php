@@ -194,27 +194,38 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'administrator', Text::_('JBS_ADM_ADMIN_PARAMS')); ?>
         <div class="row">
-            <h3 class="tab-description"><?php echo Text::_('JBS_ADM_COMPONENT_SETTINGS'); ?></h3>
             <div class="col-12 col-lg-6">
-                <?php echo $this->form->renderField('simple_mode', 'params'); ?>
-                <?php echo $this->form->renderField('simple_mode_template', 'params'); ?>
-                <?php echo $this->form->renderField('simplegridtextoverlay', 'params'); ?>
-                <?php echo $this->form->renderField('simple_mode_display', 'params'); ?>
-                <?php echo $this->form->renderField('users', 'params'); ?>
-                <?php echo $this->form->renderField('metakey', 'params'); ?>
-                <?php echo $this->form->renderField('metadesc', 'params'); ?>
-                <?php echo $this->form->renderField('compat_mode', 'params'); ?>
-                <?php echo $this->form->renderField('drop_tables'); ?>
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_SIMPLE_MODE'); ?></h3>
+                    <?php echo $this->form->renderField('simple_mode', 'params'); ?>
+                    <?php echo $this->form->renderField('simple_mode_template', 'params'); ?>
+                    <?php echo $this->form->renderField('simplegridtextoverlay', 'params'); ?>
+                    <?php echo $this->form->renderField('simple_mode_display', 'params'); ?>
+                    <?php echo $this->form->renderField('users', 'params'); ?>
+                </div>
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_SEO_METADATA'); ?></h3>
+                    <?php echo $this->form->renderField('metakey', 'params'); ?>
+                    <?php echo $this->form->renderField('metadesc', 'params'); ?>
+                </div>
             </div>
             <div class="col-12 col-lg-6">
-                <?php echo $this->form->renderField('filestokeep'); ?>
-                <?php echo $this->form->renderField('studylistlimit', 'params'); ?>
-                <?php echo $this->form->renderField('show_location_media', 'params'); ?>
-                <?php echo $this->form->renderField('popular_limit', 'params'); ?>
-                <?php echo $this->form->renderField('character_filter', 'params'); ?>
-                <?php echo $this->form->renderField('format_popular', 'params'); ?>
-                <?php echo $this->form->renderField('debug'); ?>
-                <?php echo $this->form->renderField('gdpr_mode', 'params'); ?>
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_DISPLAY_SETTINGS'); ?></h3>
+                    <?php echo $this->form->renderField('studylistlimit', 'params'); ?>
+                    <?php echo $this->form->renderField('show_location_media', 'params'); ?>
+                    <?php echo $this->form->renderField('popular_limit', 'params'); ?>
+                    <?php echo $this->form->renderField('format_popular', 'params'); ?>
+                    <?php echo $this->form->renderField('character_filter', 'params'); ?>
+                </div>
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_PRIVACY_MAINTENANCE'); ?></h3>
+                    <?php echo $this->form->renderField('gdpr_mode', 'params'); ?>
+                    <?php echo $this->form->renderField('compat_mode', 'params'); ?>
+                    <?php echo $this->form->renderField('filestokeep'); ?>
+                    <?php echo $this->form->renderField('drop_tables'); ?>
+                    <?php echo $this->form->renderField('debug'); ?>
+                </div>
             </div>
         </div>
         <?php
@@ -224,46 +235,51 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'defaults', Text::_('JBS_ADM_SYSTEM_DEFAULTS')); ?>
         <div class="row">
             <div class="col-12 col-lg-6">
-                <h3 class="tab-description"><?php echo Text::_('JBS_ADM_AUTO_FILL_STUDY_REC'); ?></h3>
-                <?php echo $this->form->renderField('location_id', 'params'); ?>
-                <?php echo $this->form->renderField('teacher_id', 'params'); ?>
-                <?php echo $this->form->renderField('series_id', 'params'); ?>
-                <?php echo $this->form->renderField('booknumber', 'params'); ?>
-                <?php echo $this->form->renderField('messagetype', 'params'); ?>
-                <?php echo $this->form->renderField('main_image_icon_or_image', 'params'); ?>
-                <?php echo $this->form->renderField('default_study_image', 'params'); ?>
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_AUTO_FILL_STUDY_REC'); ?></h3>
+                    <?php echo $this->form->renderField('location_id', 'params'); ?>
+                    <?php echo $this->form->renderField('teacher_id', 'params'); ?>
+                    <?php echo $this->form->renderField('series_id', 'params'); ?>
+                    <?php echo $this->form->renderField('booknumber', 'params'); ?>
+                    <?php echo $this->form->renderField('messagetype', 'params'); ?>
+                    <?php echo $this->form->renderField('main_image_icon_or_image', 'params'); ?>
+                    <?php echo $this->form->renderField('default_study_image', 'params'); ?>
+                </div>
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_CMN_DEFAULT_IMAGES'); ?></h3>
+                    <?php echo $this->form->renderField('default_main_image', 'params'); ?>
+                    <?php echo $this->form->renderField('default_series_image', 'params'); ?>
+                    <?php echo $this->form->renderField('default_teacher_image', 'params'); ?>
+                    <?php echo $this->form->renderField('default_showHide_image', 'params'); ?>
+                </div>
             </div>
             <div class="col-12 col-lg-6">
-                <h3 class="tab-description"><?php echo Text::_('JBS_ADM_AUTO_FILL_MEDIA_REC'); ?></h3>
-                <?php echo $this->form->renderField('download', 'params'); ?>
-                <?php echo $this->form->renderField('target', 'params'); ?>
-                <?php echo $this->form->renderField('server', 'params'); ?>
-                <?php echo $this->form->renderField('podcast', 'params'); ?>
-                <?php echo $this->form->renderField('uploadpath', 'params'); ?>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12 col-lg-6">
-                <h3 class="tab-description"><?php echo Text::_('JBS_CMN_DEFAULT_IMAGES'); ?></h3>
-                <?php echo $this->form->renderField('default_main_image', 'params'); ?>
-                <?php echo $this->form->renderField('default_series_image', 'params'); ?>
-                <?php echo $this->form->renderField('default_teacher_image', 'params'); ?>
-                <?php echo $this->form->renderField('download_show', 'params'); ?>
-                <?php echo $this->form->renderField('download_use_button_icon', 'params'); ?>
-                <?php echo $this->form->renderField('default_download_image', 'params'); ?>
-                <?php echo $this->form->renderField('download_button_text', 'params'); ?>
-                <?php echo $this->form->renderField('download_button_type', 'params'); ?>
-                <?php echo $this->form->renderField('download_button_color', 'params'); ?>
-                <?php echo $this->form->renderField('download_icon_type', 'params'); ?>
-                <?php echo $this->form->renderField('download_custom_icon', 'params'); ?>
-                <?php echo $this->form->renderField('download_icon_text_size', 'params'); ?>
-                <?php echo $this->form->renderField('default_showHide_image', 'params'); ?>
-            </div>
-            <div class="col-12 col-lg-6">
-                <h3 class="tab-description"><?php echo Text::_('JBS_CMN_DEFAULT_IMAGES_SIZES'); ?></h3>
-                <?php echo $this->form->renderField('thumbnail_teacher_size', 'params'); ?>
-                <?php echo $this->form->renderField('thumbnail_series_size', 'params'); ?>
-                <?php echo $this->form->renderField('thumbnail_study_size', 'params'); ?>
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_AUTO_FILL_MEDIA_REC'); ?></h3>
+                    <?php echo $this->form->renderField('download', 'params'); ?>
+                    <?php echo $this->form->renderField('target', 'params'); ?>
+                    <?php echo $this->form->renderField('server', 'params'); ?>
+                    <?php echo $this->form->renderField('podcast', 'params'); ?>
+                    <?php echo $this->form->renderField('uploadpath', 'params'); ?>
+                </div>
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_CMN_DEFAULT_IMAGES_SIZES'); ?></h3>
+                    <?php echo $this->form->renderField('thumbnail_teacher_size', 'params'); ?>
+                    <?php echo $this->form->renderField('thumbnail_series_size', 'params'); ?>
+                    <?php echo $this->form->renderField('thumbnail_study_size', 'params'); ?>
+                </div>
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_DOWNLOAD_BUTTON_DEFAULTS'); ?></h3>
+                    <?php echo $this->form->renderField('download_show', 'params'); ?>
+                    <?php echo $this->form->renderField('download_use_button_icon', 'params'); ?>
+                    <?php echo $this->form->renderField('default_download_image', 'params'); ?>
+                    <?php echo $this->form->renderField('download_button_text', 'params'); ?>
+                    <?php echo $this->form->renderField('download_button_type', 'params'); ?>
+                    <?php echo $this->form->renderField('download_button_color', 'params'); ?>
+                    <?php echo $this->form->renderField('download_icon_type', 'params'); ?>
+                    <?php echo $this->form->renderField('download_custom_icon', 'params'); ?>
+                    <?php echo $this->form->renderField('download_icon_text_size', 'params'); ?>
+                </div>
             </div>
         </div>
         <?php
@@ -415,50 +431,42 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
         <div class="row" id="imagetools">
             <!-- Image Migration Section -->
             <div class="col-12 col-lg-6">
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <h4><?php echo Text::_('JBS_ADM_IMAGE_MIGRATION'); ?></h4>
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_IMAGE_MIGRATION'); ?></h3>
+                    <p><?php echo Text::_('JBS_ADM_IMAGE_MIGRATION_DESC'); ?></p>
+                    <div id="migration-counts" class="mb-3">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <?php echo Text::_('JBS_ADM_LOADING'); ?>
                     </div>
-                    <div class="card-body">
-                        <p><?php echo Text::_('JBS_ADM_IMAGE_MIGRATION_DESC'); ?></p>
-                        <div id="migration-counts" class="mb-3">
-                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                            <?php echo Text::_('JBS_ADM_LOADING'); ?>
+                    <div id="migration-progress" class="mb-3" style="display:none;">
+                        <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar" style="width: 0%"></div>
                         </div>
-                        <div id="migration-progress" class="mb-3" style="display:none;">
-                            <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                <div class="progress-bar" style="width: 0%"></div>
-                            </div>
-                            <div class="mt-2" id="migration-status"></div>
-                        </div>
-                        <button type="button" class="btn btn-primary" id="btn-start-migration" disabled>
-                            <i class="icon-refresh" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_START_MIGRATION'); ?>
-                        </button>
+                        <div class="mt-2" id="migration-status"></div>
                     </div>
+                    <button type="button" class="btn btn-primary" id="btn-start-migration" disabled>
+                        <i class="icon-refresh" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_START_MIGRATION'); ?>
+                    </button>
                 </div>
             </div>
 
             <!-- Orphan Cleanup Section -->
             <div class="col-12 col-lg-6">
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <h4><?php echo Text::_('JBS_ADM_ORPHAN_CLEANUP'); ?></h4>
-                    </div>
-                    <div class="card-body">
-                        <p><?php echo Text::_('JBS_ADM_ORPHAN_CLEANUP_DESC'); ?></p>
-                        <div id="orphan-status" class="mb-3">
-                            <button type="button" class="btn btn-secondary" id="btn-scan-orphans">
-                                <i class="icon-search" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_SCAN_ORPHANS'); ?>
-                            </button>
-                        </div>
-                        <div id="orphan-results" class="mb-3" style="display:none;">
-                            <div class="alert alert-info" id="orphan-summary"></div>
-                            <div id="orphan-list" class="cwmadmin-orphan-list table-responsive"></div>
-                        </div>
-                        <button type="button" class="btn btn-danger" id="btn-delete-orphans" style="display:none;">
-                            <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_DELETE_SELECTED'); ?>
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_ORPHAN_CLEANUP'); ?></h3>
+                    <p><?php echo Text::_('JBS_ADM_ORPHAN_CLEANUP_DESC'); ?></p>
+                    <div id="orphan-status" class="mb-3">
+                        <button type="button" class="btn btn-secondary" id="btn-scan-orphans">
+                            <i class="icon-search" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_SCAN_ORPHANS'); ?>
                         </button>
                     </div>
+                    <div id="orphan-results" class="mb-3" style="display:none;">
+                        <div class="alert alert-info" id="orphan-summary"></div>
+                        <div id="orphan-list" class="cwmadmin-orphan-list table-responsive"></div>
+                    </div>
+                    <button type="button" class="btn btn-danger" id="btn-delete-orphans" style="display:none;">
+                        <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_DELETE_SELECTED'); ?>
+                    </button>
                 </div>
             </div>
         </div>
@@ -677,53 +685,43 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'scripture', Text::_('JBS_ADM_SCRIPTURE_TAB')); ?>
         <div class="row" id="scripture-settings">
             <div class="col-12 col-lg-6">
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <h4><?php echo Text::_('JBS_ADM_SCRIPTURE_PROVIDERS'); ?></h4>
-                    </div>
-                    <div class="card-body">
-                        <p class="text-muted"><?php echo Text::_('JBS_ADM_SCRIPTURE_PROVIDERS_DESC'); ?></p>
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_SCRIPTURE_PROVIDERS'); ?></h3>
+                    <p class="text-muted"><?php echo Text::_('JBS_ADM_SCRIPTURE_PROVIDERS_DESC'); ?></p>
 
-                        <?php echo $this->form->renderField('provider_getbible', 'params'); ?>
-                        <?php echo $this->form->renderField('provider_api_bible', 'params'); ?>
-                        <?php echo $this->form->renderField('api_bible_api_key', 'params'); ?>
-                        <div id="api-bible-key-row" class="mb-3" style="display:none;">
-                            <a href="https://api.bible/sign-in" target="_blank" rel="noopener noreferrer"
-                               class="btn btn-sm btn-outline-secondary">
-                                <i class="icon-key" aria-hidden="true"></i>
-                                <?php echo Text::_('JBS_ADM_API_BIBLE_GET_KEY'); ?>
-                            </a>
-                        </div>
-                        <div id="api-bible-sync-row" class="mb-3" style="display:none;">
-                            <button type="button" class="btn btn-sm btn-primary" id="btn-sync-api-bible">
-                                <i class="icon-refresh" aria-hidden="true"></i>
-                                <?php echo Text::_('JBS_ADM_SYNC_TRANSLATIONS'); ?>
-                            </button>
-                            <span id="api-bible-sync-status" class="ms-2 small"></span>
-                        </div>
+                    <?php echo $this->form->renderField('provider_getbible', 'params'); ?>
+                    <?php echo $this->form->renderField('provider_api_bible', 'params'); ?>
+                    <?php echo $this->form->renderField('api_bible_api_key', 'params'); ?>
+                    <div id="api-bible-key-row" class="mb-3" style="display:none;">
+                        <a href="https://api.bible/sign-in" target="_blank" rel="noopener noreferrer"
+                           class="btn btn-sm btn-outline-secondary">
+                            <i class="icon-key" aria-hidden="true"></i>
+                            <?php echo Text::_('JBS_ADM_API_BIBLE_GET_KEY'); ?>
+                        </a>
+                    </div>
+                    <div id="api-bible-sync-row" class="mb-3" style="display:none;">
+                        <button type="button" class="btn btn-sm btn-primary" id="btn-sync-api-bible">
+                            <i class="icon-refresh" aria-hidden="true"></i>
+                            <?php echo Text::_('JBS_ADM_SYNC_TRANSLATIONS'); ?>
+                        </button>
+                        <span id="api-bible-sync-status" class="ms-2 small"></span>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-lg-6">
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <h4><?php echo Text::_('JBS_ADM_SCRIPTURE_SETTINGS'); ?></h4>
-                    </div>
-                    <div class="card-body">
-                        <?php echo $this->form->renderField('default_bible_version', 'params'); ?>
-                        <?php echo $this->form->renderField('scripture_cache_days', 'params'); ?>
-                    </div>
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_SCRIPTURE_SETTINGS'); ?></h3>
+                    <?php echo $this->form->renderField('default_bible_version', 'params'); ?>
+                    <?php echo $this->form->renderField('scripture_cache_days', 'params'); ?>
                 </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-12">
-                <div class="card mb-3">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <div class="d-flex align-items-center gap-2" id="translations-card-header">
-                            <h4 class="mb-0"><?php echo Text::_('JBS_ADM_LOCAL_TRANSLATIONS'); ?></h4>
-                        </div>
+                <div class="cwmadmin-panel mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="tab-description mb-0" id="translations-card-header"><?php echo Text::_('JBS_ADM_LOCAL_TRANSLATIONS'); ?></h3>
                         <div class="btn-group btn-group-sm">
                             <button type="button" class="btn btn-danger d-none" id="btn-remove-all-translations"
                                     title="<?php echo Text::_('JBS_ADM_REMOVE_ALL'); ?>">
@@ -735,13 +733,11 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                             </button>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <p class="text-muted"><?php echo Text::_('JBS_ADM_LOCAL_TRANSLATIONS_DESC'); ?></p>
-                        <div id="translations-list">
-                            <div class="text-center py-3">
-                                <span class="spinner-border spinner-border-sm" role="status"></span>
-                                <?php echo Text::_('JBS_ADM_LOADING'); ?>
-                            </div>
+                    <p class="text-muted"><?php echo Text::_('JBS_ADM_LOCAL_TRANSLATIONS_DESC'); ?></p>
+                    <div id="translations-list">
+                        <div class="text-center py-3">
+                            <span class="spinner-border spinner-border-sm" role="status"></span>
+                            <?php echo Text::_('JBS_ADM_LOADING'); ?>
                         </div>
                     </div>
                 </div>

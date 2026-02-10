@@ -355,7 +355,6 @@
             "uri": "com_proclaim/scripture-switcher.css"
         },
         {
-
             "name": "com_proclaim.scripture-switcher",
             "type": "script",
             "uri": "com_proclaim/scripture-switcher.js",
