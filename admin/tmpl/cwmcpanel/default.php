@@ -144,7 +144,20 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             </div>
             <?php
             }
+
+            // Podcast task warning — show when task is disabled, trashed, or not created
+            if (Cwmstats::getPodcastTaskRawState() !== 1) :
 ?>
+            <div class="col-12">
+                <div class="alert alert-warning">
+                    <span class="icon-warning-circle" aria-hidden="true"></span>
+                    <?php echo Text::_('JBS_CMN_PODCAST_TASK_WARNING'); ?>
+                    <a href="<?php echo Route::_('index.php?option=com_scheduler&view=tasks'); ?>" class="alert-link" target="_blank">
+                        <?php echo Text::_('JBS_CMN_PODCAST_TASK_STATUS'); ?>
+                    </a>
+                </div>
+            </div>
+            <?php endif; ?>
         <div class="col-lg-2 rounded">
             <div class="cpanel-logo">
                 <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>">
