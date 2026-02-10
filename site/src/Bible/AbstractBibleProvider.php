@@ -97,15 +97,6 @@ abstract class AbstractBibleProvider implements BibleProviderInterface
     protected int $cacheTtl = 86400;
 
     /**
-     * Set the cache TTL in seconds.
-     *
-     * @param   int  $seconds  TTL in seconds
-     *
-     * @return  void
-     *
-     * @since  10.1.0
-     */
-    /**
      * Register the Joomla logger for the com_proclaim.bible category.
      *
      * Call once before any Log::add() calls. Safe to call multiple times.
@@ -126,6 +117,15 @@ abstract class AbstractBibleProvider implements BibleProviderInterface
         }
     }
 
+    /**
+     * Set the cache TTL in seconds.
+     *
+     * @param   int  $seconds  TTL in seconds
+     *
+     * @return  void
+     *
+     * @since  10.1.0
+     */
     public function setCacheTtl(int $seconds): void
     {
         $this->cacheTtl = max(3600, $seconds);
