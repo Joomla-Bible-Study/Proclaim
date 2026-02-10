@@ -12,6 +12,9 @@ namespace CWM\Plugin\Task\Proclaim\Extension;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\Component\Scheduler\Administrator\Event\ExecuteTaskEvent;
 use Joomla\Component\Scheduler\Administrator\Task\Status;
@@ -48,6 +51,11 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             'langConstPrefix' => 'PLG_TASK_PROCLAIM_PODCAST',
             'form'            => 'podcast',
             'method'          => 'podcast',
+        ],
+        'proclaim.archive' => [
+            'langConstPrefix' => 'PLG_TASK_PROCLAIM_ARCHIVE',
+            'form'            => 'archive',
+            'method'          => 'archive',
         ],
     ];
 
@@ -163,6 +171,57 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             } catch (\Exception $exception) {
                 return Status::KNOCKOUT;
             }
+        }
+
+        return Status::OK;
+    }
+
+    /**
+     * Archive old messages
+     *
+     * @param   ExecuteTaskEvent  $event
+     *
+     * @return int
+     *
+     * @since 10.2.0
+     */
+    private function archive(ExecuteTaskEvent $event): int
+    {
+        $params = ComponentHelper::getParams('com_proclaim');
+
+        if (!$params->get('archive_auto')) {
+            return Status::OK;
+        }
+
+        $timeframe = (int) ($params->get('archive_timeframe', 1));
+        $interval  = $params->get('archive_interval', 'year');
+
+        try {
+            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $query = $db->getQuery(true);
+
+            // Calculate cutoff date
+            $cutoffDate = Factory::getDate()->modify('-' . $timeframe . ' ' . $interval . 's')->toSql();
+
+            // Update query
+            $query->update($db->quoteName('#__bsms_studies'))
+                ->set($db->quoteName('published') . ' = 2')
+                ->where($db->quoteName('studydate') . ' < ' . $db->quote($cutoffDate))
+                ->where($db->quoteName('published') . ' = 1');
+
+            $db->setQuery($query);
+            $db->execute();
+            $affected = $db->getAffectedRows();
+
+            $this->logTask(Text::sprintf('PLG_TASK_PROCLAIM_ARCHIVE_SUCCESS', $affected));
+
+        } catch (\Exception $e) {
+            try {
+                $this->logTask($e->getMessage());
+            } catch (\Exception $exception) {
+                return Status::KNOCKOUT;
+            }
+            return Status::KNOCKOUT;
         }
 
         return Status::OK;

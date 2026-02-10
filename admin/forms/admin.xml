@@ -307,6 +307,32 @@
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>
+        <!-- Auto Archive Settings -->
+        <field name="archive_auto" type="radio" default="0"
+               label="PLG_TASK_PROCLAIM_ARCHIVE_AUTO_LABEL"
+               description="PLG_TASK_PROCLAIM_ARCHIVE_AUTO_DESC"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="archive_timeframe" type="number" default="1" min="1"
+               label="PLG_TASK_PROCLAIM_ARCHIVE_TIMEFRAME_LABEL"
+               description="PLG_TASK_PROCLAIM_ARCHIVE_TIMEFRAME_DESC"
+               showon="archive_auto:1"/>
+        <field name="archive_interval" type="list" default="year"
+               label="PLG_TASK_PROCLAIM_ARCHIVE_INTERVAL_LABEL"
+               description="PLG_TASK_PROCLAIM_ARCHIVE_INTERVAL_DESC"
+               showon="archive_auto:1">
+            <option value="day">JBS_CMN_DAYS</option>
+            <option value="week">PLG_TASK_PROCLAIM_WEEKS</option>
+            <option value="month">JBS_CMN_MONTHS</option>
+            <option value="year">JBS_CMN_YEARS</option>
+        </field>
+        <field name="archive_warning" type="note"
+               label=""
+               description="PLG_TASK_PROCLAIM_ARCHIVE_WARNING"
+               class="alert alert-warning"
+               showon="archive_auto:1"/>
     </fieldset>
     <fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
               addrulepath="/administrator/components/com_proclaim/models/rules">

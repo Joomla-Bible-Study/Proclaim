@@ -164,6 +164,13 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                             <i class="icon-archive" aria-hidden="true"></i>
                             <span><?php echo Text::_('JBS_ADM_ARCHIVE'); ?></span>
                         </a>
+                        <!-- New: Scheduled Tasks Button -->
+                        <a href="<?php echo Route::_('index.php?option=com_scheduler&view=tasks&filter[search]=proclaim'); ?>"
+                           class="cwmadmin-action-card"
+                           title="<?php echo Text::_('JBS_ADM_SCHEDULED_TASKS'); ?>">
+                            <i class="icon-calendar" aria-hidden="true"></i>
+                            <span><?php echo Text::_('JBS_ADM_SCHEDULED_TASKS'); ?></span>
+                        </a>
                         <button type="button"
                            class="cwmadmin-action-card"
                            id="btn-alias-update"
@@ -470,7 +477,7 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                         var countsHtml = '<ul class="list-unstyled">' +
                             '<li><strong><?php echo Text::_('JBS_CMN_STUDIES'); ?>:</strong> ' + data.studies + '</li>' +
                             '<li><strong><?php echo Text::_('JBS_CMN_TEACHERS'); ?>:</strong> ' + data.teachers + '</li>' +
-                            '<li><strong><?php echo Text::_('JBS_CMN_SERIES'); ?>:</strong> ' + data.series + '</li>' +
+                            '<li><strong><?php echo Text::_('JBS_CMN_SERIES'); ?>:</b> ' + data.series + '</li>' +
                             '<li><strong><?php echo Text::_('JBS_CMN_TOTAL'); ?>:</strong> ' + data.total + '</li>' +
                             '</ul>';
                         document.getElementById('migration-counts').innerHTML = countsHtml;
