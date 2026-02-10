@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+    <fields name="params">
+        <fieldset name="task_params">
+            <field
+                    name="archive_timeframe"
+                    type="number"
+                    label="PLG_TASK_PROCLAIM_ARCHIVE_TIMEFRAME_LABEL"
+                    description="PLG_TASK_PROCLAIM_ARCHIVE_TIMEFRAME_DESC"
+                    default="1"
+                    min="1"
+                    required="true"
+            />
+            <field
+                    name="archive_interval"
+                    type="radio"
+                    label="PLG_TASK_PROCLAIM_ARCHIVE_INTERVAL_LABEL"
+                    description="PLG_TASK_PROCLAIM_ARCHIVE_INTERVAL_DESC"
+                    default="year"
+                    class="btn-group"
+            >
+                <option value="day">JBS_CMN_DAYS</option>
+                <option value="week">PLG_TASK_PROCLAIM_WEEKS</option>
+                <option value="month">JBS_CMN_MONTHS</option>
+                <option value="year">JBS_CMN_YEARS</option>
+            </field>
+            <field
+                    name="warning"
+                    type="note"
+                    label=""
+                    description="PLG_TASK_PROCLAIM_ARCHIVE_WARNING"
+                    class="alert alert-warning"
+            />
+        </fieldset>
+    </fields>
+</form>
