@@ -667,6 +667,41 @@ class Cwmstats
     }
 
     /**
+     * Get the raw podcast task state value.
+     *
+     * Returns the integer state of the proclaim.podcast scheduler task:
+     *  1 = enabled, 0 = disabled, -2 = trashed, -3 = not created.
+     *
+     * @return int  The task state value
+     *
+     * @since 10.1.0
+     */
+    public static function getPodcastTaskRawState(): int
+    {
+        if (isset(self::$cache['podcastTaskRawState'])) {
+            return self::$cache['podcastTaskRawState'];
+        }
+
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
+        $query
+            ->select($db->quoteName(['id', 'state']))
+            ->from($db->quoteName('#__scheduler_tasks'))
+            ->where($db->quoteName('type') . ' = ' . $db->quote('proclaim.podcast'))
+            ->order($db->quoteName('state') . ' DESC');
+        $db->setQuery($query);
+
+        $task = $db->loadObject();
+
+        $state = $task ? (int) $task->state : -3;
+
+        self::$cache['podcastTaskRawState'] = $state;
+        self::$cache['podcastTaskId']       = $task ? (int) $task->id : 0;
+
+        return $state;
+    }
+
+    /**
      * Get the Podcast Task State in HTML format
      *
      * @return string HTML Formatted Button with Status info
@@ -679,51 +714,40 @@ class Cwmstats
             return self::$cache['podcastTaskState'];
         }
 
-        $states = new \stdClass();
+        $rawState = self::getPodcastTaskRawState();
+        $taskId   = self::$cache['podcastTaskId'] ?? 0;
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query
-            ->select($db->quoteName(['id', 'state', 'title']))
-            ->from($db->quoteName('#__scheduler_tasks'))
-            ->where($db->quoteName('type') . ' = ' . $db->quote('proclaim.podcast'))
-            ->order($db->quoteName('state') . ' DESC');
-        $db->setQuery($query);
-
-        if (!$PodcastTask = $db->loadObject()) {
-            $PodcastTask        = $states;
-            $PodcastTask->state = '';
-        }
-
-        switch ($PodcastTask->state) {
+        switch ($rawState) {
             case 1:
-                $states->state       = 'ENABLED';
-                $states->buttonstate = ' btn-success';
+                $stateKey    = 'JBS_CMN_TASK_ENABLED';
+                $buttonClass = 'btn-success';
                 break;
             case 0:
-                $states->state       = 'DISABLED';
-                $states->buttonstate = ' btn-warning';
+                $stateKey    = 'JBS_CMN_TASK_DISABLED';
+                $buttonClass = 'btn-warning';
                 break;
             case -2:
-                $states->state       = 'TRASHED';
-                $states->buttonstate = ' btn-light';
+                $stateKey    = 'JBS_CMN_TASK_TRASHED';
+                $buttonClass = 'btn-light';
                 break;
             default:
-                $states->state       = 'JBS_CMN_TASK_NOT_CREATED';
-                $states->buttonstate = ' btn-warning';
+                $stateKey    = 'JBS_CMN_TASK_NOT_CREATED';
+                $buttonClass = 'btn-warning';
                 break;
         }
 
-        $return = '<div style="float: left; padding: 10px;">';
+        $return = '<div class="d-inline-block me-2 mb-2">';
 
-        if ($states->state !== 'JBS_CMN_TASK_NOT_CREATED') {
-            $return .= '<a href="' . Route::_('index.php?option=com_scheduler&task=task.edit&id=' . (int) $PodcastTask->id) . '" target="_blank">';
+        if ($rawState !== -3) {
+            $return .= '<a href="' . Route::_('index.php?option=com_scheduler&task=task.edit&id=' . $taskId) . '" target="_blank">';
         } else {
             $return .= '<a href="' . Route::_('index.php?option=com_scheduler&view=tasks') . '" target="_blank">';
         }
 
-        $return .= '<button type="button" class="btn' . $states->buttonstate . '"><i class="icon-clock" title="Clock showing time"></i>' .
-            Text::_('JBS_CMN_PODCAST_TASK_STATUS') . ' <strong>' . Text::_($states->state) . '</strong></button>';
+        $return .= '<button type="button" class="btn ' . $buttonClass . '">'
+            . '<i class="icon-clock" title="Clock showing time"></i>'
+            . Text::_('JBS_CMN_PODCAST_TASK_STATUS') . ' <strong>' . Text::_($stateKey) . '</strong>'
+            . '</button>';
 
         $return .= '</a>';
         $return .= '</div>';
