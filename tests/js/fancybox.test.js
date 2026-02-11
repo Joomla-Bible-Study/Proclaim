@@ -24,14 +24,15 @@ describe('fancybox.es6.js', () => {
         beforeEach(() => {
             // Mock Fancybox
             mockFancybox = {
-                show: jest.fn()
+                show: jest.fn(),
+                bind: jest.fn()
             };
             global.Fancybox = mockFancybox;
 
             // Set up DOM with fancybox player elements
             document.body.innerHTML = `
                 <div class="fancybox_player"
-                    data-src="https://www.youtube.com/watch?v=abc123"
+                    data-src="https://www.youtube.com/embed/abc123"
                     data-height="480"
                     data-width="854"
                     data-header="Test Header"
@@ -61,46 +62,50 @@ describe('fancybox.es6.js', () => {
             jest.resetModules();
         });
 
-        test('should bind click events to fancybox_player elements', () => {
-            const players = document.querySelectorAll('.fancybox_player');
-            expect(players.length).toBe(3);
+        test('should call Fancybox.bind for fancybox_player elements', () => {
+            expect(mockFancybox.bind).toHaveBeenCalledWith(
+                '.fancybox_player',
+                expect.objectContaining({
+                    backdropClick: 'close'
+                })
+            );
         });
 
-        test('should open Fancybox on YouTube video click', () => {
-            const youtubePlayer = document.querySelector('.fancybox_player[data-src*="youtube"]');
-            youtubePlayer.click();
-
-            expect(mockFancybox.show).toHaveBeenCalled();
-            const callArgs = mockFancybox.show.mock.calls[0];
-            expect(callArgs[0][0].type).toBe('iframe');
-            expect(callArgs[0][0].src).toContain('youtube');
+        test('should bind with Carousel and Toolbar options', () => {
+            const bindOptions = mockFancybox.bind.mock.calls[0][1];
+            expect(bindOptions.Carousel).toEqual({ infinite: false });
+            expect(bindOptions.Toolbar.display.right).toContain('close');
         });
 
-        test('should use HTML5 player for local video', () => {
-            const videoPlayer = document.querySelector('.fancybox_player[data-src*=".mp4"]');
-            videoPlayer.click();
-
-            expect(mockFancybox.show).toHaveBeenCalled();
-            const callArgs = mockFancybox.show.mock.calls[0];
-            expect(callArgs[0][0].html).toContain('<video');
-        });
-
-        test('should use HTML5 audio player for audio files', () => {
+        test('should open audio overlay on audio element click', () => {
             const audioPlayer = document.querySelector('.fancybox_player[data-src*=".mp3"]');
             audioPlayer.click();
 
-            expect(mockFancybox.show).toHaveBeenCalled();
-            const callArgs = mockFancybox.show.mock.calls[0];
-            expect(callArgs[0][0].html).toContain('<audio');
+            // Audio handler creates a custom overlay, not Fancybox
+            const overlay = document.querySelector('.proclaim-audio-overlay');
+            expect(overlay).not.toBeNull();
+            expect(overlay.querySelector('audio')).not.toBeNull();
         });
 
-        test('should include header and footer in caption', () => {
-            const playerWithCaption = document.querySelector('.fancybox_player[data-header="Test Header"]');
-            playerWithCaption.click();
+        test('should close audio overlay on Escape key', () => {
+            const audioPlayer = document.querySelector('.fancybox_player[data-src*=".mp3"]');
+            audioPlayer.click();
 
-            const callArgs = mockFancybox.show.mock.calls[0];
-            expect(callArgs[0][0].caption).toContain('Test Header');
-            expect(callArgs[0][0].caption).toContain('Test Footer');
+            const overlay = document.querySelector('.proclaim-audio-overlay');
+            expect(overlay).not.toBeNull();
+
+            // Simulate Escape key
+            document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+
+            expect(document.querySelector('.proclaim-audio-overlay')).toBeNull();
+        });
+
+        test('should not open audio overlay for non-audio elements', () => {
+            const videoPlayer = document.querySelector('.fancybox_player[data-src*=".mp4"]');
+            videoPlayer.click();
+
+            // No custom audio overlay should exist
+            expect(document.querySelector('.proclaim-audio-overlay')).toBeNull();
         });
     });
 });

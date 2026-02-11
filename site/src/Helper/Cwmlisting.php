@@ -1524,7 +1524,7 @@ class Cwmlisting
         // See whether the element is a link to something and get the link from the function
         $link = 0;
 
-        if ($type === 'sermons' || $type === 'seriesdisplays' || $type === 'teachers') {
+        if ($type === 'sermons' || $type === 'sermon' || $type === 'seriesdisplays' || $type === 'teachers') {
             if ($row->linktype > 0 && $header === 0) {
                 if ($type === 'seriesdisplays') {
                     $item->teacher_id = $item->teacher;
@@ -2220,6 +2220,20 @@ class Cwmlisting
                 // Case 9 is a link to download
                 $column .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermon&amp;mid=' .
                     $row->download_id . '&amp;task=download">';
+                break;
+
+            case 10:
+                // Case 10 is a link to the series page
+                $seriesId = $row->sid ?? $row->series_id ?? 0;
+
+                if ($seriesId) {
+                    $link = Route::_(
+                        Cwmhelperroute::getSeriesRoute($seriesId) . '&t=' . $params->get('seriesdetailtemplateid')
+                    );
+                    $column = '<a href="' . $link . '">';
+                }
+
+                break;
         }
 
         return $column;

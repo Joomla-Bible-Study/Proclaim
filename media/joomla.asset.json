@@ -228,17 +228,9 @@
             ]
         },
         {
-            "name": "com_proclaim.fancybox",
-            "type": "style",
-            "uri": "com_proclaim/fancybox/fancybox.min.css"
-        },
-        {
             "name": "com_proclaim.cwm-fancybox",
             "type": "style",
-            "uri": "com_proclaim/cwm.fancybox.min.css",
-            "dependencies": [
-                "com_proclaim.fancybox"
-            ]
+            "uri": "com_proclaim/cwm.fancybox.min.css"
         },
         {
             "name": "com_proclaim.scripture-text",
