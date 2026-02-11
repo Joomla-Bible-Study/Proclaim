@@ -267,7 +267,7 @@
         // Dynamic badge for local translation count (placed in card header)
         const localBadge = document.createElement('span');
         localBadge.id = 'local-provider-status';
-        localBadge.className = 'badge bg-info';
+        localBadge.className = 'badge bg-info ms-3';
         localBadge.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
 
         const translationsHeader = document.getElementById('translations-card-header');
@@ -286,16 +286,16 @@
                     const badge = document.getElementById('local-provider-status');
 
                     if (data.local_count > 0) {
-                        badge.className = 'badge bg-success';
+                        badge.className = 'badge bg-success ms-3';
                         badge.innerHTML = `<i class="icon-checkmark-circle" aria-hidden="true"></i> ${data.local_count} ${strings.statusInstalled}`;
                     } else {
-                        badge.className = 'badge bg-warning text-dark';
+                        badge.className = 'badge bg-warning text-dark ms-3';
                         badge.innerHTML = `<i class="icon-warning" aria-hidden="true"></i> ${strings.statusNone}`;
                     }
                 })
                 .catch(() => {
                     const badge = document.getElementById('local-provider-status');
-                    badge.className = 'badge bg-secondary';
+                    badge.className = 'badge bg-secondary ms-3';
                     badge.textContent = strings.statusUnknown;
                 });
         };
