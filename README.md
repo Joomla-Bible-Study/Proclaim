@@ -6,7 +6,7 @@ A Joomla 4+ component for managing and displaying Bible studies and sermons, dev
 
 | Branch      | Version | Release Date | Joomla Version | PHP Minimum                                                                    |
 |-------------|---------|--------------|----------------|--------------------------------------------------------------------------------|
-| Development | 10.1.x  |              | 4+             | [![PHP](https://img.shields.io/badge/PHP-V8.3.0-green)](https://www.php.net/)  |
+| Development | 10.1.x  |              | 5.1.0+         | [![PHP](https://img.shields.io/badge/PHP-V8.3.0-green)](https://www.php.net/)  |
 | Main        | 10.0.1  | Sep 10, 2025 | 4+             | [![PHP](https://img.shields.io/badge/PHP-V8.3.0-green)](https://www.php.net/)  |
 
 > **Note:** The main branch reflects the current stable release. Bug fixes and minor updates go to main; new features go to development only.
