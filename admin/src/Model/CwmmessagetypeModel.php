@@ -52,20 +52,6 @@ class CwmmessagetypeModel extends AdminModel
     }
 
     /**
-     * Method to check out a row for editing.
-     *
-     * @param   int  $pk  The numeric id of the primary key.
-     *
-     * @return  bool  False on failure or error, true otherwise.
-     *
-     * @since   11.1
-     */
-    public function checkout($pk = null): bool
-    {
-        return true;
-    }
-
-    /**
      * Method to get a table object, load it if necessary.
      *
      * @param   string  $name     The table name. Optional.

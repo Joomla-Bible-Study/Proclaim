@@ -72,20 +72,6 @@ class CwmlocationModel extends AdminModel
     }
 
     /**
-     * Method to check-out a row for editing.
-     *
-     * @param   ?int  $pk  The numeric id of the primary key.
-     *
-     * @return  bool  False on failure or error, true otherwise.
-     *
-     * @since   11.1
-     */
-    public function checkout($pk = null): bool
-    {
-        return true;
-    }
-
-    /**
      * Method to get the data that should be injected in the form.
      *
      * @return  array    The default data is an empty array.

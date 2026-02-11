@@ -196,7 +196,7 @@ class CwmlocationsModel extends ListModel
         $query->select(
             $this->getState(
                 'list.select',
-                implode(', ', $db->qn(['location.id', 'location.published', 'location.access', 'location.location_text']))
+                implode(', ', $db->qn(['location.id', 'location.published', 'location.access', 'location.location_text', 'location.checked_out', 'location.checked_out_time']))
             )
         );
         $query->from($db->qn('#__bsms_locations', 'location'));
@@ -207,6 +207,10 @@ class CwmlocationsModel extends ListModel
             'LEFT',
             $db->qn('#__viewlevels', 'ag') . ' ON ' . $db->qn('ag.id') . ' = ' . $db->qn('location.access')
         );
+
+        // Join over the users for the checked out user.
+        $query->select($db->qn('uc.name', 'editor'))
+            ->join('LEFT', $db->qn('#__users', 'uc') . ' ON ' . $db->qn('uc.id') . ' = ' . $db->qn('location.checked_out'));
 
         // Filter by access level.
         if ($access = $this->getState('filter.access')) {

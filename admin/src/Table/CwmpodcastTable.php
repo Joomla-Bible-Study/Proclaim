@@ -316,6 +316,22 @@ class CwmpodcastTable extends Table
     public ?string $params = null;
 
     /**
+     * Checked out user ID
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $checked_out = null;
+
+    /**
+     * Checked out time
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $checked_out_time = null;
+
+    /**
      * Constructor
      *
      * @param   DatabaseDriver  $db  Database connector object

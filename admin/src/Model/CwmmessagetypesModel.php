@@ -202,12 +202,18 @@ class CwmmessagetypesModel extends ListModel
                         'messagetype.ordering',
                         'messagetype.access',
                         'messagetype.alias',
+                        'messagetype.checked_out',
+                        'messagetype.checked_out_time',
                     ]
                 ))
             )
         );
 
         $query->from($db->qn('#__bsms_message_type', 'messagetype'));
+
+        // Join over the users for the checked out user.
+        $query->select($db->qn('uc.name', 'editor'))
+            ->join('LEFT', $db->qn('#__users', 'uc') . ' ON ' . $db->qn('uc.id') . ' = ' . $db->qn('messagetype.checked_out'));
 
         // Filter by published state
         $published = $this->getState('filter.published');

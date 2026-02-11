@@ -863,44 +863,6 @@ class CwmmediafileModel extends AdminModel
     }
 
     /**
-     * Method override to check in a record or an array of records
-     *
-     * @param   mixed  $pks  The ID of the primary key or an array of IDs
-     *
-     * @return  false|int  Boolean false if there is an error, otherwise the count of records checked in.
-     *
-     * @throws \Exception
-     * @since   12.2
-     */
-    public function checkin($pks = []): false|int
-    {
-        $pks   = (array)$pks;
-        $table = $this->getTable();
-        $count = 0;
-
-        if (empty($pks)) {
-            $pks = [(int)$this->getState('mediafile.id')];
-        }
-
-        // Check in all items.
-        foreach ($pks as $pk) {
-            if ($table->load($pk)) {
-                if ($table->checked_out > 0) {
-                    if (!parent::checkin($pk)) {
-                        return false;
-                    }
-
-                    $count++;
-                }
-            } else {
-                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_RECORD_NOT_FOUND'));
-            }
-        }
-
-        return $count;
-    }
-
-    /**
      * Method to test whether a record can be deleted.
      *
      * @param   object  $record  A record object.

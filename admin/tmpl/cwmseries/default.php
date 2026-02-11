@@ -118,6 +118,8 @@ $saveOrder = $listOrder == $orderName;
                         <?php
                         foreach ($this->items as $i => $item) :
                             $item->max_ordering = 0;
+                            $canCheckin          = $user->authorise('core.manage', 'com_checkin')
+                                || $item->checked_out == $userId || \is_null($item->checked_out);
                             $canCreate          = $user->authorise('core.create');
                             $canEdit            = $user->authorise('core.edit', 'com_proclaim.serie.' . $item->id);
                             $canEditOwn         = $user->authorise('core.edit.own', 'com_proclaim.serie.' . $item->id);
@@ -151,6 +153,10 @@ $saveOrder = $listOrder == $orderName;
                                     ) : Text::_('JUNDEFINED'); ?>
                                         <?php
                                         endif; ?>
+                                        <?php if ($item->checked_out) : ?>
+                                            <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor,
+                                                $item->checked_out_time, 'cwmseries.', $canCheckin); ?>
+                                        <?php endif; ?>
                                         <?php
                                         if ($canEdit || $canEditOwn) : ?>
                                             <a href="<?php

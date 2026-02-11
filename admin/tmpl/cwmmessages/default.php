@@ -286,6 +286,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                 </td>
                                 <td class="nowrap has-context">
                                     <div class="float-left">
+                                        <?php if ($item->checked_out) : ?>
+                                            <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor,
+                                                $item->checked_out_time, 'cwmmessages.', $canCheckin); ?>
+                                        <?php endif; ?>
                                         <?php
                                 if ($canEdit || $canEditOwn) : ?>
                                             <a href="<?php

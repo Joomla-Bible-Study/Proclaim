@@ -63,20 +63,6 @@ class CwmcommentModel extends AdminModel
     }
 
     /**
-     * Method to check-out a row for editing.
-     *
-     * @param   int  $pk  The numeric id of the primary key.
-     *
-     * @return  bool  False on failure or error, true otherwise.
-     *
-     * @since   11.1
-     */
-    public function checkout($pk = null): mixed
-    {
-        return $pk;
-    }
-
-    /**
      * Get the form data
      *
      * @param   array    $data      Data for the form.

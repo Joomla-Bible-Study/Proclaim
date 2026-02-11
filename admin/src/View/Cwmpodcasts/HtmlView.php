@@ -142,6 +142,7 @@ class HtmlView extends BaseHtmlView
             $childBar->publish('cwmpodcasts.publish')->listCheck(true);
             $childBar->unpublish('cwmpodcasts.unpublish')->listCheck(true);
             $childBar->archive('cwmpodcasts.archive')->listCheck(true);
+            $childBar->checkin('cwmpodcasts.checkin')->listCheck(true);
 
             if ($this->state->get('filter.published') != -2) {
                 $childBar->trash('cwmpodcasts.trash')->listCheck(true);

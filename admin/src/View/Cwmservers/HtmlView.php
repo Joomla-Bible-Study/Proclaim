@@ -141,6 +141,7 @@ class HtmlView extends BaseHtmlView
             $childBar->publish('cwmservers.publish')->listCheck(true);
             $childBar->unpublish('cwmservers.unpublish')->listCheck(true);
             $childBar->archive('cwmservers.archive')->listCheck(true);
+            $childBar->checkin('cwmservers.checkin')->listCheck(true);
 
             if ($this->state->get('filter.published') != -2) {
                 $childBar->trash('cwmservers.trash')->listCheck(true);

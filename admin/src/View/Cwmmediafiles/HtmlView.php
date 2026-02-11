@@ -202,6 +202,7 @@ class HtmlView extends BaseHtmlView
                 $childBar->publish('cwmmediafiles.publish');
                 $childBar->unpublish('cwmmediafiles.unpublish');
                 $childBar->archive('cwmmediafiles.archive');
+                $childBar->checkin('cwmmediafiles.checkin')->listCheck(true);
 
                 if ((int) $this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
                     $childBar->trash('cwmmediafiles.trash')->listCheck(true);

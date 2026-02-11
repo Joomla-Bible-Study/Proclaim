@@ -166,6 +166,10 @@ class CwmteachersModel extends ListModel
             $db->qn('#__viewlevels', 'ag') . ' ON ' . $db->qn('ag.id') . ' = ' . $db->qn('teacher.access')
         );
 
+        // Join over the users for the checked out user.
+        $query->select($db->qn('uc.name', 'editor'))
+            ->join('LEFT', $db->qn('#__users', 'uc') . ' ON ' . $db->qn('uc.id') . ' = ' . $db->qn('teacher.checked_out'));
+
         // Filter by access level.
         if ($access = $this->getState('filter.access')) {
             $query->where($db->qn('teacher.access') . ' = ' . (int) $access);

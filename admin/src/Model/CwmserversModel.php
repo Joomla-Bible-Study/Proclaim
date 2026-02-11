@@ -181,8 +181,12 @@ class CwmserversModel extends ListModel
         $query = $db->getQuery(true);
         $user  = Factory::getApplication()->getIdentity();
 
-        $query->select($this->getState('list.select', 'server.id, server.published, server.server_name, server.type'));
+        $query->select($this->getState('list.select', 'server.id, server.published, server.server_name, server.type, server.checked_out, server.checked_out_time'));
         $query->from($db->quoteName('#__bsms_servers', 'server'));
+
+        // Join over the users for the checked out user.
+        $query->select($db->quoteName('uc.name', 'editor'))
+            ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('server.checked_out'));
 
         // Filter by published state
         $published = $this->getState('filter.published');

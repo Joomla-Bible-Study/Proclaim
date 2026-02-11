@@ -160,6 +160,7 @@ class HtmlView extends BaseHtmlView
         if ($this->canDo->get('core.edit.state')) {
             $childBar->publish('cwmtemplates.publish');
             $childBar->unpublish('cwmtemplates.unpublish');
+            $childBar->checkin('cwmtemplates.checkin')->listCheck(true);
             $childBar->trash('cwmtemplates.trash');
 
             // Add a batch button

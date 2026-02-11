@@ -222,6 +222,8 @@ class CwmmessagesModel extends ListModel
                         'study.publish_up',
                         'study.publish_down',
                         'study.params',
+                        'study.checked_out',
+                        'study.checked_out_time',
                     ]
                 ))
             )
@@ -275,6 +277,10 @@ class CwmmessagesModel extends ListModel
             $db->qn('#__bsms_mediafiles', 'mediafile') . ' ON ' . $db->qn('mediafile.study_id') . ' = ' . $db->qn('study.id')
         );
         $query->group($db->qn('study.id'));
+
+        // Join over the users for the checked out user.
+        $query->select($db->qn('uc.name', 'editor'))
+            ->join('LEFT', $db->qn('#__users', 'uc') . ' ON ' . $db->qn('uc.id') . ' = ' . $db->qn('study.checked_out'));
 
         // Filter by access level.
         if ($access = $this->getState('filter.access')) {

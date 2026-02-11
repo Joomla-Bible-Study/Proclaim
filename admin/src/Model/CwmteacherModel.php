@@ -156,20 +156,6 @@ class CwmteacherModel extends AdminModel
     }
 
     /**
-     * Method to check out a row for editing.
-     *
-     * @param   int  $pk  The numeric id of the primary key.
-     *
-     * @return  bool  False on failure or error, true otherwise.
-     *
-     * @since   11.1
-     */
-    public function checkout($pk = null): bool
-    {
-        return true;
-    }
-
-    /**
      * Method to validate the form data.
      *
      * @param   Form    $form   The form to validate against.

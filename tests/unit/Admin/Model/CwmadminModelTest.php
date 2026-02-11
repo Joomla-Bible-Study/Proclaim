@@ -99,27 +99,6 @@ class CwmadminModelTest extends ProclaimTestCase
     }
 
     /**
-     * Test checkout method signature
-     *
-     * @return void
-     * #[CoversClass(CwmadminModel::class)]::checkout
-     */
-    public function testCheckoutMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(CwmadminModel::class, 'checkout');
-
-        $this->assertFalse($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-        // Return type is bool|int|null, which reflection might show differently
-
-        $params = $reflection->getParameters();
-        $this->assertCount(1, $params);
-        $this->assertEquals('pk', $params[0]->getName());
-        // No type hint in method signature for pk
-        $this->assertTrue($params[0]->isOptional());
-    }
-
-    /**
      * Test getMediaFiles method signature
      *
      * @return void

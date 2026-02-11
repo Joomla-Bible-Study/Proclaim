@@ -158,6 +158,8 @@ class CwmpodcastsModel extends ListModel
                         'podcast.filename',
                         'podcast.language',
                         'podcast.access',
+                        'podcast.checked_out',
+                        'podcast.checked_out_time',
                     ]
                 ))
             )
@@ -177,6 +179,10 @@ class CwmpodcastsModel extends ListModel
                 'LEFT',
                 $db->qn('#__viewlevels', 'ag') . ' ON ' . $db->qn('ag.id') . ' = ' . $db->qn('podcast.access')
             );
+
+        // Join over the users for the checked out user.
+        $query->select($db->qn('uc.name', 'editor'))
+            ->join('LEFT', $db->qn('#__users', 'uc') . ' ON ' . $db->qn('uc.id') . ' = ' . $db->qn('podcast.checked_out'));
 
         // Filter by access level.
         if ($access = $this->getState('filter.access')) {

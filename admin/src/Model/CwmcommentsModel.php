@@ -168,6 +168,8 @@ class CwmcommentsModel extends ListModel
                         'comment.access',
                         'comment.language',
                         'comment.asset_id',
+                        'comment.checked_out',
+                        'comment.checked_out_time',
                     ]
                 ))
             )
@@ -226,6 +228,10 @@ class CwmcommentsModel extends ListModel
             'LEFT',
             $db->qn('#__viewlevels', 'ag') . ' ON ' . $db->qn('ag.id') . ' = ' . $db->qn('comment.access')
         );
+
+        // Join over the users for the checked out user.
+        $query->select($db->qn('uc.name', 'editor'))
+            ->join('LEFT', $db->qn('#__users', 'uc') . ' ON ' . $db->qn('uc.id') . ' = ' . $db->qn('comment.checked_out'));
 
         // Add the list ordering clause
         $orderCol  = $this->state->get('list.ordering', 'study.studytitle');
