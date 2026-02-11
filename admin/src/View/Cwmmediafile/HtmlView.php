@@ -96,33 +96,39 @@ class HtmlView extends BaseHtmlView
         // Get server params for default values
         $s_params = $this->state->get('s_params', []);
 
-        // For new items, bind server defaults to the media form before rendering
-        $isNew = empty($this->item->id);
+        if ($media_form !== null) {
+            // For new items, bind server defaults to the media form before rendering
+            $isNew = empty($this->item->id);
 
-        if ($isNew && $media_form && !empty($s_params)) {
-            // Bind server defaults to form - this sets field values before rendering
-            $media_form->bind(['params' => $s_params]);
+            if ($isNew && !empty($s_params)) {
+                // Bind server defaults to form - this sets field values before rendering
+                $media_form->bind(['params' => $s_params]);
+            }
+
+            // Wrap the media form with server params for addon default value handling (PHP 8.2+ compatible)
+            $this->media_form = new class ($media_form, $s_params) {
+                private $form;
+                public array $s_params;
+
+                public function __construct($form, array $s_params)
+                {
+                    $this->form     = $form;
+                    $this->s_params = $s_params;
+                }
+
+                public function __call(string $name, array $args): mixed
+                {
+                    return $this->form->$name(...$args);
+                }
+            };
+
+            // Load the addon
+            $serverType  = $this->state->get('type');
+            $this->addon = $serverType ? CWMAddon::getInstance($serverType) : null;
+        } else {
+            $this->media_form = null;
+            $this->addon      = null;
         }
-
-        // Wrap the media form with server params for addon default value handling (PHP 8.2+ compatible)
-        $this->media_form = new class ($media_form, $s_params) {
-            private $form;
-            public array $s_params;
-
-            public function __construct($form, array $s_params)
-            {
-                $this->form     = $form;
-                $this->s_params = $s_params;
-            }
-
-            public function __call(string $name, array $args): mixed
-            {
-                return $this->form->$name(...$args);
-            }
-        };
-
-        // Load the addon
-        $this->addon = CWMAddon::getInstance($this->state->type);
 
         $options       = $app->input->get('options');
         $this->options = new \stdClass();

@@ -41,9 +41,8 @@ $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->addInlineScript(
         '
-	Joomla.submitbutton = function (task, server_id) {
+	Joomla.submitbutton = function (task) {
 		if (task == "cwmmediafile.setServer") {
-			document.getElementById("adminForm").elements["jform[server_id]"].value = server_id;
 			Joomla.submitform(task, document.getElementById("adminForm"));
 		} else if (task == "cwmmediafile.cancel"|| document.formvalidator.isValid(document.getElementById("adminForm"))) {
 			Joomla.submitform(task, document.getElementById("adminForm"));
@@ -51,6 +50,15 @@ $wa->useScript('keepalive')
 			alert("' . $this->escape(Text::_("JGLOBAL_VALIDATION_FORM_FAILED")) . '");
 		}
 	}
+
+	document.addEventListener("DOMContentLoaded", function() {
+		var serverField = document.getElementById("jform_server_id");
+		if (serverField) {
+			serverField.addEventListener("change", function() {
+				Joomla.submitbutton("cwmmediafile.setServer");
+			});
+		}
+	});
 '
     );
 
@@ -76,7 +84,13 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
                 <?php echo $this->form->renderField('server_id', null, $this->item->server_id); ?>
                 <?php echo $this->form->renderField('podcast_id', null, $podcast_id); ?>
 
-                <?php echo $this->addon->renderGeneral($this->media_form, $new); ?>
+                <?php if ($this->addon !== null) : ?>
+                    <?php echo $this->addon->renderGeneral($this->media_form, $new); ?>
+                <?php else : ?>
+                    <div class="alert alert-info">
+                        <?php echo Text::_('JBS_MED_SELECT_SERVER_FIRST'); ?>
+                    </div>
+                <?php endif; ?>
 
             </div>
             <div class="col-lg-5">
@@ -89,8 +103,9 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php
-        echo $this->addon->render($this->media_form, $new); ?>
+        <?php if ($this->addon !== null) : ?>
+        <?php echo $this->addon->render($this->media_form, $new); ?>
+        <?php endif; ?>
 
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>
