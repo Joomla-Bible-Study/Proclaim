@@ -98,8 +98,10 @@ $showVersionOptions = [
     ['value' => '1', 'label' => Text::_('JYES')],
 ];
 
+$separatorOptions = $extractFieldOptions('scripture_separator');
 array_unshift($showVersesOptions, ['value' => '', 'label' => $deferLabel]);
 array_unshift($showVersionOptions, ['value' => '', 'label' => $deferLabel]);
+array_unshift($separatorOptions, ['value' => '', 'label' => $deferLabel]);
 
 // These dropdowns have no "defer" option — just the actual choices
 $elementTypeOptions     = $extractFieldOptions('scripture1element');
@@ -137,6 +139,7 @@ if (!empty($showVersesOptions)) {
 }
 
 $document->addScriptOptions('com_proclaim.showVersionOptions', $showVersionOptions);
+$document->addScriptOptions('com_proclaim.separatorOptions', $separatorOptions);
 
 if (!empty($elementTypeOptions)) {
     $document->addScriptOptions('com_proclaim.elementTypeOptions', $elementTypeOptions);

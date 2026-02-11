@@ -45,7 +45,7 @@ if (!$isPrint) {
     </h2>
     <h4 style="text-align:center;">
         <strong><?php
-        echo $this->item->scripture1; ?></strong></h4>
+        echo !empty($this->item->allScriptures) ? $this->item->allScriptures : $this->item->scripture1; ?></strong></h4>
     <?php
 echo $this->item->media; ?>
     <p>

@@ -448,7 +448,9 @@ class CwmmessageModel extends AdminModel
 
         $scriptures = [];
 
-        foreach ($scripturesData as $i => $entry) {
+        $ordering = 0;
+
+        foreach ($scripturesData as $entry) {
             $text    = trim($entry['reference_text'] ?? '');
             $version = trim($entry['bible_version'] ?? '');
 
@@ -460,7 +462,7 @@ class CwmmessageModel extends AdminModel
 
             if ($parsed !== null) {
                 $parsed->bibleVersion  = $version;
-                $parsed->ordering      = $i;
+                $parsed->ordering      = $ordering;
                 $parsed->referenceText = $text;
             } else {
                 // Unparsable — store raw text so user can fix later
@@ -468,11 +470,12 @@ class CwmmessageModel extends AdminModel
                     booknumber:    0,
                     referenceText: $text,
                     bibleVersion:  $version,
-                    ordering:      $i,
+                    ordering:      $ordering,
                 );
             }
 
             $scriptures[] = $parsed;
+            $ordering++;
         }
 
         CwmscriptureHelper::saveScriptures($studyId, $scriptures);

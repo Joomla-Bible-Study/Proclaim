@@ -526,6 +526,19 @@ class Cwmshowscripture
             $passage = $this->buildPassage($virtualRow, $params);
 
             if ($passage !== false && $passage !== '') {
+                // Add scripture reference heading above each passage block
+                $refLabel = CwmscriptureHelper::formatReference(
+                    $ref->booknumber,
+                    $ref->chapterBegin,
+                    $ref->verseBegin,
+                    $ref->chapterEnd,
+                    $ref->verseEnd
+                );
+
+                if ($refLabel !== '') {
+                    $output .= '<h4 class="scripture-passage-heading">' . htmlspecialchars($refLabel) . '</h4>';
+                }
+
                 $output .= $passage;
             }
         }

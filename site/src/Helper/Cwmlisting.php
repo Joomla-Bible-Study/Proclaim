@@ -25,6 +25,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
@@ -1991,7 +1992,7 @@ class Cwmlisting
             }
 
             if (!empty($parts)) {
-                return implode('; ', $parts);
+                return $this->joinScriptureParts($parts, $params, $elementConfig);
             }
         }
 
@@ -2008,7 +2009,47 @@ class Cwmlisting
             $parts[] = $s2;
         }
 
-        return implode('; ', $parts);
+        return $this->joinScriptureParts($parts, $params, $elementConfig);
+    }
+
+    /**
+     * Join rendered scripture parts using the configured separator.
+     *
+     * Checks per-element config first, then falls back to global template param.
+     *
+     * @param   array    $parts          Rendered scripture strings
+     * @param   Registry $params         Template parameters
+     * @param   ?object  $elementConfig  Element configuration from Layout Editor
+     *
+     * @return  string
+     *
+     * @since   10.1.0
+     */
+    private function joinScriptureParts(array $parts, Registry $params, ?object $elementConfig = null): string
+    {
+        if (empty($parts)) {
+            return '';
+        }
+
+        if (\count($parts) === 1) {
+            return $parts[0];
+        }
+
+        // Per-element separator overrides global (empty string = use global)
+        $separator = $params->get('scripture_separator', 'middot');
+
+        if ($elementConfig !== null && isset($elementConfig->separator) && $elementConfig->separator !== '') {
+            $separator = $elementConfig->separator;
+        }
+
+        return LayoutHelper::render(
+            'scripture.list',
+            [
+                'parts'     => $parts,
+                'separator' => $separator,
+            ],
+            JPATH_SITE . '/components/com_proclaim/layouts'
+        );
     }
 
     /**

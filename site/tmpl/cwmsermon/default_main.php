@@ -50,7 +50,7 @@ if (!$isPrint && $this->item->params->get('showpodcastsubscribedetails') === '1'
                 if ($this->item->params->get('details_show_header') == 1) {
                     echo $this->item->studytitle;
                 } else {
-                    echo $this->item->scripture1;
+                    echo !empty($this->item->allScriptures) ? $this->item->allScriptures : $this->item->scripture1;
                 }
                 // Add archive badge if item is archived and badge is enabled
                 $showBadge = $this->item->params->get('show_archive_badge', '');

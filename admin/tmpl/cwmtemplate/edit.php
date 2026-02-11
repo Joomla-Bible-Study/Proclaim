@@ -373,6 +373,20 @@ endforeach;
         echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
+        echo HTMLHelper::_('uitab.addTab', 'myTab', 'display-defaults', Text::_('JBS_TPL_DISPLAY_DEFAULTS')); ?>
+        <div class="row">
+            <div class="col-lg-6">
+                <?php
+foreach ($this->form->getFieldset('VERSES') as $field) :
+    echo $this->form->renderField($field->fieldname, 'params');
+endforeach;
+?>
+            </div>
+        </div>
+        <?php
+        echo HTMLHelper::_('uitab.endTab'); ?>
+
+        <?php
         if ($this->canDo->get('core.admin')) : ?>
             <?php
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
