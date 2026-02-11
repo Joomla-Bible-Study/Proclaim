@@ -111,7 +111,7 @@ class FiltersField extends FormField
                 . ' id="' . $this->id . $group->value . '_filter_type"'
                 . ' data-parent="' . ($group->parent) . '" '
                 . ' data-id="' . ($group->value) . '" '
-                . ' class="novalidate form-select"'
+                . ' class="novalidate form-select" style="min-width: 200px;"'
                 . '>';
             $html[] = '					<option value="BL"' . ($group_filter['filter_type'] == 'BL' ? ' selected="selected"' : '') . '>'
                 . Text::_('COM_CONFIG_FIELD_FILTERS_DEFAULT_FORBIDDEN_LIST') . '</option>';
