@@ -150,6 +150,7 @@ class HtmlView extends BaseHtmlView
         if ($canDo->get('core.edit.state')) {
             $childBar->publish('cwmcomments.publish');
             $childBar->unpublish('cwmcomments.unpublish');
+            $childBar->checkin('cwmcomments.checkin')->listCheck(true);
 
             if ((int) $this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
                 $childBar->trash('cwmcomments.trash');

@@ -176,6 +176,7 @@ class HtmlView extends BaseHtmlView
             $childBar->publish('cwmseries.publish');
             $childBar->unpublish('cwmseries.unpublish');
             $childBar->archive('cwmseries.archive');
+            $childBar->checkin('cwmseries.checkin')->listCheck(true);
 
             if ($canDo->get('core.edit.state')) {
                 $childBar->trash('cwmseries.trash');

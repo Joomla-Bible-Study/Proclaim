@@ -153,10 +153,14 @@ class CwmtemplatesModel extends ListModel
         $query->select(
             $this->getState(
                 'list.select',
-                implode(', ', $db->qn(['template.id', 'template.published', 'template.title']))
+                implode(', ', $db->qn(['template.id', 'template.published', 'template.title', 'template.checked_out', 'template.checked_out_time']))
             )
         );
         $query->from($db->qn('#__bsms_templates', 'template'));
+
+        // Join over the users for the checked out user.
+        $query->select($db->qn('uc.name', 'editor'))
+            ->join('LEFT', $db->qn('#__users', 'uc') . ' ON ' . $db->qn('uc.id') . ' = ' . $db->qn('template.checked_out'));
 
         // Filter by published state
         $published = $this->getState('filter.published');

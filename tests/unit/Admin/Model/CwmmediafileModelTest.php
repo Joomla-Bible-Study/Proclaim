@@ -182,24 +182,4 @@ class CwmmediafileModelTest extends ProclaimTestCase
         $this->assertTrue($params[1]->isOptional());
     }
 
-    /**
-     * Test checkin method signature
-     *
-     * @return void
-     * #[CoversClass(CwmmediafileModel::class)]::checkin
-     */
-    public function testCheckinMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(CwmmediafileModel::class, 'checkin');
-
-        $this->assertFalse($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-        // Return type is false|int, which reflection might show differently
-
-        $params = $reflection->getParameters();
-        $this->assertCount(1, $params);
-        $this->assertEquals('pks', $params[0]->getName());
-        $this->assertParamTypeName('mixed', $params[0]);
-        $this->assertTrue($params[0]->isOptional());
-    }
 }

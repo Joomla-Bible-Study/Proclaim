@@ -161,6 +161,7 @@ class HtmlView extends BaseHtmlView
                 $childBar->publish('cwmtemplatecodes.publish');
                 $childBar->unpublish('cwmtemplatecodes.unpublish');
                 $childBar->archive('cwmtemplatecodes.archive');
+                $childBar->checkin('cwmtemplatecodes.checkin')->listCheck(true);
 
                 if ((int) $this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED) {
                     $childBar->trash('cwmtemplatecodes.trash')->listCheck(true);

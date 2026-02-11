@@ -82,20 +82,6 @@ class CwmtemplatecodeModel extends AdminModel
     }
 
     /**
-     * Method to check-out a row for editing.
-     *
-     * @param   null  $pk  The numeric id of the primary key.
-     *
-     * @return bool|int|null False on failure or error, true otherwise.
-     *
-     * @since   11.1
-     */
-    public function checkout($pk = null): bool|int|null
-    {
-        return $pk;
-    }
-
-    /**
      * Get Type Language String
      *
      * @return ?string

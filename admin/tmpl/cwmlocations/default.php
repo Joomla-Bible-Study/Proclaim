@@ -130,6 +130,8 @@ if (empty($this->items)) : ?>
                     foreach ($this->items as $i => $item) :
                         $item->max_ordering = 0;
                         $ordering           = ($listOrder === 'location.ordering');
+                        $canCheckin          = $user->authorise('core.manage', 'com_checkin')
+                            || $item->checked_out == $userId || \is_null($item->checked_out);
                         $canCreate          = $user->authorise('core.create');
                         $canEdit            = $user->authorise('core.edit', 'com_proclaim.location.' . $item->id);
                         $canEditOwn         = $user->authorise('core.edit.own', 'com_proclaim.location.' . $item->id);
@@ -154,6 +156,10 @@ if (empty($this->items)) : ?>
                             </td>
                             <td class="nowrap has-context">
                                 <div class="float-left">
+                                    <?php if ($item->checked_out) : ?>
+                                        <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor,
+                                            $item->checked_out_time, 'cwmlocations.', $canCheckin); ?>
+                                    <?php endif; ?>
                                     <?php
                             if ($canEdit || $canEditOwn) : ?>
                                         <a href="<?php

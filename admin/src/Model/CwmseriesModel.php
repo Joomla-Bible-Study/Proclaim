@@ -168,6 +168,8 @@ class CwmseriesModel extends ListModel
                     $db->quoteName('series.language'),
                     $db->quoteName('series.access'),
                     $db->quoteName('series.ordering'),
+                    $db->quoteName('series.checked_out'),
+                    $db->quoteName('series.checked_out_time'),
                 ])
             )
         )
@@ -184,7 +186,11 @@ class CwmseriesModel extends ListModel
         ->join('LEFT', $db->quoteName('#__languages', 'l'), $db->quoteName('l.lang_code') . ' = ' . $db->quoteName('series.language'))
 
         // Join over the asset groups.
-        ->join('LEFT', '#__viewlevels AS ag ON ag.id = series.access');
+        ->join('LEFT', '#__viewlevels AS ag ON ag.id = series.access')
+
+        // Join over the users for the checked out user.
+        ->select($db->quoteName('uc.name', 'editor'))
+        ->join('LEFT', $db->quoteName('#__users', 'uc'), $db->quoteName('uc.id') . ' = ' . $db->quoteName('series.checked_out'));
 
         // Filter on the language.
         if ($language = $this->getState('filter.language')) {

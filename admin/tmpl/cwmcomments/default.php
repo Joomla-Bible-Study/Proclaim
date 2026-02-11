@@ -191,6 +191,8 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                         <?php
                         foreach ($this->items as $i => $item) :
                             $link       = Route::_('index.php?option=com_proclaim&task=cwmcomment.edit&id=' . (int)$item->id);
+                            $canCheckin  = $user->authorise('core.manage', 'com_checkin')
+                                || $item->checked_out == $userId || \is_null($item->checked_out);
                             $canCreate  = $user->authorise('core.create');
                             $canEdit    = $user->authorise('core.edit', 'com_proclaim.comment.' . $item->id);
                             $canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.comment.' . $item->id);
@@ -238,6 +240,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                                 </td>
                                 <td class="nowrap has-context" style="width:10%;">
                                     <div class="float-left">
+                                        <?php if ($item->checked_out) : ?>
+                                            <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor,
+                                                $item->checked_out_time, 'cwmcomments.', $canCheckin); ?>
+                                        <?php endif; ?>
                                         <?php
                                         if ($canEdit || $canEditOwn) : ?>
                                             <a href="<?php

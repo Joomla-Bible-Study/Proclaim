@@ -105,27 +105,6 @@ class CwmserieModelTest extends ProclaimTestCase
     }
 
     /**
-     * Test checkout method signature
-     *
-     * @return void
-     * #[CoversClass(CwmserieModel::class)]::checkout
-     */
-    public function testCheckoutMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(CwmserieModel::class, 'checkout');
-
-        $this->assertFalse($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-        $this->assertReturnTypeName('bool', $reflection);
-
-        $params = $reflection->getParameters();
-        $this->assertCount(1, $params);
-        $this->assertEquals('pk', $params[0]->getName());
-        // No type hint in method signature for pk
-        $this->assertTrue($params[0]->isOptional());
-    }
-
-    /**
      * Test getTable method signature
      *
      * @return void

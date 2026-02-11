@@ -288,67 +288,6 @@ class CwmmediafileTable extends Table
     }
 
     /**
-     * Method to check a row in if the necessary properties/fields exist.  Checking
-     * a row in will allow other users the ability to edit the row.
-     *
-     * @param   mixed  $pk  An optional primary key value to check out.  If not set the instance property value is used.
-     *
-     * @return  bool  True on success.
-     *
-     * @throws  \UnexpectedValueException
-     * @since   11.1
-     * @link    http://docs.joomla.org/Table/checkIn
-     */
-    #[\Override]
-    public function checkIn($pk = null): bool
-    {
-        // If there is no checked_out or checked_out_time field, just return true.
-        if (!property_exists($this, 'checked_out') || !property_exists($this, 'checked_out_time')) {
-            return true;
-        }
-
-        if (\is_null($pk)) {
-            $pk = [];
-
-            foreach ($this->_tbl_keys as $key) {
-                $pk[$this->$key] = $this->$key;
-            }
-        } elseif (!\is_array($pk)) {
-            $pk = [$this->_tbl_key => $pk];
-        }
-
-        foreach ($this->_tbl_keys as $key) {
-            $pk[$key] = empty($pk[$key]) ? $this->$key : $pk[$key];
-
-            if ($pk[$key] === null) {
-                throw new \UnexpectedValueException('Null primary key not allowed.');
-            }
-        }
-
-        // Check the row in by primary key.
-        $db    = $this->getDatabase();
-        $query = $db->getQuery(true)
-            ->update($this->_tbl)
-            ->set($db->quoteName($this->getColumnAlias('checked_out')) . ' = 0')
-            ->set(
-                $db->quoteName($this->getColumnAlias('checked_out_time')) . ' = ' . $db->quote(
-                    $db->getNullDate()
-                )
-            );
-        $this->appendPrimaryKeys($query, $pk);
-        $db->setQuery($query);
-
-        // Check for a database error.
-        $db->execute();
-
-        // Set table values in the object.
-        $this->checked_out      = 0;
-        $this->checked_out_time = '';
-
-        return true;
-    }
-
-    /**
      * Method to compute the default name of the asset.
      * The default name is in the form `table_name.id`
      * where id is the value of the primary key of the table.

@@ -128,6 +128,8 @@ echo Route::_('index.php?option=com_proclaim&view=cwmpodcasts'); ?>" method="pos
                         <?php
                         foreach ($this->items as $i => $item) :
                             $item->max_ordering = 0; //??
+                            $canCheckin          = $user->authorise('core.manage', 'com_checkin')
+                                || $item->checked_out == $userId || \is_null($item->checked_out);
                             $canCreate          = $user->authorise('core.create');
                             $canEdit            = $user->authorise('core.edit', 'com_proclaim.podcast.' . $item->id);
                             $canEditOwn         = $user->authorise('core.edit.own', 'com_proclaim.podcast.' . $item->id);
@@ -153,7 +155,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmpodcasts'); ?>" method="pos
                                 </td>
                                 <td class="nowrap has-context">
                                     <div class="float-left">
-
+                                        <?php if ($item->checked_out) : ?>
+                                            <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor,
+                                                $item->checked_out_time, 'cwmpodcasts.', $canCheckin); ?>
+                                        <?php endif; ?>
                                         <?php
                                 if ($canEdit || $canEditOwn) : ?>
                                             <a href="<?php

@@ -17,13 +17,8 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
-use CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel;
-use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
-use Joomla\CMS\Router\Route;
-use Joomla\CMS\Session\Session;
 
 /**
  * MediaFiles list controller class
@@ -33,51 +28,6 @@ use Joomla\CMS\Session\Session;
  */
 class CwmmediafilesController extends AdminController
 {
-    /**
-     * Check in of one or more records.
-     *
-     * @return  bool  True on success
-     *
-     * @throws \Exception
-     * @since   7.0.0
-     */
-    public function checkin(): bool
-    {
-        // Check for request forgeries.
-        if (!Session::checkToken()) {
-            $this->setRedirect('index.php?option=com_proclaim&view=cwmmediafiles', Text::_('JINVALID_TOKEN'), 'error');
-
-            return false;
-        }
-
-        $ids = Factory::getApplication()->getInput()->post->get('cid', [], 'array');
-
-        /** @var CwmmediafileModel $model */
-        $model  = $this->getModel($name = 'Cwmmediafile', $prefix = 'Administrator', $config = ['ignore_request' => true]);
-        $return = $model->checkin($ids);
-
-        if ($return === false) {
-            // Checkin failed.
-            $message = Text::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', '');
-            $this->setRedirect(
-                Route::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false),
-                $message,
-                'error'
-            );
-
-            return false;
-        }
-
-        // Checkin succeeded.
-        $message = Text::plural($this->text_prefix . '_N_ITEMS_CHECKED_IN', \count($ids));
-        $this->setRedirect(
-            Route::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false),
-            $message
-        );
-
-        return true;
-    }
-
     /**
      * Proxy for getModel.
      *

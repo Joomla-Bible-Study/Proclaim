@@ -24,21 +24,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 class CwmmediafilesControllerTest extends ProclaimTestCase
 {
     /**
-     * Test checkin method signature
-     *
-     * @return void
-     * #[CoversClass(CwmmediafilesController::class)]::checkin
-     */
-    public function testCheckinMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(CwmmediafilesController::class, 'checkin');
-
-        $this->assertFalse($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-        $this->assertReturnTypeName('bool', $reflection);
-    }
-
-    /**
      * Test getModel method signature
      *
      * @return void

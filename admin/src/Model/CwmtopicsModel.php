@@ -135,10 +135,14 @@ class CwmtopicsModel extends ListModel
         $query->select(
             $this->getState(
                 'list.select',
-                implode(', ', $db->qn(['topic.id', 'topic.topic_text', 'topic.published'])) . ', ' . $db->qn('topic.params', 'topic_params')
+                implode(', ', $db->qn(['topic.id', 'topic.topic_text', 'topic.published', 'topic.checked_out', 'topic.checked_out_time'])) . ', ' . $db->qn('topic.params', 'topic_params')
             )
         );
         $query->from($db->qn('#__bsms_topics', 'topic'));
+
+        // Join over the users for the checked out user.
+        $query->select($db->qn('uc.name', 'editor'))
+            ->join('LEFT', $db->qn('#__users', 'uc') . ' ON ' . $db->qn('uc.id') . ' = ' . $db->qn('topic.checked_out'));
 
         // Filter by search in title.
         $search = $this->getState('filter.search');

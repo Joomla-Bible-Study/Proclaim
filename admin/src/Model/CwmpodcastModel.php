@@ -70,20 +70,6 @@ class CwmpodcastModel extends AdminModel
     }
 
     /**
-     * Method to check out a row for editing.
-     *
-     * @param   null  $pk  The numeric ID of the primary key.
-     *
-     * @return int|null False on failure or error, true otherwise.
-     *
-     * @since   11.1
-     */
-    public function checkout($pk = null): ?int
-    {
-        return (int)$pk;
-    }
-
-    /**
      * Method to get a table object, load it if necessary.
      *
      * @param   string  $name     The table name. Optional.

@@ -76,9 +76,12 @@ CREATE TABLE IF NOT EXISTS `#__bsms_comments`
     `asset_id`     INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
     `access`       INT(10) UNSIGNED NOT NULL DEFAULT '0',
     `language`     CHAR(7)          NOT NULL COMMENT 'The language code for the Comments.',
+    `checked_out`      INT(10) UNSIGNED NOT NULL DEFAULT 0,
+    `checked_out_time` DATETIME                  DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`),
+    KEY `idx_checkout` (`checked_out`),
     KEY `idx_study_published` (`study_id`, `published`, `comment_date`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -138,6 +141,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_locations`
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`),
+    KEY `idx_checkout` (`checked_out`),
     KEY `idx_published_access` (`published`, `access`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -206,9 +210,12 @@ CREATE TABLE IF NOT EXISTS `#__bsms_message_type`
     `created_by_alias` VARCHAR(255)     NOT NULL DEFAULT '',
     `modified`         DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
     `modified_by`      INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `checked_out`      INT(10) UNSIGNED NOT NULL DEFAULT 0,
+    `checked_out_time` DATETIME                  DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
-    KEY `idx_access` (`access`)
+    KEY `idx_access` (`access`),
+    KEY `idx_checkout` (`checked_out`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
@@ -258,9 +265,12 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast`
     `created_by_alias`        VARCHAR(255)     NOT NULL DEFAULT '',
     `modified`                DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
     `modified_by`             INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `checked_out`             INT(10) UNSIGNED NOT NULL DEFAULT 0,
+    `checked_out_time`        DATETIME                  DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
-    KEY `idx_access` (`access`)
+    KEY `idx_access` (`access`),
+    KEY `idx_checkout` (`checked_out`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
@@ -292,9 +302,12 @@ CREATE TABLE IF NOT EXISTS `#__bsms_series`
     `created_by_alias` VARCHAR(255)                                     NOT NULL DEFAULT '',
     `modified`         DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
     `modified_by`      INT(10) UNSIGNED                                 NOT NULL DEFAULT '0',
+    `checked_out`      INT(10) UNSIGNED                                 NOT NULL DEFAULT 0,
+    `checked_out_time` DATETIME                                                  DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`),
+    KEY `idx_checkout` (`checked_out`),
     KEY `idx_createdby` (`created_by`),
     KEY `idx_published_access` (`published`, `access`),
     KEY `idx_teacher_published` (`teacher`, `published`)
@@ -323,9 +336,12 @@ CREATE TABLE IF NOT EXISTS `#__bsms_servers`
     `created_by_alias` VARCHAR(255)     NOT NULL DEFAULT '',
     `modified`         DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
     `modified_by`      INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `checked_out`      INT(10) UNSIGNED NOT NULL DEFAULT 0,
+    `checked_out_time` DATETIME                  DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
-    KEY `idx_access` (`access`)
+    KEY `idx_access` (`access`),
+    KEY `idx_checkout` (`checked_out`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
@@ -484,9 +500,12 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers`
     `created_by_alias`  VARCHAR(255)                                     NOT NULL DEFAULT '',
     `modified`          DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
     `modified_by`       INT(10) UNSIGNED                                 NOT NULL DEFAULT '0',
+    `checked_out`       INT(10) UNSIGNED                                 NOT NULL DEFAULT 0,
+    `checked_out_time`  DATETIME                                                  DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`),
+    KEY `idx_checkout` (`checked_out`),
     KEY `idx_createdby` (`created_by`),
     KEY `idx_published_access` (`published`, `access`)
 ) ENGINE InnoDB
@@ -511,8 +530,11 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templatecode`
     `created_by_alias` VARCHAR(255)     NOT NULL DEFAULT '',
     `modified`         DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
     `modified_by`      INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `checked_out`      INT(10) UNSIGNED NOT NULL DEFAULT 0,
+    `checked_out_time` DATETIME                  DEFAULT NULL,
     `templatecode`     MEDIUMTEXT       NOT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    KEY `idx_checkout` (`checked_out`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
@@ -539,10 +561,13 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templates`
     `created_by_alias` VARCHAR(255)     NOT NULL DEFAULT '',
     `modified`         DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
     `modified_by`      INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `checked_out`      INT(10) UNSIGNED NOT NULL DEFAULT 0,
+    `checked_out_time` DATETIME                  DEFAULT NULL,
     `access`           INT(10) UNSIGNED NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
-    KEY `idx_access` (`access`)
+    KEY `idx_access` (`access`),
+    KEY `idx_checkout` (`checked_out`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
@@ -579,12 +604,15 @@ CREATE TABLE IF NOT EXISTS `#__bsms_topics`
     `created_by_alias` VARCHAR(255)     NOT NULL DEFAULT '',
     `modified`         DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
     `modified_by`      INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `checked_out`      INT(10) UNSIGNED NOT NULL DEFAULT 0,
+    `checked_out_time` DATETIME                  DEFAULT NULL,
     `asset_id`         INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
     `language`         CHAR(7)                   DEFAULT '*',
     `access`           INT(10) UNSIGNED NOT NULL DEFAULT '1',
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`),
+    KEY `idx_checkout` (`checked_out`),
     KEY `idx_published_access` (`published`, `access`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4

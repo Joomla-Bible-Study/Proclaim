@@ -104,10 +104,16 @@ class CwmtemplatecodesModel extends ListModel
                     'templatecode.filename',
                     'templatecode.templatecode',
                     'templatecode.type',
+                    'templatecode.checked_out',
+                    'templatecode.checked_out_time',
                 ]))
             )
         );
         $query->from($db->quoteName('#__bsms_templatecode', 'templatecode'));
+
+        // Join over the users for the checked out user.
+        $query->select($db->quoteName('uc.name', 'editor'))
+            ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('templatecode.checked_out'));
 
         // Filter by search in filename or study title
         $search = $this->getState('filter.search');

@@ -160,6 +160,22 @@ class CwmtemplateTable extends Table
     public ?int $modified_by = null;
 
     /**
+     * Checked out user ID
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $checked_out = null;
+
+    /**
+     * Checked out time
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $checked_out_time = null;
+
+    /**
      * Contractor
      *
      * @param   DatabaseDriver  $db  Database connector object
