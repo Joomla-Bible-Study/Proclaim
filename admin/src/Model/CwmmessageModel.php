@@ -186,17 +186,25 @@ class CwmmessageModel extends AdminModel
 
         $query->select(
             $db->qn(
-                ['m.id', 'm.language', 'm.published', 'm.createdate', 'm.params', 'm.access']
+                [
+                    'm.id', 'm.language', 'm.published', 'm.createdate',
+                    'm.params', 'm.access', 'm.ordering', 'm.metadata',
+                    'm.server_id', 'm.hits', 'm.downloads', 'm.plays',
+                ]
             )
         );
         $query->from($db->qn('#__bsms_mediafiles', 'm'));
         $query->where($db->qn('m.study_id') . ' = ' . (int) $this->getItem()->id);
         $query->where('(' . $db->qn('m.published') . ' = 0 OR ' . $db->qn('m.published') . ' = 1)');
-        $query->order($db->qn('m.createdate') . ' DESC');
+        $query->order($db->qn('m.ordering') . ' ASC, ' . $db->qn('m.createdate') . ' DESC');
 
         // Join over the asset groups.
         $query->select($db->qn('ag.title', 'access_level'));
         $query->join('LEFT', $db->qn('#__viewlevels', 'ag') . ' ON ' . $db->qn('ag.id') . ' = ' . $db->qn('m.access'));
+
+        // Join over the server to get name and type.
+        $query->select($db->qn(['s.server_name', 's.type'], ['server_name', 'server_type']));
+        $query->join('LEFT', $db->qn('#__bsms_servers', 's') . ' ON ' . $db->qn('s.id') . ' = ' . $db->qn('m.server_id'));
 
         $db->setQuery($query->__toString());
         $mediafiles = $db->loadObjectList();
@@ -205,6 +213,10 @@ class CwmmessageModel extends AdminModel
             $reg = new Registry();
             $reg->loadString($mediafile->params);
             $mediafiles[$i]->params = $reg;
+
+            $meta = new Registry();
+            $meta->loadString($mediafile->metadata);
+            $mediafiles[$i]->metadata = $meta;
         }
 
         return $mediafiles;

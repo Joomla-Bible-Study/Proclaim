@@ -91,115 +91,146 @@ echo Route::_(
       enctype="multipart/form-data">
     <?php
     echo LayoutHelper::render('edit.studytitle_alias', $this); ?>
-    <div class="form-inline form-inline-header">
-        <div class="table-responsive" id="media">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th  scope="col" class="center"><?php
-                        echo Text::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>
-                    <th  scope="col" class="center"><?php
-                        echo Text::_('JSTATUS'); ?></th>
-                    <th  scope="col" class="center"><?php
-                        echo Text::_('JBS_CMN_MEDIA_CREATE_DATE'); ?></th>
-                    <th  scope="col" class="text-center d-none d-md-table-cell">Language</th>
-                    <th  scope="col" class="text-center d-none d-md-table-cell">Access</th>
-                    <th  scope="col" class="text-center d-none d-md-table-cell">ID</th>
-                </tr>
-                </thead>
-                <tbody>
+    <?php
+    // Media Files section
+    $mediaCount = \count($this->mediafiles);
+    $addMediaLink = 'index.php?option=com_proclaim&amp;task=cwmmediafile.edit&amp;sid='
+        . $this->form->getValue('id') . '&amp;options=' . $options . '&amp;return='
+        . $return . '&amp;' . Session::getFormToken() . '=1';
 
-                <?php
-                if (\count($this->mediafiles) > 0) :
-                    foreach ($this->mediafiles as $i => $item) :
-                        ?>
-                        <tr class="row<?php
-                        echo $i % 2; ?>">
-                            <td>
-                                <?php
-                                $link = 'index.php?option=com_proclaim&amp;task=cwmmediafile.edit&amp;id='
-                                    . (int)$item->id . '&amp;return=' . $return . '&amp;options=' . $options; ?>
-                                <a class="btn btn-primary" href="<?php
-                                echo $link; ?>"
-                                   title="<?php
-                                    echo $this->escape($item->params->get('filename')) ?: $this->escape(
-                                        $item->params->get('media_image_name')
-                                    ); ?>">
-                                    <?php
-                                    echo $this->escape($item->params->get('filename')) ?: $this->escape(
-                                        $item->params->get('media_image_name')
-                                    ); ?>
-                                </a>
-                            </td>
-                            <td class="center">
-                                <?php
-                                echo HTMLHelper::_(
-                                    'jgrid.published',
-                                    $item->published,
-                                    $i,
-                                    'message.',
-                                    true,
-                                    'cb',
-                                    '',
-                                    ''
-                                ); ?>
-                            </td>
-                            <td class="center">
-                                <?php
-                                echo HTMLHelper::_('date', $item->createdate, Text::_('DATE_FORMAT_LC4')); ?>
-                            </td>
-                            <td class="text-center d-none d-md-table-cell">
-                                <?php
-                                echo $item->language; ?>
-                            </td>
-                            <td class="text-center d-none d-md-table-cell">
-                                <?php
-                                echo $item->access_level; ?>
-                            </td>
-                            <td class="text-center d-none d-md-table-cell">
-                                <?php
-                                echo $item->id; ?>
-                            </td>
-
+    // Server type → badge color mapping
+    $serverBadgeMap = [
+        'youtube' => 'bg-danger',
+        'local'   => 'bg-success',
+        'vimeo'   => 'bg-info',
+        'legacy'  => 'bg-secondary',
+    ];
+    ?>
+    <div class="card mb-3" id="media">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">
+                <?php echo Text::_('JBS_CMN_MEDIA_FILES'); ?>
+                <?php if ($mediaCount > 0) : ?>
+                    <span class="badge bg-secondary"><?php echo $mediaCount; ?></span>
+                <?php endif; ?>
+            </h4>
+            <?php if (!empty($this->item->id)) : ?>
+                <a class="btn btn-success btn-sm" href="<?php echo $addMediaLink; ?>">
+                    <span class="icon-plus" aria-hidden="true"></span>
+                    <?php echo Text::_('JBS_STY_ADD_MEDIA_FILE'); ?>
+                </a>
+            <?php endif; ?>
+        </div>
+        <div class="card-body p-0">
+            <?php if (empty($this->item->id)) : ?>
+                <div class="p-4 text-center text-muted">
+                    <span class="icon-info-circle fs-1 d-block mb-2" aria-hidden="true"></span>
+                    <p class="mb-2"><?php echo Text::_('JBS_STY_SAVE_FIRST'); ?></p>
+                    <a class="btn btn-primary btn-sm" href="#"
+                       onclick="Joomla.submitbutton('cwmmessage.apply'); return false;">
+                        <span class="icon-save" aria-hidden="true"></span>
+                        <?php echo Text::_('JAPPLY'); ?>
+                    </a>
+                </div>
+            <?php elseif ($mediaCount === 0) : ?>
+                <div class="p-4 text-center text-muted">
+                    <span class="icon-file-add fs-1 d-block mb-2" aria-hidden="true"></span>
+                    <p class="mb-2"><?php echo Text::_('JBS_STY_NO_MEDIAFILES'); ?></p>
+                    <a class="btn btn-success btn-sm" href="<?php echo $addMediaLink; ?>">
+                        <span class="icon-plus" aria-hidden="true"></span>
+                        <?php echo Text::_('JBS_STY_ADD_MEDIA_FILE'); ?>
+                    </a>
+                </div>
+            <?php else : ?>
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
+                                <span class="icon-menu" aria-hidden="true"
+                                      title="<?php echo Text::_('JORDERINGDISABLED'); ?>"></span>
+                            </th>
+                            <th scope="col"><?php echo Text::_('JBS_CMN_EDIT_MEDIA_FILE'); ?></th>
+                            <th scope="col" class="w-10 text-center"><?php echo Text::_('JBS_CMN_SERVER'); ?></th>
+                            <th scope="col" class="w-5 text-center"><?php echo Text::_('JSTATUS'); ?></th>
+                            <th scope="col" class="w-10 text-center d-none d-md-table-cell">
+                                <?php echo Text::_('JBS_MED_DURATION'); ?>
+                            </th>
+                            <th scope="col" class="w-10 text-center d-none d-md-table-cell">
+                                <?php echo Text::_('JBS_CMN_MEDIA_CREATE_DATE'); ?>
+                            </th>
+                            <th scope="col" class="w-5 text-center d-none d-md-table-cell">ID</th>
                         </tr>
-                        <?php
-                    endforeach;
-                else :
-                    ?>
-                    <tr>
-                        <td colspan="5" class="center"><?php
-                            echo Text::_('JBS_STY_NO_MEDIAFILES'); ?></td>
-                    </tr>
-                    <?php
-                endif; ?>
-
-                </tbody>
-                <tfoot>
-                <tr>
-                    <td colspan="6">
-                        <?php
-                        $link = 'index.php?option=com_proclaim&amp;task=cwmmediafile.edit&amp;sid='
-                            . $this->form->getValue('id') . '&amp;options=' . $options . '&amp;return=' .
-                            $return . '&amp;' . Session::getFormToken() . '=1'; ?>
-                        <?php
-                        if (empty($this->item->id)) {
-                            ?> <a onClick="Joomla.submitbutton('message.apply');"
-                                  href="#"> <?php
-                                    echo Text::_('JBS_STY_SAVE_FIRST'); ?> </a> <?php
-                        } else {
+                        </thead>
+                        <tbody>
+                        <?php foreach ($this->mediafiles as $i => $item) :
+                            $editLink = 'index.php?option=com_proclaim&amp;task=cwmmediafile.edit&amp;id='
+                                . (int) $item->id . '&amp;return=' . $return . '&amp;options=' . $options;
+                            $mediaName = $this->escape($item->params->get('filename'))
+                                ?: $this->escape($item->params->get('media_image_name'))
+                                ?: Text::_('JBS_CMN_EDIT_MEDIA_FILE');
+                            $serverType = strtolower(trim($item->server_type ?? ''));
+                            $badgeClass = $serverBadgeMap[$serverType] ?? 'bg-primary';
+                            $dH = (int) $item->params->get('media_hours', 0);
+                            $dM = (int) $item->params->get('media_minutes', 0);
+                            $dS = (int) $item->params->get('media_seconds', 0);
+                            $duration = ($dH * 3600) + ($dM * 60) + $dS;
                             ?>
-                            <a class="btn btn-primary" href="<?php
-                            echo $link; ?>"
-                               title="<?php
-                                echo Text::_('JBS_STY_ADD_MEDIA_FILE'); ?>">
-                                <?php
-                                echo Text::_('JBS_STY_ADD_MEDIA_FILE'); ?></a> <?php
-                        }
-?>
-                    </td>
-                </tr>
-                </tfoot>
-            </table>
+                            <tr class="row<?php echo $i % 2; ?>">
+                                <td class="text-center d-none d-md-table-cell">
+                                    <span class="icon-ellipsis-v text-muted" aria-hidden="true"
+                                          title="<?php echo (int) $item->ordering; ?>"></span>
+                                </td>
+                                <td>
+                                    <a href="<?php echo $editLink; ?>" title="<?php echo $mediaName; ?>">
+                                        <?php echo $mediaName; ?>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <?php if ($item->server_name) : ?>
+                                        <span class="badge <?php echo $badgeClass; ?>">
+                                            <?php echo $this->escape($item->server_name); ?>
+                                        </span>
+                                    <?php else : ?>
+                                        <span class="badge bg-warning text-dark"><?php echo Text::_('JNONE'); ?></span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php echo HTMLHelper::_(
+                                        'jgrid.published',
+                                        $item->published,
+                                        $i,
+                                        'message.',
+                                        true,
+                                        'cb',
+                                        '',
+                                        ''
+                                    ); ?>
+                                </td>
+                                <td class="text-center d-none d-md-table-cell">
+                                    <?php if ($duration > 0) :
+                                        $hours = intdiv($duration, 3600);
+                                        $mins  = intdiv($duration % 3600, 60);
+                                        $secs  = $duration % 60;
+                                        echo $hours > 0
+                                            ? sprintf('%d:%02d:%02d', $hours, $mins, $secs)
+                                            : sprintf('%d:%02d', $mins, $secs);
+                                    else :
+                                        echo '&mdash;';
+                                    endif; ?>
+                                </td>
+                                <td class="text-center d-none d-md-table-cell">
+                                    <?php echo HTMLHelper::_('date', $item->createdate, Text::_('DATE_FORMAT_LC4')); ?>
+                                </td>
+                                <td class="text-center d-none d-md-table-cell">
+                                    <?php echo (int) $item->id; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 
