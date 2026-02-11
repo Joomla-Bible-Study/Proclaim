@@ -273,6 +273,7 @@ class CwmmediafilesModel extends ListModel
 
         // Join over servers
         $query->select($db->qn('server.type', 'serverType'));
+        $query->select($db->qn('server.server_name', 'server_name'));
         $query->join(
             'LEFT',
             $db->qn('#__bsms_servers', 'server') . ' ON ' . $db->qn('server.id') . ' = ' . $db->qn('mediafile.server_id')
