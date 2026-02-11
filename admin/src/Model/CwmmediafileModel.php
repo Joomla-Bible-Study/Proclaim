@@ -443,19 +443,12 @@ class CwmmediafileModel extends AdminModel
      */
     public function getMediaForm(): mixed
     {
-        // If a user hasn't selected a server yet, just return an empty form
+        // server_id is now set by getItem() (including admin default for new items)
         $server_id = $this->data->server_id;
 
-        if ($server_id === null) {
-            /** @var Registry $params */
-            $params    = Cwmparams::getAdmin()->params;
-            $server_id = $params->get('server');
-
-            if ($server_id !== '-1') {
-                $this->data->server_id = $server_id;
-            } else {
-                $server_id = null;
-            }
+        // No server selected yet — nothing to load
+        if (empty($server_id)) {
+            return null;
         }
 
         // Reverse lookup server_id to server type
@@ -464,6 +457,10 @@ class CwmmediafileModel extends AdminModel
             ->getMVCFactory()->createModel('Cwmserver', 'Administrator');
         $s_item      = $model->getItem($server_id);
         $server_type = $s_item->type;
+
+        if (empty($server_type)) {
+            return null;
+        }
 
         // Load server params (stored as JSON string in database)
         $reg = new Registry();
@@ -485,38 +482,33 @@ class CwmmediafileModel extends AdminModel
 
         $reg1->merge($reg);
 
-        if ($server_type) {
-            $path = Path::clean(
-                JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($server_type)
-            );
+        $path = Path::clean(
+            JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($server_type)
+        );
 
-            Form::addFormPath($path);
-            Form::addFieldPath($path . '/Field');
+        Form::addFormPath($path);
+        Form::addFieldPath($path . '/Field');
 
-            // Add language files
-            $lang = Factory::getApplication()->getLanguage();
-            $path = \Joomla\Filesystem\Path::clean(
-                JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($server_type)
-            );
+        // Add language files
+        $lang = Factory::getApplication()->getLanguage();
+        $path = \Joomla\Filesystem\Path::clean(
+            JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($server_type)
+        );
 
-            if (!$lang->load('jbs_addon_' . strtolower($server_type), $path)) {
-                Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'error');
-            }
-
-            $form = $this->loadForm(
-                'com_proclaim.mediafile.media',
-                "media",
-                ['control' => 'jform', 'load_data' => true],
-                true,
-                "/media"
-            );
-        } else {
-            Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'warning');
-            $form = $this->getForm();
+        if (!$lang->load('jbs_addon_' . strtolower($server_type), $path)) {
+            Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'error');
         }
 
+        $form = $this->loadForm(
+            'com_proclaim.mediafile.media',
+            "media",
+            ['control' => 'jform', 'load_data' => true],
+            true,
+            "/media"
+        );
+
         if (empty($form)) {
-            return false;
+            return null;
         }
 
         // Pass server params through state for use by view/addons when setting defaults
@@ -569,6 +561,15 @@ class CwmmediafileModel extends AdminModel
             // Set the server_id from session if available or fall back on the db value
             $server_id             = $this->getState('mediafile.server_id');
             $this->data->server_id = empty($server_id) ? $this->data->server_id : $server_id;
+
+            // For new items with no server, apply admin default
+            if (empty($this->data->server_id) && empty($this->data->id)) {
+                $defaultServer = Cwmparams::getAdmin()->params->get('server');
+
+                if ($defaultServer !== null && $defaultServer !== '-1' && $defaultServer !== '') {
+                    $this->data->server_id = (int) $defaultServer;
+                }
+            }
 
             $study_id             = $this->getState('mediafile.study_id');
             $this->data->study_id = empty($study_id) ? $this->data->study_id : $study_id;

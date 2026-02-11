@@ -30,8 +30,10 @@
         <field name="comment" type="textarea" rows="4" label="JBS_CMN_COMMENT"
                description="JBS_MED_APPEARS_UNDER_FILE_OR_TOOLTIP"/>
 
-        <field name="server_id" type="Server" label="JBS_CMN_SERVER"
-               description="JBS_MED_SERVER_DESC" required="true"/>
+        <field name="server_id" type="ServerList" label="JBS_CMN_SERVER"
+               description="JBS_MED_SERVER_DESC" required="true">
+            <option value="">JBS_CMN_SELECT_SERVER</option>
+        </field>
 
         <field name="podcast_id" type="Podcasts" label="JBS_MED_CHOOSE_PODCAST"
                description="JBS_MED_CHOOSE_PODCAST_DESC" multiple="true" default="">
