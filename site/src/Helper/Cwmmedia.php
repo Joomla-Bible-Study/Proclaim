@@ -487,7 +487,8 @@ class Cwmmedia
                             " onclick=\"window.open('index.php?option=com_proclaim&amp;player="
                             . $params->toObject()->player .
                             "&amp;view=cwmpopup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
-                            $player->playerwidth . ",height=" . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">"
+                            $player->playerwidth . ",height=" . $player->playerheight . "'); return false\"" .
+                            "  class=\"jbsmplayerlink playhit\" data-id=\"" . $media->id . "\">"
                             . $image . "</a>";
                         break;
                 }
@@ -541,7 +542,7 @@ class Cwmmedia
                             . $player->player
                             . "&amp;view=cwmpopup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
                             . $player->playerwidth . ", height=" .
-                            $player->playerheight . "'); return false\" class=\"jbsmplayerlink\">" . $image . "</a>";
+                            $player->playerheight . "'); return false\" class=\"jbsmplayerlink playhit\" data-id=\"" . $media->id . "\">" . $image . "</a>";
                         break;
                 }
 

@@ -67,4 +67,28 @@ class CwmsermonsController extends BaseController
         $return = base64_decode($return);
         $app->redirect($return);
     }
+
+    /**
+     * AJAX endpoint to record a play hit without redirect.
+     * Used by Fancybox, inline players, and other JS-based media playback.
+     *
+     * @return  void
+     *
+     * @throws \Exception
+     * @since   10.1.0
+     */
+    public function playHitAjax(): void
+    {
+        $app = Factory::getApplication();
+        $id  = $app->input->getInt('id', 0);
+
+        if ($id > 0) {
+            $getMedia = new Cwmmedia();
+            $getMedia->hitPlay($id);
+        }
+
+        $app->getDocument()->setMimeEncoding('application/json');
+        echo json_encode(['success' => $id > 0]);
+        $app->close();
+    }
 }
