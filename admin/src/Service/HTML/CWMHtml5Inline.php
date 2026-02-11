@@ -185,7 +185,7 @@ class CWMHtml5Inline
             $header = str_replace('{{title}}', $media->studytitle, $header);
         }
 
-        $render .= "<div class=\"media\">";
+        $render .= '<div class="media playhit" data-id="' . (int) $media->id . '">';
 
         # If MP3 media
         if (self::isMimeTypeAllowed($media->params->get('mime_type'), $audioFormats)) {

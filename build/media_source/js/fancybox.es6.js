@@ -10,7 +10,68 @@
 
 "use strict";
 
+/**
+ * Send an AJAX play-hit request for the given media file ID.
+ * Tracks each ID only once per page load to avoid duplicate counts.
+ *
+ * @param {number|string} mediaId  The media file ID to record
+ */
+var proclaimTrackedIds = {};
+function proclaimTrackPlay(mediaId) {
+    if (!mediaId || proclaimTrackedIds[mediaId]) {
+        return;
+    }
+    proclaimTrackedIds[mediaId] = true;
+
+    var url = 'index.php?option=com_proclaim&task=Cwmsermons.playHitAjax&id=' + encodeURIComponent(mediaId) + '&tmpl=component';
+    if (typeof fetch !== 'undefined') {
+        fetch(url, { method: 'GET', credentials: 'same-origin' }).catch(function () {});
+    } else {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.send();
+    }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
+    // Track clicks on any element with playhit or hitplay class (inline iframes, popup links, VirtueMart links, etc.)
+    document.querySelectorAll('.playhit, .hitplay').forEach(function (element) {
+        // Skip fancybox_player elements — they are tracked separately below
+        if (element.classList.contains('fancybox_player')) {
+            return;
+        }
+
+        var mediaId = element.getAttribute('data-id');
+        if (!mediaId) {
+            return;
+        }
+
+        // For containers with audio/video elements, track on the play event
+        var mediaEl = element.querySelector('audio, video');
+        if (mediaEl) {
+            mediaEl.addEventListener('play', function () {
+                proclaimTrackPlay(mediaId);
+            });
+            return;
+        }
+
+        // For links, iframes, and other clickable elements, track on click
+        element.addEventListener('click', function () {
+            proclaimTrackPlay(mediaId);
+        });
+    });
+
+    // Track clicks on fancybox_player elements before Fancybox processes them.
+    // This captures the data-id reliably regardless of Fancybox's internal API.
+    document.querySelectorAll('.fancybox_player').forEach(function (element) {
+        element.addEventListener('click', function () {
+            var id = this.getAttribute('data-id');
+            if (id) {
+                proclaimTrackPlay(id);
+            }
+        });
+    });
+
     if (typeof Fancybox === 'undefined') {
         return;
     }
@@ -66,6 +127,12 @@ document.addEventListener("DOMContentLoaded", function () {
         element.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
+
+            // Track the play
+            var mediaId = this.getAttribute('data-id');
+            if (mediaId) {
+                proclaimTrackPlay(mediaId);
+            }
 
             var audioSrc = this.getAttribute('data-src');
             var width = this.getAttribute('data-width') || this.getAttribute('pwidth') || '400';
