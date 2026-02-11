@@ -483,6 +483,20 @@
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="scripture2show_verses" type="hidden" default=""/>
             <field name="scripture2show_version" type="hidden" default=""/>
+            <field name="scripturesrow" type="RowOptions" size="1" default="0" label="JBS_CMN_ALL_SCRIPTURES"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="scripturescol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="scripturescolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="scriptureselement" type="ElementOptions" default="1" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="scripturescustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="scriptureslinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+                   description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="scripturesshow_verses" type="hidden" default=""/>
+            <field name="scripturesshow_version" type="hidden" default=""/>
             <field name="secondaryrow" type="RowOptions" size="1" default="0" label="JBS_CMN_SECONDARY_REFERENCES"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="secondarycol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -1621,6 +1635,20 @@
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="dscripture2show_verses" type="hidden" default=""/>
             <field name="dscripture2show_version" type="hidden" default=""/>
+            <field name="dscripturesrow" type="RowOptions" size="1" default="0" label="JBS_CMN_ALL_SCRIPTURES"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="dscripturescol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="dscripturescolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="dscriptureselement" type="ElementOptions" default="1" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="dscripturescustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="dscriptureslinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+                   description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="dscripturesshow_verses" type="hidden" default=""/>
+            <field name="dscripturesshow_version" type="hidden" default=""/>
             <field name="dsecondaryrow" type="RowOptions" size="1" default="0" label="JBS_CMN_SECONDARY_REFERENCES"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="dsecondarycol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"

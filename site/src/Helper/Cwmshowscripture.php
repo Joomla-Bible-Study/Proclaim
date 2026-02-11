@@ -12,6 +12,8 @@
 namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
+use CWM\Component\Proclaim\Administrator\Helper\ScriptureReference;
 use CWM\Component\Proclaim\Site\Bible\AbstractBibleProvider;
 use CWM\Component\Proclaim\Site\Bible\BiblePassageResult;
 use CWM\Component\Proclaim\Site\Bible\BibleProviderFactory;
@@ -286,7 +288,7 @@ class Cwmshowscripture
 
         // Fallback if nothing found
         if (empty($translations)) {
-            $obj = (object) ['abbreviation' => $version, 'name' => strtoupper($version), 'language' => $siteLang];
+            $obj          = (object) ['abbreviation' => $version, 'name' => strtoupper($version), 'language' => $siteLang];
             $translations = [$obj];
         }
 
@@ -315,7 +317,7 @@ class Cwmshowscripture
         ksort($otherGroup);
 
         // Build the searchable dropdown HTML
-        $messageId = (int) ($row->id ?? 0);
+        $messageId    = (int) ($row->id ?? 0);
         $siteLangName = self::$languageNames[$siteLang] ?? ucfirst($siteLang);
 
         // Find current version name for display
@@ -466,5 +468,73 @@ class Cwmshowscripture
         }
 
         return $reference;
+    }
+
+    /**
+     * Build passage text for all scripture references on a message.
+     *
+     * Uses the junction table scriptures if available, falls back to single buildPassage().
+     * Each reference gets its own passage display and version switcher.
+     *
+     * @param   object    $row     Message row (must have scriptures property)
+     * @param   Registry  $params  Template params
+     *
+     * @return  string  Combined HTML output for all passages
+     *
+     * @since  10.1.0
+     */
+    public function buildAllPassages(object $row, Registry $params): string
+    {
+        if (empty($row->scriptures) || !\is_array($row->scriptures)) {
+            // Fallback to legacy single passage
+            return (string) $this->buildPassage($row, $params);
+        }
+
+        $output = '';
+
+        foreach ($row->scriptures as $ref) {
+            if (!($ref instanceof ScriptureReference) || $ref->booknumber <= 0) {
+                continue;
+            }
+
+            // Build a virtual row for each reference
+            $bookKey = '';
+
+            foreach (CwmscriptureHelper::getAllBooks() as $book) {
+                if ($book['booknumber'] === $ref->booknumber) {
+                    $bookKey = $book['key'];
+
+                    break;
+                }
+            }
+
+            if ($bookKey === '') {
+                continue;
+            }
+
+            $virtualRow = (object) [
+                'id'            => $row->id ?? 0,
+                'booknumber'    => $ref->booknumber,
+                'bookname'      => $bookKey,
+                'chapter_begin' => $ref->chapterBegin,
+                'verse_begin'   => $ref->verseBegin,
+                'chapter_end'   => $ref->chapterEnd,
+                'verse_end'     => $ref->verseEnd,
+                'bible_version' => $ref->bibleVersion,
+            ];
+
+            $passage = $this->buildPassage($virtualRow, $params);
+
+            if ($passage !== false && $passage !== '') {
+                $output .= $passage;
+            }
+        }
+
+        if ($output === '') {
+            // Fallback to legacy single passage
+            return (string) $this->buildPassage($row, $params);
+        }
+
+        return $output;
     }
 }

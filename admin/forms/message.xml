@@ -57,33 +57,20 @@
 
         <field name="studynumber" type="text" size="15" label="JBS_CMN_STUDYNUMBER"/>
 
-        <fieldset name="scripture" label="COM_CONTENT_FIELD_IMAGE_OPTIONS">
-            <field name="booknumber" type="BookList" label="JBS_CMN_BOOK">
-                <option value="-1">JBS_CMN_SELECT_BOOK</option>
-            </field>
-
-            <field name="chapter_begin" type="text" class="jbsscript" size="5" label="JBS_STY_CHAPTER_BEGIN"
-                   filter="int"/>
-            <field name="verse_begin" type="text" size="5" label="JBS_STY_VERSE_BEGIN" filter="int"/>
-            <field name="chapter_end" type="text" size="5" label="JBS_STY_CHAPTER_END" filter="int"/>
-            <field name="verse_end" type="text" size="5" label="JBS_STY_VERSE_END" filter="int"/>
-            <field name="bible_version" type="BibleVersion" default=""
-                   label="JBS_STY_BIBLE_VERSION" description="JBS_STY_BIBLE_VERSION_DESC"/>
-
-            <field name="booknumber2" type="BookList" label="JBS_STY_BOOK2">
-                <option value="-1">JBS_CMN_SELECT_BOOK</option>
-            </field>
-            <field name="chapter_begin2" type="text" size="5" label="JBS_STY_CHAPTER_BEGIN2"
-                   filter="int"/>
-            <field name="verse_begin2" type="text" size="5" label="JBS_STY_VERSE_BEGIN2" filter="int"/>
-            <field name="chapter_end2" type="text" size="5" label="JBS_STY_CHAPTER_END2" filter="int"/>
-            <field name="verse_end2" type="text" size="5" label="JBS_STY_VERSE_END2" filter="int"/>
-            <field name="bible_version2" type="BibleVersion" default=""
-                   label="JBS_STY_BIBLE_VERSION2" description="JBS_STY_BIBLE_VERSION2_DESC"/>
-
+        <fieldset name="scripture" label="JBS_CMN_SCRIPTURE">
+            <field name="scriptures" type="subform"
+                   label="JBS_CMN_SCRIPTURE_REFERENCES"
+                   description="JBS_CMN_SCRIPTURE_REFERENCES_DESC"
+                   formsource="scripture_row"
+                   multiple="true"
+                   min="0" max="20"
+                   groupByFieldset="false"
+                   layout="joomla.form.field.subform.repeatable-table"
+                   buttons="add,remove,move"/>
             <field name="secondary_reference" type="text" size="100"
                    label="JBS_CMN_SECONDARY_REFERENCES"
-                   description="JBS_STY_SECONDARY_REFERENCES_DESC"/>
+                   description="JBS_STY_SECONDARY_REFERENCES_DESC"
+                   filter="trim"/>
         </fieldset>
 
         <field name="teacher_id" type="TeacherList" label="JBS_CMN_TEACHER">

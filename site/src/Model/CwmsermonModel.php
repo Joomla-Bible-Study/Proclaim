@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
@@ -289,6 +290,9 @@ class CwmsermonModel extends FormModel
 
                     $data->params->set('access-view', \in_array($data->access, $groups, true));
                 }
+
+                // Load all scripture references from junction table
+                $data->scriptures = CwmscriptureHelper::getScripturesForStudy((int) $pk);
 
                 $this->_item[$pk] = $data;
             } catch (\Exception $e) {

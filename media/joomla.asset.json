@@ -367,6 +367,17 @@
             "attributes": {
                 "defer": true
             }
+        },
+        {
+            "name": "com_proclaim.scripture-autocomplete",
+            "type": "script",
+            "uri": "com_proclaim/scripture-autocomplete.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
         }
     ]
 }

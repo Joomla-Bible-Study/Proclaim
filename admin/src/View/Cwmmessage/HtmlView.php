@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmmessage;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
@@ -128,6 +129,16 @@ class HtmlView extends BaseHtmlView
         $this->document     = Factory::getApplication()->getDocument();
 
         $this->simple = Cwmhelper::getSimpleView();
+
+        // Load scripture autocomplete assets
+        $document = Factory::getApplication()->getDocument();
+        $wa       = $document->getWebAssetManager();
+        $wa->useScript('com_proclaim.scripture-autocomplete');
+        $document->addScriptOptions('com_proclaim.books', CwmscriptureHelper::getAllBooks());
+        $document->addScriptOptions(
+            'com_proclaim.defaultBibleVersion',
+            $this->admin_params->get('default_bible_version', 'kjv')
+        );
 
         // Set the toolbar
         $this->addToolbar();

@@ -17,8 +17,10 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
+use CWM\Component\Proclaim\Administrator\Helper\ScriptureReference;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
@@ -250,6 +252,22 @@ class CwmmessageModel extends AdminModel
 
         $this->data = parent::getItem($pk);
 
+        // Load scripture references from junction table for the subform
+        if ($this->data && !empty($this->data->id)) {
+            $refs = CwmscriptureHelper::getScripturesForStudy((int) $this->data->id);
+
+            $subformData = [];
+
+            foreach ($refs as $ref) {
+                $subformData[] = [
+                    'reference_text' => $ref->referenceText,
+                    'bible_version'  => $ref->bibleVersion,
+                ];
+            }
+
+            $this->data->scriptures = $subformData;
+        }
+
         return $this->data;
     }
 
@@ -271,6 +289,10 @@ class CwmmessageModel extends AdminModel
         $input  = $app->input;
         $image  = HTMLHelper::cleanImageURL((string)$data['image']);
 
+        // Extract scriptures subform data before table binding strips it
+        $scripturesData = $data['scriptures'] ?? [];
+        unset($data['scriptures']);
+
         $data['image'] = $image->url;
         $this->cleanCache();
 
@@ -284,7 +306,13 @@ class CwmmessageModel extends AdminModel
                 $data['thumbnailm'] = '';
             }
 
-            return parent::save($data);
+            if (!parent::save($data)) {
+                return false;
+            }
+
+            $this->saveScriptures($scripturesData);
+
+            return true;
         }
 
         // Store the original image path for processing after save
@@ -304,7 +332,13 @@ class CwmmessageModel extends AdminModel
             $data['image']      = '';
             $data['thumbnailm'] = '';
 
-            return parent::save($data);
+            if (!parent::save($data)) {
+                return false;
+            }
+
+            $this->saveScriptures($scripturesData);
+
+            return true;
         }
 
         // For new records, save first to get the ID
@@ -333,15 +367,82 @@ class CwmmessageModel extends AdminModel
         if ($result === false) {
             $app->enqueueMessage(Text::_('JBS_STY_IMAGE_NOT_FOUND'), 'warning');
 
-            // For new records, we already saved, so just return true
-            return $isNew || parent::save($data);
+            if ($isNew) {
+                $this->saveScriptures($scripturesData);
+
+                return true;
+            }
+
+            if (!parent::save($data)) {
+                return false;
+            }
+
+            $this->saveScriptures($scripturesData);
+
+            return true;
         }
 
         // Update paths with new locations
         $data['image']      = $result['image'];
         $data['thumbnailm'] = $result['thumbnail'];
 
-        return parent::save($data);
+        if (!parent::save($data)) {
+            return false;
+        }
+
+        $this->saveScriptures($scripturesData);
+
+        return true;
+    }
+
+    /**
+     * Process and save scripture references from the subform data.
+     *
+     * @param   array  $scripturesData  Subform array of ['reference_text' => ..., 'bible_version' => ...]
+     *
+     * @return  void
+     *
+     * @since  10.1.0
+     */
+    private function saveScriptures(array $scripturesData): void
+    {
+        $studyId = (int) $this->getState($this->getName() . '.id');
+
+        if ($studyId <= 0) {
+            return;
+        }
+
+        $scriptures = [];
+
+        foreach ($scripturesData as $i => $entry) {
+            $text    = trim($entry['reference_text'] ?? '');
+            $version = trim($entry['bible_version'] ?? '');
+
+            if ($text === '') {
+                continue;
+            }
+
+            $parsed = CwmscriptureHelper::parseReference($text);
+
+            if ($parsed !== null) {
+                $parsed->bibleVersion  = $version;
+                $parsed->ordering      = $i;
+                $parsed->referenceText = $text;
+            } else {
+                // Unparsable — store raw text so user can fix later
+                $parsed = new ScriptureReference(
+                    booknumber:    0,
+                    referenceText: $text,
+                    bibleVersion:  $version,
+                    ordering:      $i,
+                );
+            }
+
+            $scriptures[] = $parsed;
+        }
+
+        CwmscriptureHelper::saveScriptures($studyId, $scriptures);
+        CwmscriptureHelper::syncLegacyColumns($studyId, $scriptures);
     }
 
     /**
