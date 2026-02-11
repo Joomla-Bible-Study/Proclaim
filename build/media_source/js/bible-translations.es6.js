@@ -515,6 +515,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadTranslations = (silent = false) => {
         const container = document.getElementById('translations-list');
 
+        // Lock height to prevent page bounce during refresh
+        container.style.minHeight = `${container.offsetHeight}px`;
+
         if (!silent) {
             container.innerHTML = `<div class="text-center py-3"><span class="spinner-border spinner-border-sm" role="status"></span> ${strings.loading}</div>`;
         }
@@ -540,9 +543,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Handle bundled auto-downloads
                 handleBundledAutoDownload(data.translations);
+
+                // Release locked height
+                container.style.minHeight = '';
             })
             .catch(() => {
                 container.innerHTML = `<div class="alert alert-warning">${strings.loadError}</div>`;
+                container.style.minHeight = '';
             });
     };
 
