@@ -54,7 +54,31 @@ $wa->useScript('keepalive')
 	document.addEventListener("DOMContentLoaded", function() {
 		var serverField = document.getElementById("jform_server_id");
 		if (serverField) {
+			var serverTypes = {};
+			try { serverTypes = JSON.parse(serverField.dataset.serverTypes || "{}"); } catch(e) {}
+			var previousValue = serverField.value;
+
 			serverField.addEventListener("change", function() {
+				var newValue = this.value;
+
+				// No previous selection — just load the addon
+				if (!previousValue || !serverTypes[previousValue]) {
+					previousValue = newValue;
+					Joomla.submitbutton("cwmmediafile.setServer");
+					return;
+				}
+
+				var oldType = serverTypes[previousValue] || "";
+				var newType = serverTypes[newValue] || "";
+
+				if (oldType !== newType && newType !== "") {
+					if (!confirm("' . $this->escape(Text::_("JBS_MED_SERVER_TYPE_CHANGE_WARNING")) . '")) {
+						this.value = previousValue;
+						return;
+					}
+				}
+
+				previousValue = newValue;
 				Joomla.submitbutton("cwmmediafile.setServer");
 			});
 		}
