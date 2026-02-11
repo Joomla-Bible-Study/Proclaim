@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<form>
+<form addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
     <field name="reference_text" type="text"
            label="JBS_STY_SCRIPTURE_REFERENCE"
            hint="JBS_STY_SCRIPTURE_REFERENCE_HINT"
@@ -8,5 +8,5 @@
     <field name="bible_version" type="BibleVersion"
            label="JBS_STY_BIBLE_VERSION"
            description="JBS_STY_BIBLE_VERSION_DESC"
-           addfieldprefix="CWM\Component\Proclaim\Administrator\Field"/>
+           class="bible-version-searchable"/>
 </form>

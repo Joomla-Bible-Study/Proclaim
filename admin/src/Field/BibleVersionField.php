@@ -24,8 +24,10 @@ use Joomla\Database\DatabaseInterface;
  * Bible Version selection field.
  *
  * Provider-agnostic, searchable version picker that aggregates available
- * translations from all enabled providers. No provider labels are shown —
- * just the version name and abbreviation.
+ * translations from all enabled providers. Shows ALL versions from all
+ * languages with language labels so users can search across languages.
+ * The JS search enhancement (bible-version-searchable class) adds a filter
+ * input above the select for quick lookup.
  *
  * @since  10.1.0
  */
@@ -38,14 +40,6 @@ class BibleVersionField extends ListField
      * @since  10.1.0
      */
     protected $type = 'BibleVersion';
-
-    /**
-     * The layout used to render the field (searchable select).
-     *
-     * @var  string
-     * @since  10.1.0
-     */
-    protected $layout = 'joomla.form.field.list-fancy-select';
 
     /**
      * Well-known Bible version names keyed by abbreviation.
@@ -73,6 +67,34 @@ class BibleVersionField extends ListField
     ];
 
     /**
+     * ISO language code to human-readable name map.
+     *
+     * @var  array<string, string>
+     * @since  10.1.0
+     */
+    private const LANGUAGE_NAMES = [
+        'af' => 'Afrikaans',  'am' => 'Amharic',      'ar' => 'Arabic',
+        'bg' => 'Bulgarian',  'bn' => 'Bengali',       'cs' => 'Czech',
+        'da' => 'Danish',     'de' => 'German',        'el' => 'Greek',
+        'en' => 'English',    'eo' => 'Esperanto',     'es' => 'Spanish',
+        'et' => 'Estonian',   'fa' => 'Persian',        'fi' => 'Finnish',
+        'fr' => 'French',     'ga' => 'Irish',         'he' => 'Hebrew',
+        'hi' => 'Hindi',      'hr' => 'Croatian',      'hu' => 'Hungarian',
+        'id' => 'Indonesian', 'is' => 'Icelandic',     'it' => 'Italian',
+        'ja' => 'Japanese',   'ko' => 'Korean',        'la' => 'Latin',
+        'lt' => 'Lithuanian', 'lv' => 'Latvian',       'mk' => 'Macedonian',
+        'ml' => 'Malayalam',  'mr' => 'Marathi',       'ms' => 'Malay',
+        'my' => 'Burmese',    'ne' => 'Nepali',        'nl' => 'Dutch',
+        'no' => 'Norwegian',  'pl' => 'Polish',        'pt' => 'Portuguese',
+        'ro' => 'Romanian',   'ru' => 'Russian',       'sk' => 'Slovak',
+        'sl' => 'Slovenian',  'sq' => 'Albanian',      'sr' => 'Serbian',
+        'sv' => 'Swedish',    'sw' => 'Swahili',       'ta' => 'Tamil',
+        'te' => 'Telugu',     'th' => 'Thai',          'tl' => 'Tagalog',
+        'tr' => 'Turkish',    'uk' => 'Ukrainian',     'ur' => 'Urdu',
+        'vi' => 'Vietnamese', 'zh' => 'Chinese',
+    ];
+
+    /**
      * Method to attach a Form object to the field.
      *
      * Sets the default value from the admin component's default_bible_version
@@ -92,20 +114,30 @@ class BibleVersionField extends ListField
 
         // If no value is set (new record), use the admin default
         if ($result && ($this->value === null || $this->value === '')) {
+            $default = 'kjv';
+
             try {
                 $admin  = Cwmparams::getAdmin();
                 $params = $admin->params ?? null;
 
                 if ($params) {
-                    $default = $params->get('default_bible_version', '');
+                    $adminDefault = $params->get('default_bible_version', '');
 
-                    if (!empty($default)) {
-                        $this->value = $default;
+                    if (!empty($adminDefault)) {
+                        $default = $adminDefault;
                     }
                 }
             } catch (\Exception $e) {
-                // Ignore — no admin params available
+                // Ignore — no admin params available, use 'kjv' fallback
             }
+
+            $this->value = $default;
+        }
+
+        // Ensure the searchable CSS class is present (also set via XML class attribute)
+        if ($result) {
+            $existing    = (string) ($this->class ?? '');
+            $this->class = trim($existing . ' bible-version-searchable');
         }
 
         return $result;
@@ -114,8 +146,10 @@ class BibleVersionField extends ListField
     /**
      * Get the field options.
      *
-     * Aggregates translations from all enabled providers into a single
-     * deduplicated, provider-agnostic list sorted alphabetically.
+     * Aggregates translations from all providers into a single deduplicated
+     * list. Shows ALL versions from all languages, sorted with the user's
+     * language first, then all other languages alphabetically. Each option
+     * includes a language label for cross-language searching.
      *
      * @return  array  Array of option objects
      *
@@ -126,23 +160,6 @@ class BibleVersionField extends ListField
         // Collected versions keyed by abbreviation to deduplicate
         $versions = [];
 
-        // Determine which providers are enabled from admin params
-        $providerGetbible = true;
-        $providerApiBible = false;
-
-        try {
-            $admin  = Cwmparams::getAdmin();
-            $params = $admin->params ?? null;
-
-            if ($params) {
-                $gdprMode         = (int) $params->get('gdpr_mode', 0) === 1;
-                $providerGetbible = !$gdprMode && (int) $params->get('provider_getbible', 1) === 1;
-                $providerApiBible = !$gdprMode && (int) $params->get('provider_api_bible', 0) === 1;
-            }
-        } catch (\Exception $e) {
-            // Defaults apply
-        }
-
         // Detect current site/admin language to prioritize native-language versions
         $currentLang = 'en';
 
@@ -152,36 +169,24 @@ class BibleVersionField extends ListField
             // Default to English
         }
 
-        // Load translations from database (covers local + getbible + api_bible sources)
+        // Load ALL translations from database — no provider filtering so users
+        // can select any version from any language
         $languages = [];
 
         try {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
-                ->select($db->quoteName(['abbreviation', 'name', 'installed', 'source', 'language']))
+                ->select($db->quoteName(['abbreviation', 'name', 'language']))
                 ->from($db->quoteName('#__bsms_bible_translations'))
-                ->order($db->quoteName('name') . ' ASC');
+                ->order($db->quoteName('language') . ' ASC, ' . $db->quoteName('name') . ' ASC');
             $db->setQuery($query);
             $translations = $db->loadObjectList();
 
             if (!empty($translations)) {
                 foreach ($translations as $row) {
-                    $isInstalled = (int) $row->installed === 1;
-                    $isGetbible  = $row->source === 'getbible';
-                    $isApiBible  = $row->source === 'api_bible';
-
-                    // Skip if the provider that can serve this is disabled
-                    if (!$isInstalled && $isGetbible && !$providerGetbible) {
-                        continue;
-                    }
-
-                    if (!$isInstalled && $isApiBible && !$providerApiBible) {
-                        continue;
-                    }
-
                     $abbr = $row->abbreviation;
 
-                    // Only add if not already collected (first occurrence wins — DB has richer names)
+                    // Only add if not already collected (first occurrence wins)
                     if (!isset($versions[$abbr])) {
                         $versions[$abbr]  = $row->name;
                         $languages[$abbr] = $row->language ?? '';
@@ -200,9 +205,10 @@ class BibleVersionField extends ListField
                 'asvd' => 'American Standard Version',
                 'ylt'  => "Young's Literal Translation",
             ];
+            $languages = ['kjv' => 'en', 'web' => 'en', 'asvd' => 'en', 'ylt' => 'en'];
         }
 
-        // Sort: browser language versions first (alphabetically), then others (alphabetically)
+        // Group by language, user's language first
         $nativeVersions = [];
         $otherVersions  = [];
 
@@ -210,29 +216,31 @@ class BibleVersionField extends ListField
             $lang = substr($languages[$abbr] ?? '', 0, 2);
 
             if ($lang === $currentLang) {
-                $nativeVersions[$abbr] = $name;
+                $nativeVersions[$abbr] = ['name' => $name, 'lang' => $lang];
             } else {
-                $otherVersions[$abbr] = $name;
+                $otherVersions[$abbr] = ['name' => $name, 'lang' => $lang];
             }
         }
 
-        asort($nativeVersions);
-        asort($otherVersions);
+        // Sort each group by name
+        uasort($nativeVersions, fn ($a, $b) => strcasecmp($a['name'], $b['name']));
+        uasort($otherVersions, fn ($a, $b) => strcasecmp($a['name'], $b['name']));
 
-        // Build option objects — native language first, then others
+        // Build option objects — native language first, then others with language label
         $options = [];
 
-        foreach ($nativeVersions as $abbr => $name) {
+        foreach ($nativeVersions as $abbr => $info) {
             $options[] = (object) [
                 'value' => $abbr,
-                'text'  => $name . ' (' . strtoupper($abbr) . ')',
+                'text'  => $info['name'] . ' (' . strtoupper($abbr) . ')',
             ];
         }
 
-        foreach ($otherVersions as $abbr => $name) {
+        foreach ($otherVersions as $abbr => $info) {
+            $langName  = self::LANGUAGE_NAMES[$info['lang']] ?? strtoupper($info['lang']);
             $options[] = (object) [
                 'value' => $abbr,
-                'text'  => $name . ' (' . strtoupper($abbr) . ')',
+                'text'  => $info['name'] . ' (' . strtoupper($abbr) . ') — ' . $langName,
             ];
         }
 

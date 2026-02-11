@@ -268,8 +268,13 @@ echo Route::_(
                 <?php echo $this->form->renderField('teacher_id', null, $teacher_id); ?>
 
                 <?php echo $this->form->renderField('series_id', null, $series_id); ?>
-                <?php echo $this->form->renderFieldset('scripture'); ?>
 
+            </div>
+        </div>
+        <!-- Scripture References — full width below the editor/sidebar columns -->
+        <div class="row mt-3">
+            <div class="col-12">
+                <?php echo $this->form->renderFieldset('scripture'); ?>
             </div>
         </div>
         <?php
