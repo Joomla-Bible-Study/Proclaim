@@ -151,6 +151,13 @@ class CwmteacherTable extends Table
             throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_TEACHER_NAME_REQUIRED'));
         }
 
+        // Auto-prepend https:// to URL fields missing a schema
+        foreach (['website', 'facebooklink', 'twitterlink', 'bloglink', 'link1', 'link2', 'link3'] as $field) {
+            if (!empty($this->$field) && !preg_match('#^[a-z][a-z0-9+\-.]*://#i', $this->$field)) {
+                $this->$field = 'https://' . $this->$field;
+            }
+        }
+
         return parent::check();
     }
 

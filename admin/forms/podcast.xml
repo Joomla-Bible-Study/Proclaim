@@ -23,11 +23,11 @@
                description="JBS_PDC_PODCAST_SUBTITLE_DESC"
                size="20" cols="60" rows="5"/>
 
-        <field name="website" type="url" label="JBS_PDC_WEBSITE_URL"
-               size="80" validate="url"/>
+        <field name="website" type="text" label="JBS_PDC_WEBSITE_URL"
+               size="80" hint="https://" filter="string"/>
 
-        <field name="podcastlink" type="url" label="JBS_PDC_PODCAST_URL"
-               size="80" validate="url"/>
+        <field name="podcastlink" type="text" label="JBS_PDC_PODCAST_URL"
+               size="80" hint="https://" filter="string"/>
 
         <field name="author" type="text" label="JBS_PDC_PODCAST_AUTHOR"
                size="50"/>
@@ -113,8 +113,8 @@
         <field name="podcast_subscribe_desc" type="text" label="JBS_PDC_SUBSCRIBE_WORDS"
                description="JBS_PDC_SUBSCRIBE_WORDS_DESC" size="20" default=""/>
 
-        <field name="alternatelink" type="url" label="JBS_PDC_ALTERNATE_LINK" description="JBS_PDC_ALTERNATE_LINK_DESC"
-               size="65" validate="url"/>
+        <field name="alternatelink" type="text" label="JBS_PDC_ALTERNATE_LINK" description="JBS_PDC_ALTERNATE_LINK_DESC"
+               size="65" hint="https://" filter="string"/>
 
         <field name="alternateimage" type="media" label="JBS_PDC_ALTERNATE_IMAGE" directory="biblestudy"
                description="JBS_PDC_ALTERNATE_IMAGE_DESC"/>

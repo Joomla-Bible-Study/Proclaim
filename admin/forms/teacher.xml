@@ -42,8 +42,8 @@
                label="JBS_TCH_PHONE"/>
         <field name="email" type="email" size="50" label="JBS_TCH_EMAIL" description="JBS_TCH_EMAIL_DESC"
                validate="email"/>
-        <field name="website" type="url" size="60"
-               label="JBS_TCH_WEBSITE" validate="url"/>
+        <field name="website" type="text" size="60"
+               label="JBS_TCH_WEBSITE" hint="https://" filter="string"/>
         <field name="short" type="editor"
                label="JBS_TCH_SHORT_DESCRIPTION_LIST_PAGE" filter="CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper::filterText"
                buttons="true"/>
@@ -58,18 +58,18 @@
                description="JBS_CMN_FIELD_LANGUAGE_DESC" class="col-12 small">
             <option value="*">JALL</option>
         </field>
-        <field name="facebooklink" type="url" label="JBS_TCH_FACEBOOK" description="JBS_TCH_FACEBOOK_DESC"
-               size="65" validate="url"/>
-        <field name="twitterlink" type="url" label="JBS_TCH_TWITTER" description="JBS_TCH_TWITTER_DESC"
-               size="65" validate="url"/>
-        <field name="bloglink" type="url" label="JBS_TCH_BLOG" description="JBS_TCH_BLOG_DESC" size="65"
-               validate="url"/>
-        <field name="link1" type="url" label="JBS_TCH_LINK1" description="JBS_TCH_LINK1_DESC" size="65"
-               validate="url"/>
-        <field name="link2" type="url" label="JBS_TCH_LINK2" description="JBS_TCH_LINK2_DESC" size="65"
-               validate="url"/>
-        <field name="link3" type="url" label="JBS_TCH_LINK3" description="JBS_TCH_LINK3_DESC" size="65"
-               validate="url"/>
+        <field name="facebooklink" type="text" label="JBS_TCH_FACEBOOK" description="JBS_TCH_FACEBOOK_DESC"
+               size="65" hint="https://" filter="string"/>
+        <field name="twitterlink" type="text" label="JBS_TCH_TWITTER" description="JBS_TCH_TWITTER_DESC"
+               size="65" hint="https://" filter="string"/>
+        <field name="bloglink" type="text" label="JBS_TCH_BLOG" description="JBS_TCH_BLOG_DESC" size="65"
+               hint="https://" filter="string"/>
+        <field name="link1" type="text" label="JBS_TCH_LINK1" description="JBS_TCH_LINK1_DESC" size="65"
+               hint="https://" filter="string"/>
+        <field name="link2" type="text" label="JBS_TCH_LINK2" description="JBS_TCH_LINK2_DESC" size="65"
+               hint="https://" filter="string"/>
+        <field name="link3" type="text" label="JBS_TCH_LINK3" description="JBS_TCH_LINK3_DESC" size="65"
+               hint="https://" filter="string"/>
         <field name="linklabel1" type="text" format="raw" label="JBS_TCH_LINK_LABEL1"
                description="JBS_TCH_LINK_LABEL1_DESC" size="65"/>
         <field name="linklabel2" type="text" format="raw" label="JBS_TCH_LINK_LABEL2"
