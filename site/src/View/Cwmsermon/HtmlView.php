@@ -213,7 +213,7 @@ class HtmlView extends BaseHtmlView
         }
 
         $BiblePassage  = new Cwmshowscripture();
-        $this->passage = $BiblePassage->buildPassage($this->item, $this->item->params);
+        $this->passage = $BiblePassage->buildAllPassages($this->item, $this->item->params);
 
         // Add router helpers.
         $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;

@@ -47,9 +47,9 @@
                         { id: 'locations', label: 'Locations', section: 'Metadata' },
                         { id: 'messagetype', label: 'Message Type', section: 'Metadata' },
                         { id: 'topic', label: 'Topics', section: 'Metadata' },
-                        { id: 'scripture1', label: 'Scripture 1', section: 'Scripture' },
-                        { id: 'scripture2', label: 'Scripture 2', section: 'Scripture' },
-                        { id: 'scriptures', label: 'All Scriptures', section: 'Scripture' },
+                        { id: 'scripture1', label: 'Scripture 1 (deprecated)', section: 'Scripture', deprecated: true },
+                        { id: 'scripture2', label: 'Scripture 2 (deprecated)', section: 'Scripture', deprecated: true },
+                        { id: 'scriptures', label: 'Scriptures', section: 'Scripture' },
                         { id: 'series', label: 'Series', section: 'Series' },
                         { id: 'seriesdescription', label: 'Series Description', section: 'Series' },
                         { id: 'seriesthumbnail', label: 'Series Thumbnail', section: 'Series' },
@@ -74,9 +74,9 @@
                         { id: 'locations', label: 'Locations', section: 'Metadata' },
                         { id: 'messagetype', label: 'Message Type', section: 'Metadata' },
                         { id: 'topic', label: 'Topics', section: 'Metadata' },
-                        { id: 'scripture1', label: 'Scripture 1', section: 'Scripture' },
-                        { id: 'scripture2', label: 'Scripture 2', section: 'Scripture' },
-                        { id: 'scriptures', label: 'All Scriptures', section: 'Scripture' },
+                        { id: 'scripture1', label: 'Scripture 1 (deprecated)', section: 'Scripture', deprecated: true },
+                        { id: 'scripture2', label: 'Scripture 2 (deprecated)', section: 'Scripture', deprecated: true },
+                        { id: 'scriptures', label: 'Scriptures', section: 'Scripture' },
                         { id: 'series', label: 'Series', section: 'Series' },
                         { id: 'seriesdescription', label: 'Series Description', section: 'Series' },
                         { id: 'seriesthumbnail', label: 'Series Thumbnail', section: 'Series' },
@@ -1697,6 +1697,11 @@
                 const sections = new Map();
 
                 contextDef.elements.forEach(element => {
+                    // Hide deprecated elements from the palette (they still render in existing layouts)
+                    if (element.deprecated) {
+                        return;
+                    }
+
                     const sectionName = element.section || contextDef.label;
 
                     if (!sections.has(sectionName)) {

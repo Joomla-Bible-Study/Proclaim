@@ -16,9 +16,9 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmmessage;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\BibleStructure;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use CWM\Component\Proclaim\Administrator\Helper\BibleStructure;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
