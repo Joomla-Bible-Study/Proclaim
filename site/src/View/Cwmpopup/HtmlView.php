@@ -65,97 +65,97 @@ class HtmlView extends BaseHtmlView
      *
      * @since 7.0
      */
-    public string $scripture;
+    public string $scripture = '';
 
     /** @var  string Date
      *
      * @since 7.0
      */
-    public string $date;
+    public string $date = '';
 
     /** @var  string Series Thumbnail
      *
      * @since 7.0
      */
-    public string $series_thumbnail;
+    public string $series_thumbnail = '';
 
     /** @var  string Teacher Image
      *
      * @since 7.0
      */
-    public string $teacherimage;
+    public string $teacherimage = '';
 
     /** @var  string Path 1
      *
      * @since 7.0
      */
-    public string $path1;
+    public string $path1 = '';
 
     /** @var  string Width
      *
      * @since 7.0
      */
-    public string $playerwidth;
+    public string $playerwidth = '';
 
     /** @var  string Player Height
      *
      * @since 7.0
      */
-    public string $playerheight;
+    public string $playerheight = '';
 
     /** @var  string Flash Vars
      *
      * @since 7.0
      */
-    public string $flashvars;
+    public string $flashvars = '';
 
     /** @var  string Back Color
      *
      * @since 7.0
      */
-    public string $backcolor;
+    public string $backcolor = '';
 
     /** @var  string Front Color
      *
      * @since 7.0
      */
-    public string $frontcolor;
+    public string $frontcolor = '';
 
     /** @var  string Light Color
      *
      * @since 7.0
      */
-    public string $lightcolor;
+    public string $lightcolor = '';
 
     /** @var  string Screen Color
      *
      * @since 7.0
      */
-    public string $screencolor;
+    public string $screencolor = '';
 
     /** @var  string Auto Start
      *
      * @since 7.0
      */
-    public string $autostart;
+    public string $autostart = '';
 
     /** @var  string Player Idle Hide
      *
      * @since 7.0
      */
-    public string $playeridlehide;
+    public string $playeridlehide = '';
 
     /** @var  string Header Text
      *
      * @since 7.0
      */
-    public string $headertext;
+    public string $headertext = '';
 
     /** @var  string Footer Text
      *
      * @since 7.0
      */
-    public string $footertext;
+    public string $footertext = '';
 
     /** @var  Registry Params
      *
@@ -251,15 +251,15 @@ class HtmlView extends BaseHtmlView
          *  Convert parameter fields to objects.
          */
         $registry = new Registry();
-        $registry->loadString($this->template->params);
+        $registry->loadString($this->template->params ?? '');
         $this->params = $registry;
 
         $registry = new Registry();
-        $registry->loadString($this->media->sparams);
+        $registry->loadString($this->media->sparams ?? '');
         $this->params->merge($registry);
         $this->media->sparams = $registry;
         $registry             = new Registry();
-        $registry->loadString($this->media->params);
+        $registry->loadString($this->media->params ?? '');
         $this->params->merge($registry);
         $saveid          = $this->media->id;
         $this->media->id = $this->media->study_id;
@@ -292,17 +292,17 @@ class HtmlView extends BaseHtmlView
             true
         );
 
-        $this->playerwidth  = $this->params->get('player_width');
-        $this->playerheight = $this->params->get('player_height');
+        $this->playerwidth  = (string) ($this->params->get('player_width') ?? '');
+        $this->playerheight = (string) ($this->params->get('player_height') ?? '');
 
         if ($this->params->get('playerheight') < 55 && $this->params->get('playerheight')) {
-            $this->playerheight = 55;
+            $this->playerheight = '55';
         } elseif ($this->params->get('playerheight')) {
-            $this->playerheight = $this->params->get('playerheight');
+            $this->playerheight = (string) $this->params->get('playerheight');
         }
 
         if ($this->params->get('playerwidth')) {
-            $this->playerwidth = $this->params->get('playerwidth');
+            $this->playerwidth = (string) $this->params->get('playerwidth');
         }
 
         if ($this->params->get('playervars')) {
@@ -315,11 +315,11 @@ class HtmlView extends BaseHtmlView
         }
 
         if ($this->params->get('altflashvars')) {
-            $this->flashvars = $this->params->get('altflashvars');
+            $this->flashvars = (string) $this->params->get('altflashvars');
         }
 
         if ($this->player === 100) {
-            $this->player = (int) $this->template->params->get('player', '0');
+            $this->player = (int) $this->params->get('player', '0');
         }
 
         $this->backcolor   = $this->params->get('backcolor', '0x287585');
@@ -346,7 +346,7 @@ class HtmlView extends BaseHtmlView
         }
 
         $this->headertext = $this->titles(
-            $this->params->get('popuptitle'),
+            (string) ($this->params->get('popuptitle') ?? ''),
             $this->media,
             $this->scripture,
             $this->date
@@ -354,7 +354,7 @@ class HtmlView extends BaseHtmlView
 
         if ($this->params->get('itempopuptitle')) {
             $this->headertext = $this->titles(
-                $this->params->get('itempopuptitle'),
+                (string) $this->params->get('itempopuptitle'),
                 $this->media,
                 $this->scripture,
                 $this->date
@@ -362,7 +362,7 @@ class HtmlView extends BaseHtmlView
         }
 
         $this->footertext = $this->titles(
-            $this->params->get('popupfooter'),
+            (string) ($this->params->get('popupfooter') ?? ''),
             $this->media,
             $this->scripture,
             $this->date
@@ -370,7 +370,7 @@ class HtmlView extends BaseHtmlView
 
         if ($this->params->get('itempopupfooter')) {
             $this->footertext = $this->titles(
-                $this->params->get('itempopupfooter'),
+                (string) $this->params->get('itempopupfooter'),
                 $this->media,
                 $this->scripture,
                 $this->date

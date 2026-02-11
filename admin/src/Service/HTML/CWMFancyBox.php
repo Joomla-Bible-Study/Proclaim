@@ -85,9 +85,13 @@ class CWMFancyBox
     public static function loadCss(bool $option = false): void
     {
         try {
-            $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-            $wa->useStyle('com_proclaim.fancybox');
-            $wa->useStyle('com_proclaim.cwm-fancybox');
+            $document = Factory::getApplication()->getDocument();
+
+            // Load core Fancybox CSS via addStylesheet (literal path, no auto css/ prefix)
+            $document->addStyleSheet('media/com_proclaim/fancybox/fancybox.min.css');
+
+            // Load our custom overrides via WebAssetManager (in media/css/, resolves correctly)
+            $document->getWebAssetManager()->useStyle('com_proclaim.cwm-fancybox');
         } catch (\Exception $e) {
             return;
         }

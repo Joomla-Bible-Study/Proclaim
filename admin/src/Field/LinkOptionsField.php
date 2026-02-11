@@ -57,6 +57,7 @@ class LinkOptionsField extends ListField
         $options[] = HTMLHelper::_('select.option', '6', Text::_('JBS_TPL_LINK_TO_FIRST_ARTICLE'));
         $options[] = HTMLHelper::_('select.option', '7', Text::_('JBS_TPL_LINK_TO_VIRTUEMART'));
         $options[] = HTMLHelper::_('select.option', '8', Text::_('JBS_TPL_LINK_TO_DOCMAN'));
+        $options[] = HTMLHelper::_('select.option', '10', Text::_('JBS_TPL_LINK_TO_SERIES'));
 
         return array_merge(parent::getOptions(), $options);
     }

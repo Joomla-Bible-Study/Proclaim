@@ -706,7 +706,7 @@ class Cwmmedia
 
         if (preg_match('/(youtube.com|youtu.be|vimeo.com)/', $path) === 1) {
             $path = (new CWMAddonYoutube())->convertYoutube($path);
-            $data = '<a data-fancybox="video-gallery" class="fancybox_player playhit" data-id="' . $media->id .
+            $data = '<a class="fancybox_player playhit" data-id="' . $media->id .
                 '" aria-hidden="false" data-src="' . $path .
                 '" data-header="' . $headerText . '" data-footer="' . $footerText .
                 '" data-options=\'{"autoplay" : "' . (int)$params->get('autostart', false) .
@@ -722,7 +722,7 @@ class Cwmmedia
         $logoLink    = $params->get('jwplayer_logolink', $params->get('player_logolink', Uri::base()));
 
         return '<a data-src="' . $path . '" data-id="' . $media->id . '" id="' . $media->id .
-            '" data-fancybox class="fancybox_player hitplay" potext="' . $popout . '" ptype="' . $player->player .
+            '" class="fancybox_player hitplay" potext="' . $popout . '" ptype="' . $player->player .
             '" pwidth="' . $player->playerwidth . '" pheight="' .
             $player->playerheight . '" autostart="' . $params->get('autostart', false) . '" controls="' .
             $params->get('controls') . '" data-header="' . $headerText . '" data-footer="' . $footerText .
