@@ -851,6 +851,20 @@ class CwmImageMigration
                 try {
                     $image = new Image($file);
                     $image->toFile($webpPath, IMAGETYPE_WEBP);
+
+                    // Verify the WebP file is a valid image
+                    if (!is_file($webpPath) || filesize($webpPath) === 0) {
+                        @unlink($webpPath);
+                        throw new \RuntimeException('Output file is empty or missing');
+                    }
+
+                    $info = @getimagesize($webpPath);
+
+                    if ($info === false || ($info[0] ?? 0) === 0) {
+                        @unlink($webpPath);
+                        throw new \RuntimeException('Output file is not a valid image');
+                    }
+
                     $result['converted']++;
                 } catch (\Exception $e) {
                     $result['errors']++;

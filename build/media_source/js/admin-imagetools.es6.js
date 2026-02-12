@@ -498,7 +498,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function convertBatch(type, typeConverted) {
-      fetch(`index.php?option=com_proclaim&task=cwmadmin.migrateToWebPXHR&${token}=1&type=${type}&limit=10`)
+      fetch(`index.php?option=com_proclaim&task=cwmadmin.migrateToWebPXHR&${token}=1&type=${type}&limit=5`)
         .then(r => {
           if (!r.ok) throw new Error(`HTTP ${r.status}: ${r.statusText}`);
           return r.text();
