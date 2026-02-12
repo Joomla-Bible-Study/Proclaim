@@ -47,7 +47,7 @@ if ($url) {
 <form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmseriesdisplays'); ?>" method="post" name="adminForm" id="adminForm">
     <div class="container proclaim-main-content" id="proclaim-main-content" role="main">
         <div class="row">
-            <div class="col1-12">
+            <div class="col-12">
                 <div <?php echo $classelement; ?> class="componentheading">
                     <?php
                     if ($this->params->get('show_page_image_series') && $this->params->get('series_show_image') > 0) {

@@ -524,7 +524,7 @@
                    description="JBS_TPL_COLUMN_DESC"/>
             <field name="jbsmediacolspan" type="SpanOptions" default="4" label="JBS_TPL_COLSPAN"
                    description="JBS_TPL_COLSPAN_DESC"/>
-            <field name="jbsmediaelement" type="ElementOptions" default="1" translate="true" multiple="false"
+            <field name="jbsmediaelement" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="jbsmediacustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
@@ -612,7 +612,7 @@
                    description="JBS_TPL_COLUMN_DESC"/>
             <field name="studyintrocolspan" type="SpanOptions" default="6" label="JBS_TPL_COLSPAN"
                    description="JBS_TPL_COLSPAN_DESC"/>
-            <field name="studyintroelement" type="ElementOptions" default="1" translate="true" multiple="false"
+            <field name="studyintroelement" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="studyintrocustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
@@ -648,7 +648,7 @@
                    description="JBS_TPL_COLUMN_DESC"/>
             <field name="seriesdescriptioncolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
                    description="JBS_TPL_COLSPAN_DESC"/>
-            <field name="seriesdescriptionelement" type="ElementOptions" default="1" translate="true" multiple="false"
+            <field name="seriesdescriptionelement" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="seriesdescriptioncustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
@@ -1352,7 +1352,7 @@
                    description="JBS_TPL_COLUMN_DESC"/>
             <field name="sdescriptioncolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
                    description="JBS_TPL_COLSPAN_DESC"/>
-            <field name="sdescriptionelement" type="ElementOptions" default="1" translate="true" multiple="false"
+            <field name="sdescriptionelement" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="sdescriptioncustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
@@ -1476,7 +1476,7 @@
                    description="JBS_TPL_COLUMN_DESC"/>
             <field name="sddescriptioncolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
                    description="JBS_TPL_COLSPAN_DESC"/>
-            <field name="sddescriptionelement" type="ElementOptions" default="1" translate="true" multiple="false"
+            <field name="sddescriptionelement" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="sddescriptioncustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
@@ -1677,7 +1677,7 @@
                    description="JBS_TPL_COLUMN_DESC"/>
             <field name="djbsmediacolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
                    description="JBS_TPL_COLSPAN_DESC"/>
-            <field name="djbsmediaelement" type="ElementOptions" default="1" translate="true" multiple="false"
+            <field name="djbsmediaelement" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="djbsmediacustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
@@ -1778,7 +1778,7 @@
                    description="JBS_TPL_COLUMN_DESC"/>
             <field name="dstudyintrocolspan" type="SpanOptions" default="6" label="JBS_TPL_COLSPAN"
                    description="JBS_TPL_COLSPAN_DESC"/>
-            <field name="dstudyintroelement" type="ElementOptions" default="1" translate="true" multiple="false"
+            <field name="dstudyintroelement" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="dstudyintrocustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
@@ -1790,7 +1790,7 @@
                    description="JBS_TPL_COLUMN_DESC"/>
             <field name="dstudytextcolspan" type="SpanOptions" default="12" label="JBS_TPL_COLSPAN"
                    description="JBS_TPL_COLSPAN_DESC"/>
-            <field name="dstudytextelement" type="ElementOptions" default="1" translate="true" multiple="false"
+            <field name="dstudytextelement" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="dstudytextcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
@@ -1826,7 +1826,7 @@
                    description="JBS_TPL_COLUMN_DESC"/>
             <field name="dseriesdescriptioncolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
                    description="JBS_TPL_COLSPAN_DESC"/>
-            <field name="dseriesdescriptionelement" type="ElementOptions" default="1" translate="true" multiple="false"
+            <field name="dseriesdescriptionelement" type="ElementOptions" default="8" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="dseriesdescriptioncustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>

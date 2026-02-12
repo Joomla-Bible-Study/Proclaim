@@ -496,12 +496,27 @@ table.fbstat .col2 {
   box-shadow: 0 4px 10px var(--color-shadow-light);
 }
 
-/* Sermon List Separator */
+/* Sermon List Row Separator */
+.proclaim-row-separator td {
+  border-bottom: 1px solid darkgrey;
+  padding: 0;
+  height: 5px;
+}
+
+/* Sermon List Separator (legacy) */
 .sermon-list-separator {
   border: 0;
   height: 4px;
   background-color: white;
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0));
+}
+
+/* Media Container - Centered Inline Layout */
+.bsms_media_container {
+  display: inline-flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 /* Centered Pagination */

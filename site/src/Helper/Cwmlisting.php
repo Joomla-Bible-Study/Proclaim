@@ -273,6 +273,7 @@ class Cwmlisting
                 $list .= '</thead>';
             }
 
+            $list .= '<tbody>';
             $list .= $this->getFluidRow(
                 $listrows,
                 $listsorts,
@@ -300,6 +301,7 @@ class Cwmlisting
                 $list .= '</thead>';
             }
 
+            $list .= '<tbody>';
             $list .= $this->getFluidRow(
                 $listrows,
                 $listsorts,
@@ -355,7 +357,7 @@ class Cwmlisting
                     $header = 0,
                     $type
                 );
-                $row[] = '</td></tr><tr style="border-bottom: 1px solid darkgrey; padding-bottom: 5px;"</tr>';
+                $row[] = '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>';
             }
         }
 
@@ -388,7 +390,7 @@ class Cwmlisting
                     $header = 0,
                     $type
                 );
-                $row[] = '</td></tr><tr style="border-bottom: 1px solid darkgrey; padding-bottom: 5px;"</tr>';
+                $row[] = '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>';
             }
         }
 
@@ -403,12 +405,16 @@ class Cwmlisting
                     $header = 0,
                     $type
                 );
-                $row[] = '</td></tr><tr style="border-bottom: 1px solid darkgrey; padding-bottom: 5px;"</tr>';
+                $row[] = '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>';
             }
         }
 
-        foreach ($row as $value) {
-            $list .= $value;
+        if (!empty($row)) {
+            $list .= '<tbody>';
+
+            foreach ($row as $value) {
+                $list .= $value;
+            }
         }
 
         $list .= '</tbody></table></div>';
@@ -824,7 +830,7 @@ class Cwmlisting
                     if (isset($item->published) && (int) $item->published === 2) {
                         $rowClass = ' class="proclaim-archived"';
                     }
-                    $frow .= '<tr scope="row"' . $rowClass . '>';
+                    $frow .= '<tr' . $rowClass . '>';
                 }
 
                 if ($header === 1) {
@@ -847,7 +853,7 @@ class Cwmlisting
 
             if ($row->row === '2') {
                 if ($row2count === $row2count2) {
-                    $frow .= '<tr scope="row">';
+                    $frow .= '<tr>';
                 }
 
                 if ($header === 1) {
@@ -870,7 +876,7 @@ class Cwmlisting
 
             if ($row->row === '3') {
                 if ($row3count === $row3count2) {
-                    $frow .= '<tr scope="row">';
+                    $frow .= '<tr>';
                 }
 
                 if ($header === 1) {
@@ -893,7 +899,7 @@ class Cwmlisting
 
             if ($row->row === '4') {
                 if ($row4count === $row4count2) {
-                    $frow .= '<tr scope="row">';
+                    $frow .= '<tr>';
                 }
 
                 if ($header === 1) {
@@ -916,7 +922,7 @@ class Cwmlisting
 
             if ($row->row === '5') {
                 if ($row5count === $row5count2) {
-                    $frow .= '<tr scope="row">';
+                    $frow .= '<tr>';
                 }
 
                 if ($header === 1) {
@@ -939,7 +945,7 @@ class Cwmlisting
 
             if ($row->row === '6') {
                 if ($row6count === $row6count2) {
-                    $frow .= '<tr scope="row">';
+                    $frow .= '<tr>';
                 }
 
                 if ($header === 1) {
@@ -1279,7 +1285,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_CMN_TEACHER');
                 } else {
-                    (isset($item->teachername) ? $data = $item->teachername : $data);
+                    (isset($item->teachername) ? $data = trim($item->teachername) : $data);
                 }
 
                 break;
@@ -1287,9 +1293,17 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_CMN_TEACHER');
                 } elseif (isset($item->title, $item->teachername)) {
-                    $data = $item->title . ' ' . $item->teachername;
+                    $titlePrefix = trim($item->title);
+                    $name = trim($item->teachername);
+
+                    // Avoid duplication when teachername already includes the title
+                    if ($titlePrefix !== '' && !str_starts_with($name, $titlePrefix)) {
+                        $data = $titlePrefix . ' ' . $name;
+                    } else {
+                        $data = $name;
+                    }
                 } else {
-                    $data = $item->teachername;
+                    $data = trim($item->teachername ?? '');
                 }
                 break;
             case $extra . 'studyintro':
@@ -1488,6 +1502,11 @@ class Cwmlisting
 
         $classelement = $this->createelement($row->element);
 
+        // Auto-upgrade <p> to <div> when content contains block-level elements
+        if ($classelement === 'p' && $data && preg_match('/<(?:div|table|ul|ol|section|article|nav|aside|header|footer|figure|blockquote|form|fieldset|pre|dl|hr)\b/i', (string) $data)) {
+            $classelement = 'div';
+        }
+
         if ($classelement) {
             if (isset($style)) {
                 $style = ' ' . $style;
@@ -1521,7 +1540,7 @@ class Cwmlisting
         $frow  = '';
 
         if ($row->colspan > 0) {
-            $tdadd = 'colspan="' . $row->colspan . '"';
+            $tdadd = ' colspan="' . $row->colspan . '"';
         }
 
         if ($customclass) {
@@ -1529,35 +1548,29 @@ class Cwmlisting
         }
 
         if ($header === 0) {
-            $frow = '<td scope="col"' . $tdadd . '>';
-        }
+            // Build table cell: <td><wrapper><link>data</link></wrapper></td>
+            $frow = '<td' . $tdadd . '>';
 
-        if ($header === 1) {
-            $frow = '';
-        }
+            if ($data) {
+                $frow .= $classopen;
 
-        if ($link) {
-            $frow .= $link;
-        }
+                if ($link) {
+                    $frow .= $link;
+                }
 
-        if ($data && $header === 0) {
-            $frow .= $classopen . $data;
-        }
+                $frow .= $data;
 
-        if ($data && $header === 1) {
-            $frow .= $data;
-        }
+                if ($link) {
+                    $frow .= '</a>';
+                }
 
-        if ($link) {
-            $frow .= '</a>';
-        }
+                $frow .= $classclose;
+            }
 
-        if ($header === 0) {
-            $frow .= $classclose . '</td>';
-        }
-
-        if ($header === 1) {
-            $frow .= '</th>';
+            $frow .= '</td>';
+        } else {
+            // Header mode - return just the data text; caller wraps in <th>
+            $frow = $data;
         }
 
         return $frow;
@@ -2117,10 +2130,7 @@ class Cwmlisting
     {
         $med = new Cwmmedia();
 
-        $mediarow = '<div class="bsms_media_container row" style="float: left;
-                      position: relative;
-                      left: 50%;
-                      transform: translateX(-50%);"  >';
+        $mediarow = '<div class="bsms_media_container row">';
 
         foreach ($item->mediafiles as $media) {
             $mediarow .= '<div id="bsms_media_file' . $media->id . '" class="col bsms_media_file" >' .
@@ -2128,7 +2138,6 @@ class Cwmlisting
         }
 
         $mediarow .= '</div>';
-        $mediarow .= '<div style="clear:both;"></div>';
 
         return $mediarow;
     }

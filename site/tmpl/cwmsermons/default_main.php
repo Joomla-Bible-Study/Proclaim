@@ -135,7 +135,7 @@ if ($showArchived === '1') : ?>
 
 <div class="container">
     <div class="row">
-        <div class="col1-12">
+        <div class="col-12">
             <?php
             // Search tools bar
             echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);

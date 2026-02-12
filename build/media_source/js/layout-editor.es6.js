@@ -220,16 +220,38 @@
         };
 
         /**
+         * Check if an element produces block-level HTML content
+         * These elements should not use <p> as a wrapper since their content
+         * contains <div> or other block elements, which is invalid inside <p>.
+         * @param {string} elementId - The element ID to check
+         * @returns {boolean} True if the element produces block content
+         */
+        const isBlockContentElement = (elementId) => {
+            const blockElements = ['jbsmedia', 'studyintro', 'studytext', 'description', 'seriesdescription'];
+            return blockElements.includes(elementId.toLowerCase());
+        };
+
+        /**
          * Get element type options (HTML wrapper) from PHP or use fallback
          * @param {string} elementId - Optional element ID to filter options for image elements
          * @returns {Array} Element type options
          */
         const getElementTypeOptions = (elementId) => {
-            // For image elements, limit to sensible options (None, P, DIV)
+            // For image elements, limit to sensible options (None, DIV)
             if (elementId && isImageElement(elementId)) {
                 return [
                     { value: '0', label: 'None' },
-                    { value: '1', label: 'P' },
+                    { value: '8', label: 'DIV' }
+                ];
+            }
+
+            // For block-content elements, exclude Paragraph (invalid HTML nesting)
+            if (elementId && isBlockContentElement(elementId)) {
+                return [
+                    { value: '0', label: 'None' },
+                    { value: '2', label: 'Header 1' }, { value: '3', label: 'Header 2' },
+                    { value: '4', label: 'Header 3' }, { value: '5', label: 'Header 4' },
+                    { value: '6', label: 'Header 5' }, { value: '7', label: 'Blockquote' },
                     { value: '8', label: 'DIV' }
                 ];
             }
@@ -2212,8 +2234,8 @@
                     data.col = col;
                 } else {
                     // Add new element with default values
-                    // Image elements default to None (0), others to Paragraph (1)
-                    const defaultElement = isImageElement(elementId) ? '0' : '1';
+                    // Image elements default to None (0), block-content to DIV (8), others to Paragraph (1)
+                    const defaultElement = isImageElement(elementId) ? '0' : (isBlockContentElement(elementId) ? '8' : '1');
                     this.state.set(elementId, {
                         row: row,
                         col: col,

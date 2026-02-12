@@ -223,99 +223,99 @@ div.listingfooter ul li {
 }
 
 /* Media Container */
-.bsms_media_contaner div.bsms_media_file:not(:first-child) {
+.bsms_media_container div.bsms_media_file:not(:first-child) {
   padding-left: 10px;
 }
-.bsms_media_contaner span.fa-play,
-.bsms_media_contaner span.icon-play {
+.bsms_media_container span.fa-play,
+.bsms_media_container span.icon-play {
   padding-right: 4px;
   background-image: none;
 }
-.bsms_media_contaner,
+.bsms_media_container,
 #bsmsmoduletable {
   margin: 0;
   border-collapse: separate;
 }
-.bsms_media_contaner .lastcol,
+.bsms_media_container .lastcol,
 #bsmsmoduletable .lastcol {
   border-right: grey 2px solid;
 }
-.bsms_media_contaner .lastrow td,
+.bsms_media_container .lastrow td,
 #bsmsmoduletable .lastrow td {
   border-bottom: 2px solid grey;
   padding-bottom: 7px;
 }
-.bsms_media_contaner th,
+.bsms_media_container th,
 #bsmsmoduletable th {
   background-color: var(--color-gray-medium);
   font-weight: bold;
   color: white;
 }
-.bsms_media_contaner th.firstrow,
+.bsms_media_container th.firstrow,
 #bsmsmoduletable th.firstrow {
   border-bottom: grey 2px solid;
 }
-.bsms_media_contaner tr.lastrow th,
+.bsms_media_container tr.lastrow th,
 #bsmsmoduletable tr.lastrow th {
   border-bottom: 2px solid grey;
   padding-bottom: 3px;
 }
-.bsms_media_contaner tr.bsodd td,
+.bsms_media_container tr.bsodd td,
 #bsmsmoduletable tr.bsodd td {
   background-color: var(--color-white);
 }
-.bsms_media_contaner tr.bseven td,
+.bsms_media_container tr.bseven td,
 #bsmsmoduletable tr.bseven td {
   background-color: var(--color-off-white);
 }
-.bsms_media_contaner .date,
+.bsms_media_container .date,
 #bsmsmoduletable .date {
   white-space: nowrap;
   font-size: 1.2em;
   color: grey;
   font-weight: bold;
 }
-.bsms_media_contaner .scripture1,
-.bsms_media_contaner .scripture2,
+.bsms_media_container .scripture1,
+.bsms_media_container .scripture2,
 #bsmsmoduletable .scripture1,
 #bsmsmoduletable .scripture2 {
   white-space: nowrap;
   color: var(--color-scripture);
   font-weight: bold;
 }
-.bsms_media_contaner .title,
+.bsms_media_container .title,
 #bsmsmoduletable .title {
   font-size: 1.2em;
   color: var(--color-gray-medium);
   font-weight: bold;
 }
-.bsms_media_contaner .series_text,
+.bsms_media_container .series_text,
 #bsmsmoduletable .series_text {
   white-space: nowrap;
   color: grey;
 }
-.bsms_media_contaner .duration,
+.bsms_media_container .duration,
 #bsmsmoduletable .duration {
   white-space: nowrap;
   font-style: italic;
 }
-.bsms_media_contaner .teacher,
-.bsms_media_contaner .location_text,
-.bsms_media_contaner .topic_text,
-.bsms_media_contaner .message_type,
-.bsms_media_contaner .jbsmedia,
-.bsms_media_contaner .store,
-.bsms_media_contaner .details-text,
-.bsms_media_contaner .details-pdf,
-.bsms_media_contaner .details-text-pdf,
-.bsms_media_contaner .secondary_reference,
-.bsms_media_contaner .teacher-title-name,
-.bsms_media_contaner .submitted,
-.bsms_media_contaner .hits,
-.bsms_media_contaner .studynumber,
-.bsms_media_contaner .filesize,
-.bsms_media_contaner .custom,
-.bsms_media_contaner .thumbnail,
+.bsms_media_container .teacher,
+.bsms_media_container .location_text,
+.bsms_media_container .topic_text,
+.bsms_media_container .message_type,
+.bsms_media_container .jbsmedia,
+.bsms_media_container .store,
+.bsms_media_container .details-text,
+.bsms_media_container .details-pdf,
+.bsms_media_container .details-text-pdf,
+.bsms_media_container .secondary_reference,
+.bsms_media_container .teacher-title-name,
+.bsms_media_container .submitted,
+.bsms_media_container .hits,
+.bsms_media_container .studynumber,
+.bsms_media_container .filesize,
+.bsms_media_container .custom,
+.bsms_media_container .thumbnail,
 #bsmsmoduletable .teacher,
 #bsmsmoduletable .location_text,
 #bsmsmoduletable .topic_text,
@@ -335,22 +335,22 @@ div.listingfooter ul li {
 #bsmsmoduletable .thumbnail {
   white-space: nowrap;
 }
-.bsms_media_contaner .detailstable td,
+.bsms_media_container .detailstable td,
 #bsmsmoduletable .detailstable td {
   border: none;
   padding: 0 2px 0 0;
 }
-.bsms_media_contaner .commentshead,
+.bsms_media_container .commentshead,
 #bsmsmoduletable .commentshead {
   font-size: 2em;
   font-weight: bold;
 }
-.bsms_media_contaner .mediatable td,
+.bsms_media_container .mediatable td,
 #bsmsmoduletable .mediatable td {
   border: none;
   padding: 0 6px 0 0;
 }
-.bsms_media_contaner .mediatable span.bsfilesize,
+.bsms_media_container .mediatable span.bsfilesize,
 #bsmsmoduletable .mediatable span.bsfilesize {
   font-size: 0.6em;
   position: relative;
@@ -743,28 +743,28 @@ a:not([class]) {
 @media (max-width: 768px) {
   /* Fix white-space: nowrap for text wrapping on mobile */
   #bsm_teachertable .bsm_teachername,
-  .bsms_media_contaner .date,
-  .bsms_media_contaner .scripture1,
-  .bsms_media_contaner .scripture2,
-  .bsms_media_contaner .series_text,
-  .bsms_media_contaner .duration,
-  .bsms_media_contaner .teacher,
-  .bsms_media_contaner .location_text,
-  .bsms_media_contaner .topic_text,
-  .bsms_media_contaner .message_type,
-  .bsms_media_contaner .jbsmedia,
-  .bsms_media_contaner .store,
-  .bsms_media_contaner .details-text,
-  .bsms_media_contaner .details-pdf,
-  .bsms_media_contaner .details-text-pdf,
-  .bsms_media_contaner .secondary_reference,
-  .bsms_media_contaner .teacher-title-name,
-  .bsms_media_contaner .submitted,
-  .bsms_media_contaner .hits,
-  .bsms_media_contaner .studynumber,
-  .bsms_media_contaner .filesize,
-  .bsms_media_contaner .custom,
-  .bsms_media_contaner .thumbnail,
+  .bsms_media_container .date,
+  .bsms_media_container .scripture1,
+  .bsms_media_container .scripture2,
+  .bsms_media_container .series_text,
+  .bsms_media_container .duration,
+  .bsms_media_container .teacher,
+  .bsms_media_container .location_text,
+  .bsms_media_container .topic_text,
+  .bsms_media_container .message_type,
+  .bsms_media_container .jbsmedia,
+  .bsms_media_container .store,
+  .bsms_media_container .details-text,
+  .bsms_media_container .details-pdf,
+  .bsms_media_container .details-text-pdf,
+  .bsms_media_container .secondary_reference,
+  .bsms_media_container .teacher-title-name,
+  .bsms_media_container .submitted,
+  .bsms_media_container .hits,
+  .bsms_media_container .studynumber,
+  .bsms_media_container .filesize,
+  .bsms_media_container .custom,
+  .bsms_media_container .thumbnail,
   #bsmsmoduletable .date,
   #bsmsmoduletable .scripture1,
   #bsmsmoduletable .scripture2,
@@ -825,17 +825,17 @@ a:not([class]) {
   }
 
   /* Media container - card layout on mobile */
-  .bsms_media_contaner,
+  .bsms_media_container,
   #bsmsmoduletable {
     display: block;
     width: 100%;
   }
 
-  .bsms_media_contaner thead,
-  .bsms_media_contaner tbody,
-  .bsms_media_contaner tr,
-  .bsms_media_contaner th,
-  .bsms_media_contaner td,
+  .bsms_media_container thead,
+  .bsms_media_container tbody,
+  .bsms_media_container tr,
+  .bsms_media_container th,
+  .bsms_media_container td,
   #bsmsmoduletable thead,
   #bsmsmoduletable tbody,
   #bsmsmoduletable tr,
@@ -845,7 +845,7 @@ a:not([class]) {
     width: 100%;
   }
 
-  .bsms_media_contaner tr,
+  .bsms_media_container tr,
   #bsmsmoduletable tr {
     margin-bottom: 1rem;
     border: 1px solid var(--color-gray-border);
@@ -853,7 +853,7 @@ a:not([class]) {
     padding: 0.5rem;
   }
 
-  .bsms_media_contaner td,
+  .bsms_media_container td,
   #bsmsmoduletable td {
     text-align: left;
     padding: 0.25rem 0.5rem;
@@ -861,8 +861,8 @@ a:not([class]) {
   }
 
   /* Hide non-essential columns on mobile */
-  .bsms_media_contaner .filesize,
-  .bsms_media_contaner .custom,
+  .bsms_media_container .filesize,
+  .bsms_media_container .custom,
   #bsmsmoduletable .filesize,
   #bsmsmoduletable .custom {
     display: none;
