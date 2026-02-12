@@ -72,7 +72,7 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
         Note, we are using a_id to avoid collisions with the router and the return page.
         Frontend is a bit messier than the backend.
         */
-        $input = $this->getInput();
+        $input = $this->input;
         $id    = $input->getInt('a_id');
         $vName = $input->getCmd('view', 'cwmlandingpage');
         $input->set('view', $vName);

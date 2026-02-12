@@ -97,7 +97,7 @@ class CwmassetsController extends BaseController
         $session    = Factory::getApplication()->getSession();
         $session->set('asset_stack', '', 'CWM');
         $session->set('checklists', $checklists, 'CWM');
-        $this->getInput()->set('view', 'Cwmassets');
+        $this->input->set('view', 'Cwmassets');
 
         $this->display(false);
     }
@@ -122,7 +122,7 @@ class CwmassetsController extends BaseController
         Cwmhelper::clearCache();
         $session = Factory::getApplication()->getSession();
         $session->set('asset_stack', '', 'CWM');
-        $this->getInput()->set('view', 'Cwmassets');
+        $this->input->set('view', 'Cwmassets');
         $this->display(false);
     }
 

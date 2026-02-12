@@ -408,7 +408,7 @@ class CwmsermonController extends FormController
         $this->input = Factory::getApplication()->getInput();
 
         // Need to override the parent method completely.
-        $tmpl   = $this->getInput()->get('tmpl');
+        $tmpl   = $this->input->get('tmpl');
         $append = '';
 
         // Setup redirect info.
