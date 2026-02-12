@@ -115,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let totalRelocated = 0;
     const errorDetails = []; // Collect {type, id, title, path, error}
     const relocatedDetails = []; // Collect {type, id, title, originalPath, foundAt, newPath}
+    const failedIds = new Set(); // Track 'type-id' keys that already failed — prevents duplicate processing
     const grandTotal = migrationTotals.total;
 
     function updateBar() {
@@ -204,11 +205,22 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
           }
 
+          // Filter out records that already failed in a previous batch —
+          // they remain in the DB (not auto-cleared) so getBatch returns them again
+          const newRecords = data.records.filter(r => !failedIds.has(`${type}-${r.id}`));
+
+          // If every record in the batch is a known failure, this type is done
+          if (newRecords.length === 0) {
+            typeIndex++;
+            migrateType();
+            return;
+          }
+
           let batchDone = 0;
-          const batchTotal = data.records.length;
+          const batchTotal = newRecords.length;
           const typeTotal = migrationTotals[type];
 
-          const promises = data.records.map(record => {
+          const promises = newRecords.map(record => {
             const recordTitle = record.studytitle || record.teachername || record.title || '';
 
             return fetch(`index.php?option=com_proclaim&task=cwmadmin.migrateRecordXHR&${token}=1&type=${type}&id=${record.id}`)
@@ -228,6 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                   }
                 } else {
+                  failedIds.add(`${type}-${record.id}`);
                   totalErrors++;
                   errorDetails.push({
                     type,
@@ -239,6 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
               })
               .catch(() => {
+                failedIds.add(`${type}-${record.id}`);
                 totalErrors++;
                 errorDetails.push({
                   type,
