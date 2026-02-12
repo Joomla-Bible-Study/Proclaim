@@ -18,8 +18,6 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 use Joomla\CMS\Client\ClientHelper;
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Event\Content\AfterSaveEvent;
-use Joomla\CMS\Event\Content\BeforeSaveEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\MediaHelper;
 use Joomla\CMS\Plugin\PluginHelper;
@@ -115,18 +113,11 @@ class Cwmuploadscript
             return ['data' => '', 'error' => 'The file can\'t be uploaded by types allowed'];
         }
 
-        // Trigger the onContentBeforeSave event via the event dispatcher (Joomla 5/6 compatible).
+        // Trigger the onContentBeforeSave event.
         $object_file = (object)$file;
-        $dispatcher  = $app->getDispatcher();
-        $beforeEvent = new BeforeSaveEvent('onContentBeforeSave', [
-            'context' => 'com_proclaim.file',
-            'subject' => $object_file,
-            'isNew'   => true,
-            'data'    => [],
-        ]);
-        $dispatcher->dispatch('onContentBeforeSave', $beforeEvent);
+        $result      = $app->triggerEvent('onContentBeforeSave', ['com_proclaim.file', &$object_file, true]);
 
-        if (\in_array(false, $beforeEvent->getResult(), true)) {
+        if (\in_array(false, $result, true)) {
             // There are some errors in the plugins
             return ['data' => '', 'error' => 'Plugin errors on upload'];
         }
@@ -135,13 +126,8 @@ class Cwmuploadscript
             return ['data' => '', 'error' => 'Could not upload'];
         }
 
-        // Trigger the onContentAfterSave event via the event dispatcher (Joomla 5/6 compatible).
-        $dispatcher->dispatch('onContentAfterSave', new AfterSaveEvent('onContentAfterSave', [
-            'context' => 'com_proclaim.file',
-            'subject' => $object_file,
-            'isNew'   => true,
-            'data'    => [],
-        ]));
+        // Trigger the onContentAfterSave event.
+        $app->triggerEvent('onContentAfterSave', ['com_proclaim.file', &$object_file, true]);
 
         // Return Success
         return [
