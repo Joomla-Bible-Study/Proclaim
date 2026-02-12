@@ -6,6 +6,17 @@
     "license": "GPL-2.0-or-later",
     "assets": [
         {
+            "name": "com_proclaim.admin-imagetools",
+            "type": "script",
+            "uri": "com_proclaim/admin-imagetools.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "type": "module"
+            }
+        },
+        {
             "name": "com_proclaim.cwmadmin-messages-batch",
             "type": "script",
             "uri": "com_proclaim/cwmadmin-messages-default-batch-footer.min.js",

@@ -132,12 +132,11 @@ class HtmlView extends BaseHtmlView
         $largeimage = $images::getTeacherImage($item->image, $item->teacher_image);
 
         if ($image) {
-            $item->image = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="" />';
+            $item->image = Cwmimages::renderPicture($image, $item->teachername ?? '');
         }
 
         if ($largeimage) {
-            $item->largeimage = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" width="'
-                . $largeimage->width . '" alt="" />';
+            $item->largeimage = Cwmimages::renderPicture($largeimage, $item->teachername ?? '');
         }
 
         if (isset($item->information)) {
@@ -168,9 +167,8 @@ class HtmlView extends BaseHtmlView
                 $item->title       = $this->contact->con_position;
                 $item->teachername = $this->contact->name;
                 $item->email       = $this->contact->email_to;
-                $largeimage        = $images::getImagePath((string)$this->contact->image);
-                $item->largeimage  = '<img src="' . $largeimage->path . '" height="' . $largeimage->height . '" <width="'
-                    . $largeimage->width . '" alt="" />';
+                $largeimage        = $images::getImagePath((string) $this->contact->image);
+                $item->largeimage  = Cwmimages::renderPicture($largeimage, $item->teachername ?? '');
                 $item->information = $this->contact->misc;
                 $item->phone       = $this->contact->telephone;
                 $cregistry         = new Registry();

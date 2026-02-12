@@ -263,7 +263,6 @@ echo Route::_(
                 <?php echo $this->form->renderField('published'); ?>
                 <?php echo $this->form->renderField('studydate'); ?>
                 <?php echo $this->form->renderField('image', null, $thumbnailm); ?>
-                <?php echo $this->form->renderField('studyimage', 'params'); ?>
                 <?php echo $this->form->renderField('nooverlaysimplemode', 'params'); ?>
                 <?php echo $this->form->renderField('teacher_id', null, $teacher_id); ?>
 

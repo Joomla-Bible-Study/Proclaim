@@ -24,7 +24,6 @@ use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
 // This is the popup window for the teachings.  We could put anything in this window.
@@ -274,15 +273,13 @@ class HtmlView extends BaseHtmlView
          */
         $this->getMedia->hitPlay((int)$mediaid);
 
-        $seriesImage            = Cwmimages::getSeriesThumbnail($this->media->series_thumbnail);
+        $seriesImage = Cwmimages::getSeriesThumbnail($this->media->series_thumbnail);
         if ($seriesImage->path) {
-            $this->series_thumbnail = '<img src="' . Uri::base() . $seriesImage->path . '" width="' . $seriesImage->width . '" height="'
-                . $seriesImage->height . '" alt="' . $this->media->series_text . '" />';
+            $this->series_thumbnail = Cwmimages::renderPicture($seriesImage, $this->media->series_text ?? '');
         }
-        $image                  = Cwmimages::getTeacherThumbnail($this->media->teacher_thumbnail, $this->media->thumb);
+        $image = Cwmimages::getTeacherThumbnail($this->media->teacher_thumbnail, $this->media->thumb);
         if ($image->path) {
-            $this->teacherimage = '<img src="' . Uri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
-                . '" alt="' . $this->media->teachername . '" />';
+            $this->teacherimage = Cwmimages::renderPicture($image, $this->media->teachername ?? '');
         }
 
         $this->path1 = Cwmhelper::mediaBuildUrl(

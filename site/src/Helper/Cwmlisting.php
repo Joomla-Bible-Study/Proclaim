@@ -23,7 +23,6 @@ use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Image\Image;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Plugin\PluginHelper;
@@ -724,17 +723,6 @@ class Cwmlisting
                     );
                 }
 
-                if ($params->get('studyimage', '-1') !== '-1') {
-                    $span = $this->useJImage(
-                        JPATH_SITE . '/media/com_proclaim/images/stockimages/' . $params->get('studyimage'),
-                        Text::_('JBS_CMN_THUMBNAIL'),
-                        '',
-                        '',
-                        '',
-                        $params->get('rowspanitemimage')
-                    );
-                }
-
                 break;
 
                 // Series Thumbnail
@@ -998,36 +986,13 @@ class Cwmlisting
         ?string $height = null,
         ?string $class = null
     ): bool|string {
-        $path = HTMLHelper::_('cleanImageURL', $path);
+        $image = Cwmimages::getImagePath($path);
 
-        try {
-            $image = Image::getImageFileProperties(JPATH_ROOT . DIRECTORY_SEPARATOR . $path->url);
-        } catch (\Exception $e) {
+        if (empty($image->path)) {
             return false;
         }
 
-        if ($id) {
-            $id = ' id="' . $id . '" ';
-        }
-
-        if ($width) {
-            $width = ' width="' . $width . '" ';
-        } else {
-            $width = ' width="' . $image->width . '" ';
-        }
-
-        if ($height) {
-            $height = ' height="' . $height . '" ';
-        } else {
-            $height = ' height="' . $image->height . '" ';
-        }
-
-        if ($class) {
-            $class = ' class="' . $class . '" ';
-        }
-
-        return '<img src="' . Uri::base() . $path->url . '"' . $id . $width . $height
-            . 'alt="' . $alt . '" ' . $class . ' />';
+        return Cwmimages::renderPicture($image, $alt ?? '', $class ?? '');
     }
 
     /**
@@ -1493,16 +1458,8 @@ class Cwmlisting
             case $extra . 'thumbnail':
                 if ($header === 1) {
                     $data = Text::_('JBS_CMN_THUMBNAIL');
-                } elseif ($item->thumbnailm || $params->get('studyimage', '-1') !== '-1') {
+                } elseif ($item->thumbnailm) {
                     $data = $this->useJImage($item->thumbnailm, Text::_('JBS_CMN_THUMBNAIL'));
-
-                    if ($params->get('studyimage', '-1') !== '-1') {
-                        $data = $this->useJImage(
-                            'media/com_proclaim/images/stockimages/'
-                            . $params->get('studyimage'),
-                            Text::_('JBS_CMN_THUMBNAIL')
-                        );
-                    }
                 }
                 break;
             case $extra . 'teacherimage':
@@ -1595,9 +1552,8 @@ class Cwmlisting
             $frow .= '</a>';
         }
 
-        // If ($header === 0){ $frow .= $classclose . '</td>';}
         if ($header === 0) {
-            $frow .= '</' . $classclose . '</td>';
+            $frow .= $classclose . '</td>';
         }
 
         if ($header === 1) {

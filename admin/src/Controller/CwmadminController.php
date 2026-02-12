@@ -987,9 +987,15 @@ class CwmadminController extends FormController
             return;
         }
 
-        $counts = CwmImageMigration::getMigrationCounts();
-
-        echo json_encode($counts, JSON_THROW_ON_ERROR);
+        try {
+            $counts = CwmImageMigration::getMigrationCounts();
+            echo json_encode($counts, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'studies' => 0, 'teachers' => 0, 'series' => 0, 'total' => 0,
+                'error' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
 
         $app->close();
     }
@@ -1018,12 +1024,22 @@ class CwmadminController extends FormController
             return;
         }
 
-        $type  = $input->get('type', 'studies', 'string');
-        $limit = $input->get('limit', 10, 'int');
+        $type    = $input->get('type', 'studies', 'string');
+        $limit   = $input->get('limit', 10, 'int');
+        $exclude = $input->get('exclude', '', 'string');
 
-        $batch = CwmImageMigration::getBatch($type, $limit);
+        // Parse comma-separated exclude IDs (records that already failed)
+        $excludeIds = !empty($exclude) ? array_map('intval', explode(',', $exclude)) : [];
 
-        echo json_encode($batch, JSON_THROW_ON_ERROR);
+        try {
+            $batch = CwmImageMigration::getBatch($type, $limit, $excludeIds);
+            echo json_encode($batch, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'records' => [], 'remaining' => 0,
+                'error' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
 
         $app->close();
     }
@@ -1052,22 +1068,25 @@ class CwmadminController extends FormController
             return;
         }
 
-        $type    = $input->get('type', '', 'string');
-        $id      = $input->get('id', 0, 'int');
-        $title   = $input->get('title', '', 'string');
-        $oldPath = $input->get('old_path', '', 'string');
+        $type = $input->get('type', '', 'string');
+        $id   = $input->get('id', 0, 'int');
 
-        if (empty($type) || empty($id) || empty($oldPath)) {
+        if (empty($type) || empty($id)) {
             echo json_encode([
                 'success' => false,
-                'error'   => 'Missing required parameters',
+                'error'   => 'Missing required parameters (type and id)',
             ], JSON_THROW_ON_ERROR);
             $app->close();
 
             return;
         }
 
-        $result = CwmImageMigration::migrateRecord($type, $id, $title, $oldPath);
+        // Look up the record from the DB — avoids URL encoding issues with image paths
+        try {
+            $result = CwmImageMigration::migrateRecordById($type, $id);
+        } catch (\Throwable $e) {
+            $result = ['success' => false, 'newPath' => null, 'error' => $e->getMessage()];
+        }
 
         echo json_encode($result, JSON_THROW_ON_ERROR);
 
@@ -1097,13 +1116,16 @@ class CwmadminController extends FormController
             return;
         }
 
-        $orphans = CwmImageCleanup::findOrphanedFolders();
-        $totals  = CwmImageCleanup::getTotals($orphans);
-
-        echo json_encode([
-            'orphans' => $orphans,
-            'totals'  => $totals,
-        ], JSON_THROW_ON_ERROR);
+        try {
+            $orphans = CwmImageCleanup::findOrphanedFolders();
+            $totals  = CwmImageCleanup::getTotals($orphans);
+            echo json_encode(['orphans' => $orphans, 'totals' => $totals], JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'orphans' => [], 'totals' => ['folders' => 0, 'size' => 0, 'size_formatted' => '0 B'],
+                'error' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
 
         $app->close();
     }
@@ -1147,6 +1169,274 @@ class CwmadminController extends FormController
         $result = CwmImageCleanup::deleteOrphans($paths);
 
         echo json_encode($result, JSON_THROW_ON_ERROR);
+
+        $app->close();
+    }
+
+    /**
+     * Get legacy folder report XHR - scans old image folders for leftover files
+     *
+     * @return void
+     *
+     * @since 10.2.0
+     */
+    public function getLegacyFolderReportXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $report = CwmImageMigration::getLegacyFolderReport();
+            echo json_encode($report, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'folders' => [], 'total_files' => 0, 'total_size' => 0,
+                'error' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Download the cleared images log CSV
+     *
+     * Sends the proclaim_cleared_images.csv file as a download so admins
+     * can review which image values were cleared during migration.
+     *
+     * @return void
+     *
+     * @since 10.2.0
+     */
+    public function downloadClearedLogXHR(): void
+    {
+        $app = Factory::getApplication();
+
+        if (!Session::checkToken('get')) {
+            $app->setHeader('Content-Type', 'application/json');
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $logFile = CwmImageMigration::getClearedLogPath();
+
+        if (!is_file($logFile)) {
+            $app->setHeader('Content-Type', 'application/json');
+            echo json_encode(['success' => false, 'message' => 'No cleared images log found.'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $app->setHeader('Content-Type', 'text/csv');
+        $app->setHeader('Content-Disposition', 'attachment; filename="proclaim_cleared_images.csv"');
+        $app->setHeader('Content-Length', (string) filesize($logFile));
+        $app->sendHeaders();
+
+        readfile($logFile);
+
+        $app->close();
+    }
+
+    /**
+     * Get count of unresolvable image records XHR
+     *
+     * Returns a preview of how many records have image paths pointing to
+     * files that cannot be found on disk.
+     *
+     * @return void
+     *
+     * @since 10.2.0
+     */
+    public function getUnresolvableCountXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $result = CwmImageMigration::getUnresolvableRecords();
+            echo json_encode($result, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode(['records' => [], 'count' => 0, 'error' => $e->getMessage()], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Clear all unresolvable image fields XHR
+     *
+     * Clears DB image fields for records whose source files cannot be found
+     * and logs the cleared values to a CSV file for manual recovery.
+     *
+     * @return void
+     *
+     * @since 10.2.0
+     */
+    public function clearUnresolvableXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $result = CwmImageMigration::clearUnresolvableImages();
+            echo json_encode(['success' => true, 'cleared' => $result['cleared']], JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode(['success' => false, 'cleared' => 0, 'error' => $e->getMessage()], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Get WebP migration counts XHR
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function getWebPCountsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['error' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $counts = CwmImageMigration::getWebPMigrationCounts();
+            echo json_encode($counts, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'studies' => 0, 'teachers' => 0, 'series' => 0, 'total' => 0,
+                'error' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Run a batch of WebP conversions XHR
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function migrateToWebPXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $input    = $app->getInput();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['error' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $type  = $input->get('type', 'studies', 'string');
+        $limit = $input->getInt('limit', 10);
+
+        try {
+            $result = CwmImageMigration::migrateToWebP($type, $limit);
+        } catch (\Throwable $e) {
+            $result = ['converted' => 0, 'errors' => 0, 'remaining' => 0, 'error' => $e->getMessage()];
+        }
+
+        echo json_encode($result, JSON_THROW_ON_ERROR);
+
+        $app->close();
+    }
+
+    /**
+     * Delete legacy image folders/files XHR
+     *
+     * Accepts an array of relative folder paths and deletes the image
+     * files within them (not entire directory trees).
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    public function deleteLegacyFoldersXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $input    = $app->getInput();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken() && !Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $paths = $input->get('paths', [], 'array');
+
+        if (empty($paths)) {
+            echo json_encode([
+                'deleted' => 0,
+                'errors'  => ['No paths provided'],
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $result = CwmImageMigration::deleteLegacyFiles($paths);
+            echo json_encode($result, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'deleted' => 0,
+                'errors'  => [$e->getMessage()],
+            ], JSON_THROW_ON_ERROR);
+        }
 
         $app->close();
     }

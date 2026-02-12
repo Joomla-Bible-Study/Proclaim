@@ -27,7 +27,6 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Uri\Uri;
-use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
 
 /**
@@ -222,21 +221,6 @@ class HtmlView extends BaseHtmlView
     public array $teachersFluid = [];
 
     /**
-     * Rotating images folder files for simple2 template
-     *
-     * @var array
-     * @since 10.0.0
-     */
-    public array $rotatingImages = [];
-
-    /**
-     * Count of rotating images
-     *
-     * @var int
-     * @since 10.0.0
-     */
-    public int $rotatingImageCount = 0;
-
     /**
      * Current menu item ID
      *
@@ -283,7 +267,7 @@ class HtmlView extends BaseHtmlView
         $user            = $mainframe->getIdentity();
         $groups          = $user->getAuthorisedViewLevels();
         $this->main      = Cwmimages::mainStudyImage($params);
-        $this->mainimage = '<img src="' . $this->main->path . '" width="' . $this->main->width . '" height="' . $this->main->height . '">';
+        $this->mainimage = Cwmimages::renderPicture($this->main, '', '', false);
 
         // Build go button
         $this->page->gobutton = '<input class="btn btn-primary" type="submit" value="' . Text::_(
@@ -369,13 +353,6 @@ class HtmlView extends BaseHtmlView
         // Pre-calculate teacher data for default_main template
         $cwmTeacher          = new Cwmteacher();
         $this->teachersFluid = $cwmTeacher->getTeachersFluid($params);
-
-        // Pre-calculate rotating images for default_simple2 template
-        $rotatingPath = 'media/com_proclaim/images/rotating';
-        if (is_dir(JPATH_ROOT . '/' . $rotatingPath)) {
-            $this->rotatingImages     = Folder::files(JPATH_ROOT . '/' . $rotatingPath);
-            $this->rotatingImageCount = \count($this->rotatingImages);
-        }
 
         $this->updateFilters();
 

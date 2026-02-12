@@ -23,7 +23,6 @@ use CWM\Component\Proclaim\Administrator\Service\HTML\CWMHtml5Inline;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Image\Image;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
@@ -323,13 +322,13 @@ class Cwmmedia
             return $alt;
         }
 
-        try {
-            $return = Image::getImageFileProperties($path);
-        } catch (\Exception $e) {
+        $image = Cwmimages::getImagePath($path);
+
+        if (empty($image->path)) {
             return $alt;
         }
 
-        return '<img src="' . Uri::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' >';
+        return Cwmimages::renderPicture($image, $alt);
     }
 
     /**

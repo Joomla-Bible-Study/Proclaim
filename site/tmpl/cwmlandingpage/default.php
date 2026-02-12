@@ -16,6 +16,7 @@
 
 /** @var CWM\Component\Proclaim\Site\View\Cwmlandingpage\HtmlView $this */
 
+use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
@@ -28,9 +29,8 @@ $params     = $this->params;
     <div id="bsms_header">
         <h1 class="componentheading">
             <?php if (isset($this->main->path) && ($this->params->get('landing_show_page_image') > 0)) {
-                ?>
-                <img src="<?php echo Uri::base() . $this->main->path; ?>" alt="<?php echo $this->params->get('landing_page_title'); ?>" width="<?php echo $this->main->width; ?>" height="<?php echo $this->main->height; ?>"/>
-                <?php
+                echo Cwmimages::renderPicture($this->main, $this->params->get('landing_page_title', ''), '', false);
+                ?><?php
                 // End of column for logo
             }
 
