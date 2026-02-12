@@ -51,8 +51,8 @@ class CwmseriespodcastlistModel extends ListModel
         }
 
         $user   = Factory::getApplication()->getIdentity();
-        $userId = $user->get('id');
-        $guest  = $user->get('guest');
+        $userId = $user->id;
+        $guest  = $user->guest;
         $groups = $user->getAuthorisedViewLevels();
 
         // Convert the parameter fields into objects.

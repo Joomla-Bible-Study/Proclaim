@@ -187,7 +187,7 @@ class CwmpodcastsController extends AdminController
             return;
         }
 
-        $mediaId = $this->input->getInt('media_id', 0);
+        $mediaId = $this->getInput()->getInt('media_id', 0);
 
         if ($mediaId <= 0) {
             echo new JsonResponse(null, Text::_('JBS_PDC_INVALID_MEDIA_ID'), true);
@@ -262,7 +262,7 @@ class CwmpodcastsController extends AdminController
             return;
         }
 
-        $mediaId = $this->input->getInt('media_id', 0);
+        $mediaId = $this->getInput()->getInt('media_id', 0);
 
         if ($mediaId <= 0) {
             echo new JsonResponse(null, Text::_('JBS_PDC_INVALID_MEDIA_ID'), true);

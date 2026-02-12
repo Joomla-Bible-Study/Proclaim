@@ -286,7 +286,7 @@ class Cwmshowscripture
 
         // Fallback if nothing found
         if (empty($translations)) {
-            $obj = (object) ['abbreviation' => $version, 'name' => strtoupper($version), 'language' => $siteLang];
+            $obj          = (object) ['abbreviation' => $version, 'name' => strtoupper($version), 'language' => $siteLang];
             $translations = [$obj];
         }
 
@@ -315,7 +315,7 @@ class Cwmshowscripture
         ksort($otherGroup);
 
         // Build the searchable dropdown HTML
-        $messageId = (int) ($row->id ?? 0);
+        $messageId    = (int) ($row->id ?? 0);
         $siteLangName = self::$languageNames[$siteLang] ?? ucfirst($siteLang);
 
         // Find current version name for display

@@ -108,8 +108,6 @@ class CwmsermonsModel extends ListModel
             ];
         }
 
-        $this->input = Factory::getApplication();
-
         parent::__construct($config);
     }
 
@@ -1071,9 +1069,10 @@ class CwmsermonsModel extends ListModel
                             }
 
                             if ((int)$filterid >= 1 && $filter === 'study.booknumber') {
-                                $book = $filterid;
-                                $chb  = $this->input->get('minChapt', '', 'int');
-                                $che  = $this->input->get('maxChapt', '', 'int');
+                                $book     = $filterid;
+                                $appInput = Factory::getApplication()->getInput();
+                                $chb      = $appInput->get('minChapt', '', 'int');
+                                $che      = $appInput->get('maxChapt', '', 'int');
 
                                 if ($chb && $che) {
                                     $query->where(
