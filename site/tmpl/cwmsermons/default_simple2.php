@@ -17,14 +17,10 @@
 /** @var CWM\Component\Proclaim\Site\View\Cwmsermons\HtmlView $this */
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\Registry\Registry;
 
-HTMLHelper::_('dropdown.init');
-HTMLHelper::_('behavior.multiselect');
-HTMLHelper::_('formbehavior.chosen', 'select');
 $wa = $this->getDocument()->getWebAssetManager();
 
 $wa->addInlineStyle(

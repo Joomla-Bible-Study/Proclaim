@@ -28,7 +28,11 @@ $params    = $this->params;
 $url       = $this->params->get('stylesheet');
 
 if ($url) {
-    $document->addStyleSheet($url);
+    $document->getWebAssetManager()->registerAndUseStyle(
+        'com_proclaim.template-custom-' . md5($url),
+        $url,
+        ['version' => false]
+    );
 }
 $JBSMSerieslist = new Cwmserieslist();
 $t              = $this->template->id;

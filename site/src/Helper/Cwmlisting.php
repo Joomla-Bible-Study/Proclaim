@@ -2596,13 +2596,15 @@ a2a_config.templates.email = {
             $config .= "\na2a_config.linkurl_default = '" . addslashes($link) . "';";
         }
 
-        $doc->addScriptDeclaration($config);
+        $wa = $doc->getWebAssetManager();
+        $wa->addInlineScript($config);
 
         // Add the AddToAny script (async for performance)
-        $doc->addScript(
+        $wa->registerAndUseScript(
+            'com_proclaim.addtoany',
             'https://static.addtoany.com/menu/page.js',
-            [],
-            ['defer' => true, 'async' => true]
+            ['version' => false],
+            ['defer'   => true, 'async' => true]
         );
 
         return $shareit;

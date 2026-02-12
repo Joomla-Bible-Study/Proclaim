@@ -36,7 +36,7 @@ $wa->useScript('core')
     ->addInlineScript(
         "setType = function(type) {
 		window.parent.Joomla.submitbutton('cwmserver.setType', type);
-		window.parent.SqueezeBox.close();
+		window.parent.Joomla.Modal.getCurrent().close();
 	}"
     );
 

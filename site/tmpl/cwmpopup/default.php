@@ -33,7 +33,7 @@ $backgroundColor = $this->params->get('popupbackground', 'black');
 $style           = "body { background-color: $backgroundColor !important; padding:0 !important;}
 	#all{background-color: $backgroundColor !important;}";
 
-$doc->addStyleDeclaration($style);
+$doc->getWebAssetManager()->addInlineStyle($style);
 
 // Normalize player value to integer for easier comparison
 $playerParam = (int) $this->params->get('player');

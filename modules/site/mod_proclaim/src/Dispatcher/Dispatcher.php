@@ -10,8 +10,8 @@
 
 namespace CWM\Module\Proclaim\Site\Dispatcher;
 
-use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
 use Joomla\CMS\Helper\HelperFactoryAwareInterface;

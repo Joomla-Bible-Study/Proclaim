@@ -135,10 +135,6 @@ class Router extends RouterView
         $popup = new RouterViewConfiguration('cwmpopup');
         $this->registerView($popup);
 
-        // Squeezebox view
-        $squeezebox = new RouterViewConfiguration('cwmsqueezebox');
-        $this->registerView($squeezebox);
-
         // Servers list view
         $serversList = new RouterViewConfiguration('cwmserverslist');
         $this->registerView($serversList);

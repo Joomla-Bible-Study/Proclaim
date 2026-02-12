@@ -169,7 +169,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
         $css = implode(",\n", $selectors) . ' { display: none !important; }';
 
-        $this->getApplication()->getDocument()->addStyleDeclaration($css);
+        $this->getApplication()->getDocument()->getWebAssetManager()->addInlineStyle($css);
     }
 
     /**
