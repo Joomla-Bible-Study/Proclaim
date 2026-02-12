@@ -93,8 +93,8 @@ class CwminstallController extends BaseController
             /** @var \CWM\Component\Proclaim\Administrator\Model\CwminstallModel $model */
             $model = $this->getModel('Cwminstall');
             $state = $model->startScanning();
-            $app->input->set('scanstate', $state);
-            $app->input->set('view', 'cwminstall');
+            $app->getInput()->set('scanstate', $state);
+            $app->getInput()->set('view', 'cwminstall');
 
             $this->display(false);
         } else {
@@ -124,8 +124,8 @@ class CwminstallController extends BaseController
         /** @var \CWM\Component\Proclaim\Administrator\Model\CwminstallModel $model */
         $model = $this->getModel('Cwminstall');
         $state = $model->run();
-        $app->input->set('scanstate', $state);
-        $app->input->set('view', 'cwminstall');
+        $app->getInput()->set('scanstate', $state);
+        $app->getInput()->set('view', 'cwminstall');
 
         $this->display(false);
     }
@@ -151,7 +151,7 @@ class CwminstallController extends BaseController
         $app     = Factory::getApplication();
         $session = $app->getSession();
         $session->set('migration_stack', '', 'CWM');
-        $app->input->set('view', 'cwminstall');
+        $app->getInput()->set('view', 'cwminstall');
 
         $this->display(false);
     }

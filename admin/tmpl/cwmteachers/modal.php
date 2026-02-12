@@ -34,8 +34,8 @@ $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('core')
     ->useScript('com_proclaim.cwmadmin-teachers-modal');
 
-$function  = $app->input->getCmd('function', 'jSelectTeachers');
-$editor    = $app->input->getCmd('editor', '');
+$function  = $app->getInput()->getCmd('function', 'jSelectTeachers');
+$editor    = $app->getInput()->getCmd('editor', '');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $onclick   = $this->escape($function);
@@ -230,7 +230,7 @@ endforeach; ?>
             echo $listDirn; ?>"/>
             <input type="hidden" name="forcedLanguage"
                    value="<?php
-    echo $app->input->get('forcedLanguage', '', 'CMD'); ?>">
+    echo $app->getInput()->get('forcedLanguage', '', 'CMD'); ?>">
             <?php
             echo HTMLHelper::_('form.token'); ?>
         </div>

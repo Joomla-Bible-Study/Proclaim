@@ -60,10 +60,10 @@ class CwmsermonsController extends BaseController
     {
         $app      = Factory::getApplication();
         $getMedia = new Cwmmedia();
-        $getMedia->hitPlay((int)$app->input->get('id', '', 'int'));
+        $getMedia->hitPlay((int)$app->getInput()->get('id', '', 'int'));
 
         // Now the hit has been updated will redirect to the url.
-        $return = $app->input->get('return');
+        $return = $app->getInput()->get('return');
         $return = base64_decode($return);
         $app->redirect($return);
     }
@@ -80,7 +80,7 @@ class CwmsermonsController extends BaseController
     public function playHitAjax(): void
     {
         $app = Factory::getApplication();
-        $id  = $app->input->getInt('id', 0);
+        $id  = $app->getInput()->getInt('id', 0);
 
         if ($id > 0) {
             $getMedia = new Cwmmedia();

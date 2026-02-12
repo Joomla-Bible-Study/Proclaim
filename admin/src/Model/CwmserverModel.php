@@ -444,7 +444,7 @@ class CwmserverModel extends AdminModel
     protected function populateState(): void
     {
         $app   = Factory::getApplication();
-        $input = $app->input;
+        $input = $app->getInput();
 
         $pk = $input->get('id', null, 'INTEGER');
         $this->setState('cwmserver.id', $pk);

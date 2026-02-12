@@ -186,7 +186,7 @@ class CwmmediafileController extends FormController
             $key = (string)$table->getKeyName();
         }
 
-        $recordId = $app->input->getInt($key);
+        $recordId = $app->getInput()->getInt($key);
 
         // Attempt to check in the current record.
         if ($recordId) {
@@ -279,7 +279,7 @@ class CwmmediafileController extends FormController
         }
 
         $app   = Factory::getApplication();
-        $input = $app->input;
+        $input = $app->getInput();
 
         $data      = $input->get('jform', [], 'post', 'array');
         $cdate     = $data['createdate'];
