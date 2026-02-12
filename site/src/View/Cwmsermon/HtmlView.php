@@ -213,7 +213,7 @@ class HtmlView extends BaseHtmlView
         }
 
         $BiblePassage  = new Cwmshowscripture();
-        $this->passage = $BiblePassage->buildPassage($this->item, $this->item->params);
+        $this->passage = $BiblePassage->buildAllPassages($this->item, $this->item->params);
 
         // Add router helpers.
         $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
@@ -292,8 +292,9 @@ class HtmlView extends BaseHtmlView
         }
 
         // Get Scripture references from listing class in case we don't use the page-builder class
-        $this->item->scripture1 = $CWMListing->getScripture($this->params, $item, 0, 1);
-        $this->item->scripture2 = $CWMListing->getScripture($this->params, $item, 0, 2);
+        $this->item->scripture1    = $CWMListing->getScripture($this->params, $item, 0, 1);
+        $this->item->scripture2    = $CWMListing->getScripture($this->params, $item, 0, 2);
+        $this->item->allScriptures = $CWMListing->getAllScriptures($this->params, $item);
 
         // @todo check to see if this works
         $this->item->topics = $this->item->topic_text;

@@ -17,6 +17,7 @@ namespace CWM\Plugin\Finder\Proclaim\Extension;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmhelperroute;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Event\Finder as FinderEvent;
@@ -544,6 +545,19 @@ final class Proclaim extends Adapter implements SubscriberInterface
                 // Add to body
                 $item->body .= ' ' . $reference;
             }
+        }
+
+        // Also index all references from the junction table
+        try {
+            $scriptures = CwmscriptureHelper::getScripturesForStudy((int) $item->id);
+
+            foreach ($scriptures as $ref) {
+                if ($ref->referenceText !== '') {
+                    $item->body .= ' ' . $ref->referenceText;
+                }
+            }
+        } catch (\Exception $e) {
+            // Junction table may not exist yet during migration
         }
 
         // Get content extras.

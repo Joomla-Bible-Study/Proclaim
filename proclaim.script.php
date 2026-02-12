@@ -12,6 +12,7 @@
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
+use CWM\Component\Proclaim\Administrator\Lib\CwmscriptureMigration;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
 use Joomla\CMS\Installer\Adapter\FileAdapter;
@@ -719,6 +720,33 @@ class com_proclaimInstallerScript extends InstallerScript
                 }
             } catch (\Exception $e) {
                 Factory::getApplication()->enqueueMessage('Failed to register guided tour: ' . $e->getMessage(), 'error');
+            }
+
+            // Migrate legacy scripture columns to junction table
+            try {
+                $migrationPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Lib/CwmscriptureMigration.php';
+
+                if (file_exists($migrationPath)) {
+                    require_once $migrationPath;
+                    // Also require the helper dependencies
+                    $helperDir = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Helper/';
+                    require_once $helperDir . 'ScriptureReference.php';
+                    require_once $helperDir . 'CwmscriptureHelper.php';
+
+                    $migrated = CwmscriptureMigration::migrate();
+
+                    if ($migrated > 0) {
+                        Factory::getApplication()->enqueueMessage(
+                            $migrated . ' study scripture reference(s) migrated to new format.',
+                            'message'
+                        );
+                    }
+                }
+            } catch (\Exception $e) {
+                Factory::getApplication()->enqueueMessage(
+                    'Scripture migration notice: ' . $e->getMessage(),
+                    'warning'
+                );
             }
         }
         // For updates, we use the migration process

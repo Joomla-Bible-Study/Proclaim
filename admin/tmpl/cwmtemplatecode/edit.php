@@ -104,6 +104,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                                         ['label' => Text::_('JBS_TPLCODE_SNIPPET_INTRO'), 'code' => 'echo $study->studyintro;'],
                                         ['label' => Text::_('JBS_TPLCODE_SNIPPET_SCRIPTURE1'), 'code' => 'echo $study->scripture1;'],
                                         ['label' => Text::_('JBS_TPLCODE_SNIPPET_SCRIPTURE2'), 'code' => 'echo $study->scripture2;'],
+                                        ['label' => Text::_('JBS_CMN_ALL_SCRIPTURES'), 'code' => 'echo $study->scriptures;'],
                                         ['label' => Text::_('JBS_TPLCODE_SNIPPET_MEDIA'), 'code' => 'echo $study->media;'],
                                         ['label' => Text::_('JBS_TPLCODE_SNIPPET_DURATION'), 'code' => 'echo $study->duration;'],
                                         ['label' => Text::_('JBS_TPLCODE_SNIPPET_TOPICS'), 'code' => 'echo $study->topics;'],

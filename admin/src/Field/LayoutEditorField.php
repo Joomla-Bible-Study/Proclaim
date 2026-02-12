@@ -58,8 +58,9 @@ class LayoutEditorField extends FormField
      * @since 10.1.0
      */
     protected array $messageElements = [
-        ['id' => 'scripture1', 'label' => 'JBS_CMN_SCRIPTURE'],
-        ['id' => 'scripture2', 'label' => 'JBS_CMN_SCRIPTURE2'],
+        ['id' => 'scriptures', 'label' => 'JBS_CMN_ALL_SCRIPTURES'],
+        ['id' => 'scripture1', 'label' => 'JBS_CMN_SCRIPTURE', 'deprecated' => true],
+        ['id' => 'scripture2', 'label' => 'JBS_CMN_SCRIPTURE2', 'deprecated' => true],
         ['id' => 'secondary', 'label' => 'JBS_CMN_SECONDARY_REFERENCES'],
         ['id' => 'jbsmedia', 'label' => 'JBS_CMN_MEDIA'],
         ['id' => 'title', 'label' => 'JBS_CMN_TITLE'],

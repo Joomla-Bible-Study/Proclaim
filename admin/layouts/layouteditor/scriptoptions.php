@@ -90,18 +90,18 @@ $dateFormatOptions = array_merge(
     $extractFieldOptions('date_format')
 );
 
-// showVerses, showVersion: only module/menu contexts get "Use Template Default";
-// the template editor sets these directly (no component-level global to defer to)
+// showVerses, showVersion: both template and module/menu contexts need a default option.
+// Template editor context uses "Use Global Setting"; module/menu uses "Use Template Default".
 $showVersesOptions  = $extractFieldOptions('show_verses');
 $showVersionOptions = [
     ['value' => '0', 'label' => Text::_('JNO')],
     ['value' => '1', 'label' => Text::_('JYES')],
 ];
 
-if ($prependInherit) {
-    array_unshift($showVersesOptions, ['value' => '', 'label' => $deferLabel]);
-    array_unshift($showVersionOptions, ['value' => '', 'label' => $deferLabel]);
-}
+$separatorOptions = $extractFieldOptions('scripture_separator');
+array_unshift($showVersesOptions, ['value' => '', 'label' => $deferLabel]);
+array_unshift($showVersionOptions, ['value' => '', 'label' => $deferLabel]);
+array_unshift($separatorOptions, ['value' => '', 'label' => $deferLabel]);
 
 // These dropdowns have no "defer" option — just the actual choices
 $elementTypeOptions     = $extractFieldOptions('scripture1element');
@@ -139,6 +139,7 @@ if (!empty($showVersesOptions)) {
 }
 
 $document->addScriptOptions('com_proclaim.showVersionOptions', $showVersionOptions);
+$document->addScriptOptions('com_proclaim.separatorOptions', $separatorOptions);
 
 if (!empty($elementTypeOptions)) {
     $document->addScriptOptions('com_proclaim.elementTypeOptions', $elementTypeOptions);

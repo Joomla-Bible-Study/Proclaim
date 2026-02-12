@@ -12,6 +12,7 @@
 namespace CWM\Component\Proclaim\Site\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
@@ -1146,5 +1147,44 @@ class CwmsermonsModel extends ListModel
         $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
 
         return $query;
+    }
+
+    /**
+     * Override getItems to batch-load scripture references from the junction table.
+     *
+     * @return  array
+     *
+     * @since  10.1.0
+     */
+    #[\Override]
+    public function getItems(): array
+    {
+        $items = parent::getItems();
+
+        if (empty($items)) {
+            return $items;
+        }
+
+        // Collect study IDs for batch loading
+        $studyIds = [];
+
+        foreach ($items as $item) {
+            if (!empty($item->id)) {
+                $studyIds[] = (int) $item->id;
+            }
+        }
+
+        if (empty($studyIds)) {
+            return $items;
+        }
+
+        // Batch-load all scripture references
+        $scriptureMap = CwmscriptureHelper::getScripturesForStudies($studyIds);
+
+        foreach ($items as $item) {
+            $item->scriptures = $scriptureMap[(int) $item->id] ?? [];
+        }
+
+        return $items;
     }
 }

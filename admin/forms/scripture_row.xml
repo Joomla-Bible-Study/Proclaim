@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+    <field name="reference_text" type="text"
+           label="JBS_STY_SCRIPTURE_REFERENCE"
+           hint="JBS_STY_SCRIPTURE_REFERENCE_HINT"
+           class="scripture-autocomplete"
+           size="40" filter="trim"/>
+    <field name="bible_version" type="BibleVersion"
+           label="JBS_STY_BIBLE_VERSION"
+           description="JBS_STY_BIBLE_VERSION_DESC"
+           class="bible-version-searchable"/>
+</form>

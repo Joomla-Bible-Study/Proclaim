@@ -49,8 +49,9 @@
                             { id: 'locations', label: 'Locations', section: 'Metadata' },
                             { id: 'messagetype', label: 'Message Type', section: 'Metadata' },
                             { id: 'topic', label: 'Topics', section: 'Metadata' },
-                            { id: 'scripture1', label: 'Scripture 1', section: 'Scripture' },
-                            { id: 'scripture2', label: 'Scripture 2', section: 'Scripture' },
+                            { id: 'scripture1', label: 'Scripture 1 (deprecated)', section: 'Scripture', deprecated: true },
+                            { id: 'scripture2', label: 'Scripture 2 (deprecated)', section: 'Scripture', deprecated: true },
+                            { id: 'scriptures', label: 'Scriptures', section: 'Scripture' },
                             { id: 'series', label: 'Series', section: 'Series' },
                             { id: 'seriesdescription', label: 'Series Description', section: 'Series' },
                             { id: 'seriesthumbnail', label: 'Series Thumbnail', section: 'Series' },
@@ -75,8 +76,9 @@
                             { id: 'locations', label: 'Locations', section: 'Metadata' },
                             { id: 'messagetype', label: 'Message Type', section: 'Metadata' },
                             { id: 'topic', label: 'Topics', section: 'Metadata' },
-                            { id: 'scripture1', label: 'Scripture 1', section: 'Scripture' },
-                            { id: 'scripture2', label: 'Scripture 2', section: 'Scripture' },
+                            { id: 'scripture1', label: 'Scripture 1 (deprecated)', section: 'Scripture', deprecated: true },
+                            { id: 'scripture2', label: 'Scripture 2 (deprecated)', section: 'Scripture', deprecated: true },
+                            { id: 'scriptures', label: 'Scriptures', section: 'Scripture' },
                             { id: 'series', label: 'Series', section: 'Series' },
                             { id: 'seriesdescription', label: 'Series Description', section: 'Series' },
                             { id: 'seriesthumbnail', label: 'Series Thumbnail', section: 'Series' },
@@ -309,6 +311,26 @@
             };
 
             /**
+             * Get separator options from PHP or use fallback
+             * @returns {Array} Separator options
+             */
+            const getSeparatorOptions = () => {
+                if (window.Joomla && typeof Joomla.getOptions === 'function') {
+                    var phpOptions = Joomla.getOptions('com_proclaim.separatorOptions');
+                    if (phpOptions && Array.isArray(phpOptions)) {
+                        return phpOptions;
+                    }
+                }
+                return [
+                    { value: '', label: 'Use Global Setting' },
+                    { value: 'newline', label: 'Stacked (one per line)' },
+                    { value: 'middot', label: 'Middle dot' },
+                    { value: 'pipe', label: 'Vertical bar (|)' },
+                    { value: 'semicolon', label: 'Semicolon (;)' }
+                ];
+            };
+
+            /**
              * Check if an element is a scripture element
              * @param {string} elementId - The element identifier
              * @returns {boolean} True if scripture element
@@ -360,7 +382,13 @@
 
                     // State: Map<elementId, {row, col, colspan, element, custom, linktype}>
                     this.state = new Map();
-                    this.currentContext = this.options.context;
+
+                    // Restore last active context tab from sessionStorage
+                    const storageKey = 'proclaim-layout-context';
+                    const savedContext = sessionStorage.getItem(storageKey);
+                    const defs = this.getElementDefs();
+                    this.currentContext = (savedContext && defs[savedContext]) ? savedContext : this.options.context;
+                    this._contextStorageKey = storageKey;
                     this.sortableInstances = [];
                     this.paletteSortables = [];
                     this.paletteSortable = null;
@@ -543,6 +571,9 @@
                     });
 
                     this.currentContext = context;
+
+                    // Persist active context for recall after save
+                    try { sessionStorage.setItem(this._contextStorageKey, context); } catch (e) { /* ignore */ }
 
                     // Clear state and reload
                     this.state.clear();
@@ -1697,6 +1728,11 @@
                     const sections = new Map();
 
                     contextDef.elements.forEach(element => {
+                        // Hide deprecated elements from the palette (they still render in existing layouts)
+                        if (element.deprecated) {
+                            return;
+                        }
+
                         const sectionName = element.section || contextDef.label;
 
                         if (!sections.has(sectionName)) {
@@ -1749,9 +1785,11 @@
                         card.dataset.paletteItem = 'true';
                     }
 
+                    var deprecatedBadge = element.deprecated ? ' <span class="badge bg-warning text-dark" style="font-size:10px;vertical-align:middle;">deprecated</span>' : '';
+
                     card.innerHTML = `
                 <span class="element-handle"><span class="icon-menu" aria-hidden="true"></span></span>
-                <span class="element-name">${element.label}</span>
+                <span class="element-name">${element.label}${deprecatedBadge}</span>
                 ${!isPalette ? `
                     <span class="element-info">Col 1</span>
                     <button type="button" class="btn-settings" title="${this.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Settings'}">
@@ -2019,6 +2057,13 @@
                                 </select>
                                 <div class="form-text">${this.trans('JBS_TPL_SHOW_VERSION_DESC') || 'Append the Bible version abbreviation to the scripture reference (e.g. Luke 7:36-38 KJV)'}</div>
                             </div>
+                            <div class="form-group" id="layout-separator-group" style="display:none;">
+                                <label class="form-label" for="layout-separator">${this.trans('JBS_TPL_SCRIPTURE_SEPARATOR') || 'Scripture Separator'}</label>
+                                <select class="form-select" id="layout-separator">
+                                    ${getSeparatorOptions().map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
+                                </select>
+                                <div class="form-text">${this.trans('JBS_TPL_SCRIPTURE_SEPARATOR_DESC') || 'How to display multiple scripture references'}</div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">${this.trans('JCANCEL') || 'Cancel'}</button>
@@ -2185,9 +2230,10 @@
                         delete evt.item.dataset.paletteItem;
                         const element = this.getElementDefinition(elementId);
                         if (element) {
+                            var depBadge = element.deprecated ? ' <span class="badge bg-warning text-dark" style="font-size:10px;vertical-align:middle;">deprecated</span>' : '';
                             evt.item.innerHTML = `
                         <span class="element-handle"><span class="icon-menu" aria-hidden="true"></span></span>
-                        <span class="element-name">${element.label}</span>
+                        <span class="element-name">${element.label}${depBadge}</span>
                         <span class="element-info">Col ${col}</span>
                         <button type="button" class="btn-settings" title="${this.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Settings'}">
                             <span class="icon-options" aria-hidden="true"></span>
@@ -2612,6 +2658,8 @@
                     const showVersesGroup = document.getElementById('layout-show-verses-group');
                     const showVersionEl = document.getElementById('layout-show-version');
                     const showVersionGroup = document.getElementById('layout-show-version-group');
+                    const separatorEl = document.getElementById('layout-separator');
+                    const separatorGroup = document.getElementById('layout-separator-group');
 
                     // Rebuild link type options based on current context
                     if (linkTypeEl) {
@@ -2635,6 +2683,7 @@
                     if (dateFormatEl) { dateFormatEl.value = data.date_format || ''; }
                     if (showVersesEl) { showVersesEl.value = data.show_verses || ''; }
                     if (showVersionEl) { showVersionEl.value = data.show_version || ''; }
+                    if (separatorEl) { separatorEl.value = data.separator || ''; }
 
                     // Store original values for change detection when modal closes
                     this.originalModalValues = {
@@ -2643,7 +2692,8 @@
                         custom: customClassEl ? customClassEl.value : '',
                         date_format: dateFormatEl ? dateFormatEl.value : '',
                         show_verses: showVersesEl ? showVersesEl.value : '',
-                        show_version: showVersionEl ? showVersionEl.value : ''
+                        show_version: showVersionEl ? showVersionEl.value : '',
+                        separator: separatorEl ? separatorEl.value : ''
                     };
 
                     // Show date format field only for date-related elements
@@ -2660,6 +2710,11 @@
                     }
                     if (showVersionGroup) {
                         showVersionGroup.style.display = isScripture ? 'block' : 'none';
+                    }
+                    // Separator only for "All Scriptures" element (not scripture1/scripture2/secondary)
+                    var isAllScriptures = elementId === 'scriptures' || elementId === 'dscriptures';
+                    if (separatorGroup) {
+                        separatorGroup.style.display = isAllScriptures ? 'block' : 'none';
                     }
 
                     // Show modal
@@ -2717,6 +2772,7 @@
                     data.date_format = document.getElementById('layout-date-format').value;
                     data.show_verses = document.getElementById('layout-show-verses').value;
                     data.show_version = document.getElementById('layout-show-version').value;
+                    data.separator = document.getElementById('layout-separator').value;
 
                     // Update visual display
                     const card = this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"]`);
@@ -2827,6 +2883,7 @@
                     const dateFormatEl = document.getElementById('layout-date-format');
                     const showVersesEl = document.getElementById('layout-show-verses');
                     const showVersionEl = document.getElementById('layout-show-version');
+                    const separatorEl = document.getElementById('layout-separator');
 
                     const current = {
                         element: elementTypeEl ? elementTypeEl.value : '',
@@ -2834,7 +2891,8 @@
                         custom: customClassEl ? customClassEl.value : '',
                         date_format: dateFormatEl ? dateFormatEl.value : '',
                         show_verses: showVersesEl ? showVersesEl.value : '',
-                        show_version: showVersionEl ? showVersionEl.value : ''
+                        show_version: showVersionEl ? showVersionEl.value : '',
+                        separator: separatorEl ? separatorEl.value : ''
                     };
 
                     // Compare each field (colspan is managed by drag resizing, not the modal)
@@ -2843,7 +2901,8 @@
                         current.custom !== this.originalModalValues.custom ||
                         current.date_format !== this.originalModalValues.date_format ||
                         current.show_verses !== this.originalModalValues.show_verses ||
-                        current.show_version !== this.originalModalValues.show_version;
+                        current.show_version !== this.originalModalValues.show_version ||
+                        current.separator !== this.originalModalValues.separator;
                 }
 
                 /**
@@ -2875,6 +2934,7 @@
                         let dateFormat = templateParams[fieldPrefix + 'date_format'] || '';
                         let showVerses = templateParams[fieldPrefix + 'show_verses'] || '';
                         let showVersion = templateParams[fieldPrefix + 'show_version'] || '';
+                        let separator = templateParams[fieldPrefix + 'separator'] || '';
 
                         // Try form fields as fallback (in case they're loaded)
                         const rowField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}row]"]`);
@@ -2888,6 +2948,7 @@
                             const dateFormatField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}date_format]"]`);
                             const showVersesField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}show_verses]"]`);
                             const showVersionField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}show_version]"]`);
+                            const separatorField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}separator]"]`);
 
                             if (colField) { col = parseInt(colField.value, 10) || col; }
                             if (colspanField) { colspan = colspanField.value || colspan; }
@@ -2897,6 +2958,7 @@
                             if (dateFormatField) { dateFormat = dateFormatField.value || dateFormat; }
                             if (showVersesField) { showVerses = showVersesField.value || showVerses; }
                             if (showVersionField) { showVersion = showVersionField.value || showVersion; }
+                            if (separatorField) { separator = separatorField.value || separator; }
                         }
 
                         // Only add to canvas if row > 0 (element is visible)
@@ -2910,7 +2972,8 @@
                                 linktype: linktype,
                                 date_format: dateFormat,
                                 show_verses: showVerses,
-                                show_version: showVersion
+                                show_version: showVersion,
+                                separator: separator
                             };
 
                             this.state.set(element.id, data);
@@ -3044,7 +3107,8 @@
                             linktype: `${this.options.paramsPrefix}[${fieldPrefix}linktype]`,
                             date_format: `${this.options.paramsPrefix}[${fieldPrefix}date_format]`,
                             show_verses: `${this.options.paramsPrefix}[${fieldPrefix}show_verses]`,
-                            show_version: `${this.options.paramsPrefix}[${fieldPrefix}show_version]`
+                            show_version: `${this.options.paramsPrefix}[${fieldPrefix}show_version]`,
+                            separator: `${this.options.paramsPrefix}[${fieldPrefix}separator]`
                         };
 
                         // Helper to get or create a hidden input field
@@ -3074,6 +3138,7 @@
                             getOrCreateField(fieldNames.date_format, data.date_format || '');
                             getOrCreateField(fieldNames.show_verses, data.show_verses || '');
                             getOrCreateField(fieldNames.show_version, data.show_version || '');
+                            getOrCreateField(fieldNames.separator, data.separator || '');
                         } else {
                             // Element not in layout - set row to 0 (hidden)
                             getOrCreateField(fieldNames.row, '0');

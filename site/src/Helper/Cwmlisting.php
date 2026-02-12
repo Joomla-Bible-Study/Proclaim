@@ -16,6 +16,8 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
+use CWM\Component\Proclaim\Administrator\Helper\ScriptureReference;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Component\ComponentHelper;
@@ -23,6 +25,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
@@ -116,7 +119,7 @@ class Cwmlisting
 
         // Standard params that check {name}row > 0
         $standardParams = [
-            'scripture1', 'scripture2', 'secondary', 'title', 'date', 'teacher', 'teacher-title',
+            'scripture1', 'scripture2', 'scriptures', 'secondary', 'title', 'date', 'teacher', 'teacher-title',
             'duration', 'studyintro', 'series', 'description', 'seriesthumbnail', 'submitted',
             'hits', 'downloads', 'studynumber', 'topic', 'locations', 'jbsmedia', 'messagetype',
             'thumbnail', 'teacheremail', 'teacherweb', 'teacherphone', 'teacherfb', 'teachertw',
@@ -1267,6 +1270,13 @@ class Cwmlisting
                     ) : $data);
                 }
                 break;
+            case $extra . 'scriptures':
+                if ($header === 1) {
+                    $data = Text::_('JBS_CMN_ALL_SCRIPTURES');
+                } else {
+                    $data = $this->getAllScriptures($params, $item, $row);
+                }
+                break;
             case $extra . 'secondary':
                 if ($header === 1) {
                     $data = Text::_('JBS_CMN_SECONDARY_REFERENCES');
@@ -1908,6 +1918,138 @@ class Cwmlisting
 
         // Full reference with verses (show_verses === 1 or esv mode)
         return $this->formatScriptureReference($book, $ch_b, $ch_e, $v_b, $v_e) . $versionSuffix;
+    }
+
+    /**
+     * Get all scripture references for a message, rendered as a semicolon-separated string.
+     *
+     * Uses the junction table scriptures if available, falls back to legacy scripture1/scripture2.
+     *
+     * @param   Registry  $params         Template parameters
+     * @param   object    $row            Message row
+     * @param   ?object   $elementConfig  Element configuration from Layout Editor
+     *
+     * @return  string  Rendered scripture references separated by "; "
+     *
+     * @since  10.1.0
+     */
+    public function getAllScriptures(
+        Registry $params,
+        object $row,
+        ?object $elementConfig = null
+    ): string {
+        // Use junction table scriptures if available
+        if (!empty($row->scriptures) && \is_array($row->scriptures)) {
+            $parts = [];
+
+            foreach ($row->scriptures as $ref) {
+                if (!($ref instanceof ScriptureReference)) {
+                    continue;
+                }
+
+                if ($ref->booknumber <= 0) {
+                    // Unparsed raw text
+                    if ($ref->referenceText !== '') {
+                        $parts[] = $ref->referenceText;
+                    }
+
+                    continue;
+                }
+
+                // Build a virtual row to reuse getScripture()
+                $virtualRow = (object) [
+                    'id'            => $row->id ?? 0,
+                    'booknumber'    => $ref->booknumber,
+                    'chapter_begin' => $ref->chapterBegin,
+                    'verse_begin'   => $ref->verseBegin,
+                    'chapter_end'   => $ref->chapterEnd,
+                    'verse_end'     => $ref->verseEnd,
+                    'bookname'      => CwmscriptureHelper::getBookName($ref->booknumber)
+                        ? array_search($ref->booknumber, array_column(CwmscriptureHelper::getAllBooks(), 'booknumber'))
+                        : '',
+                    'bible_version' => $ref->bibleVersion,
+                    'booknumber2'   => 0,
+                ];
+
+                // Get the translated book name key for the virtual row
+                $bookKey = '';
+
+                foreach (CwmscriptureHelper::getAllBooks() as $book) {
+                    if ($book['booknumber'] === $ref->booknumber) {
+                        $bookKey = $book['key'];
+
+                        break;
+                    }
+                }
+
+                $virtualRow->bookname = $bookKey;
+
+                $rendered = $this->getScripture($params, $virtualRow, 0, 1, $elementConfig);
+
+                if ($rendered !== '') {
+                    $parts[] = $rendered;
+                }
+            }
+
+            if (!empty($parts)) {
+                return $this->joinScriptureParts($parts, $params, $elementConfig);
+            }
+        }
+
+        // Fallback to legacy scripture1/scripture2
+        $parts = [];
+        $s1    = $this->getScripture($params, $row, 0, 1, $elementConfig);
+        $s2    = $this->getScripture($params, $row, 0, 2, $elementConfig);
+
+        if ($s1 !== '') {
+            $parts[] = $s1;
+        }
+
+        if ($s2 !== '') {
+            $parts[] = $s2;
+        }
+
+        return $this->joinScriptureParts($parts, $params, $elementConfig);
+    }
+
+    /**
+     * Join rendered scripture parts using the configured separator.
+     *
+     * Checks per-element config first, then falls back to global template param.
+     *
+     * @param   array    $parts          Rendered scripture strings
+     * @param   Registry $params         Template parameters
+     * @param   ?object  $elementConfig  Element configuration from Layout Editor
+     *
+     * @return  string
+     *
+     * @since   10.1.0
+     */
+    private function joinScriptureParts(array $parts, Registry $params, ?object $elementConfig = null): string
+    {
+        if (empty($parts)) {
+            return '';
+        }
+
+        if (\count($parts) === 1) {
+            return $parts[0];
+        }
+
+        // Per-element separator overrides global (empty string = use global)
+        $separator = $params->get('scripture_separator', 'middot');
+
+        if ($elementConfig !== null && isset($elementConfig->separator) && $elementConfig->separator !== '') {
+            $separator = $elementConfig->separator;
+        }
+
+        return LayoutHelper::render(
+            'scripture.list',
+            [
+                'parts'     => $parts,
+                'separator' => $separator,
+            ],
+            JPATH_SITE . '/components/com_proclaim/layouts'
+        );
     }
 
     /**

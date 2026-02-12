@@ -10,6 +10,7 @@
 
 namespace CWM\Module\Proclaim\Site\Dispatcher;
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
@@ -70,6 +71,23 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $data['list'] = $this->getHelperFactory()
             ->getHelper('ProclaimHelper')
             ->getLatest($data['params'], $this->getApplication());
+
+        // Batch-load junction table scriptures so Layout Editor "all scriptures" element works
+        $studyIds = [];
+
+        foreach ($data['list'] as $item) {
+            if (!empty($item->id)) {
+                $studyIds[] = (int) $item->id;
+            }
+        }
+
+        if (!empty($studyIds)) {
+            $scriptureMap = CwmscriptureHelper::getScripturesForStudies($studyIds);
+
+            foreach ($data['list'] as $item) {
+                $item->scriptures = $scriptureMap[(int) $item->id] ?? [];
+            }
+        }
 
         if ($data['params']->get('useexpert_module') > 0 || \is_string($data['params']->get('moduletemplate'))) {
             foreach ($data['list'] as $item) {

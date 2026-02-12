@@ -74,8 +74,11 @@ $getFieldsetLabel = function (string $fieldsetName) use ($form): ?string {
     return null;
 };
 
+$deprecatedElements = ['scripture1', 'scripture2'];
+
 $elementSectionMap = [
     'scripture1'        => 'JBS_TPL_SECTION_SCRIPTURE', 'scripture2' => 'JBS_TPL_SECTION_SCRIPTURE',
+    'scriptures'        => 'JBS_TPL_SECTION_SCRIPTURE',
     'secondary'         => 'JBS_TPL_SECTION_SCRIPTURE',
     'title'             => 'JBS_TPL_SECTION_MESSAGE', 'date' => 'JBS_TPL_SECTION_MESSAGE',
     'studyintro'        => 'JBS_TPL_SECTION_MESSAGE', 'studynumber' => 'JBS_TPL_SECTION_MESSAGE',
@@ -97,7 +100,7 @@ $elementSectionMap = [
     'custom'            => 'JBS_TPL_SECTION_CUSTOM', 'dcustom' => 'JBS_TPL_SECTION_CUSTOM',
 ];
 
-$extractElements = function (array $fieldsetNames, string $prefix) use ($form, $elementSectionMap): array {
+$extractElements = function (array $fieldsetNames, string $prefix) use ($form, $elementSectionMap, $deprecatedElements): array {
     $elements = [];
     $seen     = [];
 
@@ -116,11 +119,17 @@ $extractElements = function (array $fieldsetNames, string $prefix) use ($form, $
             }
             $seen[$elementId] = true;
 
-            $elements[] = [
+            $entry = [
                 'id'      => $elementId,
                 'label'   => Text::_($field->getAttribute('label')),
                 'section' => Text::_($elementSectionMap[$elementId] ?? 'JBS_TPL_SECTION_OTHER'),
             ];
+
+            if (\in_array($elementId, $deprecatedElements, true)) {
+                $entry['deprecated'] = true;
+            }
+
+            $elements[] = $entry;
         }
     }
 
@@ -356,6 +365,20 @@ foreach ($fieldArray as $field) :
     }
     echo $this->form->renderField($field->fieldname, 'params');
     $i++;
+endforeach;
+?>
+            </div>
+        </div>
+        <?php
+        echo HTMLHelper::_('uitab.endTab'); ?>
+
+        <?php
+        echo HTMLHelper::_('uitab.addTab', 'myTab', 'display-defaults', Text::_('JBS_TPL_DISPLAY_DEFAULTS')); ?>
+        <div class="row">
+            <div class="col-lg-6">
+                <?php
+foreach ($this->form->getFieldset('VERSES') as $field) :
+    echo $this->form->renderField($field->fieldname, 'params');
 endforeach;
 ?>
             </div>

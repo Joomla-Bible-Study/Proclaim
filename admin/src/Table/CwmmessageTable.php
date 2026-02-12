@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
@@ -544,6 +545,9 @@ class CwmmessageTable extends Table
             $array['params'] = $registry->toString();
         }
 
+        // Strip scriptures subform data — handled by CwmmessageModel, not a DB column
+        unset($array['scriptures']);
+
         // Bind the rules.
         if (isset($array['rules']) && \is_array($array['rules'])) {
             $rules = new Rules($array['rules']);
@@ -616,6 +620,9 @@ class CwmmessageTable extends Table
             $folderPath = \dirname($this->thumbnailm);
             Cwmthumbnail::deleteFolder($folderPath);
         }
+
+        // Delete associated scripture references from junction table
+        CwmscriptureHelper::deleteScriptures((int) $pk);
 
         return parent::delete($pk);
     }

@@ -36,7 +36,7 @@ use Joomla\CMS\Language\Text;
         <i class="fas fa-bible" aria-hidden="true"></i>
         <?php
         echo Text::_('JBS_CMN_SCRIPTURE'); ?>: <?php
-        echo $this->item->scripture1; ?>    </dd>
+        echo !empty($this->item->allScriptures) ? $this->item->allScriptures : $this->item->scripture1; ?>    </dd>
 
     <dd class="published">
         <i class="icon-calendar icon-fw" aria-hidden="true"></i>
