@@ -669,19 +669,29 @@ class CwmImageMigration
     {
         $report = ['folders' => [], 'total_files' => 0, 'total_size' => 0];
 
-        // All legacy locations where images were historically stored
+        // Legacy locations specific to BibleStudy/Proclaim — never scan the
+        // root images/ folder since that belongs to the entire Joomla site
         $admin         = Cwmparams::getAdmin();
         $imageFolder   = $admin->params->get('image_folder', 'images');
         $teacherFolder = $admin->params->get('teacher_image_folder', 'images');
         $seriesFolder  = $admin->params->get('series_image_folder', 'images');
 
-        $legacyDirs = array_unique(array_filter([
-            $imageFolder,
-            $teacherFolder,
-            $seriesFolder,
-            'images/biblestudy',
-            'media/com_proclaim/images/stockimages',
-        ]));
+        // Only include configured folders if they're Proclaim-specific (not the root images/)
+        $genericRoots = ['images', 'media'];
+        $candidates   = [$imageFolder, $teacherFolder, $seriesFolder];
+        $configuredDirs = array_filter(
+            $candidates,
+            fn ($d) => !\in_array(rtrim($d, '/'), $genericRoots, true)
+        );
+
+        $legacyDirs = array_unique(array_filter(array_merge(
+            $configuredDirs,
+            [
+                'images/biblestudy',
+                'media/com_proclaim/images',
+                'media/com_proclaim/images/stockimages',
+            ]
+        )));
 
         // New structured folder pattern — skip these
         $newPattern = '#^images/biblestudy/(studies|teachers|series)/[^/]+-\d+/#';
