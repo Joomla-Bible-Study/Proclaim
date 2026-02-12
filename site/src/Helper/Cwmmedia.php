@@ -722,7 +722,7 @@ class Cwmmedia
         $logoImage   = $params->get('jwplayer_logo', $params->get('player_logo', ''));
         $logoLink    = $params->get('jwplayer_logolink', $params->get('player_logolink', Uri::base()));
 
-        return '<a data-src="' . $path . '" data-id="' . $media->id . '" id="' . $media->id .
+        return '<a href="javascript:;" data-src="' . $path . '" data-id="' . $media->id . '" id="' . $media->id .
             '" class="fancybox_player hitplay" potext="' . $popout . '" ptype="' . $player->player .
             '" pwidth="' . $player->playerwidth . '" pheight="' .
             $player->playerheight . '" autostart="' . $params->get('autostart', false) . '" controls="' .

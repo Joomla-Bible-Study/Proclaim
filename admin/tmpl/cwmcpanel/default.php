@@ -145,8 +145,8 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             <?php
             }
 
-            // Podcast task warning — show when task is disabled, trashed, or not created
-            if (Cwmstats::getPodcastTaskRawState() !== 1) :
+            // Podcast task warning — only show when published podcasts exist and task is not enabled
+            if (Cwmstats::hasPublishedPodcasts() && Cwmstats::getPodcastTaskRawState() !== 1) :
 ?>
             <div class="col-12">
                 <div class="alert alert-warning">
