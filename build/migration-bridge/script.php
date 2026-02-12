@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Proclaim Migration Bridge - Installer Script
  *
@@ -12,11 +13,12 @@
  *
  * @package    Proclaim
  * @subpackage MigrationBridge
+ * @since      10.1.0
  * @copyright  (C) 2026 CWM Team
  * @license    GPL-2.0-or-later
  */
 
-defined('_JEXEC') or die;
+\defined('_JEXEC') or die;
 
 /**
  * Migration bridge installer script.
@@ -33,25 +35,26 @@ class ProclaimBridgeInstallerScript
      *   - element: the extension element name (plugins use bare name, modules use mod_ prefix)
      *   - folder: plugin group or null for modules
      *
-     * @var array
+     * @var   array
+     * @since 1.0.0
      */
-    private $extensions = array(
+    private $extensions = [
         // --- Legacy BibleStudy 9.x extensions ---
-        array('plugin', 'biblestudy',        'finder'),
-        array('plugin', 'biblestudysearch',  'search'),
-        array('plugin', 'jbspodcast',        'system'),
-        array('plugin', 'jbsbackup',         'system'),
-        array('module', 'mod_biblestudy',          null),
-        array('module', 'mod_biblestudy_podcast',  null),
+        ['plugin', 'biblestudy',        'finder'],
+        ['plugin', 'biblestudysearch',  'search'],
+        ['plugin', 'jbspodcast',        'system'],
+        ['plugin', 'jbsbackup',         'system'],
+        ['module', 'mod_biblestudy',          null],
+        ['module', 'mod_biblestudy_podcast',  null],
 
         // --- Proclaim 9.x extensions (same names as 10.x but incompatible) ---
-        array('plugin', 'proclaim',          'finder'),
-        array('plugin', 'proclaim',          'system'),
-        array('module', 'mod_proclaim',            null),
-        array('module', 'mod_proclaim_podcast',    null),
-        array('module', 'mod_proclaim_youtube',    null),
-        array('module', 'mod_proclaimicon',        null),
-    );
+        ['plugin', 'proclaim',          'finder'],
+        ['plugin', 'proclaim',          'system'],
+        ['module', 'mod_proclaim',            null],
+        ['module', 'mod_proclaim_podcast',    null],
+        ['module', 'mod_proclaim_youtube',    null],
+        ['module', 'mod_proclaimicon',        null],
+    ];
 
     /**
      * Runs after install/update.
@@ -60,6 +63,7 @@ class ProclaimBridgeInstallerScript
      * @param   object  $parent  Installer adapter
      *
      * @return  void
+     * @since   1.0.0
      */
     public function postflight($type, $parent)
     {
@@ -70,10 +74,10 @@ class ProclaimBridgeInstallerScript
             return;
         }
 
-        $disabled      = array();
-        $alreadyOff    = array();
-        $notFound      = array();
-        $errors        = array();
+        $disabled      = [];
+        $alreadyOff    = [];
+        $notFound      = [];
+        $errors        = [];
 
         foreach ($this->extensions as $ext) {
             $extType = $ext[0];
@@ -90,7 +94,7 @@ class ProclaimBridgeInstallerScript
             try {
                 // Look up the extension
                 $query = $db->getQuery(true)
-                    ->select($db->qn(array('extension_id', 'enabled')))
+                    ->select($db->qn(['extension_id', 'enabled']))
                     ->from($db->qn('#__extensions'))
                     ->where($db->qn('element') . ' = ' . $db->q($element))
                     ->where($db->qn('type') . ' = ' . $db->q($extType));
@@ -128,38 +132,38 @@ class ProclaimBridgeInstallerScript
         }
 
         // Build summary message
-        $lines = array();
+        $lines   = [];
         $lines[] = '<strong>Proclaim Migration Bridge</strong>';
 
         if (!empty($disabled)) {
-            $lines[] = '<br><strong>Disabled (' . count($disabled) . '):</strong>';
+            $lines[] = '<br><strong>Disabled (' . \count($disabled) . '):</strong>';
             foreach ($disabled as $item) {
                 $lines[] = '&nbsp;&nbsp;&bull; ' . htmlspecialchars($item, ENT_QUOTES, 'UTF-8');
             }
         }
 
         if (!empty($alreadyOff)) {
-            $lines[] = '<br><strong>Already disabled (' . count($alreadyOff) . '):</strong>';
+            $lines[] = '<br><strong>Already disabled (' . \count($alreadyOff) . '):</strong>';
             foreach ($alreadyOff as $item) {
                 $lines[] = '&nbsp;&nbsp;&bull; ' . htmlspecialchars($item, ENT_QUOTES, 'UTF-8');
             }
         }
 
         if (!empty($notFound)) {
-            $lines[] = '<br><strong>Not installed (' . count($notFound) . '):</strong>';
+            $lines[] = '<br><strong>Not installed (' . \count($notFound) . '):</strong>';
             foreach ($notFound as $item) {
                 $lines[] = '&nbsp;&nbsp;&bull; ' . htmlspecialchars($item, ENT_QUOTES, 'UTF-8');
             }
         }
 
         if (!empty($errors)) {
-            $lines[] = '<br><strong style="color:red">Errors (' . count($errors) . '):</strong>';
+            $lines[] = '<br><strong style="color:red">Errors (' . \count($errors) . '):</strong>';
             foreach ($errors as $item) {
                 $lines[] = '&nbsp;&nbsp;&bull; ' . htmlspecialchars($item, ENT_QUOTES, 'UTF-8');
             }
         }
 
-        $totalDisabled = count($disabled) + count($alreadyOff);
+        $totalDisabled = \count($disabled) + \count($alreadyOff);
         if ($totalDisabled > 0) {
             $lines[] = '<br>You can now safely migrate Joomla to version 4/5.';
             $lines[] = 'After migration, install <strong>Proclaim 10.x</strong> to register the new extensions.';
