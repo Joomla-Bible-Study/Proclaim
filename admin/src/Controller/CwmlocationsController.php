@@ -41,8 +41,8 @@ class CwmlocationsController extends AdminController
     public function saveOrderAjax(): void
     {
         // Get the input
-        $pks   = $this->getInput()->post->get('cid', [], 'array');
-        $order = $this->getInput()->post->get('order', [], 'array');
+        $pks   = $this->input->post->get('cid', [], 'array');
+        $order = $this->input->post->get('order', [], 'array');
 
         // Sanitize the input
         ArrayHelper::toInteger($pks);

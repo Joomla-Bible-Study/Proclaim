@@ -63,7 +63,7 @@ class DisplayController extends BaseController
 
         // Guess the Text message prefix. Defaults to the option.
         if (empty($this->extension)) {
-            $this->extension = $this->getInput()->get('extension', 'com_proclaim');
+            $this->extension = $this->input->get('extension', 'com_proclaim');
         }
     }
 
@@ -81,9 +81,9 @@ class DisplayController extends BaseController
     public function display($cachable = false, $urlparams = []): static
     {
         // Set the default view name and format from the Request.
-        $vName   = $this->getInput()->get('view', 'cwmcpanel');
-        $lName   = $this->getInput()->get('layout', 'default', 'string');
-        $id      = $this->getInput()->getInt('id');
+        $vName   = $this->input->get('view', 'cwmcpanel');
+        $lName   = $this->input->get('layout', 'default', 'string');
+        $id      = $this->input->getInt('id');
 
         // Check for an edit form.
         if ($vName === 'cwmmessage' && $lName === 'edit' && !$this->checkEditId('com_proclaim.edit.cwmmessage', $id)) {

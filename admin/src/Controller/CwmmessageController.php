@@ -128,7 +128,7 @@ class CwmmessageController extends FormController
         /** @var \CWM\Component\Proclaim\Administrator\Model\CwmtopicModel $model */
         $model = $this->getModel('Cwmtopic');
         $app   = Factory::getApplication();
-        $data  = $this->getInput()->post->get('jform', [], 'array');
+        $data  = $this->input->post->get('jform', [], 'array');
 
         // Get Tags - use topic_ids field (hidden input synced from fancy select)
         // Falls back to topics for backward compatibility

@@ -208,8 +208,8 @@ class CwmmediafileController extends FormController
             }
         }
 
-        if ($this->getInput()->getCmd('return') && parent::cancel($key)) {
-            $this->setRedirect(base64_decode($this->getInput()->getCmd('return')));
+        if ($this->input->getCmd('return') && parent::cancel($key)) {
+            $this->setRedirect(base64_decode($this->input->getCmd('return')));
 
             return true;
         }
@@ -231,10 +231,10 @@ class CwmmediafileController extends FormController
      */
     protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id'): string
     {
-        $tmpl    = $this->getInput()->get('tmpl');
-        $layout  = $this->getInput()->get('layout', 'edit', 'string');
-        $return  = $this->getInput()->getCmd('return');
-        $options = $this->getInput()->get('options');
+        $tmpl    = $this->input->get('tmpl');
+        $layout  = $this->input->get('layout', 'edit', 'string');
+        $return  = $this->input->getCmd('return');
+        $options = $this->input->get('options');
         $append  = '';
 
         // Setup redirect info.
@@ -310,8 +310,8 @@ class CwmmediafileController extends FormController
      */
     protected function postSaveHook($model, $validData = []): void
     {
-        $return = $this->getInput()->getCmd('return');
-        $task   = $this->getInput()->get('task');
+        $return = $this->input->getCmd('return');
+        $task   = $this->input->get('task');
 
         if ($return && $task !== 'apply') {
             Factory::getApplication()->enqueueMessage(Text::_('JBS_MED_SAVE'), 'message');
