@@ -428,8 +428,14 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
 
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'imagetools', Text::_('JBS_ADM_IMAGE_TOOLS')); ?>
+        <div id="imagetools-nav-warning" class="alert alert-danger d-flex align-items-center mb-4" role="alert" style="display:none !important;">
+            <i class="icon-warning-2 fs-3 me-3" aria-hidden="true"></i>
+            <div>
+                <strong><?php echo Text::_('JBS_ADM_OPERATION_IN_PROGRESS'); ?></strong>
+            </div>
+        </div>
         <div class="row" id="imagetools">
-            <!-- Image Migration Section -->
+            <!-- Image Migration Section (Step 1) -->
             <div class="col-12 col-lg-6">
                 <div class="cwmadmin-panel mb-4">
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_IMAGE_MIGRATION'); ?></h3>
@@ -444,13 +450,14 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                         </div>
                         <div class="mt-2" id="migration-status"></div>
                     </div>
+                    <div id="migration-error-report" style="display:none;"></div>
                     <button type="button" class="btn btn-primary" id="btn-start-migration" disabled>
                         <i class="icon-refresh" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_START_MIGRATION'); ?>
                     </button>
                 </div>
             </div>
 
-            <!-- WebP Generation Section -->
+            <!-- WebP Generation Section (Step 2) -->
             <div class="col-12 col-lg-6">
                 <div class="cwmadmin-panel mb-4">
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_WEBP_GENERATION'); ?></h3>
@@ -477,6 +484,7 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                 <div class="cwmadmin-panel mb-4">
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_ORPHAN_CLEANUP'); ?></h3>
                     <p><?php echo Text::_('JBS_ADM_ORPHAN_CLEANUP_DESC'); ?></p>
+                    <p class="text-muted small" id="orphan-step-indicator"><?php echo Text::_('JBS_ADM_ORPHAN_STEP1'); ?></p>
                     <div id="orphan-status" class="mb-3">
                         <button type="button" class="btn btn-secondary" id="btn-scan-orphans">
                             <i class="icon-search" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_SCAN_ORPHANS'); ?>
@@ -493,34 +501,64 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             </div>
         </div>
 
+        <!-- Legacy Files Report -->
+        <div class="row mt-4" id="imagetools-row3">
+            <div class="col-12">
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_LEGACY_FILES'); ?></h3>
+                    <p><?php echo Text::_('JBS_ADM_LEGACY_FILES_DESC'); ?></p>
+                    <button type="button" class="btn btn-outline-secondary" id="btn-scan-legacy">
+                        <i class="icon-search" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_SCAN_LEGACY'); ?>
+                    </button>
+                    <div id="legacy-results" class="mt-3" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+
         <?php
         // Pass PHP data to external JS via data attributes
         $wa = $this->getDocument()->getWebAssetManager();
         $wa->useScript('com_proclaim.admin-imagetools');
 
         $imagetoolsStrings = json_encode([
-            'studies'           => Text::_('JBS_CMN_STUDIES'),
-            'teachers'          => Text::_('JBS_CMN_TEACHERS'),
-            'series'            => Text::_('JBS_CMN_SERIES'),
-            'total'             => Text::_('JBS_CMN_TOTAL'),
-            'errorLoading'      => Text::_('JBS_ADM_ERROR_LOADING'),
-            'migrating'         => Text::_('JBS_ADM_MIGRATING'),
-            'migrationComplete' => Text::_('JBS_ADM_MIGRATION_COMPLETE'),
-            'recordsMigrated'   => Text::_('JBS_ADM_RECORDS_MIGRATED'),
-            'migrationError'    => Text::_('JBS_ADM_MIGRATION_ERROR'),
-            'scanning'          => Text::_('JBS_ADM_SCANNING'),
-            'scanOrphans'       => Text::_('JBS_ADM_SCAN_ORPHANS'),
-            'found'             => Text::_('JBS_ADM_FOUND'),
-            'orphanFolders'     => Text::_('JBS_ADM_ORPHAN_FOLDERS'),
-            'selectAll'         => Text::_('JBS_ADM_SELECT_ALL'),
-            'folder'            => Text::_('JBS_ADM_FOLDER'),
-            'files'             => Text::_('JBS_ADM_FILES'),
-            'size'              => Text::_('JBS_ADM_SIZE'),
-            'noOrphans'         => Text::_('JBS_ADM_NO_ORPHANS'),
-            'converting'        => Text::_('JBS_ADM_CONVERTING'),
-            'webpComplete'      => Text::_('JBS_ADM_WEBP_COMPLETE'),
-            'imagesConverted'   => Text::_('JBS_ADM_IMAGES_CONVERTED'),
-            'webpError'         => Text::_('JBS_ADM_WEBP_ERROR'),
+            'total'                 => Text::_('JBS_CMN_TOTAL'),
+            'errorLoading'          => Text::_('JBS_ADM_ERROR_LOADING'),
+            'migrating'             => Text::_('JBS_ADM_MIGRATING'),
+            'migrationComplete'     => Text::_('JBS_ADM_MIGRATION_COMPLETE'),
+            'recordsMigrated'       => Text::_('JBS_ADM_RECORDS_MIGRATED'),
+            'migrationError'        => Text::_('JBS_ADM_MIGRATION_ERROR'),
+            'migrationErrors'       => Text::_('JBS_ADM_MIGRATION_ERRORS'),
+            'migrationAllDone'      => Text::_('JBS_ADM_MIGRATION_ALL_DONE'),
+            'migrationCountMessages' => Text::_('JBS_ADM_MIGRATION_COUNT_MESSAGES'),
+            'migrationCountTeachers' => Text::_('JBS_ADM_MIGRATION_COUNT_TEACHERS'),
+            'migrationCountSeries'  => Text::_('JBS_ADM_MIGRATION_COUNT_SERIES'),
+            'scanning'              => Text::_('JBS_ADM_SCANNING'),
+            'scanOrphans'           => Text::_('JBS_ADM_SCAN_ORPHANS'),
+            'found'                 => Text::_('JBS_ADM_FOUND'),
+            'orphanFolders'         => Text::_('JBS_ADM_ORPHAN_FOLDERS'),
+            'orphanStep1'           => Text::_('JBS_ADM_ORPHAN_STEP1'),
+            'orphanStep2'           => Text::_('JBS_ADM_ORPHAN_STEP2'),
+            'selectAll'             => Text::_('JBS_ADM_SELECT_ALL'),
+            'folder'                => Text::_('JBS_ADM_FOLDER'),
+            'files'                 => Text::_('JBS_ADM_FILES'),
+            'size'                  => Text::_('JBS_ADM_SIZE'),
+            'noOrphans'             => Text::_('JBS_ADM_NO_ORPHANS'),
+            'converting'            => Text::_('JBS_ADM_CONVERTING'),
+            'webpComplete'          => Text::_('JBS_ADM_WEBP_COMPLETE'),
+            'imagesConverted'       => Text::_('JBS_ADM_IMAGES_CONVERTED'),
+            'webpError'             => Text::_('JBS_ADM_WEBP_ERROR'),
+            'webpAllDone'           => Text::_('JBS_ADM_WEBP_ALL_DONE'),
+            'webpCountMessages'     => Text::_('JBS_ADM_WEBP_COUNT_MESSAGES'),
+            'webpCountTeachers'     => Text::_('JBS_ADM_WEBP_COUNT_TEACHERS'),
+            'webpCountSeries'       => Text::_('JBS_ADM_WEBP_COUNT_SERIES'),
+            'operationInProgress'   => Text::_('JBS_ADM_OPERATION_IN_PROGRESS'),
+            'missingFiles'          => Text::_('JBS_ADM_MISSING_FILES'),
+            'missingFilesDesc'      => Text::_('JBS_ADM_MISSING_FILES_DESC'),
+            'missingPath'           => Text::_('JBS_ADM_MISSING_PATH'),
+            'scanLegacy'            => Text::_('JBS_ADM_SCAN_LEGACY'),
+            'legacyNoFiles'         => Text::_('JBS_ADM_LEGACY_NO_FILES'),
+            'legacyFilesFound'      => Text::_('JBS_ADM_LEGACY_FILES_FOUND'),
+            'filenames'             => Text::_('JBS_ADM_FILENAMES'),
         ], JSON_THROW_ON_ERROR);
         ?>
         <div id="imagetools-config"

@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
 use Joomla\Filesystem\Folder;
 use Joomla\Filesystem\Path;
@@ -52,6 +53,7 @@ class CwmImageMigration
                     ->from($db->qn('#__bsms_studies'))
                     ->where($db->qn('thumbnailm') . ' IS NOT NULL')
                     ->where($db->qn('thumbnailm') . ' != ' . $db->q(''))
+                    ->where('LENGTH(' . $db->qn('thumbnailm') . ') > 1')
                     ->where($db->qn('thumbnailm') . ' NOT LIKE ' . $db->q('images/biblestudy/studies/%-%/%'));
                 break;
 
@@ -63,6 +65,7 @@ class CwmImageMigration
                     ->from($db->qn('#__bsms_teachers'))
                     ->where($db->qn('teacher_thumbnail') . ' IS NOT NULL')
                     ->where($db->qn('teacher_thumbnail') . ' != ' . $db->q(''))
+                    ->where('LENGTH(' . $db->qn('teacher_thumbnail') . ') > 1')
                     ->where($db->qn('teacher_thumbnail') . ' NOT LIKE ' . $db->q('images/biblestudy/teachers/%-%/%'));
                 break;
 
@@ -74,6 +77,7 @@ class CwmImageMigration
                     ->from($db->qn('#__bsms_series'))
                     ->where($db->qn('series_thumbnail') . ' IS NOT NULL')
                     ->where($db->qn('series_thumbnail') . ' != ' . $db->q(''))
+                    ->where('LENGTH(' . $db->qn('series_thumbnail') . ') > 1')
                     ->where($db->qn('series_thumbnail') . ' NOT LIKE ' . $db->q('images/biblestudy/series/%-%/%'));
                 break;
 
@@ -107,6 +111,65 @@ class CwmImageMigration
     }
 
     /**
+     * Look up a record from the DB and migrate its images
+     *
+     * @param   string  $type  Record type: 'studies', 'teachers', or 'series'
+     * @param   int     $id    Record ID
+     *
+     * @return  array{success: bool, newPath: ?string, error: ?string}
+     *
+     * @since 10.2.0
+     */
+    public static function migrateRecordById(string $type, int $id): array
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
+
+        switch ($type) {
+            case 'studies':
+                $query->select($db->qn(['studytitle', 'thumbnailm']))
+                    ->from($db->qn('#__bsms_studies'))
+                    ->where($db->qn('id') . ' = ' . (int) $id);
+                break;
+
+            case 'teachers':
+                $query->select($db->qn('teachername') . ', ' . $db->qn('teacher_thumbnail'))
+                    ->from($db->qn('#__bsms_teachers'))
+                    ->where($db->qn('id') . ' = ' . (int) $id);
+                break;
+
+            case 'series':
+                $query->select($db->qn('series_text') . ', ' . $db->qn('series_thumbnail'))
+                    ->from($db->qn('#__bsms_series'))
+                    ->where($db->qn('id') . ' = ' . (int) $id);
+                break;
+
+            default:
+                return ['success' => false, 'newPath' => null, 'error' => 'Invalid type: ' . $type];
+        }
+
+        $db->setQuery($query);
+        $row = $db->loadObject();
+
+        if (!$row) {
+            return ['success' => false, 'newPath' => null, 'error' => 'Record not found: ' . $type . ' #' . $id];
+        }
+
+        // Extract title and image path from the row
+        $title   = $row->studytitle ?? $row->teachername ?? $row->series_text ?? '';
+        $oldPath = trim($row->thumbnailm ?? $row->teacher_thumbnail ?? $row->series_thumbnail ?? '');
+
+        // Treat '0', single-char junk, and empty as "no image" — clear and skip
+        if ($oldPath === '' || \strlen($oldPath) <= 1) {
+            self::clearImageField($type, $id);
+
+            return ['success' => false, 'newPath' => null, 'error' => 'No valid image path for ' . $type . ' #' . $id];
+        }
+
+        return self::migrateRecord($type, $id, $title, $oldPath);
+    }
+
+    /**
      * Migrate a single record's images to the new folder structure
      *
      * @param   string  $type       Record type: 'studies', 'teachers', or 'series'
@@ -130,23 +193,73 @@ class CwmImageMigration
         $alias     = ApplicationHelper::stringURLSafe($title ?: $type);
         $newFolder = 'images/biblestudy/' . $type . '/' . $alias . '-' . $id;
 
-        // Find the original image (not the thumbnail)
-        $oldAbsPath = Path::clean(JPATH_ROOT . '/' . $oldPath);
+        // Clean Joomla media field metadata (#joomlaImage://...)
+        $cleanImage = HTMLHelper::_('cleanImageURL', $oldPath);
+        $cleanPath  = $cleanImage->url;
 
-        // If this is a thumbnail path, try to find the original
-        $sourceImage = $oldPath;
-        if (str_contains(basename($oldPath), 'thumb_')) {
-            $originalName     = str_replace('thumb_', '', basename($oldPath));
-            $possibleOriginal = \dirname($oldPath) . '/' . $originalName;
+        // Handle bare filenames (no directory separator) by prepending configured image folder
+        if (!str_contains($cleanPath, '/')) {
+            $folderKeys = [
+                'studies'  => 'image_folder',
+                'teachers' => 'teacher_image_folder',
+                'series'   => 'series_image_folder',
+            ];
+            $folderKey   = $folderKeys[$type] ?? 'image_folder';
+            $imageFolder = Cwmparams::getAdmin()->params->get($folderKey, 'images');
+            $cleanPath   = $imageFolder . '/' . $cleanPath;
+        }
+
+        // Find the original image (not the thumbnail)
+        $oldAbsPath = Path::clean(JPATH_ROOT . '/' . $cleanPath);
+
+        // If this is a thumbnail path, try to find the original full-size image first
+        $sourceImage = $cleanPath;
+        $sourceFound = true;
+        $basename    = basename($cleanPath);
+
+        if (str_contains($basename, 'thumb_')) {
+            $originalName     = str_replace('thumb_', '', $basename);
+            $possibleOriginal = \dirname($cleanPath) . '/' . $originalName;
             $possibleAbsPath  = Path::clean(JPATH_ROOT . '/' . $possibleOriginal);
 
             if (is_file($possibleAbsPath)) {
                 $sourceImage = $possibleOriginal;
-            } elseif (!is_file($oldAbsPath)) {
-                return ['success' => false, 'newPath' => null, 'error' => 'Source file not found'];
+            } elseif (is_file($oldAbsPath)) {
+                // Thumbnail exists, use it as source
+                $sourceImage = $cleanPath;
+            } else {
+                $sourceFound = false;
             }
         } elseif (!is_file($oldAbsPath)) {
-            return ['success' => false, 'newPath' => null, 'error' => 'Source file not found'];
+            $sourceFound = false;
+        }
+
+        // Fallback: search the images directory tree for a matching filename
+        if (!$sourceFound) {
+            $searchName = str_contains($basename, 'thumb_')
+                ? str_replace('thumb_', '', $basename)
+                : $basename;
+
+            $found = self::findImageFile($searchName, $type);
+
+            if ($found !== null) {
+                $sourceImage = $found;
+                $sourceFound = true;
+            }
+        }
+
+        // If source file is still missing, clear the DB field so this record
+        // is excluded from future migration batches (avoids infinite loop)
+        if (!$sourceFound) {
+            self::clearImageField($type, $id);
+
+            return [
+                'success'      => false,
+                'newPath'      => null,
+                'error'        => 'Source file not found',
+                'missingPath'  => $cleanPath,
+                'absolutePath' => $oldAbsPath,
+            ];
         }
 
         // Create new thumbnail using Cwmthumbnail
@@ -210,6 +323,257 @@ class CwmImageMigration
             'records'   => $batch,
             'remaining' => $remaining,
         ];
+    }
+
+    /**
+     * Clear the image field for a record so it won't be returned by getRecordsNeedingMigration()
+     *
+     * Called when the source file is missing — the image is gone, nothing to migrate.
+     *
+     * @param   string  $type  Record type: 'studies', 'teachers', or 'series'
+     * @param   int     $id    Record ID
+     *
+     * @return  void
+     *
+     * @since 10.2.0
+     */
+    private static function clearImageField(string $type, int $id): void
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
+
+        switch ($type) {
+            case 'studies':
+                $query->update($db->qn('#__bsms_studies'))
+                    ->set($db->qn('thumbnailm') . ' = ' . $db->q(''))
+                    ->where($db->qn('id') . ' = ' . (int) $id);
+                break;
+
+            case 'teachers':
+                $query->update($db->qn('#__bsms_teachers'))
+                    ->set($db->qn('teacher_thumbnail') . ' = ' . $db->q(''))
+                    ->where($db->qn('id') . ' = ' . (int) $id);
+                break;
+
+            case 'series':
+                $query->update($db->qn('#__bsms_series'))
+                    ->set($db->qn('series_thumbnail') . ' = ' . $db->q(''))
+                    ->where($db->qn('id') . ' = ' . (int) $id);
+                break;
+        }
+
+        $db->setQuery($query);
+        $db->execute();
+    }
+
+    /**
+     * Search the images directory tree for a file by name
+     *
+     * Looks in the configured image folder and common locations to find a file
+     * that matches the given filename. This handles the old naming convention
+     * where images were stored as bare filenames without record IDs.
+     *
+     * @param   string  $filename  The filename to search for (e.g., 'sermon-title.jpg')
+     * @param   string  $type      Record type for folder hints: 'studies', 'teachers', 'series'
+     *
+     * @return  ?string  Relative path from JPATH_ROOT if found, null otherwise
+     *
+     * @since 10.2.0
+     */
+    private static function findImageFile(string $filename, string $type): ?string
+    {
+        if (empty($filename)) {
+            return null;
+        }
+
+        // Configured image folders per type
+        $folderKeys = [
+            'studies'  => 'image_folder',
+            'teachers' => 'teacher_image_folder',
+            'series'   => 'series_image_folder',
+        ];
+        $folderKey     = $folderKeys[$type] ?? 'image_folder';
+        $configuredDir = Cwmparams::getAdmin()->params->get($folderKey, 'images');
+
+        // Directories to search, in priority order
+        $searchDirs = [
+            JPATH_ROOT . '/' . $configuredDir,
+            JPATH_ROOT . '/images',
+            JPATH_ROOT . '/images/biblestudy',
+            JPATH_ROOT . '/images/biblestudy/' . $type,
+            JPATH_ROOT . '/media/com_proclaim/images',
+            JPATH_ROOT . '/media/com_proclaim/images/stockimages',
+        ];
+
+        // De-duplicate
+        $searchDirs = array_unique(array_map(fn ($d) => rtrim($d, '/'), $searchDirs));
+
+        foreach ($searchDirs as $dir) {
+            if (!is_dir($dir)) {
+                continue;
+            }
+
+            // Direct match in this directory
+            $candidate = $dir . '/' . $filename;
+            if (is_file($candidate)) {
+                return self::makeRelative($candidate);
+            }
+
+            // Recursive search one level deep (subdirectories)
+            $subDirs = Folder::folders($dir, '.', false, true);
+            foreach ($subDirs as $subDir) {
+                $candidate = $subDir . '/' . $filename;
+                if (is_file($candidate)) {
+                    return self::makeRelative($candidate);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Convert an absolute path to a JPATH_ROOT-relative path
+     *
+     * @param   string  $absPath  Absolute filesystem path
+     *
+     * @return  string  Path relative to JPATH_ROOT
+     *
+     * @since 10.2.0
+     */
+    private static function makeRelative(string $absPath): string
+    {
+        $root = rtrim(JPATH_ROOT, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+
+        if (str_starts_with($absPath, $root)) {
+            return substr($absPath, \strlen($root));
+        }
+
+        return $absPath;
+    }
+
+    /**
+     * Scan legacy image folders for leftover files after migration
+     *
+     * Checks the old folder locations from com_biblestudy/com_proclaim history
+     * and reports any image files still present that are NOT inside the new
+     * structured folders (images/biblestudy/{type}/{alias}-{id}/).
+     *
+     * @return array{folders: array<string, array{path: string, files: int, size: int, filenames: list<string>}>, total_files: int, total_size: int}
+     *
+     * @since 10.2.0
+     */
+    public static function getLegacyFolderReport(): array
+    {
+        $report = ['folders' => [], 'total_files' => 0, 'total_size' => 0];
+
+        // All legacy locations where images were historically stored
+        $admin         = Cwmparams::getAdmin();
+        $imageFolder   = $admin->params->get('image_folder', 'images');
+        $teacherFolder = $admin->params->get('teacher_image_folder', 'images');
+        $seriesFolder  = $admin->params->get('series_image_folder', 'images');
+
+        $legacyDirs = array_unique(array_filter([
+            $imageFolder,
+            $teacherFolder,
+            $seriesFolder,
+            'images/biblestudy',
+            'media/com_proclaim/images/stockimages',
+        ]));
+
+        // New structured folder pattern — skip these
+        $newPattern = '#^images/biblestudy/(studies|teachers|series)/[^/]+-\d+/#';
+
+        $imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'];
+
+        foreach ($legacyDirs as $relDir) {
+            $absDir = JPATH_ROOT . '/' . $relDir;
+
+            if (!is_dir($absDir)) {
+                continue;
+            }
+
+            // Collect image files directly in this folder (not in subdirs)
+            $directFiles = self::getImageFilesInDir($absDir, $imageExts);
+            if (!empty($directFiles)) {
+                $size = array_sum(array_map(fn ($f) => filesize($f), $directFiles));
+                $report['folders'][] = [
+                    'path'      => $relDir,
+                    'files'     => \count($directFiles),
+                    'size'      => $size,
+                    'filenames' => array_map('basename', $directFiles),
+                ];
+                $report['total_files'] += \count($directFiles);
+                $report['total_size']  += $size;
+            }
+
+            // Check subdirectories — but skip new structured folders
+            $subDirs = Folder::folders($absDir, '.', false, true);
+            foreach ($subDirs as $subDir) {
+                $relSub = self::makeRelative($subDir);
+
+                // Skip if it matches the new folder pattern (alias-ID)
+                if (preg_match($newPattern, $relSub . '/')) {
+                    continue;
+                }
+
+                // Skip non-image directories (media, etc.)
+                $subName = basename($subDir);
+                if (\in_array($subName, ['media', 'studies', 'teachers', 'series'], true)) {
+                    // Check inside these for loose files (not in alias-ID subfolders)
+                    $looseFiles = self::getImageFilesInDir($subDir, $imageExts);
+                    if (!empty($looseFiles)) {
+                        $size = array_sum(array_map(fn ($f) => filesize($f), $looseFiles));
+                        $report['folders'][] = [
+                            'path'      => $relSub,
+                            'files'     => \count($looseFiles),
+                            'size'      => $size,
+                            'filenames' => array_map('basename', $looseFiles),
+                        ];
+                        $report['total_files'] += \count($looseFiles);
+                        $report['total_size']  += $size;
+                    }
+
+                    continue;
+                }
+
+                $files = self::getImageFilesInDir($subDir, $imageExts);
+                if (!empty($files)) {
+                    $size = array_sum(array_map(fn ($f) => filesize($f), $files));
+                    $report['folders'][] = [
+                        'path'      => $relSub,
+                        'files'     => \count($files),
+                        'size'      => $size,
+                        'filenames' => array_map('basename', $files),
+                    ];
+                    $report['total_files'] += \count($files);
+                    $report['total_size']  += $size;
+                }
+            }
+        }
+
+        return $report;
+    }
+
+    /**
+     * Get image files directly in a directory (non-recursive)
+     *
+     * @param   string  $dir   Absolute directory path
+     * @param   array   $exts  Allowed extensions
+     *
+     * @return  list<string>  Absolute paths of image files found
+     *
+     * @since 10.2.0
+     */
+    private static function getImageFilesInDir(string $dir, array $exts): array
+    {
+        $pattern = '\\.(' . implode('|', $exts) . ')$';
+
+        try {
+            return Folder::files($dir, $pattern, false, true) ?: [];
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 
     /**

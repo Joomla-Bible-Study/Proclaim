@@ -987,9 +987,15 @@ class CwmadminController extends FormController
             return;
         }
 
-        $counts = CwmImageMigration::getMigrationCounts();
-
-        echo json_encode($counts, JSON_THROW_ON_ERROR);
+        try {
+            $counts = CwmImageMigration::getMigrationCounts();
+            echo json_encode($counts, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'studies' => 0, 'teachers' => 0, 'series' => 0, 'total' => 0,
+                'error' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
 
         $app->close();
     }
@@ -1021,9 +1027,15 @@ class CwmadminController extends FormController
         $type  = $input->get('type', 'studies', 'string');
         $limit = $input->get('limit', 10, 'int');
 
-        $batch = CwmImageMigration::getBatch($type, $limit);
-
-        echo json_encode($batch, JSON_THROW_ON_ERROR);
+        try {
+            $batch = CwmImageMigration::getBatch($type, $limit);
+            echo json_encode($batch, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'records' => [], 'remaining' => 0,
+                'error' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
 
         $app->close();
     }
@@ -1052,22 +1064,25 @@ class CwmadminController extends FormController
             return;
         }
 
-        $type    = $input->get('type', '', 'string');
-        $id      = $input->get('id', 0, 'int');
-        $title   = $input->get('title', '', 'string');
-        $oldPath = $input->get('old_path', '', 'string');
+        $type = $input->get('type', '', 'string');
+        $id   = $input->get('id', 0, 'int');
 
-        if (empty($type) || empty($id) || empty($oldPath)) {
+        if (empty($type) || empty($id)) {
             echo json_encode([
                 'success' => false,
-                'error'   => 'Missing required parameters',
+                'error'   => 'Missing required parameters (type and id)',
             ], JSON_THROW_ON_ERROR);
             $app->close();
 
             return;
         }
 
-        $result = CwmImageMigration::migrateRecord($type, $id, $title, $oldPath);
+        // Look up the record from the DB — avoids URL encoding issues with image paths
+        try {
+            $result = CwmImageMigration::migrateRecordById($type, $id);
+        } catch (\Throwable $e) {
+            $result = ['success' => false, 'newPath' => null, 'error' => $e->getMessage()];
+        }
 
         echo json_encode($result, JSON_THROW_ON_ERROR);
 
@@ -1097,13 +1112,16 @@ class CwmadminController extends FormController
             return;
         }
 
-        $orphans = CwmImageCleanup::findOrphanedFolders();
-        $totals  = CwmImageCleanup::getTotals($orphans);
-
-        echo json_encode([
-            'orphans' => $orphans,
-            'totals'  => $totals,
-        ], JSON_THROW_ON_ERROR);
+        try {
+            $orphans = CwmImageCleanup::findOrphanedFolders();
+            $totals  = CwmImageCleanup::getTotals($orphans);
+            echo json_encode(['orphans' => $orphans, 'totals' => $totals], JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'orphans' => [], 'totals' => ['folders' => 0, 'size' => 0, 'size_formatted' => '0 B'],
+                'error' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
 
         $app->close();
     }
@@ -1152,6 +1170,40 @@ class CwmadminController extends FormController
     }
 
     /**
+     * Get legacy folder report XHR - scans old image folders for leftover files
+     *
+     * @return void
+     *
+     * @since 10.2.0
+     */
+    public function getLegacyFolderReportXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $report = CwmImageMigration::getLegacyFolderReport();
+            echo json_encode($report, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'folders' => [], 'total_files' => 0, 'total_size' => 0,
+                'error' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
      * Get WebP migration counts XHR
      *
      * @return void
@@ -1174,9 +1226,15 @@ class CwmadminController extends FormController
             return;
         }
 
-        $counts = CwmImageMigration::getWebPMigrationCounts();
-
-        echo json_encode($counts, JSON_THROW_ON_ERROR);
+        try {
+            $counts = CwmImageMigration::getWebPMigrationCounts();
+            echo json_encode($counts, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'studies' => 0, 'teachers' => 0, 'series' => 0, 'total' => 0,
+                'error' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
 
         $app->close();
     }
@@ -1208,7 +1266,11 @@ class CwmadminController extends FormController
         $type  = $input->get('type', 'studies', 'string');
         $limit = $input->getInt('limit', 10);
 
-        $result = CwmImageMigration::migrateToWebP($type, $limit);
+        try {
+            $result = CwmImageMigration::migrateToWebP($type, $limit);
+        } catch (\Throwable $e) {
+            $result = ['converted' => 0, 'errors' => 0, 'remaining' => 0, 'error' => $e->getMessage()];
+        }
 
         echo json_encode($result, JSON_THROW_ON_ERROR);
 

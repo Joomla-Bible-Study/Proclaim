@@ -17,6 +17,58 @@
     const token = config.dataset.token;
     const strings = JSON.parse(config.dataset.strings);
 
+    // Store counts for progress calculation
+    let migrationTotals = {studies: 0, teachers: 0, series: 0, total: 0};
+    let webpTotals = {studies: 0, teachers: 0, series: 0, total: 0};
+
+    // ---- Navigation guard ----
+    let activeOperation = null; // null | 'migration' | 'webp' | 'orphan'
+
+    function onBeforeUnload(e) {
+      if (activeOperation) {
+        e.preventDefault();
+        // Modern browsers ignore custom text but still show a prompt
+        e.returnValue = '';
+      }
+    }
+    window.addEventListener('beforeunload', onBeforeUnload);
+
+    // Show/hide the big warning banner and disable form controls during operations
+    function setOperationRunning(running) {
+      const banner = document.getElementById('imagetools-nav-warning');
+      if (banner) {
+        banner.style.cssText = running ? 'display: flex !important;' : 'display: none !important;';
+      }
+      // Disable the Joomla toolbar Save/Close buttons and tab nav links
+      document.querySelectorAll('#toolbar button, #toolbar a, .subhead button').forEach(el => {
+        el.toggleAttribute('disabled', running);
+        if (running) el.style.pointerEvents = 'none';
+        else el.style.pointerEvents = '';
+      });
+      // Disable tab switching
+      document.querySelectorAll('[data-bs-toggle="tab"], .nav-link').forEach(el => {
+        if (running) {
+          el.classList.add('disabled');
+          el.style.pointerEvents = 'none';
+        } else {
+          el.classList.remove('disabled');
+          el.style.pointerEvents = '';
+        }
+      });
+    }
+
+    // Intercept clicks outside imagetools section while running
+    function blockNavigation(e) {
+      if (!activeOperation) return;
+      const target = e.target.closest('a[href], button[type="submit"], .nav-link, [data-bs-toggle="tab"]');
+      if (!target) return;
+      // Allow clicks inside our own imagetools section
+      if (target.closest('#imagetools, #imagetools-row2')) return;
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    document.addEventListener('click', blockNavigation, true);
+
     // ---- Image Migration ----
     loadMigrationCounts();
 
@@ -24,41 +76,101 @@
       fetch(`index.php?option=com_proclaim&task=cwmadmin.getMigrationCountsXHR&${token}=1`)
         .then(r => r.json())
         .then(data => {
-          const html = `<ul class="list-unstyled">
-          <li><strong>${strings.studies}:</strong> ${data.studies}</li>
-          <li><strong>${strings.teachers}:</strong> ${data.teachers}</li>
-          <li><strong>${strings.series}:</strong> ${data.series}</li>
-          <li><strong>${strings.total}:</strong> ${data.total}</li>
-        </ul>`;
-          document.getElementById('migration-counts').innerHTML = html;
+          migrationTotals = data;
+
+          if (data.total === 0) {
+            document.getElementById('migration-counts').innerHTML =
+              `<div class="alert alert-success mb-0"><i class="icon-checkmark me-1" aria-hidden="true"></i>${strings.migrationAllDone}</div>`;
+          } else {
+            const items = [];
+            if (data.studies > 0) items.push(`<li>${strings.migrationCountMessages.replace('%s', data.studies)}</li>`);
+            if (data.teachers > 0) items.push(`<li>${strings.migrationCountTeachers.replace('%s', data.teachers)}</li>`);
+            if (data.series > 0) items.push(`<li>${strings.migrationCountSeries.replace('%s', data.series)}</li>`);
+            document.getElementById('migration-counts').innerHTML =
+              `<ul class="list-unstyled mb-0">${items.join('')}</ul>
+             <div class="mt-2 fw-bold">${strings.total}: ${data.total}</div>`;
+          }
+
           document.getElementById('btn-start-migration').disabled = (data.total === 0);
         })
-        .catch(() => {
+        .catch((err) => {
           document.getElementById('migration-counts').innerHTML =
-            `<span class="text-danger">${strings.errorLoading}</span>`;
+            `<span class="text-danger">${strings.errorLoading}: ${err.message || err}</span>`;
         });
     }
 
     document.getElementById('btn-start-migration').addEventListener('click', function () {
       this.disabled = true;
-      document.getElementById('migration-progress').style.display = 'block';
+      activeOperation = 'migration';
+      setOperationRunning(true);
+      const progressEl = document.getElementById('migration-progress');
+      const barEl = progressEl.querySelector('.progress-bar');
+      const statusEl = document.getElementById('migration-status');
+      const reportEl = document.getElementById('migration-error-report');
+      progressEl.style.display = 'block';
+      if (reportEl) reportEl.style.display = 'none';
+      barEl.classList.add('progress-bar-striped', 'progress-bar-animated');
 
       const types = ['studies', 'teachers', 'series'];
       let typeIndex = 0;
       let totalMigrated = 0;
+      let totalErrors = 0;
+      const errorDetails = []; // Collect {type, id, title, path, error}
+      const grandTotal = migrationTotals.total;
+
+      function updateBar() {
+        const pct = grandTotal > 0 ? Math.min(100, Math.round(((totalMigrated + totalErrors) / grandTotal) * 100)) : 0;
+        barEl.style.width = `${pct}%`;
+        barEl.textContent = `${pct}%`;
+      }
+
+      function showErrorReport() {
+        if (!reportEl || errorDetails.length === 0) return;
+        let html = `<div class="alert alert-warning mt-3">
+        <h5>${strings.missingFiles} (${errorDetails.length})</h5>
+        <p class="small mb-2">${strings.missingFilesDesc}</p>
+        <div style="max-height: 300px; overflow-y: auto;">
+        <table class="table table-sm table-striped mb-0">
+          <thead><tr><th>Type</th><th>ID</th><th>Title</th><th>${strings.missingPath}</th></tr></thead>
+          <tbody>`;
+        errorDetails.forEach(e => {
+          html += `<tr><td>${e.type}</td><td>${e.id}</td><td><small>${e.title}</small></td><td><small class="text-danger">${e.path}</small></td></tr>`;
+        });
+        html += '</tbody></table></div></div>';
+        reportEl.innerHTML = html;
+        reportEl.style.display = 'block';
+      }
 
       function migrateType() {
         if (typeIndex >= types.length) {
-          document.getElementById('migration-status').innerHTML =
-            `<span class="text-success">${strings.migrationComplete} ${totalMigrated} ${strings.recordsMigrated}</span>`;
+          activeOperation = null;
+          setOperationRunning(false);
+          barEl.classList.remove('progress-bar-striped', 'progress-bar-animated');
+          barEl.style.width = '100%';
+          barEl.textContent = '100%';
+          let msg = `<span class="text-success">${strings.migrationComplete} ${totalMigrated} ${strings.recordsMigrated}</span>`;
+          if (totalErrors > 0) {
+            msg += ` <span class="text-warning">(${totalErrors} ${strings.migrationErrors})</span>`;
+          }
+          statusEl.innerHTML = msg;
+          showErrorReport();
           loadMigrationCounts();
+          loadWebPCounts();
           return;
         }
-        document.getElementById('migration-status').textContent = `${strings.migrating} ${types[typeIndex]}...`;
-        migrateBatch(types[typeIndex]);
+
+        // Skip types with zero count
+        if (migrationTotals[types[typeIndex]] === 0) {
+          typeIndex++;
+          migrateType();
+          return;
+        }
+
+        statusEl.innerHTML = `${strings.migrating} ${types[typeIndex]}... <strong>0</strong> / ${migrationTotals[types[typeIndex]]}`;
+        migrateBatch(types[typeIndex], 0);
       }
 
-      function migrateBatch(type) {
+      function migrateBatch(type, typeProcessed) {
         fetch(`index.php?option=com_proclaim&task=cwmadmin.getMigrationBatchXHR&${token}=1&type=${type}&limit=5`)
           .then(r => r.json())
           .then(data => {
@@ -67,26 +179,65 @@
               migrateType();
               return;
             }
+
+            let batchDone = 0;
+            const batchTotal = data.records.length;
+            const typeTotal = migrationTotals[type];
+
             const promises = data.records.map(record => {
-              const params = new URLSearchParams();
-              params.append('type', type);
-              params.append('id', record.id);
-              params.append('title', record.studytitle || record.teachername || record.title || '');
-              params.append('old_path', record.image_path);
-              return fetch(`index.php?option=com_proclaim&task=cwmadmin.migrateRecordXHR&${token}=1&${params}`)
+              const recordTitle = record.studytitle || record.teachername || record.title || '';
+
+              return fetch(`index.php?option=com_proclaim&task=cwmadmin.migrateRecordXHR&${token}=1&type=${type}&id=${record.id}`)
                 .then(r => r.json())
-                .then(result => { if (result.success) totalMigrated++; });
+                .then(result => {
+                  if (result.success) {
+                    totalMigrated++;
+                  } else {
+                    totalErrors++;
+                    errorDetails.push({
+                      type,
+                      id: record.id,
+                      title: recordTitle,
+                      path: result.missingPath || record.image_path || '',
+                      error: result.error || 'Unknown error'
+                    });
+                  }
+                })
+                .catch(() => {
+                  totalErrors++;
+                  errorDetails.push({
+                    type,
+                    id: record.id,
+                    title: recordTitle,
+                    path: record.image_path || '',
+                    error: 'Network error'
+                  });
+                })
+                .finally(() => {
+                  batchDone++;
+                  const displayed = Math.min(typeProcessed + batchDone, typeTotal);
+                  statusEl.innerHTML = `${strings.migrating} ${types[typeIndex]}... <strong>${displayed}</strong> / ${typeTotal}`;
+                  updateBar();
+                });
             });
+
             Promise.all(promises).then(() => {
-              document.querySelector('#migration-progress .progress-bar').style.width =
-                `${((typeIndex + 1) / types.length) * 100}%`;
-              if (data.remaining > 0) migrateBatch(type);
-              else { typeIndex++; migrateType(); }
+              const newTypeProcessed = typeProcessed + batchTotal;
+
+              // Move to next type when: no remaining, or counter exceeds total (safety cap)
+              if (data.remaining <= 0 || newTypeProcessed >= typeTotal) {
+                typeIndex++;
+                migrateType();
+              } else {
+                migrateBatch(type, newTypeProcessed);
+              }
             });
           })
           .catch(() => {
-            document.getElementById('migration-status').innerHTML =
-              `<span class="text-danger">${strings.migrationError}</span>`;
+            activeOperation = null;
+            setOperationRunning(false);
+            statusEl.innerHTML = `<span class="text-danger">${strings.migrationError}</span>`;
+            showErrorReport();
           });
       }
 
@@ -105,6 +256,11 @@
           btn.disabled = false;
           btn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${strings.scanOrphans}`;
           document.getElementById('orphan-results').style.display = 'block';
+
+          // Update step indicator
+          const stepEl = document.getElementById('orphan-step-indicator');
+          if (stepEl) stepEl.textContent = strings.orphanStep2;
+
           document.getElementById('orphan-summary').innerHTML =
             `${strings.found} <strong>${data.totals.folders}</strong> ${strings.orphanFolders} (${data.totals.size_formatted})`;
 
@@ -153,6 +309,8 @@
 
       const btn = this;
       btn.disabled = true;
+      activeOperation = 'orphan';
+      setOperationRunning(true);
       const params = new URLSearchParams();
       selected.forEach(path => params.append('paths[]', path));
 
@@ -162,10 +320,12 @@
       })
         .then(r => r.json())
         .then(data => {
+          activeOperation = null;
+          setOperationRunning(false);
           btn.disabled = false;
           document.getElementById('btn-scan-orphans').click();
         })
-        .catch(() => { btn.disabled = false; });
+        .catch(() => { activeOperation = null; setOperationRunning(false); btn.disabled = false; });
     });
 
     // ---- WebP Generation ----
@@ -175,14 +335,22 @@
       fetch(`index.php?option=com_proclaim&task=cwmadmin.getWebPCountsXHR&${token}=1`)
         .then(r => r.json())
         .then(data => {
-          const html = `<ul class="list-unstyled">
-          <li><strong>${strings.studies}:</strong> ${data.studies}</li>
-          <li><strong>${strings.teachers}:</strong> ${data.teachers}</li>
-          <li><strong>${strings.series}:</strong> ${data.series}</li>
-          <li><strong>${strings.total}:</strong> ${data.total}</li>
-        </ul>`;
-          document.getElementById('webp-counts').innerHTML = html;
-          document.getElementById('btn-start-webp').disabled = (data.total === 0);
+          webpTotals = data;
+
+          if (data.total === 0) {
+            document.getElementById('webp-counts').innerHTML =
+              `<div class="alert alert-success mb-0"><i class="icon-checkmark me-1" aria-hidden="true"></i>${strings.webpAllDone}</div>`;
+            document.getElementById('btn-start-webp').disabled = true;
+          } else {
+            const items = [];
+            if (data.studies > 0) items.push(`<li>${strings.webpCountMessages.replace('%s', data.studies)}</li>`);
+            if (data.teachers > 0) items.push(`<li>${strings.webpCountTeachers.replace('%s', data.teachers)}</li>`);
+            if (data.series > 0) items.push(`<li>${strings.webpCountSeries.replace('%s', data.series)}</li>`);
+            document.getElementById('webp-counts').innerHTML =
+              `<ul class="list-unstyled mb-0">${items.join('')}</ul>
+             <div class="mt-2 fw-bold">${strings.total}: ${data.total}</div>`;
+            document.getElementById('btn-start-webp').disabled = false;
+          }
         })
         .catch(() => {
           document.getElementById('webp-counts').innerHTML =
@@ -192,40 +360,132 @@
 
     document.getElementById('btn-start-webp').addEventListener('click', function () {
       this.disabled = true;
-      document.getElementById('webp-progress').style.display = 'block';
+      activeOperation = 'webp';
+      setOperationRunning(true);
+      const progressEl = document.getElementById('webp-progress');
+      const barEl = progressEl.querySelector('.progress-bar');
+      const statusEl = document.getElementById('webp-status');
+      progressEl.style.display = 'block';
+      barEl.classList.add('progress-bar-striped', 'progress-bar-animated');
 
       const types = ['studies', 'teachers', 'series'];
       let typeIndex = 0;
       let totalConverted = 0;
+      let totalErrors = 0;
+      const grandTotal = webpTotals.total;
+
+      function updateBar() {
+        const pct = grandTotal > 0 ? Math.min(100, Math.round(((totalConverted + totalErrors) / grandTotal) * 100)) : 0;
+        barEl.style.width = `${pct}%`;
+        barEl.textContent = `${pct}%`;
+      }
 
       function convertType() {
         if (typeIndex >= types.length) {
-          document.getElementById('webp-status').innerHTML =
-            `<span class="text-success">${strings.webpComplete} ${totalConverted} ${strings.imagesConverted}</span>`;
+          activeOperation = null;
+          setOperationRunning(false);
+          barEl.classList.remove('progress-bar-striped', 'progress-bar-animated');
+          barEl.style.width = '100%';
+          barEl.textContent = '100%';
+          let msg = `<span class="text-success">${strings.webpComplete} ${totalConverted} ${strings.imagesConverted}</span>`;
+          if (totalErrors > 0) {
+            msg += ` <span class="text-warning">(${totalErrors} ${strings.migrationErrors})</span>`;
+          }
+          statusEl.innerHTML = msg;
           loadWebPCounts();
           return;
         }
-        document.getElementById('webp-status').textContent = `${strings.converting} ${types[typeIndex]}...`;
-        convertBatch(types[typeIndex]);
+
+        // Skip types with zero count
+        if (webpTotals[types[typeIndex]] === 0) {
+          typeIndex++;
+          convertType();
+          return;
+        }
+
+        statusEl.innerHTML = `${strings.converting} ${types[typeIndex]}... <strong>0</strong> / ${webpTotals[types[typeIndex]]}`;
+        convertBatch(types[typeIndex], 0);
       }
 
-      function convertBatch(type) {
+      function convertBatch(type, typeConverted) {
         fetch(`index.php?option=com_proclaim&task=cwmadmin.migrateToWebPXHR&${token}=1&type=${type}&limit=10`)
           .then(r => r.json())
           .then(data => {
             totalConverted += data.converted;
-            document.querySelector('#webp-progress .progress-bar').style.width =
-              `${((typeIndex + 1) / types.length) * 100}%`;
-            if (data.remaining > 0) convertBatch(type);
-            else { typeIndex++; convertType(); }
+            totalErrors += (data.errors || 0);
+            const newTypeConverted = typeConverted + data.converted + (data.errors || 0);
+            const typeTotal = webpTotals[type];
+            const displayed = Math.min(newTypeConverted, typeTotal);
+            statusEl.innerHTML = `${strings.converting} ${types[typeIndex]}... <strong>${displayed}</strong> / ${typeTotal}`;
+            updateBar();
+
+            if (data.remaining > 0 && newTypeConverted < typeTotal) {
+              convertBatch(type, newTypeConverted);
+            } else {
+              typeIndex++;
+              convertType();
+            }
           })
           .catch(() => {
-            document.getElementById('webp-status').innerHTML =
-              `<span class="text-danger">${strings.webpError}</span>`;
+            activeOperation = null;
+            setOperationRunning(false);
+            statusEl.innerHTML = `<span class="text-danger">${strings.webpError}</span>`;
           });
       }
 
       convertType();
+    });
+
+    // ---- Legacy Files Report ----
+    document.getElementById('btn-scan-legacy').addEventListener('click', function () {
+      const btn = this;
+      btn.disabled = true;
+      btn.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${strings.scanning}`;
+      const resultsEl = document.getElementById('legacy-results');
+
+      fetch(`index.php?option=com_proclaim&task=cwmadmin.getLegacyFolderReportXHR&${token}=1`)
+        .then(r => r.json())
+        .then(data => {
+          btn.disabled = false;
+          btn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${strings.scanLegacy}`;
+          resultsEl.style.display = 'block';
+
+          if (data.total_files === 0) {
+            resultsEl.innerHTML = `<div class="alert alert-success"><i class="icon-checkmark me-1" aria-hidden="true"></i>${strings.legacyNoFiles}</div>`;
+            return;
+          }
+
+          const summary = strings.legacyFilesFound
+            .replace('%s', data.total_files)
+            .replace('%s', formatBytes(data.total_size));
+
+          let html = `<div class="alert alert-warning"><i class="icon-warning me-1" aria-hidden="true"></i>${summary}</div>`;
+          html += '<div style="max-height: 400px; overflow-y: auto;">';
+          html += `<table class="table table-sm table-striped">
+          <thead><tr><th>${strings.folder}</th><th>${strings.files}</th><th>${strings.size}</th><th>${strings.filenames}</th></tr></thead><tbody>`;
+
+          data.folders.forEach(folder => {
+            const names = folder.filenames.length <= 5
+              ? folder.filenames.join(', ')
+              : folder.filenames.slice(0, 5).join(', ') + ` ... +${folder.filenames.length - 5} more`;
+            html += `<tr>
+            <td><small>${folder.path}</small></td>
+            <td>${folder.files}</td>
+            <td>${formatBytes(folder.size)}</td>
+            <td><small class="text-muted">${names}</small></td>
+          </tr>`;
+          });
+
+          html += '</tbody></table></div>';
+          html += '<p class="small text-muted mt-2">These files can be removed manually after verifying the migration completed successfully.</p>';
+          resultsEl.innerHTML = html;
+        })
+        .catch(() => {
+          btn.disabled = false;
+          btn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${strings.scanLegacy}`;
+          resultsEl.style.display = 'block';
+          resultsEl.innerHTML = `<span class="text-danger">${strings.errorLoading}</span>`;
+        });
     });
 
     // ---- Utility ----
