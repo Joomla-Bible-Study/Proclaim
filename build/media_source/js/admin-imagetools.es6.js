@@ -499,8 +499,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function convertBatch(type, typeConverted) {
       fetch(`index.php?option=com_proclaim&task=cwmadmin.migrateToWebPXHR&${token}=1&type=${type}&limit=10`)
-        .then(r => r.json())
-        .then(data => {
+        .then(r => {
+          if (!r.ok) throw new Error(`HTTP ${r.status}: ${r.statusText}`);
+          return r.text();
+        })
+        .then(text => {
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch (e) {
+            // PHP returned non-JSON (fatal error, HTML error page)
+            throw new Error(`Invalid response: ${text.substring(0, 200)}`);
+          }
+
+          // PHP-level error (exception caught in controller)
+          if (data.error) {
+            statusEl.innerHTML = `<span class="text-danger">${strings.webpError}: ${data.error}</span>`;
+            // Still continue to next type — don't abort entirely
+            typeIndex++;
+            convertType();
+            return;
+          }
+
           totalConverted += data.converted;
           totalErrors += (data.errors || 0);
           const newTypeConverted = typeConverted + data.converted + (data.errors || 0);
@@ -516,10 +536,10 @@ document.addEventListener('DOMContentLoaded', () => {
             convertType();
           }
         })
-        .catch(() => {
+        .catch(err => {
           activeOperation = null;
           setOperationRunning(false);
-          statusEl.innerHTML = `<span class="text-danger">${strings.webpError}</span>`;
+          statusEl.innerHTML = `<span class="text-danger">${strings.webpError}: ${err.message || err}</span>`;
         });
     }
 

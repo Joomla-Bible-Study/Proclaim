@@ -821,7 +821,7 @@ class CwmImageMigration
     public static function migrateToWebP(string $type, int $limit = 10): array
     {
         $baseDir = JPATH_ROOT . '/images/biblestudy/' . $type;
-        $result  = ['converted' => 0, 'errors' => 0, 'remaining' => 0];
+        $result  = ['converted' => 0, 'errors' => 0, 'remaining' => 0, 'errorFiles' => []];
 
         if (!is_dir($baseDir) || !\function_exists('imagewebp')) {
             return $result;
@@ -854,6 +854,7 @@ class CwmImageMigration
                     $result['converted']++;
                 } catch (\Exception $e) {
                     $result['errors']++;
+                    $result['errorFiles'][] = self::makeRelative($file) . ': ' . $e->getMessage();
                 }
 
                 $processed++;
