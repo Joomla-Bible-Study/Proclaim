@@ -23,7 +23,6 @@ use CWM\Component\Proclaim\Site\Helper\Cwmpodcastsubscribe;
 use CWM\Component\Proclaim\Site\Helper\Cwmrelatedstudies;
 use CWM\Component\Proclaim\Site\Helper\Cwmshowscripture;
 use CWM\Component\Proclaim\Site\Model\CwmsermonModel;
-use Joomla\CMS\Event\Content\ContentPrepareEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -357,39 +356,30 @@ class HtmlView extends BaseHtmlView
         }
 
         PluginHelper::importPlugin('content');
-        $dispatcher    = $app->getDispatcher();
         $article       = new \stdClass();
         $article->text = $this->item->scripture1;
-        $dispatcher->dispatch('onContentPrepare', new ContentPrepareEvent('onContentPrepare', [
-            'context' => 'com_proclaim.sermons',
-            'subject' => $article,
-            'params'  => $this->item->params,
-            'page'    => 0,
-        ]));
+        $app->triggerEvent(
+            'onContentPrepare',
+            ['com_proclaim.sermons', &$article, &$this->item->params, null]
+        );
         $this->item->scripture1 = $article->text;
         $article->text          = $this->item->scripture2;
-        $dispatcher->dispatch('onContentPrepare', new ContentPrepareEvent('onContentPrepare', [
-            'context' => 'com_proclaim.sermons',
-            'subject' => $article,
-            'params'  => $this->item->params,
-            'page'    => 0,
-        ]));
+        $app->triggerEvent(
+            'onContentPrepare',
+            ['com_proclaim.sermons', &$article, &$this->item->params, null]
+        );
         $this->item->scripture2 = $article->text;
         $article->text          = $this->item->studyintro;
-        $dispatcher->dispatch('onContentPrepare', new ContentPrepareEvent('onContentPrepare', [
-            'context' => 'com_proclaim.sermons',
-            'subject' => $article,
-            'params'  => $this->item->params,
-            'page'    => 0,
-        ]));
+        $app->triggerEvent(
+            'onContentPrepare',
+            ['com_proclaim.sermons', &$article, &$this->item->params, null]
+        );
         $this->item->studyintro = $article->text;
         $article->text          = $this->item->secondary_reference;
-        $dispatcher->dispatch('onContentPrepare', new ContentPrepareEvent('onContentPrepare', [
-            'context' => 'com_proclaim.sermons',
-            'subject' => $article,
-            'params'  => $this->item->params,
-            'page'    => 0,
-        ]));
+        $app->triggerEvent(
+            'onContentPrepare',
+            ['com_proclaim.sermons', &$article, &$this->item->params, null]
+        );
         $this->item->secondary_reference = $article->text;
 
         // Get the podcast subscription
@@ -448,12 +438,10 @@ class HtmlView extends BaseHtmlView
             }
 
             $limitstart = (int)$app->getInput()->get('limitstart', 0, 'int');
-            $dispatcher->dispatch('onContentPrepare', new ContentPrepareEvent('onContentPrepare', [
-                'context' => 'com_proclaim.sermon',
-                'subject' => $article,
-                'params'  => $this->item->params,
-                'page'    => $limitstart,
-            ]));
+            $app->triggerEvent(
+                'onContentPrepare',
+                ['com_proclaim.sermon', &$article, &$this->item->params, $limitstart]
+            );
             $article->studytext    = $article->text;
             $this->item->studytext = $article->text;
         }
