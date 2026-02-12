@@ -263,10 +263,24 @@ class CwmImageMigration
         }
 
         // Create new thumbnail using Cwmthumbnail
-        $result = Cwmthumbnail::create($sourceImage, $newFolder, $thumbSize, $title);
+        try {
+            $result = Cwmthumbnail::create($sourceImage, $newFolder, $thumbSize, $title);
+        } catch (\Throwable $e) {
+            return [
+                'success'     => false,
+                'newPath'     => null,
+                'error'       => 'Thumbnail error: ' . $e->getMessage(),
+                'missingPath' => $cleanPath,
+            ];
+        }
 
         if ($result === false) {
-            return ['success' => false, 'newPath' => null, 'error' => 'Failed to create thumbnail'];
+            return [
+                'success'     => false,
+                'newPath'     => null,
+                'error'       => 'Failed to create thumbnail (file copy or GD init failed)',
+                'missingPath' => $cleanPath,
+            ];
         }
 
         // Update database
