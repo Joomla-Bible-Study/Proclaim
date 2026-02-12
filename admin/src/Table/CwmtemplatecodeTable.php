@@ -263,7 +263,7 @@ class CwmtemplatecodeTable extends Table
             return false;
         }
 
-        if (!$this->_rules) {
+        if (!$this->getRules()) {
             $this->setRules(
                 '{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}'
             );

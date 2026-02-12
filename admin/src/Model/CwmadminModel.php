@@ -26,6 +26,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Schema\ChangeSet;
 use Joomla\CMS\Session\Session;
+use Joomla\CMS\Table\Extension as ExtensionTable;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Versioning\VersionableModelTrait;
 use Joomla\Registry\Registry;
@@ -338,7 +339,8 @@ class CwmadminModel extends AdminModel
      */
     public function fixUpdateVersion(): mixed
     {
-        $table = Table::getInstance('Extension');
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $table = new ExtensionTable($db);
         $table->load($this->getExtentionId());
         $cache         = new Registry($table->manifest_cache);
         $updateVersion = $cache->get('version');
@@ -386,7 +388,8 @@ class CwmadminModel extends AdminModel
      */
     public function fixDefaultTextFilters(): mixed
     {
-        $table = Table::getInstance('Extension');
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $table = new ExtensionTable($db);
         $table->load($table->find(['name' => 'com_proclaim']));
 
         // Check for empty $config and non-empty content filters
@@ -429,7 +432,8 @@ class CwmadminModel extends AdminModel
      */
     public function getUpdateVersion(): mixed
     {
-        $table = Table::getInstance('Extension');
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $table = new ExtensionTable($db);
         $table->load($this->getExtentionId());
 
         return (new Registry($table->manifest_cache))->get('version');
@@ -482,7 +486,7 @@ class CwmadminModel extends AdminModel
 
         $db   = Factory::getContainer()->get('DatabaseDriver');
         $msg  = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
-        $post = $_POST['jform'];
+        $post = Factory::getApplication()->getInput()->post->get('jform', [], 'array');
         $reg  = new Registry();
         $reg->loadArray($post['params']);
         $from    = $reg->get('mtFrom', 'x');

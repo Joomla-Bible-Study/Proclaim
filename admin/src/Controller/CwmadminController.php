@@ -109,7 +109,7 @@ class CwmadminController extends FormController
 
         $db   = Factory::getContainer()->get('DatabaseDriver');
         $msg  = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
-        $post = $this->input->post->get('jform', [], 'array');
+        $post = $this->getInput()->post->get('jform', [], 'array');
         $reg  = new Registry();
         $reg->loadArray($post['params']);
         $from = $reg->get('from', 'x');
@@ -165,7 +165,7 @@ class CwmadminController extends FormController
         }
 
         $db   = Factory::getContainer()->get('DatabaseDriver');
-        $post = $this->input->post->get('jform', [], 'array');
+        $post = $this->getInput()->post->get('jform', [], 'array');
         $reg  = new Registry();
         $reg->loadArray($post['params']);
         $from  = $reg->get('pFrom', 'x');
@@ -224,7 +224,7 @@ class CwmadminController extends FormController
             return;
         }
 
-        $post    = $this->input->post->get('jform', [], 'raw');
+        $post    = $this->getInput()->post->get('jform', [], 'raw');
         $decoded = json_decode($post['mediaimage'], true, 512, JSON_THROW_ON_ERROR);
         $db      = Factory::getContainer()->get('DatabaseDriver');
         $query   = $db->getQuery(true);
@@ -930,21 +930,22 @@ class CwmadminController extends FormController
         }
 
         // Name of an array 'jform' must match 'control' => 'jform' line in the model code
-        $data = $this->input->post->get('jform', [], 'array');
+        $data = $this->getInput()->post->get('jform', [], 'array');
 
         // This is validate() from the FormModel class, not the Form class
         // FormModel::validate() calls both Form::filter() and Form::validate() methods
         $validData = $model->validate($form, $data);
 
         if ($validData === false) {
-            // @todo getErrors() is used by Joomla's FormModel::validate() internally; remove when Joomla drops it
-            $errors = $model->getErrors();
+            // Get validation errors from the form directly (Joomla 6 compatible)
+            $form   = $model->getForm();
+            $errors = $form ? $form->getErrors() : [];
 
             foreach ($errors as $error) {
                 if ($error instanceof \Exception) {
                     $app->enqueueMessage($error->getMessage(), 'warning');
                 } else {
-                    $app->enqueueMessage($error, 'warning');
+                    $app->enqueueMessage((string) $error, 'warning');
                 }
             }
 

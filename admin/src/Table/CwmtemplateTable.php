@@ -254,7 +254,7 @@ class CwmtemplateTable extends Table
     public function store($updateNulls = false): bool
     {
         // Set default rules if not already set
-        if (!$this->_rules) {
+        if (!$this->getRules()) {
             $this->setRules(
                 '{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}'
             );

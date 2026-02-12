@@ -23,6 +23,7 @@ use CWM\Component\Proclaim\Site\Helper\Cwmpodcastsubscribe;
 use CWM\Component\Proclaim\Site\Helper\Cwmrelatedstudies;
 use CWM\Component\Proclaim\Site\Helper\Cwmshowscripture;
 use CWM\Component\Proclaim\Site\Model\CwmsermonModel;
+use Joomla\CMS\Event\Content\ContentPrepareEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -279,9 +280,7 @@ class HtmlView extends BaseHtmlView
 
         // Check the view access to the article (the model has already computed the values).
         if (
-            $item->params->get('access-view') !== true && (($item->params->get('show_noauth') !== true && $user->get(
-                'guest'
-            )))
+            $item->params->get('access-view') !== true && (($item->params->get('show_noauth') !== true && $user->guest))
         ) {
             $app->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
         }
@@ -358,33 +357,40 @@ class HtmlView extends BaseHtmlView
         }
 
         PluginHelper::importPlugin('content');
+        $dispatcher    = $app->getDispatcher();
         $article       = new \stdClass();
         $article->text = $this->item->scripture1;
-        $app->triggerEvent(
-            'onContentPrepare',
-            ['com_proclaim.sermons', & $article, & $this->item->params, null]
-        );
+        $dispatcher->dispatch('onContentPrepare', new ContentPrepareEvent('onContentPrepare', [
+            'context' => 'com_proclaim.sermons',
+            'subject' => $article,
+            'params'  => $this->item->params,
+            'page'    => 0,
+        ]));
         $this->item->scripture1 = $article->text;
         $article->text          = $this->item->scripture2;
-        $app->triggerEvent(
-            'onContentPrepare',
-            ['com_proclaim.sermons', & $article, & $this->item->params, null]
-        );
+        $dispatcher->dispatch('onContentPrepare', new ContentPrepareEvent('onContentPrepare', [
+            'context' => 'com_proclaim.sermons',
+            'subject' => $article,
+            'params'  => $this->item->params,
+            'page'    => 0,
+        ]));
         $this->item->scripture2 = $article->text;
         $article->text          = $this->item->studyintro;
-        $app->triggerEvent(
-            'onContentPrepare',
-            ['com_proclaim.sermons', & $article, & $this->item->params, null]
-        );
+        $dispatcher->dispatch('onContentPrepare', new ContentPrepareEvent('onContentPrepare', [
+            'context' => 'com_proclaim.sermons',
+            'subject' => $article,
+            'params'  => $this->item->params,
+            'page'    => 0,
+        ]));
         $this->item->studyintro = $article->text;
         $article->text          = $this->item->secondary_reference;
-        $app->triggerEvent(
-            'onContentPrepare',
-            ['com_proclaim.sermons', & $article, & $this->item->params, null]
-        );
+        $dispatcher->dispatch('onContentPrepare', new ContentPrepareEvent('onContentPrepare', [
+            'context' => 'com_proclaim.sermons',
+            'subject' => $article,
+            'params'  => $this->item->params,
+            'page'    => 0,
+        ]));
         $this->item->secondary_reference = $article->text;
-        $this->addHelperPath(JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers');
-        $this->loadHelper('params');
 
         // Get the podcast subscription
         HTMLHelper::_('stylesheet', 'media/css/podcast.css');
@@ -441,11 +447,13 @@ class HtmlView extends BaseHtmlView
                     break;
             }
 
-            $limitstart = (int)$app->input->get('limitstart', 'int');
-            $app->triggerEvent(
-                'onContentPrepare',
-                ['com_proclaim.sermon', & $article, & $this->item->params, $limitstart]
-            );
+            $limitstart = (int)$app->getInput()->get('limitstart', 0, 'int');
+            $dispatcher->dispatch('onContentPrepare', new ContentPrepareEvent('onContentPrepare', [
+                'context' => 'com_proclaim.sermon',
+                'subject' => $article,
+                'params'  => $this->item->params,
+                'page'    => $limitstart,
+            ]));
             $article->studytext    = $article->text;
             $this->item->studytext = $article->text;
         }

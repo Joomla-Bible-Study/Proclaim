@@ -128,7 +128,7 @@ class CwmmessageController extends FormController
         /** @var \CWM\Component\Proclaim\Administrator\Model\CwmtopicModel $model */
         $model = $this->getModel('Cwmtopic');
         $app   = Factory::getApplication();
-        $data  = $this->input->post->get('jform', [], 'array');
+        $data  = $this->getInput()->post->get('jform', [], 'array');
 
         // Get Tags - use topic_ids field (hidden input synced from fancy select)
         // Falls back to topics for backward compatibility
@@ -229,7 +229,7 @@ class CwmmessageController extends FormController
     {
         $recordId = (int)isset($data[$key]) ? $data[$key] : 0;
         $user     = Factory::getApplication()->getIdentity();
-        $userId   = $user->get('id');
+        $userId   = $user->id;
 
         // Check general edit permission first.
         if ($user->authorise('core.edit', 'com_proclaim.message.' . $recordId)) {

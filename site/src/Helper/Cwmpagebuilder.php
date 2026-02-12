@@ -15,6 +15,10 @@ namespace CWM\Component\Proclaim\Site\Helper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Date\Date;
+use Joomla\CMS\Event\Content\AfterDisplayEvent;
+use Joomla\CMS\Event\Content\AfterTitleEvent;
+use Joomla\CMS\Event\Content\BeforeDisplayEvent;
+use Joomla\CMS\Event\Content\ContentPrepareEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
@@ -450,26 +454,30 @@ class Cwmpagebuilder
         $offset = 0;
         PluginHelper::importPlugin('content');
 
-        // Run content plugins
-        $dispatcher            = Factory::getApplication();
+        // Run content plugins via the event dispatcher (Joomla 5/6 compatible)
+        $dispatcher            = Factory::getApplication()->getDispatcher();
         $contentEventArguments = [
             'context' => 'com_proclaim.sermon',
-            'subject' => &$item,
-            'params'  => &$params,
+            'subject' => $item,
+            'params'  => $params,
             'page'    => $offset,
         ];
 
-        $dispatcher->triggerEvent('onContentPrepare', $contentEventArguments);
+        $dispatcher->dispatch('onContentPrepare', new ContentPrepareEvent('onContentPrepare', $contentEventArguments));
 
-        $item->event                        = new \stdClass();
-        $results                            = $dispatcher->triggerEvent('onContentAfterTitle', $contentEventArguments);
-        $item->event->afterDisplayTitle     = trim(implode("\n", $results));
+        $item->event = new \stdClass();
 
-        $results                            = $dispatcher->triggerEvent('onContentBeforeDisplay', $contentEventArguments);
-        $item->event->beforeDisplayContent  = trim(implode("\n", $results));
+        $event = new AfterTitleEvent('onContentAfterTitle', $contentEventArguments);
+        $dispatcher->dispatch('onContentAfterTitle', $event);
+        $item->event->afterDisplayTitle = trim(implode("\n", $event->getResult()));
 
-        $results                            = $dispatcher->triggerEvent('onContentAfterDisplay', $contentEventArguments);
-        $item->event->afterDisplayContent   = trim(implode("\n", $results));
+        $event = new BeforeDisplayEvent('onContentBeforeDisplay', $contentEventArguments);
+        $dispatcher->dispatch('onContentBeforeDisplay', $event);
+        $item->event->beforeDisplayContent = trim(implode("\n", $event->getResult()));
+
+        $event = new AfterDisplayEvent('onContentAfterDisplay', $contentEventArguments);
+        $dispatcher->dispatch('onContentAfterDisplay', $event);
+        $item->event->afterDisplayContent = trim(implode("\n", $event->getResult()));
 
         return $item;
     }
