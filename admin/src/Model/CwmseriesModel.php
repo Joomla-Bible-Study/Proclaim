@@ -86,7 +86,7 @@ class CwmseriesModel extends ListModel
         $app   = Factory::getApplication();
         $input = $app->getInput();
 
-        $forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
+        $forcedLanguage = $app->getInput()->get('forcedLanguage', '', 'cmd');
 
         // Adjust the context to support modal layouts.
         if ($layout = $input->get('layout')) {

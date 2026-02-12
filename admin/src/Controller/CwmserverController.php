@@ -91,7 +91,7 @@ class CwmserverController extends FormController
     public function setType(): void
     {
         $app   = Factory::getApplication();
-        $input = $app->input;
+        $input = $app->getInput();
 
         $data  = $input->get('jform', [], 'post');
         $sname = $data['server_name'] ?? '';
@@ -135,8 +135,8 @@ class CwmserverController extends FormController
         }
 
         $app       = Factory::getApplication();
-        $addonType = $app->input->getString('addon', '');
-        $action    = $app->input->getString('action', '');
+        $addonType = $app->getInput()->getString('addon', '');
+        $action    = $app->getInput()->getString('action', '');
 
         if (empty($addonType)) {
             CWMAddon::outputJson(['success' => false, 'error' => 'No addon type specified']);

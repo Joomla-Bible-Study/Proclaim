@@ -234,7 +234,7 @@ class HtmlView extends BaseHtmlView
 
         // Stats are now loaded via AJAX for better page load performance
         $this->playerstats = '';
-        $this->assets      = $app->input->get('checkassets', null, 'get');
+        $this->assets      = $app->getInput()->get('checkassets', null, 'get');
         $this->popups      = '';
 
         // Get the list of backup files

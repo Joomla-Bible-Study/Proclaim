@@ -268,7 +268,7 @@ class CwmmessageModel extends AdminModel
         /** @var Registry $params */
         $app    = Factory::getApplication();
         $params = Cwmparams::getAdmin()->params;
-        $input  = $app->input;
+        $input  = $app->getInput();
         $image  = HTMLHelper::cleanImageURL((string)$data['image']);
 
         $data['image'] = $image->url;
@@ -390,8 +390,8 @@ class CwmmessageModel extends AdminModel
 
         // Get ID of the article from input, for frontend, we use a_id while backend uses id
         $messageIdFromInput = $app->isClient('site')
-            ? $app->input->getInt('a_id', 0)
-            : $app->input->getInt('id', 0);
+            ? $app->getInput()->getInt('a_id', 0)
+            : $app->getInput()->getInt('id', 0);
 
         // On edit article, we get ID of article from article.id state, but on save, we use data from input
         $id = (int)$this->getState('message.id', $messageIdFromInput);

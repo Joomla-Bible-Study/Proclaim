@@ -958,7 +958,7 @@ class CwmmediafileModel extends AdminModel
     protected function populateState(): void
     {
         $app   = Factory::getApplication('administrator');
-        $input = $app->input;
+        $input = $app->getInput();
 
         // Load the Admin settings
         $admin    = Cwmparams::getAdmin();

@@ -40,14 +40,14 @@ $wa->useScript('core')
 	}"
     );
 
-$function  = $app->input->getCmd('function', 'jSelectType');
-$editor    = $app->input->getCmd('editor', '');
+$function  = $app->getInput()->getCmd('function', 'jSelectType');
+$editor    = $app->getInput()->getCmd('editor', '');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $onclick   = $this->escape($function);
 $multilang = Multilanguage::isEnabled();
 
-$this->recordId = $app->input->getInt('recordId');
+$this->recordId = $app->getInput()->getInt('recordId');
 
 if (!empty($editor)) {
     // This view is used also in com_menus. Load the xtd script only if the editor is set!
@@ -150,7 +150,7 @@ if (!empty($editor)) {
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="boxchecked" value="0"/>
         <input type="hidden" name="forcedLanguage" value="<?php
-        echo $app->input->get('forcedLanguage', '', 'CMD'); ?>">
+        echo $app->getInput()->get('forcedLanguage', '', 'CMD'); ?>">
         <?php
         echo HTMLHelper::_('form.token'); ?>
     </form>

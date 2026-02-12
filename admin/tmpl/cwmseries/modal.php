@@ -37,8 +37,8 @@ $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('core')
     ->useScript('com_proclaim.cwmadmin-series-modal');
 
-$function  = $app->input->getCmd('function', 'jSelectSeries');
-$editor    = $app->input->getCmd('editor', '');
+$function  = $app->getInput()->getCmd('function', 'jSelectSeries');
+$editor    = $app->getInput()->getCmd('editor', '');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $onclick   = $this->escape($function);
@@ -224,7 +224,7 @@ endforeach; ?>
         <input type="hidden" name="filter_order_Dir" value="<?php
         echo $listDirn; ?>"/>
         <input type="hidden" name="forcedLanguage" value="<?php
-        echo $app->input->get('forcedLanguage', '', 'CMD'); ?>">
+        echo $app->getInput()->get('forcedLanguage', '', 'CMD'); ?>">
         <?php
         echo HTMLHelper::_('form.token'); ?>
     </div>
