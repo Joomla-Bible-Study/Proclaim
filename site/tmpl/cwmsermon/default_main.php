@@ -147,7 +147,13 @@ if ($isPrint) {
 ?>
     <hr/> <?php
 
+// Show studytext here only if NOT configured in the Layout Editor (backward compat)
+if (
+    !isset($this->item->params)
+    || (int) $this->item->params->get('dstudytextrow', 0) === 0
+) {
     echo $this->item->studytext;
+}
 
 ?>
 <?php
