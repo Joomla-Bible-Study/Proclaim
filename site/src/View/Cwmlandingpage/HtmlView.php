@@ -153,7 +153,7 @@ class HtmlView extends BaseHtmlView
         }
     }
 JS;
-        $document->addScriptDeclaration($js);
+        $document->getWebAssetManager()->addInlineScript($js);
 
         parent::display($tpl);
     }

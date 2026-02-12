@@ -22,9 +22,6 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Factory;
 
-HTMLHelper::_('behavior.framework', true);
-HTMLHelper::_('formbehavior.chosen', 'select');
-
 $input     = Factory::getApplication()->getInput();
 $function  = $input->getCmd('function', 'jSelectServer');
 $listOrder = $this->escape($this->state->get('list.ordering'));

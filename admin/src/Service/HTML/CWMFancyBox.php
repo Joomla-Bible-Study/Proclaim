@@ -49,21 +49,19 @@ class CWMFancyBox
         }
 
         try {
-            $document = Factory::getApplication()->getDocument();
+            $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+            $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
 
-            // Load Fancybox UMD bundle (sets window.Fancybox)
-            $document->addScript(
+            // Fancybox vendor UMD bundle (non-standard path, WAM can't auto-resolve)
+            $wa->registerAndUseScript(
+                'com_proclaim.fancybox-vendor',
                 'media/com_proclaim/fancybox/fancybox.umd.js',
                 [],
                 ['defer' => true]
             );
 
-            // Load our custom handler script
-            $document->addScript(
-                'media/com_proclaim/js/fancybox.min.js',
-                [],
-                ['defer' => true]
-            );
+            // Custom handler script (already registered in joomla.asset.json)
+            $wa->useScript('com_proclaim.fancybox');
         } catch (\Exception $e) {
             return;
         }
@@ -85,13 +83,17 @@ class CWMFancyBox
     public static function loadCss(bool $option = false): void
     {
         try {
-            $document = Factory::getApplication()->getDocument();
+            $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+            $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
 
-            // Load core Fancybox CSS via addStylesheet (literal path, no auto css/ prefix)
-            $document->addStyleSheet('media/com_proclaim/fancybox/fancybox.min.css');
+            // Fancybox vendor CSS (non-standard path, WAM can't auto-resolve)
+            $wa->registerAndUseStyle(
+                'com_proclaim.fancybox-vendor-css',
+                'media/com_proclaim/fancybox/fancybox.min.css'
+            );
 
-            // Load our custom overrides via WebAssetManager (in media/css/, resolves correctly)
-            $document->getWebAssetManager()->useStyle('com_proclaim.cwm-fancybox');
+            // Custom overrides (already registered in joomla.asset.json)
+            $wa->useStyle('com_proclaim.cwm-fancybox');
         } catch (\Exception $e) {
             return;
         }

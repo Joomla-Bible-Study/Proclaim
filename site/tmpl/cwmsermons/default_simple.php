@@ -17,12 +17,7 @@
 /** @var CWM\Component\Proclaim\Site\View\Cwmsermons\HtmlView $this */
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-
-HTMLHelper::_('dropdown.init');
-HTMLHelper::_('behavior.multiselect');
-HTMLHelper::_('formbehavior.chosen', 'select');
 
 $app       = Factory::getApplication();
 $user      = $app->getIdentity();
