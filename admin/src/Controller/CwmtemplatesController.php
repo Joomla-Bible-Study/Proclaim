@@ -63,7 +63,7 @@ class CwmtemplatesController extends AdminController
 
         set_time_limit(300);
 
-        $userfile = $this->input->files->get('template_import');
+        $userfile = $this->getInput()->files->get('template_import');
         $app      = Factory::getApplication();
         $tc       = 0;
 

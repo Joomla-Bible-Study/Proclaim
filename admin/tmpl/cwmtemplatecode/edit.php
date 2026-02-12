@@ -23,7 +23,7 @@ use Joomla\CMS\Router\Route;
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmtemplatecode\HtmlView $this */
 
 $app   = Factory::getApplication();
-$input = $app->input;
+$input = $app->getInput();
 
 // Set up defaults
 if ($input->getInt('a_id')) {

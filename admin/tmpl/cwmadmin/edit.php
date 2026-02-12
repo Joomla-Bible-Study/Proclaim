@@ -43,7 +43,7 @@ Text::script('JBS_ADM_THUMBNAIL_RESIZE_CONFIRM');
 Text::script('JGLOBAL_VALIDATION_FORM_FAILED');
 
 $app   = Factory::getApplication();
-$input = $app->input;
+$input = $app->getInput();
 
 $this->useCoreUI = true;
 ?>

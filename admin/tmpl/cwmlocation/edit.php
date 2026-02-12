@@ -45,7 +45,7 @@ $wa->useScript('keepalive')
 $params = $this->state->get('params');
 $params = $params->toArray();
 $app    = Factory::getApplication();
-$input  = $app->input;
+$input  = $app->getInput();
 ?>
 <form action="<?php
 echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item->id); ?>"

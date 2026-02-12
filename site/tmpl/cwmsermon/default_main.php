@@ -25,8 +25,6 @@ $params  = $this->item->params;
 $user    = Factory::getApplication()->getIdentity();
 $canEdit = $params->get('access-edit');
 
-$this->loadHelper('title');
-$this->loadHelper('teacher');
 $row     = $this->item;
 $isPrint = !empty($this->print);
 ?>

@@ -14,11 +14,11 @@ namespace CWM\Component\Proclaim\Site\Controller;
 use CWM\Component\Proclaim\Administrator\Helper\CwmnotificationHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmdownload;
 use CWM\Component\Proclaim\Site\Model\CwmsermonModel;
+use Joomla\CMS\Captcha\Captcha;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Input\Input;
@@ -180,17 +180,27 @@ class CwmsermonController extends FormController
             $params->loadString($model->_template[0]->params);
         }
 
-        // Check captcha if enabled
+        // Check captcha if enabled (Joomla 5/6 compatible Captcha API)
         if ($params->get('use_captcha') > 0) {
-            PluginHelper::importPlugin('captcha');
-            $captchaResponse = $input->get('recaptcha_response_field', '', 'string');
-            $res             = $app->triggerEvent('onCheckAnswer', [$captchaResponse]);
+            $captchaPlugin = $params->get('captcha', $app->get('captcha', ''));
 
-            if (empty($res[0])) {
-                $app->enqueueMessage(Text::_('JBS_STY_INCORRECT_KEY'), 'error');
-                $this->redirectBack($input, $t);
+            if ($captchaPlugin) {
+                try {
+                    $captcha         = Captcha::getInstance($captchaPlugin);
+                    $captchaResponse = $input->get('recaptcha_response_field', '', 'string');
 
-                return;
+                    if (!$captcha->checkAnswer($captchaResponse)) {
+                        $app->enqueueMessage(Text::_('JBS_STY_INCORRECT_KEY'), 'error');
+                        $this->redirectBack($input, $t);
+
+                        return;
+                    }
+                } catch (\RuntimeException $e) {
+                    $app->enqueueMessage(Text::_('JBS_STY_INCORRECT_KEY'), 'error');
+                    $this->redirectBack($input, $t);
+
+                    return;
+                }
             }
         }
 
@@ -398,7 +408,7 @@ class CwmsermonController extends FormController
         $this->input = Factory::getApplication()->getInput();
 
         // Need to override the parent method completely.
-        $tmpl   = $this->input->get('tmpl');
+        $tmpl   = $this->getInput()->get('tmpl');
         $append = '';
 
         // Setup redirect info.

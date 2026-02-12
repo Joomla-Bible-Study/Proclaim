@@ -16,9 +16,9 @@ namespace CWM\Component\Proclaim\Site\Controller;
 
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Input\Input;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
+use Joomla\Input\Input;
 
 /**
  * Component Controller
@@ -40,12 +40,12 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
      */
     public function __construct($config = [], ?MVCFactoryInterface $factory = null, $app = null, $input = null)
     {
-        // Contact frontpage Editor contacts proxying.
-        $this->input = Factory::getApplication()->getInput();
+        // Get input early to check view before parent construction.
+        $appInput = $input ?? Factory::getApplication()->getInput();
 
-        if ($this->input->get('view') === 'cwmlandingpage' && $this->input->get('layout') === 'modal') {
+        if ($appInput->get('view') === 'cwmlandingpage' && $appInput->get('layout') === 'modal') {
             $config['base_path'] = JPATH_ADMINISTRATOR . '/components';
-        } elseif ($this->input->get('view') === 'cwmsermons' && $this->input->get('layout') === 'modal') {
+        } elseif ($appInput->get('view') === 'cwmsermons' && $appInput->get('layout') === 'modal') {
             $config['base_path'] = JPATH_ADMINISTRATOR . '/components';
         }
 
@@ -72,25 +72,26 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
         Note, we are using a_id to avoid collisions with the router and the return page.
         Frontend is a bit messier than the backend.
         */
-        $id    = $this->input->getInt('a_id');
-        $vName = $this->input->getCmd('view', 'cwmlandingpage');
-        $this->input->set('view', $vName);
+        $input = $this->getInput();
+        $id    = $input->getInt('a_id');
+        $vName = $input->getCmd('view', 'cwmlandingpage');
+        $input->set('view', $vName);
 
-        $user = $this->app->getIdentity();
+        $user = $this->getApplication()->getIdentity();
 
         if (
             $vName === 'cwmpopup'
-            || $user->get('id')
-            || ($this->input->getMethod() === 'POST'
+            || $user->id
+            || ($input->getMethod() === 'POST'
                 && str_contains($vName, 'form'))
         ) {
             $cachable = false;
         }
 
         // Attempt to change MySQL for an error in a large select
-        $t = $this->input->get('t', '1', 'int');
+        $t = $input->get('t', '1', 'int');
 
-        $this->input->set('t', $t);
+        $input->set('t', $t);
 
         $safeurlparams = [
             'id'               => 'INT',

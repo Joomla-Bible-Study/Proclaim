@@ -231,12 +231,12 @@ class CwmtemplatecodeModel extends AdminModel
         if (empty($table->id)) {
             // Set the values for a new record
             if (empty($table->created_by)) {
-                $table->created_by = $user->get('id');
+                $table->created_by = $user->id;
             }
         } else {
             // Set the values for existing records
             $table->modified    = $date->toSql();
-            $table->modified_by = $user->get('id');
+            $table->modified_by = $user->id;
         }
     }
 }

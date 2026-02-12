@@ -320,7 +320,7 @@ class CwmmessageModel extends AdminModel
         /** @var Registry $params */
         $app    = Factory::getApplication();
         $params = Cwmparams::getAdmin()->params;
-        $input  = $app->input;
+        $input  = $app->getInput();
         $image  = HTMLHelper::cleanImageURL((string)$data['image']);
 
         // Extract scriptures subform data before table binding strips it
@@ -528,8 +528,8 @@ class CwmmessageModel extends AdminModel
 
         // Get ID of the article from input, for frontend, we use a_id while backend uses id
         $messageIdFromInput = $app->isClient('site')
-            ? $app->input->getInt('a_id', 0)
-            : $app->input->getInt('id', 0);
+            ? $app->getInput()->getInt('a_id', 0)
+            : $app->getInput()->getInt('id', 0);
 
         // On edit article, we get ID of article from article.id state, but on save, we use data from input
         $id = (int)$this->getState('message.id', $messageIdFromInput);
@@ -815,7 +815,7 @@ class CwmmessageModel extends AdminModel
         if (empty($table->id)) {
             // Set the values for a new record
             if (empty($table->created_by)) {
-                $table->created_by = $user->get('id');
+                $table->created_by = $user->id;
             }
 
             // Set ordering to the last item if not set
@@ -832,7 +832,7 @@ class CwmmessageModel extends AdminModel
         } else {
             // Set the values for existing records
             $table->modified    = $date->toSql();
-            $table->modified_by = $user->get('id');
+            $table->modified_by = $user->id;
         }
     }
 }

@@ -58,7 +58,7 @@ class CwmpopupModel extends ListModel
         $t = (int)$params->get('popupid');
 
         if (!$t) {
-            $t = $app->input->get('t', 1, 'int');
+            $t = $app->getInput()->get('t', 1, 'int');
         }
 
         $template->id = $t;
@@ -66,6 +66,6 @@ class CwmpopupModel extends ListModel
         $this->setState('template', $template);
         $this->setState('administrator', $admin);
 
-        $this->setState('layout', $app->input->get('layout'));
+        $this->setState('layout', $app->getInput()->get('layout'));
     }
 }

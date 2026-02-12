@@ -262,8 +262,8 @@ class CwmsermonModel extends FormModel
                 $data->admin_params = Cwmparams::getAdmin()->params;
 
                 // Technically guest could edit an article, but lets not check that to improve performance a little.
-                if (!$user->get('guest')) {
-                    $userId = $user->get('id');
+                if (!$user->guest) {
+                    $userId = $user->id;
                     $asset  = 'com_proclaim.message.' . $data->id;
 
                     // Check general edit permission first.
@@ -321,7 +321,7 @@ class CwmsermonModel extends FormModel
     public function getComments(): array
     {
         $app = Factory::getApplication();
-        $id  = $app->input->get('id', 0, 'int');
+        $id  = $app->getInput()->get('id', 0, 'int');
 
         if (empty($id)) {
             return [];
@@ -424,10 +424,10 @@ class CwmsermonModel extends FormModel
         $app = Factory::getApplication('site');
 
         // Load state from the request.
-        $pk = $app->input->get('id', '', 'int');
+        $pk = $app->getInput()->get('id', '', 'int');
         $this->setState('study.id', $pk);
 
-        $offset = $app->input->get('limitstart', '', 'int');
+        $offset = $app->getInput()->get('limitstart', '', 'int');
         $this->setState('list.offset', $offset);
 
         // Load the parameters.
@@ -443,7 +443,7 @@ class CwmsermonModel extends FormModel
         $t = (int)$params->get('sermonid');
 
         if (!$t) {
-            $t = $app->input->get('t', 1, 'int');
+            $t = $app->getInput()->get('t', 1, 'int');
         }
 
         $template->id = $t;

@@ -51,8 +51,8 @@ class CwmseriespodcastlistModel extends ListModel
         }
 
         $user   = Factory::getApplication()->getIdentity();
-        $userId = $user->get('id');
-        $guest  = $user->get('guest');
+        $userId = $user->id;
+        $guest  = $user->guest;
         $groups = $user->getAuthorisedViewLevels();
 
         // Convert the parameter fields into objects.
@@ -113,19 +113,19 @@ class CwmseriespodcastlistModel extends ListModel
         $app = Factory::getApplication();
 
         // List state information
-        $value = $app->input->get('limit', $app->get('list_limit', 0), 'uint');
+        $value = $app->getInput()->get('limit', $app->get('list_limit', 0), 'uint');
         $this->setState('list.limit', $value);
 
-        $value = $app->input->get('limitstart', 0, 'uint');
+        $value = $app->getInput()->get('limitstart', 0, 'uint');
         $this->setState('list.start', $value);
 
-        $value = $app->input->get('filter_tag', 0, 'uint');
+        $value = $app->getInput()->get('filter_tag', 0, 'uint');
         $this->setState('filter.tag', $value);
 
-        $value = $app->input->get('filter_pc_show', 1, 'uint');
+        $value = $app->getInput()->get('filter_pc_show', 1, 'uint');
         $this->setState('filter.pc_show', $value);
 
-        $orderCol = $app->input->get('filter_order', 'a.ordering');
+        $orderCol = $app->getInput()->get('filter_order', 'a.ordering');
 
         if (!\in_array($orderCol, $this->filter_fields, true)) {
             $orderCol = 'a.id';
@@ -133,7 +133,7 @@ class CwmseriespodcastlistModel extends ListModel
 
         $this->setState('list.ordering', $orderCol);
 
-        $listOrder = $app->input->get('filter_order_Dir', 'ASC');
+        $listOrder = $app->getInput()->get('filter_order_Dir', 'ASC');
 
         if (!\in_array(strtoupper($listOrder), ['ASC', 'DESC', ''])) {
             $listOrder = 'ASC';
@@ -179,7 +179,7 @@ class CwmseriespodcastlistModel extends ListModel
         $t = (int)$params->get('messageid');
 
         if (!$t) {
-            $t = $app->input->get('t', 1, 'int');
+            $t = $app->getInput()->get('t', 1, 'int');
         }
 
         $template->id = $t;

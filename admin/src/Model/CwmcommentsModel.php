@@ -75,10 +75,10 @@ class CwmcommentsModel extends ListModel
     {
         $app = Factory::getApplication();
 
-        $forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
+        $forcedLanguage = $app->getInput()->get('forcedLanguage', '', 'cmd');
 
         // Adjust the context to support modal layouts.
-        if ($layout = $app->input->get('layout')) {
+        if ($layout = $app->getInput()->get('layout')) {
             $this->context .= '.' . $layout;
         }
 
@@ -96,17 +96,17 @@ class CwmcommentsModel extends ListModel
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
 
-        $formSubmited = $app->input->post->get('form_submited');
+        $formSubmited = $app->getInput()->post->get('form_submited');
 
         // Gets the value of a user state variable and sets it in the session
         $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
         $this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id');
 
         if ($formSubmited) {
-            $access = $app->input->post->get('access');
+            $access = $app->getInput()->post->get('access');
             $this->setState('filter.access', $access);
 
-            $authorId = $app->input->post->get('author_id');
+            $authorId = $app->getInput()->post->get('author_id');
             $this->setState('filter.author_id', $authorId);
         }
 

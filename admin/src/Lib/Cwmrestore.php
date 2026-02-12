@@ -343,7 +343,7 @@ class Cwmrestore
     public function getPackageFromUpload(): bool|array
     {
         $app   = Factory::getApplication();
-        $input = $app->input;
+        $input = $app->getInput();
 
         // Get the uploaded file information
         $userfile = $input->files->get('importdb', null, 'raw');

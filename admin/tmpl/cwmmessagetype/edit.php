@@ -27,7 +27,7 @@ use Joomla\CMS\Router\Route;
 $params = $this->state->get('params');
 $params = $params->toArray();
 $app    = Factory::getApplication();
-$input  = $app->input;
+$input  = $app->getInput();
 
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')

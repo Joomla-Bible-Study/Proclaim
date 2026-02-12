@@ -121,10 +121,10 @@ class CwmteachersModel extends ListModel
         $app = Factory::getApplication();
 
         // Load state from the request.
-        $pk = $app->input->getInt('id', '');
+        $pk = $app->getInput()->getInt('id', '');
         $this->setState('sermon.id', $pk);
 
-        $offset = $app->input->getInt('limitstart', '');
+        $offset = $app->getInput()->getInt('limitstart', '');
         $this->setState('list.offset', $offset);
 
         // Load the parameters.
@@ -140,7 +140,7 @@ class CwmteachersModel extends ListModel
         $t = (int)$params->get('teachersid');
 
         if (!$t) {
-            $t = $app->input->get('t', 1, 'int');
+            $t = $app->getInput()->get('t', 1, 'int');
         }
 
         $template->id = $t;

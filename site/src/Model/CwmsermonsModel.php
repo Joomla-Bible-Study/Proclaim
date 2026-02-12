@@ -109,8 +109,6 @@ class CwmsermonsModel extends ListModel
             ];
         }
 
-        $this->input = Factory::getApplication();
-
         parent::__construct($config);
     }
 
@@ -378,12 +376,12 @@ class CwmsermonsModel extends ListModel
         $t = $params->get('sermonsid');
 
         if (!$t) {
-            $t = $app->input->get('t', 1, 'int');
+            $t = $app->getInput()->get('t', 1, 'int');
         }
 
         $landing       = 0;
         $this->landing = 0;
-        $landingcheck  = $app->input->get('sendingview');
+        $landingcheck  = $app->getInput()->get('sendingview');
 
         if ($landingcheck === 'landing') {
             $landing       = 1;
@@ -486,7 +484,7 @@ class CwmsermonsModel extends ListModel
             );
         }
 
-        $orderCol = $app->input->get('filter_order');
+        $orderCol = $app->getInput()->get('filter_order');
 
         if (!empty($orderCol) && !\in_array($orderCol, $this->filter_fields, true)) {
             $orderCol = 'study.studydate';
@@ -495,7 +493,7 @@ class CwmsermonsModel extends ListModel
         $this->setState('list.ordering', $orderCol);
 
         // From landing page filter passing
-        $listOrder = $app->input->get('filter_order_Dir');
+        $listOrder = $app->getInput()->get('filter_order_Dir');
 
         if (!empty($listOrder) && !\in_array(strtoupper($listOrder), ['ASC', 'DESC', ''])) {
             $direction = 'DESC';
@@ -1072,9 +1070,10 @@ class CwmsermonsModel extends ListModel
                             }
 
                             if ((int)$filterid >= 1 && $filter === 'study.booknumber') {
-                                $book = $filterid;
-                                $chb  = $this->input->get('minChapt', '', 'int');
-                                $che  = $this->input->get('maxChapt', '', 'int');
+                                $book     = $filterid;
+                                $appInput = Factory::getApplication()->getInput();
+                                $chb      = $appInput->get('minChapt', '', 'int');
+                                $che      = $appInput->get('maxChapt', '', 'int');
 
                                 if ($chb && $che) {
                                     $query->where(

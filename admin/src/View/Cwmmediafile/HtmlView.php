@@ -130,14 +130,14 @@ class HtmlView extends BaseHtmlView
             $this->addon      = null;
         }
 
-        $options       = $app->input->get('options');
+        $options       = $app->getInput()->get('options');
         $this->options = new \stdClass();
 
         $this->options->study_id   = null;
         $this->options->createdate = null;
 
         if ($options) {
-            $options = explode('&', base64_decode($app->input->get('options')));
+            $options = explode('&', base64_decode($app->getInput()->get('options')));
 
             foreach ($options as $option_st) {
                 $option_st = explode('=', $option_st);

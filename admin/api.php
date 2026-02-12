@@ -24,7 +24,7 @@ try {
 
 // Component debugging
 try {
-    if (CwmproclaimHelper::debug() === 1 || $app->input->getInt('jbsmdbg', '0') === 1) {
+    if (CwmproclaimHelper::debug() === 1 || $app->getInput()->getInt('jbsmdbg', '0') === 1) {
         \define('JBSMDEBUG', 1);
     } else {
         \define('JBSMDEBUG', 0);

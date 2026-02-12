@@ -24,7 +24,7 @@ use Joomla\CMS\Router\Route;
 
 // Create shortcut to parameters.
 $app   = Factory::getApplication();
-$input = $app->input;
+$input = $app->getInput();
 
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')

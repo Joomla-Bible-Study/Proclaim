@@ -21,7 +21,7 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
 $app   = Factory::getApplication();
-$input = $app->input;
+$input = $app->getInput();
 
 // Set up defaults
 if ($input->getInt('id')) {

@@ -146,7 +146,7 @@ class CwmadminTable extends Table
     #[\Override]
     public function store($updateNulls = false): bool
     {
-        if (!$this->_rules) {
+        if (!$this->getRules()) {
             $this->setRules(
                 '{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}'
             );

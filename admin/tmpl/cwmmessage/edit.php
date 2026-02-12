@@ -33,7 +33,7 @@ $this->canDo            = ContentHelper::getActions('com_proclaim', 'message');
 $params = $this->form->getFieldsets('params');
 
 $app   = Factory::getApplication();
-$input = $app->input;
+$input = $app->getInput();
 
 $return  = base64_encode('index.php?option=com_proclaim&task=cwmmessage.edit&id=' . (int)$this->item->id);
 $options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this->item->studydate);

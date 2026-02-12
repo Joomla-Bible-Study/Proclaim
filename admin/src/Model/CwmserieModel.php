@@ -181,7 +181,7 @@ class CwmserieModel extends AdminModel
         $data['image'] = $image->url;
 
         // Alter the title for save as copy
-        if ($app->input->get('task') == 'save2copy') {
+        if ($app->getInput()->get('task') == 'save2copy') {
             list($title, $alias) = $this->generateNewTitle('0', $data['alias'], $data['series_text']);
             $data['series_text'] = $title;
             $data['alias']       = $alias;
@@ -274,7 +274,7 @@ class CwmserieModel extends AdminModel
         $newIds = [];
 
         // Check that the user has create permission for the component
-        $extension = $app->input->get('option', '');
+        $extension = $app->getInput()->get('option', '');
         $user      = Factory::getApplication()->getIdentity();
 
         if (!$user->authorise('core.create', $extension)) {
@@ -441,7 +441,7 @@ class CwmserieModel extends AdminModel
         if (empty($table->id)) {
             // Set the values for a new record
             if (empty($table->created_by)) {
-                $table->created_by = $user->get('id');
+                $table->created_by = $user->id;
             }
 
             // Set ordering to the last item if not set
@@ -457,7 +457,7 @@ class CwmserieModel extends AdminModel
         } else {
             // Set the values for existing records
             $table->modified    = $date->toSql();
-            $table->modified_by = $user->get('id');
+            $table->modified_by = $user->id;
         }
 
         if ($table->ordering == 0) {
