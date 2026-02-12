@@ -588,6 +588,11 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             'clearComplete'         => Text::_('JBS_ADM_CLEAR_COMPLETE'),
             'clearing'              => Text::_('JBS_ADM_CLEARING'),
             'orphanMigrationWarning' => Text::_('JBS_ADM_ORPHAN_MIGRATION_WARNING'),
+            'relocated'             => Text::_('JBS_ADM_RELOCATED'),
+            'relocatedFound'        => Text::_('JBS_ADM_RELOCATED_FOUND'),
+            'relocatedDesc'         => Text::_('JBS_ADM_RELOCATED_DESC'),
+            'expectedPath'          => Text::_('JBS_ADM_EXPECTED_PATH'),
+            'foundAtPath'           => Text::_('JBS_ADM_FOUND_AT_PATH'),
         ], JSON_THROW_ON_ERROR);
         ?>
         <div id="imagetools-config"

@@ -213,6 +213,8 @@ class CwmImageMigration
         // If this is a thumbnail path, try to find the original full-size image first
         $sourceImage = $cleanPath;
         $sourceFound = true;
+        $relocated   = false;
+        $foundAt     = null;
         $basename    = basename($cleanPath);
 
         if (str_contains($basename, 'thumb_')) {
@@ -243,6 +245,8 @@ class CwmImageMigration
             if ($found !== null) {
                 $sourceImage = $found;
                 $sourceFound = true;
+                $relocated   = true;
+                $foundAt     = $found;
             }
         }
 
@@ -296,7 +300,15 @@ class CwmImageMigration
         $db->setQuery($query);
         $db->execute();
 
-        return ['success' => true, 'newPath' => $result['thumbnail'], 'error' => null];
+        $response = ['success' => true, 'newPath' => $result['thumbnail'], 'error' => null];
+
+        if ($relocated) {
+            $response['relocated']    = true;
+            $response['originalPath'] = $cleanPath;
+            $response['foundAt']      = $foundAt;
+        }
+
+        return $response;
     }
 
     /**
@@ -535,6 +547,19 @@ class CwmImageMigration
     private static function findImageFile(string $filename, string $type): ?string
     {
         if (empty($filename)) {
+            return null;
+        }
+
+        // Skip generic filenames that could match unrelated files
+        $nameWithoutExt = pathinfo($filename, PATHINFO_FILENAME);
+        $genericNames   = [
+            'image', 'images', 'photo', 'picture', 'pic', 'img',
+            'thumbnail', 'thumb', 'default', 'placeholder', 'no-image',
+            'noimage', 'blank', 'sample', 'test', 'temp', 'untitled',
+            'new', 'file', 'upload', 'download', 'icon', 'logo', 'banner',
+        ];
+
+        if (\in_array(strtolower($nameWithoutExt), $genericNames, true)) {
             return null;
         }
 

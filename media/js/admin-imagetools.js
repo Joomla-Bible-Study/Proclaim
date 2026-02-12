@@ -115,13 +115,34 @@
       let typeIndex = 0;
       let totalMigrated = 0;
       let totalErrors = 0;
+      let totalRelocated = 0;
       const errorDetails = []; // Collect {type, id, title, path, error}
+      const relocatedDetails = []; // Collect {type, id, title, originalPath, foundAt, newPath}
       const grandTotal = migrationTotals.total;
 
       function updateBar() {
         const pct = grandTotal > 0 ? Math.min(100, Math.round(((totalMigrated + totalErrors) / grandTotal) * 100)) : 0;
         barEl.style.width = `${pct}%`;
         barEl.textContent = `${pct}%`;
+      }
+
+      function showRelocatedReport() {
+        if (!reportEl || relocatedDetails.length === 0) return;
+        const summary = strings.relocatedFound.replace('%s', relocatedDetails.length);
+        let html = `<div class="alert alert-info mt-3">
+        <h5><i class="icon-checkmark me-1" aria-hidden="true"></i>${summary}</h5>
+        <p class="small mb-2">${strings.relocatedDesc}</p>
+        <div style="max-height: 300px; overflow-y: auto;">
+        <table class="table table-sm table-striped mb-0">
+          <thead><tr><th>Type</th><th>ID</th><th>Title</th><th>${strings.expectedPath}</th><th>${strings.foundAtPath}</th></tr></thead>
+          <tbody>`;
+        relocatedDetails.forEach(r => {
+          html += `<tr><td>${r.type}</td><td>${r.id}</td><td><small>${r.title}</small></td><td><small class="text-muted">${r.originalPath}</small></td><td><small class="text-success">${r.foundAt}</small></td></tr>`;
+        });
+        html += '</tbody></table></div></div>';
+        // Prepend before error report
+        reportEl.innerHTML = html + reportEl.innerHTML;
+        reportEl.style.display = 'block';
       }
 
       function showErrorReport() {
@@ -151,10 +172,14 @@
           barEl.style.width = '100%';
           barEl.textContent = '100%';
           let msg = `<span class="text-success">${strings.migrationComplete} ${totalMigrated} ${strings.recordsMigrated}</span>`;
+          if (totalRelocated > 0) {
+            msg += ` <span class="text-info">(${totalRelocated} ${strings.relocated})</span>`;
+          }
           if (totalErrors > 0) {
             msg += ` <span class="text-warning">(${totalErrors} ${strings.migrationErrors})</span>`;
           }
           statusEl.innerHTML = msg;
+          showRelocatedReport();
           showErrorReport();
           loadMigrationCounts();
           loadWebPCounts();
@@ -194,6 +219,17 @@
                 .then(result => {
                   if (result.success) {
                     totalMigrated++;
+                    if (result.relocated) {
+                      totalRelocated++;
+                      relocatedDetails.push({
+                        type,
+                        id: record.id,
+                        title: recordTitle,
+                        originalPath: result.originalPath || '',
+                        foundAt: result.foundAt || '',
+                        newPath: result.newPath || ''
+                      });
+                    }
                   } else {
                     totalErrors++;
                     errorDetails.push({
