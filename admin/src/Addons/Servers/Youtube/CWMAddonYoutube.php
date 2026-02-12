@@ -274,8 +274,8 @@ class CWMAddonYoutube extends CWMAddon
     protected function handleTestApiAction(): array
     {
         $app       = Factory::getApplication();
-        $apiKey    = $app->input->getString('api_key', '');
-        $channelId = $app->input->getString('channel_id', '');
+        $apiKey    = $app->getInput()->getString('api_key', '');
+        $channelId = $app->getInput()->getString('channel_id', '');
 
         return $this->testApiConnection($apiKey, $channelId);
     }
@@ -291,7 +291,7 @@ class CWMAddonYoutube extends CWMAddon
     protected function handleFetchUpcomingAction(): array
     {
         $app      = Factory::getApplication();
-        $serverId = $app->input->getInt('server_id', 0);
+        $serverId = $app->getInput()->getInt('server_id', 0);
 
         // Verify this is a YouTube server
         $db    = Factory::getContainer()->get('DatabaseDriver');
@@ -320,7 +320,7 @@ class CWMAddonYoutube extends CWMAddon
     protected function handleFetchChannelVideosAction(): array
     {
         $app   = Factory::getApplication();
-        $input = $app->input;
+        $input = $app->getInput();
 
         return $this->fetchChannelVideos($input);
     }
@@ -336,7 +336,7 @@ class CWMAddonYoutube extends CWMAddon
     protected function handleSearchChannelVideosAction(): array
     {
         $app   = Factory::getApplication();
-        $input = $app->input;
+        $input = $app->getInput();
 
         return $this->searchChannelVideos($input);
     }
@@ -352,7 +352,7 @@ class CWMAddonYoutube extends CWMAddon
     protected function handleFetchChannelPlaylistsAction(): array
     {
         $app   = Factory::getApplication();
-        $input = $app->input;
+        $input = $app->getInput();
 
         return $this->fetchChannelPlaylists($input);
     }
@@ -368,7 +368,7 @@ class CWMAddonYoutube extends CWMAddon
     protected function handleFetchPlaylistVideosAction(): array
     {
         $app   = Factory::getApplication();
-        $input = $app->input;
+        $input = $app->getInput();
 
         return $this->fetchPlaylistVideos($input);
     }
@@ -384,7 +384,7 @@ class CWMAddonYoutube extends CWMAddon
     protected function handleFetchLiveVideosAction(): array
     {
         $app   = Factory::getApplication();
-        $input = $app->input;
+        $input = $app->getInput();
 
         return $this->fetchLiveVideos($input);
     }
@@ -907,7 +907,7 @@ class CWMAddonYoutube extends CWMAddon
     protected function handleGetVideoStatusAction(): array
     {
         $app   = Factory::getApplication();
-        $input = $app->input;
+        $input = $app->getInput();
 
         return $this->getVideoStatus($input);
     }
