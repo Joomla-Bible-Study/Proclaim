@@ -77,7 +77,7 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
         $vName = $input->getCmd('view', 'cwmlandingpage');
         $input->set('view', $vName);
 
-        $user = $this->getApplication()->getIdentity();
+        $user = $this->app->getIdentity();
 
         if (
             $vName === 'cwmpopup'
