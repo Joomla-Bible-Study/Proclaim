@@ -145,17 +145,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showErrorReport() {
       if (!reportEl || errorDetails.length === 0) return;
-      let html = `<div class="alert alert-warning mt-3">
-        <h5>${strings.missingFiles} (${errorDetails.length})</h5>
-        <p class="small mb-2">${strings.missingFilesDesc}</p>
-        <div style="max-height: 300px; overflow-y: auto;">
-        <table class="table table-sm table-striped mb-0">
-          <thead><tr><th>Type</th><th>ID</th><th>Title</th><th>${strings.missingPath}</th></tr></thead>
-          <tbody>`;
-      errorDetails.forEach(e => {
-        html += `<tr><td>${e.type}</td><td>${e.id}</td><td><small>${e.title}</small></td><td><small class="text-danger">${e.path}</small></td></tr>`;
-      });
-      html += '</tbody></table></div></div>';
+
+      // Split errors: "Source file not found" vs other processing errors
+      const missing = errorDetails.filter(e => e.error === 'Source file not found');
+      const processing = errorDetails.filter(e => e.error !== 'Source file not found');
+      let html = '';
+
+      if (missing.length > 0) {
+        html += `<div class="alert alert-warning mt-3">
+          <h5>${strings.missingFiles} (${missing.length})</h5>
+          <p class="small mb-2">${strings.missingFilesDesc}</p>
+          <div style="max-height: 300px; overflow-y: auto;">
+          <table class="table table-sm table-striped mb-0">
+            <thead><tr><th>Type</th><th>ID</th><th>Title</th><th>${strings.missingPath}</th></tr></thead>
+            <tbody>`;
+        missing.forEach(e => {
+          html += `<tr><td>${e.type}</td><td>${e.id}</td><td><small>${e.title}</small></td><td><small class="text-danger">${e.path}</small></td></tr>`;
+        });
+        html += '</tbody></table></div></div>';
+      }
+
+      if (processing.length > 0) {
+        html += `<div class="alert alert-danger mt-3">
+          <h5>${strings.processingErrors} (${processing.length})</h5>
+          <p class="small mb-2">${strings.processingErrorsDesc}</p>
+          <div style="max-height: 300px; overflow-y: auto;">
+          <table class="table table-sm table-striped mb-0">
+            <thead><tr><th>Type</th><th>ID</th><th>Title</th><th>${strings.missingPath}</th><th>${strings.errorReason}</th></tr></thead>
+            <tbody>`;
+        processing.forEach(e => {
+          html += `<tr><td>${e.type}</td><td>${e.id}</td><td><small>${e.title}</small></td><td><small>${e.path}</small></td><td><small class="text-danger">${e.error}</small></td></tr>`;
+        });
+        html += '</tbody></table></div></div>';
+      }
+
       reportEl.innerHTML = html;
       reportEl.style.display = 'block';
     }
