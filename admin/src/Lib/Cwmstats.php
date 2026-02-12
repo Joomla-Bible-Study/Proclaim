@@ -758,6 +758,34 @@ class Cwmstats
     }
 
     /**
+     * Check if any published podcasts exist.
+     *
+     * @return bool  True if at least one published podcast exists
+     *
+     * @since 10.1.0
+     */
+    public static function hasPublishedPodcasts(): bool
+    {
+        if (isset(self::$cache['hasPublishedPodcasts'])) {
+            return self::$cache['hasPublishedPodcasts'];
+        }
+
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
+        $query
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_podcast'))
+            ->where($db->quoteName('published') . ' = 1');
+        $db->setQuery($query);
+
+        $result = (int) $db->loadResult() > 0;
+
+        self::$cache['hasPublishedPodcasts'] = $result;
+
+        return $result;
+    }
+
+    /**
      * Top Score Site
      *
      * @return bool|string

@@ -228,9 +228,17 @@
             ]
         },
         {
+            "name": "com_proclaim.fancybox-vendor-css",
+            "type": "style",
+            "uri": "media/com_proclaim/fancybox/fancybox.min.css"
+        },
+        {
             "name": "com_proclaim.cwm-fancybox",
             "type": "style",
-            "uri": "com_proclaim/cwm.fancybox.min.css"
+            "uri": "com_proclaim/cwm.fancybox.min.css",
+            "dependencies": [
+                "com_proclaim.fancybox-vendor-css"
+            ]
         },
         {
             "name": "com_proclaim.scripture-text",
@@ -253,12 +261,23 @@
             "uri": "com_proclaim/podcast.min.css"
         },
         {
+            "name": "com_proclaim.fancybox-vendor",
+            "type": "script",
+            "uri": "media/com_proclaim/fancybox/fancybox.umd.js",
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.fancybox",
             "type": "script",
-            "uri": "com_proclaim/js/fancybox.min.js",
+            "uri": "com_proclaim/fancybox.min.js",
             "attributes": {
-                "type": "module"
-            }
+                "defer": true
+            },
+            "dependencies": [
+                "com_proclaim.fancybox-vendor"
+            ]
         },
         {
             "name": "com_proclaim.template-lazyload",

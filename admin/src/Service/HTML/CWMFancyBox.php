@@ -52,15 +52,7 @@ class CWMFancyBox
             $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
             $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
 
-            // Fancybox vendor UMD bundle (non-standard path, WAM can't auto-resolve)
-            $wa->registerAndUseScript(
-                'com_proclaim.fancybox-vendor',
-                'media/com_proclaim/fancybox/fancybox.umd.js',
-                [],
-                ['defer' => true]
-            );
-
-            // Custom handler script (already registered in joomla.asset.json)
+            // Loads vendor UMD + custom handler via dependency chain in joomla.asset.json
             $wa->useScript('com_proclaim.fancybox');
         } catch (\Exception $e) {
             return;
@@ -86,13 +78,7 @@ class CWMFancyBox
             $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
             $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
 
-            // Fancybox vendor CSS (non-standard path, WAM can't auto-resolve)
-            $wa->registerAndUseStyle(
-                'com_proclaim.fancybox-vendor-css',
-                'media/com_proclaim/fancybox/fancybox.min.css'
-            );
-
-            // Custom overrides (already registered in joomla.asset.json)
+            // Loads vendor CSS + custom overrides via dependency chain in joomla.asset.json
             $wa->useStyle('com_proclaim.cwm-fancybox');
         } catch (\Exception $e) {
             return;

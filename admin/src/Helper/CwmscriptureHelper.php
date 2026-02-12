@@ -168,6 +168,17 @@ class CwmscriptureHelper
     private static ?array $translatedBookCache = null;
 
     /**
+     * Static cache for batch-loaded scripture references, keyed by study_id.
+     *
+     * Prevents duplicate queries when both the component view and a module
+     * render on the same page and request scriptures for overlapping study IDs.
+     *
+     * @var array<int, ScriptureReference[]>
+     * @since 10.1.0
+     */
+    private static array $scriptureCache = [];
+
+    /**
      * Parse a human-readable scripture reference into a ScriptureReference object.
      *
      * Handles formats like:
@@ -403,27 +414,59 @@ class CwmscriptureHelper
             return [];
         }
 
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
-            ->select('*')
-            ->from($db->quoteName('#__bsms_study_scriptures'))
-            ->whereIn($db->quoteName('study_id'), $studyIds)
-            ->order($db->quoteName('study_id') . ' ASC, ' . $db->quoteName('ordering') . ' ASC');
-        $db->setQuery($query);
-        $rows = $db->loadObjectList();
+        // Determine which IDs are not yet cached
+        $uncached = array_values(array_filter($studyIds, static fn (int $id) => !isset(self::$scriptureCache[$id])));
 
+        if (!empty($uncached)) {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select('*')
+                ->from($db->quoteName('#__bsms_study_scriptures'))
+                ->whereIn($db->quoteName('study_id'), $uncached)
+                ->order($db->quoteName('study_id') . ' ASC, ' . $db->quoteName('ordering') . ' ASC');
+            $db->setQuery($query);
+            $rows = $db->loadObjectList();
+
+            // Pre-fill cache entries for all requested IDs (some may have zero scriptures)
+            foreach ($uncached as $id) {
+                self::$scriptureCache[$id] = [];
+            }
+
+            foreach ($rows as $row) {
+                $sid                          = (int) $row->study_id;
+                self::$scriptureCache[$sid][] = ScriptureReference::fromRow($row);
+            }
+        }
+
+        // Build result from cache
         $result = [];
 
         foreach ($studyIds as $id) {
-            $result[$id] = [];
-        }
-
-        foreach ($rows as $row) {
-            $sid            = (int) $row->study_id;
-            $result[$sid][] = ScriptureReference::fromRow($row);
+            $result[$id] = self::$scriptureCache[$id] ?? [];
         }
 
         return $result;
+    }
+
+    /**
+     * Clear the static scripture cache, optionally for a single study.
+     *
+     * Call this after saving/deleting scriptures, or when you need to
+     * force a fresh read from the database.
+     *
+     * @param   int|null  $studyId  Specific study to evict, or null to clear all
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public static function resetScriptureCache(?int $studyId = null): void
+    {
+        if ($studyId !== null) {
+            unset(self::$scriptureCache[$studyId]);
+        } else {
+            self::$scriptureCache = [];
+        }
     }
 
     /**
@@ -438,6 +481,9 @@ class CwmscriptureHelper
      */
     public static function saveScriptures(int $studyId, array $scriptures): void
     {
+        // Invalidate cached scriptures for this study
+        self::resetScriptureCache($studyId);
+
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Delete existing

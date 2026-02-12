@@ -49,12 +49,41 @@ class CwmsermonsModel extends ListModel
     public $context = 'com_proclaim.sermons.list';
 
     /**
+     * Whether the current request originates from a landing page.
+     *
+     * @var   int
+     * @since 10.1.0
+     */
+    public int $landing = 0;
+
+    /**
      * Cached filter query results to avoid duplicate queries per request.
      *
      * @var array<string, array>
      * @since 10.1.0
      */
     private array $filterCache = [];
+
+    /**
+     * Clear the in-memory filter dropdown cache.
+     *
+     * Useful after data changes (e.g. saving a study) when filter dropdowns
+     * (teachers, years, series, books) may have changed.
+     *
+     * @param   string|null  $key  Specific cache key to clear, or null to clear all
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public function resetFilterCache(?string $key = null): void
+    {
+        if ($key !== null) {
+            unset($this->filterCache[$key]);
+        } else {
+            $this->filterCache = [];
+        }
+    }
 
     /**
      * Constructor.
@@ -552,6 +581,66 @@ class CwmsermonsModel extends ListModel
     }
 
     /**
+     * Configure model state from module params without touching session/request.
+     *
+     * This allows mod_proclaim to delegate its query to this model by mapping
+     * module parameter names to the m-prefixed keys that getListQuery() reads.
+     *
+     * @param   Registry  $mergedParams  The fully-merged module params (admin + template + module)
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public function setModuleState(Registry $mergedParams): void
+    {
+        // Map module param names → m-prefixed keys the filter logic expects
+        $map = [
+            'teacher_id'  => 'mteacher_id',
+            'series_id'   => 'mseries_id',
+            'booknumber'  => 'mbooknumber',
+            'topic_id'    => 'mtopic_id',
+            'locations'   => 'mlocations',
+            'messagetype' => 'mmessagetype',
+            'year'        => 'years',
+        ];
+
+        foreach ($map as $moduleKey => $paramKey) {
+            $value = $mergedParams->get($moduleKey);
+
+            if ($value !== null) {
+                // Ensure arrays stay arrays, scalars become arrays
+                if (!\is_array($value)) {
+                    $value = [$value];
+                }
+
+                $mergedParams->set($paramKey, $value);
+            }
+        }
+
+        $this->setState('params', $mergedParams);
+
+        // Ordering
+        $this->setState('list.ordering', 'study.studydate');
+        $orderParam = $mergedParams->get('order', '1');
+        $this->setState('list.direction', ($orderParam === '2') ? 'ASC' : 'DESC');
+
+        // Pagination
+        $this->setState('list.start', 0);
+        $this->setState('list.limit', (int) $mergedParams->get('moduleitems', 5));
+
+        // Language filter
+        $language = $mergedParams->get('language', '*');
+
+        if ($language !== '*') {
+            $this->setState('filter.language', $language);
+        }
+
+        // Modules always show published only (no archived)
+        $this->setState('filter.show_archived', '0');
+    }
+
+    /**
      * Build an SQL query to load the list data
      *
      * @return  QueryInterface|string
@@ -575,6 +664,7 @@ class CwmsermonsModel extends ListModel
                     'study.chapter_end', 'study.verse_end', 'study.hits', 'study.alias',
                     'study.studyintro', 'study.teacher_id', 'study.secondary_reference',
                     'study.booknumber2', 'study.location_id', 'study.studytext', 'study.params',
+                    'study.bible_version', 'study.bible_version2',
                 ]))
             )
         );
@@ -653,18 +743,9 @@ class CwmsermonsModel extends ListModel
             . $db->quoteName('book2.booknumber') . ' = ' . $db->quoteName('study.booknumber2')
         );
 
-        // Join over Plays/Downloads
-        $query->select(
-            'GROUP_CONCAT(DISTINCT ' . $db->quoteName('mediafile.id') . ') AS ' . $db->quoteName('mids') . ', '
-            . 'SUM(' . $db->quoteName('mediafile.plays') . ') AS ' . $db->quoteName('totalplays') . ', '
-            . 'SUM(' . $db->quoteName('mediafile.downloads') . ') AS ' . $db->quoteName('totaldownloads') . ', '
-            . $db->quoteName('mediafile.study_id')
-        );
-        $query->join(
-            'LEFT',
-            $db->quoteName('#__bsms_mediafiles', 'mediafile') . ' ON '
-            . $db->quoteName('mediafile.study_id') . ' = ' . $db->quoteName('study.id')
-        );
+        // NOTE: Mediafile aggregation (mids, totalplays, totaldownloads) is
+        // batch-loaded in getItems() to avoid a Cartesian product with topics
+        // that inflates SUM(plays) and SUM(downloads).
 
         // Join over Locations
         $query->select($db->quoteName('locations.location_text'));
@@ -1150,7 +1231,12 @@ class CwmsermonsModel extends ListModel
     }
 
     /**
-     * Override getItems to batch-load scripture references from the junction table.
+     * Override getItems to batch-load related data from separate tables.
+     *
+     * Mediafile stats, scriptures are loaded in focused batch queries rather
+     * than via LEFT JOINs in the main query. This avoids Cartesian products
+     * (e.g. mediafiles x topics inflating SUM aggregates) and keeps each
+     * query simple and independently cacheable.
      *
      * @return  array
      *
@@ -1159,6 +1245,11 @@ class CwmsermonsModel extends ListModel
     #[\Override]
     public function getItems(): array
     {
+        // Safety net for large GROUP_CONCAT result sets
+        $db = $this->getDatabase();
+        $db->setQuery('SET SQL_BIG_SELECTS=1');
+        $db->execute();
+
         $items = parent::getItems();
 
         if (empty($items)) {
@@ -1178,6 +1269,18 @@ class CwmsermonsModel extends ListModel
             return $items;
         }
 
+        // Batch-load mediafile aggregation (mids, totalplays, totaldownloads)
+        $mediaStats = $this->batchLoadMediaStats($studyIds);
+
+        foreach ($items as $item) {
+            $sid                  = (int) $item->id;
+            $stats                = $mediaStats[$sid] ?? null;
+            $item->mids           = $stats->mids ?? null;
+            $item->totalplays     = (int) ($stats->totalplays ?? 0);
+            $item->totaldownloads = (int) ($stats->totaldownloads ?? 0);
+            $item->study_id       = $sid;
+        }
+
         // Batch-load all scripture references
         $scriptureMap = CwmscriptureHelper::getScripturesForStudies($studyIds);
 
@@ -1186,5 +1289,39 @@ class CwmsermonsModel extends ListModel
         }
 
         return $items;
+    }
+
+    /**
+     * Batch-load mediafile statistics for a set of studies.
+     *
+     * Runs a single GROUP BY query against #__bsms_mediafiles instead of
+     * joining mediafiles into the main query (which caused Cartesian products
+     * with topics, inflating SUM(plays) and SUM(downloads)).
+     *
+     * @param   int[]  $studyIds  Study primary keys
+     *
+     * @return  array<int, \stdClass>  Keyed by study_id, each with mids/totalplays/totaldownloads
+     *
+     * @since   10.1.0
+     */
+    private function batchLoadMediaStats(array $studyIds): array
+    {
+        $db    = $this->getDatabase();
+        $query = $db->getQuery(true);
+
+        $query->select([
+            $db->quoteName('study_id'),
+            'GROUP_CONCAT(DISTINCT ' . $db->quoteName('id') . ') AS ' . $db->quoteName('mids'),
+            'SUM(' . $db->quoteName('plays') . ') AS ' . $db->quoteName('totalplays'),
+            'SUM(' . $db->quoteName('downloads') . ') AS ' . $db->quoteName('totaldownloads'),
+        ])
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('published') . ' = 1')
+            ->whereIn($db->quoteName('study_id'), $studyIds)
+            ->group($db->quoteName('study_id'));
+
+        $db->setQuery($query);
+
+        return $db->loadObjectList('study_id') ?: [];
     }
 }
