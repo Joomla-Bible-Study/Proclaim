@@ -116,7 +116,7 @@ class Cwmserieslist extends Cwmlisting
             'teachertitle' => $row->teachertitle ?? '',
             'title'        => $row->series_text ?? '',
             'description'  => $row->description ?? '',
-            'thumbnail'    => '<img src="' . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" />',
+            'thumbnail'    => Cwmimages::renderPicture($image, $row->series_text ?? ''),
         ];
 
         $replacements = array_merge($replacements, $extra);

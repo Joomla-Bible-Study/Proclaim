@@ -748,6 +748,16 @@ class com_proclaimInstallerScript extends InstallerScript
                     'warning'
                 );
             }
+
+            // Migrate studyimage param values to thumbnailm column
+            try {
+                $this->migrateStudyImageParams();
+            } catch (\Exception $e) {
+                Factory::getApplication()->enqueueMessage(
+                    'StudyImage migration notice: ' . $e->getMessage(),
+                    'warning'
+                );
+            }
         }
         // For updates, we use the migration process
         $parent->getParent()->setRedirectURL(
@@ -1289,6 +1299,84 @@ class com_proclaimInstallerScript extends InstallerScript
             if (is_dir($oldFullPath) && !is_dir($newFullPath)) {
                 Folder::move($oldFullPath, $newFullPath);
             }
+        }
+    }
+
+    /**
+     * Migrate studyimage param values to thumbnailm column
+     *
+     * Messages that only have a studyimage (stock image) but no thumbnailm
+     * need the value preserved since the studyimage field is being removed.
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    private function migrateStudyImageParams(): void
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select($db->qn(['id', 'params']))
+            ->from($db->qn('#__bsms_studies'))
+            ->where('(' . $db->qn('thumbnailm') . ' IS NULL OR ' . $db->qn('thumbnailm') . ' = ' . $db->q('') . ')');
+        $db->setQuery($query);
+        $rows = $db->loadObjectList();
+
+        $migrated = 0;
+
+        foreach ($rows as $row) {
+            if (empty($row->params)) {
+                continue;
+            }
+
+            $params = json_decode($row->params, true);
+
+            if (!$params || empty($params['studyimage']) || $params['studyimage'] === '-1') {
+                continue;
+            }
+
+            $studyImage = $params['studyimage'];
+
+            // Strip hash fragment if present
+            if (str_contains($studyImage, '#')) {
+                $studyImage = substr($studyImage, 0, strpos($studyImage, '#'));
+            }
+
+            // Skip invalid values
+            if (empty($studyImage) || $studyImage === '-1') {
+                continue;
+            }
+
+            // If it's just a filename, prepend the old stock images path
+            if (!str_contains($studyImage, '/')) {
+                $studyImage = 'media/com_proclaim/images/stockimages/' . $studyImage;
+            }
+
+            // Only migrate if the file actually exists
+            if (!is_file(JPATH_ROOT . '/' . $studyImage)) {
+                continue;
+            }
+
+            // Update thumbnailm and remove studyimage from params
+            unset($params['studyimage']);
+            $newParams = json_encode($params);
+
+            $update = $db->getQuery(true)
+                ->update($db->qn('#__bsms_studies'))
+                ->set($db->qn('thumbnailm') . ' = ' . $db->q($studyImage))
+                ->set($db->qn('params') . ' = ' . $db->q($newParams))
+                ->where($db->qn('id') . ' = ' . (int) $row->id);
+            $db->setQuery($update);
+            $db->execute();
+
+            $migrated++;
+        }
+
+        if ($migrated > 0) {
+            Factory::getApplication()->enqueueMessage(
+                $migrated . ' study image(s) migrated from stock image field to thumbnail.',
+                'message'
+            );
         }
     }
 }

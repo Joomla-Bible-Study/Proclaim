@@ -171,10 +171,9 @@ class HtmlView extends BaseHtmlView
 
         // Get the series image
         $image               = Cwmimages::getSeriesThumbnail($items->series_thumbnail);
-        $items->image        = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="" />';
+        $items->image        = Cwmimages::renderPicture($image, $items->series_text ?? '');
         $teacherimage        = Cwmimages::getTeacherThumbnail($items->thumb);
-        $items->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="'
-            . $teacherimage->width . '" alt="" />';
+        $items->teacherimage = Cwmimages::renderPicture($teacherimage, $items->teachername ?? '');
 
         $items->slug = $items->alias ? ($items->id . ':' . $items->alias) :
             str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))

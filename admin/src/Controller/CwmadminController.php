@@ -1152,6 +1152,70 @@ class CwmadminController extends FormController
     }
 
     /**
+     * Get WebP migration counts XHR
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function getWebPCountsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['error' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $counts = CwmImageMigration::getWebPMigrationCounts();
+
+        echo json_encode($counts, JSON_THROW_ON_ERROR);
+
+        $app->close();
+    }
+
+    /**
+     * Run a batch of WebP conversions XHR
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function migrateToWebPXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $input    = $app->getInput();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['error' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $type  = $input->get('type', 'studies', 'string');
+        $limit = $input->getInt('limit', 10);
+
+        $result = CwmImageMigration::migrateToWebP($type, $limit);
+
+        echo json_encode($result, JSON_THROW_ON_ERROR);
+
+        $app->close();
+    }
+
+    /**
      * Get player statistics XHR - returns player stats HTML as JSON for lazy loading
      *
      * @return void

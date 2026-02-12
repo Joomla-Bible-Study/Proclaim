@@ -17,6 +17,8 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Image\Image;
+use Joomla\Filesystem\Folder;
 use Joomla\Filesystem\Path;
 
 /**
@@ -208,5 +210,107 @@ class CwmImageMigration
             'records'   => $batch,
             'remaining' => $remaining,
         ];
+    }
+
+    /**
+     * Get count of images needing WebP conversion
+     *
+     * Scans image directories for JPEG/PNG files that lack a WebP sibling.
+     *
+     * @return array{studies: int, teachers: int, series: int, total: int}
+     *
+     * @since 10.1.0
+     */
+    public static function getWebPMigrationCounts(): array
+    {
+        $baseDirs = [
+            'studies'  => JPATH_ROOT . '/images/biblestudy/studies',
+            'teachers' => JPATH_ROOT . '/images/biblestudy/teachers',
+            'series'   => JPATH_ROOT . '/images/biblestudy/series',
+        ];
+
+        $counts = ['studies' => 0, 'teachers' => 0, 'series' => 0];
+
+        foreach ($baseDirs as $type => $baseDir) {
+            if (!is_dir($baseDir)) {
+                continue;
+            }
+
+            $subDirs = Folder::folders($baseDir, '.', false, true);
+
+            foreach ($subDirs as $dir) {
+                $files = Folder::files($dir, '\.(jpe?g|png)$', false, true);
+
+                foreach ($files as $file) {
+                    $webpSibling = preg_replace('/\.(jpe?g|png)$/i', '.webp', $file);
+
+                    if (!is_file($webpSibling)) {
+                        $counts[$type]++;
+                    }
+                }
+            }
+        }
+
+        $counts['total'] = $counts['studies'] + $counts['teachers'] + $counts['series'];
+
+        return $counts;
+    }
+
+    /**
+     * Generate WebP variants for a batch of images in a given type directory
+     *
+     * @param   string  $type   Directory type: 'studies', 'teachers', or 'series'
+     * @param   int     $limit  Maximum images to process per batch
+     *
+     * @return array{converted: int, errors: int, remaining: int}
+     *
+     * @since 10.1.0
+     */
+    public static function migrateToWebP(string $type, int $limit = 10): array
+    {
+        $baseDir = JPATH_ROOT . '/images/biblestudy/' . $type;
+        $result  = ['converted' => 0, 'errors' => 0, 'remaining' => 0];
+
+        if (!is_dir($baseDir) || !\function_exists('imagewebp')) {
+            return $result;
+        }
+
+        $subDirs   = Folder::folders($baseDir, '.', false, true);
+        $processed = 0;
+        $total     = 0;
+
+        foreach ($subDirs as $dir) {
+            $files = Folder::files($dir, '\.(jpe?g|png)$', false, true);
+
+            foreach ($files as $file) {
+                $webpPath = preg_replace('/\.(jpe?g|png)$/i', '.webp', $file);
+
+                if (is_file($webpPath)) {
+                    continue;
+                }
+
+                $total++;
+
+                if ($processed >= $limit) {
+                    $result['remaining']++;
+                    continue;
+                }
+
+                try {
+                    $image = new Image($file);
+                    $image->toFile($webpPath, IMAGETYPE_WEBP);
+                    $result['converted']++;
+                } catch (\Exception $e) {
+                    $result['errors']++;
+                }
+
+                $processed++;
+            }
+        }
+
+        // Count remaining across all not-yet-scanned dirs
+        $result['remaining'] = $total - $processed;
+
+        return $result;
     }
 }

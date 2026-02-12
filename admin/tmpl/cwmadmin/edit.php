@@ -450,6 +450,28 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                 </div>
             </div>
 
+            <!-- WebP Generation Section -->
+            <div class="col-12 col-lg-6">
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_WEBP_GENERATION'); ?></h3>
+                    <p><?php echo Text::_('JBS_ADM_WEBP_GENERATION_DESC'); ?></p>
+                    <div id="webp-counts" class="mb-3">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <?php echo Text::_('JBS_ADM_LOADING'); ?>
+                    </div>
+                    <div id="webp-progress" class="mb-3" style="display:none;">
+                        <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar bg-success" style="width: 0%"></div>
+                        </div>
+                        <div class="mt-2" id="webp-status"></div>
+                    </div>
+                    <button type="button" class="btn btn-success" id="btn-start-webp" disabled>
+                        <i class="icon-images" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_GENERATE_WEBP'); ?>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3" id="imagetools-row2">
             <!-- Orphan Cleanup Section -->
             <div class="col-12 col-lg-6">
                 <div class="cwmadmin-panel mb-4">
@@ -471,213 +493,40 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             </div>
         </div>
 
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var token = '<?php echo Session::getFormToken(); ?>';
+        <?php
+        // Pass PHP data to external JS via data attributes
+        $wa = $this->getDocument()->getWebAssetManager();
+        $wa->useScript('com_proclaim.admin-imagetools');
 
-            // Load migration counts on page load
-            loadMigrationCounts();
-
-            function loadMigrationCounts() {
-                fetch('index.php?option=com_proclaim&task=cwmadmin.getMigrationCountsXHR&' + token + '=1')
-                    .then(response => response.json())
-                    .then(data => {
-                        var countsHtml = '<ul class="list-unstyled">' +
-                            '<li><strong><?php echo Text::_('JBS_CMN_STUDIES'); ?>:</strong> ' + data.studies + '</li>' +
-                            '<li><strong><?php echo Text::_('JBS_CMN_TEACHERS'); ?>:</strong> ' + data.teachers + '</li>' +
-                            '<li><strong><?php echo Text::_('JBS_CMN_SERIES'); ?>:</b> ' + data.series + '</li>' +
-                            '<li><strong><?php echo Text::_('JBS_CMN_TOTAL'); ?>:</strong> ' + data.total + '</li>' +
-                            '</ul>';
-                        document.getElementById('migration-counts').innerHTML = countsHtml;
-                        document.getElementById('btn-start-migration').disabled = (data.total === 0);
-                    })
-                    .catch(error => {
-                        document.getElementById('migration-counts').innerHTML =
-                            '<span class="text-danger"><?php echo Text::_('JBS_ADM_ERROR_LOADING'); ?></span>';
-                    });
-            }
-
-            // Start migration
-            document.getElementById('btn-start-migration').addEventListener('click', function() {
-                var btn = this;
-                btn.disabled = true;
-                document.getElementById('migration-progress').style.display = 'block';
-
-                var types = ['studies', 'teachers', 'series'];
-                var typeIndex = 0;
-                var totalMigrated = 0;
-                var totalErrors = 0;
-
-                function migrateType() {
-                    if (typeIndex >= types.length) {
-                        document.getElementById('migration-status').innerHTML =
-                            '<span class="text-success"><?php echo Text::_('JBS_ADM_MIGRATION_COMPLETE'); ?> ' +
-                            totalMigrated + ' <?php echo Text::_('JBS_ADM_RECORDS_MIGRATED'); ?></span>';
-                        loadMigrationCounts();
-                        return;
-                    }
-
-                    var type = types[typeIndex];
-                    document.getElementById('migration-status').textContent =
-                        '<?php echo Text::_('JBS_ADM_MIGRATING'); ?> ' + type + '...';
-
-                    migrateBatch(type);
-                }
-
-                function migrateBatch(type) {
-                    fetch('index.php?option=com_proclaim&task=cwmadmin.getMigrationBatchXHR&' + token + '=1&type=' + type + '&limit=5')
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.records.length === 0) {
-                                typeIndex++;
-                                migrateType();
-                                return;
-                            }
-
-                            var promises = data.records.map(function(record) {
-                                var params = new URLSearchParams();
-                                params.append('type', type);
-                                params.append('id', record.id);
-                                params.append('title', record.studytitle || record.teachername || record.title || '');
-                                params.append('old_path', record.image_path);
-
-                                return fetch('index.php?option=com_proclaim&task=cwmadmin.migrateRecordXHR&' + token + '=1&' + params.toString())
-                                    .then(response => response.json())
-                                    .then(result => {
-                                        if (result.success) {
-                                            totalMigrated++;
-                                        } else {
-                                            totalErrors++;
-                                        }
-                                        return result;
-                                    });
-                            });
-
-                            Promise.all(promises).then(function() {
-                                var progress = ((typeIndex + 1) / types.length) * 100;
-                                document.querySelector('#migration-progress .progress-bar').style.width = progress + '%';
-
-                                if (data.remaining > 0) {
-                                    migrateBatch(type);
-                                } else {
-                                    typeIndex++;
-                                    migrateType();
-                                }
-                            });
-                        })
-                        .catch(error => {
-                            document.getElementById('migration-status').innerHTML =
-                                '<span class="text-danger"><?php echo Text::_('JBS_ADM_MIGRATION_ERROR'); ?></span>';
-                        });
-                }
-
-                migrateType();
-            });
-
-            // Scan for orphans
-            document.getElementById('btn-scan-orphans').addEventListener('click', function() {
-                var btn = this;
-                btn.disabled = true;
-                btn.innerHTML = '<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> <?php echo Text::_('JBS_ADM_SCANNING'); ?>';
-
-                fetch('index.php?option=com_proclaim&task=cwmadmin.getOrphanedFoldersXHR&' + token + '=1')
-                    .then(response => response.json())
-                    .then(data => {
-                        btn.disabled = false;
-                        btn.innerHTML = '<i class="icon-search" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_SCAN_ORPHANS'); ?>';
-
-                        document.getElementById('orphan-results').style.display = 'block';
-                        document.getElementById('orphan-summary').innerHTML =
-                            '<?php echo Text::_('JBS_ADM_FOUND'); ?> <strong>' + data.totals.folders + '</strong> <?php echo Text::_('JBS_ADM_ORPHAN_FOLDERS'); ?> (' + data.totals.size_formatted + ')';
-
-                        if (data.totals.folders > 0) {
-                            var tableHtml = '<table class="table table-sm table-striped">' +
-                                '<thead><tr><th><input type="checkbox" id="select-all-orphans" aria-label="<?php echo Text::_('JBS_ADM_SELECT_ALL'); ?>"></th><th><?php echo Text::_('JBS_ADM_FOLDER'); ?></th><th><?php echo Text::_('JBS_ADM_FILES'); ?></th><th><?php echo Text::_('JBS_ADM_SIZE'); ?></th></tr></thead><tbody>';
-
-                            ['studies', 'teachers', 'series'].forEach(function(type) {
-                                if (data.orphans[type] && data.orphans[type].length > 0) {
-                                    data.orphans[type].forEach(function(orphan) {
-                                        tableHtml += '<tr>' +
-                                            '<td><input type="checkbox" class="orphan-checkbox" value="' + orphan.path + '" aria-label="' + orphan.path + '"></td>' +
-                                            '<td><small>' + orphan.path + '</small></td>' +
-                                            '<td>' + orphan.files + '</td>' +
-                                            '<td>' + formatBytes(orphan.size) + '</td>' +
-                                            '</tr>';
-                                    });
-                                }
-                            });
-
-                            tableHtml += '</tbody></table>';
-                            document.getElementById('orphan-list').innerHTML = tableHtml;
-                            document.getElementById('btn-delete-orphans').style.display = 'inline-block';
-
-                            document.getElementById('select-all-orphans').addEventListener('change', function() {
-                                document.querySelectorAll('.orphan-checkbox').forEach(function(cb) {
-                                    cb.checked = this.checked;
-                                }.bind(this));
-                            });
-                        } else {
-                            document.getElementById('orphan-list').innerHTML =
-                                '<p class="text-success"><?php echo Text::_('JBS_ADM_NO_ORPHANS'); ?></p>';
-                            document.getElementById('btn-delete-orphans').style.display = 'none';
-                        }
-                    })
-                    .catch(error => {
-                        btn.disabled = false;
-                        btn.innerHTML = '<i class="icon-search" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_SCAN_ORPHANS'); ?>';
-                        alert('<?php echo Text::_('JBS_ADM_ERROR_SCANNING'); ?>');
-                    });
-            });
-
-            // Delete orphans
-            document.getElementById('btn-delete-orphans').addEventListener('click', function() {
-                var selected = [];
-                document.querySelectorAll('.orphan-checkbox:checked').forEach(function(cb) {
-                    selected.push(cb.value);
-                });
-
-                if (selected.length === 0) {
-                    alert('<?php echo Text::_('JBS_ADM_SELECT_FOLDERS'); ?>');
-                    return;
-                }
-
-                if (!confirm('<?php echo Text::_('JBS_ADM_CONFIRM_DELETE'); ?> ' + selected.length + ' <?php echo Text::_('JBS_ADM_FOLDERS'); ?>?')) {
-                    return;
-                }
-
-                var btn = this;
-                btn.disabled = true;
-
-                var params = new URLSearchParams();
-                selected.forEach(function(path) {
-                    params.append('paths[]', path);
-                });
-
-                fetch('index.php?option=com_proclaim&task=cwmadmin.deleteOrphanedFoldersXHR&' + token + '=1', {
-                    method: 'POST',
-                    body: params
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        btn.disabled = false;
-                        alert('<?php echo Text::_('JBS_ADM_DELETED'); ?> ' + data.deleted + ' <?php echo Text::_('JBS_ADM_FOLDERS'); ?>');
-                        document.getElementById('btn-scan-orphans').click();
-                    })
-                    .catch(error => {
-                        btn.disabled = false;
-                        alert('<?php echo Text::_('JBS_ADM_ERROR_DELETING'); ?>');
-                    });
-            });
-
-            function formatBytes(bytes) {
-                if (bytes === 0) return '0 Bytes';
-                var k = 1024;
-                var sizes = ['Bytes', 'KB', 'MB', 'GB'];
-                var i = Math.floor(Math.log(bytes) / Math.log(k));
-                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-            }
-        });
-        </script>
+        $imagetoolsStrings = json_encode([
+            'studies'           => Text::_('JBS_CMN_STUDIES'),
+            'teachers'          => Text::_('JBS_CMN_TEACHERS'),
+            'series'            => Text::_('JBS_CMN_SERIES'),
+            'total'             => Text::_('JBS_CMN_TOTAL'),
+            'errorLoading'      => Text::_('JBS_ADM_ERROR_LOADING'),
+            'migrating'         => Text::_('JBS_ADM_MIGRATING'),
+            'migrationComplete' => Text::_('JBS_ADM_MIGRATION_COMPLETE'),
+            'recordsMigrated'   => Text::_('JBS_ADM_RECORDS_MIGRATED'),
+            'migrationError'    => Text::_('JBS_ADM_MIGRATION_ERROR'),
+            'scanning'          => Text::_('JBS_ADM_SCANNING'),
+            'scanOrphans'       => Text::_('JBS_ADM_SCAN_ORPHANS'),
+            'found'             => Text::_('JBS_ADM_FOUND'),
+            'orphanFolders'     => Text::_('JBS_ADM_ORPHAN_FOLDERS'),
+            'selectAll'         => Text::_('JBS_ADM_SELECT_ALL'),
+            'folder'            => Text::_('JBS_ADM_FOLDER'),
+            'files'             => Text::_('JBS_ADM_FILES'),
+            'size'              => Text::_('JBS_ADM_SIZE'),
+            'noOrphans'         => Text::_('JBS_ADM_NO_ORPHANS'),
+            'converting'        => Text::_('JBS_ADM_CONVERTING'),
+            'webpComplete'      => Text::_('JBS_ADM_WEBP_COMPLETE'),
+            'imagesConverted'   => Text::_('JBS_ADM_IMAGES_CONVERTED'),
+            'webpError'         => Text::_('JBS_ADM_WEBP_ERROR'),
+        ], JSON_THROW_ON_ERROR);
+        ?>
+        <div id="imagetools-config"
+             data-token="<?php echo Session::getFormToken(); ?>"
+             data-strings="<?php echo htmlspecialchars($imagetoolsStrings, ENT_QUOTES, 'UTF-8'); ?>"
+             style="display:none;"></div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
 

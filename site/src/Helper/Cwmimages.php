@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
 /**
@@ -74,11 +75,12 @@ class Cwmimages
      */
     public static function getImagePath(string $path): object
     {
-        $tmp         = new \stdClass();
-        $tmp->path   = null;
-        $tmp->size   = 0;
-        $tmp->width  = 0;
-        $tmp->height = 0;
+        $tmp            = new \stdClass();
+        $tmp->path      = null;
+        $tmp->size      = 0;
+        $tmp->width     = 0;
+        $tmp->height    = 0;
+        $tmp->webp_path = null;
 
         if (empty($path)) {
             return $tmp;
@@ -98,7 +100,62 @@ class Cwmimages
             $tmp->height = (int) $imagePath->attributes['height'];
         }
 
+        // Check for WebP sibling file
+        if ($tmp->path !== null) {
+            $ext     = pathinfo($tmp->path, PATHINFO_EXTENSION);
+            $webpUrl = preg_replace('/\.' . preg_quote($ext, '/') . '$/', '.webp', $tmp->path);
+
+            if ($ext !== 'webp' && is_file(JPATH_ROOT . DIRECTORY_SEPARATOR . $webpUrl)) {
+                $tmp->webp_path = $webpUrl;
+            }
+        }
+
         return $tmp;
+    }
+
+    /**
+     * Render a <picture> element with optional WebP source and lazy loading
+     *
+     * @param   object  $image  Image object from getImagePath() / getStudyThumbnail() etc.
+     * @param   string  $alt    Alt text for the image
+     * @param   string  $class  CSS class(es) for the <img> tag
+     * @param   bool    $lazy   Whether to add loading="lazy" (default true)
+     *
+     * @return string HTML <picture> element or empty string if no image
+     *
+     * @since 10.1.0
+     */
+    public static function renderPicture(
+        object $image,
+        string $alt = '',
+        string $class = '',
+        bool $lazy = true
+    ): string {
+        if (empty($image->path)) {
+            return '';
+        }
+
+        $base     = Uri::base();
+        $altAttr  = htmlspecialchars($alt, ENT_QUOTES, 'UTF-8');
+        $loading  = $lazy ? ' loading="lazy"' : ' loading="eager"';
+        $width    = $image->width > 0 ? ' width="' . (int) $image->width . '"' : '';
+        $height   = $image->height > 0 ? ' height="' . (int) $image->height . '"' : '';
+        $cssClass = $class !== '' ? ' class="' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '"' : '';
+
+        $html = '';
+
+        if (!empty($image->webp_path)) {
+            $html .= '<picture>';
+            $html .= '<source srcset="' . $base . $image->webp_path . '" type="image/webp">';
+            $html .= '<img src="' . $base . $image->path . '"' . $width . $height
+                . ' alt="' . $altAttr . '"' . $cssClass . $loading . '>';
+            $html .= '</picture>';
+        } else {
+            $html .= '<img src="' . $base . $image->path . '"' . $width . $height
+                . ' alt="' . $altAttr . '"' . $cssClass . $loading . '>';
+        }
+
+        return $html;
     }
 
     /**

@@ -19,7 +19,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
-use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -117,18 +116,14 @@ class Cwmpagebuilder
 
         if ($item->thumbnailm) {
             $image                 = Cwmimages::getStudyThumbnail($item->thumbnailm);
-            $page->study_thumbnail = '<img src="' . Uri::base(
-            ) . $image->path . '" width="' . $image->width . '" height="' . $image->height
-                . '" alt="' . $item->studytitle . '" />';
+            $page->study_thumbnail = Cwmimages::renderPicture($image, $item->studytitle);
         } else {
             $page->study_thumbnail = '';
         }
 
         if ($item->series_thumbnail) {
             $image                  = Cwmimages::getSeriesThumbnail($item->series_thumbnail);
-            $page->series_thumbnail = '<img src="' . Uri::base(
-            ) . $image->path . '" width="' . $image->width . '" height="' . $image->height
-                . '" alt="' . $item->series_text . '" />';
+            $page->series_thumbnail = Cwmimages::renderPicture($image, $item->series_text);
         } else {
             $page->series_thumnail = '';
         }
@@ -147,9 +142,7 @@ class Cwmpagebuilder
 
         if ($item->image || $item->thumb) {
             $image              = Cwmimages::getTeacherImage($item->image, $item->thumb);
-            $page->teacherimage = '<img src="' . Uri::base(
-            ) . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="'
-                . $item->teachername . '" />';
+            $page->teacherimage = Cwmimages::renderPicture($image, $item->teachername);
         } else {
             $page->teacherimage = '';
         }

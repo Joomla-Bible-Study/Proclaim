@@ -16,6 +16,7 @@
 
 /** @var CWM\Component\Proclaim\Site\View\Cwmseriesdisplays\HtmlView $this */
 
+use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -50,10 +51,8 @@ if ($url) {
                 <div <?php echo $classelement; ?> class="componentheading">
                     <?php
                     if ($this->params->get('show_page_image_series') && $this->params->get('series_show_image') > 0) {
-                        echo '<img src="' . Uri::base() . $this->params->get(
-                            'show_page_image_series'
-                        ) . '" alt="' . $this->params->get('show_series_title') . '" />';
-                        // End of column for logo
+                        $seriesPageImage = Cwmimages::getImagePath($this->params->get('show_page_image_series'));
+                        echo Cwmimages::renderPicture($seriesPageImage, $this->params->get('show_series_title', ''), '', false);
                     }
 ?>
                     <?php

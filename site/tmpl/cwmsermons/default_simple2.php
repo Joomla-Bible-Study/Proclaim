@@ -16,6 +16,7 @@
 
 /** @var CWM\Component\Proclaim\Site\View\Cwmsermons\HtmlView $this */
 
+use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
@@ -159,9 +160,8 @@ $archived  = $this->state->get('filter.published') == 2;
 $trashed   = $this->state->get('filter.published') == -2;
 $saveOrder = $listOrder === 'study.ordering';
 // Use pre-calculated values from HtmlView
-$listing = $this->listing;
-$folder  = $this->rotatingImages;
-$count   = $this->rotatingImageCount;
+$listing      = $this->listing;
+$defaultImage = $this->params->get('default_study_image', '');
 ?>
 
 <div class="container">
@@ -183,33 +183,9 @@ $count   = $this->rotatingImageCount;
     foreach ($this->items as $item) {
         $itemparams = new Registry();
         $params     = $itemparams->loadString($item->params);
-        $studyimage = $params->get('studyimage');
-        if (!empty($item->thumbnailm)) {
-            $image = $item->thumbnailm;
-        }
-        if ($params->get('studyimage') !== -1) {
-            //clean up extra data in the image
-            $hash = str_contains((string) $params->get('studyimage'), '#');
-            if ($hash == 1) {
-                $imageparam   = $params->get('studyimage');
-                $hashlocation = strpos($imageparam, '#');
-                $image        = substr($imageparam, 0, $hashlocation);
-            } else {
-                $image = 'media/com_proclaim/images/stockimages/' . $params->get('studyimage');
-            }
-        }
-        if ($studyimage === null || (empty($item->thumbnailm) && ($params->get('studyimage') == -1))) {
-            $random = random_int(0, $count);
-            if (\array_key_exists($random, $folder)) {
-                $image = 'media/com_proclaim/images/rotating/' . $folder[$random];
-            }
-            if ($image === 'media/com_proclaim/images/stockimages/') {
-                $image = 'media/com_proclaim/images/rotating/bible01.jpg';
-            }
-            if ($image === 'media/com_proclaim/images/stockimages/-1') {
-                $image = 'media/com_proclaim/images/rotating/bible01.jpg';
-            }
-        }
+
+        // Use thumbnailm if set, fall back to admin default image
+        $image = !empty($item->thumbnailm) ? $item->thumbnailm : $defaultImage;
         if (
             $this->params->get('simplegridtextoverlay') == 1 || $params->get(
                 'nooverlaysimplemode'
@@ -224,8 +200,10 @@ $count   = $this->rotatingImageCount;
                         <article class="media__item__wrapper">
                             <div class="thumbnail text-center">
                                 <div class="card overflow-hidden border-0 rounded-0 text-center text-white">
-                                    <img src="<?php
-                    echo $image; ?>" class="card-img rounded-0" alt="...">
+                                    <?php
+                                    $imageObj = Cwmimages::getImagePath($image);
+                    echo Cwmimages::renderPicture($imageObj, $item->studytitle, 'card-img rounded-0');
+                    ?>
                                     <div class="card-img-overlay d-flex flex-column justify-content-center">
                                         <?php
                         echo $overlaytext; ?>

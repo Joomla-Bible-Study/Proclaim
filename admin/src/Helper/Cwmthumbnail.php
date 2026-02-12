@@ -163,7 +163,7 @@ class Cwmthumbnail
      * @param   string|null  $title       Optional title to use in filename (will be converted to URL-safe alias)
      * @param   bool         $preserveOld If true, keeps existing files; if false, archives old folder
      *
-     * @return array{image: string, thumbnail: string}|false Array with new paths on success, false on failure
+     * @return array{image: string, thumbnail: string, image_webp: ?string, thumbnail_webp: ?string}|false
      *
      * @since 9.0.0
      */
@@ -231,16 +231,36 @@ class Cwmthumbnail
             }
         }
 
-        // Create thumbnail
+        // Create JPEG thumbnail for universal compatibility
         $image     = new Image($newImagePath);
         $thumbnail = $image->resize($size, (int) round($size * 0.5625), true, self::SCALE_INSIDE);
         $thumbnail->toFile($thumbPath, IMAGETYPE_JPEG);
 
-        // Return relative paths (without JPATH_ROOT)
-        return [
-            'image'     => $path . '/' . $newFilename,
-            'thumbnail' => $path . '/' . $thumbName,
+        $result = [
+            'image'          => $path . '/' . $newFilename,
+            'thumbnail'      => $path . '/' . $thumbName,
+            'image_webp'     => null,
+            'thumbnail_webp' => null,
         ];
+
+        // Generate WebP variants if GD supports it
+        if (\function_exists('imagewebp')) {
+            $webpThumbPath = $destFolder . '/' . 'thumb_' . $baseFilename . '.webp';
+            $thumbnail->toFile($webpThumbPath, IMAGETYPE_WEBP);
+            $result['thumbnail_webp'] = $path . '/' . 'thumb_' . $baseFilename . '.webp';
+
+            // Generate WebP of the full-size image (skip if source is already WebP)
+            if ($extension !== 'webp') {
+                $webpImagePath = $destFolder . '/' . $baseFilename . '.webp';
+                $fullImage     = new Image($newImagePath);
+                $fullImage->toFile($webpImagePath, IMAGETYPE_WEBP);
+                $result['image_webp'] = $path . '/' . $baseFilename . '.webp';
+            } else {
+                $result['image_webp'] = $result['image'];
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -287,8 +307,8 @@ class Cwmthumbnail
         $thumbFilename = 'thumb_' . $filenameBase . '.' . $extension;
 
         // Delete existing thumbnails in this directory
-        $directory  = \dirname($path);
-        $oldThumbs  = Folder::files($directory, '^thumb_' . preg_quote($filenameBase, '/'), false, true);
+        $directory = \dirname($path);
+        $oldThumbs = Folder::files($directory, '^thumb_' . preg_quote($filenameBase, '/'), false, true);
 
         foreach ($oldThumbs as $thumb) {
             File::delete($thumb);
@@ -299,6 +319,12 @@ class Cwmthumbnail
         $height    = (int) round($newSize * 0.5625);
         $thumbnail = $image->resize($newSize, $height, true, self::SCALE_INSIDE);
         $thumbnail->toFile($directory . '/' . $thumbFilename, $outputType);
+
+        // Generate WebP variant alongside
+        if (\function_exists('imagewebp')) {
+            $webpThumbFilename = 'thumb_' . $filenameBase . '.webp';
+            $thumbnail->toFile($directory . '/' . $webpThumbFilename, IMAGETYPE_WEBP);
+        }
 
         return true;
     }

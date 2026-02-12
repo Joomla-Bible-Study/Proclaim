@@ -174,8 +174,7 @@ class HtmlView extends BaseHtmlView
             $seriesimage = Cwmimages::getSeriesThumbnail($item->series_thumbnail);
 
             if ($seriesimage->path) {
-                $item->image = '<img src="' . $seriesimage->path . '" height="' . $seriesimage->height . '" width="'
-                    . $seriesimage->width . '" alt="" />';
+                $item->image = Cwmimages::renderPicture($seriesimage, $item->series_text ?? '');
             }
 
             $item->serieslink = Route::_(
@@ -184,8 +183,7 @@ class HtmlView extends BaseHtmlView
             $teacherimage     = Cwmimages::getTeacherImage($item->thumb);
 
             if ($teacherimage->path) {
-                $item->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height .
-                    '" width="' . $teacherimage->width . '" alt="" />';
+                $item->teacherimage = Cwmimages::renderPicture($teacherimage, $item->teachername ?? '');
             }
 
             if (isset($item->description)) {
