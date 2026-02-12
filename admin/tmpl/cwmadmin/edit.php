@@ -478,31 +478,8 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                 </div>
             </div>
         </div>
+        <!-- Row 2: Post-Migration Review -->
         <div class="row mt-3" id="imagetools-row2">
-            <!-- Orphan Cleanup Section -->
-            <div class="col-12 col-lg-6">
-                <div class="cwmadmin-panel mb-4">
-                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_ORPHAN_CLEANUP'); ?></h3>
-                    <p><?php echo Text::_('JBS_ADM_ORPHAN_CLEANUP_DESC'); ?></p>
-                    <p class="text-muted small" id="orphan-step-indicator"><?php echo Text::_('JBS_ADM_ORPHAN_STEP1'); ?></p>
-                    <div id="orphan-status" class="mb-3">
-                        <button type="button" class="btn btn-secondary" id="btn-scan-orphans">
-                            <i class="icon-search" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_SCAN_ORPHANS'); ?>
-                        </button>
-                    </div>
-                    <div id="orphan-results" class="mb-3" style="display:none;">
-                        <div class="alert alert-info" id="orphan-summary"></div>
-                        <div id="orphan-list" class="cwmadmin-orphan-list table-responsive"></div>
-                    </div>
-                    <button type="button" class="btn btn-danger" id="btn-delete-orphans" style="display:none;">
-                        <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_DELETE_SELECTED'); ?>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Clear Unresolvable + Legacy Files Report -->
-        <div class="row mt-4" id="imagetools-row3">
             <div class="col-12 col-lg-6">
                 <div class="cwmadmin-panel mb-4">
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_CLEAR_UNRESOLVABLE'); ?></h3>
@@ -531,6 +508,29 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                         <i class="icon-search" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_SCAN_LEGACY'); ?>
                     </button>
                     <div id="legacy-results" class="mt-3" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 3: Orphan Cleanup (last step) -->
+        <div class="row mt-3" id="imagetools-row3">
+            <div class="col-12 col-lg-6">
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_ORPHAN_CLEANUP'); ?></h3>
+                    <p><?php echo Text::_('JBS_ADM_ORPHAN_CLEANUP_DESC'); ?></p>
+                    <p class="text-muted small" id="orphan-step-indicator"><?php echo Text::_('JBS_ADM_ORPHAN_STEP1'); ?></p>
+                    <div id="orphan-status" class="mb-3">
+                        <button type="button" class="btn btn-secondary" id="btn-scan-orphans">
+                            <i class="icon-search" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_SCAN_ORPHANS'); ?>
+                        </button>
+                    </div>
+                    <div id="orphan-results" class="mb-3" style="display:none;">
+                        <div class="alert alert-info" id="orphan-summary"></div>
+                        <div id="orphan-list" class="cwmadmin-orphan-list table-responsive"></div>
+                    </div>
+                    <button type="button" class="btn btn-danger" id="btn-delete-orphans" style="display:none;">
+                        <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_DELETE_SELECTED'); ?>
+                    </button>
                 </div>
             </div>
         </div>
@@ -587,6 +587,7 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             'confirmClear'          => Text::_('JBS_ADM_CONFIRM_CLEAR_UNRESOLVABLE'),
             'clearComplete'         => Text::_('JBS_ADM_CLEAR_COMPLETE'),
             'clearing'              => Text::_('JBS_ADM_CLEARING'),
+            'orphanMigrationWarning' => Text::_('JBS_ADM_ORPHAN_MIGRATION_WARNING'),
         ], JSON_THROW_ON_ERROR);
         ?>
         <div id="imagetools-config"

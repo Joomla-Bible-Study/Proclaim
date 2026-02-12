@@ -246,6 +246,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---- Orphan Cleanup ----
   document.getElementById('btn-scan-orphans').addEventListener('click', function () {
     const btn = this;
+
+    // Warn if migration or unresolvable cleanup hasn't been done yet
+    if (migrationTotals.total > 0) {
+      // eslint-disable-next-line no-restricted-globals
+      if (!confirm(strings.orphanMigrationWarning)) {
+        return;
+      }
+    }
+
     btn.disabled = true;
     btn.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${strings.scanning}`;
 
