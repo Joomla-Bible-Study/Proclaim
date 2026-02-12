@@ -593,6 +593,7 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             'relocatedDesc'         => Text::_('JBS_ADM_RELOCATED_DESC'),
             'expectedPath'          => Text::_('JBS_ADM_EXPECTED_PATH'),
             'foundAtPath'           => Text::_('JBS_ADM_FOUND_AT_PATH'),
+            'migrationDone'         => Text::_('JBS_ADM_MIGRATION_DONE'),
         ], JSON_THROW_ON_ERROR);
         ?>
         <div id="imagetools-config"

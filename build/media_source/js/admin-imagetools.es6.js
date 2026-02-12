@@ -155,9 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
       errorDetails.forEach(e => {
         html += `<tr><td>${e.type}</td><td>${e.id}</td><td><small>${e.title}</small></td><td><small class="text-danger">${e.path}</small></td></tr>`;
       });
-      html += `</tbody></table></div>
-        <p class="small text-muted mt-2">Use the "Clear Unresolvable Images" section below to clean up these records.</p>
-      </div>`;
+      html += '</tbody></table></div></div>';
       reportEl.innerHTML = html;
       reportEl.style.display = 'block';
     }
@@ -179,8 +177,20 @@ document.addEventListener('DOMContentLoaded', () => {
         statusEl.innerHTML = msg;
         showRelocatedReport();
         showErrorReport();
-        loadMigrationCounts();
         loadWebPCounts();
+
+        // Show a "Done" button — user must acknowledge before Start Migration re-enables
+        const startBtn = document.getElementById('btn-start-migration');
+        const doneBtn = document.createElement('button');
+        doneBtn.type = 'button';
+        doneBtn.className = 'btn btn-success mt-3';
+        doneBtn.innerHTML = `<i class="icon-checkmark" aria-hidden="true"></i> ${strings.migrationDone}`;
+        doneBtn.addEventListener('click', () => {
+          doneBtn.remove();
+          loadMigrationCounts(); // Refreshes counts and re-enables Start Migration if needed
+        });
+        // Insert after the start button
+        startBtn.parentNode.insertBefore(doneBtn, startBtn.nextSibling);
         return;
       }
 
