@@ -1784,6 +1784,18 @@
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dstudyintrolinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="dstudytextrow" type="RowOptions" size="1" default="0" label="JBS_CMN_STUDY_TEXT"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="dstudytextcol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="dstudytextcolspan" type="SpanOptions" default="12" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="dstudytextelement" type="ElementOptions" default="1" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="dstudytextcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="dstudytextlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+                   description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="dseriesrow" type="RowOptions" size="1" default="0" label="JBS_CMN_SERIES"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="dseriescol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"

@@ -120,7 +120,7 @@ class Cwmlisting
         // Standard params that check {name}row > 0
         $standardParams = [
             'scripture1', 'scripture2', 'scriptures', 'secondary', 'title', 'date', 'teacher', 'teacher-title',
-            'duration', 'studyintro', 'series', 'description', 'seriesthumbnail', 'submitted',
+            'duration', 'studyintro', 'studytext', 'series', 'description', 'seriesthumbnail', 'submitted',
             'hits', 'downloads', 'studynumber', 'topic', 'locations', 'jbsmedia', 'messagetype',
             'thumbnail', 'teacheremail', 'teacherweb', 'teacherphone', 'teacherfb', 'teachertw',
             'teacherblog', 'teachershort', 'teacherlong', 'teacheraddress', 'teacherlink1',
@@ -1339,6 +1339,18 @@ class Cwmlisting
                     ) : $data;
                 }
                 break;
+            case $extra . 'studytext':
+                if ($header === 1) {
+                    $data = Text::_('JBS_CMN_STUDY_TEXT');
+                } else {
+                    isset($item->studytext) ? $data = HTMLHelper::_(
+                        'content.prepare',
+                        $item->studytext,
+                        '',
+                        'com_proclaim.' . $type
+                    ) : $data;
+                }
+                break;
             case $extra . 'series':
                 if ($header === 1) {
                     $data = Text::_('JBS_CMN_SERIES');
@@ -1676,6 +1688,13 @@ class Cwmlisting
             case 'studyintro':
                 if (isset($row->studyintro)) {
                     $element = HTMLHelper::_('content.prepare', $row->studyintro, '', 'com_proclaim.' . $type);
+                } else {
+                    $element = '';
+                }
+                break;
+            case 'studytext':
+                if (isset($row->studytext)) {
+                    $element = HTMLHelper::_('content.prepare', $row->studytext, '', 'com_proclaim.' . $type);
                 } else {
                     $element = '';
                 }

@@ -81,6 +81,7 @@ class ProclaimHelper implements DatabaseAwareInterface
                     'study.hits',
                     'study.alias',
                     'study.studyintro',
+                    'study.studytext',
                     'study.teacher_id',
                     'study.secondary_reference',
                     'study.booknumber2',
