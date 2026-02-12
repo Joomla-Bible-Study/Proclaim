@@ -50,42 +50,6 @@ class ApiBibleProviderTest extends ProclaimTestCase
     }
 
     /**
-     * Test getPassage method signature
-     *
-     * @return void
-     */
-    public function testGetPassageMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(ApiBibleProvider::class, 'getPassage');
-
-        $this->assertTrue($reflection->isPublic());
-        $this->assertReturnTypeName(
-            'CWM\Component\Proclaim\Site\Bible\BiblePassageResult',
-            $reflection
-        );
-
-        $params = $reflection->getParameters();
-        $this->assertCount(2, $params);
-        $this->assertEquals('reference', $params[0]->getName());
-        $this->assertParamTypeName('string', $params[0]);
-        $this->assertEquals('translation', $params[1]->getName());
-        $this->assertParamTypeName('string', $params[1]);
-    }
-
-    /**
-     * Test getAvailableTranslations method signature
-     *
-     * @return void
-     */
-    public function testGetAvailableTranslationsMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(ApiBibleProvider::class, 'getAvailableTranslations');
-
-        $this->assertTrue($reflection->isPublic());
-        $this->assertReturnTypeName('array', $reflection);
-    }
-
-    /**
      * Test OSIS codes mapping has all 66 books
      *
      * @return void

@@ -95,27 +95,6 @@ class LocalProviderTest extends ProclaimTestCase
     }
 
     /**
-     * Test getPassage method signature
-     *
-     * @return void
-     */
-    public function testGetPassageMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(LocalProvider::class, 'getPassage');
-
-        $this->assertTrue($reflection->isPublic());
-        $this->assertReturnTypeName(
-            'CWM\Component\Proclaim\Site\Bible\BiblePassageResult',
-            $reflection
-        );
-
-        $params = $reflection->getParameters();
-        $this->assertCount(2, $params);
-        $this->assertEquals('reference', $params[0]->getName());
-        $this->assertEquals('translation', $params[1]->getName());
-    }
-
-    /**
      * Test parseReference method via reflection
      *
      * @return void

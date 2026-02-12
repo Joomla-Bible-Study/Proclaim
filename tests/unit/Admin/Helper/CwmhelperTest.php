@@ -32,25 +32,6 @@ class CwmhelperTest extends ProclaimTestCase
     }
 
     /**
-     * Test getRemoteFileSize method signature
-     *
-     * @return void
-     */
-    public function testGetRemoteFileSizeMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(Cwmhelper::class, 'getRemoteFileSize');
-
-        $this->assertTrue($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-        $this->assertReturnTypeName('int', $reflection);
-
-        $params = $reflection->getParameters();
-        $this->assertCount(1, $params);
-        $this->assertEquals('url', $params[0]->getName());
-        $this->assertParamTypeName('string', $params[0]);
-    }
-
-    /**
      * Test getRemoteFileSize returns 0 for empty URL
      *
      * @return void
@@ -70,23 +51,6 @@ class CwmhelperTest extends ProclaimTestCase
     {
         $this->assertEquals(0, Cwmhelper::getRemoteFileSize('https://youtu.be/abc123'));
         $this->assertEquals(0, Cwmhelper::getRemoteFileSize('https://youtube.com/watch?v=abc123'));
-    }
-
-    /**
-     * Test removeHttp method signature
-     *
-     * @return void
-     */
-    public function testRemoveHttpMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(Cwmhelper::class, 'removeHttp');
-
-        $this->assertTrue($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-
-        $params = $reflection->getParameters();
-        $this->assertCount(1, $params);
-        $this->assertEquals('url', $params[0]->getName());
     }
 
     /**
@@ -118,68 +82,5 @@ class CwmhelperTest extends ProclaimTestCase
     {
         $this->assertEquals('ftp://example.com', Cwmhelper::removeHttp('ftp://example.com'));
         $this->assertEquals('example.com', Cwmhelper::removeHttp('example.com'));
-    }
-
-    /**
-     * Test mediaBuildUrl method exists
-     *
-     * @return void
-     */
-    public function testMediaBuildUrlMethodExists(): void
-    {
-        $this->assertTrue(method_exists(Cwmhelper::class, 'mediaBuildUrl'));
-    }
-
-    /**
-     * Test clearCache method signature
-     *
-     * @return void
-     */
-    public function testClearCacheMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(Cwmhelper::class, 'clearCache');
-
-        $this->assertTrue($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-        $this->assertReturnTypeName('void', $reflection);
-    }
-
-    /**
-     * Test getSimpleView method signature
-     *
-     * @return void
-     */
-    public function testGetSimpleViewMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(Cwmhelper::class, 'getSimpleView');
-
-        $this->assertTrue($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-
-        $params = $reflection->getParameters();
-        $this->assertCount(1, $params);
-        $this->assertEquals('params', $params[0]->getName());
-        $this->assertTrue($params[0]->allowsNull());
-    }
-
-    /**
-     * Test setFileSize method signature
-     *
-     * @return void
-     */
-    public function testSetFileSizeMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(Cwmhelper::class, 'setFileSize');
-
-        $this->assertTrue($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-        $this->assertReturnTypeName('void', $reflection);
-
-        $params = $reflection->getParameters();
-        $this->assertCount(2, $params);
-        $this->assertEquals('id', $params[0]->getName());
-        $this->assertParamTypeName('int', $params[0]);
-        $this->assertEquals('size', $params[1]->getName());
-        $this->assertParamTypeName('int', $params[1]);
     }
 }

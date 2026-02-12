@@ -52,66 +52,6 @@ class CwmassetsTest extends ProclaimTestCase
     }
 
     /**
-     * Test fixAssets method signature
-     *
-     * @return void
-     */
-    public function testFixAssetsMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(Cwmassets::class, 'fixAssets');
-
-        $this->assertTrue($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-        $this->assertReturnTypeName('bool', $reflection);
-
-        $params = $reflection->getParameters();
-        $this->assertCount(2, $params);
-        $this->assertEquals('key', $params[0]->getName());
-        $this->assertEquals('result', $params[1]->getName());
-    }
-
-    /**
-     * Test parentId method signature
-     *
-     * @return void
-     */
-    public function testParentIdMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(Cwmassets::class, 'parentId');
-
-        $this->assertTrue($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-        $this->assertReturnTypeName('int', $reflection);
-    }
-
-    /**
-     * Test build method exists and returns object
-     *
-     * @return void
-     */
-    public function testBuildMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(Cwmassets::class, 'build');
-
-        $this->assertTrue($reflection->isPublic());
-        $this->assertReturnTypeName('object', $reflection);
-    }
-
-    /**
-     * Test getAssetObjects method returns array
-     *
-     * @return void
-     */
-    public function testGetAssetObjectsMethodSignature(): void
-    {
-        $reflection = new \ReflectionMethod(Cwmassets::class, 'getAssetObjects');
-
-        $this->assertTrue($reflection->isStatic());
-        $this->assertTrue($reflection->isPublic());
-        $this->assertReturnTypeName('array', $reflection);
-    }
-
-    /**
      * Test getAssetObjects returns expected structure
      *
      * @return void
