@@ -314,16 +314,27 @@ class CwmImageMigration
     /**
      * Get a batch of records to migrate
      *
-     * @param   string  $type   Record type
-     * @param   int     $limit  Maximum number of records to return
+     * @param   string  $type        Record type
+     * @param   int     $limit       Maximum number of records to return
+     * @param   int[]   $excludeIds  Record IDs to skip (already failed)
      *
      * @return  array{records: array, remaining: int}
      *
      * @since 10.2.0
      */
-    public static function getBatch(string $type, int $limit = 10): array
+    public static function getBatch(string $type, int $limit = 10, array $excludeIds = []): array
     {
-        $records   = self::getRecordsNeedingMigration($type);
+        $records = self::getRecordsNeedingMigration($type);
+
+        // Filter out records that already failed — they stay in the DB
+        // but the JS tracks them and sends their IDs to skip
+        if (!empty($excludeIds)) {
+            $records = array_values(array_filter(
+                $records,
+                fn ($r) => !\in_array((int) $r->id, $excludeIds, true)
+            ));
+        }
+
         $batch     = \array_slice($records, 0, $limit);
         $remaining = \count($records) - \count($batch);
 

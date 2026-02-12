@@ -1024,11 +1024,15 @@ class CwmadminController extends FormController
             return;
         }
 
-        $type  = $input->get('type', 'studies', 'string');
-        $limit = $input->get('limit', 10, 'int');
+        $type    = $input->get('type', 'studies', 'string');
+        $limit   = $input->get('limit', 10, 'int');
+        $exclude = $input->get('exclude', '', 'string');
+
+        // Parse comma-separated exclude IDs (records that already failed)
+        $excludeIds = !empty($exclude) ? array_map('intval', explode(',', $exclude)) : [];
 
         try {
-            $batch = CwmImageMigration::getBatch($type, $limit);
+            $batch = CwmImageMigration::getBatch($type, $limit, $excludeIds);
             echo json_encode($batch, JSON_THROW_ON_ERROR);
         } catch (\Throwable $e) {
             echo json_encode([

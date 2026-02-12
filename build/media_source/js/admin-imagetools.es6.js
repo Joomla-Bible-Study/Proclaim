@@ -206,31 +206,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function migrateBatch(type, typeProcessed) {
-      fetch(`index.php?option=com_proclaim&task=cwmadmin.getMigrationBatchXHR&${token}=1&type=${type}&limit=5`)
+      // Collect failed IDs for this type so PHP can skip them in the query
+      const typeFailedIds = [];
+      failedIds.forEach(key => {
+        if (key.startsWith(`${type}-`)) {
+          typeFailedIds.push(key.substring(type.length + 1));
+        }
+      });
+      const excludeParam = typeFailedIds.length > 0 ? `&exclude=${typeFailedIds.join(',')}` : '';
+
+      fetch(`index.php?option=com_proclaim&task=cwmadmin.getMigrationBatchXHR&${token}=1&type=${type}&limit=5${excludeParam}`)
         .then(r => r.json())
         .then(data => {
+          // No more records to process for this type (PHP already excluded failed IDs)
           if (data.records.length === 0) {
             typeIndex++;
             migrateType();
             return;
           }
 
-          // Filter out records that already failed in a previous batch —
-          // they remain in the DB (not auto-cleared) so getBatch returns them again
-          const newRecords = data.records.filter(r => !failedIds.has(`${type}-${r.id}`));
-
-          // If every record in the batch is a known failure, this type is done
-          if (newRecords.length === 0) {
-            typeIndex++;
-            migrateType();
-            return;
-          }
-
           let batchDone = 0;
-          const batchTotal = newRecords.length;
+          const batchTotal = data.records.length;
           const typeTotal = migrationTotals[type];
 
-          const promises = newRecords.map(record => {
+          const promises = data.records.map(record => {
             const recordTitle = record.studytitle || record.teachername || record.title || '';
 
             return fetch(`index.php?option=com_proclaim&task=cwmadmin.migrateRecordXHR&${token}=1&type=${type}&id=${record.id}`)
