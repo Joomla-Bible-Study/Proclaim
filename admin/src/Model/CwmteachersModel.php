@@ -92,7 +92,7 @@ class CwmteachersModel extends ListModel
         $app = Factory::getApplication();
 
         // Adjust the context to support modal layouts.
-        if ($layout = $app->input->get('layout')) {
+        if ($layout = $app->getInput()->get('layout')) {
             $this->context .= '.' . $layout;
         }
 

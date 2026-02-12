@@ -60,7 +60,7 @@ class PluploadField extends FormField
         $document->addScript(
             Uri::root() . 'administrator/components/com_proclaim/src/Addons/Servers/Legacy/includes/js/legacy.js'
         );
-        $view  = $app->input->get('view');
+        $view  = $app->getInput()->get('view');
         $admin = Cwmparams::getAdmin();
 
         if (isset($this->form->s_params['uploadpath'])) {

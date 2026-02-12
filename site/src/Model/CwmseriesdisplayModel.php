@@ -292,10 +292,10 @@ class CwmseriesdisplayModel extends ItemModel
         $app = Factory::getApplication();
 
         // Load state from the request.
-        $pk = $app->input->get('id', '', 'int');
+        $pk = $app->getInput()->get('id', '', 'int');
         $this->setState('series.id', $pk);
 
-        $offset = $app->input->get('limitstart', '', 'int');
+        $offset = $app->getInput()->get('limitstart', '', 'int');
         $this->setState('list.offset', $offset);
 
         // Load the parameters.
@@ -311,7 +311,7 @@ class CwmseriesdisplayModel extends ItemModel
         $t = (int) $params->get('seriesid');
 
         if (!$t) {
-            $t = $app->input->get('t', 1, 'int');
+            $t = $app->getInput()->get('t', 1, 'int');
         }
 
         $template->id = $t;

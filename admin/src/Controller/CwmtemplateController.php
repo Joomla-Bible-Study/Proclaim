@@ -80,7 +80,7 @@ class CwmtemplateController extends FormController
         }
 
         $app       = Factory::getApplication();
-        $input     = $app->input;
+        $input     = $app->getInput();
         $fieldset  = $input->getString('fieldset', '');
         $id        = $input->getInt('id', 0);
 
@@ -153,7 +153,7 @@ class CwmtemplateController extends FormController
     public function loadLayoutEditor(): void
     {
         $app   = Factory::getApplication();
-        $input = $app->input;
+        $input = $app->getInput();
         $id    = $input->getInt('id', 0);
 
         try {

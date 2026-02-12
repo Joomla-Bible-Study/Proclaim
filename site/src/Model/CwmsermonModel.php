@@ -317,7 +317,7 @@ class CwmsermonModel extends FormModel
     public function getComments(): array
     {
         $app = Factory::getApplication();
-        $id  = $app->input->get('id', 0, 'int');
+        $id  = $app->getInput()->get('id', 0, 'int');
 
         if (empty($id)) {
             return [];
@@ -420,10 +420,10 @@ class CwmsermonModel extends FormModel
         $app = Factory::getApplication('site');
 
         // Load state from the request.
-        $pk = $app->input->get('id', '', 'int');
+        $pk = $app->getInput()->get('id', '', 'int');
         $this->setState('study.id', $pk);
 
-        $offset = $app->input->get('limitstart', '', 'int');
+        $offset = $app->getInput()->get('limitstart', '', 'int');
         $this->setState('list.offset', $offset);
 
         // Load the parameters.
@@ -439,7 +439,7 @@ class CwmsermonModel extends FormModel
         $t = (int)$params->get('sermonid');
 
         if (!$t) {
-            $t = $app->input->get('t', 1, 'int');
+            $t = $app->getInput()->get('t', 1, 'int');
         }
 
         $template->id = $t;

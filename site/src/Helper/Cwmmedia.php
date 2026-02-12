@@ -916,7 +916,7 @@ class Cwmmedia
 
             // Check to see if they want to use a popup
             $app   = Factory::getApplication();
-            $input = $app->input;
+            $input = $app->getInput();
             $opt   = $input->get('option');
 
             if (($opt === 'com_proclaim') && $params->get('useterms') > 0) {

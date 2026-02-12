@@ -117,12 +117,12 @@ class HtmlView extends BaseHtmlView
     public function display($tpl = null): void
     {
         $app             = Factory::getApplication();
-        $this->scanstate = $app->input->get('scanstate', false);
+        $this->scanstate = $app->getInput()->get('scanstate', false);
 
         // Get data from the model
         $this->state = $this->get("State");
-        $layout      = $app->input->get('layout', 'default');
-        $task        = $app->input->get('task', 'execute');
+        $layout      = $app->getInput()->get('layout', 'default');
+        $task        = $app->getInput()->get('task', 'execute');
 
         $load    = $this->loadStack();
         $more    = true;

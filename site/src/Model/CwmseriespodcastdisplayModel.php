@@ -342,7 +342,7 @@ class CwmseriespodcastdisplayModel extends ItemModel
         $params = $template->params;
 
         // Load state from the request.
-        $pk = $app->input->get('id', '', 'int');
+        $pk = $app->getInput()->get('id', '', 'int');
 
         if (empty($pk)) {
             $mseries_id = $params->get('mseries_id');
@@ -364,7 +364,7 @@ class CwmseriespodcastdisplayModel extends ItemModel
         $t = $params->get('seriesid');
 
         if (!$t) {
-            $t = $app->input->get('t', 1, 'int');
+            $t = $app->getInput()->get('t', 1, 'int');
         }
 
         $template->id = $t;
