@@ -98,6 +98,7 @@
     "check": ["@lint:syntax", "@lint", "@test"],
     "check:all": ["@lint:syntax", "@lint", "@test:all"],
     "build:assets": "npm ci && npm run build",
+    "build:bridge": "cd build/migration-bridge && zip -r ../packages/proclaim_bridge_v1.0.0.zip proclaim_bridge.xml script.php index.html",
     "build:full": ["@check:all", "@build"],
     "setup": "php build/proclaim_build.php setup",
     "joomla-install": "php build/proclaim_build.php install-joomla",
