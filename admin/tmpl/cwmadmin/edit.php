@@ -597,6 +597,9 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             'expectedPath'          => Text::_('JBS_ADM_EXPECTED_PATH'),
             'foundAtPath'           => Text::_('JBS_ADM_FOUND_AT_PATH'),
             'migrationDone'         => Text::_('JBS_ADM_MIGRATION_DONE'),
+            'deleteSelected'        => Text::_('JBS_ADM_DELETE_SELECTED'),
+            'confirmDeleteLegacy'   => Text::_('JBS_ADM_CONFIRM_DELETE_LEGACY'),
+            'deleting'              => Text::_('JBS_ADM_DELETING'),
         ], JSON_THROW_ON_ERROR);
         ?>
         <div id="imagetools-config"

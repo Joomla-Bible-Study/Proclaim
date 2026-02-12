@@ -789,6 +789,83 @@ class CwmImageMigration
     }
 
     /**
+     * Delete legacy image files from selected folders
+     *
+     * Only deletes image files directly in the folder (not recursive).
+     * Removes the folder afterwards if it becomes empty.
+     * Validates paths are within known Proclaim image directories.
+     *
+     * @param   array  $folderPaths  Relative paths (e.g. 'images/biblestudy/123')
+     *
+     * @return  array{deleted: int, errors: list<string>}
+     *
+     * @since 10.1.0
+     */
+    public static function deleteLegacyFiles(array $folderPaths): array
+    {
+        $deleted = 0;
+        $errors  = [];
+
+        // Allowed base paths for safety — never delete outside Proclaim dirs
+        $allowedBases = [
+            'images/biblestudy',
+            'media/com_proclaim/images',
+        ];
+
+        $imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'];
+
+        foreach ($folderPaths as $relPath) {
+            $relPath = trim($relPath, '/');
+
+            // SAFETY: Validate path is within allowed scope
+            $isAllowed = false;
+
+            foreach ($allowedBases as $base) {
+                if ($relPath === $base || str_starts_with($relPath, $base . '/')) {
+                    $isAllowed = true;
+                    break;
+                }
+            }
+
+            if (!$isAllowed) {
+                $errors[] = 'Path not allowed: ' . $relPath;
+                continue;
+            }
+
+            $absDir = Path::clean(JPATH_ROOT . '/' . $relPath);
+
+            if (!is_dir($absDir)) {
+                $errors[] = 'Folder not found: ' . $relPath;
+                continue;
+            }
+
+            // Delete only image files directly in this folder
+            $files = self::getImageFilesInDir($absDir, $imageExts);
+            $folderDeleted = 0;
+
+            foreach ($files as $file) {
+                if (@unlink($file)) {
+                    $folderDeleted++;
+                } else {
+                    $errors[] = 'Failed to delete: ' . self::makeRelative($file);
+                }
+            }
+
+            $deleted += $folderDeleted;
+
+            // If the folder is now empty (no files, no subdirs), remove it
+            $remaining = @scandir($absDir);
+
+            if ($remaining !== false && \count($remaining) <= 2) {
+                // Only . and .. remain — safe to remove
+                Folder::delete($absDir);
+            }
+        }
+
+        return ['deleted' => $deleted, 'errors' => $errors];
+    }
+
+    /**
      * Get count of images needing WebP conversion
      *
      * Scans image directories for JPEG/PNG files that lack a WebP sibling.

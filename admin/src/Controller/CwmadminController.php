@@ -1392,6 +1392,56 @@ class CwmadminController extends FormController
     }
 
     /**
+     * Delete legacy image folders/files XHR
+     *
+     * Accepts an array of relative folder paths and deletes the image
+     * files within them (not entire directory trees).
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    public function deleteLegacyFoldersXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $input    = $app->getInput();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken() && !Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $paths = $input->get('paths', [], 'array');
+
+        if (empty($paths)) {
+            echo json_encode([
+                'deleted' => 0,
+                'errors'  => ['No paths provided'],
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $result = CwmImageMigration::deleteLegacyFiles($paths);
+            echo json_encode($result, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'deleted' => 0,
+                'errors'  => [$e->getMessage()],
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
      * Get player statistics XHR - returns player stats HTML as JSON for lazy loading
      *
      * @return void

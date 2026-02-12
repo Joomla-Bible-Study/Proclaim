@@ -572,13 +572,17 @@ document.addEventListener('DOMContentLoaded', () => {
         let html = `<div class="alert alert-warning"><i class="icon-warning me-1" aria-hidden="true"></i>${summary}</div>`;
         html += '<div style="max-height: 400px; overflow-y: auto;">';
         html += `<table class="table table-sm table-striped">
-          <thead><tr><th>${strings.folder}</th><th>${strings.files}</th><th>${strings.size}</th><th>${strings.filenames}</th></tr></thead><tbody>`;
+          <thead><tr>
+            <th><input type="checkbox" id="select-all-legacy" aria-label="${strings.selectAll}"></th>
+            <th>${strings.folder}</th><th>${strings.files}</th><th>${strings.size}</th><th>${strings.filenames}</th>
+          </tr></thead><tbody>`;
 
         data.folders.forEach(folder => {
           const names = folder.filenames.length <= 5
             ? folder.filenames.join(', ')
             : folder.filenames.slice(0, 5).join(', ') + ` ... +${folder.filenames.length - 5} more`;
           html += `<tr>
+            <td><input type="checkbox" class="legacy-checkbox" value="${folder.path}" aria-label="${folder.path}"></td>
             <td><small>${folder.path}</small></td>
             <td>${folder.files}</td>
             <td>${formatBytes(folder.size)}</td>
@@ -587,8 +591,70 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         html += '</tbody></table></div>';
-        html += '<p class="small text-muted mt-2">These files can be removed manually after verifying the migration completed successfully.</p>';
+        html += `<div class="mt-3 d-flex gap-2">
+          <button type="button" class="btn btn-danger" id="btn-delete-legacy" style="display:none;">
+            <i class="icon-trash" aria-hidden="true"></i> ${strings.deleteSelected}
+          </button>
+        </div>`;
         resultsEl.innerHTML = html;
+
+        // Wire up select-all checkbox
+        const selectAllLegacy = document.getElementById('select-all-legacy');
+        if (selectAllLegacy) {
+          selectAllLegacy.addEventListener('change', function () {
+            document.querySelectorAll('.legacy-checkbox').forEach(cb => { cb.checked = this.checked; });
+            updateLegacyDeleteBtn();
+          });
+        }
+        // Show/hide delete button based on selection
+        document.querySelectorAll('.legacy-checkbox').forEach(cb => {
+          cb.addEventListener('change', updateLegacyDeleteBtn);
+        });
+
+        function updateLegacyDeleteBtn() {
+          const checked = document.querySelectorAll('.legacy-checkbox:checked').length;
+          const delBtn = document.getElementById('btn-delete-legacy');
+          if (delBtn) delBtn.style.display = checked > 0 ? '' : 'none';
+        }
+
+        // Delete selected legacy folders
+        const delLegacyBtn = document.getElementById('btn-delete-legacy');
+        if (delLegacyBtn) {
+          delLegacyBtn.addEventListener('click', function () {
+            const selected = [];
+            document.querySelectorAll('.legacy-checkbox:checked').forEach(cb => selected.push(cb.value));
+            if (selected.length === 0) return;
+
+            const message = strings.confirmDeleteLegacy.replace('%s', selected.length);
+            // eslint-disable-next-line no-restricted-globals
+            if (!confirm(message)) return;
+
+            delLegacyBtn.disabled = true;
+            delLegacyBtn.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${strings.deleting}`;
+
+            const params = new URLSearchParams();
+            selected.forEach(path => params.append('paths[]', path));
+
+            fetch(`index.php?option=com_proclaim&task=cwmadmin.deleteLegacyFoldersXHR&${token}=1`, {
+              method: 'POST',
+              body: params
+            })
+              .then(r => r.json())
+              .then(result => {
+                delLegacyBtn.disabled = false;
+                delLegacyBtn.innerHTML = `<i class="icon-trash" aria-hidden="true"></i> ${strings.deleteSelected}`;
+
+                if (result.deleted > 0) {
+                  // Re-scan to refresh the list
+                  btn.click();
+                }
+              })
+              .catch(() => {
+                delLegacyBtn.disabled = false;
+                delLegacyBtn.innerHTML = `<i class="icon-trash" aria-hidden="true"></i> ${strings.deleteSelected}`;
+              });
+          });
+        }
       })
       .catch(() => {
         btn.disabled = false;
