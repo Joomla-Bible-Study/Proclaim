@@ -1552,9 +1552,8 @@ class Cwmlisting
             $frow .= '</a>';
         }
 
-        // If ($header === 0){ $frow .= $classclose . '</td>';}
         if ($header === 0) {
-            $frow .= '</' . $classclose . '</td>';
+            $frow .= $classclose . '</td>';
         }
 
         if ($header === 1) {
