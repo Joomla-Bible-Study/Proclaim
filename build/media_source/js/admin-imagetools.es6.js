@@ -123,15 +123,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showErrorReport() {
       if (!reportEl || errorDetails.length === 0) return;
-      const downloadUrl = `index.php?option=com_proclaim&task=cwmadmin.downloadClearedLogXHR&${token}=1`;
       let html = `<div class="alert alert-warning mt-3">
         <h5>${strings.missingFiles} (${errorDetails.length})</h5>
         <p class="small mb-2">${strings.missingFilesDesc}</p>
-        <p class="mb-2">
-          <a href="${downloadUrl}" class="btn btn-sm btn-outline-secondary" download>
-            <i class="icon-download" aria-hidden="true"></i> ${strings.downloadLog}
-          </a>
-        </p>
         <div style="max-height: 300px; overflow-y: auto;">
         <table class="table table-sm table-striped mb-0">
           <thead><tr><th>Type</th><th>ID</th><th>Title</th><th>${strings.missingPath}</th></tr></thead>
@@ -139,7 +133,9 @@ document.addEventListener('DOMContentLoaded', () => {
       errorDetails.forEach(e => {
         html += `<tr><td>${e.type}</td><td>${e.id}</td><td><small>${e.title}</small></td><td><small class="text-danger">${e.path}</small></td></tr>`;
       });
-      html += '</tbody></table></div></div>';
+      html += `</tbody></table></div>
+        <p class="small text-muted mt-2">Use the "Clear Unresolvable Images" section below to clean up these records.</p>
+      </div>`;
       reportEl.innerHTML = html;
       reportEl.style.display = 'block';
     }
@@ -490,6 +486,128 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsEl.innerHTML = `<span class="text-danger">${strings.errorLoading}</span>`;
       });
   });
+
+  // ---- Clear Unresolvable Images ----
+  const previewBtn      = document.getElementById('btn-preview-unresolvable');
+  const clearBtn        = document.getElementById('btn-clear-unresolvable');
+  const downloadLogBtn  = document.getElementById('btn-download-cleared-log');
+  const previewEl       = document.getElementById('unresolvable-preview');
+  const unresStatusEl   = document.getElementById('unresolvable-status');
+
+  if (previewBtn) {
+    previewBtn.addEventListener('click', function () {
+      previewBtn.disabled = true;
+      previewBtn.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${strings.scanning}`;
+      if (previewEl) previewEl.style.display = 'none';
+      if (clearBtn) clearBtn.style.display = 'none';
+      if (unresStatusEl) unresStatusEl.style.display = 'none';
+
+      fetch(`index.php?option=com_proclaim&task=cwmadmin.getUnresolvableCountXHR&${token}=1`)
+        .then(r => r.json())
+        .then(data => {
+          previewBtn.disabled = false;
+          previewBtn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${strings.previewUnresolvable}`;
+
+          if (!data.count || data.count === 0) {
+            if (previewEl) {
+              previewEl.style.display = 'block';
+              previewEl.innerHTML = `<div class="alert alert-success"><i class="icon-checkmark me-1" aria-hidden="true"></i>${strings.noUnresolvable}</div>`;
+            }
+            return;
+          }
+
+          // Show preview table
+          const summary = strings.unresolvableFound.replace('%s', data.count);
+          let html = `<div class="alert alert-warning"><i class="icon-warning me-1" aria-hidden="true"></i>${summary}</div>`;
+          html += '<div style="max-height: 300px; overflow-y: auto;">';
+          html += `<table class="table table-sm table-striped mb-0">
+            <thead><tr><th>Type</th><th>ID</th><th>Title</th><th>${strings.missingPath}</th></tr></thead><tbody>`;
+          data.records.forEach(r => {
+            html += `<tr><td>${r.type}</td><td>${r.id}</td><td><small>${r.title}</small></td><td><small class="text-danger">${r.path}</small></td></tr>`;
+          });
+          html += '</tbody></table></div>';
+
+          if (previewEl) {
+            previewEl.innerHTML = html;
+            previewEl.style.display = 'block';
+          }
+
+          // Show clear button
+          if (clearBtn) {
+            clearBtn.style.display = '';
+            clearBtn.dataset.count = data.count;
+          }
+        })
+        .catch(err => {
+          previewBtn.disabled = false;
+          previewBtn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${strings.previewUnresolvable}`;
+          if (previewEl) {
+            previewEl.style.display = 'block';
+            previewEl.innerHTML = `<span class="text-danger">${strings.errorLoading}: ${err.message || err}</span>`;
+          }
+        });
+    });
+  }
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', function () {
+      const count = clearBtn.dataset.count || '?';
+      const message = strings.confirmClear.replace('%s', count);
+
+      // eslint-disable-next-line no-restricted-globals
+      if (!confirm(message)) {
+        return;
+      }
+
+      clearBtn.disabled = true;
+      clearBtn.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${strings.clearing}`;
+
+      fetch(`index.php?option=com_proclaim&task=cwmadmin.clearUnresolvableXHR&${token}=1`)
+        .then(r => r.json())
+        .then(data => {
+          clearBtn.style.display = 'none';
+
+          if (data.success) {
+            const msg = strings.clearComplete.replace('%s', data.cleared);
+            if (unresStatusEl) {
+              unresStatusEl.style.display = 'block';
+              unresStatusEl.innerHTML = `<div class="alert alert-success"><i class="icon-checkmark me-1" aria-hidden="true"></i>${msg}</div>`;
+            }
+            // Show download log button
+            if (downloadLogBtn) downloadLogBtn.style.display = '';
+            // Refresh migration counts
+            loadMigrationCounts();
+          } else {
+            if (unresStatusEl) {
+              unresStatusEl.style.display = 'block';
+              unresStatusEl.innerHTML = `<span class="text-danger">${data.error || strings.errorLoading}</span>`;
+            }
+            clearBtn.disabled = false;
+            clearBtn.style.display = '';
+            clearBtn.innerHTML = `<i class="icon-trash" aria-hidden="true"></i> ${strings.clearUnresolvable}`;
+          }
+        })
+        .catch(err => {
+          clearBtn.disabled = false;
+          clearBtn.innerHTML = `<i class="icon-trash" aria-hidden="true"></i> ${strings.clearUnresolvable}`;
+          if (unresStatusEl) {
+            unresStatusEl.style.display = 'block';
+            unresStatusEl.innerHTML = `<span class="text-danger">${strings.errorLoading}: ${err.message || err}</span>`;
+          }
+        });
+    });
+  }
+
+  // Show download log button if a log file already exists (check via preview)
+  if (downloadLogBtn) {
+    fetch(`index.php?option=com_proclaim&task=cwmadmin.downloadClearedLogXHR&${token}=1`, { method: 'HEAD' })
+      .then(r => {
+        if (r.ok && r.headers.get('content-type')?.includes('text/csv')) {
+          downloadLogBtn.style.display = '';
+        }
+      })
+      .catch(() => {});
+  }
 
   // ---- Utility ----
   function formatBytes(bytes) {

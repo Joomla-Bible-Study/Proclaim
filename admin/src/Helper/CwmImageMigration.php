@@ -159,11 +159,9 @@ class CwmImageMigration
         $title   = $row->studytitle ?? $row->teachername ?? $row->series_text ?? '';
         $oldPath = trim($row->thumbnailm ?? $row->teacher_thumbnail ?? $row->series_thumbnail ?? '');
 
-        // Treat '0', single-char junk, and empty as "no image" — clear and skip
+        // Treat '0', single-char junk, and empty as "no image" — skip (not migratable)
         if ($oldPath === '' || \strlen($oldPath) <= 1) {
-            self::clearImageField($type, $id, $oldPath, $title);
-
-            return ['success' => false, 'newPath' => null, 'error' => 'No valid image path for ' . $type . ' #' . $id];
+            return ['success' => false, 'newPath' => null, 'error' => 'No valid image path for ' . $type . ' #' . $id, 'junk' => true];
         }
 
         return self::migrateRecord($type, $id, $title, $oldPath);
@@ -248,11 +246,9 @@ class CwmImageMigration
             }
         }
 
-        // If source file is still missing, clear the DB field so this record
-        // is excluded from future migration batches (avoids infinite loop)
+        // If source file is still missing, report it but do NOT clear the DB field.
+        // The admin can clear unresolvable records manually via the dedicated button.
         if (!$sourceFound) {
-            self::clearImageField($type, $id, $cleanPath, $title);
-
             return [
                 'success'      => false,
                 'newPath'      => null,
@@ -417,6 +413,109 @@ class CwmImageMigration
     public static function getClearedLogPath(): string
     {
         return JPATH_ADMINISTRATOR . '/logs/proclaim_cleared_images.csv';
+    }
+
+    /**
+     * Find all records with image paths that cannot be resolved to real files
+     *
+     * Checks each record returned by getRecordsNeedingMigration() to see if
+     * the source file actually exists on disk. Returns those that don't.
+     *
+     * @return  array{records: list<array{type: string, id: int, title: string, path: string}>, count: int}
+     *
+     * @since 10.2.0
+     */
+    public static function getUnresolvableRecords(): array
+    {
+        $unresolvable = [];
+
+        foreach (['studies', 'teachers', 'series'] as $type) {
+            $records = self::getRecordsNeedingMigration($type);
+
+            foreach ($records as $row) {
+                $imagePath = trim($row->image_path ?? '');
+
+                // Junk values are always unresolvable
+                if ($imagePath === '' || \strlen($imagePath) <= 1) {
+                    $title = $row->studytitle ?? $row->teachername ?? $row->title ?? '';
+                    $unresolvable[] = ['type' => $type, 'id' => (int) $row->id, 'title' => $title, 'path' => $imagePath];
+
+                    continue;
+                }
+
+                // Clean Joomla media field metadata
+                $cleanImage = HTMLHelper::_('cleanImageURL', $imagePath);
+                $cleanPath  = $cleanImage->url;
+
+                // Handle bare filenames
+                if (!str_contains($cleanPath, '/')) {
+                    $folderKeys = [
+                        'studies'  => 'image_folder',
+                        'teachers' => 'teacher_image_folder',
+                        'series'   => 'series_image_folder',
+                    ];
+                    $folderKey   = $folderKeys[$type] ?? 'image_folder';
+                    $imageFolder = Cwmparams::getAdmin()->params->get($folderKey, 'images');
+                    $cleanPath   = $imageFolder . '/' . $cleanPath;
+                }
+
+                $absPath  = Path::clean(JPATH_ROOT . '/' . $cleanPath);
+                $basename = basename($cleanPath);
+
+                // Check if original or thumbnail exists
+                $found = false;
+
+                if (str_contains($basename, 'thumb_')) {
+                    $originalName    = str_replace('thumb_', '', $basename);
+                    $possibleOriginal = \dirname($cleanPath) . '/' . $originalName;
+
+                    if (is_file(Path::clean(JPATH_ROOT . '/' . $possibleOriginal)) || is_file($absPath)) {
+                        $found = true;
+                    }
+                } elseif (is_file($absPath)) {
+                    $found = true;
+                }
+
+                // Fallback: search image directories
+                if (!$found) {
+                    $searchName = str_contains($basename, 'thumb_')
+                        ? str_replace('thumb_', '', $basename)
+                        : $basename;
+                    $found = self::findImageFile($searchName, $type) !== null;
+                }
+
+                if (!$found) {
+                    $title = $row->studytitle ?? $row->teachername ?? $row->title ?? '';
+                    $unresolvable[] = ['type' => $type, 'id' => (int) $row->id, 'title' => $title, 'path' => $cleanPath];
+                }
+            }
+        }
+
+        return ['records' => $unresolvable, 'count' => \count($unresolvable)];
+    }
+
+    /**
+     * Clear all unresolvable image fields from the database
+     *
+     * For each record whose image file cannot be found, clears the DB field
+     * and logs the old value to CSV. This is a manual opt-in operation — the
+     * admin must explicitly trigger it after reviewing the missing files.
+     *
+     * @return  array{cleared: int, logFile: string}
+     *
+     * @since 10.2.0
+     */
+    public static function clearUnresolvableImages(): array
+    {
+        $result = self::getUnresolvableRecords();
+        $cleared = 0;
+
+        foreach ($result['records'] as $record) {
+            self::clearImageField($record['type'], $record['id'], $record['path'], $record['title']);
+            $cleared++;
+        }
+
+        return ['cleared' => $cleared, 'logFile' => self::getClearedLogPath()];
     }
 
     /**

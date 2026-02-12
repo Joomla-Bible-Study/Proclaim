@@ -501,9 +501,29 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             </div>
         </div>
 
-        <!-- Legacy Files Report -->
+        <!-- Clear Unresolvable + Legacy Files Report -->
         <div class="row mt-4" id="imagetools-row3">
-            <div class="col-12">
+            <div class="col-12 col-lg-6">
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_CLEAR_UNRESOLVABLE'); ?></h3>
+                    <p><?php echo Text::_('JBS_ADM_CLEAR_UNRESOLVABLE_DESC'); ?></p>
+                    <div id="unresolvable-preview" class="mb-3" style="display:none;"></div>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button type="button" class="btn btn-outline-secondary" id="btn-preview-unresolvable">
+                            <i class="icon-search" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_PREVIEW_UNRESOLVABLE'); ?>
+                        </button>
+                        <button type="button" class="btn btn-warning" id="btn-clear-unresolvable" style="display:none;">
+                            <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_CLEAR_UNRESOLVABLE_BTN'); ?>
+                        </button>
+                        <a href="index.php?option=com_proclaim&task=cwmadmin.downloadClearedLogXHR&<?php echo Session::getFormToken(); ?>=1"
+                           class="btn btn-outline-secondary" id="btn-download-cleared-log" style="display:none;" download>
+                            <i class="icon-download" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_DOWNLOAD_CLEARED_LOG'); ?>
+                        </a>
+                    </div>
+                    <div id="unresolvable-status" class="mt-3" style="display:none;"></div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
                 <div class="cwmadmin-panel mb-4">
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_LEGACY_FILES'); ?></h3>
                     <p><?php echo Text::_('JBS_ADM_LEGACY_FILES_DESC'); ?></p>
@@ -560,6 +580,13 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             'legacyFilesFound'      => Text::_('JBS_ADM_LEGACY_FILES_FOUND'),
             'filenames'             => Text::_('JBS_ADM_FILENAMES'),
             'downloadLog'           => Text::_('JBS_ADM_DOWNLOAD_CLEARED_LOG'),
+            'previewUnresolvable'   => Text::_('JBS_ADM_PREVIEW_UNRESOLVABLE'),
+            'clearUnresolvable'     => Text::_('JBS_ADM_CLEAR_UNRESOLVABLE_BTN'),
+            'noUnresolvable'        => Text::_('JBS_ADM_NO_UNRESOLVABLE'),
+            'unresolvableFound'     => Text::_('JBS_ADM_UNRESOLVABLE_FOUND'),
+            'confirmClear'          => Text::_('JBS_ADM_CONFIRM_CLEAR_UNRESOLVABLE'),
+            'clearComplete'         => Text::_('JBS_ADM_CLEAR_COMPLETE'),
+            'clearing'              => Text::_('JBS_ADM_CLEARING'),
         ], JSON_THROW_ON_ERROR);
         ?>
         <div id="imagetools-config"

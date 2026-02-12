@@ -1246,6 +1246,74 @@ class CwmadminController extends FormController
     }
 
     /**
+     * Get count of unresolvable image records XHR
+     *
+     * Returns a preview of how many records have image paths pointing to
+     * files that cannot be found on disk.
+     *
+     * @return void
+     *
+     * @since 10.2.0
+     */
+    public function getUnresolvableCountXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $result = CwmImageMigration::getUnresolvableRecords();
+            echo json_encode($result, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode(['records' => [], 'count' => 0, 'error' => $e->getMessage()], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Clear all unresolvable image fields XHR
+     *
+     * Clears DB image fields for records whose source files cannot be found
+     * and logs the cleared values to a CSV file for manual recovery.
+     *
+     * @return void
+     *
+     * @since 10.2.0
+     */
+    public function clearUnresolvableXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $result = CwmImageMigration::clearUnresolvableImages();
+            echo json_encode(['success' => true, 'cleared' => $result['cleared']], JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode(['success' => false, 'cleared' => 0, 'error' => $e->getMessage()], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
      * Get WebP migration counts XHR
      *
      * @return void
