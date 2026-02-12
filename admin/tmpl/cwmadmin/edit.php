@@ -559,6 +559,7 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             'legacyNoFiles'         => Text::_('JBS_ADM_LEGACY_NO_FILES'),
             'legacyFilesFound'      => Text::_('JBS_ADM_LEGACY_FILES_FOUND'),
             'filenames'             => Text::_('JBS_ADM_FILENAMES'),
+            'downloadLog'           => Text::_('JBS_ADM_DOWNLOAD_CLEARED_LOG'),
         ], JSON_THROW_ON_ERROR);
         ?>
         <div id="imagetools-config"

@@ -1204,6 +1204,48 @@ class CwmadminController extends FormController
     }
 
     /**
+     * Download the cleared images log CSV
+     *
+     * Sends the proclaim_cleared_images.csv file as a download so admins
+     * can review which image values were cleared during migration.
+     *
+     * @return void
+     *
+     * @since 10.2.0
+     */
+    public function downloadClearedLogXHR(): void
+    {
+        $app = Factory::getApplication();
+
+        if (!Session::checkToken('get')) {
+            $app->setHeader('Content-Type', 'application/json');
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $logFile = CwmImageMigration::getClearedLogPath();
+
+        if (!is_file($logFile)) {
+            $app->setHeader('Content-Type', 'application/json');
+            echo json_encode(['success' => false, 'message' => 'No cleared images log found.'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $app->setHeader('Content-Type', 'text/csv');
+        $app->setHeader('Content-Disposition', 'attachment; filename="proclaim_cleared_images.csv"');
+        $app->setHeader('Content-Length', (string) filesize($logFile));
+        $app->sendHeaders();
+
+        readfile($logFile);
+
+        $app->close();
+    }
+
+    /**
      * Get WebP migration counts XHR
      *
      * @return void

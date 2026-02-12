@@ -161,7 +161,7 @@ class CwmImageMigration
 
         // Treat '0', single-char junk, and empty as "no image" — clear and skip
         if ($oldPath === '' || \strlen($oldPath) <= 1) {
-            self::clearImageField($type, $id);
+            self::clearImageField($type, $id, $oldPath, $title);
 
             return ['success' => false, 'newPath' => null, 'error' => 'No valid image path for ' . $type . ' #' . $id];
         }
@@ -251,7 +251,7 @@ class CwmImageMigration
         // If source file is still missing, clear the DB field so this record
         // is excluded from future migration batches (avoids infinite loop)
         if (!$sourceFound) {
-            self::clearImageField($type, $id);
+            self::clearImageField($type, $id, $cleanPath, $title);
 
             return [
                 'success'      => false,
@@ -329,16 +329,22 @@ class CwmImageMigration
      * Clear the image field for a record so it won't be returned by getRecordsNeedingMigration()
      *
      * Called when the source file is missing — the image is gone, nothing to migrate.
+     * Logs the cleared value to a CSV file so admins can search for the file manually.
      *
-     * @param   string  $type  Record type: 'studies', 'teachers', or 'series'
-     * @param   int     $id    Record ID
+     * @param   string  $type     Record type: 'studies', 'teachers', or 'series'
+     * @param   int     $id       Record ID
+     * @param   string  $oldPath  The image path being cleared (for the log)
+     * @param   string  $title    Record title (for the log)
      *
      * @return  void
      *
      * @since 10.2.0
      */
-    private static function clearImageField(string $type, int $id): void
+    private static function clearImageField(string $type, int $id, string $oldPath = '', string $title = ''): void
     {
+        // Log the cleared value before wiping it
+        self::logClearedImage($type, $id, $oldPath, $title);
+
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
 
@@ -364,6 +370,53 @@ class CwmImageMigration
 
         $db->setQuery($query);
         $db->execute();
+    }
+
+    /**
+     * Log a cleared image value to CSV for administrator review
+     *
+     * Writes to administrator/logs/proclaim_cleared_images.csv so admins
+     * can search other locations for the missing files.
+     *
+     * @param   string  $type     Record type
+     * @param   int     $id       Record ID
+     * @param   string  $oldPath  The image path that was cleared
+     * @param   string  $title    Record title for identification
+     *
+     * @return  void
+     *
+     * @since 10.2.0
+     */
+    private static function logClearedImage(string $type, int $id, string $oldPath, string $title): void
+    {
+        $logFile = JPATH_ADMINISTRATOR . '/logs/proclaim_cleared_images.csv';
+
+        // Write header row if this is a new file
+        if (!is_file($logFile)) {
+            file_put_contents($logFile, "Date,Type,ID,Title,Cleared Path\n");
+        }
+
+        $row = [
+            date('Y-m-d H:i:s'),
+            $type,
+            (string) $id,
+            str_replace(['"', "\n", "\r"], ['""', ' ', ' '], $title),
+            str_replace('"', '""', $oldPath),
+        ];
+
+        file_put_contents($logFile, '"' . implode('","', $row) . "\"\n", FILE_APPEND);
+    }
+
+    /**
+     * Get the path to the cleared images log file
+     *
+     * @return  string  Absolute path to the CSV log
+     *
+     * @since 10.2.0
+     */
+    public static function getClearedLogPath(): string
+    {
+        return JPATH_ADMINISTRATOR . '/logs/proclaim_cleared_images.csv';
     }
 
     /**

@@ -126,9 +126,15 @@
 
       function showErrorReport() {
         if (!reportEl || errorDetails.length === 0) return;
+        const downloadUrl = `index.php?option=com_proclaim&task=cwmadmin.downloadClearedLogXHR&${token}=1`;
         let html = `<div class="alert alert-warning mt-3">
         <h5>${strings.missingFiles} (${errorDetails.length})</h5>
         <p class="small mb-2">${strings.missingFilesDesc}</p>
+        <p class="mb-2">
+          <a href="${downloadUrl}" class="btn btn-sm btn-outline-secondary" download>
+            <i class="icon-download" aria-hidden="true"></i> ${strings.downloadLog}
+          </a>
+        </p>
         <div style="max-height: 300px; overflow-y: auto;">
         <table class="table table-sm table-striped mb-0">
           <thead><tr><th>Type</th><th>ID</th><th>Title</th><th>${strings.missingPath}</th></tr></thead>
