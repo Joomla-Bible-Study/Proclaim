@@ -266,12 +266,18 @@
                             previousServerType = serverTypes[serverId] || '';
                             previousServerValue = serverId;
 
-                            // Re-initialize any custom fields that need JS
-                            document.dispatchEvent(new CustomEvent('joomla:updated', {
-                                bubbles: true,
-                                cancelable: true,
-                                detail: { container: document.getElementById('adminForm') }
-                            }));
+                            // Re-initialize custom fields in the updated containers.
+                            // Dispatch on each container (not the whole form) to avoid
+                            // showon.js errors when controlling fields aren't in scope.
+                            [generalContainer, optionsContent].forEach(function(el) {
+                                if (el && el.innerHTML) {
+                                    el.dispatchEvent(new CustomEvent('joomla:updated', {
+                                        bubbles: true,
+                                        cancelable: true,
+                                        detail: { container: el }
+                                    }));
+                                }
+                            });
                         } else {
                             showError(data.error || 'Failed to load server configuration');
                         }
@@ -328,7 +334,7 @@
                 var selectedBadge = isSelected ? ' <span class="badge bg-primary ms-1">Current</span>' : '';
 
                 cardsHtml += '<div class="col-md-4 mb-3">' +
-                    '<div class="card h-100 server-picker-card' + selectedClass + '" role="button" tabindex="0" data-server-id="' + opt.value + '" style="cursor:pointer;transition:border-color 0.2s,box-shadow 0.2s;">' +
+                    '<div class="card h-100 server-picker-card' + selectedClass + '" role="button" data-server-id="' + opt.value + '" style="cursor:pointer;transition:border-color 0.2s,box-shadow 0.2s;">' +
                     '<div class="card-body text-center">' +
                     '<span class="' + icon + '" style="font-size:2.5rem;" aria-hidden="true"></span>' +
                     '<h5 class="card-title mt-2">' + opt.text + selectedBadge + '</h5>' +
@@ -405,12 +411,6 @@
                 }
 
                 card.addEventListener('click', selectServer);
-                card.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        selectServer();
-                    }
-                });
 
                 // Hover effects
                 card.addEventListener('mouseenter', function() {
@@ -423,6 +423,14 @@
                     }
                     this.style.boxShadow = '';
                 });
+            });
+
+            // Blur focused elements before modal starts hiding (prevents aria-hidden conflict)
+            modalEl.addEventListener('hide.bs.modal', function() {
+                var focused = modalEl.querySelector(':focus');
+                if (focused) {
+                    focused.blur();
+                }
             });
 
             // Clean up modal after hidden
