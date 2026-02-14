@@ -77,19 +77,19 @@
     }
 
     /**
-     * Replace the <select> with a clickable button that opens the modal.
+     * Replace the <select> with an input-group matching the Modal_Study field pattern:
+     * readonly text input + Select button + Clear button.
      * The hidden <select> keeps its value for form submission.
      */
-    function convertSelectToButton() {
+    function convertSelectToInputGroup() {
         var serverField = document.getElementById('jform_server_id');
         if (!serverField) {
             return;
         }
 
-        // If a display button already exists, just update its text
-        var existing = document.getElementById('server-picker-btn');
-        if (existing) {
-            updatePickerButton();
+        // If the input group already exists, just update the display
+        if (document.getElementById('jform_server_id_name')) {
+            updateServerDisplay();
             return;
         }
 
@@ -102,56 +102,115 @@
             choicesWrapper.style.display = 'none';
         }
 
-        // Build the button
-        var btn = document.createElement('button');
-        btn.type = 'button';
-        btn.id = 'server-picker-btn';
-        btn.className = 'btn btn-outline-secondary w-100 text-start d-flex align-items-center justify-content-between';
+        var value = serverField.value;
+        var name = getSelectedServerName();
+        var hasValue = !!(value && name);
+        var displayText = hasValue ? name : (config.selectServerTitle || 'Select a Server');
 
-        updatePickerButtonElement(btn);
+        // Build the input-group (same pattern as StudyField / Modal_Study)
+        var group = document.createElement('span');
+        group.className = 'input-group';
+        group.id = 'server-picker-group';
 
-        btn.addEventListener('click', function(e) {
+        // Readonly text input showing server name
+        var input = document.createElement('input');
+        input.className = 'form-control';
+        input.id = 'jform_server_id_name';
+        input.type = 'text';
+        input.value = displayText;
+        input.readOnly = true;
+        input.style.cursor = 'pointer';
+        input.addEventListener('click', function() {
+            showServerPickerModal();
+        });
+
+        // Select button (hidden when a value is set)
+        var selectBtn = document.createElement('button');
+        selectBtn.type = 'button';
+        selectBtn.id = 'jform_server_id_select';
+        selectBtn.className = 'btn btn-primary' + (hasValue ? ' hidden' : '');
+        selectBtn.innerHTML = '<span class="icon-file" aria-hidden="true"></span> ' +
+            (config.selectLabel || 'Select');
+        selectBtn.addEventListener('click', function(e) {
             e.preventDefault();
             showServerPickerModal();
         });
 
-        // Insert the button after the select (or its wrapper)
+        // Clear button (hidden when no value)
+        var clearBtn = document.createElement('button');
+        clearBtn.type = 'button';
+        clearBtn.id = 'jform_server_id_clear';
+        clearBtn.className = 'btn btn-secondary' + (hasValue ? '' : ' hidden');
+        clearBtn.innerHTML = '<span class="icon-times" aria-hidden="true"></span> ' +
+            (config.clearLabel || 'Clear');
+        clearBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            clearServer();
+        });
+
+        group.appendChild(input);
+        group.appendChild(selectBtn);
+        group.appendChild(clearBtn);
+
+        // Insert the group after the select (or its wrapper)
         var insertAfter = choicesWrapper || serverField;
-        insertAfter.parentNode.insertBefore(btn, insertAfter.nextSibling);
+        insertAfter.parentNode.insertBefore(group, insertAfter.nextSibling);
     }
 
     /**
-     * Update the picker button text/icon to match the current selection
+     * Update the display input and button visibility to match the current selection
      */
-    function updatePickerButton() {
-        var btn = document.getElementById('server-picker-btn');
-        if (btn) {
-            updatePickerButtonElement(btn);
-        }
-    }
-
-    /**
-     * Set content of the picker button element
-     */
-    function updatePickerButtonElement(btn) {
+    function updateServerDisplay() {
         var serverField = document.getElementById('jform_server_id');
-        var serverTypes = getServerTypes();
-        var value = serverField ? serverField.value : '';
-        var name = getSelectedServerName();
-        var type = serverTypes[value] || '';
+        var nameInput = document.getElementById('jform_server_id_name');
+        var selectBtn = document.getElementById('jform_server_id_select');
+        var clearBtn = document.getElementById('jform_server_id_clear');
 
-        if (value && name) {
-            var icon = getTypeIcon(type);
-            var typeBadge = type ? type.charAt(0).toUpperCase() + type.slice(1).toLowerCase() : '';
-            btn.innerHTML = '<span><span class="' + icon + '" aria-hidden="true"></span> ' + name +
-                (typeBadge ? ' <span class="badge bg-secondary">' + typeBadge + '</span>' : '') +
-                '</span>' +
-                '<span class="icon-chevron-down" aria-hidden="true"></span>';
-        } else {
-            btn.innerHTML = '<span class="text-muted">' +
-                (config.selectServerTitle || 'Select a Server') +
-                '</span><span class="icon-chevron-down" aria-hidden="true"></span>';
+        if (!serverField || !nameInput) {
+            return;
         }
+
+        var value = serverField.value;
+        var name = getSelectedServerName();
+        var hasValue = !!(value && name);
+
+        nameInput.value = hasValue ? name : (config.selectServerTitle || 'Select a Server');
+
+        if (selectBtn) {
+            selectBtn.classList.toggle('hidden', hasValue);
+        }
+
+        if (clearBtn) {
+            clearBtn.classList.toggle('hidden', !hasValue);
+        }
+    }
+
+    /**
+     * Clear the server selection and reset the addon containers
+     */
+    function clearServer() {
+        var serverField = document.getElementById('jform_server_id');
+        if (serverField) {
+            serverField.value = '';
+        }
+
+        previousServerValue = '';
+        previousServerType = '';
+
+        updateServerDisplay();
+
+        // Clear addon containers
+        var generalContainer = document.getElementById('addon-general-container');
+        if (generalContainer) {
+            generalContainer.innerHTML = '';
+        }
+        var optionsContent = document.getElementById('addon-options-content');
+        if (optionsContent) {
+            optionsContent.innerHTML = '';
+        }
+
+        // Show the picker modal so user can select a new server
+        showServerPickerModal();
     }
 
     /**
@@ -330,8 +389,8 @@
                 previousServerValue = serverId;
                 previousServerType = newType;
 
-                // Update the display button
-                updatePickerButton();
+                // Update the display input and buttons
+                updateServerDisplay();
 
                 bsModal.hide();
 
@@ -401,8 +460,8 @@
         previousServerValue = serverField.value;
         previousServerType = serverTypes[serverField.value] || '';
 
-        // Replace the <select> with a clickable button that opens the modal
-        convertSelectToButton();
+        // Replace the <select> with an input-group (readonly input + Select/Clear buttons)
+        convertSelectToInputGroup();
 
         // Show the modal immediately for new items with no server
         var form = document.getElementById('adminForm');

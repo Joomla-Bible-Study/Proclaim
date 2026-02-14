@@ -59,6 +59,8 @@ $this->getDocument()->addScriptOptions('com_proclaim.mediafile', [
     'serverTypeLocalDesc'  => Text::_('JBS_MED_SERVER_TYPE_LOCAL_DESC'),
     'serverTypeYoutubeDesc' => Text::_('JBS_MED_SERVER_TYPE_YOUTUBE_DESC'),
     'serverTypeLegacyDesc'  => Text::_('JBS_MED_SERVER_TYPE_LEGACY_DESC'),
+    'selectLabel'           => Text::_('JSELECT'),
+    'clearLabel'            => Text::_('JCLEAR'),
 ]);
 
 $this->useCoreUI = true;
