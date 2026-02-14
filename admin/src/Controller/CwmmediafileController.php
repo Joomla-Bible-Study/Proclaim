@@ -262,6 +262,88 @@ class CwmmediafileController extends FormController
     }
 
     /**
+     * Return addon HTML fragments via AJAX for a given server_id.
+     *
+     * Called via GET with token validation. Returns JSON with generalHtml
+     * and optionsHtml for the selected server's addon.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   10.1.0
+     */
+    public function getAddonHtml(): void
+    {
+        CWMAddon::prepareAjaxEnvironment();
+
+        try {
+            if (!Session::checkToken('get')) {
+                CWMAddon::outputJson(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            }
+
+            $app      = Factory::getApplication();
+            $serverId = $app->getInput()->getInt('server_id', 0);
+
+            if (empty($serverId)) {
+                CWMAddon::outputJson(['success' => false, 'error' => 'No server_id provided']);
+            }
+
+            // Set server_id in user state so the model picks it up via populateState()
+            $app->setUserState('com_proclaim.edit.mediafile.server_id', $serverId);
+
+            /** @var \CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel $model */
+            $model = $this->getModel('Cwmmediafile', 'Administrator', []);
+
+            // getItem() populates model->data including server_id from state
+            $model->getItem();
+
+            // getMediaForm() loads form paths, language, and returns the Joomla Form
+            $mediaForm = $model->getMediaForm();
+
+            if (empty($mediaForm)) {
+                CWMAddon::outputJson(['success' => false, 'error' => 'Could not load media form']);
+            }
+
+            $serverType = $model->getState('type');
+            $sParams    = $model->getState('s_params', []);
+
+            // Wrap form with server params (same pattern as HtmlView::display)
+            $wrappedForm = new class ($mediaForm, $sParams) {
+                private $form;
+                public array $s_params;
+
+                public function __construct($form, array $s_params)
+                {
+                    $this->form     = $form;
+                    $this->s_params = $s_params;
+                }
+
+                public function __call(string $name, array $args): mixed
+                {
+                    return $this->form->$name(...$args);
+                }
+            };
+
+            // Bind server defaults for new items
+            $mediaForm->bind(['params' => $sParams]);
+
+            // Instantiate addon and render HTML
+            $addon       = CWMAddon::getInstance($serverType);
+            $generalHtml = $addon->renderGeneral($wrappedForm, true);
+            $optionsHtml = $addon->renderOptionsFields($wrappedForm, true);
+
+            CWMAddon::outputJson([
+                'success'     => true,
+                'generalHtml' => $generalHtml,
+                'optionsHtml' => $optionsHtml,
+                'serverType'  => $serverType,
+            ]);
+        } catch (\Exception $e) {
+            CWMAddon::outputJson(['success' => false, 'error' => $e->getMessage()]);
+        }
+    }
+
+    /**
      * Sets the server for this media record
      *
      * @return  void

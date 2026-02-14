@@ -1294,7 +1294,7 @@ class Cwmlisting
                     $data = Text::_('JBS_CMN_TEACHER');
                 } elseif (isset($item->title, $item->teachername)) {
                     $titlePrefix = trim($item->title);
-                    $name = trim($item->teachername);
+                    $name        = trim($item->teachername);
 
                     // Avoid duplication when teachername already includes the title
                     if ($titlePrefix !== '' && !str_starts_with($name, $titlePrefix)) {

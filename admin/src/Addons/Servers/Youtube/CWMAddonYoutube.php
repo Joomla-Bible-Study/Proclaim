@@ -87,8 +87,7 @@ class CWMAddonYoutube extends CWMAddon
         $fields = $media_form->getFieldset('general');
 
         if ($fields) {
-            foreach ($fields as $field) :
-                // Way to set defaults on new media
+            foreach ($fields as $field) {
                 if ($new) {
                     $s_name = $field->fieldname;
 
@@ -98,7 +97,7 @@ class CWMAddonYoutube extends CWMAddon
                 }
 
                 $html .= $field->renderField();
-            endforeach;
+            }
         }
 
         return $html;
@@ -107,7 +106,7 @@ class CWMAddonYoutube extends CWMAddon
     /**
      * Render Layout and fields
      *
-     * @param object  $media_form  Medea files form
+     * @param object  $media_form  Media files form
      * @param bool    $new         If media is new
      *
      * @return string
@@ -117,31 +116,7 @@ class CWMAddonYoutube extends CWMAddon
     public function render($media_form, bool $new): string
     {
         $html = HTMLHelper::_('uitab.addTab', 'myTab', 'options', Text::_('JBS_ADDON_MEDIA_OPTIONS_LABEL'));
-
-        $html .= '<div class="row">';
-
-        foreach ($media_form->getFieldsets('params') as $name => $fieldset) {
-            if ($name !== 'general') {
-                $html .= '<div class="col-6">';
-
-                foreach ($media_form->getFieldset($name) as $field) :
-                    // Way to set defaults on new media
-                    if ($new) {
-                        $s_name = $field->fieldname;
-
-                        if (isset($media_form->s_params[$s_name])) {
-                            $field->setValue($media_form->s_params[$s_name]);
-                        }
-                    }
-
-                    $html .= $field->renderField();
-                endforeach;
-
-                $html .= '</div>';
-            }
-        }
-
-        $html .= '</div>';
+        $html .= $this->renderOptionsFields($media_form, $new);
         $html .= HTMLHelper::_('uitab.endTab');
 
         return $html;

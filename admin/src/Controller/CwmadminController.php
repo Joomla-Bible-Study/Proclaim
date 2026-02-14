@@ -993,7 +993,7 @@ class CwmadminController extends FormController
         } catch (\Throwable $e) {
             echo json_encode([
                 'studies' => 0, 'teachers' => 0, 'series' => 0, 'total' => 0,
-                'error' => $e->getMessage(),
+                'error'   => $e->getMessage(),
             ], JSON_THROW_ON_ERROR);
         }
 
@@ -1037,7 +1037,7 @@ class CwmadminController extends FormController
         } catch (\Throwable $e) {
             echo json_encode([
                 'records' => [], 'remaining' => 0,
-                'error' => $e->getMessage(),
+                'error'   => $e->getMessage(),
             ], JSON_THROW_ON_ERROR);
         }
 
@@ -1123,7 +1123,7 @@ class CwmadminController extends FormController
         } catch (\Throwable $e) {
             echo json_encode([
                 'orphans' => [], 'totals' => ['folders' => 0, 'size' => 0, 'size_formatted' => '0 B'],
-                'error' => $e->getMessage(),
+                'error'   => $e->getMessage(),
             ], JSON_THROW_ON_ERROR);
         }
 
@@ -1200,7 +1200,7 @@ class CwmadminController extends FormController
         } catch (\Throwable $e) {
             echo json_encode([
                 'folders' => [], 'total_files' => 0, 'total_size' => 0,
-                'error' => $e->getMessage(),
+                'error'   => $e->getMessage(),
             ], JSON_THROW_ON_ERROR);
         }
 
@@ -1346,7 +1346,7 @@ class CwmadminController extends FormController
         } catch (\Throwable $e) {
             echo json_encode([
                 'studies' => 0, 'teachers' => 0, 'series' => 0, 'total' => 0,
-                'error' => $e->getMessage(),
+                'error'   => $e->getMessage(),
             ], JSON_THROW_ON_ERROR);
         }
 

@@ -474,7 +474,7 @@ class CwmImageMigration
 
                 // Junk values are always unresolvable
                 if ($imagePath === '' || \strlen($imagePath) <= 1) {
-                    $title = $row->studytitle ?? $row->teachername ?? $row->title ?? '';
+                    $title          = $row->studytitle ?? $row->teachername ?? $row->title ?? '';
                     $unresolvable[] = ['type' => $type, 'id' => (int) $row->id, 'title' => $title, 'path' => $imagePath];
 
                     continue;
@@ -503,7 +503,7 @@ class CwmImageMigration
                 $found = false;
 
                 if (str_contains($basename, 'thumb_')) {
-                    $originalName    = str_replace('thumb_', '', $basename);
+                    $originalName     = str_replace('thumb_', '', $basename);
                     $possibleOriginal = \dirname($cleanPath) . '/' . $originalName;
 
                     if (is_file(Path::clean(JPATH_ROOT . '/' . $possibleOriginal)) || is_file($absPath)) {
@@ -522,7 +522,7 @@ class CwmImageMigration
                 }
 
                 if (!$found) {
-                    $title = $row->studytitle ?? $row->teachername ?? $row->title ?? '';
+                    $title          = $row->studytitle ?? $row->teachername ?? $row->title ?? '';
                     $unresolvable[] = ['type' => $type, 'id' => (int) $row->id, 'title' => $title, 'path' => $cleanPath];
                 }
             }
@@ -544,7 +544,7 @@ class CwmImageMigration
      */
     public static function clearUnresolvableImages(): array
     {
-        $result = self::getUnresolvableRecords();
+        $result  = self::getUnresolvableRecords();
         $cleared = 0;
 
         foreach ($result['records'] as $record) {
@@ -677,8 +677,8 @@ class CwmImageMigration
         $seriesFolder  = $admin->params->get('series_image_folder', 'images');
 
         // Only include configured folders if they're Proclaim-specific (not the root images/)
-        $genericRoots = ['images', 'media'];
-        $candidates   = [$imageFolder, $teacherFolder, $seriesFolder];
+        $genericRoots   = ['images', 'media'];
+        $candidates     = [$imageFolder, $teacherFolder, $seriesFolder];
         $configuredDirs = array_filter(
             $candidates,
             fn ($d) => !\in_array(rtrim($d, '/'), $genericRoots, true)
@@ -708,7 +708,7 @@ class CwmImageMigration
             // Collect image files directly in this folder (not in subdirs)
             $directFiles = self::getImageFilesInDir($absDir, $imageExts);
             if (!empty($directFiles)) {
-                $size = array_sum(array_map(fn ($f) => filesize($f), $directFiles));
+                $size                = array_sum(array_map(fn ($f) => filesize($f), $directFiles));
                 $report['folders'][] = [
                     'path'      => $relDir,
                     'files'     => \count($directFiles),
@@ -716,7 +716,7 @@ class CwmImageMigration
                     'filenames' => array_map('basename', $directFiles),
                 ];
                 $report['total_files'] += \count($directFiles);
-                $report['total_size']  += $size;
+                $report['total_size'] += $size;
             }
 
             // Check subdirectories — but skip new structured folders
@@ -735,7 +735,7 @@ class CwmImageMigration
                     // Check inside these for loose files (not in alias-ID subfolders)
                     $looseFiles = self::getImageFilesInDir($subDir, $imageExts);
                     if (!empty($looseFiles)) {
-                        $size = array_sum(array_map(fn ($f) => filesize($f), $looseFiles));
+                        $size                = array_sum(array_map(fn ($f) => filesize($f), $looseFiles));
                         $report['folders'][] = [
                             'path'      => $relSub,
                             'files'     => \count($looseFiles),
@@ -743,7 +743,7 @@ class CwmImageMigration
                             'filenames' => array_map('basename', $looseFiles),
                         ];
                         $report['total_files'] += \count($looseFiles);
-                        $report['total_size']  += $size;
+                        $report['total_size'] += $size;
                     }
 
                     continue;
@@ -751,7 +751,7 @@ class CwmImageMigration
 
                 $files = self::getImageFilesInDir($subDir, $imageExts);
                 if (!empty($files)) {
-                    $size = array_sum(array_map(fn ($f) => filesize($f), $files));
+                    $size                = array_sum(array_map(fn ($f) => filesize($f), $files));
                     $report['folders'][] = [
                         'path'      => $relSub,
                         'files'     => \count($files),
@@ -759,7 +759,7 @@ class CwmImageMigration
                         'filenames' => array_map('basename', $files),
                     ];
                     $report['total_files'] += \count($files);
-                    $report['total_size']  += $size;
+                    $report['total_size'] += $size;
                 }
             }
         }
@@ -840,7 +840,7 @@ class CwmImageMigration
             }
 
             // Delete only image files directly in this folder
-            $files = self::getImageFilesInDir($absDir, $imageExts);
+            $files         = self::getImageFilesInDir($absDir, $imageExts);
             $folderDeleted = 0;
 
             foreach ($files as $file) {
