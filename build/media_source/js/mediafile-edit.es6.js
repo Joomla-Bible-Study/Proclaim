@@ -423,12 +423,11 @@
             });
         });
 
-        // Blur focused elements before modal starts hiding (prevents aria-hidden conflict)
+        // Move focus outside the modal before it hides — Bootstrap sets aria-hidden
+        // on the modal element itself (which has tabindex="-1" and may hold focus)
         modalEl.addEventListener('hide.bs.modal', function() {
-            var focused = modalEl.querySelector(':focus');
-            if (focused) {
-                focused.blur();
-            }
+            var target = document.getElementById('jform_server_id_name') || document.body;
+            target.focus();
         });
 
         // Clean up modal after hidden
