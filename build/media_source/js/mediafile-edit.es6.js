@@ -398,6 +398,12 @@
                 // Update the display input and buttons
                 updateServerDisplay();
 
+                // Move focus outside the modal BEFORE hiding — Bootstrap sets
+                // aria-hidden="true" at the start of hide(), which triggers a
+                // browser warning if the modal or a descendant still has focus.
+                var focusTarget = document.getElementById('jform_server_id_name') || document.body;
+                focusTarget.focus();
+
                 bsModal.hide();
 
                 // Same server — no need to reload
@@ -421,13 +427,6 @@
                 }
                 this.style.boxShadow = '';
             });
-        });
-
-        // Move focus outside the modal before it hides — Bootstrap sets aria-hidden
-        // on the modal element itself (which has tabindex="-1" and may hold focus)
-        modalEl.addEventListener('hide.bs.modal', function() {
-            var target = document.getElementById('jform_server_id_name') || document.body;
-            target.focus();
         });
 
         // Clean up modal after hidden
