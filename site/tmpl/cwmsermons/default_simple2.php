@@ -184,8 +184,11 @@ $defaultImage = $this->params->get('default_study_image', '');
         $itemparams = new Registry();
         $params     = $itemparams->loadString($item->params);
 
-        // Use thumbnailm if set, fall back to admin default image
-        $image = !empty($item->thumbnailm) ? $item->thumbnailm : $defaultImage;
+        // Use full-size original image; fall back to admin default image
+        $imageObj = !empty($item->thumbnailm)
+            ? Cwmimages::getStudyOriginal($item->thumbnailm)
+            : Cwmimages::getImagePath($defaultImage);
+
         if (
             $this->params->get('simplegridtextoverlay') == 1 || $params->get(
                 'nooverlaysimplemode'
@@ -201,7 +204,6 @@ $defaultImage = $this->params->get('default_study_image', '');
                             <div class="thumbnail text-center">
                                 <div class="card overflow-hidden border-0 rounded-0 text-center text-white">
                                     <?php
-                                    $imageObj = Cwmimages::getImagePath($image);
                     echo Cwmimages::renderPicture($imageObj, $item->studytitle, 'card-img rounded-0');
                     ?>
                                     <div class="card-img-overlay d-flex flex-column justify-content-center">
