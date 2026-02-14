@@ -94,23 +94,20 @@ if ($showArchived === '1') : ?>
             <?php
         } ?>
         <?php
-        if ($this->params->get('show_page_image == 1') || $this->params->get('show_page_title') > 0) { ?>
-            <div class="col" style="display: inline-flex; align-items: center;">
-
+        if ($this->params->get('show_page_image') == 1 || $this->params->get('show_page_title') > 0) { ?>
+            <div class="d-inline-flex align-items-center mb-3">
                 <?php
                 if ($this->params->get('show_page_image') > 0) {
-                    if ($this->params->get('main_image_icon_or_image') == 1) {
-                        echo '<div class="col" style="display: flex;>' . $this->mainimage . '</div>';
+                    if ((int) $this->params->get('main_image_icon_or_image') === 1 && $this->mainimage !== '') {
+                        echo '<div class="me-3" style="max-height: 80px;">' . $this->mainimage . '</div>';
                     } else {
-                        echo '<i class="fas fa-bible fa-3x" style="display: flex; margin-right: 10px;"></i>';
+                        echo '<i class="fas fa-bible fa-3x me-3"></i>';
                     }
                 }
-            if ($this->params->get('show_page_title') > 0) {
-                echo '<h2 style="display: flex; list-style: none;"> ' . $this->params->get(
-                    'list_page_title'
-                ) . '</h2>';
-            }
-            ?>
+                if ($this->params->get('show_page_title') > 0) {
+                    echo '<h2 class="mb-0">' . $this->params->get('list_page_title') . '</h2>';
+                }
+                ?>
             </div>
             <?php
         } ?>

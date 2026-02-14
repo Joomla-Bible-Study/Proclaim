@@ -204,6 +204,13 @@ button:focus:not(:focus-visible),
   height: 15px;
 }
 
+/* Listing Page — header image */
+.proclaim-page-header-img {
+  max-height: 80px;
+  width: auto;
+  object-fit: contain;
+}
+
 /* Listing Page */
 div.listingfooter ul li {
   list-style: none outside none;

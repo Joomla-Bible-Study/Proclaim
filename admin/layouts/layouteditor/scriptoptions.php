@@ -90,18 +90,23 @@ $dateFormatOptions = array_merge(
     $extractFieldOptions('date_format')
 );
 
-// showVerses, showVersion: both template and module/menu contexts need a default option.
-// Template editor context uses "Use Global Setting"; module/menu uses "Use Template Default".
-$showVersesOptions  = $extractFieldOptions('show_verses');
+// showVerses and separator have global defaults in the VERSES fieldset, so per-element
+// dropdowns get a "defer" option (template: "Use Global Setting"; module: "Use Template Default").
+$showVersesOptions = $extractFieldOptions('show_verses');
+$separatorOptions  = $extractFieldOptions('scripture_separator');
+array_unshift($showVersesOptions, ['value' => '', 'label' => $deferLabel]);
+array_unshift($separatorOptions, ['value' => '', 'label' => $deferLabel]);
+
+// showVersion and showTooltip are per-element only (no global default).
+// No defer option — just direct Yes/No choices (default: No).
 $showVersionOptions = [
     ['value' => '0', 'label' => Text::_('JNO')],
     ['value' => '1', 'label' => Text::_('JYES')],
 ];
-
-$separatorOptions = $extractFieldOptions('scripture_separator');
-array_unshift($showVersesOptions, ['value' => '', 'label' => $deferLabel]);
-array_unshift($showVersionOptions, ['value' => '', 'label' => $deferLabel]);
-array_unshift($separatorOptions, ['value' => '', 'label' => $deferLabel]);
+$showTooltipOptions = [
+    ['value' => '0', 'label' => Text::_('JNO')],
+    ['value' => '1', 'label' => Text::_('JYES')],
+];
 
 // These dropdowns have no "defer" option — just the actual choices
 $elementTypeOptions     = $extractFieldOptions('scripture1element');
@@ -139,6 +144,7 @@ if (!empty($showVersesOptions)) {
 }
 
 $document->addScriptOptions('com_proclaim.showVersionOptions', $showVersionOptions);
+$document->addScriptOptions('com_proclaim.showTooltipOptions', $showTooltipOptions);
 $document->addScriptOptions('com_proclaim.separatorOptions', $separatorOptions);
 
 if (!empty($elementTypeOptions)) {

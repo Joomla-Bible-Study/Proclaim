@@ -69,7 +69,8 @@
         </field>
         <field name="default_main_image" type="media" directory="biblestudy" size="50"
                label="JBS_ADM_DEFAULT_MAIN_IMAGE"
-               description="JBS_ADM_DEFAULT_MAIN_IMAGE_DESC"/>
+               description="JBS_ADM_DEFAULT_MAIN_IMAGE_DESC"
+               showon="main_image_icon_or_image:1"/>
         <field name="default_series_image" type="media" directory="biblestudy" size="50"
                label="JBS_ADM_DEFAULT_SERIES_IMAGE"
                description="JBS_ADM_DEFAULT_SERIES_IMAGE_DESC"/>

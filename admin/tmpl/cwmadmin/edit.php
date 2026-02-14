@@ -242,12 +242,12 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                     <?php echo $this->form->renderField('series_id', 'params'); ?>
                     <?php echo $this->form->renderField('booknumber', 'params'); ?>
                     <?php echo $this->form->renderField('messagetype', 'params'); ?>
-                    <?php echo $this->form->renderField('main_image_icon_or_image', 'params'); ?>
-                    <?php echo $this->form->renderField('default_study_image', 'params'); ?>
                 </div>
                 <div class="cwmadmin-panel mb-4">
                     <h3 class="tab-description"><?php echo Text::_('JBS_CMN_DEFAULT_IMAGES'); ?></h3>
+                    <?php echo $this->form->renderField('main_image_icon_or_image', 'params'); ?>
                     <?php echo $this->form->renderField('default_main_image', 'params'); ?>
+                    <?php echo $this->form->renderField('default_study_image', 'params'); ?>
                     <?php echo $this->form->renderField('default_series_image', 'params'); ?>
                     <?php echo $this->form->renderField('default_teacher_image', 'params'); ?>
                     <?php echo $this->form->renderField('default_showHide_image', 'params'); ?>

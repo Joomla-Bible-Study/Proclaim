@@ -15,7 +15,6 @@ namespace CWM\Component\Proclaim\Site\Helper;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\ScriptureReference;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
@@ -557,6 +556,9 @@ class Cwmlisting
         $l->customtext   = (string) $this->params->get($paramtext . 'text', '');
         $l->date_format  = $this->params->get($paramtext . 'date_format', '');
         $l->show_verses  = $this->params->get($paramtext . 'show_verses', '');
+        $l->show_version = $this->params->get($paramtext . 'show_version', '');
+        $l->show_tooltip = $this->params->get($paramtext . 'show_tooltip', '');
+        $l->separator    = $this->params->get($paramtext . 'separator', '');
 
         return $l;
     }
@@ -1878,8 +1880,8 @@ class Cwmlisting
             $show_verses = (int) $elementConfig->show_verses;
         }
 
-        // Check for element-specific show_version setting
-        $showVersion = (int) $params->get('show_version', 1);
+        // Per-element show_version (no global default — off unless element enables it)
+        $showVersion = 0;
 
         if ($elementConfig !== null && isset($elementConfig->show_version) && $elementConfig->show_version !== '') {
             $showVersion = (int) $elementConfig->show_version;
@@ -1891,8 +1893,11 @@ class Cwmlisting
             $versionSuffix = ' ' . strtoupper($bibleVersion);
         }
 
+        // Build full API reference for tooltips (always includes verses when available)
+        $apiRef = $this->buildApiReference($book, $ch_b, $ch_e, $v_b, $v_e);
+
         if ($bookNum > 166 || $show_verses === 2) {
-            return $book . $versionSuffix;
+            return $this->wrapScriptureTooltip($book . $versionSuffix, $apiRef, $bibleVersion, $params, $elementConfig);
         }
 
         // Chapters only mode (show_verses === 0)
@@ -1901,11 +1906,17 @@ class Cwmlisting
                 ? $book . ' ' . $ch_b . '-' . $ch_e
                 : $book . ' ' . $ch_b;
 
-            return $ref . $versionSuffix;
+            return $this->wrapScriptureTooltip($ref . $versionSuffix, $apiRef, $bibleVersion, $params, $elementConfig);
         }
 
         // Full reference with verses (show_verses === 1 or esv mode)
-        return $this->formatScriptureReference($book, $ch_b, $ch_e, $v_b, $v_e) . $versionSuffix;
+        return $this->wrapScriptureTooltip(
+            $this->formatScriptureReference($book, $ch_b, $ch_e, $v_b, $v_e) . $versionSuffix,
+            $apiRef,
+            $bibleVersion,
+            $params,
+            $elementConfig
+        );
     }
 
     /**
@@ -2115,6 +2126,101 @@ class Cwmlisting
     }
 
     /**
+     * Build the full API reference string for tooltip AJAX lookups.
+     *
+     * Always includes verse numbers when available, regardless of display mode.
+     * Format: "Book+Ch:Vs-Vs" or "Book+Ch:Vs-EndCh:Vs"
+     *
+     * @param   string  $book  Translated book name
+     * @param   int     $ch_b  Chapter begin
+     * @param   int     $ch_e  Chapter end
+     * @param   int     $v_b   Verse begin
+     * @param   int     $v_e   Verse end
+     *
+     * @return  string  API-compatible reference (e.g. "Luke+7:36-38")
+     *
+     * @since   10.1.0
+     */
+    private function buildApiReference(string $book, int $ch_b, int $ch_e, int $v_b, int $v_e): string
+    {
+        if ($ch_b === 0) {
+            return '';
+        }
+
+        $ref = $book . '+' . $ch_b;
+
+        if ($v_b > 0) {
+            $ref .= ':' . $v_b;
+
+            if ($ch_e > $ch_b) {
+                $ref .= '-' . $ch_e;
+
+                if ($v_e > 0) {
+                    $ref .= ':' . $v_e;
+                }
+            } elseif ($v_e > 0 && $v_e !== $v_b) {
+                $ref .= '-' . $v_e;
+            }
+        } elseif ($ch_e > $ch_b) {
+            // Chapters only range
+            $ref .= '-' . $ch_e;
+        }
+
+        return $ref;
+    }
+
+    /**
+     * Wrap scripture text with tooltip markup for verse preview on hover.
+     *
+     * Uses a <span> (not <a>) to avoid conflicts with content plugins that
+     * process links, and to prevent nested <a> tags when plugins wrap
+     * scripture references in their own links.
+     *
+     * When tooltips are disabled or no API reference is available,
+     * returns the plain text unchanged.
+     *
+     * @param   string    $text          Rendered scripture display text
+     * @param   string    $apiRef        API reference string (e.g. "Luke+7:36-38")
+     * @param   string    $bibleVersion  Bible version abbreviation
+     * @param   Registry  $params        Template parameters
+     * @param   ?object   $elementConfig Element configuration from Layout Editor
+     *
+     * @return  string  HTML with tooltip data attributes, or plain text
+     *
+     * @since   10.1.0
+     */
+    private function wrapScriptureTooltip(
+        string $text,
+        string $apiRef,
+        string $bibleVersion,
+        Registry $params,
+        ?object $elementConfig = null
+    ): string {
+        if (empty($text)) {
+            return '';
+        }
+
+        // Per-element show_tooltip (no global default — off unless element enables it)
+        $showTooltip = 0;
+
+        if ($elementConfig !== null && isset($elementConfig->show_tooltip) && $elementConfig->show_tooltip !== '') {
+            $showTooltip = (int) $elementConfig->show_tooltip;
+        }
+
+        if ($showTooltip !== 1 || empty($apiRef)) {
+            return $text;
+        }
+
+        $escapedRef     = htmlspecialchars($apiRef, ENT_QUOTES, 'UTF-8');
+        $escapedVersion = htmlspecialchars($bibleVersion ?: 'kjv', ENT_QUOTES, 'UTF-8');
+
+        return '<span class="proclaim-scripture-ref" role="button" tabindex="0"'
+            . ' data-scripture-ref="' . $escapedRef . '"'
+            . ' data-bible-version="' . $escapedVersion . '">'
+            . $text . '</span>';
+    }
+
+    /**
      * Get Fluid Media Files
      *
      * @param   Object     $item      Study item
@@ -2304,19 +2410,18 @@ class Cwmlisting
                 break;
 
             case 4:
-                // Case 4 is a details link with a tooltip
-
+                // Legacy "Link to Details with ToolTip" — downgrade to plain details link.
+                // The old hasTip tooltip was removed; scripture verse popovers replace it.
                 $link = Route::_(
                     Cwmhelperroute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid')
                 );
 
-                $column = Cwmhelper::getTooltip($row, $params, $template);
-                $column .= '<a href="' . $link . '">';
-
+                $column = '<a href="' . $link . '">';
                 break;
 
             case 5:
-                $column = Cwmhelper::getTooltip($row, $params, $template);
+                // Legacy "Link to Media with ToolTip" — downgrade to plain media link.
+                $column .= '<a href="' . $this->getOtherlinks($id3, 2, $params) . '">';
                 break;
 
             case 6:

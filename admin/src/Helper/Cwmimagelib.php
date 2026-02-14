@@ -138,7 +138,7 @@ class Cwmimagelib
         $img              = $image_create_func($originalFile);
         [$width, $height] = getimagesize($originalFile);
 
-        $newHeight = ($height / $width) * $newWidth;
+        $newHeight = (int) round(($height / $width) * $newWidth);
         $tmp       = imagecreatetruecolor($canv_width, $canv_height);
         imagecopyresampled($tmp, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
 

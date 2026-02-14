@@ -26,6 +26,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
@@ -268,7 +269,12 @@ class HtmlView extends BaseHtmlView
         $user            = $mainframe->getIdentity();
         $groups          = $user->getAuthorisedViewLevels();
         $this->main      = Cwmimages::mainStudyImage($params);
-        $this->mainimage = Cwmimages::renderPicture($this->main, '', '', false);
+        $this->mainimage = Cwmimages::renderPicture(
+            $this->main,
+            Text::_('JBS_CMN_MESSAGES_LIST'),
+            'proclaim-page-header-img',
+            false
+        );
 
         // Build go button
         $this->page->gobutton = '<input class="btn btn-primary" type="submit" value="' . Text::_(
@@ -379,6 +385,18 @@ class HtmlView extends BaseHtmlView
             $wa->useScript('com_proclaim.sermon-filters');
             $wa->useStyle('com_proclaim.sermon-filters-css');
         }
+
+        // Load scripture tooltip assets (per-element controlled; JS is a no-op
+        // if no elements have show_tooltip enabled)
+        $wa->useScript('com_proclaim.scripture-tooltip');
+        $wa->useStyle('com_proclaim.scripture-tooltip-css');
+
+        $mainframe->getDocument()->addScriptOptions('com_proclaim.scripture', [
+            'ajaxUrl' => Route::_(
+                'index.php?option=com_proclaim&task=cwmscripture.getPassageXHR&format=raw',
+                false
+            ),
+        ]);
 
         $this->updateFilters();
 

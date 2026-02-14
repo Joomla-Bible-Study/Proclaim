@@ -107,6 +107,18 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $wa->useStyle('com_proclaim.cwmcore');
         $wa->useStyle('com_proclaim.general');
 
+        // Load scripture tooltip assets (per-element controlled; JS is a no-op
+        // if no elements have show_tooltip enabled)
+        $wa->useScript('com_proclaim.scripture-tooltip');
+        $wa->useStyle('com_proclaim.scripture-tooltip-css');
+
+        $this->app->getDocument()->addScriptOptions('com_proclaim.scripture', [
+            'ajaxUrl' => Route::_(
+                'index.php?option=com_proclaim&task=cwmscripture.getPassageXHR&format=raw',
+                false
+            ),
+        ]);
+
         $url = $data['params']->get('stylesheet');
 
         if ($url) {

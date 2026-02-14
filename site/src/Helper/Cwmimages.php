@@ -52,7 +52,18 @@ class Cwmimages
             $params = Cwmparams::getAdmin()->params;
         }
 
-        $path = $params->get('default_main_image') ?: 'media/com_proclaim/images/openbible.png';
+        $path = $params->get('default_main_image', '');
+
+        if (empty($path)) {
+            $tmp            = new \stdClass();
+            $tmp->path      = null;
+            $tmp->size      = 0;
+            $tmp->width     = 0;
+            $tmp->height    = 0;
+            $tmp->webp_path = null;
+
+            return $tmp;
+        }
 
         return self::getImagePath($path);
     }

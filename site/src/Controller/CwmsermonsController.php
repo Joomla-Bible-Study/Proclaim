@@ -11,7 +11,6 @@
 
 namespace CWM\Component\Proclaim\Site\Controller;
 
-use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Site\Helper\Cwmdownload;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;

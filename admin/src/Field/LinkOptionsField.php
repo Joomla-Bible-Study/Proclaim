@@ -49,10 +49,8 @@ class LinkOptionsField extends ListField
     {
         $options[] = HTMLHelper::_('select.option', '0', Text::_('JBS_TPL_NO_LINK'));
         $options[] = HTMLHelper::_('select.option', '1', Text::_('JBS_TPL_LINK_TO_DETAILS'));
-        $options[] = HTMLHelper::_('select.option', '4', Text::_('JBS_TPL_LINK_TO_DETAILS_TOOLTIP'));
         $options[] = HTMLHelper::_('select.option', '2', Text::_('JBS_TPL_LINK_TO_MEDIA'));
         $options[] = HTMLHelper::_('select.option', '9', Text::_('JBS_TPL_LINK_TO_DOWNLOAD'));
-        $options[] = HTMLHelper::_('select.option', '5', Text::_('JBS_TPL_LINK_TO_MEDIA_TOOLTIP'));
         $options[] = HTMLHelper::_('select.option', '3', Text::_('JBS_TPL_LINK_TO_TEACHERS_PROFILE'));
         $options[] = HTMLHelper::_('select.option', '6', Text::_('JBS_TPL_LINK_TO_FIRST_ARTICLE'));
         $options[] = HTMLHelper::_('select.option', '7', Text::_('JBS_TPL_LINK_TO_VIRTUEMART'));

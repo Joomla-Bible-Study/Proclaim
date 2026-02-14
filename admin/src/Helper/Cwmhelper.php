@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\Cache\CacheControllerFactoryInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
@@ -38,40 +37,6 @@ class Cwmhelper
      * @since 8.0.0
      */
     public static string $extension = 'com_proclaim';
-
-    /**
-     * Get tooltip.
-     *
-     * @param   object     $row       JTable
-     * @param   Registry   $params    Item Params
-     * @param   \stdClass  $template  Template Table
-     *
-     * @return string
-     *
-     * @throws \Exception
-     * @since  9.0.0
-     */
-    public static function getTooltip(object $row, Registry $params, \stdClass $template): string
-    {
-        $JBSMElements = new Cwmlisting();
-
-        $linktext = '<span class="hasTip" title="' . $params->get('tip_title') . '  :: ';
-
-        $tip1 = $JBSMElements->getElement($params->get('tip_item1'), $row, $params, $template, $type = 0);
-        $tip2 = $JBSMElements->getElement($params->get('tip_item2'), $row, $params, $template, $type = 0);
-        $tip3 = $JBSMElements->getElement($params->get('tip_item3'), $row, $params, $template, $type = 0);
-        $tip4 = $JBSMElements->getElement($params->get('tip_item4'), $row, $params, $template, $type = 0);
-        $tip5 = $JBSMElements->getElement($params->get('tip_item5'), $row, $params, $template, $type = 0);
-
-        $linktext .= $params->get('tip_item1_title') . ': ' . $tip1 . ' - ';
-        $linktext .= $params->get('tip_item2_title') . ': ' . $tip2 . ' - ';
-        $linktext .= $params->get('tip_item3_title') . ': ' . $tip3 . ' - ';
-        $linktext .= $params->get('tip_item4_title') . ': ' . $tip4 . ' - ';
-        $linktext .= $params->get('tip_item5_title') . ': ' . $tip5 . ' - ';
-        $linktext .= '">';
-
-        return $linktext;
-    }
 
     /**
      * Method to get file size
