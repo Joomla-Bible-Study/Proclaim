@@ -70,8 +70,13 @@
             const params = new URLSearchParams();
 
             for (const [key, value] of data.entries()) {
+                // Always include filter/list fields (even empty) so the server
+                // can reset session state via getUserStateFromRequest().
+                // Skip other empty fields to keep the URL short.
                 if (value !== '' && value !== null) {
                     params.set(key, value);
+                } else if (key.indexOf('filter') === 0 || key.indexOf('list') === 0) {
+                    params.set(key, '');
                 }
             }
 
@@ -378,12 +383,21 @@
 
         /**
          * Intercept form submission (triggered by Joomla searchtools on filter change).
+         *
+         * Joomla searchtools calls the native form.submit() method directly
+         * (not requestSubmit()), which does NOT fire the "submit" event.
+         * We override the method itself so both paths route through AJAX.
          */
         form.addEventListener('submit', function (e) {
             e.preventDefault();
             // Reset limitstart on new filter/search
             fetchResults({ limitstart: 0 });
         });
+
+        // Override the native submit() so searchtools' form.submit() goes through AJAX
+        form.submit = function () {
+            fetchResults({ limitstart: 0 });
+        };
 
         /**
          * Debounced search input handler.
