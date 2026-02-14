@@ -297,10 +297,15 @@ class HtmlView extends BaseHtmlView
             $app->enqueueMessage(Text::_('JBS_CMN_ACCESS_FORBIDDEN'), 'error');
         }
 
+        // Detect print mode early so we can disable tooltip wrapping on scripture refs
+        $this->print = $app->getInput()->getString('print', '');
+
+        $scriptureParams = $this->params;
+
         // Get Scripture references from listing class in case we don't use the page-builder class
-        $this->item->scripture1    = $CWMListing->getScripture($this->params, $item, 0, 1);
-        $this->item->scripture2    = $CWMListing->getScripture($this->params, $item, 0, 2);
-        $this->item->allScriptures = $CWMListing->getAllScriptures($this->params, $item);
+        $this->item->scripture1    = $CWMListing->getScripture($scriptureParams, $item, 0, 1);
+        $this->item->scripture2    = $CWMListing->getScripture($scriptureParams, $item, 0, 2);
+        $this->item->allScriptures = $CWMListing->getAllScriptures($scriptureParams, $item);
 
         // @todo check to see if this works
         $this->item->topics = $this->item->topic_text;
@@ -486,9 +491,6 @@ class HtmlView extends BaseHtmlView
             $model->hit();
         }
 
-        // Set print mode from request
-        $this->print = $app->getInput()->getString('print', '');
-
         // Build print-friendly passage: always visible, no version switcher
         if (!empty($this->print)) {
             $printParams = clone $this->item->params;
@@ -498,7 +500,22 @@ class HtmlView extends BaseHtmlView
         }
 
         // Load print stylesheet
-        $this->getDocument()->getWebAssetManager()->useStyle('com_proclaim.print');
+        $wa = $this->getDocument()->getWebAssetManager();
+        $wa->useStyle('com_proclaim.print');
+
+        // Load scripture tooltip assets (per-element controlled; JS is a no-op
+        // if no elements have show_tooltip enabled). Skip in print mode.
+        if (empty($this->print)) {
+            $wa->useScript('com_proclaim.scripture-tooltip');
+            $wa->useStyle('com_proclaim.scripture-tooltip-css');
+
+            $app->getDocument()->addScriptOptions('com_proclaim.scripture', [
+                'ajaxUrl' => Route::_(
+                    'index.php?option=com_proclaim&task=cwmscripture.getPassageXHR&format=raw',
+                    false
+                ),
+            ]);
+        }
 
         $this->prepareDocument();
 

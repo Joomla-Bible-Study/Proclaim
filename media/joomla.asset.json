@@ -453,6 +453,28 @@
             "name": "com_proclaim.sermon-filters-css",
             "type": "style",
             "uri": "com_proclaim/sermon-filters.css"
+        },
+        {
+            "name": "com_proclaim.related-studies",
+            "type": "style",
+            "uri": "com_proclaim/related-studies.css"
+        },
+        {
+            "name": "com_proclaim.scripture-tooltip",
+            "type": "script",
+            "uri": "com_proclaim/scripture-tooltip.js",
+            "dependencies": [
+                "core",
+                "bootstrap.popover"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.scripture-tooltip-css",
+            "type": "style",
+            "uri": "com_proclaim/scripture-tooltip.css"
         }
     ]
 }

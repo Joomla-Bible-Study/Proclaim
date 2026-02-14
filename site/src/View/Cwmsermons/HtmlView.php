@@ -26,6 +26,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
@@ -379,6 +380,18 @@ class HtmlView extends BaseHtmlView
             $wa->useScript('com_proclaim.sermon-filters');
             $wa->useStyle('com_proclaim.sermon-filters-css');
         }
+
+        // Load scripture tooltip assets (per-element controlled; JS is a no-op
+        // if no elements have show_tooltip enabled)
+        $wa->useScript('com_proclaim.scripture-tooltip');
+        $wa->useStyle('com_proclaim.scripture-tooltip-css');
+
+        $mainframe->getDocument()->addScriptOptions('com_proclaim.scripture', [
+            'ajaxUrl' => Route::_(
+                'index.php?option=com_proclaim&task=cwmscripture.getPassageXHR&format=raw',
+                false
+            ),
+        ]);
 
         $this->updateFilters();
 

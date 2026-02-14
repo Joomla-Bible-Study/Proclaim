@@ -23,7 +23,14 @@ use Joomla\CMS\Router\Route;
 use Joomla\Registry\Registry;
 
 /**
- * helper to get related studies to the current one
+ * Helper to get related studies using weighted multi-dimension scoring.
+ *
+ * Scoring weights:
+ * - Same series:   3 points
+ * - Same teacher:  2 points
+ * - Same topic:    2 points per overlap
+ * - Same book:     1 point per overlap
+ * - Metakey match: 1 point per keyword
  *
  * @package  Proclaim.Site
  * @since    7.1.0
@@ -31,187 +38,442 @@ use Joomla\Registry\Registry;
 class Cwmrelatedstudies
 {
     /**
-     * Remove array declaration for php 7.3.x
+     * Score map: study_id => total score
      *
-     * @var  array Score
-     *
-     * @since    7.2
+     * @var  array<int, int>
+     * @since 10.1.0
      */
-    public array $score;
+    public array $scores = [];
 
     /**
-     * Get Related
+     * Get Related studies as card HTML.
      *
      * @param   object    $row     Study data
      * @param   Registry  $params  Item Params
      *
-     * @return string|bool
+     * @return string|bool  HTML string of card grid, or false if no related studies
      *
      * @throws \Exception
      * @since    7.2
      */
     public function getRelated(object $row, Registry $params): string|bool
     {
-        $this->score = [];
-        $keywords    = (string) $params->get('metakey');
-        $topics      = $row->tp_id ?? '';
+        $this->scores = [];
+        $studyId      = (int) ($row->id ?? 0);
+        $limit        = (int) $params->get('related_limit', 5);
 
-        if (empty($keywords) && empty($topics) && empty($row->studyintro)) {
+        if ($studyId === 0) {
             return false;
         }
 
-        $studies = $this->getStudies();
-
-        if (empty($studies)) {
-            return false;
-        }
-
-        foreach ($studies as $study) {
-            // Don't compare with itself
-            if ((int) $study->id === (int) $row->id) {
-                continue;
-            }
-
-            $compare = '';
-
-            if (!empty($study->params) && $study->params !== '{}') {
-                $sparams = new Registry($study->params);
-                $compare = (string) $sparams->get('metakey');
-            }
-
-            if (!empty($keywords) && !empty($compare)) {
-                $this->parseKeys($keywords, $compare, (int) $study->id);
-            }
-
-            if (!empty($topics) && !empty($study->tp_id)) {
-                $this->parseKeys((string) $topics, (string) $study->tp_id, (int) $study->id);
-            }
-        }
-
-        if (empty($this->score)) {
-            return false;
-        }
-
-        return $this->getRelatedLinks((int) $row->id);
-    }
-
-    /**
-     * Get Studies
-     *
-     * @return array
-     *
-     * @throws \Exception
-     * @since    7.2
-     */
-    public function getStudies(): array
-    {
         $db     = Factory::getContainer()->get('DatabaseDriver');
         $user   = Factory::getApplication()->getIdentity();
         $groups = $user->getAuthorisedViewLevels();
 
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName(['s.id', 's.params', 's.access']))
-            ->from($db->quoteName('#__bsms_studies', 's'))
-            ->select('GROUP_CONCAT(' . $db->quoteName('stp.id') . ' SEPARATOR ", ") AS ' . $db->quoteName('tp_id'))
-            ->leftJoin($db->quoteName('#__bsms_studytopics', 'tp') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('tp.study_id'))
-            ->leftJoin($db->quoteName('#__bsms_topics', 'stp') . ' ON ' . $db->quoteName('stp.id') . ' = ' . $db->quoteName('tp.topic_id'))
-            ->where($db->quoteName('s.published') . ' = 1')
-            ->where($db->quoteName('s.access') . ' IN (' . implode(',', $groups) . ')')
-            ->group($db->quoteName('s.id'));
+        // Dimension 1: Same series (3 points)
+        $seriesId = (int) ($row->series_id ?? 0);
 
-        $db->setQuery($query);
+        if ($seriesId > 0) {
+            $this->scoreBySeries($db, $studyId, $seriesId, $groups);
+        }
 
-        return $db->loadObjectList() ?: [];
+        // Dimension 2: Same teacher (2 points)
+        $teacherId = (int) ($row->teacher_id ?? 0);
+
+        if ($teacherId > 0) {
+            $this->scoreByTeacher($db, $studyId, $teacherId, $groups);
+        }
+
+        // Dimension 3: Topic overlap (2 points each)
+        $this->scoreByTopics($db, $studyId, $groups);
+
+        // Dimension 4: Scripture book overlap (1 point each)
+        $this->scoreByBooks($db, $studyId, $groups);
+
+        // Dimension 5: Metakey overlap (1 point each)
+        $keywords = (string) $params->get('metakey');
+
+        if (!empty($keywords)) {
+            $this->scoreByMetakeys($db, $studyId, $keywords, $groups);
+        }
+
+        if (empty($this->scores)) {
+            return false;
+        }
+
+        return $this->buildCards($db, $studyId, $limit);
     }
 
     /**
-     * Parse keys
+     * Score studies in the same series.
      *
-     * @param   string  $source   String of source
-     * @param   string  $compare  String to compare
-     * @param   int     $id       ID of study
+     * @param   object  $db        Database driver
+     * @param   int     $studyId   Current study ID
+     * @param   int     $seriesId  Series ID to match
+     * @param   array   $groups    Authorised view levels
      *
-     * @return void
+     * @return  void
      *
-     * @since    7.2
+     * @since   10.1.0
      */
-    public function parseKeys(string $source, string $compare, int $id): void
+    private function scoreBySeries(object $db, int $studyId, int $seriesId, array $groups): void
     {
-        $sourceArray  = array_filter(array_map('trim', explode(',', $source)));
-        $compareArray = array_filter(array_map('trim', explode(',', $compare)));
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__bsms_studies'))
+            ->where($db->quoteName('series_id') . ' = ' . $seriesId)
+            ->where($db->quoteName('id') . ' != ' . $studyId)
+            ->where($db->quoteName('published') . ' = 1')
+            ->where($db->quoteName('access') . ' IN (' . implode(',', $groups) . ')');
 
-        if (array_intersect($sourceArray, $compareArray)) {
-            $this->score[] = $id;
+        $db->setQuery($query);
+        $ids = $db->loadColumn();
+
+        foreach ($ids as $id) {
+            $this->addScore((int) $id, 3);
         }
     }
 
     /**
-     * Look for Related Links.
+     * Score studies by the same teacher.
      *
-     * @param   int  $id  Id to link to
+     * @param   object  $db         Database driver
+     * @param   int     $studyId    Current study ID
+     * @param   int     $teacherId  Teacher ID to match
+     * @param   array   $groups     Authorised view levels
      *
-     * @return string
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function scoreByTeacher(object $db, int $studyId, int $teacherId, array $groups): void
+    {
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__bsms_studies'))
+            ->where($db->quoteName('teacher_id') . ' = ' . $teacherId)
+            ->where($db->quoteName('id') . ' != ' . $studyId)
+            ->where($db->quoteName('published') . ' = 1')
+            ->where($db->quoteName('access') . ' IN (' . implode(',', $groups) . ')');
+
+        $db->setQuery($query);
+        $ids = $db->loadColumn();
+
+        foreach ($ids as $id) {
+            $this->addScore((int) $id, 2);
+        }
+    }
+
+    /**
+     * Score studies by topic overlap (2 points per shared topic).
+     *
+     * @param   object  $db       Database driver
+     * @param   int     $studyId  Current study ID
+     * @param   array   $groups   Authorised view levels
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function scoreByTopics(object $db, int $studyId, array $groups): void
+    {
+        // Get current study's topic IDs
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('topic_id'))
+            ->from($db->quoteName('#__bsms_studytopics'))
+            ->where($db->quoteName('study_id') . ' = ' . $studyId);
+
+        $db->setQuery($query);
+        $topicIds = $db->loadColumn();
+
+        if (empty($topicIds)) {
+            return;
+        }
+
+        // Find other studies with overlapping topics, counting overlaps
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('st.study_id'))
+            ->select('COUNT(*) AS ' . $db->quoteName('overlap'))
+            ->from($db->quoteName('#__bsms_studytopics', 'st'))
+            ->innerJoin(
+                $db->quoteName('#__bsms_studies', 's')
+                . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('st.study_id')
+            )
+            ->where($db->quoteName('st.topic_id') . ' IN (' . implode(',', array_map('intval', $topicIds)) . ')')
+            ->where($db->quoteName('st.study_id') . ' != ' . $studyId)
+            ->where($db->quoteName('s.published') . ' = 1')
+            ->where($db->quoteName('s.access') . ' IN (' . implode(',', $groups) . ')')
+            ->group($db->quoteName('st.study_id'));
+
+        $db->setQuery($query);
+        $rows = $db->loadObjectList();
+
+        foreach ($rows as $r) {
+            $this->addScore((int) $r->study_id, 2 * (int) $r->overlap);
+        }
+    }
+
+    /**
+     * Score studies by scripture book overlap (1 point per shared book).
+     *
+     * Checks both junction table and legacy booknumber field.
+     *
+     * @param   object  $db       Database driver
+     * @param   int     $studyId  Current study ID
+     * @param   array   $groups   Authorised view levels
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function scoreByBooks(object $db, int $studyId, array $groups): void
+    {
+        // Collect book numbers from junction table
+        $query = $db->getQuery(true)
+            ->select('DISTINCT ' . $db->quoteName('booknumber'))
+            ->from($db->quoteName('#__bsms_study_scriptures'))
+            ->where($db->quoteName('study_id') . ' = ' . $studyId)
+            ->where($db->quoteName('booknumber') . ' > 0');
+
+        $db->setQuery($query);
+        $bookNumbers = array_map('intval', $db->loadColumn() ?: []);
+
+        // Also get the legacy booknumber from the studies table
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('booknumber'))
+            ->from($db->quoteName('#__bsms_studies'))
+            ->where($db->quoteName('id') . ' = ' . $studyId);
+
+        $db->setQuery($query);
+        $legacyBook = (int) $db->loadResult();
+
+        if ($legacyBook > 0) {
+            $bookNumbers[] = $legacyBook;
+        }
+
+        $bookNumbers = array_unique(array_filter($bookNumbers));
+
+        if (empty($bookNumbers)) {
+            return;
+        }
+
+        $bookList = implode(',', $bookNumbers);
+
+        // Find matches via junction table
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('ss.study_id'))
+            ->select('COUNT(DISTINCT ' . $db->quoteName('ss.booknumber') . ') AS ' . $db->quoteName('overlap'))
+            ->from($db->quoteName('#__bsms_study_scriptures', 'ss'))
+            ->innerJoin(
+                $db->quoteName('#__bsms_studies', 's')
+                . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('ss.study_id')
+            )
+            ->where($db->quoteName('ss.booknumber') . ' IN (' . $bookList . ')')
+            ->where($db->quoteName('ss.study_id') . ' != ' . $studyId)
+            ->where($db->quoteName('s.published') . ' = 1')
+            ->where($db->quoteName('s.access') . ' IN (' . implode(',', $groups) . ')')
+            ->group($db->quoteName('ss.study_id'));
+
+        $db->setQuery($query);
+        $rows = $db->loadObjectList();
+
+        foreach ($rows as $r) {
+            $this->addScore((int) $r->study_id, (int) $r->overlap);
+        }
+
+        // Also match via legacy booknumber column
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__bsms_studies'))
+            ->where($db->quoteName('booknumber') . ' IN (' . $bookList . ')')
+            ->where($db->quoteName('id') . ' != ' . $studyId)
+            ->where($db->quoteName('published') . ' = 1')
+            ->where($db->quoteName('access') . ' IN (' . implode(',', $groups) . ')');
+
+        $db->setQuery($query);
+        $ids = $db->loadColumn();
+
+        foreach ($ids as $id) {
+            $this->addScore((int) $id, 1);
+        }
+    }
+
+    /**
+     * Score studies by metakey overlap (1 point per shared keyword).
+     *
+     * @param   object  $db        Database driver
+     * @param   int     $studyId   Current study ID
+     * @param   string  $keywords  Comma-separated keywords
+     * @param   array   $groups    Authorised view levels
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function scoreByMetakeys(object $db, int $studyId, string $keywords, array $groups): void
+    {
+        $keys = array_filter(array_map('trim', explode(',', $keywords)));
+
+        if (empty($keys)) {
+            return;
+        }
+
+        // Get params for all published studies (excluding self)
+        $query = $db->getQuery(true)
+            ->select($db->quoteName(['id', 'params']))
+            ->from($db->quoteName('#__bsms_studies'))
+            ->where($db->quoteName('id') . ' != ' . $studyId)
+            ->where($db->quoteName('published') . ' = 1')
+            ->where($db->quoteName('access') . ' IN (' . implode(',', $groups) . ')')
+            ->where($db->quoteName('params') . ' IS NOT NULL')
+            ->where($db->quoteName('params') . ' != ' . $db->quote(''))
+            ->where($db->quoteName('params') . ' != ' . $db->quote('{}'));
+
+        $db->setQuery($query);
+        $studies = $db->loadObjectList();
+
+        foreach ($studies as $study) {
+            $sparams    = new Registry($study->params);
+            $compareStr = (string) $sparams->get('metakey');
+
+            if (empty($compareStr)) {
+                continue;
+            }
+
+            $compareKeys = array_filter(array_map('trim', explode(',', $compareStr)));
+            $overlap     = \count(array_intersect(
+                array_map('strtolower', $keys),
+                array_map('strtolower', $compareKeys)
+            ));
+
+            if ($overlap > 0) {
+                $this->addScore((int) $study->id, $overlap);
+            }
+        }
+    }
+
+    /**
+     * Add points to a study's score.
+     *
+     * @param   int  $studyId  Study ID
+     * @param   int  $points   Points to add
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public function addScore(int $studyId, int $points): void
+    {
+        if (!isset($this->scores[$studyId])) {
+            $this->scores[$studyId] = 0;
+        }
+
+        $this->scores[$studyId] += $points;
+    }
+
+    /**
+     * Build card grid HTML for the top-scoring related studies.
+     *
+     * @param   object  $db       Database driver
+     * @param   int     $studyId  Current study ID (excluded)
+     * @param   int     $limit    Max cards to show
+     *
+     * @return  string  HTML card grid
      *
      * @throws \Exception
-     * @since    7.2
+     * @since   10.1.0
      */
-    public function getRelatedLinks(int $id): string
+    private function buildCards(object $db, int $studyId, int $limit): string
     {
-        $db          = Factory::getContainer()->get('DatabaseDriver');
-        $this->score = array_unique($this->score);
+        // Sort by score desc
+        arsort($this->scores);
 
-        if (empty($this->score)) {
+        // Take top N
+        $topIds = \array_slice(array_keys($this->scores), 0, $limit);
+
+        if (empty($topIds)) {
             return '';
         }
 
-        $link = implode(',', $this->score);
+        $idList = implode(',', $topIds);
 
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName(['s.studytitle', 's.alias', 's.id', 's.booknumber', 's.chapter_begin']))
-            ->from($db->quoteName('#__bsms_studies', 's'))
+        $query = $db->getQuery(true)
+            ->select($db->quoteName([
+                's.id', 's.studytitle', 's.alias', 's.studydate',
+                's.booknumber', 's.chapter_begin', 's.thumbnailm',
+            ]))
+            ->select($db->quoteName('t.teachername'))
             ->select($db->quoteName('b.bookname'))
-            ->leftJoin($db->quoteName('#__bsms_books', 'b') . ' ON ' . $db->quoteName('b.booknumber') . ' = ' . $db->quoteName('s.booknumber'))
-            ->where($db->quoteName('s.id') . ' IN (' . $link . ')')
-            ->where($db->quoteName('s.id') . ' != ' . (int) $id);
+            ->from($db->quoteName('#__bsms_studies', 's'))
+            ->leftJoin(
+                $db->quoteName('#__bsms_teachers', 't')
+                . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('s.teacher_id')
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_books', 'b')
+                . ' ON ' . $db->quoteName('b.booknumber') . ' = ' . $db->quoteName('s.booknumber')
+            )
+            ->where($db->quoteName('s.id') . ' IN (' . $idList . ')')
+            ->where($db->quoteName('s.id') . ' != ' . $studyId);
 
         $db->setQuery($query);
-        $studyrecords = $db->loadObjectList() ?: [];
+        $studies = $db->loadObjectList('id') ?: [];
 
-        if (empty($studyrecords)) {
+        if (empty($studies)) {
             return '';
         }
 
         $input      = Factory::getApplication()->getInput();
         $templateId = $input->get('t', 1, 'int');
 
-        $options = [
-            HTMLHelper::_('select.option', '', Text::_('JBS_CMN_SELECT_RELATED_STUDY')),
-        ];
+        // Load related-studies CSS via WAM
+        Factory::getApplication()->getDocument()->getWebAssetManager()
+            ->useStyle('com_proclaim.related-studies');
 
-        foreach ($studyrecords as $studyrecord) {
-            $url   = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . (int) $studyrecord->id . '&t=' . $templateId);
-            $title = $studyrecord->studytitle;
+        $html = '<div class="proclaim-related-studies">';
+        $html .= '<h4>' . Text::_('JBS_CMN_RELATED_STUDIES') . '</h4>';
+        $html .= '<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">';
 
-            if (!empty($studyrecord->bookname)) {
-                $title .= ' - ' . Text::_($studyrecord->bookname) . ' ' . $studyrecord->chapter_begin;
+        // Output in score order
+        foreach ($topIds as $id) {
+            if (!isset($studies[$id])) {
+                continue;
             }
 
-            $options[] = HTMLHelper::_('select.option', $url, $title);
+            $study = $studies[$id];
+            $url   = Route::_(
+                'index.php?option=com_proclaim&view=cwmsermon&id=' . (int) $study->id . '&t=' . $templateId
+            );
+            $title = htmlspecialchars($study->studytitle, ENT_QUOTES, 'UTF-8');
+
+            $html .= '<div class="col">';
+            $html .= '<a href="' . $url . '" class="proclaim-related-card">';
+            $html .= '<div class="card">';
+
+            // Optional thumbnail
+            if (!empty($study->thumbnailm)) {
+                $thumb = htmlspecialchars($study->thumbnailm, ENT_QUOTES, 'UTF-8');
+                $html .= '<img src="' . $thumb . '" class="card-img-top" alt="' . $title . '" loading="lazy">';
+            }
+
+            $html .= '<div class="card-body">';
+            $html .= '<h5 class="card-title">' . $title . '</h5>';
+            $html .= '<p class="proclaim-related-meta">';
+
+            if (!empty($study->teachername)) {
+                $html .= '<span>' . htmlspecialchars($study->teachername, ENT_QUOTES, 'UTF-8') . '</span>';
+            }
+
+            if (!empty($study->studydate)) {
+                $html .= '<span>' . HTMLHelper::_('date', $study->studydate, Text::_('DATE_FORMAT_LC4')) . '</span>';
+            }
+
+            $html .= '</p>';
+            $html .= '</div></div></a></div>';
         }
 
-        $dropdown = HTMLHelper::_(
-            'select.genericlist',
-            $options,
-            'urlList',
-            [
-                'list.attr'   => 'class="form-select chzn-color-state valid form-control-success" onchange="window.location.href=this.value"',
-                'list.select' => '',
-                'option.key'  => 'value',
-                'option.text' => 'text',
-                'id'          => 'urlList',
-            ]
-        );
+        $html .= '</div></div>';
 
-        return '<div class="related col-lg-4">' . $dropdown . '</div>';
+        return $html;
     }
 }

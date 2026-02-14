@@ -476,6 +476,7 @@
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="scripture1show_verses" type="hidden" default=""/>
             <field name="scripture1show_version" type="hidden" default=""/>
+            <field name="scripture1show_tooltip" type="hidden" default=""/>
             <field name="scripture2row" type="RowOptions" size="1" default="0" label="JBS_CMN_SCRIPTURE2"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="scripture2col" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -490,6 +491,7 @@
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="scripture2show_verses" type="hidden" default=""/>
             <field name="scripture2show_version" type="hidden" default=""/>
+            <field name="scripture2show_tooltip" type="hidden" default=""/>
             <field name="scripturesrow" type="RowOptions" size="1" default="0" label="JBS_CMN_ALL_SCRIPTURES"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="scripturescol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -504,6 +506,7 @@
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="scripturesshow_verses" type="hidden" default=""/>
             <field name="scripturesshow_version" type="hidden" default=""/>
+            <field name="scripturesshow_tooltip" type="hidden" default=""/>
             <field name="scripturesseparator" type="hidden" default=""/>
             <field name="secondaryrow" type="RowOptions" size="1" default="0" label="JBS_CMN_SECONDARY_REFERENCES"
                    description="JBS_TPL_ROW_DESC"/>
@@ -518,6 +521,8 @@
             <field name="secondarylinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="secondaryshow_verses" type="hidden" default=""/>
+            <field name="secondaryshow_version" type="hidden" default=""/>
+            <field name="secondaryshow_tooltip" type="hidden" default=""/>
             <field name="jbsmediarow" type="RowOptions" size="1" default="1" label="JBS_CMN_MEDIA"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="jbsmediacol" type="SpanOptions" default="3" label="JBS_TPL_COLUMN"
@@ -789,6 +794,9 @@
                 <option value="1">JBS_TPL_RELATED_TOP</option>
                 <option value="2">JBS_TPL_RELATED_BOTTOM</option>
             </field>
+            <field name="related_limit" type="number" default="5" min="1" max="20"
+                   label="JBS_TPL_RELATED_LIMIT" description="JBS_TPL_RELATED_LIMIT_DESC"
+                   showon="showrelated!:0"/>
             <field name="showpodcastsubscribedetails" type="list" default="1"
                    label="JBS_TPL_PODCAST_SHOW" description="JBS_TPL_PODCAST_SHOW_DESC">
                 <option value="0">JBS_CMN_HIDE</option>
@@ -1497,122 +1505,6 @@
                    description="JBS_TPL_CUSTOM_TEXT_DESC"/>
 
         </fieldset>
-        <fieldset name="TOOLTIP" label="JBS_TPL_TOOLTIP" layoutContext="messages"
-                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
-            <field name="tip_title" type="text" default="Sermon Information"
-                   size="100" label="JBS_TPL_TOOLTIP_TIP_TITLE" description="JBS_TPL_TOOLTIP_TIP_TITLE_DESC"/>
-            <field name="tooltip" type="radio" default="1"
-                   label="JBS_TPL_FP_IMAGES_TOOLTIP" description="JBS_TPL_FP_IMAGES_TOOLTIP_DESC"
-                   layout="joomla.form.field.radio.switcher">
-                <option value="0">JNO</option>
-                <option value="1">JYES</option>
-            </field>
-            <field name="tip_item1_title" type="text" default="Title"
-                   label="JBS_TPL_TOOLTIP_TIP_ITEM1_TITLE" description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_DESC"
-                   size="100"/>
-            <field name="tip_item1" type="list" default="5"
-                   label="JBS_TPL_TOOLTIP_TIP_ITEM1" description="JBS_TPL_TOOLTIP_TIP_ITEM_DESC">
-                <option value="title">JBS_CMN_STUDY_TITLE</option>
-                <option value="date">JBS_CMN_STUDY_DATE</option>
-                <option value="teacher">JBS_CMN_TEACHER_NAME</option>
-                <option value="teacher-title-name">JBS_CMN_TEACHER_TITLE</option>
-                <option value="scripture1">JBS_CMN_SCRIPTURE</option>
-                <option value="scripture2">JBS_CMN_SCRIPTURE2</option>
-                <option value="secondary">JBS_CMN_SECONDARY_REFERENCES</option>
-                <option value="duration">JBS_CMN_DURATION</option>
-                <option value="studyintro">JBS_CMN_STUDY_INTRO</option>
-                <option value="hits">JBS_CMN_HITS</option>
-                <option value="studynumber">JBS_CMN_STUDYNUMBER</option>
-                <option value="topics">JBS_CMN_TOPIC</option>
-                <option value="location_text">JBS_CMN_LOCATION</option>
-                <option value="message_type">JBS_CMN_MESSAGETYPE</option>
-                <option value="series_text">JBS_SER_SERIES_NAME</option>
-            </field>
-            <field name="tip_item2_title" type="text" default="Details"
-                   label="JBS_TPL_TOOLTIP_TIP_ITEM2_TITLE" description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_DESC"
-                   size="100"/>
-            <field name="tip_item2" type="list" default="6"
-                   label="JBS_TPL_TOOLTIP_TIP_ITEM2" description="JBS_TPL_TOOLTIP_TIP_ITEM_DESC">
-                <option value="title">JBS_CMN_STUDY_TITLE</option>
-                <option value="date">JBS_CMN_STUDY_DATE</option>
-                <option value="teacher">JBS_CMN_TEACHER_NAME</option>
-                <option value="teacher-title-name">JBS_CMN_TEACHER_TITLE</option>
-                <option value="scripture1">JBS_CMN_SCRIPTURE</option>
-                <option value="scripture2">JBS_CMN_SCRIPTURE2</option>
-                <option value="secondary">JBS_CMN_SECONDARY_REFERENCES</option>
-                <option value="duration">JBS_CMN_DURATION</option>
-                <option value="studyintro">JBS_CMN_STUDY_INTRO</option>
-                <option value="hits">JBS_CMN_HITS</option>
-                <option value="studynumber">JBS_CMN_STUDYNUMBER</option>
-                <option value="topics">JBS_CMN_TOPIC</option>
-                <option value="location_text">JBS_CMN_LOCATION</option>
-                <option value="message_type">JBS_CMN_MESSAGETYPE</option>
-                <option value="series_text">JBS_SER_SERIES_NAME</option>
-            </field>
-            <field name="tip_item3_title" type="text" default="Teacher"
-                   label="JBS_TPL_TOOLTIP_TIP_ITEM3_TITLE" description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_DESC"
-                   size="100"/>
-            <field name="tip_item3" type="list" default="7"
-                   label="JBS_TPL_TOOLTIP_TIP_ITEM3" description="JBS_TPL_TOOLTIP_TIP_ITEM_DESC">
-                <option value="title">JBS_CMN_STUDY_TITLE</option>
-                <option value="date">JBS_CMN_STUDY_DATE</option>
-                <option value="teacher">JBS_CMN_TEACHER_NAME</option>
-                <option value="teacher-title-name">JBS_CMN_TEACHER_TITLE</option>
-                <option value="scripture1">JBS_CMN_SCRIPTURE</option>
-                <option value="scripture2">JBS_CMN_SCRIPTURE2</option>
-                <option value="secondary">JBS_CMN_SECONDARY_REFERENCES</option>
-                <option value="duration">JBS_CMN_DURATION</option>
-                <option value="studyintro">JBS_CMN_STUDY_INTRO</option>
-                <option value="hits">JBS_CMN_HITS</option>
-                <option value="studynumber">JBS_CMN_STUDYNUMBER</option>
-                <option value="topics">JBS_CMN_TOPIC</option>
-                <option value="location_text">JBS_CMN_LOCATION</option>
-                <option value="message_type">JBS_CMN_MESSAGETYPE</option>
-                <option value="series_text">JBS_SER_SERIES_NAME</option>
-            </field>
-            <field name="tip_item4_title" type="text" default="Reference"
-                   label="JBS_TPL_TOOLTIP_TIP_ITEM4_TITLE" description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_DESC"
-                   size="100"/>
-            <field name="tip_item4" type="list" default="1"
-                   label="JBS_TPL_TOOLTIP_TIP_ITEM4" description="JBS_TPL_TOOLTIP_TIP_ITEM_DESC">
-                <option value="title">JBS_CMN_STUDY_TITLE</option>
-                <option value="date">JBS_CMN_STUDY_DATE</option>
-                <option value="teacher">JBS_CMN_TEACHER_NAME</option>
-                <option value="teacher-title-name">JBS_CMN_TEACHER_TITLE</option>
-                <option value="scripture1">JBS_CMN_SCRIPTURE</option>
-                <option value="scripture2">JBS_CMN_SCRIPTURE2</option>
-                <option value="secondary">JBS_CMN_SECONDARY_REFERENCES</option>
-                <option value="duration">JBS_CMN_DURATION</option>
-                <option value="studyintro">JBS_CMN_STUDY_INTRO</option>
-                <option value="hits">JBS_CMN_HITS</option>
-                <option value="studynumber">JBS_CMN_STUDYNUMBER</option>
-                <option value="topics">JBS_CMN_TOPIC</option>
-                <option value="location_text">JBS_CMN_LOCATION</option>
-                <option value="message_type">JBS_CMN_MESSAGETYPE</option>
-                <option value="series_text">JBS_SER_SERIES_NAME</option>
-            </field>
-            <field name="tip_item5_title" type="text" default="Date"
-                   label="JBS_TPL_TOOLTIP_TIP_ITEM5_TITLE" description="JBS_TPL_TOOLTIP_TIP_ITEM_TITLE_DESC"
-                   size="100"/>
-            <field name="tip_item5" type="list" default="10"
-                   label="JBS_TPL_TOOLTIP_TIP_ITEM5" description="JBS_TPL_TOOLTIP_TIP_ITEM_DESC">
-                <option value="title">JBS_CMN_STUDY_TITLE</option>
-                <option value="date">JBS_CMN_STUDY_DATE</option>
-                <option value="teacher">JBS_CMN_TEACHER_NAME</option>
-                <option value="teacher-title-name">JBS_CMN_TEACHER_TITLE</option>
-                <option value="scripture1">JBS_CMN_SCRIPTURE</option>
-                <option value="scripture2">JBS_CMN_SCRIPTURE2</option>
-                <option value="secondary">JBS_CMN_SECONDARY_REFERENCES</option>
-                <option value="duration">JBS_CMN_DURATION</option>
-                <option value="studyintro">JBS_CMN_STUDY_INTRO</option>
-                <option value="hits">JBS_CMN_HITS</option>
-                <option value="studynumber">JBS_CMN_STUDYNUMBER</option>
-                <option value="topics">JBS_CMN_TOPIC</option>
-                <option value="location_text">JBS_CMN_LOCATION</option>
-                <option value="message_type">JBS_CMN_MESSAGETYPE</option>
-                <option value="series_text">JBS_SER_SERIES_NAME</option>
-            </field>
-        </fieldset>
         <fieldset name="DDISPLAYELEMENTS1" label="JBS_TPL_STUDY_DETAILS"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="dscripture1row" type="RowOptions" default="1" label="JBS_CMN_SCRIPTURE"
@@ -1629,6 +1521,7 @@
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="dscripture1show_verses" type="hidden" default=""/>
             <field name="dscripture1show_version" type="hidden" default=""/>
+            <field name="dscripture1show_tooltip" type="hidden" default=""/>
             <field name="dscripture2row" type="RowOptions" size="1" default="0" label="JBS_CMN_SCRIPTURE2"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="dscripture2col" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -1643,6 +1536,7 @@
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="dscripture2show_verses" type="hidden" default=""/>
             <field name="dscripture2show_version" type="hidden" default=""/>
+            <field name="dscripture2show_tooltip" type="hidden" default=""/>
             <field name="dscripturesrow" type="RowOptions" size="1" default="0" label="JBS_CMN_ALL_SCRIPTURES"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="dscripturescol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -1657,6 +1551,7 @@
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="dscripturesshow_verses" type="hidden" default=""/>
             <field name="dscripturesshow_version" type="hidden" default=""/>
+            <field name="dscripturesshow_tooltip" type="hidden" default=""/>
             <field name="dscripturesseparator" type="hidden" default=""/>
             <field name="dsecondaryrow" type="RowOptions" size="1" default="0" label="JBS_CMN_SECONDARY_REFERENCES"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1671,6 +1566,8 @@
             <field name="dsecondarylinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="dsecondaryshow_verses" type="hidden" default=""/>
+            <field name="dsecondaryshow_version" type="hidden" default=""/>
+            <field name="dsecondaryshow_tooltip" type="hidden" default=""/>
             <field name="djbsmediarow" type="RowOptions" size="1" default="1" label="JBS_CMN_MEDIA"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="djbsmediacol" type="SpanOptions" default="3" label="JBS_TPL_COLUMN"

@@ -203,8 +203,7 @@
             // Fallback (English only) - core options (VirtueMart/DOCman require PHP config)
             return [
                 { value: '0', label: 'No Link' }, { value: '1', label: 'Link to Details' },
-                { value: '4', label: 'Link to Details (Tooltip)' }, { value: '2', label: 'Link to Media' },
-                { value: '9', label: 'Link to Download' }, { value: '5', label: 'Link to Media (Tooltip)' },
+                { value: '2', label: 'Link to Media' }, { value: '9', label: 'Link to Download' },
                 { value: '3', label: "Link to Teacher's Profile" }, { value: '6', label: 'Link to First Article' }
             ];
         };
@@ -323,9 +322,26 @@
                     return phpOptions;
                 }
             }
-            // Fallback (English only)
+            // Fallback (English only) — no defer option, per-element only
             return [
-                { value: '', label: 'Use Global Setting' },
+                { value: '0', label: 'No' },
+                { value: '1', label: 'Yes' }
+            ];
+        };
+
+        /**
+         * Get show tooltip options from PHP or use fallback
+         * @returns {Array} Show tooltip options
+         */
+        const getShowTooltipOptions = () => {
+            if (window.Joomla && typeof Joomla.getOptions === 'function') {
+                const phpOptions = Joomla.getOptions('com_proclaim.showTooltipOptions');
+                if (phpOptions && Array.isArray(phpOptions)) {
+                    return phpOptions;
+                }
+            }
+            // Fallback (English only) — no defer option, per-element only
+            return [
                 { value: '0', label: 'No' },
                 { value: '1', label: 'Yes' }
             ];
@@ -2078,6 +2094,13 @@
                                 </select>
                                 <div class="form-text">${this.trans('JBS_TPL_SHOW_VERSION_DESC') || 'Append the Bible version abbreviation to the scripture reference (e.g. Luke 7:36-38 KJV)'}</div>
                             </div>
+                            <div class="form-group" id="layout-show-tooltip-group" style="display:none;">
+                                <label class="form-label" for="layout-show-tooltip">${this.trans('JBS_TPL_SHOW_SCRIPTURE_TOOLTIPS') || 'Show Verse Tooltip'}</label>
+                                <select class="form-select" id="layout-show-tooltip">
+                                    ${getShowTooltipOptions().map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
+                                </select>
+                                <div class="form-text">${this.trans('JBS_TPL_SHOW_TOOLTIP_ELEMENT_DESC') || 'Show verse text in a popover when hovering over this scripture reference'}</div>
+                            </div>
                             <div class="form-group" id="layout-separator-group" style="display:none;">
                                 <label class="form-label" for="layout-separator">${this.trans('JBS_TPL_SCRIPTURE_SEPARATOR') || 'Scripture Separator'}</label>
                                 <select class="form-select" id="layout-separator">
@@ -2679,6 +2702,8 @@
                 const showVersesGroup = document.getElementById('layout-show-verses-group');
                 const showVersionEl = document.getElementById('layout-show-version');
                 const showVersionGroup = document.getElementById('layout-show-version-group');
+                const showTooltipEl = document.getElementById('layout-show-tooltip');
+                const showTooltipGroup = document.getElementById('layout-show-tooltip-group');
                 const separatorEl = document.getElementById('layout-separator');
                 const separatorGroup = document.getElementById('layout-separator-group');
 
@@ -2703,7 +2728,8 @@
                 if (customClassEl) { customClassEl.value = data.custom || ''; }
                 if (dateFormatEl) { dateFormatEl.value = data.date_format || ''; }
                 if (showVersesEl) { showVersesEl.value = data.show_verses || ''; }
-                if (showVersionEl) { showVersionEl.value = data.show_version || ''; }
+                if (showVersionEl) { showVersionEl.value = data.show_version || '0'; }
+                if (showTooltipEl) { showTooltipEl.value = data.show_tooltip || '0'; }
                 if (separatorEl) { separatorEl.value = data.separator || ''; }
 
                 // Store original values for change detection when modal closes
@@ -2714,6 +2740,7 @@
                     date_format: dateFormatEl ? dateFormatEl.value : '',
                     show_verses: showVersesEl ? showVersesEl.value : '',
                     show_version: showVersionEl ? showVersionEl.value : '',
+                    show_tooltip: showTooltipEl ? showTooltipEl.value : '',
                     separator: separatorEl ? separatorEl.value : ''
                 };
 
@@ -2731,6 +2758,9 @@
                 }
                 if (showVersionGroup) {
                     showVersionGroup.style.display = isScripture ? 'block' : 'none';
+                }
+                if (showTooltipGroup) {
+                    showTooltipGroup.style.display = isScripture ? 'block' : 'none';
                 }
                 // Separator only for "All Scriptures" element (not scripture1/scripture2/secondary)
                 var isAllScriptures = elementId === 'scriptures' || elementId === 'dscriptures';
@@ -2793,6 +2823,7 @@
                 data.date_format = document.getElementById('layout-date-format').value;
                 data.show_verses = document.getElementById('layout-show-verses').value;
                 data.show_version = document.getElementById('layout-show-version').value;
+                data.show_tooltip = document.getElementById('layout-show-tooltip').value;
                 data.separator = document.getElementById('layout-separator').value;
 
                 // Update visual display
@@ -2904,6 +2935,7 @@
                 const dateFormatEl = document.getElementById('layout-date-format');
                 const showVersesEl = document.getElementById('layout-show-verses');
                 const showVersionEl = document.getElementById('layout-show-version');
+                const showTooltipEl = document.getElementById('layout-show-tooltip');
                 const separatorEl = document.getElementById('layout-separator');
 
                 const current = {
@@ -2913,6 +2945,7 @@
                     date_format: dateFormatEl ? dateFormatEl.value : '',
                     show_verses: showVersesEl ? showVersesEl.value : '',
                     show_version: showVersionEl ? showVersionEl.value : '',
+                    show_tooltip: showTooltipEl ? showTooltipEl.value : '',
                     separator: separatorEl ? separatorEl.value : ''
                 };
 
@@ -2923,6 +2956,7 @@
                     current.date_format !== this.originalModalValues.date_format ||
                     current.show_verses !== this.originalModalValues.show_verses ||
                     current.show_version !== this.originalModalValues.show_version ||
+                    current.show_tooltip !== this.originalModalValues.show_tooltip ||
                     current.separator !== this.originalModalValues.separator;
             }
 
@@ -2954,7 +2988,8 @@
                     let linktype = templateParams[fieldPrefix + 'linktype'] || '0';
                     let dateFormat = templateParams[fieldPrefix + 'date_format'] || '';
                     let showVerses = templateParams[fieldPrefix + 'show_verses'] || '';
-                    let showVersion = templateParams[fieldPrefix + 'show_version'] || '';
+                    let showVersion = templateParams[fieldPrefix + 'show_version'] || '0';
+                    let showTooltip = templateParams[fieldPrefix + 'show_tooltip'] || '0';
                     let separator = templateParams[fieldPrefix + 'separator'] || '';
 
                     // Try form fields as fallback (in case they're loaded)
@@ -2969,6 +3004,7 @@
                         const dateFormatField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}date_format]"]`);
                         const showVersesField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}show_verses]"]`);
                         const showVersionField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}show_version]"]`);
+                        const showTooltipField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}show_tooltip]"]`);
                         const separatorField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}separator]"]`);
 
                         if (colField) { col = parseInt(colField.value, 10) || col; }
@@ -2979,6 +3015,7 @@
                         if (dateFormatField) { dateFormat = dateFormatField.value || dateFormat; }
                         if (showVersesField) { showVerses = showVersesField.value || showVerses; }
                         if (showVersionField) { showVersion = showVersionField.value || showVersion; }
+                        if (showTooltipField) { showTooltip = showTooltipField.value || showTooltip; }
                         if (separatorField) { separator = separatorField.value || separator; }
                     }
 
@@ -2994,6 +3031,7 @@
                             date_format: dateFormat,
                             show_verses: showVerses,
                             show_version: showVersion,
+                            show_tooltip: showTooltip,
                             separator: separator
                         };
 
@@ -3129,6 +3167,7 @@
                         date_format: `${this.options.paramsPrefix}[${fieldPrefix}date_format]`,
                         show_verses: `${this.options.paramsPrefix}[${fieldPrefix}show_verses]`,
                         show_version: `${this.options.paramsPrefix}[${fieldPrefix}show_version]`,
+                        show_tooltip: `${this.options.paramsPrefix}[${fieldPrefix}show_tooltip]`,
                         separator: `${this.options.paramsPrefix}[${fieldPrefix}separator]`
                     };
 
@@ -3158,7 +3197,8 @@
                         getOrCreateField(fieldNames.linktype, data.linktype);
                         getOrCreateField(fieldNames.date_format, data.date_format || '');
                         getOrCreateField(fieldNames.show_verses, data.show_verses || '');
-                        getOrCreateField(fieldNames.show_version, data.show_version || '');
+                        getOrCreateField(fieldNames.show_version, data.show_version || '0');
+                        getOrCreateField(fieldNames.show_tooltip, data.show_tooltip || '0');
                         getOrCreateField(fieldNames.separator, data.separator || '');
                     } else {
                         // Element not in layout - set row to 0 (hidden)
