@@ -269,7 +269,12 @@ class HtmlView extends BaseHtmlView
         $user            = $mainframe->getIdentity();
         $groups          = $user->getAuthorisedViewLevels();
         $this->main      = Cwmimages::mainStudyImage($params);
-        $this->mainimage = Cwmimages::renderPicture($this->main, '', '', false);
+        $this->mainimage = Cwmimages::renderPicture(
+            $this->main,
+            Text::_('JBS_CMN_MESSAGES_LIST'),
+            'proclaim-page-header-img',
+            false
+        );
 
         // Build go button
         $this->page->gobutton = '<input class="btn btn-primary" type="submit" value="' . Text::_(
