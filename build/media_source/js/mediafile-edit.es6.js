@@ -398,13 +398,9 @@
                 // Update the display input and buttons
                 updateServerDisplay();
 
-                // Move focus outside the modal BEFORE hiding — Bootstrap sets
-                // aria-hidden="true" at the start of hide(), which triggers a
-                // browser warning if the modal or a descendant still has focus.
-                var focusTarget = document.getElementById('jform_server_id_name') || document.body;
-                focusTarget.focus();
-
-                bsModal.hide();
+                // Dispose the modal immediately (skip hide animation) to avoid
+                // Bootstrap's aria-hidden focus conflict during the hide transition
+                closeModal(bsModal, modalEl);
 
                 // Same server — no need to reload
                 if (serverId === currentValue) {
@@ -429,12 +425,31 @@
             });
         });
 
-        // Clean up modal after hidden
-        modalEl.addEventListener('hidden.bs.modal', function() {
-            modalEl.remove();
-        });
-
         bsModal.show();
+    }
+
+    /**
+     * Close and remove a Bootstrap modal without the hide animation.
+     * Bootstrap's animated hide sets aria-hidden while the modal still holds
+     * focus, triggering a browser a11y warning. Disposing directly avoids this.
+     */
+    function closeModal(bsModal, modalEl) {
+        // Move focus out first
+        var focusTarget = document.getElementById('jform_server_id_name') || document.body;
+        focusTarget.focus();
+
+        // Dispose removes event listeners and Bootstrap data
+        bsModal.dispose();
+
+        // Clean up DOM: modal element and any remaining backdrop/body class
+        modalEl.remove();
+        document.body.classList.remove('modal-open');
+        document.body.style.removeProperty('overflow');
+        document.body.style.removeProperty('padding-right');
+        var backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
     }
 
     /**
