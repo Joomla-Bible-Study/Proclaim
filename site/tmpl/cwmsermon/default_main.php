@@ -94,51 +94,11 @@ echo $this->fluidListing;
 
 <?php
 if ($isPrint) {
-    // Print mode: show scripture references as text instead of iframe
-    $refs = [];
-
-    // Use junction table scriptures if available
-    if (!empty($row->scriptures) && \is_array($row->scriptures)) {
-        foreach ($row->scriptures as $ref) {
-            if ($ref->booknumber <= 0) {
-                if ($ref->referenceText !== '') {
-                    $refs[] = $ref->referenceText;
-                }
-                continue;
-            }
-            $refs[] = \CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper::formatReference(
-                $ref->booknumber,
-                $ref->chapterBegin,
-                $ref->verseBegin,
-                $ref->chapterEnd,
-                $ref->verseEnd
-            );
-        }
-    } elseif (!empty($row->bookname)) {
-        // Legacy fallback: build from flat columns
-        $bookRef = Text::_($row->bookname);
-        if (!empty($row->chapter_begin)) {
-            $bookRef .= ' ' . $row->chapter_begin;
-            if (!empty($row->verse_begin)) {
-                $bookRef .= ':' . $row->verse_begin;
-            }
-            if (!empty($row->chapter_end) && !empty($row->verse_end)) {
-                if ($row->chapter_end !== $row->chapter_begin) {
-                    $bookRef .= '-' . $row->chapter_end . ':' . $row->verse_end;
-                } else {
-                    $bookRef .= '-' . $row->verse_end;
-                }
-            } elseif (!empty($row->verse_end)) {
-                $bookRef .= '-' . $row->verse_end;
-            }
-        }
-        $refs[] = $bookRef;
-    }
-
-    if (!empty($refs)) {
+    // Print mode: show full passage text (always visible, no interactive elements)
+    if (!empty($this->printPassage)) {
         echo '<div class="passage-print">';
         echo '<h3>' . Text::_('JBS_CMN_BIBLE_PASSAGE') . '</h3>';
-        echo '<p><strong>' . htmlspecialchars(implode('; ', $refs)) . '</strong></p>';
+        echo $this->printPassage;
         echo '</div>';
     }
 } else {
@@ -152,6 +112,9 @@ if (
     !isset($this->item->params)
     || (int) $this->item->params->get('dstudytextrow', 0) === 0
 ) {
+    if ($isPrint && !empty($this->item->studytext)) {
+        echo '<h3 class="studytext-print-heading">' . Text::_('JBS_CMN_MESSAGE_TEXT') . '</h3>';
+    }
     echo $this->item->studytext;
 }
 

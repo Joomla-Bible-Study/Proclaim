@@ -121,7 +121,7 @@
         display: none !important;
     }
 
-    /* Style the print-friendly passage reference */
+    /* Style the print-friendly passage block */
     .passage-print {
         margin: 12pt 0;
         padding: 8pt 0;
@@ -131,6 +131,45 @@
 
     .passage-print h3 {
         font-size: 14pt;
+        margin-bottom: 4pt;
+    }
+
+    /* Scripture passage headings (per-reference) */
+    .passage-print .scripture-passage-heading {
+        font-size: 12pt;
+        margin: 8pt 0 4pt;
+    }
+
+    /* Force scripture text visible (toggle/popup modes hide it with inline style) */
+    .passage-print .scripture-text {
+        display: block !important;
+    }
+
+    /* Hide interactive elements inside print passage */
+    .passage-print .scripture-toggle,
+    .passage-print .scripture-popup-trigger,
+    .passage-print .scripture-popup-close,
+    .passage-print .scripture-version-switcher {
+        display: none !important;
+    }
+
+    /* Scripture body styling for print */
+    .passage-print .scripture-body {
+        font-size: 11pt;
+        line-height: 1.6;
+        margin: 4pt 0;
+    }
+
+    .passage-print .scripture-copyright {
+        font-size: 8pt;
+        color: #666;
+        margin-top: 4pt;
+    }
+
+    /* Study text heading for print */
+    .studytext-print-heading {
+        font-size: 14pt;
+        margin-top: 8pt;
         margin-bottom: 4pt;
     }
 

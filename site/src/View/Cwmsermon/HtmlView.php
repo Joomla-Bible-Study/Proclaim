@@ -77,6 +77,12 @@ class HtmlView extends BaseHtmlView
      */
     protected ?string $passage = null;
 
+    /** @var  string Print-friendly passage (always visible, no interactive elements)
+     *
+     * @since 10.1.0
+     */
+    protected string $printPassage = '';
+
     /** @var  string|null Related
      *
      * @since 7.0
@@ -482,6 +488,14 @@ class HtmlView extends BaseHtmlView
 
         // Set print mode from request
         $this->print = $app->getInput()->getString('print', '');
+
+        // Build print-friendly passage: always visible, no version switcher
+        if (!empty($this->print)) {
+            $printParams = clone $this->item->params;
+            $printParams->set('show_passage_view', 2);
+            $printParams->set('allow_version_switch', 0);
+            $this->printPassage = $BiblePassage->buildAllPassages($this->item, $printParams);
+        }
 
         // Load print stylesheet
         $this->getDocument()->getWebAssetManager()->useStyle('com_proclaim.print');
