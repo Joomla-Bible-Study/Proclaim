@@ -19,14 +19,11 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
-use Joomla\Filesystem\Path;
-use Joomla\Registry\Registry;
 
 /**
  * Controller For MediaFile
@@ -284,68 +281,33 @@ class CwmmediafileController extends FormController
                 CWMAddon::outputJson(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
             }
 
-            $app       = Factory::getApplication();
-            $serverId  = $app->getInput()->getInt('server_id', 0);
+            $app      = Factory::getApplication();
+            $serverId = $app->getInput()->getInt('server_id', 0);
 
             if (empty($serverId)) {
                 CWMAddon::outputJson(['success' => false, 'error' => 'No server_id provided']);
             }
 
-            // Load server record
-            $serverTable = $app->bootComponent('com_proclaim')
-                ->getMVCFactory()->createTable('Cwmserver', 'Administrator');
-            $serverTable->load($serverId);
+            // Set server_id in user state so the model picks it up via populateState()
+            $app->setUserState('com_proclaim.edit.mediafile.server_id', $serverId);
 
-            $serverType = $serverTable->type ?? '';
-
-            if (empty($serverType)) {
-                CWMAddon::outputJson(['success' => false, 'error' => 'Server type not found']);
-            }
-
-            // Load server params
-            $serverParams = new Registry();
-            if (\is_string($serverTable->params)) {
-                $serverParams->loadString($serverTable->params);
-            }
-
-            $serverMedia = new Registry();
-            if (\is_string($serverTable->media)) {
-                $serverMedia->loadString($serverTable->media);
-            } elseif (\is_array($serverTable->media)) {
-                $serverMedia->loadArray($serverTable->media);
-            }
-
-            $serverMedia->merge($serverParams);
-            $sParams = $serverMedia->toArray();
-
-            // Set up form paths for addon
-            $addonPath = Path::clean(
-                JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($serverType)
-            );
-            Form::addFormPath($addonPath);
-            Form::addFieldPath($addonPath . '/Field');
-
-            // Load addon language
-            $lang = $app->getLanguage();
-            $lang->load('jbs_addon_' . strtolower($serverType), $addonPath);
-
-            // Load media form
             /** @var \CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel $model */
             $model = $this->getModel('Cwmmediafile', 'Administrator', []);
 
-            $mediaForm = $model->loadForm(
-                'com_proclaim.mediafile.media',
-                'media',
-                ['control' => 'jform', 'load_data' => true],
-                true,
-                '/media'
-            );
+            // getItem() populates model->data including server_id from state
+            $model->getItem();
+
+            // getMediaForm() loads form paths, language, and returns the Joomla Form
+            $mediaForm = $model->getMediaForm();
 
             if (empty($mediaForm)) {
                 CWMAddon::outputJson(['success' => false, 'error' => 'Could not load media form']);
             }
 
-            // Wrap form with server params
+            $serverType = $model->getState('type');
+            $sParams    = $model->getState('s_params', []);
+
+            // Wrap form with server params (same pattern as HtmlView::display)
             $wrappedForm = new class ($mediaForm, $sParams) {
                 private $form;
                 public array $s_params;
@@ -365,10 +327,8 @@ class CwmmediafileController extends FormController
             // Bind server defaults for new items
             $mediaForm->bind(['params' => $sParams]);
 
-            // Instantiate addon
-            $addon = CWMAddon::getInstance($serverType);
-
-            // Render general and options HTML
+            // Instantiate addon and render HTML
+            $addon       = CWMAddon::getInstance($serverType);
             $generalHtml = $addon->renderGeneral($wrappedForm, true);
             $optionsHtml = $addon->renderOptionsFields($wrappedForm, true);
 
