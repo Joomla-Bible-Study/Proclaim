@@ -450,10 +450,14 @@ class Cwmrelatedstudies
             $html .= '<a href="' . $url . '" class="proclaim-related-card">';
             $html .= '<div class="card">';
 
-            // Optional thumbnail
+            // Optional thumbnail — use full-size original for quality
             if (!empty($study->thumbnailm)) {
-                $thumb = htmlspecialchars($study->thumbnailm, ENT_QUOTES, 'UTF-8');
-                $html .= '<img src="' . $thumb . '" class="card-img-top" alt="' . $title . '" loading="lazy">';
+                $imageObj    = Cwmimages::getStudyOriginal($study->thumbnailm);
+                $pictureHtml = Cwmimages::renderPicture($imageObj, $study->studytitle, 'card-img-top');
+
+                if ($pictureHtml !== '') {
+                    $html .= $pictureHtml;
+                }
             }
 
             $html .= '<div class="card-body">';

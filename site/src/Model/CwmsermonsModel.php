@@ -542,6 +542,11 @@ class CwmsermonsModel extends ListModel
 
         parent::populateState($ordering, $direction);
 
+        // Card grid layout uses 12 items per page for clean 3-column rows
+        if ($params->get('simple_mode') === '1') {
+            $this->setState('list.limit', 12);
+        }
+
         // Force a language
         if (!empty($forcedLanguage)) {
             $this->setState('filter.language', $forcedLanguage);

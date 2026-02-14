@@ -115,7 +115,7 @@ class Cwmpagebuilder
         }
 
         if ($item->thumbnailm) {
-            $image                 = Cwmimages::getStudyThumbnail($item->thumbnailm);
+            $image                 = Cwmimages::getStudyOriginal($item->thumbnailm);
             $page->study_thumbnail = Cwmimages::renderPicture($image, $item->studytitle);
         } else {
             $page->study_thumbnail = '';
