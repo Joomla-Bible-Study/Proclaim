@@ -437,6 +437,22 @@
             "name": "com_proclaim.addon-local-browser",
             "type": "style",
             "uri": "com_proclaim/addon-local-browser.css"
+        },
+        {
+            "name": "com_proclaim.sermon-filters",
+            "type": "script",
+            "uri": "com_proclaim/sermon-filters.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.sermon-filters-css",
+            "type": "style",
+            "uri": "com_proclaim/sermon-filters.css"
         }
     ]
 }

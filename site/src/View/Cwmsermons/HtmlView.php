@@ -26,6 +26,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
@@ -353,6 +354,31 @@ class HtmlView extends BaseHtmlView
         // Pre-calculate teacher data for default_main template
         $cwmTeacher          = new Cwmteacher();
         $this->teachersFluid = $cwmTeacher->getTeachersFluid($params);
+
+        // AJAX filtering — only for the default_main template (not custom/simple)
+        $isDefaultTemplate = !(
+            $params->get('useexpert_list') > 0
+            || $params->get('simple_mode') === '1'
+            || (\is_string($params->get('sermonstemplate')) && $params->get('sermonstemplate') !== '0')
+        );
+
+        if ($isDefaultTemplate) {
+            $t      = $this->template->id ?? $mainframe->input->getInt('t', 1);
+            $itemId = $this->itemid;
+
+            $ajaxUrl = 'index.php?option=com_proclaim&task=cwmsermons.filterAjax&format=raw'
+                . '&t=' . (int) $t
+                . '&Itemid=' . (int) $itemId;
+
+            $mainframe->getDocument()->addScriptOptions('com_proclaim.sermonFilters', [
+                'ajaxUrl'   => $ajaxUrl,
+                'enabled'   => true,
+                'csrfToken' => Session::getFormToken(),
+            ]);
+
+            $wa->useScript('com_proclaim.sermon-filters');
+            $wa->useStyle('com_proclaim.sermon-filters-css');
+        }
 
         $this->updateFilters();
 

@@ -140,10 +140,10 @@ if ($showArchived === '1') : ?>
             // Search tools bar
             echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
 ?>
-            <?php
-// Add pagination links?>
-            <?php
-if (!empty($this->items)) : ?>
+            <div id="proclaim-active-filters"></div>
+            <?php // Top pagination ?>
+            <div id="proclaim-pagination-top" class="proclaim-pagination">
+            <?php if (!empty($this->items)) : ?>
                 <?php
     if (
         ($this->pagination->pagesTotal > 1) &&
@@ -166,8 +166,10 @@ if (!empty($this->items)) : ?>
                     </div>
                     <?php
     endif; ?>
-                <?php
-endif; ?>
+            <?php endif; ?>
+            </div>
+            <?php // Sermon listing ?>
+            <div id="proclaim-sermon-list" aria-live="polite">
             <?php
 if ($this->items) {
     echo $listing->getFluidListing($this->items, $this->params, $this->template, $type = 'sermons');
@@ -175,10 +177,10 @@ if ($this->items) {
     echo "<h4>" . Text::_("JBS_CMN_STUDY_NOT_FOUND") . "</h4><br />";
 }
 ?>
-            <?php
-// Add pagination links?>
-            <?php
-if (!empty($this->items)) : ?>
+            </div>
+            <?php // Bottom pagination ?>
+            <div id="proclaim-pagination-bottom" class="proclaim-pagination">
+            <?php if (!empty($this->items)) : ?>
                 <?php
     if (
         ($this->pagination->pagesTotal > 1) &&
@@ -198,6 +200,7 @@ if (!empty($this->items)) : ?>
                     </div>
                 <?php endif; ?>
             <?php endif; ?>
+            </div>
             <?php
             if ($this->params->get('showpodcastsubscribelist') === '2') {
                 echo $this->subscribe;
