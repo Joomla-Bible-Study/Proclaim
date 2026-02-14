@@ -47,6 +47,15 @@ class ServerListField extends ListField
     protected array $serverTypeMap = [];
 
     /**
+     * Server ID-to-info mapping with type and name for each server.
+     *
+     * @var  array<int, array{type: string, name: string}>
+     *
+     * @since 10.1.0
+     */
+    protected array $serverInfoMap = [];
+
+    /**
      * Method to get a list of options for a list input.
      *
      * @return  array  An array of JHtml options.
@@ -67,11 +76,16 @@ class ServerListField extends ListField
         $options = [];
 
         $this->serverTypeMap = [];
+        $this->serverInfoMap = [];
 
         if ($servers) {
             foreach ($servers as $server) {
                 $options[]                              = HTMLHelper::_('select.option', $server->id, $server->server_name);
                 $this->serverTypeMap[(int) $server->id] = $server->type;
+                $this->serverInfoMap[(int) $server->id] = [
+                    'type' => $server->type,
+                    'name' => $server->server_name,
+                ];
             }
         }
 
@@ -96,7 +110,9 @@ class ServerListField extends ListField
         $html = parent::getInput();
 
         // Inject data-server-types JSON attribute onto the <select> element
+        // This contains both the type-only map (for backward compat) and extended info
         $attr = ' data-server-types="' . htmlspecialchars(json_encode($this->serverTypeMap), ENT_QUOTES, 'UTF-8') . '"';
+        $attr .= ' data-server-info="' . htmlspecialchars(json_encode($this->serverInfoMap), ENT_QUOTES, 'UTF-8') . '"';
         $html = preg_replace('/<select\b/', '<select' . $attr, $html, 1);
 
         return $html;

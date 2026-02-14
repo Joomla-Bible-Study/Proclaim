@@ -408,6 +408,35 @@
             "attributes": {
                 "defer": true
             }
+        },
+        {
+            "name": "com_proclaim.mediafile-edit",
+            "type": "script",
+            "uri": "com_proclaim/mediafile-edit.min.js",
+            "dependencies": [
+                "core",
+                "form.validate"
+            ],
+            "attributes": {
+                "type": "module"
+            }
+        },
+        {
+            "name": "com_proclaim.addon-local-browser",
+            "type": "script",
+            "uri": "com_proclaim/addon-local-browser.min.js",
+            "dependencies": [
+                "core",
+                "bootstrap.modal"
+            ],
+            "attributes": {
+                "type": "module"
+            }
+        },
+        {
+            "name": "com_proclaim.addon-local-browser",
+            "type": "style",
+            "uri": "com_proclaim/addon-local-browser.css"
         }
     ]
 }

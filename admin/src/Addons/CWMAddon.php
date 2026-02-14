@@ -186,10 +186,10 @@ abstract class CWMAddon
      *
      * @since 9.1.3
      */
-    abstract protected function renderGeneral($media_form, bool $new): string;
+    abstract public function renderGeneral($media_form, bool $new): string;
 
     /**
-     * Render Layout and fields
+     * Render Layout and fields (full tab with addTab/endTab wrappers)
      *
      * @param object $media_form Media files form
      * @param bool $new If media is new
@@ -198,7 +198,49 @@ abstract class CWMAddon
      *
      * @since 9.1.3
      */
-    abstract protected function render($media_form, bool $new): string;
+    abstract public function render($media_form, bool $new): string;
+
+    /**
+     * Render non-general fieldset fields WITHOUT tab wrappers.
+     *
+     * Used by AJAX addon loading to return just the options HTML content
+     * that gets injected into an existing tab shell.
+     *
+     * @param   object  $media_form  Media files form
+     * @param   bool    $new         If media is new
+     *
+     * @return  string  The rendered HTML
+     *
+     * @since   10.1.0
+     */
+    public function renderOptionsFields($media_form, bool $new): string
+    {
+        $html = '<div class="row">';
+
+        foreach ($media_form->getFieldsets('params') as $name => $fieldset) {
+            if ($name !== 'general') {
+                $html .= '<div class="col-6">';
+
+                foreach ($media_form->getFieldset($name) as $field) {
+                    if ($new) {
+                        $s_name = $field->fieldname;
+
+                        if (isset($media_form->s_params[$s_name])) {
+                            $field->setValue($media_form->s_params[$s_name]);
+                        }
+                    }
+
+                    $html .= $field->renderField();
+                }
+
+                $html .= '</div>';
+            }
+        }
+
+        $html .= '</div>';
+
+        return $html;
+    }
 
     /**
      * Upload

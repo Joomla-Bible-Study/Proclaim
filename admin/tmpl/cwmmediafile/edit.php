@@ -18,6 +18,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Session\Session;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmmediafile\HtmlView $this */
 
@@ -36,55 +37,29 @@ if ($input->getInt('id')) {
 
 $new = ($this->item->id === '0' || empty($this->item->id));
 
+// Determine if we should show the server picker modal
+$showServerPicker = $new && $this->addon === null;
+
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
-    ->addInlineScript(
-        '
-	Joomla.submitbutton = function (task) {
-		if (task == "cwmmediafile.setServer") {
-			Joomla.submitform(task, document.getElementById("adminForm"));
-		} else if (task == "cwmmediafile.cancel"|| document.formvalidator.isValid(document.getElementById("adminForm"))) {
-			Joomla.submitform(task, document.getElementById("adminForm"));
-		} else {
-			alert("' . $this->escape(Text::_("JGLOBAL_VALIDATION_FORM_FAILED")) . '");
-		}
-	}
+    ->useScript('com_proclaim.mediafile-edit');
 
-	document.addEventListener("DOMContentLoaded", function() {
-		var serverField = document.getElementById("jform_server_id");
-		if (serverField) {
-			var serverTypes = {};
-			try { serverTypes = JSON.parse(serverField.dataset.serverTypes || "{}"); } catch(e) {}
-			var previousValue = serverField.value;
-
-			serverField.addEventListener("change", function() {
-				var newValue = this.value;
-
-				// No previous selection — just load the addon
-				if (!previousValue || !serverTypes[previousValue]) {
-					previousValue = newValue;
-					Joomla.submitbutton("cwmmediafile.setServer");
-					return;
-				}
-
-				var oldType = serverTypes[previousValue] || "";
-				var newType = serverTypes[newValue] || "";
-
-				if (oldType !== newType && newType !== "") {
-					if (!confirm("' . $this->escape(Text::_("JBS_MED_SERVER_TYPE_CHANGE_WARNING")) . '")) {
-						this.value = previousValue;
-						return;
-					}
-				}
-
-				previousValue = newValue;
-				Joomla.submitbutton("cwmmediafile.setServer");
-			});
-		}
-	});
-'
-    );
+// Pass config to JavaScript
+$this->getDocument()->addScriptOptions('com_proclaim.mediafile', [
+    'token'            => Session::getFormToken(),
+    'isNew'            => $new,
+    'showServerPicker' => $showServerPicker,
+    'validationFailed' => Text::_('JGLOBAL_VALIDATION_FORM_FAILED'),
+    'switchWarning'    => Text::_('JBS_MED_SERVER_TYPE_CHANGE_WARNING'),
+    'loadingAddon'     => Text::_('JBS_MED_LOADING_ADDON'),
+    'switchLoading'    => Text::_('JBS_MED_SERVER_SWITCH_LOADING'),
+    'selectServerTitle' => Text::_('JBS_MED_SELECT_SERVER_TITLE'),
+    'selectServerDesc'  => Text::_('JBS_MED_SELECT_SERVER_DESC'),
+    'serverTypeLocalDesc'  => Text::_('JBS_MED_SERVER_TYPE_LOCAL_DESC'),
+    'serverTypeYoutubeDesc' => Text::_('JBS_MED_SERVER_TYPE_YOUTUBE_DESC'),
+    'serverTypeLegacyDesc'  => Text::_('JBS_MED_SERVER_TYPE_LEGACY_DESC'),
+]);
 
 $this->useCoreUI = true;
 ?>
@@ -93,7 +68,8 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
       method="post"
       name="adminForm"
       id="adminForm"
-      class="form-validate">
+      class="form-validate"
+      <?php if ($showServerPicker) : ?>data-show-server-picker="true"<?php endif; ?>>
     <div>
         <?php
         echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general']); ?>
@@ -108,13 +84,15 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
                 <?php echo $this->form->renderField('server_id', null, $this->item->server_id); ?>
                 <?php echo $this->form->renderField('podcast_id', null, $podcast_id); ?>
 
-                <?php if ($this->addon !== null) : ?>
-                    <?php echo $this->addon->renderGeneral($this->media_form, $new); ?>
-                <?php else : ?>
-                    <div class="alert alert-info">
-                        <?php echo Text::_('JBS_MED_SELECT_SERVER_FIRST'); ?>
-                    </div>
-                <?php endif; ?>
+                <div id="addon-general-container">
+                    <?php if ($this->addon !== null) : ?>
+                        <?php echo $this->addon->renderGeneral($this->media_form, $new); ?>
+                    <?php elseif (!$showServerPicker) : ?>
+                        <div class="alert alert-info">
+                            <?php echo Text::_('JBS_MED_SELECT_SERVER_FIRST'); ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
 
             </div>
             <div class="col-lg-5">
@@ -127,9 +105,13 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php if ($this->addon !== null) : ?>
-        <?php echo $this->addon->render($this->media_form, $new); ?>
-        <?php endif; ?>
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'options', Text::_('JBS_ADDON_MEDIA_OPTIONS_LABEL')); ?>
+        <div id="addon-options-content">
+            <?php if ($this->addon !== null) : ?>
+                <?php echo $this->addon->renderOptionsFields($this->media_form, $new); ?>
+            <?php endif; ?>
+        </div>
+        <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>
