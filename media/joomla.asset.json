@@ -475,11 +475,6 @@
             "name": "com_proclaim.scripture-tooltip-css",
             "type": "style",
             "uri": "com_proclaim/scripture-tooltip.css"
-        },
-        {
-            "name": "com_proclaim.simple-grid",
-            "type": "style",
-            "uri": "com_proclaim/simple-grid.css"
         }
     ]
 }
