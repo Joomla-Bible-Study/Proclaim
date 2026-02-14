@@ -25,7 +25,6 @@ function setupModule(fetchMock) {
                     <option value="5">Pastor John</option>
                 </select>
             </form>
-            <div id="proclaim-active-filters"></div>
             <div id="proclaim-pagination-top" class="proclaim-pagination"></div>
             <div id="proclaim-sermon-list" aria-live="polite">
                 <div>Original content</div>
@@ -42,11 +41,6 @@ function setupModule(fetchMock) {
         }),
         Text: { _: jest.fn((key, fallback) => fallback || key) },
     };
-
-    if (!global.CSS) {
-        global.CSS = {};
-    }
-    global.CSS.escape = jest.fn(s => s);
 
     global.AbortController = class {
         constructor() { this.signal = {}; }
@@ -163,7 +157,6 @@ describe('sermon-filters.es6.js', () => {
                     pagesCounter: '',
                     total: 10,
                     pagesTotal: 1,
-                    activeFilters: {},
                 }),
             });
 
@@ -197,7 +190,6 @@ describe('sermon-filters.es6.js', () => {
                     pagesCounter: '',
                     total: 1,
                     pagesTotal: 1,
-                    activeFilters: {},
                 }),
             });
 
@@ -223,7 +215,6 @@ describe('sermon-filters.es6.js', () => {
                     pagesCounter: '',
                     total: 10,
                     pagesTotal: 1,
-                    activeFilters: {},
                 }),
             });
 
@@ -256,7 +247,6 @@ describe('sermon-filters.es6.js', () => {
                     pagesCounter: '',
                     total: 5,
                     pagesTotal: 1,
-                    activeFilters: {},
                 }),
             });
 
@@ -298,7 +288,7 @@ describe('sermon-filters.es6.js', () => {
             const mockFetch = jest.fn()
                 .mockResolvedValueOnce({
                     ok: true,
-                    json: () => Promise.resolve({ success: true, html: '', pagination: '', pagesCounter: '', total: 0, pagesTotal: 0, activeFilters: {} }),
+                    json: () => Promise.resolve({ success: true, html: '', pagination: '', pagesCounter: '', total: 0, pagesTotal: 0 }),
                 })
                 .mockRejectedValue(new TypeError('Network error'));
 

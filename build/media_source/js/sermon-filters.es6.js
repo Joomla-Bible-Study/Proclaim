@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const listContainer    = document.getElementById('proclaim-sermon-list');
     const paginationTop    = document.getElementById('proclaim-pagination-top');
     const paginationBottom = document.getElementById('proclaim-pagination-bottom');
-    const activeFiltersEl  = document.getElementById('proclaim-active-filters');
     const mainContent      = document.getElementById('proclaim-main-content');
 
     if (!listContainer) {
@@ -43,19 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const DEBOUNCE_MS = 350;
 
-    // ─── Helpers (defined first to satisfy latedef) ────────────
-
-    /**
-     * Escape HTML entities for safe insertion.
-     *
-     * @param {string} str
-     * @returns {string}
-     */
-    function escapeHtml(str) {
-        const div = document.createElement('div');
-        div.textContent = String(str);
-        return div.innerHTML;
-    }
+    // ─── Helpers ─────────────────────────────────────────────
 
     /**
      * Build query string from form data, adding CSRF token and overrides.
@@ -249,9 +236,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // Update pagination
             updatePagination(result);
 
-            // Update active filter badges
-            renderActiveFilters(result.activeFilters);
-
             // Update URL
             updateUrl(new URLSearchParams(qs));
 
@@ -270,111 +254,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         hideLoading();
-    }
-
-    /**
-     * Clear a single filter and re-fetch.
-     *
-     * @param {string} filterKey
-     */
-    function clearFilter(filterKey) {
-        const select = form.querySelector('[name="filter_' + filterKey + '"], [name="filter[' + filterKey + ']"]');
-
-        if (select) {
-            select.value = '';
-        }
-
-        // Also clear text input (for search)
-        const input = form.querySelector('[name="filter_' + filterKey + '"]');
-
-        if (input && input.type === 'text') {
-            input.value = '';
-        }
-
-        fetchResults();
-    }
-
-    /**
-     * Clear all filters and re-fetch.
-     */
-    function clearAllFilters() {
-        const filterSelects = form.querySelectorAll('select[name^="filter_"], select[name^="filter["]');
-
-        filterSelects.forEach(function (select) {
-            select.value = '';
-        });
-
-        const searchInput = form.querySelector('input[name="filter_search"], input[name="filter[search]"]');
-
-        if (searchInput) {
-            searchInput.value = '';
-        }
-
-        fetchResults();
-    }
-
-    /**
-     * Render active filter badges from the response data.
-     *
-     * @param {Object} activeFilters  Map of filter name to value
-     */
-    function renderActiveFilters(activeFilters) {
-        if (!activeFiltersEl) {
-            return;
-        }
-
-        const entries = Object.entries(activeFilters || {});
-
-        if (entries.length === 0) {
-            activeFiltersEl.innerHTML = '';
-            return;
-        }
-
-        // Map filter keys to display labels from the form's select elements
-        const labels = {};
-
-        entries.forEach(function ([key, value]) {
-            const select = form.querySelector('[name="filter_' + key + '"], [name="filter[' + key + ']"]');
-
-            if (select && select.options) {
-                const opt = select.querySelector('option[value="' + CSS.escape(String(value)) + '"]');
-                labels[key] = opt ? opt.textContent.trim() : value;
-            } else if (key === 'search') {
-                labels[key] = '"' + value + '"';
-            } else {
-                labels[key] = value;
-            }
-        });
-
-        let html = '<div class="proclaim-filter-badges">';
-
-        entries.forEach(function ([key]) {
-            html += '<span class="badge proclaim-filter-badge">' +
-                '<span class="proclaim-filter-badge-label">' + escapeHtml(labels[key]) + '</span>' +
-                ' <button type="button" class="btn-close btn-close-white proclaim-filter-clear"' +
-                ' data-filter="' + escapeHtml(key) + '" aria-label="Remove filter">' +
-                '</button></span>';
-        });
-
-        html += ' <button type="button" class="btn btn-sm btn-outline-secondary proclaim-filter-clear-all">' +
-            Joomla.Text._('JBS_CMN_CLEAR_ALL_FILTERS', 'Clear All') +
-            '</button></div>';
-
-        activeFiltersEl.innerHTML = html;
-
-        // Bind clear handlers
-        activeFiltersEl.querySelectorAll('.proclaim-filter-clear').forEach(function (btn) {
-            btn.addEventListener('click', function (e) {
-                const filterKey = e.currentTarget.dataset.filter;
-                clearFilter(filterKey);
-            });
-        });
-
-        const clearAllBtn = activeFiltersEl.querySelector('.proclaim-filter-clear-all');
-
-        if (clearAllBtn) {
-            clearAllBtn.addEventListener('click', clearAllFilters);
-        }
     }
 
     // ─── Event Binding ─────────────────────────────────────────

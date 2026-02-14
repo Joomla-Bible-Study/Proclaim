@@ -140,7 +140,6 @@ if ($showArchived === '1') : ?>
             // Search tools bar
             echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
 ?>
-            <div id="proclaim-active-filters"></div>
             <?php // Top pagination ?>
             <div id="proclaim-pagination-top" class="proclaim-pagination">
             <?php if (!empty($this->items)) : ?>

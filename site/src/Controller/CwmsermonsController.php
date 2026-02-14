@@ -142,26 +142,13 @@ class CwmsermonsController extends BaseController
                 $html = $listing->getFluidListing($items, $params, $template, 'sermons');
             }
 
-            // Build active filters map for badge display.
-            $activeFilters = [];
-            $filterNames   = ['search', 'book', 'teacher', 'series', 'messagetype', 'year', 'topic', 'location'];
-
-            foreach ($filterNames as $filter) {
-                $value = $state->get('filter.' . ($filter === 'messagetype' ? 'messageType' : $filter));
-
-                if ($value !== null && $value !== '' && $value !== 0 && $value !== '0') {
-                    $activeFilters[$filter] = $value;
-                }
-            }
-
             echo json_encode([
-                'success'       => true,
-                'html'          => $html,
-                'pagination'    => $pagination->getPagesLinks(),
-                'pagesCounter'  => $pagination->getPagesCounter(),
-                'total'         => $pagination->total,
-                'pagesTotal'    => $pagination->pagesTotal,
-                'activeFilters' => $activeFilters,
+                'success'      => true,
+                'html'         => $html,
+                'pagination'   => $pagination->getPagesLinks(),
+                'pagesCounter' => $pagination->getPagesCounter(),
+                'total'        => $pagination->total,
+                'pagesTotal'   => $pagination->pagesTotal,
             ], JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
             echo json_encode([

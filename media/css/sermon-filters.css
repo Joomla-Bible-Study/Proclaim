@@ -1,5 +1,5 @@
 /**
- * AJAX Sermon Filters — loading overlay, spinner, active filter badges
+ * AJAX Sermon Filters — loading overlay and spinner
  *
  * @package  Proclaim.Site
  * @since    10.1.0
@@ -31,72 +31,8 @@
     height: 2.5rem;
 }
 
-/* ─── Active filter badges ────────────────────────────────── */
-
-.proclaim-filter-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    align-items: center;
-    padding: 0.5rem 0;
-}
-
-.proclaim-filter-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 0.3rem 0.6rem;
-    font-size: 0.85rem;
-    background-color: var(--proclaim-accent-color, #287585);
-    color: #fff;
-    border-radius: 1rem;
-}
-
-.proclaim-filter-badge .btn-close {
-    font-size: 0.55rem;
-    padding: 0.2rem;
-    filter: brightness(0) invert(1);
-    opacity: 0.8;
-}
-
-.proclaim-filter-badge .btn-close:hover {
-    opacity: 1;
-}
-
-.proclaim-filter-badge-label {
-    max-width: 180px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.proclaim-filter-clear-all {
-    font-size: 0.8rem;
-    padding: 0.25rem 0.6rem;
-    margin-inline-start: 0.25rem;
-}
-
 /* ─── Pagination transitions ──────────────────────────────── */
 
 .proclaim-pagination {
     transition: opacity 0.2s ease;
-}
-
-/* ─── Dark mode ───────────────────────────────────────────── */
-
-@media (prefers-color-scheme: dark) {
-    .proclaim-filter-badge {
-        background-color: var(--proclaim-accent-color, #287585);
-        color: #f0f0f0;
-    }
-
-    .proclaim-filter-clear-all {
-        color: #ccc;
-        border-color: #666;
-    }
-
-    .proclaim-filter-clear-all:hover {
-        color: #fff;
-        border-color: #999;
-    }
 }
