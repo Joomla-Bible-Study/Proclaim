@@ -228,30 +228,22 @@ class Cwmrelatedstudies
      */
     private function scoreByBooks(object $db, int $studyId, array $groups): void
     {
-        // Collect book numbers from junction table
+        // Collect book numbers from both junction table and legacy column in one query
         $query = $db->getQuery(true)
             ->select('DISTINCT ' . $db->quoteName('booknumber'))
             ->from($db->quoteName('#__bsms_study_scriptures'))
             ->where($db->quoteName('study_id') . ' = ' . $studyId)
-            ->where($db->quoteName('booknumber') . ' > 0');
+            ->where($db->quoteName('booknumber') . ' > 0')
+            ->union(
+                $db->getQuery(true)
+                    ->select($db->quoteName('booknumber'))
+                    ->from($db->quoteName('#__bsms_studies'))
+                    ->where($db->quoteName('id') . ' = ' . $studyId)
+                    ->where($db->quoteName('booknumber') . ' > 0')
+            );
 
         $db->setQuery($query);
-        $bookNumbers = array_map('intval', $db->loadColumn() ?: []);
-
-        // Also get the legacy booknumber from the studies table
-        $query = $db->getQuery(true)
-            ->select($db->quoteName('booknumber'))
-            ->from($db->quoteName('#__bsms_studies'))
-            ->where($db->quoteName('id') . ' = ' . $studyId);
-
-        $db->setQuery($query);
-        $legacyBook = (int) $db->loadResult();
-
-        if ($legacyBook > 0) {
-            $bookNumbers[] = $legacyBook;
-        }
-
-        $bookNumbers = array_unique(array_filter($bookNumbers));
+        $bookNumbers = array_unique(array_filter(array_map('intval', $db->loadColumn() ?: [])));
 
         if (empty($bookNumbers)) {
             return;
@@ -318,36 +310,30 @@ class Cwmrelatedstudies
             return;
         }
 
-        // Get params for all published studies (excluding self)
-        $query = $db->getQuery(true)
-            ->select($db->quoteName(['id', 'params']))
-            ->from($db->quoteName('#__bsms_studies'))
-            ->where($db->quoteName('id') . ' != ' . $studyId)
-            ->where($db->quoteName('published') . ' = 1')
-            ->where($db->quoteName('access') . ' IN (' . implode(',', $groups) . ')')
-            ->where($db->quoteName('params') . ' IS NOT NULL')
-            ->where($db->quoteName('params') . ' != ' . $db->quote(''))
-            ->where($db->quoteName('params') . ' != ' . $db->quote('{}'));
+        // Use SQL LIKE matching to avoid loading all studies into PHP.
+        // Each keyword match adds 1 point. We run one query per keyword
+        // but only return IDs (no heavy params deserialization).
+        foreach ($keys as $key) {
+            $key = trim($key);
 
-        $db->setQuery($query);
-        $studies = $db->loadObjectList();
-
-        foreach ($studies as $study) {
-            $sparams    = new Registry($study->params);
-            $compareStr = (string) $sparams->get('metakey');
-
-            if (empty($compareStr)) {
+            if ($key === '') {
                 continue;
             }
 
-            $compareKeys = array_filter(array_map('trim', explode(',', $compareStr)));
-            $overlap     = \count(array_intersect(
-                array_map('strtolower', $keys),
-                array_map('strtolower', $compareKeys)
-            ));
+            $escaped = $db->quote('%' . $db->escape($key, true) . '%');
+            $query   = $db->getQuery(true)
+                ->select($db->quoteName('id'))
+                ->from($db->quoteName('#__bsms_studies'))
+                ->where($db->quoteName('id') . ' != ' . $studyId)
+                ->where($db->quoteName('published') . ' = 1')
+                ->where($db->quoteName('access') . ' IN (' . implode(',', $groups) . ')')
+                ->where($db->quoteName('params') . ' LIKE ' . $escaped);
 
-            if ($overlap > 0) {
-                $this->addScore((int) $study->id, $overlap);
+            $db->setQuery($query);
+            $ids = $db->loadColumn();
+
+            foreach ($ids as $id) {
+                $this->addScore((int) $id, 1);
             }
         }
     }

@@ -354,20 +354,26 @@ class Cwmshowscripture
         // Detect the site's active language (ISO 2-letter code)
         $siteLang = substr(Factory::getApplication()->getLanguage()->getTag(), 0, 2);
 
-        // Collect translations from DB with language info
-        $translations = [];
+        // Collect translations from DB with language info (cached per-request)
+        static $translationsCache = null;
 
-        try {
-            $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
-            $query = $db->getQuery(true)
-                ->select($db->quoteName(['abbreviation', 'name', 'language']))
-                ->from($db->quoteName('#__bsms_bible_translations'))
-                ->order($db->quoteName('language') . ' ASC, ' . $db->quoteName('name') . ' ASC');
-            $db->setQuery($query);
-            $translations = $db->loadObjectList() ?: [];
-        } catch (\Exception $e) {
-            // DB not available
+        if ($translationsCache === null) {
+            $translationsCache = [];
+
+            try {
+                $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
+                $query = $db->getQuery(true)
+                    ->select($db->quoteName(['abbreviation', 'name', 'language']))
+                    ->from($db->quoteName('#__bsms_bible_translations'))
+                    ->order($db->quoteName('language') . ' ASC, ' . $db->quoteName('name') . ' ASC');
+                $db->setQuery($query);
+                $translationsCache = $db->loadObjectList() ?: [];
+            } catch (\Exception $e) {
+                // DB not available
+            }
         }
+
+        $translations = $translationsCache;
 
         // Fallback if nothing found
         if (empty($translations)) {
