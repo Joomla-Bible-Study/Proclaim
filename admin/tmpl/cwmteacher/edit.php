@@ -23,11 +23,11 @@ use Joomla\CMS\Uri\Uri;
 $app   = Factory::getApplication();
 $input = $app->getInput();
 
-// Set up defaults
+// Set up defaults — use original image path, not thumbnail
 if ($input->getInt('id')) {
-    $teacher_thumbnail = $this->item->teacher_thumbnail;
+    $imageDefault = !empty($this->item->image) ? $this->item->image : ($this->item->teacher_thumbnail ?? '');
 } else {
-    $teacher_thumbnail = $this->admin->params->get('default_teacher_image');
+    $imageDefault = $this->admin->params->get('default_teacher_image', '');
 }
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmteacher\HtmlView $this */
@@ -99,7 +99,7 @@ echo Route::_('index.php?option=com_proclaim&layout=' . $layout . $tmpl . '&id='
                          alt="<?php echo $this->form->getValue('teachername'); ?>"
                          class="img-thumbnail mb-3 d-block"/>
                 <?php endif; ?>
-                <?php echo $this->form->renderField('image'); ?>
+                <?php echo $this->form->renderField('image', null, $imageDefault); ?>
                 <hr/>
                 <?php echo $this->form->renderField('published'); ?>
                 <?php echo $this->form->renderField('access'); ?>

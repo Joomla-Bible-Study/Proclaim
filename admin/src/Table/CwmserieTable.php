@@ -84,6 +84,15 @@ class CwmserieTable extends Table
     public ?string $series_thumbnail = null;
 
     /**
+     * Original full-size image path
+     *
+     * @var string|null
+     *
+     * @since 10.1.0
+     */
+    public ?string $image = null;
+
+    /**
      * Publish state
      *
      * @var int
@@ -274,8 +283,9 @@ class CwmserieTable extends Table
         }
 
         // Delete associated image folder if exists
-        if (!empty($this->series_thumbnail) && str_contains($this->series_thumbnail, 'images/biblestudy/series/')) {
-            $folderPath = \dirname($this->series_thumbnail);
+        $imagePath = $this->image ?: $this->series_thumbnail;
+        if (!empty($imagePath) && str_contains($imagePath, 'images/biblestudy/series/')) {
+            $folderPath = \dirname($imagePath);
             Cwmthumbnail::deleteFolder($folderPath);
         }
 

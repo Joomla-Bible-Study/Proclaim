@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CwmteacherTable;
@@ -261,14 +262,31 @@ class CwmteacherModel extends AdminModel
         // Set contact to be an Int to work with Database
         $data['contact'] = (int) $data['contact'];
 
-        // If no image uploaded or already processed, just save data as usual
-        if (empty($data['image']) || str_contains($data['image'], '/teachers/')) {
-            if (empty($data['image'])) {
-                $data['teacher_image']     = '';
-                $data['teacher_thumbnail'] = '';
-            }
+        // If no image, clear thumbnail fields and save
+        if (empty($data['image'])) {
+            $data['teacher_image']     = '';
+            $data['teacher_thumbnail'] = '';
 
             return parent::save($data);
+        }
+
+        // Core component images — save path as-is without thumbnail processing
+        if (CwmImageMigration::isCoreImage($data['image'])) {
+            return parent::save($data);
+        }
+
+        // Correct legacy thumb_ paths
+        $imageBasename = basename($data['image']);
+        if (str_starts_with($imageBasename, 'thumb_') && str_contains($data['image'], '/teachers/')) {
+            $dir          = \dirname(JPATH_ROOT . '/' . $data['image']);
+            $strippedName = pathinfo(substr($imageBasename, 6), PATHINFO_FILENAME);
+
+            foreach (['jpg', 'jpeg', 'png', 'webp', 'gif'] as $ext) {
+                if (is_file($dir . '/' . $strippedName . '.' . $ext)) {
+                    $data['image'] = \dirname($data['image']) . '/' . $strippedName . '.' . $ext;
+                    break;
+                }
+            }
         }
 
         // Store the original image path for processing after save

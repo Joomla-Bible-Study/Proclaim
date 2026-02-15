@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
@@ -350,6 +351,17 @@ class CwmmessageModel extends AdminModel
 
         // If no image, save without touching thumbnailm (preserve existing thumbnail)
         if (empty($data['image'])) {
+            if (!parent::save($data)) {
+                return false;
+            }
+
+            $this->saveScriptures($scripturesData);
+
+            return true;
+        }
+
+        // Core component images (media/com_proclaim/images/*) — save path as-is
+        if (CwmImageMigration::isCoreImage($data['image'])) {
             if (!parent::save($data)) {
                 return false;
             }

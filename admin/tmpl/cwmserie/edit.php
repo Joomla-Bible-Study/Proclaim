@@ -23,11 +23,11 @@ use Joomla\CMS\Router\Route;
 $app   = Factory::getApplication();
 $input = $app->getInput();
 
-// Set up defaults
+// Set up defaults — use original image path, not thumbnail
 if ($input->getInt('id')) {
-    $series_thumbnail = $this->item->series_thumbnail;
+    $imageDefault = !empty($this->item->image) ? $this->item->image : ($this->item->series_thumbnail ?? '');
 } else {
-    $series_thumbnail = $this->admin_params->get('default_series_image');
+    $imageDefault = $this->admin_params->get('default_series_image', '');
 }
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmserie\HtmlView $this */
@@ -68,7 +68,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                 <?php echo $this->form->renderField('teacher'); ?>
                 <?php echo $this->form->renderField('landing_show'); ?>
                 <?php echo $this->form->renderField('pc_show'); ?>
-                <?php echo $this->form->renderField('image', null, $series_thumbnail); ?>
+                <?php echo $this->form->renderField('image', null, $imageDefault); ?>
                 <?php echo $this->form->renderField('published'); ?>
                 <?php echo $this->form->renderField('access'); ?>
                 <?php echo $this->form->renderField('language'); ?>

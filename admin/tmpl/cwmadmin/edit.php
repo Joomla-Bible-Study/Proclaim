@@ -500,6 +500,29 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                 </div>
             </div>
         </div>
+        <!-- Row 1c: Recover Bare-ID Folders -->
+        <div class="row mt-3" id="imagetools-row1c">
+            <div class="col-12 col-lg-6">
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_RECOVER_IMAGES'); ?></h3>
+                    <p><?php echo Text::_('JBS_ADM_RECOVER_IMAGES_DESC'); ?></p>
+                    <div id="recovery-counts" class="mb-3">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <?php echo Text::_('JBS_ADM_LOADING'); ?>
+                    </div>
+                    <div id="recovery-progress" class="mb-3" style="display:none;">
+                        <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar bg-warning" style="width: 0%"></div>
+                        </div>
+                        <div class="mt-2" id="recovery-status"></div>
+                    </div>
+                    <button type="button" class="btn btn-warning" id="btn-start-recovery" disabled>
+                        <i class="icon-refresh" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_RECOVER_IMAGES_BTN'); ?>
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Row 2: Post-Migration Review -->
         <div class="row mt-3" id="imagetools-row2">
             <div class="col-12 col-lg-6">
@@ -623,8 +646,17 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             'confirmDeleteLegacy'   => Text::_('JBS_ADM_CONFIRM_DELETE_LEGACY'),
             'deleting'              => Text::_('JBS_ADM_DELETING'),
             'thumbRegenComplete'    => Text::_('JBS_ADM_THUMB_REGEN_COMPLETE'),
-            'thumbRegenCount'       => Text::_('JBS_ADM_THUMB_REGEN_COUNT'),
+            'thumbRegenMessages'    => Text::_('JBS_ADM_THUMB_REGEN_COUNT_MESSAGES'),
+            'thumbRegenTeachers'    => Text::_('JBS_ADM_THUMB_REGEN_COUNT_TEACHERS'),
+            'thumbRegenSeries'      => Text::_('JBS_ADM_THUMB_REGEN_COUNT_SERIES'),
             'regenerating'          => Text::_('JBS_ADM_REGENERATING'),
+            'recoverNone'           => Text::_('JBS_ADM_RECOVER_IMAGES_NONE'),
+            'recoverCountMessages'  => Text::_('JBS_ADM_RECOVER_COUNT_MESSAGES'),
+            'recoverCountTeachers'  => Text::_('JBS_ADM_RECOVER_COUNT_TEACHERS'),
+            'recoverCountSeries'    => Text::_('JBS_ADM_RECOVER_COUNT_SERIES'),
+            'recovering'            => Text::_('JBS_ADM_RECOVERING'),
+            'recoverComplete'       => Text::_('JBS_ADM_RECOVER_COMPLETE'),
+            'foldersRecovered'      => Text::_('JBS_ADM_FOLDERS_RECOVERED'),
         ], JSON_THROW_ON_ERROR);
         ?>
         <div id="imagetools-config"

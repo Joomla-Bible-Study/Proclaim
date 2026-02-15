@@ -213,6 +213,15 @@ class Cwmrestore
                 $this->dbo->setQuery($query);
                 $cid = (int) $this->dbo->loadResult();
 
+                // Reset #__schemas so DatabaseModel::fix() re-runs all migrations.
+                // The restore replaced all bsms_* tables with backup data, but
+                // #__schemas (a Joomla core table) still claims the latest version.
+                // Without this reset, fix() thinks everything is up-to-date and
+                // skips creating tables that were added after the backup was made.
+                if ($cid) {
+                    self::resetSchemaVersion($cid);
+                }
+
                 // Fix the Proclaim Database schema after restore
                 $DatabaseModel = new DatabaseModel();
                 $DatabaseModel->fix([$cid]);
@@ -298,6 +307,26 @@ class Cwmrestore
                 $db->setQuery($query);
                 $db->execute();
             }
+        }
+
+        // After restoring, reset the schema version and run DatabaseModel::fix()
+        // so that any tables/columns added after the backup was created get applied.
+        try {
+            $query = $db->getQuery(true);
+            $query->select($db->quoteName('extension_id'))
+                ->from($db->quoteName('#__extensions'))
+                ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'));
+            $db->setQuery($query);
+            $cid = (int) $db->loadResult();
+
+            if ($cid) {
+                self::resetSchemaVersion($cid);
+
+                $databaseModel = new DatabaseModel();
+                $databaseModel->fix([$cid]);
+            }
+        } catch (\Exception $e) {
+            $app->enqueueMessage('Schema repair notice: ' . $e->getMessage(), 'warning');
         }
 
         return true;
@@ -507,6 +536,41 @@ class Cwmrestore
         }
 
         return true;
+    }
+
+    /**
+     * Reset the #__schemas version for Proclaim so that DatabaseModel::fix()
+     * re-runs all SQL update files.
+     *
+     * After a restore, the bsms_* tables come from the backup but #__schemas
+     * (a Joomla core table) still holds the version from before the restore.
+     * This mismatch causes DatabaseModel::fix() to skip migrations, leaving
+     * tables that were added after the backup was created missing entirely.
+     *
+     * @param   int  $extensionId  The Proclaim extension ID
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    protected static function resetSchemaVersion(int $extensionId): void
+    {
+        $db = Factory::getContainer()->get('DatabaseDriver');
+
+        // Delete the current schema entry
+        $query = $db->getQuery(true);
+        $query->delete($db->quoteName('#__schemas'))
+            ->where($db->quoteName('extension_id') . ' = ' . $extensionId);
+        $db->setQuery($query);
+        $db->execute();
+
+        // Insert a baseline version before all update files so fix() runs everything
+        $query = $db->getQuery(true);
+        $query->insert($db->quoteName('#__schemas'))
+            ->columns([$db->quoteName('extension_id'), $db->quoteName('version_id')])
+            ->values($extensionId . ', ' . $db->quote('0.0.0'));
+        $db->setQuery($query);
+        $db->execute();
     }
 
     /**

@@ -289,6 +289,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_series`
     `teacher`          INT(3)                                                    DEFAULT NULL,
     `description`      TEXT,
     `series_thumbnail` VARCHAR(255)                                              DEFAULT NULL,
+    `image`            TEXT                                                       DEFAULT NULL,
     `published`        TINYINT(3)                                       NOT NULL DEFAULT '1',
     `asset_id`         INT(10) UNSIGNED                                 NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
     `ordering`         INT(11)                                          NOT NULL DEFAULT '0',

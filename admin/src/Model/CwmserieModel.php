@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CwmserieTable;
@@ -187,13 +188,30 @@ class CwmserieModel extends AdminModel
             $data['alias']       = $alias;
         }
 
-        // If no image uploaded or already processed, just save data as usual
-        if (empty($data['image']) || str_contains($data['image'], '/series/')) {
-            if (empty($data['image'])) {
-                $data['series_thumbnail'] = '';
-            }
+        // If no image, clear thumbnail and save
+        if (empty($data['image'])) {
+            $data['series_thumbnail'] = '';
 
             return parent::save($data);
+        }
+
+        // Core component images — save path as-is without thumbnail processing
+        if (CwmImageMigration::isCoreImage($data['image'])) {
+            return parent::save($data);
+        }
+
+        // Correct legacy thumb_ paths
+        $imageBasename = basename($data['image']);
+        if (str_starts_with($imageBasename, 'thumb_') && str_contains($data['image'], '/series/')) {
+            $dir          = \dirname(JPATH_ROOT . '/' . $data['image']);
+            $strippedName = pathinfo(substr($imageBasename, 6), PATHINFO_FILENAME);
+
+            foreach (['jpg', 'jpeg', 'png', 'webp', 'gif'] as $ext) {
+                if (is_file($dir . '/' . $strippedName . '.' . $ext)) {
+                    $data['image'] = \dirname($data['image']) . '/' . $strippedName . '.' . $ext;
+                    break;
+                }
+            }
         }
 
         // Store the original image path for processing after save

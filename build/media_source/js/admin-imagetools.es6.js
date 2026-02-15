@@ -546,19 +546,25 @@ document.addEventListener('DOMContentLoaded', () => {
     convertType();
   });
 
-  // ---- Thumbnail Regeneration ----
+  // ---- Thumbnail & WebP Regeneration (studies + teachers + series) ----
+  let regenTotals = {studies: 0, teachers: 0, series: 0, total: 0};
   loadThumbRegenCounts();
 
   function loadThumbRegenCounts() {
     fetch(`index.php?option=com_proclaim&task=cwmadmin.getThumbRegenCountXHR&${token}=1`)
       .then(r => r.json())
       .then(data => {
+        regenTotals = data;
         if (data.total === 0) {
           document.getElementById('thumb-regen-counts').innerHTML =
-            `<div class="alert alert-info mb-0">No messages with images found.</div>`;
+            `<div class="alert alert-info mb-0">No images found to regenerate.</div>`;
         } else {
+          const parts = [];
+          if (data.studies > 0) parts.push(strings.thumbRegenMessages.replace('%s', data.studies));
+          if (data.teachers > 0) parts.push(strings.thumbRegenTeachers.replace('%s', data.teachers));
+          if (data.series > 0) parts.push(strings.thumbRegenSeries.replace('%s', data.series));
           document.getElementById('thumb-regen-counts').innerHTML =
-            `<div class="mb-0">${strings.thumbRegenCount.replace('%s', data.total)}</div>`;
+            `<div class="mb-0">${parts.join(', ')} (${data.total} total)</div>`;
           document.getElementById('btn-start-thumb-regen').disabled = false;
         }
       })
@@ -580,13 +586,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let totalProcessed = 0;
     let totalErrors = 0;
-    let offset = 0;
-    // Re-fetch the count for accurate progress tracking
+
+    // Re-fetch counts for accurate progress
     fetch(`index.php?option=com_proclaim&task=cwmadmin.getThumbRegenCountXHR&${token}=1`)
       .then(r => r.json())
       .then(data => {
+        regenTotals = data;
         const grandTotal = data.total;
-        processThumbBatch(grandTotal);
+        const types = ['studies', 'teachers', 'series'].filter(t => data[t] > 0);
+        processNextType(types, 0, grandTotal);
       });
 
     function updateBar(grandTotal) {
@@ -595,57 +603,183 @@ document.addEventListener('DOMContentLoaded', () => {
       barEl.textContent = `${pct}%`;
     }
 
-    function processThumbBatch(grandTotal) {
-      statusEl.innerHTML = `${strings.regenerating}... <strong>${totalProcessed}</strong> / ${grandTotal}`;
+    function processNextType(types, typeIdx, grandTotal) {
+      if (typeIdx >= types.length) {
+        // All types done
+        activeOperation = null;
+        setOperationRunning(false);
+        barEl.classList.remove('progress-bar-striped', 'progress-bar-animated');
+        barEl.style.width = '100%';
+        barEl.textContent = '100%';
+        let msg = `<span class="text-success">${strings.thumbRegenComplete} ${totalProcessed} processed.</span>`;
+        if (totalErrors > 0) {
+          msg += ` <span class="text-warning">(${totalErrors} errors)</span>`;
+        }
+        statusEl.innerHTML = msg;
+        loadThumbRegenCounts();
+        return;
+      }
 
-      fetch(`index.php?option=com_proclaim&task=cwmadmin.regenerateThumbsXHR&${token}=1&limit=10&offset=${offset}`)
-        .then(r => {
-          if (!r.ok) throw new Error(`HTTP ${r.status}: ${r.statusText}`);
-          return r.text();
-        })
-        .then(text => {
-          let data;
-          try {
-            data = JSON.parse(text);
-          } catch (e) {
-            throw new Error(`Invalid response: ${text.substring(0, 200)}`);
-          }
+      const currentType = types[typeIdx];
+      let offset = 0;
+      processTypeBatch();
 
-          if (data.error) {
-            statusEl.innerHTML = `<span class="text-danger">Error: ${data.error}</span>`;
-            activeOperation = null;
-            setOperationRunning(false);
-            return;
-          }
+      function processTypeBatch() {
+        statusEl.innerHTML = `${strings.regenerating} ${currentType}... <strong>${totalProcessed}</strong> / ${grandTotal}`;
 
-          totalProcessed += data.processed;
-          totalErrors += (data.errors || 0);
-          offset += data.processed + (data.errors || 0);
-          updateBar(grandTotal);
-          statusEl.innerHTML = `${strings.regenerating}... <strong>${totalProcessed}</strong> / ${grandTotal}`;
-
-          if (data.remaining > 0) {
-            processThumbBatch(grandTotal);
-          } else {
-            activeOperation = null;
-            setOperationRunning(false);
-            barEl.classList.remove('progress-bar-striped', 'progress-bar-animated');
-            barEl.style.width = '100%';
-            barEl.textContent = '100%';
-            let msg = `<span class="text-success">${strings.thumbRegenComplete} ${totalProcessed} processed.</span>`;
-            if (totalErrors > 0) {
-              msg += ` <span class="text-warning">(${totalErrors} errors)</span>`;
+        fetch(`index.php?option=com_proclaim&task=cwmadmin.regenerateThumbsXHR&${token}=1&type=${currentType}&limit=10&offset=${offset}`)
+          .then(r => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}: ${r.statusText}`);
+            return r.text();
+          })
+          .then(text => {
+            let data;
+            try {
+              data = JSON.parse(text);
+            } catch (e) {
+              throw new Error(`Invalid response: ${text.substring(0, 200)}`);
             }
-            statusEl.innerHTML = msg;
-            loadThumbRegenCounts();
+
+            if (data.error) {
+              statusEl.innerHTML = `<span class="text-danger">Error: ${data.error}</span>`;
+              activeOperation = null;
+              setOperationRunning(false);
+              return;
+            }
+
+            totalProcessed += data.processed;
+            totalErrors += (data.errors || 0);
+            offset += data.processed + (data.errors || 0);
+            updateBar(grandTotal);
+            statusEl.innerHTML = `${strings.regenerating} ${currentType}... <strong>${totalProcessed}</strong> / ${grandTotal}`;
+
+            if (data.remaining > 0) {
+              processTypeBatch();
+            } else {
+              // Move to next type
+              processNextType(types, typeIdx + 1, grandTotal);
+            }
+          })
+          .catch(err => {
+            activeOperation = null;
+            setOperationRunning(false);
+            statusEl.innerHTML = `<span class="text-danger">Error: ${err.message || err}</span>`;
+          });
+      }
+    }
+  });
+
+  // ---- Recover Bare-ID Folders ----
+  let recoveryTotals = {studies: 0, teachers: 0, series: 0, total: 0};
+  loadRecoveryCounts();
+
+  function loadRecoveryCounts() {
+    fetch(`index.php?option=com_proclaim&task=cwmadmin.getRecoveryCountsXHR&${token}=1`)
+      .then(r => r.json())
+      .then(data => {
+        recoveryTotals = data;
+
+        if (data.total === 0) {
+          document.getElementById('recovery-counts').innerHTML =
+            `<div class="alert alert-success mb-0"><i class="icon-checkmark me-1" aria-hidden="true"></i>${strings.recoverNone}</div>`;
+          document.getElementById('btn-start-recovery').disabled = true;
+        } else {
+          const items = [];
+          if (data.studies > 0) items.push(`<li>${strings.recoverCountMessages.replace('%s', data.studies)}</li>`);
+          if (data.teachers > 0) items.push(`<li>${strings.recoverCountTeachers.replace('%s', data.teachers)}</li>`);
+          if (data.series > 0) items.push(`<li>${strings.recoverCountSeries.replace('%s', data.series)}</li>`);
+          document.getElementById('recovery-counts').innerHTML =
+            `<ul class="list-unstyled mb-0">${items.join('')}</ul>
+             <div class="mt-2 fw-bold">${strings.total}: ${data.total}</div>`;
+          document.getElementById('btn-start-recovery').disabled = false;
+        }
+      })
+      .catch(() => {
+        document.getElementById('recovery-counts').innerHTML =
+          `<span class="text-danger">${strings.errorLoading}</span>`;
+      });
+  }
+
+  document.getElementById('btn-start-recovery').addEventListener('click', function () {
+    this.disabled = true;
+    activeOperation = 'recovery';
+    setOperationRunning(true);
+    const progressEl = document.getElementById('recovery-progress');
+    const barEl = progressEl.querySelector('.progress-bar');
+    const statusEl = document.getElementById('recovery-status');
+    progressEl.style.display = 'block';
+    barEl.classList.add('progress-bar-striped', 'progress-bar-animated');
+
+    const types = ['studies', 'teachers', 'series'];
+    let typeIndex = 0;
+    let totalRecovered = 0;
+    let totalErrors = 0;
+    let totalSkipped = 0;
+    const grandTotal = recoveryTotals.total;
+
+    function updateBar() {
+      const pct = grandTotal > 0 ? Math.min(100, Math.round(((totalRecovered + totalErrors) / grandTotal) * 100)) : 0;
+      barEl.style.width = `${pct}%`;
+      barEl.textContent = `${pct}%`;
+    }
+
+    function recoverType() {
+      if (typeIndex >= types.length) {
+        activeOperation = null;
+        setOperationRunning(false);
+        barEl.classList.remove('progress-bar-striped', 'progress-bar-animated');
+        barEl.style.width = '100%';
+        barEl.textContent = '100%';
+        let msg = `<span class="text-success">${strings.recoverComplete} ${totalRecovered} ${strings.foldersRecovered}</span>`;
+        if (totalSkipped > 0) {
+          msg += ` <span class="text-muted">(${totalSkipped} skipped — no DB record)</span>`;
+        }
+        if (totalErrors > 0) {
+          msg += ` <span class="text-warning">(${totalErrors} ${strings.migrationErrors})</span>`;
+        }
+        statusEl.innerHTML = msg;
+        loadRecoveryCounts();
+        loadMigrationCounts();
+        return;
+      }
+
+      if (recoveryTotals[types[typeIndex]] === 0) {
+        typeIndex++;
+        recoverType();
+        return;
+      }
+
+      statusEl.innerHTML = `${strings.recovering} ${types[typeIndex]}...`;
+      recoverBatch(types[typeIndex]);
+    }
+
+    function recoverBatch(type) {
+      fetch(`index.php?option=com_proclaim&task=cwmadmin.recoverBareIdFoldersXHR&${token}=1&type=${type}&limit=10`)
+        .then(r => r.json())
+        .then(data => {
+          totalRecovered += data.recovered;
+          totalErrors += data.errors;
+          totalSkipped += data.skipped;
+          updateBar();
+          statusEl.innerHTML = `${strings.recovering} ${types[typeIndex]}... <strong>${totalRecovered}</strong> / ${grandTotal}`;
+
+          // Stop if remaining folders exist but none were recovered in this batch —
+          // the remaining folders are all failing/skipping and would loop forever.
+          if (data.remaining > 0 && data.recovered > 0) {
+            recoverBatch(type);
+          } else {
+            typeIndex++;
+            recoverType();
           }
         })
-        .catch(err => {
+        .catch(() => {
           activeOperation = null;
           setOperationRunning(false);
-          statusEl.innerHTML = `<span class="text-danger">Error: ${err.message || err}</span>`;
+          statusEl.innerHTML = `<span class="text-danger">${strings.migrationError}</span>`;
         });
     }
+
+    recoverType();
   });
 
   // ---- Legacy Files Report ----
