@@ -5,12 +5,4 @@
            required="true">
         <option value="">JBS_CMN_SELECT_TEACHER</option>
     </field>
-    <field name="role" type="list"
-           label="JBS_TCH_ROLE"
-           default="speaker">
-        <option value="speaker">JBS_TCH_ROLE_SPEAKER</option>
-        <option value="worship">JBS_TCH_ROLE_WORSHIP</option>
-        <option value="host">JBS_TCH_ROLE_HOST</option>
-        <option value="guest">JBS_TCH_ROLE_GUEST</option>
-    </field>
 </form>

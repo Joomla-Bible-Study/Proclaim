@@ -312,7 +312,6 @@ class CwmmessageModel extends AdminModel
                 foreach ($teachers as $t) {
                     $teacherSubform[] = [
                         'teacher_id' => (int) $t->teacher_id,
-                        'role'       => $t->role ?? 'speaker',
                     ];
                 }
 
@@ -320,7 +319,7 @@ class CwmmessageModel extends AdminModel
             } elseif (!empty($this->data->teacher_id) && (int) $this->data->teacher_id > 0) {
                 // Fallback: build from legacy flat column for pre-migration records
                 $this->data->teachers = [
-                    ['teacher_id' => (int) $this->data->teacher_id, 'role' => 'speaker'],
+                    ['teacher_id' => (int) $this->data->teacher_id],
                 ];
             } else {
                 $this->data->teachers = [];
@@ -543,7 +542,7 @@ class CwmmessageModel extends AdminModel
     /**
      * Save teachers from the subform data to the junction table.
      *
-     * @param   array  $teachersData  Subform array of ['teacher_id' => int, 'role' => string]
+     * @param   array  $teachersData  Subform array of ['teacher_id' => int]
      *
      * @return  void
      *
@@ -734,7 +733,7 @@ class CwmmessageModel extends AdminModel
 
                 // Update junction table to match
                 $teachers = $teacherId > 0
-                    ? [['teacher_id' => $teacherId, 'role' => 'speaker']]
+                    ? [['teacher_id' => $teacherId]]
                     : [];
                 CwmstudyteacherHelper::saveTeachers((int) $pk, $teachers);
             } else {

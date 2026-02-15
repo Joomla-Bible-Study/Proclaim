@@ -1323,12 +1323,6 @@ class Cwmlisting
                         $name = trim($t->teachername ?? '');
 
                         if ($name !== '') {
-                            $role = trim($t->role ?? '');
-
-                            if ($role !== '' && $role !== 'speaker') {
-                                $name .= ' (' . Text::_('JBS_TCH_ROLE_' . strtoupper($role)) . ')';
-                            }
-
                             $names[] = $name;
                         }
                     }

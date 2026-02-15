@@ -43,7 +43,7 @@ class CwmstudyteacherHelper
      *
      * @param   int  $studyId  Study primary key
      *
-     * @return  object[]  Array of junction row objects (id, study_id, teacher_id, ordering, role, teachername, title, teacher_thumbnail)
+     * @return  object[]  Array of junction row objects (teacher_id, ordering, teachername, title, teacher_thumbnail, teacher_image)
      *
      * @since  10.1.0
      */
@@ -58,7 +58,6 @@ class CwmstudyteacherHelper
             ->select([
                 $db->quoteName('st.teacher_id'),
                 $db->quoteName('st.ordering'),
-                $db->quoteName('st.role'),
                 $db->quoteName('t.teachername'),
                 $db->quoteName('t.title'),
                 $db->quoteName('t.teacher_thumbnail'),
@@ -104,7 +103,6 @@ class CwmstudyteacherHelper
                     $db->quoteName('st.study_id'),
                     $db->quoteName('st.teacher_id'),
                     $db->quoteName('st.ordering'),
-                    $db->quoteName('st.role'),
                     $db->quoteName('t.teachername'),
                     $db->quoteName('t.title'),
                     $db->quoteName('t.teacher_thumbnail'),
@@ -164,7 +162,7 @@ class CwmstudyteacherHelper
      * Save teachers for a study (delete + insert).
      *
      * @param   int      $studyId   Study primary key
-     * @param   array    $teachers  Array of ['teacher_id' => int, 'role' => string] entries
+     * @param   array    $teachers  Array of ['teacher_id' => int] entries
      *
      * @return  void
      *
@@ -188,7 +186,6 @@ class CwmstudyteacherHelper
 
         foreach ($teachers as $i => $entry) {
             $teacherId = (int) ($entry['teacher_id'] ?? 0);
-            $role      = trim($entry['role'] ?? 'speaker');
 
             if ($teacherId <= 0 || isset($seen[$teacherId])) {
                 continue;
@@ -196,12 +193,11 @@ class CwmstudyteacherHelper
 
             $seen[$teacherId] = true;
 
-            $columns = ['study_id', 'teacher_id', 'ordering', 'role'];
+            $columns = ['study_id', 'teacher_id', 'ordering'];
             $values  = [
                 $studyId,
                 $teacherId,
                 \count($seen) - 1,
-                $db->quote($role),
             ];
 
             $insert = $db->getQuery(true)
@@ -217,7 +213,7 @@ class CwmstudyteacherHelper
      * Sync the primary teacher (ordering=0) back to studies.teacher_id for backwards compatibility.
      *
      * @param   int    $studyId   Study primary key
-     * @param   array  $teachers  Array of ['teacher_id' => int, 'role' => string] entries
+     * @param   array  $teachers  Array of ['teacher_id' => int] entries
      *
      * @return  void
      *
