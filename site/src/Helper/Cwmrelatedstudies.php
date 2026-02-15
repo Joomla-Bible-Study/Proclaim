@@ -471,13 +471,13 @@ class Cwmrelatedstudies
                     $formattedDate = HTMLHelper::_('date', $study->studydate, $customDate, null);
                 } else {
                     $formattedDate = match ($dateFormat) {
-                        1 => HTMLHelper::_('date', $study->studydate, 'M J', null),
-                        2 => HTMLHelper::_('date', $study->studydate, 'n/j/Y', null),
-                        4 => HTMLHelper::_('date', $study->studydate, 'l, F j, Y', null),
-                        5 => HTMLHelper::_('date', $study->studydate, 'F j, Y', null),
-                        6 => HTMLHelper::_('date', $study->studydate, 'j F Y', null),
-                        7 => date('j/n/Y', strtotime($study->studydate)),
-                        8 => HTMLHelper::_('date', $study->studydate, Text::_('DATE_FORMAT_LC'), null),
+                        1       => HTMLHelper::_('date', $study->studydate, 'M J', null),
+                        2       => HTMLHelper::_('date', $study->studydate, 'n/j/Y', null),
+                        4       => HTMLHelper::_('date', $study->studydate, 'l, F j, Y', null),
+                        5       => HTMLHelper::_('date', $study->studydate, 'F j, Y', null),
+                        6       => HTMLHelper::_('date', $study->studydate, 'j F Y', null),
+                        7       => date('j/n/Y', strtotime($study->studydate)),
+                        8       => HTMLHelper::_('date', $study->studydate, Text::_('DATE_FORMAT_LC'), null),
                         default => HTMLHelper::_('date', $study->studydate, 'M j, Y', null),
                     };
                 }

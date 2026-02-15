@@ -160,7 +160,7 @@ class CwmteacherTable extends Table
 
         if (!empty($this->alias) && $db !== null) {
             $query = $db->getQuery(true);
-            $query->select($db->quoteName('id'))
+            $query->select($db->quoteName(['id', 'teachername']))
                 ->from($db->quoteName('#__bsms_teachers'))
                 ->where('LOWER(' . $db->quoteName('alias') . ') = LOWER(' . $db->quote($this->alias) . ')');
 
@@ -170,9 +170,13 @@ class CwmteacherTable extends Table
             }
 
             $db->setQuery($query);
+            $existing = $db->loadObject();
 
-            if ($db->loadResult()) {
-                throw new \UnexpectedValueException(Text::_('JBS_TCH_DUPLICATE'));
+            if ($existing) {
+                $link = 'index.php?option=com_proclaim&task=cwmteacher.edit&id=' . (int) $existing->id;
+                throw new \UnexpectedValueException(
+                    Text::sprintf('JBS_TCH_DUPLICATE_LINK', $existing->teachername, $link)
+                );
             }
         }
 

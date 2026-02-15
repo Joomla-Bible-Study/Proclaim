@@ -82,8 +82,8 @@ class CwmscriptureController extends BaseController
                 $provider->setCacheTtl($cacheDays * 86400);
             }
 
-            $result    = $provider->getPassage($reference, $version);
-            $transient = ($provider instanceof AbstractBibleProvider) && $provider->lastErrorTransient;
+            $result      = $provider->getPassage($reference, $version);
+            $transient   = ($provider instanceof AbstractBibleProvider) && $provider->lastErrorTransient;
             $usedVersion = $version;
 
             // Fallback 1: try same version via Local provider
