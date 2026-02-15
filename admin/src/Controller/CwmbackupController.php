@@ -27,6 +27,7 @@ use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
+use Joomla\Component\Installer\Administrator\Model\DatabaseModel;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Filesystem\Path;
@@ -550,6 +551,10 @@ class CwmbackupController extends FormController
             $session->set('proclaim_import_' . $sessionId, '', 'CWM');
             $session->set('proclaim_import_queries_' . $sessionId, '', 'CWM');
 
+            // Reset schema version and run migrations so tables/columns added
+            // after the backup was created get applied (e.g. bible_translations).
+            $schemaFixed = $this->fixSchemaAfterRestore();
+
             // Fix assets using a lightweight direct SQL approach (unless skipped for testing)
             if (!$skipAssetFix) {
                 $this->fixAssetsLightweight();
@@ -566,6 +571,60 @@ class CwmbackupController extends FormController
         } catch (\Exception $e) {
             $this->sendJsonResponse(false, 'Import finalize error: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Reset the schema version and run Joomla's DatabaseModel::fix() so that
+     * SQL update files created after the backup run against the restored data.
+     *
+     * The restore replaces all bsms_* tables with backup data, but #__schemas
+     * (a Joomla core table) keeps the pre-restore version. Without a reset,
+     * fix() thinks the schema is already current and skips creating tables
+     * that were added after the backup (e.g. bible_translations).
+     *
+     * @return  bool  True if schema was repaired successfully
+     *
+     * @since   10.1.0
+     */
+    private function fixSchemaAfterRestore(): bool
+    {
+        $db = Factory::getContainer()->get('DatabaseDriver');
+
+        // Find the Proclaim extension ID
+        $query = $db->getQuery(true);
+        $query->select($db->quoteName('extension_id'))
+            ->from($db->quoteName('#__extensions'))
+            ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'));
+        $db->setQuery($query);
+        $cid = (int) $db->loadResult();
+
+        if (!$cid) {
+            Log::add('Cannot fix schema: com_proclaim not found in extensions', Log::WARNING, 'com_proclaim');
+
+            return false;
+        }
+
+        // Reset #__schemas to force all update files to re-run
+        $query = $db->getQuery(true);
+        $query->delete($db->quoteName('#__schemas'))
+            ->where($db->quoteName('extension_id') . ' = ' . $cid);
+        $db->setQuery($query);
+        $db->execute();
+
+        $query = $db->getQuery(true);
+        $query->insert($db->quoteName('#__schemas'))
+            ->columns([$db->quoteName('extension_id'), $db->quoteName('version_id')])
+            ->values($cid . ', ' . $db->quote('0.0.0'));
+        $db->setQuery($query);
+        $db->execute();
+
+        // Run Joomla's schema fixer — processes all SQL update files in order
+        $databaseModel = new DatabaseModel();
+        $databaseModel->fix([$cid]);
+
+        Log::add('Schema version reset and migrations re-applied after restore', Log::INFO, 'com_proclaim');
+
+        return true;
     }
 
     /**

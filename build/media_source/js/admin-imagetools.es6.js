@@ -546,19 +546,25 @@ document.addEventListener('DOMContentLoaded', () => {
     convertType();
   });
 
-  // ---- Thumbnail Regeneration ----
+  // ---- Thumbnail & WebP Regeneration (studies + teachers + series) ----
+  let regenTotals = {studies: 0, teachers: 0, series: 0, total: 0};
   loadThumbRegenCounts();
 
   function loadThumbRegenCounts() {
     fetch(`index.php?option=com_proclaim&task=cwmadmin.getThumbRegenCountXHR&${token}=1`)
       .then(r => r.json())
       .then(data => {
+        regenTotals = data;
         if (data.total === 0) {
           document.getElementById('thumb-regen-counts').innerHTML =
-            `<div class="alert alert-info mb-0">No messages with images found.</div>`;
+            `<div class="alert alert-info mb-0">No images found to regenerate.</div>`;
         } else {
+          const parts = [];
+          if (data.studies > 0) parts.push(strings.thumbRegenMessages.replace('%s', data.studies));
+          if (data.teachers > 0) parts.push(strings.thumbRegenTeachers.replace('%s', data.teachers));
+          if (data.series > 0) parts.push(strings.thumbRegenSeries.replace('%s', data.series));
           document.getElementById('thumb-regen-counts').innerHTML =
-            `<div class="mb-0">${strings.thumbRegenCount.replace('%s', data.total)}</div>`;
+            `<div class="mb-0">${parts.join(', ')} (${data.total} total)</div>`;
           document.getElementById('btn-start-thumb-regen').disabled = false;
         }
       })
@@ -580,13 +586,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let totalProcessed = 0;
     let totalErrors = 0;
-    let offset = 0;
-    // Re-fetch the count for accurate progress tracking
+
+    // Re-fetch counts for accurate progress
     fetch(`index.php?option=com_proclaim&task=cwmadmin.getThumbRegenCountXHR&${token}=1`)
       .then(r => r.json())
       .then(data => {
+        regenTotals = data;
         const grandTotal = data.total;
-        processThumbBatch(grandTotal);
+        const types = ['studies', 'teachers', 'series'].filter(t => data[t] > 0);
+        processNextType(types, 0, grandTotal);
       });
 
     function updateBar(grandTotal) {
@@ -595,56 +603,69 @@ document.addEventListener('DOMContentLoaded', () => {
       barEl.textContent = `${pct}%`;
     }
 
-    function processThumbBatch(grandTotal) {
-      statusEl.innerHTML = `${strings.regenerating}... <strong>${totalProcessed}</strong> / ${grandTotal}`;
+    function processNextType(types, typeIdx, grandTotal) {
+      if (typeIdx >= types.length) {
+        // All types done
+        activeOperation = null;
+        setOperationRunning(false);
+        barEl.classList.remove('progress-bar-striped', 'progress-bar-animated');
+        barEl.style.width = '100%';
+        barEl.textContent = '100%';
+        let msg = `<span class="text-success">${strings.thumbRegenComplete} ${totalProcessed} processed.</span>`;
+        if (totalErrors > 0) {
+          msg += ` <span class="text-warning">(${totalErrors} errors)</span>`;
+        }
+        statusEl.innerHTML = msg;
+        loadThumbRegenCounts();
+        return;
+      }
 
-      fetch(`index.php?option=com_proclaim&task=cwmadmin.regenerateThumbsXHR&${token}=1&limit=10&offset=${offset}`)
-        .then(r => {
-          if (!r.ok) throw new Error(`HTTP ${r.status}: ${r.statusText}`);
-          return r.text();
-        })
-        .then(text => {
-          let data;
-          try {
-            data = JSON.parse(text);
-          } catch (e) {
-            throw new Error(`Invalid response: ${text.substring(0, 200)}`);
-          }
+      const currentType = types[typeIdx];
+      let offset = 0;
+      processTypeBatch();
 
-          if (data.error) {
-            statusEl.innerHTML = `<span class="text-danger">Error: ${data.error}</span>`;
-            activeOperation = null;
-            setOperationRunning(false);
-            return;
-          }
+      function processTypeBatch() {
+        statusEl.innerHTML = `${strings.regenerating} ${currentType}... <strong>${totalProcessed}</strong> / ${grandTotal}`;
 
-          totalProcessed += data.processed;
-          totalErrors += (data.errors || 0);
-          offset += data.processed + (data.errors || 0);
-          updateBar(grandTotal);
-          statusEl.innerHTML = `${strings.regenerating}... <strong>${totalProcessed}</strong> / ${grandTotal}`;
-
-          if (data.remaining > 0) {
-            processThumbBatch(grandTotal);
-          } else {
-            activeOperation = null;
-            setOperationRunning(false);
-            barEl.classList.remove('progress-bar-striped', 'progress-bar-animated');
-            barEl.style.width = '100%';
-            barEl.textContent = '100%';
-            let msg = `<span class="text-success">${strings.thumbRegenComplete} ${totalProcessed} processed.</span>`;
-            if (totalErrors > 0) {
-              msg += ` <span class="text-warning">(${totalErrors} errors)</span>`;
+        fetch(`index.php?option=com_proclaim&task=cwmadmin.regenerateThumbsXHR&${token}=1&type=${currentType}&limit=10&offset=${offset}`)
+          .then(r => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}: ${r.statusText}`);
+            return r.text();
+          })
+          .then(text => {
+            let data;
+            try {
+              data = JSON.parse(text);
+            } catch (e) {
+              throw new Error(`Invalid response: ${text.substring(0, 200)}`);
             }
-            statusEl.innerHTML = msg;
-            loadThumbRegenCounts();
-          }
-        })
-        .catch(err => {
-          activeOperation = null;
-          setOperationRunning(false);
-          statusEl.innerHTML = `<span class="text-danger">Error: ${err.message || err}</span>`;
-        });
+
+            if (data.error) {
+              statusEl.innerHTML = `<span class="text-danger">Error: ${data.error}</span>`;
+              activeOperation = null;
+              setOperationRunning(false);
+              return;
+            }
+
+            totalProcessed += data.processed;
+            totalErrors += (data.errors || 0);
+            offset += data.processed + (data.errors || 0);
+            updateBar(grandTotal);
+            statusEl.innerHTML = `${strings.regenerating} ${currentType}... <strong>${totalProcessed}</strong> / ${grandTotal}`;
+
+            if (data.remaining > 0) {
+              processTypeBatch();
+            } else {
+              // Move to next type
+              processNextType(types, typeIdx + 1, grandTotal);
+            }
+          })
+          .catch(err => {
+            activeOperation = null;
+            setOperationRunning(false);
+            statusEl.innerHTML = `<span class="text-danger">Error: ${err.message || err}</span>`;
+          });
+      }
     }
   });
 

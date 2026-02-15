@@ -1448,11 +1448,12 @@ class CwmadminController extends FormController
             return;
         }
 
+        $type   = $input->getCmd('type', 'studies');
         $limit  = $input->getInt('limit', 10);
         $offset = $input->getInt('offset', 0);
 
         try {
-            $result = CwmImageMigration::regenerateThumbnails($limit, $offset);
+            $result = CwmImageMigration::regenerateThumbnails($type, $limit, $offset);
         } catch (\Throwable $e) {
             $result = ['processed' => 0, 'errors' => 0, 'remaining' => 0, 'error' => $e->getMessage()];
         }
