@@ -334,12 +334,22 @@ class CwmmessageModel extends AdminModel
             $data['id'] = $input->get('a_id');
         }
 
-        // If no image uploaded or already processed, just save data as usual
-        if (empty($data['image']) || str_contains($data['image'], '/studies/')) {
-            if (empty($data['image'])) {
-                $data['thumbnailm'] = '';
-            }
+        // Correct legacy thumb_ paths submitted from pre-migration records
+        $imageBasename = basename($data['image']);
+        if (str_starts_with($imageBasename, 'thumb_') && str_contains($data['image'], '/studies/')) {
+            $dir            = \dirname(JPATH_ROOT . '/' . $data['image']);
+            $strippedName   = pathinfo(substr($imageBasename, 6), PATHINFO_FILENAME);
 
+            foreach (['jpg', 'jpeg', 'png', 'webp', 'gif'] as $ext) {
+                if (is_file($dir . '/' . $strippedName . '.' . $ext)) {
+                    $data['image'] = \dirname($data['image']) . '/' . $strippedName . '.' . $ext;
+                    break;
+                }
+            }
+        }
+
+        // If no image, save without touching thumbnailm (preserve existing thumbnail)
+        if (empty($data['image'])) {
             if (!parent::save($data)) {
                 return false;
             }
@@ -348,6 +358,9 @@ class CwmmessageModel extends AdminModel
 
             return true;
         }
+
+        // Always regenerate thumbnail + WebP on save (Cwmthumbnail::create skips
+        // the file copy when the original is already in the destination folder)
 
         // Store the original image path for processing after save
         $originalImage = $data['image'];
@@ -394,7 +407,7 @@ class CwmmessageModel extends AdminModel
         $result = Cwmthumbnail::create(
             $originalImage,
             $path,
-            $params->get('thumbnail_study_size', 300),
+            $params->get('thumbnail_study_size', 600),
             $studyTitle
         );
 

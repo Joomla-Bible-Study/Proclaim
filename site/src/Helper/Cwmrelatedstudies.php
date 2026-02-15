@@ -400,7 +400,7 @@ class Cwmrelatedstudies
         $query = $db->getQuery(true)
             ->select($db->quoteName([
                 's.id', 's.studytitle', 's.alias', 's.studydate',
-                's.booknumber', 's.chapter_begin', 's.thumbnailm',
+                's.booknumber', 's.chapter_begin', 's.thumbnailm', 's.image',
             ]))
             ->select($db->quoteName('t.teachername'))
             ->select($db->quoteName('b.bookname'))
@@ -450,8 +450,17 @@ class Cwmrelatedstudies
             $html .= '<a href="' . $url . '" class="proclaim-related-card">';
             $html .= '<div class="card">';
 
-            // Optional thumbnail — use full-size original for quality
-            if (!empty($study->thumbnailm)) {
+            // Optional thumbnail — prefer image column, fall back to deriving from thumbnailm
+            $studyImg = $study->image ?? '';
+
+            if (!empty($studyImg)) {
+                $imageObj    = Cwmimages::getImagePath($studyImg);
+                $pictureHtml = Cwmimages::renderPicture($imageObj, $study->studytitle, 'card-img-top');
+
+                if ($pictureHtml !== '') {
+                    $html .= $pictureHtml;
+                }
+            } elseif (!empty($study->thumbnailm)) {
                 $imageObj    = Cwmimages::getStudyOriginal($study->thumbnailm);
                 $pictureHtml = Cwmimages::renderPicture($imageObj, $study->studytitle, 'card-img-top');
 

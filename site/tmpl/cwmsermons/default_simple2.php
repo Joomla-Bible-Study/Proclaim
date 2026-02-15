@@ -26,106 +26,66 @@ $wa = $this->getDocument()->getWebAssetManager();
 
 $wa->addInlineStyle(
     "
-.title {text-transform: uppercase;
-    color: #1e3e48;
-    font-family: 'Fjalla One',sans-serif; font-size: 16px;
+.title {
+    text-transform: uppercase;
+    font-family: 'Fjalla One', sans-serif;
+    font-size: 16px;
     text-align: left;
     margin-top: 10px;
     margin-bottom: 2px;
     padding: 0;
     color: #444;
-    font-weight: 700;} 
-    .authordate {font-size: 12px;
-    color: #777; .small {font-size: .875em;} .media__item__wrapper {line-height: 1.5;}
-    .media__item__wrapper 
-    .placeholder {
-    width: 100%;
-    aspect-ratio: 1.78;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 3rem;
-    background: #eee;
-    color: #ccc;
-    svg.icon {
-    fill: currentColor;}
-    @media (max-width: @screen-sm-max) {
-	#su_media_filters,
-	.media__filter__wrapper {
-		display: block;
-	}
+    font-weight: 700;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.authordate {
+    font-size: 12px;
+    color: #777;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.media__item__wrapper {
+    line-height: 1.5;
+    overflow: hidden;
+}
+.media__item__info {
+    overflow: hidden;
+}
+.media__item__details {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .media__container {
-	.flexbox-Display;
-	margin-top: 1em;
+    display: flex;
+    margin-top: 1em;
 }
 .media__view {
-	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 15px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    width: 100%;
 }
-@media (max-width: @screen-md-min) {
-	#su_media_sortby {
-		margin-bottom: 15px;
-		margin-left: 0;
-	}
-	.media__view {
-		grid-template-columns: repeat(2, 1fr);
-	}
+@media (max-width: 991px) {
+    .media__view {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
-@media (max-width: @screen-xs-min) {
-	.media__view {
-		grid-template-columns: repeat(1, 1fr);
-	}
+@media (max-width: 575px) {
+    .media__view {
+        grid-template-columns: repeat(1, 1fr);
+    }
 }
 .sf_hidden {
-	display: none !important;
+    display: none !important;
 }
-svg.icon {
-	fill: currentColor;
-
-	&.big {
-		width: 6rem;
-		height: 6rem;
-	}
-	&.huge {
-		width: 12rem;
-		height: 12rem;
-	}
-	&.spin {
-		animation: spin 2s linear infinite;
-	}
-}
-img,
-svg {
-  vertical-align: middle;
-}
-.centered .media__item__image{position: absolute;
-        z-index: 999;
-        margin: 0 auto;
-        left: 0;
-        right: 0;
-        top: 40%; /* Adjust this value to move the positioned div up and down */
-        text-align: center;
-        width: 60%; /* Set the width of the positioned div */;
-}
-.media__item__image--wrapper{position: relative;
-        display: inline-block;}
-        
- .h5 {-webkit-text-stroke: 4px black;}
- 
-.img-container img{
-margin-left:36%;
-   display: inline-block;
-   position: relative;
-   text-align: center;
-   color: rgb(64, 11, 124);
-}
-.center .img-container {
-position: absolute;
-   top: 50%;
-   left: 50%;
-   transform: translate(-50%, -50%);
+img, svg {
+    vertical-align: middle;
 }
 .thumbnail {
     position: relative;
@@ -138,12 +98,36 @@ position: absolute;
     margin-right: -50%;
     transform: translate(-50%, -50%);
 }
-.overlay-div{
-   height:100%;
-   width: 100%;
-   position:absolute;
-   background-color:#000;
-   opacity:.7;
+.overlay-div {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background-color: #000;
+    opacity: .7;
+}
+/* Clamp overlay text on image to 3 lines max */
+.media__item__wrapper .card-img-overlay .overlay-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: clamp(0.75rem, 1.5vw, 1.1rem);
+    padding: 0 0.25rem;
+}
+/* Constrain card images to uniform 16:9 aspect ratio with black letterbox fill */
+.media__item__wrapper .card {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #000;
+}
+.media__item__wrapper .card .card-img,
+.media__item__wrapper .card picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.media__item__wrapper .card picture {
+    display: contents;
 }"
 );
 
@@ -176,25 +160,31 @@ $defaultImage = $this->params->get('default_study_image', '');
             <section class="media__container">
                 <div id="media__items__list"
                      class="su_macro_prototype list-unstyled media__view media__container list_contains_thumbnail"
-                     style="display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;">
+>
                     <?php
     foreach ($this->items as $item) {
         $itemparams = new Registry();
         $params     = $itemparams->loadString($item->params);
 
-        // Use full-size original image; fall back to admin default image
-        $imageObj = !empty($item->thumbnailm)
-            ? Cwmimages::getStudyOriginal($item->thumbnailm)
-            : Cwmimages::getImagePath($defaultImage);
+        // Use study_image (original) for high quality; fall back to deriving from thumbnailm
+        $studyImagePath = $item->study_image ?? '';
+
+        if (!empty($studyImagePath)) {
+            $imageObj = Cwmimages::getImagePath($studyImagePath);
+        } elseif (!empty($item->thumbnailm)) {
+            $imageObj = Cwmimages::getStudyOriginal($item->thumbnailm);
+        } else {
+            $imageObj = Cwmimages::getImagePath($defaultImage);
+        }
+
+        $overlaytext = '';
 
         if (
             $this->params->get('simplegridtextoverlay') == 1 || $params->get(
                 'nooverlaysimplemode'
             ) === 'yes'
         ) {
-            $overlaytext = '<h5 class="card-title text-uppercase overlay-text -webkit-text-stroke" style="text-shadow: 2px 2px #000000;">' . $item->studytitle . '</h5>';
+            $overlaytext = '<h5 class="card-title text-uppercase overlay-text" style="text-shadow: 2px 2px #000000;">' . $item->studytitle . '</h5>';
         }
         if ($params->get('nooverlaysimplemode') === 'no') {
             $overlaytext = '';

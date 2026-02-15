@@ -40,23 +40,22 @@ $options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this-
 
 // Set up defaults
 if ($input->getInt('id')) {
-    $booknumber  = $this->item->booknumber;
-    $thumbnailm  = $this->item->thumbnailm;
-    $teacher_id  = $this->item->teacher_id;
-    $location_id = $this->item->location_id;
-    $series_id   = $this->item->series_id;
-    $messagetype = $this->item->messagetype;
-    $thumbnailm  = $this->item->thumbnailm;
-    $user_id     = $this->item->user_id;
+    $booknumber   = $this->item->booknumber;
+    $teacher_id   = $this->item->teacher_id;
+    $location_id  = $this->item->location_id;
+    $series_id    = $this->item->series_id;
+    $messagetype  = $this->item->messagetype;
+    $user_id      = $this->item->user_id;
+    // Use the original image path (image column); fall back to thumbnailm for pre-migration records
+    $imageDefault = !empty($this->item->image) ? $this->item->image : ($this->item->thumbnailm ?? '');
 } else {
-    $booknumber  = $this->admin_params->get('booknumber');
-    $thumbnailm  = $this->admin_params->get('default_study_image');
-    $teacher_id  = $this->admin_params->get('teacher_id');
-    $location_id = $this->admin_params->get('location_id');
-    $series_id   = $this->admin_params->get('series_id');
-    $messagetype = $this->admin_params->get('messagetype');
-    $thumbnailm  = $this->admin_params->get('default_study_image');
-    $user_id     = $this->admin->user_id;
+    $booknumber   = $this->admin_params->get('booknumber');
+    $teacher_id   = $this->admin_params->get('teacher_id');
+    $location_id  = $this->admin_params->get('location_id');
+    $series_id    = $this->admin_params->get('series_id');
+    $messagetype  = $this->admin_params->get('messagetype');
+    $imageDefault = $this->admin_params->get('default_study_image', '');
+    $user_id      = $this->admin->user_id;
 }
 
 $wa = $this->getDocument()->getWebAssetManager();
@@ -262,7 +261,7 @@ echo Route::_(
                 </div>
                 <?php echo $this->form->renderField('published'); ?>
                 <?php echo $this->form->renderField('studydate'); ?>
-                <?php echo $this->form->renderField('image', null, $thumbnailm); ?>
+                <?php echo $this->form->renderField('image', null, $imageDefault); ?>
                 <?php echo $this->form->renderField('nooverlaysimplemode', 'params'); ?>
                 <?php echo $this->form->renderField('teacher_id', null, $teacher_id); ?>
 
@@ -291,7 +290,7 @@ echo Route::_(
                     <?php echo $this->form->renderField('language'); ?>
                     <?php echo $this->form->renderField('topics'); ?>
                     <?php echo $this->form->renderField('messagetype', null, $messagetype); ?>
-                    <?php echo $this->form->renderField('thumbnailm', null, $thumbnailm); ?>
+                    <?php echo $this->form->renderField('thumbnailm'); ?>
                 </div>
             </div>
             <?php

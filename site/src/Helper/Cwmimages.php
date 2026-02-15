@@ -228,6 +228,17 @@ class Cwmimages
             if (is_file($fullPath)) {
                 return self::getImagePath($originalPath);
             }
+
+            // Thumbnail is always .jpg but original may have a different extension
+            $nameWithoutExt = pathinfo($originalBasename, PATHINFO_FILENAME);
+
+            foreach (['png', 'webp', 'gif', 'jpeg'] as $ext) {
+                $altPath = $dir . '/' . $nameWithoutExt . '.' . $ext;
+
+                if (is_file(JPATH_ROOT . '/' . $altPath)) {
+                    return self::getImagePath($altPath);
+                }
+            }
         }
 
         // Fallback to whatever was passed (the thumbnail itself)

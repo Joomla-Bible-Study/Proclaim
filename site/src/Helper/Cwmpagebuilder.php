@@ -114,7 +114,13 @@ class Cwmpagebuilder
             $page->topics = Text::_($item->topics_text);
         }
 
-        if ($item->thumbnailm) {
+        // Prefer study_image (original path) over deriving from thumbnailm
+        $studyImagePath = $item->study_image ?? '';
+
+        if (!empty($studyImagePath)) {
+            $image                 = Cwmimages::getImagePath($studyImagePath);
+            $page->study_thumbnail = Cwmimages::renderPicture($image, $item->studytitle);
+        } elseif (!empty($item->thumbnailm)) {
             $image                 = Cwmimages::getStudyOriginal($item->thumbnailm);
             $page->study_thumbnail = Cwmimages::renderPicture($image, $item->studytitle);
         } else {
@@ -132,16 +138,15 @@ class Cwmpagebuilder
             'index.php?option=com_proclaim&view=cwmsermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid')
         );
 
-        if (!isset($item->image)) {
-            $item->image = '';
-        }
+        // Teacher image: use teacher_image alias (avoids collision with study.image)
+        $teacherImg = $item->teacher_image ?? $item->image ?? '';
 
         if (!isset($item->thumb)) {
             $item->thumb = '';
         }
 
-        if ($item->image || $item->thumb) {
-            $image              = Cwmimages::getTeacherImage($item->image, $item->thumb);
+        if ($teacherImg || $item->thumb) {
+            $image              = Cwmimages::getTeacherImage($teacherImg, $item->thumb);
             $page->teacherimage = Cwmimages::renderPicture($image, $item->teachername);
         } else {
             $page->teacherimage = '';

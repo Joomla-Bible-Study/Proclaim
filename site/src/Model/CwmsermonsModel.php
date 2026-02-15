@@ -687,6 +687,8 @@ class CwmsermonsModel extends ListModel
             'study.access', 'study.user_name', 'study.user_id', 'study.studynumber',
             'study.chapter_begin2', 'study.chapter_end2', 'study.verse_end2', 'study.verse_begin2',
         ])));
+        // Select the original image path (avoids deriving from thumbnailm)
+        $query->select($db->quoteName('study.image', 'study_image'));
         $query->select($query->length($db->quoteName('study.studytext')) . ' AS ' . $db->quoteName('readmore'));
         $query->select(
             'CASE WHEN CHAR_LENGTH(' . $db->quoteName('study.alias') . ') THEN CONCAT_WS('

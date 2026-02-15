@@ -981,4 +981,220 @@ class CwmImageMigration
 
         return $result;
     }
+
+    /**
+     * Get count of study records eligible for thumbnail regeneration
+     *
+     * Counts all studies that have either an image or thumbnailm path set.
+     *
+     * @return array{total: int}
+     *
+     * @since 10.1.0
+     */
+    public static function getThumbRegenerationCounts(): array
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_studies'))
+            ->extendWhere(
+                'AND',
+                [
+                    '(' . $db->quoteName('image') . ' IS NOT NULL AND '
+                        . $db->quoteName('image') . ' != ' . $db->quote('') . ')',
+                    '(' . $db->quoteName('thumbnailm') . ' IS NOT NULL AND '
+                        . $db->quoteName('thumbnailm') . ' != ' . $db->quote('') . ')',
+                ],
+                'OR'
+            );
+
+        $total = (int) $db->setQuery($query)->loadResult();
+
+        return ['total' => $total];
+    }
+
+    /**
+     * Force-regenerate thumbnails and WebP variants for a batch of studies
+     *
+     * Reads each study's image column (or derives original from thumbnailm),
+     * creates a fresh thumbnail at the configured size, and generates WebP
+     * variants for both the original and the thumbnail.  Always overwrites
+     * existing files.
+     *
+     * @param   int  $limit   Maximum records to process per batch
+     * @param   int  $offset  Offset to resume from
+     *
+     * @return array{processed: int, errors: int, remaining: int, errorDetails: array}
+     *
+     * @since 10.1.0
+     */
+    public static function regenerateThumbnails(int $limit = 10, int $offset = 0): array
+    {
+        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $params = Cwmparams::getAdmin()->params;
+        $size   = (int) $params->get('thumbnail_study_size', 600);
+        $result = ['processed' => 0, 'errors' => 0, 'remaining' => 0, 'errorDetails' => []];
+
+        // Get batch of studies with either image or thumbnailm
+        $query = $db->getQuery(true)
+            ->select($db->quoteName(['id', 'image', 'thumbnailm']))
+            ->from($db->quoteName('#__bsms_studies'))
+            ->extendWhere(
+                'AND',
+                [
+                    '(' . $db->quoteName('image') . ' IS NOT NULL AND '
+                        . $db->quoteName('image') . ' != ' . $db->quote('') . ')',
+                    '(' . $db->quoteName('thumbnailm') . ' IS NOT NULL AND '
+                        . $db->quoteName('thumbnailm') . ' != ' . $db->quote('') . ')',
+                ],
+                'OR'
+            )
+            ->order($db->quoteName('id'));
+
+        $db->setQuery($query, $offset, $limit);
+        $studies = $db->loadObjectList();
+
+        // Count total
+        $countQuery = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_studies'))
+            ->extendWhere(
+                'AND',
+                [
+                    '(' . $db->quoteName('image') . ' IS NOT NULL AND '
+                        . $db->quoteName('image') . ' != ' . $db->quote('') . ')',
+                    '(' . $db->quoteName('thumbnailm') . ' IS NOT NULL AND '
+                        . $db->quoteName('thumbnailm') . ' != ' . $db->quote('') . ')',
+                ],
+                'OR'
+            );
+        $totalCount          = (int) $db->setQuery($countQuery)->loadResult();
+        $result['remaining'] = max(0, $totalCount - $offset - \count($studies));
+
+        foreach ($studies as $study) {
+            // Resolve the original image path — prefer image column, derive from thumbnailm
+            $imagePath = self::resolveOriginalImage($study);
+
+            if ($imagePath === null) {
+                $result['errors']++;
+                $result['errorDetails'][] = 'No original found (id=' . $study->id . ')';
+                continue;
+            }
+
+            try {
+                $dir          = \dirname($imagePath);
+                $baseName     = pathinfo($imagePath, PATHINFO_FILENAME);
+                $relDir       = self::absoluteToRelative($dir);
+                $thumbPath    = $dir . '/thumb_' . $baseName . '.jpg';
+                $thumbRelPath = $relDir . '/thumb_' . $baseName . '.jpg';
+                $imageRelPath = $relDir . '/' . basename($imagePath);
+
+                // Generate thumbnail
+                $image     = new Image($imagePath);
+                $thumbnail = $image->resize($size, (int) round($size * 0.5625), true, Image::SCALE_INSIDE);
+                $thumbnail->toFile($thumbPath, IMAGETYPE_JPEG);
+
+                // Always regenerate WebP variants
+                if (\function_exists('imagewebp')) {
+                    $webpThumbPath = $dir . '/thumb_' . $baseName . '.webp';
+                    $thumbnail->toFile($webpThumbPath, IMAGETYPE_WEBP);
+
+                    $ext = strtolower(pathinfo($imagePath, PATHINFO_EXTENSION));
+
+                    if ($ext !== 'webp') {
+                        $webpOrigPath = $dir . '/' . $baseName . '.webp';
+                        $fullImage    = new Image($imagePath);
+                        $fullImage->toFile($webpOrigPath, IMAGETYPE_WEBP);
+                    }
+                }
+
+                // Update both columns in DB
+                $update = $db->getQuery(true)
+                    ->update($db->quoteName('#__bsms_studies'))
+                    ->set($db->quoteName('image') . ' = ' . $db->quote($imageRelPath))
+                    ->set($db->quoteName('thumbnailm') . ' = ' . $db->quote($thumbRelPath))
+                    ->where($db->quoteName('id') . ' = ' . (int) $study->id);
+                $db->setQuery($update)->execute();
+
+                $result['processed']++;
+            } catch (\Throwable $e) {
+                $result['errors']++;
+                $result['errorDetails'][] = 'id=' . $study->id . ': ' . $e->getMessage();
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Resolve the absolute path to the original image for a study record
+     *
+     * Prefers the image column.  Falls back to deriving from thumbnailm by
+     * stripping the thumb_ prefix and trying multiple extensions.
+     *
+     * @param   object  $study  Row with ->image and ->thumbnailm
+     *
+     * @return  string|null  Absolute path on disk, or null if not found
+     *
+     * @since 10.1.0
+     */
+    private static function resolveOriginalImage(object $study): ?string
+    {
+        // Try image column first
+        if (!empty($study->image)) {
+            $path = Path::clean(JPATH_ROOT . '/' . $study->image);
+
+            if (is_file($path)) {
+                return $path;
+            }
+
+            // Image column might have wrong extension (migration artefact) — try alternatives
+            $dir  = \dirname($path);
+            $name = pathinfo($path, PATHINFO_FILENAME);
+
+            foreach (['jpg', 'jpeg', 'png', 'webp', 'gif'] as $ext) {
+                $candidate = $dir . '/' . $name . '.' . $ext;
+
+                if (is_file($candidate)) {
+                    return $candidate;
+                }
+            }
+        }
+
+        // Derive from thumbnailm by stripping thumb_ prefix
+        if (!empty($study->thumbnailm)) {
+            $thumbBase = basename($study->thumbnailm);
+
+            if (str_starts_with($thumbBase, 'thumb_')) {
+                $dir          = Path::clean(JPATH_ROOT . '/' . \dirname($study->thumbnailm));
+                $strippedName = pathinfo(substr($thumbBase, 6), PATHINFO_FILENAME);
+
+                foreach (['jpg', 'jpeg', 'png', 'webp', 'gif'] as $ext) {
+                    $candidate = $dir . '/' . $strippedName . '.' . $ext;
+
+                    if (is_file($candidate)) {
+                        return $candidate;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Convert an absolute path to a JPATH_ROOT-relative path
+     *
+     * @param   string  $absolutePath  Absolute filesystem path
+     *
+     * @return  string  Relative path (forward slashes, no leading slash)
+     *
+     * @since 10.1.0
+     */
+    private static function absoluteToRelative(string $absolutePath): string
+    {
+        $root = Path::clean(JPATH_ROOT);
+
+        return ltrim(str_replace($root, '', Path::clean($absolutePath)), '/\\');
+    }
 }
