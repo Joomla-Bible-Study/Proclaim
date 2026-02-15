@@ -139,7 +139,7 @@ class CwmImageMigration
                 $col = $db->qn('thumbnailm');
                 $query->select(
                     $db->qn('id') . ', ' . $db->qn('studytitle') . ', ' . $db->qn('alias') . ', '
-                    . $db->qn('thumbnailm', 'image_path')
+                    . $db->qn('thumbnailm', 'image_path') . ', ' . $db->qn('image', 'original_path')
                 )
                     ->from($db->qn('#__bsms_studies'))
                     ->where($col . ' IS NOT NULL')
@@ -153,7 +153,9 @@ class CwmImageMigration
                 $col = $db->qn('teacher_thumbnail');
                 $query->select(
                     $db->qn('id') . ', ' . $db->qn('teachername') . ', ' . $db->qn('alias') . ', '
-                    . $db->qn('teacher_thumbnail', 'image_path')
+                    . $db->qn('teacher_thumbnail', 'image_path') . ', '
+                    . 'COALESCE(' . $db->qn('teacher_image') . ', ' . $db->qn('image') . ') AS '
+                    . $db->qn('original_path')
                 )
                     ->from($db->qn('#__bsms_teachers'))
                     ->where($col . ' IS NOT NULL')
@@ -167,7 +169,7 @@ class CwmImageMigration
                 $col = $db->qn('series_thumbnail');
                 $query->select(
                     $db->qn('id') . ', ' . $db->qn('series_text', 'title') . ', ' . $db->qn('alias') . ', '
-                    . $db->qn('series_thumbnail', 'image_path')
+                    . $db->qn('series_thumbnail', 'image_path') . ', ' . $db->qn('image', 'original_path')
                 )
                     ->from($db->qn('#__bsms_series'))
                     ->where($col . ' IS NOT NULL')
@@ -228,19 +230,19 @@ class CwmImageMigration
 
         switch ($type) {
             case 'studies':
-                $query->select($db->qn(['studytitle', 'thumbnailm']))
+                $query->select($db->qn(['studytitle', 'alias', 'thumbnailm', 'image']))
                     ->from($db->qn('#__bsms_studies'))
                     ->where($db->qn('id') . ' = ' . (int) $id);
                 break;
 
             case 'teachers':
-                $query->select($db->qn('teachername') . ', ' . $db->qn('teacher_thumbnail'))
+                $query->select($db->qn(['teachername', 'alias', 'teacher_thumbnail', 'teacher_image', 'image']))
                     ->from($db->qn('#__bsms_teachers'))
                     ->where($db->qn('id') . ' = ' . (int) $id);
                 break;
 
             case 'series':
-                $query->select($db->qn('series_text') . ', ' . $db->qn('series_thumbnail'))
+                $query->select($db->qn(['series_text', 'alias', 'series_thumbnail', 'image']))
                     ->from($db->qn('#__bsms_series'))
                     ->where($db->qn('id') . ' = ' . (int) $id);
                 break;
@@ -259,6 +261,25 @@ class CwmImageMigration
         // Extract title and image path from the row
         $title   = $row->studytitle ?? $row->teachername ?? $row->series_text ?? '';
         $oldPath = trim($row->thumbnailm ?? $row->teacher_thumbnail ?? $row->series_thumbnail ?? '');
+
+        // Check if the alias-ID folder already has migrated files (previous run
+        // may have copied files but failed to update DB columns)
+        $existing = self::findExistingMigratedFiles($type, $id, $title, $row->alias ?? '');
+
+        if ($existing !== null) {
+            return self::updateDbFromExistingFiles($type, $id, $existing);
+        }
+
+        // Prefer the image column (original full-size) over thumbnail when available
+        $imagePath = trim($row->image ?? $row->teacher_image ?? '');
+
+        if ($imagePath !== '' && \strlen($imagePath) > 1 && !self::isCoreImage($imagePath)) {
+            $imageAbsPath = Path::clean(JPATH_ROOT . '/' . $imagePath);
+
+            if (is_file($imageAbsPath)) {
+                $oldPath = $imagePath;
+            }
+        }
 
         // Treat '0', single-char junk, and empty as "no image" — skip (not migratable)
         if ($oldPath === '' || \strlen($oldPath) <= 1) {
@@ -324,17 +345,34 @@ class CwmImageMigration
         $basename    = basename($cleanPath);
 
         if (str_contains($basename, 'thumb_')) {
-            $originalName     = str_replace('thumb_', '', $basename);
-            $possibleOriginal = \dirname($cleanPath) . '/' . $originalName;
-            $possibleAbsPath  = Path::clean(JPATH_ROOT . '/' . $possibleOriginal);
+            // Try the exact extension first, then alternate extensions
+            $strippedBase = str_replace('thumb_', '', $basename);
+            $strippedName = pathinfo($strippedBase, PATHINFO_FILENAME);
+            $dirName      = \dirname($cleanPath);
+            $foundOriginal = false;
 
-            if (is_file($possibleAbsPath)) {
-                $sourceImage = $possibleOriginal;
-            } elseif (is_file($oldAbsPath)) {
-                // Thumbnail exists, use it as source
-                $sourceImage = $cleanPath;
-            } else {
-                $sourceFound = false;
+            // Try original name as-is, then alternate extensions (thumb may be .jpg but original .png)
+            foreach ([$strippedBase, ...array_map(
+                fn ($ext) => $strippedName . '.' . $ext,
+                ['jpg', 'jpeg', 'png', 'webp', 'gif']
+            )] as $candidateName) {
+                $possibleOriginal = $dirName . '/' . $candidateName;
+                $possibleAbsPath  = Path::clean(JPATH_ROOT . '/' . $possibleOriginal);
+
+                if (is_file($possibleAbsPath)) {
+                    $sourceImage   = $possibleOriginal;
+                    $foundOriginal = true;
+                    break;
+                }
+            }
+
+            if (!$foundOriginal) {
+                if (is_file($oldAbsPath)) {
+                    // Thumbnail exists, use it as source
+                    $sourceImage = $cleanPath;
+                } else {
+                    $sourceFound = false;
+                }
             }
         } elseif (!is_file($oldAbsPath)) {
             $sourceFound = false;
@@ -347,6 +385,11 @@ class CwmImageMigration
                 : $basename;
 
             $found = self::findImageFile($searchName, $type);
+
+            // If original not found but this is a thumb_ path, also try the thumbnail filename
+            if ($found === null && str_contains($basename, 'thumb_')) {
+                $found = self::findImageFile($basename, $type);
+            }
 
             if ($found !== null) {
                 $sourceImage = $found;
@@ -429,6 +472,140 @@ class CwmImageMigration
         }
 
         return $response;
+    }
+
+    /**
+     * Check if an alias-ID folder already contains migrated files for a record
+     *
+     * A previous migration run may have copied files to the proper folder but
+     * failed to update the DB columns. This detects that case so we can fix
+     * the DB without re-copying files.
+     *
+     * @param   string  $type   Record type: 'studies', 'teachers', or 'series'
+     * @param   int     $id     Record ID
+     * @param   string  $title  Record title (used to build folder name)
+     * @param   string  $alias  Record alias (preferred over title for folder name)
+     *
+     * @return  ?array{image: string, thumbnail: string}  Relative paths if found, null otherwise
+     *
+     * @since 10.1.0
+     */
+    private static function findExistingMigratedFiles(string $type, int $id, string $title, string $alias): ?array
+    {
+        // Build the expected alias-ID folder name
+        $folderAlias = $alias ?: ApplicationHelper::stringURLSafe($title ?: $type);
+        $expectedDir = JPATH_ROOT . '/images/biblestudy/' . $type . '/' . $folderAlias . '-' . $id;
+
+        // Also check bare-ID folder (legacy migration artefact: folder named just "528" instead of "alias-528")
+        $bareIdDir = JPATH_ROOT . '/images/biblestudy/' . $type . '/' . $id;
+
+        $dirsToCheck = [];
+
+        if (is_dir($expectedDir)) {
+            $dirsToCheck[] = ['dir' => $expectedDir, 'relDir' => 'images/biblestudy/' . $type . '/' . $folderAlias . '-' . $id];
+        }
+
+        if (is_dir($bareIdDir)) {
+            $dirsToCheck[] = ['dir' => $bareIdDir, 'relDir' => 'images/biblestudy/' . $type . '/' . $id];
+        }
+
+        if (empty($dirsToCheck)) {
+            return null;
+        }
+
+        $imageExts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+
+        foreach ($dirsToCheck as $candidate) {
+            $thumbFile = null;
+            $imageFile = null;
+
+            $files = @scandir($candidate['dir']);
+
+            if ($files === false) {
+                continue;
+            }
+
+            foreach ($files as $file) {
+                if ($file === '.' || $file === '..') {
+                    continue;
+                }
+
+                $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
+                if (!\in_array($ext, $imageExts, true)) {
+                    continue;
+                }
+
+                if (str_starts_with($file, 'thumb_') && $ext !== 'webp') {
+                    $thumbFile = $file;
+                } elseif (!str_starts_with($file, 'thumb_') && $ext !== 'webp') {
+                    $imageFile = $file;
+                }
+            }
+
+            if ($thumbFile !== null || $imageFile !== null) {
+                return [
+                    'image'     => $imageFile ? $candidate['relDir'] . '/' . $imageFile : '',
+                    'thumbnail' => $thumbFile ? $candidate['relDir'] . '/' . $thumbFile : '',
+                ];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Update DB columns from already-migrated files in the alias-ID folder
+     *
+     * @param   string  $type      Record type: 'studies', 'teachers', or 'series'
+     * @param   int     $id        Record ID
+     * @param   array   $existing  Array with 'image' and 'thumbnail' relative paths
+     *
+     * @return  array{success: bool, newPath: ?string, error: ?string}
+     *
+     * @since 10.1.0
+     */
+    private static function updateDbFromExistingFiles(string $type, int $id, array $existing): array
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
+
+        $thumbPath = $existing['thumbnail'];
+        $imagePath = $existing['image'];
+
+        switch ($type) {
+            case 'studies':
+                $query->update($db->qn('#__bsms_studies'))
+                    ->set($db->qn('thumbnailm') . ' = ' . $db->q($thumbPath))
+                    ->set($db->qn('image') . ' = ' . $db->q($imagePath))
+                    ->where($db->qn('id') . ' = ' . (int) $id);
+                break;
+
+            case 'teachers':
+                $query->update($db->qn('#__bsms_teachers'))
+                    ->set($db->qn('teacher_thumbnail') . ' = ' . $db->q($thumbPath))
+                    ->set($db->qn('teacher_image') . ' = ' . $db->q($imagePath))
+                    ->set($db->qn('image') . ' = ' . $db->q($imagePath))
+                    ->where($db->qn('id') . ' = ' . (int) $id);
+                break;
+
+            case 'series':
+                $query->update($db->qn('#__bsms_series'))
+                    ->set($db->qn('series_thumbnail') . ' = ' . $db->q($thumbPath))
+                    ->set($db->qn('image') . ' = ' . $db->q($imagePath))
+                    ->where($db->qn('id') . ' = ' . (int) $id);
+                break;
+        }
+
+        $db->setQuery($query);
+        $db->execute();
+
+        return [
+            'success'  => true,
+            'newPath'  => $thumbPath,
+            'error'    => null,
+            'relinked' => true,
+        ];
     }
 
     /**
@@ -578,13 +755,32 @@ class CwmImageMigration
 
             foreach ($records as $row) {
                 $imagePath = trim($row->image_path ?? '');
+                $title     = $row->studytitle ?? $row->teachername ?? $row->title ?? '';
+                $alias     = $row->alias ?? '';
+
+                // Check if alias-ID folder already has migrated files (DB wasn't updated)
+                $existing = self::findExistingMigratedFiles($type, (int) $row->id, $title, $alias);
+
+                if ($existing !== null) {
+                    continue;
+                }
 
                 // Junk values are always unresolvable
                 if ($imagePath === '' || \strlen($imagePath) <= 1) {
-                    $title          = $row->studytitle ?? $row->teachername ?? $row->title ?? '';
                     $unresolvable[] = ['type' => $type, 'id' => (int) $row->id, 'title' => $title, 'path' => $imagePath];
 
                     continue;
+                }
+
+                // Quick check: if the image column has a valid file, record is resolvable
+                $originalPath = trim($row->original_path ?? '');
+
+                if ($originalPath !== '' && \strlen($originalPath) > 1) {
+                    $origAbsPath = Path::clean(JPATH_ROOT . '/' . $originalPath);
+
+                    if (is_file($origAbsPath)) {
+                        continue;
+                    }
                 }
 
                 // Clean Joomla media field metadata
@@ -610,10 +806,25 @@ class CwmImageMigration
                 $found = false;
 
                 if (str_contains($basename, 'thumb_')) {
-                    $originalName     = str_replace('thumb_', '', $basename);
-                    $possibleOriginal = \dirname($cleanPath) . '/' . $originalName;
+                    // Check for original with exact extension and alternate extensions
+                    $strippedBase = str_replace('thumb_', '', $basename);
+                    $strippedName = pathinfo($strippedBase, PATHINFO_FILENAME);
+                    $dirName      = \dirname($cleanPath);
 
-                    if (is_file(Path::clean(JPATH_ROOT . '/' . $possibleOriginal)) || is_file($absPath)) {
+                    foreach ([$strippedBase, ...array_map(
+                        fn ($ext) => $strippedName . '.' . $ext,
+                        ['jpg', 'jpeg', 'png', 'webp', 'gif']
+                    )] as $candidateName) {
+                        $possibleOriginal = $dirName . '/' . $candidateName;
+
+                        if (is_file(Path::clean(JPATH_ROOT . '/' . $possibleOriginal))) {
+                            $found = true;
+                            break;
+                        }
+                    }
+
+                    // Also check if the thumbnail itself exists
+                    if (!$found && is_file($absPath)) {
                         $found = true;
                     }
                 } elseif (is_file($absPath)) {
@@ -626,6 +837,11 @@ class CwmImageMigration
                         ? str_replace('thumb_', '', $basename)
                         : $basename;
                     $found = self::findImageFile($searchName, $type) !== null;
+
+                    // Also try the thumbnail filename itself
+                    if (!$found && str_contains($basename, 'thumb_')) {
+                        $found = self::findImageFile($basename, $type) !== null;
+                    }
                 }
 
                 if (!$found) {
@@ -660,6 +876,341 @@ class CwmImageMigration
         }
 
         return ['cleared' => $cleared, 'logFile' => self::getClearedLogPath()];
+    }
+
+    /**
+     * Count bare-ID folders per type that can be recovered
+     *
+     * Scans images/biblestudy/{type}/ for numeric-only subdirectories
+     * where the DB record has empty image fields but the folder has files.
+     *
+     * @return  array{studies: int, teachers: int, series: int, total: int}
+     *
+     * @since 10.1.0
+     */
+    public static function getRecoveryCounts(): array
+    {
+        $counts = ['studies' => 0, 'teachers' => 0, 'series' => 0];
+
+        foreach (array_keys(self::REGEN_TYPE_CONFIG) as $type) {
+            $baseDir = JPATH_ROOT . '/images/biblestudy/' . $type;
+
+            if (!is_dir($baseDir)) {
+                continue;
+            }
+
+            $subDirs = @scandir($baseDir);
+
+            if ($subDirs === false) {
+                continue;
+            }
+
+            foreach ($subDirs as $dirName) {
+                if ($dirName === '.' || $dirName === '..' || !ctype_digit($dirName)) {
+                    continue;
+                }
+
+                $absDir = $baseDir . '/' . $dirName;
+
+                if (!is_dir($absDir)) {
+                    continue;
+                }
+
+                // Check if the folder has any image files
+                if (self::dirHasImageFiles($absDir)) {
+                    $counts[$type]++;
+                }
+            }
+        }
+
+        $counts['total'] = $counts['studies'] + $counts['teachers'] + $counts['series'];
+
+        return $counts;
+    }
+
+    /**
+     * Recover bare-ID folders by migrating their images to proper alias-ID folders
+     *
+     * For each numeric-only folder, looks up the DB record, generates proper
+     * thumbnails in the alias-ID folder, updates DB columns, and removes
+     * the old bare-ID folder if it becomes empty.
+     *
+     * @param   string  $type   Record type: 'studies', 'teachers', or 'series'
+     * @param   int     $limit  Maximum folders to process per batch
+     *
+     * @return  array{recovered: int, skipped: int, errors: int, remaining: int, errorDetails: list<string>}
+     *
+     * @since 10.1.0
+     */
+    public static function recoverBareIdFolders(string $type, int $limit = 10): array
+    {
+        $cfg = self::REGEN_TYPE_CONFIG[$type] ?? null;
+        $result = [
+            'recovered'    => 0,
+            'skipped'      => 0,
+            'errors'       => 0,
+            'remaining'    => 0,
+            'errorDetails' => [],
+        ];
+
+        if ($cfg === null) {
+            $result['errorDetails'][] = 'Invalid type: ' . $type;
+
+            return $result;
+        }
+
+        $baseDir = JPATH_ROOT . '/images/biblestudy/' . $type;
+
+        if (!is_dir($baseDir)) {
+            return $result;
+        }
+
+        $subDirs = @scandir($baseDir);
+
+        if ($subDirs === false) {
+            return $result;
+        }
+
+        $db        = Factory::getContainer()->get('DatabaseDriver');
+        $params    = Cwmparams::getAdmin()->params;
+        $thumbSize = (int) $params->get($cfg['sizeParam'], $cfg['sizeDefault']);
+        $processed = 0;
+
+        foreach ($subDirs as $dirName) {
+            if ($dirName === '.' || $dirName === '..' || !ctype_digit($dirName)) {
+                continue;
+            }
+
+            $absDir = $baseDir . '/' . $dirName;
+
+            if (!is_dir($absDir)) {
+                continue;
+            }
+
+            if (!self::dirHasImageFiles($absDir)) {
+                continue;
+            }
+
+            if ($processed >= $limit) {
+                $result['remaining']++;
+
+                continue;
+            }
+
+            $processed++;
+            $id = (int) $dirName;
+
+            // Look up the DB record
+            $query = $db->getQuery(true);
+
+            switch ($type) {
+                case 'studies':
+                    $query->select($db->qn(['id', 'studytitle', 'alias', 'thumbnailm', 'image']))
+                        ->from($db->qn('#__bsms_studies'))
+                        ->where($db->qn('id') . ' = ' . $id);
+                    break;
+
+                case 'teachers':
+                    $query->select($db->qn(['id', 'teachername', 'alias', 'teacher_thumbnail', 'teacher_image', 'image']))
+                        ->from($db->qn('#__bsms_teachers'))
+                        ->where($db->qn('id') . ' = ' . $id);
+                    break;
+
+                case 'series':
+                    $query->select($db->qn(['id', 'series_text', 'alias', 'series_thumbnail', 'image']))
+                        ->from($db->qn('#__bsms_series'))
+                        ->where($db->qn('id') . ' = ' . $id);
+                    break;
+            }
+
+            $db->setQuery($query);
+            $row = $db->loadObject();
+
+            if (!$row) {
+                $result['skipped']++;
+
+                continue;
+            }
+
+            // Find the best source image in the bare-ID folder
+            $sourceFile = self::findBestImageInDir($absDir);
+
+            if ($sourceFile === null) {
+                $result['skipped']++;
+
+                continue;
+            }
+
+            $title = $row->studytitle ?? $row->teachername ?? $row->series_text ?? '';
+            $alias = $row->alias ?? '';
+            $folderAlias = $alias ?: ApplicationHelper::stringURLSafe($title ?: $type);
+            $newFolder   = 'images/biblestudy/' . $type . '/' . $folderAlias . '-' . $id;
+            $sourceRel   = self::makeRelative($sourceFile);
+
+            try {
+                $thumbResult = Cwmthumbnail::create($sourceRel, $newFolder, $thumbSize, $title);
+            } catch (\Throwable $e) {
+                $result['errors']++;
+                $result['errorDetails'][] = $type . ' #' . $id . ': ' . $e->getMessage();
+
+                continue;
+            }
+
+            if ($thumbResult === false) {
+                $result['errors']++;
+                $result['errorDetails'][] = $type . ' #' . $id . ': Thumbnail creation failed';
+
+                continue;
+            }
+
+            // Update DB columns
+            $update = $db->getQuery(true);
+
+            switch ($type) {
+                case 'studies':
+                    $update->update($db->qn('#__bsms_studies'))
+                        ->set($db->qn('thumbnailm') . ' = ' . $db->q($thumbResult['thumbnail']))
+                        ->set($db->qn('image') . ' = ' . $db->q($thumbResult['image']))
+                        ->where($db->qn('id') . ' = ' . $id);
+                    break;
+
+                case 'teachers':
+                    $update->update($db->qn('#__bsms_teachers'))
+                        ->set($db->qn('teacher_thumbnail') . ' = ' . $db->q($thumbResult['thumbnail']))
+                        ->set($db->qn('teacher_image') . ' = ' . $db->q($thumbResult['image']))
+                        ->set($db->qn('image') . ' = ' . $db->q($thumbResult['image']))
+                        ->where($db->qn('id') . ' = ' . $id);
+                    break;
+
+                case 'series':
+                    $update->update($db->qn('#__bsms_series'))
+                        ->set($db->qn('series_thumbnail') . ' = ' . $db->q($thumbResult['thumbnail']))
+                        ->set($db->qn('image') . ' = ' . $db->q($thumbResult['image']))
+                        ->where($db->qn('id') . ' = ' . $id);
+                    break;
+            }
+
+            $db->setQuery($update);
+            $db->execute();
+
+            // Clean up the old bare-ID folder
+            self::cleanupBareIdFolder($absDir);
+
+            $result['recovered']++;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Check whether a directory contains any image files
+     *
+     * @param   string  $absDir  Absolute directory path
+     *
+     * @return  bool
+     *
+     * @since 10.1.0
+     */
+    private static function dirHasImageFiles(string $absDir): bool
+    {
+        $imageExts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        $files     = @scandir($absDir);
+
+        if ($files === false) {
+            return false;
+        }
+
+        foreach ($files as $file) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+
+            $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
+            if (\in_array($ext, $imageExts, true)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Find the best source image file in a directory
+     *
+     * Prefers non-thumb originals over thumbnails. Returns the absolute path.
+     *
+     * @param   string  $absDir  Absolute directory path
+     *
+     * @return  ?string  Absolute path to best image file, or null
+     *
+     * @since 10.1.0
+     */
+    private static function findBestImageInDir(string $absDir): ?string
+    {
+        $imageExts = ['jpg', 'jpeg', 'png', 'gif'];
+        $files     = @scandir($absDir);
+
+        if ($files === false) {
+            return null;
+        }
+
+        $original  = null;
+        $thumbnail = null;
+
+        foreach ($files as $file) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+
+            $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
+            if (!\in_array($ext, $imageExts, true)) {
+                continue;
+            }
+
+            if (str_starts_with($file, 'thumb_')) {
+                $thumbnail = $absDir . '/' . $file;
+            } else {
+                $original = $absDir . '/' . $file;
+            }
+        }
+
+        return $original ?? $thumbnail;
+    }
+
+    /**
+     * Remove a bare-ID folder if it's empty or only contains WebP files
+     *
+     * @param   string  $absDir  Absolute path to the bare-ID folder
+     *
+     * @return  void
+     *
+     * @since 10.1.0
+     */
+    private static function cleanupBareIdFolder(string $absDir): void
+    {
+        $remaining = @scandir($absDir);
+
+        if ($remaining === false) {
+            return;
+        }
+
+        // Delete any leftover files (old thumbs, WebP variants)
+        foreach ($remaining as $file) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+
+            @unlink($absDir . '/' . $file);
+        }
+
+        // Remove the now-empty directory
+        $remaining = @scandir($absDir);
+
+        if ($remaining !== false && \count($remaining) <= 2) {
+            Folder::delete($absDir);
+        }
     }
 
     /**

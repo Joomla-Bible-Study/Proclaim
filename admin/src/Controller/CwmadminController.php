@@ -1464,6 +1464,91 @@ class CwmadminController extends FormController
     }
 
     /**
+     * Get count of recoverable bare-ID image folders XHR
+     *
+     * Returns per-type count of numeric-only folders in images/biblestudy/{type}/
+     * that contain image files but whose DB records have empty image fields.
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function getRecoveryCountsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $counts = CwmImageMigration::getRecoveryCounts();
+            echo json_encode($counts, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'studies' => 0, 'teachers' => 0, 'series' => 0, 'total' => 0,
+                'error'   => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Recover bare-ID image folders XHR - processes a batch per type
+     *
+     * Migrates images from numeric-only folders to proper alias-ID folders,
+     * updates DB columns, and cleans up the old folders.
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function recoverBareIdFoldersXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $input    = $app->getInput();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $type  = $input->getCmd('type', 'studies');
+        $limit = $input->getInt('limit', 10);
+
+        try {
+            $result = CwmImageMigration::recoverBareIdFolders($type, $limit);
+            echo json_encode($result, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'recovered'    => 0,
+                'skipped'      => 0,
+                'errors'       => 0,
+                'remaining'    => 0,
+                'errorDetails' => [$e->getMessage()],
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
      * Delete legacy image folders/files XHR
      *
      * Accepts an array of relative folder paths and deletes the image

@@ -253,6 +253,13 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             return;
         }
 
+        // Skip XHR task endpoints — these are programmatic batch operations (Image Tools, etc.)
+        $task = $input->getCmd('task', '');
+
+        if (str_ends_with($task, 'XHR')) {
+            return;
+        }
+
         $params = $this->getAdminParams();
         $max    = (int) ($params['rate_limit_max'] ?? self::DEFAULT_RATE_LIMIT_MAX);
         $window = (int) ($params['rate_limit_window'] ?? self::DEFAULT_RATE_LIMIT_WINDOW);

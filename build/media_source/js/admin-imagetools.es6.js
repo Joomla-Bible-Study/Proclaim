@@ -669,6 +669,119 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // ---- Recover Bare-ID Folders ----
+  let recoveryTotals = {studies: 0, teachers: 0, series: 0, total: 0};
+  loadRecoveryCounts();
+
+  function loadRecoveryCounts() {
+    fetch(`index.php?option=com_proclaim&task=cwmadmin.getRecoveryCountsXHR&${token}=1`)
+      .then(r => r.json())
+      .then(data => {
+        recoveryTotals = data;
+
+        if (data.total === 0) {
+          document.getElementById('recovery-counts').innerHTML =
+            `<div class="alert alert-success mb-0"><i class="icon-checkmark me-1" aria-hidden="true"></i>${strings.recoverNone}</div>`;
+          document.getElementById('btn-start-recovery').disabled = true;
+        } else {
+          const items = [];
+          if (data.studies > 0) items.push(`<li>${strings.recoverCountMessages.replace('%s', data.studies)}</li>`);
+          if (data.teachers > 0) items.push(`<li>${strings.recoverCountTeachers.replace('%s', data.teachers)}</li>`);
+          if (data.series > 0) items.push(`<li>${strings.recoverCountSeries.replace('%s', data.series)}</li>`);
+          document.getElementById('recovery-counts').innerHTML =
+            `<ul class="list-unstyled mb-0">${items.join('')}</ul>
+             <div class="mt-2 fw-bold">${strings.total}: ${data.total}</div>`;
+          document.getElementById('btn-start-recovery').disabled = false;
+        }
+      })
+      .catch(() => {
+        document.getElementById('recovery-counts').innerHTML =
+          `<span class="text-danger">${strings.errorLoading}</span>`;
+      });
+  }
+
+  document.getElementById('btn-start-recovery').addEventListener('click', function () {
+    this.disabled = true;
+    activeOperation = 'recovery';
+    setOperationRunning(true);
+    const progressEl = document.getElementById('recovery-progress');
+    const barEl = progressEl.querySelector('.progress-bar');
+    const statusEl = document.getElementById('recovery-status');
+    progressEl.style.display = 'block';
+    barEl.classList.add('progress-bar-striped', 'progress-bar-animated');
+
+    const types = ['studies', 'teachers', 'series'];
+    let typeIndex = 0;
+    let totalRecovered = 0;
+    let totalErrors = 0;
+    let totalSkipped = 0;
+    const grandTotal = recoveryTotals.total;
+
+    function updateBar() {
+      const pct = grandTotal > 0 ? Math.min(100, Math.round(((totalRecovered + totalErrors) / grandTotal) * 100)) : 0;
+      barEl.style.width = `${pct}%`;
+      barEl.textContent = `${pct}%`;
+    }
+
+    function recoverType() {
+      if (typeIndex >= types.length) {
+        activeOperation = null;
+        setOperationRunning(false);
+        barEl.classList.remove('progress-bar-striped', 'progress-bar-animated');
+        barEl.style.width = '100%';
+        barEl.textContent = '100%';
+        let msg = `<span class="text-success">${strings.recoverComplete} ${totalRecovered} ${strings.foldersRecovered}</span>`;
+        if (totalSkipped > 0) {
+          msg += ` <span class="text-muted">(${totalSkipped} skipped — no DB record)</span>`;
+        }
+        if (totalErrors > 0) {
+          msg += ` <span class="text-warning">(${totalErrors} ${strings.migrationErrors})</span>`;
+        }
+        statusEl.innerHTML = msg;
+        loadRecoveryCounts();
+        loadMigrationCounts();
+        return;
+      }
+
+      if (recoveryTotals[types[typeIndex]] === 0) {
+        typeIndex++;
+        recoverType();
+        return;
+      }
+
+      statusEl.innerHTML = `${strings.recovering} ${types[typeIndex]}...`;
+      recoverBatch(types[typeIndex]);
+    }
+
+    function recoverBatch(type) {
+      fetch(`index.php?option=com_proclaim&task=cwmadmin.recoverBareIdFoldersXHR&${token}=1&type=${type}&limit=10`)
+        .then(r => r.json())
+        .then(data => {
+          totalRecovered += data.recovered;
+          totalErrors += data.errors;
+          totalSkipped += data.skipped;
+          updateBar();
+          statusEl.innerHTML = `${strings.recovering} ${types[typeIndex]}... <strong>${totalRecovered}</strong> / ${grandTotal}`;
+
+          // Stop if remaining folders exist but none were recovered in this batch —
+          // the remaining folders are all failing/skipping and would loop forever.
+          if (data.remaining > 0 && data.recovered > 0) {
+            recoverBatch(type);
+          } else {
+            typeIndex++;
+            recoverType();
+          }
+        })
+        .catch(() => {
+          activeOperation = null;
+          setOperationRunning(false);
+          statusEl.innerHTML = `<span class="text-danger">${strings.migrationError}</span>`;
+        });
+    }
+
+    recoverType();
+  });
+
   // ---- Legacy Files Report ----
   document.getElementById('btn-scan-legacy').addEventListener('click', function () {
     const btn = this;
