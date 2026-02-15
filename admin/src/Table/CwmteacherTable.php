@@ -151,6 +151,31 @@ class CwmteacherTable extends Table
             throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_TEACHER_NAME_REQUIRED'));
         }
 
+        // Check for duplicate alias (case-insensitive)
+        try {
+            $db = $this->getDatabase();
+        } catch (\Throwable) {
+            $db = null;
+        }
+
+        if (!empty($this->alias) && $db !== null) {
+            $query = $db->getQuery(true);
+            $query->select($db->quoteName('id'))
+                ->from($db->quoteName('#__bsms_teachers'))
+                ->where('LOWER(' . $db->quoteName('alias') . ') = LOWER(' . $db->quote($this->alias) . ')');
+
+            // Exclude self on edit
+            if (!empty($this->id)) {
+                $query->where($db->quoteName('id') . ' != ' . (int) $this->id);
+            }
+
+            $db->setQuery($query);
+
+            if ($db->loadResult()) {
+                throw new \UnexpectedValueException(Text::_('JBS_TCH_DUPLICATE'));
+            }
+        }
+
         // Auto-prepend https:// to URL fields missing a schema
         foreach (['website', 'facebooklink', 'twitterlink', 'bloglink', 'link1', 'link2', 'link3'] as $field) {
             if (!empty($this->$field) && !preg_match('#^[a-z][a-z0-9+\-.]*://#i', $this->$field)) {

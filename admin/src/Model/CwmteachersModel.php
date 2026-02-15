@@ -46,8 +46,6 @@ class CwmteachersModel extends ListModel
                 'teacher.id',
                 'title',
                 'teacher.title',
-                'catid',
-                'teacher.catid',
                 'access',
                 'teacher.access',
                 'access_level',
@@ -55,15 +53,12 @@ class CwmteachersModel extends ListModel
                 'teacher.published',
                 'ordering',
                 'teacher.ordering',
-                'teahername',
+                'teachername',
                 'teacher.teachername',
                 'alias',
                 'teacher.alias',
                 'language',
                 'teacher.language',
-                'access',
-                'teacher.access',
-                'access_level',
             ];
         }
 

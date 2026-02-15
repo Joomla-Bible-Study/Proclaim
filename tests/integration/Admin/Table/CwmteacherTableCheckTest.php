@@ -51,4 +51,35 @@ class CwmteacherTableCheckTest extends IntegrationTestCase
         $this->expectException(\UnexpectedValueException::class);
         $this->table->check();
     }
+
+    public function testCheckPassesWithUniqueAlias(): void
+    {
+        $this->table->teachername = 'Unique Teacher';
+        $this->table->alias       = 'unique-teacher-test-xyz';
+        $this->assertTrue($this->table->check());
+    }
+
+    public function testCheckAutoPrependsHttpsToUrls(): void
+    {
+        $this->table->teachername = 'Test Teacher';
+        $this->table->website     = 'www.example.com';
+        $this->table->check();
+        $this->assertSame('https://www.example.com', $this->table->website);
+    }
+
+    public function testCheckPreservesExistingHttpsUrls(): void
+    {
+        $this->table->teachername = 'Test Teacher';
+        $this->table->website     = 'https://www.example.com';
+        $this->table->check();
+        $this->assertSame('https://www.example.com', $this->table->website);
+    }
+
+    public function testCheckPreservesExistingHttpUrls(): void
+    {
+        $this->table->teachername = 'Test Teacher';
+        $this->table->website     = 'http://www.example.com';
+        $this->table->check();
+        $this->assertSame('http://www.example.com', $this->table->website);
+    }
 }

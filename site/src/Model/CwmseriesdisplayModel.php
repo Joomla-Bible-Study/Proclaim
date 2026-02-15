@@ -71,8 +71,8 @@ class CwmseriesdisplayModel extends ItemModel
             // Join over teachers
             $query->select(
                 $db->quoteName(
-                    ['t.id', 't.teachername', 't.title', 't.thumb', 't.thumbh', 't.thumbw', 't.teacher_thumbnail'],
-                    ['tid', null, 'teachertitle', null, null, null, null]
+                    ['t.id', 't.teachername', 't.title', 't.teacher_thumbnail'],
+                    ['tid', null, 'teachertitle', null]
                 )
             );
             $query->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON ' . $db->quoteName('se.teacher') . ' = ' . $db->quoteName('t.id'));
@@ -164,9 +164,7 @@ class CwmseriesdisplayModel extends ItemModel
         $query->select(
             $db->quoteName('teacher.teachername', 'teachername') . ', ' .
             $db->quoteName('teacher.title', 'teachertitle') . ', ' .
-            $db->quoteName('teacher.teacher_thumbnail', 'thumb') . ', ' .
-            $db->quoteName('teacher.thumbh') . ', ' .
-            $db->quoteName('teacher.thumbw')
+            $db->quoteName('teacher.teacher_thumbnail', 'thumb')
         );
         $query->join('LEFT', $db->quoteName('#__bsms_teachers', 'teacher') . ' ON ' . $db->quoteName('teacher.id') . ' = ' . $db->quoteName('study.teacher_id'));
 

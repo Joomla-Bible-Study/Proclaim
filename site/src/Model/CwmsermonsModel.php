@@ -709,8 +709,7 @@ class CwmsermonsModel extends ListModel
         $query->select(
             $db->quoteName('teacher.teachername', 'teachername') . ', '
             . $db->quoteName('teacher.title', 'title') . ', '
-            . $db->quoteName('teacher.teacher_thumbnail', 'thumb') . ', '
-            . $db->quoteName('teacher.thumbh') . ', ' . $db->quoteName('teacher.thumbw')
+            . $db->quoteName('teacher.teacher_thumbnail', 'thumb')
         );
         $query->join(
             'LEFT',

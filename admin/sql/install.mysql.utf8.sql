@@ -493,14 +493,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers`
     `website`           TEXT,
     `information`       TEXT,
     `image`             TEXT,
-    `imageh`            TEXT,
-    `imagew`            TEXT,
-    `thumb`             TEXT,
-    `thumbw`            TEXT,
-    `thumbh`            TEXT,
     `short`             TEXT,
     `ordering`          INT(11)                                          NOT NULL DEFAULT '0',
-    `catid`             INT(3)                                                    DEFAULT '1',
     `list_show`         TINYINT(1)                                       NOT NULL DEFAULT '1',
     `published`         TINYINT(3)                                       NOT NULL DEFAULT '1',
     `asset_id`          INT(10) UNSIGNED                                 NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
@@ -518,7 +512,6 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers`
     `contact`           INT(11)                                                   DEFAULT NULL,
     `address`           MEDIUMTEXT,
     `landing_show`      INT(3)                                                    DEFAULT NULL,
-    `address1`          MEDIUMTEXT,
     `created`           DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
     `created_by`        INT(10) UNSIGNED                                 NOT NULL DEFAULT '0',
     `created_by_alias`  VARCHAR(255)                                     NOT NULL DEFAULT '',
@@ -527,6 +520,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers`
     `checked_out`       INT(10) UNSIGNED                                 NOT NULL DEFAULT 0,
     `checked_out_time`  DATETIME                                                  DEFAULT NULL,
     PRIMARY KEY (`id`),
+    UNIQUE KEY `idx_alias` (`alias`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`),
     KEY `idx_checkout` (`checked_out`),
@@ -843,18 +837,18 @@ VALUES (3, 1, 114, 7594, 1),
 -- ------------------------------------------------------------
 
 INSERT IGNORE INTO `#__bsms_teachers` (`id`, `teacher_image`, `teacher_thumbnail`, `teachername`, `alias`, `title`,
-                                       `phone`, `email`, `website`, `information`, `image`, `imageh`, `imagew`, `thumb`,
-                                       `thumbw`, `thumbh`, `short`, `ordering`, `catid`, `list_show`, `published`,
+                                       `phone`, `email`, `website`, `information`, `image`,
+                                       `short`, `ordering`, `list_show`, `published`,
                                        `asset_id`, `access`, `language`, `facebooklink`, `twitterlink`, `bloglink`,
                                        `link1`, `linklabel1`, `link2`, `linklabel2`, `link3`, `linklabel3`, `contact`,
-                                       `address`, `landing_show`, `address1`)
+                                       `address`, `landing_show`)
 VALUES (1, '', '', 'Billy Sunday', X'62696C6C792D73756E646179', 'Pastor', '555-555-5555', 'billy@sunday.com',
         'https://billysunday.com',
         'William Ashley Sunday was an American athlete who after being a popular outfielder in baseballs National League during the 1880s became the most celebrated and influential American evangelist during the first two decades of the 20th century. ',
-        'media/com_proclaim/images/billy_sunday11.jpg', '276', '197', 'media/com_proclaim/images/images.jpg', '101',
-        '141', 'Billy Sunday: 1862-1935', 0, 1, 1, 1, 7489, 1, '*', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        'media/com_proclaim/images/billy_sunday11.jpg',
+        'Billy Sunday: 1862-1935', 0, 1, 1, 7489, 1, '*', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL,
-        NULL, '', 1, '');
+        NULL, '', 1);
 
 -- Dump of table #__bsms_templatatecode
 

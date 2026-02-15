@@ -292,8 +292,7 @@ class Cwmpagebuilder
         $query->select(
             $db->quoteName('teacher.teachername', 'teachername') . ', '
             . $db->quoteName('teacher.title', 'teachertitle') . ', '
-            . $db->quoteName('teacher.thumb') . ', ' . $db->quoteName('teacher.thumbh') . ', '
-            . $db->quoteName('teacher.thumbw')
+            . $db->quoteName('teacher.teacher_thumbnail', 'thumb')
         );
         $query->join(
             'LEFT',

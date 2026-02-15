@@ -109,9 +109,8 @@ class CwmsermonModel extends FormModel
                     $db->quoteName('t.id', 'tid') . ', '
                     . $db->quoteName('t.teachername', 'teachername') . ', '
                     . $db->quoteName('t.title', 'teachertitle') . ', '
-                    . $db->quoteName('t.image', 'teacher_image') . ', ' . $db->quoteName('t.imagew') . ', ' . $db->quoteName('t.imageh') . ', '
-                    . $db->quoteName('t.teacher_thumbnail', 'thumb') . ', '
-                    . $db->quoteName('t.thumbw') . ', ' . $db->quoteName('t.thumbh')
+                    . $db->quoteName('t.image', 'teacher_image') . ', '
+                    . $db->quoteName('t.teacher_thumbnail', 'thumb')
                 );
 
                 $query->join(

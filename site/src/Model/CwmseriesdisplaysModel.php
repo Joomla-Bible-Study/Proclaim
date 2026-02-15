@@ -359,8 +359,7 @@ class CwmseriesdisplaysModel extends ListModel
         $query->from($db->quoteName('#__bsms_series', 'se'));
         $query->select(
             $db->quoteName('t.id', 'tid') . ', ' . $db->quoteName('t.teachername') . ', '
-            . $db->quoteName('t.title', 'teachertitle') . ', ' . $db->quoteName('t.thumb') . ', '
-            . $db->quoteName('t.thumbh') . ', ' . $db->quoteName('t.thumbw') . ', '
+            . $db->quoteName('t.title', 'teachertitle') . ', '
             . $db->quoteName('t.teacher_thumbnail')
         );
         $query->join(
