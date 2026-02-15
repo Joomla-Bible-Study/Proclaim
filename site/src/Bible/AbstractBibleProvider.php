@@ -332,8 +332,8 @@ abstract class AbstractBibleProvider implements BibleProviderInterface
     protected function httpGet(string $url, int $timeout = 10): ?string
     {
         $this->lastErrorTransient = false;
-        $http = HttpFactory::getHttp();
-        $host = strtok($url, '?');
+        $http                     = HttpFactory::getHttp();
+        $host                     = strtok($url, '?');
 
         for ($attempt = 1; $attempt <= self::HTTP_MAX_RETRIES; $attempt++) {
             // Exponential backoff: 0s, 2s, 4s

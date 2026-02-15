@@ -346,9 +346,9 @@ class CwmImageMigration
 
         if (str_contains($basename, 'thumb_')) {
             // Try the exact extension first, then alternate extensions
-            $strippedBase = str_replace('thumb_', '', $basename);
-            $strippedName = pathinfo($strippedBase, PATHINFO_FILENAME);
-            $dirName      = \dirname($cleanPath);
+            $strippedBase  = str_replace('thumb_', '', $basename);
+            $strippedName  = pathinfo($strippedBase, PATHINFO_FILENAME);
+            $dirName       = \dirname($cleanPath);
             $foundOriginal = false;
 
             // Try original name as-is, then alternate extensions (thumb may be .jpg but original .png)
@@ -958,7 +958,7 @@ class CwmImageMigration
      */
     public static function recoverBareIdFolders(string $type, int $limit = 10): array
     {
-        $cfg = self::REGEN_TYPE_CONFIG[$type] ?? null;
+        $cfg    = self::REGEN_TYPE_CONFIG[$type] ?? null;
         $result = [
             'recovered'    => 0,
             'skipped'      => 0,
@@ -1048,8 +1048,8 @@ class CwmImageMigration
                 continue;
             }
 
-            $title = $row->studytitle ?? $row->teachername ?? $row->series_text ?? '';
-            $alias = $row->alias ?? '';
+            $title       = $row->studytitle ?? $row->teachername ?? $row->series_text ?? '';
+            $alias       = $row->alias ?? '';
             $folderAlias = $alias ?: ApplicationHelper::stringURLSafe($title ?: $type);
             $newFolder   = 'images/biblestudy/' . $type . '/' . $folderAlias . '-' . $id;
 

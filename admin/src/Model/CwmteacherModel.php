@@ -23,7 +23,6 @@ use CWM\Component\Proclaim\Administrator\Table\CwmteacherTable;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -172,32 +171,8 @@ class CwmteacherModel extends AdminModel
      */
     public function validate($form, $data, $group = null): bool|array
     {
-        $app   = Factory::getApplication();
-        $input = $app->getInput();
-
         if (!$this->getCurrentUser()->authorise('core.admin', 'com_proclaim') && isset($data['rules'])) {
             unset($data['rules']);
-        }
-
-        // Check for duplicates on new teachers
-        if (
-            (!isset($data['id']) || (int) $data['id'] === 0) && $data['alias'] === null &&
-            \in_array(
-                $input->get('task'),
-                ['apply', 'save', 'save2new']
-            )
-        ) {
-            if ((int) $app->get('unicodeslugs') === 1) {
-                $data['alias'] = OutputFilter::stringUrlUnicodeSlug($data['teachername']);
-            } else {
-                $data['alias'] = OutputFilter::stringURLSafe($data['teachername']);
-            }
-
-            $table = $this->getTable();
-
-            if ($table->load(['alias' => $data['alias']])) {
-                throw new \RuntimeException(Text::_('JBS_TCH_DUPLICATE'));
-            }
         }
 
         return parent::validate($form, $data, $group);
@@ -471,4 +446,5 @@ class CwmteacherModel extends AdminModel
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');
     }
+
 }
