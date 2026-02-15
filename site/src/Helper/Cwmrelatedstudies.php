@@ -101,7 +101,7 @@ class Cwmrelatedstudies
             return false;
         }
 
-        return $this->buildCards($db, $studyId, $limit);
+        return $this->buildCards($db, $studyId, $limit, $params);
     }
 
     /**
@@ -383,7 +383,7 @@ class Cwmrelatedstudies
      * @throws \Exception
      * @since   10.1.0
      */
-    private function buildCards(object $db, int $studyId, int $limit): string
+    private function buildCards(object $db, int $studyId, int $limit, Registry $params): string
     {
         // Sort by score desc
         arsort($this->scores);
@@ -478,7 +478,25 @@ class Cwmrelatedstudies
             }
 
             if (!empty($study->studydate)) {
-                $html .= '<span>' . HTMLHelper::_('date', $study->studydate, Text::_('DATE_FORMAT_LC4')) . '</span>';
+                $dateFormat = (int) $params->get('date_format', 0);
+                $customDate = $params->get('custom_date_format', '');
+
+                if (!empty($customDate)) {
+                    $formattedDate = HTMLHelper::_('date', $study->studydate, $customDate, null);
+                } else {
+                    $formattedDate = match ($dateFormat) {
+                        1 => HTMLHelper::_('date', $study->studydate, 'M J', null),
+                        2 => HTMLHelper::_('date', $study->studydate, 'n/j/Y', null),
+                        4 => HTMLHelper::_('date', $study->studydate, 'l, F j, Y', null),
+                        5 => HTMLHelper::_('date', $study->studydate, 'F j, Y', null),
+                        6 => HTMLHelper::_('date', $study->studydate, 'j F Y', null),
+                        7 => date('j/n/Y', strtotime($study->studydate)),
+                        8 => HTMLHelper::_('date', $study->studydate, Text::_('DATE_FORMAT_LC'), null),
+                        default => HTMLHelper::_('date', $study->studydate, 'M j, Y', null),
+                    };
+                }
+
+                $html .= '<span>' . $formattedDate . '</span>';
             }
 
             $html .= '</p>';
