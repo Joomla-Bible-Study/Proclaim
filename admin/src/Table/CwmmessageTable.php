@@ -342,6 +342,15 @@ class CwmmessageTable extends Table
     public ?string $thumbnailm = null;
 
     /**
+     * Full-size original image path
+     *
+     * @var string|null
+     *
+     * @since 10.1.0
+     */
+    public ?string $image = null;
+
+    /**
      * ThumbNail Height
      *
      * @var int|null

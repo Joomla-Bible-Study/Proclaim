@@ -1392,6 +1392,77 @@ class CwmadminController extends FormController
     }
 
     /**
+     * Get thumbnail regeneration count XHR
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function getThumbRegenCountXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['error' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $counts = CwmImageMigration::getThumbRegenerationCounts();
+            echo json_encode($counts, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode(['total' => 0, 'error' => $e->getMessage()], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Regenerate thumbnails batch XHR
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function regenerateThumbsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $input    = $app->getInput();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['error' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $limit  = $input->getInt('limit', 10);
+        $offset = $input->getInt('offset', 0);
+
+        try {
+            $result = CwmImageMigration::regenerateThumbnails($limit, $offset);
+        } catch (\Throwable $e) {
+            $result = ['processed' => 0, 'errors' => 0, 'remaining' => 0, 'error' => $e->getMessage()];
+        }
+
+        echo json_encode($result, JSON_THROW_ON_ERROR);
+
+        $app->close();
+    }
+
+    /**
      * Delete legacy image folders/files XHR
      *
      * Accepts an array of relative folder paths and deletes the image

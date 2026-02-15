@@ -391,6 +391,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies`
     `series_id`           INT(3)                                                    DEFAULT '0',
     `studytext`           TEXT,
     `thumbnailm`          TEXT,
+    `image`               TEXT                                                      DEFAULT NULL,
     `thumbhm`             INT(11)                                                   DEFAULT NULL,
     `thumbwm`             INT(11)                                                   DEFAULT NULL,
     `params`              TEXT,

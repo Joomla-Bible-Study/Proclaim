@@ -546,6 +546,108 @@ document.addEventListener('DOMContentLoaded', () => {
     convertType();
   });
 
+  // ---- Thumbnail Regeneration ----
+  loadThumbRegenCounts();
+
+  function loadThumbRegenCounts() {
+    fetch(`index.php?option=com_proclaim&task=cwmadmin.getThumbRegenCountXHR&${token}=1`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.total === 0) {
+          document.getElementById('thumb-regen-counts').innerHTML =
+            `<div class="alert alert-info mb-0">No messages with images found.</div>`;
+        } else {
+          document.getElementById('thumb-regen-counts').innerHTML =
+            `<div class="mb-0">${strings.thumbRegenCount.replace('%s', data.total)}</div>`;
+          document.getElementById('btn-start-thumb-regen').disabled = false;
+        }
+      })
+      .catch(() => {
+        document.getElementById('thumb-regen-counts').innerHTML =
+          `<span class="text-danger">${strings.errorLoading}</span>`;
+      });
+  }
+
+  document.getElementById('btn-start-thumb-regen').addEventListener('click', function () {
+    this.disabled = true;
+    activeOperation = 'thumbregen';
+    setOperationRunning(true);
+    const progressEl = document.getElementById('thumb-regen-progress');
+    const barEl = progressEl.querySelector('.progress-bar');
+    const statusEl = document.getElementById('thumb-regen-status');
+    progressEl.style.display = 'block';
+    barEl.classList.add('progress-bar-striped', 'progress-bar-animated');
+
+    let totalProcessed = 0;
+    let totalErrors = 0;
+    let offset = 0;
+    // Re-fetch the count for accurate progress tracking
+    fetch(`index.php?option=com_proclaim&task=cwmadmin.getThumbRegenCountXHR&${token}=1`)
+      .then(r => r.json())
+      .then(data => {
+        const grandTotal = data.total;
+        processThumbBatch(grandTotal);
+      });
+
+    function updateBar(grandTotal) {
+      const pct = grandTotal > 0 ? Math.min(100, Math.round(((totalProcessed + totalErrors) / grandTotal) * 100)) : 0;
+      barEl.style.width = `${pct}%`;
+      barEl.textContent = `${pct}%`;
+    }
+
+    function processThumbBatch(grandTotal) {
+      statusEl.innerHTML = `${strings.regenerating}... <strong>${totalProcessed}</strong> / ${grandTotal}`;
+
+      fetch(`index.php?option=com_proclaim&task=cwmadmin.regenerateThumbsXHR&${token}=1&limit=10&offset=${offset}`)
+        .then(r => {
+          if (!r.ok) throw new Error(`HTTP ${r.status}: ${r.statusText}`);
+          return r.text();
+        })
+        .then(text => {
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch (e) {
+            throw new Error(`Invalid response: ${text.substring(0, 200)}`);
+          }
+
+          if (data.error) {
+            statusEl.innerHTML = `<span class="text-danger">Error: ${data.error}</span>`;
+            activeOperation = null;
+            setOperationRunning(false);
+            return;
+          }
+
+          totalProcessed += data.processed;
+          totalErrors += (data.errors || 0);
+          offset += data.processed + (data.errors || 0);
+          updateBar(grandTotal);
+          statusEl.innerHTML = `${strings.regenerating}... <strong>${totalProcessed}</strong> / ${grandTotal}`;
+
+          if (data.remaining > 0) {
+            processThumbBatch(grandTotal);
+          } else {
+            activeOperation = null;
+            setOperationRunning(false);
+            barEl.classList.remove('progress-bar-striped', 'progress-bar-animated');
+            barEl.style.width = '100%';
+            barEl.textContent = '100%';
+            let msg = `<span class="text-success">${strings.thumbRegenComplete} ${totalProcessed} processed.</span>`;
+            if (totalErrors > 0) {
+              msg += ` <span class="text-warning">(${totalErrors} errors)</span>`;
+            }
+            statusEl.innerHTML = msg;
+            loadThumbRegenCounts();
+          }
+        })
+        .catch(err => {
+          activeOperation = null;
+          setOperationRunning(false);
+          statusEl.innerHTML = `<span class="text-danger">Error: ${err.message || err}</span>`;
+        });
+    }
+  });
+
   // ---- Legacy Files Report ----
   document.getElementById('btn-scan-legacy').addEventListener('click', function () {
     const btn = this;

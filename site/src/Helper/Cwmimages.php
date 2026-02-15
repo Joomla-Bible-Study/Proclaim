@@ -197,6 +197,55 @@ class Cwmimages
     }
 
     /**
+     * Get the full-size original study image from a thumbnail path.
+     *
+     * Strips the `thumb_` prefix from the filename to locate the original.
+     * Falls back to the thumbnail if the original doesn't exist.
+     *
+     * @param   string  $thumbnailPath  The thumbnail path (may contain thumb_ prefix)
+     *
+     * @return object Image object from getImagePath()
+     *
+     * @since  10.1.0
+     */
+    public static function getStudyOriginal(string $thumbnailPath): object
+    {
+        if (empty($thumbnailPath)) {
+            return self::getImagePath('');
+        }
+
+        $dir      = \dirname($thumbnailPath);
+        $basename = basename($thumbnailPath);
+
+        // Strip thumb_ prefix to get original filename
+        if (str_starts_with($basename, 'thumb_')) {
+            $originalBasename = substr($basename, 6);
+            $originalPath     = $dir . '/' . $originalBasename;
+
+            // Use original if it exists on disk
+            $fullPath = JPATH_ROOT . '/' . $originalPath;
+
+            if (is_file($fullPath)) {
+                return self::getImagePath($originalPath);
+            }
+
+            // Thumbnail is always .jpg but original may have a different extension
+            $nameWithoutExt = pathinfo($originalBasename, PATHINFO_FILENAME);
+
+            foreach (['png', 'webp', 'gif', 'jpeg'] as $ext) {
+                $altPath = $dir . '/' . $nameWithoutExt . '.' . $ext;
+
+                if (is_file(JPATH_ROOT . '/' . $altPath)) {
+                    return self::getImagePath($altPath);
+                }
+            }
+        }
+
+        // Fallback to whatever was passed (the thumbnail itself)
+        return self::getImagePath($thumbnailPath);
+    }
+
+    /**
      * Get StudiesImage Folder
      *
      * @return string
