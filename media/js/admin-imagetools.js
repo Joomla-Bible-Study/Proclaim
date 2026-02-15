@@ -713,6 +713,7 @@
       let totalRecovered = 0;
       let totalErrors = 0;
       let totalSkipped = 0;
+      const allErrorDetails = [];
       const grandTotal = recoveryTotals.total;
 
       function updateBar() {
@@ -736,6 +737,11 @@
             msg += ` <span class="text-warning">(${totalErrors} ${strings.migrationErrors})</span>`;
           }
           statusEl.innerHTML = msg;
+          // Show error details if any
+          if (allErrorDetails.length > 0) {
+            const detailHtml = allErrorDetails.map(d => `<li class="small text-danger">${d}</li>`).join('');
+            statusEl.innerHTML += `<ul class="mt-2 mb-0">${detailHtml}</ul>`;
+          }
           loadRecoveryCounts();
           loadMigrationCounts();
           return;
@@ -758,6 +764,9 @@
             totalRecovered += data.recovered;
             totalErrors += data.errors;
             totalSkipped += data.skipped;
+            if (data.errorDetails && data.errorDetails.length > 0) {
+              allErrorDetails.push(...data.errorDetails);
+            }
             updateBar();
             statusEl.innerHTML = `${strings.recovering} ${types[typeIndex]}... <strong>${totalRecovered}</strong> / ${grandTotal}`;
 
