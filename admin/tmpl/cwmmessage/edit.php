@@ -264,6 +264,7 @@ echo Route::_(
                 <?php echo $this->form->renderField('image', null, $imageDefault); ?>
                 <?php echo $this->form->renderField('nooverlaysimplemode', 'params'); ?>
                 <?php echo $this->form->renderField('teacher_id', null, $teacher_id); ?>
+                <?php echo $this->form->renderField('teachers'); ?>
 
                 <?php echo $this->form->renderField('series_id', null, $series_id); ?>
 
