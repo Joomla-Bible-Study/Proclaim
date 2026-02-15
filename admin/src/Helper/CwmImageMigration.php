@@ -1017,21 +1017,23 @@ class CwmImageMigration
             // Look up the DB record
             $query = $db->getQuery(true);
 
+            // Only select the columns needed for folder naming — the source
+            // image comes from the filesystem, not the DB.
             switch ($type) {
                 case 'studies':
-                    $query->select($db->qn(['id', 'studytitle', 'alias', 'thumbnailm', 'image']))
+                    $query->select($db->qn(['id', 'studytitle', 'alias']))
                         ->from($db->qn('#__bsms_studies'))
                         ->where($db->qn('id') . ' = ' . $id);
                     break;
 
                 case 'teachers':
-                    $query->select($db->qn(['id', 'teachername', 'alias', 'teacher_thumbnail', 'teacher_image', 'image']))
+                    $query->select($db->qn(['id', 'teachername', 'alias']))
                         ->from($db->qn('#__bsms_teachers'))
                         ->where($db->qn('id') . ' = ' . $id);
                     break;
 
                 case 'series':
-                    $query->select($db->qn(['id', 'series_text', 'alias', 'series_thumbnail', 'image']))
+                    $query->select($db->qn(['id', 'series_text', 'alias']))
                         ->from($db->qn('#__bsms_series'))
                         ->where($db->qn('id') . ' = ' . $id);
                     break;
