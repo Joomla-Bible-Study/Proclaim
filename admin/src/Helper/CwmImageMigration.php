@@ -890,6 +890,7 @@ class CwmImageMigration
      */
     public static function getRecoveryCounts(): array
     {
+        $db     = Factory::getContainer()->get('DatabaseDriver');
         $counts = ['studies' => 0, 'teachers' => 0, 'series' => 0];
 
         foreach (array_keys(self::REGEN_TYPE_CONFIG) as $type) {
@@ -905,6 +906,14 @@ class CwmImageMigration
                 continue;
             }
 
+            // Load valid IDs for this type so we only count recoverable folders
+            $table = self::REGEN_TYPE_CONFIG[$type]['table'];
+            $query = $db->getQuery(true)
+                ->select($db->qn('id'))
+                ->from($db->qn($table));
+            $db->setQuery($query);
+            $validIds = array_map('intval', $db->loadColumn() ?: []);
+
             foreach ($subDirs as $dirName) {
                 if ($dirName === '.' || $dirName === '..' || !ctype_digit($dirName)) {
                     continue;
@@ -913,6 +922,11 @@ class CwmImageMigration
                 $absDir = $baseDir . '/' . $dirName;
 
                 if (!is_dir($absDir)) {
+                    continue;
+                }
+
+                // Only count if the DB record exists (otherwise it's an orphan, not recoverable)
+                if (!\in_array((int) $dirName, $validIds, true)) {
                     continue;
                 }
 
@@ -1148,15 +1162,18 @@ class CwmImageMigration
      */
     private static function findBestImageInDir(string $absDir): ?string
     {
-        $imageExts = ['jpg', 'jpeg', 'png', 'gif'];
-        $files     = @scandir($absDir);
+        $preferredExts = ['jpg', 'jpeg', 'png', 'gif'];
+        $allExts       = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $files         = @scandir($absDir);
 
         if ($files === false) {
             return null;
         }
 
-        $original  = null;
-        $thumbnail = null;
+        $original     = null;
+        $thumbnail    = null;
+        $webpOriginal = null;
+        $webpThumb    = null;
 
         foreach ($files as $file) {
             if ($file === '.' || $file === '..') {
@@ -1165,18 +1182,30 @@ class CwmImageMigration
 
             $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 
-            if (!\in_array($ext, $imageExts, true)) {
+            if (!\in_array($ext, $allExts, true)) {
                 continue;
             }
 
-            if (str_starts_with($file, 'thumb_')) {
-                $thumbnail = $absDir . '/' . $file;
+            $isThumb = str_starts_with($file, 'thumb_');
+            $isWebp  = $ext === 'webp';
+
+            if ($isThumb) {
+                if ($isWebp) {
+                    $webpThumb = $absDir . '/' . $file;
+                } else {
+                    $thumbnail = $absDir . '/' . $file;
+                }
             } else {
-                $original = $absDir . '/' . $file;
+                if ($isWebp) {
+                    $webpOriginal = $absDir . '/' . $file;
+                } else {
+                    $original = $absDir . '/' . $file;
+                }
             }
         }
 
-        return $original ?? $thumbnail;
+        // Prefer non-webp originals, then non-webp thumbs, then webp as fallback
+        return $original ?? $thumbnail ?? $webpOriginal ?? $webpThumb;
     }
 
     /**
@@ -1196,7 +1225,7 @@ class CwmImageMigration
             return;
         }
 
-        // Delete any leftover files (old thumbs, WebP variants)
+        // Delete any leftover files (old thumbs, WebP variants, index.html)
         foreach ($remaining as $file) {
             if ($file === '.' || $file === '..') {
                 continue;
@@ -1206,9 +1235,46 @@ class CwmImageMigration
         }
 
         // Remove the now-empty directory
+        self::removeDirIfEmpty($absDir);
+    }
+
+    /**
+     * Remove a directory if it contains only index.html or is truly empty
+     *
+     * Joomla creates index.html files in directories to prevent directory listing.
+     * After all real files are deleted, this stub should be cleaned up too.
+     *
+     * @param   string  $absDir  Absolute path to the directory
+     *
+     * @return  void
+     *
+     * @since 10.1.0
+     */
+    private static function removeDirIfEmpty(string $absDir): void
+    {
+        if (!is_dir($absDir)) {
+            return;
+        }
+
         $remaining = @scandir($absDir);
 
-        if ($remaining !== false && \count($remaining) <= 2) {
+        if ($remaining === false) {
+            return;
+        }
+
+        // Filter out . and ..
+        $real = array_filter($remaining, fn ($f) => $f !== '.' && $f !== '..');
+
+        // Empty directory — remove it
+        if (\count($real) === 0) {
+            Folder::delete($absDir);
+
+            return;
+        }
+
+        // Only index.html (Joomla directory listing guard) — delete it and remove dir
+        if ($real === ['index.html'] || array_values($real) === ['index.html']) {
+            @unlink($absDir . '/index.html');
             Folder::delete($absDir);
         }
     }
@@ -1516,13 +1582,8 @@ class CwmImageMigration
 
             $deleted += $folderDeleted;
 
-            // If the folder is now empty (no files, no subdirs), remove it
-            $remaining = @scandir($absDir);
-
-            if ($remaining !== false && \count($remaining) <= 2) {
-                // Only . and .. remain — safe to remove
-                Folder::delete($absDir);
-            }
+            // Remove index.html and the folder itself if nothing else remains
+            self::removeDirIfEmpty($absDir);
         }
 
         return ['deleted' => $deleted, 'errors' => $errors];
