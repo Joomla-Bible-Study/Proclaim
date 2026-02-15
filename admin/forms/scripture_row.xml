@@ -6,6 +6,7 @@
            class="scripture-autocomplete"
            size="40" filter="trim"/>
     <field name="bible_version" type="BibleVersion"
+           servable_only="true"
            label="JBS_STY_BIBLE_VERSION"
            description="JBS_STY_BIBLE_VERSION_DESC"
            class="bible-version-searchable"/>

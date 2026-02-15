@@ -65,6 +65,16 @@ class GetBibleProvider extends AbstractBibleProvider
             );
         }
 
+        // Guard: gatekeeper may slip through with 200 + HTML body
+        if (self::isHtmlResponse($body)) {
+            Log::add('GetBible: HTML gatekeeper response for "' . $apiRef . '" (' . $translation . ')', Log::WARNING, 'com_proclaim.bible');
+
+            return new BiblePassageResult(
+                reference: $reference,
+                translation: $translation
+            );
+        }
+
         $data = json_decode($body, true);
 
         if (!\is_array($data) || empty($data)) {

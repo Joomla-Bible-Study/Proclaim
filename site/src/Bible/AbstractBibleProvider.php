@@ -279,7 +279,48 @@ abstract class AbstractBibleProvider implements BibleProviderInterface
     }
 
     /**
-     * Perform an HTTP GET request.
+     * Maximum number of HTTP retry attempts.
+     *
+     * @var  int
+     * @since  10.1.0
+     */
+    private const HTTP_MAX_RETRIES = 3;
+
+    /**
+     * Whether the last httpGet() failure was a transient (retryable) error.
+     *
+     * Set after each httpGet() call. Callers can inspect this to decide
+     * whether to attempt a fallback or report a permanent failure.
+     *
+     * @var  bool
+     * @since  10.1.0
+     */
+    protected bool $lastErrorTransient = false;
+
+    /**
+     * Detect HTML responses (DDoS gatekeeper pages).
+     *
+     * Some Bible API providers return HTML instead of JSON when under
+     * DDoS protection. This detects that condition.
+     *
+     * @param   string  $body  Response body to check
+     *
+     * @return  bool  True if the body appears to be HTML
+     *
+     * @since  10.1.0
+     */
+    protected static function isHtmlResponse(string $body): bool
+    {
+        $trimmed = ltrim($body);
+
+        return str_starts_with($trimmed, '<!') || str_starts_with(strtolower($trimmed), '<html');
+    }
+
+    /**
+     * Perform an HTTP GET request with retry and backoff.
+     *
+     * Retries on transient errors (429, 503, timeouts, HTML gatekeeper pages).
+     * Non-retryable errors (400, 404) fail immediately.
      *
      * @param   string  $url      The URL to fetch
      * @param   int     $timeout  Timeout in seconds
@@ -290,18 +331,66 @@ abstract class AbstractBibleProvider implements BibleProviderInterface
      */
     protected function httpGet(string $url, int $timeout = 10): ?string
     {
-        try {
-            $http     = HttpFactory::getHttp();
-            $response = $http->get($url, [], $timeout);
+        $this->lastErrorTransient = false;
+        $http = HttpFactory::getHttp();
+        $host = strtok($url, '?');
+
+        for ($attempt = 1; $attempt <= self::HTTP_MAX_RETRIES; $attempt++) {
+            // Exponential backoff: 0s, 2s, 4s
+            if ($attempt > 1) {
+                $delay = (int) pow(2, $attempt - 1);
+                Log::add(
+                    'Retry ' . ($attempt - 1) . '/' . (self::HTTP_MAX_RETRIES - 1) . ' for ' . $host . ' (waiting ' . $delay . 's)',
+                    Log::WARNING,
+                    'com_proclaim.bible'
+                );
+                sleep($delay);
+            }
+
+            try {
+                $response = $http->get($url, [], $timeout);
+            } catch (\Exception $e) {
+                // Network error / timeout — transient, retry
+                Log::add('HTTP request failed (attempt ' . $attempt . '): ' . $e->getMessage(), Log::WARNING, 'com_proclaim.bible');
+                $this->lastErrorTransient = true;
+
+                continue;
+            }
+
+            // Non-retryable client errors — fail immediately
+            if (\in_array($response->code, [400, 404], true)) {
+                Log::add('HTTP ' . $response->code . ' from ' . $host . ' (not retryable)', Log::WARNING, 'com_proclaim.bible');
+                $this->lastErrorTransient = false;
+
+                return null;
+            }
+
+            // Retryable server errors
+            if (\in_array($response->code, [429, 503], true)) {
+                Log::add('HTTP ' . $response->code . ' from ' . $host . ' (attempt ' . $attempt . ')', Log::WARNING, 'com_proclaim.bible');
+                $this->lastErrorTransient = true;
+
+                continue;
+            }
 
             if ($response->code === 200) {
+                // Detect DDoS gatekeeper HTML pages returned with 200
+                if (self::isHtmlResponse($response->body)) {
+                    Log::add('HTML gatekeeper detected from ' . $host . ' (attempt ' . $attempt . ')', Log::WARNING, 'com_proclaim.bible');
+                    $this->lastErrorTransient = true;
+
+                    continue;
+                }
+
                 return $response->body;
             }
 
-            Log::add('HTTP ' . $response->code . ' from ' . strtok($url, '?'), Log::WARNING, 'com_proclaim.bible');
-        } catch (\Exception $e) {
-            Log::add('HTTP request failed: ' . $e->getMessage(), Log::ERROR, 'com_proclaim.bible');
+            // Other non-200 codes — log and retry
+            Log::add('HTTP ' . $response->code . ' from ' . $host . ' (attempt ' . $attempt . ')', Log::WARNING, 'com_proclaim.bible');
+            $this->lastErrorTransient = true;
         }
+
+        Log::add('All ' . self::HTTP_MAX_RETRIES . ' attempts exhausted for ' . $host, Log::ERROR, 'com_proclaim.bible');
 
         return null;
     }

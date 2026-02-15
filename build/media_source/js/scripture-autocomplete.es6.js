@@ -459,18 +459,33 @@
         select.style.cssText = 'width:100%;max-height:160px;overflow-y:auto;';
 
         /**
-         * Highlight the selected option with an explicit background color.
-         * Native <select> highlighting is invisible in many dark admin themes,
-         * so we paint it ourselves.
+         * Highlight the selected option with explicit colors and a checkmark.
+         * Native <select>/<option> styling is inconsistent across dark admin
+         * themes, so we paint every option explicitly using Bootstrap CSS
+         * variables so the whole list looks uniform.
          */
         function highlightSelected() {
+            const cs = getComputedStyle(document.documentElement);
+            const selectCs = getComputedStyle(select);
+            const activeBg = cs.getPropertyValue('--bs-primary-bg-subtle').trim() || '#cfe2ff';
+            const activeColor = cs.getPropertyValue('--bs-emphasis-color').trim() || '#000';
+            // Read normal colors from the select element itself (inherits the admin theme correctly)
+            const normalBg = selectCs.backgroundColor || '#fff';
+            const normalColor = selectCs.color || '#212529';
+
             for (let i = 0; i < select.options.length; i++) {
+                const original = allOptions[i] ? allOptions[i].text : select.options[i].textContent;
+
                 if (i === select.selectedIndex && select.options[i].value) {
-                    select.options[i].style.backgroundColor = '#0d6efd';
-                    select.options[i].style.color = '#fff';
+                    select.options[i].textContent = '\u2713 ' + original;
+                    select.options[i].style.backgroundColor = activeBg;
+                    select.options[i].style.color = activeColor;
+                    select.options[i].style.fontWeight = '600';
                 } else {
-                    select.options[i].style.backgroundColor = '';
-                    select.options[i].style.color = '';
+                    select.options[i].textContent = '   ' + original;
+                    select.options[i].style.backgroundColor = normalBg;
+                    select.options[i].style.color = normalColor;
+                    select.options[i].style.fontWeight = '';
                 }
             }
         }

@@ -399,6 +399,99 @@ class BibleImporter
     }
 
     /**
+     * Default GetBible translation catalog entries.
+     *
+     * These are re-inserted when the provider is (re-)enabled and the
+     * catalog has been depleted by a previous disable/cleanup.
+     *
+     * @var  array<array{0: string, 1: string, 2: string, 3: int, 4: int}>
+     *       [abbreviation, name, language, bundled, estimated_size]
+     * @since  10.1.0
+     */
+    private const GETBIBLE_SEED = [
+        ['kjv',          'King James Version',        'en', 1, 4000000],
+        ['akjv',         'American King James Version', 'en', 0, 4000000],
+        ['web',          'World English Bible',       'en', 1, 4300000],
+        ['asv',          'American Standard Version',  'en', 0, 4100000],
+        ['ylt',          "Young's Literal Translation", 'en', 0, 4000000],
+        ['basicenglish', 'Bible in Basic English',     'en', 0, 3500000],
+        ['douayrheims',  'Douay-Rheims Bible',         'en', 0, 4200000],
+        ['wb',           'Webster Bible',              'en', 0, 4000000],
+        ['darby',        'Darby Translation',          'en', 0, 4000000],
+        ['vulgate',      'Vulgata Clementina',         'la', 0, 3800000],
+        ['almeida',      'Almeida Atualizada',         'pt', 0, 4000000],
+        ['luther1545',   'Luther (1545)',              'de', 0, 4200000],
+        ['ls1910',       'Louis Segond 1910',          'fr', 0, 4100000],
+        ['synodal',      'Synodal Translation',        'ru', 0, 4500000],
+        ['valera',       'Reina Valera (1909)',        'es', 0, 4100000],
+        ['karoli',       'Karoli Bible',               'hu', 0, 4000000],
+        ['giovanni',     'Giovanni Diodati Bible',     'it', 0, 4100000],
+        ['cornilescu',   'Cornilescu Bible',           'ro', 0, 3900000],
+        ['korean',       'Korean Bible',               'ko', 0, 3800000],
+        ['cus',          'Chinese Union Simplified',   'zh', 0, 2500000],
+    ];
+
+    /**
+     * Seed the GetBible translation catalog if depleted.
+     *
+     * Called when GetBible is enabled but the catalog has no uninstalled
+     * entries (e.g. after a disable/re-enable cycle). Uses INSERT IGNORE
+     * so existing rows (installed translations) are not overwritten.
+     *
+     * @return  int  Number of rows inserted
+     *
+     * @since  10.1.0
+     */
+    public static function seedGetBibleCatalog(): int
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Check if there are already uninstalled getbible entries — skip if so
+        $query = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_bible_translations'))
+            ->where($db->quoteName('source') . ' = ' . $db->quote('getbible'));
+        $db->setQuery($query);
+        $existing = (int) $db->loadResult();
+
+        // If we already have a reasonable catalog, don't re-seed
+        if ($existing >= \count(self::GETBIBLE_SEED)) {
+            return 0;
+        }
+
+        $inserted = 0;
+
+        foreach (self::GETBIBLE_SEED as [$abbr, $name, $lang, $bundled, $size]) {
+            // Check if row already exists
+            $query = $db->getQuery(true)
+                ->select('COUNT(*)')
+                ->from($db->quoteName('#__bsms_bible_translations'))
+                ->where($db->quoteName('abbreviation') . ' = :abbr')
+                ->bind(':abbr', $abbr);
+            $db->setQuery($query);
+
+            if ((int) $db->loadResult() > 0) {
+                continue;
+            }
+
+            $query = $db->getQuery(true)
+                ->insert($db->quoteName('#__bsms_bible_translations'))
+                ->columns($db->quoteName(['abbreviation', 'name', 'language', 'source', 'installed', 'bundled', 'estimated_size']))
+                ->values(':abbr, :name, :lang, ' . $db->quote('getbible') . ', 0, :bundled, :size')
+                ->bind(':abbr', $abbr)
+                ->bind(':name', $name)
+                ->bind(':lang', $lang)
+                ->bind(':bundled', $bundled, ParameterType::INTEGER)
+                ->bind(':size', $size, ParameterType::INTEGER);
+            $db->setQuery($query);
+            $db->execute();
+            $inserted++;
+        }
+
+        return $inserted;
+    }
+
+    /**
      * Check if a translation is installed (has verses).
      *
      * @param   string  $abbreviation  Translation abbreviation

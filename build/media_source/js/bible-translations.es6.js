@@ -204,8 +204,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    // Only API.Bible gets cleanup on disable — its translations require an online API
+    // and cannot be served locally. GetBible translations CAN be downloaded locally,
+    // so we keep the catalog even when the online provider is disabled.
     attachProviderToggle('jform[params][provider_api_bible]', 'api_bible');
-    attachProviderToggle('jform[params][provider_getbible]', 'getbible');
 
     // --- API.Bible sync button ---
     const syncBtn = document.getElementById('btn-sync-api-bible');

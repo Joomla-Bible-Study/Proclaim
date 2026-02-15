@@ -12,6 +12,7 @@
 namespace CWM\Component\Proclaim\Site\Controller;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Site\Bible\AbstractBibleProvider;
 use CWM\Component\Proclaim\Site\Bible\BibleProviderFactory;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
@@ -73,6 +74,7 @@ class CwmscriptureController extends BaseController
         }
 
         try {
+            AbstractBibleProvider::registerLogger();
             $provider  = BibleProviderFactory::getProviderForTranslation($version, $adminParams);
             $cacheDays = (int) $adminParams->get('scripture_cache_days', 30);
 
@@ -80,18 +82,85 @@ class CwmscriptureController extends BaseController
                 $provider->setCacheTtl($cacheDays * 86400);
             }
 
-            $result = $provider->getPassage($reference, $version);
+            $result    = $provider->getPassage($reference, $version);
+            $transient = ($provider instanceof AbstractBibleProvider) && $provider->lastErrorTransient;
+            $usedVersion = $version;
 
-            echo json_encode([
-                'success'     => true,
-                'text'        => $result->text ?? '',
-                'copyright'   => $result->copyright ?? '',
-                'translation' => $version,
-            ], JSON_THROW_ON_ERROR);
+            // Fallback 1: try same version via Local provider
+            if (!$result->hasText() && $provider->getName() !== 'local') {
+                try {
+                    $localProvider = BibleProviderFactory::getProvider('local');
+                    $localResult   = $localProvider->getPassage($reference, $version);
+
+                    if ($localResult->hasText()) {
+                        $result    = $localResult;
+                        $transient = false;
+                    }
+                } catch (\Exception $e) {
+                    // Continue to next fallback
+                }
+            }
+
+            // Fallback 2: try admin default version locally
+            if (!$result->hasText()) {
+                $defaultVersion = (string) $adminParams->get('default_bible_version', 'kjv');
+
+                if ($defaultVersion === '') {
+                    $defaultVersion = 'kjv';
+                }
+
+                if ($defaultVersion !== $version) {
+                    try {
+                        $localProvider = BibleProviderFactory::getProvider('local');
+                        $defaultResult = $localProvider->getPassage($reference, $defaultVersion);
+
+                        if ($defaultResult->hasText()) {
+                            $result      = $defaultResult;
+                            $usedVersion = $defaultVersion;
+                            $transient   = false;
+                        }
+                    } catch (\Exception $e) {
+                        // Continue to hard fallback
+                    }
+                }
+            }
+
+            // Fallback 3: hard fallback to KJV (bundled, always auto-downloaded)
+            if (!$result->hasText() && $usedVersion !== 'kjv') {
+                try {
+                    $localProvider = BibleProviderFactory::getProvider('local');
+                    $kjvResult     = $localProvider->getPassage($reference, 'kjv');
+
+                    if ($kjvResult->hasText()) {
+                        $result      = $kjvResult;
+                        $usedVersion = 'kjv';
+                        $transient   = false;
+                    }
+                } catch (\Exception $e) {
+                    // Even KJV failed
+                }
+            }
+
+            if ($result->hasText()) {
+                echo json_encode([
+                    'success'     => true,
+                    'text'        => $result->text,
+                    'copyright'   => $result->copyright,
+                    'translation' => $usedVersion,
+                    'fallback'    => $usedVersion !== $version,
+                ], JSON_THROW_ON_ERROR);
+            } else {
+                echo json_encode([
+                    'success'   => false,
+                    'retryable' => $transient,
+                    'message'   => 'No passage text returned',
+                ], JSON_THROW_ON_ERROR);
+            }
         } catch (\Exception $e) {
             echo json_encode([
-                'success' => false,
-                'message' => 'Failed to fetch passage',
+                'success'   => false,
+                'retryable' => true,
+                'message'   => 'Failed to fetch passage',
             ], JSON_THROW_ON_ERROR);
         }
 

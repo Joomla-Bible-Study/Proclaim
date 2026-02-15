@@ -144,25 +144,35 @@
     color: var(--bs-body-color, #212529);
     font-size: 0.8125rem;
     line-height: 1.4;
-    transition: background-color 0.1s;
+    border-left: 3px solid transparent;
+    transition: background-color 0.1s, border-color 0.1s;
 }
 
 .scripture-dropdown-item:hover,
 .scripture-dropdown-item:focus {
-    background-color: var(--bs-primary-bg-subtle, #cfe2ff);
+    background-color: var(--bs-tertiary-bg, #f8f9fa);
     outline: none;
 }
 
 .scripture-dropdown-item.active {
-    background-color: var(--bs-primary, #0d6efd);
-    color: #fff;
-    font-weight: 500;
+    background-color: var(--bs-primary-bg-subtle, #cfe2ff);
+    border-left-color: var(--bs-primary, #0d6efd);
+    color: var(--bs-emphasis-color, #000);
+    font-weight: 600;
+}
+
+.scripture-dropdown-item.active::before {
+    content: "\f00c";
+    font-family: "Font Awesome 6 Free", "Font Awesome 5 Free", FontAwesome;
+    font-weight: 900;
+    font-size: 0.65rem;
+    margin-right: 0.4rem;
+    color: var(--bs-primary, #0d6efd);
 }
 
 .scripture-dropdown-item.active:hover,
 .scripture-dropdown-item.active:focus {
-    background-color: var(--bs-primary, #0d6efd);
-    filter: brightness(0.9);
+    background-color: var(--bs-secondary-bg, #e9ecef);
 }
 
 /* Footer area - fixed at bottom of dropdown */

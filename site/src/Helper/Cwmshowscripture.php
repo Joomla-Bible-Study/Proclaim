@@ -76,6 +76,10 @@ class Cwmshowscripture
         }
 
         // Resolve which provider can serve this version
+        $result           = null;
+        $provider         = null;
+        $requestedVersion = $version;
+
         try {
             $provider = BibleProviderFactory::getProviderForTranslation($version, $adminParams);
 
@@ -89,12 +93,82 @@ class Cwmshowscripture
             $result = $provider->getPassage($reference, $version);
         } catch (\Exception $e) {
             Log::add('Provider error for "' . $reference . '" (' . $version . '): ' . $e->getMessage(), Log::ERROR, 'com_proclaim.bible');
-
-            return '';
         }
 
-        if (!$result->hasText()) {
-            Log::add('No text returned for "' . $reference . '" (' . $version . ') via ' . ($provider->getName() ?? 'unknown'), Log::WARNING, 'com_proclaim.bible');
+        // Fallback 1: try the same version via Local provider
+        if (($result === null || !$result->hasText()) && ($provider === null || $provider->getName() !== 'local')) {
+            try {
+                $localProvider = BibleProviderFactory::getProvider('local');
+                $localResult   = $localProvider->getPassage($reference, $version);
+
+                if ($localResult->hasText()) {
+                    Log::add('Fallback to local provider for "' . $reference . '" (' . $version . ')', Log::INFO, 'com_proclaim.bible');
+                    $result = $localResult;
+                }
+            } catch (\Exception $e) {
+                // Local fallback failed too — try default version next
+            }
+        }
+
+        // Fallback 2: try the admin default bible version locally
+        if ($result === null || !$result->hasText()) {
+            $defaultVersion = (string) $adminParams->get('default_bible_version', 'kjv');
+
+            if ($defaultVersion === '') {
+                $defaultVersion = 'kjv';
+            }
+
+            if ($defaultVersion !== $version) {
+                try {
+                    $localProvider = BibleProviderFactory::getProvider('local');
+                    $defaultResult = $localProvider->getPassage($reference, $defaultVersion);
+
+                    if ($defaultResult->hasText()) {
+                        Log::add(
+                            'Fallback to default version "' . $defaultVersion . '" for "' . $reference . '" (requested: ' . $version . ')',
+                            Log::INFO,
+                            'com_proclaim.bible'
+                        );
+                        $result  = $defaultResult;
+                        $version = $defaultVersion;
+                    }
+                } catch (\Exception $e) {
+                    // Default version fallback failed too
+                }
+            }
+        }
+
+        // Fallback 3: hard fallback to KJV (bundled, always auto-downloaded)
+        if ($result === null || !$result->hasText()) {
+            $coreDefault = 'kjv';
+
+            if ($coreDefault !== $version) {
+                try {
+                    $localProvider = BibleProviderFactory::getProvider('local');
+                    $kjvResult     = $localProvider->getPassage($reference, $coreDefault);
+
+                    if ($kjvResult->hasText()) {
+                        Log::add(
+                            'Hard fallback to KJV for "' . $reference . '" (requested: ' . $requestedVersion . ')',
+                            Log::WARNING,
+                            'com_proclaim.bible'
+                        );
+                        $result  = $kjvResult;
+                        $version = $coreDefault;
+                    }
+                } catch (\Exception $e) {
+                    // Even KJV failed — nothing we can do
+                }
+            }
+        }
+
+        if ($result === null || !$result->hasText()) {
+            Log::add('No text returned for "' . $reference . '" (' . $requestedVersion . ') — all fallbacks exhausted', Log::WARNING, 'com_proclaim.bible');
+
+            // Return "temporarily unavailable" notice with retry button
+            if ($choice > 0) {
+                return $this->renderUnavailableNotice($row, $reference, $requestedVersion);
+            }
 
             return '';
         }
@@ -106,7 +180,16 @@ class Cwmshowscripture
             $switcherHtml = $this->renderVersionSwitcher($row, $version, $adminParams);
         }
 
-        $output = $this->renderTextPassage($result, $choice, $params, $switcherHtml);
+        $output = '';
+
+        // Show fallback notice if serving a different version than requested
+        if ($version !== $requestedVersion) {
+            $output .= '<div class="scripture-fallback-notice text-muted small mb-1">'
+                . '<em>' . Text::sprintf('JBS_CMN_SCRIPTURE_FALLBACK', strtoupper($version)) . '</em>'
+                . '</div>';
+        }
+
+        $output .= $this->renderTextPassage($result, $choice, $params, $switcherHtml);
 
         return $output;
     }
@@ -468,6 +551,47 @@ class Cwmshowscripture
         }
 
         return $reference;
+    }
+
+    /**
+     * Render a "temporarily unavailable" notice with a retry button.
+     *
+     * @param   object  $row        Message row
+     * @param   string  $reference  Scripture reference
+     * @param   string  $version    Bible version abbreviation
+     *
+     * @return  string  HTML notice
+     *
+     * @since  10.1.0
+     */
+    private function renderUnavailableNotice(object $row, string $reference, string $version): string
+    {
+        $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+        $wa->useScript('com_proclaim.scripture-switcher');
+        $wa->useStyle('com_proclaim.scripture-text');
+
+        $ajaxUrl = Route::_('index.php?option=com_proclaim&task=cwmscripture.getPassageXHR&format=raw', false);
+        Factory::getApplication()->getDocument()->addScriptOptions('com_proclaim.scripture', [
+            'ajaxUrl' => $ajaxUrl,
+        ]);
+
+        $messageId = (int) ($row->id ?? 0);
+        $uid       = uniqid('retry_', true);
+
+        $html  = '<div class="scripture-container scripture-unavailable" '
+            . 'data-reference="' . htmlspecialchars($reference) . '" '
+            . 'data-version="' . htmlspecialchars($version) . '" '
+            . 'data-message-id="' . $messageId . '">';
+        $html .= '<div class="scripture-text">';
+        $html .= '<div class="scripture-body">';
+        $html .= '<p class="text-muted"><em>' . Text::_('JBS_CMN_SCRIPTURE_UNAVAILABLE') . '</em></p>';
+        $html .= '<button type="button" class="btn btn-sm btn-outline-secondary scripture-retry-btn" '
+            . 'id="' . $uid . '">'
+            . '<i class="fas fa-redo" aria-hidden="true"></i> '
+            . Text::_('JBS_CMN_SCRIPTURE_RETRY') . '</button>';
+        $html .= '</div></div></div>';
+
+        return $html;
     }
 
     /**

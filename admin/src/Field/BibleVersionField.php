@@ -15,6 +15,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -56,7 +57,7 @@ class BibleVersionField extends ListField
         'niv'  => 'New International Version',
         'nasb' => 'New American Standard Bible',
         'nkjv' => 'New King James Version',
-        'asvd' => 'American Standard Version',
+        'asv'  => 'American Standard Version',
         'ylt'  => "Young's Literal Translation",
         'hcsb' => 'Holman Christian Standard Bible',
         'amp'  => 'Amplified Bible',
@@ -147,9 +148,13 @@ class BibleVersionField extends ListField
      * Get the field options.
      *
      * Aggregates translations from all providers into a single deduplicated
-     * list. Shows ALL versions from all languages, sorted with the user's
+     * list. Shows versions from all languages, sorted with the user's
      * language first, then all other languages alphabetically. Each option
      * includes a language label for cross-language searching.
+     *
+     * When `servable_only="true"` is set in the XML, only translations
+     * that can actually be served are shown (locally installed +
+     * translations from enabled providers).
      *
      * @return  array  Array of option objects
      *
@@ -160,6 +165,31 @@ class BibleVersionField extends ListField
         // Collected versions keyed by abbreviation to deduplicate
         $versions = [];
 
+        $servableOnly = ((string) ($this->element['servable_only'] ?? '')) === 'true';
+
+        // Determine which online provider sources are enabled
+        $enabledSources = [];
+
+        if ($servableOnly) {
+            try {
+                $admin       = Cwmparams::getAdmin();
+                $adminParams = $admin->params ?? new Registry();
+            } catch (\Exception $e) {
+                $adminParams = new Registry();
+            }
+
+            $gdprMode = (int) $adminParams->get('gdpr_mode', 0) === 1;
+
+            if (!$gdprMode && (int) $adminParams->get('provider_getbible', 1) === 1) {
+                $enabledSources[] = 'getbible';
+            }
+
+            if (!$gdprMode && (int) $adminParams->get('provider_api_bible', 0) === 1
+                && !empty($adminParams->get('api_bible_api_key', ''))) {
+                $enabledSources[] = 'api_bible';
+            }
+        }
+
         // Detect current site/admin language to prioritize native-language versions
         $currentLang = 'en';
 
@@ -169,14 +199,13 @@ class BibleVersionField extends ListField
             // Default to English
         }
 
-        // Load ALL translations from database — no provider filtering so users
-        // can select any version from any language
+        // Load translations from database
         $languages = [];
 
         try {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
-                ->select($db->quoteName(['abbreviation', 'name', 'language']))
+                ->select($db->quoteName(['abbreviation', 'name', 'language', 'installed', 'source']))
                 ->from($db->quoteName('#__bsms_bible_translations'))
                 ->order($db->quoteName('language') . ' ASC, ' . $db->quoteName('name') . ' ASC');
             $db->setQuery($query);
@@ -184,7 +213,13 @@ class BibleVersionField extends ListField
 
             if (!empty($translations)) {
                 foreach ($translations as $row) {
-                    $abbr = $row->abbreviation;
+                    $abbr      = $row->abbreviation;
+                    $installed = (int) ($row->installed ?? 0) === 1;
+
+                    // In servable_only mode, skip translations that can't be served
+                    if ($servableOnly && !$installed && !\in_array($row->source ?? '', $enabledSources, true)) {
+                        continue;
+                    }
 
                     // Only add if not already collected (first occurrence wins)
                     if (!isset($versions[$abbr])) {
@@ -200,12 +235,12 @@ class BibleVersionField extends ListField
         // If no translations found at all, provide common defaults
         if (empty($versions)) {
             $versions = [
-                'kjv'  => 'King James Version',
-                'web'  => 'World English Bible',
-                'asvd' => 'American Standard Version',
-                'ylt'  => "Young's Literal Translation",
+                'kjv' => 'King James Version',
+                'web' => 'World English Bible',
+                'asv' => 'American Standard Version',
+                'ylt' => "Young's Literal Translation",
             ];
-            $languages = ['kjv' => 'en', 'web' => 'en', 'asvd' => 'en', 'ylt' => 'en'];
+            $languages = ['kjv' => 'en', 'web' => 'en', 'asv' => 'en', 'ylt' => 'en'];
         }
 
         // Group by language, user's language first

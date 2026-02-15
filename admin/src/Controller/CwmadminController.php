@@ -2084,6 +2084,21 @@ class CwmadminController extends FormController
         }
 
         try {
+            // Auto-seed GetBible catalog if provider is enabled but catalog is depleted
+            try {
+                $admin       = Cwmparams::getAdmin();
+                $adminParams = $admin->params ?? new Registry();
+            } catch (\Exception $e) {
+                $adminParams = new Registry();
+            }
+
+            $getbibleEnabled = (int) $adminParams->get('provider_getbible', 1) === 1
+                && (int) $adminParams->get('gdpr_mode', 0) !== 1;
+
+            if ($getbibleEnabled) {
+                BibleImporter::seedGetBibleCatalog();
+            }
+
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
 
             $query = $db->getQuery(true)

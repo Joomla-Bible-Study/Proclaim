@@ -18,7 +18,116 @@ document.addEventListener('DOMContentLoaded', () => {
     const isDebug = Joomla.getOptions('system.debug') || false;
 
     /**
-     * Fetch a new passage via AJAX and update the DOM.
+     * Maximum number of automatic retries for transient failures.
+     * @type {number}
+     */
+    const MAX_AUTO_RETRIES = 2;
+
+    /**
+     * Delay between automatic retries in milliseconds.
+     * @type {number}
+     */
+    const RETRY_DELAY_MS = 3000;
+
+    /**
+     * Sleep helper for retry delays.
+     *
+     * @param {number} ms  Milliseconds to wait
+     * @returns {Promise<void>}
+     */
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    /**
+     * Perform a single AJAX call to the scripture endpoint.
+     *
+     * @param {string} reference  Scripture reference
+     * @param {string} version    Bible version abbreviation
+     * @returns {Promise<object>}  Parsed JSON response
+     */
+    const doFetch = async (reference, version) => {
+        const token = Joomla.getOptions('csrf.token') || '';
+        const url = ajaxBaseUrl
+            + `&reference=${encodeURIComponent(reference)}`
+            + `&version=${encodeURIComponent(version)}`
+            + `&${token}=1`;
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            return { success: false, retryable: true, message: `HTTP ${response.status}` };
+        }
+
+        const text = await response.text();
+
+        // Guard against HTML responses (Joomla redirected or gatekeeper)
+        if (text.trimStart().startsWith('<!') || text.trimStart().startsWith('<html')) {
+            return { success: false, retryable: true, message: 'HTML gatekeeper response' };
+        }
+
+        return JSON.parse(text);
+    };
+
+    /**
+     * Show a "Try Again" button inside a scripture body element.
+     *
+     * @param {HTMLElement} body       The .scripture-body element
+     * @param {string}      reference  Scripture reference
+     * @param {string}      version    Bible version abbreviation
+     * @param {HTMLElement|null} copyright  The .scripture-copyright element
+     */
+    const showRetryButton = (body, reference, version, copyright) => {
+        body.innerHTML = '<p class="text-muted"><em>'
+            + (Joomla.Text ? Joomla.Text._('JBS_CMN_SCRIPTURE_UNAVAILABLE') || 'Scripture text temporarily unavailable' : 'Scripture text temporarily unavailable')
+            + '</em></p>'
+            + '<button type="button" class="btn btn-sm btn-outline-secondary scripture-retry-btn">'
+            + '<i class="fas fa-redo" aria-hidden="true"></i> '
+            + (Joomla.Text ? Joomla.Text._('JBS_CMN_SCRIPTURE_RETRY') || 'Try Again' : 'Try Again')
+            + '</button>';
+
+        if (copyright) {
+            copyright.style.display = 'none';
+        }
+
+        // Attach one-time click handler for manual retry
+        const btn = body.querySelector('.scripture-retry-btn');
+
+        if (btn) {
+            btn.addEventListener('click', async () => {
+                btn.disabled = true;
+                body.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+
+                try {
+                    const data = await doFetch(reference, version);
+
+                    if (data.success && data.text) {
+                        let fallbackHtml = '';
+
+                        if (data.fallback && data.translation) {
+                            const fallbackMsg = (Joomla.Text
+                                ? Joomla.Text._('JBS_CMN_SCRIPTURE_FALLBACK') || 'Showing in %s (requested version unavailable)'
+                                : 'Showing in %s (requested version unavailable)')
+                                .replace('%s', data.translation.toUpperCase());
+                            fallbackHtml = `<div class="scripture-fallback-notice text-muted small mb-1"><em>${fallbackMsg}</em></div>`;
+                        }
+
+                        body.innerHTML = fallbackHtml + data.text;
+
+                        if (copyright) {
+                            copyright.textContent = data.copyright || '';
+                            copyright.style.display = data.copyright ? '' : 'none';
+                        }
+                    } else {
+                        showRetryButton(body, reference, version, copyright);
+                    }
+                } catch (error) {
+                    showRetryButton(body, reference, version, copyright);
+                }
+            });
+        }
+    };
+
+    /**
+     * Fetch a new passage via AJAX with automatic retry on transient failures.
      *
      * @param {HTMLElement} switcher  The .scripture-version-switcher container
      * @param {string}      version   Bible version abbreviation
@@ -70,58 +179,80 @@ document.addEventListener('DOMContentLoaded', () => {
         const originalText = body.innerHTML;
         body.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
 
-        try {
-            const token = Joomla.getOptions('csrf.token') || '';
-            const url = ajaxBaseUrl
-                + `&reference=${encodeURIComponent(reference)}`
-                + `&version=${encodeURIComponent(version)}`
-                + `&${token}=1`;
-
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
-            }
-
-            const text = await response.text();
-
-            // Guard against HTML responses (Joomla redirected to a page)
-            if (text.trimStart().startsWith('<!') || text.trimStart().startsWith('<html')) {
-                throw new Error('Received HTML instead of JSON — endpoint not reachable');
-            }
-
-            const data = JSON.parse(text);
-
-            if (data.success && data.text) {
-                body.innerHTML = data.text;
-
-                if (copyright) {
-                    copyright.textContent = data.copyright || '';
-                    copyright.style.display = data.copyright ? '' : 'none';
+        for (let attempt = 0; attempt <= MAX_AUTO_RETRIES; attempt++) {
+            try {
+                if (attempt > 0) {
+                    body.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> '
+                        + '<em class="text-muted">'
+                        + (Joomla.Text ? Joomla.Text._('JBS_CMN_SCRIPTURE_SERVICE_BUSY') || 'Bible service is temporarily busy. Retrying...' : 'Bible service is temporarily busy. Retrying...')
+                        + '</em>';
+                    await sleep(RETRY_DELAY_MS);
                 }
-            } else if (data.success && data.isIframe && data.iframeUrl) {
-                body.innerHTML = `<iframe src="${data.iframeUrl}" width="100%" height="400" `
-                    + `style="border:0;" title="Bible Passage"></iframe>`;
 
-                if (copyright) {
-                    copyright.style.display = 'none';
+                const data = await doFetch(reference, version);
+
+                if (data.success && data.text) {
+                    // Show fallback notice if a different version was served
+                    let fallbackHtml = '';
+
+                    if (data.fallback && data.translation) {
+                        const fallbackMsg = (Joomla.Text
+                            ? Joomla.Text._('JBS_CMN_SCRIPTURE_FALLBACK') || 'Showing in %s (requested version unavailable)'
+                            : 'Showing in %s (requested version unavailable)')
+                            .replace('%s', data.translation.toUpperCase());
+                        fallbackHtml = `<div class="scripture-fallback-notice text-muted small mb-1"><em>${fallbackMsg}</em></div>`;
+                    }
+
+                    body.innerHTML = fallbackHtml + data.text;
+
+                    if (copyright) {
+                        copyright.textContent = data.copyright || '';
+                        copyright.style.display = data.copyright ? '' : 'none';
+                    }
+
+                    return;
+                } else if (data.success && data.isIframe && data.iframeUrl) {
+                    body.innerHTML = `<iframe src="${data.iframeUrl}" width="100%" height="400" `
+                        + `style="border:0;" title="Bible Passage"></iframe>`;
+
+                    if (copyright) {
+                        copyright.style.display = 'none';
+                    }
+
+                    return;
                 }
-            } else {
-                body.innerHTML = originalText;
 
-                if (isDebug && data.message) {
-                    // eslint-disable-next-line no-console
-                    console.warn('[Proclaim] Scripture fetch error:', data.message);
+                // Not successful — check if retryable
+                if (!data.retryable || attempt >= MAX_AUTO_RETRIES) {
+                    if (isDebug && data.message) {
+                        // eslint-disable-next-line no-console
+                        console.warn('[Proclaim] Scripture fetch error:', data.message);
+                    }
+
+                    showRetryButton(body, reference, version, copyright);
+
+                    return;
                 }
-            }
-        } catch (error) {
-            body.innerHTML = originalText;
 
-            if (isDebug) {
-                // eslint-disable-next-line no-console
-                console.error('[Proclaim] Scripture fetch failed:', error.message || error);
+                // Retryable — continue loop
+            } catch (error) {
+                if (attempt >= MAX_AUTO_RETRIES) {
+                    if (isDebug) {
+                        // eslint-disable-next-line no-console
+                        console.error('[Proclaim] Scripture fetch failed:', error.message || error);
+                    }
+
+                    showRetryButton(body, reference, version, copyright);
+
+                    return;
+                }
+
+                // Network error — retry
             }
         }
+
+        // Should not reach here, but safety fallback
+        body.innerHTML = originalText;
     };
 
     /**
@@ -335,47 +466,126 @@ document.addEventListener('DOMContentLoaded', () => {
             body.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
             select.disabled = true;
 
-            try {
-                const token = Joomla.getOptions('csrf.token') || '';
-                const url = ajaxBaseUrl
-                    + `&reference=${encodeURIComponent(reference)}`
-                    + `&version=${encodeURIComponent(version)}`
-                    + `&${token}=1`;
+            for (let attempt = 0; attempt <= MAX_AUTO_RETRIES; attempt++) {
+                try {
+                    if (attempt > 0) {
+                        body.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> '
+                            + '<em class="text-muted">'
+                            + (Joomla.Text ? Joomla.Text._('JBS_CMN_SCRIPTURE_SERVICE_BUSY') || 'Bible service is temporarily busy. Retrying...' : 'Bible service is temporarily busy. Retrying...')
+                            + '</em>';
+                        await sleep(RETRY_DELAY_MS);
+                    }
 
-                const response = await fetch(url);
+                    const data = await doFetch(reference, version);
 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
+                    if (data.success && data.text) {
+                        // Show fallback notice if a different version was served
+                        let fallbackHtml = '';
+
+                        if (data.fallback && data.translation) {
+                            const fallbackMsg = (Joomla.Text
+                                ? Joomla.Text._('JBS_CMN_SCRIPTURE_FALLBACK') || 'Showing in %s (requested version unavailable)'
+                                : 'Showing in %s (requested version unavailable)')
+                                .replace('%s', data.translation.toUpperCase());
+                            fallbackHtml = `<div class="scripture-fallback-notice text-muted small mb-1"><em>${fallbackMsg}</em></div>`;
+                        }
+
+                        body.innerHTML = fallbackHtml + data.text;
+
+                        if (copyright) {
+                            copyright.textContent = data.copyright || '';
+                            copyright.style.display = data.copyright ? '' : 'none';
+                        }
+
+                        select.disabled = false;
+
+                        return;
+                    } else if (data.success && data.isIframe && data.iframeUrl) {
+                        body.innerHTML = `<iframe src="${data.iframeUrl}" width="100%" height="400" `
+                            + `style="border:0;" title="Bible Passage"></iframe>`;
+
+                        if (copyright) {
+                            copyright.style.display = 'none';
+                        }
+
+                        select.disabled = false;
+
+                        return;
+                    }
+
+                    if (!data.retryable || attempt >= MAX_AUTO_RETRIES) {
+                        showRetryButton(body, reference, version, copyright);
+                        select.disabled = false;
+
+                        return;
+                    }
+                } catch (error) {
+                    if (attempt >= MAX_AUTO_RETRIES) {
+                        if (isDebug) {
+                            // eslint-disable-next-line no-console
+                            console.error('[Proclaim] Scripture fetch failed:', error.message || error);
+                        }
+
+                        showRetryButton(body, reference, version, copyright);
+                        select.disabled = false;
+
+                        return;
+                    }
                 }
+            }
 
-                const data = await response.json();
+            body.innerHTML = originalText;
+            select.disabled = false;
+        });
+    });
+
+    // -- Handle PHP-rendered "Try Again" buttons (from initial page load failures) --
+    document.querySelectorAll('.scripture-unavailable .scripture-retry-btn').forEach((btn) => {
+        const container = btn.closest('.scripture-unavailable');
+
+        if (!container || !ajaxBaseUrl) {
+            return;
+        }
+
+        const reference = container.dataset.reference;
+        const version = container.dataset.version;
+        const body = container.querySelector('.scripture-body');
+        const copyright = container.querySelector('.scripture-copyright');
+
+        if (!body || !reference) {
+            return;
+        }
+
+        btn.addEventListener('click', async () => {
+            btn.disabled = true;
+            body.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+
+            try {
+                const data = await doFetch(reference, version);
 
                 if (data.success && data.text) {
-                    body.innerHTML = data.text;
+                    let fallbackHtml = '';
+
+                    if (data.fallback && data.translation) {
+                        const fallbackMsg = (Joomla.Text
+                            ? Joomla.Text._('JBS_CMN_SCRIPTURE_FALLBACK') || 'Showing in %s (requested version unavailable)'
+                            : 'Showing in %s (requested version unavailable)')
+                            .replace('%s', data.translation.toUpperCase());
+                        fallbackHtml = `<div class="scripture-fallback-notice text-muted small mb-1"><em>${fallbackMsg}</em></div>`;
+                    }
+
+                    body.innerHTML = fallbackHtml + data.text;
+                    container.classList.remove('scripture-unavailable');
 
                     if (copyright) {
                         copyright.textContent = data.copyright || '';
                         copyright.style.display = data.copyright ? '' : 'none';
                     }
-                } else if (data.success && data.isIframe && data.iframeUrl) {
-                    body.innerHTML = `<iframe src="${data.iframeUrl}" width="100%" height="400" `
-                        + `style="border:0;" title="Bible Passage"></iframe>`;
-
-                    if (copyright) {
-                        copyright.style.display = 'none';
-                    }
                 } else {
-                    body.innerHTML = originalText;
+                    showRetryButton(body, reference, version, copyright);
                 }
             } catch (error) {
-                body.innerHTML = originalText;
-
-                if (isDebug) {
-                    // eslint-disable-next-line no-console
-                    console.error('[Proclaim] Scripture fetch failed:', error.message || error);
-                }
-            } finally {
-                select.disabled = false;
+                showRetryButton(body, reference, version, copyright);
             }
         });
     });
