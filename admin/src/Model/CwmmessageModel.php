@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use CWM\Component\Proclaim\Administrator\Helper\ScriptureReference;
@@ -301,6 +302,29 @@ class CwmmessageModel extends AdminModel
             }
 
             $this->data->scriptures = $subformData;
+
+            // Load teachers from junction table for the subform
+            $teachers = CwmstudyteacherHelper::getTeachersForStudy((int) $this->data->id);
+
+            if (!empty($teachers)) {
+                $teacherSubform = [];
+
+                foreach ($teachers as $t) {
+                    $teacherSubform[] = [
+                        'teacher_id' => (int) $t->teacher_id,
+                        'role'       => $t->role ?? 'speaker',
+                    ];
+                }
+
+                $this->data->teachers = $teacherSubform;
+            } elseif (!empty($this->data->teacher_id) && (int) $this->data->teacher_id > 0) {
+                // Fallback: build from legacy flat column for pre-migration records
+                $this->data->teachers = [
+                    ['teacher_id' => (int) $this->data->teacher_id, 'role' => 'speaker'],
+                ];
+            } else {
+                $this->data->teachers = [];
+            }
         }
 
         return $this->data;
@@ -324,9 +348,12 @@ class CwmmessageModel extends AdminModel
         $input  = $app->getInput();
         $image  = HTMLHelper::cleanImageURL((string)$data['image']);
 
-        // Extract scriptures subform data before table binding strips it
+        // Extract subform data before table binding strips it
         $scripturesData = $data['scriptures'] ?? [];
         unset($data['scriptures']);
+
+        $teachersData = $data['teachers'] ?? [];
+        unset($data['teachers']);
 
         $data['image'] = $image->url;
         $this->cleanCache();
@@ -356,6 +383,7 @@ class CwmmessageModel extends AdminModel
             }
 
             $this->saveScriptures($scripturesData);
+            $this->saveTeachers($teachersData);
 
             return true;
         }
@@ -367,6 +395,7 @@ class CwmmessageModel extends AdminModel
             }
 
             $this->saveScriptures($scripturesData);
+            $this->saveTeachers($teachersData);
 
             return true;
         }
@@ -396,6 +425,7 @@ class CwmmessageModel extends AdminModel
             }
 
             $this->saveScriptures($scripturesData);
+            $this->saveTeachers($teachersData);
 
             return true;
         }
@@ -428,6 +458,7 @@ class CwmmessageModel extends AdminModel
 
             if ($isNew) {
                 $this->saveScriptures($scripturesData);
+                $this->saveTeachers($teachersData);
 
                 return true;
             }
@@ -437,6 +468,7 @@ class CwmmessageModel extends AdminModel
             }
 
             $this->saveScriptures($scripturesData);
+            $this->saveTeachers($teachersData);
 
             return true;
         }
@@ -450,6 +482,7 @@ class CwmmessageModel extends AdminModel
         }
 
         $this->saveScriptures($scripturesData);
+        $this->saveTeachers($teachersData);
 
         return true;
     }
@@ -505,6 +538,27 @@ class CwmmessageModel extends AdminModel
 
         CwmscriptureHelper::saveScriptures($studyId, $scriptures);
         CwmscriptureHelper::syncLegacyColumns($studyId, $scriptures);
+    }
+
+    /**
+     * Save teachers from the subform data to the junction table.
+     *
+     * @param   array  $teachersData  Subform array of ['teacher_id' => int, 'role' => string]
+     *
+     * @return  void
+     *
+     * @since  10.1.0
+     */
+    private function saveTeachers(array $teachersData): void
+    {
+        $studyId = (int) $this->getState($this->getName() . '.id');
+
+        if ($studyId <= 0) {
+            return;
+        }
+
+        CwmstudyteacherHelper::saveTeachers($studyId, $teachersData);
+        CwmstudyteacherHelper::syncLegacyColumn($studyId, $teachersData);
     }
 
     /**
@@ -663,19 +717,26 @@ class CwmmessageModel extends AdminModel
     protected function batchTeacher($value, $pks, $contexts): bool
     {
         // Set the variables
-        $user = Factory::getApplication()->getIdentity();
+        $user      = Factory::getApplication()->getIdentity();
         /** @var CwmmessageTable $table */
-        $table = $this->getTable();
+        $table     = $this->getTable();
+        $teacherId = (int) $value;
 
         foreach ($pks as $pk) {
             if ($user->authorise('core.edit', $contexts[$pk])) {
                 $table->reset();
                 $table->load($pk);
-                $table->teacher_id = (int)$value;
+                $table->teacher_id = $teacherId;
 
                 if (!$table->store()) {
                     throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
+
+                // Update junction table to match
+                $teachers = $teacherId > 0
+                    ? [['teacher_id' => $teacherId, 'role' => 'speaker']]
+                    : [];
+                CwmstudyteacherHelper::saveTeachers((int) $pk, $teachers);
             } else {
                 throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
             }

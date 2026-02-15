@@ -449,7 +449,11 @@ class Cwmpodcast
             ->leftJoin($db->quoteName('#__bsms_series', 'se') . ' ON ' . $db->quoteName('se.id') . ' = ' . $db->quoteName('s.series_id'))
             ->leftJoin($db->quoteName('#__bsms_servers', 'sr') . ' ON ' . $db->quoteName('sr.id') . ' = ' . $db->quoteName('mf.server_id'))
             ->leftJoin($db->quoteName('#__bsms_books', 'b') . ' ON ' . $db->quoteName('b.booknumber') . ' = ' . $db->quoteName('s.booknumber'))
-            ->leftJoin($db->quoteName('#__bsms_teachers', 't') . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('s.teacher_id'))
+            ->leftJoin($db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+                . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
+                . ' AND ' . $db->quoteName('stj.ordering') . ' = 0')
+            ->leftJoin($db->quoteName('#__bsms_teachers', 't') . ' ON '
+                . $db->quoteName('t.id') . ' = ' . $db->quoteName('stj.teacher_id'))
             ->leftJoin($db->quoteName('#__bsms_podcast', 'p') . ' ON FIND_IN_SET(' . $db->quoteName('p.id') . ', ' . $db->quoteName('mf.podcast_id') . ')')
             ->where('FIND_IN_SET(' . $id . ', ' . $db->quoteName('mf.podcast_id') . ')')
             ->where($db->quoteName('mf.published') . ' = 1')

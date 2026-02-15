@@ -189,7 +189,7 @@ class HtmlView extends BaseHtmlView
         $this->item = $item;
 
         $whereitem  = (int)$item->id;
-        $wherefield = 'study.teacher_id';
+        $wherefield = 'teacher';
         $limit      = $params->get('studies', '20');
         $order      = 'DESC';
         $template   = $input->get('template');

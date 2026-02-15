@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Site\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
@@ -705,7 +706,7 @@ class CwmsermonsModel extends ListModel
             . $db->quoteName('messageType.id') . ' = ' . $db->quoteName('study.messagetype')
         );
 
-        // Join over Teachers
+        // Join over Teachers (primary teacher via junction table, ordering=0)
         $query->select(
             $db->quoteName('teacher.teachername', 'teachername') . ', '
             . $db->quoteName('teacher.title', 'title') . ', '
@@ -713,8 +714,14 @@ class CwmsermonsModel extends ListModel
         );
         $query->join(
             'LEFT',
+            $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+            . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('study.id')
+            . ' AND ' . $db->quoteName('stj.ordering') . ' = 0'
+        );
+        $query->join(
+            'LEFT',
             $db->quoteName('#__bsms_teachers', 'teacher') . ' ON '
-            . $db->quoteName('teacher.id') . ' = ' . $db->quoteName('study.teacher_id')
+            . $db->quoteName('teacher.id') . ' = ' . $db->quoteName('stj.teacher_id')
         );
 
         // Join over Series
@@ -840,44 +847,36 @@ class CwmsermonsModel extends ListModel
 
         $filters_group = [];
 
-        // Teacher ID for podcast display
-        if (
-            $params->get('mteacher_id') !== null && $params->get('mteacher_id')[0] !== '-1' && empty(
-                $this->getState(
-                    'filter.teacher'
-                )
-            )
-        ) {
-            $filters_group[] = ['study.teacher_id' => $params->get('mteacher_id')];
-        } elseif (
-            $params->get('mteacher_id') !== null && $params->get(
-                'mteacher_id'
-            )[0] !== '-1' && !empty($this->getState('filter.teacher'))
-        ) {
-            $filters_group[] = ['study.teacher_id' => $params->get('mteacher_id')];
-            $filters_group[] = ['study.teacher_id' => [$this->getState('filter.teacher')]];
-        } elseif (!empty($this->getState('filter.teacher'))) {
-            $filters_group[] = ['study.teacher_id' => [$this->getState('filter.teacher')]];
+        // Teacher filter via junction table (matches any teacher role, not just primary)
+        $teacherIds = [];
+
+        $mteacher = $params->get('mteacher_id');
+
+        if ($mteacher !== null && $mteacher[0] !== '-1') {
+            $teacherIds = array_merge($teacherIds, array_map('intval', (array) $mteacher));
         }
 
-        // Teacher ID from template
-        if (
-            $params->get('lteacher_id') !== null && $params->get('lteacher_id')[0] !== '-1' && empty(
-                $this->getState(
-                    'filter.teacher'
-                )
-            )
-        ) {
-            $filters_group[] = ['study.teacher_id' => $params->get('lteacher_id')];
-        } elseif (
-            $params->get('lteacher_id') !== null && $params->get(
-                'lteacher_id'
-            )[0] !== '-1' && !empty($this->getState('filter.teacher'))
-        ) {
-            $filters_group[] = ['study.teacher_id' => $params->get('lteacher_id')];
-            $filters_group[] = ['study.teacher_id' => [$this->getState('filter.teacher')]];
-        } elseif (!empty($this->getState('filter.teacher'))) {
-            $filters_group[] = ['study.teacher_id' => [$this->getState('filter.teacher')]];
+        $lteacher = $params->get('lteacher_id');
+
+        if ($lteacher !== null && $lteacher[0] !== '-1') {
+            $teacherIds = array_merge($teacherIds, array_map('intval', (array) $lteacher));
+        }
+
+        $filterTeacher = $this->getState('filter.teacher');
+
+        if (!empty($filterTeacher)) {
+            $teacherIds[] = (int) $filterTeacher;
+        }
+
+        $teacherIds = array_unique(array_filter($teacherIds));
+
+        if (!empty($teacherIds)) {
+            $tSubquery = $db->getQuery(true)
+                ->select('1')
+                ->from($db->quoteName('#__bsms_study_teachers', 'stf'))
+                ->where($db->quoteName('stf.study_id') . ' = ' . $db->quoteName('study.id'))
+                ->whereIn($db->quoteName('stf.teacher_id'), $teacherIds);
+            $query->where('EXISTS (' . $tSubquery . ')');
         }
 
         // Location ID
@@ -1253,8 +1252,8 @@ class CwmsermonsModel extends ListModel
 
         $items = parent::getItems();
 
-        if (empty($items)) {
-            return $items;
+        if (empty($items) || !\is_array($items)) {
+            return [];
         }
 
         // Collect study IDs for batch loading
@@ -1287,6 +1286,13 @@ class CwmsermonsModel extends ListModel
 
         foreach ($items as $item) {
             $item->scriptures = $scriptureMap[(int) $item->id] ?? [];
+        }
+
+        // Batch-load all teachers (for teachers-list element)
+        $teacherMap = CwmstudyteacherHelper::getTeachersForStudies($studyIds);
+
+        foreach ($items as $item) {
+            $item->teachers = $teacherMap[(int) $item->id] ?? [];
         }
 
         return $items;

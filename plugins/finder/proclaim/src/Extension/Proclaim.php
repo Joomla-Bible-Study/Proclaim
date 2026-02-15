@@ -613,7 +613,11 @@ final class Proclaim extends Adapter implements SubscriberInterface
 
         $query->select($db->qn('t.teachername', 'author'))
             ->from($db->qn('#__bsms_studies', 'a'))
-            ->join('LEFT', $db->qn('#__bsms_teachers', 't') . ' ON ' . $db->qn('t.id') . ' = ' . $db->qn('a.teacher_id'))
+            ->join('LEFT', $db->qn('#__bsms_study_teachers', 'stj') . ' ON '
+                . $db->qn('stj.study_id') . ' = ' . $db->qn('a.id')
+                . ' AND ' . $db->qn('stj.ordering') . ' = 0')
+            ->join('LEFT', $db->qn('#__bsms_teachers', 't') . ' ON '
+                . $db->qn('t.id') . ' = ' . $db->qn('stj.teacher_id'))
             ->join('LEFT', $db->qn('#__bsms_series', 's') . ' ON ' . $db->qn('s.id') . ' = ' . $db->qn('a.series_id'));
 
         return $query;

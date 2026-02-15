@@ -56,6 +56,7 @@
                             { id: 'seriesdescription', label: 'Series Description', section: 'Series' },
                             { id: 'seriesthumbnail', label: 'Series Thumbnail', section: 'Series' },
                             { id: 'teacher', label: 'Teacher', section: 'Teacher' },
+                            { id: 'teachers-list', label: 'All Teachers', section: 'Teacher' },
                             { id: 'teacherimage', label: 'Teacher Image', section: 'Teacher' },
                             { id: 'teacher-title', label: 'Teacher Title + Name', section: 'Teacher' }
                         ]
@@ -84,6 +85,7 @@
                             { id: 'seriesdescription', label: 'Series Description', section: 'Series' },
                             { id: 'seriesthumbnail', label: 'Series Thumbnail', section: 'Series' },
                             { id: 'teacher', label: 'Teacher', section: 'Teacher' },
+                            { id: 'teachers-list', label: 'All Teachers', section: 'Teacher' },
                             { id: 'teacherimage', label: 'Teacher Image', section: 'Teacher' },
                             { id: 'teacher-title', label: 'Teacher Title + Name', section: 'Teacher' }
                         ]

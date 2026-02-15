@@ -12,6 +12,7 @@
 namespace CWM\Component\Proclaim\Site\Helper;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Date\Date;
@@ -296,8 +297,14 @@ class Cwmpagebuilder
         );
         $query->join(
             'LEFT',
+            $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+            . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('study.id')
+            . ' AND ' . $db->quoteName('stj.ordering') . ' = 0'
+        );
+        $query->join(
+            'LEFT',
             $db->quoteName('#__bsms_teachers', 'teacher') . ' ON '
-            . $db->quoteName('teacher.id') . ' = ' . $db->quoteName('study.teacher_id')
+            . $db->quoteName('teacher.id') . ' = ' . $db->quoteName('stj.teacher_id')
         );
 
         // Join over Series
@@ -390,7 +397,17 @@ class Cwmpagebuilder
         $query->where('(' . $db->quoteName('series.published') . ' = 1 OR ' . $db->quoteName('study.series_id') . ' <= 0)');
 
         if ($wherefield && $whereitem) {
-            $query->where($wherefield . ' = ' . $whereitem);
+            if ($wherefield === 'teacher') {
+                // Use junction table EXISTS subquery for multi-teacher support
+                $tSubquery = $db->getQuery(true)
+                    ->select('1')
+                    ->from($db->quoteName('#__bsms_study_teachers', 'stf'))
+                    ->where($db->quoteName('stf.study_id') . ' = ' . $db->quoteName('study.id'))
+                    ->where($db->quoteName('stf.teacher_id') . ' = ' . (int) $whereitem);
+                $query->where('EXISTS (' . $tSubquery . ')');
+            } else {
+                $query->where($wherefield . ' = ' . $whereitem);
+            }
         }
 
         // Define null and now dates
@@ -426,8 +443,19 @@ class Cwmpagebuilder
         $query->where($db->quoteName('study.access') . ' IN (' . $groups . ')');
 
         $db->setQuery($query, 0, $limit);
+        $items = $db->loadObjectList();
 
-        return $db->loadObjectList();
+        // Batch-load all teachers for teachers-list element
+        if (!empty($items)) {
+            $studyIds   = array_map(fn ($item) => (int) $item->id, $items);
+            $teacherMap = CwmstudyteacherHelper::getTeachersForStudies($studyIds);
+
+            foreach ($items as $item) {
+                $item->teachers = $teacherMap[(int) $item->id] ?? [];
+            }
+        }
+
+        return $items;
     }
 
     /**

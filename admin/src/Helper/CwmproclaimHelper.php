@@ -356,7 +356,11 @@ class CwmproclaimHelper
         $query->from($db->qn('#__bsms_teachers', 'teacher'));
         $query->join(
             'INNER',
-            $db->qn('#__bsms_studies', 'study') . ' ON ' . $db->qn('study.teacher_id') . ' = ' . $db->qn('teacher.id')
+            $db->qn('#__bsms_study_teachers', 'stj') . ' ON ' . $db->qn('stj.teacher_id') . ' = ' . $db->qn('teacher.id')
+        );
+        $query->join(
+            'INNER',
+            $db->qn('#__bsms_studies', 'study') . ' ON ' . $db->qn('study.id') . ' = ' . $db->qn('stj.study_id')
         );
         $query->group($db->qn('teacher.id'));
         $query->order($db->qn('value') . ' ASC');

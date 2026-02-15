@@ -137,13 +137,22 @@ class CwmyoutubeHelper
                 $db->quoteName('t.id', 'teacher_id'),
             ])
             ->from($db->quoteName('#__bsms_studies', 's'))
-            ->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('s.teacher_id'))
+            ->join('LEFT', $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+                . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
+                . ' AND ' . $db->quoteName('stj.ordering') . ' = 0')
+            ->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON '
+                . $db->quoteName('t.id') . ' = ' . $db->quoteName('stj.teacher_id'))
             ->where('LOWER(' . $db->quoteName('s.studytitle') . ') LIKE LOWER(' . $searchTitle . ')')
             ->where($db->quoteName('s.published') . ' = 1');
 
         // Filter by teacher if provided
         if ($teacherId !== null) {
-            $query->where($db->quoteName('s.teacher_id') . ' = ' . (int) $teacherId);
+            $tSub = $db->getQuery(true)
+                ->select('1')
+                ->from($db->quoteName('#__bsms_study_teachers', 'stf'))
+                ->where($db->quoteName('stf.study_id') . ' = ' . $db->quoteName('s.id'))
+                ->where($db->quoteName('stf.teacher_id') . ' = ' . (int) $teacherId);
+            $query->where('EXISTS (' . $tSub . ')');
         }
 
         // Order by exact match first, then most recent
@@ -246,7 +255,11 @@ class CwmyoutubeHelper
                     $db->quoteName('t.teachername'),
                 ])
                 ->from($db->quoteName('#__bsms_studies', 's'))
-                ->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('s.teacher_id'))
+                ->join('LEFT', $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+                    . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
+                    . ' AND ' . $db->quoteName('stj.ordering') . ' = 0')
+                ->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON '
+                    . $db->quoteName('t.id') . ' = ' . $db->quoteName('stj.teacher_id'))
                 ->where('LOWER(' . $db->quoteName('s.studytitle') . ') LIKE LOWER(' . $searchTitle . ')')
                 ->where($db->quoteName('s.published') . ' = 1')
                 ->order($db->quoteName('s.studydate') . ' DESC')

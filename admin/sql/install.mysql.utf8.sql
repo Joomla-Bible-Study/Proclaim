@@ -454,6 +454,24 @@ CREATE TABLE IF NOT EXISTS `#__bsms_study_scriptures` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `#__bsms_study_teachers`
+--
+
+CREATE TABLE IF NOT EXISTS `#__bsms_study_teachers` (
+    `id`         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `study_id`   INT(10) UNSIGNED NOT NULL,
+    `teacher_id` INT(10) UNSIGNED NOT NULL,
+    `ordering`   INT(3)           NOT NULL DEFAULT 0,
+    `role`       VARCHAR(50)      NOT NULL DEFAULT 'speaker',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `idx_study_teacher` (`study_id`, `teacher_id`),
+    KEY `idx_teacher` (`teacher_id`),
+    KEY `idx_study_ordering` (`study_id`, `ordering`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `#__bsms_studytopics`
 --
 

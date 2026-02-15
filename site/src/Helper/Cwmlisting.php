@@ -478,8 +478,13 @@ class Cwmlisting
             . $db->quoteName('s.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.study_id') . ')'
         );
         $query->leftJoin(
+            $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON ('
+            . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
+            . ' AND ' . $db->quoteName('stj.ordering') . ' = 0)'
+        );
+        $query->leftJoin(
             $db->quoteName('#__bsms_teachers', 't') . ' ON ('
-            . $db->quoteName('t.id') . ' = ' . $db->quoteName('s.teacher_id') . ')'
+            . $db->quoteName('t.id') . ' = ' . $db->quoteName('stj.teacher_id') . ')'
         );
 
         $ids = [];
@@ -1306,6 +1311,31 @@ class Cwmlisting
                     }
                 } else {
                     $data = trim($item->teachername ?? '');
+                }
+                break;
+            case $extra . 'teachers-list':
+                if ($header === 1) {
+                    $data = Text::_('JBS_CMN_TEACHERS');
+                } elseif (!empty($item->teachers) && \is_array($item->teachers)) {
+                    $names = [];
+
+                    foreach ($item->teachers as $t) {
+                        $name = trim($t->teachername ?? '');
+
+                        if ($name !== '') {
+                            $role = trim($t->role ?? '');
+
+                            if ($role !== '' && $role !== 'speaker') {
+                                $name .= ' (' . Text::_('JBS_TCH_ROLE_' . strtoupper($role)) . ')';
+                            }
+
+                            $names[] = $name;
+                        }
+                    }
+
+                    $data = implode(', ', $names);
+                } elseif (isset($item->teachername)) {
+                    $data = trim($item->teachername);
                 }
                 break;
             case $extra . 'studyintro':

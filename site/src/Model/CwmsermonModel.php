@@ -115,8 +115,14 @@ class CwmsermonModel extends FormModel
 
                 $query->join(
                     'LEFT',
+                    $db->quoteName('#__bsms_study_teachers', 'st') . ' ON '
+                    . $db->quoteName('st.study_id') . ' = ' . $db->quoteName('s.id')
+                    . ' AND ' . $db->quoteName('st.ordering') . ' = 0'
+                );
+                $query->join(
+                    'LEFT',
                     $db->quoteName('#__bsms_teachers', 't') . ' ON '
-                    . $db->quoteName('s.teacher_id') . ' = ' . $db->quoteName('t.id')
+                    . $db->quoteName('t.id') . ' = ' . $db->quoteName('st.teacher_id')
                 );
 
                 // Join over series
