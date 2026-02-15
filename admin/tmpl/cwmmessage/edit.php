@@ -73,6 +73,10 @@ $wa->useScript('keepalive')
 			alert("' . $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . '")
 		}
 	}
+	// Prevent TinyMCE / subform init from scrolling the page down
+	window.addEventListener("load", function () {
+		if (!location.hash) { window.scrollTo(0, 0); }
+	});
 '
     );
 
