@@ -114,17 +114,17 @@ img, svg {
     font-size: clamp(0.75rem, 1.5vw, 1.1rem);
     padding: 0 0.25rem;
 }
-/* Constrain card images to uniform 16:9 aspect ratio with black letterbox fill */
+/* Constrain card images to uniform 16:9 aspect ratio */
 .media__item__wrapper .card {
     aspect-ratio: 16 / 9;
     overflow: hidden;
-    background: #000;
 }
 .media__item__wrapper .card .card-img,
 .media__item__wrapper .card picture img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
+    object-position: center 20%;
 }
 .media__item__wrapper .card picture {
     display: contents;

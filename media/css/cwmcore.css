@@ -434,6 +434,10 @@ p.popupfooter {
 }
 .jbsmimg img {
   border: none;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  object-position: center 20%;
 }
 .cwm-no-image {
   width: 200px;
@@ -494,6 +498,8 @@ div.JBSM .img-rounded {
   margin: 0;
   padding: 0;
   max-width: 100%;
+  object-fit: cover;
+  object-position: center 20%;
 }
 .overlay {
   display: block;

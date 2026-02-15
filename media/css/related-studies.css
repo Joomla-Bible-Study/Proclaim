@@ -60,12 +60,8 @@
 }
 
 .proclaim-related-card .card-img-top {
-    height: 120px;
+    aspect-ratio: 16 / 9;
+    width: 100%;
     object-fit: cover;
-}
-
-@media (max-width: 575.98px) {
-    .proclaim-related-card .card-img-top {
-        height: 160px;
-    }
+    object-position: center 20%;
 }
