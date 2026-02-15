@@ -413,18 +413,18 @@ class HtmlView extends BaseHtmlView
             $windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";
         }
 
-        // Added database queries from the default template - moved here instead
-        $database = Factory::getContainer()->get('DatabaseDriver');
-        $query    = $database->getQuery(true);
-        $query->select($database->quoteName('id'))
-            ->from($database->quoteName('#__menu'))
-            ->where(
-                $database->quoteName('link') . ' = '
-                . $database->quote('index.php?option=com_proclaim&view=cwmsermons')
-            )
-            ->where($database->quoteName('published') . ' = 1');
-        $database->setQuery($query);
-        $menuid       = $database->loadResult();
+        // Find the messages list menu item via Joomla's cached menu API
+        $menuid = null;
+        $menu   = $app->getMenu();
+
+        foreach ($menu->getItems('component', 'com_proclaim') as $menuItem) {
+            if (isset($menuItem->query['view']) && $menuItem->query['view'] === 'cwmsermons'
+                && $menuItem->published === 1) {
+                $menuid = $menuItem->id;
+                break;
+            }
+        }
+
         $this->menuid = $menuid;
 
         if ($this->getLayout() === 'pagebreak') {
