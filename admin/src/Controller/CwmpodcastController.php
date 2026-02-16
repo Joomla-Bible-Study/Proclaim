@@ -18,9 +18,11 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use CWM\Component\Proclaim\Administrator\Model\CwmpodcastModel;
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
+use Joomla\Database\ParameterType;
 
 /**
  * Podcast form class
@@ -30,6 +32,41 @@ use Joomla\CMS\Router\Route;
  */
 class CwmpodcastController extends FormController
 {
+    /**
+     * Method override to check if you can edit an existing record.
+     *
+     * @param   array   $data  An array of input data.
+     * @param   string  $key   The name of the key for the primary key.
+     *
+     * @return  bool
+     *
+     * @throws \Exception
+     * @since   10.1.0
+     */
+    protected function allowEdit($data = [], $key = 'id'): bool
+    {
+        $recordId = (int) ($data[$key] ?? 0);
+        $user     = Factory::getApplication()->getIdentity();
+
+        // Non-admin users must have access to the item's view level
+        if (!$user->authorise('core.admin') && $recordId > 0) {
+            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('access'))
+                ->from($db->quoteName('#__bsms_podcast'))
+                ->where($db->quoteName('id') . ' = :rid')
+                ->bind(':rid', $recordId, ParameterType::INTEGER);
+            $db->setQuery($query);
+            $access = (int) $db->loadResult();
+
+            if ($access && !\in_array($access, $user->getAuthorisedViewLevels())) {
+                return false;
+            }
+        }
+
+        return parent::allowEdit($data, $key);
+    }
+
     /**
      * Method to run batch operations.
      *

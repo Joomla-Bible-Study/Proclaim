@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
+use Joomla\Database\ParameterType;
 
 /**
  * Controller for a Serie
@@ -84,8 +85,24 @@ class CwmserieController extends FormController
      */
     protected function allowEdit($data = [], $key = 'id'): bool
     {
-        $recordId = (int)isset($data[$key]) ? $data[$key] : 0;
+        $recordId = (int) ($data[$key] ?? 0);
         $user     = Factory::getApplication()->getIdentity();
+
+        // Non-admin users must have access to the item's view level
+        if (!$user->authorise('core.admin') && $recordId > 0) {
+            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('access'))
+                ->from($db->quoteName('#__bsms_series'))
+                ->where($db->quoteName('id') . ' = :rid')
+                ->bind(':rid', $recordId, ParameterType::INTEGER);
+            $db->setQuery($query);
+            $access = (int) $db->loadResult();
+
+            if ($access && !\in_array($access, $user->getAuthorisedViewLevels())) {
+                return false;
+            }
+        }
 
         // Check general edit permission first.
         if ($user->authorise('core.edit', 'com_proclaim.serie.' . $recordId)) {
