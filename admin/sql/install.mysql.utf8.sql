@@ -303,6 +303,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_series`
     `created_by_alias` VARCHAR(255)                                     NOT NULL DEFAULT '',
     `modified`         DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
     `modified_by`      INT(10) UNSIGNED                                 NOT NULL DEFAULT '0',
+    `publish_up`       DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `publish_down`     DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
     `checked_out`      INT(10) UNSIGNED                                 NOT NULL DEFAULT 0,
     `checked_out_time` DATETIME                                                  DEFAULT NULL,
     PRIMARY KEY (`id`),
@@ -311,7 +313,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_series`
     KEY `idx_checkout` (`checked_out`),
     KEY `idx_createdby` (`created_by`),
     KEY `idx_published_access` (`published`, `access`),
-    KEY `idx_teacher_published` (`teacher`, `published`)
+    KEY `idx_teacher_published` (`teacher`, `published`),
+    KEY `idx_published_dates` (`published`, `publish_up`, `publish_down`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;

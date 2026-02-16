@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -408,8 +409,26 @@ class Cwmrelatedstudies
                 $db->quoteName('#__bsms_books', 'b')
                 . ' ON ' . $db->quoteName('b.booknumber') . ' = ' . $db->quoteName('s.booknumber')
             )
+            ->leftJoin(
+                $db->quoteName('#__bsms_series', 'ser')
+                . ' ON ' . $db->quoteName('ser.id') . ' = ' . $db->quoteName('s.series_id')
+            )
             ->where($db->quoteName('s.id') . ' IN (' . $idList . ')')
-            ->where($db->quoteName('s.id') . ' != ' . $studyId);
+            ->where($db->quoteName('s.id') . ' != ' . $studyId)
+            ->where('(' . $db->quoteName('ser.published') . ' = 1 OR ' . $db->quoteName('s.series_id') . ' <= 0)');
+
+        // Cascading series date window for non-admin users
+        $user = Factory::getApplication()->getIdentity();
+
+        if (!$user->authorise('core.edit.state', 'com_proclaim') && !$user->authorise('core.edit', 'com_proclaim')) {
+            $nullDate = $db->quote($db->getNullDate());
+            $nowDate  = $db->quote((new Date())->toSql());
+            $query->where(
+                '((' . $db->quoteName('ser.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('ser.publish_up') . ' <= ' . $nowDate . ')'
+                . ' AND (' . $db->quoteName('ser.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('ser.publish_down') . ' >= ' . $nowDate . ')'
+                . ' OR ' . $db->quoteName('s.series_id') . ' <= 0)'
+            );
+        }
 
         $db->setQuery($query);
         $studies = $db->loadObjectList('id') ?: [];

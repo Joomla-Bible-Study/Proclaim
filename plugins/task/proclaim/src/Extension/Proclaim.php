@@ -57,6 +57,11 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             'form'            => 'archive',
             'method'          => 'archive',
         ],
+        'proclaim.publish' => [
+            'langConstPrefix' => 'PLG_TASK_PROCLAIM_PUBLISH',
+            'form'            => 'publish',
+            'method'          => 'publish',
+        ],
     ];
 
     /**
@@ -221,6 +226,76 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             } catch (\Exception $exception) {
                 return Status::KNOCKOUT;
             }
+            return Status::KNOCKOUT;
+        }
+
+        return Status::OK;
+    }
+
+    /**
+     * Scheduled publishing: auto-publish and auto-unpublish/archive
+     * messages and series based on publish_up / publish_down dates.
+     *
+     * @param   ExecuteTaskEvent  $event
+     *
+     * @return int
+     *
+     * @since 10.1.0
+     */
+    private function publish(ExecuteTaskEvent $event): int
+    {
+        $params            = $event->getArgument('params');
+        $publishDownAction = (int) ($params->publish_down_action ?? 0);
+
+        // Validate: only 0 (unpublish) or 2 (archive) are valid
+        if ($publishDownAction !== 0 && $publishDownAction !== 2) {
+            $publishDownAction = 0;
+        }
+
+        try {
+            $db       = Factory::getContainer()->get('DatabaseDriver');
+            $nowDate  = Factory::getDate()->toSql();
+            $nullDate = $db->getNullDate();
+
+            $totalPublished = 0;
+            $totalExpired   = 0;
+
+            $tables = ['#__bsms_studies', '#__bsms_series'];
+
+            foreach ($tables as $table) {
+                // Auto-publish: unpublished items whose publish_up has passed
+                $query = $db->getQuery(true)
+                    ->update($db->quoteName($table))
+                    ->set($db->quoteName('published') . ' = 1')
+                    ->where($db->quoteName('published') . ' = 0')
+                    ->where($db->quoteName('publish_up') . ' != ' . $db->quote($nullDate))
+                    ->where($db->quoteName('publish_up') . ' <= ' . $db->quote($nowDate));
+
+                $db->setQuery($query);
+                $db->execute();
+                $totalPublished += $db->getAffectedRows();
+
+                // Auto-unpublish/archive: published items whose publish_down has passed
+                $query = $db->getQuery(true)
+                    ->update($db->quoteName($table))
+                    ->set($db->quoteName('published') . ' = ' . $publishDownAction)
+                    ->where($db->quoteName('published') . ' = 1')
+                    ->where($db->quoteName('publish_down') . ' != ' . $db->quote($nullDate))
+                    ->where($db->quoteName('publish_down') . ' <= ' . $db->quote($nowDate));
+
+                $db->setQuery($query);
+                $db->execute();
+                $totalExpired += $db->getAffectedRows();
+            }
+
+            $this->logTask(Text::sprintf('PLG_TASK_PROCLAIM_PUBLISH_SUCCESS', $totalPublished, $totalExpired));
+        } catch (\Exception $e) {
+            try {
+                $this->logTask($e->getMessage());
+            } catch (\Exception $exception) {
+                return Status::KNOCKOUT;
+            }
+
             return Status::KNOCKOUT;
         }
 

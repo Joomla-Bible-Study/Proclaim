@@ -182,6 +182,22 @@ class CwmserieTable extends Table
     public ?int $modified_by = null;
 
     /**
+     * Publish up date
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public string $publish_up = '0000-00-00 00:00:00';
+
+    /**
+     * Publish down date
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public string $publish_down = '0000-00-00 00:00:00';
+
+    /**
      * Podcast Show
      *
      * @var int

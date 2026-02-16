@@ -825,18 +825,30 @@ class CwmsermonsModel extends ListModel
                 $query->where($db->quoteName('study.published') . ' = 1');
                 break;
         }
-        $query->where('(' . $db->quoteName('series.published') . ' = 1 OR ' . $db->quoteName('study.series_id') . ' <= 0)');
-
         // Define now date for publish filter
         $nowDate = $db->quote((new Date())->toSql());
 
-        // Filter by start and end dates.
-        if (
-            (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
-                'core.edit',
-                'com_proclaim'
-            ))
-        ) {
+        // Series must be published AND within its date window (like Joomla categories).
+        // Admin users with edit.state or edit bypass date filtering.
+        $canEditState = $user->authorise('core.edit.state', 'com_proclaim');
+        $canEdit      = $user->authorise('core.edit', 'com_proclaim');
+
+        if (!$canEditState && !$canEdit) {
+            // Non-admin: enforce series published + date window, or no series assigned
+            $query->where(
+                '(('
+                . $db->quoteName('series.published') . ' = 1'
+                . ' AND (' . $db->quoteName('series.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('series.publish_up') . ' <= ' . $nowDate . ')'
+                . ' AND (' . $db->quoteName('series.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('series.publish_down') . ' >= ' . $nowDate . ')'
+                . ') OR ' . $db->quoteName('study.series_id') . ' <= 0)'
+            );
+        } else {
+            // Admin: only check series published state
+            $query->where('(' . $db->quoteName('series.published') . ' = 1 OR ' . $db->quoteName('study.series_id') . ' <= 0)');
+        }
+
+        // Filter by start and end dates for messages.
+        if (!$canEditState && !$canEdit) {
             $query->where('(' . $db->quoteName('study.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('study.publish_up') . ' <= ' . $nowDate . ')')
                 ->where('(' . $db->quoteName('study.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('study.publish_down') . ' >= ' . $nowDate . ')');
         }

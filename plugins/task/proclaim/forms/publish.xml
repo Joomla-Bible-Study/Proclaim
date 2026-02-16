@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+    <fields name="params">
+        <fieldset name="task_params">
+            <field
+                    name="publish_down_action"
+                    type="radio"
+                    label="PLG_TASK_PROCLAIM_PUBLISH_DOWN_ACTION_LABEL"
+                    description="PLG_TASK_PROCLAIM_PUBLISH_DOWN_ACTION_DESC"
+                    default="0"
+                    class="btn-group"
+            >
+                <option value="0">PLG_TASK_PROCLAIM_PUBLISH_ACTION_UNPUBLISH</option>
+                <option value="2">PLG_TASK_PROCLAIM_PUBLISH_ACTION_ARCHIVE</option>
+            </field>
+            <field
+                    name="info_note"
+                    type="note"
+                    label=""
+                    description="PLG_TASK_PROCLAIM_PUBLISH_NOTE"
+                    class="alert alert-info"
+            />
+        </fieldset>
+    </fields>
+</form>

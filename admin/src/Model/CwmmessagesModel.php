@@ -294,7 +294,7 @@ class CwmmessagesModel extends ListModel
         }
 
         // Implement View Level Access
-        if (!$user->authorise('core.cwmadmin')) {
+        if (!$user->authorise('core.admin')) {
             $groups = implode(',', $user->getAuthorisedViewLevels());
             $query->where($db->qn('study.access') . ' IN (' . $groups . ')');
         }

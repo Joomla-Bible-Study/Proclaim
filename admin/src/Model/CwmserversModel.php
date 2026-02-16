@@ -204,7 +204,7 @@ class CwmserversModel extends ListModel
         }
 
         // Implement View Level Access
-        if (!$user->authorise('core.cwmadmin')) {
+        if (!$user->authorise('core.admin')) {
             $groups = $user->getAuthorisedViewLevels();
             $query->whereIn($db->quoteName('server.access'), $groups);
         }
