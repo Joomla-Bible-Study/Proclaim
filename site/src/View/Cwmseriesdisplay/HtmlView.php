@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmseriesdisplay;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
@@ -280,6 +281,18 @@ class HtmlView extends BaseHtmlView
 
         // Pre-create listing helper for template use
         $this->listing = new Cwmlisting();
+
+        // Schema.org structured data
+        if (CwmschemaorgHelper::isEnabled()) {
+            CwmschemaorgHelper::inject(
+                CwmschemaorgHelper::buildSeriesDetail(
+                    $this->items,
+                    $this->studies ?? [],
+                    Uri::getInstance()->toString(),
+                    $mainframe->get('sitename')
+                )
+            );
+        }
 
         parent::display($tpl);
     }

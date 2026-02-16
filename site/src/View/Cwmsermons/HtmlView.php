@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmsermons;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
@@ -517,6 +518,17 @@ class HtmlView extends BaseHtmlView
 
         if ($this->params->get('robots')) {
             $this->document->setMetadata('robots', $this->params->get('robots'));
+        }
+
+        // Schema.org structured data
+        if (CwmschemaorgHelper::isEnabled()) {
+            CwmschemaorgHelper::inject(
+                CwmschemaorgHelper::buildSermonList(
+                    $this->items ?? [],
+                    Uri::getInstance()->toString(),
+                    $app->get('sitename')
+                )
+            );
         }
     }
 }
