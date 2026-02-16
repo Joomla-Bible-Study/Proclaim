@@ -244,7 +244,7 @@ class CwmmessagesModel extends ListModel
             $db->qn('#__bsms_message_type', 'messageType') . ' ON ' . $db->qn('messageType.id') . ' = ' . $db->qn('study.messagetype')
         );
 
-        // Join over Teachers (via junction table, primary teacher only)
+        // Join over Teachers (via junction table, primary teacher only; falls back to legacy teacher_id)
         $query->select($db->qn('teacher.teachername', 'teachername'));
         $query->join(
             'LEFT',
@@ -253,7 +253,8 @@ class CwmmessagesModel extends ListModel
         );
         $query->join(
             'LEFT',
-            $db->qn('#__bsms_teachers', 'teacher') . ' ON ' . $db->qn('teacher.id') . ' = ' . $db->qn('stj.teacher_id')
+            $db->qn('#__bsms_teachers', 'teacher') . ' ON ' . $db->qn('teacher.id')
+            . ' = COALESCE(' . $db->qn('stj.teacher_id') . ', ' . $db->qn('study.teacher_id') . ')'
         );
 
         // Join over Series

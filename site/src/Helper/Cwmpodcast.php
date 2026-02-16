@@ -453,7 +453,7 @@ class Cwmpodcast
                 . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
                 . ' AND ' . $db->quoteName('stj.ordering') . ' = 0')
             ->leftJoin($db->quoteName('#__bsms_teachers', 't') . ' ON '
-                . $db->quoteName('t.id') . ' = ' . $db->quoteName('stj.teacher_id'))
+                . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . ')')
             ->leftJoin($db->quoteName('#__bsms_podcast', 'p') . ' ON FIND_IN_SET(' . $db->quoteName('p.id') . ', ' . $db->quoteName('mf.podcast_id') . ')')
             ->where('FIND_IN_SET(' . $id . ', ' . $db->quoteName('mf.podcast_id') . ')')
             ->where($db->quoteName('mf.published') . ' = 1')

@@ -144,7 +144,7 @@ class CwmlandingpageModel extends ListModel
             . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
             . ' AND ' . $db->quoteName('stj.ordering') . ' = 0');
         $query->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON '
-            . $db->quoteName('t.id') . ' = ' . $db->quoteName('stj.teacher_id'));
+            . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . ')');
         $query->select(
             $db->quoteName(
                 ['se.id', 'se.series_text', 'se.description', 'se.series_thumbnail'],

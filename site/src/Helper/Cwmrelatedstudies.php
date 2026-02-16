@@ -402,7 +402,7 @@ class Cwmrelatedstudies
             )
             ->leftJoin(
                 $db->quoteName('#__bsms_teachers', 't')
-                . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('stj2.teacher_id')
+                . ' ON ' . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj2.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . ')'
             )
             ->leftJoin(
                 $db->quoteName('#__bsms_books', 'b')

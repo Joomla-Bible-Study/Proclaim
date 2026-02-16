@@ -1073,7 +1073,7 @@ class Cwmmedia
             )
             ->leftJoin(
                 $db->quoteName('#__bsms_teachers', 't') . ' ON ('
-                . $db->quoteName('t.id') . ' = ' . $db->quoteName('stj.teacher_id') . ')'
+                . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . '))'
             )
             ->leftJoin(
                 $db->quoteName('#__bsms_series', 'se') . ' ON ('
