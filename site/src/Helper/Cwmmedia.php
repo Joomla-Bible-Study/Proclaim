@@ -1029,6 +1029,96 @@ class Cwmmedia
     }
 
     /**
+     * Get multiple media rows in a single query (batch version of getMediaRows2).
+     *
+     * Uses WHERE IN(...) to load all requested media files at once,
+     * avoiding the N+1 query pattern.
+     *
+     * @param   int[]  $ids  Array of media file IDs
+     *
+     * @return array  Associative array keyed by media file ID
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public function getMediaRowsBatch(array $ids): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+
+        // Deduplicate and sanitise
+        $ids = array_unique(array_map('intval', $ids));
+        $ids = array_filter($ids, static fn ($id) => $id > 0);
+
+        if (empty($ids)) {
+            return [];
+        }
+
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
+        $query->select(
+            $db->quoteName('#__bsms_mediafiles') . '.*, ' . $db->quoteName('#__bsms_servers.params', 'sparams') . ','
+            . $db->quoteName('s.studyintro') . ', ' . $db->quoteName('s.series_id') . ', '
+            . $db->quoteName('s.studytitle') . ', ' . $db->quoteName('s.studydate') . ', '
+            . $db->quoteName('s.teacher_id') . ', ' . $db->quoteName('s.booknumber') . ', '
+            . $db->quoteName('s.chapter_begin') . ', ' . $db->quoteName('s.chapter_end') . ', '
+            . $db->quoteName('s.verse_begin') . ', ' . $db->quoteName('s.verse_end') . ', '
+            . $db->quoteName('t.teachername') . ', ' . $db->quoteName('t.teacher_thumbnail') . ', '
+            . $db->quoteName('t.teacher_image') . ', '
+            . $db->quoteName('t.teacher_thumbnail', 'thumb') . ', '
+            . $db->quoteName('t.image') . ', ' . $db->quoteName('t.id', 'tid') . ', '
+            . $db->quoteName('s.id', 'sid') . ', '
+            . $db->quoteName('se.id', 'seriesid') . ', ' . $db->quoteName('se.series_text') . ', '
+            . $db->quoteName('se.series_thumbnail')
+        )
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->leftJoin(
+                $db->quoteName('#__bsms_servers') . ' ON ('
+                . $db->quoteName('#__bsms_servers.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.server_id') . ')'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_studies', 's') . ' ON ('
+                . $db->quoteName('s.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.study_id') . ')'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON ('
+                . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
+                . ' AND ' . $db->quoteName('stj.ordering') . ' = 0)'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_teachers', 't') . ' ON ('
+                . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . '))'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_series', 'se') . ' ON ('
+                . $db->quoteName('s.series_id') . ' = ' . $db->quoteName('se.id') . ')'
+            )
+            ->whereIn($db->quoteName('#__bsms_mediafiles.id'), $ids)
+            ->where($db->quoteName('#__bsms_mediafiles.published') . ' IN (1, 2)')
+            ->where(
+                $db->quoteName('#__bsms_mediafiles.language') . ' IN ('
+                . $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*') . ')'
+            )
+            ->order($db->quoteName('ordering') . ' ASC');
+        $db->setQuery($query);
+        $rows = $db->loadObjectList();
+
+        $result = [];
+
+        foreach ($rows as $media) {
+            $reg = new Registry();
+            $reg->loadString($media->sparams);
+            $sparams      = $reg->toObject();
+            $media->spath = $sparams->path ?? '';
+
+            $result[$media->id] = $media;
+        }
+
+        return $result;
+    }
+
+    /**
      * Get Media info Row2
      *
      * @param   int  $id  ID of Row
