@@ -36,3 +36,29 @@
 .proclaim-pagination {
     transition: opacity 0.2s ease;
 }
+
+/* ─── Load More button ───────────────────────────────────── */
+
+.proclaim-load-more {
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.proclaim-load-more button {
+    min-width: 160px;
+}
+
+/* ─── Infinite scroll sentinel ───────────────────────────── */
+
+.proclaim-scroll-sentinel {
+    height: 1px;
+}
+
+/* ─── Item counter ───────────────────────────────────────── */
+
+.proclaim-item-counter {
+    text-align: center;
+    color: var(--bs-secondary);
+    padding: 0.5rem 0;
+    font-size: 0.875rem;
+}

@@ -26,6 +26,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
@@ -225,6 +226,40 @@ class HtmlView extends BaseHtmlView
         $this->classelement = $this->listing->createelement($params->get('series_element'));
         $this->serieslist   = new Cwmserieslist();
         $this->seriesMenu   = (int) $params->get('series_id', 1);
+
+        // Infinite scroll / Load More for series listing
+        $seriesPaginationStyle = $params->get('series_pagination_style', 'pagination');
+
+        if ($seriesPaginationStyle !== 'pagination') {
+            $app = Factory::getApplication();
+            $wa  = $app->getDocument()->getWebAssetManager();
+
+            $t      = $this->template->id ?? $app->getInput()->getInt('t', 1);
+            $itemId = (int) $app->getInput()->get('Itemid', 0);
+
+            $ajaxUrl = 'index.php?option=com_proclaim&task=cwmseriesdisplays.paginateAjax&format=raw'
+                . '&t=' . (int) $t
+                . '&Itemid=' . (int) $itemId;
+
+            $app->getDocument()->addScriptOptions('com_proclaim.seriesScroll', [
+                'ajaxUrl'         => $ajaxUrl,
+                'enabled'         => true,
+                'csrfToken'       => Session::getFormToken(),
+                'paginationStyle' => $seriesPaginationStyle,
+                'limit'           => (int) $this->pagination->limit,
+                'totalItems'      => (int) $pagination->total,
+                'scrollThreshold' => (int) $params->get('series_infinite_scroll_threshold', 3),
+            ]);
+
+            $wa->useScript('com_proclaim.series-scroll');
+            $wa->useStyle('com_proclaim.sermon-filters-css');
+
+            // Register language strings for JS
+            Text::script('JBS_CMN_LOAD_MORE');
+            Text::script('JBS_CMN_LOADING');
+            Text::script('JBS_CMN_SHOWING_X_OF_Y');
+            Text::script('JBS_CMN_ALL_ITEMS_LOADED');
+        }
 
         $this->updateFilters();
 

@@ -378,9 +378,13 @@ class HtmlView extends BaseHtmlView
                 . '&Itemid=' . (int) $itemId;
 
             $mainframe->getDocument()->addScriptOptions('com_proclaim.sermonFilters', [
-                'ajaxUrl'   => $ajaxUrl,
-                'enabled'   => true,
-                'csrfToken' => Session::getFormToken(),
+                'ajaxUrl'         => $ajaxUrl,
+                'enabled'         => true,
+                'csrfToken'       => Session::getFormToken(),
+                'paginationStyle' => $params->get('pagination_style', 'pagination'),
+                'limit'           => (int) $this->state->get('list.limit', 20),
+                'totalItems'      => (int) $pagination->total,
+                'scrollThreshold' => (int) $params->get('infinite_scroll_threshold', 3),
             ]);
 
             $wa->useScript('com_proclaim.sermon-filters');
@@ -398,6 +402,12 @@ class HtmlView extends BaseHtmlView
                 false
             ),
         ]);
+
+        // Register language strings used by infinite scroll / load more JS
+        Text::script('JBS_CMN_LOAD_MORE');
+        Text::script('JBS_CMN_LOADING');
+        Text::script('JBS_CMN_SHOWING_X_OF_Y');
+        Text::script('JBS_CMN_ALL_ITEMS_LOADED');
 
         // Register language strings used by scripture-switcher JS
         Text::script('JBS_CMN_SCRIPTURE_UNAVAILABLE');

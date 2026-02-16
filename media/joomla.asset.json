@@ -466,6 +466,17 @@
             "uri": "com_proclaim/sermon-filters.css"
         },
         {
+            "name": "com_proclaim.series-scroll",
+            "type": "script",
+            "uri": "com_proclaim/series-scroll.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.related-studies",
             "type": "style",
             "uri": "com_proclaim/related-studies.css"
