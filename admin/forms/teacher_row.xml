@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+    <field name="teacher_id" type="TeacherList"
+           label="JBS_CMN_TEACHER"
+           required="true">
+        <option value="">JBS_CMN_SELECT_TEACHER</option>
+    </field>
+</form>

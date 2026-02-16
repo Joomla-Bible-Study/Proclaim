@@ -310,4 +310,201 @@ class CwmmigrationHelper
 
         return $totalUpdated;
     }
+
+    /**
+     * Ensure teacher aliases are populated and unique, then add UNIQUE KEY if missing.
+     *
+     * Handles data cleanup that Joomla's ChangeSet cannot execute (UPDATE/DELETE/TEMP TABLE),
+     * so the ALTER TABLE ADD UNIQUE KEY succeeds regardless of how the migration was triggered.
+     *
+     * @return  int  Number of teachers cleaned up
+     *
+     * @since   10.1.0
+     */
+    public static function fixTeacherAliases(): int
+    {
+        $db = Factory::getContainer()->get('DatabaseDriver');
+        $fixed = 0;
+
+        // Step 1: Ensure every teacher has an alias
+        $query = $db->getQuery(true)
+            ->update($db->quoteName('#__bsms_teachers'))
+            ->set(
+                $db->quoteName('alias') . ' = LOWER(REPLACE(REPLACE(REPLACE(TRIM('
+                . $db->quoteName('teachername') . '), ' . $db->quote(' ') . ', ' . $db->quote('-')
+                . '), ' . $db->quote("'") . ', ' . $db->quote('')
+                . '), ' . $db->quote('"') . ', ' . $db->quote('') . '))'
+            )
+            ->where([
+                $db->quoteName('alias') . ' = ' . $db->quote(''),
+                $db->quoteName('alias') . ' IS NULL',
+            ], 'OR');
+        $db->setQuery($query);
+        $db->execute();
+        $fixed += $db->getAffectedRows();
+
+        // Step 2: Merge duplicate teachers (same name, keep lowest ID)
+        $mergeSql = 'CREATE TEMPORARY TABLE ' . $db->quoteName('#__bsms_teachers_merge') . ' AS '
+            . 'SELECT t1.' . $db->quoteName('id') . ' AS dup_id, '
+            . '(SELECT MIN(t2.' . $db->quoteName('id') . ') FROM ' . $db->quoteName('#__bsms_teachers') . ' t2 '
+            . 'WHERE LOWER(t2.' . $db->quoteName('teachername') . ') = LOWER(t1.' . $db->quoteName('teachername') . ')) AS keeper_id '
+            . 'FROM ' . $db->quoteName('#__bsms_teachers') . ' t1 '
+            . 'WHERE t1.' . $db->quoteName('id') . ' > ('
+            . 'SELECT MIN(t3.' . $db->quoteName('id') . ') FROM ' . $db->quoteName('#__bsms_teachers') . ' t3 '
+            . 'WHERE LOWER(t3.' . $db->quoteName('teachername') . ') = LOWER(t1.' . $db->quoteName('teachername') . '))';
+        $db->setQuery($mergeSql);
+        $db->execute();
+
+        // Check if there are duplicates to merge
+        $db->setQuery('SELECT COUNT(*) FROM ' . $db->quoteName('#__bsms_teachers_merge'));
+        $dupCount = (int) $db->loadResult();
+
+        if ($dupCount > 0) {
+            // Reassign sermons
+            $db->setQuery(
+                'UPDATE ' . $db->quoteName('#__bsms_studies') . ' s '
+                . 'INNER JOIN ' . $db->quoteName('#__bsms_teachers_merge') . ' m ON s.'
+                . $db->quoteName('teacher_id') . ' = m.dup_id '
+                . 'SET s.' . $db->quoteName('teacher_id') . ' = m.keeper_id'
+            );
+            $db->execute();
+
+            // Reassign junction table entries
+            if (\in_array(str_replace('#__', $db->getPrefix(), '#__bsms_study_teachers'), $db->getTableList(), true)) {
+                $db->setQuery(
+                    'UPDATE IGNORE ' . $db->quoteName('#__bsms_study_teachers') . ' st '
+                    . 'INNER JOIN ' . $db->quoteName('#__bsms_teachers_merge') . ' m ON st.'
+                    . $db->quoteName('teacher_id') . ' = m.dup_id '
+                    . 'SET st.' . $db->quoteName('teacher_id') . ' = m.keeper_id'
+                );
+                $db->execute();
+
+                // Delete junction rows that became duplicates after reassignment
+                $db->setQuery(
+                    'DELETE st1 FROM ' . $db->quoteName('#__bsms_study_teachers') . ' st1 '
+                    . 'INNER JOIN ' . $db->quoteName('#__bsms_study_teachers') . ' st2 '
+                    . 'ON st1.' . $db->quoteName('study_id') . ' = st2.' . $db->quoteName('study_id')
+                    . ' AND st1.' . $db->quoteName('teacher_id') . ' = st2.' . $db->quoteName('teacher_id')
+                    . ' AND st1.' . $db->quoteName('id') . ' > st2.' . $db->quoteName('id')
+                );
+                $db->execute();
+            }
+
+            // Reassign series
+            $db->setQuery(
+                'UPDATE ' . $db->quoteName('#__bsms_series') . ' sr '
+                . 'INNER JOIN ' . $db->quoteName('#__bsms_teachers_merge') . ' m ON sr.'
+                . $db->quoteName('teacher') . ' = m.dup_id '
+                . 'SET sr.' . $db->quoteName('teacher') . ' = m.keeper_id'
+            );
+            $db->execute();
+
+            // Remove asset entries for duplicates
+            $db->setQuery(
+                'DELETE FROM ' . $db->quoteName('#__assets')
+                . ' WHERE ' . $db->quoteName('name') . ' IN ('
+                . 'SELECT CONCAT(' . $db->quote('com_proclaim.teacher.') . ', dup_id) FROM '
+                . $db->quoteName('#__bsms_teachers_merge') . ')'
+            );
+            $db->execute();
+
+            // Delete duplicate teachers
+            $db->setQuery(
+                'DELETE FROM ' . $db->quoteName('#__bsms_teachers')
+                . ' WHERE ' . $db->quoteName('id') . ' IN ('
+                . 'SELECT dup_id FROM ' . $db->quoteName('#__bsms_teachers_merge') . ')'
+            );
+            $db->execute();
+            $fixed += $dupCount;
+        }
+
+        $db->setQuery('DROP TEMPORARY TABLE IF EXISTS ' . $db->quoteName('#__bsms_teachers_merge'));
+        $db->execute();
+
+        // Step 3: Deduplicate aliases by appending -ID to collisions
+        $dupAliasSql = 'CREATE TEMPORARY TABLE ' . $db->quoteName('#__bsms_teachers_dup_ids') . ' AS '
+            . 'SELECT t2.' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__bsms_teachers') . ' t2 '
+            . 'WHERE EXISTS ('
+            . 'SELECT 1 FROM ' . $db->quoteName('#__bsms_teachers') . ' t3 '
+            . 'WHERE LOWER(t3.' . $db->quoteName('alias') . ') = LOWER(t2.' . $db->quoteName('alias') . ') '
+            . 'AND t3.' . $db->quoteName('id') . ' < t2.' . $db->quoteName('id') . ')';
+        $db->setQuery($dupAliasSql);
+        $db->execute();
+
+        $db->setQuery(
+            'UPDATE ' . $db->quoteName('#__bsms_teachers')
+            . ' SET ' . $db->quoteName('alias') . ' = CONCAT(' . $db->quoteName('alias') . ', '
+            . $db->quote('-') . ', ' . $db->quoteName('id') . ')'
+            . ' WHERE ' . $db->quoteName('id') . ' IN ('
+            . 'SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__bsms_teachers_dup_ids') . ')'
+        );
+        $db->execute();
+        $fixed += $db->getAffectedRows();
+
+        $db->setQuery('DROP TEMPORARY TABLE IF EXISTS ' . $db->quoteName('#__bsms_teachers_dup_ids'));
+        $db->execute();
+
+        // Step 4: Add UNIQUE KEY if missing
+        $db->setQuery(
+            'SHOW INDEX FROM ' . $db->quoteName('#__bsms_teachers')
+            . ' WHERE ' . $db->quoteName('Key_name') . ' = ' . $db->quote('idx_alias')
+        );
+
+        if (!$db->loadResult()) {
+            try {
+                $db->setQuery(
+                    'ALTER TABLE ' . $db->quoteName('#__bsms_teachers')
+                    . ' ADD UNIQUE KEY ' . $db->quoteName('idx_alias') . ' (' . $db->quoteName('alias') . ')'
+                );
+                $db->execute();
+            } catch (\Exception $e) {
+                Log::add('Could not add idx_alias: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+            }
+        }
+
+        if ($fixed > 0) {
+            Log::add('Fixed ' . $fixed . ' teacher alias/duplicate issues', Log::INFO, 'com_proclaim');
+        }
+
+        return $fixed;
+    }
+
+    /**
+     * Populate the study_teachers junction table from the legacy teacher_id column.
+     *
+     * Ensures every study with a teacher_id has a corresponding junction table entry.
+     * Safe to run multiple times (uses INSERT IGNORE).
+     *
+     * @return  int  Number of rows inserted
+     *
+     * @since   10.1.0
+     */
+    public static function populateStudyTeachers(): int
+    {
+        $db = Factory::getContainer()->get('DatabaseDriver');
+
+        // Check if junction table exists
+        $junctionTable = str_replace('#__', $db->getPrefix(), '#__bsms_study_teachers');
+
+        if (!\in_array($junctionTable, $db->getTableList(), true)) {
+            return 0;
+        }
+
+        $db->setQuery(
+            'INSERT IGNORE INTO ' . $db->quoteName('#__bsms_study_teachers')
+            . ' (' . $db->quoteName('study_id') . ', ' . $db->quoteName('teacher_id') . ', ' . $db->quoteName('ordering') . ')'
+            . ' SELECT ' . $db->quoteName('id') . ', ' . $db->quoteName('teacher_id') . ', 0'
+            . ' FROM ' . $db->quoteName('#__bsms_studies')
+            . ' WHERE ' . $db->quoteName('teacher_id') . ' IS NOT NULL'
+            . ' AND ' . $db->quoteName('teacher_id') . ' > 0'
+        );
+        $db->execute();
+        $inserted = $db->getAffectedRows();
+
+        if ($inserted > 0) {
+            Log::add('Populated ' . $inserted . ' study-teacher junction records from legacy column', Log::INFO, 'com_proclaim');
+        }
+
+        return $inserted;
+    }
 }

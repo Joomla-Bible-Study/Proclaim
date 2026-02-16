@@ -166,7 +166,8 @@ class CwmseriesdisplayModel extends ItemModel
             $db->quoteName('teacher.title', 'teachertitle') . ', ' .
             $db->quoteName('teacher.teacher_thumbnail', 'thumb')
         );
-        $query->join('LEFT', $db->quoteName('#__bsms_teachers', 'teacher') . ' ON ' . $db->quoteName('teacher.id') . ' = ' . $db->quoteName('study.teacher_id'));
+        $query->join('LEFT', $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON ' . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('study.id') . ' AND ' . $db->quoteName('stj.ordering') . ' = 0');
+        $query->join('LEFT', $db->quoteName('#__bsms_teachers', 'teacher') . ' ON ' . $db->quoteName('teacher.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('study.teacher_id') . ')');
 
         // Join over Series
         $query->select(

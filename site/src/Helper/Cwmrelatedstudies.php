@@ -149,12 +149,16 @@ class Cwmrelatedstudies
     private function scoreByTeacher(object $db, int $studyId, int $teacherId, array $groups): void
     {
         $query = $db->getQuery(true)
-            ->select($db->quoteName('id'))
-            ->from($db->quoteName('#__bsms_studies'))
-            ->where($db->quoteName('teacher_id') . ' = ' . $teacherId)
-            ->where($db->quoteName('id') . ' != ' . $studyId)
-            ->where($db->quoteName('published') . ' = 1')
-            ->where($db->quoteName('access') . ' IN (' . implode(',', $groups) . ')');
+            ->select($db->quoteName('s.id'))
+            ->from($db->quoteName('#__bsms_studies', 's'))
+            ->innerJoin(
+                $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+                . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
+            )
+            ->where($db->quoteName('stj.teacher_id') . ' = ' . $teacherId)
+            ->where($db->quoteName('s.id') . ' != ' . $studyId)
+            ->where($db->quoteName('s.published') . ' = 1')
+            ->where($db->quoteName('s.access') . ' IN (' . implode(',', $groups) . ')');
 
         $db->setQuery($query);
         $ids = $db->loadColumn();
@@ -392,8 +396,13 @@ class Cwmrelatedstudies
             ->select($db->quoteName('b.bookname'))
             ->from($db->quoteName('#__bsms_studies', 's'))
             ->leftJoin(
+                $db->quoteName('#__bsms_study_teachers', 'stj2') . ' ON '
+                . $db->quoteName('stj2.study_id') . ' = ' . $db->quoteName('s.id')
+                . ' AND ' . $db->quoteName('stj2.ordering') . ' = 0'
+            )
+            ->leftJoin(
                 $db->quoteName('#__bsms_teachers', 't')
-                . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('s.teacher_id')
+                . ' ON ' . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj2.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . ')'
             )
             ->leftJoin(
                 $db->quoteName('#__bsms_books', 'b')

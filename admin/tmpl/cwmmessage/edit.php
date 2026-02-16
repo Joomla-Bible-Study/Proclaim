@@ -81,6 +81,19 @@ $isModal = $input->get('layout') === 'modal';
 $layout  = $isModal ? 'modal' : 'edit';
 $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=component' : '';
 ?>
+<?php // Prevent TinyMCE / subform / Choices.js init from scrolling the page down.
+// Placed as raw <script> so it runs immediately, before any element init fires. ?>
+<script>
+(function () {
+    if (location.hash) return;
+    function hold() { window.scrollTo(0, 0); }
+    window.addEventListener("scroll", hold);
+    window.addEventListener("load", function () {
+        hold();
+        setTimeout(function () { window.removeEventListener("scroll", hold); }, 500);
+    });
+})();
+</script>
 <form action="<?php
 echo Route::_(
     'index.php?option=com_proclaim&view=cwmmessage&layout=' . $layout . $tmpl . '&id=' . (int)$this->item->id
@@ -264,6 +277,7 @@ echo Route::_(
                 <?php echo $this->form->renderField('image', null, $imageDefault); ?>
                 <?php echo $this->form->renderField('nooverlaysimplemode', 'params'); ?>
                 <?php echo $this->form->renderField('teacher_id', null, $teacher_id); ?>
+                <?php echo $this->form->renderField('teachers'); ?>
 
                 <?php echo $this->form->renderField('series_id', null, $series_id); ?>
 

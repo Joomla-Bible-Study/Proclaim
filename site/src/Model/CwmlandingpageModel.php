@@ -140,7 +140,11 @@ class CwmlandingpageModel extends ListModel
         $query->select(
             $db->quoteName(['t.id', 't.teachername', 't.title', 't.language'], ['tid', 'teachertitle', null, null])
         );
-        $query->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON ' . $db->quoteName('s.teacher_id') . ' = ' . $db->quoteName('t.id'));
+        $query->join('LEFT', $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+            . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
+            . ' AND ' . $db->quoteName('stj.ordering') . ' = 0');
+        $query->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON '
+            . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . ')');
         $query->select(
             $db->quoteName(
                 ['se.id', 'se.series_text', 'se.description', 'se.series_thumbnail'],

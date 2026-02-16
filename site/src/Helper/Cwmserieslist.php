@@ -212,8 +212,13 @@ class Cwmserieslist extends Cwmlisting
                 . $db->quoteName('s.series_id') . ' = ' . $db->quoteName('se.id') . ')'
             )
             ->leftJoin(
+                $db->quoteName('#__bsms_study_teachers', 'st') . ' ON ('
+                . $db->quoteName('st.study_id') . ' = ' . $db->quoteName('s.id')
+                . ' AND ' . $db->quoteName('st.ordering') . ' = 0)'
+            )
+            ->leftJoin(
                 $db->quoteName('#__bsms_teachers', 't') . ' ON ('
-                . $db->quoteName('s.teacher_id') . ' = ' . $db->quoteName('t.id') . ')'
+                . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('st.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . '))'
             )
             ->leftJoin(
                 $db->quoteName('#__bsms_books') . ' ON ('

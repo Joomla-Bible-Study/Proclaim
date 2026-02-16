@@ -457,8 +457,12 @@ class Cwmlanding
                 )
                     ->from($this->db->quoteName('#__bsms_teachers', 'a'))
                     ->innerJoin(
+                        $this->db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+                        . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('stj.teacher_id')
+                    )
+                    ->innerJoin(
                         $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
-                        . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.teacher_id')
+                        . $this->db->quoteName('b.id') . ' = ' . $this->db->quoteName('stj.study_id')
                     )
                     ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
                     ->where($this->db->quoteName('a.published') . ' = 1')
@@ -689,8 +693,12 @@ class Cwmlanding
             $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
                 ->from($this->db->quoteName('#__bsms_teachers', 'a'))
                 ->innerJoin(
+                    $this->db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+                    . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('stj.teacher_id')
+                )
+                ->innerJoin(
                     $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
-                    . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.teacher_id')
+                    . $this->db->quoteName('b.id') . ' = ' . $this->db->quoteName('stj.study_id')
                 )
                 ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
                 ->where($this->db->quoteName('a.published') . ' = 1')

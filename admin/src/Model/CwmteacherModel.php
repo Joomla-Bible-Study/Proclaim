@@ -195,10 +195,14 @@ class CwmteacherModel extends AdminModel
 
         if (!empty($record) && $this->getState('task') === 'trash') {
             $query = $db->getQuery(true);
-            $query->select($db->qn(['id', 'studytitle']))
-                ->from($db->qn('#__bsms_studies'))
-                ->where($db->qn('teacher_id') . ' = ' . (int) $record->id)
-                ->where($db->qn('published') . ' != ' . $db->q('-2'));
+            $query->select($db->qn(['s.id', 's.studytitle']))
+                ->from($db->qn('#__bsms_studies', 's'))
+                ->innerJoin(
+                    $db->qn('#__bsms_study_teachers', 'st') . ' ON '
+                    . $db->qn('st.study_id') . ' = ' . $db->qn('s.id')
+                )
+                ->where($db->qn('st.teacher_id') . ' = ' . (int) $record->id)
+                ->where($db->qn('s.published') . ' != ' . $db->q('-2'));
             $db->setQuery($query, 10);
             $studies = $db->loadObjectList();
 
@@ -344,9 +348,13 @@ class CwmteacherModel extends AdminModel
 
         // Iterate the items to delete each one.
         $query = $db->getQuery(true);
-        $query->select($db->qn(['id', 'studytitle']))
-            ->from($db->qn('#__bsms_studies'))
-            ->where($db->qn('teacher_id') . ' = ' . (int) $record->id);
+        $query->select($db->qn(['s.id', 's.studytitle']))
+            ->from($db->qn('#__bsms_studies', 's'))
+            ->innerJoin(
+                $db->qn('#__bsms_study_teachers', 'st') . ' ON '
+                . $db->qn('st.study_id') . ' = ' . $db->qn('s.id')
+            )
+            ->where($db->qn('st.teacher_id') . ' = ' . (int) $record->id);
         $db->setQuery($query);
         $studies = $db->loadObjectList();
 

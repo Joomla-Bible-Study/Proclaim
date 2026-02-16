@@ -244,11 +244,17 @@ class CwmmessagesModel extends ListModel
             $db->qn('#__bsms_message_type', 'messageType') . ' ON ' . $db->qn('messageType.id') . ' = ' . $db->qn('study.messagetype')
         );
 
-        // Join over Teachers
+        // Join over Teachers (via junction table, primary teacher only; falls back to legacy teacher_id)
         $query->select($db->qn('teacher.teachername', 'teachername'));
         $query->join(
             'LEFT',
-            $db->qn('#__bsms_teachers', 'teacher') . ' ON ' . $db->qn('teacher.id') . ' = ' . $db->qn('study.teacher_id')
+            $db->qn('#__bsms_study_teachers', 'stj') . ' ON ' . $db->qn('stj.study_id') . ' = ' . $db->qn('study.id')
+            . ' AND ' . $db->qn('stj.ordering') . ' = 0'
+        );
+        $query->join(
+            'LEFT',
+            $db->qn('#__bsms_teachers', 'teacher') . ' ON ' . $db->qn('teacher.id')
+            . ' = COALESCE(' . $db->qn('stj.teacher_id') . ', ' . $db->qn('study.teacher_id') . ')'
         );
 
         // Join over Series
@@ -297,7 +303,12 @@ class CwmmessagesModel extends ListModel
         $teacher = $this->getState('filter.teacher');
 
         if (is_numeric($teacher)) {
-            $query->where($db->qn('study.teacher_id') . ' = ' . (int) $teacher);
+            $tSubquery = $db->getQuery(true)
+                ->select('1')
+                ->from($db->qn('#__bsms_study_teachers', 'stf'))
+                ->where($db->qn('stf.study_id') . ' = ' . $db->qn('study.id'))
+                ->where($db->qn('stf.teacher_id') . ' = ' . (int) $teacher);
+            $query->where('EXISTS (' . $tSubquery . ')');
         }
 
         // Filter by series

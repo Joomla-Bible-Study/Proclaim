@@ -73,9 +73,17 @@
                    filter="trim"/>
         </fieldset>
 
-        <field name="teacher_id" type="TeacherList" label="JBS_CMN_TEACHER">
-            <option value="-1">JBS_CMN_SELECT_TEACHER</option>
-        </field>
+        <field name="teacher_id" type="hidden" default="0"/>
+
+        <field name="teachers" type="subform"
+               label="JBS_CMN_TEACHERS"
+               description="JBS_CMN_TEACHERS_DESC"
+               formsource="teacher_row"
+               multiple="true"
+               min="0" max="10"
+               groupByFieldset="false"
+               layout="joomla.form.field.subform.repeatable-table"
+               buttons="add,remove,move"/>
 
         <field name="location_id" type="LocationList" label="JBS_CMN_LOCATION">
             <option value="-1">JBS_CMN_SELECT_LOCATION</option>
