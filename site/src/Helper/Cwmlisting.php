@@ -929,8 +929,8 @@ class Cwmlisting
         $data = '';
 
         // Build image CSS class: always include img-fluid for responsive images, plus any custom class
-        $customImgClass = isset($row->custom) && !str_contains($row->custom, 'style=') ? $row->custom : '';
-        $imgClass = trim('img-fluid' . ($customImgClass !== '' ? ' ' . $customImgClass : ''));
+        $customImgClass    = isset($row->custom) && !str_contains($row->custom, 'style=') ? $row->custom : '';
+        $imgClass          = trim('img-fluid' . ($customImgClass !== '' ? ' ' . $customImgClass : ''));
         $classAppliedToImg = false;
 
         // Match the data in $item to a row/col in $row->name

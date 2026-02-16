@@ -42,6 +42,15 @@ class CwmseriespodcastdisplayModel extends ItemModel
     protected string $context = 'com_proclaim.podcastdisplay';
 
     /**
+     * Cached studies query (avoids rebuilding for getTotal).
+     *
+     * @var  QueryInterface|null
+     *
+     * @since 10.1.0
+     */
+    private ?QueryInterface $studiesQuery = null;
+
+    /**
      * Method to get study data.
      *
      * @param   int  $pk  The ID of the study.
@@ -291,8 +300,12 @@ class CwmseriespodcastdisplayModel extends ItemModel
      */
     public function getStudies(): array
     {
-        $db              = $this->getDatabase();
-        $query           = $this->getStudiesQuery();
+        $db    = $this->getDatabase();
+        $query = $this->getStudiesQuery();
+
+        // Cache the query so getTotal() can clone it
+        $this->studiesQuery = $query;
+
         $template_params = Cwmparams::getTemplateparams();
         $t_params        = $template_params->params;
 
@@ -320,8 +333,12 @@ class CwmseriespodcastdisplayModel extends ItemModel
      */
     public function getTotal(): int
     {
-        $db    = $this->getDatabase();
-        $query = $this->getStudiesQuery();
+        $db = $this->getDatabase();
+
+        // Reuse the cached query from getStudies() if available, otherwise build fresh
+        $query = $this->studiesQuery !== null
+            ? clone $this->studiesQuery
+            : $this->getStudiesQuery();
 
         $query->clear('select')->clear('order')->clear('limit')->clear('offset');
         $query->select('COUNT(DISTINCT ' . $db->quoteName('study.id') . ')');

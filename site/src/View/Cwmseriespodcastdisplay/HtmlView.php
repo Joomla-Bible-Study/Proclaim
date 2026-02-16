@@ -136,21 +136,35 @@ class HtmlView extends BaseHtmlView
         $media = [];
 
         if ($studies) {
-            foreach ($studies as $s => $study) {
-                $medias   = !empty($study->mids) ? explode(',', $study->mids) : [];
-                $jbsMedia = new Cwmmedia();
+            // Collect all media IDs from every study into one flat array
+            $allMediaIds = [];
 
-                foreach ($medias as $i => $extraMedia) {
-                    $rowMedia = $jbsMedia->getMediaRows2((int)$extraMedia);
+            foreach ($studies as $study) {
+                if (!empty($study->mids)) {
+                    foreach (explode(',', $study->mids) as $mid) {
+                        $mid = (int) $mid;
 
-                    if ($rowMedia) {
-                        $reg = new Registry();
-                        $reg->loadString($rowMedia->params);
-                        $rowParams = $reg;
-
-                        if (str_ends_with($rowParams->get('filename', ''), '.mp3')) {
-                            $media[] = $rowMedia;
+                        if ($mid > 0) {
+                            $allMediaIds[] = $mid;
                         }
+                    }
+                }
+            }
+
+            if ($allMediaIds) {
+                // Single batch query replaces N+1 individual queries
+                $jbsMedia    = new Cwmmedia();
+                $batchResult = $jbsMedia->getMediaRowsBatch($allMediaIds);
+
+                foreach ($batchResult as $rowMedia) {
+                    $reg = new Registry();
+                    $reg->loadString($rowMedia->params);
+
+                    if (str_ends_with($reg->get('filename', ''), '.mp3')) {
+                        // Pre-parse Registry objects so the template doesn't recreate them
+                        $rowMedia->sparams = new Registry($rowMedia->sparams);
+                        $rowMedia->params  = $reg;
+                        $media[]           = $rowMedia;
                     }
                 }
             }
