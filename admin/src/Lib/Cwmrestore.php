@@ -82,13 +82,6 @@ class Cwmrestore
     }
 
     /**
-     * Get Objects for tables
-     *
-     * @return array
-     *
-     * @since 7.0.0
-     */
-    /**
      * Tables to preserve during restore.
      *
      * These tables contain downloaded/cached data that is expensive to
@@ -105,6 +98,13 @@ class Cwmrestore
         '#__bsms_bible_verses',
     ];
 
+    /**
+     * Get Objects for tables
+     *
+     * @return array
+     *
+     * @since 7.0.0
+     */
     protected static function getObjects(): array
     {
         $db        = Factory::getContainer()->get('DatabaseDriver');

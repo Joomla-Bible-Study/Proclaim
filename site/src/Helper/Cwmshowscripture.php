@@ -281,7 +281,7 @@ class Cwmshowscripture
 
                 $passage .= '</a>';
 
-                // Hidden template — JS reads innerHTML to build the Blob
+                // Hidden template — JS reads innerHTML to write into the popup window
                 $lang     = Factory::getApplication()->getLanguage()->getTag();
                 $passage .= '<template id="' . $popupId . '">';
                 $passage .= '<!DOCTYPE html><html lang="' . $lang . '">';

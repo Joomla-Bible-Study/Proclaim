@@ -937,18 +937,6 @@ class CwmbackupController extends FormController
     }
 
     /**
-     * Send JSON response and terminate.
-     *
-     * @param   bool    $success  Success status
-     * @param   string  $message  Message
-     * @param   array   $data     Additional data
-     *
-     * @return never
-     *
-     * @throws \Exception
-     * @since 10.1.0
-     */
-    /**
      * Run post-restore data fixes that Joomla's ChangeSet cannot handle.
      *
      * These are PHP-level migrations for INSERT/UPDATE/DELETE operations
@@ -1038,6 +1026,18 @@ class CwmbackupController extends FormController
         }
     }
 
+    /**
+     * Send JSON response and terminate.
+     *
+     * @param   bool    $success  Success status
+     * @param   string  $message  Message
+     * @param   array   $data     Additional data
+     *
+     * @return never
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
     private function sendJsonResponse(bool $success, string $message = '', array $data = []): never
     {
         $app = Factory::getApplication();
