@@ -122,10 +122,15 @@ describe('series-scroll.es6.js', () => {
     });
 
     describe('Load More Mode', () => {
-        function setupLoadMore(fetchMock) {
+        function setupLoadMore(fetchMock, extraOpts) {
             document.body.innerHTML =
                 '<div id="proclaim-series-list">' +
-                    '<div class="row"><div class="col">Series 1</div><div class="col">Series 2</div></div>' +
+                    '<div class="table-responsive"><table class="table"><tbody>' +
+                    '<tr><td>Series 1</td></tr>' +
+                    '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
+                    '<tr><td>Series 2</td></tr>' +
+                    '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
+                    '</tbody></table></div>' +
                 '</div>' +
                 '<div class="proclaim-load-more" id="proclaim-load-more">' +
                     '<button type="button" class="btn">Load More</button>' +
@@ -134,13 +139,14 @@ describe('series-scroll.es6.js', () => {
                 '<div class="proclaim-scroll-sentinel" id="proclaim-scroll-sentinel"></div>';
 
             global.Joomla = {
-                getOptions: jest.fn().mockReturnValue({
+                getOptions: jest.fn().mockReturnValue(Object.assign({
                     enabled: true,
                     ajaxUrl: 'http://localhost/index.php?option=com_proclaim&task=cwmseriesdisplays.paginateAjax&format=raw',
                     csrfToken: 'testtoken',
                     paginationStyle: 'loadmore',
                     limit: 2,
-                }),
+                    totalItems: 10,
+                }, extraOpts || {})),
                 Text: { _: jest.fn(function (key, fallback) { return fallback || key; }) },
             };
 
@@ -161,13 +167,28 @@ describe('series-scroll.es6.js', () => {
             document.dispatchEvent(new Event('DOMContentLoaded'));
         }
 
+        test('should show initial counter on page load', () => {
+            var mockFetch = jest.fn();
+            setupLoadMore(mockFetch);
+
+            var counter = document.getElementById('proclaim-item-counter');
+            expect(counter.textContent).toContain('Showing');
+            expect(counter.textContent).toContain('2');
+            expect(counter.textContent).toContain('10');
+        });
+
         test('should append items on Load More click', async () => {
             var mockFetch = jest.fn().mockResolvedValue({
                 ok: true,
                 json: function () {
                     return Promise.resolve({
                         success: true,
-                        html: '<div class="row"><div class="col">Series 3</div><div class="col">Series 4</div></div>',
+                        html: '<div class="table-responsive"><table class="table"><tbody>' +
+                            '<tr><td>Series 3</td></tr>' +
+                            '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
+                            '<tr><td>Series 4</td></tr>' +
+                            '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
+                            '</tbody></table></div>',
                         total: 10,
                         pagesTotal: 5,
                     });
@@ -177,7 +198,9 @@ describe('series-scroll.es6.js', () => {
             setupLoadMore(mockFetch);
 
             var list = document.getElementById('proclaim-series-list');
-            expect(list.querySelector('.row').children.length).toBe(2);
+            var tbody = list.querySelector('tbody');
+            // 2 items × 2 tr = 4
+            expect(tbody.querySelectorAll('tr').length).toBe(4);
 
             var btn = document.querySelector('#proclaim-load-more button');
             btn.click();
@@ -186,7 +209,9 @@ describe('series-scroll.es6.js', () => {
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
 
-            expect(list.querySelector('.row').children.length).toBe(4);
+            // 4 items × 2 tr = 8
+            expect(tbody.querySelectorAll('tr').length).toBe(8);
+            expect(tbody.innerHTML).toContain('Series 3');
         });
 
         test('should hide button when all items loaded', async () => {
@@ -195,14 +220,17 @@ describe('series-scroll.es6.js', () => {
                 json: function () {
                     return Promise.resolve({
                         success: true,
-                        html: '<div class="row"><div class="col">Series 3</div></div>',
+                        html: '<div class="table-responsive"><table class="table"><tbody>' +
+                            '<tr><td>Series 3</td></tr>' +
+                            '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
+                            '</tbody></table></div>',
                         total: 3,
                         pagesTotal: 1,
                     });
                 },
             });
 
-            setupLoadMore(mockFetch);
+            setupLoadMore(mockFetch, { totalItems: 3 });
 
             var btn = document.querySelector('#proclaim-load-more button');
             btn.click();

@@ -35,7 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
     var paginationStyle = opts.paginationStyle || 'pagination';
     var pageLimit       = opts.limit || 20;
     var currentOffset   = 0;
-    var totalItems      = 0;
+    var totalItems      = opts.totalItems || 0;
+    var displayedCount  = Math.min(pageLimit, totalItems);
     var isLoadingMore   = false;
     var allItemsLoaded  = false;
     var scrollObserver  = null;
@@ -90,17 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
             var template = txt('JBS_CMN_SHOWING_X_OF_Y', 'Showing %s of %s');
             itemCounter.textContent = template.replace('%s', shown).replace('%s', total);
         }
-    }
-
-    /**
-     * Count the number of series items currently in the list container.
-     */
-    function countDisplayedItems() {
-        var row = listContainer.querySelector('.row');
-        if (row) {
-            return row.children.length;
-        }
-        return listContainer.children.length;
     }
 
     /**
@@ -164,22 +154,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 var temp = document.createElement('div');
                 temp.innerHTML = result.html;
 
-                var newRow = temp.querySelector('.row');
-                var existingRow = listContainer.querySelector('.row');
+                // The listing helper renders a table inside a
+                // .table-responsive wrapper. Extract <tbody> rows from
+                // the response and append them to the existing <tbody>.
+                var newTbody = temp.querySelector('tbody');
+                var existingTbody = listContainer.querySelector('tbody');
 
-                if (newRow && existingRow) {
-                    while (newRow.firstChild) {
-                        existingRow.appendChild(newRow.firstChild);
+                if (newTbody && existingTbody) {
+                    while (newTbody.firstChild) {
+                        existingTbody.appendChild(newTbody.firstChild);
                     }
-                } else if (result.html) {
+                } else {
                     listContainer.insertAdjacentHTML('beforeend', result.html);
                 }
             }
 
             // Update tracking
             totalItems = result.total || 0;
-            var displayed = countDisplayedItems();
-            updateCounter(displayed, totalItems);
+            displayedCount = Math.min(currentOffset + pageLimit, totalItems);
+            updateCounter(displayedCount, totalItems);
 
             // Check if we've loaded everything
             var currentPage = Math.floor(currentOffset / pageLimit) + 1;
@@ -201,6 +194,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ─── Setup ──────────────────────────────────────────────────
+
+    // Show initial counter
+    if (totalItems > 0) {
+        updateCounter(displayedCount, totalItems);
+
+        // If all items fit on the first page, hide load-more controls
+        if (displayedCount >= totalItems) {
+            handleAllItemsLoaded();
+        }
+    }
 
     if (paginationStyle === 'loadmore' && loadMoreBtn) {
         loadMoreBtn.addEventListener('click', function () {

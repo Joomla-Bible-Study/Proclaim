@@ -43,7 +43,12 @@ function setupModule(fetchMock, extraOpts) {
     }
 
     html += '<div id="proclaim-sermon-list" aria-live="polite">' +
-                '<div class="row"><div class="col">Item 1</div><div class="col">Item 2</div></div>' +
+                '<div class="table-responsive"><table class="table"><tbody>' +
+                '<tr><td>Item 1</td></tr>' +
+                '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
+                '<tr><td>Item 2</td></tr>' +
+                '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
+                '</tbody></table></div>' +
             '</div>';
 
     if (paginationStyle === 'pagination') {
@@ -72,6 +77,7 @@ function setupModule(fetchMock, extraOpts) {
             csrfToken: 'testtoken',
             paginationStyle: paginationStyle,
             limit: 2,
+            totalItems: 10,
         }, extraOpts || {})),
         Text: { _: jest.fn(function (key, fallback) {
             return fallback || key;
@@ -121,14 +127,19 @@ function setupModule(fetchMock, extraOpts) {
     document.addEventListener = origAddEventListener;
 }
 
-/** Standard AJAX response mock */
+/** Standard AJAX response mock — uses table structure matching Cwmlisting output */
 function mockAjaxResponse(overrides) {
     return {
         ok: true,
         json: function () {
             return Promise.resolve(Object.assign({
                 success: true,
-                html: '<div class="row"><div class="col">New Item 1</div><div class="col">New Item 2</div></div>',
+                html: '<div class="table-responsive"><table class="table"><tbody>' +
+                    '<tr><td>New Item 1</td></tr>' +
+                    '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
+                    '<tr><td>New Item 2</td></tr>' +
+                    '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
+                    '</tbody></table></div>',
                 pagination: '',
                 pagesCounter: '',
                 total: 10,
@@ -292,6 +303,7 @@ describe('sermon-filters.es6.js', () => {
 
             var list = document.getElementById('proclaim-sermon-list');
             expect(list.innerHTML).toContain('New Item 1');
+            expect(list.querySelector('tbody')).not.toBeNull();
         });
     });
 
@@ -323,6 +335,16 @@ describe('sermon-filters.es6.js', () => {
     });
 
     describe('Load More Mode', () => {
+        test('should show initial counter on page load', () => {
+            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
+            setupModule(mockFetch, { paginationStyle: 'loadmore' });
+
+            var counter = document.getElementById('proclaim-item-counter');
+            expect(counter.textContent).toContain('Showing');
+            expect(counter.textContent).toContain('2');
+            expect(counter.textContent).toContain('10');
+        });
+
         test('should show Load More button when in loadmore mode', () => {
             var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
             setupModule(mockFetch, { paginationStyle: 'loadmore' });
@@ -337,8 +359,9 @@ describe('sermon-filters.es6.js', () => {
             setupModule(mockFetch, { paginationStyle: 'loadmore' });
 
             var list = document.getElementById('proclaim-sermon-list');
-            var initialChildren = list.querySelector('.row').children.length;
-            expect(initialChildren).toBe(2);
+            var tbody = list.querySelector('tbody');
+            // 2 items × (1 content tr + 1 separator tr) = 4 tr elements
+            expect(tbody.querySelectorAll('tr').length).toBe(4);
 
             mockFetch.mockClear();
 
@@ -349,9 +372,8 @@ describe('sermon-filters.es6.js', () => {
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
 
-            // Items should be appended (2 original + 2 new = 4)
-            var afterChildren = list.querySelector('.row').children.length;
-            expect(afterChildren).toBe(4);
+            // Items appended: 2 original + 2 new = 4 items = 8 tr elements
+            expect(tbody.querySelectorAll('tr').length).toBe(8);
         });
 
         test('should update counter after load', async () => {
@@ -403,7 +425,9 @@ describe('sermon-filters.es6.js', () => {
             await new Promise(function (r) { setTimeout(r, 0); });
 
             var list = document.getElementById('proclaim-sermon-list');
-            expect(list.querySelector('.row').children.length).toBe(4);
+            var tbody = list.querySelector('tbody');
+            // 4 items = 8 tr elements
+            expect(tbody.querySelectorAll('tr').length).toBe(8);
 
             // Now change a filter — should replace, not append
             mockFetch.mockClear();
@@ -415,8 +439,8 @@ describe('sermon-filters.es6.js', () => {
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
 
-            // After filter change, list should be replaced (2 items, not 6)
-            expect(list.querySelector('.row').children.length).toBe(2);
+            // After filter change, list should be replaced (fresh table with 2 items)
+            expect(list.innerHTML).toContain('New Item 1');
         });
     });
 

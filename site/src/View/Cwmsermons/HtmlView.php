@@ -383,6 +383,7 @@ class HtmlView extends BaseHtmlView
                 'csrfToken'       => Session::getFormToken(),
                 'paginationStyle' => $params->get('pagination_style', 'pagination'),
                 'limit'           => (int) $this->state->get('list.limit', 20),
+                'totalItems'      => (int) $pagination->total,
             ]);
 
             $wa->useScript('com_proclaim.sermon-filters');

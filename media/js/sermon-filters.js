@@ -54,11 +54,12 @@
         const pageLimit       = opts.limit || 20;
 
         // Scroll/load-more state
-        let currentOffset  = 0;
-        let totalItems     = 0;
-        let isLoadingMore  = false;
-        let allItemsLoaded = false;
-        let scrollObserver = null;
+        let currentOffset   = 0;
+        let totalItems      = opts.totalItems || 0;
+        let displayedCount  = Math.min(pageLimit, totalItems);
+        let isLoadingMore   = false;
+        let allItemsLoaded  = false;
+        let scrollObserver  = null;
 
         // DOM elements for scroll modes
         const loadMoreContainer = document.getElementById('proclaim-load-more');
@@ -184,22 +185,6 @@
                 var template = txt('JBS_CMN_SHOWING_X_OF_Y', 'Showing %s of %s');
                 itemCounter.textContent = template.replace('%s', shown).replace('%s', total);
             }
-        }
-
-        /**
-         * Count the number of sermon items currently in the list container.
-         *
-         * @returns {number}
-         */
-        function countDisplayedItems() {
-            // The fluid listing renders items as column divs inside a .row wrapper.
-            var row = listContainer.querySelector('.row');
-
-            if (row) {
-                return row.children.length;
-            }
-
-            return listContainer.children.length;
         }
 
         /**
@@ -369,17 +354,17 @@
                         var temp = document.createElement('div');
                         temp.innerHTML = result.html;
 
-                        // The listing helper wraps items in a .row container.
-                        // Extract inner content from the response's row.
-                        var newRow = temp.querySelector('.row');
-                        var existingRow = listContainer.querySelector('.row');
+                        // The listing helper renders a table inside a
+                        // .table-responsive wrapper. Extract <tbody> rows from
+                        // the response and append them to the existing <tbody>.
+                        var newTbody = temp.querySelector('tbody');
+                        var existingTbody = listContainer.querySelector('tbody');
 
-                        if (newRow && existingRow) {
-                            // Append each child of the new row to the existing row
-                            while (newRow.firstChild) {
-                                existingRow.appendChild(newRow.firstChild);
+                        if (newTbody && existingTbody) {
+                            while (newTbody.firstChild) {
+                                existingTbody.appendChild(newTbody.firstChild);
                             }
-                        } else if (result.html) {
+                        } else {
                             // Fallback: just append the raw HTML
                             listContainer.insertAdjacentHTML('beforeend', result.html);
                         }
@@ -387,8 +372,8 @@
 
                     // Update tracking
                     totalItems = result.total || 0;
-                    var displayed = countDisplayedItems();
-                    updateCounter(displayed, totalItems);
+                    displayedCount = Math.min(currentOffset + pageLimit, totalItems);
+                    updateCounter(displayedCount, totalItems);
 
                     // Check if we've loaded everything
                     var currentPage = Math.floor(currentOffset / pageLimit) + 1;
@@ -412,8 +397,8 @@
                     // For scroll modes, update state after replace
                     if (paginationStyle !== 'pagination') {
                         totalItems = result.total || 0;
-                        var displayedAfterReplace = countDisplayedItems();
-                        updateCounter(displayedAfterReplace, totalItems);
+                        displayedCount = Math.min(pageLimit, totalItems);
+                        updateCounter(displayedCount, totalItems);
 
                         if (result.pagesTotal <= 1 || !result.html) {
                             handleAllItemsLoaded();
@@ -549,6 +534,16 @@
             });
 
             scrollObserver.observe(scrollSentinel);
+        }
+
+        // Show initial counter for non-pagination modes
+        if (paginationStyle !== 'pagination' && totalItems > 0) {
+            updateCounter(displayedCount, totalItems);
+
+            // If all items fit on the first page, hide load-more controls
+            if (displayedCount >= totalItems) {
+                handleAllItemsLoaded();
+            }
         }
 
         /**

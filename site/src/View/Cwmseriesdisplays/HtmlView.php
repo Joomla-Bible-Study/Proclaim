@@ -247,6 +247,7 @@ class HtmlView extends BaseHtmlView
                 'csrfToken'       => Session::getFormToken(),
                 'paginationStyle' => $seriesPaginationStyle,
                 'limit'           => (int) $this->pagination->limit,
+                'totalItems'      => (int) $pagination->total,
             ]);
 
             $wa->useScript('com_proclaim.series-scroll');
