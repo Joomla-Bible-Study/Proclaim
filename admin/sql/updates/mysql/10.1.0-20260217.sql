@@ -2,16 +2,6 @@
 -- Teacher table cleanup: merge duplicate teachers, deduplicate aliases, add UNIQUE KEY, drop legacy columns.
 --
 
--- Step 0: Make legacy columns nullable so saves don't fail before migration completes
-ALTER TABLE `#__bsms_teachers`
-    MODIFY COLUMN `imageh` LONGTEXT DEFAULT NULL,
-    MODIFY COLUMN `imagew` LONGTEXT DEFAULT NULL,
-    MODIFY COLUMN `thumb` LONGTEXT DEFAULT NULL,
-    MODIFY COLUMN `thumbw` LONGTEXT DEFAULT NULL,
-    MODIFY COLUMN `thumbh` LONGTEXT DEFAULT NULL,
-    MODIFY COLUMN `address1` LONGTEXT DEFAULT NULL,
-    MODIFY COLUMN `catid` INT DEFAULT NULL;
-
 -- Step 1: Ensure every teacher has an alias (generate from teachername if missing)
 UPDATE `#__bsms_teachers`
 SET `alias` = LOWER(REPLACE(REPLACE(REPLACE(TRIM(`teachername`), ' ', '-'), '''', ''), '"', ''))
@@ -73,11 +63,10 @@ ALTER TABLE `#__bsms_teachers`
     ADD UNIQUE KEY `idx_alias` (`alias`);
 
 -- Step 5: Drop legacy image/dimension columns superseded by teacher_thumbnail system
-ALTER TABLE `#__bsms_teachers`
-    DROP COLUMN `imageh`,
-    DROP COLUMN `imagew`,
-    DROP COLUMN `thumb`,
-    DROP COLUMN `thumbw`,
-    DROP COLUMN `thumbh`,
-    DROP COLUMN `address1`,
-    DROP COLUMN `catid`;
+ALTER TABLE `#__bsms_teachers` DROP COLUMN `imageh`;
+ALTER TABLE `#__bsms_teachers` DROP COLUMN `imagew`;
+ALTER TABLE `#__bsms_teachers` DROP COLUMN `thumb`;
+ALTER TABLE `#__bsms_teachers` DROP COLUMN `thumbw`;
+ALTER TABLE `#__bsms_teachers` DROP COLUMN `thumbh`;
+ALTER TABLE `#__bsms_teachers` DROP COLUMN `address1`;
+ALTER TABLE `#__bsms_teachers` DROP COLUMN `catid`;
