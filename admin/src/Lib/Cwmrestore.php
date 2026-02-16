@@ -16,9 +16,11 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\InstallerHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
 use Joomla\Component\Installer\Administrator\Model\DatabaseModel;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
@@ -226,6 +228,9 @@ class Cwmrestore
                 $DatabaseModel = new DatabaseModel();
                 $DatabaseModel->fix([$cid]);
 
+                // Run PHP data migration steps that ChangeSet cannot handle
+                self::runPostRestoreDataFixes();
+
                 // Fix Proclaim assets (ACL permissions)
                 self::fixAssetsAfterRestore();
 
@@ -328,6 +333,15 @@ class Cwmrestore
         } catch (\Exception $e) {
             $app->enqueueMessage('Schema repair notice: ' . $e->getMessage(), 'warning');
         }
+
+        // Run PHP data migration steps that ChangeSet cannot handle
+        self::runPostRestoreDataFixes();
+
+        // Fix Proclaim assets (ACL permissions)
+        self::fixAssetsAfterRestore();
+
+        // Fix object ownership for migrated data
+        self::fixOwnershipAfterRestore();
 
         return true;
     }
@@ -571,6 +585,34 @@ class Cwmrestore
             ->values($extensionId . ', ' . $db->quote('0.0.0'));
         $db->setQuery($query);
         $db->execute();
+    }
+
+    /**
+     * Run PHP data migration steps after a database restore.
+     *
+     * DatabaseModel::fix() only runs SQL DDL via Joomla's ChangeSet — it skips
+     * UPDATE/DELETE/INSERT statements. This method runs the PHP finish steps
+     * that handle data migration the ChangeSet cannot.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    protected static function runPostRestoreDataFixes(): void
+    {
+        try {
+            $fixed = CwmmigrationHelper::fixTeacherAliases();
+            Log::add('Post-restore: fixed ' . $fixed . ' teacher alias/duplicate issues', Log::INFO, 'com_proclaim');
+        } catch (\Exception $e) {
+            Log::add('Post-restore teacher alias fix failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        try {
+            $inserted = CwmmigrationHelper::populateStudyTeachers();
+            Log::add('Post-restore: populated ' . $inserted . ' study-teacher junction records', Log::INFO, 'com_proclaim');
+        } catch (\Exception $e) {
+            Log::add('Post-restore study-teacher population failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
     }
 
     /**

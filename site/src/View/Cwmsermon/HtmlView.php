@@ -418,8 +418,7 @@ class HtmlView extends BaseHtmlView
         $menu   = $app->getMenu();
 
         foreach ($menu->getItems('component', 'com_proclaim') as $menuItem) {
-            if (isset($menuItem->query['view']) && $menuItem->query['view'] === 'cwmsermons'
-                && $menuItem->published === 1) {
+            if (isset($menuItem->query['view']) && $menuItem->query['view'] === 'cwmsermons') {
                 $menuid = $menuItem->id;
                 break;
             }

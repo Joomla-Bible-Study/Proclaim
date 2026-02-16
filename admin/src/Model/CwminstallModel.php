@@ -262,6 +262,8 @@ class CwminstallModel extends ListModel
             'fixemptylanguage',
             'migratedeprecatedplayers',
             'updatetemplatedefaults',
+            'populatestudyteachers',
+            'fixteacheraliases',
             'registerguidedtours',
             'rmoldurl',
             'setupdateurl',
@@ -945,6 +947,16 @@ class CwminstallModel extends ListModel
                 $updated       = $migration->migrateFromVersion($this->versionSwitch);
                 $this->running = 'Update Template Defaults (' . $updated . ' templates updated)';
                 Log::add('Updated ' . $updated . ' templates with new default parameters', Log::INFO, 'com_proclaim');
+                break;
+            case 'fixteacheraliases':
+                $fixed         = CwmmigrationHelper::fixTeacherAliases();
+                $this->running = 'Fix Teacher Aliases (' . $fixed . ' fixed)';
+                Log::add('Fixed ' . $fixed . ' teacher alias/duplicate issues', Log::INFO, 'com_proclaim');
+                break;
+            case 'populatestudyteachers':
+                $inserted      = CwmmigrationHelper::populateStudyTeachers();
+                $this->running = 'Populate Study Teachers (' . $inserted . ' records)';
+                Log::add('Populated ' . $inserted . ' study-teacher junction records', Log::INFO, 'com_proclaim');
                 break;
             case 'registerguidedtours':
                 $tourHelper    = new CwmguidedtourHelper();
