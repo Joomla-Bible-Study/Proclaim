@@ -96,6 +96,13 @@ class CwmtemplatemigrationHelper
             'topic_id'    => 'ltopic_id',
             'messagetype' => 'lmessagetype',
             'locations'   => 'llocations',
+            // Fix legacy teacherimagerrow → teacherimagerow (double-r typo) across all 6 contexts
+            'teacherimagerrow'   => 'teacherimagerow',
+            'dteacherimagerrow'  => 'dteacherimagerow',
+            'tsteacherimagerrow' => 'tsteacherimagerow',
+            'tdteacherimagerrow' => 'tdteacherimagerow',
+            'steacherimagerrow'  => 'steacherimagerow',
+            'sdteacherimagerrow' => 'sdteacherimagerow',
         ],
     ];
 
@@ -238,6 +245,9 @@ class CwmtemplatemigrationHelper
         if (!empty($paramsToAdd)) {
             $updatedCount += $this->applyParamsToTemplates($paramsToAdd);
         }
+
+        // Migrate legacy rowspanitem image settings to Layout Editor elements
+        $updatedCount += $this->migrateRowspanImages();
 
         Log::add('Template migration complete. Updated ' . $updatedCount . ' templates.', Log::INFO, 'com_proclaim');
 
@@ -632,6 +642,136 @@ class CwmtemplatemigrationHelper
             }
 
             // Save if any parameters were added
+            if ($updated) {
+                $this->updateTemplateParams($template->id, $registry->toString());
+                $updatedCount++;
+            }
+        }
+
+        return $updatedCount;
+    }
+
+    /**
+     * Migrate legacy rowspanitem image settings to Layout Editor element placement.
+     *
+     * The rowspanitem feature rendered images as a side column via div-inside-table
+     * (invalid HTML). This migration converts those settings to proper Layout Editor
+     * element placement and disables the legacy feature.
+     *
+     * Mapping: rowspanitem=1 → teacherimage, 2 → thumbnail, 3 → seriesthumbnail, 4 → teacherlargeimage
+     *
+     * @return  int  Number of templates updated
+     *
+     * @since   10.1.0
+     */
+    public function migrateRowspanImages(): int
+    {
+        $updatedCount = 0;
+
+        // Rowspanitem value → Layout Editor element name
+        $elementMap = [
+            1 => 'teacherimage',
+            2 => 'thumbnail',
+            3 => 'seriesthumbnail',
+            4 => 'teacherlargeimage',
+        ];
+
+        // Context prefixes
+        $prefixes = ['', 'd', 'ts', 'td', 's', 'sd'];
+
+        $query = $this->db->getQuery(true)
+            ->select($this->db->quoteName(['id', 'params', 'title']))
+            ->from($this->db->quoteName('#__bsms_templates'));
+        $this->db->setQuery($query);
+        $templates = $this->db->loadObjectList();
+
+        foreach ($templates as $template) {
+            $updated  = false;
+            $registry = new Registry();
+
+            if (!empty($template->params)) {
+                $registry->loadString($template->params);
+            }
+
+            foreach ($prefixes as $prefix) {
+                $rowspanitem = (int) $registry->get($prefix . 'rowspanitem', 0);
+
+                if ($rowspanitem < 1 || !isset($elementMap[$rowspanitem])) {
+                    continue;
+                }
+
+                $element = $elementMap[$rowspanitem];
+                $rowKey  = $prefix . $element . 'row';
+
+                // Only migrate if the element isn't already placed in a row
+                if ((int) $registry->get($rowKey, 0) === 0) {
+                    $colSpan = (int) $registry->get($prefix . 'rowspanitemspan', '4');
+
+                    // Shift existing row-1 elements to the right to make room for the image on the left
+                    $allElements = [
+                        'scripture1', 'scripture2', 'scriptures', 'secondary', 'title', 'date',
+                        'teacher', 'teacher-title', 'duration', 'studyintro', 'studytext',
+                        'series', 'description', 'seriesthumbnail', 'submitted', 'hits',
+                        'downloads', 'studynumber', 'topic', 'locations', 'jbsmedia',
+                        'messagetype', 'thumbnail', 'teacherimage', 'teacheremail', 'teacherweb',
+                        'teacherphone', 'teacherfb', 'teachertw', 'teacherblog', 'teachershort',
+                        'teacherlong', 'teacheraddress', 'teacherlink1', 'teacherlink2',
+                        'teacherlink3', 'teacherlargeimage', 'teacherallinone',
+                    ];
+
+                    foreach ($allElements as $elName) {
+                        $elRowKey = $prefix . $elName . 'row';
+
+                        if ((int) $registry->get($elRowKey, 0) === 1 && $elName !== $element) {
+                            $elColspan = (int) $registry->get($prefix . $elName . 'colspan', 1);
+                            $elCol     = (int) $registry->get($prefix . $elName . 'col', 1);
+
+                            // Shift element right by image width
+                            $registry->set($prefix . $elName . 'col', (string) ($elCol + $colSpan));
+
+                            // Shrink element if it would overflow the 12-column grid
+                            if ($elColspan > (12 - $colSpan)) {
+                                $registry->set($prefix . $elName . 'colspan', (string) (12 - $colSpan));
+                            }
+                        }
+                    }
+
+                    // Place image at column 1 (left side), matching the old rowspanitem layout
+                    $registry->set($rowKey, '1');
+                    $registry->set($prefix . $element . 'col', '1');
+                    $registry->set($prefix . $element . 'colspan', (string) $colSpan);
+
+                    // Transfer the legacy image CSS class (e.g., img-rounded, img-polaroid)
+                    // to the element's custom param, converting to Bootstrap 5 equivalents
+                    $legacyClass = $registry->get($prefix . 'rowspanitemimage', '');
+                    $customKey   = $prefix . $element . 'custom';
+
+                    if ($legacyClass !== '' && $registry->get($customKey, '') === '') {
+                        // Convert Bootstrap 2/3 classes to Bootstrap 5
+                        $classMap = [
+                            'img-polaroid' => 'img-thumbnail',
+                            'img-rounded'  => 'rounded',
+                            'img-circle'   => 'rounded-circle',
+                        ];
+
+                        $modernClass = $classMap[$legacyClass] ?? $legacyClass;
+                        $registry->set($customKey, $modernClass);
+                    }
+
+                    Log::add(
+                        'Migrated rowspanitem=' . $rowspanitem . ' to element "' . $element
+                        . '" (row 1, col 1, colspan ' . $colSpan . ') with prefix "' . $prefix
+                        . '" in template "' . $template->title . '"',
+                        Log::INFO,
+                        'com_proclaim'
+                    );
+                }
+
+                // Disable the legacy feature
+                $registry->set($prefix . 'rowspanitem', '0');
+                $updated = true;
+            }
+
             if ($updated) {
                 $this->updateTemplateParams($template->id, $registry->toString());
                 $updatedCount++;

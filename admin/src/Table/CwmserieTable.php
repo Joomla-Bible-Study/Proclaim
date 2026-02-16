@@ -249,6 +249,15 @@ class CwmserieTable extends Table
             throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_SERIES_NAME_REQUIRED'));
         }
 
+        // Sanitise publish dates — empty strings are invalid for NOT NULL DATETIME columns
+        if (empty($this->publish_up)) {
+            $this->publish_up = $this->getDatabase()->getNullDate();
+        }
+
+        if (empty($this->publish_down)) {
+            $this->publish_down = $this->getDatabase()->getNullDate();
+        }
+
         return parent::check();
     }
 
