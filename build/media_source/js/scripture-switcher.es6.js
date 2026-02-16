@@ -18,6 +18,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const isDebug = Joomla.getOptions('system.debug') || false;
 
     /**
+     * Get a translated string from Joomla.Text with a proper fallback.
+     * Joomla.Text._() returns the key itself when not found, so we compare
+     * the result against the key to detect missing translations.
+     *
+     * @param {string} key       Language key
+     * @param {string} fallback  Fallback text if key is not registered
+     * @returns {string}
+     */
+    const txt = (key, fallback) => {
+        if (!Joomla.Text) {
+            return fallback;
+        }
+
+        const result = Joomla.Text._(key);
+
+        return (result && result !== key) ? result : fallback;
+    };
+
+    /**
      * Maximum number of automatic retries for transient failures.
      * @type {number}
      */
@@ -77,11 +96,11 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const showRetryButton = (body, reference, version, copyright) => {
         body.innerHTML = '<p class="text-muted"><em>'
-            + (Joomla.Text ? Joomla.Text._('JBS_CMN_SCRIPTURE_UNAVAILABLE') || 'Scripture text temporarily unavailable' : 'Scripture text temporarily unavailable')
+            + txt('JBS_CMN_SCRIPTURE_UNAVAILABLE', 'Scripture text temporarily unavailable')
             + '</em></p>'
             + '<button type="button" class="btn btn-sm btn-outline-secondary scripture-retry-btn">'
             + '<i class="fas fa-redo" aria-hidden="true"></i> '
-            + (Joomla.Text ? Joomla.Text._('JBS_CMN_SCRIPTURE_RETRY') || 'Try Again' : 'Try Again')
+            + txt('JBS_CMN_SCRIPTURE_RETRY', 'Try Again')
             + '</button>';
 
         if (copyright) {
@@ -103,9 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         let fallbackHtml = '';
 
                         if (data.fallback && data.translation) {
-                            const fallbackMsg = (Joomla.Text
-                                ? Joomla.Text._('JBS_CMN_SCRIPTURE_FALLBACK') || 'Showing in %s (requested version unavailable)'
-                                : 'Showing in %s (requested version unavailable)')
+                            const fallbackMsg = txt('JBS_CMN_SCRIPTURE_FALLBACK', 'Showing in %s (requested version unavailable)')
                                 .replace('%s', data.translation.toUpperCase());
                             fallbackHtml = `<div class="scripture-fallback-notice text-muted small mb-1"><em>${fallbackMsg}</em></div>`;
                         }
@@ -183,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (attempt > 0) {
                     body.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> '
                         + '<em class="text-muted">'
-                        + (Joomla.Text ? Joomla.Text._('JBS_CMN_SCRIPTURE_SERVICE_BUSY') || 'Bible service is temporarily busy. Retrying...' : 'Bible service is temporarily busy. Retrying...')
+                        + txt('JBS_CMN_SCRIPTURE_SERVICE_BUSY', 'Bible service is temporarily busy. Retrying...')
                         + '</em>';
                     await sleep(RETRY_DELAY_MS);
                 }
@@ -195,9 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     let fallbackHtml = '';
 
                     if (data.fallback && data.translation) {
-                        const fallbackMsg = (Joomla.Text
-                            ? Joomla.Text._('JBS_CMN_SCRIPTURE_FALLBACK') || 'Showing in %s (requested version unavailable)'
-                            : 'Showing in %s (requested version unavailable)')
+                        const fallbackMsg = txt('JBS_CMN_SCRIPTURE_FALLBACK', 'Showing in %s (requested version unavailable)')
                             .replace('%s', data.translation.toUpperCase());
                         fallbackHtml = `<div class="scripture-fallback-notice text-muted small mb-1"><em>${fallbackMsg}</em></div>`;
                     }
@@ -469,7 +484,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (attempt > 0) {
                         body.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> '
                             + '<em class="text-muted">'
-                            + (Joomla.Text ? Joomla.Text._('JBS_CMN_SCRIPTURE_SERVICE_BUSY') || 'Bible service is temporarily busy. Retrying...' : 'Bible service is temporarily busy. Retrying...')
+                            + txt('JBS_CMN_SCRIPTURE_SERVICE_BUSY', 'Bible service is temporarily busy. Retrying...')
                             + '</em>';
                         await sleep(RETRY_DELAY_MS);
                     }
@@ -481,9 +496,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         let fallbackHtml = '';
 
                         if (data.fallback && data.translation) {
-                            const fallbackMsg = (Joomla.Text
-                                ? Joomla.Text._('JBS_CMN_SCRIPTURE_FALLBACK') || 'Showing in %s (requested version unavailable)'
-                                : 'Showing in %s (requested version unavailable)')
+                            const fallbackMsg = txt('JBS_CMN_SCRIPTURE_FALLBACK', 'Showing in %s (requested version unavailable)')
                                 .replace('%s', data.translation.toUpperCase());
                             fallbackHtml = `<div class="scripture-fallback-notice text-muted small mb-1"><em>${fallbackMsg}</em></div>`;
                         }
@@ -565,9 +578,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     let fallbackHtml = '';
 
                     if (data.fallback && data.translation) {
-                        const fallbackMsg = (Joomla.Text
-                            ? Joomla.Text._('JBS_CMN_SCRIPTURE_FALLBACK') || 'Showing in %s (requested version unavailable)'
-                            : 'Showing in %s (requested version unavailable)')
+                        const fallbackMsg = txt('JBS_CMN_SCRIPTURE_FALLBACK', 'Showing in %s (requested version unavailable)')
                             .replace('%s', data.translation.toUpperCase());
                         fallbackHtml = `<div class="scripture-fallback-notice text-muted small mb-1"><em>${fallbackMsg}</em></div>`;
                     }

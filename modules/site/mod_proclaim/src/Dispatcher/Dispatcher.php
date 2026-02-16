@@ -15,6 +15,7 @@ use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
 use Joomla\CMS\Helper\HelperFactoryAwareInterface;
 use Joomla\CMS\Helper\HelperFactoryAwareTrait;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\Registry\Registry;
 
@@ -118,6 +119,12 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
                 false
             ),
         ]);
+
+        // Register language strings used by scripture-switcher JS
+        Text::script('JBS_CMN_SCRIPTURE_UNAVAILABLE');
+        Text::script('JBS_CMN_SCRIPTURE_RETRY');
+        Text::script('JBS_CMN_SCRIPTURE_FALLBACK');
+        Text::script('JBS_CMN_SCRIPTURE_SERVICE_BUSY');
 
         $url = $data['params']->get('stylesheet');
 

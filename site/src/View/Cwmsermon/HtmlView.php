@@ -514,6 +514,12 @@ class HtmlView extends BaseHtmlView
                     false
                 ),
             ]);
+
+            // Register language strings used by scripture-switcher JS
+            Text::script('JBS_CMN_SCRIPTURE_UNAVAILABLE');
+            Text::script('JBS_CMN_SCRIPTURE_RETRY');
+            Text::script('JBS_CMN_SCRIPTURE_FALLBACK');
+            Text::script('JBS_CMN_SCRIPTURE_SERVICE_BUSY');
         }
 
         $this->prepareDocument();
