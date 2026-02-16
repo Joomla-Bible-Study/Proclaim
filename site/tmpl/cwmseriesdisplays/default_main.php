@@ -35,10 +35,11 @@ $option        = $input->get('option', '', 'cmd');
 $CWMSerieslist = $this->serieslist;
 $series_menu   = $this->seriesMenu;
 
-$params       = $this->params;
-$url          = $params->get('stylesheet');
-$listing      = $this->listing;
-$classelement = $this->classelement;
+$params              = $this->params;
+$url                 = $params->get('stylesheet');
+$listing             = $this->listing;
+$classelement        = $this->classelement;
+$seriesPagStyle      = $params->get('series_pagination_style', 'pagination');
 
 if ($url) {
     HTMLHelper::_('stylesheet', $url);
@@ -66,6 +67,9 @@ if ($this->params->get('show_series_title') > 0) {
 
                 <?php
                 echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
+?>
+                <div id="proclaim-series-list" aria-live="polite">
+                <?php
 if ($this->items) {
     try {
         $list = $listing->getFluidListing(
@@ -81,6 +85,10 @@ if ($this->items) {
     echo '<h4>' . Text::_('JBS_CMN_SERIES_NOT_FOUND') . '</h4>';
 }
 ?>
+                </div>
+
+                <?php // Standard pagination ?>
+                <?php if ($seriesPagStyle === 'pagination') : ?>
                 <div class="pagination-container pagelinks">
                     <?php
     if ((int) $this->params->get('series_list_show_pagination') === 2) {
@@ -91,9 +99,22 @@ if ($this->items) {
 echo $this->pagination->getPageslinks();
 ?>
                 </div>
-                <!--end of bsfooter div-->
+                <?php endif; ?>
 
-                <!--end of bspagecontainer div-->
+                <?php // Load More button ?>
+                <?php if ($seriesPagStyle === 'loadmore') : ?>
+                <div class="proclaim-load-more" id="proclaim-load-more">
+                    <button type="button" class="btn btn-outline-primary">
+                        <?php echo Text::_('JBS_CMN_LOAD_MORE'); ?>
+                    </button>
+                </div>
+                <?php endif; ?>
+
+                <?php // Item counter and scroll sentinel ?>
+                <?php if ($seriesPagStyle !== 'pagination') : ?>
+                <div class="proclaim-item-counter" id="proclaim-item-counter"></div>
+                <div class="proclaim-scroll-sentinel" id="proclaim-scroll-sentinel"></div>
+                <?php endif; ?>
             </div> <!-- end of container-fluid div -->
         </div>
     </div>

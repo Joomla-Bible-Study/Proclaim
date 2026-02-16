@@ -28,10 +28,11 @@ $wa = $this->getDocument()->getWebAssetManager();
 $wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
 
 // Use pre-calculated values from HtmlView
-$teachers     = $this->teachersFluid;
-$listing      = $this->listing;
-$classelement = $this->classelement;
-$itemid       = $this->itemid;
+$teachers        = $this->teachersFluid;
+$listing         = $this->listing;
+$classelement    = $this->classelement;
+$itemid          = $this->itemid;
+$paginationStyle = $this->params->get('pagination_style', 'pagination');
 
 ?>
 
@@ -137,7 +138,8 @@ if ($showArchived === '1') : ?>
             // Search tools bar
             echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
 ?>
-            <?php // Top pagination ?>
+            <?php // Top pagination (standard mode only) ?>
+            <?php if ($paginationStyle === 'pagination') : ?>
             <div id="proclaim-pagination-top" class="proclaim-pagination">
             <?php if (!empty($this->items)) : ?>
                 <?php
@@ -164,6 +166,7 @@ if ($showArchived === '1') : ?>
     endif; ?>
             <?php endif; ?>
             </div>
+            <?php endif; ?>
             <?php // Sermon listing ?>
             <div id="proclaim-sermon-list" aria-live="polite">
             <?php
@@ -174,7 +177,8 @@ if ($this->items) {
 }
 ?>
             </div>
-            <?php // Bottom pagination ?>
+            <?php // Bottom pagination (standard mode only) ?>
+            <?php if ($paginationStyle === 'pagination') : ?>
             <div id="proclaim-pagination-bottom" class="proclaim-pagination">
             <?php if (!empty($this->items)) : ?>
                 <?php
@@ -197,6 +201,22 @@ if ($this->items) {
                 <?php endif; ?>
             <?php endif; ?>
             </div>
+            <?php endif; ?>
+
+            <?php // Load More button (loadmore mode only) ?>
+            <?php if ($paginationStyle === 'loadmore') : ?>
+            <div class="proclaim-load-more" id="proclaim-load-more">
+                <button type="button" class="btn btn-outline-primary">
+                    <?php echo Text::_('JBS_CMN_LOAD_MORE'); ?>
+                </button>
+            </div>
+            <?php endif; ?>
+
+            <?php // Item counter and scroll sentinel (loadmore and infinite modes) ?>
+            <?php if ($paginationStyle !== 'pagination') : ?>
+            <div class="proclaim-item-counter" id="proclaim-item-counter"></div>
+            <div class="proclaim-scroll-sentinel" id="proclaim-scroll-sentinel"></div>
+            <?php endif; ?>
             <?php
             if ($this->params->get('showpodcastsubscribelist') === '2') {
                 echo $this->subscribe;
