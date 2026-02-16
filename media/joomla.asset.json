@@ -486,6 +486,17 @@
             "name": "com_proclaim.scripture-tooltip-css",
             "type": "style",
             "uri": "com_proclaim/scripture-tooltip.css"
+        },
+        {
+            "name": "com_proclaim.upgrade-wizard",
+            "type": "script",
+            "uri": "com_proclaim/upgrade-wizard.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "type": "module"
+            }
         }
     ]
 }

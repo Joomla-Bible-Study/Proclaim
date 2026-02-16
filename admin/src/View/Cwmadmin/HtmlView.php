@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmadmin;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmupgradeHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Helper\ContentHelper;
@@ -182,6 +183,14 @@ class HtmlView extends BaseHtmlView
     public $pi;
 
     /**
+     * Whether a 9.x schema was detected in the database
+     *
+     * @var bool
+     * @since 10.1.0
+     */
+    public bool $has9xSchema = false;
+
+    /**
      * Form
      *
      * @var Form
@@ -285,6 +294,9 @@ class HtmlView extends BaseHtmlView
                     . Text::_('JBS_IBM_CONVERT_PREACH_IT') . '</a>';
             }
         }
+
+        // Detect 9.x schema for upgrade wizard tab
+        $this->has9xSchema = CwmupgradeHelper::detect9xSchema()['detected'];
 
         // Get cached version to avoid parsing XML on every request
         $this->version = self::getComponentVersion();

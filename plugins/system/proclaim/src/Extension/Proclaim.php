@@ -81,6 +81,14 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     private ?bool $simpleMode = null;
 
     /**
+     * Cached 9.x schema detection result for this request (null = not yet checked).
+     *
+     * @var ?bool
+     * @since 10.1.0
+     */
+    private ?bool $has9xSchema = null;
+
+    /**
      * Returns the events this plugin subscribes to.
      *
      * @return  array
@@ -122,6 +130,18 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             );
 
             return;
+        }
+
+        // 9.x schema upgrade warning — shown on all admin pages until the upgrade wizard is run
+        if ($this->has9xLegacySchema()) {
+            $app->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
+
+            $upgradeUrl = Route::_('index.php?option=com_proclaim&view=cwmadmin', false);
+
+            $app->enqueueMessage(
+                Text::sprintf('COM_PROCLAIM_UPGRADE_9X_DETECTED', $upgradeUrl),
+                'warning'
+            );
         }
 
         // Rate limiting for POST requests to com_proclaim
@@ -322,6 +342,39 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         } catch (\Exception $e) {
             return [];
         }
+    }
+
+    /**
+     * Detect whether a legacy 9.x schema exists in the database.
+     *
+     * Checks for `#__bsms_version` or `#__bsms_schemaversion` tables which
+     * only exist in Proclaim 9.x and earlier. Uses direct DB queries to avoid
+     * depending on component helper classes that may not be loaded yet.
+     *
+     * Result is cached for the request to avoid repeated table list lookups.
+     *
+     * @return  bool  True if 9.x legacy tables are detected.
+     *
+     * @since   10.1.0
+     */
+    private function has9xLegacySchema(): bool
+    {
+        if ($this->has9xSchema !== null) {
+            return $this->has9xSchema;
+        }
+
+        try {
+            $db        = Factory::getContainer()->get('DatabaseDriver');
+            $prefix    = $db->getPrefix();
+            $tableList = $db->getTableList();
+
+            $this->has9xSchema = \in_array($prefix . 'bsms_version', $tableList, true)
+                || \in_array($prefix . 'bsms_schemaversion', $tableList, true);
+        } catch (\Exception $e) {
+            $this->has9xSchema = false;
+        }
+
+        return $this->has9xSchema;
     }
 
     /**
