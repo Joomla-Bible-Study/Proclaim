@@ -23,6 +23,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmImageCleanup;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
+use CWM\Component\Proclaim\Administrator\Helper\CwmupgradeHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Administrator\Lib\CwmpIconvert;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmrestore;
@@ -2618,6 +2619,282 @@ class CwmadminController extends FormController
         $app->sendHeaders();
 
         echo $csv;
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Detect whether a 9.x schema exists and return version + record counts.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function detectUpgradeXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $detection = CwmupgradeHelper::detect9xSchema();
+
+            if ($detection['detected']) {
+                $detection['meets_minimum'] = CwmupgradeHelper::meetsMinimumVersion($detection['version']);
+                $detection['record_counts'] = CwmupgradeHelper::get9xInfo();
+            }
+
+            echo json_encode($detection, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'detected' => false,
+                'error'    => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Create a safety backup before the upgrade.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function upgradeBackupXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $backup = new Cwmbackup();
+            $result = $backup->exportdb(2);
+
+            echo json_encode([
+                'success'  => (bool) $result,
+                'filename' => $result ? 'backup created' : '',
+                'message'  => $result ? 'Backup completed' : 'Backup failed',
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Convert INI parameters to JSON format.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function upgradeParamsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $result            = CwmupgradeHelper::convertIniToJson();
+            $result['success'] = true;
+            echo json_encode($result, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'success'   => false,
+                'converted' => 0,
+                'message'   => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Reset schema version and run SQL migrations.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function upgradeSchemaXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $resetResult = CwmupgradeHelper::resetSchemaVersion();
+
+            if (!$resetResult) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Could not reset schema version',
+                ], JSON_THROW_ON_ERROR);
+                $app->close();
+
+                return;
+            }
+
+            $migrationResult = CwmupgradeHelper::runSchemaMigration();
+            echo json_encode($migrationResult, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Run all data migration fixes.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function upgradeDataXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $result            = CwmupgradeHelper::runDataFixes();
+            $result['success'] = empty($result['errors']);
+            echo json_encode($result, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'success' => false,
+                'steps'   => [],
+                'errors'  => [$e->getMessage()],
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Rebuild ACL assets.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function upgradeAssetsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $result = CwmupgradeHelper::rebuildAssets();
+            echo json_encode($result, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Verify upgrade and clean up 9.x artifacts.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function upgradeVerifyXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $verifyResult = CwmupgradeHelper::verify();
+            $dropped      = CwmupgradeHelper::cleanup9xArtifacts();
+
+            $verifyResult['artifacts_dropped'] = $dropped;
+            echo json_encode($verifyResult, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
 
         $app->close();
     }

@@ -65,6 +65,42 @@ Text::script('JBS_CSV_TYPE_LOCATION');
 Text::script('JBS_CSV_TYPE_MESSAGETYPE');
 Text::script('JBS_CSV_TYPE_TOPIC');
 
+// Upgrade wizard (conditional)
+if ($this->has9xSchema) {
+    $wa->useScript('com_proclaim.upgrade-wizard');
+
+    Text::script('JBS_UPG_DETECTING');
+    Text::script('JBS_UPG_NOT_DETECTED');
+    Text::script('JBS_UPG_DETECTED');
+    Text::script('JBS_UPG_DETECT_ERROR');
+    Text::script('JBS_UPG_TOTAL');
+    Text::script('JBS_UPG_PENDING');
+    Text::script('JBS_UPG_RUNNING');
+    Text::script('JBS_UPG_DONE');
+    Text::script('JBS_UPG_ERROR');
+    Text::script('JBS_UPG_RUNNING_STEP');
+    Text::script('JBS_UPG_STEP_BACKUP');
+    Text::script('JBS_UPG_STEP_PARAMS');
+    Text::script('JBS_UPG_STEP_SCHEMA');
+    Text::script('JBS_UPG_STEP_DATA');
+    Text::script('JBS_UPG_STEP_ASSETS');
+    Text::script('JBS_UPG_STEP_VERIFY');
+    Text::script('JBS_UPG_STEP_FAILED');
+    Text::script('JBS_UPG_CANCELLED');
+    Text::script('JBS_UPG_CANCELLING');
+    Text::script('JBS_UPG_COMPLETE');
+    Text::script('JBS_UPG_RETRY');
+    Text::script('JBS_UPG_RELOAD');
+    Text::script('JBS_UPG_SUCCESS');
+    Text::script('JBS_UPG_FAILED');
+    Text::script('JBS_UPG_REPORT_CANCELLED');
+    Text::script('JBS_UPG_REPORT_ERROR');
+    Text::script('JBS_UPG_REPORT_SUCCESS');
+    Text::script('JBS_UPG_STEP');
+    Text::script('JBS_UPG_RESULT');
+    Text::script('JBS_UPG_DETAILS');
+}
+
 $app   = Factory::getApplication();
 $input = $app->getInput();
 
@@ -448,6 +484,14 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
+
+        <?php if ($this->has9xSchema) : ?>
+        <?php
+        echo HTMLHelper::_('uitab.addTab', 'myTab', 'upgrade', Text::_('JBS_UPG_TAB_TITLE')); ?>
+        <?php echo $this->loadTemplate('upgrade'); ?>
+        <?php
+        echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php endif; ?>
 
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'imagetools', Text::_('JBS_ADM_IMAGE_TOOLS')); ?>

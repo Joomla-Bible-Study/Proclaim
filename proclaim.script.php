@@ -769,6 +769,29 @@ class com_proclaimInstallerScript extends InstallerScript
                 );
             }
         }
+        // Detect 9.x legacy schema and warn the user to run the upgrade wizard
+        if ($type === 'install') {
+            try {
+                $db        = Factory::getContainer()->get('DatabaseDriver');
+                $prefix    = $db->getPrefix();
+                $tableList = $db->getTableList();
+
+                if (
+                    \in_array($prefix . 'bsms_version', $tableList, true)
+                    || \in_array($prefix . 'bsms_schemaversion', $tableList, true)
+                ) {
+                    Factory::getApplication()->enqueueMessage(
+                        'Proclaim 9.x data detected in your database. After installation completes, '
+                        . 'go to <strong>Components &rarr; Proclaim &rarr; Admin Center</strong> and click the '
+                        . '<strong>9.x Upgrade</strong> tab to complete the migration.',
+                        'warning'
+                    );
+                }
+            } catch (\Exception $e) {
+                // Silently ignore detection failures during install
+            }
+        }
+
         // For updates, we use the migration process
         $parent->getParent()->setRedirectURL(
             'index.php?option=com_proclaim&view=cwminstall&task=cwminstall.browse&scanstate=start&' .
