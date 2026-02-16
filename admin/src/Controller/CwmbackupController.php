@@ -17,7 +17,9 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmtemplatemigrationHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use Joomla\CMS\Factory;
@@ -462,12 +464,17 @@ class CwmbackupController extends FormController
 
         $db = Factory::getContainer()->get('DatabaseDriver');
 
-        // For the first batch, drop existing tables
+        // For the first batch, drop existing tables (preserving downloaded Bible verse data)
         if ($batch === 0) {
-            $objects = CwmdbHelper::getObjects();
+            $preserve = ['#__bsms_bible_verses'];
+            $objects  = CwmdbHelper::getObjects();
 
             foreach ($objects as $object) {
-                $dropper = 'DROP TABLE IF EXISTS ' . $object['name'] . ';';
+                if (\in_array($object['name'], $preserve, true)) {
+                    continue;
+                }
+
+                $dropper = 'DROP TABLE IF EXISTS ' . $db->quoteName($object['name']);
                 $db->setQuery($dropper);
                 $db->execute();
             }
@@ -547,6 +554,9 @@ class CwmbackupController extends FormController
             $skipAssetFix = $input->get('skipAssetFix', '0', 'string') === '1';
             $session      = $app->getSession();
 
+            // Retrieve and clean up the import file path before clearing session
+            $importFilePath = $session->get('proclaim_import_' . $sessionId, '', 'CWM');
+
             // Clean up session data
             $session->set('proclaim_import_' . $sessionId, '', 'CWM');
             $session->set('proclaim_import_queries_' . $sessionId, '', 'CWM');
@@ -554,6 +564,9 @@ class CwmbackupController extends FormController
             // Reset schema version and run migrations so tables/columns added
             // after the backup was created get applied (e.g. bible_translations).
             $schemaFixed = $this->fixSchemaAfterRestore();
+
+            // Run post-restore data fixes (seed bible translations, template defaults, etc.)
+            $this->runPostRestoreDataFixes();
 
             // Fix assets using a lightweight direct SQL approach (unless skipped for testing)
             if (!$skipAssetFix) {
@@ -564,6 +577,9 @@ class CwmbackupController extends FormController
 
             // Recreate templatecode PHP files from database records
             $templatecodesCreated = $this->recreateTemplatecodeFiles();
+
+            // Clean up tmp files left by the import
+            $this->cleanupImportTmpFiles($importFilePath);
 
             $this->sendJsonResponse(true, Text::_('JBS_CMN_OPERATION_SUCCESSFUL'), [
                 'templatecodes_created' => $templatecodesCreated,
@@ -932,6 +948,96 @@ class CwmbackupController extends FormController
      * @throws \Exception
      * @since 10.1.0
      */
+    /**
+     * Run post-restore data fixes that Joomla's ChangeSet cannot handle.
+     *
+     * These are PHP-level migrations for INSERT/UPDATE/DELETE operations
+     * that the SQL DDL-only ChangeSet skips.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function runPostRestoreDataFixes(): void
+    {
+        try {
+            CwmmigrationHelper::fixTeacherAliases();
+        } catch (\Exception $e) {
+            Log::add('Post-restore teacher alias fix failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        try {
+            CwmmigrationHelper::populateStudyTeachers();
+        } catch (\Exception $e) {
+            Log::add('Post-restore study-teacher population failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        try {
+            CwmmigrationHelper::seedBibleTranslations();
+        } catch (\Exception $e) {
+            Log::add('Post-restore bible translation seed failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        try {
+            $migration = new CwmtemplatemigrationHelper();
+            $migration->migrateAll();
+        } catch (\Exception $e) {
+            Log::add('Post-restore template defaults merge failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+    }
+
+    /**
+     * Clean up temporary files left by the import process.
+     *
+     * Removes the uploaded SQL file, any extracted ZIP directory,
+     * and stale proclaim_export_* files from previous exports.
+     *
+     * @param   string  $importFilePath  Path to the import SQL file (from session)
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function cleanupImportTmpFiles(string $importFilePath): void
+    {
+        $config  = Factory::getApplication()->getConfig();
+        $tmpPath = $config->get('tmp_path');
+
+        // Delete the uploaded/extracted SQL file
+        if (!empty($importFilePath) && is_file($importFilePath)) {
+            try {
+                File::delete($importFilePath);
+            } catch (\Exception $e) {
+                Log::add('Failed to delete import file: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+            }
+
+            // If the SQL was inside an extracted directory, clean that too
+            $extractDir = \dirname($importFilePath);
+
+            if ($extractDir !== $tmpPath && str_starts_with($extractDir, $tmpPath) && is_dir($extractDir)) {
+                try {
+                    Folder::delete($extractDir);
+                } catch (\Exception $e) {
+                    Log::add('Failed to delete extract dir: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+                }
+            }
+        }
+
+        // Clean up any stale proclaim_export_*.sql files from previous exports
+        try {
+            $staleFiles = Folder::files($tmpPath, '^proclaim_export_.*\.sql$', false, true);
+
+            foreach ($staleFiles as $staleFile) {
+                // Only delete files older than 1 hour
+                if (filemtime($staleFile) < time() - 3600) {
+                    File::delete($staleFile);
+                }
+            }
+        } catch (\Exception $e) {
+            Log::add('Failed to clean stale export files: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+    }
+
     private function sendJsonResponse(bool $success, string $message = '', array $data = []): never
     {
         $app = Factory::getApplication();

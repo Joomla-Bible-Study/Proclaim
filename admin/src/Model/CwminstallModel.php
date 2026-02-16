@@ -262,6 +262,7 @@ class CwminstallModel extends ListModel
             'fixemptylanguage',
             'migratedeprecatedplayers',
             'updatetemplatedefaults',
+            'seedbibletranslations',
             'populatestudyteachers',
             'fixteacheraliases',
             'registerguidedtours',
@@ -947,6 +948,11 @@ class CwminstallModel extends ListModel
                 $updated       = $migration->migrateFromVersion($this->versionSwitch);
                 $this->running = 'Update Template Defaults (' . $updated . ' templates updated)';
                 Log::add('Updated ' . $updated . ' templates with new default parameters', Log::INFO, 'com_proclaim');
+                break;
+            case 'seedbibletranslations':
+                $seeded        = CwmmigrationHelper::seedBibleTranslations();
+                $this->running = 'Seed Bible Translations (' . $seeded . ' inserted)';
+                Log::add('Seeded ' . $seeded . ' bible translations', Log::INFO, 'com_proclaim');
                 break;
             case 'fixteacheraliases':
                 $fixed         = CwmmigrationHelper::fixTeacherAliases();

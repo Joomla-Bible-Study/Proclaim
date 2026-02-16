@@ -62,6 +62,9 @@ class CwmtemplatemigrationHelper
         '10.1.0' => [
             'default_show_archived'      => '2',
             'default_show_archive_badge' => '1',
+            'show_passage_view'          => '3',
+            'showpassage_icon'           => '1',
+            'allow_version_switch'       => '0',
         ],
     ];
 

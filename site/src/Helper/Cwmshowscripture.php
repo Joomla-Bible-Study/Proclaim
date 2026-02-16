@@ -57,7 +57,7 @@ class Cwmshowscripture
         }
 
         $reference = $this->formReference($row);
-        $choice    = (int) $params->get('show_passage_view');
+        $choice    = (int) $params->get('show_passage_view', 3);
 
         // Read Bible version from message row (new), fallback to template params (legacy compat)
         $version = $row->bible_version ?? $params->get('bible_translation', '');
@@ -232,7 +232,7 @@ class Cwmshowscripture
                     . 'e.style.display = (isHidden ? \'block\' : \'none\'); '
                     . 'this.setAttribute(\'aria-expanded\', isHidden); return false;">';
 
-                if ((int) $params->get('showpassage_icon') === 1) {
+                if ((int) $params->get('showpassage_icon', 1) === 1) {
                     $passage .= '<i class="fas fa-bible fa-3x" aria-hidden="true" '
                         . 'style="display: flex; margin-right: 10px;"></i>';
                 }
@@ -257,21 +257,22 @@ class Cwmshowscripture
 
             case 3:
                 // New window – opens scripture in a separate browser window/tab.
-                // Uses a Blob URL so Chrome allows the popup (data: URIs are blocked
-                // in top-level navigations). The Blob URL remains valid for refresh
-                // as long as the parent page stays open.
+                // Opens a blank window, then writes the server-rendered HTML into it
+                // via the DOM API. This is cross-browser safe: Chrome blocks data: URIs
+                // in top-level navigations, and Safari lacks Blob URL support in some
+                // contexts. The content comes from a server-rendered <template> element
+                // (not user input) so there is no XSS vector.
                 $popupId  = 'scripture_popup_' . uniqid('', true);
                 $passage  = '<div class="scripture-container">';
                 $passage .= '<a href="#" class="scripture-popup-trigger" '
                     . 'onclick="var t=document.getElementById(\'' . $popupId . '\');'
-                    . 'var b=new Blob([t.innerHTML],{type:\'text/html\'});'
-                    . 'var u=URL.createObjectURL(b);'
-                    . 'window.open(u,\'scripture_popup\','
+                    . 'var w=window.open(\'\',\'scripture_popup\','
                     . '\'width=700,height=500,scrollbars=yes,resizable=yes\');'
+                    . 'if(w){w.document.open();w.document.write(t.innerHTML);w.document.close();}'
                     . 'return false;" '
                     . 'title="' . Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE') . '">';
 
-                if ((int) $params->get('showpassage_icon') === 1) {
+                if ((int) $params->get('showpassage_icon', 1) === 1) {
                     $passage .= '<i class="fas fa-bible fa-3x" aria-hidden="true" '
                         . 'style="display: flex; margin-right: 10px;"></i>';
                 } else {

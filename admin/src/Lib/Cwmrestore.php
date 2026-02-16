@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmtemplatemigrationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\InstallerHelper;
 use Joomla\CMS\Language\Text;
@@ -87,6 +88,23 @@ class Cwmrestore
      *
      * @since 7.0.0
      */
+    /**
+     * Tables to preserve during restore.
+     *
+     * These tables contain downloaded/cached data that is expensive to
+     * regenerate and is NOT part of the user's content backup.  They are
+     * excluded from the DROP phase so locally downloaded Bibles survive
+     * a restore cycle.  If the backup SQL file happens to contain its own
+     * version of these tables, `CREATE TABLE IF NOT EXISTS` is a no-op and
+     * the existing data wins.
+     *
+     * @var string[]
+     * @since 10.1.0
+     */
+    private static array $preserveTables = [
+        '#__bsms_bible_verses',
+    ];
+
     protected static function getObjects(): array
     {
         $db        = Factory::getContainer()->get('DatabaseDriver');
@@ -99,6 +117,12 @@ class Cwmrestore
         foreach ($tables as $table) {
             if (substr_count($table, $bsms)) {
                 $table     = substr_replace($table, '#__', 0, $prelength);
+
+                // Skip tables that should survive a restore
+                if (\in_array($table, self::$preserveTables, true)) {
+                    continue;
+                }
+
                 $objects[] = ['name' => $table];
             }
         }
@@ -612,6 +636,23 @@ class Cwmrestore
             Log::add('Post-restore: populated ' . $inserted . ' study-teacher junction records', Log::INFO, 'com_proclaim');
         } catch (\Exception $e) {
             Log::add('Post-restore study-teacher population failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        // Seed bible translations catalogue (INSERT IGNORE preserves existing data)
+        try {
+            $seeded = CwmmigrationHelper::seedBibleTranslations();
+            Log::add('Post-restore: seeded ' . $seeded . ' bible translations', Log::INFO, 'com_proclaim');
+        } catch (\Exception $e) {
+            Log::add('Post-restore bible translation seed failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        // Merge form XML defaults into template params
+        try {
+            $migration = new CwmtemplatemigrationHelper();
+            $updated   = $migration->migrateAll();
+            Log::add('Post-restore: updated ' . $updated . ' templates with default params', Log::INFO, 'com_proclaim');
+        } catch (\Exception $e) {
+            Log::add('Post-restore template defaults merge failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
         }
     }
 

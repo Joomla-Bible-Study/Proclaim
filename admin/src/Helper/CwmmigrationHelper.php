@@ -507,4 +507,202 @@ class CwmmigrationHelper
 
         return $inserted;
     }
+
+    /**
+     * Ensure bible_translations table is seeded with known translations.
+     *
+     * After a restore or migration, the seed data (INSERT IGNORE) from SQL
+     * update files is NOT executed by Joomla's ChangeSet (it only runs DDL).
+     * This method ensures the translation catalogue is populated so the
+     * Bible version picker works out-of-the-box.
+     *
+     * Uses INSERT IGNORE so existing rows (e.g. from backup) are preserved,
+     * and already-downloaded translations keep their `installed`/`verse_count` state.
+     *
+     * @return  int  Number of rows inserted
+     *
+     * @since   10.1.0
+     */
+    public static function seedBibleTranslations(): int
+    {
+        $db = Factory::getContainer()->get('DatabaseDriver');
+
+        // Check if the table exists
+        $tableName = str_replace('#__', $db->getPrefix(), '#__bsms_bible_translations');
+
+        if (!\in_array($tableName, $db->getTableList(), true)) {
+            return 0;
+        }
+
+        // Canonical translation catalogue — must match install.mysql.utf8.sql / 10.1.0-20260209.sql
+        $translations = [
+            ['kjv', 'King James Version', 'en', 'getbible', 0, 1, 4000000],
+            ['akjv', 'American King James Version', 'en', 'getbible', 0, 0, 4000000],
+            ['web', 'World English Bible', 'en', 'getbible', 0, 1, 4300000],
+            ['asv', 'American Standard Version', 'en', 'getbible', 0, 0, 4100000],
+            ['ylt', 'Young\'s Literal Translation', 'en', 'getbible', 0, 0, 4000000],
+            ['basicenglish', 'Bible in Basic English', 'en', 'getbible', 0, 0, 3500000],
+            ['douayrheims', 'Douay-Rheims Bible', 'en', 'getbible', 0, 0, 4200000],
+            ['wb', 'Webster Bible', 'en', 'getbible', 0, 0, 4000000],
+            ['darby', 'Darby Translation', 'en', 'getbible', 0, 0, 4000000],
+            ['vulgate', 'Vulgata Clementina', 'la', 'getbible', 0, 0, 3800000],
+            ['almeida', 'Almeida Atualizada', 'pt', 'getbible', 0, 0, 4000000],
+            ['luther1545', 'Luther (1545)', 'de', 'getbible', 0, 0, 4200000],
+            ['ls1910', 'Louis Segond 1910', 'fr', 'getbible', 0, 0, 4100000],
+            ['synodal', 'Synodal Translation', 'ru', 'getbible', 0, 0, 4500000],
+            ['valera', 'Reina Valera (1909)', 'es', 'getbible', 0, 0, 4100000],
+            ['karoli', 'Károli Bible', 'hu', 'getbible', 0, 0, 4000000],
+            ['giovanni', 'Giovanni Diodati Bible', 'it', 'getbible', 0, 0, 4100000],
+            ['cornilescu', 'Cornilescu Bible', 'ro', 'getbible', 0, 0, 3900000],
+            ['korean', 'Korean Bible', 'ko', 'getbible', 0, 0, 3800000],
+            ['cus', 'Chinese Union Simplified', 'zh', 'getbible', 0, 0, 2500000],
+        ];
+
+        $columns = [
+            $db->quoteName('abbreviation'),
+            $db->quoteName('name'),
+            $db->quoteName('language'),
+            $db->quoteName('source'),
+            $db->quoteName('installed'),
+            $db->quoteName('bundled'),
+            $db->quoteName('estimated_size'),
+        ];
+
+        $inserted = 0;
+
+        foreach ($translations as $row) {
+            $values = $db->quote($row[0]) . ', '
+                . $db->quote($row[1]) . ', '
+                . $db->quote($row[2]) . ', '
+                . $db->quote($row[3]) . ', '
+                . (int) $row[4] . ', '
+                . (int) $row[5] . ', '
+                . (int) $row[6];
+
+            $query = 'INSERT IGNORE INTO ' . $db->quoteName('#__bsms_bible_translations')
+                . ' (' . implode(', ', $columns) . ')'
+                . ' VALUES (' . $values . ')';
+
+            $db->setQuery($query);
+            $db->execute();
+            $inserted += $db->getAffectedRows();
+        }
+
+        // Fix legacy abbreviations that may still exist from older seed data
+        $renames = [
+            'asvd'       => ['asv', 'American Standard Version'],
+            'clementine' => ['vulgate', 'Vulgata Clementina'],
+            'luther1912' => ['luther1545', 'Luther (1545)'],
+            'rv1909'     => ['valera', 'Reina Valera (1909)'],
+            'cuvs'       => ['cus', 'Chinese Union Simplified'],
+        ];
+
+        foreach ($renames as $oldAbbr => [$newAbbr, $newName]) {
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__bsms_bible_translations'))
+                ->set($db->quoteName('abbreviation') . ' = ' . $db->quote($newAbbr))
+                ->set($db->quoteName('name') . ' = ' . $db->quote($newName))
+                ->where($db->quoteName('abbreviation') . ' = ' . $db->quote($oldAbbr));
+            $db->setQuery($query);
+            $db->execute();
+        }
+
+        // Remove deprecated abbreviation
+        $query = $db->getQuery(true)
+            ->delete($db->quoteName('#__bsms_bible_translations'))
+            ->where($db->quoteName('abbreviation') . ' = ' . $db->quote('webbe'));
+        $db->setQuery($query);
+        $db->execute();
+
+        // Reconcile installed/verse_count with actual verse data.
+        // After restore the translations table may be freshly seeded (installed=0)
+        // while the verses table was preserved and still has downloaded data.
+        self::reconcileBibleTranslations();
+
+        if ($inserted > 0) {
+            Log::add('Seeded ' . $inserted . ' bible translations', Log::INFO, 'com_proclaim');
+        }
+
+        return $inserted;
+    }
+
+    /**
+     * Reconcile bible_translations installed/verse_count with actual verse data.
+     *
+     * After a restore, the translations catalogue may be freshly seeded
+     * (installed=0, verse_count=0) while the bible_verses table was
+     * preserved and still contains downloaded verse data.  This method
+     * syncs the two tables so the admin UI correctly shows which
+     * translations are already available locally.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public static function reconcileBibleTranslations(): void
+    {
+        $db = Factory::getContainer()->get('DatabaseDriver');
+
+        // Check both tables exist
+        $prefix     = $db->getPrefix();
+        $tableList  = $db->getTableList();
+        $transTable = str_replace('#__', $prefix, '#__bsms_bible_translations');
+        $verseTable = str_replace('#__', $prefix, '#__bsms_bible_verses');
+
+        if (!\in_array($transTable, $tableList, true) || !\in_array($verseTable, $tableList, true)) {
+            return;
+        }
+
+        // Get actual verse counts per translation from the verses table
+        $query = $db->getQuery(true)
+            ->select([
+                $db->quoteName('translation'),
+                'COUNT(*) AS ' . $db->quoteName('cnt'),
+            ])
+            ->from($db->quoteName('#__bsms_bible_verses'))
+            ->group($db->quoteName('translation'));
+        $db->setQuery($query);
+        $counts = $db->loadObjectList('translation');
+
+        if (empty($counts)) {
+            // No verses in DB — mark all as not installed
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__bsms_bible_translations'))
+                ->set($db->quoteName('installed') . ' = 0')
+                ->set($db->quoteName('verse_count') . ' = 0')
+                ->where($db->quoteName('installed') . ' = 1');
+            $db->setQuery($query);
+            $db->execute();
+
+            return;
+        }
+
+        // Update translations that have verses
+        foreach ($counts as $abbr => $row) {
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__bsms_bible_translations'))
+                ->set($db->quoteName('installed') . ' = 1')
+                ->set($db->quoteName('verse_count') . ' = ' . (int) $row->cnt)
+                ->where($db->quoteName('abbreviation') . ' = ' . $db->quote($abbr));
+            $db->setQuery($query);
+            $db->execute();
+        }
+
+        // Mark translations with no verses as not installed
+        $installedAbbrs = array_keys($counts);
+
+        if (!empty($installedAbbrs)) {
+            $quoted = array_map([$db, 'quote'], $installedAbbrs);
+            $query  = $db->getQuery(true)
+                ->update($db->quoteName('#__bsms_bible_translations'))
+                ->set($db->quoteName('installed') . ' = 0')
+                ->set($db->quoteName('verse_count') . ' = 0')
+                ->where($db->quoteName('abbreviation') . ' NOT IN (' . implode(',', $quoted) . ')')
+                ->where($db->quoteName('installed') . ' = 1');
+            $db->setQuery($query);
+            $db->execute();
+        }
+
+        Log::add('Reconciled bible translation install status with verse data', Log::INFO, 'com_proclaim');
+    }
 }
