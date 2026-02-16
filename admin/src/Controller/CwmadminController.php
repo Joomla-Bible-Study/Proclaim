@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Bible\BibleImporter;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
+use CWM\Component\Proclaim\Administrator\Helper\CwmcsvimportHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageCleanup;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
@@ -2529,6 +2530,94 @@ class CwmadminController extends FormController
                 'message' => $e->getMessage(),
             ], JSON_THROW_ON_ERROR);
         }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Process a batch of CSV rows for import.
+     *
+     * Expects POST JSON with 'rows' (array of arrays), 'mappings' (column index => field),
+     * and 'settings' (auto_create, default_published, duplicate_handling).
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since  10.1.0
+     */
+    public function csvImportBatchXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            echo json_encode(['imported' => 0, 'skipped' => 0, 'errors' => [['row' => 0, 'field' => '', 'message' => Text::_('JINVALID_TOKEN')]]], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        // Read raw POST body (JSON)
+        $rawInput = file_get_contents('php://input');
+        $data     = json_decode($rawInput, true);
+
+        if (!\is_array($data) || empty($data['rows'])) {
+            echo json_encode(['imported' => 0, 'skipped' => 0, 'errors' => [['row' => 0, 'field' => '', 'message' => 'No rows provided']]], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $rows     = $data['rows'];
+        $mappings = $data['mappings'] ?? [];
+        $settings = $data['settings'] ?? [];
+
+        try {
+            $result = CwmcsvimportHelper::processBatch($rows, $mappings, $settings);
+            echo json_encode($result, JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'imported'     => 0,
+                'skipped'      => 0,
+                'errors'       => [['row' => 0, 'field' => '', 'message' => $e->getMessage()]],
+                'auto_created' => [],
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Stream a CSV import template for download.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since  10.1.0
+     */
+    public function csvTemplateXHR(): void
+    {
+        $app = Factory::getApplication();
+
+        if (!Session::checkToken('get')) {
+            $app->setHeader('Content-Type', 'application/json');
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $csv = CwmcsvimportHelper::generateTemplate();
+
+        $app->setHeader('Content-Type', 'text/csv; charset=utf-8');
+        $app->setHeader('Content-Disposition', 'attachment; filename="proclaim-import-template.csv"');
+        $app->setHeader('Content-Length', (string) \strlen($csv));
+        $app->sendHeaders();
+
+        echo $csv;
 
         $app->close();
     }
