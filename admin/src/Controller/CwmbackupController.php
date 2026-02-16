@@ -22,6 +22,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmtemplatemigrationHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
+use CWM\Component\Proclaim\Administrator\Lib\CwmscriptureMigration;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\InstallerHelper;
 use Joomla\CMS\Language\Text;
@@ -960,10 +961,24 @@ class CwmbackupController extends FormController
             Log::add('Post-restore study-teacher population failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
         }
 
+        // Populate scripture junction table from legacy flat columns
+        try {
+            CwmscriptureMigration::migrate();
+        } catch (\Exception $e) {
+            Log::add('Post-restore scripture migration failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
         try {
             CwmmigrationHelper::seedBibleTranslations();
         } catch (\Exception $e) {
             Log::add('Post-restore bible translation seed failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        // Fix legacy image paths in mediafile params
+        try {
+            CwmmigrationHelper::fixMediafileLegacyPaths();
+        } catch (\Exception $e) {
+            Log::add('Post-restore mediafile path fix failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
         }
 
         try {

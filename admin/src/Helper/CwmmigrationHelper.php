@@ -705,4 +705,48 @@ class CwmmigrationHelper
 
         Log::add('Reconciled bible translation install status with verse data', Log::INFO, 'com_proclaim');
     }
+
+    /**
+     * Rewrite legacy component media paths inside mediafile params JSON.
+     *
+     * Converts `media/com_biblestudy/` to `media/com_proclaim/` (component rename).
+     * Does NOT touch `images/biblestudy/` paths — that filesystem folder still exists.
+     * Safe to run multiple times — only updates rows that still contain the old paths.
+     *
+     * @return  int  Number of mediafile rows updated
+     *
+     * @since   10.1.0
+     */
+    public static function fixMediafileLegacyPaths(): int
+    {
+        $db = Factory::getContainer()->get('DatabaseDriver');
+
+        $replacements = [
+            // JSON-escaped form: media\/com_biblestudy\/ → media\/com_proclaim\/
+            'media\\/com_biblestudy\\/' => 'media\\/com_proclaim\\/',
+        ];
+
+        $updated = 0;
+
+        foreach ($replacements as $search => $replace) {
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__bsms_mediafiles'))
+                ->set(
+                    $db->quoteName('params') . ' = REPLACE('
+                    . $db->quoteName('params') . ', '
+                    . $db->quote($search) . ', '
+                    . $db->quote($replace) . ')'
+                )
+                ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%' . $search . '%'));
+            $db->setQuery($query);
+            $db->execute();
+            $updated += $db->getAffectedRows();
+        }
+
+        if ($updated > 0) {
+            Log::add('Fixed legacy image paths in ' . $updated . ' mediafile rows', Log::INFO, 'com_proclaim');
+        }
+
+        return $updated;
+    }
 }

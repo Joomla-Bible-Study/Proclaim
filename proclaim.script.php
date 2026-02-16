@@ -749,6 +749,16 @@ class com_proclaimInstallerScript extends InstallerScript
                 );
             }
 
+            // Fix legacy image paths in mediafile params (images/biblestudy/ -> media/com_proclaim/images/)
+            try {
+                CwmmigrationHelper::fixMediafileLegacyPaths();
+            } catch (\Exception $e) {
+                Factory::getApplication()->enqueueMessage(
+                    'Mediafile path migration notice: ' . $e->getMessage(),
+                    'warning'
+                );
+            }
+
             // Migrate studyimage param values to thumbnailm column
             try {
                 $this->migrateStudyImageParams();

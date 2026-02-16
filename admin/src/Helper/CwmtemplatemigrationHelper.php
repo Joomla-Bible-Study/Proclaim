@@ -65,6 +65,8 @@ class CwmtemplatemigrationHelper
             'show_passage_view'          => '3',
             'showpassage_icon'           => '1',
             'allow_version_switch'       => '0',
+            'listheadertype'             => 'table-light',
+            'scripture_separator'        => 'middot',
         ],
     ];
 
@@ -87,6 +89,13 @@ class CwmtemplatemigrationHelper
             // Fix search filter param names to match PHP code expectations
             'show_type_search'      => 'show_messagetype_search',
             'show_locations_search' => 'show_location_search',
+            // Rename legacy template filter params to l-prefixed names used by CwmsermonsModel
+            'teacher_id'  => 'lteacher_id',
+            'series_id'   => 'lseries_id',
+            'booknumber'  => 'lbooknumber',
+            'topic_id'    => 'ltopic_id',
+            'messagetype' => 'lmessagetype',
+            'locations'   => 'llocations',
         ],
     ];
 
@@ -115,6 +124,19 @@ class CwmtemplatemigrationHelper
             'popupbackground',
             'teacherdisplay_color',
             'seriesdisplay_color',
+        ],
+    ];
+
+    /**
+     * Array of path string replacements keyed by version.
+     * Each entry lists search => replace pairs applied to all string params.
+     *
+     * @var array
+     * @since 10.1.0
+     */
+    protected array $pathConversions = [
+        '10.1.0' => [
+            'media/com_biblestudy/' => 'media/com_proclaim/',
         ],
     ];
 
@@ -177,10 +199,27 @@ class CwmtemplatemigrationHelper
             $updatedCount += $this->convertColorFieldsInAdmin();
         }
 
+        // Run any path conversions (e.g. media/com_biblestudy/ -> media/com_proclaim/)
+        $pathConversionsToRun = $this->getPathConversionsAfterVersion($fromVersion);
+
+        if (!empty($pathConversionsToRun)) {
+            $pathReplacements = [];
+
+            foreach ($pathConversionsToRun as $version => $replacements) {
+                foreach ($replacements as $search => $replace) {
+                    $pathReplacements[$search] = $replace;
+                }
+                Log::add('Including path conversions for version ' . $version, Log::INFO, 'com_proclaim');
+            }
+
+            $updatedCount += $this->convertPathsInTemplates($pathReplacements);
+        }
+
         // Get all migrations that should run (versions greater than fromVersion)
         $migrationsToRun = $this->getMigrationsAfterVersion($fromVersion);
 
-        if (empty($migrationsToRun) && empty($renamesToRun) && empty($colorConversionsToRun)) {
+        if (empty($migrationsToRun) && empty($renamesToRun) && empty($colorConversionsToRun)
+            && empty($pathConversionsToRun)) {
             Log::add('No template migrations to run from version ' . $fromVersion, Log::INFO, 'com_proclaim');
             return 0;
         }
@@ -307,6 +346,74 @@ class CwmtemplatemigrationHelper
         uksort($result, 'version_compare');
 
         return $result;
+    }
+
+    /**
+     * Get path conversions that should run for versions after the specified version.
+     *
+     * @param   string  $fromVersion  Version to compare against
+     *
+     * @return  array  Array of path replacements to run
+     *
+     * @since   10.1.0
+     */
+    protected function getPathConversionsAfterVersion(string $fromVersion): array
+    {
+        $result = [];
+
+        foreach ($this->pathConversions as $version => $replacements) {
+            if (version_compare($version, $fromVersion, '>')) {
+                $result[$version] = $replacements;
+            }
+        }
+
+        uksort($result, 'version_compare');
+
+        return $result;
+    }
+
+    /**
+     * Convert legacy file paths in all template string parameters.
+     *
+     * @param   array  $replacements  Array of search => replace path pairs
+     *
+     * @return  int  Number of templates updated
+     *
+     * @since   10.1.0
+     */
+    protected function convertPathsInTemplates(array $replacements): int
+    {
+        $updatedCount = 0;
+
+        $query = $this->db->getQuery(true)
+            ->select($this->db->quoteName(['id', 'params', 'title']))
+            ->from($this->db->quoteName('#__bsms_templates'));
+        $this->db->setQuery($query);
+        $templates = $this->db->loadObjectList();
+
+        foreach ($templates as $template) {
+            if (empty($template->params)) {
+                continue;
+            }
+
+            $newParams = $template->params;
+
+            foreach ($replacements as $search => $replace) {
+                $newParams = str_replace($search, $replace, $newParams);
+            }
+
+            if ($newParams !== $template->params) {
+                $this->updateTemplateParams($template->id, $newParams);
+                $updatedCount++;
+                Log::add(
+                    'Converted legacy paths in template "' . $template->title . '"',
+                    Log::INFO,
+                    'com_proclaim'
+                );
+            }
+        }
+
+        return $updatedCount;
     }
 
     /**

@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmtemplatemigrationHelper;
+use CWM\Component\Proclaim\Administrator\Lib\CwmscriptureMigration;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\InstallerHelper;
 use Joomla\CMS\Language\Text;
@@ -638,12 +639,28 @@ class Cwmrestore
             Log::add('Post-restore study-teacher population failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
         }
 
+        // Populate scripture junction table from legacy flat columns
+        try {
+            $migrated = CwmscriptureMigration::migrate();
+            Log::add('Post-restore: migrated ' . $migrated . ' scripture junction records', Log::INFO, 'com_proclaim');
+        } catch (\Exception $e) {
+            Log::add('Post-restore scripture migration failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
         // Seed bible translations catalogue (INSERT IGNORE preserves existing data)
         try {
             $seeded = CwmmigrationHelper::seedBibleTranslations();
             Log::add('Post-restore: seeded ' . $seeded . ' bible translations', Log::INFO, 'com_proclaim');
         } catch (\Exception $e) {
             Log::add('Post-restore bible translation seed failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        // Fix legacy image paths in mediafile params (images/biblestudy/ -> media/com_proclaim/images/)
+        try {
+            $fixed = CwmmigrationHelper::fixMediafileLegacyPaths();
+            Log::add('Post-restore: fixed legacy paths in ' . $fixed . ' mediafile rows', Log::INFO, 'com_proclaim');
+        } catch (\Exception $e) {
+            Log::add('Post-restore mediafile path fix failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
         }
 
         // Merge form XML defaults into template params
