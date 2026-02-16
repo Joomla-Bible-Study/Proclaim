@@ -140,8 +140,7 @@
             const reference = switcher.dataset.reference;
 
             // Switcher lives inside .scripture-text; find body/copyright as siblings
-            const scriptureText = switcher.closest('.scripture-text')
-                || switcher.closest('.scripture-popup-content');
+            const scriptureText = switcher.closest('.scripture-text');
 
             if (!scriptureText) {
                 return;
@@ -451,8 +450,7 @@
                 }
 
                 // Switcher lives inside .scripture-text; find body/copyright as siblings
-                const scriptureText = container.closest('.scripture-text')
-                    || container.closest('.scripture-popup-content');
+                const scriptureText = container.closest('.scripture-text');
 
                 if (!scriptureText) {
                     return;

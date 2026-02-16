@@ -148,7 +148,6 @@
     /* Hide interactive elements inside print passage */
     .passage-print .scripture-toggle,
     .passage-print .scripture-popup-trigger,
-    .passage-print .scripture-popup-close,
     .passage-print .scripture-version-switcher {
         display: none !important;
     }

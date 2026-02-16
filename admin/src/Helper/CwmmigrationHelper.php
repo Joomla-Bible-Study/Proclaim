@@ -323,7 +323,7 @@ class CwmmigrationHelper
      */
     public static function fixTeacherAliases(): int
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get('DatabaseDriver');
         $fixed = 0;
 
         // Step 1: Ensure every teacher has an alias

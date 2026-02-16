@@ -51,48 +51,7 @@
     text-decoration: underline;
 }
 
-/* Popup overlay */
-.scripture-popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 10000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.scripture-popup-content {
-    position: relative;
-    background: #fff;
-    border-radius: 8px;
-    padding: 2em;
-    max-width: 700px;
-    max-height: 80vh;
-    overflow-y: auto;
-    width: 90%;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
-.scripture-popup-close {
-    position: absolute;
-    top: 0.5em;
-    right: 0.75em;
-    font-size: 1.5em;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #666;
-    line-height: 1;
-    padding: 0;
-}
-
-.scripture-popup-close:hover {
-    color: #000;
-}
+/* Popup trigger link (opens scripture in new window) */
 
 .scripture-popup-trigger {
     display: inline-flex;

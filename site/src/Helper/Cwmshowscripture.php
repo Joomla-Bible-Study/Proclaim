@@ -256,32 +256,47 @@ class Cwmshowscripture
                 break;
 
             case 3:
-                // Popup
+                // New window – opens scripture in a separate browser window/tab.
+                // Uses a Blob URL so Chrome allows the popup (data: URIs are blocked
+                // in top-level navigations). The Blob URL remains valid for refresh
+                // as long as the parent page stays open.
                 $popupId  = 'scripture_popup_' . uniqid('', true);
                 $passage  = '<div class="scripture-container">';
                 $passage .= '<a href="#" class="scripture-popup-trigger" '
-                    . 'onclick="var p = document.getElementById(\'' . $popupId . '\'); '
-                    . 'p.style.display = (p.style.display === \'none\' ? \'block\' : \'none\'); '
+                    . 'onclick="var t=document.getElementById(\'' . $popupId . '\');'
+                    . 'var b=new Blob([t.innerHTML],{type:\'text/html\'});'
+                    . 'var u=URL.createObjectURL(b);'
+                    . 'window.open(u,\'scripture_popup\','
+                    . '\'width=700,height=500,scrollbars=yes,resizable=yes\');'
                     . 'return false;" '
                     . 'title="' . Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE') . '">';
 
                 if ((int) $params->get('showpassage_icon') === 1) {
                     $passage .= '<i class="fas fa-bible fa-3x" aria-hidden="true" '
                         . 'style="display: flex; margin-right: 10px;"></i>';
-                } elseif ($params->get('showpassage_icon') > 0) {
+                } else {
                     $passage .= Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE');
                 }
 
                 $passage .= '</a>';
-                $passage .= '<div id="' . $popupId . '" class="scripture-popup" style="display: none;">';
-                $passage .= '<div class="scripture-popup-content">';
-                $passage .= '<button type="button" class="scripture-popup-close" '
-                    . 'onclick="this.closest(\'.scripture-popup\').style.display = \'none\'; return false;" '
-                    . 'aria-label="' . Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '">&times;</button>';
-                $passage .= '<div class="scripture-body">' . $result->text . '</div>';
+
+                // Hidden template — JS reads innerHTML to build the Blob
+                $lang     = Factory::getApplication()->getLanguage()->getTag();
+                $passage .= '<template id="' . $popupId . '">';
+                $passage .= '<!DOCTYPE html><html lang="' . $lang . '">';
+                $passage .= '<head><meta charset="utf-8">';
+                $passage .= '<title>' . Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE') . '</title>';
+                $passage .= '<style>'
+                    . 'body{font-family:Georgia,"Times New Roman",serif;line-height:1.8;'
+                    . 'padding:2em;margin:0;max-width:700px;margin:0 auto;color:#333;background:#fafaf8;}'
+                    . 'sup{font-size:0.65em;font-weight:700;color:#8b4513;margin-right:2px;}'
+                    . '.scripture-copyright{margin-top:1em;padding-top:0.75em;'
+                    . 'border-top:1px solid #e0ddd5;font-size:0.8em;color:#888;font-style:italic;}'
+                    . '</style></head><body>';
+                $passage .= $result->text;
                 $passage .= $copyrightHtml;
-                $passage .= $switcherHtml;
-                $passage .= '</div></div></div>';
+                $passage .= '</body></html>';
+                $passage .= '</template></div>';
                 break;
 
             default:
