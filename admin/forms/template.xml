@@ -361,6 +361,15 @@
                 <option value="loadmore">JBS_TPL_PAGINATION_LOAD_MORE</option>
                 <option value="infinite">JBS_TPL_PAGINATION_INFINITE_SCROLL</option>
             </field>
+            <field name="infinite_scroll_threshold" type="list" default="3"
+                   label="JBS_TPL_INFINITE_SCROLL_THRESHOLD" description="JBS_TPL_INFINITE_SCROLL_THRESHOLD_DESC"
+                   showon="pagination_style:infinite">
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="0">JBS_TPL_INFINITE_SCROLL_UNLIMITED</option>
+            </field>
         </fieldset>
         <!-- Messages: Teacher Display -->
         <fieldset name="LISTTEACHER" label="JBS_TPL_LIST_TEACHER" layoutContext="messages"
@@ -1281,6 +1290,15 @@
                 <option value="pagination">JBS_TPL_PAGINATION_STANDARD</option>
                 <option value="loadmore">JBS_TPL_PAGINATION_LOAD_MORE</option>
                 <option value="infinite">JBS_TPL_PAGINATION_INFINITE_SCROLL</option>
+            </field>
+            <field name="series_infinite_scroll_threshold" type="list" default="3"
+                   label="JBS_TPL_INFINITE_SCROLL_THRESHOLD" description="JBS_TPL_INFINITE_SCROLL_THRESHOLD_DESC"
+                   showon="series_pagination_style:infinite">
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="0">JBS_TPL_INFINITE_SCROLL_UNLIMITED</option>
             </field>
             <field name="series_list_order" type="list" default="ASC"
                    label="JBS_TPL_SERIES_SERIES_LIST_ORDER" description="JBS_TPL_SERIES_SERIES_LIST_ORDER_DESC">

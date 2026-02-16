@@ -60,13 +60,17 @@ class CwmtemplatemigrationHelper
      */
     protected array $migrations = [
         '10.1.0' => [
-            'default_show_archived'      => '2',
-            'default_show_archive_badge' => '1',
-            'show_passage_view'          => '3',
-            'showpassage_icon'           => '1',
-            'allow_version_switch'       => '0',
-            'listheadertype'             => 'table-light',
-            'scripture_separator'        => 'middot',
+            'default_show_archived'            => '2',
+            'default_show_archive_badge'       => '1',
+            'show_passage_view'                => '3',
+            'showpassage_icon'                 => '1',
+            'allow_version_switch'             => '0',
+            'listheadertype'                   => 'table-light',
+            'scripture_separator'              => 'middot',
+            'pagination_style'                 => 'pagination',
+            'infinite_scroll_threshold'        => '3',
+            'series_pagination_style'          => 'pagination',
+            'series_infinite_scroll_threshold' => '3',
         ],
     ];
 

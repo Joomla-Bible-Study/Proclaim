@@ -55,8 +55,9 @@ function setupModule(fetchMock, extraOpts) {
         html += '<div id="proclaim-pagination-bottom" class="proclaim-pagination"></div>';
     }
 
-    if (paginationStyle === 'loadmore') {
-        html += '<div class="proclaim-load-more" id="proclaim-load-more">' +
+    if (paginationStyle === 'loadmore' || paginationStyle === 'infinite') {
+        var hideBtn = (paginationStyle === 'infinite') ? ' style="display:none"' : '';
+        html += '<div class="proclaim-load-more" id="proclaim-load-more"' + hideBtn + '>' +
                     '<button type="button" class="btn btn-outline-primary">Load More</button>' +
                 '</div>';
     }
@@ -474,6 +475,104 @@ describe('sermon-filters.es6.js', () => {
 
             var counter = document.getElementById('proclaim-item-counter');
             expect(counter).not.toBeNull();
+        });
+
+        test('should have Load More button hidden initially in infinite mode', () => {
+            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
+            setupModule(mockFetch, { paginationStyle: 'infinite' });
+
+            var container = document.getElementById('proclaim-load-more');
+            expect(container).not.toBeNull();
+            expect(container.style.display).toBe('none');
+        });
+
+        test('should include credentials in fetch requests', async () => {
+            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
+            setupModule(mockFetch, { paginationStyle: 'loadmore' });
+            mockFetch.mockClear();
+
+            var btn = document.querySelector('#proclaim-load-more button');
+            btn.click();
+
+            await new Promise(function (r) { setTimeout(r, 0); });
+
+            var fetchOpts = mockFetch.mock.calls[0][1];
+            expect(fetchOpts.credentials).toBe('same-origin');
+            expect(fetchOpts.headers['Accept']).toBe('application/json');
+        });
+    });
+
+    describe('Infinite Scroll Threshold', () => {
+        test('should pause auto-scroll after threshold pages and show Load More button', async () => {
+            // threshold=2 means after 2 auto-loaded pages, pause
+            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse({ total: 20, pagesTotal: 10 }));
+            setupModule(mockFetch, { paginationStyle: 'infinite', scrollThreshold: 2 });
+
+            var observer = IntersectionObserver._lastInstance;
+            var loadMoreContainer = document.getElementById('proclaim-load-more');
+
+            // Initially hidden
+            expect(loadMoreContainer.style.display).toBe('none');
+
+            // Simulate first scroll trigger (auto-load page 1)
+            mockFetch.mockClear();
+            observer.trigger([{ isIntersecting: true }]);
+            await new Promise(function (r) { setTimeout(r, 0); });
+            await new Promise(function (r) { setTimeout(r, 0); });
+            await new Promise(function (r) { setTimeout(r, 0); });
+            // Still hidden after 1 page
+            expect(loadMoreContainer.style.display).toBe('none');
+
+            // Simulate second scroll trigger (auto-load page 2 = threshold)
+            observer.trigger([{ isIntersecting: true }]);
+            await new Promise(function (r) { setTimeout(r, 0); });
+            await new Promise(function (r) { setTimeout(r, 0); });
+            await new Promise(function (r) { setTimeout(r, 0); });
+            // Now the button should be visible (threshold reached)
+            expect(loadMoreContainer.style.display).toBe('');
+        });
+
+        test('should resume auto-scroll after manual Load More click', async () => {
+            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse({ total: 20, pagesTotal: 10 }));
+            setupModule(mockFetch, { paginationStyle: 'infinite', scrollThreshold: 1 });
+
+            var observer = IntersectionObserver._lastInstance;
+            var loadMoreContainer = document.getElementById('proclaim-load-more');
+
+            // Trigger one auto-load to reach threshold
+            observer.trigger([{ isIntersecting: true }]);
+            await new Promise(function (r) { setTimeout(r, 0); });
+            await new Promise(function (r) { setTimeout(r, 0); });
+            await new Promise(function (r) { setTimeout(r, 0); });
+            expect(loadMoreContainer.style.display).toBe('');
+
+            // Click Load More — should resume
+            var btn = loadMoreContainer.querySelector('button');
+            btn.click();
+            await new Promise(function (r) { setTimeout(r, 0); });
+            await new Promise(function (r) { setTimeout(r, 0); });
+            await new Promise(function (r) { setTimeout(r, 0); });
+
+            // Button should be hidden again (auto-scroll resumed)
+            expect(loadMoreContainer.style.display).toBe('none');
+        });
+
+        test('should not pause when threshold is 0 (unlimited)', async () => {
+            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse({ total: 20, pagesTotal: 10 }));
+            setupModule(mockFetch, { paginationStyle: 'infinite', scrollThreshold: 0 });
+
+            var observer = IntersectionObserver._lastInstance;
+            var loadMoreContainer = document.getElementById('proclaim-load-more');
+
+            // Auto-load many pages — should never show button
+            for (var i = 0; i < 5; i++) {
+                observer.trigger([{ isIntersecting: true }]);
+                await new Promise(function (r) { setTimeout(r, 0); });
+                await new Promise(function (r) { setTimeout(r, 0); });
+                await new Promise(function (r) { setTimeout(r, 0); });
+            }
+
+            expect(loadMoreContainer.style.display).toBe('none');
         });
     });
 

@@ -243,4 +243,117 @@ describe('series-scroll.es6.js', () => {
             expect(container.style.display).toBe('none');
         });
     });
+
+    describe('Infinite Scroll Threshold', () => {
+        function setupInfinite(fetchMock, extraOpts) {
+            document.body.innerHTML =
+                '<div id="proclaim-series-list">' +
+                    '<div class="table-responsive"><table class="table"><tbody>' +
+                    '<tr><td>Series 1</td></tr>' +
+                    '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
+                    '</tbody></table></div>' +
+                '</div>' +
+                '<div class="proclaim-load-more" id="proclaim-load-more" style="display:none">' +
+                    '<button type="button" class="btn">Load More</button>' +
+                '</div>' +
+                '<div class="proclaim-item-counter" id="proclaim-item-counter"></div>' +
+                '<div class="proclaim-scroll-sentinel" id="proclaim-scroll-sentinel"></div>';
+
+            global.Joomla = {
+                getOptions: jest.fn().mockReturnValue(Object.assign({
+                    enabled: true,
+                    ajaxUrl: 'http://localhost/index.php?option=com_proclaim&task=cwmseriesdisplays.paginateAjax&format=raw',
+                    csrfToken: 'testtoken',
+                    paginationStyle: 'infinite',
+                    limit: 2,
+                    totalItems: 20,
+                    scrollThreshold: 2,
+                }, extraOpts || {})),
+                Text: { _: jest.fn(function (key, fallback) { return fallback || key; }) },
+            };
+
+            global.AbortController = class {
+                constructor() { this.signal = {}; }
+                abort() {}
+            };
+
+            global.IntersectionObserver = class {
+                constructor(cb, opts) {
+                    this._cb = cb;
+                    this._opts = opts;
+                    IntersectionObserver._lastInstance = this;
+                }
+                observe() {}
+                unobserve() {}
+                trigger(entries) { this._cb(entries); }
+            };
+
+            global.fetch = fetchMock;
+
+            captureAndRequire('../../build/media_source/js/series-scroll.es6.js');
+            document.dispatchEvent(new Event('DOMContentLoaded'));
+        }
+
+        test('should pause after threshold and show Load More', async () => {
+            var mockFetch = jest.fn().mockResolvedValue({
+                ok: true,
+                json: function () {
+                    return Promise.resolve({
+                        success: true,
+                        html: '<div class="table-responsive"><table class="table"><tbody>' +
+                            '<tr><td>New</td></tr>' +
+                            '</tbody></table></div>',
+                        total: 20,
+                        pagesTotal: 10,
+                    });
+                },
+            });
+
+            setupInfinite(mockFetch, { scrollThreshold: 2 });
+
+            var observer = IntersectionObserver._lastInstance;
+            var loadMoreContainer = document.getElementById('proclaim-load-more');
+
+            // Initially hidden
+            expect(loadMoreContainer.style.display).toBe('none');
+
+            // First auto-load
+            observer.trigger([{ isIntersecting: true }]);
+            await new Promise(function (r) { setTimeout(r, 0); });
+            await new Promise(function (r) { setTimeout(r, 0); });
+            await new Promise(function (r) { setTimeout(r, 0); });
+            expect(loadMoreContainer.style.display).toBe('none');
+
+            // Second auto-load (= threshold)
+            observer.trigger([{ isIntersecting: true }]);
+            await new Promise(function (r) { setTimeout(r, 0); });
+            await new Promise(function (r) { setTimeout(r, 0); });
+            await new Promise(function (r) { setTimeout(r, 0); });
+            expect(loadMoreContainer.style.display).toBe('');
+        });
+
+        test('should include credentials in fetch requests', async () => {
+            var mockFetch = jest.fn().mockResolvedValue({
+                ok: true,
+                json: function () {
+                    return Promise.resolve({
+                        success: true,
+                        html: '<div class="table-responsive"><table><tbody><tr><td>X</td></tr></tbody></table></div>',
+                        total: 20,
+                        pagesTotal: 10,
+                    });
+                },
+            });
+
+            setupInfinite(mockFetch);
+
+            var observer = IntersectionObserver._lastInstance;
+            mockFetch.mockClear();
+            observer.trigger([{ isIntersecting: true }]);
+            await new Promise(function (r) { setTimeout(r, 0); });
+
+            var fetchOpts = mockFetch.mock.calls[0][1];
+            expect(fetchOpts.credentials).toBe('same-origin');
+        });
+    });
 });

@@ -89,7 +89,7 @@ class CwmsermonsController extends BaseController
             $getMedia->hitPlay($id);
         }
 
-        $app->getDocument()->setMimeEncoding('application/json');
+        $app->setHeader('Content-Type', 'application/json; charset=utf-8');
         echo json_encode(['success' => $id > 0]);
         $app->close();
     }
@@ -111,7 +111,7 @@ class CwmsermonsController extends BaseController
     public function filterAjax(): void
     {
         $app = Factory::getApplication();
-        $app->getDocument()->setMimeEncoding('application/json');
+        $app->setHeader('Content-Type', 'application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => 'Invalid token'], JSON_THROW_ON_ERROR);

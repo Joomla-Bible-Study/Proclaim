@@ -43,6 +43,12 @@
         var allItemsLoaded  = false;
         var scrollObserver  = null;
 
+        // Infinite scroll threshold: after this many auto-loaded pages, pause and
+        // require a manual "Load More" click.  0 = unlimited (never pause).
+        var scrollThreshold   = opts.scrollThreshold || 0;
+        var autoLoadedPages   = 0;
+        var scrollPaused      = false;
+
         // DOM elements
         var loadMoreContainer = document.getElementById('proclaim-load-more');
         var loadMoreBtn       = loadMoreContainer ? loadMoreContainer.querySelector('button') : null;
@@ -111,11 +117,49 @@
         }
 
         /**
-         * Fetch the next page and append to the list.
+         * Pause infinite scroll and show the Load More button instead.
          */
-        async function fetchNextPage() {
+        function pauseInfiniteScroll() {
+            scrollPaused = true;
+
+            if (scrollObserver && scrollSentinel) {
+                scrollObserver.unobserve(scrollSentinel);
+            }
+
+            if (loadMoreContainer) {
+                loadMoreContainer.style.display = '';
+            }
+        }
+
+        /**
+         * Resume infinite scroll after a manual Load More click.
+         */
+        function resumeInfiniteScroll() {
+            scrollPaused = false;
+            autoLoadedPages = 0;
+
+            if (loadMoreContainer && paginationStyle === 'infinite') {
+                loadMoreContainer.style.display = 'none';
+            }
+
+            if (scrollObserver && scrollSentinel) {
+                scrollObserver.observe(scrollSentinel);
+            }
+        }
+
+        /**
+         * Fetch the next page and append to the list.
+         *
+         * @param {boolean} manualClick  True when triggered by a Load More button click
+         */
+        async function fetchNextPage(manualClick) {
             if (isLoadingMore || allItemsLoaded) {
                 return;
+            }
+
+            // If this was a manual click in infinite mode, resume auto-scrolling
+            if (manualClick && scrollPaused) {
+                resumeInfiniteScroll();
             }
 
             if (abortController) {
@@ -128,6 +172,17 @@
 
             currentOffset += pageLimit;
 
+            // Track auto-loaded pages for threshold
+            var shouldPauseAfter = false;
+
+            if (paginationStyle === 'infinite' && !manualClick) {
+                autoLoadedPages++;
+
+                if (scrollThreshold > 0 && autoLoadedPages >= scrollThreshold) {
+                    shouldPauseAfter = true;
+                }
+            }
+
             var url = opts.ajaxUrl + '&limitstart=' + currentOffset;
 
             if (opts.csrfToken) {
@@ -137,7 +192,11 @@
             try {
                 var response = await fetch(url, {
                     method: 'GET',
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                    },
+                    credentials: 'same-origin',
                     signal: abortController.signal,
                 });
 
@@ -180,6 +239,8 @@
                 var currentPage = Math.floor(currentOffset / pageLimit) + 1;
                 if (currentPage >= result.pagesTotal || !result.html) {
                     handleAllItemsLoaded();
+                } else if (shouldPauseAfter) {
+                    pauseInfiniteScroll();
                 }
             } catch (err) {
                 if (err.name === 'AbortError') {
@@ -207,9 +268,11 @@
             }
         }
 
-        if (paginationStyle === 'loadmore' && loadMoreBtn) {
+        if (loadMoreBtn) {
+            // Load More button click handler (used in loadmore mode,
+            // and in infinite mode after threshold is reached)
             loadMoreBtn.addEventListener('click', function () {
-                fetchNextPage();
+                fetchNextPage(true);
             });
         }
 

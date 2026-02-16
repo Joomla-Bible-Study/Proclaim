@@ -101,9 +101,9 @@ echo $this->pagination->getPageslinks();
                 </div>
                 <?php endif; ?>
 
-                <?php // Load More button ?>
-                <?php if ($seriesPagStyle === 'loadmore') : ?>
-                <div class="proclaim-load-more" id="proclaim-load-more">
+                <?php // Load More button (loadmore and infinite modes — in infinite mode, shown after auto-load threshold) ?>
+                <?php if ($seriesPagStyle === 'loadmore' || $seriesPagStyle === 'infinite') : ?>
+                <div class="proclaim-load-more" id="proclaim-load-more"<?php if ($seriesPagStyle === 'infinite') : ?> style="display:none"<?php endif; ?>>
                     <button type="button" class="btn btn-outline-primary">
                         <?php echo Text::_('JBS_CMN_LOAD_MORE'); ?>
                     </button>

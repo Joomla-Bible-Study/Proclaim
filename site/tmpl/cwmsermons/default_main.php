@@ -203,9 +203,9 @@ if ($this->items) {
             </div>
             <?php endif; ?>
 
-            <?php // Load More button (loadmore mode only) ?>
-            <?php if ($paginationStyle === 'loadmore') : ?>
-            <div class="proclaim-load-more" id="proclaim-load-more">
+            <?php // Load More button (loadmore and infinite modes — in infinite mode, shown after auto-load threshold) ?>
+            <?php if ($paginationStyle === 'loadmore' || $paginationStyle === 'infinite') : ?>
+            <div class="proclaim-load-more" id="proclaim-load-more"<?php if ($paginationStyle === 'infinite') : ?> style="display:none"<?php endif; ?>>
                 <button type="button" class="btn btn-outline-primary">
                     <?php echo Text::_('JBS_CMN_LOAD_MORE'); ?>
                 </button>

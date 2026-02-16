@@ -59,6 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let allItemsLoaded  = false;
     let scrollObserver  = null;
 
+    // Infinite scroll threshold: after this many auto-loaded pages, pause and
+    // require a manual "Load More" click.  0 = unlimited (never pause).
+    const scrollThreshold     = opts.scrollThreshold || 0;
+    let   autoLoadedPages     = 0;
+    let   scrollPaused        = false;
+
     // DOM elements for scroll modes
     const loadMoreContainer = document.getElementById('proclaim-load-more');
     const loadMoreBtn       = loadMoreContainer ? loadMoreContainer.querySelector('button') : null;
@@ -208,11 +214,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Smooth-scroll to the list area after results load.
+     * Safari sometimes throws on smooth scroll options; fall back to instant.
      */
     function scrollToList() {
         var target = mainContent || listContainer;
 
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        try {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } catch (ignore) {
+            target.scrollIntoView(true);
+        }
     }
 
     /**
@@ -281,16 +292,52 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
+     * Pause infinite scroll and show the Load More button instead.
+     * Called when the auto-load threshold is reached.
+     */
+    function pauseInfiniteScroll() {
+        scrollPaused = true;
+
+        if (scrollObserver && scrollSentinel) {
+            scrollObserver.unobserve(scrollSentinel);
+        }
+
+        // Show the Load More button so the user can continue manually
+        if (loadMoreContainer) {
+            loadMoreContainer.style.display = '';
+        }
+    }
+
+    /**
+     * Resume infinite scroll after a manual Load More click.
+     */
+    function resumeInfiniteScroll() {
+        scrollPaused = false;
+        autoLoadedPages = 0;
+
+        if (loadMoreContainer && paginationStyle === 'infinite') {
+            loadMoreContainer.style.display = 'none';
+        }
+
+        if (scrollObserver && scrollSentinel) {
+            scrollObserver.observe(scrollSentinel);
+        }
+    }
+
+    /**
      * Reset scroll/load-more state when filters change.
      */
     function resetScrollState() {
-        currentOffset  = 0;
-        totalItems     = 0;
-        isLoadingMore  = false;
-        allItemsLoaded = false;
+        currentOffset   = 0;
+        totalItems      = 0;
+        isLoadingMore   = false;
+        allItemsLoaded  = false;
+        autoLoadedPages = 0;
+        scrollPaused    = false;
 
         if (loadMoreContainer) {
-            loadMoreContainer.style.display = '';
+            // In infinite mode, hide the button again (auto-scroll resumes)
+            loadMoreContainer.style.display = (paginationStyle === 'infinite') ? 'none' : '';
             hideLoadMoreSpinner();
         }
 
@@ -332,7 +379,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'GET',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
                 },
+                credentials: 'same-origin',
                 signal: abortController.signal,
             });
 
@@ -440,13 +489,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Load the next page of results (append mode).
+     *
+     * @param {boolean} manualClick  True when triggered by a Load More button click
      */
-    function loadNextPage() {
+    function loadNextPage(manualClick) {
         if (isLoadingMore || allItemsLoaded) {
             return;
         }
 
+        // If this was a manual click in infinite mode, resume auto-scrolling
+        if (manualClick && scrollPaused) {
+            resumeInfiniteScroll();
+        }
+
         currentOffset += pageLimit;
+
+        // Track auto-loaded pages for threshold (only for auto-scroll, not manual clicks)
+        if (paginationStyle === 'infinite' && !manualClick) {
+            autoLoadedPages++;
+
+            if (scrollThreshold > 0 && autoLoadedPages >= scrollThreshold) {
+                // Load this page, then pause after it completes
+                fetchResults({ limitstart: currentOffset }, true).then(function () {
+                    if (!allItemsLoaded) {
+                        pauseInfiniteScroll();
+                    }
+                });
+                return;
+            }
+        }
+
         fetchResults({ limitstart: currentOffset }, true);
     }
 
@@ -510,10 +582,11 @@ document.addEventListener('DOMContentLoaded', () => {
         bindPaginationLinks();
     }
 
-    if (paginationStyle === 'loadmore' && loadMoreBtn) {
-        // Load More button click handler
+    if (loadMoreBtn) {
+        // Load More button click handler (used in loadmore mode,
+        // and in infinite mode after threshold is reached)
         loadMoreBtn.addEventListener('click', function () {
-            loadNextPage();
+            loadNextPage(true);
         });
     }
 

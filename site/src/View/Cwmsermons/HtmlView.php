@@ -384,6 +384,7 @@ class HtmlView extends BaseHtmlView
                 'paginationStyle' => $params->get('pagination_style', 'pagination'),
                 'limit'           => (int) $this->state->get('list.limit', 20),
                 'totalItems'      => (int) $pagination->total,
+                'scrollThreshold' => (int) $params->get('infinite_scroll_threshold', 3),
             ]);
 
             $wa->useScript('com_proclaim.sermon-filters');

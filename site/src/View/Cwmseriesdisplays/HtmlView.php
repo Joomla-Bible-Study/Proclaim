@@ -248,6 +248,7 @@ class HtmlView extends BaseHtmlView
                 'paginationStyle' => $seriesPaginationStyle,
                 'limit'           => (int) $this->pagination->limit,
                 'totalItems'      => (int) $pagination->total,
+                'scrollThreshold' => (int) $params->get('series_infinite_scroll_threshold', 3),
             ]);
 
             $wa->useScript('com_proclaim.series-scroll');
