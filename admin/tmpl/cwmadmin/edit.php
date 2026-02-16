@@ -28,6 +28,7 @@ $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->useScript('com_proclaim.cwmadmin')
     ->useScript('com_proclaim.bible-translations')
+    ->useScript('com_proclaim.csv-import')
     ->useStyle('com_proclaim.general');
 
 // Make language strings available to JavaScript
@@ -41,6 +42,28 @@ Text::script('JBS_ADM_PLAYER_TOOLS_PROCESSING');
 Text::script('JBS_ADM_PLAYER_TOOLS_COMPLETE');
 Text::script('JBS_ADM_THUMBNAIL_RESIZE_CONFIRM');
 Text::script('JGLOBAL_VALIDATION_FORM_FAILED');
+
+// CSV Import language strings
+Text::script('JBS_CSV_ROWS_FOUND');
+Text::script('JBS_CSV_IMPORTING');
+Text::script('JBS_CSV_COMPLETE');
+Text::script('JBS_CSV_IMPORTED');
+Text::script('JBS_CSV_SKIPPED');
+Text::script('JBS_CSV_ERRORS');
+Text::script('JBS_CSV_AUTO_CREATED');
+Text::script('JBS_CSV_TYPE');
+Text::script('JBS_CSV_NAME');
+Text::script('JBS_CSV_EDIT');
+Text::script('JBS_CSV_ERROR_DETAILS');
+Text::script('JBS_CSV_ROW');
+Text::script('JBS_CSV_FIELD');
+Text::script('JBS_CSV_MESSAGE');
+Text::script('JBS_CSV_NETWORK_ERROR');
+Text::script('JBS_CSV_TYPE_TEACHER');
+Text::script('JBS_CSV_TYPE_SERIES');
+Text::script('JBS_CSV_TYPE_LOCATION');
+Text::script('JBS_CSV_TYPE_MESSAGETYPE');
+Text::script('JBS_CSV_TYPE_TOPIC');
 
 $app   = Factory::getApplication();
 $input = $app->getInput();
@@ -781,6 +804,12 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
              data-str-provider-disable-confirm="<?php echo Text::_('JBS_ADM_PROVIDER_DISABLE_CONFIRM'); ?>"
              data-str-provider-cleanup-done="<?php echo Text::_('JBS_ADM_PROVIDER_CLEANUP_DONE'); ?>"
         ></div>
+        <?php
+        echo HTMLHelper::_('uitab.endTab'); ?>
+
+        <?php
+        echo HTMLHelper::_('uitab.addTab', 'myTab', 'csvimport', Text::_('JBS_CSV_TAB_TITLE')); ?>
+        <?php echo $this->loadTemplate('csvimport'); ?>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
 
