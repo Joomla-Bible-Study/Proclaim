@@ -180,7 +180,7 @@ class HtmlView extends BaseHtmlView
             $item->serieslink = Route::_(
                 'index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . $item->slug . '&t=' . $this->template->id
             );
-            $teacherimage     = Cwmimages::getTeacherImage($item->thumb);
+            $teacherimage     = Cwmimages::getTeacherImage($item->thumb ?? '');
 
             if ($teacherimage->path) {
                 $item->teacherimage = Cwmimages::renderPicture($teacherimage, $item->teachername ?? '');

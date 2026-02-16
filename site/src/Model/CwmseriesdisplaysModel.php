@@ -361,7 +361,8 @@ class CwmseriesdisplaysModel extends ListModel
         $query->select(
             $db->quoteName('t.id', 'tid') . ', ' . $db->quoteName('t.teachername') . ', '
             . $db->quoteName('t.title', 'teachertitle') . ', '
-            . $db->quoteName('t.teacher_thumbnail')
+            . $db->quoteName('t.teacher_thumbnail') . ', '
+            . $db->quoteName('t.teacher_thumbnail', 'thumb')
         );
         $query->join(
             'LEFT',
