@@ -120,7 +120,7 @@ class Cwmlisting
             'scripture1', 'scripture2', 'scriptures', 'secondary', 'title', 'date', 'teacher', 'teacher-title',
             'duration', 'studyintro', 'studytext', 'series', 'description', 'seriesthumbnail', 'submitted',
             'hits', 'downloads', 'studynumber', 'topic', 'locations', 'jbsmedia', 'messagetype',
-            'thumbnail', 'teacheremail', 'teacherweb', 'teacherphone', 'teacherfb', 'teachertw',
+            'thumbnail', 'teacherimage', 'teacheremail', 'teacherweb', 'teacherphone', 'teacherfb', 'teachertw',
             'teacherblog', 'teachershort', 'teacherlong', 'teacheraddress', 'teacherlink1',
             'teacherlink2', 'teacherlink3', 'teacherlargeimage', 'teacherallinone',
         ];
@@ -129,11 +129,6 @@ class Cwmlisting
             if ($params->get($extra . $paramName . 'row') > 0) {
                 $listparams[] = $this->getListParamsArray($extra . $paramName);
             }
-        }
-
-        // Special case: teacherimage checks both teacherimagerow and teacherimagerrow
-        if ($params->get($extra . 'teacherimagerow') > 0 || $params->get($extra . 'teacherimagerrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherimage');
         }
 
         // Special case: seriesdescription maps to description
@@ -542,15 +537,7 @@ class Cwmlisting
     {
         $l = new \stdClass();
 
-        if ($paramtext === 'tdteacherimage') {
-            if ($this->params->get($paramtext . 'rrow')) {
-                $l->row = $this->params->get($paramtext . 'rrow');
-            } else {
-                $l->row = $this->params->get($paramtext . 'row');
-            }
-        } else {
-            $l->row = $this->params->get($paramtext . 'row');
-        }
+        $l->row = $this->params->get($paramtext . 'row');
 
         $l->col          = $this->params->get($paramtext . 'col');
         $l->colspan      = $this->params->get($paramtext . 'colspan');
@@ -663,13 +650,6 @@ class Cwmlisting
         int $header,
         string $type
     ): string {
-        $span        = '';
-        $headerstyle = '';
-
-        if ($header === 1) {
-            $headerstyle = "style=\"display: none;\"";
-        }
-
         $extra = '';
 
         switch ($type) {
@@ -692,84 +672,6 @@ class Cwmlisting
                 break;
         }
 
-        $pull        = $params->get($extra . 'rowspanitempull');
-        $rowspanitem = $params->get($extra . 'rowspanitem', 0);
-
-        switch ($rowspanitem) {
-            // Teacher Thumbnail
-            case 1:
-                if (!empty($item->thumb)) {
-                    $span = $this->useJImage(
-                        $item->thumb,
-                        $item->teachername,
-                        '',
-                        '',
-                        '',
-                        $params->get('rowspanitemimage')
-                    );
-                } else {
-                    $span = null;
-                }
-
-                if (!empty($item->teacher_thumbnail) && $span === null) {
-                    $span = $this->useJImage(
-                        $item->teacher_thumbnail,
-                        $item->teachername,
-                        '',
-                        '',
-                        '',
-                        $params->get('rowspanitemimage')
-                    );
-                }
-                break;
-
-                // Study Thumbnail
-            case 2:
-                if (isset($item->thumbnailm)) {
-                    $span = $this->useJImage(
-                        $item->thumbnailm,
-                        Text::_('JBS_CMN_THUMBNAIL'),
-                        '',
-                        '',
-                        '',
-                        $params->get('rowspanitemimage')
-                    );
-                }
-
-                break;
-
-                // Series Thumbnail
-            case 3:
-                if (!empty($item->series_thumbnail)) {
-                    $span = $this->useJImage(
-                        $item->series_thumbnail,
-                        Text::_('JBS_CMN_SERIES'),
-                        '',
-                        '',
-                        '',
-                        $params->get('rowspanitemimage')
-                    );
-                }
-                break;
-
-                // Teacher Large image
-            case 4:
-                if (!empty($item->teacher_image)) {
-                    $span = $this->useJImage(
-                        $item->teacher_image,
-                        $item->teachername,
-                        '',
-                        '',
-                        '',
-                        $params->get('rowspanitemimage')
-                    );
-                }
-                break;
-        }
-
-        $rowspanitemspan = $params->get($extra . 'rowspanitemspan');
-        $rowspanbalance  = 12 - (int)$rowspanitemspan;
-
         $frow = '';
 
         $row1count  = 0;
@@ -784,13 +686,6 @@ class Cwmlisting
         $row4count2 = 0;
         $row5count2 = 0;
         $row6count2 = 0;
-
-        if ($span) {
-            $frow .= '<div class="row" about="' . $type . '">';
-            $frow .= '<div class="col-' . $rowspanitemspan . ' ' . $pull
-                . '" id="jbsmspan-image"><div ' . $headerstyle . '>' . $span . '</div></div>';
-            $frow .= '<div class="col-' . $rowspanbalance . '" about="' . $type . '">';
-        }
 
         foreach ($listsorts as $sort) {
             if (\count($sort)) {
@@ -1032,6 +927,11 @@ class Cwmlisting
         string $type
     ): string {
         $data = '';
+
+        // Build image CSS class: always include img-fluid for responsive images, plus any custom class
+        $customImgClass = isset($row->custom) && !str_contains($row->custom, 'style=') ? $row->custom : '';
+        $imgClass = trim('img-fluid' . ($customImgClass !== '' ? ' ' . $customImgClass : ''));
+        $classAppliedToImg = false;
 
         // Match the data in $item to a row/col in $row->name
         $extra = '';
@@ -1364,17 +1264,19 @@ class Cwmlisting
                 }
                 break;
             case $extra . 'seriesthumbnail':
+                $classAppliedToImg = true;
                 if ($header === 1) {
                     $data = Text::_('JBS_CMN_THUMBNAIL');
                 } elseif ($item->series_thumbnail) {
-                    $data = $this->useJImage($item->series_thumbnail, Text::_('JBS_CMN_THUMBNAIL'));
+                    $data = $this->useJImage($item->series_thumbnail, Text::_('JBS_CMN_THUMBNAIL'), null, null, null, $imgClass);
                 }
                 break;
             case $extra . 'teacherlargeimage':
+                $classAppliedToImg = true;
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_TEACHER_IMAGE');
                 } elseif (isset($item->teacher_image) && !empty($item->teacher_image)) {
-                    $data = $this->useJImage($item->teacher_image, Text::_('JBS_CMN_THUMBNAIL'));
+                    $data = $this->useJImage($item->teacher_image, Text::_('JBS_CMN_THUMBNAIL'), null, null, null, $imgClass);
                 }
                 break;
             case $extra . 'description':
@@ -1496,21 +1398,23 @@ class Cwmlisting
                 }
                 break;
             case $extra . 'thumbnail':
+                $classAppliedToImg = true;
                 if ($header === 1) {
                     $data = Text::_('JBS_CMN_THUMBNAIL');
                 } elseif ($item->thumbnailm) {
-                    $data = $this->useJImage($item->thumbnailm, Text::_('JBS_CMN_THUMBNAIL'));
+                    $data = $this->useJImage($item->thumbnailm, Text::_('JBS_CMN_THUMBNAIL'), null, null, null, $imgClass);
                 }
                 break;
             case $extra . 'teacherimage':
+                $classAppliedToImg = true;
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_TEACHER_IMAGE');
                 } elseif ($type === 'seriesdisplays' || $type === 'seriesdisplay' || $type === 'teachers' || $type === 'teacher') {
                     if (!empty($item->teacher_thumbnail)) {
-                        $data = $this->useJImage($item->teacher_thumbnail, Text::_('JBS_CMN_THUMBNAIL'));
+                        $data = $this->useJImage($item->teacher_thumbnail, Text::_('JBS_CMN_THUMBNAIL'), null, null, null, $imgClass);
                     }
                 } elseif ($item->thumb) {
-                    $data = $this->useJImage($item->thumb, Text::_('JBS_CMN_THUMBNAIL'));
+                    $data = $this->useJImage($item->thumb, Text::_('JBS_CMN_THUMBNAIL'), null, null, null, $imgClass);
                 }
                 break;
         }
@@ -1569,7 +1473,7 @@ class Cwmlisting
             $tdadd = ' colspan="' . $row->colspan . '"';
         }
 
-        if ($customclass) {
+        if ($customclass && !$classAppliedToImg) {
             $tdadd .= ' class="' . $customclass . '"';
         }
 

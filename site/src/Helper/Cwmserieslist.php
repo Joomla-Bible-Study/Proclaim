@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 
@@ -242,12 +243,21 @@ class Cwmserieslist extends Cwmlisting
             )
             ->where($db->quoteName('s.series_id') . ' = ' . (int) $id)
             ->where($db->quoteName('s.published') . ' = 1')
+            ->where($db->quoteName('se.published') . ' = 1')
             ->where($db->quoteName('s.language') . ' IN (' . $language . ')')
             ->where($db->quoteName('s.access') . ' IN (' . $groups . ')')
             ->group($db->quoteName('s.id'))
             ->order(
                 $db->quoteName($params->get('series_detail_sort', 'studydate')) . ' ' . $params->get('series_detail_order', 'DESC')
             );
+
+        // Cascading series date window for non-admin users
+        if (!$user->authorise('core.edit.state', 'com_proclaim') && !$user->authorise('core.edit', 'com_proclaim')) {
+            $nullDate = $db->quote($db->getNullDate());
+            $nowDate  = $db->quote((new Date())->toSql());
+            $query->where('(' . $db->quoteName('se.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('se.publish_up') . ' <= ' . $nowDate . ')')
+                ->where('(' . $db->quoteName('se.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('se.publish_down') . ' >= ' . $nowDate . ')');
+        }
 
         $db->setQuery($query, 0, $limit);
         $items = $db->loadObjectList() ?: [];

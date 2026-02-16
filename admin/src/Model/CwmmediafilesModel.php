@@ -246,7 +246,7 @@ class CwmmediafilesModel extends ListModel
     {
         $db    = $this->getDatabase();
         $query = $db->getQuery(true);
-        $user  = Factory::getApplication()->getIdentity();
+        $user  = $this->getCurrentUser();
 
         $query->select(
             $this->getState(
@@ -317,10 +317,10 @@ class CwmmediafilesModel extends ListModel
             $query->whereIn($db->quoteName('mediafile.access'), $access);
         }
 
-        //        // Implement View Level Access
-        //        if (!$user->authorise('core.cwmadmin')) {
-        //            $query->whereIn($db->quoteName('mediafile.access'), $user->getAuthorisedViewLevels());
-        //        }
+        // Restrict non-admin users to their authorised view levels
+        if (!$user->authorise('core.admin')) {
+            $query->whereIn($db->quoteName('mediafile.access'), $user->getAuthorisedViewLevels());
+        }
 
         // Filter by study title
         //        $study = $this->getState('filter.study_id');

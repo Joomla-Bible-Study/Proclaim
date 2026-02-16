@@ -40,21 +40,7 @@ class CwmteachersModel extends ListModel
      */
     public function getItems(): array
     {
-        $items = parent::getItems();
-
-        if (Factory::getApplication()->isClient('site')) {
-            $user   = Factory::getApplication()->getIdentity();
-            $groups = $user->getAuthorisedViewLevels();
-
-            foreach ($items as $x => $xValue) {
-                // Check the access level. Remove articles the user shouldn't see
-                if (!\in_array($xValue->access, $groups, true)) {
-                    unset($items[$x]);
-                }
-            }
-        }
-
-        return $items;
+        return parent::getItems();
     }
 
     /**
@@ -101,6 +87,12 @@ class CwmteachersModel extends ListModel
             ->where($db->quoteName('teachers.list_show') . ' = :listShow')
             ->bind(':published', $published, ParameterType::INTEGER)
             ->bind(':listShow', $listShow, ParameterType::INTEGER);
+
+        // Filter by view access level
+        $user   = Factory::getApplication()->getIdentity();
+        $groups = $user->getAuthorisedViewLevels();
+        $query->whereIn($db->quoteName('teachers.access'), $groups);
+
         $query->order($db->quoteName('teachers.ordering') . ', ' . $db->quoteName('teachers.teachername') . ' ASC');
         $query->group($db->quoteName('teachers.id'));
 

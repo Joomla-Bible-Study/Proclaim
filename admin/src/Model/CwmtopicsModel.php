@@ -131,6 +131,7 @@ class CwmtopicsModel extends ListModel
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
+        $user  = $this->getCurrentUser();
 
         $query->select(
             $this->getState(
@@ -163,6 +164,11 @@ class CwmtopicsModel extends ListModel
             $query->where($db->qn('topic.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
             $query->where('(' . $db->qn('topic.published') . ' = 0 OR ' . $db->qn('topic.published') . ' = 1)');
+        }
+
+        // Restrict non-admin users to their authorised view levels
+        if (!$user->authorise('core.admin')) {
+            $query->whereIn($db->qn('topic.access'), $user->getAuthorisedViewLevels());
         }
 
         // Add the list ordering clause

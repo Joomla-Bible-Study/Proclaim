@@ -179,7 +179,7 @@ class CwmserversModel extends ListModel
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $user  = Factory::getApplication()->getIdentity();
+        $user  = $this->getCurrentUser();
 
         $query->select($this->getState('list.select', 'server.id, server.published, server.server_name, server.type, server.checked_out, server.checked_out_time'));
         $query->from($db->quoteName('#__bsms_servers', 'server'));
@@ -203,10 +203,9 @@ class CwmserversModel extends ListModel
             $query->where($db->quoteName('server.published') . ' IN (0, 1)');
         }
 
-        // Implement View Level Access
-        if (!$user->authorise('core.cwmadmin')) {
-            $groups = $user->getAuthorisedViewLevels();
-            $query->whereIn($db->quoteName('server.access'), $groups);
+        // Restrict non-admin users to their authorised view levels
+        if (!$user->authorise('core.admin')) {
+            $query->whereIn($db->quoteName('server.access'), $user->getAuthorisedViewLevels());
         }
 
         // Add the list ordering clause with whitelist validation

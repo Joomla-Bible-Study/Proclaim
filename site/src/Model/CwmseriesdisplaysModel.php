@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Site\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Multilanguage;
@@ -360,7 +361,8 @@ class CwmseriesdisplaysModel extends ListModel
         $query->select(
             $db->quoteName('t.id', 'tid') . ', ' . $db->quoteName('t.teachername') . ', '
             . $db->quoteName('t.title', 'teachertitle') . ', '
-            . $db->quoteName('t.teacher_thumbnail')
+            . $db->quoteName('t.teacher_thumbnail') . ', '
+            . $db->quoteName('t.teacher_thumbnail', 'thumb')
         );
         $query->join(
             'LEFT',
@@ -419,6 +421,14 @@ class CwmseriesdisplaysModel extends ListModel
             default: // Published only (backward compatible)
                 $query->where($db->quoteName('se.published') . ' = 1');
                 break;
+        }
+
+        // Filter by publish dates for non-admin users (like Joomla category date filtering)
+        if (!$user->authorise('core.edit.state', 'com_proclaim') && !$user->authorise('core.edit', 'com_proclaim')) {
+            $nullDate = $db->quote($db->getNullDate());
+            $nowDate  = $db->quote((new Date())->toSql());
+            $query->where('(' . $db->quoteName('se.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('se.publish_up') . ' <= ' . $nowDate . ')')
+                ->where('(' . $db->quoteName('se.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('se.publish_down') . ' >= ' . $nowDate . ')');
         }
 
         //Filter by year

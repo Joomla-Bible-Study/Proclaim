@@ -229,6 +229,13 @@ class CwmcommentsModel extends ListModel
             $db->qn('#__viewlevels', 'ag') . ' ON ' . $db->qn('ag.id') . ' = ' . $db->qn('comment.access')
         );
 
+        // Restrict non-admin users to their authorised view levels
+        $user = $this->getCurrentUser();
+
+        if (!$user->authorise('core.admin')) {
+            $query->whereIn($db->qn('comment.access'), $user->getAuthorisedViewLevels());
+        }
+
         // Join over the users for the checked out user.
         $query->select($db->qn('uc.name', 'editor'))
             ->join('LEFT', $db->qn('#__users', 'uc') . ' ON ' . $db->qn('uc.id') . ' = ' . $db->qn('comment.checked_out'));

@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use Joomla\CMS\Application\CMSApplicationInterface;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -484,7 +485,17 @@ class Cwmlanding
                         . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.series_id')
                     )
                     ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
-                    ->where($this->db->quoteName('b.published') . ' = 1');
+                    ->where($this->db->quoteName('b.published') . ' = 1')
+                    ->where($this->db->quoteName('a.published') . ' = 1');
+
+                // Cascading series date window for non-admin users
+                if (!$this->user->authorise('core.edit.state', 'com_proclaim') && !$this->user->authorise('core.edit', 'com_proclaim')) {
+                    $nullDate = $this->db->quote($this->db->getNullDate());
+                    $nowDate  = $this->db->quote((new Date())->toSql());
+                    $query->where('(' . $this->db->quoteName('a.publish_up') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_up') . ' <= ' . $nowDate . ')')
+                        ->where('(' . $this->db->quoteName('a.publish_down') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_down') . ' >= ' . $nowDate . ')');
+                }
+
                 $this->addAccessFilter($query);
                 break;
 
@@ -794,8 +805,17 @@ class Cwmlanding
                 )
                 ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
                 ->where($this->db->quoteName('b.published') . ' = 1')
+                ->where($this->db->quoteName('a.published') . ' = 1')
                 ->group($this->db->quoteName('a.id'))
                 ->order($this->db->quoteName('a.series_text') . ' ' . $order);
+
+            // Cascading series date window for non-admin users
+            if (!$this->user->authorise('core.edit.state', 'com_proclaim') && !$this->user->authorise('core.edit', 'com_proclaim')) {
+                $nullDate = $this->db->quote($this->db->getNullDate());
+                $nowDate  = $this->db->quote((new Date())->toSql());
+                $query->where('(' . $this->db->quoteName('a.publish_up') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_up') . ' <= ' . $nowDate . ')')
+                    ->where('(' . $this->db->quoteName('a.publish_down') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_down') . ' >= ' . $nowDate . ')');
+            }
 
             $this->addAccessFilter($query);
             $this->db->setQuery($query);

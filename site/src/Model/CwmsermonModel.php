@@ -197,24 +197,29 @@ class CwmsermonModel extends FormModel
                     . $db->quoteName('s.id') . ' = ' . $db->quoteName('m.study_id')
                 );
 
-                if (
-                    (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
-                        'core.edit',
-                        'com_proclaim'
-                    ))
-                ) {
-                    // Filter by start and end dates.
-                    $nullDate = $db->quote($db->getNullDate());
-                    $date     = new Date();
+                $canEditState = $user->authorise('core.edit.state', 'com_proclaim');
+                $canEdit      = $user->authorise('core.edit', 'com_proclaim');
 
-                    $nowDate = $db->quote($date->toSql());
+                if (!$canEditState && !$canEdit) {
+                    // Filter by start and end dates for the message itself.
+                    $nullDate = $db->quote($db->getNullDate());
+                    $nowDate  = $db->quote((new Date())->toSql());
 
                     $query->where('(' . $db->quoteName('s.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('s.publish_up') . ' <= ' . $nowDate . ')')
                         ->where('(' . $db->quoteName('s.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('s.publish_down') . ' >= ' . $nowDate . ')');
+
+                    // Cascading series date window: hide message if its series is outside publish window.
+                    $query->where(
+                        '(('
+                        . $db->quoteName('se.published') . ' = 1'
+                        . ' AND (' . $db->quoteName('se.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('se.publish_up') . ' <= ' . $nowDate . ')'
+                        . ' AND (' . $db->quoteName('se.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('se.publish_down') . ' >= ' . $nowDate . ')'
+                        . ') OR ' . $db->quoteName('s.series_id') . ' <= 0)'
+                    );
                 }
 
                 // Implement View Level Access
-                if (!$user->authorise('core.cwmadmin')) {
+                if (!$user->authorise('core.admin')) {
                     $groups = implode(',', $user->getAuthorisedViewLevels());
                     $query->where($db->quoteName('s.access') . ' IN (' . $groups . ')');
                 }

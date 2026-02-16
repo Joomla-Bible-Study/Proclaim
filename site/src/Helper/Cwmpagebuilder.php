@@ -394,7 +394,6 @@ class Cwmpagebuilder
 
         // Select only published studies
         $query->where($db->quoteName('study.published') . ' = 1');
-        $query->where('(' . $db->quoteName('series.published') . ' = 1 OR ' . $db->quoteName('study.series_id') . ' <= 0)');
 
         if ($wherefield && $whereitem) {
             if ($wherefield === 'teacher') {
@@ -414,7 +413,7 @@ class Cwmpagebuilder
         $nullDate = $db->quote($db->getNullDate());
         $nowDate  = $db->quote((new Date())->toSql());
 
-        // Filter by start and end dates.
+        // Filter by start and end dates + cascading series date window
         if (
             (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
                 'core.edit',
@@ -423,6 +422,16 @@ class Cwmpagebuilder
         ) {
             $query->where('(' . $db->quoteName('study.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('study.publish_up') . ' <= ' . $nowDate . ')')
                 ->where('(' . $db->quoteName('study.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('study.publish_down') . ' >= ' . $nowDate . ')');
+
+            // Cascading series date window (like Joomla categories)
+            $query->where(
+                '((' . $db->quoteName('series.published') . ' = 1'
+                . ' AND (' . $db->quoteName('series.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('series.publish_up') . ' <= ' . $nowDate . ')'
+                . ' AND (' . $db->quoteName('series.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('series.publish_down') . ' >= ' . $nowDate . ')'
+                . ') OR ' . $db->quoteName('study.series_id') . ' <= 0)'
+            );
+        } else {
+            $query->where('(' . $db->quoteName('series.published') . ' = 1 OR ' . $db->quoteName('study.series_id') . ' <= 0)');
         }
 
         // Filter by language

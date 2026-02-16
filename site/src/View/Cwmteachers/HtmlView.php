@@ -168,7 +168,7 @@ class HtmlView extends BaseHtmlView
 
         foreach ($items as $i => $item) {
             if (isset($item->teacher_thumbnail)) {
-                $image                  = $images::getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
+                $image                  = $images::getTeacherThumbnail($item->teacher_thumbnail, $item->teacher_image ?? '');
                 $items[$i]->image       = Cwmimages::renderPicture($image, $item->teachername ?? '');
                 $items[$i]->slug        = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
                     . str_replace(' ', '-', htmlspecialchars_decode($item->teachername, ENT_QUOTES));

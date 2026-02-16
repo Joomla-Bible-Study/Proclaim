@@ -43,3 +43,4 @@ com_proclaim/media/css/site/
 !/docs/
 
 media/backup/*.sql
+media/images/

@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ItemModel;
@@ -244,14 +245,29 @@ class CwmseriesdisplayModel extends ItemModel
                 break;
         }
 
-        $query->extendWhere(
-            'AND',
-            [
-                $db->quoteName('series.published') . ' = 1',
-                $db->quoteName('study.series_id') . ' <= 0',
-            ],
-            'OR'
-        );
+        // Cascading series date window for non-admin users (like Joomla categories)
+        $canEditState = $user->authorise('core.edit.state', 'com_proclaim');
+        $canEdit      = $user->authorise('core.edit', 'com_proclaim');
+
+        if (!$canEditState && !$canEdit) {
+            $quotedNow = $db->quote((new Date())->toSql());
+            $query->where(
+                '(('
+                . $db->quoteName('series.published') . ' = 1'
+                . ' AND (' . $db->quoteName('series.publish_up') . ' = ' . $db->quote($nullDate) . ' OR ' . $db->quoteName('series.publish_up') . ' <= ' . $quotedNow . ')'
+                . ' AND (' . $db->quoteName('series.publish_down') . ' = ' . $db->quote($nullDate) . ' OR ' . $db->quoteName('series.publish_down') . ' >= ' . $quotedNow . ')'
+                . ') OR ' . $db->quoteName('study.series_id') . ' <= 0)'
+            );
+        } else {
+            $query->extendWhere(
+                'AND',
+                [
+                    $db->quoteName('series.published') . ' = 1',
+                    $db->quoteName('study.series_id') . ' <= 0',
+                ],
+                'OR'
+            );
+        }
 
         $query->where($db->quoteName('study.series_id') . ' = :sid')
             ->bind(':sid', $sid, ParameterType::INTEGER);

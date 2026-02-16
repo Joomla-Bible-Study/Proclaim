@@ -189,7 +189,7 @@ class CwmmessagetypesModel extends ListModel
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $user  = Factory::getApplication()->getIdentity();
+        $user  = $this->getCurrentUser();
 
         $query->select(
             $this->getState(
@@ -223,10 +223,9 @@ class CwmmessagetypesModel extends ListModel
             $query->where($db->qn('messagetype.access') . ' = ' . (int) $access);
         }
 
-        // Implement View Level Access
-        if (!$user->authorise('core.cwmadmin')) {
-            $groups = implode(',', $user->getAuthorisedViewLevels());
-            $query->where($db->qn('messagetype.access') . ' IN (' . $groups . ')');
+        // Restrict non-admin users to their authorised view levels
+        if (!$user->authorise('core.admin')) {
+            $query->whereIn($db->qn('messagetype.access'), $user->getAuthorisedViewLevels());
         }
 
         // Filter by search in title.

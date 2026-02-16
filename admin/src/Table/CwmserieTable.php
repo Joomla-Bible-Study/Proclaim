@@ -182,6 +182,22 @@ class CwmserieTable extends Table
     public ?int $modified_by = null;
 
     /**
+     * Publish up date
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public string $publish_up = '0000-00-00 00:00:00';
+
+    /**
+     * Publish down date
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public string $publish_down = '0000-00-00 00:00:00';
+
+    /**
      * Podcast Show
      *
      * @var int
@@ -231,6 +247,15 @@ class CwmserieTable extends Table
     {
         if (trim($this->series_text ?? '') === '') {
             throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_SERIES_NAME_REQUIRED'));
+        }
+
+        // Sanitise publish dates — empty strings are invalid for NOT NULL DATETIME columns
+        if (empty($this->publish_up)) {
+            $this->publish_up = $this->getDatabase()->getNullDate();
+        }
+
+        if (empty($this->publish_down)) {
+            $this->publish_down = $this->getDatabase()->getNullDate();
         }
 
         return parent::check();
