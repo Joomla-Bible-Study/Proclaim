@@ -73,10 +73,6 @@ $wa->useScript('keepalive')
 			alert("' . $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . '")
 		}
 	}
-	// Prevent TinyMCE / subform init from scrolling the page down
-	window.addEventListener("load", function () {
-		if (!location.hash) { window.scrollTo(0, 0); }
-	});
 '
     );
 
@@ -85,6 +81,19 @@ $isModal = $input->get('layout') === 'modal';
 $layout  = $isModal ? 'modal' : 'edit';
 $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=component' : '';
 ?>
+<?php // Prevent TinyMCE / subform / Choices.js init from scrolling the page down.
+// Placed as raw <script> so it runs immediately, before any element init fires. ?>
+<script>
+(function () {
+    if (location.hash) return;
+    function hold() { window.scrollTo(0, 0); }
+    window.addEventListener("scroll", hold);
+    window.addEventListener("load", function () {
+        hold();
+        setTimeout(function () { window.removeEventListener("scroll", hold); }, 500);
+    });
+})();
+</script>
 <form action="<?php
 echo Route::_(
     'index.php?option=com_proclaim&view=cwmmessage&layout=' . $layout . $tmpl . '&id=' . (int)$this->item->id
