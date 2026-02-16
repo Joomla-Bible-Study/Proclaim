@@ -183,6 +183,14 @@ class CwmtemplatesModel extends ListModel
             }
         }
 
+        // Implement View Level Access
+        $user = Factory::getApplication()->getIdentity();
+
+        if (!$user->authorise('core.admin')) {
+            $groups = implode(',', $user->getAuthorisedViewLevels());
+            $query->where($db->qn('template.access') . ' IN (' . $groups . ')');
+        }
+
         // Add the list ordering clause
         $orderCol  = $this->state->get('list.ordering', 'template.id');
         $orderDirn = $this->state->get('list.direction', 'ACS');

@@ -229,6 +229,14 @@ class CwmcommentsModel extends ListModel
             $db->qn('#__viewlevels', 'ag') . ' ON ' . $db->qn('ag.id') . ' = ' . $db->qn('comment.access')
         );
 
+        // Implement View Level Access
+        $user = Factory::getApplication()->getIdentity();
+
+        if (!$user->authorise('core.admin')) {
+            $groups = implode(',', $user->getAuthorisedViewLevels());
+            $query->where($db->qn('comment.access') . ' IN (' . $groups . ')');
+        }
+
         // Join over the users for the checked out user.
         $query->select($db->qn('uc.name', 'editor'))
             ->join('LEFT', $db->qn('#__users', 'uc') . ' ON ' . $db->qn('uc.id') . ' = ' . $db->qn('comment.checked_out'));

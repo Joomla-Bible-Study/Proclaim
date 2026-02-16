@@ -210,6 +210,12 @@ class CwmseriesModel extends ListModel
             $query->whereIn($db->quoteName('series.access'), $access);
         }
 
+        // Implement View Level Access
+        if (!$user->authorise('core.admin')) {
+            $groups = implode(',', $user->getAuthorisedViewLevels());
+            $query->where($db->quoteName('series.access') . ' IN (' . $groups . ')');
+        }
+
         // Filter by published state
         $published = (string) $this->getState('filter.published');
 

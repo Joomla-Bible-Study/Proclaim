@@ -317,10 +317,10 @@ class CwmmediafilesModel extends ListModel
             $query->whereIn($db->quoteName('mediafile.access'), $access);
         }
 
-        //        // Implement View Level Access
-        //        if (!$user->authorise('core.cwmadmin')) {
-        //            $query->whereIn($db->quoteName('mediafile.access'), $user->getAuthorisedViewLevels());
-        //        }
+        // Implement View Level Access
+        if (!$user->authorise('core.admin')) {
+            $query->whereIn($db->quoteName('mediafile.access'), $user->getAuthorisedViewLevels());
+        }
 
         // Filter by study title
         //        $study = $this->getState('filter.study_id');

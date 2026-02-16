@@ -165,6 +165,14 @@ class CwmtopicsModel extends ListModel
             $query->where('(' . $db->qn('topic.published') . ' = 0 OR ' . $db->qn('topic.published') . ' = 1)');
         }
 
+        // Implement View Level Access
+        $user = Factory::getApplication()->getIdentity();
+
+        if (!$user->authorise('core.admin')) {
+            $groups = implode(',', $user->getAuthorisedViewLevels());
+            $query->where($db->qn('topic.access') . ' IN (' . $groups . ')');
+        }
+
         // Add the list ordering clause
         $orderCol  = $this->state->get('list.ordering', 'topic.topic_text');
         $orderDirn = $this->state->get('list.direction', 'asc');
