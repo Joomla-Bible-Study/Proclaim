@@ -57,7 +57,7 @@ class Cwmshowscripture
         }
 
         $reference = $this->formReference($row);
-        $choice    = (int) $params->get('show_passage_view');
+        $choice    = (int) $params->get('show_passage_view', 3);
 
         // Read Bible version from message row (new), fallback to template params (legacy compat)
         $version = $row->bible_version ?? $params->get('bible_translation', '');
@@ -232,7 +232,7 @@ class Cwmshowscripture
                     . 'e.style.display = (isHidden ? \'block\' : \'none\'); '
                     . 'this.setAttribute(\'aria-expanded\', isHidden); return false;">';
 
-                if ((int) $params->get('showpassage_icon') === 1) {
+                if ((int) $params->get('showpassage_icon', 1) === 1) {
                     $passage .= '<i class="fas fa-bible fa-3x" aria-hidden="true" '
                         . 'style="display: flex; margin-right: 10px;"></i>';
                 }
@@ -256,32 +256,48 @@ class Cwmshowscripture
                 break;
 
             case 3:
-                // Popup
+                // New window – opens scripture in a separate browser window/tab.
+                // Opens a blank window, then writes the server-rendered HTML into it
+                // via the DOM API. This is cross-browser safe: Chrome blocks data: URIs
+                // in top-level navigations, and Safari lacks Blob URL support in some
+                // contexts. The content comes from a server-rendered <template> element
+                // (not user input) so there is no XSS vector.
                 $popupId  = 'scripture_popup_' . uniqid('', true);
                 $passage  = '<div class="scripture-container">';
                 $passage .= '<a href="#" class="scripture-popup-trigger" '
-                    . 'onclick="var p = document.getElementById(\'' . $popupId . '\'); '
-                    . 'p.style.display = (p.style.display === \'none\' ? \'block\' : \'none\'); '
+                    . 'onclick="var t=document.getElementById(\'' . $popupId . '\');'
+                    . 'var w=window.open(\'\',\'scripture_popup\','
+                    . '\'width=700,height=500,scrollbars=yes,resizable=yes\');'
+                    . 'if(w){w.document.open();w.document.write(t.innerHTML);w.document.close();}'
                     . 'return false;" '
                     . 'title="' . Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE') . '">';
 
-                if ((int) $params->get('showpassage_icon') === 1) {
+                if ((int) $params->get('showpassage_icon', 1) === 1) {
                     $passage .= '<i class="fas fa-bible fa-3x" aria-hidden="true" '
                         . 'style="display: flex; margin-right: 10px;"></i>';
-                } elseif ($params->get('showpassage_icon') > 0) {
+                } else {
                     $passage .= Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE');
                 }
 
                 $passage .= '</a>';
-                $passage .= '<div id="' . $popupId . '" class="scripture-popup" style="display: none;">';
-                $passage .= '<div class="scripture-popup-content">';
-                $passage .= '<button type="button" class="scripture-popup-close" '
-                    . 'onclick="this.closest(\'.scripture-popup\').style.display = \'none\'; return false;" '
-                    . 'aria-label="' . Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '">&times;</button>';
-                $passage .= '<div class="scripture-body">' . $result->text . '</div>';
+
+                // Hidden template — JS reads innerHTML to write into the popup window
+                $lang     = Factory::getApplication()->getLanguage()->getTag();
+                $passage .= '<template id="' . $popupId . '">';
+                $passage .= '<!DOCTYPE html><html lang="' . $lang . '">';
+                $passage .= '<head><meta charset="utf-8">';
+                $passage .= '<title>' . Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE') . '</title>';
+                $passage .= '<style>'
+                    . 'body{font-family:Georgia,"Times New Roman",serif;line-height:1.8;'
+                    . 'padding:2em;margin:0;max-width:700px;margin:0 auto;color:#333;background:#fafaf8;}'
+                    . 'sup{font-size:0.65em;font-weight:700;color:#8b4513;margin-right:2px;}'
+                    . '.scripture-copyright{margin-top:1em;padding-top:0.75em;'
+                    . 'border-top:1px solid #e0ddd5;font-size:0.8em;color:#888;font-style:italic;}'
+                    . '</style></head><body>';
+                $passage .= $result->text;
                 $passage .= $copyrightHtml;
-                $passage .= $switcherHtml;
-                $passage .= '</div></div></div>';
+                $passage .= '</body></html>';
+                $passage .= '</template></div>';
                 break;
 
             default:

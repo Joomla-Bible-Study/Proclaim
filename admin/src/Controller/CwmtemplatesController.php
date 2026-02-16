@@ -238,6 +238,11 @@ class CwmtemplatesController extends AdminController
 
         $table->store();
 
+        // Clean up the uploaded tmp file
+        if (is_file($tmp_dest)) {
+            File::delete($tmp_dest);
+        }
+
         $message = Text::_('JBS_TPL_IMPORT_SUCCESS');
 
         return $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
