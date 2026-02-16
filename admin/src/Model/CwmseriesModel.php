@@ -210,10 +210,9 @@ class CwmseriesModel extends ListModel
             $query->whereIn($db->quoteName('series.access'), $access);
         }
 
-        // Implement View Level Access
+        // Restrict non-admin users to their authorised view levels
         if (!$user->authorise('core.admin')) {
-            $groups = implode(',', $user->getAuthorisedViewLevels());
-            $query->where($db->quoteName('series.access') . ' IN (' . $groups . ')');
+            $query->whereIn($db->quoteName('series.access'), $user->getAuthorisedViewLevels());
         }
 
         // Filter by published state

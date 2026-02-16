@@ -149,6 +149,7 @@ class CwmtemplatesModel extends ListModel
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
+        $user  = $this->getCurrentUser();
 
         $query->select(
             $this->getState(
@@ -183,12 +184,9 @@ class CwmtemplatesModel extends ListModel
             }
         }
 
-        // Implement View Level Access
-        $user = Factory::getApplication()->getIdentity();
-
+        // Restrict non-admin users to their authorised view levels
         if (!$user->authorise('core.admin')) {
-            $groups = implode(',', $user->getAuthorisedViewLevels());
-            $query->where($db->qn('template.access') . ' IN (' . $groups . ')');
+            $query->whereIn($db->qn('template.access'), $user->getAuthorisedViewLevels());
         }
 
         // Add the list ordering clause

@@ -191,7 +191,7 @@ class CwmlocationsModel extends ListModel
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $user  = Factory::getApplication()->getIdentity();
+        $user  = $this->getCurrentUser();
 
         $query->select(
             $this->getState(
@@ -217,10 +217,9 @@ class CwmlocationsModel extends ListModel
             $query->where($db->qn('location.access') . ' = ' . (int) $access);
         }
 
-        // Implement View Level Access
+        // Restrict non-admin users to their authorised view levels
         if (!$user->authorise('core.admin')) {
-            $groups = implode(',', $user->getAuthorisedViewLevels());
-            $query->where($db->qn('location.access') . ' IN (' . $groups . ')');
+            $query->whereIn($db->qn('location.access'), $user->getAuthorisedViewLevels());
         }
 
         // Filter by search in title.

@@ -142,7 +142,7 @@ class CwmteachersModel extends ListModel
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $user  = Factory::getApplication()->getIdentity();
+        $user  = $this->getCurrentUser();
 
         $query->select($this->getState('list.select', $db->qn('teacher') . '.*'));
         $query->from($db->qn('#__bsms_teachers', 'teacher'));
@@ -170,10 +170,9 @@ class CwmteachersModel extends ListModel
             $query->where($db->qn('teacher.access') . ' = ' . (int) $access);
         }
 
-        // Implement View Level Access
+        // Restrict non-admin users to their authorised view levels
         if (!$user->authorise('core.admin')) {
-            $groups = implode(',', $user->getAuthorisedViewLevels());
-            $query->where($db->qn('teacher.access') . ' IN (' . $groups . ')');
+            $query->whereIn($db->qn('teacher.access'), $user->getAuthorisedViewLevels());
         }
 
         // Filter by published state
