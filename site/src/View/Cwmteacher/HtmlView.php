@@ -128,7 +128,7 @@ class HtmlView extends BaseHtmlView
         $id         = $input->get('id', '0', 'get');
         $item->id   = $id;
 
-        $image      = $images::getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
+        $image      = $images::getTeacherThumbnail($item->teacher_thumbnail, $item->teacher_image ?? '');
         $largeimage = $images::getTeacherImage($item->image, $item->teacher_image);
 
         if ($image) {

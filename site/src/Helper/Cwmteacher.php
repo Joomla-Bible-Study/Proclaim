@@ -77,7 +77,7 @@ class Cwmteacher extends Cwmlisting
                 if ($result->teacher_thumbnail) {
                     $image = $result->teacher_thumbnail;
                 } else {
-                    $image = $result->thumb;
+                    $image = $result->teacher_image ?? '';
                 }
 
                 if ($result->title) {
