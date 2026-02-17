@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmImageCleanup;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
@@ -155,6 +156,32 @@ class CwmmediafileModel extends AdminModel
             $this->autoDetectMetadata($params, $table, $set_path, $path);
 
             $data['params'] = $params->toArray();
+
+            // Clean up old image file when filename changes on an existing record
+            $recordId = (int) ($data['id'] ?? 0);
+
+            if ($recordId > 0) {
+                $db       = Factory::getContainer()->get('DatabaseDriver');
+                $oldQuery = $db->getQuery(true)
+                    ->select($db->quoteName('params'))
+                    ->from($db->quoteName('#__bsms_mediafiles'))
+                    ->where($db->quoteName('id') . ' = ' . $recordId);
+                $db->setQuery($oldQuery);
+                $oldParamsJson = $db->loadResult();
+
+                if ($oldParamsJson) {
+                    $oldParams    = new Registry($oldParamsJson);
+                    $oldFilename  = $oldParams->get('filename', '');
+                    $newFilename  = $params->get('filename', '');
+
+                    CwmImageCleanup::cleanupOldMediaImage(
+                        $oldFilename,
+                        $newFilename,
+                        (int) $data['server_id'],
+                        $recordId
+                    );
+                }
+            }
 
             if (parent::save($data)) {
                 return true;

@@ -15,10 +15,12 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 use Joomla\Filesystem\Folder;
 use Joomla\Filesystem\Path;
+use Joomla\Registry\Registry;
 
 /**
  * Image Cleanup Helper - Find and remove orphaned image folders
@@ -310,5 +312,97 @@ class CwmImageCleanup
         $i     = (int) floor(log($bytes) / log($k));
 
         return round($bytes / ($k ** $i), 2) . ' ' . $sizes[$i];
+    }
+
+    /**
+     * Image file extensions recognised for cleanup
+     */
+    private const array IMAGE_EXTENSIONS = [
+        'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico',
+    ];
+
+    /**
+     * Clean up an old media-file image when the filename changes on save.
+     *
+     * Checks whether the old file is still referenced by any OTHER media record
+     * on the same server. If no other record uses it the file is deleted via the
+     * addon's deleteFile() (which respects the server's `delete_files` setting).
+     *
+     * @param   string  $oldFilename  Previous filename (from DB before save)
+     * @param   string  $newFilename  New filename being saved
+     * @param   int     $serverId     Server ID for both old and new file
+     * @param   int     $recordId     The media-file record being saved (excluded from ref count)
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public static function cleanupOldMediaImage(
+        string $oldFilename,
+        string $newFilename,
+        int $serverId,
+        int $recordId
+    ): void {
+        // Nothing to clean up if the filename hasn't changed or was empty
+        if (empty($oldFilename) || $oldFilename === $newFilename) {
+            return;
+        }
+
+        // Only clean up image files
+        $ext = strtolower(pathinfo($oldFilename, PATHINFO_EXTENSION));
+
+        if (!\in_array($ext, self::IMAGE_EXTENSIONS, true)) {
+            return;
+        }
+
+        // Count other media records referencing the same filename + server
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('server_id') . ' = ' . $serverId)
+            ->where($db->quoteName('id') . ' != ' . $recordId);
+
+        // The filename is stored inside the JSON params column
+        $query->where(
+            $db->quoteName('params') . ' LIKE ' . $db->quote('%' . $db->escape($oldFilename, true) . '%')
+        );
+
+        $db->setQuery($query);
+        $refCount = (int) $db->loadResult();
+
+        if ($refCount > 0) {
+            Log::add(
+                'Image cleanup: skipping ' . $oldFilename . ' — still referenced by ' . $refCount . ' other record(s)',
+                Log::INFO,
+                'com_proclaim'
+            );
+
+            return;
+        }
+
+        // Load server type so we can instantiate the correct addon
+        $query = $db->getQuery(true)
+            ->select([$db->quoteName('type'), $db->quoteName('params')])
+            ->from($db->quoteName('#__bsms_servers'))
+            ->where($db->quoteName('id') . ' = ' . $serverId);
+        $db->setQuery($query);
+        $server = $db->loadObject();
+
+        if (!$server || empty($server->type)) {
+            return;
+        }
+
+        try {
+            $addon       = CWMAddon::getInstance($server->type);
+            $serverParams = new Registry($server->params ?: '{}');
+            $addon->deleteFile($oldFilename, $serverParams);
+        } catch (\Exception $e) {
+            Log::add(
+                'Image cleanup: failed to delete old image ' . $oldFilename . ' — ' . $e->getMessage(),
+                Log::WARNING,
+                'com_proclaim'
+            );
+        }
     }
 }

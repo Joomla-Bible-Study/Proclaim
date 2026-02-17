@@ -237,7 +237,7 @@ class CWMAddonLocal extends CWMAddon
     #[\Override]
     public function getAjaxActions(): array
     {
-        return ['browseFiles'];
+        return ['browseFiles', 'copyFile'];
     }
 
     /**
@@ -421,5 +421,125 @@ class CWMAddonLocal extends CWMAddon
             'parentPath'  => $parentPath,
             'basePath'    => $basePath,
         ];
+    }
+
+    /**
+     * Copy a file to create a unique copy for a media record (XHR handler)
+     *
+     * Called by the xhr() controller method via `$addon->copyFile($input)`.
+     *
+     * @param   \Joomla\Input\Input  $input  Request input
+     *
+     * @return  array  Response with new file path and size
+     *
+     * @throws  \Exception
+     * @since   10.1.0
+     */
+    public function copyFile($input): array
+    {
+        return $this->handleCopyFileAction();
+    }
+
+    /**
+     * Handle copyFile AJAX action — create a unique copy of a file
+     *
+     * @return  array  Response with new file path and size
+     *
+     * @throws  \Exception
+     * @since   10.1.0
+     */
+    protected function handleCopyFileAction(): array
+    {
+        $app      = Factory::getApplication();
+        $input    = $app->getInput();
+        $serverId = $input->getInt('server_id', 0);
+        $filePath = $input->getString('file', '');
+
+        if (!$serverId || empty($filePath)) {
+            return ['success' => false, 'error' => 'Missing server_id or file parameter'];
+        }
+
+        // Load server configuration to get base path
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('params'))
+            ->from($db->quoteName('#__bsms_servers'))
+            ->where($db->quoteName('id') . ' = ' . $serverId);
+        $db->setQuery($query);
+        $serverParams = $db->loadResult();
+
+        $reg      = new Registry($serverParams ?: '{}');
+        $basePath = $reg->get('path', 'images/biblestudy/media');
+        $basePath = trim($basePath, '/');
+
+        // Build absolute path for the source file
+        $absBase = Path::clean(JPATH_SITE . '/' . $basePath);
+        $absFile = Path::clean(JPATH_SITE . '/' . $filePath);
+
+        // Security: ensure both paths resolve and file is within the base directory
+        $realBase = realpath($absBase);
+        $realFile = realpath($absFile);
+        $realSite = realpath(JPATH_SITE);
+
+        if ($realBase === false || $realFile === false || $realSite === false) {
+            return ['success' => false, 'error' => 'File or base path not found'];
+        }
+
+        if (!str_starts_with($realFile, $realSite)) {
+            return ['success' => false, 'error' => 'Path traversal blocked'];
+        }
+
+        if (!is_file($realFile)) {
+            return ['success' => false, 'error' => 'Source is not a file'];
+        }
+
+        // Build new filename with timestamp suffix
+        $pathInfo  = pathinfo($realFile);
+        $baseName  = $pathInfo['filename'];
+        $extension = $pathInfo['extension'] ?? '';
+        $directory = $pathInfo['dirname'];
+        $timestamp = time();
+
+        $newName = $baseName . '_' . $timestamp . ($extension ? '.' . $extension : '');
+        $newPath = $directory . '/' . $newName;
+
+        // Collision guard: if timestamp name exists, append random suffix
+        if (file_exists($newPath)) {
+            $newName = $baseName . '_' . $timestamp . '_' . random_int(100, 999) . ($extension ? '.' . $extension : '');
+            $newPath = $directory . '/' . $newName;
+        }
+
+        try {
+            $result = File::copy($realFile, $newPath);
+
+            if (!$result) {
+                return ['success' => false, 'error' => 'File::copy() returned false'];
+            }
+
+            // Build the relative path matching the original format
+            $relDir  = \dirname($filePath);
+            $newRelPath = $relDir . '/' . $newName;
+            $newSize = filesize($newPath) ?: 0;
+
+            Log::add(
+                'Local server: copied file ' . $realFile . ' → ' . $newPath,
+                Log::INFO,
+                'com_proclaim'
+            );
+
+            return [
+                'success' => true,
+                'newPath' => $newRelPath,
+                'newSize' => $newSize,
+            ];
+        } catch (\Exception $e) {
+            Log::add(
+                'Local server: failed to copy file: ' . $realFile . ' — ' . $e->getMessage(),
+                Log::ERROR,
+                'com_proclaim'
+            );
+
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
     }
 }
