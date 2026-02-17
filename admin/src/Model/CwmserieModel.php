@@ -507,6 +507,69 @@ class CwmserieModel extends AdminModel
     }
 
     /**
+     * Get messages belonging to this series.
+     *
+     * @return  array  List of message objects with title, date, teacher, location, published, id.
+     *
+     * @since   10.1.0
+     */
+    public function getMessages(): array
+    {
+        $item = $this->getItem();
+
+        if (!$item || empty($item->id)) {
+            return [];
+        }
+
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
+
+        $query->select([
+            $db->qn('study.id'),
+            $db->qn('study.studytitle'),
+            $db->qn('study.studydate'),
+            $db->qn('study.published'),
+            $db->qn('study.access'),
+        ]);
+        $query->from($db->qn('#__bsms_studies', 'study'));
+
+        // Join over Teachers (via junction table, primary teacher; falls back to legacy teacher_id)
+        $query->select($db->qn('teacher.teachername'));
+        $query->join(
+            'LEFT',
+            $db->qn('#__bsms_study_teachers', 'stj') . ' ON ' . $db->qn('stj.study_id') . ' = ' . $db->qn('study.id')
+            . ' AND ' . $db->qn('stj.ordering') . ' = 0'
+        );
+        $query->join(
+            'LEFT',
+            $db->qn('#__bsms_teachers', 'teacher') . ' ON ' . $db->qn('teacher.id')
+            . ' = COALESCE(' . $db->qn('stj.teacher_id') . ', ' . $db->qn('study.teacher_id') . ')'
+        );
+
+        // Join over Location
+        $query->select($db->qn('loc.location_text'));
+        $query->join(
+            'LEFT',
+            $db->qn('#__bsms_locations', 'loc') . ' ON ' . $db->qn('loc.id') . ' = ' . $db->qn('study.location_id')
+        );
+
+        $query->where($db->qn('study.series_id') . ' = ' . (int) $item->id);
+
+        // Restrict non-admin users to their authorised view levels
+        $user = $this->getCurrentUser();
+
+        if (!$user->authorise('core.admin')) {
+            $query->whereIn($db->qn('study.access'), $user->getAuthorisedViewLevels());
+        }
+
+        $query->order($db->qn('study.studydate') . ' DESC');
+
+        $db->setQuery($query);
+
+        return $db->loadObjectList() ?: [];
+    }
+
+    /**
      * A protected method to get a set of ordering conditions.
      *
      * @param   Table  $table  A JTable object.
