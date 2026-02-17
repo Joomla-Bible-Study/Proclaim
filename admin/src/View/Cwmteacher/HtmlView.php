@@ -20,8 +20,10 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Registry\Registry;
 
 /**
  * View class for Teacher
@@ -48,14 +50,6 @@ class HtmlView extends BaseHtmlView
     public $state;
 
     /**
-     * Admin
-     *
-     * @var object
-     * @since    7.0.0
-     */
-    public $admin;
-
-    /**
      * Can Do
      *
      * @var object
@@ -64,11 +58,27 @@ class HtmlView extends BaseHtmlView
     public $canDo;
 
     /**
+     * Admin params
+     *
+     * @var Registry
+     * @since 10.1.0
+     */
+    protected Registry $admin_params;
+
+    /**
+     * Messages belonging to this teacher
+     *
+     * @var array
+     * @since 10.1.0
+     */
+    protected array $messages = [];
+
+    /**
      * Execute and display a template script.
      *
      * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
      *
-     * @return  void A string if successful, otherwise a JError object.
+     * @return  void  A string if successful, otherwise a JError object.
      *
      * @throws \Exception
      * @since   11.1
@@ -82,13 +92,21 @@ class HtmlView extends BaseHtmlView
         $this->state = $this->get("State");
         $this->canDo = ContentHelper::getActions('com_proclaim', 'teacher', (int)$this->item->id);
 
-        // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
-            throw new \RuntimeException(implode("\n", $errors), 500);
+        // Load the Admin settings as Registry
+        $admin    = Cwmparams::getAdmin();
+        $registry = new Registry();
+        $registry->loadString($admin->params);
+        $this->admin_params = $registry;
+
+        // Load messages belonging to this teacher (only for existing records)
+        if (!empty($this->item->id) && $this->item->id > 0) {
+            $this->messages = $this->get('Messages');
         }
 
-        // Load the Admin settings
-        $this->admin = Cwmparams::getAdmin();
+        // Check for errors.
+        if (\count($errors = $this->get('Errors'))) {
+            throw new GenericDataException(implode("\n", $errors), 500);
+        }
 
         $this->setLayout("edit");
 
@@ -96,8 +114,6 @@ class HtmlView extends BaseHtmlView
         if ($this->getLayout() !== 'modal') {
             $this->addToolbar();
         }
-
-        $isNew = ($this->item->id < 1);
 
         // Display the template
         parent::display($tpl);

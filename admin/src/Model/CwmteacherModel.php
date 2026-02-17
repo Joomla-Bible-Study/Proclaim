@@ -152,6 +152,40 @@ class CwmteacherModel extends AdminModel
 
         $this->data = parent::getItem($pk);
 
+        // Auto-populate social_links from legacy columns if not yet migrated
+        if ($this->data && !empty($this->data->id) && empty($this->data->social_links)) {
+            $migrated = [];
+
+            if (!empty($this->data->facebooklink)) {
+                $migrated[] = ['platform' => 'facebook', 'url' => $this->data->facebooklink, 'label' => ''];
+            }
+
+            if (!empty($this->data->twitterlink)) {
+                $migrated[] = ['platform' => 'x-twitter', 'url' => $this->data->twitterlink, 'label' => ''];
+            }
+
+            if (!empty($this->data->bloglink)) {
+                $migrated[] = ['platform' => 'blog', 'url' => $this->data->bloglink, 'label' => ''];
+            }
+
+            for ($i = 1; $i <= 3; $i++) {
+                $linkField  = 'link' . $i;
+                $labelField = 'linklabel' . $i;
+
+                if (!empty($this->data->$linkField)) {
+                    $migrated[] = [
+                        'platform' => 'other',
+                        'url'      => $this->data->$linkField,
+                        'label'    => $this->data->$labelField ?? '',
+                    ];
+                }
+            }
+
+            if (!empty($migrated)) {
+                $this->data->social_links = json_encode($migrated);
+            }
+        }
+
         return $this->data;
     }
 
@@ -232,6 +266,33 @@ class CwmteacherModel extends AdminModel
      */
     public function save($data): bool
     {
+        // Sync social_links subform → legacy columns for frontend backward compatibility
+        if (!empty($data['social_links']) && \is_array($data['social_links'])) {
+            $data['social_links'] = json_encode(array_values($data['social_links']));
+
+            $decoded = json_decode($data['social_links'], true) ?: [];
+
+            // Map platform → legacy column (first match wins)
+            $legacyMap = [
+                'facebook'  => 'facebooklink',
+                'x-twitter' => 'twitterlink',
+                'blog'      => 'bloglink',
+            ];
+
+            foreach ($legacyMap as $platform => $column) {
+                foreach ($decoded as $link) {
+                    if (($link['platform'] ?? '') === $platform && !empty($link['url'])) {
+                        $data[$column] = $link['url'];
+                        break;
+                    }
+                }
+            }
+        } elseif (isset($data['social_links']) && \is_string($data['social_links'])) {
+            // Already JSON string — leave as-is
+        } else {
+            $data['social_links'] = '';
+        }
+
         /** @var Registry $params */
         $params        = Cwmparams::getAdmin()->params;
         $app           = Factory::getApplication();
@@ -437,6 +498,71 @@ class CwmteacherModel extends AdminModel
             $table->modified    = $date->toSql();
             $table->modified_by = $user->id;
         }
+    }
+
+    /**
+     * Get messages (sermons) by this teacher.
+     *
+     * @return  array  List of message objects
+     *
+     * @since   10.1.0
+     */
+    public function getMessages(): array
+    {
+        $item = $this->getItem();
+
+        if (!$item || empty($item->id)) {
+            return [];
+        }
+
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
+
+        $query->select([
+            $db->qn('study.id'),
+            $db->qn('study.studytitle'),
+            $db->qn('study.studydate'),
+            $db->qn('study.published'),
+            $db->qn('study.access'),
+        ]);
+        $query->from($db->qn('#__bsms_studies', 'study'));
+
+        // Join over Series
+        $query->select($db->qn('series.series_text'));
+        $query->join(
+            'LEFT',
+            $db->qn('#__bsms_series', 'series') . ' ON ' . $db->qn('series.id') . ' = ' . $db->qn('study.series_id')
+        );
+
+        // Join over Location
+        $query->select($db->qn('loc.location_text'));
+        $query->join(
+            'LEFT',
+            $db->qn('#__bsms_locations', 'loc') . ' ON ' . $db->qn('loc.id') . ' = ' . $db->qn('study.location_id')
+        );
+
+        // Filter by teacher via junction table OR legacy teacher_id
+        $query->where(
+            '(' . $db->qn('study.id') . ' IN ('
+            . $db->getQuery(true)
+                ->select($db->qn('st.study_id'))
+                ->from($db->qn('#__bsms_study_teachers', 'st'))
+                ->where($db->qn('st.teacher_id') . ' = ' . (int) $item->id)
+            . ') OR ' . $db->qn('study.teacher_id') . ' = ' . (int) $item->id . ')'
+        );
+
+        // Restrict non-admin users to their authorised view levels
+        $user = $this->getCurrentUser();
+
+        if (!$user->authorise('core.admin')) {
+            $query->whereIn($db->qn('study.access'), $user->getAuthorisedViewLevels());
+        }
+
+        $query->order($db->qn('study.studydate') . ' DESC');
+
+        $db->setQuery($query, 0, 20);
+
+        return $db->loadObjectList() ?: [];
     }
 
     /**

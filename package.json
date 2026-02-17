@@ -56,6 +56,7 @@
     "test:coverage": "node --no-deprecation node_modules/.bin/jest -c build/jest.config.js --coverage"
   },
   "dependencies": {
-    "core-js": "^3.48.0"
+    "core-js": "^3.48.0",
+    "intl-tel-input": "^26.4.1"
   }
 }

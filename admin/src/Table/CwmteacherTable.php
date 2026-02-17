@@ -108,6 +108,14 @@ class CwmteacherTable extends Table
     public ?string $teacher_thumbnail = null;
 
     /**
+     * Social links JSON
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $social_links = null;
+
+    /**
      * Checked out user ID
      *
      * @var int|null
@@ -184,6 +192,32 @@ class CwmteacherTable extends Table
         foreach (['website', 'facebooklink', 'twitterlink', 'bloglink', 'link1', 'link2', 'link3'] as $field) {
             if (!empty($this->$field) && !preg_match('#^[a-z][a-z0-9+\-.]*://#i', $this->$field)) {
                 $this->$field = 'https://' . $this->$field;
+            }
+        }
+
+        // Auto-prepend https:// to URLs in social_links JSON
+        if (!empty($this->social_links) && \is_string($this->social_links)) {
+            $links   = json_decode($this->social_links, true);
+            $changed = false;
+
+            if (\is_array($links)) {
+                foreach ($links as &$link) {
+                    if (
+                        !empty($link['url'])
+                        && !preg_match('#^[a-z][a-z0-9+\-.]*://#i', $link['url'])
+                        && ($link['platform'] ?? '') !== 'email'
+                        && ($link['platform'] ?? '') !== 'phone'
+                    ) {
+                        $link['url'] = 'https://' . $link['url'];
+                        $changed     = true;
+                    }
+                }
+
+                unset($link);
+
+                if ($changed) {
+                    $this->social_links = json_encode($links);
+                }
             }
         }
 
