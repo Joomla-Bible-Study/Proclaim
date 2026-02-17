@@ -21,6 +21,8 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmuploadscript;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
+use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
@@ -62,6 +64,116 @@ class CWMAddonLocal extends CWMAddon
     public function upload(?array $data): array
     {
         return (new Cwmuploadscript())->upload($data);
+    }
+
+    /**
+     * Delete a physical file from the local server
+     *
+     * @param   string    $filename      The filename or relative path to delete
+     * @param   Registry  $serverParams  The server configuration parameters
+     *
+     * @return  bool  True if the file was deleted or already absent
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function deleteFile(string $filename, Registry $serverParams): bool
+    {
+        if (!(int) $serverParams->get('delete_files', 0)) {
+            Log::add(
+                'Local server: physical file deletion disabled, skipping: ' . $filename,
+                Log::INFO,
+                'com_proclaim'
+            );
+
+            return false;
+        }
+
+        if (empty($filename)) {
+            return true;
+        }
+
+        // Determine absolute path: if filename starts with a known directory prefix, treat as site-relative
+        $knownPrefixes  = ['images/', 'media/', 'tmp/'];
+        $isSiteRelative = false;
+
+        foreach ($knownPrefixes as $prefix) {
+            if (str_starts_with($filename, $prefix)) {
+                $isSiteRelative = true;
+                break;
+            }
+        }
+
+        if ($isSiteRelative) {
+            $absPath = Path::clean(JPATH_SITE . '/' . $filename);
+        } else {
+            $basePath = $serverParams->get('path', 'images/biblestudy/media');
+            $basePath = trim($basePath, '/');
+            $absPath  = Path::clean(JPATH_SITE . '/' . $basePath . '/' . $filename);
+        }
+
+        // Safety: resolve symlinks and verify within JPATH_SITE
+        $realPath = realpath($absPath);
+        $realSite = realpath(JPATH_SITE);
+
+        if ($realPath === false) {
+            // File does not exist on disk — nothing to delete
+            Log::add(
+                'Local server: file not found on disk (already absent): ' . $absPath,
+                Log::INFO,
+                'com_proclaim'
+            );
+
+            return true;
+        }
+
+        if ($realSite === false || !str_starts_with($realPath, $realSite)) {
+            Log::add(
+                'Local server: path traversal blocked for: ' . $absPath . ' (resolved: ' . $realPath . ')',
+                Log::WARNING,
+                'com_proclaim'
+            );
+
+            return false;
+        }
+
+        if (!is_file($realPath)) {
+            Log::add(
+                'Local server: path is not a file: ' . $realPath,
+                Log::WARNING,
+                'com_proclaim'
+            );
+
+            return false;
+        }
+
+        try {
+            $result = File::delete($realPath);
+
+            if ($result) {
+                Log::add(
+                    'Local server: deleted physical file: ' . $realPath,
+                    Log::INFO,
+                    'com_proclaim'
+                );
+            } else {
+                Log::add(
+                    'Local server: File::delete() returned false for: ' . $realPath,
+                    Log::WARNING,
+                    'com_proclaim'
+                );
+            }
+
+            return $result;
+        } catch (\Exception $e) {
+            Log::add(
+                'Local server: failed to delete file: ' . $realPath . ' — ' . $e->getMessage(),
+                Log::ERROR,
+                'com_proclaim'
+            );
+
+            return false;
+        }
     }
 
     /**

@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Filesystem\Path;
+use Joomla\Registry\Registry;
 
 /**
  * Abstract Server class
@@ -174,6 +175,24 @@ abstract class CWMAddon
         }
 
         return new $class($config);
+    }
+
+    /**
+     * Delete a physical file managed by this addon
+     *
+     * Base implementation returns false (not supported). Only addons
+     * that manage local files should override this method.
+     *
+     * @param   string    $filename      The filename or relative path to delete
+     * @param   Registry  $serverParams  The server configuration parameters
+     *
+     * @return  bool  True if the file was deleted or already absent, false if not supported
+     *
+     * @since   10.1.0
+     */
+    public function deleteFile(string $filename, Registry $serverParams): bool
+    {
+        return false;
     }
 
     /**
