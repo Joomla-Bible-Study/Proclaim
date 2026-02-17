@@ -51,54 +51,6 @@ $wa->useScript('keepalive')
 '
     );
 
-// Platform → FontAwesome icon mapping
-$platformIcons = [
-    'website'       => 'fa-solid fa-globe',
-    'blog'          => 'fa-solid fa-blog',
-    'email'         => 'fa-solid fa-envelope',
-    'phone'         => 'fa-solid fa-phone',
-    'rss'           => 'fa-solid fa-rss',
-    'facebook'      => 'fa-brands fa-facebook',
-    'instagram'     => 'fa-brands fa-instagram',
-    'x-twitter'     => 'fa-brands fa-x-twitter',
-    'youtube'       => 'fa-brands fa-youtube',
-    'tiktok'        => 'fa-brands fa-tiktok',
-    'linkedin'      => 'fa-brands fa-linkedin',
-    'threads'       => 'fa-brands fa-threads',
-    'pinterest'     => 'fa-brands fa-pinterest',
-    'snapchat'      => 'fa-brands fa-snapchat',
-    'whatsapp'      => 'fa-brands fa-whatsapp',
-    'telegram'      => 'fa-brands fa-telegram',
-    'truthsocial'   => 'fa-solid fa-check-double',
-    'rumble'        => 'fa-solid fa-play',
-    'vimeo'         => 'fa-brands fa-vimeo',
-    'spotify'       => 'fa-brands fa-spotify',
-    'apple-podcast' => 'fa-solid fa-podcast',
-    'amazon-music'  => 'fa-brands fa-amazon',
-    'soundcloud'    => 'fa-brands fa-soundcloud',
-    'subsplash'     => 'fa-solid fa-mobile-screen',
-    'church-center' => 'fa-solid fa-church',
-    'faithlife'     => 'fa-solid fa-book-bible',
-    'giving'        => 'fa-solid fa-hand-holding-heart',
-    'github'        => 'fa-brands fa-github',
-    'other'         => 'fa-solid fa-link',
-];
-
-// Decode saved social links for the icon preview
-$savedLinks = [];
-
-if (!empty($this->item->social_links)) {
-    $decoded = json_decode($this->item->social_links, true);
-
-    if (\is_array($decoded)) {
-        foreach ($decoded as $link) {
-            if (!empty($link['url'])) {
-                $savedLinks[] = $link;
-            }
-        }
-    }
-}
-
 // In case of modal
 $isModal = $input->get('layout') === 'modal';
 $layout  = $isModal ? 'modal' : 'edit';
@@ -161,48 +113,18 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'links', Text::_('JBS_TCH_LINKS')); ?>
         <div class="row">
             <div class="col-lg-12">
-                <?php // ---- Saved Links Preview ---- ?>
-                <?php if (!empty($savedLinks) || !empty($this->item->website)) : ?>
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <div class="d-flex flex-wrap gap-2">
-                            <?php if (!empty($this->item->website)) : ?>
-                            <a href="<?php echo $this->escape($this->item->website); ?>" target="_blank"
-                               class="btn btn-outline-secondary btn-sm" title="<?php echo Text::_('JBS_TCH_WEBSITE'); ?>">
-                                <i class="fa-solid fa-globe"></i> <?php echo Text::_('JBS_TCH_WEBSITE'); ?>
-                            </a>
-                            <?php endif; ?>
-                            <?php foreach ($savedLinks as $link) :
-                                $iconClass = $platformIcons[$link['platform'] ?? 'other'] ?? 'fa-solid fa-link';
-                                $linkLabel = !empty($link['label']) ? $link['label'] : ucfirst(str_replace('-', ' ', $link['platform'] ?? 'Link'));
-                            ?>
-                            <a href="<?php echo $this->escape($link['url']); ?>" target="_blank"
-                               class="btn btn-outline-secondary btn-sm" title="<?php echo $this->escape($linkLabel); ?>">
-                                <i class="<?php echo $iconClass; ?>"></i> <?php echo $this->escape($linkLabel); ?>
-                            </a>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <?php endif; ?>
-
                 <?php // ---- Website Field ---- ?>
-                <div class="mb-3">
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fa-solid fa-globe"></i></span>
-                        <div class="flex-grow-1">
-                            <?php echo $this->form->renderField('website'); ?>
-                        </div>
-                    </div>
-                </div>
+                <?php echo $this->form->renderField('website'); ?>
 
                 <?php // ---- Social Links Subform ---- ?>
-                <h4 class="mt-4 mb-3">
-                    <i class="fa-solid fa-share-nodes"></i>
-                    <?php echo Text::_('JBS_TCH_SOCIAL_LINKS'); ?>
-                </h4>
-                <p class="text-muted small mb-3"><?php echo Text::_('JBS_TCH_SOCIAL_LINKS_DESC'); ?></p>
-                <?php echo $this->form->renderField('social_links'); ?>
+                <div class="mt-4">
+                    <h4 class="mb-2">
+                        <i class="fa-solid fa-share-nodes"></i>
+                        <?php echo Text::_('JBS_TCH_SOCIAL_LINKS'); ?>
+                    </h4>
+                    <p class="text-muted small mb-3"><?php echo Text::_('JBS_TCH_SOCIAL_LINKS_DESC'); ?></p>
+                    <?php echo $this->form->renderField('social_links'); ?>
+                </div>
 
                 <?php // ---- Legacy Links (if any exist) ---- ?>
                 <?php
@@ -214,64 +136,41 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
                     || !empty($this->item->link3);
                 ?>
                 <?php if ($hasLegacyLinks) : ?>
-                <div class="mt-4">
-                    <h5 class="mb-3 text-muted">
-                        <i class="fa-solid fa-clock-rotate-left"></i>
-                        <?php echo Text::_('JBS_TCH_LEGACY_LINKS'); ?>
-                    </h5>
-                    <div class="card">
-                        <div class="card-body">
-                            <?php if (!empty($this->item->facebooklink)) : ?>
-                            <div class="input-group mb-2">
-                                <span class="input-group-text"><i class="fa-brands fa-facebook"></i></span>
-                                <div class="flex-grow-1">
+                <div class="accordion mt-5" id="legacyLinksAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="legacyLinksHeading">
+                            <button class="accordion-button collapsed" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#legacyLinksCollapse"
+                                    aria-expanded="false" aria-controls="legacyLinksCollapse">
+                                <i class="fa-solid fa-clock-rotate-left me-2"></i>
+                                <?php echo Text::_('JBS_TCH_LEGACY_LINKS'); ?>
+                            </button>
+                        </h2>
+                        <div id="legacyLinksCollapse" class="accordion-collapse collapse"
+                             aria-labelledby="legacyLinksHeading" data-bs-parent="#legacyLinksAccordion">
+                            <div class="accordion-body">
+                                <?php if (!empty($this->item->facebooklink)) : ?>
                                     <?php echo $this->form->renderField('facebooklink'); ?>
-                                </div>
-                            </div>
-                            <?php endif; ?>
-                            <?php if (!empty($this->item->twitterlink)) : ?>
-                            <div class="input-group mb-2">
-                                <span class="input-group-text"><i class="fa-brands fa-x-twitter"></i></span>
-                                <div class="flex-grow-1">
+                                <?php endif; ?>
+                                <?php if (!empty($this->item->twitterlink)) : ?>
                                     <?php echo $this->form->renderField('twitterlink'); ?>
-                                </div>
-                            </div>
-                            <?php endif; ?>
-                            <?php if (!empty($this->item->bloglink)) : ?>
-                            <div class="input-group mb-2">
-                                <span class="input-group-text"><i class="fa-solid fa-blog"></i></span>
-                                <div class="flex-grow-1">
+                                <?php endif; ?>
+                                <?php if (!empty($this->item->bloglink)) : ?>
                                     <?php echo $this->form->renderField('bloglink'); ?>
-                                </div>
-                            </div>
-                            <?php endif; ?>
-                            <?php if (!empty($this->item->link1)) : ?>
-                            <div class="input-group mb-2">
-                                <span class="input-group-text"><i class="fa-solid fa-link"></i></span>
-                                <div class="flex-grow-1">
+                                <?php endif; ?>
+                                <?php if (!empty($this->item->link1)) : ?>
                                     <?php echo $this->form->renderField('link1'); ?>
                                     <?php echo $this->form->renderField('linklabel1'); ?>
-                                </div>
-                            </div>
-                            <?php endif; ?>
-                            <?php if (!empty($this->item->link2)) : ?>
-                            <div class="input-group mb-2">
-                                <span class="input-group-text"><i class="fa-solid fa-link"></i></span>
-                                <div class="flex-grow-1">
+                                <?php endif; ?>
+                                <?php if (!empty($this->item->link2)) : ?>
                                     <?php echo $this->form->renderField('link2'); ?>
                                     <?php echo $this->form->renderField('linklabel2'); ?>
-                                </div>
-                            </div>
-                            <?php endif; ?>
-                            <?php if (!empty($this->item->link3)) : ?>
-                            <div class="input-group mb-2">
-                                <span class="input-group-text"><i class="fa-solid fa-link"></i></span>
-                                <div class="flex-grow-1">
+                                <?php endif; ?>
+                                <?php if (!empty($this->item->link3)) : ?>
                                     <?php echo $this->form->renderField('link3'); ?>
                                     <?php echo $this->form->renderField('linklabel3'); ?>
-                                </div>
+                                <?php endif; ?>
                             </div>
-                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
