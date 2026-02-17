@@ -367,6 +367,19 @@ class Cwmrestore
         // Fix object ownership for migrated data
         self::fixOwnershipAfterRestore();
 
+        // Verify restore integrity
+        $integrity = self::verifyRestoreIntegrity();
+        Log::add(
+            \sprintf(
+                'Restore verification: %d tables, %d tasks, config %s',
+                $integrity['tables'],
+                $integrity['tasks'],
+                $integrity['config'] ? 'OK' : 'missing'
+            ),
+            Log::INFO,
+            'com_proclaim'
+        );
+
         return true;
     }
 
@@ -784,5 +797,50 @@ class Cwmrestore
         if ($totalFixed > 0) {
             $app->enqueueMessage(Text::sprintf('JBS_IBM_OWNERSHIP_FIXED', $totalFixed), 'info');
         }
+    }
+
+    /**
+     * Verify that component config and tasks were restored successfully
+     *
+     * @return array ['config' => bool, 'tasks' => int, 'tables' => int]
+     *
+     * @since 10.1.0
+     */
+    public static function verifyRestoreIntegrity(): array
+    {
+        $db = Factory::getContainer()->get('DatabaseDriver');
+
+        // Check component config (params should be substantial JSON)
+        $query = $db->getQuery(true);
+        $query->select('LENGTH(' . $db->qn('params') . ')')
+            ->from($db->qn('#__extensions'))
+            ->where($db->qn('element') . ' = ' . $db->q('com_proclaim'))
+            ->where($db->qn('type') . ' = ' . $db->q('component'));
+        $db->setQuery($query);
+        $configSize = (int) $db->loadResult();
+
+        // Check scheduled tasks count
+        $tasksCount = 0;
+        $tables = $db->getTableList();
+        $prefix = $db->getPrefix();
+        $schedulerTable = $prefix . 'scheduler_tasks';
+
+        if (\in_array($schedulerTable, $tables, true)) {
+            $query = $db->getQuery(true);
+            $query->select('COUNT(*)')
+                ->from($db->qn('#__scheduler_tasks'))
+                ->where($db->qn('type') . ' LIKE ' . $db->q('proclaim.%'));
+            $db->setQuery($query);
+            $tasksCount = (int) $db->loadResult();
+        }
+
+        // Check Proclaim tables count
+        $proclaimTables = CwmdbHelper::getObjects();
+
+        return [
+            'config' => $configSize > 10, // Params should be substantial JSON
+            'tasks' => $tasksCount,
+            'tables' => \count($proclaimTables),
+        ];
     }
 }

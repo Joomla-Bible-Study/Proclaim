@@ -91,6 +91,114 @@ class Cwmbackup
     }
 
     /**
+     * Export component configuration from #__extensions table.
+     *
+     * Returns SQL UPDATE statement to restore component params.
+     *
+     * @return string SQL statement
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public function getComponentConfigExport(): string
+    {
+        $db = Factory::getContainer()->get('DatabaseDriver');
+
+        // Get com_proclaim row from extensions
+        $query = $db->getQuery(true);
+        $query->select($db->qn(['extension_id', 'params']))
+            ->from($db->qn('#__extensions'))
+            ->where($db->qn('element') . ' = ' . $db->q('com_proclaim'))
+            ->where($db->qn('type') . ' = ' . $db->q('component'));
+        $db->setQuery($query);
+        $result = $db->loadObject();
+
+        if (!$result || empty($result->params)) {
+            return "\n-- No component configuration found\n";
+        }
+
+        // Build UPDATE statement (not INSERT - we update existing row)
+        $export = "\n-- --------------------------------------------------------\n";
+        $export .= "-- Component Configuration (com_proclaim)\n";
+        $export .= "-- --------------------------------------------------------\n\n";
+        $export .= "UPDATE " . $db->qn('#__extensions') . " SET ";
+        $export .= $db->qn('params') . " = " . $db->q($result->params);
+        $export .= " WHERE " . $db->qn('element') . " = " . $db->q('com_proclaim');
+        $export .= " AND " . $db->qn('type') . " = " . $db->q('component') . ";\n\n";
+
+        return $export;
+    }
+
+    /**
+     * Export Proclaim scheduled tasks from #__scheduler_tasks table.
+     *
+     * Returns SQL DELETE + INSERT statements to restore tasks.
+     *
+     * @return string SQL statements
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public function getScheduledTasksExport(): string
+    {
+        $db = Factory::getContainer()->get('DatabaseDriver');
+
+        // Check if scheduler_tasks table exists (Joomla 4+)
+        $tables = $db->getTableList();
+        $prefix = $db->getPrefix();
+        $schedulerTable = $prefix . 'scheduler_tasks';
+
+        if (!\in_array($schedulerTable, $tables, true)) {
+            return "\n-- Scheduler tasks table not found (Joomla 4+ required)\n";
+        }
+
+        // Get all Proclaim tasks
+        $query = $db->getQuery(true);
+        $query->select('*')
+            ->from($db->qn('#__scheduler_tasks'))
+            ->where($db->qn('type') . ' LIKE ' . $db->q('proclaim.%'));
+        $db->setQuery($query);
+        $results = $db->loadObjectList();
+
+        if (empty($results)) {
+            return "\n-- No scheduled tasks found\n";
+        }
+
+        $export = "\n-- --------------------------------------------------------\n";
+        $export .= "-- Scheduled Tasks (proclaim)\n";
+        $export .= "-- --------------------------------------------------------\n\n";
+
+        // DELETE existing Proclaim tasks (clean slate on restore)
+        $export .= "DELETE FROM " . $db->qn('#__scheduler_tasks');
+        $export .= " WHERE " . $db->qn('type') . " LIKE " . $db->q('proclaim.%') . ";\n\n";
+
+        // INSERT each task
+        foreach ($results as $task) {
+            $data = [];
+            $export .= 'INSERT INTO ' . $db->qn('#__scheduler_tasks') . ' SET ';
+
+            foreach ($task as $key => $value) {
+                // Skip auto-increment id (will be regenerated on restore)
+                if ($key === 'id') {
+                    continue;
+                }
+
+                if ($value === null) {
+                    $data[] = $db->qn($key) . " = NULL";
+                } else {
+                    $data[] = $db->qn($key) . " = " . $db->q($value);
+                }
+            }
+
+            $export .= implode(', ', $data) . ";\n";
+        }
+
+        $export .= "\n";
+
+        return $export;
+    }
+
+    /**
      * Export DB//
      *
      * @param   int  $run  ID
@@ -111,6 +219,10 @@ class Cwmbackup
         foreach ($objects as $object) {
             $this->getExportTable($object['name']);
         }
+
+        // Append component configuration and scheduled tasks
+        $this->data_cache .= $this->getComponentConfigExport();
+        $this->data_cache .= $this->getScheduledTasksExport();
 
         switch ($run) {
             case 1:
@@ -182,7 +294,7 @@ class Cwmbackup
     /**
      * Get Export Table Data as string (for AJAX export)
      *
-     * @param   string  $table  Table name
+     * @param   string  $table  Table name (or virtual table name like '_component_config')
      *
      * @return string The SQL export data for the table
      *
@@ -192,6 +304,15 @@ class Cwmbackup
     {
         if (!$table) {
             return '';
+        }
+
+        // Handle virtual "tables" for component config and scheduled tasks
+        if ($table === '_component_config') {
+            return $this->getComponentConfigExport();
+        }
+
+        if ($table === '_scheduled_tasks') {
+            return $this->getScheduledTasksExport();
         }
 
         // Reset the execution time limit for long-running exports

@@ -75,6 +75,10 @@ class CwmbackupController extends FormController
         $tables     = CwmdbHelper::getObjects();
         $tableNames = array_column($tables, 'name');
 
+        // Add virtual "tables" for component config and scheduled tasks
+        $tableNames[] = '_component_config';
+        $tableNames[] = '_scheduled_tasks';
+
         // Return the export ID so it can be passed to later calls
         $this->sendJsonResponse(true, '', ['tables' => $tableNames, 'exportId' => $exportId]);
     }
@@ -579,11 +583,27 @@ class CwmbackupController extends FormController
             // Recreate templatecode PHP files from database records
             $templatecodesCreated = $this->recreateTemplatecodeFiles();
 
+            // Verify restore integrity
+            $integrity = Cwmrestore::verifyRestoreIntegrity();
+            Log::add(
+                \sprintf(
+                    'Restore verification: %d tables, %d tasks, config %s',
+                    $integrity['tables'],
+                    $integrity['tasks'],
+                    $integrity['config'] ? 'OK' : 'missing'
+                ),
+                Log::INFO,
+                'com_proclaim'
+            );
+
             // Clean up tmp files left by the import
             $this->cleanupImportTmpFiles($importFilePath);
 
             $this->sendJsonResponse(true, Text::_('JBS_CMN_OPERATION_SUCCESSFUL'), [
                 'templatecodes_created' => $templatecodesCreated,
+                'tables_restored' => $integrity['tables'],
+                'tasks_restored' => $integrity['tasks'],
+                'config_restored' => $integrity['config'],
             ]);
         } catch (\Exception $e) {
             $this->sendJsonResponse(false, 'Import finalize error: ' . $e->getMessage());
