@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Addons\Servers\Resi\CWMAddonResi;
 use CWM\Component\Proclaim\Administrator\Addons\Servers\Vimeo\CWMAddonVimeo;
 use CWM\Component\Proclaim\Administrator\Addons\Servers\Wistia\CWMAddonWistia;
 use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
@@ -288,6 +289,10 @@ class Cwmmedia
                     $mediaimage = '<span class="fas fa-play-circle" title="Wistia" style="font-size:24px;"></span>';
                     break;
 
+                case preg_match('/(resi.io)/', $filename) === 1:
+                    $mediaimage = '<span class="fas fa-video" title="Resi" style="font-size:24px;"></span>';
+                    break;
+
                 case preg_match('/(pdf|PDF)/', $filename) === 1:
                     $mediaimage = '<span class="fas fa-file-pdf" title="PDF" style="font-size:24px;"></span>';
                     break;
@@ -539,6 +544,11 @@ class Cwmmedia
                             $playercode = '<iframe class="playhit" data-id="' . $media->id . '" src="' . $wistia->convertWistia($path) .
                                 '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
                                 '" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" style="border: none"></iframe>';
+                        } elseif (preg_match('/(resi.io)/', $path) === 1) {
+                            $resi = new CWMAddonResi();
+                            $playercode = '<iframe class="playhit" data-id="' . $media->id . '" src="' . $resi->convertResi($path) .
+                                '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
+                                '" allow="autoplay; fullscreen" allowfullscreen style="border: none"></iframe>';
                         } else {
                             $playercode = CWMHtml5Inline::render($media, $params, $player, false, $template);
                         }
@@ -751,6 +761,17 @@ class Cwmmedia
             return $data;
         }
 
+        // Handle Resi.io
+        if (preg_match('/(resi.io)/', $path) === 1) {
+            $path = (new CWMAddonResi())->convertResi($path);
+            $data = '<a class="fancybox_player playhit" data-id="' . $media->id .
+                '" aria-hidden="false" data-src="' . $path .
+                '" data-header="' . $headerText . '" data-footer="' . $footerText .
+                '" data-options=\'{"autoplay" : "' . (int)$params->get('autostart', false) .
+                '", "controls" : "' . (int)$params->get('controls') . '"}\'  href="javascript:;">' . $image . '</a>';
+            return $data;
+        }
+
         // Player attributes - jwplayer_* params are deprecated, kept for backward compatibility
         // These are now handled by the Fancybox player (see media/js/fancybox.js)
         $posterImage = $params->get('jwplayer_image', $params->get('player_image', ''));
@@ -889,13 +910,14 @@ class Cwmmedia
      */
     public function getFluidDownloadLink(object $media, Registry $params, $template): string
     {
-        // Remove the download option from video platform URLs (YouTube, Vimeo, Wistia)
+        // Remove the download option from video platform URLs (YouTube, Vimeo, Wistia, Resi)
         $filename  = $media->params->get('filename') ?? '';
         $link_type = 0;
 
         if (substr_count($filename, 'youtube') || substr_count($filename, 'youtu.be') ||
             substr_count($filename, 'vimeo.com') ||
-            substr_count($filename, 'wistia.com') || substr_count($filename, 'wistia.net')) {
+            substr_count($filename, 'wistia.com') || substr_count($filename, 'wistia.net') ||
+            substr_count($filename, 'resi.io')) {
             return '';
         }
 
