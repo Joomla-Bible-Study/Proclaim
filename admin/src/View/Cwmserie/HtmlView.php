@@ -66,6 +66,14 @@ class HtmlView extends BaseHtmlView
     protected Registry $admin_params;
 
     /**
+     * Messages belonging to this series
+     *
+     * @var array
+     * @since 10.1.0
+     */
+    protected array $messages = [];
+
+    /**
      * Execute and display a template script.
      *
      * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
@@ -85,6 +93,11 @@ class HtmlView extends BaseHtmlView
         $registry    = new Registry();
         $registry->loadString($admin->params);
         $this->admin_params = $registry;
+
+        // Load messages belonging to this series (only for existing records)
+        if (!empty($this->item->id) && $this->item->id > 0) {
+            $this->messages = $this->get('Messages');
+        }
 
         // Check for errors.
         if (\count($errors = $this->get('Errors'))) {

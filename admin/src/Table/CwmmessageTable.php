@@ -17,10 +17,13 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Registry\Registry;
@@ -642,7 +645,82 @@ class CwmmessageTable extends Table
         // Delete associated scripture references from junction table
         CwmscriptureHelper::deleteScriptures((int) $pk);
 
+        // Delete associated study_teachers junction records
+        CwmstudyteacherHelper::deleteTeachers((int) $pk);
+
+        // Cascade-delete associated media files (triggers physical file cleanup)
+        $this->deleteMediaFiles((int) $pk);
+
         return parent::delete($pk);
+    }
+
+    /**
+     * Cascade-delete all media files associated with a message
+     *
+     * Each media file is deleted individually through CwmmediafileTable::delete()
+     * so that physical file cleanup is triggered via the addon pattern.
+     *
+     * @param   int  $studyId  The message/study primary key
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function deleteMediaFiles(int $studyId): void
+    {
+        try {
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('id'))
+                ->from($db->quoteName('#__bsms_mediafiles'))
+                ->where($db->quoteName('study_id') . ' = ' . $studyId);
+            $db->setQuery($query);
+            $mediaIds = $db->loadColumn();
+
+            if (empty($mediaIds)) {
+                return;
+            }
+
+            // Get a media file table instance via MVCFactory
+            $app        = Factory::getApplication();
+            $mediaTable = $app->bootComponent('com_proclaim')
+                ->getMVCFactory()
+                ->createTable('Cwmmediafile', 'Administrator');
+
+            $deleted = 0;
+
+            foreach ($mediaIds as $mediaId) {
+                try {
+                    $mediaTable->reset();
+
+                    if ($mediaTable->load((int) $mediaId)) {
+                        $mediaTable->delete((int) $mediaId);
+                        $deleted++;
+                    }
+                } catch (\Exception $e) {
+                    Log::add(
+                        'Message #' . $studyId . ': failed to cascade-delete media file #' . $mediaId
+                        . ' — ' . $e->getMessage(),
+                        Log::WARNING,
+                        'com_proclaim'
+                    );
+                }
+            }
+
+            if ($deleted > 0) {
+                Log::add(
+                    'Message #' . $studyId . ': cascade-deleted ' . $deleted . ' media file(s)',
+                    Log::INFO,
+                    'com_proclaim'
+                );
+            }
+        } catch (\Exception $e) {
+            Log::add(
+                'Message #' . $studyId . ': media file cascade query failed — ' . $e->getMessage(),
+                Log::WARNING,
+                'com_proclaim'
+            );
+        }
     }
 
     /**

@@ -16,8 +16,11 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Registry\Registry;
@@ -285,6 +288,95 @@ class CwmmediafileTable extends Table
         }
 
         return parent::store($updateNulls);
+    }
+
+    /**
+     * Method to delete a row from the database by primary key value.
+     * Also attempts to delete the physical file from disk if the server supports it.
+     *
+     * @param   mixed  $pk  Primary key value to delete (null uses instance property)
+     *
+     * @return  bool  True on success
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function delete($pk = null): bool
+    {
+        $pk = $pk ?? $this->id;
+
+        // Load record to get server_id and params before deletion
+        if ($pk !== $this->id) {
+            $this->load($pk);
+        }
+
+        // Attempt physical file deletion — never block DB deletion
+        $this->deletePhysicalFile();
+
+        return parent::delete($pk);
+    }
+
+    /**
+     * Attempt to delete the physical file associated with this media record
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function deletePhysicalFile(): void
+    {
+        try {
+            // Check user choice from delete confirmation dialog (default 1 = delete files)
+            $deletePhysical = (int) Factory::getApplication()->getInput()->get('delete_physical_files', 1, 'int');
+
+            if ($deletePhysical === 0) {
+                Log::add(
+                    'Media file #' . ($this->id ?? '?') . ': physical file deletion skipped by user choice',
+                    Log::INFO,
+                    'com_proclaim'
+                );
+
+                return;
+            }
+
+            if (empty($this->server_id)) {
+                return;
+            }
+
+            // Load server record
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true)
+                ->select([$db->quoteName('type'), $db->quoteName('params')])
+                ->from($db->quoteName('#__bsms_servers'))
+                ->where($db->quoteName('id') . ' = ' . (int) $this->server_id);
+            $db->setQuery($query);
+            $server = $db->loadObject();
+
+            if (!$server || empty($server->type)) {
+                return;
+            }
+
+            // Parse media file params to get filename
+            $mediaParams = new Registry($this->params ?: '{}');
+            $filename    = $mediaParams->get('filename', '');
+
+            if (empty($filename)) {
+                return;
+            }
+
+            // Parse server params
+            $serverParams = new Registry($server->params ?: '{}');
+
+            // Get addon and attempt deletion
+            $addon = CWMAddon::getInstance($server->type);
+            $addon->deleteFile($filename, $serverParams);
+        } catch (\Exception $e) {
+            Log::add(
+                'Media file #' . ($this->id ?? '?') . ': physical file deletion failed — ' . $e->getMessage(),
+                Log::WARNING,
+                'com_proclaim'
+            );
+        }
     }
 
     /**

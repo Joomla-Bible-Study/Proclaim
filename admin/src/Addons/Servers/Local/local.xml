@@ -5,6 +5,16 @@
     <config>
         <media_resource>filename</media_resource>
     </config>
+    <fields name="params">
+        <fieldset name="server_settings" label="JBS_SVR_LOCAL_SETTINGS">
+            <field name="delete_files" type="radio" layout="joomla.form.field.radio.switcher"
+                   label="JBS_SVR_DELETE_FILES" description="JBS_SVR_DELETE_FILES_DESC"
+                   default="0">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+        </fieldset>
+    </fields>
     <fields name="media">
         <fieldset name="details" label="JBS_ADDON_LOCAL_DETAILS">
             <field name="linkType" type="list" extension="com_proclaim"

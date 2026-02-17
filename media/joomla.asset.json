@@ -508,6 +508,18 @@
             "attributes": {
                 "type": "module"
             }
+        },
+        {
+            "name": "com_proclaim.delete-confirm",
+            "type": "script",
+            "uri": "com_proclaim/delete-confirm.min.js",
+            "dependencies": [
+                "core",
+                "bootstrap.modal"
+            ],
+            "attributes": {
+                "type": "module"
+            }
         }
     ]
 }

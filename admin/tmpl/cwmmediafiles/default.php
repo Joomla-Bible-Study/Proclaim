@@ -262,6 +262,7 @@ if ($saveOrder && !empty($this->items)) {
                 <?php endif; ?>
                 <input type="hidden" name="task" value=""/>
                 <input type="hidden" name="boxchecked" value="0"/>
+                <input type="hidden" name="delete_physical_files" value="1"/>
                 <?php echo HTMLHelper::_('form.token'); ?>
             </div>
         </div>

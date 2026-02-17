@@ -88,6 +88,68 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
 
+        <?php if (!empty($this->item->id) && $this->item->id > 0) : ?>
+        <?php
+        $msgCount = \count($this->messages);
+        echo HTMLHelper::_(
+            'uitab.addTab',
+            'myTab',
+            'messages',
+            Text::sprintf('JBS_SER_MESSAGES_COUNT', $msgCount)
+        ); ?>
+        <div class="row">
+            <div class="col-lg-12">
+                <?php if ($msgCount > 0) : ?>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="w-5 text-center"><?php echo Text::_('JSTATUS'); ?></th>
+                            <th><?php echo Text::_('JGLOBAL_TITLE'); ?></th>
+                            <th class="w-15"><?php echo Text::_('JBS_CMN_DATE'); ?></th>
+                            <th class="w-15"><?php echo Text::_('JBS_CMN_TEACHER'); ?></th>
+                            <th class="w-15"><?php echo Text::_('JBS_CMN_LOCATION'); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($this->messages as $i => $msg) : ?>
+                        <tr>
+                            <td class="text-center">
+                                <?php echo HTMLHelper::_('jgrid.published', $msg->published, $i, '', false); ?>
+                            </td>
+                            <td>
+                                <a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmmessage.edit&id=' . (int) $msg->id); ?>">
+                                    <?php echo $this->escape($msg->studytitle); ?>
+                                </a>
+                            </td>
+                            <td>
+                                <?php echo HTMLHelper::_('date', $msg->studydate, Text::_('DATE_FORMAT_LC4')); ?>
+                            </td>
+                            <td>
+                                <?php echo $this->escape($msg->teachername ?? ''); ?>
+                            </td>
+                            <td>
+                                <?php echo $this->escape($msg->location_text ?? ''); ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <div class="mt-2">
+                    <a class="btn btn-secondary btn-sm"
+                       href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmessages&filter[series]=' . (int) $this->item->id); ?>">
+                        <?php echo Text::_('JBS_SER_VIEW_ALL_MESSAGES'); ?>
+                    </a>
+                </div>
+                <?php else : ?>
+                <div class="alert alert-info">
+                    <?php echo Text::_('JBS_SER_NO_MESSAGES_IN_SERIES'); ?>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php endif; ?>
+
         <?php
         if ($this->canDo->get('core.admin')) : ?>
             <?php
