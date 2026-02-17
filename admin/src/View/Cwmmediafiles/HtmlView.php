@@ -231,6 +231,17 @@ class HtmlView extends BaseHtmlView
                 ->text('JTOOLBAR_EMPTY_TRASH')
                 ->message('JGLOBAL_CONFIRM_DELETE')
                 ->listCheck(true);
+
+            // Delete confirmation dialog for physical files
+            $wa = $this->getDocument()->getWebAssetManager();
+            $wa->useScript('com_proclaim.delete-confirm');
+
+            Text::script('JBS_DEL_PHYSICAL_FILES_TITLE');
+            Text::script('JBS_DEL_PHYSICAL_FILES_WARNING');
+            Text::script('JBS_DEL_PHYSICAL_FILES_COUNT');
+            Text::script('JBS_DEL_DELETE_EVERYTHING');
+            Text::script('JBS_DEL_RECORDS_ONLY');
+            Text::script('JCANCEL');
         }
         $toolbar->help('mediafiles', true);
     }
