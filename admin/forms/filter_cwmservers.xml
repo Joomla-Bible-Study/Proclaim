@@ -6,13 +6,13 @@
                 type="text"
                 inputmode="search"
                 label="JBS_CMN_FILTER_SEARCH_DESC"
-                description="COM_CONTENT_FILTER_SEARCH_DESC"
+                description="JBS_CMN_FILTER_SEARCH_DESC"
                 hint="JSEARCH_FILTER"
         />
         <field
                 name="published"
                 type="status"
-                label="COM_CONTENT_FILTER_PUBLISHED"
+                label="JSTATUS"
                 class="js-select-submit-on-change"
                 extension="com_proclaim"
         >
