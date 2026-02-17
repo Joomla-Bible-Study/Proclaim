@@ -42,8 +42,8 @@
                             { id: 'thumbnail', label: 'Thumbnail', section: 'Media' },
                             { id: 'date', label: 'Date', section: 'Message' },
                             { id: 'duration', label: 'Duration', section: 'Message' },
-                            { id: 'studyintro', label: 'Study Intro', section: 'Message' },
-                            { id: 'studynumber', label: 'Study Number', section: 'Message' },
+                            { id: 'studyintro', label: 'Message Intro', section: 'Message' },
+                            { id: 'studynumber', label: 'Message Number', section: 'Message' },
                             { id: 'title', label: 'Title', section: 'Message' },
                             { id: 'hits', label: 'Hits', section: 'Metadata' },
                             { id: 'locations', label: 'Locations', section: 'Metadata' },
@@ -62,7 +62,7 @@
                         ]
                     },
                     details: {
-                        label: 'Study Details', prefix: 'd',
+                        label: 'Message Details', prefix: 'd',
                         elements: [
                             { id: 'custom', label: 'Custom', section: 'Custom' },
                             { id: 'downloads', label: 'Downloads', section: 'Media' },
@@ -70,9 +70,9 @@
                             { id: 'thumbnail', label: 'Thumbnail', section: 'Media' },
                             { id: 'date', label: 'Date', section: 'Message' },
                             { id: 'duration', label: 'Duration', section: 'Message' },
-                            { id: 'studyintro', label: 'Study Intro', section: 'Message' },
+                            { id: 'studyintro', label: 'Message Intro', section: 'Message' },
                             { id: 'studytext', label: 'Message Body', section: 'Message' },
-                            { id: 'studynumber', label: 'Study Number', section: 'Message' },
+                            { id: 'studynumber', label: 'Message Number', section: 'Message' },
                             { id: 'title', label: 'Title', section: 'Message' },
                             { id: 'hits', label: 'Hits', section: 'Metadata' },
                             { id: 'locations', label: 'Locations', section: 'Metadata' },

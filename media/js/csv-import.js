@@ -15,17 +15,17 @@
 
         // Column auto-detection aliases (field -> [aliases])
         const COLUMN_ALIASES = {
-            studytitle:       ['title', 'sermon title', 'study title', 'message', 'sermon', 'name'],
-            studydate:        ['date', 'sermon date', 'study date', 'message date'],
+            studytitle:       ['title', 'message title', 'sermon title', 'study title', 'message', 'sermon', 'name'],
+            studydate:        ['date', 'message date', 'sermon date', 'study date'],
             teacher:          ['teacher', 'speaker', 'pastor', 'preacher', 'minister'],
-            series:           ['series', 'sermon series', 'study series'],
+            series:           ['series', 'message series', 'sermon series', 'study series'],
             location:         ['location', 'venue', 'church', 'campus'],
             messagetype:      ['type', 'message type', 'category', 'sermon type'],
             scripture:        ['scripture', 'passage', 'reference', 'bible ref'],
             topics:           ['topic', 'topics', 'tag', 'tags', 'keyword', 'keywords'],
             studyintro:       ['intro', 'introduction', 'summary', 'description', 'excerpt'],
-            studytext:        ['body', 'text', 'content', 'notes', 'study text', 'sermon notes', 'transcript'],
-            studynumber:      ['number', 'study number', 'sermon number', '#'],
+            studytext:        ['body', 'text', 'content', 'notes', 'message text', 'message notes', 'study text', 'sermon notes', 'transcript'],
+            studynumber:      ['number', 'message number', 'study number', 'sermon number', '#'],
             published:        ['published', 'status', 'state', 'active'],
             thumbnailm:       ['image', 'thumbnail', 'photo', 'picture'],
             created_by_alias: ['author', 'created by'],

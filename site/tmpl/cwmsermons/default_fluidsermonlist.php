@@ -9,6 +9,8 @@
  * @link           https://www.christianwebministries.org
  * */
 
+use Joomla\CMS\Language\Text;
+
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
@@ -25,7 +27,7 @@ $wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
 
 <div class="row">
     <h2>
-        Bible Studies
+        <?php echo Text::_('JBS_CMN_MESSAGES'); ?>
     </h2>
 </div>
 

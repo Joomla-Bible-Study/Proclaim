@@ -9,6 +9,8 @@
  * @link           https://www.christianwebministries.org
  * */
 
+use Joomla\CMS\Language\Text;
+
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
@@ -22,7 +24,7 @@
     <div class="row">
         <div class="col-12">
             <h3 class="text-end">
-                Bible Study from Calvary Chapel Newberg
+                <?php echo $this->escape($this->params->get('list_page_title', Text::_('JBS_CMN_MESSAGES'))); ?>
             </h3>
         </div>
         <div class="col-12">
