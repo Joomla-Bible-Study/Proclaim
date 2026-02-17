@@ -73,7 +73,7 @@ class GetBibleProvider extends AbstractBibleProvider
         // urlencode() produces both wrong formats; rawurlencode + colon restore works.
         $encodedRef = str_replace('%3A', ':', rawurlencode($apiRef));
         $url        = self::API_BASE . rawurlencode($translation) . '/' . $encodedRef;
-        $body    = $this->httpGet($url, 15);
+        $body       = $this->httpGet($url, 15);
 
         if ($body === null) {
             Log::add('GetBible: API returned no data for "' . $apiRef . '" (' . $translation . ')', Log::WARNING, 'com_proclaim.bible');
