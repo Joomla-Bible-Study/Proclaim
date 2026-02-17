@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <field name="platform" type="list"
+           label="JBS_TCH_LINK_PLATFORM"
+           default="website"
+           class="form-select">
+        <!-- General -->
+        <option value="website">JBS_TCH_PLATFORM_WEBSITE</option>
+        <option value="blog">JBS_TCH_PLATFORM_BLOG</option>
+        <option value="email">JBS_TCH_PLATFORM_EMAIL</option>
+        <option value="phone">JBS_TCH_PLATFORM_PHONE</option>
+        <option value="rss">JBS_TCH_PLATFORM_RSS</option>
+        <!-- Social Media -->
+        <option value="facebook">JBS_TCH_PLATFORM_FACEBOOK</option>
+        <option value="instagram">JBS_TCH_PLATFORM_INSTAGRAM</option>
+        <option value="x-twitter">JBS_TCH_PLATFORM_X_TWITTER</option>
+        <option value="youtube">JBS_TCH_PLATFORM_YOUTUBE</option>
+        <option value="tiktok">JBS_TCH_PLATFORM_TIKTOK</option>
+        <option value="linkedin">JBS_TCH_PLATFORM_LINKEDIN</option>
+        <option value="threads">JBS_TCH_PLATFORM_THREADS</option>
+        <option value="pinterest">JBS_TCH_PLATFORM_PINTEREST</option>
+        <option value="snapchat">JBS_TCH_PLATFORM_SNAPCHAT</option>
+        <option value="whatsapp">JBS_TCH_PLATFORM_WHATSAPP</option>
+        <option value="telegram">JBS_TCH_PLATFORM_TELEGRAM</option>
+        <option value="truthsocial">JBS_TCH_PLATFORM_TRUTHSOCIAL</option>
+        <option value="rumble">JBS_TCH_PLATFORM_RUMBLE</option>
+        <!-- Video & Audio -->
+        <option value="vimeo">JBS_TCH_PLATFORM_VIMEO</option>
+        <option value="spotify">JBS_TCH_PLATFORM_SPOTIFY</option>
+        <option value="apple-podcast">JBS_TCH_PLATFORM_APPLE_PODCAST</option>
+        <option value="amazon-music">JBS_TCH_PLATFORM_AMAZON_MUSIC</option>
+        <option value="soundcloud">JBS_TCH_PLATFORM_SOUNDCLOUD</option>
+        <!-- Church Platforms -->
+        <option value="subsplash">JBS_TCH_PLATFORM_SUBSPLASH</option>
+        <option value="church-center">JBS_TCH_PLATFORM_CHURCH_CENTER</option>
+        <option value="faithlife">JBS_TCH_PLATFORM_FAITHLIFE</option>
+        <option value="giving">JBS_TCH_PLATFORM_GIVING</option>
+        <!-- Developer -->
+        <option value="github">JBS_TCH_PLATFORM_GITHUB</option>
+        <!-- Custom -->
+        <option value="other">JBS_TCH_PLATFORM_OTHER</option>
+    </field>
+    <field name="url" type="url"
+           label="JBS_TCH_LINK_URL"
+           hint="https://"
+           validate="url"
+           filter="url"/>
+    <field name="label" type="text"
+           label="JBS_TCH_LINK_LABEL"
+           description="JBS_TCH_LINK_LABEL_DESC"
+           filter="string"/>
+</form>

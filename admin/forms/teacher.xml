@@ -1,20 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<form>
-    <fieldset addfieldprefix="Joomla\Component\Contact\Administrator\Field">
+<form addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+
+    <fieldset name="details" label="JBS_CMN_DETAILS">
         <field name="id" type="hidden" label="JGLOBAL_FIELD_ID_LABEL"
-               description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"
-               class="col-12 small"/>
+               description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"/>
+        <field name="teachername" type="text" size="60"
+               label="JBS_CMN_TEACHER" required="true" filter="trim"/>
+        <field name="alias"
+               type="text"
+               label="JFIELD_ALIAS_LABEL"
+               description="JFIELD_ALIAS_DESC"
+               size="30"/>
+        <field name="title" type="text" size="60"
+               label="JBS_CMN_TITLE" description="JBS_TCH_TITLE_DESC"/>
+        <field name="phone" type="tel" size="60"
+               label="JBS_TCH_PHONE"/>
+        <field name="email" type="email" size="50" label="JBS_TCH_EMAIL" description="JBS_TCH_EMAIL_DESC"
+               validate="email"/>
+        <field name="address" type="textarea" format="raw" label="JBS_TCH_ADDRESS" description="JBS_TCH_ADDRESS_DESC"
+               cols="50" rows="5"/>
+        <field name="contact"
+               type="Modal_Contact"
+               addfieldprefix="Joomla\Component\Contact\Administrator\Field"
+               description="JBS_TCH_SELECT_CONTACT_DESC"
+               label="JBS_TCH_SELECT_CONTACT_LABEL"/>
+    </fieldset>
+
+    <fieldset name="sidebar" label="JGLOBAL_FIELDSET_OPTIONS">
+        <field name="image" type="media" directory="biblestudy/teachers" label="JBS_TCH_TEACHER_IMAGE_LARGE"
+               class="col-10 small"/>
+        <field name="teacher_image" type="hidden"/>
         <field name="published"
                type="status"
                label="JSTATUS"
                description="JFIELD_PUBLISHED_DESC"
                default="1"
                filter="int"/>
-        <field name="list_show" type="list" label="JBS_TCH_SHOW_LIST_VIEW" class="col-12 small"
-               description="JBS_TCH_SHOW_LIST_VIEW_DESC" default="0"
-               required="true">
-            <option value="0">JBS_CMN_NO</option>
-            <option value="1">JBS_CMN_YES</option>
+        <field name="access" type="accesslevel"
+               label="JFIELD_ACCESS_LABEL"
+               description="JFIELD_ACCESS_DESC"
+               default="1"/>
+        <field name="list_show" type="radio"
+               label="JBS_TCH_SHOW_LIST_VIEW"
+               description="JBS_TCH_SHOW_LIST_VIEW_DESC"
+               default="0"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
         <field name="landing_show" default="1" type="list" label="JBS_CMN_LANDING_SHOW"
                description="JBS_CMN_LANDING_SHOW_DESC" class="col-12 small">
@@ -22,68 +54,58 @@
             <option value="1">JBS_CMN_SHOW_ABOVE_LANDING</option>
             <option value="2">JBS_CMN_SHOW_BELOW_LANDING</option>
         </field>
-        <field name="ordering" type="text" label="JFIELD_ORDERING_LABEL"
-               description="JFIELD_ORDERING_DESC" size="6"
-               default="0"/>
-        <field name="teachername" type="text" size="60"
-               label="JBS_CMN_TEACHER" required="true" filter="trim"/>
-        <field name="alias"
-               type="text"
-               label="JFIELD_ALIAS_LABEL"
-               description="JFIELD_ALIAS_DESC"
-               size="30"
-        />
-        <field name="title" type="text" size="60"
-               label="JBS_CMN_TITLE" description="JBS_TCH_TITLE_DESC"/>
-        <field name="image" type="media" directory="biblestudy/teachers" label="JBS_TCH_TEACHER_IMAGE_LARGE"
-               class="col-10 small"/>
-        <field name="teacher_image" type="hidden"/>
-        <field name="phone" type="tel" size="60"
-               label="JBS_TCH_PHONE"/>
-        <field name="email" type="email" size="50" label="JBS_TCH_EMAIL" description="JBS_TCH_EMAIL_DESC"
-               validate="email"/>
-        <field name="website" type="text" size="60"
-               label="JBS_TCH_WEBSITE" hint="https://" filter="string"/>
-        <field name="short" type="editor"
-               label="JBS_TCH_SHORT_DESCRIPTION_LIST_PAGE" filter="CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper::filterText"
-               buttons="true"/>
-        <field name="information" type="editor"
-               label="JBS_TCH_INFORMATION" filter="CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper::filterText"
-               buttons="true"/>
-        <field name="asset_id" type="hidden" filter="unset"/>
-        <field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
-               translate_label="false" filter="rules" component="com_proclaim"
-               section="teacher" validate="rules"/>
         <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
                description="JBS_CMN_FIELD_LANGUAGE_DESC" class="col-12 small">
             <option value="*">JALL</option>
         </field>
-        <field name="facebooklink" type="text" label="JBS_TCH_FACEBOOK" description="JBS_TCH_FACEBOOK_DESC"
-               size="65" hint="https://" filter="string"/>
-        <field name="twitterlink" type="text" label="JBS_TCH_TWITTER" description="JBS_TCH_TWITTER_DESC"
-               size="65" hint="https://" filter="string"/>
-        <field name="bloglink" type="text" label="JBS_TCH_BLOG" description="JBS_TCH_BLOG_DESC" size="65"
-               hint="https://" filter="string"/>
-        <field name="link1" type="text" label="JBS_TCH_LINK1" description="JBS_TCH_LINK1_DESC" size="65"
-               hint="https://" filter="string"/>
-        <field name="link2" type="text" label="JBS_TCH_LINK2" description="JBS_TCH_LINK2_DESC" size="65"
-               hint="https://" filter="string"/>
-        <field name="link3" type="text" label="JBS_TCH_LINK3" description="JBS_TCH_LINK3_DESC" size="65"
-               hint="https://" filter="string"/>
+        <field name="ordering" type="text" label="JFIELD_ORDERING_LABEL"
+               description="JFIELD_ORDERING_DESC" size="6"
+               default="0"/>
+    </fieldset>
+
+    <fieldset name="biography" label="JBS_TCH_BIOGRAPHY">
+        <field name="short" type="editor"
+               label="JBS_TCH_SHORT_DESCRIPTION_LIST_PAGE"
+               filter="CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper::filterText"
+               buttons="true"/>
+        <field name="information" type="editor"
+               label="JBS_TCH_INFORMATION"
+               filter="CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper::filterText"
+               buttons="true"/>
+    </fieldset>
+
+    <fieldset name="links" label="JBS_TCH_LINKS">
+        <field name="website" type="url" size="60"
+               label="JBS_TCH_WEBSITE" hint="https://" validate="url" filter="url"/>
+        <field name="social_links" type="subform"
+               label="JBS_TCH_SOCIAL_LINKS"
+               description="JBS_TCH_SOCIAL_LINKS_DESC"
+               formsource="teacher_link_row"
+               multiple="true"
+               min="0" max="50"
+               layout="joomla.form.field.subform.repeatable-table"
+               buttons="add,remove,move"/>
+        <field name="facebooklink" type="url" label="JBS_TCH_FACEBOOK" description="JBS_TCH_FACEBOOK_DESC"
+               size="65" hint="https://" validate="url" filter="url"/>
+        <field name="twitterlink" type="url" label="JBS_TCH_TWITTER" description="JBS_TCH_TWITTER_DESC"
+               size="65" hint="https://" validate="url" filter="url"/>
+        <field name="bloglink" type="url" label="JBS_TCH_BLOG" description="JBS_TCH_BLOG_DESC" size="65"
+               hint="https://" validate="url" filter="url"/>
+        <field name="link1" type="url" label="JBS_TCH_LINK1" description="JBS_TCH_LINK1_DESC" size="65"
+               hint="https://" validate="url" filter="url"/>
         <field name="linklabel1" type="text" format="raw" label="JBS_TCH_LINK_LABEL1"
                description="JBS_TCH_LINK_LABEL1_DESC" size="65"/>
+        <field name="link2" type="url" label="JBS_TCH_LINK2" description="JBS_TCH_LINK2_DESC" size="65"
+               hint="https://" validate="url" filter="url"/>
         <field name="linklabel2" type="text" format="raw" label="JBS_TCH_LINK_LABEL2"
                description="JBS_TCH_LINK_LABEL2_DESC" size="65"/>
+        <field name="link3" type="url" label="JBS_TCH_LINK3" description="JBS_TCH_LINK3_DESC" size="65"
+               hint="https://" validate="url" filter="url"/>
         <field name="linklabel3" type="text" format="raw" label="JBS_TCH_LINK_LABEL3"
                description="JBS_TCH_LINK_LABEL3_DESC" size="65"/>
-        <field name="address" type="textarea" format="raw" label="JBS_TCH_ADDRESS" description="JBS_TCH_ADDRESS_DESC"
-               cols="50" rows="10"/>
-        <field name="contact"
-               type="Modal_Contact"
-               description="JBS_TCH_SELECT_CONTACT_DESC"
-               label="JBS_TCH_SELECT_CONTACT_LABEL"
-        />
+    </fieldset>
 
+    <fieldset name="publishing" label="JBS_STY_PUBLISH">
         <field name="created" type="calendar"
                label="JGLOBAL_FIELD_CREATED_LABEL"
                readonly="true" translateformat="true"
@@ -96,7 +118,6 @@
         <field name="created_by_alias" type="text"
                label="JGLOBAL_FIELD_CREATED_BY_ALIAS_LABEL"
                size="20" filter="string"/>
-
         <field name="modified" type="calendar"
                label="JGLOBAL_FIELD_MODIFIED_LABEL"
                readonly="true" translateformat="true"
@@ -106,5 +127,14 @@
                label="JGLOBAL_FIELD_MODIFIED_BY_LABEL"
                readonly="true"
                filter="unset"/>
+        <field name="checked_out" type="hidden" filter="unset"/>
+        <field name="checked_out_time" type="hidden" filter="unset"/>
+    </fieldset>
+
+    <fieldset name="permissions" label="JBS_CMN_FIELDSET_RULES">
+        <field name="asset_id" type="hidden" filter="unset"/>
+        <field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
+               translate_label="false" filter="rules" component="com_proclaim"
+               section="teacher" validate="rules"/>
     </fieldset>
 </form>

@@ -1,0 +1,96 @@
+/**
+ * @package    Proclaim.Admin
+ * @copyright  (C) 2026 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ *
+ * Dark mode overrides for intl-tel-input (phone country picker).
+ * Overrides the CSS custom properties defined in intlTelInput.min.css
+ * to match Joomla's Atum dark theme.
+ */
+
+/* ==========================================================================
+   Proclaim phone input wrapper — ensure full-width inside Joomla forms
+   ========================================================================== */
+.iti--proclaim {
+    display: block;
+    width: 100%;
+}
+
+.iti--proclaim .iti__tel-input {
+    width: 100%;
+}
+
+/* ==========================================================================
+   Dark mode — Bootstrap 5.3+ data-bs-theme attribute
+   ========================================================================== */
+[data-bs-theme="dark"] {
+    --iti-hover-color: rgba(255, 255, 255, 0.08);
+    --iti-border-color: var(--bs-border-color, #495057);
+    --iti-dialcode-color: var(--bs-secondary-color, #adb5bd);
+    --iti-dropdown-bg: var(--bs-body-bg, #212529);
+    --iti-icon-color: var(--bs-secondary-color, #adb5bd);
+}
+
+/* Search input in dark mode */
+[data-bs-theme="dark"] .iti__search-input {
+    background-color: var(--bs-tertiary-bg, #2b3035);
+    color: var(--bs-body-color, #dee2e6);
+    border-color: var(--bs-border-color, #495057);
+}
+
+[data-bs-theme="dark"] .iti__search-input::placeholder {
+    color: var(--bs-secondary-color, #adb5bd);
+}
+
+/* Country list items in dark mode */
+[data-bs-theme="dark"] .iti__country-name,
+[data-bs-theme="dark"] .iti__no-results {
+    color: var(--bs-body-color, #dee2e6);
+}
+
+/* Dropdown box-shadow for dark mode */
+[data-bs-theme="dark"] .iti--inline-dropdown .iti__dropdown-content {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Selected country hover in dark mode */
+[data-bs-theme="dark"] .iti__selected-country-primary:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ==========================================================================
+   Dark mode — System preference fallback (prefers-color-scheme)
+   Applies only when NO explicit data-bs-theme is set on <html>
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-bs-theme="light"]) {
+        --iti-hover-color: rgba(255, 255, 255, 0.08);
+        --iti-border-color: #495057;
+        --iti-dialcode-color: #adb5bd;
+        --iti-dropdown-bg: #212529;
+        --iti-icon-color: #adb5bd;
+    }
+
+    :root:not([data-bs-theme="light"]) .iti__search-input {
+        background-color: #2b3035;
+        color: #dee2e6;
+        border-color: #495057;
+    }
+
+    :root:not([data-bs-theme="light"]) .iti__search-input::placeholder {
+        color: #adb5bd;
+    }
+
+    :root:not([data-bs-theme="light"]) .iti__country-name,
+    :root:not([data-bs-theme="light"]) .iti__no-results {
+        color: #dee2e6;
+    }
+
+    :root:not([data-bs-theme="light"]) .iti--inline-dropdown .iti__dropdown-content {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    :root:not([data-bs-theme="light"]) .iti__selected-country-primary:hover {
+        background-color: rgba(255, 255, 255, 0.08);
+    }
+}

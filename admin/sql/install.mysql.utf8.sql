@@ -531,6 +531,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers`
     `linklabel3`        VARCHAR(150)                                              DEFAULT NULL,
     `contact`           INT(11)                                                   DEFAULT NULL,
     `address`           MEDIUMTEXT,
+    `social_links`      TEXT                                                      DEFAULT NULL,
     `landing_show`      INT(3)                                                    DEFAULT NULL,
     `created`           DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
     `created_by`        INT(10) UNSIGNED                                 NOT NULL DEFAULT '0',
