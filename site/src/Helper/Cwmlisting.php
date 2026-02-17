@@ -216,29 +216,27 @@ class Cwmlisting
 
 
 
-        // Start the table for the entire list
-        $list .= '<div class="table-responsive" about="' . $type . '"><table class="table w-100 table-borderless">';
+        // Start the listing wrapper
+        $list .= '<div class="proclaim-listing" data-context="' . $type . '">';
 
         // Check if we have a valid first item for header rows
         $hasValidFirstItem = !empty($items) && isset($items[0]) && \is_object($items[0]);
+        $headerClass       = $params->get('listheadertype', '');
 
         if (($type === 'sermons') && $params->get('use_headers_list') > 0 && $hasValidFirstItem) {
-            // Start the header
-            $list .= '<thead class="' . $params->get('listheadertype') . '">';
+            $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">';
             $list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $header = 1, $type);
-            $list .= '</thead>';
+            $list .= '</div>';
         }
 
         if (($type === 'sermon') && $params->get('use_headers_view') > 0 && $hasValidFirstItem) {
-            // Start the header
-            $list .= '<thead class="' . $params->get('listheadertype') . '">';
+            $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">';
             $list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $header = 1, $type);
-            $list .= '</thead>';
+            $list .= '</div>';
         }
 
         if (($type === 'seriesdisplays') && $params->get('use_headers_series') == 1 && $hasValidFirstItem) {
-            // Start the header
-            $list .= '<thead class="' . $params->get('listheadertype') . '">';
+            $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">';
             $list .= $this->getFluidRow(
                 $listrows,
                 $listsorts,
@@ -248,13 +246,12 @@ class Cwmlisting
                 $header = 1,
                 $type
             );
-            $list .= '</thead>';
+            $list .= '</div>';
         }
 
         if ($type === 'seriesdisplay' && $hasValidFirstItem) {
             if ($params->get('use_header_seriesdisplay') > 0) {
-                // Start the header
-                $list .= '<thead class="' . $params->get('listheadertype') . '">';
+                $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">';
                 $list .= $this->getFluidRow(
                     $listrows,
                     $listsorts,
@@ -264,10 +261,9 @@ class Cwmlisting
                     $header = 1,
                     $type
                 );
-                $list .= '</thead>';
+                $list .= '</div>';
             }
 
-            $list .= '<tbody>';
             $list .= $this->getFluidRow(
                 $listrows,
                 $listsorts,
@@ -281,8 +277,7 @@ class Cwmlisting
 
         if ($type === 'teacher' && $hasValidFirstItem) {
             if ($params->get('use_headers_teacher_details') > 0) {
-                // Start the header
-                $list .= '<thead class="' . $params->get('listheadertype') . '">';
+                $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">';
                 $list .= $this->getFluidRow(
                     $listrows,
                     $listsorts,
@@ -292,10 +287,9 @@ class Cwmlisting
                     $header = 1,
                     $type
                 );
-                $list .= '</thead>';
+                $list .= '</div>';
             }
 
-            $list .= '<tbody>';
             $list .= $this->getFluidRow(
                 $listrows,
                 $listsorts,
@@ -308,8 +302,7 @@ class Cwmlisting
         }
 
         if (($type === 'teachers') && $params->get('use_headers_teacher_list') > 0 && $hasValidFirstItem) {
-            // Start the header
-            $list .= '<thead class="' . $params->get('listheadertype') . '">';
+            $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">';
             $list .= $this->getFluidRow(
                 $listrows,
                 $listsorts,
@@ -319,7 +312,7 @@ class Cwmlisting
                 $header = 1,
                 $type
             );
-            $list .= '</thead>';
+            $list .= '</div>';
         }
 
         // Go through and attach the media files as an array to their study
@@ -351,7 +344,6 @@ class Cwmlisting
                     $header = 0,
                     $type
                 );
-                $row[] = '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>';
             }
         }
 
@@ -384,7 +376,6 @@ class Cwmlisting
                     $header = 0,
                     $type
                 );
-                $row[] = '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>';
             }
         }
 
@@ -399,19 +390,16 @@ class Cwmlisting
                     $header = 0,
                     $type
                 );
-                $row[] = '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>';
             }
         }
 
         if (!empty($row)) {
-            $list .= '<tbody>';
-
             foreach ($row as $value) {
                 $list .= $value;
             }
         }
 
-        $list .= '</tbody></table></div>';
+        $list .= '</div>';
 
         return $list;
     }
@@ -723,150 +711,90 @@ class Cwmlisting
             }
         }
 
-        $thadd = '';
+        // Determine which rows have content
+        $rowCounts = [
+            '1' => [$row1count, $row1count2],
+            '2' => [$row2count, $row2count2],
+            '3' => [$row3count, $row3count2],
+            '4' => [$row4count, $row4count2],
+            '5' => [$row5count, $row5count2],
+            '6' => [$row6count, $row6count2],
+        ];
+
+        // Pre-compute the total effective colspan per row so we can calculate
+        // proportional Bootstrap column widths.  In the old <table> layout,
+        // colspan="2" in a row whose cells summed to 3 meant 2/3 of the
+        // table width.  We replicate that by mapping each element's span to
+        // round(span / rowTotal * 12).
+        $rowSpanTotals = [];
+
+        foreach ($listrows as $r) {
+            $span = $r->colspan > 0 ? (int) $r->colspan : 1;
+
+            if (!isset($rowSpanTotals[$r->row])) {
+                $rowSpanTotals[$r->row] = 0;
+            }
+
+            $rowSpanTotals[$r->row] += $span;
+        }
+
+        // For body mode, wrap all rows in a proclaim-item container
+        if ($header === 0) {
+            $archivedClass = '';
+
+            if (isset($item->published) && (int) $item->published === 2) {
+                $archivedClass = ' proclaim-archived';
+            }
+
+            $frow .= '<div class="proclaim-item' . $archivedClass . '">';
+        }
 
         foreach ($listrows as $row) {
-            if ($row->row === '1') {
-                if ($row1count === $row1count2 && $header === 0) {
-                    $rowClass = '';
-                    if (isset($item->published) && (int) $item->published === 2) {
-                        $rowClass = ' class="proclaim-archived"';
-                    }
-                    $frow .= '<tr' . $rowClass . '>';
-                }
+            $rowNum = $row->row;
 
-                if ($header === 1) {
-                    if ($row->colspan > 0) {
-                        $thadd = 'colspan="' . $row->colspan . '"';
-                    } else {
-                        $thadd = '';
-                    }
-                    $frow .= '<th scope="col" ' . $thadd . '>' . $this->getFluidData($item, $row, $params, $template, 1, $type) . '</th>';
-                } else {
-                    $frow .= $this->getFluidData($item, $row, $params, $template, 0, $type);
-                }
-
-                $row1count--;
-
-                if ($row1count === 0) {
-                    $frow .= '</tr>';
-                }
+            if (!isset($rowCounts[$rowNum])) {
+                continue;
             }
 
-            if ($row->row === '2') {
-                if ($row2count === $row2count2) {
-                    $frow .= '<tr>';
-                }
+            [$remaining, $total] = $rowCounts[$rowNum];
 
-                if ($header === 1) {
-                    if ($row->colspan > 0) {
-                        $thadd = 'colspan="' . $row->colspan . '"';
-                    } else {
-                        $thadd = '';
-                    }
-                    $frow .= '<th scope="col" ' . $thadd . '>' . $this->getFluidData($item, $row, $params, $template, 1, $type) . '</th>';
-                } else {
-                    $frow .= $this->getFluidData($item, $row, $params, $template, 0, $type);
-                }
-
-                $row2count--;
-
-                if ($row2count === 0) {
-                    $frow .= '</tr>';
-                }
+            // Open the row div at the first element of this row
+            if ($remaining === $total) {
+                $frow .= '<div class="row proclaim-item-row">';
             }
 
-            if ($row->row === '3') {
-                if ($row3count === $row3count2) {
-                    $frow .= '<tr>';
-                }
+            // Compute proportional Bootstrap column class for this element
+            $elementSpan = $row->colspan > 0 ? (int) $row->colspan : 1;
+            $rowTotal    = $rowSpanTotals[$rowNum] ?? $elementSpan;
 
-                if ($header === 1) {
-                    if ($row->colspan > 0) {
-                        $thadd = 'colspan="' . $row->colspan . '"';
-                    } else {
-                        $thadd = '';
-                    }
-                    $frow .= '<th scope="col" ' . $thadd . '>' . $this->getFluidData($item, $row, $params, $template, 1, $type) . '</th>';
-                } else {
-                    $frow .= $this->getFluidData($item, $row, $params, $template, 0, $type);
-                }
-
-                $row3count--;
-
-                if ($row3count === 0) {
-                    $frow .= '</tr>';
-                }
+            if ($rowTotal === $elementSpan) {
+                // Single element in row or spans full row → full width
+                $colClass = 'col-12';
+            } else {
+                $bsCols   = (int) round($elementSpan / $rowTotal * 12);
+                $bsCols   = max(1, min(12, $bsCols));
+                $colClass = 'col-' . $bsCols;
             }
 
-            if ($row->row === '4') {
-                if ($row4count === $row4count2) {
-                    $frow .= '<tr>';
-                }
-
-                if ($header === 1) {
-                    if ($row->colspan > 0) {
-                        $thadd = 'colspan="' . $row->colspan . '"';
-                    } else {
-                        $thadd = '';
-                    }
-                    $frow .= '<th scope="col" ' . $thadd . '>' . $this->getFluidData($item, $row, $params, $template, 1, $type) . '</th>';
-                } else {
-                    $frow .= $this->getFluidData($item, $row, $params, $template, 0, $type);
-                }
-
-                $row4count--;
-
-                if ($row4count === 0) {
-                    $frow .= '</tr>';
-                }
+            if ($header === 1) {
+                $frow .= '<div class="' . $colClass . ' fw-bold">'
+                    . $this->getFluidData($item, $row, $params, $template, 1, $type)
+                    . '</div>';
+            } else {
+                $frow .= $this->getFluidData($item, $row, $params, $template, 0, $type, $colClass);
             }
 
-            if ($row->row === '5') {
-                if ($row5count === $row5count2) {
-                    $frow .= '<tr>';
-                }
+            $rowCounts[$rowNum][0]--;
 
-                if ($header === 1) {
-                    if ($row->colspan > 0) {
-                        $thadd = 'colspan="' . $row->colspan . '"';
-                    } else {
-                        $thadd = '';
-                    }
-                    $frow .= '<th scope="col" ' . $thadd . '>' . $this->getFluidData($item, $row, $params, $template, 1, $type) . '</th>';
-                } else {
-                    $frow .= $this->getFluidData($item, $row, $params, $template, 0, $type);
-                }
-
-                $row5count--;
-
-                if ($row5count === 0) {
-                    $frow .= '</tr>';
-                }
+            // Close the row div after the last element of this row
+            if ($rowCounts[$rowNum][0] === 0) {
+                $frow .= '</div>';
             }
+        }
 
-            if ($row->row === '6') {
-                if ($row6count === $row6count2) {
-                    $frow .= '<tr>';
-                }
-
-                if ($header === 1) {
-                    if ($row->colspan > 0) {
-                        $thadd = 'colspan="' . $row->colspan . '"';
-                    } else {
-                        $thadd = '';
-                    }
-                    $frow .= '<th scope="col" ' . $thadd . '>' . $this->getFluidData($item, $row, $params, $template, 1, $type) . '</th>';
-                } else {
-                    $frow .= $this->getFluidData($item, $row, $params, $template, 0, $type);
-                }
-
-                $row6count--;
-
-                if ($row6count === 0) {
-                    $frow .= '</tr>';
-                }
-            }
+        // Close proclaim-item wrapper for body mode
+        if ($header === 0) {
+            $frow .= '</div>';
         }
 
         return $frow;
@@ -924,7 +852,8 @@ class Cwmlisting
         Registry $params,
         \stdClass $template,
         int $header,
-        string $type
+        string $type,
+        string $computedColClass = ''
     ): string {
         $data = '';
 
@@ -1466,20 +1395,18 @@ class Cwmlisting
             }
         }
 
-        $tdadd = '';
-        $frow  = '';
+        $frow = '';
 
-        if ($row->colspan > 0) {
-            $tdadd = ' colspan="' . $row->colspan . '"';
-        }
+        // Use the proportional column class computed by getFluidRow(), or fall back
+        $colClass = $computedColClass !== '' ? $computedColClass : ($row->colspan > 0 ? 'col-' . $row->colspan : 'col');
 
         if ($customclass && !$classAppliedToImg) {
-            $tdadd .= ' class="' . $customclass . '"';
+            $colClass .= ' ' . $customclass;
         }
 
         if ($header === 0) {
-            // Build table cell: <td><wrapper><link>data</link></wrapper></td>
-            $frow = '<td' . $tdadd . '>';
+            // Build grid cell: <div class="col-{span}"><wrapper><link>data</link></wrapper></div>
+            $frow = '<div class="' . $colClass . '">';
 
             if ($data) {
                 $frow .= $classopen;
@@ -1497,9 +1424,9 @@ class Cwmlisting
                 $frow .= $classclose;
             }
 
-            $frow .= '</td>';
+            $frow .= '</div>';
         } else {
-            // Header mode - return just the data text; caller wraps in <th>
+            // Header mode - return just the data text; caller wraps in col div
             $frow = $data;
         }
 

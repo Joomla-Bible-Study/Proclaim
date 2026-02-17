@@ -123,14 +123,13 @@ describe('series-scroll.es6.js', () => {
 
     describe('Load More Mode', () => {
         function setupLoadMore(fetchMock, extraOpts) {
+            // Safe: static test fixture string, not user input
             document.body.innerHTML =
                 '<div id="proclaim-series-list">' +
-                    '<div class="table-responsive"><table class="table"><tbody>' +
-                    '<tr><td>Series 1</td></tr>' +
-                    '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
-                    '<tr><td>Series 2</td></tr>' +
-                    '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
-                    '</tbody></table></div>' +
+                    '<div class="proclaim-listing" data-context="seriesdisplays">' +
+                    '<div class="proclaim-item"><div class="row proclaim-item-row"><div class="col">Series 1</div></div></div>' +
+                    '<div class="proclaim-item"><div class="row proclaim-item-row"><div class="col">Series 2</div></div></div>' +
+                    '</div>' +
                 '</div>' +
                 '<div class="proclaim-load-more" id="proclaim-load-more">' +
                     '<button type="button" class="btn">Load More</button>' +
@@ -183,12 +182,10 @@ describe('series-scroll.es6.js', () => {
                 json: function () {
                     return Promise.resolve({
                         success: true,
-                        html: '<div class="table-responsive"><table class="table"><tbody>' +
-                            '<tr><td>Series 3</td></tr>' +
-                            '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
-                            '<tr><td>Series 4</td></tr>' +
-                            '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
-                            '</tbody></table></div>',
+                        html: '<div class="proclaim-listing" data-context="seriesdisplays">' +
+                            '<div class="proclaim-item"><div class="row proclaim-item-row"><div class="col">Series 3</div></div></div>' +
+                            '<div class="proclaim-item"><div class="row proclaim-item-row"><div class="col">Series 4</div></div></div>' +
+                            '</div>',
                         total: 10,
                         pagesTotal: 5,
                     });
@@ -198,9 +195,9 @@ describe('series-scroll.es6.js', () => {
             setupLoadMore(mockFetch);
 
             var list = document.getElementById('proclaim-series-list');
-            var tbody = list.querySelector('tbody');
-            // 2 items × 2 tr = 4
-            expect(tbody.querySelectorAll('tr').length).toBe(4);
+            var listing = list.querySelector('.proclaim-listing');
+            // 2 proclaim-item divs
+            expect(listing.querySelectorAll(':scope > .proclaim-item').length).toBe(2);
 
             var btn = document.querySelector('#proclaim-load-more button');
             btn.click();
@@ -209,9 +206,9 @@ describe('series-scroll.es6.js', () => {
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
 
-            // 4 items × 2 tr = 8
-            expect(tbody.querySelectorAll('tr').length).toBe(8);
-            expect(tbody.innerHTML).toContain('Series 3');
+            // 4 proclaim-item divs
+            expect(listing.querySelectorAll(':scope > .proclaim-item').length).toBe(4);
+            expect(listing.innerHTML).toContain('Series 3');
         });
 
         test('should hide button when all items loaded', async () => {
@@ -220,10 +217,9 @@ describe('series-scroll.es6.js', () => {
                 json: function () {
                     return Promise.resolve({
                         success: true,
-                        html: '<div class="table-responsive"><table class="table"><tbody>' +
-                            '<tr><td>Series 3</td></tr>' +
-                            '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
-                            '</tbody></table></div>',
+                        html: '<div class="proclaim-listing" data-context="seriesdisplays">' +
+                            '<div class="proclaim-item"><div class="row proclaim-item-row"><div class="col">Series 3</div></div></div>' +
+                            '</div>',
                         total: 3,
                         pagesTotal: 1,
                     });
@@ -246,12 +242,12 @@ describe('series-scroll.es6.js', () => {
 
     describe('Infinite Scroll Threshold', () => {
         function setupInfinite(fetchMock, extraOpts) {
+            // Safe: static test fixture string, not user input
             document.body.innerHTML =
                 '<div id="proclaim-series-list">' +
-                    '<div class="table-responsive"><table class="table"><tbody>' +
-                    '<tr><td>Series 1</td></tr>' +
-                    '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
-                    '</tbody></table></div>' +
+                    '<div class="proclaim-listing" data-context="seriesdisplays">' +
+                    '<div class="proclaim-item"><div class="row proclaim-item-row"><div class="col">Series 1</div></div></div>' +
+                    '</div>' +
                 '</div>' +
                 '<div class="proclaim-load-more" id="proclaim-load-more" style="display:none">' +
                     '<button type="button" class="btn">Load More</button>' +
@@ -300,9 +296,9 @@ describe('series-scroll.es6.js', () => {
                 json: function () {
                     return Promise.resolve({
                         success: true,
-                        html: '<div class="table-responsive"><table class="table"><tbody>' +
-                            '<tr><td>New</td></tr>' +
-                            '</tbody></table></div>',
+                        html: '<div class="proclaim-listing" data-context="seriesdisplays">' +
+                            '<div class="proclaim-item"><div class="row proclaim-item-row"><div class="col">New</div></div></div>' +
+                            '</div>',
                         total: 20,
                         pagesTotal: 10,
                     });
@@ -338,7 +334,9 @@ describe('series-scroll.es6.js', () => {
                 json: function () {
                     return Promise.resolve({
                         success: true,
-                        html: '<div class="table-responsive"><table><tbody><tr><td>X</td></tr></tbody></table></div>',
+                        html: '<div class="proclaim-listing" data-context="seriesdisplays">' +
+                            '<div class="proclaim-item"><div class="row proclaim-item-row"><div class="col">X</div></div></div>' +
+                            '</div>',
                         total: 20,
                         pagesTotal: 10,
                     });

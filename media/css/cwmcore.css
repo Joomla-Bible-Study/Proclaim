@@ -729,6 +729,7 @@ p.expand {
 }
 
 table span a,
+.proclaim-listing a,
 a:not([class]) {
     text-decoration: none;
 }
@@ -747,7 +748,7 @@ a:not([class]) {
     margin-bottom: 1rem;
 }
 
-/* .proclaim-archived class is added to archived message rows for custom styling */
+/* .proclaim-archived class is added to archived message .proclaim-item divs for custom styling */
 
 /* ==========================================================================
    Mobile Responsive Breakpoints

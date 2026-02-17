@@ -438,7 +438,8 @@ class Cwmshowscripture
 
         $html = '<div class="scripture-version-switcher scripture-searchable-switcher" '
             . 'data-reference="' . htmlspecialchars($reference) . '" '
-            . 'data-message-id="' . $messageId . '">';
+            . 'data-message-id="' . $messageId . '" '
+            . 'data-current-version="' . htmlspecialchars($version) . '">';
 
         // Hidden select for form data / fallback
         $html .= '<select class="scripture-version-select" '
@@ -566,7 +567,7 @@ class Cwmshowscripture
             $reference .= ':' . $row->verse_begin;
         }
 
-        if (!empty($row->chapter_end) && !empty($row->verse_end)) {
+        if (!empty($row->chapter_end) && !empty($row->verse_end) && $row->chapter_end !== $row->chapter_begin) {
             $reference .= '-' . $row->chapter_end . ':' . $row->verse_end;
         } elseif (!empty($row->verse_end)) {
             $reference .= '-' . $row->verse_end;

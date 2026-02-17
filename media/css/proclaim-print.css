@@ -280,8 +280,12 @@
        7. FLUID LISTING (layout editor output)
        ========================================================== */
 
-    .proclaim-listing-row {
+    .proclaim-item {
         page-break-inside: avoid;
+    }
+
+    .proclaim-listing-header {
+        display: block !important;
     }
 
     /* Fluid listing rows - hide YouTube media content */

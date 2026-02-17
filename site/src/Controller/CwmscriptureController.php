@@ -83,7 +83,7 @@ class CwmscriptureController extends BaseController
             }
 
             $result      = $provider->getPassage($reference, $version);
-            $transient   = ($provider instanceof AbstractBibleProvider) && $provider->lastErrorTransient;
+            $transient   = ($provider instanceof AbstractBibleProvider) && $provider->isLastErrorTransient();
             $usedVersion = $version;
 
             // Fallback 1: try same version via Local provider
@@ -96,7 +96,7 @@ class CwmscriptureController extends BaseController
                         $result    = $localResult;
                         $transient = false;
                     }
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     // Continue to next fallback
                 }
             }
@@ -119,7 +119,7 @@ class CwmscriptureController extends BaseController
                             $usedVersion = $defaultVersion;
                             $transient   = false;
                         }
-                    } catch (\Exception $e) {
+                    } catch (\Throwable $e) {
                         // Continue to hard fallback
                     }
                 }
@@ -136,10 +136,12 @@ class CwmscriptureController extends BaseController
                         $usedVersion = 'kjv';
                         $transient   = false;
                     }
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     // Even KJV failed
                 }
             }
+
+            $providerName = ($provider instanceof AbstractBibleProvider) ? $provider->getName() : 'unknown';
 
             if ($result->hasText()) {
                 echo json_encode([
@@ -148,19 +150,24 @@ class CwmscriptureController extends BaseController
                     'copyright'   => $result->copyright,
                     'translation' => $usedVersion,
                     'fallback'    => $usedVersion !== $version,
+                    'provider'    => $providerName,
+                    'requested'   => $version,
                 ], JSON_THROW_ON_ERROR);
             } else {
                 echo json_encode([
                     'success'   => false,
                     'retryable' => $transient,
                     'message'   => 'No passage text returned',
+                    'provider'  => $providerName,
+                    'requested' => $version,
                 ], JSON_THROW_ON_ERROR);
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             echo json_encode([
                 'success'   => false,
-                'retryable' => true,
-                'message'   => 'Failed to fetch passage',
+                'retryable' => false,
+                'message'   => $e->getMessage(),
+                'requested' => $version,
             ], JSON_THROW_ON_ERROR);
         }
 

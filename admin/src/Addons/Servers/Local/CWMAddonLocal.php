@@ -517,9 +517,9 @@ class CWMAddonLocal extends CWMAddon
             }
 
             // Build the relative path matching the original format
-            $relDir  = \dirname($filePath);
+            $relDir     = \dirname($filePath);
             $newRelPath = $relDir . '/' . $newName;
-            $newSize = filesize($newPath) ?: 0;
+            $newSize    = filesize($newPath) ?: 0;
 
             Log::add(
                 'Local server: copied file ' . $realFile . ' → ' . $newPath,

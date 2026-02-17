@@ -52,8 +52,27 @@ class GetBibleProvider extends AbstractBibleProvider
         }
 
         // Normalize reference: replace + with spaces for the API
-        $apiRef  = str_replace('+', ' ', $reference);
-        $url     = self::API_BASE . urlencode($translation) . '/' . urlencode($apiRef);
+        $apiRef = str_replace('+', ' ', $reference);
+
+        // Fix same-chapter redundant prefix: "Luke 12:54-12:56" → "Luke 12:54-56"
+        // GetBible API returns 400 for the redundant chapter format.
+        $apiRef = preg_replace_callback(
+            '/(\d+):(\d+)-(\d+):(\d+)$/',
+            static function (array $m): string {
+                // $m[1]=startCh, $m[2]=startVs, $m[3]=endCh, $m[4]=endVs
+                if ($m[1] === $m[3]) {
+                    return $m[1] . ':' . $m[2] . '-' . $m[4];
+                }
+
+                return $m[0];
+            },
+            $apiRef
+        );
+
+        // GetBible requires %20 for spaces (not +) and literal colons (not %3A).
+        // urlencode() produces both wrong formats; rawurlencode + colon restore works.
+        $encodedRef = str_replace('%3A', ':', rawurlencode($apiRef));
+        $url        = self::API_BASE . rawurlencode($translation) . '/' . $encodedRef;
         $body    = $this->httpGet($url, 15);
 
         if ($body === null) {

@@ -25,7 +25,6 @@ use CWM\Component\Proclaim\Site\Helper\Cwmrelatedstudies;
 use CWM\Component\Proclaim\Site\Helper\Cwmshowscripture;
 use CWM\Component\Proclaim\Site\Model\CwmsermonModel;
 use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Plugin\PluginHelper;
@@ -396,7 +395,7 @@ class HtmlView extends BaseHtmlView
         $this->item->secondary_reference = $article->text;
 
         // Get the podcast subscription
-        HTMLHelper::_('stylesheet', 'media/css/podcast.css');
+        $this->getDocument()->getWebAssetManager()->useStyle('com_proclaim.podcast');
         $podcast         = new Cwmpodcastsubscribe();
         $this->subscribe = $podcast->buildSubscribeTable($this->item->params->get('subscribeintro', 'Our Podcasts'));
 
