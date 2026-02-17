@@ -185,6 +185,9 @@ class CwmbackupController extends FormController
             // Generate filename using standardized method
             $filename = Cwmbackup::generateBackupFilename();
 
+            // Check if compression is requested (default: yes)
+            $compress = $input->getInt('jbs_compress', 1);
+
             if ($mode === 'save') {
                 // Save to back up folder
                 $backupDir = JPATH_SITE . '/media/com_proclaim/backup/';
@@ -204,6 +207,13 @@ class CwmbackupController extends FormController
                     File::delete($tmpExportPath);
                 }
 
+                // Compress the file if requested
+                if ($compress) {
+                    $zipPath = $this->compressBackupFile($path);
+                    $path = $zipPath;
+                    $filename = basename($zipPath);
+                }
+
                 // Clean up old backups
                 $backup = new Cwmbackup();
                 $backup->updatefiles(Cwmparams::getAdmin()->params);
@@ -219,6 +229,13 @@ class CwmbackupController extends FormController
                         $this->sendJsonResponse(false, 'Failed to prepare download file');
                     }
                     File::delete($tmpExportPath);
+                }
+
+                // Compress the file if requested
+                if ($compress) {
+                    $zipPath = $this->compressBackupFile($downloadPath);
+                    $downloadPath = $zipPath;
+                    $filename = basename($zipPath);
                 }
 
                 // Store path in session for download (needed for the download redirect)
@@ -261,9 +278,12 @@ class CwmbackupController extends FormController
         // Clear session
         $session->set('proclaim_download_file', '', 'CWM');
 
+        // Determine MIME type based on file extension
+        $mimeType = str_ends_with(strtolower($filePath), '.zip') ? 'application/zip' : 'text/x-sql';
+
         // Output file
         $backup = new Cwmbackup();
-        $backup->outputFile($filePath, basename($filePath), 'text/x-sql');
+        $backup->outputFile($filePath, basename($filePath), $mimeType);
 
         // Clean up
         File::delete($filePath);
@@ -1059,6 +1079,38 @@ class CwmbackupController extends FormController
         } catch (\Exception $e) {
             Log::add('Failed to clean stale export files: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
         }
+    }
+
+    /**
+     * Compress a backup file into a ZIP archive
+     *
+     * @param   string  $sqlFilePath  Path to the SQL file to compress
+     *
+     * @return string Path to the created ZIP file
+     *
+     * @throws \RuntimeException If ZIP creation fails
+     * @since 10.1.0
+     */
+    private function compressBackupFile(string $sqlFilePath): string
+    {
+        $zipPath = $sqlFilePath . '.zip';
+        $zip = new \ZipArchive();
+
+        // Create the ZIP file
+        if ($zip->open($zipPath, \ZipArchive::CREATE) !== true) {
+            throw new \RuntimeException("Cannot create ZIP file: {$zipPath}");
+        }
+
+        // Add the SQL file to the ZIP
+        $zip->addFile($sqlFilePath, basename($sqlFilePath));
+        $zip->close();
+
+        // Delete the original SQL file
+        File::delete($sqlFilePath);
+
+        Log::add('Compressed backup file: ' . basename($zipPath), Log::INFO, 'com_proclaim');
+
+        return $zipPath;
     }
 
     /**
