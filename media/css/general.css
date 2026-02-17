@@ -496,11 +496,35 @@ table.fbstat .col2 {
   box-shadow: 0 4px 10px var(--color-shadow-light);
 }
 
-/* Sermon List Row Separator */
-.proclaim-row-separator td {
+/* Proclaim Listing Grid */
+.proclaim-listing {
+  width: 100%;
+}
+
+.proclaim-item {
   border-bottom: 1px solid darkgrey;
-  padding: 0;
-  height: 5px;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.proclaim-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.proclaim-item-row {
+  align-items: baseline;
+  padding: 0.125rem 0;
+}
+
+.proclaim-listing-header {
+  font-weight: bold;
+  border-bottom: 2px solid darkgrey;
+  padding-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.proclaim-listing-header .row {
+  align-items: baseline;
 }
 
 /* Sermon List Separator (legacy) */

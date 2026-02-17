@@ -43,12 +43,10 @@ function setupModule(fetchMock, extraOpts) {
     }
 
     html += '<div id="proclaim-sermon-list" aria-live="polite">' +
-                '<div class="table-responsive"><table class="table"><tbody>' +
-                '<tr><td>Item 1</td></tr>' +
-                '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
-                '<tr><td>Item 2</td></tr>' +
-                '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
-                '</tbody></table></div>' +
+                '<div class="proclaim-listing" data-context="sermons">' +
+                '<div class="proclaim-item"><div class="row proclaim-item-row"><div class="col">Item 1</div></div></div>' +
+                '<div class="proclaim-item"><div class="row proclaim-item-row"><div class="col">Item 2</div></div></div>' +
+                '</div>' +
             '</div>';
 
     if (paginationStyle === 'pagination') {
@@ -128,19 +126,17 @@ function setupModule(fetchMock, extraOpts) {
     document.addEventListener = origAddEventListener;
 }
 
-/** Standard AJAX response mock — uses table structure matching Cwmlisting output */
+/** Standard AJAX response mock — uses div structure matching Cwmlisting output */
 function mockAjaxResponse(overrides) {
     return {
         ok: true,
         json: function () {
             return Promise.resolve(Object.assign({
                 success: true,
-                html: '<div class="table-responsive"><table class="table"><tbody>' +
-                    '<tr><td>New Item 1</td></tr>' +
-                    '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
-                    '<tr><td>New Item 2</td></tr>' +
-                    '<tr class="proclaim-row-separator"><td colspan="12"></td></tr>' +
-                    '</tbody></table></div>',
+                html: '<div class="proclaim-listing" data-context="sermons">' +
+                    '<div class="proclaim-item"><div class="row proclaim-item-row"><div class="col">New Item 1</div></div></div>' +
+                    '<div class="proclaim-item"><div class="row proclaim-item-row"><div class="col">New Item 2</div></div></div>' +
+                    '</div>',
                 pagination: '',
                 pagesCounter: '',
                 total: 10,
@@ -304,7 +300,7 @@ describe('sermon-filters.es6.js', () => {
 
             var list = document.getElementById('proclaim-sermon-list');
             expect(list.innerHTML).toContain('New Item 1');
-            expect(list.querySelector('tbody')).not.toBeNull();
+            expect(list.querySelector('.proclaim-listing')).not.toBeNull();
         });
     });
 
@@ -360,9 +356,9 @@ describe('sermon-filters.es6.js', () => {
             setupModule(mockFetch, { paginationStyle: 'loadmore' });
 
             var list = document.getElementById('proclaim-sermon-list');
-            var tbody = list.querySelector('tbody');
-            // 2 items × (1 content tr + 1 separator tr) = 4 tr elements
-            expect(tbody.querySelectorAll('tr').length).toBe(4);
+            var listing = list.querySelector('.proclaim-listing');
+            // 2 proclaim-item divs
+            expect(listing.querySelectorAll(':scope > .proclaim-item').length).toBe(2);
 
             mockFetch.mockClear();
 
@@ -373,8 +369,8 @@ describe('sermon-filters.es6.js', () => {
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
 
-            // Items appended: 2 original + 2 new = 4 items = 8 tr elements
-            expect(tbody.querySelectorAll('tr').length).toBe(8);
+            // Items appended: 2 original + 2 new = 4 proclaim-item divs
+            expect(listing.querySelectorAll(':scope > .proclaim-item').length).toBe(4);
         });
 
         test('should update counter after load', async () => {
@@ -426,9 +422,9 @@ describe('sermon-filters.es6.js', () => {
             await new Promise(function (r) { setTimeout(r, 0); });
 
             var list = document.getElementById('proclaim-sermon-list');
-            var tbody = list.querySelector('tbody');
-            // 4 items = 8 tr elements
-            expect(tbody.querySelectorAll('tr').length).toBe(8);
+            var listing = list.querySelector('.proclaim-listing');
+            // 4 proclaim-item divs after append
+            expect(listing.querySelectorAll(':scope > .proclaim-item').length).toBe(4);
 
             // Now change a filter — should replace, not append
             mockFetch.mockClear();

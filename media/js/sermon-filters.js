@@ -401,18 +401,20 @@
                     // Append new items to existing list
                     if (result.html) {
                         var temp = document.createElement('div');
+                        // Safe: result.html is from our own server-side listing helper
                         temp.innerHTML = result.html;
 
-                        // The listing helper renders a table inside a
-                        // .table-responsive wrapper. Extract <tbody> rows from
-                        // the response and append them to the existing <tbody>.
-                        var newTbody = temp.querySelector('tbody');
-                        var existingTbody = listContainer.querySelector('tbody');
+                        // The listing helper renders .proclaim-item divs inside a
+                        // .proclaim-listing wrapper. Extract items and append them
+                        // to the existing listing container.
+                        var newListing = temp.querySelector('.proclaim-listing');
+                        var existingListing = listContainer.querySelector('.proclaim-listing');
 
-                        if (newTbody && existingTbody) {
-                            while (newTbody.firstChild) {
-                                existingTbody.appendChild(newTbody.firstChild);
-                            }
+                        if (newListing && existingListing) {
+                            var items = newListing.querySelectorAll(':scope > .proclaim-item');
+                            items.forEach(function (item) {
+                                existingListing.appendChild(item);
+                            });
                         } else {
                             // Fallback: just append the raw HTML
                             listContainer.insertAdjacentHTML('beforeend', result.html);

@@ -298,6 +298,18 @@ abstract class AbstractBibleProvider implements BibleProviderInterface
     protected bool $lastErrorTransient = false;
 
     /**
+     * Whether the last error was transient (retryable).
+     *
+     * @return  bool
+     *
+     * @since  10.1.0
+     */
+    public function isLastErrorTransient(): bool
+    {
+        return $this->lastErrorTransient;
+    }
+
+    /**
      * Detect HTML responses (DDoS gatekeeper pages).
      *
      * Some Bible API providers return HTML instead of JSON when under

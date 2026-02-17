@@ -1,87 +1,131 @@
-/* Podcast Subscription Display Settings */
+/* Podcast Subscription Display */
 
 .podcastsubscribe {
-    display: flex;
-    flex-wrap: wrap;
     width: 100%;
-    background-color: #eeeeee;
-    border-radius: 15px;
-    border: 1px solid grey;
     padding: 1em;
-    gap: 1em;
-}
-
-.podcastsubscribe .image {
-    flex-shrink: 0;
-    display: flex;
-    align-items: flex-start;
-}
-
-.podcastsubscribe .image .text {
-    display: inline-block;
-}
-
-.podcastsubscribe .prow {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    gap: 5px;
-}
-
-.podcastsubscribe .pcell {
-    flex: 0 1 auto;
-    background-color: #e3e2e2;
-    border-radius: 15px;
-    border: 1px solid grey;
-    padding: 1em;
-}
-
-.podcastheader h3 {
-    text-align: center;
 }
 
 .podcastheader {
+    margin-bottom: 0.75rem;
+}
+
+.podcastheader h4 {
+    margin: 0;
     font-weight: bold;
 }
 
-.podcastlinks {
-    display: inline-block;
+/* Card grid */
+.podcastsubscribe .prow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    width: 100%;
 }
 
-.fltlft {
-    margin-right: 5px;
+.podcastsubscribe .pcell {
+    flex: 1 1 280px;
+    background-color: var(--color-background-light, #f8f9fa);
+    border-radius: 8px;
+    border: 1px solid var(--color-border, #dee2e6);
+    padding: 1rem;
+}
+
+.podcastsubscribe .pcell h5 {
+    margin: 0 0 0.75rem;
+    font-size: 1rem;
+}
+
+.podcastsubscribe .pcell h5 i {
+    margin-right: 0.35rem;
+    color: var(--color-gray-medium, #6c757d);
+}
+
+/* Subscribe links container */
+.podcast-subscribe-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Text-only subscribe buttons */
+.podcast-subscribe-links a:not(.podcast-badge) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 6px;
+    border: 1px solid var(--color-border, #dee2e6);
+    background: var(--color-white, #fff);
+    color: inherit;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.podcast-subscribe-links a:not(.podcast-badge):hover {
+    background-color: var(--color-background-alt, #e9ecef);
+    border-color: var(--color-gray-medium, #adb5bd);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    text-decoration: none;
+}
+
+.podcast-subscribe-links a:not(.podcast-badge) i {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+/* Image badge subscribe buttons */
+.podcast-subscribe-links a.podcast-badge {
+    display: inline-block;
+    line-height: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    transition: opacity 0.15s ease, box-shadow 0.15s ease;
+}
+
+.podcast-subscribe-links a.podcast-badge:hover {
+    opacity: 0.85;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.podcast-subscribe-links a.podcast-badge img {
+    max-height: 40px;
+    width: auto;
+    object-fit: contain;
 }
 
 /* Mobile responsive layout */
-@media (max-width: 768px) {
-    .podcastsubscribe {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .podcastsubscribe .image {
-        margin-bottom: 1em;
-    }
-
+@media (max-width: 576px) {
     .podcastsubscribe .prow {
         flex-direction: column;
-        align-items: stretch;
-        width: 100%;
     }
 
     .podcastsubscribe .pcell {
-        width: 100%;
-        margin-bottom: 5px;
+        flex-basis: auto;
     }
 
-    .podcastsubscribe .pcell:last-child {
-        margin-bottom: 0;
+    .podcast-subscribe-links {
+        justify-content: center;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .podcastsubscribe .pcell {
+        background-color: var(--color-background-light, #2b2b2b);
+        border-color: var(--color-border, #444);
     }
 
-    .fltlft {
-        float: none;
-        margin: 0 auto 5px;
-        display: block;
+    .podcast-subscribe-links a:not(.podcast-badge) {
+        background: var(--color-white, #333);
+        border-color: var(--color-border, #555);
+        color: var(--color-text, #e0e0e0);
+    }
+
+    .podcast-subscribe-links a:not(.podcast-badge):hover {
+        background-color: var(--color-background-alt, #3a3a3a);
+        border-color: var(--color-gray-medium, #666);
     }
 }

@@ -394,7 +394,7 @@ class CwmImageCleanup
         }
 
         try {
-            $addon       = CWMAddon::getInstance($server->type);
+            $addon        = CWMAddon::getInstance($server->type);
             $serverParams = new Registry($server->params ?: '{}');
             $addon->deleteFile($oldFilename, $serverParams);
         } catch (\Exception $e) {

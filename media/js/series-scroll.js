@@ -210,21 +210,22 @@
                     throw new Error(result.message || 'Unknown error');
                 }
 
-                // Append new items (HTML from our own server-side listing helper)
+                // Append new items (server-side listing helper HTML, safe origin)
                 if (result.html) {
                     var temp = document.createElement('div');
-                    temp.innerHTML = result.html;
+                    temp.innerHTML = result.html; // eslint-disable-line -- safe: own server response
 
-                    // The listing helper renders a table inside a
-                    // .table-responsive wrapper. Extract <tbody> rows from
-                    // the response and append them to the existing <tbody>.
-                    var newTbody = temp.querySelector('tbody');
-                    var existingTbody = listContainer.querySelector('tbody');
+                    // The listing helper renders .proclaim-item divs inside a
+                    // .proclaim-listing wrapper. Extract items and append them
+                    // to the existing listing container.
+                    var newListing = temp.querySelector('.proclaim-listing');
+                    var existingListing = listContainer.querySelector('.proclaim-listing');
 
-                    if (newTbody && existingTbody) {
-                        while (newTbody.firstChild) {
-                            existingTbody.appendChild(newTbody.firstChild);
-                        }
+                    if (newListing && existingListing) {
+                        var items = newListing.querySelectorAll(':scope > .proclaim-item');
+                        items.forEach(function (item) {
+                            existingListing.appendChild(item);
+                        });
                     } else {
                         listContainer.insertAdjacentHTML('beforeend', result.html);
                     }

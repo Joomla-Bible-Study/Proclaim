@@ -26,6 +26,7 @@ if (empty($list)) {
 
 $wa = $app->getDocument()->getWebAssetManager();
 $wa->useStyle('com_proclaim.general');
+$wa->useStyle('com_proclaim.podcast');
 
 ?>
 

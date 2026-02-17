@@ -50,28 +50,31 @@ class Cwmpodcastsubscribe
         }
 
         $this->baseUri = Uri::base();
-        $rows          = '';
+        $cards         = '';
 
         foreach ($podcasts as $podcast) {
             $podcastshow = (int) ($podcast->podcast_subscribe_show ?: 2);
 
-            $content = match ($podcastshow) {
+            $links = match ($podcastshow) {
                 3 => $this->buildAlternatePodcast($podcast),
-                4 => '<div class="row"><div class="col-6">'
-                    . $this->buildStandardPodcast($podcast)
-                    . '</div><div class="col-6">'
-                    . $this->buildAlternatePodcast($podcast)
-                    . '</div></div>',
+                4 => $this->buildStandardPodcast($podcast)
+                    . $this->buildAlternatePodcast($podcast),
                 default => $this->buildStandardPodcast($podcast),
             };
 
-            $rows .= '<div class="pcell col-md-6"><h5><i class="fa fa-podcast"></i> '
-                . $podcast->title . '</h5>' . $content . '<hr /></div>';
+            $title = htmlspecialchars($podcast->title, ENT_QUOTES, 'UTF-8');
+
+            $cards .= '<div class="pcell">'
+                . '<h5><i class="fa fa-podcast" aria-hidden="true"></i> ' . $title . '</h5>'
+                . '<div class="podcast-subscribe-links">' . $links . '</div>'
+                . '</div>';
         }
 
+        $heading = htmlspecialchars($introtext ?? 'Our Podcasts', ENT_QUOTES, 'UTF-8');
+
         return '<div class="podcastsubscribe">'
-            . '<div class="podcastheader"><h4>' . $introtext . '</h4></div>'
-            . '<div class="prow row">' . $rows . '</div>'
+            . '<div class="podcastheader"><h4>' . $heading . '</h4></div>'
+            . '<div class="prow">' . $cards . '</div>'
             . '</div>';
     }
 
@@ -112,19 +115,22 @@ class Cwmpodcastsubscribe
      */
     public function buildStandardPodcast(object $podcast): string
     {
-        $link = $this->baseUri . $podcast->filename;
-        $name = $podcast->podcast_subscribe_desc ?: $podcast->title;
-
-        $html = '';
+        $link = htmlspecialchars($this->baseUri . $podcast->filename, ENT_QUOTES, 'UTF-8');
+        $name = htmlspecialchars(
+            $podcast->podcast_subscribe_desc ?: $podcast->title,
+            ENT_QUOTES,
+            'UTF-8'
+        );
 
         if (!empty($podcast->podcast_image_subscribe)) {
-            $image = $this->buildPodcastImage($podcast->podcast_image_subscribe, $podcast->podcast_subscribe_desc);
-            $html .= '<div class="image"><a href="' . $link . '">' . $image . '</a></div>';
+            $image = $this->buildPodcastImage($podcast->podcast_image_subscribe, $name);
+
+            if ($image) {
+                return '<a href="' . $link . '" class="podcast-badge">' . $image . '</a>';
+            }
         }
 
-        $html .= '<div class="text"><a href="' . $link . '">' . $name . '</a></div>';
-
-        return $html;
+        return '<a href="' . $link . '"><i class="fa fa-rss" aria-hidden="true"></i> ' . $name . '</a>';
     }
 
     /**
@@ -148,7 +154,12 @@ class Cwmpodcastsubscribe
         return HTMLHelper::image(
             $this->baseUri . $image->path,
             $words,
-            ['width' => $image->width, 'height' => $image->height, 'title' => $words]
+            [
+                'width'   => $image->width,
+                'height'  => $image->height,
+                'title'   => $words,
+                'loading' => 'lazy',
+            ]
         );
     }
 
@@ -163,15 +174,17 @@ class Cwmpodcastsubscribe
      */
     public function buildAlternatePodcast(object $podcast): string
     {
-        $html = '';
+        $link  = htmlspecialchars($podcast->alternatelink ?? '', ENT_QUOTES, 'UTF-8');
+        $words = htmlspecialchars($podcast->alternatewords ?? '', ENT_QUOTES, 'UTF-8');
 
         if (!empty($podcast->alternateimage)) {
-            $image = $this->buildPodcastImage($podcast->alternateimage, $podcast->alternatewords);
-            $html .= '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image . '</a></div>';
+            $image = $this->buildPodcastImage($podcast->alternateimage, $words);
+
+            if ($image) {
+                return '<a href="' . $link . '" class="podcast-badge">' . $image . '</a>';
+            }
         }
 
-        $html .= '<div class="text"><a href="' . $podcast->alternatelink . '">' . $podcast->alternatewords . '</a></div>';
-
-        return $html;
+        return '<a href="' . $link . '"><i class="fa fa-headphones" aria-hidden="true"></i> ' . $words . '</a>';
     }
 }
