@@ -62,6 +62,16 @@ class LocalBrowseBtnField extends FormField
         $wa->useScript('com_proclaim.addon-local-browser');
         $wa->useStyle('com_proclaim.addon-local-browser');
 
+        // Register JS translation keys for image prompt modal
+        Text::script('JBS_MED_LOCAL_BROWSER_IMAGE_PROMPT_TITLE');
+        Text::script('JBS_MED_LOCAL_BROWSER_IMAGE_PROMPT_DESC');
+        Text::script('JBS_MED_LOCAL_BROWSER_USE_EXISTING');
+        Text::script('JBS_MED_LOCAL_BROWSER_USE_EXISTING_DESC');
+        Text::script('JBS_MED_LOCAL_BROWSER_COPY_FOR_RECORD');
+        Text::script('JBS_MED_LOCAL_BROWSER_COPY_FOR_RECORD_DESC');
+        Text::script('JBS_MED_LOCAL_BROWSER_COPYING');
+        Text::script('JBS_MED_LOCAL_BROWSER_COPY_FAILED');
+
         return '<button type="button" class="btn btn-secondary" id="local-browse-btn" onclick="Proclaim.LocalBrowser.open()">' .
             '<span class="icon-search" aria-hidden="true"></span> ' . Text::_('JBS_MED_BROWSE_LOCAL_FILES') . '</button>';
     }
