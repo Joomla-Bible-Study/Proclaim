@@ -136,12 +136,15 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
     </div>
 
     <?php
-    // $usingLegacy = true until the first real tracked event is recorded.
-    // The primary KPI cards ALWAYS show $recordTotals (the live counter columns
-    // from #__bsms_studies and #__bsms_mediafiles) because those always reflect
-    // the complete history including pre-10.1 data.  Event-based period totals
-    // are shown as a secondary strip once detailed tracking is active.
-    $usingLegacy = !$this->hasTrackedEvents;
+    // Three display states:
+    //   $showImportPanel  — no real events yet AND seed not run → show full "Getting started" card
+    //   $showSeededNotice — seed run but no real events yet     → show compact success note
+    //   $showPeriodStrip  — real events exist                   → show event-based period strip
+    $legacySeeded    = ($this->legacyKpi['views'] + $this->legacyKpi['plays'] + $this->legacyKpi['downloads']) > 0;
+    $hasRealEvents   = $this->hasTrackedEvents;
+    $showImportPanel = !$hasRealEvents && !$legacySeeded;
+    $showSeededNotice = $legacySeeded && !$hasRealEvents;
+    $showPeriodStrip = $hasRealEvents;
     ?>
 
     <!-- ── All-Time KPI Cards (always from record counters) ─────────────── -->
@@ -167,7 +170,29 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
         <?php endforeach; ?>
     </div>
 
-    <?php if (!$usingLegacy) : ?>
+    <?php if ($showSeededNotice) : ?>
+    <!-- ── Seeded notice — seed run, awaiting first real event ───────────── -->
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-3 p-2 bg-light rounded small text-muted">
+        <i class="icon-check-circle text-success" aria-hidden="true"></i>
+        <span><?php echo Text::sprintf('JBS_ANA_SEEDED_NOTICE',
+            number_format($this->legacyKpi['views']),
+            number_format($this->legacyKpi['plays']),
+            number_format($this->legacyKpi['downloads'])
+        ); ?></span>
+        <span class="ms-auto">
+            <form method="post" action="index.php" class="d-inline">
+                <input type="hidden" name="option" value="com_proclaim">
+                <input type="hidden" name="task" value="cwmanalytics.seedLegacy">
+                <?php echo HTMLHelper::_('form.token'); ?>
+                <button type="submit" class="btn btn-link btn-sm text-muted text-decoration-none p-0 border-0">
+                    <i class="icon-refresh me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_RESEED_LEGACY'); ?>
+                </button>
+            </form>
+        </span>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($showPeriodStrip) : ?>
     <!-- ── Period strip — event-based totals for selected date range ─────── -->
     <div class="d-flex flex-wrap align-items-center gap-3 mb-3 p-2 bg-light rounded small">
         <span class="fw-semibold text-muted">
@@ -203,9 +228,9 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
     </div>
     <?php endif; ?>
 
-    <?php if ($usingLegacy) : ?>
+    <?php if ($showImportPanel) : ?>
     <!-- ── TRANSITION PANEL ──────────────────────────────────────────────── -->
-    <!-- Shown until the first real tracked event is recorded -->
+    <!-- Shown only until the legacy seed has been run (then replaced by the compact seeded notice above) -->
     <div class="card border-primary mb-3">
         <div class="card-header bg-primary text-white fw-semibold">
             <i class="icon-rocket me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_TRANSITION_TITLE'); ?>
