@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmadmin;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmupgradeHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
@@ -190,6 +191,9 @@ class HtmlView extends BaseHtmlView
      */
     public bool $has9xSchema = false;
 
+    /** @var array{views: int, plays: int, downloads: int, sessions: int} Last-30-day analytics KPIs for the analytics tab @since 10.1.0 */
+    public array $anaKpi = ['views' => 0, 'plays' => 0, 'downloads' => 0, 'sessions' => 0];
+
     /**
      * Form
      *
@@ -245,6 +249,11 @@ class HtmlView extends BaseHtmlView
         $this->playerstats = '';
         $this->assets      = $app->getInput()->get('checkassets', null, 'get');
         $this->popups      = '';
+
+        // Analytics KPI (last 30 days) — loaded server-side to avoid spinner
+        $today          = date('Y-m-d');
+        $thirtyDaysAgo  = date('Y-m-d', strtotime('-29 days'));
+        $this->anaKpi   = CwmanalyticsHelper::getKpiTotals($thirtyDaysAgo, $today);
 
         // Get the list of backup files
         $path = JPATH_SITE . '/media/com_proclaim/backup';

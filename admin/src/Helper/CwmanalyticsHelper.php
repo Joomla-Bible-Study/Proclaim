@@ -339,6 +339,12 @@ class CwmanalyticsHelper
             if (!$params->get('analytics_gdpr_optout', '1')) {
                 return false;
             }
+
+            // When site-wide GDPR compliance mode is ON, treat all visitors as opted out
+            // (gdpr_mode disables external calls; analytics personal data should be suppressed too)
+            if ($params->get('gdpr_mode', '0')) {
+                return true;
+            }
         } catch (\Throwable $e) {
             // No params available (CLI / unit-test) — default to opt-out support enabled
         }

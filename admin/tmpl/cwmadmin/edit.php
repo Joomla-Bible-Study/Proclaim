@@ -874,10 +874,10 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                     <div class="row g-3 mb-3" id="analytics-kpi-cards">
                         <?php
                         $anaKpiCards = [
-                            ['id' => 'ana-views', 'icon' => 'icon-eye', 'label' => 'JBS_ANA_TOTAL_VIEWS', 'class' => 'text-primary'],
-                            ['id' => 'ana-plays', 'icon' => 'icon-play', 'label' => 'JBS_ANA_TOTAL_PLAYS', 'class' => 'text-success'],
-                            ['id' => 'ana-downloads', 'icon' => 'icon-download', 'label' => 'JBS_ANA_TOTAL_DOWNLOADS', 'class' => 'text-warning'],
-                            ['id' => 'ana-sessions', 'icon' => 'icon-user', 'label' => 'JBS_ANA_UNIQUE_SESSIONS', 'class' => 'text-info'],
+                            ['icon' => 'icon-eye',      'label' => 'JBS_ANA_TOTAL_VIEWS',     'value' => $this->anaKpi['views'],     'class' => 'text-primary'],
+                            ['icon' => 'icon-play',     'label' => 'JBS_ANA_TOTAL_PLAYS',     'value' => $this->anaKpi['plays'],     'class' => 'text-success'],
+                            ['icon' => 'icon-download', 'label' => 'JBS_ANA_TOTAL_DOWNLOADS', 'value' => $this->anaKpi['downloads'], 'class' => 'text-warning'],
+                            ['icon' => 'icon-user',     'label' => 'JBS_ANA_UNIQUE_SESSIONS', 'value' => $this->anaKpi['sessions'], 'class' => 'text-info'],
                         ];
                         ?>
                         <?php foreach ($anaKpiCards as $card) : ?>
@@ -885,8 +885,8 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                             <div class="card text-center">
                                 <div class="card-body py-2">
                                     <i class="<?php echo $card['icon']; ?> <?php echo $card['class']; ?> mb-1" aria-hidden="true"></i>
-                                    <div class="fw-bold fs-5 <?php echo $card['class']; ?>" id="<?php echo $card['id']; ?>">
-                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    <div class="fw-bold fs-5 <?php echo $card['class']; ?>">
+                                        <?php echo number_format($card['value']); ?>
                                     </div>
                                     <div class="text-muted small"><?php echo Text::_($card['label']); ?></div>
                                 </div>
