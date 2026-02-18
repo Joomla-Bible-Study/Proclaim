@@ -84,20 +84,104 @@
         }
     }, true);
 
-    // Re-init YouTube players after sermon-filters.es6.js replaces or appends listing content.
-    // onYouTubeIframeAPIReady only fires once; new iframes need wrapping manually.
-    document.addEventListener('proclaim:listing-updated', function () {
-        if (typeof YT === 'undefined' || typeof YT.Player === 'undefined') {
-            return;
-        }
-        document.querySelectorAll('iframe.playhit[src*="youtube.com"], iframe.hitplay[src*="youtube.com"]').forEach(function (iframe) {
+    /**
+     * Attach Vimeo Player SDK wrappers to all uninitialised Vimeo iframes.
+     * Called after the SDK script loads and after any listing DOM replacement.
+     */
+    function proclaimInitVimeoPlayers() {
+        document.querySelectorAll('iframe.playhit[src*="vimeo.com"], iframe.hitplay[src*="vimeo.com"]').forEach(function (iframe) {
             var mediaId = iframe.getAttribute('data-id');
-            if (!mediaId || iframe.dataset.ytInited) {
+            if (!mediaId || iframe.dataset.vimeoInited) {
                 return;
             }
-            iframe.dataset.ytInited = '1';
-            proclaimInitYTPlayer(iframe, mediaId);
+            iframe.dataset.vimeoInited = '1';
+            var player = new Vimeo.Player(iframe);
+            player.on('play', function () {
+                proclaimTrackPlay(mediaId);
+            });
         });
+    }
+
+    /**
+     * Push _wq handlers for all uninitialised Wistia iframes.
+     * Must be called before (or after) E-v1.js loads — _wq is processed either way.
+     */
+    function proclaimSetupWistiaTracking() {
+        window._wq = window._wq || [];
+        document.querySelectorAll('iframe.playhit[src*="wistia"], iframe.hitplay[src*="wistia"]').forEach(function (iframe) {
+            if (iframe.dataset.wistiaInited) {
+                return;
+            }
+            var src = iframe.getAttribute('src') || '';
+            var match = src.match(/\/embed\/iframe\/([a-zA-Z0-9]+)/);
+            if (!match) {
+                return;
+            }
+            iframe.dataset.wistiaInited = '1';
+            var wistiaHash = match[1];
+            var mediaId = iframe.getAttribute('data-id');
+            window._wq.push({
+                id: wistiaHash,
+                onReady: function (video) {
+                    video.bind('play', function () {
+                        proclaimTrackPlay(mediaId);
+                    });
+                }
+            });
+        });
+    }
+
+    /**
+     * Resi has no public player SDK. Listen for postMessage events as best-effort.
+     * Called once — the window listener persists across DOM replacements.
+     */
+    function proclaimSetupResiTracking() {
+        window.addEventListener('message', function (event) {
+            if (typeof event.origin !== 'string' || event.origin.indexOf('resi.io') === -1) {
+                return;
+            }
+            var data = event.data;
+            if (typeof data === 'string') {
+                try { data = JSON.parse(data); } catch (e) { return; }
+            }
+            if (!data || typeof data !== 'object') {
+                return;
+            }
+            // Match common video-player postMessage play-event shapes
+            var isPlay = data.event === 'play' || data.type === 'play' || data.action === 'play';
+            if (!isPlay) {
+                return;
+            }
+            document.querySelectorAll('iframe.playhit[src*="resi.io"], iframe.hitplay[src*="resi.io"]').forEach(function (iframe) {
+                var mediaId = iframe.getAttribute('data-id');
+                if (mediaId) {
+                    proclaimTrackPlay(mediaId);
+                }
+            });
+        });
+    }
+
+    // Re-init third-party players after sermon-filters.es6.js replaces or appends listing content.
+    // onYouTubeIframeAPIReady / Vimeo SDK onload each fire only once; new iframes need wrapping manually.
+    document.addEventListener('proclaim:listing-updated', function () {
+        // YouTube
+        if (typeof YT !== 'undefined' && typeof YT.Player !== 'undefined') {
+            document.querySelectorAll('iframe.playhit[src*="youtube.com"], iframe.hitplay[src*="youtube.com"]').forEach(function (iframe) {
+                var mediaId = iframe.getAttribute('data-id');
+                if (!mediaId || iframe.dataset.ytInited) {
+                    return;
+                }
+                iframe.dataset.ytInited = '1';
+                proclaimInitYTPlayer(iframe, mediaId);
+            });
+        }
+        // Vimeo
+        if (typeof Vimeo !== 'undefined' && typeof Vimeo.Player !== 'undefined') {
+            proclaimInitVimeoPlayers();
+        }
+        // Wistia — _wq handles timing; just push handlers for new iframes
+        proclaimSetupWistiaTracking();
+        // Resi — window postMessage listener persists; no per-listing action needed
     });
 
     window.onYouTubeIframeAPIReady = function () {
@@ -137,6 +221,28 @@
             document.head.appendChild(ytScript);
         }
 
+        // Load the Vimeo Player SDK and init players once it's ready.
+        if (document.querySelector('iframe.playhit[src*="vimeo.com"], iframe.hitplay[src*="vimeo.com"]')) {
+            var vimeoScript = document.createElement('script');
+            vimeoScript.src = 'https://player.vimeo.com/api/player.js';
+            vimeoScript.onload = function () { proclaimInitVimeoPlayers(); };
+            document.head.appendChild(vimeoScript);
+        }
+
+        // Set up Wistia _wq listeners then load E-v1.js asynchronously.
+        if (document.querySelector('iframe.playhit[src*="wistia"], iframe.hitplay[src*="wistia"]')) {
+            proclaimSetupWistiaTracking();
+            var wistiaScript = document.createElement('script');
+            wistiaScript.src = 'https://fast.wistia.com/assets/external/E-v1.js';
+            wistiaScript.async = true;
+            document.head.appendChild(wistiaScript);
+        }
+
+        // Set up best-effort Resi postMessage listener (window-level, fires once).
+        if (document.querySelector('iframe.playhit[src*="resi.io"], iframe.hitplay[src*="resi.io"]')) {
+            proclaimSetupResiTracking();
+        }
+
         // Track clicks/plays on any element with playhit or hitplay class.
         document.querySelectorAll('.playhit, .hitplay').forEach(function (element) {
             // Skip fancybox_player elements — they are tracked separately below
@@ -155,9 +261,10 @@
                 return;
             }
 
-            // YouTube iframes are tracked via IFrame API (onYouTubeIframeAPIReady above).
-            // Vimeo/Resi/Wistia inline iframes: track on border click (best we can without their SDKs).
-            if (element.tagName === 'IFRAME' && /(youtube\.com\/embed)/.test(element.src)) {
+            // Third-party iframes are tracked via their own SDKs/postMessage listeners above.
+            // Clicks on cross-origin iframes never reach the parent document, so adding a
+            // click listener here would be silently ineffective.
+            if (element.tagName === 'IFRAME') {
                 return;
             }
 
