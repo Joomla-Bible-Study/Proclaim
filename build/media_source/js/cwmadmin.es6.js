@@ -517,9 +517,14 @@
     }
 
     /**
-     * Perform thumbnail resize operation
-     * @param {string[]} imageTypes - Types to resize (teachers, series, studies)
-     * @param {string} task - Task to execute after completion
+     * Perform thumbnail resize operation using the batch regeneration system.
+     *
+     * The new sizes come from the form fields (not yet saved to DB), so they are
+     * passed as `size` URL params to regenerateThumbsXHR which forwards them to
+     * CwmImageMigration::regenerateThumbnails() as $sizeOverride.
+     *
+     * @param {string[]} imageTypes - Changed types: 'teachers', 'series', 'studies'
+     * @param {string} task - Joomla save task to execute after completion
      */
     async performThumbnailResize(imageTypes, task) {
       const modal = document.getElementById('dialog_thumbnail_resize');
@@ -527,72 +532,84 @@
       const statusText = modal?.querySelector('.status-text');
       const progressContainer = progressBar?.parentElement;
 
-      // Show modal
+      // Map form field IDs to types
+      const typeSizes = {
+        teachers: parseInt(document.getElementById('jform_params_thumbnail_teacher_size')?.value || '300', 10),
+        studies:  parseInt(document.getElementById('jform_params_thumbnail_study_size')?.value || '600', 10),
+        series:   parseInt(document.getElementById('jform_params_thumbnail_series_size')?.value || '300', 10),
+      };
+
       if (this.thumbnailModal) {
         this.thumbnailModal.show();
       }
 
       try {
-        // Get list of images to resize
-        const listUrl = `index.php?option=com_proclaim&task=cwmadmin.getThumbnailListXHR&${this.token}=1&images=${encodeURIComponent(JSON.stringify(imageTypes))}`;
-        const listResponse = await this.fetchJson(listUrl);
+        // Get total counts (filtered to changed types only) for progress display
+        const countsUrl = `index.php?option=com_proclaim&task=cwmadmin.getThumbRegenCountXHR&${this.token}=1`;
+        const counts = await this.fetchJson(countsUrl);
+        const grandTotal = imageTypes.reduce((sum, t) => sum + (counts[t] || 0), 0);
 
-        const totalPaths = listResponse.total || 0;
-
-        if (totalPaths === 0) {
-          // No images to resize, submit form
+        if (grandTotal === 0) {
           if (this.thumbnailModal) this.thumbnailModal.hide();
           Joomla.submitform(task, document.getElementById('item-admin'));
           return;
         }
 
-        let counter = 0;
-        const paths = listResponse.paths || [];
+        let totalProcessed = 0;
+        let totalErrors = 0;
 
-        // Process each image type
-        for (const pathGroup of paths) {
-          const type = pathGroup[0]?.type;
-          const images = pathGroup[0]?.images || [];
-
-          if (!images.length) continue;
-
-          // Get new size for this type
-          let newSize = 100;
-          switch (type) {
-            case 'teachers':
-              newSize = document.getElementById('jform_params_thumbnail_teacher_size')?.value || 100;
-              break;
-            case 'studies':
-              newSize = document.getElementById('jform_params_thumbnail_study_size')?.value || 100;
-              break;
-            case 'series':
-              newSize = document.getElementById('jform_params_thumbnail_series_size')?.value || 100;
-              break;
+        const updateProgress = () => {
+          const done = totalProcessed + totalErrors;
+          const pct = Math.min(100, Math.round((done / grandTotal) * 100));
+          if (progressBar) {
+            progressBar.style.width = `${pct}%`;
+            progressBar.textContent = `${pct}%`;
           }
+          if (progressContainer) {
+            progressContainer.setAttribute('aria-valuenow', pct);
+          }
+        };
 
-          // Resize each image
-          for (const imagePath of images) {
-            const resizeUrl = `index.php?option=com_proclaim&task=cwmadmin.createThumbnailXHR&${this.token}=1&image_path=${encodeURIComponent(imagePath)}&new_size=${newSize}`;
-            await this.fetchJson(resizeUrl);
+        const regenLabel = Joomla.Text._('JBS_ADM_REGENERATING') || 'Regenerating';
 
-            counter++;
-            const progress = (counter / totalPaths) * 100;
+        for (const type of imageTypes) {
+          const newSize = typeSizes[type] || 300;
+          let offset = 0;
 
-            // Update progress bar
-            if (progressBar) {
-              progressBar.style.width = `${progress}%`;
-              progressBar.textContent = `${Math.round(progress)}%`;
-            }
-            if (progressContainer) {
-              progressContainer.setAttribute('aria-valuenow', Math.round(progress));
-            }
+          while (true) {
             if (statusText) {
-              statusText.textContent = `${counter} / ${totalPaths}`;
+              statusText.textContent = `${regenLabel} ${type}… ${totalProcessed + totalErrors} / ${grandTotal}`;
+            }
+
+            const url = `index.php?option=com_proclaim&task=cwmadmin.regenerateThumbsXHR`
+              + `&${this.token}=1&type=${type}&limit=10&offset=${offset}&size=${newSize}`;
+            const data = await this.fetchJson(url);
+
+            if (data.error) {
+              throw new Error(data.error);
+            }
+
+            totalProcessed += data.processed || 0;
+            totalErrors    += data.errors   || 0;
+            offset         += (data.processed || 0) + (data.errors || 0);
+            updateProgress();
+
+            if ((data.remaining || 0) === 0) {
+              break;
             }
           }
         }
 
-        // Complete - hide modal and submit form
+        if (progressBar) {
+          progressBar.style.width = '100%';
+          progressBar.textContent = '100%';
+        }
+        if (statusText) {
+          statusText.textContent = totalErrors > 0
+            ? `${totalProcessed} processed, ${totalErrors} errors`
+            : `${totalProcessed} processed`;
+        }
+
         if (this.thumbnailModal) this.thumbnailModal.hide();
         Joomla.submitform(task, document.getElementById('item-admin'));
 
