@@ -497,6 +497,7 @@ class Cwmmedia
                         return $this->renderSB($media, $params, $player, $image, $path, true);
 
                     case 1: // Popup window
+                        CWMFancyBox::framework();
                         $playercode = "<a $colorStyle href=\"javascript:;\"" .
                             " onclick=\"window.open('index.php?option=com_proclaim&amp;player="
                             . $params->toObject()->player .
@@ -556,6 +557,7 @@ class Cwmmedia
                         break;
 
                     case 1: // Popup
+                        CWMFancyBox::framework();
                         // Add space for a pop-up window
                         $diff                 = $params->get('player_width') - $params->get('playerwidth');
                         $player->playerwidth += abs($diff) + 10;

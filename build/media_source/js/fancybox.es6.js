@@ -70,6 +70,18 @@ function proclaimInitYTPlayer(iframe, mediaId) {
  * Handles both new renders (src already has enablejsapi=1) and cached
  * renders (src missing enablejsapi=1 — iframe is reloaded with it added).
  */
+// Capture audio/video play events from .playhit/.hitplay containers.
+// Uses capture phase because 'play' does not bubble, and survives DOM
+// replacement by sermon-filters AJAX (innerHTML swaps destroy per-element listeners).
+document.addEventListener('play', function (e) {
+    var el = e.target;
+    if (el.tagName !== 'AUDIO' && el.tagName !== 'VIDEO') { return; }
+    var container = el.closest('.playhit[data-id], .hitplay[data-id]');
+    if (container) {
+        proclaimTrackPlay(container.getAttribute('data-id'));
+    }
+}, true);
+
 window.onYouTubeIframeAPIReady = function () {
     document.querySelectorAll('iframe.playhit, iframe.hitplay').forEach(function (iframe) {
         if (!/(youtube\.com\/embed)/.test(iframe.src)) {
@@ -117,12 +129,9 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // For containers with audio/video elements, track on the play event
-        var mediaEl = element.querySelector('audio, video');
-        if (mediaEl) {
-            mediaEl.addEventListener('play', function () {
-                proclaimTrackPlay(mediaId);
-            });
+        // Audio/video in .playhit/.hitplay containers are tracked by the document
+        // capture listener above — skip adding a click listener to the container.
+        if (element.querySelector('audio, video')) {
             return;
         }
 
