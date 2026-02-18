@@ -59,20 +59,21 @@ class FiltersField extends FormField
 
         // Open the table.
         $html[] = '<table id="filter-config" class="table">';
+        $html[] = '<caption class="visually-hidden">' . Text::_('COM_CONFIG_TEXT_FILTERS') . '</caption>';
 
         // The table heading.
         $html[] = '	<thead>';
         $html[] = '	<tr>';
-        $html[] = '		<th>';
+        $html[] = '		<th scope="col">';
         $html[] = '			<span class="acl-action">' . Text::_('JGLOBAL_FILTER_GROUPS_LABEL') . '</span>';
         $html[] = '		</th>';
-        $html[] = '		<th>';
+        $html[] = '		<th scope="col">';
         $html[] = '			<span class="acl-action">' . Text::_('JGLOBAL_FILTER_TYPE_LABEL') . '</span>';
         $html[] = '		</th>';
-        $html[] = '		<th>';
+        $html[] = '		<th scope="col">';
         $html[] = '			<span class="acl-action">' . Text::_('JGLOBAL_FILTER_TAGS_LABEL') . '</span>';
         $html[] = '		</th>';
-        $html[] = '		<th>';
+        $html[] = '		<th scope="col">';
         $html[] = '			<span class="acl-action">' . Text::_('JGLOBAL_FILTER_ATTRIBUTES_LABEL') . '</span>';
         $html[] = '		</th>';
         $html[] = '	</tr>';
@@ -83,12 +84,7 @@ class FiltersField extends FormField
 
         foreach ($groups as $group) {
             if (!isset($this->value[$group->value])) {
-                $this->value                = [];
-                $this->value[$group->value] = [
-                    'filter_type'       => 'BL',
-                    'filter_tags'       => '',
-                    'filter_attributes' => '',
-                ];
+                $this->value[$group->value] = ['filter_type' => 'BL', 'filter_tags' => '', 'filter_attributes' => ''];
             }
 
             $group_filter = $this->value[$group->value];
@@ -97,12 +93,12 @@ class FiltersField extends FormField
             $group_filter['filter_attributes'] = !empty($group_filter['filter_attributes']) ? $group_filter['filter_attributes'] : '';
 
             $html[] = '	<tr>';
-            $html[] = '		<td class="acl-groups left">';
+            $html[] = '		<th class="acl-groups left" scope="row">';
             $html[] = '			' . LayoutHelper::render(
                 'joomla.html.treeprefix',
                 ['level' => $group->level + 1]
             ) . $group->text;
-            $html[] = '		</td>';
+            $html[] = '		</th>';
             $html[] = '		<td>';
             $html[] = '			<label for="' . $this->id . $group->value . '_filter_type" class="visually-hidden">'
                 . Text::_('JGLOBAL_FILTER_TYPE_LABEL') . '</label>';
@@ -111,7 +107,7 @@ class FiltersField extends FormField
                 . ' id="' . $this->id . $group->value . '_filter_type"'
                 . ' data-parent="' . ($group->parent) . '" '
                 . ' data-id="' . ($group->value) . '" '
-                . ' class="novalidate form-select" style="min-width: 200px;"'
+                . ' class="novalidate form-select"'
                 . '>';
             $html[] = '					<option value="BL"' . ($group_filter['filter_type'] == 'BL' ? ' selected="selected"' : '') . '>'
                 . Text::_('COM_CONFIG_FIELD_FILTERS_DEFAULT_FORBIDDEN_LIST') . '</option>';
@@ -165,26 +161,13 @@ class FiltersField extends FormField
      */
     protected function getUserGroups(): array
     {
-        // Get a database object.
-        $db = Factory::getContainer()->get('DatabaseDriver');
-
-        // Get the user groups from the database.
-        $query = $db->getQuery(true);
-        $query->select(
-            $db->qn('a.id', 'value') . ', '
-                . $db->qn('a.title', 'text') . ', '
-                . 'COUNT(DISTINCT ' . $db->qn('b.id') . ') AS ' . $db->qn('level') . ', '
-                . $db->qn('a.parent_id', 'parent')
-        );
-        $query->from($db->qn('#__usergroups', 'a'));
-        $query->join(
-            'LEFT',
-            $db->qn('#__usergroups', 'b') . ' ON '
-                . $db->qn('a.lft') . ' > ' . $db->qn('b.lft') . ' AND '
-                . $db->qn('a.rgt') . ' < ' . $db->qn('b.rgt')
-        );
-        $query->group($db->qn(['a.id', 'a.title', 'a.lft']));
-        $query->order($db->qn('a.lft') . ' ASC');
+        $db    = $this->getDatabase();
+        $query = $db->getQuery(true)
+            ->select($db->qn('a.id', 'value') . ', ' . $db->qn('a.title', 'text') . ', COUNT(DISTINCT ' . $db->qn('b.id') . ') AS ' . $db->qn('level') . ', ' . $db->qn('a.parent_id', 'parent'))
+            ->from($db->qn('#__usergroups', 'a'))
+            ->join('LEFT', $db->qn('#__usergroups', 'b') . ' ON ' . $db->qn('a.lft') . ' > ' . $db->qn('b.lft') . ' AND ' . $db->qn('a.rgt') . ' < ' . $db->qn('b.rgt'))
+            ->group($db->qn(['a.id', 'a.title', 'a.lft']))
+            ->order($db->qn('a.lft') . ' ASC');
         $db->setQuery($query);
 
         return $db->loadObjectList();
