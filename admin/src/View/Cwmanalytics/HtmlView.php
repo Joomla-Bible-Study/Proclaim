@@ -21,6 +21,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 /**
@@ -75,6 +76,15 @@ class HtmlView extends BaseHtmlView
 
     /** @var string Export URL for CSV download @since 10.1.0 */
     public string $exportUrl = '';
+
+    /** @var array{views: int, plays: int, downloads: int} All-time totals from monthly aggregates (includes legacy seeded data) @since 10.1.0 */
+    public array $legacyKpi = ['views' => 0, 'plays' => 0, 'downloads' => 0];
+
+    /** @var bool True if the raw events table has at least one real tracked event @since 10.1.0 */
+    public bool $hasTrackedEvents = false;
+
+    /** @var string Seed-legacy URL @since 10.1.0 */
+    public string $seedLegacyUrl = '';
 
     /**
      * Load all published locations, optionally restricted to specific view levels.
@@ -187,6 +197,13 @@ class HtmlView extends BaseHtmlView
         $this->osBreakdown       = CwmanalyticsHelper::getOsBreakdown($s, $e, $l);
         $this->languageBreakdown = CwmanalyticsHelper::getLanguageBreakdown($s, $e, $l);
         $this->utmBreakdown      = CwmanalyticsHelper::getUtmBreakdown($s, $e, $l);
+
+        // --- Legacy / historical data ---
+        $this->hasTrackedEvents = CwmanalyticsHelper::hasTrackedEvents();
+        $this->legacyKpi        = CwmanalyticsHelper::getLegacyKpiTotals($l);
+        $this->seedLegacyUrl    = Route::_(
+            'index.php?option=com_proclaim&task=cwmanalytics.seedLegacy&' . Session::getFormToken() . '=1'
+        );
 
         // --- Export URL ---
         $this->exportUrl = Route::_(

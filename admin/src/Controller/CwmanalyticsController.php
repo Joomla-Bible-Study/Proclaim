@@ -30,6 +30,36 @@ use Joomla\CMS\Session\Session;
 class CwmanalyticsController extends BaseController
 {
     /**
+     * Seed the monthly aggregates table with legacy hit/play/download counts
+     * from existing study and media-file records.
+     *
+     * Safe to run multiple times (idempotent). Redirects back to analytics view
+     * with a success/info message.
+     *
+     * @return  void
+     *
+     * @throws \Exception
+     * @since   10.1.0
+     */
+    public function seedLegacy(): void
+    {
+        $app = Factory::getApplication();
+        Session::checkToken() or $app->redirect('index.php?option=com_proclaim&view=cwmanalytics');
+
+        $result = CwmanalyticsHelper::seedFromLegacy();
+        $app->enqueueMessage(
+            \sprintf(
+                '%d study rows and %d media rows imported from legacy counters.',
+                $result['studies'],
+                $result['media']
+            ),
+            'success'
+        );
+
+        $app->redirect('index.php?option=com_proclaim&view=cwmanalytics');
+    }
+
+    /**
      * Export filtered analytics data as a CSV file.
      *
      * @return  void

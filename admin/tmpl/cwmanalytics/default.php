@@ -158,6 +158,42 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
         <?php endforeach; ?>
     </div>
 
+    <?php if (!$this->hasTrackedEvents) : ?>
+    <!-- No real tracking data yet — show onboarding notice + legacy totals -->
+    <div class="alert alert-info d-flex align-items-start gap-3 mb-3" role="alert">
+        <i class="icon-info-circle fa-lg mt-1" aria-hidden="true"></i>
+        <div>
+            <strong><?php echo Text::_('JBS_ANA_ONBOARD_TITLE'); ?></strong>
+            <p class="mb-2"><?php echo Text::_('JBS_ANA_ONBOARD_BODY'); ?></p>
+            <?php if ($this->legacyKpi['views'] > 0 || $this->legacyKpi['plays'] > 0 || $this->legacyKpi['downloads'] > 0) : ?>
+                <p class="mb-2 fw-semibold"><?php echo Text::_('JBS_ANA_LEGACY_HEADER'); ?></p>
+                <ul class="mb-2">
+                    <li><?php echo Text::_('JBS_ANA_TOTAL_VIEWS'); ?>: <strong><?php echo number_format($this->legacyKpi['views']); ?></strong></li>
+                    <li><?php echo Text::_('JBS_ANA_TOTAL_PLAYS'); ?>: <strong><?php echo number_format($this->legacyKpi['plays']); ?></strong></li>
+                    <li><?php echo Text::_('JBS_ANA_TOTAL_DOWNLOADS'); ?>: <strong><?php echo number_format($this->legacyKpi['downloads']); ?></strong></li>
+                </ul>
+            <?php else : ?>
+                <a href="<?php echo htmlspecialchars($this->seedLegacyUrl, ENT_QUOTES); ?>"
+                   class="btn btn-sm btn-outline-primary">
+                    <i class="icon-database me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_SEED_LEGACY'); ?>
+                </a>
+                <span class="text-muted small ms-2"><?php echo Text::_('JBS_ANA_SEED_LEGACY_HINT'); ?></span>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- If legacy data was seeded but no tracked events yet, offer re-seed option -->
+    <?php if (!$this->hasTrackedEvents && ($this->legacyKpi['views'] > 0 || $this->legacyKpi['plays'] > 0)) : ?>
+    <div class="d-flex align-items-center gap-2 mb-3">
+        <a href="<?php echo htmlspecialchars($this->seedLegacyUrl, ENT_QUOTES); ?>"
+           class="btn btn-sm btn-outline-secondary">
+            <i class="icon-refresh me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_RESEED_LEGACY'); ?>
+        </a>
+        <span class="text-muted small"><?php echo Text::_('JBS_ANA_RESEED_LEGACY_HINT'); ?></span>
+    </div>
+    <?php endif; ?>
+
     <!-- Line Chart: Views / Plays / Downloads over time -->
     <div class="card mb-3">
         <div class="card-header fw-semibold">

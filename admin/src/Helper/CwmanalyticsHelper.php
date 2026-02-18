@@ -801,6 +801,156 @@ class CwmanalyticsHelper
     }
 
     /**
+     * Seed the monthly aggregates table with legacy hit counts from existing study/media records.
+     *
+     * This is a one-time bridge from pre-10.1 aggregate counters into the new analytics tables.
+     * Safe to run multiple times — uses ON DUPLICATE KEY UPDATE so counts are not double-added.
+     *
+     * Studies: `hits` column → page_view events (keyed to the study's studydate).
+     * Media files: `downloads` column → download events, `plays` → play events (keyed to createdate).
+     *
+     * @return  array{studies: int, media: int}  Rows inserted/updated for studies and media.
+     *
+     * @since   10.1.0
+     */
+    public static function seedFromLegacy(): array
+    {
+        $result = ['studies' => 0, 'media' => 0];
+
+        try {
+            $db       = Factory::getContainer()->get('DatabaseDriver');
+            $cols     = implode(',', array_map([$db, 'quoteName'], [
+                'study_id', 'media_id', 'location_id', 'event_type',
+                'referrer_type', 'country_code', 'device_type', 'year', 'month', 'count',
+            ]));
+            $dupeKey  = ' ON DUPLICATE KEY UPDATE ' . $db->quoteName('count') . ' = VALUES(' . $db->quoteName('count') . ')';
+
+            // --- Seed study page-views from #__bsms_studies.hits ---
+            $dateExpr = 'COALESCE(NULLIF(' . $db->quoteName('studydate') . ', ' . $db->quote('0000-00-00') . '),'
+                      . $db->quoteName('createdate') . ', NOW())';
+
+            $sql = 'INSERT INTO ' . $db->quoteName('#__bsms_analytics_monthly') . ' (' . $cols . ')'
+                 . ' SELECT'
+                 . ' ' . $db->quoteName('id') . ', NULL, ' . $db->quoteName('location_id') . ','
+                 . ' ' . $db->quote('page_view') . ', NULL, NULL, NULL,'
+                 . ' YEAR(' . $dateExpr . '), MONTH(' . $dateExpr . '),'
+                 . ' ' . $db->quoteName('hits')
+                 . ' FROM ' . $db->quoteName('#__bsms_studies')
+                 . ' WHERE ' . $db->quoteName('hits') . ' > 0'
+                 . $dupeKey;
+
+            $db->setQuery($sql);
+            $db->execute();
+            $result['studies'] = $db->getAffectedRows();
+
+            // --- Seed media downloads from #__bsms_mediafiles.downloads ---
+            $dateMExpr = 'COALESCE(NULLIF(' . $db->quoteName('m.createdate') . ', ' . $db->quote('0000-00-00') . '), NOW())';
+
+            $sqlDl = 'INSERT INTO ' . $db->quoteName('#__bsms_analytics_monthly') . ' (' . $cols . ')'
+                   . ' SELECT'
+                   . ' ' . $db->quoteName('m.study_id') . ', ' . $db->quoteName('m.id') . ', ' . $db->quoteName('s.location_id') . ','
+                   . ' ' . $db->quote('download') . ', NULL, NULL, NULL,'
+                   . ' YEAR(' . $dateMExpr . '), MONTH(' . $dateMExpr . '),'
+                   . ' ' . $db->quoteName('m.downloads')
+                   . ' FROM ' . $db->quoteName('#__bsms_mediafiles', 'm')
+                   . ' LEFT JOIN ' . $db->quoteName('#__bsms_studies', 's')
+                   . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('m.study_id')
+                   . ' WHERE ' . $db->quoteName('m.downloads') . ' > 0'
+                   . $dupeKey;
+
+            $db->setQuery($sqlDl);
+            $db->execute();
+            $result['media'] += $db->getAffectedRows();
+
+            // --- Seed media plays from #__bsms_mediafiles.plays ---
+            $sqlPl = 'INSERT INTO ' . $db->quoteName('#__bsms_analytics_monthly') . ' (' . $cols . ')'
+                   . ' SELECT'
+                   . ' ' . $db->quoteName('m.study_id') . ', ' . $db->quoteName('m.id') . ', ' . $db->quoteName('s.location_id') . ','
+                   . ' ' . $db->quote('play') . ', NULL, NULL, NULL,'
+                   . ' YEAR(' . $dateMExpr . '), MONTH(' . $dateMExpr . '),'
+                   . ' ' . $db->quoteName('m.plays')
+                   . ' FROM ' . $db->quoteName('#__bsms_mediafiles', 'm')
+                   . ' LEFT JOIN ' . $db->quoteName('#__bsms_studies', 's')
+                   . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('m.study_id')
+                   . ' WHERE ' . $db->quoteName('m.plays') . ' > 0'
+                   . $dupeKey;
+
+            $db->setQuery($sqlPl);
+            $db->execute();
+            $result['media'] += $db->getAffectedRows();
+        } catch (\Exception $e) {
+            // Never let this break the page
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get all-time KPI totals from the permanent monthly aggregates table.
+     *
+     * Returns historical totals imported via seedFromLegacy() plus any data
+     * that has been rolled up from the raw events table. Used alongside
+     * getKpiTotals() (which queries live raw events) to show combined numbers
+     * on the dashboard when real tracked data is sparse.
+     *
+     * @param   int  $locationId  Filter by campus; 0 = all.
+     *
+     * @return  array{views: int, plays: int, downloads: int}
+     *
+     * @since   10.1.0
+     */
+    public static function getLegacyKpiTotals(int $locationId = 0): array
+    {
+        try {
+            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $query = $db->getQuery(true)
+                ->select([
+                    'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('page_view') . ' THEN ' . $db->quoteName('count') . ' ELSE 0 END) AS views',
+                    'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('play') . ' THEN ' . $db->quoteName('count') . ' ELSE 0 END) AS plays',
+                    'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('download') . ' THEN ' . $db->quoteName('count') . ' ELSE 0 END) AS downloads',
+                ])
+                ->from($db->quoteName('#__bsms_analytics_monthly'));
+
+            if ($locationId > 0) {
+                $query->where($db->quoteName('location_id') . ' = ' . (int) $locationId);
+            }
+
+            $db->setQuery($query);
+            $row = $db->loadAssoc() ?? [];
+
+            return [
+                'views'     => (int) ($row['views'] ?? 0),
+                'plays'     => (int) ($row['plays'] ?? 0),
+                'downloads' => (int) ($row['downloads'] ?? 0),
+            ];
+        } catch (\Exception $e) {
+            return ['views' => 0, 'plays' => 0, 'downloads' => 0];
+        }
+    }
+
+    /**
+     * Check whether any real (post-10.1) tracked events exist in the raw events table.
+     *
+     * Used to determine whether to show the "analytics collecting data" notice
+     * on the dashboard instead of empty charts.
+     *
+     * @return  bool
+     *
+     * @since   10.1.0
+     */
+    public static function hasTrackedEvents(): bool
+    {
+        try {
+            $db = Factory::getContainer()->get('DatabaseDriver');
+            $db->setQuery('SELECT 1 FROM ' . $db->quoteName('#__bsms_analytics_events') . ' LIMIT 1');
+
+            return $db->loadResult() !== null;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
      * Generic breakdown query helper.
      *
      * @param   string  $column      Column name to group by.
