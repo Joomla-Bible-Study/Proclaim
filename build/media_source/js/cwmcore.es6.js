@@ -178,44 +178,6 @@
             });
         });
 
-        // Check for touch support using native browser APIs
-        const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-        if (isTouchDevice) {
-            const jbsmcloseoverlay = document.querySelectorAll('.jbsmclose-overlay');
-
-            jbsmcloseoverlay.forEach(function (el) {
-                el.classList.remove('hidden');
-            });
-
-            document.querySelectorAll('.jbsmimg').forEach(function (el) {
-                el.addEventListener('click', function () {
-                    if (!this.classList.contains('hover')) {
-                        this.classList.add('hover');
-                    }
-                });
-            });
-
-            jbsmcloseoverlay.forEach(function (el) {
-                el.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const closestImg = this.closest('.jbsmimg');
-                    if (closestImg && closestImg.classList.contains('hover')) {
-                        closestImg.classList.remove('hover');
-                    }
-                });
-            });
-        } else {
-            document.querySelectorAll('.jbsmimg').forEach(function (el) {
-                el.addEventListener('mouseenter', function () {
-                    this.classList.add('hover');
-                });
-                el.addEventListener('mouseleave', function () {
-                    this.classList.remove('hover');
-                });
-            });
-        }
-
         const addReferenceBtn = document.getElementById('addReference');
         if (addReferenceBtn) {
             addReferenceBtn.addEventListener('click', function (e) {
