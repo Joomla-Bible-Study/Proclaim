@@ -17,6 +17,7 @@
 use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -158,6 +159,23 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                 </div>
             </div>
             <?php endif; ?>
+        <?php
+            // Location system wizard opt-in card — shown to super admins when wizard has not been configured
+            $cpanelUser = Factory::getApplication()->getIdentity();
+            if ($cpanelUser->authorise('core.admin') && CwmlocationHelper::shouldShowWizard()) :
+        ?>
+            <div class="col-12">
+                <div class="alert alert-primary">
+                    <span class="icon-location" aria-hidden="true"></span>
+                    <strong><?php echo Text::_('JBS_CPL_WIZARD_TITLE'); ?></strong>
+                    <p class="mb-1"><?php echo Text::_('JBS_CPL_WIZARD_DESC'); ?></p>
+                    <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmlocationwizard'); ?>"
+                       class="btn btn-primary btn-sm">
+                        <?php echo Text::_('JBS_CPL_WIZARD_BUTTON'); ?>
+                    </a>
+                </div>
+            </div>
+        <?php endif; ?>
         <div class="col-lg-2 rounded">
             <div class="cpanel-logo">
                 <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>">

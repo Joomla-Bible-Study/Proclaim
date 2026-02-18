@@ -44,4 +44,9 @@ use Joomla\CMS\Layout\LayoutHelper;
             <?php echo Cwmhtml::messageType(); ?>
         </div>
     </div>
+    <div class="row">
+        <div class="form-group col-md-12">
+            <?php echo Cwmhtml::location(); ?>
+        </div>
+    </div>
 </div>

@@ -144,16 +144,16 @@ class CWMAddonVimeo extends CWMAddon
     public function getVideoMetadata(string $videoId): array
     {
         try {
-            $url = 'https://vimeo.com/api/oembed.json?url=https://vimeo.com/' . $videoId;
-            $http = Factory::getApplication()->getHttpFactory()->getHttp();
+            $url      = 'https://vimeo.com/api/oembed.json?url=https://vimeo.com/' . $videoId;
+            $http     = Factory::getApplication()->getHttpFactory()->getHttp();
             $response = $http->get($url);
 
             if ($response->code !== 200) {
                 return [
-                    'title' => '',
+                    'title'       => '',
                     'description' => '',
-                    'thumbnail' => '',
-                    'duration' => 0,
+                    'thumbnail'   => '',
+                    'duration'    => 0,
                 ];
             }
 
@@ -161,28 +161,28 @@ class CWMAddonVimeo extends CWMAddon
 
             if (!$data) {
                 return [
-                    'title' => '',
+                    'title'       => '',
                     'description' => '',
-                    'thumbnail' => '',
-                    'duration' => 0,
+                    'thumbnail'   => '',
+                    'duration'    => 0,
                 ];
             }
 
             return [
-                'title' => $data['title'] ?? '',
+                'title'       => $data['title'] ?? '',
                 'description' => $data['description'] ?? '',
-                'thumbnail' => $data['thumbnail_url'] ?? '',
-                'duration' => $data['duration'] ?? 0,
-                'author' => $data['author_name'] ?? '',
-                'width' => $data['width'] ?? 0,
-                'height' => $data['height'] ?? 0,
+                'thumbnail'   => $data['thumbnail_url'] ?? '',
+                'duration'    => $data['duration'] ?? 0,
+                'author'      => $data['author_name'] ?? '',
+                'width'       => $data['width'] ?? 0,
+                'height'      => $data['height'] ?? 0,
             ];
         } catch (\Exception $e) {
             return [
-                'title' => '',
+                'title'       => '',
                 'description' => '',
-                'thumbnail' => '',
-                'duration' => 0,
+                'thumbnail'   => '',
+                'duration'    => 0,
             ];
         }
     }
@@ -213,20 +213,20 @@ class CWMAddonVimeo extends CWMAddon
      */
     protected function handleTestApiAction(): array
     {
-        $app = Factory::getApplication();
-        $input = $app->getInput();
+        $app      = Factory::getApplication();
+        $input    = $app->getInput();
         $serverId = $input->getInt('server_id', 0);
 
         if (!$serverId) {
             return [
                 'success' => false,
-                'error' => Text::_('JBS_ADDON_VIMEO_NO_SERVER_ID'),
+                'error'   => Text::_('JBS_ADDON_VIMEO_NO_SERVER_ID'),
             ];
         }
 
         // Load server params
         try {
-            $db = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true)
                 ->select($db->quoteName('params'))
                 ->from($db->quoteName('#__bsms_servers'))
@@ -237,25 +237,25 @@ class CWMAddonVimeo extends CWMAddon
             if (!$paramsJson) {
                 return [
                     'success' => false,
-                    'error' => Text::_('JBS_ADDON_VIMEO_SERVER_NOT_FOUND'),
+                    'error'   => Text::_('JBS_ADDON_VIMEO_SERVER_NOT_FOUND'),
                 ];
             }
 
-            $params = json_decode($paramsJson, true);
+            $params      = json_decode($paramsJson, true);
             $accessToken = $params['access_token'] ?? '';
 
             if (empty($accessToken)) {
                 return [
                     'success' => false,
-                    'error' => Text::_('JBS_ADDON_VIMEO_NO_ACCESS_TOKEN'),
+                    'error'   => Text::_('JBS_ADDON_VIMEO_NO_ACCESS_TOKEN'),
                 ];
             }
 
             // Test API connection by getting user info
-            $http = $app->getHttpFactory()->getHttp();
+            $http    = $app->getHttpFactory()->getHttp();
             $headers = [
                 'Authorization' => 'Bearer ' . $accessToken,
-                'Accept' => 'application/vnd.vimeo.*+json;version=3.4',
+                'Accept'        => 'application/vnd.vimeo.*+json;version=3.4',
             ];
 
             $response = $http->get('https://api.vimeo.com/me', $headers);
@@ -263,7 +263,7 @@ class CWMAddonVimeo extends CWMAddon
             if ($response->code !== 200) {
                 return [
                     'success' => false,
-                    'error' => Text::sprintf('JBS_ADDON_VIMEO_API_ERROR', $response->code),
+                    'error'   => Text::sprintf('JBS_ADDON_VIMEO_API_ERROR', $response->code),
                 ];
             }
 
@@ -276,7 +276,7 @@ class CWMAddonVimeo extends CWMAddon
         } catch (\Exception $e) {
             return [
                 'success' => false,
-                'error' => $e->getMessage(),
+                'error'   => $e->getMessage(),
             ];
         }
     }
@@ -292,14 +292,14 @@ class CWMAddonVimeo extends CWMAddon
      */
     protected function handleGetMetadataAction(): array
     {
-        $app = Factory::getApplication();
-        $input = $app->getInput();
+        $app     = Factory::getApplication();
+        $input   = $app->getInput();
         $videoId = $input->getString('video_id', '');
 
         if (empty($videoId)) {
             return [
                 'success' => false,
-                'error' => Text::_('JBS_ADDON_VIMEO_NO_VIDEO_ID'),
+                'error'   => Text::_('JBS_ADDON_VIMEO_NO_VIDEO_ID'),
             ];
         }
 
@@ -307,13 +307,13 @@ class CWMAddonVimeo extends CWMAddon
             $metadata = $this->getVideoMetadata($videoId);
 
             return [
-                'success' => true,
+                'success'  => true,
                 'metadata' => $metadata,
             ];
         } catch (\Exception $e) {
             return [
                 'success' => false,
-                'error' => $e->getMessage(),
+                'error'   => $e->getMessage(),
             ];
         }
     }

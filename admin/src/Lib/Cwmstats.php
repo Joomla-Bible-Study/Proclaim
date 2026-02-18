@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Cache\CacheControllerFactoryInterface;
 use Joomla\CMS\Cache\Controller\CallbackController;
@@ -135,20 +136,18 @@ class Cwmstats
             $query = $db->getQuery(true);
             $query
                 ->select('COUNT(*)')
-                ->from($db->quoteName('#__bsms_studies'))
-                ->where($db->quoteName('published') . ' = 1');
+                ->from($db->quoteName('#__bsms_studies', 's'))
+                ->where($db->quoteName('s.published') . ' = 1');
 
-            // Filter by access level for non-super-admin users (multi-campus isolation)
-            if (!$isAdmin) {
-                $query->whereIn($db->quoteName('access'), $user->getAuthorisedViewLevels());
-            }
+            // Apply hybrid security filter: location-based + Joomla view-level access
+            CwmlocationHelper::applySecurityFilter($query, 's');
 
             if (!empty($start)) {
-                $query->where($db->quoteName('time') . ' > UNIX_TIMESTAMP(' . $db->quote($start) . ')');
+                $query->where($db->quoteName('s.time') . ' > UNIX_TIMESTAMP(' . $db->quote($start) . ')');
             }
 
             if (!empty($end)) {
-                $query->where($db->quoteName('time') . ' < UNIX_TIMESTAMP(' . $db->quote($end) . ')');
+                $query->where($db->quoteName('s.time') . ' < UNIX_TIMESTAMP(' . $db->quote($end) . ')');
             }
 
             $db->setQuery($query);
@@ -173,8 +172,9 @@ class Cwmstats
         $user    = Factory::getApplication()->getIdentity();
         $isAdmin = $user->authorise('core.admin');
 
-        // Include user authorization in cache key for non-admin users
-        $userKey = $isAdmin ? 'admin' : implode(',', $user->getAuthorisedViewLevels());
+        // Include user ID in cache key for non-admin users
+        $userId  = (int) $user->id;
+        $userKey = $isAdmin ? 'admin' : 'uid:' . $userId;
         $key     = 'totalTopics:' . $start . ':' . $end . ':' . $userKey;
 
         if (isset(self::$cache[$key])) {
@@ -183,7 +183,7 @@ class Cwmstats
 
         // L2: persistent cache across requests (TTL: 15 min)
         $pc     = self::getPersistentCache();
-        $result = $pc->get(function () use ($isAdmin, $user, $start, $end) {
+        $result = $pc->get(function () use ($start, $end) {
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
             $query
@@ -193,10 +193,8 @@ class Cwmstats
                 ->leftJoin($db->quoteName('#__bsms_topics', 't') . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('st.topic_id'))
                 ->where($db->quoteName('t.published') . ' = 1');
 
-            // Filter by access level for non-super-admin users (multi-campus isolation)
-            if (!$isAdmin) {
-                $query->whereIn($db->quoteName('s.access'), $user->getAuthorisedViewLevels());
-            }
+            // Apply hybrid security filter: location-based + Joomla view-level access
+            CwmlocationHelper::applySecurityFilter($query, 's');
 
             if (!empty($start)) {
                 $query->where($db->quoteName('s.time') . ' > UNIX_TIMESTAMP(' . $db->quote($start) . ')');
@@ -228,8 +226,9 @@ class Cwmstats
         $user    = Factory::getApplication()->getIdentity();
         $isAdmin = $user->authorise('core.admin');
 
-        // Include user authorization in cache key for non-admin users
-        $userKey  = $isAdmin ? 'admin' : implode(',', $user->getAuthorisedViewLevels());
+        // Include user ID in cache key for non-admin users
+        $userId   = (int) $user->id;
+        $userKey  = $isAdmin ? 'admin' : 'uid:' . $userId;
         $cacheKey = 'topStudies:' . $userKey;
 
         if (isset(self::$cache[$cacheKey])) {
@@ -238,21 +237,19 @@ class Cwmstats
 
         // L2: persistent cache across requests (TTL: 15 min)
         $pc     = self::getPersistentCache();
-        $result = $pc->get(function () use ($isAdmin, $user) {
+        $result = $pc->get(function () {
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
             $query
-                ->select($db->quoteName(['id', 'studytitle', 'studydate', 'hits', 'access']))
-                ->from($db->quoteName('#__bsms_studies'))
-                ->where($db->quoteName('published') . ' = 1')
-                ->where($db->quoteName('hits') . ' > 0');
+                ->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
+                ->from($db->quoteName('#__bsms_studies', 's'))
+                ->where($db->quoteName('s.published') . ' = 1')
+                ->where($db->quoteName('s.hits') . ' > 0');
 
-            // Filter by access level for non-super-admin users (multi-campus isolation)
-            if (!$isAdmin) {
-                $query->whereIn($db->quoteName('access'), $user->getAuthorisedViewLevels());
-            }
+            // Apply hybrid security filter: location-based + Joomla view-level access
+            CwmlocationHelper::applySecurityFilter($query, 's');
 
-            $query->order($db->quoteName('hits') . ' DESC');
+            $query->order($db->quoteName('s.hits') . ' DESC');
             $db->setQuery($query, 0, 5);
             $rows        = $db->loadObjectList();
             $top_studies = '';
@@ -295,8 +292,9 @@ class Cwmstats
         $user    = Factory::getApplication()->getIdentity();
         $isAdmin = $user->authorise('core.admin');
 
-        // Include user authorization in cache key for non-admin users
-        $userKey  = $isAdmin ? 'admin' : implode(',', $user->getAuthorisedViewLevels());
+        // Include user ID in cache key for non-admin users
+        $userId   = (int) $user->id;
+        $userKey  = $isAdmin ? 'admin' : 'uid:' . $userId;
         $cacheKey = 'topThirtyDays:' . $userKey;
 
         if (isset(self::$cache[$cacheKey])) {
@@ -305,24 +303,22 @@ class Cwmstats
 
         // L2: persistent cache across requests (TTL: 15 min)
         $pc     = self::getPersistentCache();
-        $result = $pc->get(function () use ($isAdmin, $user) {
+        $result = $pc->get(function () {
             $month      = mktime(0, 0, 0, (int) date("m") - 1, (int) date("d"), (int) date("Y"));
             $last_month = date("Y-m-d 00:00:01", $month);
             $db         = Factory::getContainer()->get('DatabaseDriver');
             $query      = $db->getQuery(true);
             $query
-                ->select($db->quoteName(['id', 'studytitle', 'studydate', 'hits', 'access']))
-                ->from($db->quoteName('#__bsms_studies'))
-                ->where($db->quoteName('published') . ' = 1')
-                ->where($db->quoteName('hits') . ' > 0')
-                ->where($db->quoteName('studydate') . ' > ' . $db->quote($last_month));
+                ->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
+                ->from($db->quoteName('#__bsms_studies', 's'))
+                ->where($db->quoteName('s.published') . ' = 1')
+                ->where($db->quoteName('s.hits') . ' > 0')
+                ->where($db->quoteName('s.studydate') . ' > ' . $db->quote($last_month));
 
-            // Filter by access level for non-super-admin users (multi-campus isolation)
-            if (!$isAdmin) {
-                $query->whereIn($db->quoteName('access'), $user->getAuthorisedViewLevels());
-            }
+            // Apply hybrid security filter: location-based + Joomla view-level access
+            CwmlocationHelper::applySecurityFilter($query, 's');
 
-            $query->order($db->quoteName('hits') . ' DESC');
+            $query->order($db->quoteName('s.hits') . ' DESC');
             $db->setQuery($query, 0, 5);
             $rows        = $db->loadObjectList();
             $top_studies = '';
@@ -369,8 +365,9 @@ class Cwmstats
         $user    = Factory::getApplication()->getIdentity();
         $isAdmin = $user->authorise('core.admin');
 
-        // Include user authorization in cache key for non-admin users
-        $userKey  = $isAdmin ? 'admin' : implode(',', $user->getAuthorisedViewLevels());
+        // Include user ID in cache key for non-admin users
+        $userId   = (int) $user->id;
+        $userKey  = $isAdmin ? 'admin' : 'uid:' . $userId;
         $cacheKey = 'topDownloads:' . $userKey;
 
         if (isset(self::$cache[$cacheKey])) {
@@ -379,7 +376,7 @@ class Cwmstats
 
         // L2: persistent cache across requests (TTL: 15 min)
         $pc     = self::getPersistentCache();
-        $result = $pc->get(function () use ($isAdmin, $user) {
+        $result = $pc->get(function () {
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
             $query
@@ -393,10 +390,8 @@ class Cwmstats
                 ->where($db->quoteName('mf.published') . ' = 1')
                 ->where($db->quoteName('mf.downloads') . ' > 0');
 
-            // Filter by access level for non-super-admin users (multi-campus isolation)
-            if (!$isAdmin) {
-                $query->whereIn($db->quoteName('s.access'), $user->getAuthorisedViewLevels());
-            }
+            // Apply hybrid security filter: location-based + Joomla view-level access
+            CwmlocationHelper::applySecurityFilter($query, 's');
 
             $query->order($db->quoteName('mf.downloads') . ' DESC');
             $db->setQuery($query, 0, 5);
@@ -430,8 +425,9 @@ class Cwmstats
         $user    = Factory::getApplication()->getIdentity();
         $isAdmin = $user->authorise('core.admin');
 
-        // Include user authorization in cache key for non-admin users
-        $userKey  = $isAdmin ? 'admin' : implode(',', $user->getAuthorisedViewLevels());
+        // Include user ID in cache key for non-admin users
+        $userId   = (int) $user->id;
+        $userKey  = $isAdmin ? 'admin' : 'uid:' . $userId;
         $cacheKey = 'downloadsLast3Months:' . $userKey;
 
         if (isset(self::$cache[$cacheKey])) {
@@ -440,7 +436,7 @@ class Cwmstats
 
         // L2: persistent cache across requests (TTL: 15 min)
         $pc     = self::getPersistentCache();
-        $result = $pc->get(function () use ($isAdmin, $user) {
+        $result = $pc->get(function () {
             $month     = mktime(0, 0, 0, (int) date("m") - 3, (int) date("d"), (int) date("Y"));
             $lastmonth = date("Y-m-d 00:00:01", $month);
             $db        = Factory::getContainer()->get('DatabaseDriver');
@@ -457,10 +453,8 @@ class Cwmstats
                 ->where($db->quoteName('mf.downloads') . ' > 0')
                 ->where($db->quoteName('mf.createdate') . ' > ' . $db->quote($lastmonth));
 
-            // Filter by access level for non-super-admin users (multi-campus isolation)
-            if (!$isAdmin) {
-                $query->whereIn($db->quoteName('s.access'), $user->getAuthorisedViewLevels());
-            }
+            // Apply hybrid security filter: location-based + Joomla view-level access
+            CwmlocationHelper::applySecurityFilter($query, 's');
 
             $query->order($db->quoteName('mf.downloads') . ' DESC');
             $db->setQuery($query, 0, 5);
@@ -527,8 +521,9 @@ class Cwmstats
         $user    = Factory::getApplication()->getIdentity();
         $isAdmin = $user->authorise('core.admin');
 
-        // Include user authorization in cache key for non-admin users
-        $userKey  = $isAdmin ? 'admin' : implode(',', $user->getAuthorisedViewLevels());
+        // Include user ID in cache key for non-admin users
+        $userId   = (int) $user->id;
+        $userKey  = $isAdmin ? 'admin' : 'uid:' . $userId;
         $cacheKey = 'topScore:' . $userKey;
 
         if (isset(self::$cache[$cacheKey])) {
@@ -537,7 +532,7 @@ class Cwmstats
 
         // L2: persistent cache across requests (TTL: 15 min)
         $pc     = self::getPersistentCache();
-        $result = $pc->get(function () use ($isAdmin, $user) {
+        $result = $pc->get(function () {
             $admin  = Cwmparams::getAdmin();
             $format = (int) $admin->params->get('format_popular', 0);
             $db     = Factory::getContainer()->get('DatabaseDriver');
@@ -549,10 +544,8 @@ class Cwmstats
                 ->join('INNER', $db->quoteName('#__bsms_mediafiles', 'mf') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
                 ->where($db->quoteName('mf.published') . ' = 1');
 
-            // Filter by access level for non-super-admin users (multi-campus isolation)
-            if (!$isAdmin) {
-                $query->whereIn($db->quoteName('s.access'), $user->getAuthorisedViewLevels());
-            }
+            // Apply hybrid security filter: location-based + Joomla view-level access
+            CwmlocationHelper::applySecurityFilter($query, 's');
 
             $query->group($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
                 ->order($db->qn('added') . ' DESC');

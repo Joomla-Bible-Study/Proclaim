@@ -6,6 +6,17 @@
     "license": "GPL-2.0-or-later",
     "assets": [
         {
+            "name": "com_proclaim.location-wizard",
+            "type": "script",
+            "uri": "com_proclaim/location-wizard.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.csv-import",
             "type": "script",
             "uri": "com_proclaim/csv-import.min.js",

@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
@@ -191,7 +192,6 @@ class CwmlocationsModel extends ListModel
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $user  = $this->getCurrentUser();
 
         $query->select(
             $this->getState(
@@ -217,9 +217,12 @@ class CwmlocationsModel extends ListModel
             $query->where($db->qn('location.access') . ' = ' . (int) $access);
         }
 
-        // Restrict non-admin users to their authorised view levels
-        if (!$user->authorise('core.admin')) {
-            $query->whereIn($db->qn('location.access'), $user->getAuthorisedViewLevels());
+        // Apply location-based visibility filter (multi-campus support).
+        // Super admins get [] from getUserLocations() — no filter added (see all).
+        $visibleLocations = CwmlocationHelper::getUserLocations();
+
+        if (!empty($visibleLocations)) {
+            $query->whereIn($db->qn('location.id'), $visibleLocations);
         }
 
         // Filter by search in title.

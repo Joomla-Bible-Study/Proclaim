@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Site\Model;
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
@@ -664,6 +665,23 @@ class CwmsermonsModel extends ListModel
                 }
 
                 $mergedParams->set($paramKey, $value);
+            }
+        }
+
+        // Location filter mode: all | specific | user
+        $locationFilter = $mergedParams->get('location_filter', 'all');
+
+        if ($locationFilter === 'specific') {
+            $specificLocation = (int) $mergedParams->get('specific_location', -1);
+
+            if ($specificLocation > 0) {
+                $mergedParams->set('mlocations', [$specificLocation]);
+            }
+        } elseif ($locationFilter === 'user' && CwmlocationHelper::isEnabled()) {
+            $accessible = CwmlocationHelper::getUserLocations();
+
+            if (!empty($accessible)) {
+                $mergedParams->set('mlocations', $accessible);
             }
         }
 

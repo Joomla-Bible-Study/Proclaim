@@ -349,4 +349,75 @@ class Cwmhtml
 
         return $options;
     }
+
+    /**
+     * Display a batch widget for the location selector.
+     *
+     * When the location system is enabled, the dropdown is filtered to
+     * locations the current user has visibility over.
+     *
+     * @return  string  The necessary HTML for the widget.
+     *
+     * @since   10.1.0
+     */
+    public static function location(): string
+    {
+        $lines = [
+            '<label id="batch-location-lbl" for="batch-location" class="hasTip" title="' .
+            Text::_('JBS_CMN_LOCATION') . '::' . Text::_('JBS_BAT_LOCATION_DESC') . '">',
+            Text::_('JBS_CMN_LOCATION'),
+            '</label>',
+            '<select name="batch[location]" class="form-select" id="batch-location">',
+            '<option value="">' . Text::_('JBS_BAT_LOCATION_NOCHANGE') . '</option>',
+            '<option value="0">' . Text::_('JBS_BAT_LOCATION_CLEAR') . '</option>',
+            HTMLHelper::_('select.options', self::locationList(), 'value', 'text'),
+            '</select>',
+        ];
+
+        return implode("\n", $lines);
+    }
+
+    /**
+     * Return published locations as select options, filtered to accessible ones.
+     *
+     * Super admins and installations without the location system enabled see
+     * all published locations. Other users see only locations returned by
+     * CwmlocationHelper::getUserLocations().
+     *
+     * @return  array  Option objects with ->value and ->text.
+     *
+     * @since   10.1.0
+     */
+    public static function locationList(): array
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select($db->qn('id', 'value') . ', ' . $db->qn('location_text', 'text'))
+            ->from($db->qn('#__bsms_locations', 'a'))
+            ->where($db->qn('a.published') . ' = 1')
+            ->order($db->qn('a.location_text') . ' ASC');
+
+        // If location filtering is enabled, restrict to accessible locations
+        if (CwmlocationHelper::isEnabled()) {
+            $accessible = CwmlocationHelper::getUserLocations();
+
+            if (!empty($accessible)) {
+                $query->whereIn($db->qn('a.id'), $accessible);
+            }
+        }
+
+        $db->setQuery($query);
+
+        try {
+            return $db->loadObjectList() ?: [];
+        } catch (\Exception $e) {
+            try {
+                Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+            } catch (\Exception $e) {
+                return [];
+            }
+        }
+
+        return [];
+    }
 }

@@ -469,7 +469,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
         $item->state = $this->translateState($item->state, $item->series_state);
 
         // Get taxonomies to display
-        $taxonomies = $this->params->get('taxonomies', ['type', 'author', 'series', 'language', 'topic', 'scripter']);
+        $taxonomies = $this->params->get('taxonomies', ['type', 'author', 'series', 'language', 'topic', 'scripter', 'location']);
 
         // Add the type taxonomy data.
         if (\in_array('type', $taxonomies, true)) {
@@ -489,6 +489,16 @@ final class Proclaim extends Adapter implements SubscriberInterface
         // Add the series taxonomy data.
         if (!empty($item->series) && \in_array('series', $taxonomies, true)) {
             $item->addTaxonomy('Series', $item->series, $item->series_state, $item->series_access);
+        }
+
+        // Add the location taxonomy data (campus/location for multi-campus installations).
+        if (!empty($item->location_id) && $item->location_id > 0 && \in_array('location', $taxonomies, true)) {
+            $locationText = $item->location_text ?? '';
+
+            if ($locationText !== '') {
+                $item->addTaxonomy('Location', $locationText);
+                $item->body .= ' ' . $locationText;
+            }
         }
 
         // Add Topics
@@ -611,14 +621,16 @@ final class Proclaim extends Adapter implements SubscriberInterface
         $case_when_series_alias .= $s_id . ' END as seriesslug';
         $query->select($case_when_series_alias);
 
-        $query->select($db->qn('t.teachername', 'author'))
+        $query->select($db->qn('a.location_id') . ', ' . $db->qn('loc.location_text'))
+            ->select($db->qn('t.teachername', 'author'))
             ->from($db->qn('#__bsms_studies', 'a'))
             ->join('LEFT', $db->qn('#__bsms_study_teachers', 'stj') . ' ON '
                 . $db->qn('stj.study_id') . ' = ' . $db->qn('a.id')
                 . ' AND ' . $db->qn('stj.ordering') . ' = 0')
             ->join('LEFT', $db->qn('#__bsms_teachers', 't') . ' ON '
                 . $db->qn('t.id') . ' = COALESCE(' . $db->qn('stj.teacher_id') . ', ' . $db->qn('a.teacher_id') . ')')
-            ->join('LEFT', $db->qn('#__bsms_series', 's') . ' ON ' . $db->qn('s.id') . ' = ' . $db->qn('a.series_id'));
+            ->join('LEFT', $db->qn('#__bsms_series', 's') . ' ON ' . $db->qn('s.id') . ' = ' . $db->qn('a.series_id'))
+            ->join('LEFT', $db->qn('#__bsms_locations', 'loc') . ' ON ' . $db->qn('loc.id') . ' = ' . $db->qn('a.location_id'));
 
         return $query;
     }

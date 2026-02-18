@@ -90,10 +90,10 @@ class CWMAddonResi extends CWMAddon
                     // VOD with video ID
                     $videoId = $matches[2];
                     return '//player.resi.io/' . $accountId . '/' . $videoId;
-                } else {
-                    // Live stream with only account ID
-                    return '//player.resi.io/' . $accountId;
                 }
+                // Live stream with only account ID
+                return '//player.resi.io/' . $accountId;
+
             }
         }
 
@@ -214,20 +214,20 @@ class CWMAddonResi extends CWMAddon
      */
     protected function handleTestApiAction(): array
     {
-        $app = Factory::getApplication();
-        $input = $app->getInput();
+        $app      = Factory::getApplication();
+        $input    = $app->getInput();
         $serverId = $input->getInt('server_id', 0);
 
         if (!$serverId) {
             return [
                 'success' => false,
-                'error' => Text::_('JBS_ADDON_RESI_NO_SERVER_ID'),
+                'error'   => Text::_('JBS_ADDON_RESI_NO_SERVER_ID'),
             ];
         }
 
         // Load server params
         try {
-            $db = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true)
                 ->select($db->quoteName('params'))
                 ->from($db->quoteName('#__bsms_servers'))
@@ -238,17 +238,17 @@ class CWMAddonResi extends CWMAddon
             if (!$paramsJson) {
                 return [
                     'success' => false,
-                    'error' => Text::_('JBS_ADDON_RESI_SERVER_NOT_FOUND'),
+                    'error'   => Text::_('JBS_ADDON_RESI_SERVER_NOT_FOUND'),
                 ];
             }
 
-            $params = json_decode($paramsJson, true);
+            $params    = json_decode($paramsJson, true);
             $accountId = $params['account_id'] ?? '';
 
             if (empty($accountId)) {
                 return [
                     'success' => false,
-                    'error' => Text::_('JBS_ADDON_RESI_NO_ACCOUNT_ID'),
+                    'error'   => Text::_('JBS_ADDON_RESI_NO_ACCOUNT_ID'),
                 ];
             }
 
@@ -256,14 +256,14 @@ class CWMAddonResi extends CWMAddon
             $testUrl = 'https://player.resi.io/' . $accountId;
 
             return [
-                'success' => true,
-                'message' => Text::sprintf('JBS_ADDON_RESI_CONNECTION_SUCCESS', $accountId),
+                'success'  => true,
+                'message'  => Text::sprintf('JBS_ADDON_RESI_CONNECTION_SUCCESS', $accountId),
                 'test_url' => $testUrl,
             ];
         } catch (\Exception $e) {
             return [
                 'success' => false,
-                'error' => $e->getMessage(),
+                'error'   => $e->getMessage(),
             ];
         }
     }

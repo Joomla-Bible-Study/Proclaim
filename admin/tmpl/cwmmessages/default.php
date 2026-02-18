@@ -14,6 +14,7 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Button\PublishedButton;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
@@ -75,14 +76,31 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                 <?php
                 echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
                 <?php
-                if (empty($this->items)) : ?>
+                if (empty($this->items)) :
+                    // Show location-aware empty state when system is enabled and user has no locations
+                    $locationEnabled  = CwmlocationHelper::isEnabled();
+                    $user             = Factory::getApplication()->getIdentity();
+                    $isAdmin          = $user->authorise('core.admin');
+                    $userLocations    = $locationEnabled && !$isAdmin ? CwmlocationHelper::getUserLocations() : null;
+                    $noAccessState    = $locationEnabled && !$isAdmin && $userLocations !== null && empty($userLocations);
+                ?>
+                    <?php if ($noAccessState): ?>
+                    <div class="alert alert-warning">
+                        <span class="icon-warning-circle" aria-hidden="true"></span>
+                        <strong><?php echo Text::_('JBS_MSG_EMPTY_NO_LOCATIONS_TITLE'); ?></strong>
+                        <p class="mb-1"><?php echo Text::_('JBS_MSG_EMPTY_NO_LOCATIONS_DESC'); ?></p>
+                        <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmlocations'); ?>"
+                           class="alert-link">
+                            <?php echo Text::_('JBS_MSG_EMPTY_NO_LOCATIONS_LINK'); ?>
+                        </a>
+                    </div>
+                    <?php else: ?>
                     <div class="alert alert-info">
                         <span class="icon-info-circle" aria-hidden="true"></span><span
-                                class="visually-hidden"><?php
-                            echo Text::_('INFO'); ?></span>
-                        <?php
-                        echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+                                class="visually-hidden"><?php echo Text::_('INFO'); ?></span>
+                        <?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                     </div>
+                    <?php endif; ?>
                 <?php else : ?>
                     <table class="table" id="messagesList">
                         <caption class="visually-hidden">

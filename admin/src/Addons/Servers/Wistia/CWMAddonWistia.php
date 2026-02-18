@@ -142,16 +142,16 @@ class CWMAddonWistia extends CWMAddon
     {
         try {
             $videoUrl = 'https://home.wistia.com/medias/' . $mediaHash;
-            $url = 'https://fast.wistia.com/oembed?url=' . urlencode($videoUrl);
-            $http = Factory::getApplication()->getHttpFactory()->getHttp();
+            $url      = 'https://fast.wistia.com/oembed?url=' . urlencode($videoUrl);
+            $http     = Factory::getApplication()->getHttpFactory()->getHttp();
             $response = $http->get($url);
 
             if ($response->code !== 200) {
                 return [
-                    'title' => '',
+                    'title'       => '',
                     'description' => '',
-                    'thumbnail' => '',
-                    'duration' => 0,
+                    'thumbnail'   => '',
+                    'duration'    => 0,
                 ];
             }
 
@@ -159,28 +159,28 @@ class CWMAddonWistia extends CWMAddon
 
             if (!$data) {
                 return [
-                    'title' => '',
+                    'title'       => '',
                     'description' => '',
-                    'thumbnail' => '',
-                    'duration' => 0,
+                    'thumbnail'   => '',
+                    'duration'    => 0,
                 ];
             }
 
             return [
-                'title' => $data['title'] ?? '',
+                'title'       => $data['title'] ?? '',
                 'description' => $data['description'] ?? '',
-                'thumbnail' => $data['thumbnail_url'] ?? '',
-                'duration' => $data['duration'] ?? 0,
-                'author' => $data['author_name'] ?? '',
-                'width' => $data['width'] ?? 0,
-                'height' => $data['height'] ?? 0,
+                'thumbnail'   => $data['thumbnail_url'] ?? '',
+                'duration'    => $data['duration'] ?? 0,
+                'author'      => $data['author_name'] ?? '',
+                'width'       => $data['width'] ?? 0,
+                'height'      => $data['height'] ?? 0,
             ];
         } catch (\Exception $e) {
             return [
-                'title' => '',
+                'title'       => '',
                 'description' => '',
-                'thumbnail' => '',
-                'duration' => 0,
+                'thumbnail'   => '',
+                'duration'    => 0,
             ];
         }
     }
@@ -211,20 +211,20 @@ class CWMAddonWistia extends CWMAddon
      */
     protected function handleTestApiAction(): array
     {
-        $app = Factory::getApplication();
-        $input = $app->getInput();
+        $app      = Factory::getApplication();
+        $input    = $app->getInput();
         $serverId = $input->getInt('server_id', 0);
 
         if (!$serverId) {
             return [
                 'success' => false,
-                'error' => Text::_('JBS_ADDON_WISTIA_NO_SERVER_ID'),
+                'error'   => Text::_('JBS_ADDON_WISTIA_NO_SERVER_ID'),
             ];
         }
 
         // Load server params
         try {
-            $db = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true)
                 ->select($db->quoteName('params'))
                 ->from($db->quoteName('#__bsms_servers'))
@@ -235,22 +235,22 @@ class CWMAddonWistia extends CWMAddon
             if (!$paramsJson) {
                 return [
                     'success' => false,
-                    'error' => Text::_('JBS_ADDON_WISTIA_SERVER_NOT_FOUND'),
+                    'error'   => Text::_('JBS_ADDON_WISTIA_SERVER_NOT_FOUND'),
                 ];
             }
 
-            $params = json_decode($paramsJson, true);
+            $params   = json_decode($paramsJson, true);
             $apiToken = $params['api_token'] ?? '';
 
             if (empty($apiToken)) {
                 return [
                     'success' => false,
-                    'error' => Text::_('JBS_ADDON_WISTIA_NO_API_TOKEN'),
+                    'error'   => Text::_('JBS_ADDON_WISTIA_NO_API_TOKEN'),
                 ];
             }
 
             // Test API connection by getting account info
-            $http = $app->getHttpFactory()->getHttp();
+            $http    = $app->getHttpFactory()->getHttp();
             $headers = [
                 'Authorization' => 'Bearer ' . $apiToken,
             ];
@@ -260,7 +260,7 @@ class CWMAddonWistia extends CWMAddon
             if ($response->code !== 200) {
                 return [
                     'success' => false,
-                    'error' => Text::sprintf('JBS_ADDON_WISTIA_API_ERROR', $response->code),
+                    'error'   => Text::sprintf('JBS_ADDON_WISTIA_API_ERROR', $response->code),
                 ];
             }
 
@@ -273,7 +273,7 @@ class CWMAddonWistia extends CWMAddon
         } catch (\Exception $e) {
             return [
                 'success' => false,
-                'error' => $e->getMessage(),
+                'error'   => $e->getMessage(),
             ];
         }
     }
@@ -289,14 +289,14 @@ class CWMAddonWistia extends CWMAddon
      */
     protected function handleGetMetadataAction(): array
     {
-        $app = Factory::getApplication();
-        $input = $app->getInput();
+        $app       = Factory::getApplication();
+        $input     = $app->getInput();
         $mediaHash = $input->getString('media_hash', '');
 
         if (empty($mediaHash)) {
             return [
                 'success' => false,
-                'error' => Text::_('JBS_ADDON_WISTIA_NO_MEDIA_HASH'),
+                'error'   => Text::_('JBS_ADDON_WISTIA_NO_MEDIA_HASH'),
             ];
         }
 
@@ -304,13 +304,13 @@ class CWMAddonWistia extends CWMAddon
             $metadata = $this->getVideoMetadata($mediaHash);
 
             return [
-                'success' => true,
+                'success'  => true,
                 'metadata' => $metadata,
             ];
         } catch (\Exception $e) {
             return [
                 'success' => false,
-                'error' => $e->getMessage(),
+                'error'   => $e->getMessage(),
             ];
         }
     }

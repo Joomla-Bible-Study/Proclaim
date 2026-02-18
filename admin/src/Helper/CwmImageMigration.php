@@ -1804,8 +1804,12 @@ class CwmImageMigration
      *
      * @since 10.1.0
      */
-    public static function regenerateThumbnails(string $type = 'studies', int $limit = 10, int $offset = 0): array
-    {
+    public static function regenerateThumbnails(
+        string $type = 'studies',
+        int $limit = 10,
+        int $offset = 0,
+        int $sizeOverride = 0
+    ): array {
         $cfg = self::REGEN_TYPE_CONFIG[$type] ?? null;
 
         if ($cfg === null) {
@@ -1814,7 +1818,7 @@ class CwmImageMigration
 
         $db     = Factory::getContainer()->get('DatabaseDriver');
         $params = Cwmparams::getAdmin()->params;
-        $size   = (int) $params->get($cfg['sizeParam'], $cfg['sizeDefault']);
+        $size   = $sizeOverride > 0 ? $sizeOverride : (int) $params->get($cfg['sizeParam'], $cfg['sizeDefault']);
         $result = ['processed' => 0, 'errors' => 0, 'remaining' => 0, 'errorDetails' => []];
 
         // Build column list to select
