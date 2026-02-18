@@ -174,7 +174,6 @@ class LocationGroupMappingField extends FormField
      *
      * @since   10.1.0
      */
-    #[\Override]
     public function getValue(): string
     {
         return \is_string($this->value) ? $this->value : json_encode($this->value ?? new \stdClass());

@@ -535,17 +535,17 @@ class Cwmmedia
                                 $player->playerheight . '" src="' . $youtube->convertYoutube($path) .
                                 '" allow="autoplay; encrypted-media" allowfullscreen style="border: none"></iframe>';
                         } elseif (preg_match('/(vimeo.com)/', $path) === 1) {
-                            $vimeo = new CWMAddonVimeo();
+                            $vimeo      = new CWMAddonVimeo();
                             $playercode = '<iframe class="playhit" data-id="' . $media->id . '" src="' . $vimeo->convertVimeo($path) .
                                 '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
                                 '" webkitallowfullscreen mozallowfullscreen allowfullscreen style="border: none"></iframe>';
                         } elseif (preg_match('/(wistia.com|wistia.net)/', $path) === 1) {
-                            $wistia = new CWMAddonWistia();
+                            $wistia     = new CWMAddonWistia();
                             $playercode = '<iframe class="playhit" data-id="' . $media->id . '" src="' . $wistia->convertWistia($path) .
                                 '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
                                 '" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" style="border: none"></iframe>';
                         } elseif (preg_match('/(resi.io)/', $path) === 1) {
-                            $resi = new CWMAddonResi();
+                            $resi       = new CWMAddonResi();
                             $playercode = '<iframe class="playhit" data-id="' . $media->id . '" src="' . $resi->convertResi($path) .
                                 '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
                                 '" allow="autoplay; fullscreen" allowfullscreen style="border: none"></iframe>';
