@@ -473,7 +473,10 @@ class CwmanalyticsModel extends BaseDatabaseModel
     /**
      * Seed the monthly aggregates table with legacy hit counts from existing study/media records.
      *
-     * Safe to run multiple times — uses ON DUPLICATE KEY UPDATE so counts are not double-added.
+     * Safe to run multiple times. Because the unique index includes nullable columns and MySQL
+     * treats NULL != NULL in unique indexes (preventing ON DUPLICATE KEY UPDATE from firing),
+     * this method first removes any previously seeded rows — identified by device_type IS NULL,
+     * which real event rollup rows never have — then re-inserts current counts from scratch.
      *
      * @return  array{studies: int, media: int}
      *
@@ -484,12 +487,22 @@ class CwmanalyticsModel extends BaseDatabaseModel
         $result = ['studies' => 0, 'media' => 0];
 
         try {
-            $db      = $this->getDatabase();
-            $cols    = implode(',', array_map([$db, 'quoteName'], [
+            $db   = $this->getDatabase();
+            $cols = implode(',', array_map([$db, 'quoteName'], [
                 'study_id', 'media_id', 'location_id', 'event_type',
                 'referrer_type', 'country_code', 'device_type', 'year', 'month', 'count',
             ]));
-            $dupeKey = ' ON DUPLICATE KEY UPDATE ' . $db->quoteName('count') . ' = VALUES(' . $db->quoteName('count') . ')';
+
+            // Remove previously seeded rows before re-inserting fresh counts.
+            // Seed rows are identified by device_type IS NULL — real rollup rows always
+            // have device_type set by the UA classifier (never NULL).
+            $db->setQuery(
+                'DELETE FROM ' . $db->quoteName('#__bsms_analytics_monthly') .
+                ' WHERE ' . $db->quoteName('device_type') . ' IS NULL' .
+                ' AND ' . $db->quoteName('referrer_type') . ' IS NULL' .
+                ' AND ' . $db->quoteName('country_code') . ' IS NULL'
+            );
+            $db->execute();
 
             // Seed study page-views from #__bsms_studies.hits
             $dateExpr = 'COALESCE(NULLIF(' . $db->quoteName('studydate') . ', ' . $db->quote('0000-00-00') . '),'
@@ -502,8 +515,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 . ' YEAR(' . $dateExpr . '), MONTH(' . $dateExpr . '),'
                 . ' ' . $db->quoteName('hits')
                 . ' FROM ' . $db->quoteName('#__bsms_studies')
-                . ' WHERE ' . $db->quoteName('hits') . ' > 0'
-                . $dupeKey;
+                . ' WHERE ' . $db->quoteName('hits') . ' > 0';
 
             $db->setQuery($sql);
             $db->execute();
@@ -521,8 +533,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 . ' FROM ' . $db->quoteName('#__bsms_mediafiles', 'm')
                 . ' LEFT JOIN ' . $db->quoteName('#__bsms_studies', 's')
                 . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('m.study_id')
-                . ' WHERE ' . $db->quoteName('m.downloads') . ' > 0'
-                . $dupeKey;
+                . ' WHERE ' . $db->quoteName('m.downloads') . ' > 0';
 
             $db->setQuery($sqlDl);
             $db->execute();
@@ -538,8 +549,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 . ' FROM ' . $db->quoteName('#__bsms_mediafiles', 'm')
                 . ' LEFT JOIN ' . $db->quoteName('#__bsms_studies', 's')
                 . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('m.study_id')
-                . ' WHERE ' . $db->quoteName('m.plays') . ' > 0'
-                . $dupeKey;
+                . ' WHERE ' . $db->quoteName('m.plays') . ' > 0';
 
             $db->setQuery($sqlPl);
             $db->execute();
