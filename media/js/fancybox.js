@@ -19,13 +19,24 @@
      * @param {number|string} mediaId  The media file ID to record
      */
     var proclaimTrackedIds = {};
+
+    // Resolve the site root from Joomla's <base href> so the AJAX URL is always
+    // root-relative, even on multilingual sites where pages live under /en/, /es/, etc.
+    // Falls back to '/' if no <base> tag is present (non-multilingual installs).
+    var proclaimBaseUrl = (function () {
+        var base = document.querySelector('base');
+        if (!base) { return '/'; }
+        var href = base.href; // absolute URL, e.g. "https://example.com/"
+        return href.charAt(href.length - 1) === '/' ? href : href + '/';
+    }());
+
     function proclaimTrackPlay(mediaId) {
         if (!mediaId || proclaimTrackedIds[mediaId]) {
             return;
         }
         proclaimTrackedIds[mediaId] = true;
 
-        var url = 'index.php?option=com_proclaim&task=Cwmsermons.playHitAjax&id=' + encodeURIComponent(mediaId) + '&tmpl=component';
+        var url = proclaimBaseUrl + 'index.php?option=com_proclaim&task=Cwmsermons.playHitAjax&id=' + encodeURIComponent(mediaId) + '&tmpl=component';
         if (typeof fetch !== 'undefined') {
             fetch(url, { method: 'GET', credentials: 'same-origin' }).catch(function () {});
         } else {
