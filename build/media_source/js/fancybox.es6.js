@@ -34,10 +34,30 @@ function proclaimTrackPlay(mediaId) {
 }
 
 /**
+ * Attach a YT.Player wrapper to an iframe and track PLAYING events.
+ * @param {HTMLIFrameElement} iframe
+ * @param {string} mediaId
+ */
+function proclaimInitYTPlayer(iframe, mediaId) {
+    new YT.Player(iframe, {
+        events: {
+            onStateChange: function (event) {
+                if (event.data === YT.PlayerState.PLAYING) {
+                    proclaimTrackPlay(mediaId);
+                }
+            }
+        }
+    });
+}
+
+/**
  * YouTube IFrame API callback — fires once the API script has loaded.
  * Creates YT.Player wrappers on each inline YouTube iframe so we can
  * detect the PLAYING state and log the analytics event.
  * (Cross-origin security prevents detecting clicks inside the iframe itself.)
+ *
+ * Handles both new renders (src already has enablejsapi=1) and cached
+ * renders (src missing enablejsapi=1 — iframe is reloaded with it added).
  */
 window.onYouTubeIframeAPIReady = function () {
     document.querySelectorAll('iframe.playhit, iframe.hitplay').forEach(function (iframe) {
@@ -50,17 +70,18 @@ window.onYouTubeIframeAPIReady = function () {
             return;
         }
 
-        // YT.Player wraps the existing iframe in-place.
-        // enablejsapi=1 is required in the src (added server-side by convertYoutube()).
-        new YT.Player(iframe, {
-            events: {
-                onStateChange: function (event) {
-                    if (event.data === YT.PlayerState.PLAYING) {
-                        proclaimTrackPlay(mediaId);
-                    }
-                }
-            }
-        });
+        // If the iframe was served from cache without enablejsapi=1, add it now.
+        // This reloads the iframe, so we wait for the load event before wrapping.
+        if (iframe.src.indexOf('enablejsapi=1') === -1) {
+            var sep = iframe.src.indexOf('?') >= 0 ? '&' : '?';
+            iframe.addEventListener('load', function () {
+                proclaimInitYTPlayer(iframe, mediaId);
+            }, { once: true });
+            iframe.src = iframe.src + sep + 'enablejsapi=1';
+            return;
+        }
+
+        proclaimInitYTPlayer(iframe, mediaId);
     });
 };
 

@@ -9,7 +9,7 @@
      * @license     GNU General Public License version 2 or later; see LICENSE.txt
      */
     /* jshint esversion: 11, browser: true */
-    /* globals Fancybox */
+    /* globals Fancybox, YT */
 
 
     /**
@@ -35,8 +35,68 @@
         }
     }
 
+    /**
+     * Attach a YT.Player wrapper to an iframe and track PLAYING events.
+     * @param {HTMLIFrameElement} iframe
+     * @param {string} mediaId
+     */
+    function proclaimInitYTPlayer(iframe, mediaId) {
+        new YT.Player(iframe, {
+            events: {
+                onStateChange: function (event) {
+                    if (event.data === YT.PlayerState.PLAYING) {
+                        proclaimTrackPlay(mediaId);
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * YouTube IFrame API callback — fires once the API script has loaded.
+     * Creates YT.Player wrappers on each inline YouTube iframe so we can
+     * detect the PLAYING state and log the analytics event.
+     * (Cross-origin security prevents detecting clicks inside the iframe itself.)
+     *
+     * Handles both new renders (src already has enablejsapi=1) and cached
+     * renders (src missing enablejsapi=1 — iframe is reloaded with it added).
+     */
+    window.onYouTubeIframeAPIReady = function () {
+        document.querySelectorAll('iframe.playhit, iframe.hitplay').forEach(function (iframe) {
+            if (!/(youtube\.com\/embed)/.test(iframe.src)) {
+                return;
+            }
+
+            var mediaId = iframe.getAttribute('data-id');
+            if (!mediaId) {
+                return;
+            }
+
+            // If the iframe was served from cache without enablejsapi=1, add it now.
+            // This reloads the iframe, so we wait for the load event before wrapping.
+            if (iframe.src.indexOf('enablejsapi=1') === -1) {
+                var sep = iframe.src.indexOf('?') >= 0 ? '&' : '?';
+                iframe.addEventListener('load', function () {
+                    proclaimInitYTPlayer(iframe, mediaId);
+                }, { once: true });
+                iframe.src = iframe.src + sep + 'enablejsapi=1';
+                return;
+            }
+
+            proclaimInitYTPlayer(iframe, mediaId);
+        });
+    };
+
     document.addEventListener("DOMContentLoaded", function () {
-        // Track clicks on any element with playhit or hitplay class (inline iframes, popup links, VirtueMart links, etc.)
+        // Load the YouTube IFrame API if any inline YouTube iframes are present.
+        // This is deferred so it doesn't block page render.
+        if (document.querySelector('iframe.playhit[src*="youtube.com"], iframe.hitplay[src*="youtube.com"]')) {
+            var ytScript = document.createElement('script');
+            ytScript.src = 'https://www.youtube.com/iframe_api';
+            document.head.appendChild(ytScript);
+        }
+
+        // Track clicks/plays on any element with playhit or hitplay class.
         document.querySelectorAll('.playhit, .hitplay').forEach(function (element) {
             // Skip fancybox_player elements — they are tracked separately below
             if (element.classList.contains('fancybox_player')) {
@@ -57,7 +117,12 @@
                 return;
             }
 
-            // For links, iframes, and other clickable elements, track on click
+            // YouTube iframes are tracked via IFrame API (onYouTubeIframeAPIReady above).
+            // Vimeo/Resi/Wistia inline iframes: track on border click (best we can without their SDKs).
+            if (element.tagName === 'IFRAME' && /(youtube\.com\/embed)/.test(element.src)) {
+                return;
+            }
+
             element.addEventListener('click', function () {
                 proclaimTrackPlay(mediaId);
             });
@@ -184,6 +249,12 @@
                 }
                 audio.innerHTML = '<source src="' + audioSrc + '" type="audio/mpeg">';
                 wrapper.appendChild(audio);
+
+                // Track when the audio actually starts playing (belt-and-suspenders alongside click tracking above).
+                // Deduplication in proclaimTrackPlay ensures only one event per page load per media ID.
+                audio.addEventListener('play', function () {
+                    proclaimTrackPlay(mediaId);
+                });
 
                 // Error handler
                 audio.addEventListener('error', function () {
