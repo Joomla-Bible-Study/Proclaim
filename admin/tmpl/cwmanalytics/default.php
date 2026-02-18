@@ -1,0 +1,329 @@
+<?php
+
+/**
+ * Analytics Dashboard Template
+ *
+ * @package    Proclaim.Admin
+ * @copyright  (C) 2026 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @link       https://www.christianwebministries.org
+ */
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+
+// phpcs:enable PSR1.Files.SideEffects
+
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
+
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmanalytics\HtmlView $this */
+
+$presets  = ['7d' => 'JBS_ANA_LAST_7_DAYS', '30d' => 'JBS_ANA_LAST_30_DAYS', '90d' => 'JBS_ANA_LAST_90_DAYS', '1y' => 'JBS_ANA_LAST_YEAR'];
+$baseUrl  = 'index.php?option=com_proclaim&view=cwmanalytics';
+$token    = '&' . Session::getFormToken() . '=1';
+
+// Prepare time-series JSON for Chart.js
+$labels         = [];
+$viewsData      = [];
+$playsData      = [];
+$downloadsData  = [];
+
+foreach ($this->timeSeries as $row) {
+    $labels[]       = htmlspecialchars($row['period'] ?? '', ENT_QUOTES);
+    $viewsData[]    = (int) ($row['views'] ?? 0);
+    $playsData[]    = (int) ($row['plays'] ?? 0);
+    $downloadsData[] = (int) ($row['downloads'] ?? 0);
+}
+
+$timeSeriesJson = json_encode([
+    'labels'   => $labels,
+    'datasets' => [
+        ['label' => Text::_('JBS_ANA_VIEWS'), 'data' => $viewsData, 'key' => 'views'],
+        ['label' => Text::_('JBS_ANA_PLAYS'), 'data' => $playsData, 'key' => 'plays'],
+        ['label' => Text::_('JBS_ANA_DOWNLOADS'), 'data' => $downloadsData, 'key' => 'downloads'],
+    ],
+], JSON_THROW_ON_ERROR);
+
+// Referrer doughnut
+$refLabels = [];
+$refCounts = [];
+
+foreach ($this->referrerBreakdown as $row) {
+    $refLabels[] = Text::_('JBS_ANA_REF_' . strtoupper((string) ($row['referrer_type'] ?? 'other')));
+    $refCounts[] = (int) ($row['count'] ?? 0);
+}
+
+$referrerJson = json_encode(['labels' => $refLabels, 'data' => $refCounts], JSON_THROW_ON_ERROR);
+
+// Device doughnut
+$devLabels = [];
+$devCounts = [];
+
+foreach ($this->deviceBreakdown as $row) {
+    $devLabels[] = Text::_('JBS_ANA_DEV_' . strtoupper((string) ($row['device_type'] ?? 'unknown')));
+    $devCounts[] = (int) ($row['count'] ?? 0);
+}
+
+$deviceJson = json_encode(['labels' => $devLabels, 'data' => $devCounts], JSON_THROW_ON_ERROR);
+
+// Top studies bar chart
+$studyLabels = [];
+$studyTotals = [];
+
+foreach ($this->topStudies as $row) {
+    $title         = htmlspecialchars(substr((string) ($row['title'] ?? 'ID #' . $row['study_id']), 0, 40), ENT_QUOTES);
+    $studyLabels[] = $title;
+    $studyTotals[] = (int) ($row['total'] ?? 0);
+}
+
+$topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals], JSON_THROW_ON_ERROR);
+?>
+<div class="container-fluid p-3">
+
+    <!-- Filter bar -->
+    <div class="card mb-3">
+        <div class="card-body py-2">
+            <form method="get" class="d-flex flex-wrap align-items-center gap-2">
+                <input type="hidden" name="option" value="com_proclaim">
+                <input type="hidden" name="view" value="cwmanalytics">
+                <input type="hidden" name="preset" id="cwm-ana-preset-input" value="custom">
+
+                <!-- Preset buttons -->
+                <div class="btn-group btn-group-sm" role="group" aria-label="<?php echo Text::_('JBS_ANA_DATE_PRESET'); ?>">
+                    <?php foreach ($presets as $key => $label) : ?>
+                        <a href="<?php echo Route::_($baseUrl . '&preset=' . $key . '&location_id=' . $this->locationId); ?>"
+                           class="btn btn-outline-secondary<?php echo $key === '30d' ? ' active' : ''; ?>">
+                            <?php echo Text::_($label); ?>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Custom date range -->
+                <label class="ms-2 me-1 fw-semibold small"><?php echo Text::_('JBS_ANA_FROM'); ?></label>
+                <input type="date" name="date_start" class="form-control form-control-sm" style="width:140px"
+                       value="<?php echo htmlspecialchars($this->dateStart, ENT_QUOTES); ?>">
+                <label class="me-1 fw-semibold small"><?php echo Text::_('JBS_ANA_TO'); ?></label>
+                <input type="date" name="date_end" class="form-control form-control-sm" style="width:140px"
+                       value="<?php echo htmlspecialchars($this->dateEnd, ENT_QUOTES); ?>">
+
+                <!-- Campus filter (super-admin only) -->
+                <?php if ($this->isSuperAdmin && !empty($this->locations)) : ?>
+                    <label class="ms-2 me-1 fw-semibold small"><?php echo Text::_('JBS_ANA_CAMPUS'); ?></label>
+                    <select name="location_id" class="form-select form-select-sm" style="width:160px">
+                        <option value="0"><?php echo Text::_('JBS_ANA_ALL_CAMPUSES'); ?></option>
+                        <?php foreach ($this->locations as $loc) : ?>
+                            <option value="<?php echo (int) $loc->id; ?>"
+                                <?php echo $this->locationId === (int) $loc->id ? ' selected' : ''; ?>>
+                                <?php echo htmlspecialchars($loc->name, ENT_QUOTES); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                <?php endif; ?>
+
+                <button type="submit" class="btn btn-sm btn-primary">
+                    <i class="icon-search me-1" aria-hidden="true"></i><?php echo Text::_('JSEARCH_FILTER_SUBMIT'); ?>
+                </button>
+
+                <a href="<?php echo htmlspecialchars($this->exportUrl . $token, ENT_QUOTES); ?>"
+                   class="btn btn-sm btn-outline-success ms-auto">
+                    <i class="icon-download me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_EXPORT_CSV'); ?>
+                </a>
+            </form>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="row g-3 mb-3">
+        <?php
+        $kpiCards = [
+            ['icon' => 'icon-eye', 'label' => 'JBS_ANA_TOTAL_VIEWS', 'value' => $this->kpi['views'], 'class' => 'text-primary'],
+            ['icon' => 'icon-play', 'label' => 'JBS_ANA_TOTAL_PLAYS', 'value' => $this->kpi['plays'], 'class' => 'text-success'],
+            ['icon' => 'icon-download', 'label' => 'JBS_ANA_TOTAL_DOWNLOADS', 'value' => $this->kpi['downloads'], 'class' => 'text-warning'],
+            ['icon' => 'icon-user', 'label' => 'JBS_ANA_UNIQUE_SESSIONS', 'value' => $this->kpi['sessions'], 'class' => 'text-info'],
+        ];
+        ?>
+        <?php foreach ($kpiCards as $card) : ?>
+            <div class="col-6 col-md-3">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <i class="<?php echo $card['icon']; ?> fa-2x <?php echo $card['class']; ?> mb-2" aria-hidden="true"></i>
+                        <div class="fw-bold fs-4 <?php echo $card['class']; ?>"><?php echo number_format($card['value']); ?></div>
+                        <div class="text-muted small"><?php echo Text::_($card['label']); ?></div>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- Line Chart: Views / Plays / Downloads over time -->
+    <div class="card mb-3">
+        <div class="card-header fw-semibold">
+            <i class="icon-chart-line me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_ENGAGEMENT_OVER_TIME'); ?>
+        </div>
+        <div class="card-body">
+            <canvas id="cwm-chart-timeseries" height="80"
+                    data-cwm-chart="line"
+                    data-cwm-chart-data="<?php echo htmlspecialchars($timeSeriesJson, ENT_QUOTES); ?>">
+            </canvas>
+        </div>
+    </div>
+
+    <!-- Bar Chart: Top 10 sermons -->
+    <?php if (!empty($this->topStudies)) : ?>
+    <div class="card mb-3">
+        <div class="card-header fw-semibold">
+            <i class="icon-star me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_TOP_SERMONS'); ?>
+        </div>
+        <div class="card-body">
+            <canvas id="cwm-chart-topstudies" height="80"
+                    data-cwm-chart="bar"
+                    data-cwm-chart-data="<?php echo htmlspecialchars($topStudiesJson, ENT_QUOTES); ?>">
+            </canvas>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Doughnut Charts Row -->
+    <div class="row g-3 mb-3">
+        <div class="col-12 col-md-6">
+            <div class="card h-100">
+                <div class="card-header fw-semibold">
+                    <i class="icon-share me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_TRAFFIC_SOURCES'); ?>
+                </div>
+                <div class="card-body d-flex justify-content-center">
+                    <?php if (!empty($this->referrerBreakdown)) : ?>
+                        <canvas id="cwm-chart-referrer" style="max-height:260px"
+                                data-cwm-chart="doughnut"
+                                data-cwm-chart-data="<?php echo htmlspecialchars($referrerJson, ENT_QUOTES); ?>">
+                        </canvas>
+                    <?php else : ?>
+                        <p class="text-muted my-auto"><?php echo Text::_('JBS_ANA_NO_DATA'); ?></p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="card h-100">
+                <div class="card-header fw-semibold">
+                    <i class="icon-laptop me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_DEVICE_BREAKDOWN'); ?>
+                </div>
+                <div class="card-body d-flex justify-content-center">
+                    <?php if (!empty($this->deviceBreakdown)) : ?>
+                        <canvas id="cwm-chart-device" style="max-height:260px"
+                                data-cwm-chart="doughnut"
+                                data-cwm-chart-data="<?php echo htmlspecialchars($deviceJson, ENT_QUOTES); ?>">
+                        </canvas>
+                    <?php else : ?>
+                        <p class="text-muted my-auto"><?php echo Text::_('JBS_ANA_NO_DATA'); ?></p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Browser + OS + Language Tables Row -->
+    <div class="row g-3 mb-3">
+        <?php if (!empty($this->browserBreakdown)) : ?>
+        <div class="col-12 col-md-4">
+            <div class="card h-100">
+                <div class="card-header fw-semibold"><?php echo Text::_('JBS_ANA_BROWSERS'); ?></div>
+                <div class="card-body p-0">
+                    <table class="table table-sm table-hover mb-0">
+                        <thead><tr><th><?php echo Text::_('JBS_ANA_BROWSER'); ?></th><th class="text-end"><?php echo Text::_('JBS_ANA_COUNT'); ?></th></tr></thead>
+                        <tbody>
+                        <?php foreach ($this->browserBreakdown as $row) : ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars((string) ($row['browser'] ?? 'other'), ENT_QUOTES); ?></td>
+                                <td class="text-end"><?php echo number_format((int) ($row['count'] ?? 0)); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($this->osBreakdown)) : ?>
+        <div class="col-12 col-md-4">
+            <div class="card h-100">
+                <div class="card-header fw-semibold"><?php echo Text::_('JBS_ANA_OS'); ?></div>
+                <div class="card-body p-0">
+                    <table class="table table-sm table-hover mb-0">
+                        <thead><tr><th><?php echo Text::_('JBS_ANA_OPERATING_SYSTEM'); ?></th><th class="text-end"><?php echo Text::_('JBS_ANA_COUNT'); ?></th></tr></thead>
+                        <tbody>
+                        <?php foreach ($this->osBreakdown as $row) : ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars((string) ($row['os'] ?? 'other'), ENT_QUOTES); ?></td>
+                                <td class="text-end"><?php echo number_format((int) ($row['count'] ?? 0)); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($this->languageBreakdown)) : ?>
+        <div class="col-12 col-md-4">
+            <div class="card h-100">
+                <div class="card-header fw-semibold"><?php echo Text::_('JBS_ANA_LANGUAGES'); ?></div>
+                <div class="card-body p-0">
+                    <table class="table table-sm table-hover mb-0">
+                        <thead><tr><th><?php echo Text::_('JBS_ANA_LANGUAGE'); ?></th><th class="text-end"><?php echo Text::_('JBS_ANA_COUNT'); ?></th></tr></thead>
+                        <tbody>
+                        <?php foreach ($this->languageBreakdown as $row) : ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars((string) ($row['language'] ?? ''), ENT_QUOTES); ?></td>
+                                <td class="text-end"><?php echo number_format((int) ($row['count'] ?? 0)); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- UTM Campaigns Table -->
+    <?php if (!empty($this->utmBreakdown)) : ?>
+    <div class="card mb-3">
+        <div class="card-header fw-semibold">
+            <i class="icon-tag me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_UTM_CAMPAIGNS'); ?>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-sm table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th><?php echo Text::_('JBS_ANA_UTM_SOURCE'); ?></th>
+                        <th><?php echo Text::_('JBS_ANA_UTM_MEDIUM'); ?></th>
+                        <th><?php echo Text::_('JBS_ANA_UTM_CAMPAIGN'); ?></th>
+                        <th class="text-end"><?php echo Text::_('JBS_ANA_COUNT'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($this->utmBreakdown as $row) : ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars((string) ($row['utm_source'] ?? ''), ENT_QUOTES); ?></td>
+                        <td><?php echo htmlspecialchars((string) ($row['utm_medium'] ?? ''), ENT_QUOTES); ?></td>
+                        <td><?php echo htmlspecialchars((string) ($row['utm_campaign'] ?? ''), ENT_QUOTES); ?></td>
+                        <td class="text-end"><?php echo number_format((int) ($row['count'] ?? 0)); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- GDPR notice -->
+    <p class="text-muted small mt-3">
+        <i class="icon-lock me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_GDPR_NOTICE'); ?>
+    </p>
+
+</div>

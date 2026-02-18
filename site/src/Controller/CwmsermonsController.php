@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Site\Controller;
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmdownload;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
@@ -45,6 +46,7 @@ class CwmsermonsController extends BaseController
         $mid   = $input->getInt('id');
 
         if ($task === 'download') {
+            CwmanalyticsHelper::logEvent('download', 0, $mid);
             $downloader = new Cwmdownload();
             $downloader->download($mid);
         }
@@ -87,6 +89,7 @@ class CwmsermonsController extends BaseController
         if ($id > 0) {
             $getMedia = new Cwmmedia();
             $getMedia->hitPlay($id);
+            CwmanalyticsHelper::logEvent('play', 0, $id);
         }
 
         $app->setHeader('Content-Type', 'application/json; charset=utf-8');

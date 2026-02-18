@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmsermon;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
@@ -488,6 +489,9 @@ class HtmlView extends BaseHtmlView
             /** @var CwmsermonModel $model */
             $model = $this->getModel();
             $model->hit();
+
+            // Log analytics page_view event
+            CwmanalyticsHelper::logEvent('page_view', (int) $item->id);
         }
 
         // Build print-friendly passage: always visible, no version switcher
