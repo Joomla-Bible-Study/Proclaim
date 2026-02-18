@@ -21,7 +21,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Router\Route;
-use Joomla\CMS\Session\Session;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 /**
@@ -83,8 +82,6 @@ class HtmlView extends BaseHtmlView
     /** @var bool True if the raw events table has at least one real tracked event @since 10.1.0 */
     public bool $hasTrackedEvents = false;
 
-    /** @var string Seed-legacy URL @since 10.1.0 */
-    public string $seedLegacyUrl = '';
 
     /** @var array{views: int, plays: int, downloads: int} All-time totals from live record counters (old system) @since 10.1.0 */
     public array $recordTotals = ['views' => 0, 'plays' => 0, 'downloads' => 0];
@@ -209,9 +206,6 @@ class HtmlView extends BaseHtmlView
         $this->firstEventDate   = CwmanalyticsHelper::getFirstEventDate();
         $this->legacyKpi        = CwmanalyticsHelper::getLegacyKpiTotals($l);
         $this->recordTotals     = CwmanalyticsHelper::getRecordTotals($l);
-        $this->seedLegacyUrl    = Route::_(
-            'index.php?option=com_proclaim&task=cwmanalytics.seedLegacy&' . Session::getFormToken() . '=1'
-        );
 
         // --- Export URL ---
         $this->exportUrl = Route::_(
@@ -222,7 +216,7 @@ class HtmlView extends BaseHtmlView
         );
 
         // --- Toolbar ---
-        ToolbarHelper::title(Text::_('JBS_ANA_ANALYTICS_DASHBOARD'), 'chart-bar');
+        ToolbarHelper::title(Text::_('JBS_ANA_ANALYTICS_DASHBOARD'), 'bar-chart');
         ToolbarHelper::back('JTOOLBAR_BACK', Route::_('index.php?option=com_proclaim&view=cwmadmin'));
 
         $wa = $this->getDocument()->getWebAssetManager();

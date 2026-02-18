@@ -191,10 +191,14 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
             <?php echo Text::_('JBS_ANA_TRACKING_SINCE'); ?>
             <strong><?php echo htmlspecialchars($this->firstEventDate, ENT_QUOTES); ?></strong>
             &nbsp;·&nbsp;
-            <a href="<?php echo htmlspecialchars($this->seedLegacyUrl, ENT_QUOTES); ?>"
-               class="text-muted text-decoration-none">
-                <i class="icon-refresh me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_RESEED_LEGACY'); ?>
-            </a>
+            <form method="post" action="index.php" class="d-inline">
+                <input type="hidden" name="option" value="com_proclaim">
+                <input type="hidden" name="task" value="cwmanalytics.seedLegacy">
+                <?php echo HTMLHelper::_('form.token'); ?>
+                <button type="submit" class="btn btn-link btn-sm text-muted text-decoration-none p-0 border-0">
+                    <i class="icon-refresh me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_RESEED_LEGACY'); ?>
+                </button>
+            </form>
         </span>
     </div>
     <?php endif; ?>
@@ -231,10 +235,14 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
             </div>
             <hr>
             <p class="mb-2"><?php echo Text::_('JBS_ANA_IMPORT_PROMPT'); ?></p>
-            <a href="<?php echo htmlspecialchars($this->seedLegacyUrl, ENT_QUOTES); ?>"
-               class="btn btn-primary btn-sm">
-                <i class="icon-database me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_SEED_LEGACY'); ?>
-            </a>
+            <form method="post" action="index.php" class="d-inline">
+                <input type="hidden" name="option" value="com_proclaim">
+                <input type="hidden" name="task" value="cwmanalytics.seedLegacy">
+                <?php echo HTMLHelper::_('form.token'); ?>
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="icon-database me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_SEED_LEGACY'); ?>
+                </button>
+            </form>
             <?php if ($this->legacyKpi['views'] > 0 || $this->legacyKpi['plays'] > 0) : ?>
                 <span class="text-success small ms-3">
                     <i class="icon-check" aria-hidden="true"></i>

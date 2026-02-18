@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Session\Session;
 
@@ -44,7 +45,13 @@ class CwmanalyticsController extends BaseController
     public function seedLegacy(): void
     {
         $app = Factory::getApplication();
-        Session::checkToken('get') or $app->redirect('index.php?option=com_proclaim&view=cwmanalytics');
+
+        if (!Session::checkToken()) {
+            $app->enqueueMessage(Text::_('JINVALID_TOKEN_NOTICE'), 'error');
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmanalytics');
+
+            return;
+        }
 
         $result = CwmanalyticsHelper::seedFromLegacy();
         $app->enqueueMessage(
@@ -56,7 +63,7 @@ class CwmanalyticsController extends BaseController
             'success'
         );
 
-        $app->redirect('index.php?option=com_proclaim&view=cwmanalytics');
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmanalytics');
     }
 
     /**
