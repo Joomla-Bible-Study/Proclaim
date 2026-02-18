@@ -172,7 +172,7 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
 
     <?php if ($showSeededNotice) : ?>
     <!-- ── Seeded notice — seed run, awaiting first real event ───────────── -->
-    <div class="d-flex flex-wrap align-items-center gap-2 mb-3 p-2 bg-light rounded small text-muted">
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-3 p-2 bg-body-secondary rounded small text-muted">
         <i class="icon-check-circle text-success" aria-hidden="true"></i>
         <span><?php echo Text::sprintf('JBS_ANA_SEEDED_NOTICE',
             number_format($this->legacyKpi['views']),
@@ -194,7 +194,7 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
 
     <?php if ($showPeriodStrip) : ?>
     <!-- ── Period strip — event-based totals for selected date range ─────── -->
-    <div class="d-flex flex-wrap align-items-center gap-3 mb-3 p-2 bg-light rounded small">
+    <div class="d-flex flex-wrap align-items-center gap-3 mb-3 p-2 bg-body-secondary rounded small">
         <span class="fw-semibold text-muted">
             <?php echo Text::_('JBS_ANA_PERIOD_ANALYTICS'); ?>
             (<?php echo htmlspecialchars($this->dateStart, ENT_QUOTES); ?> – <?php echo htmlspecialchars($this->dateEnd, ENT_QUOTES); ?>):
