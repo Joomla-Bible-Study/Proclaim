@@ -63,6 +63,11 @@ global.triggerBsEvent = (element, eventName) => {
     element.dispatchEvent(event);
 };
 
+// Mock HTMLMediaElement methods not implemented in jsdom
+window.HTMLMediaElement.prototype.pause = jest.fn();
+window.HTMLMediaElement.prototype.play = jest.fn().mockResolvedValue(undefined);
+window.HTMLMediaElement.prototype.load = jest.fn();
+
 // Reset DOM before each test
 beforeEach(() => {
     document.body.innerHTML = '';
