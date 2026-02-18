@@ -178,7 +178,7 @@ class CwmcsvimportHelper
         }
 
         $seriesId      = self::resolveOrCreateSeries($rowData['series'] ?? '', $autoCreate);
-        $locationId    = self::resolveOrCreateLocation($rowData['location'] ?? '', $autoCreate);
+        $locationId    = self::processLocation($rowData['location'] ?? '', $autoCreate, (int) ($user ? $user->id : 0));
         $messageTypeId = self::resolveOrCreateMessageType($rowData['messagetype'] ?? '', $autoCreate);
         $published     = self::parsePublished($rowData['published'] ?? null, $defaultPublished);
         $alias         = OutputFilter::stringURLSafe($title);
@@ -986,6 +986,102 @@ class CwmcsvimportHelper
     public static function getAutoCreatedReport(): array
     {
         return self::$autoCreated;
+    }
+
+    /**
+     * Look up a location by name without auto-creating.
+     *
+     * Returns the location ID if found in the database, or 0 if not found.
+     * Does not write to the database and does not require any special
+     * permission — the caller is responsible for access validation.
+     *
+     * @param   string  $name  Location name to search for (case-insensitive).
+     *
+     * @return  int  Location ID, or 0 if not found.
+     *
+     * @since  10.1.0
+     */
+    public static function findLocationByName(string $name): int
+    {
+        $name = trim($name);
+
+        if ($name === '') {
+            return 0;
+        }
+
+        $cacheKey = strtolower($name);
+
+        if (isset(self::$cache['location'][$cacheKey])) {
+            return self::$cache['location'][$cacheKey];
+        }
+
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__bsms_locations'))
+            ->where('LOWER(' . $db->quoteName('location_text') . ') = LOWER(' . $db->quote($name) . ')')
+            ->setLimit(1);
+        $db->setQuery($query);
+
+        $id = (int) $db->loadResult();
+
+        if ($id > 0) {
+            self::$cache['location'][$cacheKey] = $id;
+        }
+
+        return $id;
+    }
+
+    /**
+     * Resolve a location for CSV import, enforcing the current user's access.
+     *
+     * When the location system is enabled and the user is not a super admin:
+     *   - If the resolved/created location is not in the user's accessible list,
+     *     the location is silently dropped (returns 0) to avoid cross-campus leaks.
+     *
+     * Falls back to resolveOrCreateLocation() for the actual lookup/creation logic.
+     *
+     * @param   string  $name        Location name from the CSV file.
+     * @param   bool    $autoCreate  Whether to auto-create if not found.
+     * @param   int     $userId      Joomla user ID (0 = current user).
+     *
+     * @return  int  Location ID, or 0 if not found, not permitted, or empty name.
+     *
+     * @since  10.1.0
+     */
+    public static function processLocation(string $name, bool $autoCreate, int $userId = 0): int
+    {
+        $locationId = self::resolveOrCreateLocation($name, $autoCreate);
+
+        if ($locationId <= 0) {
+            return 0;
+        }
+
+        // No access check needed when location system is disabled
+        if (!CwmlocationHelper::isEnabled()) {
+            return $locationId;
+        }
+
+        $app    = Factory::getApplication();
+        $user   = $userId > 0
+            ? Factory::getContainer()->get('user.factory')->loadUserById($userId)
+            : $app->getIdentity();
+
+        // Super admins may assign any location
+        if ($user->authorise('core.admin')) {
+            return $locationId;
+        }
+
+        $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+        // Empty accessible list = super admin already handled above,
+        // non-empty = must contain the target location
+        if (!empty($accessible) && !\in_array($locationId, $accessible, true)) {
+            return 0;
+        }
+
+        return $locationId;
     }
 
     /**

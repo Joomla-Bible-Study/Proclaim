@@ -68,6 +68,7 @@ class CwmmessageModel extends AdminModel
         'teacher'       => 'batchTeacher',
         'series'        => 'batchSeries',
         'messageType'   => 'batchMessagetype',
+        'location'      => 'batchLocation',
     ];
 
     /**
@@ -881,6 +882,59 @@ class CwmmessageModel extends AdminModel
         }
 
         // Clean the cache
+        $this->cleanCache();
+
+        return true;
+    }
+
+    /**
+     * Batch-update the location for a group of messages.
+     *
+     * When the location system is enabled, non-admin users may only assign
+     * locations they have visibility over. Passing an empty string clears
+     * the location_id (set to NULL).
+     *
+     * @param   string  $value     The new location ID, or '' to clear.
+     * @param   array   $pks       An array of primary key IDs.
+     * @param   array   $contexts  An array of item contexts.
+     *
+     * @return  bool  True if successful.
+     *
+     * @throws  \RuntimeException  When the user lacks edit or location access.
+     * @throws  \Exception
+     * @since   10.1.0
+     */
+    protected function batchLocation(string $value, array $pks, array $contexts): bool
+    {
+        $user       = Factory::getApplication()->getIdentity();
+        $locationId = (int) $value;
+
+        // Validate location access when the system is enabled
+        if ($locationId > 0 && CwmlocationHelper::isEnabled() && !$user->authorise('core.admin')) {
+            $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+            if (!empty($accessible) && !\in_array($locationId, $accessible, true)) {
+                throw new \RuntimeException(Text::_('JBS_BAT_LOCATION_ACCESS_DENIED'));
+            }
+        }
+
+        /** @var CwmmessageTable $table */
+        $table = $this->getTable();
+
+        foreach ($pks as $pk) {
+            if ($user->authorise('core.edit', $contexts[$pk])) {
+                $table->reset();
+                $table->load($pk);
+                $table->location_id = $locationId > 0 ? $locationId : null;
+
+                if (!$table->store()) {
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                }
+            } else {
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+            }
+        }
+
         $this->cleanCache();
 
         return true;
