@@ -149,6 +149,8 @@
         <field
                 name="filters"
                 type="filters"
+                label="JBS_ADM_TEXT_FILTERS_LABEL"
+                hiddenLabel="true"
                 filter=""
         />
     </fieldset>

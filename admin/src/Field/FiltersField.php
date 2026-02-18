@@ -57,6 +57,22 @@ class FiltersField extends FormField
         // Build the form control.
         $html = [];
 
+        // Expandable notes — matches the joomla.content.text_filters layout style.
+        $html[] = '<details>';
+        $html[] = '    <summary class="filter-notes">' . Text::_('JGLOBAL_FILTER_TYPE_LABEL') . '</summary>';
+        $html[] = '    <div class="filter-notes">' . Text::_('JGLOBAL_FILTER_TYPE_DESC') . '</div>';
+        $html[] = '</details>';
+        $html[] = '<details>';
+        $html[] = '    <summary class="filter-notes">' . Text::_('JGLOBAL_FILTER_TAGS_LABEL') . '</summary>';
+        $html[] = '    <div class="filter-notes">' . Text::_('JGLOBAL_FILTER_TAGS_DESC') . '</div>';
+        $html[] = '</details>';
+        $html[] = '<details>';
+        $html[] = '    <summary class="filter-notes">' . Text::_('JGLOBAL_FILTER_ATTRIBUTES_LABEL') . '</summary>';
+        $html[] = '    <div class="filter-notes">' . Text::_('JGLOBAL_FILTER_ATTRIBUTES_DESC') . '</div>';
+        $html[] = '</details>';
+
+        $html[] = '<div class="table-responsive">';
+
         // Open the table.
         $html[] = '<table id="filter-config" class="table">';
         $html[] = '<caption class="visually-hidden">' . Text::_('COM_CONFIG_TEXT_FILTERS') . '</caption>';
@@ -146,8 +162,9 @@ class FiltersField extends FormField
 
         $html[] = '	</tbody>';
 
-        // Close the table.
+        // Close the table and table-responsive wrapper.
         $html[] = '</table>';
+        $html[] = '</div>';
 
         return implode("\n", $html);
     }
