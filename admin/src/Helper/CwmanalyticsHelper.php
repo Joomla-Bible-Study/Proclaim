@@ -997,6 +997,32 @@ class CwmanalyticsHelper
     }
 
     /**
+     * Return the date (Y-m-d) of the earliest tracked event, or '' if none exist.
+     *
+     * Used on the analytics dashboard to communicate "detailed tracking started on X".
+     *
+     * @return  string
+     *
+     * @since   10.1.0
+     */
+    public static function getFirstEventDate(): string
+    {
+        try {
+            $db = Factory::getContainer()->get('DatabaseDriver');
+            $db->setQuery(
+                'SELECT DATE(' . $db->quoteName('created') . ') FROM ' .
+                $db->quoteName('#__bsms_analytics_events') .
+                ' ORDER BY ' . $db->quoteName('created') . ' ASC LIMIT 1'
+            );
+            $result = $db->loadResult();
+
+            return $result ?? '';
+        } catch (\Exception $e) {
+            return '';
+        }
+    }
+
+    /**
      * Check whether any real (post-10.1) tracked events exist in the raw events table.
      *
      * Used to determine whether to show the "analytics collecting data" notice

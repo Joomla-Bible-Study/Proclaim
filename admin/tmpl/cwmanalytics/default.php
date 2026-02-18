@@ -135,63 +135,118 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
         </div>
     </div>
 
-    <!-- KPI Cards -->
+    <?php
+    // $usingLegacy = true until the first real tracked event is recorded.
+    // The primary KPI cards ALWAYS show $recordTotals (the live counter columns
+    // from #__bsms_studies and #__bsms_mediafiles) because those always reflect
+    // the complete history including pre-10.1 data.  Event-based period totals
+    // are shown as a secondary strip once detailed tracking is active.
+    $usingLegacy = !$this->hasTrackedEvents;
+    ?>
+
+    <!-- ── All-Time KPI Cards (always from record counters) ─────────────── -->
     <div class="row g-3 mb-3">
         <?php
         $kpiCards = [
-            ['icon' => 'icon-eye', 'label' => 'JBS_ANA_TOTAL_VIEWS', 'value' => $this->kpi['views'], 'class' => 'text-primary'],
-            ['icon' => 'icon-play', 'label' => 'JBS_ANA_TOTAL_PLAYS', 'value' => $this->kpi['plays'], 'class' => 'text-success'],
-            ['icon' => 'icon-download', 'label' => 'JBS_ANA_TOTAL_DOWNLOADS', 'value' => $this->kpi['downloads'], 'class' => 'text-warning'],
-            ['icon' => 'icon-user', 'label' => 'JBS_ANA_UNIQUE_SESSIONS', 'value' => $this->kpi['sessions'], 'class' => 'text-info'],
+            ['icon' => 'icon-eye',      'label' => 'JBS_ANA_TOTAL_VIEWS',     'value' => $this->recordTotals['views'],     'class' => 'text-primary'],
+            ['icon' => 'icon-play',     'label' => 'JBS_ANA_TOTAL_PLAYS',     'value' => $this->recordTotals['plays'],     'class' => 'text-success'],
+            ['icon' => 'icon-download', 'label' => 'JBS_ANA_TOTAL_DOWNLOADS', 'value' => $this->recordTotals['downloads'], 'class' => 'text-warning'],
         ];
         ?>
         <?php foreach ($kpiCards as $card) : ?>
-            <div class="col-6 col-md-3">
+            <div class="col-6 col-md-4">
                 <div class="card text-center h-100">
                     <div class="card-body">
                         <i class="<?php echo $card['icon']; ?> fa-2x <?php echo $card['class']; ?> mb-2" aria-hidden="true"></i>
                         <div class="fw-bold fs-4 <?php echo $card['class']; ?>"><?php echo number_format($card['value']); ?></div>
                         <div class="text-muted small"><?php echo Text::_($card['label']); ?></div>
+                        <span class="text-muted" style="font-size:.7rem"><?php echo Text::_('JBS_ANA_ALL_TIME'); ?></span>
                     </div>
                 </div>
             </div>
         <?php endforeach; ?>
     </div>
 
-    <?php if (!$this->hasTrackedEvents) : ?>
-    <!-- No real tracking data yet — show onboarding notice + legacy totals -->
-    <div class="alert alert-info d-flex align-items-start gap-3 mb-3" role="alert">
-        <i class="icon-info-circle fa-lg mt-1" aria-hidden="true"></i>
-        <div>
-            <strong><?php echo Text::_('JBS_ANA_ONBOARD_TITLE'); ?></strong>
-            <p class="mb-2"><?php echo Text::_('JBS_ANA_ONBOARD_BODY'); ?></p>
-            <?php if ($this->legacyKpi['views'] > 0 || $this->legacyKpi['plays'] > 0 || $this->legacyKpi['downloads'] > 0) : ?>
-                <p class="mb-2 fw-semibold"><?php echo Text::_('JBS_ANA_LEGACY_HEADER'); ?></p>
-                <ul class="mb-2">
-                    <li><?php echo Text::_('JBS_ANA_TOTAL_VIEWS'); ?>: <strong><?php echo number_format($this->legacyKpi['views']); ?></strong></li>
-                    <li><?php echo Text::_('JBS_ANA_TOTAL_PLAYS'); ?>: <strong><?php echo number_format($this->legacyKpi['plays']); ?></strong></li>
-                    <li><?php echo Text::_('JBS_ANA_TOTAL_DOWNLOADS'); ?>: <strong><?php echo number_format($this->legacyKpi['downloads']); ?></strong></li>
-                </ul>
-            <?php else : ?>
-                <a href="<?php echo htmlspecialchars($this->seedLegacyUrl, ENT_QUOTES); ?>"
-                   class="btn btn-sm btn-outline-primary">
-                    <i class="icon-database me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_SEED_LEGACY'); ?>
-                </a>
-                <span class="text-muted small ms-2"><?php echo Text::_('JBS_ANA_SEED_LEGACY_HINT'); ?></span>
-            <?php endif; ?>
-        </div>
+    <?php if (!$usingLegacy) : ?>
+    <!-- ── Period strip — event-based totals for selected date range ─────── -->
+    <div class="d-flex flex-wrap align-items-center gap-3 mb-3 p-2 bg-light rounded small">
+        <span class="fw-semibold text-muted">
+            <?php echo Text::_('JBS_ANA_PERIOD_ANALYTICS'); ?>
+            (<?php echo htmlspecialchars($this->dateStart, ENT_QUOTES); ?> – <?php echo htmlspecialchars($this->dateEnd, ENT_QUOTES); ?>):
+        </span>
+        <span class="text-primary">
+            <i class="icon-eye me-1" aria-hidden="true"></i><?php echo number_format($this->kpi['views']); ?> <?php echo Text::_('JBS_ANA_VIEWS'); ?>
+        </span>
+        <span class="text-success">
+            <i class="icon-play me-1" aria-hidden="true"></i><?php echo number_format($this->kpi['plays']); ?> <?php echo Text::_('JBS_ANA_PLAYS'); ?>
+        </span>
+        <span class="text-warning">
+            <i class="icon-download me-1" aria-hidden="true"></i><?php echo number_format($this->kpi['downloads']); ?> <?php echo Text::_('JBS_ANA_DOWNLOADS'); ?>
+        </span>
+        <span class="text-info">
+            <i class="icon-user me-1" aria-hidden="true"></i><?php echo number_format($this->kpi['sessions']); ?> <?php echo Text::_('JBS_ANA_UNIQUE_SESSIONS'); ?>
+        </span>
+        <span class="ms-auto">
+            <i class="icon-check-circle text-success me-1" aria-hidden="true"></i>
+            <?php echo Text::_('JBS_ANA_TRACKING_SINCE'); ?>
+            <strong><?php echo htmlspecialchars($this->firstEventDate, ENT_QUOTES); ?></strong>
+            &nbsp;·&nbsp;
+            <a href="<?php echo htmlspecialchars($this->seedLegacyUrl, ENT_QUOTES); ?>"
+               class="text-muted text-decoration-none">
+                <i class="icon-refresh me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_RESEED_LEGACY'); ?>
+            </a>
+        </span>
     </div>
     <?php endif; ?>
 
-    <!-- If legacy data was seeded but no tracked events yet, offer re-seed option -->
-    <?php if (!$this->hasTrackedEvents && ($this->legacyKpi['views'] > 0 || $this->legacyKpi['plays'] > 0)) : ?>
-    <div class="d-flex align-items-center gap-2 mb-3">
-        <a href="<?php echo htmlspecialchars($this->seedLegacyUrl, ENT_QUOTES); ?>"
-           class="btn btn-sm btn-outline-secondary">
-            <i class="icon-refresh me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_RESEED_LEGACY'); ?>
-        </a>
-        <span class="text-muted small"><?php echo Text::_('JBS_ANA_RESEED_LEGACY_HINT'); ?></span>
+    <?php if ($usingLegacy) : ?>
+    <!-- ── TRANSITION PANEL ──────────────────────────────────────────────── -->
+    <!-- Shown until the first real tracked event is recorded -->
+    <div class="card border-primary mb-3">
+        <div class="card-header bg-primary text-white fw-semibold">
+            <i class="icon-rocket me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_TRANSITION_TITLE'); ?>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <!-- Old system status -->
+                <div class="col-md-6">
+                    <div class="d-flex align-items-start gap-2">
+                        <i class="icon-check-circle text-success mt-1" aria-hidden="true"></i>
+                        <div>
+                            <strong><?php echo Text::_('JBS_ANA_OLD_SYSTEM_LABEL'); ?></strong>
+                            <p class="text-muted small mb-0"><?php echo Text::_('JBS_ANA_OLD_SYSTEM_DESC'); ?></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- New system status -->
+                <div class="col-md-6">
+                    <div class="d-flex align-items-start gap-2">
+                        <i class="icon-clock text-warning mt-1" aria-hidden="true"></i>
+                        <div>
+                            <strong><?php echo Text::_('JBS_ANA_NEW_SYSTEM_LABEL'); ?></strong>
+                            <p class="text-muted small mb-0"><?php echo Text::_('JBS_ANA_NEW_SYSTEM_DESC'); ?></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <p class="mb-2"><?php echo Text::_('JBS_ANA_IMPORT_PROMPT'); ?></p>
+            <a href="<?php echo htmlspecialchars($this->seedLegacyUrl, ENT_QUOTES); ?>"
+               class="btn btn-primary btn-sm">
+                <i class="icon-database me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_SEED_LEGACY'); ?>
+            </a>
+            <?php if ($this->legacyKpi['views'] > 0 || $this->legacyKpi['plays'] > 0) : ?>
+                <span class="text-success small ms-3">
+                    <i class="icon-check" aria-hidden="true"></i>
+                    <?php echo Text::_('JBS_ANA_IMPORT_DONE'); ?>
+                    <?php echo number_format($this->legacyKpi['views']); ?> <?php echo Text::_('JBS_ANA_VIEWS'); ?>
+                    / <?php echo number_format($this->legacyKpi['plays']); ?> <?php echo Text::_('JBS_ANA_PLAYS'); ?>
+                    / <?php echo number_format($this->legacyKpi['downloads']); ?> <?php echo Text::_('JBS_ANA_DOWNLOADS'); ?>
+                </span>
+            <?php endif; ?>
+        </div>
     </div>
+    <!-- ── END TRANSITION PANEL ──────────────────────────────────────────── -->
     <?php endif; ?>
 
     <!-- Line Chart: Views / Plays / Downloads over time -->
