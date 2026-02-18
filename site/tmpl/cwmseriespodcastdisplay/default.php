@@ -25,59 +25,6 @@ use Joomla\Registry\Registry;
 
 $CWMedia = new Cwmmedia();
 ?>
-<script>
-    function loadVideo(path, image) {
-        var audio = document.querySelector('audio');
-        var loading = document.getElementById('audio-loading');
-        var timeoutId;
-
-        if (audio) {
-            // Show loading
-            if (loading) {
-                loading.style.display = 'block';
-                loading.innerHTML = '<?php echo Text::_('JBS_CMN_LOADING'); ?>...';
-                loading.className = 'alert alert-info';
-            }
-
-            audio.src = path;
-
-            // Set timeout (e.g., 10 seconds)
-            timeoutId = setTimeout(function() {
-                if (loading) {
-                    loading.innerHTML = '<?php echo Text::_('JBS_CMN_LOADING_TIMEOUT', 'Loading is taking longer than expected...'); ?>';
-                    loading.className = 'alert alert-warning';
-                }
-            }, 10000);
-
-            // When audio is ready to play
-            audio.oncanplay = function() {
-                clearTimeout(timeoutId);
-                if (loading) {
-                    loading.style.display = 'none';
-                }
-                audio.play();
-            };
-
-            // Handle errors
-            audio.onerror = function() {
-                clearTimeout(timeoutId);
-                if (loading) {
-                    loading.innerHTML = '<?php echo Text::_('JBS_CMN_LOADING_ERROR', 'Error loading audio file.'); ?>';
-                    loading.className = 'alert alert-danger';
-                }
-            };
-
-            // Trigger load
-            audio.load();
-        } else {
-            // Fallback for iframe/video if present
-            var iframe = document.querySelector('iframe.playhit');
-            if (iframe) {
-                console.log('Video/Iframe update not fully supported in this view for ' + path);
-            }
-        }
-    }
-</script>
 
 <form action="<?php echo htmlspecialchars(Uri::getInstance()->toString()); ?>" method="post" name="adminForm" id="adminForm">
     <div class="container-fluid">

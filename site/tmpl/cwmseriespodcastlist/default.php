@@ -65,7 +65,9 @@ $imgAttribs = array_merge($this->attribs ?? [], ['loading' => 'lazy']);
             );
             ?>
             <div class="jbsmimg" role="listitem">
-                <div class="jbsmimg-wrapper">
+                <a href="<?php echo $podcastUrl; ?>"
+                   class="jbsmimg-wrapper"
+                   aria-label="<?php echo Text::sprintf('JBS_CMN_VIEW_PODCAST_SERIES', $seriesTitle); ?>">
                     <?php if ($hasImage) :
                         echo HTMLHelper::image(
                             $img,
@@ -77,15 +79,7 @@ $imgAttribs = array_merge($this->attribs ?? [], ['loading' => 'lazy']);
                             <span class="icon-image" aria-hidden="true"></span>
                         </div>
                     <?php endif; ?>
-                    <div class="overlay">
-                        <a href="<?php echo $podcastUrl; ?>"
-                           class="expand"
-                           aria-label="<?php echo Text::sprintf('JBS_CMN_VIEW_PODCAST_SERIES', $seriesTitle); ?>">
-                            <span aria-hidden="true">+</span>
-                            <span class="visually-hidden"><?php echo Text::_('JBS_CMN_VIEW'); ?></span>
-                        </a>
-                    </div>
-                </div>
+                </a>
                 <a href="<?php echo $podcastUrl; ?>" class="jbsmimg-title">
                     <?php echo $seriesTitle; ?>
                 </a>

@@ -820,9 +820,9 @@ class Cwmrestore
         $configSize = (int) $db->loadResult();
 
         // Check scheduled tasks count
-        $tasksCount = 0;
-        $tables = $db->getTableList();
-        $prefix = $db->getPrefix();
+        $tasksCount     = 0;
+        $tables         = $db->getTableList();
+        $prefix         = $db->getPrefix();
         $schedulerTable = $prefix . 'scheduler_tasks';
 
         if (\in_array($schedulerTable, $tables, true)) {
@@ -839,7 +839,7 @@ class Cwmrestore
 
         return [
             'config' => $configSize > 10, // Params should be substantial JSON
-            'tasks' => $tasksCount,
+            'tasks'  => $tasksCount,
             'tables' => \count($proclaimTables),
         ];
     }

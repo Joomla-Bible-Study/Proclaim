@@ -144,8 +144,8 @@ class Cwmbackup
         $db = Factory::getContainer()->get('DatabaseDriver');
 
         // Check if scheduler_tasks table exists (Joomla 4+)
-        $tables = $db->getTableList();
-        $prefix = $db->getPrefix();
+        $tables         = $db->getTableList();
+        $prefix         = $db->getPrefix();
         $schedulerTable = $prefix . 'scheduler_tasks';
 
         if (!\in_array($schedulerTable, $tables, true)) {

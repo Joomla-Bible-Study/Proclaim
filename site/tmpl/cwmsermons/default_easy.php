@@ -23,13 +23,9 @@ use Joomla\CMS\HTML\HTMLHelper;
 $accentColor = $this->params->get('backcolor', '#287585');
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
+$wa->addInlineStyle('img { border-radius: 4px; }');
 
 ?>
-<style>img {
-        border-radius: 4px;
-    }</style>
-
-
 <div class="row">
     <h2>
         Teachings

@@ -58,7 +58,7 @@ class Cwmimagelib
             return '';
         }
 
-        $newFileName  = $img_base['dirname'] . '/' . $img_base['filename'] . '-200x112.' . $img_base['extension'];
+        $newFileName  = $img_base['dirname'] . '/' . $img_base['filename'] . '-fit.' . $img_base['extension'];
         $newFilePath  = JPATH_ROOT . '/' . $newFileName;
         $origFilePath = JPATH_ROOT . '/' . $img;
 
@@ -138,9 +138,20 @@ class Cwmimagelib
         $img              = $image_create_func($originalFile);
         [$width, $height] = getimagesize($originalFile);
 
-        $newHeight = (int) round(($height / $width) * $newWidth);
-        $tmp       = imagecreatetruecolor($canv_width, $canv_height);
-        imagecopyresampled($tmp, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+        // Scale to fit within canvas while preserving aspect ratio (letterbox)
+        $scale     = min($canv_width / $width, $canv_height / $height);
+        $newWidth  = (int) round($width * $scale);
+        $newHeight = (int) round($height * $scale);
+        $dst_x     = (int) round(($canv_width - $newWidth) / 2);
+        $dst_y     = (int) round(($canv_height - $newHeight) / 2);
+
+        $tmp = imagecreatetruecolor((int) $canv_width, (int) $canv_height);
+
+        // Fill background with neutral grey matching the CSS placeholder colour
+        $bg = imagecolorallocate($tmp, 233, 236, 239);
+        imagefill($tmp, 0, 0, $bg);
+
+        imagecopyresampled($tmp, $img, $dst_x, $dst_y, 0, 0, $newWidth, $newHeight, $width, $height);
 
         if (file_exists($targetFile)) {
             unlink($targetFile);

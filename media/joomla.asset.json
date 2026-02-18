@@ -275,7 +275,10 @@
         {
             "name": "com_proclaim.print",
             "type": "style",
-            "uri": "com_proclaim/proclaim-print.css"
+            "uri": "com_proclaim/proclaim-print.min.css",
+            "attributes": {
+                "media": "print"
+            }
         },
         {
             "name": "com_proclaim.podcast",
@@ -548,6 +551,17 @@
             "uri": "com_proclaim/phone-input.js",
             "dependencies": [
                 "com_proclaim.intl-tel-input"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.podcast-audio",
+            "type": "script",
+            "uri": "com_proclaim/podcast-audio.min.js",
+            "dependencies": [
+                "core"
             ],
             "attributes": {
                 "defer": true
