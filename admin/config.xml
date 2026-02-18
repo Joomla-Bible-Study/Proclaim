@@ -127,7 +127,6 @@
                 name="location_group_mapping"
                 type="LocationGroupMapping"
                 label="JBS_CONFIG_LOCATION_MAPPINGS"
-                description="JBS_CONFIG_LOCATION_MAPPINGS_DESC"
                 filter="raw"
         />
         <field
