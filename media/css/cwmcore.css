@@ -471,12 +471,13 @@ div.JBSM .img-rounded {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  width: 200px;
 }
 .effects .jbsmimg-wrapper {
   display: block;
   position: relative;
   overflow: hidden;
-  width: 200px;
+  width: 100%;
   aspect-ratio: 16 / 9;
   border-radius: 4px;
   text-decoration: none;
@@ -488,7 +489,7 @@ div.JBSM .img-rounded {
   text-align: center;
   text-decoration: none;
   padding: 8px 4px;
-  max-width: 200px;
+  max-width: 100%;
   line-height: 1.3;
   word-break: break-word;
 }
@@ -497,6 +498,8 @@ div.JBSM .img-rounded {
   text-decoration: underline;
 }
 .effects .jbsmimg img {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
@@ -504,6 +507,12 @@ div.JBSM .img-rounded {
   padding: 0;
   object-fit: cover;
   object-position: center center;
+}
+.effects .jbsmimg .cwm-no-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 .overlay {
   display: block;
