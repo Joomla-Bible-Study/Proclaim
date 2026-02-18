@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
@@ -638,6 +639,49 @@ class CwmmessageModel extends AdminModel
         }
 
         return $form;
+    }
+
+    /**
+     * Determine whether a record can be edited by the current user.
+     *
+     * Checks permissions in priority order:
+     *   1. `core.edit`     — standard Joomla edit permission
+     *   2. `core.edit.own` — user created the message
+     *   3. Teacher check   — user is listed as a teacher on this message
+     *
+     * The teacher check delegates to CwmlocationHelper::userIsTeacher(), which
+     * is currently a stub (returns false) until a user_id column is added to
+     * #__bsms_teachers (Phase N). Once that column exists the stub will be
+     * replaced with a real DB lookup and this method will automatically work.
+     *
+     * @param   object  $record  The record to check.
+     *
+     * @return  bool
+     *
+     * @since   10.1.0
+     */
+    protected function canEdit($record): bool
+    {
+        $user = Factory::getApplication()->getIdentity();
+
+        // Standard edit permission
+        if ($user->authorise('core.edit', 'com_proclaim.message.' . (int) $record->id)) {
+            return true;
+        }
+
+        // Edit-own permission: user created the message
+        if ($user->authorise('core.edit.own', 'com_proclaim.message.' . (int) $record->id)) {
+            if ((int) ($record->created_by ?? 0) === (int) $user->id) {
+                return true;
+            }
+        }
+
+        // Teacher permission: user is listed as a teacher on this message
+        if (CwmlocationHelper::userIsTeacher((int) $user->id, (int) $record->id)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
