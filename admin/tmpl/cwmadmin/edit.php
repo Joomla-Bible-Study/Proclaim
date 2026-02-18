@@ -223,12 +223,6 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                             <i class="icon-archive" aria-hidden="true"></i>
                             <span><?php echo Text::_('JBS_ADM_ARCHIVE'); ?></span>
                         </a>
-                        <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmanalytics'); ?>"
-                           class="cwmadmin-action-card"
-                           title="<?php echo Text::_('JBS_ANA_ANALYTICS'); ?>">
-                            <i class="icon-chart-bar" aria-hidden="true"></i>
-                            <span><?php echo Text::_('JBS_ANA_ANALYTICS'); ?></span>
-                        </a>
                         <!-- New: Scheduled Tasks Button -->
                         <a href="<?php echo Route::_('index.php?option=com_scheduler&view=tasks&filter[search]=proclaim'); ?>"
                            class="cwmadmin-action-card"
