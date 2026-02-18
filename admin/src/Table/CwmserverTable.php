@@ -85,6 +85,14 @@ class CwmserverTable extends Table
     public ?string $type = null;
 
     /**
+     * Location ID (NULL = shared, visible to all campuses)
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $location_id = null;
+
+    /**
      * Params
      *
      * @var string|Registry|null

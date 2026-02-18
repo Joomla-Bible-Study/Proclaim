@@ -17,6 +17,12 @@
                required="true"/>
         <field name="server_name" type="text" label="JBS_SVR_SERVER_NAME"
                description="JBS_SVR_SERVER_NAME_DESC" size="50" required="true" filter="trim"/>
+
+        <field name="location_id" type="LocationList" label="JBS_CMN_LOCATION"
+               description="JBS_SVR_LOCATION_DESC">
+            <option value="-1">JBS_SVR_SHARED</option>
+        </field>
+
         <field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
                translate_label="false" filter="rules" component="com_proclaim"
                section="server" validate="rules"/>

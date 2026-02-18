@@ -34,7 +34,7 @@ $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $archived  = $this->state->get('filter.published') == 2;
 $trashed   = $this->state->get('filter.published') == -2;
-$columns   = 4;
+$columns   = 5;
 
 $workflow_enabled  = ComponentHelper::getParams('com_proclaim')->get('workflow_enabled');
 $workflow_state    = false;
@@ -126,6 +126,9 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                                     $listOrder
                                 ); ?>
                             </th>
+                            <th scope="col" class="w-10 d-none d-md-table-cell">
+                                <?php echo Text::_('JBS_CMN_LOCATION'); ?>
+                            </th>
                             <th scope="col" class="w-3 d-none d-lg-table-cell">
                                 <?php
                                 echo HTMLHelper::_(
@@ -200,6 +203,13 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                                         <?php
                                         endif; ?>
                                     </div>
+                                </td>
+                                <td class="small d-none d-md-table-cell">
+                                    <?php if (isset($item->location_id) && $item->location_id > 0) : ?>
+                                        <?php echo $this->escape($item->location_text ?? ''); ?>
+                                    <?php else : ?>
+                                        <span class="badge bg-secondary"><?php echo Text::_('JBS_SVR_SHARED'); ?></span>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="center d-none d-md-table-cell">
                                     <?php

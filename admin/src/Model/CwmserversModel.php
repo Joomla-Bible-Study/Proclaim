@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Uri\Uri;
@@ -181,12 +182,20 @@ class CwmserversModel extends ListModel
         $query = $db->getQuery(true);
         $user  = $this->getCurrentUser();
 
-        $query->select($this->getState('list.select', 'server.id, server.published, server.server_name, server.type, server.checked_out, server.checked_out_time'));
+        $query->select($this->getState('list.select', 'server.id, server.published, server.server_name, server.type, server.location_id, server.checked_out, server.checked_out_time'));
         $query->from($db->quoteName('#__bsms_servers', 'server'));
 
         // Join over the users for the checked out user.
         $query->select($db->quoteName('uc.name', 'editor'))
             ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('server.checked_out'));
+
+        // Join location name for display (graceful — column may not exist on older installs)
+        $columns = $db->getTableColumns('#__bsms_servers');
+
+        if (isset($columns['location_id'])) {
+            $query->select($db->quoteName('loc.location_text', 'location_text'))
+                ->join('LEFT', $db->quoteName('#__bsms_locations', 'loc') . ' ON ' . $db->quoteName('loc.id') . ' = ' . $db->quoteName('server.location_id'));
+        }
 
         // Filter by published state
         $published = $this->getState('filter.published');
@@ -203,9 +212,32 @@ class CwmserversModel extends ListModel
             $query->where($db->quoteName('server.published') . ' IN (0, 1)');
         }
 
-        // Restrict non-admin users to their authorised view levels
+        // Restrict non-admin users: use hybrid location filter when location system is enabled,
+        // otherwise fall back to standard Joomla access-level filtering
         if (!$user->authorise('core.admin')) {
-            $query->whereIn($db->quoteName('server.access'), $user->getAuthorisedViewLevels());
+            if (CwmlocationHelper::isEnabled() && isset($columns['location_id'])) {
+                // Shared server pattern: NULL = visible to all, specific ID = campus-restricted
+                $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+                if (!empty($accessible)) {
+                    // Show shared (NULL) servers + servers belonging to user's accessible locations
+                    $inClause = implode(',', array_map('intval', $accessible));
+                    $query->extendWhere(
+                        'AND',
+                        [
+                            $db->quoteName('server.location_id') . ' IS NULL',
+                            $db->quoteName('server.location_id') . ' IN (' . $inClause . ')',
+                        ],
+                        'OR'
+                    );
+                } else {
+                    // No campus access — only shared (NULL) servers
+                    $query->where($db->quoteName('server.location_id') . ' IS NULL');
+                }
+            } else {
+                // Location system disabled — standard Joomla access-level filter
+                $query->whereIn($db->quoteName('server.access'), $user->getAuthorisedViewLevels());
+            }
         }
 
         // Add the list ordering clause with whitelist validation
