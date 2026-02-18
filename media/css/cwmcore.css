@@ -481,6 +481,7 @@ div.JBSM .img-rounded {
   aspect-ratio: 16 / 9;
   border-radius: 4px;
   text-decoration: none;
+  background-color: var(--color-gray-200, #e9ecef);
 }
 .effects .jbsmimg-title {
   display: block;
@@ -505,7 +506,7 @@ div.JBSM .img-rounded {
   height: 100%;
   margin: 0;
   padding: 0;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center center;
 }
 .effects .jbsmimg .cwm-no-image {
