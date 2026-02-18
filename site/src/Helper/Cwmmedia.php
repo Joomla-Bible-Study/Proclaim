@@ -16,6 +16,9 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Addons\Servers\Resi\CWMAddonResi;
+use CWM\Component\Proclaim\Administrator\Addons\Servers\Vimeo\CWMAddonVimeo;
+use CWM\Component\Proclaim\Administrator\Addons\Servers\Wistia\CWMAddonWistia;
 use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Service\HTML\CWMFancyBox;
@@ -278,6 +281,18 @@ class Cwmmedia
                     $mediaimage = '<span class="fab fa-youtube" title="YouTube" style="font-size:24px;"></span>';
                     break;
 
+                case preg_match('/(vimeo.com)/', $filename) === 1:
+                    $mediaimage = '<span class="fab fa-vimeo" title="Vimeo" style="font-size:24px;"></span>';
+                    break;
+
+                case preg_match('/(wistia.com|wistia.net)/', $filename) === 1:
+                    $mediaimage = '<span class="fas fa-play-circle" title="Wistia" style="font-size:24px;"></span>';
+                    break;
+
+                case preg_match('/(resi.io)/', $filename) === 1:
+                    $mediaimage = '<span class="fas fa-video" title="Resi" style="font-size:24px;"></span>';
+                    break;
+
                 case preg_match('/(pdf|PDF)/', $filename) === 1:
                     $mediaimage = '<span class="fas fa-file-pdf" title="PDF" style="font-size:24px;"></span>';
                     break;
@@ -520,11 +535,20 @@ class Cwmmedia
                                 $player->playerheight . '" src="' . $youtube->convertYoutube($path) .
                                 '" allow="autoplay; encrypted-media" allowfullscreen style="border: none"></iframe>';
                         } elseif (preg_match('/(vimeo.com)/', $path) === 1) {
-                            $playercode = '<iframe class="playhit" data-id="' . $media->id . '" src="' . $this->convertVimeo(
-                                $path
-                            ) .
+                            $vimeo = new CWMAddonVimeo();
+                            $playercode = '<iframe class="playhit" data-id="' . $media->id . '" src="' . $vimeo->convertVimeo($path) .
                                 '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
                                 '" webkitallowfullscreen mozallowfullscreen allowfullscreen style="border: none"></iframe>';
+                        } elseif (preg_match('/(wistia.com|wistia.net)/', $path) === 1) {
+                            $wistia = new CWMAddonWistia();
+                            $playercode = '<iframe class="playhit" data-id="' . $media->id . '" src="' . $wistia->convertWistia($path) .
+                                '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
+                                '" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" style="border: none"></iframe>';
+                        } elseif (preg_match('/(resi.io)/', $path) === 1) {
+                            $resi = new CWMAddonResi();
+                            $playercode = '<iframe class="playhit" data-id="' . $media->id . '" src="' . $resi->convertResi($path) .
+                                '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
+                                '" allow="autoplay; fullscreen" allowfullscreen style="border: none"></iframe>';
                         } else {
                             $playercode = CWMHtml5Inline::render($media, $params, $player, false, $template);
                         }
@@ -704,8 +728,42 @@ class Cwmmedia
         $headerText = htmlspecialchars($this->getPopupHeader($media, $params), ENT_QUOTES, 'UTF-8');
         $footerText = htmlspecialchars($this->getPopupFooter($media, $params), ENT_QUOTES, 'UTF-8');
 
-        if (preg_match('/(youtube.com|youtu.be|vimeo.com)/', $path) === 1) {
+        // Handle YouTube
+        if (preg_match('/(youtube.com|youtu.be)/', $path) === 1) {
             $path = (new CWMAddonYoutube())->convertYoutube($path);
+            $data = '<a class="fancybox_player playhit" data-id="' . $media->id .
+                '" aria-hidden="false" data-src="' . $path .
+                '" data-header="' . $headerText . '" data-footer="' . $footerText .
+                '" data-options=\'{"autoplay" : "' . (int)$params->get('autostart', false) .
+                '", "controls" : "' . (int)$params->get('controls') . '"}\'  href="javascript:;">' . $image . '</a>';
+            return $data;
+        }
+
+        // Handle Vimeo
+        if (preg_match('/(vimeo.com)/', $path) === 1) {
+            $path = (new CWMAddonVimeo())->convertVimeo($path);
+            $data = '<a class="fancybox_player playhit" data-id="' . $media->id .
+                '" aria-hidden="false" data-src="' . $path .
+                '" data-header="' . $headerText . '" data-footer="' . $footerText .
+                '" data-options=\'{"autoplay" : "' . (int)$params->get('autostart', false) .
+                '", "controls" : "' . (int)$params->get('controls') . '"}\'  href="javascript:;">' . $image . '</a>';
+            return $data;
+        }
+
+        // Handle Wistia
+        if (preg_match('/(wistia.com|wistia.net)/', $path) === 1) {
+            $path = (new CWMAddonWistia())->convertWistia($path);
+            $data = '<a class="fancybox_player playhit" data-id="' . $media->id .
+                '" aria-hidden="false" data-src="' . $path .
+                '" data-header="' . $headerText . '" data-footer="' . $footerText .
+                '" data-options=\'{"autoplay" : "' . (int)$params->get('autostart', false) .
+                '", "controls" : "' . (int)$params->get('controls') . '"}\'  href="javascript:;">' . $image . '</a>';
+            return $data;
+        }
+
+        // Handle Resi.io
+        if (preg_match('/(resi.io)/', $path) === 1) {
+            $path = (new CWMAddonResi())->convertResi($path);
             $data = '<a class="fancybox_player playhit" data-id="' . $media->id .
                 '" aria-hidden="false" data-src="' . $path .
                 '" data-header="' . $headerText . '" data-footer="' . $footerText .
@@ -852,11 +910,14 @@ class Cwmmedia
      */
     public function getFluidDownloadLink(object $media, Registry $params, $template): string
     {
-        // Remove the download option from YouTube links.
+        // Remove the download option from video platform URLs (YouTube, Vimeo, Wistia, Resi)
         $filename  = $media->params->get('filename') ?? '';
         $link_type = 0;
 
-        if (substr_count($filename, 'youtube') || substr_count($filename, 'youtu.be')) {
+        if (substr_count($filename, 'youtube') || substr_count($filename, 'youtu.be') ||
+            substr_count($filename, 'vimeo.com') ||
+            substr_count($filename, 'wistia.com') || substr_count($filename, 'wistia.net') ||
+            substr_count($filename, 'resi.io')) {
             return '';
         }
 
