@@ -18,6 +18,8 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use Joomla\CMS\Cache\CacheControllerFactoryInterface;
+use Joomla\CMS\Cache\Controller\CallbackController;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -59,6 +61,29 @@ class Cwmstats
     private static string $total_messages_end = '';
 
     /**
+     * Get a Joomla persistent cache controller for cross-request caching.
+     *
+     * @param   int  $lifetime  Cache lifetime in seconds.
+     *
+     * @return  CallbackController
+     *
+     * @since   10.1.0
+     */
+    private static function getPersistentCache(int $lifetime = 900): CallbackController
+    {
+        /** @var CallbackController $cache */
+        $cache = Factory::getContainer()
+            ->get(CacheControllerFactoryInterface::class)
+            ->createCacheController('callback', [
+                'defaultgroup' => 'com_proclaim',
+                'caching'      => true,
+            ]);
+        $cache->setLifeTime($lifetime);
+
+        return $cache;
+    }
+
+    /**
      * Total plays of media files per study
      *
      * @param   int  $id  ID number of study
@@ -93,7 +118,7 @@ class Cwmstats
      */
     public static function getTotalMessages(string $start = '', string $end = ''): int
     {
-        $user = Factory::getApplication()->getIdentity();
+        $user    = Factory::getApplication()->getIdentity();
         $isAdmin = $user->authorise('core.admin');
 
         // Delegate to CwmcountHelper for simple published count (no date filtering)
@@ -145,44 +170,50 @@ class Cwmstats
      */
     public static function getTotalTopics(string $start = '', string $end = ''): int
     {
-        $user = Factory::getApplication()->getIdentity();
+        $user    = Factory::getApplication()->getIdentity();
         $isAdmin = $user->authorise('core.admin');
 
         // Include user authorization in cache key for non-admin users
         $userKey = $isAdmin ? 'admin' : implode(',', $user->getAuthorisedViewLevels());
-        $key = 'totalTopics:' . $start . ':' . $end . ':' . $userKey;
+        $key     = 'totalTopics:' . $start . ':' . $end . ':' . $userKey;
 
         if (isset(self::$cache[$key])) {
             return self::$cache[$key];
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query
-            ->select('COUNT(*)')
-            ->from($db->quoteName('#__bsms_studies', 's'))
-            ->leftJoin($db->quoteName('#__bsms_studytopics', 'st') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('st.study_id'))
-            ->leftJoin($db->quoteName('#__bsms_topics', 't') . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('st.topic_id'))
-            ->where($db->quoteName('t.published') . ' = 1');
+        // L2: persistent cache across requests (TTL: 15 min)
+        $pc     = self::getPersistentCache();
+        $result = $pc->get(function () use ($isAdmin, $user, $start, $end) {
+            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $query = $db->getQuery(true);
+            $query
+                ->select('COUNT(*)')
+                ->from($db->quoteName('#__bsms_studies', 's'))
+                ->leftJoin($db->quoteName('#__bsms_studytopics', 'st') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('st.study_id'))
+                ->leftJoin($db->quoteName('#__bsms_topics', 't') . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('st.topic_id'))
+                ->where($db->quoteName('t.published') . ' = 1');
 
-        // Filter by access level for non-super-admin users (multi-campus isolation)
-        if (!$isAdmin) {
-            $query->whereIn($db->quoteName('s.access'), $user->getAuthorisedViewLevels());
-        }
+            // Filter by access level for non-super-admin users (multi-campus isolation)
+            if (!$isAdmin) {
+                $query->whereIn($db->quoteName('s.access'), $user->getAuthorisedViewLevels());
+            }
 
-        if (!empty($start)) {
-            $query->where($db->quoteName('s.time') . ' > UNIX_TIMESTAMP(' . $db->quote($start) . ')');
-        }
+            if (!empty($start)) {
+                $query->where($db->quoteName('s.time') . ' > UNIX_TIMESTAMP(' . $db->quote($start) . ')');
+            }
 
-        if (!empty($end)) {
-            $query->where($db->quoteName('s.time') . ' < UNIX_TIMESTAMP(' . $db->quote($end) . ')');
-        }
+            if (!empty($end)) {
+                $query->where($db->quoteName('s.time') . ' < UNIX_TIMESTAMP(' . $db->quote($end) . ')');
+            }
 
-        $db->setQuery($query);
+            $db->setQuery($query);
 
-        self::$cache[$key] = (int) $db->loadResult();
+            return (int) $db->loadResult();
+        }, [], md5($key));
 
-        return self::$cache[$key];
+        self::$cache[$key] = $result;
+
+        return $result;
     }
 
     /**
@@ -194,44 +225,50 @@ class Cwmstats
      */
     public static function getTopStudies(): string
     {
-        $user = Factory::getApplication()->getIdentity();
+        $user    = Factory::getApplication()->getIdentity();
         $isAdmin = $user->authorise('core.admin');
 
         // Include user authorization in cache key for non-admin users
-        $userKey = $isAdmin ? 'admin' : implode(',', $user->getAuthorisedViewLevels());
+        $userKey  = $isAdmin ? 'admin' : implode(',', $user->getAuthorisedViewLevels());
         $cacheKey = 'topStudies:' . $userKey;
 
         if (isset(self::$cache[$cacheKey])) {
             return self::$cache[$cacheKey];
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query
-            ->select($db->quoteName(['id', 'studytitle', 'studydate', 'hits', 'access']))
-            ->from($db->quoteName('#__bsms_studies'))
-            ->where($db->quoteName('published') . ' = 1')
-            ->where($db->quoteName('hits') . ' > 0');
+        // L2: persistent cache across requests (TTL: 15 min)
+        $pc     = self::getPersistentCache();
+        $result = $pc->get(function () use ($isAdmin, $user) {
+            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $query = $db->getQuery(true);
+            $query
+                ->select($db->quoteName(['id', 'studytitle', 'studydate', 'hits', 'access']))
+                ->from($db->quoteName('#__bsms_studies'))
+                ->where($db->quoteName('published') . ' = 1')
+                ->where($db->quoteName('hits') . ' > 0');
 
-        // Filter by access level for non-super-admin users (multi-campus isolation)
-        if (!$isAdmin) {
-            $query->whereIn($db->quoteName('access'), $user->getAuthorisedViewLevels());
-        }
+            // Filter by access level for non-super-admin users (multi-campus isolation)
+            if (!$isAdmin) {
+                $query->whereIn($db->quoteName('access'), $user->getAuthorisedViewLevels());
+            }
 
-        $query->order($db->quoteName('hits') . ' DESC');
-        $db->setQuery($query, 0, 5);
-        $results     = $db->loadObjectList();
-        $top_studies = '';
+            $query->order($db->quoteName('hits') . ' DESC');
+            $db->setQuery($query, 0, 5);
+            $rows        = $db->loadObjectList();
+            $top_studies = '';
 
-        foreach ($results as $result) {
-            $top_studies .= (int) $result->hits . ' ' . Text::_('JBS_CMN_HITS') .
-                ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . (int) $result->id . '">' .
-                htmlspecialchars($result->studytitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
-        }
+            foreach ($rows as $row) {
+                $top_studies .= (int) $row->hits . ' ' . Text::_('JBS_CMN_HITS') .
+                    ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . (int) $row->id . '">' .
+                    htmlspecialchars($row->studytitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($row->studydate)) . '<br>';
+            }
 
-        self::$cache[$cacheKey] = $top_studies;
+            return $top_studies;
+        }, [], md5($cacheKey));
 
-        return $top_studies;
+        self::$cache[$cacheKey] = $result;
+
+        return $result;
     }
 
     /**
@@ -255,51 +292,57 @@ class Cwmstats
      */
     public static function getTopThirtyDays(): string
     {
-        $user = Factory::getApplication()->getIdentity();
+        $user    = Factory::getApplication()->getIdentity();
         $isAdmin = $user->authorise('core.admin');
 
         // Include user authorization in cache key for non-admin users
-        $userKey = $isAdmin ? 'admin' : implode(',', $user->getAuthorisedViewLevels());
+        $userKey  = $isAdmin ? 'admin' : implode(',', $user->getAuthorisedViewLevels());
         $cacheKey = 'topThirtyDays:' . $userKey;
 
         if (isset(self::$cache[$cacheKey])) {
             return self::$cache[$cacheKey];
         }
 
-        $month      = mktime(0, 0, 0, (int) date("m") - 1, (int) date("d"), (int) date("Y"));
-        $last_month = date("Y-m-d 00:00:01", $month);
-        $db         = Factory::getContainer()->get('DatabaseDriver');
-        $query      = $db->getQuery(true);
-        $query
-            ->select($db->quoteName(['id', 'studytitle', 'studydate', 'hits', 'access']))
-            ->from($db->quoteName('#__bsms_studies'))
-            ->where($db->quoteName('published') . ' = 1')
-            ->where($db->quoteName('hits') . ' > 0')
-            ->where($db->quoteName('studydate') . ' > ' . $db->quote($last_month));
+        // L2: persistent cache across requests (TTL: 15 min)
+        $pc     = self::getPersistentCache();
+        $result = $pc->get(function () use ($isAdmin, $user) {
+            $month      = mktime(0, 0, 0, (int) date("m") - 1, (int) date("d"), (int) date("Y"));
+            $last_month = date("Y-m-d 00:00:01", $month);
+            $db         = Factory::getContainer()->get('DatabaseDriver');
+            $query      = $db->getQuery(true);
+            $query
+                ->select($db->quoteName(['id', 'studytitle', 'studydate', 'hits', 'access']))
+                ->from($db->quoteName('#__bsms_studies'))
+                ->where($db->quoteName('published') . ' = 1')
+                ->where($db->quoteName('hits') . ' > 0')
+                ->where($db->quoteName('studydate') . ' > ' . $db->quote($last_month));
 
-        // Filter by access level for non-super-admin users (multi-campus isolation)
-        if (!$isAdmin) {
-            $query->whereIn($db->quoteName('access'), $user->getAuthorisedViewLevels());
-        }
-
-        $query->order($db->quoteName('hits') . ' DESC');
-        $db->setQuery($query, 0, 5);
-        $results     = $db->loadObjectList();
-        $top_studies = '';
-
-        if (!$results) {
-            $top_studies = Text::_('JBS_CPL_NO_INFORMATION');
-        } else {
-            foreach ($results as $result) {
-                $top_studies .= (int) $result->hits . ' ' . Text::_('JBS_CMN_HITS') .
-                    ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . (int) $result->id . '">' .
-                    htmlspecialchars($result->studytitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
+            // Filter by access level for non-super-admin users (multi-campus isolation)
+            if (!$isAdmin) {
+                $query->whereIn($db->quoteName('access'), $user->getAuthorisedViewLevels());
             }
-        }
 
-        self::$cache[$cacheKey] = $top_studies;
+            $query->order($db->quoteName('hits') . ' DESC');
+            $db->setQuery($query, 0, 5);
+            $rows        = $db->loadObjectList();
+            $top_studies = '';
 
-        return $top_studies;
+            if (!$rows) {
+                $top_studies = Text::_('JBS_CPL_NO_INFORMATION');
+            } else {
+                foreach ($rows as $row) {
+                    $top_studies .= (int) $row->hits . ' ' . Text::_('JBS_CMN_HITS') .
+                        ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . (int) $row->id . '">' .
+                        htmlspecialchars($row->studytitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($row->studydate)) . '<br>';
+                }
+            }
+
+            return $top_studies;
+        }, [], md5($cacheKey));
+
+        self::$cache[$cacheKey] = $result;
+
+        return $result;
     }
 
     /**
@@ -323,50 +366,56 @@ class Cwmstats
      */
     public static function getTopDownloads(): string
     {
-        $user = Factory::getApplication()->getIdentity();
+        $user    = Factory::getApplication()->getIdentity();
         $isAdmin = $user->authorise('core.admin');
 
         // Include user authorization in cache key for non-admin users
-        $userKey = $isAdmin ? 'admin' : implode(',', $user->getAuthorisedViewLevels());
+        $userKey  = $isAdmin ? 'admin' : implode(',', $user->getAuthorisedViewLevels());
         $cacheKey = 'topDownloads:' . $userKey;
 
         if (isset(self::$cache[$cacheKey])) {
             return self::$cache[$cacheKey];
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query
-            ->select($db->quoteName(['mf.downloads']))
-            ->select($db->quoteName('s.id', 'sid'))
-            ->select($db->quoteName('s.studytitle', 'stitle'))
-            ->select($db->quoteName('s.studydate', 'sdate'))
-            ->select($db->quoteName('s.access', 'saccess'))
-            ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
-            ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('mf.study_id') . ' = ' . $db->quoteName('s.id'))
-            ->where($db->quoteName('mf.published') . ' = 1')
-            ->where($db->quoteName('mf.downloads') . ' > 0');
+        // L2: persistent cache across requests (TTL: 15 min)
+        $pc     = self::getPersistentCache();
+        $result = $pc->get(function () use ($isAdmin, $user) {
+            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $query = $db->getQuery(true);
+            $query
+                ->select($db->quoteName(['mf.downloads']))
+                ->select($db->quoteName('s.id', 'sid'))
+                ->select($db->quoteName('s.studytitle', 'stitle'))
+                ->select($db->quoteName('s.studydate', 'sdate'))
+                ->select($db->quoteName('s.access', 'saccess'))
+                ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
+                ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('mf.study_id') . ' = ' . $db->quoteName('s.id'))
+                ->where($db->quoteName('mf.published') . ' = 1')
+                ->where($db->quoteName('mf.downloads') . ' > 0');
 
-        // Filter by access level for non-super-admin users (multi-campus isolation)
-        if (!$isAdmin) {
-            $query->whereIn($db->quoteName('s.access'), $user->getAuthorisedViewLevels());
-        }
+            // Filter by access level for non-super-admin users (multi-campus isolation)
+            if (!$isAdmin) {
+                $query->whereIn($db->quoteName('s.access'), $user->getAuthorisedViewLevels());
+            }
 
-        $query->order($db->quoteName('mf.downloads') . ' DESC');
-        $db->setQuery($query, 0, 5);
-        $results     = $db->loadObjectList();
-        $top_studies = '';
+            $query->order($db->quoteName('mf.downloads') . ' DESC');
+            $db->setQuery($query, 0, 5);
+            $rows        = $db->loadObjectList();
+            $top_studies = '';
 
-        foreach ($results as $result) {
-            $top_studies .=
-                (int) $result->downloads . ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' .
-                (int) $result->sid . '">' . htmlspecialchars($result->stitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) .
-                '<br>';
-        }
+            foreach ($rows as $row) {
+                $top_studies .=
+                    (int) $row->downloads . ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' .
+                    (int) $row->sid . '">' . htmlspecialchars($row->stitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($row->sdate)) .
+                    '<br>';
+            }
 
-        self::$cache[$cacheKey] = $top_studies;
+            return $top_studies;
+        }, [], md5($cacheKey));
 
-        return $top_studies;
+        self::$cache[$cacheKey] = $result;
+
+        return $result;
     }
 
     /**
@@ -378,56 +427,62 @@ class Cwmstats
      */
     public static function getDownloadsLastThreeMonths(): string
     {
-        $user = Factory::getApplication()->getIdentity();
+        $user    = Factory::getApplication()->getIdentity();
         $isAdmin = $user->authorise('core.admin');
 
         // Include user authorization in cache key for non-admin users
-        $userKey = $isAdmin ? 'admin' : implode(',', $user->getAuthorisedViewLevels());
+        $userKey  = $isAdmin ? 'admin' : implode(',', $user->getAuthorisedViewLevels());
         $cacheKey = 'downloadsLast3Months:' . $userKey;
 
         if (isset(self::$cache[$cacheKey])) {
             return self::$cache[$cacheKey];
         }
 
-        $month     = mktime(0, 0, 0, (int) date("m") - 3, (int) date("d"), (int) date("Y"));
-        $lastmonth = date("Y-m-d 00:00:01", $month);
-        $db        = Factory::getContainer()->get('DatabaseDriver');
-        $query     = $db->getQuery(true);
-        $query
-            ->select($db->quoteName(['mf.downloads']))
-            ->select($db->quoteName('s.id', 'sid'))
-            ->select($db->quoteName('s.studytitle', 'stitle'))
-            ->select($db->quoteName('s.studydate', 'sdate'))
-            ->select($db->quoteName('s.access', 'saccess'))
-            ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
-            ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('mf.study_id') . ' = ' . $db->quoteName('s.id'))
-            ->where($db->quoteName('mf.published') . ' = 1')
-            ->where($db->quoteName('mf.downloads') . ' > 0')
-            ->where($db->quoteName('mf.createdate') . ' > ' . $db->quote($lastmonth));
+        // L2: persistent cache across requests (TTL: 15 min)
+        $pc     = self::getPersistentCache();
+        $result = $pc->get(function () use ($isAdmin, $user) {
+            $month     = mktime(0, 0, 0, (int) date("m") - 3, (int) date("d"), (int) date("Y"));
+            $lastmonth = date("Y-m-d 00:00:01", $month);
+            $db        = Factory::getContainer()->get('DatabaseDriver');
+            $query     = $db->getQuery(true);
+            $query
+                ->select($db->quoteName(['mf.downloads']))
+                ->select($db->quoteName('s.id', 'sid'))
+                ->select($db->quoteName('s.studytitle', 'stitle'))
+                ->select($db->quoteName('s.studydate', 'sdate'))
+                ->select($db->quoteName('s.access', 'saccess'))
+                ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
+                ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('mf.study_id') . ' = ' . $db->quoteName('s.id'))
+                ->where($db->quoteName('mf.published') . ' = 1')
+                ->where($db->quoteName('mf.downloads') . ' > 0')
+                ->where($db->quoteName('mf.createdate') . ' > ' . $db->quote($lastmonth));
 
-        // Filter by access level for non-super-admin users (multi-campus isolation)
-        if (!$isAdmin) {
-            $query->whereIn($db->quoteName('s.access'), $user->getAuthorisedViewLevels());
-        }
-
-        $query->order($db->quoteName('mf.downloads') . ' DESC');
-        $db->setQuery($query, 0, 5);
-        $results     = $db->loadObjectList();
-        $top_studies = '';
-
-        if (!$results) {
-            $top_studies = Text::_('JBS_CPL_NO_INFORMATION');
-        } else {
-            foreach ($results as $result) {
-                $top_studies .= (int) $result->downloads . ' ' . Text::_('JBS_CMN_HITS') .
-                    ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . (int) $result->sid . '">' .
-                    htmlspecialchars($result->stitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) . '<br>';
+            // Filter by access level for non-super-admin users (multi-campus isolation)
+            if (!$isAdmin) {
+                $query->whereIn($db->quoteName('s.access'), $user->getAuthorisedViewLevels());
             }
-        }
 
-        self::$cache[$cacheKey] = $top_studies;
+            $query->order($db->quoteName('mf.downloads') . ' DESC');
+            $db->setQuery($query, 0, 5);
+            $rows        = $db->loadObjectList();
+            $top_studies = '';
 
-        return $top_studies;
+            if (!$rows) {
+                $top_studies = Text::_('JBS_CPL_NO_INFORMATION');
+            } else {
+                foreach ($rows as $row) {
+                    $top_studies .= (int) $row->downloads . ' ' . Text::_('JBS_CMN_HITS') .
+                        ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . (int) $row->sid . '">' .
+                        htmlspecialchars($row->stitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($row->sdate)) . '<br>';
+                }
+            }
+
+            return $top_studies;
+        }, [], md5($cacheKey));
+
+        self::$cache[$cacheKey] = $result;
+
+        return $result;
     }
 
     /**
@@ -469,65 +524,71 @@ class Cwmstats
      */
     public static function getTopScore(): string
     {
-        $user = Factory::getApplication()->getIdentity();
+        $user    = Factory::getApplication()->getIdentity();
         $isAdmin = $user->authorise('core.admin');
 
         // Include user authorization in cache key for non-admin users
-        $userKey = $isAdmin ? 'admin' : implode(',', $user->getAuthorisedViewLevels());
+        $userKey  = $isAdmin ? 'admin' : implode(',', $user->getAuthorisedViewLevels());
         $cacheKey = 'topScore:' . $userKey;
 
         if (isset(self::$cache[$cacheKey])) {
             return self::$cache[$cacheKey];
         }
 
-        $admin  = Cwmparams::getAdmin();
-        $format = (int) $admin->params->get('format_popular', 0);
-        $db     = Factory::getContainer()->get('DatabaseDriver');
+        // L2: persistent cache across requests (TTL: 15 min)
+        $pc     = self::getPersistentCache();
+        $result = $pc->get(function () use ($isAdmin, $user) {
+            $admin  = Cwmparams::getAdmin();
+            $format = (int) $admin->params->get('format_popular', 0);
+            $db     = Factory::getContainer()->get('DatabaseDriver');
 
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
-            ->select('SUM(' . $db->quoteName('mf.downloads') . ' + ' . $db->quoteName('mf.plays') . ') AS added')
-            ->from($db->quoteName('#__bsms_studies', 's'))
-            ->join('INNER', $db->quoteName('#__bsms_mediafiles', 'mf') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
-            ->where($db->quoteName('mf.published') . ' = 1');
+            $query = $db->getQuery(true);
+            $query->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
+                ->select('SUM(' . $db->quoteName('mf.downloads') . ' + ' . $db->quoteName('mf.plays') . ') AS added')
+                ->from($db->quoteName('#__bsms_studies', 's'))
+                ->join('INNER', $db->quoteName('#__bsms_mediafiles', 'mf') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
+                ->where($db->quoteName('mf.published') . ' = 1');
 
-        // Filter by access level for non-super-admin users (multi-campus isolation)
-        if (!$isAdmin) {
-            $query->whereIn($db->quoteName('s.access'), $user->getAuthorisedViewLevels());
-        }
+            // Filter by access level for non-super-admin users (multi-campus isolation)
+            if (!$isAdmin) {
+                $query->whereIn($db->quoteName('s.access'), $user->getAuthorisedViewLevels());
+            }
 
-        $query->group($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
-            ->order($db->qn('added') . ' DESC');
+            $query->group($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
+                ->order($db->qn('added') . ' DESC');
 
-        $db->setQuery($query, 0, 10); // Get more to account for re-sorting if hits are included
-        $results = $db->loadObjectList();
+            $db->setQuery($query, 0, 10); // Get more to account for re-sorting if hits are included
+            $rows = $db->loadObjectList();
 
-        $final = [];
+            $final = [];
 
-        foreach ($results as $result) {
-            $total = ($format < 1) ? ((int) $result->added + (int) $result->hits) : (int) $result->added;
-            $link  = ' <a href="' . Route::_('index.php?option=com_proclaim&task=message.edit&id=' . (int) $result->id) . '">' .
-                htmlspecialchars($result->studytitle, ENT_QUOTES, 'UTF-8') . '</a> ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
-            $final[] = ['total' => $total, 'link' => $link];
-        }
+            foreach ($rows as $row) {
+                $total   = ($format < 1) ? ((int) $row->added + (int) $row->hits) : (int) $row->added;
+                $link    = ' <a href="' . Route::_('index.php?option=com_proclaim&task=message.edit&id=' . (int) $row->id) . '">' .
+                    htmlspecialchars($row->studytitle, ENT_QUOTES, 'UTF-8') . '</a> ' . date('Y-m-d', strtotime($row->studydate)) . '<br>';
+                $final[] = ['total' => $total, 'link' => $link];
+            }
 
-        // Re-sort by total descending
-        usort($final, function ($a, $b) {
-            return $b['total'] <=> $a['total'];
-        });
+            // Re-sort by total descending
+            usort($final, function ($a, $b) {
+                return $b['total'] <=> $a['total'];
+            });
 
-        // Slice to top 5
-        $final = \array_slice($final, 0, 5);
+            // Slice to top 5
+            $final = \array_slice($final, 0, 5);
 
-        $top_score_table = '';
+            $top_score_table = '';
 
-        foreach ($final as $item) {
-            $top_score_table .= (string) $item['total'] . ' ' . $item['link'];
-        }
+            foreach ($final as $item) {
+                $top_score_table .= (string) $item['total'] . ' ' . $item['link'];
+            }
 
-        self::$cache[$cacheKey] = $top_score_table;
+            return $top_score_table;
+        }, [], md5($cacheKey));
 
-        return $top_score_table;
+        self::$cache[$cacheKey] = $result;
+
+        return $result;
     }
 
     /**

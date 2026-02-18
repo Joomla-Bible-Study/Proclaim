@@ -15,6 +15,8 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
+use Joomla\CMS\Cache\CacheControllerFactoryInterface;
+use Joomla\CMS\Cache\Controller\CallbackController;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
@@ -84,6 +86,29 @@ class CwmsermonsModel extends ListModel
         } else {
             $this->filterCache = [];
         }
+    }
+
+    /**
+     * Get a Joomla persistent cache controller for cross-request caching.
+     *
+     * @param   int  $lifetime  Cache lifetime in seconds.
+     *
+     * @return  CallbackController
+     *
+     * @since   10.1.0
+     */
+    private function getPersistentCache(int $lifetime = 3600): CallbackController
+    {
+        /** @var CallbackController $cache */
+        $cache = Factory::getContainer()
+            ->get(CacheControllerFactoryInterface::class)
+            ->createCacheController('callback', [
+                'defaultgroup' => 'com_proclaim',
+                'caching'      => true,
+            ]);
+        $cache->setLifeTime($lifetime);
+
+        return $cache;
     }
 
     /**
@@ -250,20 +275,25 @@ class CwmsermonsModel extends ListModel
             return $this->filterCache['teachers'];
         }
 
-        $db    = $this->getDatabase();
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName(['t.id', 't.teachername'], ['value', 'text']));
-        $query->from($db->quoteName('#__bsms_teachers', 't'));
-        $query->select($db->quoteName('series.access'));
-        $query->join('INNER', $db->quoteName('#__bsms_series', 'series') . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('series.teacher'));
-        $query->group($db->quoteName('t.id'));
-        $query->order($db->quoteName('t.teachername') . ' ASC');
+        // L2: persistent cache across requests (TTL: 1 hour)
+        $pc     = $this->getPersistentCache();
+        $result = $pc->get(function () {
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true);
+            $query->select($db->quoteName(['t.id', 't.teachername'], ['value', 'text']));
+            $query->from($db->quoteName('#__bsms_teachers', 't'));
+            $query->select($db->quoteName('series.access'));
+            $query->join('INNER', $db->quoteName('#__bsms_series', 'series') . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('series.teacher'));
+            $query->group($db->quoteName('t.id'));
+            $query->order($db->quoteName('t.teachername') . ' ASC');
+            $db->setQuery($query);
 
-        $db->setQuery($query);
+            return $db->loadObjectList();
+        }, [], 'filter_teachers');
 
-        $this->filterCache['teachers'] = $db->loadObjectList();
+        $this->filterCache['teachers'] = $result;
 
-        return $this->filterCache['teachers'];
+        return $result;
     }
 
     /**
@@ -278,20 +308,25 @@ class CwmsermonsModel extends ListModel
             return $this->filterCache['years'];
         }
 
-        $db    = $this->getDatabase();
-        $query = $db->getQuery(true);
-        $query->select('DISTINCT YEAR(' . $db->quoteName('s.studydate') . ') as value');
-        $query->select('YEAR(' . $db->quoteName('s.studydate') . ') as text');
-        $query->from($db->quoteName('#__bsms_studies', 's'));
-        $query->select($db->quoteName('series.access'));
-        $query->join('INNER', $db->quoteName('#__bsms_series', 'series') . ' ON ' . $db->quoteName('s.series_id') . ' = ' . $db->quoteName('series.id'));
-        $query->order($db->quoteName('value'));
+        // L2: persistent cache across requests (TTL: 1 hour)
+        $pc     = $this->getPersistentCache();
+        $result = $pc->get(function () {
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true);
+            $query->select('DISTINCT YEAR(' . $db->quoteName('s.studydate') . ') as value');
+            $query->select('YEAR(' . $db->quoteName('s.studydate') . ') as text');
+            $query->from($db->quoteName('#__bsms_studies', 's'));
+            $query->select($db->quoteName('series.access'));
+            $query->join('INNER', $db->quoteName('#__bsms_series', 'series') . ' ON ' . $db->quoteName('s.series_id') . ' = ' . $db->quoteName('series.id'));
+            $query->order($db->quoteName('value'));
+            $db->setQuery($query);
 
-        $db->setQuery($query);
+            return $db->loadObjectList();
+        }, [], 'filter_years');
 
-        $this->filterCache['years'] = $db->loadObjectList();
+        $this->filterCache['years'] = $result;
 
-        return $this->filterCache['years'];
+        return $result;
     }
 
     /**
@@ -307,36 +342,43 @@ class CwmsermonsModel extends ListModel
             return $this->filterCache['series'];
         }
 
-        $db    = $this->getDatabase();
-        $query = $db->getQuery(true);
-
-        $query->select($db->quoteName(['series.id', 'series.series_text', 'series.access'], ['value', 'text', 'access']));
-        $query->from($db->quoteName('#__bsms_series', 'series'));
-        $query->join('INNER', $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.series_id') . ' = ' . $db->quoteName('series.id'));
-        $query->group($db->quoteName('series.id'));
-        $query->order($db->quoteName('series.series_text'));
-
-        $db->setQuery($query);
-        $items = $db->loadObjectList();
-
-        // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
+        // User-aware cache key: users sharing the same access levels share the cached result
         $user   = $this->getCurrentUser();
         $groups = $user->getAuthorisedViewLevels();
-        $count  = \count($items);
 
-        if ($count > 0) {
-            foreach ($items as $i => $iValue) {
-                if ($iValue->access > 1) {
-                    if (!\in_array($iValue->access, $groups, true)) {
-                        unset($items[$i]);
+        // L2: persistent cache across requests (TTL: 1 hour)
+        $pc     = $this->getPersistentCache();
+        $result = $pc->get(function () use ($groups) {
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true);
+
+            $query->select($db->quoteName(['series.id', 'series.series_text', 'series.access'], ['value', 'text', 'access']));
+            $query->from($db->quoteName('#__bsms_series', 'series'));
+            $query->join('INNER', $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.series_id') . ' = ' . $db->quoteName('series.id'));
+            $query->group($db->quoteName('series.id'));
+            $query->order($db->quoteName('series.series_text'));
+
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+            $count = \count($items);
+
+            // Check permissions: remove series the current access group cannot see
+            if ($count > 0) {
+                foreach ($items as $i => $iValue) {
+                    if ($iValue->access > 1) {
+                        if (!\in_array($iValue->access, $groups, true)) {
+                            unset($items[$i]);
+                        }
                     }
                 }
             }
-        }
 
-        $this->filterCache['series'] = $items;
+            return $items;
+        }, [], md5('filter_series:' . implode(',', $groups)));
 
-        return $items;
+        $this->filterCache['series'] = $result;
+
+        return $result;
     }
 
     /**
@@ -351,23 +393,29 @@ class CwmsermonsModel extends ListModel
             return $this->filterCache['books'];
         }
 
-        $db    = $this->getDatabase();
-        $query = $db->getQuery(true);
+        // L2: persistent cache across requests (TTL: 1 hour)
+        $pc     = $this->getPersistentCache();
+        $result = $pc->get(function () {
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true);
 
-        $query->select($db->quoteName(['books.id', 'books.bookname', 'books.id'], ['value', 'text', 'value']));
-        $query->from($db->quoteName('#__bsms_books', 'books'));
-        $query->order($db->quoteName('books.booknumber'));
+            $query->select($db->quoteName(['books.id', 'books.bookname', 'books.id'], ['value', 'text', 'value']));
+            $query->from($db->quoteName('#__bsms_books', 'books'));
+            $query->order($db->quoteName('books.booknumber'));
 
-        $db->setQuery($query);
-        $books = $db->loadObjectList();
+            $db->setQuery($query);
+            $books = $db->loadObjectList();
 
-        foreach ($books as $book) {
-            $book->text = Text::_($book->text);
-        }
+            foreach ($books as $book) {
+                $book->text = Text::_($book->text);
+            }
 
-        $this->filterCache['books'] = $books;
+            return $books;
+        }, [], 'filter_books');
 
-        return $this->filterCache['books'];
+        $this->filterCache['books'] = $result;
+
+        return $result;
     }
 
     /**
