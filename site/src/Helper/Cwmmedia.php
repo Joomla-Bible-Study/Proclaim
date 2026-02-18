@@ -579,10 +579,11 @@ class Cwmmedia
 
                 switch ($player->type) {
                     case 1: // This goes to the popup view
+                        CWMFancyBox::framework();
                         $playercode = "<a $colorStyle href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
                             . "&amp;view=cwmpopup&amp;player=3&amp;t=" . $template .
                             "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
-                            . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">" . $image . "</a>";
+                            . $player->playerheight . "'); return false\" class=\"jbsmplayerlink playhit\" data-id=\"" . $media->id . "\">" . $image . "</a>";
                         break;
 
                     case 2: // This plays the video inline
@@ -603,10 +604,12 @@ class Cwmmedia
                 return $this->getVirtuemart($media, $image);
 
             case 8: // Embed code
+                CWMFancyBox::framework();
+
                 return "<a $colorStyle href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
                     . "&amp;view=cwmpopup&amp;player=8&amp;t=" . $template .
                     "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
-                    . $player->playerheight . "'); return false\">" . $image . "</a>";
+                    . $player->playerheight . "'); return false\" class=\"jbsmplayerlink playhit\" data-id=\"" . $media->id . "\">" . $image . "</a>";
         }
 
         return false;
