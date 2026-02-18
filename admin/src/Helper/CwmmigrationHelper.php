@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 
@@ -748,5 +749,527 @@ class CwmmigrationHelper
         }
 
         return $updated;
+    }
+
+    // =========================================================================
+    // Phase 4: Location migration (access-level → location_id)
+    // =========================================================================
+
+    /**
+     * Main orchestrator for migrating access-level campus separation to the
+     * location system introduced in Proclaim 10.1.
+     *
+     * Detects the current installation scenario and runs the appropriate
+     * sub-migration.  Safe to re-run — already-migrated data is skipped.
+     *
+     * @return  array{scenario: string, locations_created: int, messages_updated: int,
+     *                groups_mapped: int, teachers_linked: int, teachers_unlinked: int,
+     *                timestamp: string}  Migration report.
+     *
+     * @since   10.1.0
+     */
+    public static function migrateAccessToLocations(): array
+    {
+        $scenario = self::detectMigrationScenario();
+
+        $report = [
+            'scenario'          => $scenario,
+            'locations_created' => 0,
+            'messages_updated'  => 0,
+            'groups_mapped'     => 0,
+            'teachers_linked'   => self::countLinkedTeachers(),
+            'teachers_unlinked' => \count(self::getUnlinkedTeachers()),
+            'timestamp'         => date('Y-m-d H:i:s'),
+        ];
+
+        switch ($scenario) {
+            case '2B':
+                // Already using locations — validate data integrity and suggest mappings
+                $report['valid'] = self::validateExistingLocations() ? 1 : 0;
+                break;
+
+            case '2A':
+                // Multi-campus via access levels — create locations and map messages
+                $accessLevels = self::getDistinctNonPublicAccessLevels();
+                $locationMap  = []; // accessLevelId => newLocationId
+
+                foreach ($accessLevels as $accessLevel) {
+                    $locationId                    = self::createLocationFromAccess($accessLevel);
+                    $locationMap[(int) $accessLevel->id] = $locationId;
+                    $report['locations_created']++;
+                }
+
+                // Map messages: access level → location_id
+                $report['messages_updated'] = self::mapMessagesToLocations($locationMap);
+
+                // Store group→location mappings in component params
+                $mappings                 = self::buildGroupLocationMappings($locationMap);
+                self::createGroupLocationMappings($mappings);
+                $report['groups_mapped']  = \count($mappings);
+
+                // Normalise all message access to Public (1) after location assignment
+                self::normalizeAccessLevelsToPublic();
+                break;
+
+            case '2C':
+            default:
+                // Single campus — create a default location and assign all messages
+                $locationId                  = self::createDefaultLocation();
+                $report['locations_created'] = $locationId > 0 ? 1 : 0;
+                $report['messages_updated']  = self::assignAllMessagesToLocation($locationId);
+                break;
+        }
+
+        Log::add(
+            'Location migration complete. Scenario: ' . $scenario
+            . ' | created: ' . $report['locations_created']
+            . ' | updated: ' . $report['messages_updated'],
+            Log::INFO,
+            'com_proclaim'
+        );
+
+        return $report;
+    }
+
+    /**
+     * Detect which migration scenario applies to the current installation.
+     *
+     *   2B — Messages already have location_id values (no data migration needed).
+     *   2A — Messages use distinct non-Public access levels for campus separation.
+     *   2C — Single-campus install (all messages are Public or one access level).
+     *
+     * @return  string  '2A', '2B', or '2C'.
+     *
+     * @since   10.1.0
+     */
+    public static function detectMigrationScenario(): string
+    {
+        if (self::getMessagesWithLocations() > 0) {
+            return '2B';
+        }
+
+        if (\count(self::getDistinctNonPublicAccessLevels()) >= 2) {
+            return '2A';
+        }
+
+        return '2C';
+    }
+
+    /**
+     * Count how many published messages already have a location_id assigned.
+     *
+     * @return  int
+     *
+     * @since   10.1.0
+     */
+    public static function getMessagesWithLocations(): int
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_studies'))
+            ->where($db->quoteName('published') . ' = 1')
+            ->where($db->quoteName('location_id') . ' > 0');
+        $db->setQuery($query);
+
+        return (int) $db->loadResult();
+    }
+
+    /**
+     * Return the distinct non-Public Joomla view levels that are currently
+     * used on published messages.
+     *
+     * @return  \stdClass[]  Each object has ->id and ->title.
+     *
+     * @since   10.1.0
+     */
+    public static function getDistinctNonPublicAccessLevels(): array
+    {
+        $db = Factory::getContainer()->get('DatabaseDriver');
+
+        // Subquery: distinct non-Public access values used by published messages
+        $sub = $db->getQuery(true)
+            ->select('DISTINCT ' . $db->quoteName('access'))
+            ->from($db->quoteName('#__bsms_studies'))
+            ->where($db->quoteName('published') . ' = 1')
+            ->where($db->quoteName('access') . ' > 1'); // 1 = Public
+
+        $query = $db->getQuery(true)
+            ->select([$db->quoteName('id'), $db->quoteName('title')])
+            ->from($db->quoteName('#__viewlevels'))
+            ->where($db->quoteName('id') . ' IN (' . $sub . ')');
+
+        $db->setQuery($query);
+
+        return $db->loadObjectList() ?: [];
+    }
+
+    /**
+     * Return the count of published locations.
+     *
+     * @return  int
+     *
+     * @since   10.1.0
+     */
+    public static function getPublishedLocationCount(): int
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_locations'))
+            ->where($db->quoteName('published') . ' = 1');
+        $db->setQuery($query);
+
+        return (int) $db->loadResult();
+    }
+
+    // -------------------------------------------------------------------------
+    // Scenario 2A helpers
+    // -------------------------------------------------------------------------
+
+    /**
+     * Create a location record named after the given Joomla view level.
+     * If a location with the same name already exists it is reused (idempotent).
+     *
+     * @param   \stdClass  $accessLevel  Object with ->id and ->title properties.
+     *
+     * @return  int  The location ID (new or existing).
+     *
+     * @since   10.1.0
+     */
+    public static function createLocationFromAccess(\stdClass $accessLevel): int
+    {
+        $db   = Factory::getContainer()->get('DatabaseDriver');
+        $name = trim((string) $accessLevel->title);
+
+        // Check for existing location with this name
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__bsms_locations'))
+            ->where($db->quoteName('location_text') . ' = ' . $db->quote($name));
+        $db->setQuery($query);
+        $existing = (int) $db->loadResult();
+
+        if ($existing > 0) {
+            return $existing;
+        }
+
+        // Insert new location
+        $alias = \Joomla\CMS\Application\ApplicationHelper::stringURLSafe($name);
+        $row   = new \stdClass();
+        $row->location_text = $name;
+        $row->alias         = $alias ?: 'location-' . (int) $accessLevel->id;
+        $row->published     = 1;
+        $row->access        = 1; // Public
+        $db->insertObject('#__bsms_locations', $row);
+
+        $newId = (int) $db->insertid();
+        Log::add('Created location "' . $name . '" (ID ' . $newId . ') from access level', Log::INFO, 'com_proclaim');
+
+        return $newId;
+    }
+
+    /**
+     * Persist the group→location mappings array in component parameters.
+     *
+     * Merges with existing mappings so repeated calls are safe.
+     *
+     * @param   array<int, int[]>  $mappings  locationId → [groupId, ...]
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public static function createGroupLocationMappings(array $mappings): void
+    {
+        $params   = ComponentHelper::getParams('com_proclaim');
+        $existing = $params->get('location_group_mapping', '{}');
+
+        if (\is_string($existing)) {
+            $existing = json_decode($existing, true) ?: [];
+        }
+
+        // Merge without overwriting manually configured entries
+        foreach ($mappings as $locationId => $groupIds) {
+            $key = (string) $locationId;
+
+            if (!isset($existing[$key])) {
+                $existing[$key] = array_values(array_unique(array_map('intval', $groupIds)));
+            }
+        }
+
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->update($db->quoteName('#__extensions'))
+            ->set($db->quoteName('params') . ' = ' . $db->quote(json_encode($existing, JSON_THROW_ON_ERROR)))
+            ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
+            ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
+        $db->setQuery($query);
+        $db->execute();
+    }
+
+    /**
+     * Set location_id on messages based on their current access level.
+     * Only updates messages that do not yet have a location assigned.
+     *
+     * @param   array<int, int>  $locationMap  accessLevelId → locationId
+     *
+     * @return  int  Number of messages updated.
+     *
+     * @since   10.1.0
+     */
+    public static function mapMessagesToLocations(array $locationMap): int
+    {
+        if (empty($locationMap)) {
+            return 0;
+        }
+
+        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $updated = 0;
+
+        foreach ($locationMap as $accessId => $locationId) {
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__bsms_studies'))
+                ->set($db->quoteName('location_id') . ' = ' . (int) $locationId)
+                ->where($db->quoteName('access') . ' = ' . (int) $accessId)
+                ->where('(' . $db->quoteName('location_id') . ' = 0 OR ' . $db->quoteName('location_id') . ' IS NULL)');
+            $db->setQuery($query);
+            $db->execute();
+            $updated += $db->getAffectedRows();
+        }
+
+        return $updated;
+    }
+
+    /**
+     * Reset all message access fields to Public (1) after location assignment.
+     * Only touches messages that already have a location_id set.
+     *
+     * @return  int  Number of messages normalised.
+     *
+     * @since   10.1.0
+     */
+    public static function normalizeAccessLevelsToPublic(): int
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->update($db->quoteName('#__bsms_studies'))
+            ->set($db->quoteName('access') . ' = 1')
+            ->where($db->quoteName('access') . ' != 1')
+            ->where($db->quoteName('location_id') . ' > 0');
+        $db->setQuery($query);
+        $db->execute();
+
+        return $db->getAffectedRows();
+    }
+
+    /**
+     * Build a locationId → [groupIds] mapping by inspecting Joomla view level rules.
+     *
+     * The #__viewlevels.rules column stores a JSON array of group IDs that can
+     * see that access level.  We invert the map: accessLevel → groups → locationId.
+     *
+     * @param   array<int, int>  $locationMap  accessLevelId → locationId
+     *
+     * @return  array<int, int[]>  locationId → [groupId, ...]
+     *
+     * @since   10.1.0
+     */
+    public static function buildGroupLocationMappings(array $locationMap): array
+    {
+        if (empty($locationMap)) {
+            return [];
+        }
+
+        $db  = Factory::getContainer()->get('DatabaseDriver');
+        $ids = array_map('intval', array_keys($locationMap));
+
+        $query = $db->getQuery(true)
+            ->select([$db->quoteName('id'), $db->quoteName('rules')])
+            ->from($db->quoteName('#__viewlevels'))
+            ->whereIn($db->quoteName('id'), $ids);
+        $db->setQuery($query);
+        $levels = $db->loadObjectList('id') ?: [];
+
+        $result = [];
+
+        foreach ($locationMap as $accessId => $locationId) {
+            if (!isset($levels[$accessId])) {
+                continue;
+            }
+
+            $rules    = json_decode($levels[$accessId]->rules, true);
+            $groupIds = \is_array($rules) ? array_values(array_map('intval', $rules)) : [];
+
+            if (!empty($groupIds)) {
+                $result[$locationId] = $groupIds;
+            }
+        }
+
+        return $result;
+    }
+
+    // -------------------------------------------------------------------------
+    // Scenario 2B helpers
+    // -------------------------------------------------------------------------
+
+    /**
+     * Verify that all messages with location_id set reference a valid, published
+     * location record.
+     *
+     * @return  bool  True if data is consistent; false if orphaned references exist.
+     *
+     * @since   10.1.0
+     */
+    public static function validateExistingLocations(): bool
+    {
+        $db = Factory::getContainer()->get('DatabaseDriver');
+
+        $orphanQuery = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_studies', 's'))
+            ->where($db->quoteName('s.location_id') . ' > 0')
+            ->where('NOT EXISTS ('
+                . $db->getQuery(true)
+                    ->select('1')
+                    ->from($db->quoteName('#__bsms_locations', 'l'))
+                    ->where($db->quoteName('l.id') . ' = ' . $db->quoteName('s.location_id'))
+                    ->where($db->quoteName('l.published') . ' = 1')
+                . ')'
+            );
+        $db->setQuery($orphanQuery);
+
+        return (int) $db->loadResult() === 0;
+    }
+
+    // -------------------------------------------------------------------------
+    // Scenario 2C helpers
+    // -------------------------------------------------------------------------
+
+    /**
+     * Create a "Main Campus" default location if none exists yet.
+     *
+     * @return  int  The location ID (new or existing).
+     *
+     * @since   10.1.0
+     */
+    public static function createDefaultLocation(): int
+    {
+        $db = Factory::getContainer()->get('DatabaseDriver');
+
+        // Reuse existing location if any are present
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__bsms_locations'))
+            ->where($db->quoteName('published') . ' = 1')
+            ->order($db->quoteName('id') . ' ASC');
+        $db->setQuery($query, 0, 1);
+        $existing = (int) $db->loadResult();
+
+        if ($existing > 0) {
+            return $existing;
+        }
+
+        $row                = new \stdClass();
+        $row->location_text = 'Main Campus';
+        $row->alias         = 'main-campus';
+        $row->published     = 1;
+        $row->access        = 1;
+        $db->insertObject('#__bsms_locations', $row);
+
+        $newId = (int) $db->insertid();
+        Log::add('Created default "Main Campus" location (ID ' . $newId . ')', Log::INFO, 'com_proclaim');
+
+        return $newId;
+    }
+
+    /**
+     * Assign all messages that have no location to the given location ID.
+     *
+     * @param   int  $locationId  The location to assign to.
+     *
+     * @return  int  Number of messages updated.
+     *
+     * @since   10.1.0
+     */
+    public static function assignAllMessagesToLocation(int $locationId): int
+    {
+        if ($locationId <= 0) {
+            return 0;
+        }
+
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->update($db->quoteName('#__bsms_studies'))
+            ->set($db->quoteName('location_id') . ' = ' . $locationId)
+            ->where('(' . $db->quoteName('location_id') . ' = 0 OR ' . $db->quoteName('location_id') . ' IS NULL)');
+        $db->setQuery($query);
+        $db->execute();
+
+        return $db->getAffectedRows();
+    }
+
+    // -------------------------------------------------------------------------
+    // Teacher linkage helpers
+    // -------------------------------------------------------------------------
+
+    /**
+     * Count teacher records that have a non-zero user_id (linked to a Joomla user).
+     *
+     * @return  int
+     *
+     * @since   10.1.0
+     */
+    public static function countLinkedTeachers(): int
+    {
+        $db = Factory::getContainer()->get('DatabaseDriver');
+
+        // The user_id column may not exist yet — handle gracefully
+        $columns = $db->getTableColumns('#__bsms_teachers');
+
+        if (!isset($columns['user_id'])) {
+            return 0;
+        }
+
+        $query = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_teachers'))
+            ->where($db->quoteName('user_id') . ' > 0');
+        $db->setQuery($query);
+
+        return (int) $db->loadResult();
+    }
+
+    /**
+     * Return teacher records that have no associated Joomla user account.
+     *
+     * @return  \stdClass[]  Teacher rows with ->id and ->name.
+     *
+     * @since   10.1.0
+     */
+    public static function getUnlinkedTeachers(): array
+    {
+        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $columns = $db->getTableColumns('#__bsms_teachers');
+
+        if (!isset($columns['user_id'])) {
+            // All teachers are "unlinked" if the column doesn't exist yet
+            $query = $db->getQuery(true)
+                ->select([$db->quoteName('id'), $db->quoteName('name')])
+                ->from($db->quoteName('#__bsms_teachers'))
+                ->where($db->quoteName('published') . ' = 1');
+            $db->setQuery($query);
+
+            return $db->loadObjectList() ?: [];
+        }
+
+        $query = $db->getQuery(true)
+            ->select([$db->quoteName('id'), $db->quoteName('name')])
+            ->from($db->quoteName('#__bsms_teachers'))
+            ->where($db->quoteName('published') . ' = 1')
+            ->where('(' . $db->quoteName('user_id') . ' = 0 OR ' . $db->quoteName('user_id') . ' IS NULL)');
+        $db->setQuery($query);
+
+        return $db->loadObjectList() ?: [];
     }
 }

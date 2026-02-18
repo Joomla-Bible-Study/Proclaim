@@ -265,6 +265,7 @@ class CwminstallModel extends ListModel
             'seedbibletranslations',
             'populatestudyteachers',
             'fixteacheraliases',
+            'migrateaccesstolocations',
             'registerguidedtours',
             'rmoldurl',
             'setupdateurl',
@@ -963,6 +964,15 @@ class CwminstallModel extends ListModel
                 $inserted      = CwmmigrationHelper::populateStudyTeachers();
                 $this->running = 'Populate Study Teachers (' . $inserted . ' records)';
                 Log::add('Populated ' . $inserted . ' study-teacher junction records', Log::INFO, 'com_proclaim');
+                break;
+            case 'migrateaccesstolocations':
+                $report        = CwmmigrationHelper::migrateAccessToLocations();
+                $this->running = 'Migrate Access → Locations (scenario ' . $report['scenario']
+                    . ', ' . $report['locations_created'] . ' created'
+                    . ', ' . $report['messages_updated'] . ' updated)';
+                Log::add('Location migration: scenario=' . $report['scenario']
+                    . ' locations=' . $report['locations_created']
+                    . ' messages=' . $report['messages_updated'], Log::INFO, 'com_proclaim');
                 break;
             case 'registerguidedtours':
                 $tourHelper    = new CwmguidedtourHelper();
