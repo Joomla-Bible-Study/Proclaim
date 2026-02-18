@@ -16,7 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
+use CWM\Component\Proclaim\Administrator\Model\CwmanalyticsModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
@@ -53,7 +53,10 @@ class CwmanalyticsController extends BaseController
             return;
         }
 
-        $result = CwmanalyticsHelper::seedFromLegacy();
+        /** @var CwmanalyticsModel $model */
+        $model  = $this->getModel('Cwmanalytics', 'Administrator');
+        $result = $model->seedFromLegacy();
+
         $app->enqueueMessage(
             \sprintf(
                 '%d study rows and %d media rows imported from legacy counters.',
@@ -89,7 +92,9 @@ class CwmanalyticsController extends BaseController
         $end        = $app->getInput()->getString('date_end', date('Y-m-d'));
         $locationId = $app->getInput()->getInt('location_id', 0);
 
-        CwmanalyticsHelper::exportCsv($start, $end, $locationId);
+        /** @var CwmanalyticsModel $model */
+        $model = $this->getModel('Cwmanalytics', 'Administrator');
+        $model->exportCsv($start, $end, $locationId);
         $app->close();
     }
 }

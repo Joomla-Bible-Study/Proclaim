@@ -12,6 +12,7 @@ namespace CWM\Plugin\Task\Proclaim\Extension;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
+use CWM\Component\Proclaim\Administrator\Model\CwmanalyticsModel;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
@@ -346,8 +347,15 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             if ($enableEmail && $reportEmail !== '' && filter_var($reportEmail, FILTER_VALIDATE_EMAIL)) {
                 $start = date('Y-m-d', strtotime('-' . $reportDays . ' days'));
                 $end   = date('Y-m-d');
-                $kpi   = CwmanalyticsHelper::getKpiTotals($start, $end);
-                $top   = CwmanalyticsHelper::getTopStudies($start, $end, 5);
+
+                /** @var CwmanalyticsModel $analyticsModel */
+                $analyticsModel = Factory::getApplication()
+                    ->bootComponent('com_proclaim')
+                    ->getMVCFactory()
+                    ->createModel('Cwmanalytics', 'Administrator');
+
+                $kpi = $analyticsModel->getKpiTotals($start, $end);
+                $top = $analyticsModel->getTopStudies($start, $end, 5);
 
                 $body  = '<h2>' . Text::_('PLG_TASK_PROCLAIM_ANALYTICS_EMAIL_TITLE') . '</h2>';
                 $body .= '<p>' . Text::sprintf('PLG_TASK_PROCLAIM_ANALYTICS_EMAIL_PERIOD', $start, $end) . '</p>';
