@@ -138,7 +138,7 @@ class CWMAddonYoutube extends CWMAddon
         if (preg_match('/\s*[a-zA-Z\/\/:\.]*youtu(be.com\/watch\?v=|.be\/)([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i', $url)) {
             $string = preg_replace(
                 "/\s*[a-zA-Z\/\/:\.]*youtu(be.com\/watch\?v=|.be\/)([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i",
-                "//www.youtube.com/embed/$2",
+                "//www.youtube.com/embed/$2?enablejsapi=1",
                 $url
             );
         }
@@ -150,7 +150,7 @@ class CWMAddonYoutube extends CWMAddon
             // Extract the part after the last "/"
             if ($lastSlashPosition !== false) {
                 $videoID = substr($url, $lastSlashPosition + 1);
-                $string  = "//www.youtube.com/embed/$videoID";
+                $string  = "//www.youtube.com/embed/$videoID?enablejsapi=1";
             }
         }
 
