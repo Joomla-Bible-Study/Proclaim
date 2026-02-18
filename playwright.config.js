@@ -1,8 +1,12 @@
 /**
  * Playwright E2E configuration for Proclaim.
  *
- * Credentials and URLs are read from build.properties (gitignored).
- * Copy build.dist.properties → build.properties and fill in your values.
+ * Configuration is resolved with a two-layer approach:
+ *   1. build.dist.properties — default values (committed, safe to share)
+ *   2. build.properties      — local overrides for credentials/paths (gitignored)
+ *
+ * To get started: copy build.dist.properties → build.properties and fill in
+ * builder.joomla_username, builder.joomla_password, and the site URLs.
  */
 
 const fs = require('fs');
@@ -32,7 +36,17 @@ function parseProperties(filePath) {
     return props;
 }
 
-const props = parseProperties(path.join(__dirname, 'build.properties'));
+/**
+ * Load properties with dist-file defaults overridden by local build.properties.
+ * Keys present in build.properties always take precedence.
+ */
+function loadProps() {
+    const dist = parseProperties(path.join(__dirname, 'build.dist.properties'));
+    const local = parseProperties(path.join(__dirname, 'build.properties'));
+    return { ...dist, ...local };
+}
+
+const props = loadProps();
 
 const j5Url = props['builder.j5dev.url'] || 'https://j5-dev.local:8890';
 const j6Url = props['builder.j6dev.url'] || 'https://j6-dev.local:8890';

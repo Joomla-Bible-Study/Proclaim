@@ -4,6 +4,10 @@
  *
  * Runs once before the entire test suite.
  *
+ * Configuration follows a two-layer approach:
+ *   1. build.dist.properties — defaults (committed)
+ *   2. build.properties      — local overrides for credentials (gitignored)
+ *
  * Uses a real browser context so that the user-agent stored in the Joomla
  * PHP session matches the Chromium user-agent used by the actual test runs.
  */
@@ -30,6 +34,12 @@ function parseProperties(filePath) {
         props[trimmed.slice(0, eq).trim()] = trimmed.slice(eq + 1).trim();
     }
     return props;
+}
+
+function loadProps(root) {
+    const dist = parseProperties(path.join(root, 'build.dist.properties'));
+    const local = parseProperties(path.join(root, 'build.properties'));
+    return { ...dist, ...local };
 }
 
 async function loginAdmin(browser, baseUrl, username, password, storageStatePath) {
@@ -78,16 +88,16 @@ async function loginAdmin(browser, baseUrl, username, password, storageStatePath
 }
 
 module.exports = async function globalSetup() {
-    const propsPath = path.join(__dirname, '../../build.properties');
-    const props = parseProperties(propsPath);
+    const root = path.join(__dirname, '../..');
+    const props = loadProps(root);
 
     const username = props['builder.joomla_username'];
     const password = props['builder.joomla_password'];
 
     if (!username || !password) {
         throw new Error(
-            'Missing builder.joomla_username / builder.joomla_password in build.properties.\n' +
-            'Copy build.dist.properties → build.properties and fill in your credentials.'
+            'Missing builder.joomla_username / builder.joomla_password.\n' +
+            'Set them in build.properties (local dev) or build.dist.properties (shared defaults).'
         );
     }
 
