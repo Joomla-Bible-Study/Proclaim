@@ -794,7 +794,7 @@ class CwmmigrationHelper
                 $locationMap  = []; // accessLevelId => newLocationId
 
                 foreach ($accessLevels as $accessLevel) {
-                    $locationId                    = self::createLocationFromAccess($accessLevel);
+                    $locationId                          = self::createLocationFromAccess($accessLevel);
                     $locationMap[(int) $accessLevel->id] = $locationId;
                     $report['locations_created']++;
                 }
@@ -955,8 +955,8 @@ class CwmmigrationHelper
         }
 
         // Insert new location
-        $alias = \Joomla\CMS\Application\ApplicationHelper::stringURLSafe($name);
-        $row   = new \stdClass();
+        $alias              = \Joomla\CMS\Application\ApplicationHelper::stringURLSafe($name);
+        $row                = new \stdClass();
         $row->location_text = $name;
         $row->alias         = $alias ?: 'location-' . (int) $accessLevel->id;
         $row->published     = 1;
@@ -1129,7 +1129,8 @@ class CwmmigrationHelper
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_studies', 's'))
             ->where($db->quoteName('s.location_id') . ' > 0')
-            ->where('NOT EXISTS ('
+            ->where(
+                'NOT EXISTS ('
                 . $db->getQuery(true)
                     ->select('1')
                     ->from($db->quoteName('#__bsms_locations', 'l'))

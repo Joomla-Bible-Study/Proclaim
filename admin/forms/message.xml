@@ -85,7 +85,8 @@
                layout="joomla.form.field.subform.repeatable-table"
                buttons="add,remove,move"/>
 
-        <field name="location_id" type="LocationList" label="JBS_CMN_LOCATION">
+        <field name="location_id" type="LocationList" label="JBS_CMN_LOCATION"
+               description="JBS_FLD_LOCATION_DESC">
             <option value="-1">JBS_CMN_SELECT_LOCATION</option>
         </field>
 
@@ -152,7 +153,7 @@
         />
 
         <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
-               description="JFIELD_ACCESS_DESC"/>
+               description="JBS_FLD_ACCESS_VS_LOCATION_DESC"/>
         <field name="asset_id" type="hidden" filter="unset"/>
     </fieldset>
 

@@ -255,7 +255,7 @@ class CwmlocationModel extends AdminModel
             return false;
         }
 
-        return array_key_exists((string) $locationId, $mapping);
+        return \array_key_exists((string) $locationId, $mapping);
     }
 
     /**
