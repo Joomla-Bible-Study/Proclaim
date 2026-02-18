@@ -44,7 +44,7 @@ class CwmanalyticsController extends BaseController
     public function seedLegacy(): void
     {
         $app = Factory::getApplication();
-        Session::checkToken() or $app->redirect('index.php?option=com_proclaim&view=cwmanalytics');
+        Session::checkToken('get') or $app->redirect('index.php?option=com_proclaim&view=cwmanalytics');
 
         $result = CwmanalyticsHelper::seedFromLegacy();
         $app->enqueueMessage(

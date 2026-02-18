@@ -18,7 +18,6 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmadmin;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmupgradeHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
@@ -191,8 +190,6 @@ class HtmlView extends BaseHtmlView
      */
     public bool $has9xSchema = false;
 
-    /** @var array{views: int, plays: int, downloads: int} All-time record totals for the analytics quick-stats tab @since 10.1.0 */
-    public array $anaKpi = ['views' => 0, 'plays' => 0, 'downloads' => 0];
 
     /**
      * Form
@@ -250,9 +247,6 @@ class HtmlView extends BaseHtmlView
         $this->assets      = $app->getInput()->get('checkassets', null, 'get');
         $this->popups      = '';
 
-        // Analytics quick stats — query live record counters (hits/plays/downloads columns)
-        // so the cards always reflect real data regardless of whether event tracking is active
-        $this->anaKpi = CwmanalyticsHelper::getRecordTotals();
 
         // Get the list of backup files
         $path = JPATH_SITE . '/media/com_proclaim/backup';

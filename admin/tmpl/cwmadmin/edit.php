@@ -869,33 +869,9 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
         <div class="row" id="analytics-tab">
             <div class="col-12">
                 <div class="cwmadmin-panel mb-4">
-                    <h3 class="tab-description"><?php echo Text::_('JBS_ANA_QUICK_STATS'); ?></h3>
-                    <p class="text-muted small"><?php echo Text::_('JBS_ANA_QUICK_STATS_DESC'); ?></p>
-                    <div class="row g-3 mb-3" id="analytics-kpi-cards">
-                        <?php
-                        $anaKpiCards = [
-                            ['icon' => 'icon-eye',      'label' => 'JBS_ANA_TOTAL_VIEWS',     'value' => $this->anaKpi['views'],     'class' => 'text-primary'],
-                            ['icon' => 'icon-play',     'label' => 'JBS_ANA_TOTAL_PLAYS',     'value' => $this->anaKpi['plays'],     'class' => 'text-success'],
-                            ['icon' => 'icon-download', 'label' => 'JBS_ANA_TOTAL_DOWNLOADS', 'value' => $this->anaKpi['downloads'], 'class' => 'text-warning'],
-                        ];
-                        ?>
-                        <?php foreach ($anaKpiCards as $card) : ?>
-                        <div class="col-6 col-md-3">
-                            <div class="card text-center">
-                                <div class="card-body py-2">
-                                    <i class="<?php echo $card['icon']; ?> <?php echo $card['class']; ?> mb-1" aria-hidden="true"></i>
-                                    <div class="fw-bold fs-5 <?php echo $card['class']; ?>">
-                                        <?php echo number_format($card['value']); ?>
-                                    </div>
-                                    <div class="text-muted small"><?php echo Text::_($card['label']); ?></div>
-                                </div>
-                            </div>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
                     <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmanalytics'); ?>"
-                       class="btn btn-primary">
-                        <i class="icon-chart-bar me-1" aria-hidden="true"></i>
+                       class="btn btn-primary btn-lg">
+                        <i class="icon-chart-bar me-2" aria-hidden="true"></i>
                         <?php echo Text::_('JBS_ANA_FULL_DASHBOARD'); ?>
                     </a>
                 </div>
