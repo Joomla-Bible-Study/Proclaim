@@ -418,6 +418,68 @@ class CwmanalyticsHelper
     // -------------------------------------------------------------------------
 
     /**
+     * Get all-time accumulated totals directly from the source record counters.
+     *
+     * Queries #__bsms_studies.hits (page views) and #__bsms_mediafiles plays/downloads.
+     * These are the counters incremented in real-time by the existing hit() / hitPlay() /
+     * download() methods — they are always current regardless of whether analytics event
+     * tracking is active.
+     *
+     * Used by the admin-center quick-stats cards where "how much content has been
+     * accessed total" is more useful than the new event log.
+     *
+     * @param   int  $locationId  Filter by campus; 0 = all.
+     *
+     * @return  array{views: int, plays: int, downloads: int}
+     *
+     * @since   10.1.0
+     */
+    public static function getRecordTotals(int $locationId = 0): array
+    {
+        $result = ['views' => 0, 'plays' => 0, 'downloads' => 0];
+
+        try {
+            $db = Factory::getContainer()->get('DatabaseDriver');
+
+            // Page views from studies
+            $q = $db->getQuery(true)
+                ->select('SUM(' . $db->quoteName('hits') . ')')
+                ->from($db->quoteName('#__bsms_studies'));
+
+            if ($locationId > 0) {
+                $q->where($db->quoteName('location_id') . ' = ' . (int) $locationId);
+            }
+
+            $db->setQuery($q);
+            $result['views'] = (int) ($db->loadResult() ?? 0);
+
+            // Plays and downloads from media files (join to get location)
+            $q2 = $db->getQuery(true)
+                ->select([
+                    'SUM(' . $db->quoteName('m.plays') . ') AS plays',
+                    'SUM(' . $db->quoteName('m.downloads') . ') AS downloads',
+                ])
+                ->from($db->quoteName('#__bsms_mediafiles', 'm'));
+
+            if ($locationId > 0) {
+                $q2->leftJoin(
+                    $db->quoteName('#__bsms_studies', 's') .
+                    ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('m.study_id')
+                )->where($db->quoteName('s.location_id') . ' = ' . (int) $locationId);
+            }
+
+            $db->setQuery($q2);
+            $row                 = $db->loadAssoc() ?? [];
+            $result['plays']     = (int) ($row['plays'] ?? 0);
+            $result['downloads'] = (int) ($row['downloads'] ?? 0);
+        } catch (\Exception $e) {
+            // Return zeros
+        }
+
+        return $result;
+    }
+
+    /**
      * Get KPI totals for the dashboard.
      *
      * @param   string  $start       Start date (Y-m-d).

@@ -877,7 +877,6 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                             ['icon' => 'icon-eye',      'label' => 'JBS_ANA_TOTAL_VIEWS',     'value' => $this->anaKpi['views'],     'class' => 'text-primary'],
                             ['icon' => 'icon-play',     'label' => 'JBS_ANA_TOTAL_PLAYS',     'value' => $this->anaKpi['plays'],     'class' => 'text-success'],
                             ['icon' => 'icon-download', 'label' => 'JBS_ANA_TOTAL_DOWNLOADS', 'value' => $this->anaKpi['downloads'], 'class' => 'text-warning'],
-                            ['icon' => 'icon-user',     'label' => 'JBS_ANA_UNIQUE_SESSIONS', 'value' => $this->anaKpi['sessions'], 'class' => 'text-info'],
                         ];
                         ?>
                         <?php foreach ($anaKpiCards as $card) : ?>

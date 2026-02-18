@@ -191,8 +191,8 @@ class HtmlView extends BaseHtmlView
      */
     public bool $has9xSchema = false;
 
-    /** @var array{views: int, plays: int, downloads: int, sessions: int} Last-30-day analytics KPIs for the analytics tab @since 10.1.0 */
-    public array $anaKpi = ['views' => 0, 'plays' => 0, 'downloads' => 0, 'sessions' => 0];
+    /** @var array{views: int, plays: int, downloads: int} All-time record totals for the analytics quick-stats tab @since 10.1.0 */
+    public array $anaKpi = ['views' => 0, 'plays' => 0, 'downloads' => 0];
 
     /**
      * Form
@@ -250,10 +250,9 @@ class HtmlView extends BaseHtmlView
         $this->assets      = $app->getInput()->get('checkassets', null, 'get');
         $this->popups      = '';
 
-        // Analytics KPI (last 30 days) — loaded server-side to avoid spinner
-        $today          = date('Y-m-d');
-        $thirtyDaysAgo  = date('Y-m-d', strtotime('-29 days'));
-        $this->anaKpi   = CwmanalyticsHelper::getKpiTotals($thirtyDaysAgo, $today);
+        // Analytics quick stats — query live record counters (hits/plays/downloads columns)
+        // so the cards always reflect real data regardless of whether event tracking is active
+        $this->anaKpi = CwmanalyticsHelper::getRecordTotals();
 
         // Get the list of backup files
         $path = JPATH_SITE . '/media/com_proclaim/backup';
