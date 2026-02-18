@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
@@ -293,10 +294,8 @@ class CwmmessagesModel extends ListModel
             $query->where($db->qn('study.access') . ' = ' . (int) $access);
         }
 
-        // Restrict non-admin users to their authorised view levels
-        if (!$user->authorise('core.admin')) {
-            $query->whereIn($db->qn('study.access'), $user->getAuthorisedViewLevels());
-        }
+        // Apply hybrid security filter: location-based + Joomla view-level access
+        CwmlocationHelper::applySecurityFilter($query, 'study');
 
         // Filter by teacher
         $teacher = $this->getState('filter.teacher');
