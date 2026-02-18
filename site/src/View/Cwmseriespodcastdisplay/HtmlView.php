@@ -203,6 +203,13 @@ class HtmlView extends BaseHtmlView
         $this->item        = $item;
         $this->request_url = (new Uri())->toString();
 
+        $wa = $this->getDocument()->getWebAssetManager();
+        $wa->useScript('com_proclaim.podcast-audio');
+
+        Text::script('JBS_CMN_LOADING');
+        Text::script('JBS_CMN_LOADING_TIMEOUT');
+        Text::script('JBS_CMN_LOADING_ERROR');
+
         parent::display($tpl);
     }
 }

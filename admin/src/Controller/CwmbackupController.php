@@ -209,8 +209,8 @@ class CwmbackupController extends FormController
 
                 // Compress the file if requested
                 if ($compress) {
-                    $zipPath = $this->compressBackupFile($path);
-                    $path = $zipPath;
+                    $zipPath  = $this->compressBackupFile($path);
+                    $path     = $zipPath;
                     $filename = basename($zipPath);
                 }
 
@@ -233,9 +233,9 @@ class CwmbackupController extends FormController
 
                 // Compress the file if requested
                 if ($compress) {
-                    $zipPath = $this->compressBackupFile($downloadPath);
+                    $zipPath      = $this->compressBackupFile($downloadPath);
                     $downloadPath = $zipPath;
-                    $filename = basename($zipPath);
+                    $filename     = basename($zipPath);
                 }
 
                 // Store path in session for download (needed for the download redirect)
@@ -621,9 +621,9 @@ class CwmbackupController extends FormController
 
             $this->sendJsonResponse(true, Text::_('JBS_CMN_OPERATION_SUCCESSFUL'), [
                 'templatecodes_created' => $templatecodesCreated,
-                'tables_restored' => $integrity['tables'],
-                'tasks_restored' => $integrity['tasks'],
-                'config_restored' => $integrity['config'],
+                'tables_restored'       => $integrity['tables'],
+                'tasks_restored'        => $integrity['tasks'],
+                'config_restored'       => $integrity['config'],
             ]);
         } catch (\Exception $e) {
             $this->sendJsonResponse(false, 'Import finalize error: ' . $e->getMessage());
@@ -1094,7 +1094,7 @@ class CwmbackupController extends FormController
     private function compressBackupFile(string $sqlFilePath): string
     {
         $zipPath = $sqlFilePath . '.zip';
-        $zip = new \ZipArchive();
+        $zip     = new \ZipArchive();
 
         // Create the ZIP file
         if ($zip->open($zipPath, \ZipArchive::CREATE) !== true) {
