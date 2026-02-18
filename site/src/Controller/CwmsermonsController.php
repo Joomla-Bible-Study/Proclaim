@@ -63,8 +63,10 @@ class CwmsermonsController extends BaseController
     public function playHit(): void
     {
         $app      = Factory::getApplication();
+        $id       = $app->getInput()->getInt('id', 0);
         $getMedia = new Cwmmedia();
-        $getMedia->hitPlay((int)$app->getInput()->get('id', '', 'int'));
+        $getMedia->hitPlay($id);
+        CwmanalyticsHelper::logEvent('play', 0, $id);
 
         // Now the hit has been updated will redirect to the url.
         $return = $app->getInput()->get('return');
