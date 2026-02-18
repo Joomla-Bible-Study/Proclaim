@@ -33,11 +33,9 @@ $columns   = 12;
 $accentColor = $this->params->get('backcolor', '#287585');
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
+$wa->addInlineStyle('img { border-radius: 4px; }');
 
 ?>
-<style>img {
-        border-radius: 4px;
-    }</style>
 <div class="row col-12">
     <h4>
         <?php

@@ -53,6 +53,24 @@ $translations = [
     'JBS_PDC_FIX_METADATA_SKIPPED' => Text::_('JBS_PDC_FIX_METADATA_SKIPPED'),
 ];
 $token = $app->getSession()->getFormToken();
+
+$translationsJson = json_encode($translations, JSON_THROW_ON_ERROR);
+$inlineJs = <<<JS
+document.addEventListener('DOMContentLoaded', function() {
+    var fixProblemsBtn = document.getElementById('fixProblemsBtn');
+    if (fixProblemsBtn) {
+        fixProblemsBtn.addEventListener('click', function() {
+            var progress = new MetadataFixProgress({
+                baseUrl: 'index.php',
+                token: '{$token}',
+                translations: {$translationsJson}
+            });
+            progress.init();
+        });
+    }
+});
+JS;
+$wa->addInlineScript($inlineJs);
 ?>
 
 <div class="container-fluid">
@@ -172,19 +190,3 @@ $token = $app->getSession()->getFormToken();
         <?php echo $reportHtml; ?>
     <?php endif; ?>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const fixProblemsBtn = document.getElementById('fixProblemsBtn');
-    if (fixProblemsBtn) {
-        fixProblemsBtn.addEventListener('click', function() {
-            const progress = new MetadataFixProgress({
-                baseUrl: 'index.php',
-                token: '<?php echo $token; ?>',
-                translations: <?php echo json_encode($translations, JSON_THROW_ON_ERROR); ?>
-            });
-            progress.init();
-        });
-    }
-});
-</script>
