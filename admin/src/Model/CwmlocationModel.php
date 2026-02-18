@@ -16,10 +16,13 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Table\CwmlocationTable;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 
@@ -120,6 +123,139 @@ class CwmlocationModel extends AdminModel
             $table->modified    = $date->toSql();
             $table->modified_by = $user->id;
         }
+    }
+
+    /**
+     * Delete one or more location records after verifying they are not in use.
+     *
+     * Blocks deletion when:
+     *   - Messages, series, or podcasts are assigned to the location, OR
+     *   - The location is referenced in the group-to-location mapping config.
+     *
+     * @param   array  $pks  Primary key IDs to delete.
+     *
+     * @return  bool  True if all requested records were deleted; false otherwise.
+     *
+     * @since   10.1.0
+     */
+    public function delete(&$pks): bool
+    {
+        foreach ($pks as $pk) {
+            $pk    = (int) $pk;
+            $usage = $this->getLocationUsage($pk);
+
+            // Block if content is assigned to this location
+            if ($usage['messages'] > 0 || $usage['series'] > 0 || $usage['podcasts'] > 0) {
+                $this->setError(
+                    Text::sprintf(
+                        'JBS_ERROR_LOCATION_IN_USE',
+                        $usage['messages'],
+                        $usage['series'],
+                        $usage['podcasts']
+                    )
+                );
+
+                return false;
+            }
+
+            // Block if this location is referenced in the group mapping config
+            if ($this->isInGroupMapping($pk)) {
+                $this->setError(Text::_('JBS_ERROR_LOCATION_IN_GROUP_MAPPING'));
+
+                return false;
+            }
+        }
+
+        return parent::delete($pks);
+    }
+
+    /**
+     * Return content counts for a location, used for deletion safety checks.
+     *
+     * Results are cached per request to avoid repeated queries when checking
+     * multiple locations in a batch delete.
+     *
+     * @param   int  $locationId  The location ID to check.
+     *
+     * @return  array{messages: int, series: int, podcasts: int}
+     *
+     * @since   10.1.0
+     */
+    public function getLocationUsage(int $locationId): array
+    {
+        static $cache = [];
+
+        if (isset($cache[$locationId])) {
+            return $cache[$locationId];
+        }
+
+        // Messages — always available via CwmlocationHelper
+        $usage = CwmlocationHelper::getLocationUsage($locationId);
+
+        // Series — count if #__bsms_series has a location_id column
+        $usage['series'] = $this->countByLocationId('#__bsms_series', $locationId);
+
+        // Podcasts — count if #__bsms_podcast has a location_id column
+        $usage['podcasts'] = $this->countByLocationId('#__bsms_podcast', $locationId);
+
+        $cache[$locationId] = $usage;
+
+        return $usage;
+    }
+
+    /**
+     * Count records in a table by location_id, returning 0 if the column does
+     * not exist (graceful degradation for tables not yet in the location system).
+     *
+     * @param   string  $table      Database table name (with # prefix).
+     * @param   int     $locationId Location ID to count.
+     *
+     * @return  int
+     *
+     * @since   10.1.0
+     */
+    private function countByLocationId(string $table, int $locationId): int
+    {
+        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $columns = $db->getTableColumns($table);
+
+        if (!isset($columns['location_id'])) {
+            return 0;
+        }
+
+        $query = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName($table))
+            ->where($db->quoteName('location_id') . ' = ' . $locationId);
+        $db->setQuery($query);
+
+        return (int) $db->loadResult();
+    }
+
+    /**
+     * Check whether a location ID appears in the component group-mapping config.
+     *
+     * @param   int  $locationId  Location ID to look up.
+     *
+     * @return  bool
+     *
+     * @since   10.1.0
+     */
+    private function isInGroupMapping(int $locationId): bool
+    {
+        $raw = ComponentHelper::getParams('com_proclaim')->get('location_group_mapping', '{}');
+
+        if (\is_string($raw)) {
+            $mapping = json_decode($raw, true);
+        } else {
+            $mapping = $raw;
+        }
+
+        if (!\is_array($mapping)) {
+            return false;
+        }
+
+        return array_key_exists((string) $locationId, $mapping);
     }
 
     /**
