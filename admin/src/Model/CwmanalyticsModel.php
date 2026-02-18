@@ -506,7 +506,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
 
             // Seed study page-views from #__bsms_studies.hits
             $dateExpr = 'COALESCE(NULLIF(' . $db->quoteName('studydate') . ', ' . $db->quote('0000-00-00') . '),'
-                . $db->quoteName('createdate') . ', NOW())';
+                . $db->quoteName('created') . ', NOW())';
 
             $sql = 'INSERT INTO ' . $db->quoteName('#__bsms_analytics_monthly') . ' (' . $cols . ')'
                 . ' SELECT'
