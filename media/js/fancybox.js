@@ -84,6 +84,22 @@
         }
     }, true);
 
+    // Re-init YouTube players after sermon-filters.es6.js replaces or appends listing content.
+    // onYouTubeIframeAPIReady only fires once; new iframes need wrapping manually.
+    document.addEventListener('proclaim:listing-updated', function () {
+        if (typeof YT === 'undefined' || typeof YT.Player === 'undefined') {
+            return;
+        }
+        document.querySelectorAll('iframe.playhit[src*="youtube.com"], iframe.hitplay[src*="youtube.com"]').forEach(function (iframe) {
+            var mediaId = iframe.getAttribute('data-id');
+            if (!mediaId || iframe.dataset.ytInited) {
+                return;
+            }
+            iframe.dataset.ytInited = '1';
+            proclaimInitYTPlayer(iframe, mediaId);
+        });
+    });
+
     window.onYouTubeIframeAPIReady = function () {
         document.querySelectorAll('iframe.playhit, iframe.hitplay').forEach(function (iframe) {
             if (!/(youtube\.com\/embed)/.test(iframe.src)) {
@@ -94,6 +110,8 @@
             if (!mediaId) {
                 return;
             }
+
+            iframe.dataset.ytInited = '1';
 
             // If the iframe was served from cache without enablejsapi=1, add it now.
             // This reloads the iframe, so we wait for the load event before wrapping.

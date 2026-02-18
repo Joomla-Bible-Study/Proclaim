@@ -419,6 +419,9 @@
                             // Fallback: just append the raw HTML
                             listContainer.insertAdjacentHTML('beforeend', result.html);
                         }
+
+                        // Notify fancybox.es6.js to re-init any YouTube iframes in new content.
+                        document.dispatchEvent(new CustomEvent('proclaim:listing-updated'));
                     }
 
                     // Update tracking
@@ -444,6 +447,9 @@
                             txt('JBS_CMN_STUDY_NOT_FOUND', 'No results found') +
                             '</h4><br />';
                     }
+
+                    // Notify fancybox.es6.js to re-init any YouTube iframes in new content.
+                    document.dispatchEvent(new CustomEvent('proclaim:listing-updated'));
 
                     // For scroll modes, update state after replace
                     if (paginationStyle !== 'pagination') {
