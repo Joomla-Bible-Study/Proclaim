@@ -514,6 +514,42 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<?php echo Text::_('JCLOSE'); ?>"></button>
         </div>
 
+        <!-- Image Migration Pipeline -->
+        <div id="imagetools-pipeline-panel" class="cwmadmin-panel mb-4">
+            <h3 class="tab-description"><?php echo Text::_('JBS_ADM_PIPELINE_TITLE'); ?></h3>
+            <p class="text-body-secondary"><?php echo Text::_('JBS_ADM_PIPELINE_DESC'); ?></p>
+            <ol id="pipeline-steps" class="list-group list-group-numbered list-group-flush mb-3">
+                <li class="list-group-item d-flex align-items-center gap-2 bg-transparent px-0" data-pipeline-step="migrate">
+                    <span><?php echo Text::_('JBS_ADM_PIPELINE_STEP_MIGRATE'); ?></span>
+                    <span data-pipeline-badge="migrate" class="badge bg-secondary ms-auto"><?php echo Text::_('JBS_ADM_PIPELINE_PENDING'); ?></span>
+                </li>
+                <li class="list-group-item d-flex align-items-center gap-2 bg-transparent px-0" data-pipeline-step="recover">
+                    <span><?php echo Text::_('JBS_ADM_PIPELINE_STEP_RECOVER'); ?></span>
+                    <span data-pipeline-badge="recover" class="badge bg-secondary ms-auto"><?php echo Text::_('JBS_ADM_PIPELINE_PENDING'); ?></span>
+                </li>
+                <li class="list-group-item d-flex align-items-center gap-2 bg-transparent px-0" data-pipeline-step="webp">
+                    <span><?php echo Text::_('JBS_ADM_PIPELINE_STEP_WEBP'); ?></span>
+                    <span data-pipeline-badge="webp" class="badge bg-secondary ms-auto"><?php echo Text::_('JBS_ADM_PIPELINE_PENDING'); ?></span>
+                </li>
+            </ol>
+            <div id="pipeline-progress-wrap" style="display:none;" class="mb-3">
+                <div class="progress" role="progressbar" aria-label="<?php echo Text::_('JBS_ADM_PIPELINE_PROGRESS'); ?>" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div id="pipeline-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%;"></div>
+                </div>
+            </div>
+            <p id="pipeline-status-text" class="mb-3 text-body-secondary" aria-live="polite"></p>
+            <div class="d-flex gap-2">
+                <button type="button" id="btn-run-pipeline" class="btn btn-primary">
+                    <i class="icon-play" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_PIPELINE_RUN'); ?>
+                </button>
+                <button type="button" id="btn-cancel-pipeline" class="btn btn-outline-danger" style="display:none;">
+                    <?php echo Text::_('JCANCEL'); ?>
+                </button>
+            </div>
+        </div>
+
+        <!-- Migration Tools section -->
+        <h4 class="border-bottom pb-2 mb-3 mt-2"><?php echo Text::_('JBS_ADM_IMAGETOOLS_MIGRATION_HEADING'); ?></h4>
         <div class="row" id="imagetools">
             <!-- Image Migration Section (Step 1) -->
             <div class="col-12 col-lg-6">
@@ -603,8 +639,11 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             </div>
         </div>
 
+        <!-- Cleanup & Maintenance section -->
+        <h4 class="border-bottom pb-2 mb-3 mt-4"><?php echo Text::_('JBS_ADM_IMAGETOOLS_CLEANUP_HEADING'); ?></h4>
+
         <!-- Row 2: Post-Migration Review -->
-        <div class="row mt-3" id="imagetools-row2">
+        <div class="row mt-0" id="imagetools-row2">
             <div class="col-12 col-lg-6">
                 <div class="cwmadmin-panel mb-4">
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_CLEAR_UNRESOLVABLE'); ?></h3>
@@ -737,6 +776,14 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             'recovering'            => Text::_('JBS_ADM_RECOVERING'),
             'recoverComplete'       => Text::_('JBS_ADM_RECOVER_COMPLETE'),
             'foldersRecovered'      => Text::_('JBS_ADM_FOLDERS_RECOVERED'),
+            'pipelineRunning'       => Text::_('JBS_ADM_PIPELINE_RUNNING'),
+            'pipelineDone'          => Text::_('JBS_ADM_PIPELINE_DONE'),
+            'pipelineError'         => Text::_('JBS_ADM_PIPELINE_ERROR'),
+            'pipelineSkipped'       => Text::_('JBS_ADM_PIPELINE_SKIPPED'),
+            'pipelinePending'       => Text::_('JBS_ADM_PIPELINE_PENDING'),
+            'pipelineComplete'      => Text::_('JBS_ADM_PIPELINE_COMPLETE'),
+            'pipelineCancelled'     => Text::_('JBS_ADM_PIPELINE_CANCELLED'),
+            'pipelineCancelling'    => Text::_('JBS_ADM_PIPELINE_CANCELLING'),
         ], JSON_THROW_ON_ERROR);
         ?>
         <div id="imagetools-config"

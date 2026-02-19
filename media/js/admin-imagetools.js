@@ -24,6 +24,11 @@
     // ---- Navigation guard ----
     let activeOperation = null; // null | 'migration' | 'webp' | 'orphan'
 
+    // ---- Pipeline state ----
+    let pipelineMode = false;
+    let pipelineCancelled = false;
+    let pipelineStepDone = null; // resolve() for current step's Promise
+
     function onBeforeUnload(e) {
       if (activeOperation) {
         e.preventDefault();
@@ -63,7 +68,7 @@
       const target = e.target.closest('a[href], button[type="submit"], .nav-link, [data-bs-toggle="tab"]');
       if (!target) return;
       // Allow clicks inside our own imagetools section
-      if (target.closest('#imagetools, #imagetools-row2')) return;
+      if (target.closest('#imagetools, #imagetools-row2, #imagetools-pipeline-panel')) return;
       e.preventDefault();
       e.stopPropagation();
     }
@@ -73,7 +78,7 @@
     loadMigrationCounts();
 
     function loadMigrationCounts() {
-      fetch(`index.php?option=com_proclaim&task=cwmadmin.getMigrationCountsXHR&${token}=1`)
+      return fetch(`index.php?option=com_proclaim&task=cwmadmin.getMigrationCountsXHR&${token}=1`)
         .then(r => r.json())
         .then(data => {
           migrationTotals = data;
@@ -205,6 +210,13 @@
           showErrorReport();
           loadWebPCounts();
 
+          if (pipelineMode && pipelineStepDone) {
+            const resolve = pipelineStepDone;
+            pipelineStepDone = null;
+            resolve();
+            return; // skip Done button in pipeline mode
+          }
+
           // Show a "Done" button — user must acknowledge before Start Migration re-enables
           const startBtn = document.getElementById('btn-start-migration');
           const doneBtn = document.createElement('button');
@@ -322,6 +334,11 @@
             setOperationRunning(false);
             statusEl.innerHTML = `<span class="text-danger">${strings.migrationError}</span>`;
             showErrorReport();
+            if (pipelineMode && pipelineStepDone) {
+              const resolve = pipelineStepDone;
+              pipelineStepDone = null;
+              resolve();
+            }
           });
       }
 
@@ -425,7 +442,7 @@
     loadWebPCounts();
 
     function loadWebPCounts() {
-      fetch(`index.php?option=com_proclaim&task=cwmadmin.getWebPCountsXHR&${token}=1`)
+      return fetch(`index.php?option=com_proclaim&task=cwmadmin.getWebPCountsXHR&${token}=1`)
         .then(r => r.json())
         .then(data => {
           webpTotals = data;
@@ -486,6 +503,11 @@
           }
           statusEl.innerHTML = msg;
           loadWebPCounts();
+          if (pipelineMode && pipelineStepDone) {
+            const resolve = pipelineStepDone;
+            pipelineStepDone = null;
+            resolve();
+          }
           return;
         }
 
@@ -543,6 +565,11 @@
             activeOperation = null;
             setOperationRunning(false);
             statusEl.innerHTML = `<span class="text-danger">${strings.webpError}: ${err.message || err}</span>`;
+            if (pipelineMode && pipelineStepDone) {
+              const resolve = pipelineStepDone;
+              pipelineStepDone = null;
+              resolve();
+            }
           });
       }
 
@@ -672,7 +699,7 @@
     loadRecoveryCounts();
 
     function loadRecoveryCounts() {
-      fetch(`index.php?option=com_proclaim&task=cwmadmin.getRecoveryCountsXHR&${token}=1`)
+      return fetch(`index.php?option=com_proclaim&task=cwmadmin.getRecoveryCountsXHR&${token}=1`)
         .then(r => r.json())
         .then(data => {
           recoveryTotals = data;
@@ -744,6 +771,11 @@
           }
           loadRecoveryCounts();
           loadMigrationCounts();
+          if (pipelineMode && pipelineStepDone) {
+            const resolve = pipelineStepDone;
+            pipelineStepDone = null;
+            resolve();
+          }
           return;
         }
 
@@ -783,6 +815,11 @@
             activeOperation = null;
             setOperationRunning(false);
             statusEl.innerHTML = `<span class="text-danger">${strings.migrationError}</span>`;
+            if (pipelineMode && pipelineStepDone) {
+              const resolve = pipelineStepDone;
+              pipelineStepDone = null;
+              resolve();
+            }
           });
       }
 
@@ -1027,6 +1064,136 @@
           }
         })
         .catch(() => {});
+    }
+
+    // ---- Pipeline ----
+    function setPipelineBadge(stepId, state) {
+      const badge = document.querySelector(`[data-pipeline-badge="${stepId}"]`);
+      if (!badge) return;
+      const stateClasses = {
+        pending: 'bg-secondary',
+        running: 'bg-primary',
+        done:    'bg-success',
+        skipped: 'bg-info text-dark',
+        error:   'bg-danger',
+      };
+      badge.className = `badge ms-auto ${stateClasses[state] || 'bg-secondary'}`;
+      const key = `pipeline${state.charAt(0).toUpperCase() + state.slice(1)}`;
+      badge.textContent = strings[key] || state;
+    }
+
+    function setPipelineStatus(text) {
+      const el = document.getElementById('pipeline-status-text');
+      if (el) el.textContent = text;
+    }
+
+    function setPipelineProgress(pct, done = false) {
+      const wrap = document.getElementById('pipeline-progress-wrap');
+      const bar  = document.getElementById('pipeline-progress-bar');
+      if (!wrap || !bar) return;
+      wrap.style.display = 'block';
+      bar.style.width = `${pct}%`;
+      bar.setAttribute('aria-valuenow', pct);
+      if (done) {
+        bar.classList.remove('progress-bar-striped', 'progress-bar-animated');
+      } else {
+        bar.classList.add('progress-bar-striped', 'progress-bar-animated');
+      }
+    }
+
+    function runStepAsync(btnId) {
+      return new Promise(resolve => {
+        pipelineStepDone = resolve;
+        const btn = document.getElementById(btnId);
+        if (btn && !btn.disabled) {
+          btn.click();
+        } else {
+          // Button disabled — nothing to do, resolve immediately
+          pipelineStepDone = null;
+          resolve();
+        }
+      });
+    }
+
+    const runPipeline = async () => {
+      pipelineMode = true;
+      pipelineCancelled = false;
+      const runBtn    = document.getElementById('btn-run-pipeline');
+      const cancelBtn = document.getElementById('btn-cancel-pipeline');
+      if (runBtn)    runBtn.style.display    = 'none';
+      if (cancelBtn) cancelBtn.style.display = '';
+      if (cancelBtn) cancelBtn.disabled      = false;
+
+      ['migrate', 'recover', 'webp'].forEach(s => setPipelineBadge(s, 'pending'));
+      setPipelineStatus('');
+      setPipelineProgress(0);
+
+      try {
+        // Step 1: Image Migration
+        setPipelineBadge('migrate', 'running');
+        setPipelineStatus(strings.pipelineRunning);
+        await loadMigrationCounts();
+        if (migrationTotals.total > 0) {
+          await runStepAsync('btn-start-migration');
+          setPipelineBadge('migrate', 'done');
+        } else {
+          setPipelineBadge('migrate', 'skipped');
+        }
+        setPipelineProgress(35);
+
+        if (pipelineCancelled) throw new Error('cancelled');
+
+        // Step 2: Recover Bare-ID Folders
+        setPipelineBadge('recover', 'running');
+        await loadRecoveryCounts();
+        if (recoveryTotals.total > 0) {
+          await runStepAsync('btn-start-recovery');
+          setPipelineBadge('recover', 'done');
+        } else {
+          setPipelineBadge('recover', 'skipped');
+        }
+        setPipelineProgress(70);
+
+        if (pipelineCancelled) throw new Error('cancelled');
+
+        // Step 3: WebP Generation
+        setPipelineBadge('webp', 'running');
+        await loadWebPCounts();
+        if (webpTotals.total > 0) {
+          await runStepAsync('btn-start-webp');
+          setPipelineBadge('webp', 'done');
+        } else {
+          setPipelineBadge('webp', 'skipped');
+        }
+        setPipelineProgress(100, true);
+
+        setPipelineStatus(strings.pipelineComplete);
+      } catch (err) {
+        if (err.message === 'cancelled') {
+          setPipelineStatus(strings.pipelineCancelled);
+        } else {
+          setPipelineStatus(`${strings.pipelineError}: ${err.message || err}`);
+        }
+      } finally {
+        pipelineMode = false;
+        pipelineStepDone = null;
+        if (runBtn)    runBtn.style.display    = '';
+        if (cancelBtn) cancelBtn.style.display = 'none';
+      }
+    };
+
+    const runPipelineBtn = document.getElementById('btn-run-pipeline');
+    if (runPipelineBtn) {
+      runPipelineBtn.addEventListener('click', runPipeline);
+    }
+
+    const cancelPipelineBtn = document.getElementById('btn-cancel-pipeline');
+    if (cancelPipelineBtn) {
+      cancelPipelineBtn.addEventListener('click', () => {
+        pipelineCancelled = true;
+        setPipelineStatus(strings.pipelineCancelling);
+        cancelPipelineBtn.disabled = true;
+      });
     }
 
     // ---- Utility ----
