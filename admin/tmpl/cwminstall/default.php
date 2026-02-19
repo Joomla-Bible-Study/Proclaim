@@ -13,7 +13,6 @@
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-use Joomla\CMS\Session\Session;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwminstall\HtmlView $this */
 
@@ -119,7 +118,7 @@ if ($this->more) {
                         }, 3000);
                     });"
                 );
-                ?>
+                    ?>
                 <?php endif; ?>
             </div>
 

@@ -108,7 +108,7 @@ class CwmanalyticsController extends BaseController
 
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
-        header('Content-Length: ' . strlen($csv));
+        header('Content-Length: ' . \strlen($csv));
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Pragma: public');

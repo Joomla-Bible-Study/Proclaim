@@ -16,7 +16,6 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
 
@@ -76,7 +75,7 @@ foreach ($list as $study) {
             /** @var string $link */
             echo $link;
         }
-        ?>
+?>
     </div>
 </div>
 <!--end of footer div-->

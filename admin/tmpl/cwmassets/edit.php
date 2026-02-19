@@ -15,7 +15,6 @@
 
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Router\Route;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmassets\HtmlView $this */
 
@@ -26,7 +25,7 @@ $wa->useScript('keepalive')
         'proclaim.asset-fix',
         'com_proclaim/asset-fix.min.js',
         ['version' => 'auto'],
-        ['defer' => true],
+        ['defer'   => true],
         ['core']
     );
 

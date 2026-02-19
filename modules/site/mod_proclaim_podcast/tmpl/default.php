@@ -15,8 +15,6 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Application\SiteApplication;
-use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
 
 /** @var SiteApplication $app */
 
