@@ -167,6 +167,15 @@
             btn.addEventListener('click', () => this.handlePlayerTools(btn));
           });
 
+          // Bind reset-stats buttons (two-step inline confirm)
+          document.querySelectorAll('[data-reset-stat]').forEach(btn => {
+            btn.addEventListener('click', () => this.promptResetStat(btn.dataset.resetStat));
+          });
+          const confirmResetBtn = document.getElementById('btn-reset-stats-confirm');
+          const cancelResetBtn  = document.getElementById('btn-reset-stats-cancel');
+          if (confirmResetBtn) confirmResetBtn.addEventListener('click', () => this.executeResetStat());
+          if (cancelResetBtn)  cancelResetBtn.addEventListener('click',  () => this.cancelResetStat());
+
           // Bind player tools modal close button
           const playerToolsCloseBtn = playerToolsModalEl.querySelector('.btn-close-player-tools-modal');
           if (playerToolsCloseBtn) {
@@ -252,9 +261,6 @@
           // Tasks that bypass validation
           const bypassTasks = [
             'cwmadmin.cancel',
-            'cwmadmin.resetHits',
-            'cwmadmin.resetDownloads',
-            'cwmadmin.resetPlays',
             'cwmadmin.aliasUpdate'
           ];
 
@@ -352,6 +358,73 @@
             resultText.textContent = error.message || 'An error occurred';
           }
           if (footer) footer.style.display = 'flex';
+        }
+      }
+
+      /**
+       * Step 1 of reset-stat: show inline confirm panel
+       * @param {string} field - 'hits' | 'downloads' | 'plays'
+       */
+      promptResetStat(field) {
+        this._pendingResetField = field;
+        const confirmEl = document.getElementById('reset-stats-confirm');
+        const textEl    = document.getElementById('reset-stats-confirm-text');
+        const statusEl  = document.getElementById('reset-stats-status');
+        const keys = {
+          hits:      'JBS_ADM_RESET_STATS_CONFIRM_HITS',
+          downloads: 'JBS_ADM_RESET_STATS_CONFIRM_DOWNLOADS',
+          plays:     'JBS_ADM_RESET_STATS_CONFIRM_PLAYS',
+        };
+        if (statusEl) statusEl.style.display = 'none';
+        if (textEl)    textEl.textContent = Joomla.Text._(keys[field]) || `Reset all ${field} to zero?`;
+        if (confirmEl) confirmEl.style.display = '';
+      }
+
+      /**
+       * Step 2 of reset-stat: cancel — hide the confirm panel
+       */
+      cancelResetStat() {
+        this._pendingResetField = null;
+        const confirmEl = document.getElementById('reset-stats-confirm');
+        if (confirmEl) confirmEl.style.display = 'none';
+      }
+
+      /**
+       * Step 3 of reset-stat: execute the AJAX call
+       */
+      async executeResetStat() {
+        const field = this._pendingResetField;
+        if (!field) return;
+        this._pendingResetField = null;
+
+        const confirmEl  = document.getElementById('reset-stats-confirm');
+        const statusEl   = document.getElementById('reset-stats-status');
+        const confirmBtn = document.getElementById('btn-reset-stats-confirm');
+        if (confirmEl)  confirmEl.style.display = 'none';
+        if (confirmBtn) confirmBtn.disabled = true;
+
+        const taskMap = { hits: 'resetHitsXHR', downloads: 'resetDownloadsXHR', plays: 'resetPlaysXHR' };
+        const task = taskMap[field];
+
+        try {
+          const url = `index.php?option=com_proclaim&task=cwmadmin.${task}&${this.token}=1`;
+          const result = await this.fetchJson(url);
+          if (statusEl) {
+            statusEl.style.display = 'block';
+            const doneKey = Joomla.Text._('JBS_ADM_RESET_STATS_DONE') || '%s record(s) reset to zero.';
+            if (result.success) {
+              statusEl.innerHTML = `<div class="alert alert-success mb-0"><i class="icon-checkmark me-1" aria-hidden="true"></i>${doneKey.replace('%s', result.updated)}</div>`;
+            } else {
+              statusEl.innerHTML = `<div class="alert alert-danger mb-0">${result.error || 'Error'}</div>`;
+            }
+          }
+        } catch (err) {
+          if (statusEl) {
+            statusEl.style.display = 'block';
+            statusEl.innerHTML = `<div class="alert alert-danger mb-0">${err.message || 'Network error'}</div>`;
+          }
+        } finally {
+          if (confirmBtn) confirmBtn.disabled = false;
         }
       }
 

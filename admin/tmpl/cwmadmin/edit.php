@@ -14,6 +14,7 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlangHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -31,77 +32,14 @@ $wa->useScript('keepalive')
     ->useScript('com_proclaim.csv-import')
     ->useStyle('com_proclaim.general');
 
-// Make language strings available to JavaScript
-Text::script('JBS_ADM_STATS_LOADED');
-Text::script('JBS_ADM_ALIAS_UPDATING');
-Text::script('JBS_ADM_ALIAS_COMPLETE');
-Text::script('JBS_ADM_ALIAS_NONE');
-Text::script('JBS_ADM_ERROR');
-Text::script('JBS_ADM_SELECT_FROM_TO');
-Text::script('JBS_ADM_PLAYER_TOOLS_PROCESSING');
-Text::script('JBS_ADM_PLAYER_TOOLS_COMPLETE');
-Text::script('JBS_ADM_THUMBNAIL_RESIZE_CONFIRM');
+// Auto-register all component language strings for JavaScript.
+// Any JBS_* key added to the .ini file is immediately available as Joomla.Text._('KEY').
+CwmlangHelper::registerAllForJs();
+// Register Joomla core string(s) also needed in JS
 Text::script('JGLOBAL_VALIDATION_FORM_FAILED');
 
-// CSV Import language strings
-Text::script('JBS_CSV_ROWS_FOUND');
-Text::script('JBS_CSV_IMPORTING');
-Text::script('JBS_CSV_COMPLETE');
-Text::script('JBS_CSV_IMPORTED');
-Text::script('JBS_CSV_SKIPPED');
-Text::script('JBS_CSV_ERRORS');
-Text::script('JBS_CSV_AUTO_CREATED');
-Text::script('JBS_CSV_TYPE');
-Text::script('JBS_CSV_NAME');
-Text::script('JBS_CSV_EDIT');
-Text::script('JBS_CSV_ERROR_DETAILS');
-Text::script('JBS_CSV_ROW');
-Text::script('JBS_CSV_FIELD');
-Text::script('JBS_CSV_MESSAGE');
-Text::script('JBS_CSV_NETWORK_ERROR');
-Text::script('JBS_CSV_TYPE_TEACHER');
-Text::script('JBS_CSV_TYPE_SERIES');
-Text::script('JBS_CSV_TYPE_LOCATION');
-Text::script('JBS_CSV_TYPE_MESSAGETYPE');
-Text::script('JBS_CSV_TYPE_TOPIC');
-
-// Upgrade wizard (conditional)
 if ($this->has9xSchema) {
     $wa->useScript('com_proclaim.upgrade-wizard');
-
-    Text::script('JBS_UPG_DETECTING');
-    Text::script('JBS_UPG_NOT_DETECTED');
-    Text::script('JBS_UPG_DETECTED');
-    Text::script('JBS_UPG_DETECT_ERROR');
-    Text::script('JBS_UPG_TOTAL');
-    Text::script('JBS_UPG_PENDING');
-    Text::script('JBS_UPG_RUNNING');
-    Text::script('JBS_UPG_DONE');
-    Text::script('JBS_UPG_ERROR');
-    Text::script('JBS_UPG_RUNNING_STEP');
-    Text::script('JBS_UPG_STEP_BACKUP');
-    Text::script('JBS_UPG_STEP_PARAMS');
-    Text::script('JBS_UPG_STEP_SCHEMA');
-    Text::script('JBS_UPG_STEP_DATA');
-    Text::script('JBS_UPG_STEP_ASSETS');
-    Text::script('JBS_UPG_STEP_VERIFY');
-    Text::script('JBS_UPG_STEP_FAILED');
-    Text::script('JBS_UPG_CANCELLED');
-    Text::script('JBS_UPG_CANCELLING');
-    Text::script('JBS_UPG_COMPLETE');
-    Text::script('JBS_UPG_RETRY');
-    Text::script('JBS_UPG_RELOAD');
-    Text::script('JBS_UPG_SUCCESS');
-    Text::script('JBS_UPG_FAILED');
-    Text::script('JBS_UPG_REPORT_CANCELLED');
-    Text::script('JBS_UPG_REPORT_ERROR');
-    Text::script('JBS_UPG_REPORT_SUCCESS');
-    Text::script('JBS_UPG_STEP');
-    Text::script('JBS_UPG_RESULT');
-    Text::script('JBS_UPG_DETAILS');
-    Text::script('JBS_UPG_RUN_STEP');
-    Text::script('JBS_UPG_RETRY_STEP');
-    Text::script('JBS_UPG_STEP_DONE');
 }
 
 $app   = Factory::getApplication();
@@ -773,110 +711,19 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
         <?php
         // Pass PHP data to external JS via data attributes
         $wa = $this->getDocument()->getWebAssetManager();
-        $wa->useScript('com_proclaim.admin-imagetools');
+$wa->useScript('com_proclaim.admin-imagetools');
 
-        $imagetoolsStrings = json_encode([
-            'total'                 => Text::_('JBS_CMN_TOTAL'),
-            'errorLoading'          => Text::_('JBS_ADM_ERROR_LOADING'),
-            'migrating'             => Text::_('JBS_ADM_MIGRATING'),
-            'migrationComplete'     => Text::_('JBS_ADM_MIGRATION_COMPLETE'),
-            'recordsMigrated'       => Text::_('JBS_ADM_RECORDS_MIGRATED'),
-            'migrationError'        => Text::_('JBS_ADM_MIGRATION_ERROR'),
-            'migrationErrors'       => Text::_('JBS_ADM_MIGRATION_ERRORS'),
-            'migrationAllDone'      => Text::_('JBS_ADM_MIGRATION_ALL_DONE'),
-            'migrationCountMessages' => Text::_('JBS_ADM_MIGRATION_COUNT_MESSAGES'),
-            'migrationCountTeachers' => Text::_('JBS_ADM_MIGRATION_COUNT_TEACHERS'),
-            'migrationCountSeries'  => Text::_('JBS_ADM_MIGRATION_COUNT_SERIES'),
-            'scanning'              => Text::_('JBS_ADM_SCANNING'),
-            'scanOrphans'           => Text::_('JBS_ADM_SCAN_ORPHANS'),
-            'found'                 => Text::_('JBS_ADM_FOUND'),
-            'orphanFolders'         => Text::_('JBS_ADM_ORPHAN_FOLDERS'),
-            'orphanStep1'           => Text::_('JBS_ADM_ORPHAN_STEP1'),
-            'orphanStep2'           => Text::_('JBS_ADM_ORPHAN_STEP2'),
-            'selectAll'             => Text::_('JBS_ADM_SELECT_ALL'),
-            'folder'                => Text::_('JBS_ADM_FOLDER'),
-            'files'                 => Text::_('JBS_ADM_FILES'),
-            'size'                  => Text::_('JBS_ADM_SIZE'),
-            'noOrphans'             => Text::_('JBS_ADM_NO_ORPHANS'),
-            'converting'            => Text::_('JBS_ADM_CONVERTING'),
-            'webpComplete'          => Text::_('JBS_ADM_WEBP_COMPLETE'),
-            'imagesConverted'       => Text::_('JBS_ADM_IMAGES_CONVERTED'),
-            'webpError'             => Text::_('JBS_ADM_WEBP_ERROR'),
-            'webpAllDone'           => Text::_('JBS_ADM_WEBP_ALL_DONE'),
-            'webpCountMessages'     => Text::_('JBS_ADM_WEBP_COUNT_MESSAGES'),
-            'webpCountTeachers'     => Text::_('JBS_ADM_WEBP_COUNT_TEACHERS'),
-            'webpCountSeries'       => Text::_('JBS_ADM_WEBP_COUNT_SERIES'),
-            'operationInProgress'   => Text::_('JBS_ADM_OPERATION_IN_PROGRESS'),
-            'missingFiles'          => Text::_('JBS_ADM_MISSING_FILES'),
-            'missingFilesDesc'      => Text::_('JBS_ADM_MISSING_FILES_DESC'),
-            'processingErrors'      => Text::_('JBS_ADM_PROCESSING_ERRORS'),
-            'processingErrorsDesc'  => Text::_('JBS_ADM_PROCESSING_ERRORS_DESC'),
-            'errorReason'           => Text::_('JBS_ADM_ERROR_REASON'),
-            'missingPath'           => Text::_('JBS_ADM_MISSING_PATH'),
-            'scanLegacy'            => Text::_('JBS_ADM_SCAN_LEGACY'),
-            'legacyNoFiles'         => Text::_('JBS_ADM_LEGACY_NO_FILES'),
-            'legacyFilesFound'      => Text::_('JBS_ADM_LEGACY_FILES_FOUND'),
-            'filenames'             => Text::_('JBS_ADM_FILENAMES'),
-            'downloadLog'           => Text::_('JBS_ADM_DOWNLOAD_CLEARED_LOG'),
-            'previewUnresolvable'   => Text::_('JBS_ADM_PREVIEW_UNRESOLVABLE'),
-            'clearUnresolvable'     => Text::_('JBS_ADM_CLEAR_UNRESOLVABLE_BTN'),
-            'noUnresolvable'        => Text::_('JBS_ADM_NO_UNRESOLVABLE'),
-            'unresolvableFound'     => Text::_('JBS_ADM_UNRESOLVABLE_FOUND'),
-            'confirmClear'          => Text::_('JBS_ADM_CONFIRM_CLEAR_UNRESOLVABLE'),
-            'clearComplete'         => Text::_('JBS_ADM_CLEAR_COMPLETE'),
-            'clearing'              => Text::_('JBS_ADM_CLEARING'),
-            'orphanMigrationWarning' => Text::_('JBS_ADM_ORPHAN_MIGRATION_WARNING'),
-            'relocated'             => Text::_('JBS_ADM_RELOCATED'),
-            'relocatedFound'        => Text::_('JBS_ADM_RELOCATED_FOUND'),
-            'relocatedDesc'         => Text::_('JBS_ADM_RELOCATED_DESC'),
-            'expectedPath'          => Text::_('JBS_ADM_EXPECTED_PATH'),
-            'foundAtPath'           => Text::_('JBS_ADM_FOUND_AT_PATH'),
-            'migrationDone'         => Text::_('JBS_ADM_MIGRATION_DONE'),
-            'deleteSelected'        => Text::_('JBS_ADM_DELETE_SELECTED'),
-            'confirmDeleteLegacy'   => Text::_('JBS_ADM_CONFIRM_DELETE_LEGACY'),
-            'deleting'              => Text::_('JBS_ADM_DELETING'),
-            'thumbRegenComplete'    => Text::_('JBS_ADM_THUMB_REGEN_COMPLETE'),
-            'thumbRegenAllDone'     => Text::_('JBS_ADM_THUMB_REGEN_ALL_DONE'),
-            'thumbRegenMessages'    => Text::_('JBS_ADM_THUMB_REGEN_COUNT_MESSAGES'),
-            'thumbRegenTeachers'    => Text::_('JBS_ADM_THUMB_REGEN_COUNT_TEACHERS'),
-            'thumbRegenSeries'      => Text::_('JBS_ADM_THUMB_REGEN_COUNT_SERIES'),
-            'regenerating'          => Text::_('JBS_ADM_REGENERATING'),
-            'recoverNone'           => Text::_('JBS_ADM_RECOVER_IMAGES_NONE'),
-            'recoverCountMessages'  => Text::_('JBS_ADM_RECOVER_COUNT_MESSAGES'),
-            'recoverCountTeachers'  => Text::_('JBS_ADM_RECOVER_COUNT_TEACHERS'),
-            'recoverCountSeries'    => Text::_('JBS_ADM_RECOVER_COUNT_SERIES'),
-            'recovering'            => Text::_('JBS_ADM_RECOVERING'),
-            'recoverComplete'       => Text::_('JBS_ADM_RECOVER_COMPLETE'),
-            'foldersRecovered'      => Text::_('JBS_ADM_FOLDERS_RECOVERED'),
-            'pipelineRunning'       => Text::_('JBS_ADM_PIPELINE_RUNNING'),
-            'pipelineDone'          => Text::_('JBS_ADM_PIPELINE_DONE'),
-            'pipelineError'         => Text::_('JBS_ADM_PIPELINE_ERROR'),
-            'pipelineSkipped'       => Text::_('JBS_ADM_PIPELINE_SKIPPED'),
-            'pipelinePending'       => Text::_('JBS_ADM_PIPELINE_PENDING'),
-            'pipelineComplete'      => Text::_('JBS_ADM_PIPELINE_COMPLETE'),
-            'pipelineCancelled'     => Text::_('JBS_ADM_PIPELINE_CANCELLED'),
-            'pipelineCancelling'    => Text::_('JBS_ADM_PIPELINE_CANCELLING'),
-            'cleanupPipelineRunning'        => Text::_('JBS_ADM_CLEANUP_PIPELINE_RUNNING'),
-            'cleanupPipelineDone'           => Text::_('JBS_ADM_CLEANUP_PIPELINE_DONE'),
-            'cleanupPipelineError'          => Text::_('JBS_ADM_CLEANUP_PIPELINE_ERROR'),
-            'cleanupPipelineSkipped'        => Text::_('JBS_ADM_CLEANUP_PIPELINE_SKIPPED'),
-            'cleanupPipelineComplete'       => Text::_('JBS_ADM_CLEANUP_PIPELINE_COMPLETE'),
-            'cleanupPipelineCancelled'      => Text::_('JBS_ADM_CLEANUP_PIPELINE_CANCELLED'),
-            'cleanupPipelineCancelling'     => Text::_('JBS_ADM_CLEANUP_PIPELINE_CANCELLING'),
-            'cleanupPipelineConfirmLegacy'  => Text::_('JBS_ADM_CLEANUP_PIPELINE_CONFIRM_LEGACY'),
-            'cleanupPipelineConfirmOrphans' => Text::_('JBS_ADM_CLEANUP_PIPELINE_CONFIRM_ORPHANS'),
-            'cleanupPipelineCleared'        => Text::_('JBS_ADM_CLEANUP_PIPELINE_CLEARED'),
-        ], JSON_THROW_ON_ERROR);
-        ?>
+// Language strings for imagetools JS are auto-registered via CwmlangHelper::registerAllForJs()
+// above and accessed directly via Joomla.Text._('JBS_ADM_KEY') in admin-imagetools.es6.js.
+?>
         <div id="imagetools-config"
              data-token="<?php echo Session::getFormToken(); ?>"
-             data-strings="<?php echo htmlspecialchars($imagetoolsStrings, ENT_QUOTES, 'UTF-8'); ?>"
              style="display:none;"></div>
         <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
+echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'scripture', Text::_('JBS_ADM_SCRIPTURE_TAB')); ?>
+echo HTMLHelper::_('uitab.addTab', 'myTab', 'scripture', Text::_('JBS_ADM_SCRIPTURE_TAB')); ?>
         <div class="row" id="scripture-settings">
             <div class="col-12 col-lg-6">
                 <div class="cwmadmin-panel mb-4">
@@ -991,16 +838,16 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
              data-str-provider-cleanup-done="<?php echo Text::_('JBS_ADM_PROVIDER_CLEANUP_DONE'); ?>"
         ></div>
         <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
+echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'csvimport', Text::_('JBS_CSV_TAB_TITLE')); ?>
+echo HTMLHelper::_('uitab.addTab', 'myTab', 'csvimport', Text::_('JBS_CSV_TAB_TITLE')); ?>
         <?php echo $this->loadTemplate('csvimport'); ?>
         <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
+echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'analytics', Text::_('JBS_ANA_ANALYTICS')); ?>
+echo HTMLHelper::_('uitab.addTab', 'myTab', 'analytics', Text::_('JBS_ANA_ANALYTICS')); ?>
         <div class="row" id="analytics-tab">
             <div class="col-12">
                 <div class="cwmadmin-panel mb-4">
@@ -1018,26 +865,55 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                     <?php echo $this->form->renderField('analytics_referrer_mode', 'params'); ?>
                     <?php echo $this->form->renderField('analytics_retention_days', 'params'); ?>
                 </div>
+
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_RESET_STATS_TITLE'); ?></h3>
+                    <p class="text-body-secondary"><?php echo Text::_('JBS_ADM_RESET_STATS_DESC'); ?></p>
+                    <!-- Two-step inline confirm — shown after first button click -->
+                    <div id="reset-stats-confirm" class="alert alert-warning mb-3" style="display:none;">
+                        <p id="reset-stats-confirm-text" class="fw-semibold mb-2"></p>
+                        <div class="d-flex gap-2">
+                            <button type="button" id="btn-reset-stats-confirm" class="btn btn-danger btn-sm">
+                                <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_RESET_STATS_CONFIRM_BTN'); ?>
+                            </button>
+                            <button type="button" id="btn-reset-stats-cancel" class="btn btn-outline-secondary btn-sm">
+                                <?php echo Text::_('JCANCEL'); ?>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="reset-stats-status" class="mb-3" style="display:none;"></div>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button type="button" class="btn btn-outline-warning" data-reset-stat="hits">
+                            <i class="icon-remove" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_RESET_ALL_HITS'); ?>
+                        </button>
+                        <button type="button" class="btn btn-outline-warning" data-reset-stat="downloads">
+                            <i class="icon-remove" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_RESET_ALL_DOWNLOAD_HITS'); ?>
+                        </button>
+                        <button type="button" class="btn btn-outline-warning" data-reset-stat="plays">
+                            <i class="icon-remove" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_RESET_ALL_PLAYS'); ?>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
         <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
+echo HTMLHelper::_('uitab.endTab'); ?>
 
         <!-- Track thumbnail sizes to fire event if they are changed -->
         <input type="hidden" id="thumbnail_teacher_size_old"
                value="<?php
-                echo @$this->item->params['thumbnail_teacher_size']; ?>"/>
+        echo @$this->item->params['thumbnail_teacher_size']; ?>"/>
         <input type="hidden" id="thumbnail_series_size_old"
                value="<?php
-                echo @$this->item->params['thumbnail_series_size']; ?>"/>
+        echo @$this->item->params['thumbnail_series_size']; ?>"/>
         <input type="hidden" id="thumbnail_study_size_old"
                value="<?php
-                echo @$this->item->params['thumbnail_study_size']; ?>"/>
+        echo @$this->item->params['thumbnail_study_size']; ?>"/>
         <input type="hidden" name="tooltype" value=""/>
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="return" value="<?php
-        echo $input->getCmd('return'); ?>"/>
+echo $input->getCmd('return'); ?>"/>
         <?php
-        echo HTMLHelper::_('form.token'); ?>
+echo HTMLHelper::_('form.token'); ?>
     </div>
 </form>

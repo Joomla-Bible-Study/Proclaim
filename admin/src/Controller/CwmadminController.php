@@ -530,6 +530,102 @@ class CwmadminController extends FormController
     }
 
     /**
+     * Reset All Hits — AJAX endpoint
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    public function resetHitsXHR(): void
+    {
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->app->close();
+
+            return;
+        }
+
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
+        $query->update($db->quoteName('#__bsms_mediafiles'))
+            ->set($db->quoteName('hits') . ' = 0')
+            ->where($db->quoteName('hits') . ' != 0');
+        $db->setQuery($query);
+
+        if ($db->execute()) {
+            echo json_encode(['success' => true, 'updated' => $db->getAffectedRows()]);
+        } else {
+            echo json_encode(['success' => false, 'error' => Text::_('JBS_CMN_ERROR_RESETTING_HITS')]);
+        }
+
+        $this->app->close();
+    }
+
+    /**
+     * Reset All Downloads — AJAX endpoint
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    public function resetDownloadsXHR(): void
+    {
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->app->close();
+
+            return;
+        }
+
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
+        $query->update($db->quoteName('#__bsms_mediafiles'))
+            ->set($db->quoteName('downloads') . ' = 0')
+            ->where($db->quoteName('downloads') . ' != 0');
+        $db->setQuery($query);
+
+        if ($db->execute()) {
+            echo json_encode(['success' => true, 'updated' => $db->getAffectedRows()]);
+        } else {
+            echo json_encode(['success' => false, 'error' => Text::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS')]);
+        }
+
+        $this->app->close();
+    }
+
+    /**
+     * Reset All Plays — AJAX endpoint
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    public function resetPlaysXHR(): void
+    {
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->app->close();
+
+            return;
+        }
+
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true);
+        $query->update($db->quoteName('#__bsms_mediafiles'))
+            ->set($db->quoteName('plays') . ' = 0')
+            ->where($db->quoteName('plays') . ' != 0');
+        $db->setQuery($query);
+
+        if ($db->execute()) {
+            echo json_encode(['success' => true, 'updated' => $db->getAffectedRows()]);
+        } else {
+            echo json_encode(['success' => false, 'error' => Text::_('JBS_CMN_ERROR_RESETTING_PLAYS')]);
+        }
+
+        $this->app->close();
+    }
+
+    /**
      * Return to c-panel
      *
      * @return void

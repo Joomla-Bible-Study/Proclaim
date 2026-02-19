@@ -5,14 +5,14 @@
  *
  * Image Tools tab: migration, orphan cleanup, and WebP generation.
  *
- * Reads configuration from #imagetools-config data attributes.
+ * Reads CSRF token from #imagetools-config[data-token].
+ * All UI strings use Joomla.Text._('JBS_ADM_KEY') — auto-registered via CwmlangHelper.
  */
 document.addEventListener('DOMContentLoaded', () => {
   const config = document.getElementById('imagetools-config');
   if (!config) return;
 
   const token = config.dataset.token;
-  const strings = JSON.parse(config.dataset.strings);
 
   // Store counts for progress calculation
   let migrationTotals = {studies: 0, teachers: 0, series: 0, total: 0};
@@ -82,22 +82,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (data.total === 0) {
           document.getElementById('migration-counts').innerHTML =
-            `<div class="alert alert-success mb-0"><i class="icon-checkmark me-1" aria-hidden="true"></i>${strings.migrationAllDone}</div>`;
+            `<div class="alert alert-success mb-0"><i class="icon-checkmark me-1" aria-hidden="true"></i>${Joomla.Text._('JBS_ADM_MIGRATION_ALL_DONE')}</div>`;
         } else {
           const items = [];
-          if (data.studies > 0) items.push(`<li>${strings.migrationCountMessages.replace('%s', data.studies)}</li>`);
-          if (data.teachers > 0) items.push(`<li>${strings.migrationCountTeachers.replace('%s', data.teachers)}</li>`);
-          if (data.series > 0) items.push(`<li>${strings.migrationCountSeries.replace('%s', data.series)}</li>`);
+          if (data.studies > 0) items.push(`<li>${Joomla.Text._('JBS_ADM_MIGRATION_COUNT_MESSAGES').replace('%s', data.studies)}</li>`);
+          if (data.teachers > 0) items.push(`<li>${Joomla.Text._('JBS_ADM_MIGRATION_COUNT_TEACHERS').replace('%s', data.teachers)}</li>`);
+          if (data.series > 0) items.push(`<li>${Joomla.Text._('JBS_ADM_MIGRATION_COUNT_SERIES').replace('%s', data.series)}</li>`);
           document.getElementById('migration-counts').innerHTML =
             `<ul class="list-unstyled mb-0">${items.join('')}</ul>
-             <div class="mt-2 fw-bold">${strings.total}: ${data.total}</div>`;
+             <div class="mt-2 fw-bold">${Joomla.Text._('JBS_CMN_TOTAL')}: ${data.total}</div>`;
         }
 
         document.getElementById('btn-start-migration').disabled = (data.total === 0);
       })
       .catch((err) => {
         document.getElementById('migration-counts').innerHTML =
-          `<span class="text-danger">${strings.errorLoading}: ${err.message || err}</span>`;
+          `<span class="text-danger">${Joomla.Text._('JBS_ADM_ERROR_LOADING')}: ${err.message || err}</span>`;
       });
   }
 
@@ -131,13 +131,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showRelocatedReport() {
       if (!reportEl || relocatedDetails.length === 0) return;
-      const summary = strings.relocatedFound.replace('%s', relocatedDetails.length);
+      const summary = Joomla.Text._('JBS_ADM_RELOCATED_FOUND').replace('%s', relocatedDetails.length);
       let html = `<div class="alert alert-info mt-3">
         <h5><i class="icon-checkmark me-1" aria-hidden="true"></i>${summary}</h5>
-        <p class="small mb-2">${strings.relocatedDesc}</p>
+        <p class="small mb-2">${Joomla.Text._('JBS_ADM_RELOCATED_DESC')}</p>
         <div style="max-height: 300px; overflow-y: auto;">
         <table class="table table-sm table-striped mb-0">
-          <thead><tr><th>Type</th><th>ID</th><th>Title</th><th>${strings.expectedPath}</th><th>${strings.foundAtPath}</th></tr></thead>
+          <thead><tr><th>Type</th><th>ID</th><th>Title</th><th>${Joomla.Text._('JBS_ADM_EXPECTED_PATH')}</th><th>${Joomla.Text._('JBS_ADM_FOUND_AT_PATH')}</th></tr></thead>
           <tbody>`;
       relocatedDetails.forEach(r => {
         html += `<tr><td>${r.type}</td><td>${r.id}</td><td><small>${r.title}</small></td><td><small class="text-muted">${r.originalPath}</small></td><td><small class="text-success">${r.foundAt}</small></td></tr>`;
@@ -158,11 +158,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (missing.length > 0) {
         html += `<div class="alert alert-warning mt-3">
-          <h5>${strings.missingFiles} (${missing.length})</h5>
-          <p class="small mb-2">${strings.missingFilesDesc}</p>
+          <h5>${Joomla.Text._('JBS_ADM_MISSING_FILES')} (${missing.length})</h5>
+          <p class="small mb-2">${Joomla.Text._('JBS_ADM_MISSING_FILES_DESC')}</p>
           <div style="max-height: 300px; overflow-y: auto;">
           <table class="table table-sm table-striped mb-0">
-            <thead><tr><th>Type</th><th>ID</th><th>Title</th><th>${strings.missingPath}</th></tr></thead>
+            <thead><tr><th>Type</th><th>ID</th><th>Title</th><th>${Joomla.Text._('JBS_ADM_MISSING_PATH')}</th></tr></thead>
             <tbody>`;
         missing.forEach(e => {
           html += `<tr><td>${e.type}</td><td>${e.id}</td><td><small>${e.title}</small></td><td><small class="text-danger">${e.path}</small></td></tr>`;
@@ -172,11 +172,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (processing.length > 0) {
         html += `<div class="alert alert-danger mt-3">
-          <h5>${strings.processingErrors} (${processing.length})</h5>
-          <p class="small mb-2">${strings.processingErrorsDesc}</p>
+          <h5>${Joomla.Text._('JBS_ADM_PROCESSING_ERRORS')} (${processing.length})</h5>
+          <p class="small mb-2">${Joomla.Text._('JBS_ADM_PROCESSING_ERRORS_DESC')}</p>
           <div style="max-height: 300px; overflow-y: auto;">
           <table class="table table-sm table-striped mb-0">
-            <thead><tr><th>Type</th><th>ID</th><th>Title</th><th>${strings.missingPath}</th><th>${strings.errorReason}</th></tr></thead>
+            <thead><tr><th>Type</th><th>ID</th><th>Title</th><th>${Joomla.Text._('JBS_ADM_MISSING_PATH')}</th><th>${Joomla.Text._('JBS_ADM_ERROR_REASON')}</th></tr></thead>
             <tbody>`;
         processing.forEach(e => {
           html += `<tr><td>${e.type}</td><td>${e.id}</td><td><small>${e.title}</small></td><td><small>${e.path}</small></td><td><small class="text-danger">${e.error}</small></td></tr>`;
@@ -195,12 +195,12 @@ document.addEventListener('DOMContentLoaded', () => {
         barEl.classList.remove('progress-bar-striped', 'progress-bar-animated');
         barEl.style.width = '100%';
         barEl.textContent = '100%';
-        let msg = `<span class="text-success">${strings.migrationComplete} ${totalMigrated} ${strings.recordsMigrated}</span>`;
+        let msg = `<span class="text-success">${Joomla.Text._('JBS_ADM_MIGRATION_COMPLETE')} ${totalMigrated} ${Joomla.Text._('JBS_ADM_RECORDS_MIGRATED')}</span>`;
         if (totalRelocated > 0) {
-          msg += ` <span class="text-info">(${totalRelocated} ${strings.relocated})</span>`;
+          msg += ` <span class="text-info">(${totalRelocated} ${Joomla.Text._('JBS_ADM_RELOCATED')})</span>`;
         }
         if (totalErrors > 0) {
-          msg += ` <span class="text-warning">(${totalErrors} ${strings.migrationErrors})</span>`;
+          msg += ` <span class="text-warning">(${totalErrors} ${Joomla.Text._('JBS_ADM_MIGRATION_ERRORS')})</span>`;
         }
         statusEl.innerHTML = msg;
         showRelocatedReport();
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const doneBtn = document.createElement('button');
         doneBtn.type = 'button';
         doneBtn.className = 'btn btn-success mt-3';
-        doneBtn.innerHTML = `<i class="icon-checkmark" aria-hidden="true"></i> ${strings.migrationDone}`;
+        doneBtn.innerHTML = `<i class="icon-checkmark" aria-hidden="true"></i> ${Joomla.Text._('JBS_ADM_MIGRATION_DONE')}`;
         doneBtn.addEventListener('click', () => {
           doneBtn.remove();
           loadMigrationCounts(); // Refreshes counts and re-enables Start Migration if needed
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      statusEl.innerHTML = `${strings.migrating} ${types[typeIndex]}... <strong>0</strong> / ${migrationTotals[types[typeIndex]]}`;
+      statusEl.innerHTML = `${Joomla.Text._('JBS_ADM_MIGRATING')} ${types[typeIndex]}... <strong>0</strong> / ${migrationTotals[types[typeIndex]]}`;
       migrateBatch(types[typeIndex], 0);
     }
 
@@ -309,7 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
               .finally(() => {
                 batchDone++;
                 const displayed = Math.min(typeProcessed + batchDone, typeTotal);
-                statusEl.innerHTML = `${strings.migrating} ${types[typeIndex]}... <strong>${displayed}</strong> / ${typeTotal}`;
+                statusEl.innerHTML = `${Joomla.Text._('JBS_ADM_MIGRATING')} ${types[typeIndex]}... <strong>${displayed}</strong> / ${typeTotal}`;
                 updateBar();
               });
           });
@@ -329,7 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(() => {
           activeOperation = null;
           setOperationRunning(false);
-          statusEl.innerHTML = `<span class="text-danger">${strings.migrationError}</span>`;
+          statusEl.innerHTML = `<span class="text-danger">${Joomla.Text._('JBS_ADM_MIGRATION_ERROR')}</span>`;
           showErrorReport();
           if (pipelineMode && pipelineStepDone) {
             const resolve = pipelineStepDone;
@@ -349,33 +349,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // Warn if migration or unresolvable cleanup hasn't been done yet
     if (migrationTotals.total > 0) {
       // eslint-disable-next-line no-restricted-globals
-      if (!confirm(strings.orphanMigrationWarning)) {
+      if (!confirm(Joomla.Text._('JBS_ADM_ORPHAN_MIGRATION_WARNING'))) {
         return;
       }
     }
 
     btn.disabled = true;
-    btn.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${strings.scanning}`;
+    btn.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${Joomla.Text._('JBS_ADM_SCANNING')}`;
 
     fetch(`index.php?option=com_proclaim&task=cwmadmin.getOrphanedFoldersXHR&${token}=1`)
       .then(r => r.json())
       .then(data => {
         btn.disabled = false;
-        btn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${strings.scanOrphans}`;
+        btn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${Joomla.Text._('JBS_ADM_SCAN_ORPHANS')}`;
         document.getElementById('orphan-results').style.display = 'block';
 
         // Update step indicator
         const stepEl = document.getElementById('orphan-step-indicator');
-        if (stepEl) stepEl.textContent = strings.orphanStep2;
+        if (stepEl) stepEl.textContent = Joomla.Text._('JBS_ADM_ORPHAN_STEP2');
 
         document.getElementById('orphan-summary').innerHTML =
-          `${strings.found} <strong>${data.totals.folders}</strong> ${strings.orphanFolders} (${data.totals.size_formatted})`;
+          `${Joomla.Text._('JBS_ADM_FOUND')} <strong>${data.totals.folders}</strong> ${Joomla.Text._('JBS_ADM_ORPHAN_FOLDERS')} (${data.totals.size_formatted})`;
 
         if (data.totals.folders > 0) {
           let tableHtml = `<table class="table table-sm table-striped">
             <thead><tr>
-              <th><input type="checkbox" id="select-all-orphans" aria-label="${strings.selectAll}"></th>
-              <th>${strings.folder}</th><th>${strings.files}</th><th>${strings.size}</th>
+              <th><input type="checkbox" id="select-all-orphans" aria-label="${Joomla.Text._('JBS_ADM_SELECT_ALL')}"></th>
+              <th>${Joomla.Text._('JBS_ADM_FOLDER')}</th><th>${Joomla.Text._('JBS_ADM_FILES')}</th><th>${Joomla.Text._('JBS_ADM_SIZE')}</th>
             </tr></thead><tbody>`;
 
           ['studies', 'teachers', 'series'].forEach(type => {
@@ -399,13 +399,13 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         } else {
           document.getElementById('orphan-list').innerHTML =
-            `<p class="text-success">${strings.noOrphans}</p>`;
+            `<p class="text-success">${Joomla.Text._('JBS_ADM_NO_ORPHANS')}</p>`;
           document.getElementById('btn-delete-orphans').style.display = 'none';
         }
       })
       .catch(() => {
         btn.disabled = false;
-        btn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${strings.scanOrphans}`;
+        btn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${Joomla.Text._('JBS_ADM_SCAN_ORPHANS')}`;
       });
   });
 
@@ -446,22 +446,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (data.total === 0) {
           document.getElementById('webp-counts').innerHTML =
-            `<div class="alert alert-success mb-0"><i class="icon-checkmark me-1" aria-hidden="true"></i>${strings.webpAllDone}</div>`;
+            `<div class="alert alert-success mb-0"><i class="icon-checkmark me-1" aria-hidden="true"></i>${Joomla.Text._('JBS_ADM_WEBP_ALL_DONE')}</div>`;
           document.getElementById('btn-start-webp').disabled = true;
         } else {
           const items = [];
-          if (data.studies > 0) items.push(`<li>${strings.webpCountMessages.replace('%s', data.studies)}</li>`);
-          if (data.teachers > 0) items.push(`<li>${strings.webpCountTeachers.replace('%s', data.teachers)}</li>`);
-          if (data.series > 0) items.push(`<li>${strings.webpCountSeries.replace('%s', data.series)}</li>`);
+          if (data.studies > 0) items.push(`<li>${Joomla.Text._('JBS_ADM_WEBP_COUNT_MESSAGES').replace('%s', data.studies)}</li>`);
+          if (data.teachers > 0) items.push(`<li>${Joomla.Text._('JBS_ADM_WEBP_COUNT_TEACHERS').replace('%s', data.teachers)}</li>`);
+          if (data.series > 0) items.push(`<li>${Joomla.Text._('JBS_ADM_WEBP_COUNT_SERIES').replace('%s', data.series)}</li>`);
           document.getElementById('webp-counts').innerHTML =
             `<ul class="list-unstyled mb-0">${items.join('')}</ul>
-             <div class="mt-2 fw-bold">${strings.total}: ${data.total}</div>`;
+             <div class="mt-2 fw-bold">${Joomla.Text._('JBS_CMN_TOTAL')}: ${data.total}</div>`;
           document.getElementById('btn-start-webp').disabled = false;
         }
       })
       .catch(() => {
         document.getElementById('webp-counts').innerHTML =
-          `<span class="text-danger">${strings.errorLoading}</span>`;
+          `<span class="text-danger">${Joomla.Text._('JBS_ADM_ERROR_LOADING')}</span>`;
       });
   }
 
@@ -494,9 +494,9 @@ document.addEventListener('DOMContentLoaded', () => {
         barEl.classList.remove('progress-bar-striped', 'progress-bar-animated');
         barEl.style.width = '100%';
         barEl.textContent = '100%';
-        let msg = `<span class="text-success">${strings.webpComplete} ${totalConverted} ${strings.imagesConverted}</span>`;
+        let msg = `<span class="text-success">${Joomla.Text._('JBS_ADM_WEBP_COMPLETE')} ${totalConverted} ${Joomla.Text._('JBS_ADM_IMAGES_CONVERTED')}</span>`;
         if (totalErrors > 0) {
-          msg += ` <span class="text-warning">(${totalErrors} ${strings.migrationErrors})</span>`;
+          msg += ` <span class="text-warning">(${totalErrors} ${Joomla.Text._('JBS_ADM_MIGRATION_ERRORS')})</span>`;
         }
         statusEl.innerHTML = msg;
         loadWebPCounts();
@@ -515,7 +515,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      statusEl.innerHTML = `${strings.converting} ${types[typeIndex]}... <strong>0</strong> / ${webpTotals[types[typeIndex]]}`;
+      statusEl.innerHTML = `${Joomla.Text._('JBS_ADM_CONVERTING')} ${types[typeIndex]}... <strong>0</strong> / ${webpTotals[types[typeIndex]]}`;
       convertBatch(types[typeIndex], 0);
     }
 
@@ -536,7 +536,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // PHP-level error (exception caught in controller)
           if (data.error) {
-            statusEl.innerHTML = `<span class="text-danger">${strings.webpError}: ${data.error}</span>`;
+            statusEl.innerHTML = `<span class="text-danger">${Joomla.Text._('JBS_ADM_WEBP_ERROR')}: ${data.error}</span>`;
             // Still continue to next type — don't abort entirely
             typeIndex++;
             convertType();
@@ -548,7 +548,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const newTypeConverted = typeConverted + data.converted + (data.errors || 0);
           const typeTotal = webpTotals[type];
           const displayed = Math.min(newTypeConverted, typeTotal);
-          statusEl.innerHTML = `${strings.converting} ${types[typeIndex]}... <strong>${displayed}</strong> / ${typeTotal}`;
+          statusEl.innerHTML = `${Joomla.Text._('JBS_ADM_CONVERTING')} ${types[typeIndex]}... <strong>${displayed}</strong> / ${typeTotal}`;
           updateBar();
 
           if (data.remaining > 0 && newTypeConverted < typeTotal) {
@@ -561,7 +561,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(err => {
           activeOperation = null;
           setOperationRunning(false);
-          statusEl.innerHTML = `<span class="text-danger">${strings.webpError}: ${err.message || err}</span>`;
+          statusEl.innerHTML = `<span class="text-danger">${Joomla.Text._('JBS_ADM_WEBP_ERROR')}: ${err.message || err}</span>`;
           if (pipelineMode && pipelineStepDone) {
             const resolve = pipelineStepDone;
             pipelineStepDone = null;
@@ -584,12 +584,12 @@ document.addEventListener('DOMContentLoaded', () => {
         regenTotals = data;
         if (data.total === 0) {
           document.getElementById('thumb-regen-counts').innerHTML =
-            `<div class="alert alert-success mb-0"><i class="icon-checkmark me-1" aria-hidden="true"></i>${strings.thumbRegenAllDone}</div>`;
+            `<div class="alert alert-success mb-0"><i class="icon-checkmark me-1" aria-hidden="true"></i>${Joomla.Text._('JBS_ADM_THUMB_REGEN_ALL_DONE')}</div>`;
         } else {
           const parts = [];
-          if (data.studies > 0) parts.push(strings.thumbRegenMessages.replace('%s', data.studies));
-          if (data.teachers > 0) parts.push(strings.thumbRegenTeachers.replace('%s', data.teachers));
-          if (data.series > 0) parts.push(strings.thumbRegenSeries.replace('%s', data.series));
+          if (data.studies > 0) parts.push(Joomla.Text._('JBS_ADM_THUMB_REGEN_COUNT_MESSAGES').replace('%s', data.studies));
+          if (data.teachers > 0) parts.push(Joomla.Text._('JBS_ADM_THUMB_REGEN_COUNT_TEACHERS').replace('%s', data.teachers));
+          if (data.series > 0) parts.push(Joomla.Text._('JBS_ADM_THUMB_REGEN_COUNT_SERIES').replace('%s', data.series));
           document.getElementById('thumb-regen-counts').innerHTML =
             `<div class="mb-0">${parts.join(', ')} (${data.total} total)</div>`;
         }
@@ -598,7 +598,7 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .catch(() => {
         document.getElementById('thumb-regen-counts').innerHTML =
-          `<span class="text-danger">${strings.errorLoading}</span>`;
+          `<span class="text-danger">${Joomla.Text._('JBS_ADM_ERROR_LOADING')}</span>`;
       });
   }
 
@@ -639,7 +639,7 @@ document.addEventListener('DOMContentLoaded', () => {
         barEl.classList.remove('progress-bar-striped', 'progress-bar-animated');
         barEl.style.width = '100%';
         barEl.textContent = '100%';
-        let msg = `<span class="text-success">${strings.thumbRegenComplete} ${totalProcessed} processed.</span>`;
+        let msg = `<span class="text-success">${Joomla.Text._('JBS_ADM_THUMB_REGEN_COMPLETE')} ${totalProcessed} processed.</span>`;
         if (totalErrors > 0) {
           msg += ` <span class="text-warning">(${totalErrors} errors)</span>`;
         }
@@ -653,7 +653,7 @@ document.addEventListener('DOMContentLoaded', () => {
       processTypeBatch();
 
       function processTypeBatch() {
-        statusEl.innerHTML = `${strings.regenerating} ${currentType}... <strong>${totalProcessed}</strong> / ${grandTotal}`;
+        statusEl.innerHTML = `${Joomla.Text._('JBS_ADM_REGENERATING')} ${currentType}... <strong>${totalProcessed}</strong> / ${grandTotal}`;
 
         fetch(`index.php?option=com_proclaim&task=cwmadmin.regenerateThumbsXHR&${token}=1&type=${currentType}&limit=10&offset=${offset}`)
           .then(r => {
@@ -679,7 +679,7 @@ document.addEventListener('DOMContentLoaded', () => {
             totalErrors += (data.errors || 0);
             offset += data.processed + (data.errors || 0);
             updateBar(grandTotal);
-            statusEl.innerHTML = `${strings.regenerating} ${currentType}... <strong>${totalProcessed}</strong> / ${grandTotal}`;
+            statusEl.innerHTML = `${Joomla.Text._('JBS_ADM_REGENERATING')} ${currentType}... <strong>${totalProcessed}</strong> / ${grandTotal}`;
 
             if (data.remaining > 0) {
               processTypeBatch();
@@ -709,22 +709,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (data.total === 0) {
           document.getElementById('recovery-counts').innerHTML =
-            `<div class="alert alert-success mb-0"><i class="icon-checkmark me-1" aria-hidden="true"></i>${strings.recoverNone}</div>`;
+            `<div class="alert alert-success mb-0"><i class="icon-checkmark me-1" aria-hidden="true"></i>${Joomla.Text._('JBS_ADM_RECOVER_IMAGES_NONE')}</div>`;
           document.getElementById('btn-start-recovery').disabled = true;
         } else {
           const items = [];
-          if (data.studies > 0) items.push(`<li>${strings.recoverCountMessages.replace('%s', data.studies)}</li>`);
-          if (data.teachers > 0) items.push(`<li>${strings.recoverCountTeachers.replace('%s', data.teachers)}</li>`);
-          if (data.series > 0) items.push(`<li>${strings.recoverCountSeries.replace('%s', data.series)}</li>`);
+          if (data.studies > 0) items.push(`<li>${Joomla.Text._('JBS_ADM_RECOVER_COUNT_MESSAGES').replace('%s', data.studies)}</li>`);
+          if (data.teachers > 0) items.push(`<li>${Joomla.Text._('JBS_ADM_RECOVER_COUNT_TEACHERS').replace('%s', data.teachers)}</li>`);
+          if (data.series > 0) items.push(`<li>${Joomla.Text._('JBS_ADM_RECOVER_COUNT_SERIES').replace('%s', data.series)}</li>`);
           document.getElementById('recovery-counts').innerHTML =
             `<ul class="list-unstyled mb-0">${items.join('')}</ul>
-             <div class="mt-2 fw-bold">${strings.total}: ${data.total}</div>`;
+             <div class="mt-2 fw-bold">${Joomla.Text._('JBS_CMN_TOTAL')}: ${data.total}</div>`;
           document.getElementById('btn-start-recovery').disabled = false;
         }
       })
       .catch(() => {
         document.getElementById('recovery-counts').innerHTML =
-          `<span class="text-danger">${strings.errorLoading}</span>`;
+          `<span class="text-danger">${Joomla.Text._('JBS_ADM_ERROR_LOADING')}</span>`;
       });
   }
 
@@ -759,12 +759,12 @@ document.addEventListener('DOMContentLoaded', () => {
         barEl.classList.remove('progress-bar-striped', 'progress-bar-animated');
         barEl.style.width = '100%';
         barEl.textContent = '100%';
-        let msg = `<span class="text-success">${strings.recoverComplete} ${totalRecovered} ${strings.foldersRecovered}</span>`;
+        let msg = `<span class="text-success">${Joomla.Text._('JBS_ADM_RECOVER_COMPLETE')} ${totalRecovered} ${Joomla.Text._('JBS_ADM_FOLDERS_RECOVERED')}</span>`;
         if (totalSkipped > 0) {
           msg += ` <span class="text-muted">(${totalSkipped} skipped — no DB record)</span>`;
         }
         if (totalErrors > 0) {
-          msg += ` <span class="text-warning">(${totalErrors} ${strings.migrationErrors})</span>`;
+          msg += ` <span class="text-warning">(${totalErrors} ${Joomla.Text._('JBS_ADM_MIGRATION_ERRORS')})</span>`;
         }
         statusEl.innerHTML = msg;
         // Show error details if any
@@ -788,7 +788,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      statusEl.innerHTML = `${strings.recovering} ${types[typeIndex]}...`;
+      statusEl.innerHTML = `${Joomla.Text._('JBS_ADM_RECOVERING')} ${types[typeIndex]}...`;
       recoverBatch(types[typeIndex]);
     }
 
@@ -803,7 +803,7 @@ document.addEventListener('DOMContentLoaded', () => {
             allErrorDetails.push(...data.errorDetails);
           }
           updateBar();
-          statusEl.innerHTML = `${strings.recovering} ${types[typeIndex]}... <strong>${totalRecovered}</strong> / ${grandTotal}`;
+          statusEl.innerHTML = `${Joomla.Text._('JBS_ADM_RECOVERING')} ${types[typeIndex]}... <strong>${totalRecovered}</strong> / ${grandTotal}`;
 
           // Stop if remaining folders exist but none were recovered in this batch —
           // the remaining folders are all failing/skipping and would loop forever.
@@ -817,7 +817,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(() => {
           activeOperation = null;
           setOperationRunning(false);
-          statusEl.innerHTML = `<span class="text-danger">${strings.migrationError}</span>`;
+          statusEl.innerHTML = `<span class="text-danger">${Joomla.Text._('JBS_ADM_MIGRATION_ERROR')}</span>`;
           if (pipelineMode && pipelineStepDone) {
             const resolve = pipelineStepDone;
             pipelineStepDone = null;
@@ -833,22 +833,22 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-scan-legacy').addEventListener('click', function () {
     const btn = this;
     btn.disabled = true;
-    btn.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${strings.scanning}`;
+    btn.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${Joomla.Text._('JBS_ADM_SCANNING')}`;
     const resultsEl = document.getElementById('legacy-results');
 
     fetch(`index.php?option=com_proclaim&task=cwmadmin.getLegacyFolderReportXHR&${token}=1`)
       .then(r => r.json())
       .then(data => {
         btn.disabled = false;
-        btn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${strings.scanLegacy}`;
+        btn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${Joomla.Text._('JBS_ADM_SCAN_LEGACY')}`;
         resultsEl.style.display = 'block';
 
         if (data.total_files === 0) {
-          resultsEl.innerHTML = `<div class="alert alert-success"><i class="icon-checkmark me-1" aria-hidden="true"></i>${strings.legacyNoFiles}</div>`;
+          resultsEl.innerHTML = `<div class="alert alert-success"><i class="icon-checkmark me-1" aria-hidden="true"></i>${Joomla.Text._('JBS_ADM_LEGACY_NO_FILES')}</div>`;
           return;
         }
 
-        const summary = strings.legacyFilesFound
+        const summary = Joomla.Text._('JBS_ADM_LEGACY_FILES_FOUND')
           .replace('%s', data.total_files)
           .replace('%s', formatBytes(data.total_size));
 
@@ -856,8 +856,8 @@ document.addEventListener('DOMContentLoaded', () => {
         html += '<div style="max-height: 400px; overflow-y: auto;">';
         html += `<table class="table table-sm table-striped">
           <thead><tr>
-            <th><input type="checkbox" id="select-all-legacy" aria-label="${strings.selectAll}"></th>
-            <th>${strings.folder}</th><th>${strings.files}</th><th>${strings.size}</th><th>${strings.filenames}</th>
+            <th><input type="checkbox" id="select-all-legacy" aria-label="${Joomla.Text._('JBS_ADM_SELECT_ALL')}"></th>
+            <th>${Joomla.Text._('JBS_ADM_FOLDER')}</th><th>${Joomla.Text._('JBS_ADM_FILES')}</th><th>${Joomla.Text._('JBS_ADM_SIZE')}</th><th>${Joomla.Text._('JBS_ADM_FILENAMES')}</th>
           </tr></thead><tbody>`;
 
         data.folders.forEach(folder => {
@@ -876,7 +876,7 @@ document.addEventListener('DOMContentLoaded', () => {
         html += '</tbody></table></div>';
         html += `<div class="mt-3 d-flex gap-2">
           <button type="button" class="btn btn-danger" id="btn-delete-legacy" style="display:none;">
-            <i class="icon-trash" aria-hidden="true"></i> ${strings.deleteSelected}
+            <i class="icon-trash" aria-hidden="true"></i> ${Joomla.Text._('JBS_ADM_DELETE_SELECTED')}
           </button>
         </div>`;
         resultsEl.innerHTML = html;
@@ -908,12 +908,12 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.legacy-checkbox:checked').forEach(cb => selected.push(cb.value));
             if (selected.length === 0) return;
 
-            const message = strings.confirmDeleteLegacy.replace('%s', selected.length);
+            const message = Joomla.Text._('JBS_ADM_CONFIRM_DELETE_LEGACY').replace('%s', selected.length);
             // eslint-disable-next-line no-restricted-globals
             if (!confirm(message)) return;
 
             delLegacyBtn.disabled = true;
-            delLegacyBtn.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${strings.deleting}`;
+            delLegacyBtn.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${Joomla.Text._('JBS_ADM_DELETING')}`;
 
             const params = new URLSearchParams();
             selected.forEach(path => params.append('paths[]', path));
@@ -925,7 +925,7 @@ document.addEventListener('DOMContentLoaded', () => {
               .then(r => r.json())
               .then(result => {
                 delLegacyBtn.disabled = false;
-                delLegacyBtn.innerHTML = `<i class="icon-trash" aria-hidden="true"></i> ${strings.deleteSelected}`;
+                delLegacyBtn.innerHTML = `<i class="icon-trash" aria-hidden="true"></i> ${Joomla.Text._('JBS_ADM_DELETE_SELECTED')}`;
 
                 if (result.deleted > 0) {
                   // Re-scan to refresh the list
@@ -934,16 +934,16 @@ document.addEventListener('DOMContentLoaded', () => {
               })
               .catch(() => {
                 delLegacyBtn.disabled = false;
-                delLegacyBtn.innerHTML = `<i class="icon-trash" aria-hidden="true"></i> ${strings.deleteSelected}`;
+                delLegacyBtn.innerHTML = `<i class="icon-trash" aria-hidden="true"></i> ${Joomla.Text._('JBS_ADM_DELETE_SELECTED')}`;
               });
           });
         }
       })
       .catch(() => {
         btn.disabled = false;
-        btn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${strings.scanLegacy}`;
+        btn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${Joomla.Text._('JBS_ADM_SCAN_LEGACY')}`;
         resultsEl.style.display = 'block';
-        resultsEl.innerHTML = `<span class="text-danger">${strings.errorLoading}</span>`;
+        resultsEl.innerHTML = `<span class="text-danger">${Joomla.Text._('JBS_ADM_ERROR_LOADING')}</span>`;
       });
   });
 
@@ -957,7 +957,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (previewBtn) {
     previewBtn.addEventListener('click', function () {
       previewBtn.disabled = true;
-      previewBtn.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${strings.scanning}`;
+      previewBtn.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${Joomla.Text._('JBS_ADM_SCANNING')}`;
       if (previewEl) previewEl.style.display = 'none';
       if (clearBtn) clearBtn.style.display = 'none';
       if (unresStatusEl) unresStatusEl.style.display = 'none';
@@ -966,22 +966,22 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(r => r.json())
         .then(data => {
           previewBtn.disabled = false;
-          previewBtn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${strings.previewUnresolvable}`;
+          previewBtn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${Joomla.Text._('JBS_ADM_PREVIEW_UNRESOLVABLE')}`;
 
           if (!data.count || data.count === 0) {
             if (previewEl) {
               previewEl.style.display = 'block';
-              previewEl.innerHTML = `<div class="alert alert-success"><i class="icon-checkmark me-1" aria-hidden="true"></i>${strings.noUnresolvable}</div>`;
+              previewEl.innerHTML = `<div class="alert alert-success"><i class="icon-checkmark me-1" aria-hidden="true"></i>${Joomla.Text._('JBS_ADM_NO_UNRESOLVABLE')}</div>`;
             }
             return;
           }
 
           // Show preview table
-          const summary = strings.unresolvableFound.replace('%s', data.count);
+          const summary = Joomla.Text._('JBS_ADM_UNRESOLVABLE_FOUND').replace('%s', data.count);
           let html = `<div class="alert alert-warning"><i class="icon-warning me-1" aria-hidden="true"></i>${summary}</div>`;
           html += '<div style="max-height: 300px; overflow-y: auto;">';
           html += `<table class="table table-sm table-striped mb-0">
-            <thead><tr><th>Type</th><th>ID</th><th>Title</th><th>${strings.missingPath}</th></tr></thead><tbody>`;
+            <thead><tr><th>Type</th><th>ID</th><th>Title</th><th>${Joomla.Text._('JBS_ADM_MISSING_PATH')}</th></tr></thead><tbody>`;
           data.records.forEach(r => {
             html += `<tr><td>${r.type}</td><td>${r.id}</td><td><small>${r.title}</small></td><td><small class="text-danger">${r.path}</small></td></tr>`;
           });
@@ -1000,10 +1000,10 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(err => {
           previewBtn.disabled = false;
-          previewBtn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${strings.previewUnresolvable}`;
+          previewBtn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${Joomla.Text._('JBS_ADM_PREVIEW_UNRESOLVABLE')}`;
           if (previewEl) {
             previewEl.style.display = 'block';
-            previewEl.innerHTML = `<span class="text-danger">${strings.errorLoading}: ${err.message || err}</span>`;
+            previewEl.innerHTML = `<span class="text-danger">${Joomla.Text._('JBS_ADM_ERROR_LOADING')}: ${err.message || err}</span>`;
           }
         });
     });
@@ -1012,7 +1012,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (clearBtn) {
     clearBtn.addEventListener('click', function () {
       const count = clearBtn.dataset.count || '?';
-      const message = strings.confirmClear.replace('%s', count);
+      const message = Joomla.Text._('JBS_ADM_CONFIRM_CLEAR_UNRESOLVABLE').replace('%s', count);
 
       // eslint-disable-next-line no-restricted-globals
       if (!confirm(message)) {
@@ -1020,7 +1020,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       clearBtn.disabled = true;
-      clearBtn.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${strings.clearing}`;
+      clearBtn.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${Joomla.Text._('JBS_ADM_CLEARING')}`;
 
       fetch(`index.php?option=com_proclaim&task=cwmadmin.clearUnresolvableXHR&${token}=1`)
         .then(r => r.json())
@@ -1028,7 +1028,7 @@ document.addEventListener('DOMContentLoaded', () => {
           clearBtn.style.display = 'none';
 
           if (data.success) {
-            const msg = strings.clearComplete.replace('%s', data.cleared);
+            const msg = Joomla.Text._('JBS_ADM_CLEAR_COMPLETE').replace('%s', data.cleared);
             if (unresStatusEl) {
               unresStatusEl.style.display = 'block';
               unresStatusEl.innerHTML = `<div class="alert alert-success"><i class="icon-checkmark me-1" aria-hidden="true"></i>${msg}</div>`;
@@ -1040,19 +1040,19 @@ document.addEventListener('DOMContentLoaded', () => {
           } else {
             if (unresStatusEl) {
               unresStatusEl.style.display = 'block';
-              unresStatusEl.innerHTML = `<span class="text-danger">${data.error || strings.errorLoading}</span>`;
+              unresStatusEl.innerHTML = `<span class="text-danger">${data.error || Joomla.Text._('JBS_ADM_ERROR_LOADING')}</span>`;
             }
             clearBtn.disabled = false;
             clearBtn.style.display = '';
-            clearBtn.innerHTML = `<i class="icon-trash" aria-hidden="true"></i> ${strings.clearUnresolvable}`;
+            clearBtn.innerHTML = `<i class="icon-trash" aria-hidden="true"></i> ${Joomla.Text._('JBS_ADM_CLEAR_UNRESOLVABLE_BTN')}`;
           }
         })
         .catch(err => {
           clearBtn.disabled = false;
-          clearBtn.innerHTML = `<i class="icon-trash" aria-hidden="true"></i> ${strings.clearUnresolvable}`;
+          clearBtn.innerHTML = `<i class="icon-trash" aria-hidden="true"></i> ${Joomla.Text._('JBS_ADM_CLEAR_UNRESOLVABLE_BTN')}`;
           if (unresStatusEl) {
             unresStatusEl.style.display = 'block';
-            unresStatusEl.innerHTML = `<span class="text-danger">${strings.errorLoading}: ${err.message || err}</span>`;
+            unresStatusEl.innerHTML = `<span class="text-danger">${Joomla.Text._('JBS_ADM_ERROR_LOADING')}: ${err.message || err}</span>`;
           }
         });
     });
@@ -1086,8 +1086,8 @@ document.addEventListener('DOMContentLoaded', () => {
       error:   'bg-danger',
     };
     badge.className = `badge ms-auto ${stateClasses[state] || 'bg-secondary'}`;
-    const key = `pipeline${state.charAt(0).toUpperCase() + state.slice(1)}`;
-    badge.textContent = strings[key] || state;
+    const pipelineKeys = {running: 'JBS_ADM_PIPELINE_RUNNING', done: 'JBS_ADM_PIPELINE_DONE', skipped: 'JBS_ADM_PIPELINE_SKIPPED', error: 'JBS_ADM_PIPELINE_ERROR'};
+    badge.textContent = Joomla.Text._(pipelineKeys[state] || '') || state;
   }
 
   function setPipelineStatus(text) {
@@ -1139,7 +1139,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       // Step 1: Image Migration
       setPipelineBadge('migrate', 'running');
-      setPipelineStatus(strings.pipelineRunning);
+      setPipelineStatus(Joomla.Text._('JBS_ADM_PIPELINE_RUNNING'));
       await loadMigrationCounts();
       if (migrationTotals.total > 0) {
         await runStepAsync('btn-start-migration');
@@ -1175,12 +1175,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       setPipelineProgress(100, true);
 
-      setPipelineStatus(strings.pipelineComplete);
+      setPipelineStatus(Joomla.Text._('JBS_ADM_PIPELINE_COMPLETE'));
     } catch (err) {
       if (err.message === 'cancelled') {
-        setPipelineStatus(strings.pipelineCancelled);
+        setPipelineStatus(Joomla.Text._('JBS_ADM_PIPELINE_CANCELLED'));
       } else {
-        setPipelineStatus(`${strings.pipelineError}: ${err.message || err}`);
+        setPipelineStatus(`${Joomla.Text._('JBS_ADM_PIPELINE_ERROR')}: ${err.message || err}`);
       }
     } finally {
       pipelineMode = false;
@@ -1199,7 +1199,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (cancelPipelineBtn) {
     cancelPipelineBtn.addEventListener('click', () => {
       pipelineCancelled = true;
-      setPipelineStatus(strings.pipelineCancelling);
+      setPipelineStatus(Joomla.Text._('JBS_ADM_PIPELINE_CANCELLING'));
       cancelPipelineBtn.disabled = true;
     });
   }
@@ -1224,8 +1224,8 @@ document.addEventListener('DOMContentLoaded', () => {
       error:   'bg-danger',
     };
     badge.className = `badge ms-auto ${stateClasses[state] || 'bg-secondary'}`;
-    const key = `cleanupPipeline${state.charAt(0).toUpperCase() + state.slice(1)}`;
-    badge.textContent = strings[key] || state;
+    const cleanupKeys = {running: 'JBS_ADM_CLEANUP_PIPELINE_RUNNING', done: 'JBS_ADM_CLEANUP_PIPELINE_DONE', skipped: 'JBS_ADM_CLEANUP_PIPELINE_SKIPPED', error: 'JBS_ADM_CLEANUP_PIPELINE_ERROR'};
+    badge.textContent = Joomla.Text._(cleanupKeys[state] || '') || state;
   }
 
   function setCleanupStatus(text) {
@@ -1253,7 +1253,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const confirmDiv = document.getElementById('cleanup-pipeline-confirm');
       const textEl = document.getElementById('cleanup-pipeline-confirm-text');
       if (!confirmDiv || !textEl) { resolve(false); return; }
-      textEl.textContent = (strings[messageKey] || '').replace('%s', count);
+      textEl.textContent = Joomla.Text._(messageKey).replace('%s', count);
       confirmDiv.style.display = '';
     });
   }
@@ -1294,7 +1294,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       // Step 1: Clear Unresolvable References (auto — DB only, no file deletion)
       setCleanupBadge('unresolvable', 'running');
-      setCleanupStatus(strings.cleanupPipelineRunning);
+      setCleanupStatus(Joomla.Text._('JBS_ADM_CLEANUP_PIPELINE_RUNNING'));
 
       const unresData = await fetch(
         `index.php?option=com_proclaim&task=cwmadmin.getUnresolvableCountXHR&${token}=1`
@@ -1306,7 +1306,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ).then(r => r.json());
         if (clearResult.success) {
           setCleanupBadge('unresolvable', 'done');
-          setCleanupStatus(strings.cleanupPipelineCleared.replace('%s', clearResult.cleared));
+          setCleanupStatus(Joomla.Text._('JBS_ADM_CLEANUP_PIPELINE_CLEARED').replace('%s', clearResult.cleared));
           loadMigrationCounts(); // refresh dependent counts
         } else {
           setCleanupBadge('unresolvable', 'error');
@@ -1320,14 +1320,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Step 2: Legacy Files (scan → inline confirm → delete all)
       setCleanupBadge('legacy', 'running');
-      setCleanupStatus(strings.cleanupPipelineRunning);
+      setCleanupStatus(Joomla.Text._('JBS_ADM_CLEANUP_PIPELINE_RUNNING'));
 
       const legacyData = await fetch(
         `index.php?option=com_proclaim&task=cwmadmin.getLegacyFolderReportXHR&${token}=1`
       ).then(r => r.json());
 
       if (legacyData.total_files > 0) {
-        const shouldDelete = await showCleanupConfirm(legacyData.total_files, 'cleanupPipelineConfirmLegacy');
+        const shouldDelete = await showCleanupConfirm(legacyData.total_files, 'JBS_ADM_CLEANUP_PIPELINE_CONFIRM_LEGACY');
         if (shouldDelete) {
           const paths = (legacyData.folders || []).map(f => f.path);
           const params = new URLSearchParams();
@@ -1353,7 +1353,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Step 3: Orphan Folders (scan → inline confirm → delete all)
       setCleanupBadge('orphans', 'running');
-      setCleanupStatus(strings.cleanupPipelineRunning);
+      setCleanupStatus(Joomla.Text._('JBS_ADM_CLEANUP_PIPELINE_RUNNING'));
 
       const orphanData = await fetch(
         `index.php?option=com_proclaim&task=cwmadmin.getOrphanedFoldersXHR&${token}=1`
@@ -1362,7 +1362,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const orphanCount = orphanData.totals ? orphanData.totals.folders : 0;
 
       if (orphanCount > 0) {
-        const shouldDelete = await showCleanupConfirm(orphanCount, 'cleanupPipelineConfirmOrphans');
+        const shouldDelete = await showCleanupConfirm(orphanCount, 'JBS_ADM_CLEANUP_PIPELINE_CONFIRM_ORPHANS');
         if (shouldDelete) {
           const paths = [];
           if (orphanData.orphans) {
@@ -1388,7 +1388,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setCleanupBadge('orphans', 'skipped');
       }
       setCleanupProgress(100, true);
-      setCleanupStatus(strings.cleanupPipelineComplete);
+      setCleanupStatus(Joomla.Text._('JBS_ADM_CLEANUP_PIPELINE_COMPLETE'));
 
     } catch (err) {
       if (activeOperation) {
@@ -1398,9 +1398,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // Hide any pending confirm if we're aborting
       resolveCleanupConfirm(false);
       if (err.message === 'cancelled') {
-        setCleanupStatus(strings.cleanupPipelineCancelled);
+        setCleanupStatus(Joomla.Text._('JBS_ADM_CLEANUP_PIPELINE_CANCELLED'));
       } else {
-        setCleanupStatus(`${strings.cleanupPipelineError}: ${err.message || err}`);
+        setCleanupStatus(`${Joomla.Text._('JBS_ADM_CLEANUP_PIPELINE_ERROR')}: ${err.message || err}`);
       }
     } finally {
       cleanupPipelineMode = false;
@@ -1419,7 +1419,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (cancelCleanupPipelineBtn) {
     cancelCleanupPipelineBtn.addEventListener('click', () => {
       cleanupPipelineCancelled = true;
-      setCleanupStatus(strings.cleanupPipelineCancelling);
+      setCleanupStatus(Joomla.Text._('JBS_ADM_CLEANUP_PIPELINE_CANCELLING'));
       cancelCleanupPipelineBtn.disabled = true;
     });
   }

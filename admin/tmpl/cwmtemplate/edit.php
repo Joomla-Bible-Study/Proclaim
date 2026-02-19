@@ -14,6 +14,7 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlangHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -49,6 +50,10 @@ $wa->useScript('bootstrap.modal')
 // addScriptOptions() and Text::script() in AJAX context don't reach
 // the main page — they must be on the parent page before AJAX loads.
 // =====================================================================
+
+// Auto-register all component language strings (JBS_TPL_*, JBS_ADM_*, etc.)
+// so Joomla.Text._('KEY') works throughout the Layout Editor JS.
+CwmlangHelper::registerAllForJs();
 
 // Template params for initial loading
 $tplParams = $this->item->params;

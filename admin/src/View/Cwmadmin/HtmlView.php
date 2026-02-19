@@ -331,17 +331,6 @@ class HtmlView extends BaseHtmlView
         $toolbar->apply('cwmadmin.apply');
         $toolbar->save('cwmadmin.save');
         $toolbar->cancel('cwmadmin.cancel');
-        ToolbarHelper::divider();
-        ToolbarHelper::custom('cwmadmin.resetHits', 'hits', 'Reset All Hits', 'JBS_ADM_RESET_ALL_HITS', false);
-        ToolbarHelper::custom(
-            'cwmadmin.resetDownloads',
-            'download.png',
-            'Reset All Download Hits',
-            'JBS_ADM_RESET_ALL_DOWNLOAD_HITS',
-            false
-        );
-        ToolbarHelper::custom('cwmadmin.resetPlays', 'play.png', 'Reset All Plays', 'JBS_ADM_RESET_ALL_PLAYS', false);
-
         $toolbar->divider();
 
         ToolbarHelper::inlinehelp();
