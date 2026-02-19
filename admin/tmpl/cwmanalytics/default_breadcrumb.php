@@ -19,7 +19,7 @@ $presets  = 'preset=' . htmlspecialchars(Factory::getApplication()->getInput()->
 <div class="card mb-3">
 <div class="card-body py-2">
 <nav aria-label="<?php echo Text::_('JBS_ANA_BREADCRUMB'); ?>">
-    <ol class="breadcrumb mb-0">
+    <ol class="breadcrumb mb-0 bg-transparent">
         <li class="breadcrumb-item">
             <a href="<?php echo Route::_($baseUrl . '&' . $presets); ?>">
                 <?php echo Text::_('JBS_ANA_ANALYTICS_DASHBOARD'); ?>
