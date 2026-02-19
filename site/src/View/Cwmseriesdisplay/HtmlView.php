@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmseriesdisplay;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
@@ -169,6 +170,8 @@ class HtmlView extends BaseHtmlView
         // Get studies associated with this series
         $mainframe->setUserState('sid', $items->id);
         $this->seriesstudies = $this->get('Studies');
+
+        CwmanalyticsHelper::logEvent('page_view', 0, 0, '', (int) $items->id);
 
         // Get the series image
         $image               = Cwmimages::getSeriesThumbnail($items->series_thumbnail);

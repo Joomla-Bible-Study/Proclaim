@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmseriespodcastdisplay;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Factory;
@@ -120,6 +121,8 @@ class HtmlView extends BaseHtmlView
         // Get studies associated with this series
         Factory::getApplication()->setUserState('sid', $item->id);
         $studies = $this->get('Studies');
+
+        CwmanalyticsHelper::logEvent('page_view', 0, 0, '', (int) $item->id);
 
         // Pagination
         $total            = $this->get('Total');

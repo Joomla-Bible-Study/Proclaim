@@ -722,7 +722,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 )
                 ->leftJoin(
                     $db->quoteName('#__bsms_analytics_events', 'e') .
-                    ' ON ' . $db->quoteName('e.study_id') . ' = ' . $db->quoteName('s.id') .
+                    ' ON ' . $db->quoteName('e.series_id') . ' = ' . $db->quoteName('sr.id') .
                     ' AND ' . $db->quoteName('e.created') . ' >= ' . $db->quote($start . ' 00:00:00') .
                     ' AND ' . $db->quoteName('e.created') . ' <= ' . $db->quote($end . ' 23:59:59')
                 )

@@ -66,16 +66,17 @@ class CwmanalyticsHelper
      * Respects GDPR opt-out (DNT header + proclaim_analytics_optout cookie).
      * Classifies UA, referrer, and GeoIP at log-time; raw signals never stored.
      *
-     * @param   string  $type     Event type: page_view|play|download|outbound_click
-     * @param   int     $studyId  Study (message) ID, 0 if media-only
-     * @param   int     $mediaId  Media file ID, 0 if page view
-     * @param   string  $destUrl  Destination URL for outbound_click events
+     * @param   string  $type      Event type: page_view|play|download|outbound_click
+     * @param   int     $studyId   Study (message) ID, 0 if media-only
+     * @param   int     $mediaId   Media file ID, 0 if page view
+     * @param   string  $destUrl   Destination URL for outbound_click events
+     * @param   int     $seriesId  Series ID (optional; auto-resolved from study when omitted)
      *
      * @return  void
      *
      * @since   10.1.0
      */
-    public static function logEvent(string $type, int $studyId = 0, int $mediaId = 0, string $destUrl = ''): void
+    public static function logEvent(string $type, int $studyId = 0, int $mediaId = 0, string $destUrl = '', int $seriesId = 0): void
     {
         try {
             $app = Factory::getApplication();
@@ -116,6 +117,16 @@ class CwmanalyticsHelper
             if ($acceptLang !== '') {
                 $parts    = explode(',', $acceptLang);
                 $language = substr(trim(explode(';', $parts[0])[0]), 0, 10);
+            }
+
+            // Auto-resolve study_id from media file when not provided
+            if ($studyId === 0 && $mediaId > 0) {
+                $studyId = self::resolveStudyId($mediaId);
+            }
+
+            // Auto-resolve series_id from study when not provided
+            if ($seriesId === 0 && $studyId > 0) {
+                $seriesId = self::resolveSeriesId($studyId);
             }
 
             // Campus: resolved from study or media record
@@ -159,6 +170,7 @@ class CwmanalyticsHelper
             $query = $db->getQuery(true)
                 ->insert($db->quoteName('#__bsms_analytics_events'))
                 ->columns([
+                    $db->quoteName('series_id'),
                     $db->quoteName('study_id'),
                     $db->quoteName('media_id'),
                     $db->quoteName('location_id'),
@@ -178,6 +190,7 @@ class CwmanalyticsHelper
                     $db->quoteName('created'),
                 ])
                 ->values(implode(',', [
+                    $seriesId > 0 ? (int) $seriesId : 'NULL',
                     $studyId > 0 ? (int) $studyId : 'NULL',
                     $mediaId > 0 ? (int) $mediaId : 'NULL',
                     $locationId > 0 ? (int) $locationId : 'NULL',
@@ -378,10 +391,11 @@ class CwmanalyticsHelper
             // Rollup: aggregate into monthly table using ON DUPLICATE KEY UPDATE
             $rollupSql = 'INSERT INTO ' . $db->quoteName('#__bsms_analytics_monthly') . '
                 (' . implode(',', array_map([$db, 'quoteName'], [
-                'study_id', 'media_id', 'location_id', 'event_type',
+                'series_id', 'study_id', 'media_id', 'location_id', 'event_type',
                 'referrer_type', 'country_code', 'device_type', 'year', 'month', 'count',
             ])) . ')
                 SELECT
+                    ' . $db->quoteName('series_id') . ',
                     ' . $db->quoteName('study_id') . ',
                     ' . $db->quoteName('media_id') . ',
                     ' . $db->quoteName('location_id') . ',
@@ -395,6 +409,7 @@ class CwmanalyticsHelper
                 FROM ' . $db->quoteName('#__bsms_analytics_events') . '
                 WHERE ' . $db->quoteName('created') . ' < ' . $db->quote($cutoff) . '
                 GROUP BY
+                    ' . $db->quoteName('series_id') . ',
                     ' . $db->quoteName('study_id') . ',
                     ' . $db->quoteName('media_id') . ',
                     ' . $db->quoteName('location_id') . ',
@@ -422,6 +437,64 @@ class CwmanalyticsHelper
         }
 
         return $result;
+    }
+
+    /**
+     * Resolve the series ID from a study (message) record.
+     *
+     * @param   int  $studyId  Study ID.
+     *
+     * @return  int  Series ID or 0 if unknown.
+     *
+     * @since   10.1.0
+     */
+    private static function resolveSeriesId(int $studyId): int
+    {
+        if ($studyId <= 0) {
+            return 0;
+        }
+
+        try {
+            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('series_id'))
+                ->from($db->quoteName('#__bsms_studies'))
+                ->where($db->quoteName('id') . ' = ' . (int) $studyId);
+            $db->setQuery($query);
+
+            return (int) $db->loadResult();
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Resolve the study (message) ID from a media file record.
+     *
+     * @param   int  $mediaId  Media file ID.
+     *
+     * @return  int  Study ID or 0 if unknown.
+     *
+     * @since   10.1.0
+     */
+    private static function resolveStudyId(int $mediaId): int
+    {
+        if ($mediaId <= 0) {
+            return 0;
+        }
+
+        try {
+            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('study_id'))
+                ->from($db->quoteName('#__bsms_mediafiles'))
+                ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
+            $db->setQuery($query);
+
+            return (int) $db->loadResult();
+        } catch (\Exception $e) {
+            return 0;
+        }
     }
 
     /**
