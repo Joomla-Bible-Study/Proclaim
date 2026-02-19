@@ -58,7 +58,7 @@ describe('fancybox.es6.js', () => {
         });
 
         test('should bind with Carousel and Toolbar options', () => {
-            const bindOptions = mockFancybox.bind.mock.calls[0][1];
+            const [, bindOptions] = mockFancybox.bind.mock.calls[0];
             expect(bindOptions.Carousel).toEqual({ infinite: false });
             expect(bindOptions.Toolbar.display.right).toContain('close');
         });

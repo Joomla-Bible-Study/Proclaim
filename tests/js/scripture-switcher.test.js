@@ -13,8 +13,8 @@
 const SOURCE_FILE = 'build/media_source/js/scripture-switcher.es6.js';
 
 // Track DOMContentLoaded handlers for cleanup
-var capturedDclHandler = null;
-var origAddEventListener = document.addEventListener.bind(document);
+let capturedDclHandler = null;
+const origAddEventListener = document.addEventListener.bind(document);
 
 /**
  * Build the DOM fixtures for the searchable scripture switcher.
@@ -24,15 +24,14 @@ var origAddEventListener = document.addEventListener.bind(document);
  * @param {Object} opts  Configuration options
  * @returns {void}
  */
-function setupDOM(opts) {
-    opts = opts || {};
-    var currentVersion = opts.currentVersion || 'kjv';
-    var bodyText = opts.bodyText || '<p><sup>1</sup> In the beginning God created...</p>';
-    var copyrightText = opts.copyrightText || 'Public Domain';
+function setupDOM(opts = {}) {
+    const currentVersion = opts.currentVersion || 'kjv';
+    const bodyText = opts.bodyText || '<p><sup>1</sup> In the beginning God created...</p>';
+    const copyrightText = opts.copyrightText || 'Public Domain';
 
     // Build the scripture container with switcher inside .scripture-text
     // All content is static test fixture data
-    var html = '<div class="scripture-container scripture-visible">'
+    const html = '<div class="scripture-container scripture-visible">'
         + '<div class="scripture-text">'
         + '<div class="scripture-body">' + bodyText + '</div>'
         + '<div class="scripture-copyright">' + copyrightText + '</div>'
@@ -136,15 +135,15 @@ afterEach(function () {
 // --- Initialization tests ---
 describe('scripture-switcher initialization', function () {
     test('sets _currentVersion from data-current-version', function () {
-        var mockFetch = jest.fn();
+        const mockFetch = jest.fn();
         setupModule(mockFetch, { currentVersion: 'kjv' });
 
-        var switcher = document.querySelector('.scripture-searchable-switcher');
+        const switcher = document.querySelector('.scripture-searchable-switcher');
         expect(switcher._currentVersion).toBe('kjv');
     });
 
     test('caches initial content at init time', function () {
-        var mockFetch = jest.fn();
+        const mockFetch = jest.fn();
         setupModule(mockFetch, {
             currentVersion: 'kjv',
             bodyText: '<p>Initial KJV text</p>'
@@ -152,7 +151,7 @@ describe('scripture-switcher initialization', function () {
 
         // The cache is internal (WeakMap), but we can verify by clicking KJV
         // and confirming no fetch is made
-        var kjvItem = document.querySelector('[data-value="kjv"]');
+        const kjvItem = document.querySelector('[data-value="kjv"]');
         kjvItem.click();
 
         expect(mockFetch).not.toHaveBeenCalled();
@@ -162,26 +161,26 @@ describe('scripture-switcher initialization', function () {
 // --- Same-version short-circuit ---
 describe('same-version short-circuit', function () {
     test('clicking the currently displayed version does not trigger fetch', function () {
-        var mockFetch = jest.fn();
+        const mockFetch = jest.fn();
         setupModule(mockFetch, { currentVersion: 'kjv' });
 
-        var kjvItem = document.querySelector('[data-value="kjv"]');
+        const kjvItem = document.querySelector('[data-value="kjv"]');
         kjvItem.click();
 
         expect(mockFetch).not.toHaveBeenCalled();
     });
 
     test('clicking same version closes the menu', function () {
-        var mockFetch = jest.fn();
+        const mockFetch = jest.fn();
         setupModule(mockFetch, { currentVersion: 'kjv' });
 
         // Open menu first
-        var toggle = document.querySelector('.scripture-dropdown-toggle');
+        const toggle = document.querySelector('.scripture-dropdown-toggle');
         toggle.click();
         expect(document.querySelector('.scripture-dropdown-menu').style.display).toBe('flex');
 
         // Click KJV (already active)
-        var kjvItem = document.querySelector('[data-value="kjv"]');
+        const kjvItem = document.querySelector('[data-value="kjv"]');
         kjvItem.click();
 
         expect(document.querySelector('.scripture-dropdown-menu').style.display).toBe('none');
@@ -192,7 +191,7 @@ describe('same-version short-circuit', function () {
 // --- Successful fetch commits UI ---
 describe('successful fetch', function () {
     test('updates body, dropdown text, and select only after success', async function () {
-        var mockFetch = jest.fn().mockResolvedValue({
+        const mockFetch = jest.fn().mockResolvedValue({
             ok: true,
             text: function () {
                 return Promise.resolve(JSON.stringify({
@@ -208,15 +207,15 @@ describe('successful fetch', function () {
         });
         setupModule(mockFetch, { currentVersion: 'kjv' });
 
-        var esvItem = document.querySelector('[data-value="esv"]');
+        const esvItem = document.querySelector('[data-value="esv"]');
         esvItem.click();
 
         // Wait for async fetch to complete
         await new Promise(function (r) { setTimeout(r, 50); });
 
-        var body = document.querySelector('.scripture-body');
-        var toggleText = document.querySelector('.scripture-dropdown-text');
-        var select = document.querySelector('.scripture-version-select');
+        const body = document.querySelector('.scripture-body');
+        const toggleText = document.querySelector('.scripture-dropdown-text');
+        const select = document.querySelector('.scripture-version-select');
 
         expect(body.textContent).toContain('ESV passage text');
         expect(toggleText.textContent).toBe('English Standard Version');
@@ -224,9 +223,9 @@ describe('successful fetch', function () {
     });
 
     test('caches successful fetch for instant restore', async function () {
-        var callCount = 0;
-        var mockFetch = jest.fn().mockImplementation(function () {
-            callCount++;
+        let callCount = 0;
+        const mockFetch = jest.fn().mockImplementation(function () {
+            callCount += 1;
             return Promise.resolve({
                 ok: true,
                 text: function () {
@@ -245,13 +244,13 @@ describe('successful fetch', function () {
         setupModule(mockFetch, { currentVersion: 'kjv' });
 
         // First: click ESV
-        var esvItem = document.querySelector('[data-value="esv"]');
+        const esvItem = document.querySelector('[data-value="esv"]');
         esvItem.click();
         await new Promise(function (r) { setTimeout(r, 50); });
         expect(callCount).toBe(1);
 
         // Switch back to KJV (cached from init)
-        var kjvItem = document.querySelector('[data-value="kjv"]');
+        const kjvItem = document.querySelector('[data-value="kjv"]');
         kjvItem.click();
         await new Promise(function (r) { setTimeout(r, 50); });
         // No additional fetch because KJV was cached at init
@@ -264,7 +263,7 @@ describe('successful fetch', function () {
         expect(callCount).toBe(1);
 
         // Verify ESV content is displayed
-        var body = document.querySelector('.scripture-body');
+        const body = document.querySelector('.scripture-body');
         expect(body.textContent).toContain('ESV passage text');
     });
 });
@@ -272,7 +271,7 @@ describe('successful fetch', function () {
 // --- Failure rollback ---
 describe('failure rollback', function () {
     test('restores original content and shows error banner on failure', async function () {
-        var mockFetch = jest.fn().mockResolvedValue({
+        const mockFetch = jest.fn().mockResolvedValue({
             ok: true,
             text: function () {
                 return Promise.resolve(JSON.stringify({
@@ -290,50 +289,50 @@ describe('failure rollback', function () {
             copyrightText: 'Public Domain'
         });
 
-        var esvItem = document.querySelector('[data-value="esv"]');
+        const esvItem = document.querySelector('[data-value="esv"]');
         esvItem.click();
 
         // Wait for fetch + retries (non-retryable so should be fast)
         await new Promise(function (r) { setTimeout(r, 100); });
 
         // Original content restored
-        var body = document.querySelector('.scripture-body');
+        const body = document.querySelector('.scripture-body');
         expect(body.textContent).toContain('Original KJV text');
 
         // Dropdown text NOT changed (was never committed)
-        var toggleText = document.querySelector('.scripture-dropdown-text');
+        const toggleText = document.querySelector('.scripture-dropdown-text');
         expect(toggleText.textContent).toBe('King James Version');
 
         // Error banner shown
-        var banner = document.querySelector('.scripture-error-banner');
+        const banner = document.querySelector('.scripture-error-banner');
         expect(banner).not.toBeNull();
         expect(banner.className).toContain('alert-warning');
 
         // Banner has retry button
-        var retryBtn = banner.querySelector('.scripture-retry-banner-btn');
+        const retryBtn = banner.querySelector('.scripture-retry-banner-btn');
         expect(retryBtn).not.toBeNull();
 
         // Banner has diagnostic details
-        var details = banner.querySelector('details');
+        const details = banner.querySelector('details');
         expect(details).not.toBeNull();
         expect(details.textContent).toContain('ESV');
         expect(details.textContent).toContain('api_bible');
     });
 
     test('dropdown text and select are never changed on failure', async function () {
-        var mockFetch = jest.fn().mockRejectedValue(new Error('Network error'));
+        const mockFetch = jest.fn().mockRejectedValue(new Error('Network error'));
         setupModule(mockFetch, { currentVersion: 'kjv' });
 
-        var esvItem = document.querySelector('[data-value="esv"]');
+        const esvItem = document.querySelector('[data-value="esv"]');
         esvItem.click();
 
         // Wait for retries to exhaust
         await new Promise(function (r) { setTimeout(r, 200); });
 
-        var toggleText = document.querySelector('.scripture-dropdown-text');
+        const toggleText = document.querySelector('.scripture-dropdown-text');
         expect(toggleText.textContent).toBe('King James Version');
 
-        var select = document.querySelector('.scripture-version-select');
+        const select = document.querySelector('.scripture-version-select');
         expect(select.value).toBe('kjv');
     });
 });
@@ -341,9 +340,9 @@ describe('failure rollback', function () {
 // --- Error banner ---
 describe('error banner', function () {
     test('error banner is removed when new fetch starts', async function () {
-        var callNum = 0;
-        var mockFetch = jest.fn().mockImplementation(function () {
-            callNum++;
+        let callNum = 0;
+        const mockFetch = jest.fn().mockImplementation(function () {
+            callNum += 1;
             if (callNum <= 1) {
                 // First call (ESV) fails non-retryable
                 return Promise.resolve({
@@ -378,29 +377,29 @@ describe('error banner', function () {
         setupModule(mockFetch, { currentVersion: 'kjv' });
 
         // First attempt — fails, shows banner
-        var esvItem = document.querySelector('[data-value="esv"]');
+        const esvItem = document.querySelector('[data-value="esv"]');
         esvItem.click();
         await new Promise(function (r) { setTimeout(r, 100); });
 
-        var banner = document.querySelector('.scripture-error-banner');
+        const banner = document.querySelector('.scripture-error-banner');
         expect(banner).not.toBeNull();
 
         // Click NIV — existing banner should be removed during loading
-        var nivItem = document.querySelector('[data-value="niv"]');
+        const nivItem = document.querySelector('[data-value="niv"]');
         nivItem.click();
 
         // Wait for NIV fetch to succeed — banner from ESV should be gone
         await new Promise(function (r) { setTimeout(r, 100); });
-        var bannerAfterNiv = document.querySelector('.scripture-error-banner');
+        const bannerAfterNiv = document.querySelector('.scripture-error-banner');
         expect(bannerAfterNiv).toBeNull();
 
         // NIV content should be displayed
-        var body = document.querySelector('.scripture-body');
+        const body = document.querySelector('.scripture-body');
         expect(body.textContent).toContain('NIV text');
     });
 
     test('banner includes diagnostic details section', async function () {
-        var mockFetch = jest.fn().mockResolvedValue({
+        const mockFetch = jest.fn().mockResolvedValue({
             ok: true,
             text: function () {
                 return Promise.resolve(JSON.stringify({
@@ -414,14 +413,14 @@ describe('error banner', function () {
         });
         setupModule(mockFetch, { currentVersion: 'kjv' });
 
-        var esvItem = document.querySelector('[data-value="esv"]');
+        const esvItem = document.querySelector('[data-value="esv"]');
         esvItem.click();
         await new Promise(function (r) { setTimeout(r, 100); });
 
-        var banner = document.querySelector('.scripture-error-banner');
+        const banner = document.querySelector('.scripture-error-banner');
         expect(banner).not.toBeNull();
 
-        var details = banner.querySelector('details');
+        const details = banner.querySelector('details');
         expect(details).not.toBeNull();
         expect(details.textContent).toContain('API key expired');
         expect(details.textContent).toContain('api_bible');
@@ -432,11 +431,11 @@ describe('error banner', function () {
 // --- Menu interaction ---
 describe('menu interaction', function () {
     test('toggle opens and closes the menu', function () {
-        var mockFetch = jest.fn();
+        const mockFetch = jest.fn();
         setupModule(mockFetch);
 
-        var toggle = document.querySelector('.scripture-dropdown-toggle');
-        var menu = document.querySelector('.scripture-dropdown-menu');
+        const toggle = document.querySelector('.scripture-dropdown-toggle');
+        const menu = document.querySelector('.scripture-dropdown-menu');
 
         // Initially closed
         expect(menu.style.display).toBe('none');
@@ -453,10 +452,10 @@ describe('menu interaction', function () {
     });
 
     test('items get tabindex for keyboard navigation', function () {
-        var mockFetch = jest.fn();
+        const mockFetch = jest.fn();
         setupModule(mockFetch);
 
-        var items = document.querySelectorAll('.scripture-dropdown-item');
+        const items = document.querySelectorAll('.scripture-dropdown-item');
         items.forEach(function (item) {
             expect(item.getAttribute('tabindex')).toBe('0');
         });

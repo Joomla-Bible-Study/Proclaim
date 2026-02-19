@@ -10,10 +10,8 @@
  * unit testing purposes, not from external input.
  */
 
-const SOURCE_FILE = 'build/media_source/js/series-scroll.es6.js';
-
-var capturedDclHandler = null;
-var origAddEventListener = document.addEventListener.bind(document);
+let capturedDclHandler = null;
+const origAddEventListener = document.addEventListener.bind(document);
 
 function captureAndRequire(path) {
     document.addEventListener = function (type, handler, options) {
@@ -155,17 +153,17 @@ describe('series-scroll.es6.js', () => {
         }
 
         test('should show initial counter on page load', () => {
-            var mockFetch = jest.fn();
+            const mockFetch = jest.fn();
             setupLoadMore(mockFetch);
 
-            var counter = document.getElementById('proclaim-item-counter');
+            const counter = document.getElementById('proclaim-item-counter');
             expect(counter.textContent).toContain('Showing');
             expect(counter.textContent).toContain('2');
             expect(counter.textContent).toContain('10');
         });
 
         test('should append items on Load More click', async () => {
-            var mockFetch = jest.fn().mockResolvedValue({
+            const mockFetch = jest.fn().mockResolvedValue({
                 ok: true,
                 json: function () {
                     return Promise.resolve({
@@ -182,12 +180,12 @@ describe('series-scroll.es6.js', () => {
 
             setupLoadMore(mockFetch);
 
-            var list = document.getElementById('proclaim-series-list');
-            var listing = list.querySelector('.proclaim-listing');
+            const list = document.getElementById('proclaim-series-list');
+            const listing = list.querySelector('.proclaim-listing');
             // 2 proclaim-item divs
             expect(listing.querySelectorAll(':scope > .proclaim-item').length).toBe(2);
 
-            var btn = document.querySelector('#proclaim-load-more button');
+            const btn = document.querySelector('#proclaim-load-more button');
             btn.click();
 
             await new Promise(function (r) { setTimeout(r, 0); });
@@ -200,7 +198,7 @@ describe('series-scroll.es6.js', () => {
         });
 
         test('should hide button when all items loaded', async () => {
-            var mockFetch = jest.fn().mockResolvedValue({
+            const mockFetch = jest.fn().mockResolvedValue({
                 ok: true,
                 json: function () {
                     return Promise.resolve({
@@ -216,14 +214,14 @@ describe('series-scroll.es6.js', () => {
 
             setupLoadMore(mockFetch, { totalItems: 3 });
 
-            var btn = document.querySelector('#proclaim-load-more button');
+            const btn = document.querySelector('#proclaim-load-more button');
             btn.click();
 
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
 
-            var container = document.getElementById('proclaim-load-more');
+            const container = document.getElementById('proclaim-load-more');
             expect(container.style.display).toBe('none');
         });
     });
@@ -279,7 +277,7 @@ describe('series-scroll.es6.js', () => {
         }
 
         test('should pause after threshold and show Load More', async () => {
-            var mockFetch = jest.fn().mockResolvedValue({
+            const mockFetch = jest.fn().mockResolvedValue({
                 ok: true,
                 json: function () {
                     return Promise.resolve({
@@ -295,8 +293,8 @@ describe('series-scroll.es6.js', () => {
 
             setupInfinite(mockFetch, { scrollThreshold: 2 });
 
-            var observer = IntersectionObserver._lastInstance;
-            var loadMoreContainer = document.getElementById('proclaim-load-more');
+            const observer = IntersectionObserver._lastInstance;
+            const loadMoreContainer = document.getElementById('proclaim-load-more');
 
             // Initially hidden
             expect(loadMoreContainer.style.display).toBe('none');
@@ -317,7 +315,7 @@ describe('series-scroll.es6.js', () => {
         });
 
         test('should include credentials in fetch requests', async () => {
-            var mockFetch = jest.fn().mockResolvedValue({
+            const mockFetch = jest.fn().mockResolvedValue({
                 ok: true,
                 json: function () {
                     return Promise.resolve({
@@ -333,12 +331,12 @@ describe('series-scroll.es6.js', () => {
 
             setupInfinite(mockFetch);
 
-            var observer = IntersectionObserver._lastInstance;
+            const observer = IntersectionObserver._lastInstance;
             mockFetch.mockClear();
             observer.trigger([{ isIntersecting: true }]);
             await new Promise(function (r) { setTimeout(r, 0); });
 
-            var fetchOpts = mockFetch.mock.calls[0][1];
+            const [, fetchOpts] = mockFetch.mock.calls[0];
             expect(fetchOpts.credentials).toBe('same-origin');
         });
     });

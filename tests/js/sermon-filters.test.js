@@ -12,8 +12,8 @@
 
 // Track DOMContentLoaded handlers so we can clean them up between tests.
 // jest.resetModules() does NOT remove event listeners from `document`.
-var capturedDclHandler = null;
-var origAddEventListener = document.addEventListener.bind(document);
+let capturedDclHandler = null;
+const origAddEventListener = document.addEventListener.bind(document);
 
 /**
  * Helper: set up the full DOM + mocks needed for the sermon-filters module.
@@ -23,9 +23,9 @@ var origAddEventListener = document.addEventListener.bind(document);
  * @param {Object}   extraOpts  Additional options to merge into sermonFilters config
  */
 function setupModule(fetchMock, extraOpts) {
-    var paginationStyle = (extraOpts && extraOpts.paginationStyle) || 'pagination';
+    const paginationStyle = (extraOpts && extraOpts.paginationStyle) || 'pagination';
 
-    var html = '<div id="proclaim-main-content">' +
+    let html = '<div id="proclaim-main-content">' +
             '<form id="adminForm">' +
                 '<input name="filter_search" type="text" value="" />' +
                 '<select name="filter_teacher">' +
@@ -50,7 +50,7 @@ function setupModule(fetchMock, extraOpts) {
     }
 
     if (paginationStyle === 'loadmore' || paginationStyle === 'infinite') {
-        var hideBtn = (paginationStyle === 'infinite') ? ' style="display:none"' : '';
+        const hideBtn = (paginationStyle === 'infinite') ? ' style="display:none"' : '';
         html += '<div class="proclaim-load-more" id="proclaim-load-more"' + hideBtn + '>' +
                     '<button type="button" class="btn btn-outline-primary">Load More</button>' +
                 '</div>';
@@ -229,7 +229,7 @@ describe('sermon-filters.es6.js', () => {
         });
 
         test('should initialize when all requirements are met', () => {
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
             setupModule(mockFetch);
 
             expect(window.history.replaceState).toHaveBeenCalledWith(
@@ -242,11 +242,11 @@ describe('sermon-filters.es6.js', () => {
 
     describe('Standard Pagination Mode', () => {
         test('should trigger AJAX fetch on form submit', async () => {
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
             setupModule(mockFetch);
             mockFetch.mockClear();
 
-            var form = document.getElementById('adminForm');
+            const form = document.getElementById('adminForm');
             form.dispatchEvent(new Event('submit', { cancelable: true }));
 
             await new Promise(function (r) { setTimeout(r, 0); });
@@ -254,37 +254,37 @@ describe('sermon-filters.es6.js', () => {
 
             expect(mockFetch).toHaveBeenCalled();
 
-            var fetchUrl = mockFetch.mock.calls[0][0];
+            const [fetchUrl] = mockFetch.mock.calls[0];
             expect(fetchUrl).toContain('task=cwmsermons.filterAjax');
         });
 
         test('should include CSRF token in request', async () => {
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
             setupModule(mockFetch);
             mockFetch.mockClear();
 
-            var form = document.getElementById('adminForm');
+            const form = document.getElementById('adminForm');
             form.dispatchEvent(new Event('submit', { cancelable: true }));
 
             await new Promise(function (r) { setTimeout(r, 0); });
 
-            var fetchUrl = mockFetch.mock.calls[0][0];
+            const [fetchUrl] = mockFetch.mock.calls[0];
             expect(fetchUrl).toContain('testtoken=1');
         });
 
         test('should update listing content after successful fetch', async () => {
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
             setupModule(mockFetch);
             mockFetch.mockClear();
 
-            var form = document.getElementById('adminForm');
+            const form = document.getElementById('adminForm');
             form.dispatchEvent(new Event('submit', { cancelable: true }));
 
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
 
-            var list = document.getElementById('proclaim-sermon-list');
+            const list = document.getElementById('proclaim-sermon-list');
             expect(list.innerHTML).toContain('New Item 1');
             expect(list.querySelector('.proclaim-listing')).not.toBeNull();
         });
@@ -294,11 +294,11 @@ describe('sermon-filters.es6.js', () => {
         test('should debounce search input by 350ms', () => {
             jest.useFakeTimers();
 
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
             setupModule(mockFetch);
-            var baselineCount = mockFetch.mock.calls.length;
+            const baselineCount = mockFetch.mock.calls.length;
 
-            var searchInput = document.querySelector('input[name="filter_search"]');
+            const searchInput = document.querySelector('input[name="filter_search"]');
 
             searchInput.value = 'G';
             searchInput.dispatchEvent(new Event('input'));
@@ -319,36 +319,36 @@ describe('sermon-filters.es6.js', () => {
 
     describe('Load More Mode', () => {
         test('should show initial counter on page load', () => {
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
             setupModule(mockFetch, { paginationStyle: 'loadmore' });
 
-            var counter = document.getElementById('proclaim-item-counter');
+            const counter = document.getElementById('proclaim-item-counter');
             expect(counter.textContent).toContain('Showing');
             expect(counter.textContent).toContain('2');
             expect(counter.textContent).toContain('10');
         });
 
         test('should show Load More button when in loadmore mode', () => {
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
             setupModule(mockFetch, { paginationStyle: 'loadmore' });
 
-            var btn = document.getElementById('proclaim-load-more');
+            const btn = document.getElementById('proclaim-load-more');
             expect(btn).not.toBeNull();
             expect(btn.querySelector('button')).not.toBeNull();
         });
 
         test('should append items on Load More click', async () => {
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
             setupModule(mockFetch, { paginationStyle: 'loadmore' });
 
-            var list = document.getElementById('proclaim-sermon-list');
-            var listing = list.querySelector('.proclaim-listing');
+            const list = document.getElementById('proclaim-sermon-list');
+            const listing = list.querySelector('.proclaim-listing');
             // 2 proclaim-item divs
             expect(listing.querySelectorAll(':scope > .proclaim-item').length).toBe(2);
 
             mockFetch.mockClear();
 
-            var btn = document.querySelector('#proclaim-load-more button');
+            const btn = document.querySelector('#proclaim-load-more button');
             btn.click();
 
             await new Promise(function (r) { setTimeout(r, 0); });
@@ -360,61 +360,61 @@ describe('sermon-filters.es6.js', () => {
         });
 
         test('should update counter after load', async () => {
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse({ total: 10, pagesTotal: 5 }));
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse({ total: 10, pagesTotal: 5 }));
             setupModule(mockFetch, { paginationStyle: 'loadmore' });
             mockFetch.mockClear();
 
-            var btn = document.querySelector('#proclaim-load-more button');
+            const btn = document.querySelector('#proclaim-load-more button');
             btn.click();
 
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
 
-            var counter = document.getElementById('proclaim-item-counter');
+            const counter = document.getElementById('proclaim-item-counter');
             expect(counter.textContent).toContain('Showing');
         });
 
         test('should hide Load More when all items loaded', async () => {
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse({ total: 2, pagesTotal: 1 }));
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse({ total: 2, pagesTotal: 1 }));
             setupModule(mockFetch, { paginationStyle: 'loadmore' });
             mockFetch.mockClear();
 
-            var btn = document.querySelector('#proclaim-load-more button');
+            const btn = document.querySelector('#proclaim-load-more button');
             btn.click();
 
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
 
-            var container = document.getElementById('proclaim-load-more');
+            const container = document.getElementById('proclaim-load-more');
             expect(container.style.display).toBe('none');
 
-            var counter = document.getElementById('proclaim-item-counter');
+            const counter = document.getElementById('proclaim-item-counter');
             expect(counter.textContent).toContain('All items loaded');
         });
 
         test('should reset to replace mode on filter change', async () => {
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
             setupModule(mockFetch, { paginationStyle: 'loadmore' });
 
             // First, do a load more to accumulate
             mockFetch.mockClear();
-            var btn = document.querySelector('#proclaim-load-more button');
+            const btn = document.querySelector('#proclaim-load-more button');
             btn.click();
 
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
 
-            var list = document.getElementById('proclaim-sermon-list');
-            var listing = list.querySelector('.proclaim-listing');
+            const list = document.getElementById('proclaim-sermon-list');
+            const listing = list.querySelector('.proclaim-listing');
             // 4 proclaim-item divs after append
             expect(listing.querySelectorAll(':scope > .proclaim-item').length).toBe(4);
 
             // Now change a filter — should replace, not append
             mockFetch.mockClear();
-            var select = document.querySelector('select[name="filter_teacher"]');
+            const select = document.querySelector('select[name="filter_teacher"]');
             select.value = '5';
             select.dispatchEvent(new Event('change'));
 
@@ -429,14 +429,14 @@ describe('sermon-filters.es6.js', () => {
 
     describe('Infinite Scroll Mode', () => {
         test('should create IntersectionObserver when in infinite mode', () => {
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
             setupModule(mockFetch, { paginationStyle: 'infinite' });
 
             expect(IntersectionObserver._lastInstance).toBeDefined();
         });
 
         test('should not show pagination containers in infinite mode', () => {
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
             setupModule(mockFetch, { paginationStyle: 'infinite' });
 
             expect(document.getElementById('proclaim-pagination-top')).toBeNull();
@@ -444,41 +444,41 @@ describe('sermon-filters.es6.js', () => {
         });
 
         test('should have sentinel element for intersection', () => {
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
             setupModule(mockFetch, { paginationStyle: 'infinite' });
 
-            var sentinel = document.getElementById('proclaim-scroll-sentinel');
+            const sentinel = document.getElementById('proclaim-scroll-sentinel');
             expect(sentinel).not.toBeNull();
         });
 
         test('should show counter element', () => {
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
             setupModule(mockFetch, { paginationStyle: 'infinite' });
 
-            var counter = document.getElementById('proclaim-item-counter');
+            const counter = document.getElementById('proclaim-item-counter');
             expect(counter).not.toBeNull();
         });
 
         test('should have Load More button hidden initially in infinite mode', () => {
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
             setupModule(mockFetch, { paginationStyle: 'infinite' });
 
-            var container = document.getElementById('proclaim-load-more');
+            const container = document.getElementById('proclaim-load-more');
             expect(container).not.toBeNull();
             expect(container.style.display).toBe('none');
         });
 
         test('should include credentials in fetch requests', async () => {
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
             setupModule(mockFetch, { paginationStyle: 'loadmore' });
             mockFetch.mockClear();
 
-            var btn = document.querySelector('#proclaim-load-more button');
+            const btn = document.querySelector('#proclaim-load-more button');
             btn.click();
 
             await new Promise(function (r) { setTimeout(r, 0); });
 
-            var fetchOpts = mockFetch.mock.calls[0][1];
+            const [, fetchOpts] = mockFetch.mock.calls[0];
             expect(fetchOpts.credentials).toBe('same-origin');
             expect(fetchOpts.headers['Accept']).toBe('application/json');
         });
@@ -487,11 +487,11 @@ describe('sermon-filters.es6.js', () => {
     describe('Infinite Scroll Threshold', () => {
         test('should pause auto-scroll after threshold pages and show Load More button', async () => {
             // threshold=2 means after 2 auto-loaded pages, pause
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse({ total: 20, pagesTotal: 10 }));
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse({ total: 20, pagesTotal: 10 }));
             setupModule(mockFetch, { paginationStyle: 'infinite', scrollThreshold: 2 });
 
-            var observer = IntersectionObserver._lastInstance;
-            var loadMoreContainer = document.getElementById('proclaim-load-more');
+            const observer = IntersectionObserver._lastInstance;
+            const loadMoreContainer = document.getElementById('proclaim-load-more');
 
             // Initially hidden
             expect(loadMoreContainer.style.display).toBe('none');
@@ -515,11 +515,11 @@ describe('sermon-filters.es6.js', () => {
         });
 
         test('should resume auto-scroll after manual Load More click', async () => {
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse({ total: 20, pagesTotal: 10 }));
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse({ total: 20, pagesTotal: 10 }));
             setupModule(mockFetch, { paginationStyle: 'infinite', scrollThreshold: 1 });
 
-            var observer = IntersectionObserver._lastInstance;
-            var loadMoreContainer = document.getElementById('proclaim-load-more');
+            const observer = IntersectionObserver._lastInstance;
+            const loadMoreContainer = document.getElementById('proclaim-load-more');
 
             // Trigger one auto-load to reach threshold
             observer.trigger([{ isIntersecting: true }]);
@@ -529,7 +529,7 @@ describe('sermon-filters.es6.js', () => {
             expect(loadMoreContainer.style.display).toBe('');
 
             // Click Load More — should resume
-            var btn = loadMoreContainer.querySelector('button');
+            const btn = loadMoreContainer.querySelector('button');
             btn.click();
             await new Promise(function (r) { setTimeout(r, 0); });
             await new Promise(function (r) { setTimeout(r, 0); });
@@ -540,14 +540,14 @@ describe('sermon-filters.es6.js', () => {
         });
 
         test('should not pause when threshold is 0 (unlimited)', async () => {
-            var mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse({ total: 20, pagesTotal: 10 }));
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse({ total: 20, pagesTotal: 10 }));
             setupModule(mockFetch, { paginationStyle: 'infinite', scrollThreshold: 0 });
 
-            var observer = IntersectionObserver._lastInstance;
-            var loadMoreContainer = document.getElementById('proclaim-load-more');
+            const observer = IntersectionObserver._lastInstance;
+            const loadMoreContainer = document.getElementById('proclaim-load-more');
 
             // Auto-load many pages — should never show button
-            for (var i = 0; i < 5; i++) {
+            for (let i = 0; i < 5; i++) {
                 observer.trigger([{ isIntersecting: true }]);
                 await new Promise(function (r) { setTimeout(r, 0); });
                 await new Promise(function (r) { setTimeout(r, 0); });
@@ -563,17 +563,17 @@ describe('sermon-filters.es6.js', () => {
             jest.spyOn(console, 'warn').mockImplementation(function () {});
 
             // All fetch calls fail (no fetch happens during init)
-            var mockFetch = jest.fn()
+            const mockFetch = jest.fn()
                 .mockRejectedValue(new TypeError('Network error'));
 
             setupModule(mockFetch);
 
-            var form = document.getElementById('adminForm');
+            const form = document.getElementById('adminForm');
             form.submit = jest.fn();
 
             form.dispatchEvent(new Event('submit', { cancelable: true }));
 
-            for (var i = 0; i < 10; i++) {
+            for (let i = 0; i < 10; i++) {
                 await new Promise(function (r) { setTimeout(r, 10); });
             }
 
