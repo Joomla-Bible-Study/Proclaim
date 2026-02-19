@@ -97,12 +97,24 @@ class CwmanalyticsController extends BaseController
         $csv      = $model->exportCsvString($start, $end, $locationId);
         $filename = 'proclaim-analytics-' . $start . '-to-' . $end . '.csv';
 
-        $app->setHeader('Content-Type', 'text/csv; charset=utf-8', true);
-        $app->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"', true);
-        $app->setHeader('Content-Length', (string) strlen($csv), true);
-        $app->sendHeaders();
+        // Match Cwmdownload.php pattern: disable all buffering layers
+        // (including zlib compression) before sending file headers.
+        ini_set('output_buffering', '0');
+        ini_set('zlib.output_compression', '0');
+
+        while (ob_get_level()) {
+            @ob_end_clean();
+        }
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Length: ' . strlen($csv));
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        flush();
 
         echo $csv;
-        $app->close();
+        exit;
     }
 }
