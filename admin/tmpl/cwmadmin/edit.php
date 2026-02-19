@@ -571,51 +571,6 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             </div>
         </div>
 
-        <!-- Cleanup & Maintenance Pipeline -->
-        <div id="cleanup-pipeline-panel" class="cwmadmin-panel mb-4">
-            <h3 class="tab-description"><?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_TITLE'); ?></h3>
-            <p class="text-body-secondary"><?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_DESC'); ?></p>
-            <ol id="cleanup-pipeline-steps" class="list-group list-group-numbered list-group-flush mb-3">
-                <li class="list-group-item d-flex align-items-center gap-2 bg-transparent px-0" data-cleanup-step="unresolvable">
-                    <span><?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_STEP_UNRESOLVABLE'); ?></span>
-                    <span data-cleanup-badge="unresolvable" class="badge bg-secondary ms-auto" style="display:none;"></span>
-                </li>
-                <li class="list-group-item d-flex align-items-center gap-2 bg-transparent px-0" data-cleanup-step="legacy">
-                    <span><?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_STEP_LEGACY'); ?></span>
-                    <span data-cleanup-badge="legacy" class="badge bg-secondary ms-auto" style="display:none;"></span>
-                </li>
-                <li class="list-group-item d-flex align-items-center gap-2 bg-transparent px-0" data-cleanup-step="orphans">
-                    <span><?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_STEP_ORPHANS'); ?></span>
-                    <span data-cleanup-badge="orphans" class="badge bg-secondary ms-auto" style="display:none;"></span>
-                </li>
-            </ol>
-            <div id="cleanup-pipeline-progress-wrap" style="display:none;" class="mb-3">
-                <div class="progress" role="progressbar" aria-label="<?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_PROGRESS'); ?>" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                    <div id="cleanup-pipeline-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%;"></div>
-                </div>
-            </div>
-            <div id="cleanup-pipeline-confirm" class="alert alert-warning mb-3" style="display:none;">
-                <p id="cleanup-pipeline-confirm-text" class="mb-2"></p>
-                <div class="d-flex gap-2">
-                    <button type="button" id="btn-cleanup-confirm-delete" class="btn btn-danger btn-sm">
-                        <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_DELETE_CONTINUE'); ?>
-                    </button>
-                    <button type="button" id="btn-cleanup-confirm-skip" class="btn btn-outline-secondary btn-sm">
-                        <?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_SKIP'); ?>
-                    </button>
-                </div>
-            </div>
-            <p id="cleanup-pipeline-status-text" class="mb-3 text-body-secondary" aria-live="polite"></p>
-            <div class="d-flex gap-2">
-                <button type="button" id="btn-run-cleanup-pipeline" class="btn btn-warning">
-                    <i class="icon-play" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_RUN'); ?>
-                </button>
-                <button type="button" id="btn-cancel-cleanup-pipeline" class="btn btn-outline-danger" style="display:none;">
-                    <?php echo Text::_('JCANCEL'); ?>
-                </button>
-            </div>
-        </div>
-
         <!-- Advanced Tools (collapsible) -->
         <div class="accordion accordion-flush mt-2" id="imagetools-accordion">
 
@@ -697,6 +652,53 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                      class="accordion-collapse collapse"
                      aria-labelledby="accordion-cleanup-heading">
                     <div class="accordion-body px-0 pt-3 pb-0">
+
+                        <!-- Cleanup & Maintenance Pipeline -->
+                        <div id="cleanup-pipeline-panel" class="cwmadmin-panel mb-4">
+                            <h3 class="tab-description"><?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_TITLE'); ?></h3>
+                            <p class="text-body-secondary"><?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_DESC'); ?></p>
+                            <ol id="cleanup-pipeline-steps" class="list-group list-group-numbered list-group-flush mb-3">
+                                <li class="list-group-item d-flex align-items-center gap-2 bg-transparent px-0" data-cleanup-step="unresolvable">
+                                    <span><?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_STEP_UNRESOLVABLE'); ?></span>
+                                    <span data-cleanup-badge="unresolvable" class="badge bg-secondary ms-auto" style="display:none;"></span>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center gap-2 bg-transparent px-0" data-cleanup-step="legacy">
+                                    <span><?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_STEP_LEGACY'); ?></span>
+                                    <span data-cleanup-badge="legacy" class="badge bg-secondary ms-auto" style="display:none;"></span>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center gap-2 bg-transparent px-0" data-cleanup-step="orphans">
+                                    <span><?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_STEP_ORPHANS'); ?></span>
+                                    <span data-cleanup-badge="orphans" class="badge bg-secondary ms-auto" style="display:none;"></span>
+                                </li>
+                            </ol>
+                            <div id="cleanup-pipeline-progress-wrap" style="display:none;" class="mb-3">
+                                <div class="progress" role="progressbar" aria-label="<?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_PROGRESS'); ?>" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                    <div id="cleanup-pipeline-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                            <div id="cleanup-pipeline-confirm" class="alert alert-warning mb-3" style="display:none;">
+                                <p id="cleanup-pipeline-confirm-text" class="mb-2"></p>
+                                <div class="d-flex gap-2">
+                                    <button type="button" id="btn-cleanup-confirm-delete" class="btn btn-danger btn-sm">
+                                        <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_DELETE_CONTINUE'); ?>
+                                    </button>
+                                    <button type="button" id="btn-cleanup-confirm-skip" class="btn btn-outline-secondary btn-sm">
+                                        <?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_SKIP'); ?>
+                                    </button>
+                                </div>
+                            </div>
+                            <p id="cleanup-pipeline-status-text" class="mb-3 text-body-secondary" aria-live="polite"></p>
+                            <div class="d-flex gap-2">
+                                <button type="button" id="btn-run-cleanup-pipeline" class="btn btn-warning">
+                                    <i class="icon-play" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_RUN'); ?>
+                                </button>
+                                <button type="button" id="btn-cancel-cleanup-pipeline" class="btn btn-outline-danger" style="display:none;">
+                                    <?php echo Text::_('JCANCEL'); ?>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Individual Tools -->
                         <div class="row" id="imagetools-row2">
                             <div class="col-12 col-lg-6">
                                 <div class="cwmadmin-panel mb-4">
