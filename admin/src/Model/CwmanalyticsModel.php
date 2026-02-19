@@ -717,7 +717,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
             $sql = 'SELECT'
                 . ' sr.' . $db->quoteName('id') . ' AS series_id,'
                 . ' sr.' . $db->quoteName('series_text') . ' AS title,'
-                . ' sr.' . $db->quoteName('thumb') . ','
+                . ' sr.' . $db->quoteName('series_thumbnail') . ' AS thumb,'
                 . ' (SELECT COUNT(*) FROM ' . $db->quoteName('#__bsms_studies') . ' sc'
                 . '  WHERE sc.' . $db->quoteName('series_id') . ' = sr.' . $db->quoteName('id')
                 . '  AND sc.' . $db->quoteName('published') . ' = 1) AS message_count,'
@@ -753,7 +753,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
         try {
             $db    = $this->getDatabase();
             $query = $db->getQuery(true)
-                ->select([$db->quoteName('id'), $db->quoteName('series_text', 'title'), $db->quoteName('thumb')])
+                ->select([$db->quoteName('id'), $db->quoteName('series_text', 'title'), $db->quoteName('series_thumbnail', 'thumb')])
                 ->from($db->quoteName('#__bsms_series'))
                 ->where($db->quoteName('id') . ' = ' . (int) $seriesId);
             $db->setQuery($query);
