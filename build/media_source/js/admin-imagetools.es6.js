@@ -64,8 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!activeOperation) return;
     const target = e.target.closest('a[href], button[type="submit"], .nav-link, [data-bs-toggle="tab"]');
     if (!target) return;
-    // Allow clicks inside our own imagetools section (including accordion toggles)
-    if (target.closest('#imagetools, #imagetools-row2, #imagetools-pipeline-panel, #imagetools-accordion')) return;
+    // Allow clicks inside our own imagetools section (including accordion toggles and pipelines)
+    if (target.closest('#imagetools, #imagetools-row2, #imagetools-pipeline-panel, #cleanup-pipeline-panel, #imagetools-accordion')) return;
     e.preventDefault();
     e.stopPropagation();
   }
@@ -1073,6 +1073,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function setPipelineBadge(stepId, state) {
     const badge = document.querySelector(`[data-pipeline-badge="${stepId}"]`);
     if (!badge) return;
+    if (state === 'clear') {
+      badge.style.display = 'none';
+      return;
+    }
+    badge.style.display = '';
     const stateClasses = {
       pending: 'bg-secondary',
       running: 'bg-primary',
@@ -1127,7 +1132,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cancelBtn) cancelBtn.style.display = '';
     if (cancelBtn) cancelBtn.disabled      = false;
 
-    ['migrate', 'recover', 'webp'].forEach(s => setPipelineBadge(s, 'pending'));
+    ['migrate', 'recover', 'webp'].forEach(s => setPipelineBadge(s, 'clear'));
     setPipelineStatus('');
     setPipelineProgress(0);
 
@@ -1196,6 +1201,226 @@ document.addEventListener('DOMContentLoaded', () => {
       pipelineCancelled = true;
       setPipelineStatus(strings.pipelineCancelling);
       cancelPipelineBtn.disabled = true;
+    });
+  }
+
+  // ---- Cleanup Pipeline ----
+  let cleanupPipelineMode = false;
+  let cleanupPipelineCancelled = false;
+  let cleanupPipelineConfirmResolve = null;
+
+  function setCleanupBadge(stepId, state) {
+    const badge = document.querySelector(`[data-cleanup-badge="${stepId}"]`);
+    if (!badge) return;
+    if (state === 'clear') {
+      badge.style.display = 'none';
+      return;
+    }
+    badge.style.display = '';
+    const stateClasses = {
+      running: 'bg-primary',
+      done:    'bg-success',
+      skipped: 'bg-info text-dark',
+      error:   'bg-danger',
+    };
+    badge.className = `badge ms-auto ${stateClasses[state] || 'bg-secondary'}`;
+    const key = `cleanupPipeline${state.charAt(0).toUpperCase() + state.slice(1)}`;
+    badge.textContent = strings[key] || state;
+  }
+
+  function setCleanupStatus(text) {
+    const el = document.getElementById('cleanup-pipeline-status-text');
+    if (el) el.textContent = text;
+  }
+
+  function setCleanupProgress(pct, done = false) {
+    const wrap = document.getElementById('cleanup-pipeline-progress-wrap');
+    const bar  = document.getElementById('cleanup-pipeline-progress-bar');
+    if (!wrap || !bar) return;
+    wrap.style.display = 'block';
+    bar.style.width = `${pct}%`;
+    bar.setAttribute('aria-valuenow', pct);
+    if (done) {
+      bar.classList.remove('progress-bar-striped', 'progress-bar-animated');
+    } else {
+      bar.classList.add('progress-bar-striped', 'progress-bar-animated');
+    }
+  }
+
+  function showCleanupConfirm(count, messageKey) {
+    return new Promise(resolve => {
+      cleanupPipelineConfirmResolve = resolve;
+      const confirmDiv = document.getElementById('cleanup-pipeline-confirm');
+      const textEl = document.getElementById('cleanup-pipeline-confirm-text');
+      if (!confirmDiv || !textEl) { resolve(false); return; }
+      textEl.textContent = (strings[messageKey] || '').replace('%s', count);
+      confirmDiv.style.display = '';
+    });
+  }
+
+  const cleanupConfirmDeleteBtn = document.getElementById('btn-cleanup-confirm-delete');
+  const cleanupConfirmSkipBtn   = document.getElementById('btn-cleanup-confirm-skip');
+  const cleanupConfirmDiv       = document.getElementById('cleanup-pipeline-confirm');
+
+  function resolveCleanupConfirm(value) {
+    if (cleanupConfirmDiv) cleanupConfirmDiv.style.display = 'none';
+    if (cleanupPipelineConfirmResolve) {
+      const resolve = cleanupPipelineConfirmResolve;
+      cleanupPipelineConfirmResolve = null;
+      resolve(value);
+    }
+  }
+
+  if (cleanupConfirmDeleteBtn) {
+    cleanupConfirmDeleteBtn.addEventListener('click', () => resolveCleanupConfirm(true));
+  }
+  if (cleanupConfirmSkipBtn) {
+    cleanupConfirmSkipBtn.addEventListener('click', () => resolveCleanupConfirm(false));
+  }
+
+  const runCleanupPipeline = async () => {
+    cleanupPipelineMode = true;
+    cleanupPipelineCancelled = false;
+    const runBtn    = document.getElementById('btn-run-cleanup-pipeline');
+    const cancelBtn = document.getElementById('btn-cancel-cleanup-pipeline');
+    if (runBtn)    runBtn.style.display    = 'none';
+    if (cancelBtn) cancelBtn.style.display = '';
+    if (cancelBtn) cancelBtn.disabled      = false;
+
+    ['unresolvable', 'legacy', 'orphans'].forEach(s => setCleanupBadge(s, 'clear'));
+    setCleanupStatus('');
+    setCleanupProgress(0);
+
+    try {
+      // Step 1: Clear Unresolvable References (auto — DB only, no file deletion)
+      setCleanupBadge('unresolvable', 'running');
+      setCleanupStatus(strings.cleanupPipelineRunning);
+
+      const unresData = await fetch(
+        `index.php?option=com_proclaim&task=cwmadmin.getUnresolvableCountXHR&${token}=1`
+      ).then(r => r.json());
+
+      if (unresData.count > 0) {
+        const clearResult = await fetch(
+          `index.php?option=com_proclaim&task=cwmadmin.clearUnresolvableXHR&${token}=1`
+        ).then(r => r.json());
+        if (clearResult.success) {
+          setCleanupBadge('unresolvable', 'done');
+          setCleanupStatus(strings.cleanupPipelineCleared.replace('%s', clearResult.cleared));
+          loadMigrationCounts(); // refresh dependent counts
+        } else {
+          setCleanupBadge('unresolvable', 'error');
+        }
+      } else {
+        setCleanupBadge('unresolvable', 'skipped');
+      }
+      setCleanupProgress(35);
+
+      if (cleanupPipelineCancelled) throw new Error('cancelled');
+
+      // Step 2: Legacy Files (scan → inline confirm → delete all)
+      setCleanupBadge('legacy', 'running');
+      setCleanupStatus(strings.cleanupPipelineRunning);
+
+      const legacyData = await fetch(
+        `index.php?option=com_proclaim&task=cwmadmin.getLegacyFolderReportXHR&${token}=1`
+      ).then(r => r.json());
+
+      if (legacyData.total_files > 0) {
+        const shouldDelete = await showCleanupConfirm(legacyData.total_files, 'cleanupPipelineConfirmLegacy');
+        if (shouldDelete) {
+          const paths = (legacyData.folders || []).map(f => f.path);
+          const params = new URLSearchParams();
+          paths.forEach(p => params.append('paths[]', p));
+          activeOperation = 'legacy';
+          setOperationRunning(true);
+          const result = await fetch(
+            `index.php?option=com_proclaim&task=cwmadmin.deleteLegacyFoldersXHR&${token}=1`,
+            { method: 'POST', body: params }
+          ).then(r => r.json());
+          activeOperation = null;
+          setOperationRunning(false);
+          setCleanupBadge('legacy', result.deleted > 0 ? 'done' : 'error');
+        } else {
+          setCleanupBadge('legacy', 'skipped');
+        }
+      } else {
+        setCleanupBadge('legacy', 'skipped');
+      }
+      setCleanupProgress(70);
+
+      if (cleanupPipelineCancelled) throw new Error('cancelled');
+
+      // Step 3: Orphan Folders (scan → inline confirm → delete all)
+      setCleanupBadge('orphans', 'running');
+      setCleanupStatus(strings.cleanupPipelineRunning);
+
+      const orphanData = await fetch(
+        `index.php?option=com_proclaim&task=cwmadmin.getOrphanedFoldersXHR&${token}=1`
+      ).then(r => r.json());
+
+      const orphanCount = orphanData.totals ? orphanData.totals.folders : 0;
+
+      if (orphanCount > 0) {
+        const shouldDelete = await showCleanupConfirm(orphanCount, 'cleanupPipelineConfirmOrphans');
+        if (shouldDelete) {
+          const paths = [];
+          if (orphanData.orphans) {
+            ['studies', 'teachers', 'series'].forEach(type => {
+              (orphanData.orphans[type] || []).forEach(o => paths.push(o.path));
+            });
+          }
+          const params = new URLSearchParams();
+          paths.forEach(p => params.append('paths[]', p));
+          activeOperation = 'orphan';
+          setOperationRunning(true);
+          await fetch(
+            `index.php?option=com_proclaim&task=cwmadmin.deleteOrphanedFoldersXHR&${token}=1`,
+            { method: 'POST', body: params }
+          ).then(r => r.json());
+          activeOperation = null;
+          setOperationRunning(false);
+          setCleanupBadge('orphans', 'done');
+        } else {
+          setCleanupBadge('orphans', 'skipped');
+        }
+      } else {
+        setCleanupBadge('orphans', 'skipped');
+      }
+      setCleanupProgress(100, true);
+      setCleanupStatus(strings.cleanupPipelineComplete);
+
+    } catch (err) {
+      if (activeOperation) {
+        activeOperation = null;
+        setOperationRunning(false);
+      }
+      // Hide any pending confirm if we're aborting
+      resolveCleanupConfirm(false);
+      if (err.message === 'cancelled') {
+        setCleanupStatus(strings.cleanupPipelineCancelled);
+      } else {
+        setCleanupStatus(`${strings.cleanupPipelineError}: ${err.message || err}`);
+      }
+    } finally {
+      cleanupPipelineMode = false;
+      cleanupPipelineConfirmResolve = null;
+      if (runBtn)    runBtn.style.display    = '';
+      if (cancelBtn) cancelBtn.style.display = 'none';
+    }
+  };
+
+  const runCleanupPipelineBtn = document.getElementById('btn-run-cleanup-pipeline');
+  if (runCleanupPipelineBtn) {
+    runCleanupPipelineBtn.addEventListener('click', runCleanupPipeline);
+  }
+
+  const cancelCleanupPipelineBtn = document.getElementById('btn-cancel-cleanup-pipeline');
+  if (cancelCleanupPipelineBtn) {
+    cancelCleanupPipelineBtn.addEventListener('click', () => {
+      cleanupPipelineCancelled = true;
+      setCleanupStatus(strings.cleanupPipelineCancelling);
+      cancelCleanupPipelineBtn.disabled = true;
     });
   }
 

@@ -521,15 +521,15 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             <ol id="pipeline-steps" class="list-group list-group-numbered list-group-flush mb-3">
                 <li class="list-group-item d-flex align-items-center gap-2 bg-transparent px-0" data-pipeline-step="migrate">
                     <span><?php echo Text::_('JBS_ADM_PIPELINE_STEP_MIGRATE'); ?></span>
-                    <span data-pipeline-badge="migrate" class="badge bg-secondary ms-auto"><?php echo Text::_('JBS_ADM_PIPELINE_PENDING'); ?></span>
+                    <span data-pipeline-badge="migrate" class="badge bg-secondary ms-auto" style="display:none;"></span>
                 </li>
                 <li class="list-group-item d-flex align-items-center gap-2 bg-transparent px-0" data-pipeline-step="recover">
                     <span><?php echo Text::_('JBS_ADM_PIPELINE_STEP_RECOVER'); ?></span>
-                    <span data-pipeline-badge="recover" class="badge bg-secondary ms-auto"><?php echo Text::_('JBS_ADM_PIPELINE_PENDING'); ?></span>
+                    <span data-pipeline-badge="recover" class="badge bg-secondary ms-auto" style="display:none;"></span>
                 </li>
                 <li class="list-group-item d-flex align-items-center gap-2 bg-transparent px-0" data-pipeline-step="webp">
                     <span><?php echo Text::_('JBS_ADM_PIPELINE_STEP_WEBP'); ?></span>
-                    <span data-pipeline-badge="webp" class="badge bg-secondary ms-auto"><?php echo Text::_('JBS_ADM_PIPELINE_PENDING'); ?></span>
+                    <span data-pipeline-badge="webp" class="badge bg-secondary ms-auto" style="display:none;"></span>
                 </li>
             </ol>
             <div id="pipeline-progress-wrap" style="display:none;" class="mb-3">
@@ -568,6 +568,51 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                         <i class="icon-refresh" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_REGENERATE_THUMBS'); ?>
                     </button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Cleanup & Maintenance Pipeline -->
+        <div id="cleanup-pipeline-panel" class="cwmadmin-panel mb-4">
+            <h3 class="tab-description"><?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_TITLE'); ?></h3>
+            <p class="text-body-secondary"><?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_DESC'); ?></p>
+            <ol id="cleanup-pipeline-steps" class="list-group list-group-numbered list-group-flush mb-3">
+                <li class="list-group-item d-flex align-items-center gap-2 bg-transparent px-0" data-cleanup-step="unresolvable">
+                    <span><?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_STEP_UNRESOLVABLE'); ?></span>
+                    <span data-cleanup-badge="unresolvable" class="badge bg-secondary ms-auto" style="display:none;"></span>
+                </li>
+                <li class="list-group-item d-flex align-items-center gap-2 bg-transparent px-0" data-cleanup-step="legacy">
+                    <span><?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_STEP_LEGACY'); ?></span>
+                    <span data-cleanup-badge="legacy" class="badge bg-secondary ms-auto" style="display:none;"></span>
+                </li>
+                <li class="list-group-item d-flex align-items-center gap-2 bg-transparent px-0" data-cleanup-step="orphans">
+                    <span><?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_STEP_ORPHANS'); ?></span>
+                    <span data-cleanup-badge="orphans" class="badge bg-secondary ms-auto" style="display:none;"></span>
+                </li>
+            </ol>
+            <div id="cleanup-pipeline-progress-wrap" style="display:none;" class="mb-3">
+                <div class="progress" role="progressbar" aria-label="<?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_PROGRESS'); ?>" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div id="cleanup-pipeline-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%;"></div>
+                </div>
+            </div>
+            <div id="cleanup-pipeline-confirm" class="alert alert-warning mb-3" style="display:none;">
+                <p id="cleanup-pipeline-confirm-text" class="mb-2"></p>
+                <div class="d-flex gap-2">
+                    <button type="button" id="btn-cleanup-confirm-delete" class="btn btn-danger btn-sm">
+                        <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_DELETE_CONTINUE'); ?>
+                    </button>
+                    <button type="button" id="btn-cleanup-confirm-skip" class="btn btn-outline-secondary btn-sm">
+                        <?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_SKIP'); ?>
+                    </button>
+                </div>
+            </div>
+            <p id="cleanup-pipeline-status-text" class="mb-3 text-body-secondary" aria-live="polite"></p>
+            <div class="d-flex gap-2">
+                <button type="button" id="btn-run-cleanup-pipeline" class="btn btn-warning">
+                    <i class="icon-play" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_RUN'); ?>
+                </button>
+                <button type="button" id="btn-cancel-cleanup-pipeline" class="btn btn-outline-danger" style="display:none;">
+                    <?php echo Text::_('JCANCEL'); ?>
+                </button>
             </div>
         </div>
 
@@ -611,9 +656,7 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                                     </button>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Recover Bare-ID Folders -->
-                        <div class="row mt-3" id="imagetools-row1c">
+                            <!-- Recover Bare-ID Folders -->
                             <div class="col-12 col-lg-6">
                                 <div class="cwmadmin-panel mb-4">
                                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_RECOVER_IMAGES'); ?></h3>
@@ -811,6 +854,16 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             'pipelineComplete'      => Text::_('JBS_ADM_PIPELINE_COMPLETE'),
             'pipelineCancelled'     => Text::_('JBS_ADM_PIPELINE_CANCELLED'),
             'pipelineCancelling'    => Text::_('JBS_ADM_PIPELINE_CANCELLING'),
+            'cleanupPipelineRunning'        => Text::_('JBS_ADM_CLEANUP_PIPELINE_RUNNING'),
+            'cleanupPipelineDone'           => Text::_('JBS_ADM_CLEANUP_PIPELINE_DONE'),
+            'cleanupPipelineError'          => Text::_('JBS_ADM_CLEANUP_PIPELINE_ERROR'),
+            'cleanupPipelineSkipped'        => Text::_('JBS_ADM_CLEANUP_PIPELINE_SKIPPED'),
+            'cleanupPipelineComplete'       => Text::_('JBS_ADM_CLEANUP_PIPELINE_COMPLETE'),
+            'cleanupPipelineCancelled'      => Text::_('JBS_ADM_CLEANUP_PIPELINE_CANCELLED'),
+            'cleanupPipelineCancelling'     => Text::_('JBS_ADM_CLEANUP_PIPELINE_CANCELLING'),
+            'cleanupPipelineConfirmLegacy'  => Text::_('JBS_ADM_CLEANUP_PIPELINE_CONFIRM_LEGACY'),
+            'cleanupPipelineConfirmOrphans' => Text::_('JBS_ADM_CLEANUP_PIPELINE_CONFIRM_ORPHANS'),
+            'cleanupPipelineCleared'        => Text::_('JBS_ADM_CLEANUP_PIPELINE_CLEARED'),
         ], JSON_THROW_ON_ERROR);
         ?>
         <div id="imagetools-config"
