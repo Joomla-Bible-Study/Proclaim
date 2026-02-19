@@ -70,7 +70,7 @@
                     const currentFocusable = this.getFocusableElements(modalElement);
                     if (currentFocusable.length === 0) { return; }
 
-                    const first = currentFocusable[0];
+                    const [first] = currentFocusable;
                     const last = currentFocusable[currentFocusable.length - 1];
 
                     if (e.shiftKey) {

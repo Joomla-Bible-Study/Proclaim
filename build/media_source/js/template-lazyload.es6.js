@@ -61,7 +61,7 @@
             // Initialize TinyMCE
             window.tinymce.init(config).then((editors) => {
                 if (editors && editors[0]) {
-                    const editor = editors[0];
+                    const [editor] = editors;
 
                     // Enable the toggle button
                     const wrapper = textarea.closest('.js-editor-tinymce');

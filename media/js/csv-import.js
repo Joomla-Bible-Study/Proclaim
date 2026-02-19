@@ -661,7 +661,7 @@
             }
 
             fileInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
+                const [file] = e.target.files;
 
                 if (!file) {
                     return;

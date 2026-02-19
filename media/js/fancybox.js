@@ -118,7 +118,7 @@
                 return;
             }
             iframe.dataset.wistiaInited = '1';
-            const wistiaHash = match[1];
+            const [, wistiaHash] = match;
             const mediaId = iframe.getAttribute('data-id');
             window._wq.push({
                 id: wistiaHash,
