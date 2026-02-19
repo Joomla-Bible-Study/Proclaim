@@ -472,6 +472,13 @@ div.JBSM .img-rounded {
   display: flex;
   flex-direction: column;
   width: 200px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.effects .jbsmimg:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 .effects .jbsmimg-wrapper {
   display: block;
@@ -483,10 +490,43 @@ div.JBSM .img-rounded {
   text-decoration: none;
   background-color: var(--color-gray-200, #e9ecef);
 }
+/* Dark overlay fades in on card hover */
+.effects .jbsmimg-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background: transparent;
+  transition: background 0.2s ease;
+  pointer-events: none;
+}
+.effects .jbsmimg:hover .jbsmimg-wrapper::after {
+  background: rgba(0, 0, 0, 0.28);
+}
+/* Play icon scales in over the overlay */
+.effects .jbsmimg-wrapper::before {
+  content: '▶';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  color: #fff;
+  font-size: 1.5rem;
+  line-height: 1;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  transform: translate(-50%, -50%) scale(0.5);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+.effects .jbsmimg:hover .jbsmimg-wrapper::before {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
 .effects .jbsmimg-title {
   display: block;
   font-size: 13px;
-  color: var(--color-gray-700, #495057);
+  color: var(--bs-link-color, var(--color-primary, #0d6efd));
   text-align: center;
   text-decoration: none;
   padding: 8px 4px;
@@ -495,7 +535,6 @@ div.JBSM .img-rounded {
   word-break: break-word;
 }
 .effects .jbsmimg-title:hover {
-  color: var(--color-primary, #0d6efd);
   text-decoration: underline;
 }
 .effects .jbsmimg img {
