@@ -527,6 +527,21 @@ table.fbstat .col2 {
   align-items: baseline;
 }
 
+/* Mobile / tablet responsive listing adjustments (< lg = < 992px) */
+@media (max-width: 991.98px) {
+  /* Constrain thumbnail images so they don't fill the screen width */
+  .proclaim-item img.img-fluid {
+    max-width: 200px;
+    height: auto;
+  }
+
+  /* More breathing room between items on small screens */
+  .proclaim-item {
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
 /* Sermon List Separator (legacy) */
 .sermon-list-separator {
   border: 0;
@@ -567,6 +582,22 @@ table.fbstat .col2 {
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
+}
+
+/* Mobile: compact wrapping pagination */
+@media (max-width: 767.98px) {
+  .proclaim-pagination .pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem;
+  }
+
+  .proclaim-pagination .page-link {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8125rem;
+    min-width: 2rem;
+    text-align: center;
+  }
 }
 
 /* ==========================================================================

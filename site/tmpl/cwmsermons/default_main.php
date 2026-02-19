@@ -186,17 +186,16 @@ if ($this->items) {
         ($this->params->def('show_pagination', 2) === '2' || ($this->params->get(
             'show_pagination'
         ) === '2'))) : ?>
-                    <nav class="pagination__wrapper" aria-label="Pagination">
+                <div class="pagination pagination-centered w-100">
                         <?php if ($this->params->def('show_pagination_results', 1)) : ?>
-                            <div class="text-end me-3">
-                                <?php
-                echo $this->pagination->getPagesCounter(); ?>
-                            </div>
+                            <p class="counter float-end pt-3 pe-2">
+                                <?php echo $this->pagination->getPagesCounter(); ?>
+                            </p>
                         <?php endif; ?>
-                    </nav>
                     <div class="pagination pagination-centered">
                         <?php echo $this->pagination->getPagesLinks(); ?>
                     </div>
+                </div>
                 <?php endif; ?>
             <?php endif; ?>
             </div>

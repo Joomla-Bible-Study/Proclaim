@@ -773,7 +773,7 @@ class Cwmlisting
             } else {
                 $bsCols   = (int) round($elementSpan / $rowTotal * 12);
                 $bsCols   = max(1, min(12, $bsCols));
-                $colClass = 'col-' . $bsCols;
+                $colClass = 'col-12 col-lg-' . $bsCols;
             }
 
             if ($header === 1) {
