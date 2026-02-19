@@ -548,10 +548,33 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             </div>
         </div>
 
-        <!-- Individual Tools (collapsible) -->
+        <!-- Regenerate Thumbnails — always visible, standalone tool -->
+        <div class="row mt-3" id="imagetools-row1b">
+            <div class="col-12 col-lg-6">
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_THUMB_REGENERATION'); ?></h3>
+                    <p><?php echo Text::_('JBS_ADM_THUMB_REGENERATION_DESC'); ?></p>
+                    <div id="thumb-regen-counts" class="mb-3">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <?php echo Text::_('JBS_ADM_LOADING'); ?>
+                    </div>
+                    <div id="thumb-regen-progress" class="mb-3" style="display:none;">
+                        <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar bg-info" style="width: 0%"></div>
+                        </div>
+                        <div class="mt-2" id="thumb-regen-status"></div>
+                    </div>
+                    <button type="button" class="btn btn-info" id="btn-start-thumb-regen" disabled>
+                        <i class="icon-refresh" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_REGENERATE_THUMBS'); ?>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Tools (collapsible) -->
         <div class="accordion accordion-flush mt-2" id="imagetools-accordion">
 
-            <!-- Migration Tools -->
+            <!-- Migration Tools (on-demand) -->
             <div class="accordion-item border-0 bg-transparent">
                 <h4 class="accordion-header" id="accordion-migration-heading">
                     <button class="accordion-button collapsed bg-body-secondary rounded px-3 py-2 fw-semibold"
@@ -585,28 +608,6 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                                     </div>
                                     <button type="button" class="btn btn-success" id="btn-start-webp" disabled>
                                         <i class="icon-images" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_GENERATE_WEBP'); ?>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Thumbnail Regeneration -->
-                        <div class="row mt-3" id="imagetools-row1b">
-                            <div class="col-12 col-lg-6">
-                                <div class="cwmadmin-panel mb-4">
-                                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_THUMB_REGENERATION'); ?></h3>
-                                    <p><?php echo Text::_('JBS_ADM_THUMB_REGENERATION_DESC'); ?></p>
-                                    <div id="thumb-regen-counts" class="mb-3">
-                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                        <?php echo Text::_('JBS_ADM_LOADING'); ?>
-                                    </div>
-                                    <div id="thumb-regen-progress" class="mb-3" style="display:none;">
-                                        <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                            <div class="progress-bar bg-info" style="width: 0%"></div>
-                                        </div>
-                                        <div class="mt-2" id="thumb-regen-status"></div>
-                                    </div>
-                                    <button type="button" class="btn btn-info" id="btn-start-thumb-regen" disabled>
-                                        <i class="icon-refresh" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_REGENERATE_THUMBS'); ?>
                                     </button>
                                 </div>
                             </div>
