@@ -45,13 +45,6 @@ vendorEntries.forEach(entry => {
     }
 });
 
-// Also copy fancybox to media/fancybox/ for backward compatibility with WAM registration
-// (WAM uses full literal path "media/com_proclaim/fancybox/...")
-copyDir(
-    path.join(vendorSrc, 'fancybox'),
-    path.join(mediaBase, 'fancybox')
-);
-console.log('  Copied vendor/fancybox -> fancybox/ (WAM compat)');
 
 // Copy Sortable.js to media/vendor/sortable/ (consistent with chart.js, intl-tel-input)
 const sortableSrc = path.join(__dirname, '../node_modules/sortablejs/Sortable.min.js');
