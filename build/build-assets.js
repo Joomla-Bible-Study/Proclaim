@@ -53,11 +53,11 @@ copyDir(
 );
 console.log('  Copied vendor/fancybox -> fancybox/ (WAM compat)');
 
-// Copy Sortable.js to media/js/vendor/ (used by layout-editor via WAM)
+// Copy Sortable.js to media/vendor/sortable/ (consistent with chart.js, intl-tel-input)
 const sortableSrc = path.join(__dirname, '../node_modules/sortablejs/Sortable.min.js');
-const sortableDest = path.join(mediaBase, 'js/vendor/Sortable.min.js');
+const sortableDest = path.join(mediaBase, 'vendor/sortable/Sortable.min.js');
 fs.mkdirSync(path.dirname(sortableDest), { recursive: true });
 fs.copyFileSync(sortableSrc, sortableDest);
-console.log('  Copied sortablejs -> js/vendor/Sortable.min.js');
+console.log('  Copied sortablejs -> vendor/sortable/Sortable.min.js');
 
 console.log('Asset copy complete.');

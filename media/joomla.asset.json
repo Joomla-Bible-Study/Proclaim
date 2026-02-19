@@ -349,7 +349,7 @@
         {
             "name": "com_proclaim.sortable",
             "type": "script",
-            "uri": "com_proclaim/vendor/Sortable.min.js",
+            "uri": "media/com_proclaim/vendor/sortable/Sortable.min.js",
             "attributes": {
                 "defer": true
             }
