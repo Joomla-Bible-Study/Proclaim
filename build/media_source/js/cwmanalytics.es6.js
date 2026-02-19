@@ -13,7 +13,8 @@
     'use strict';
 
     /** Detect Joomla Atum dark mode */
-    const isDark = () => document.documentElement.classList.contains('theme-dark') ||
+    const isDark = () => document.documentElement.getAttribute('data-bs-theme') === 'dark' ||
+        document.documentElement.classList.contains('theme-dark') ||
         document.body.classList.contains('dark');
 
     const PALETTE = [

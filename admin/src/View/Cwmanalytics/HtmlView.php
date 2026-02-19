@@ -31,6 +31,9 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
  */
 class HtmlView extends BaseHtmlView
 {
+    /** @var string Active date preset key ('7d', '30d', '90d', '1y', or 'custom') @since 10.1.0 */
+    public string $preset = '30d';
+
     /** @var string Date range start (Y-m-d) @since 10.1.0 */
     public string $dateStart = '';
 
@@ -143,8 +146,9 @@ class HtmlView extends BaseHtmlView
         $this->isSuperAdmin = $user->authorise('core.admin');
 
         // --- Date range ---
-        $preset = $input->getString('preset', '30d');
-        $today  = date('Y-m-d');
+        $preset       = $input->getString('preset', '30d');
+        $this->preset = $preset;
+        $today        = date('Y-m-d');
 
         switch ($preset) {
             case '7d':

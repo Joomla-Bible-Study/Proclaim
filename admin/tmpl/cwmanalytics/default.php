@@ -94,10 +94,10 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
                 <input type="hidden" name="preset" id="cwm-ana-preset-input" value="custom">
 
                 <!-- Preset buttons -->
-                <div class="btn-group btn-group-sm" role="group" aria-label="<?php echo Text::_('JBS_ANA_DATE_PRESET'); ?>">
+                <div class="btn-group" role="group" aria-label="<?php echo Text::_('JBS_ANA_DATE_PRESET'); ?>">
                     <?php foreach ($presets as $key => $label) : ?>
                         <a href="<?php echo Route::_($baseUrl . '&preset=' . $key . '&location_id=' . $this->locationId); ?>"
-                           class="btn btn-outline-secondary<?php echo $key === '30d' ? ' active' : ''; ?>">
+                           class="btn <?php echo $key === $this->preset ? 'btn-primary' : 'btn-outline-secondary'; ?>">
                             <?php echo Text::_($label); ?>
                         </a>
                     <?php endforeach; ?>
