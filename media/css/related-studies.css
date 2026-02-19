@@ -65,3 +65,25 @@
     object-fit: cover;
     object-position: center 20%;
 }
+
+/* Mobile: horizontal card layout so portrait headshots don't dominate */
+@media (max-width: 767.98px) {
+    .proclaim-related-card .card {
+        flex-direction: row;
+    }
+
+    .proclaim-related-card .card-img-top {
+        width: 110px;
+        aspect-ratio: unset;
+        align-self: stretch;
+        flex-shrink: 0;
+        border-radius: var(--bs-card-inner-border-radius, 0.375rem) 0 0
+            var(--bs-card-inner-border-radius, 0.375rem);
+    }
+
+    .proclaim-related-card .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+}
