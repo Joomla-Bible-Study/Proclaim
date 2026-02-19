@@ -34,9 +34,9 @@ $playsData      = [];
 $downloadsData  = [];
 
 foreach ($this->timeSeries as $row) {
-    $labels[]       = htmlspecialchars($row['period'] ?? '', ENT_QUOTES);
-    $viewsData[]    = (int) ($row['views'] ?? 0);
-    $playsData[]    = (int) ($row['plays'] ?? 0);
+    $labels[]        = htmlspecialchars($row['period'] ?? '', ENT_QUOTES);
+    $viewsData[]     = (int) ($row['views'] ?? 0);
+    $playsData[]     = (int) ($row['plays'] ?? 0);
     $downloadsData[] = (int) ($row['downloads'] ?? 0);
 }
 
@@ -88,10 +88,10 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
     <!-- View navigation tabs -->
     <?php
     $isOverview = $this->drilldown === '';
-    $isSeries   = $this->drilldown === 'series' || $this->drilldown === 'message';
-    $isMedia    = $this->drilldown === 'media';
-    $navParams  = '&preset=' . htmlspecialchars($this->preset, ENT_QUOTES) . '&location_id=' . (int) $this->locationId;
-    ?>
+$isSeries       = $this->drilldown === 'series' || $this->drilldown === 'message';
+$isMedia        = $this->drilldown === 'media';
+$navParams      = '&preset=' . htmlspecialchars($this->preset, ENT_QUOTES) . '&location_id=' . (int) $this->locationId;
+?>
     <ul class="nav nav-tabs mb-0" style="border-bottom:0">
         <li class="nav-item">
             <a href="<?php echo Route::_($baseUrl . $navParams); ?>"
@@ -128,7 +128,7 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
                 <div class="btn-group" role="group" aria-label="<?php echo Text::_('JBS_ANA_DATE_PRESET'); ?>">
                     <?php foreach ($presets as $key => $label) : ?>
                         <?php
-                        $presetHref = Route::_($baseUrl . '&preset=' . $key . '&location_id=' . $this->locationId . ($this->drilldown !== '' ? '&drilldown=' . htmlspecialchars($this->drilldown, ENT_QUOTES) : ''));
+                    $presetHref = Route::_($baseUrl . '&preset=' . $key . '&location_id=' . $this->locationId . ($this->drilldown !== '' ? '&drilldown=' . htmlspecialchars($this->drilldown, ENT_QUOTES) : ''));
                         ?>
                         <a href="<?php echo $presetHref; ?>"
                            class="btn <?php echo $key === $this->preset ? 'btn-primary' : 'btn-outline-secondary'; ?>">
@@ -177,21 +177,21 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
     //   $showSeededNotice — seed run but no real events yet     → show compact success note
     //   $showPeriodStrip  — real events exist                   → show event-based period strip
     $legacySeeded    = ($this->legacyKpi['views'] + $this->legacyKpi['plays'] + $this->legacyKpi['downloads']) > 0;
-    $hasRealEvents   = $this->hasTrackedEvents;
-    $showImportPanel = !$hasRealEvents && !$legacySeeded;
-    $showSeededNotice = $legacySeeded && !$hasRealEvents;
-    $showPeriodStrip = $hasRealEvents;
-    ?>
+$hasRealEvents       = $this->hasTrackedEvents;
+$showImportPanel     = !$hasRealEvents && !$legacySeeded;
+$showSeededNotice    = $legacySeeded && !$hasRealEvents;
+$showPeriodStrip     = $hasRealEvents;
+?>
 
     <!-- ── All-Time KPI Cards (always from record counters) ─────────────── -->
     <div class="row g-3 mb-3">
         <?php
-        $kpiCards = [
-            ['icon' => 'icon-eye',      'label' => 'JBS_ANA_TOTAL_VIEWS',     'value' => $this->recordTotals['views'],     'class' => 'text-primary'],
-            ['icon' => 'icon-play',     'label' => 'JBS_ANA_TOTAL_PLAYS',     'value' => $this->recordTotals['plays'],     'class' => 'text-success'],
-            ['icon' => 'icon-download', 'label' => 'JBS_ANA_TOTAL_DOWNLOADS', 'value' => $this->recordTotals['downloads'], 'class' => 'text-warning'],
-        ];
-        ?>
+    $kpiCards = [
+        ['icon' => 'icon-eye',      'label' => 'JBS_ANA_TOTAL_VIEWS',     'value' => $this->recordTotals['views'],     'class' => 'text-primary'],
+        ['icon' => 'icon-play',     'label' => 'JBS_ANA_TOTAL_PLAYS',     'value' => $this->recordTotals['plays'],     'class' => 'text-success'],
+        ['icon' => 'icon-download', 'label' => 'JBS_ANA_TOTAL_DOWNLOADS', 'value' => $this->recordTotals['downloads'], 'class' => 'text-warning'],
+    ];
+?>
         <?php foreach ($kpiCards as $card) : ?>
             <div class="col-6 col-md-4">
                 <div class="card text-center h-100">
@@ -500,7 +500,7 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
         </div>
     </div>
     <?php endif; ?>
-    <?php endif; // $isOverview ?>
+    <?php endif; // $isOverview?>
 
     <!-- Breadcrumb for all drilldown levels -->
     <?php if ($this->drilldown !== '') : ?>

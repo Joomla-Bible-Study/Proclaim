@@ -211,7 +211,7 @@ class HtmlView extends BaseHtmlView
         // --- Load data for the active drill-down level ---
         if ($this->drilldown === 'series' && $this->drilldownId > 0) {
             // Series detail: messages inside one series
-            $this->seriesInfo    = $model->getSeriesInfo($this->drilldownId);
+            $this->seriesInfo     = $model->getSeriesInfo($this->drilldownId);
             $this->seriesMessages = $model->getSeriesMessages($this->drilldownId, $s, $e);
         } elseif ($this->drilldown === 'series') {
             // Series list
@@ -238,12 +238,13 @@ class HtmlView extends BaseHtmlView
             $this->utmBreakdown      = $model->getUtmBreakdown($s, $e, $l);
         }
 
-        // --- Export URL ---
+        // --- Export URL (false = raw &, not &amp; — template handles escaping) ---
         $this->exportUrl = Route::_(
             'index.php?option=com_proclaim&task=cwmanalytics.exportCsv' .
             '&date_start=' . urlencode($s) .
             '&date_end=' . urlencode($e) .
-            '&location_id=' . (int) $l
+            '&location_id=' . (int) $l,
+            false
         );
 
         // --- Toolbar ---

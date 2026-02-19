@@ -3,6 +3,9 @@
  * Analytics drill-down: Single message detail with media file breakdown.
  *
  * @package    Proclaim.Admin
+ * @copyright  (C) 2026 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @link       https://www.christianwebministries.org
  * @since      10.1.0
  */
 \defined('_JEXEC') or die;
