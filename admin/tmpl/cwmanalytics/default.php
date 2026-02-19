@@ -502,8 +502,8 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
     <?php endif; ?>
     <?php endif; // $isOverview ?>
 
-    <!-- Breadcrumb for sub-levels (series detail, message detail) -->
-    <?php if (($this->drilldown === 'series' && $this->drilldownId > 0) || $this->drilldown === 'message') : ?>
+    <!-- Breadcrumb for all drilldown levels -->
+    <?php if ($this->drilldown !== '') : ?>
     <?php echo $this->loadTemplate('breadcrumb'); ?>
     <?php endif; ?>
 

@@ -16,7 +16,9 @@ use Joomla\CMS\Router\Route;
 $baseUrl  = 'index.php?option=com_proclaim&view=cwmanalytics';
 $presets  = 'preset=' . htmlspecialchars(Factory::getApplication()->getInput()->getString('preset', '30d')) . '&location_id=' . (int) $this->locationId;
 ?>
-<nav aria-label="<?php echo Text::_('JBS_ANA_BREADCRUMB'); ?>" class="mb-3">
+<div class="card mb-3">
+<div class="card-body py-2">
+<nav aria-label="<?php echo Text::_('JBS_ANA_BREADCRUMB'); ?>">
     <ol class="breadcrumb mb-0">
         <li class="breadcrumb-item">
             <a href="<?php echo Route::_($baseUrl . '&' . $presets); ?>">
@@ -59,3 +61,5 @@ $presets  = 'preset=' . htmlspecialchars(Factory::getApplication()->getInput()->
         <?php endif; ?>
     </ol>
 </nav>
+</div>
+</div>
