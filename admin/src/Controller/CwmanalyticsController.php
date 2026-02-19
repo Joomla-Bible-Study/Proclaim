@@ -97,12 +97,17 @@ class CwmanalyticsController extends BaseController
         $csv      = $model->exportCsvString($start, $end, $locationId);
         $filename = 'proclaim-analytics-' . $start . '-to-' . $end . '.csv';
 
-        // Use Joomla's response pipeline so headers are sent correctly.
-        $app->clearHeaders();
-        $app->setHeader('Content-Type', 'text/csv; charset=utf-8', true);
-        $app->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"', true);
-        $app->setHeader('Content-Length', (string) strlen($csv), true);
-        $app->setBody($csv);
-        $app->close();
+        // Bypass Joomla's admin template wrapper entirely.
+        // ob_end_clean() removes buffered page HTML; exit() prevents
+        // Joomla from wrapping our output in the admin template.
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Length: ' . strlen($csv));
+        echo $csv;
+        exit();
     }
 }
