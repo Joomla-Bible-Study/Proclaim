@@ -1054,8 +1054,12 @@ namespace Joomla\Database {
                 return "'" . $text . "'";
             }
 
-            public function quoteName($name, $as = null): string
+            public function quoteName($name, $as = null): string|array
             {
+                if (\is_array($name)) {
+                    return array_map(static fn ($n) => '`' . $n . '`', $name);
+                }
+
                 return '`' . $name . '`';
             }
 
@@ -1119,6 +1123,14 @@ namespace Joomla\Registry {
 
             public function loadString($data, $format = 'JSON')
             {
+                if (\is_string($data) && $data !== '') {
+                    $decoded = json_decode($data, true);
+
+                    if (\is_array($decoded)) {
+                        $this->data = $decoded;
+                    }
+                }
+
                 return $this;
             }
 
@@ -1134,9 +1146,21 @@ namespace Joomla\Registry {
                 return $this->data;
             }
 
+            public function toString($format = 'JSON', $options = 0): string
+            {
+                return json_encode($this->data, \JSON_UNESCAPED_UNICODE | \JSON_UNESCAPED_SLASHES) ?: '{}';
+            }
+
+            public function remove($path)
+            {
+                unset($this->data[$path]);
+
+                return $this;
+            }
+
             public function __toString(): string
             {
-                return json_encode($this->data);
+                return $this->toString();
             }
         }
     }
