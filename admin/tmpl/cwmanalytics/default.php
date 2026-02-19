@@ -14,6 +14,7 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -21,6 +22,7 @@ use Joomla\CMS\Session\Session;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmanalytics\HtmlView $this */
 
+$input    = Factory::getApplication()->getInput();
 $presets  = ['7d' => 'JBS_ANA_LAST_7_DAYS', '30d' => 'JBS_ANA_LAST_30_DAYS', '90d' => 'JBS_ANA_LAST_90_DAYS', '1y' => 'JBS_ANA_LAST_YEAR'];
 $baseUrl  = 'index.php?option=com_proclaim&view=cwmanalytics';
 $token    = '&' . Session::getFormToken() . '=1';
@@ -295,7 +297,7 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
         </div>
     </div>
 
-    <!-- Bar Chart: Top 10 sermons -->
+    <!-- Bar Chart + Table: Top 10 sermons -->
     <?php if (!empty($this->topStudies)) : ?>
     <div class="card mb-3">
         <div class="card-header fw-semibold">
@@ -306,6 +308,25 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
                     data-cwm-chart="bar"
                     data-cwm-chart-data="<?php echo htmlspecialchars($topStudiesJson, ENT_QUOTES); ?>">
             </canvas>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-sm table-hover mb-0">
+                <thead><tr>
+                    <th><?php echo Text::_('JBS_ANA_MESSAGE_TITLE'); ?></th>
+                    <th class="text-end"><?php echo Text::_('JBS_ANA_COUNT'); ?></th>
+                    <th></th>
+                </tr></thead>
+                <tbody>
+                <?php foreach ($this->topStudies as $row) : ?>
+                    <?php $drillUrl = Route::_($baseUrl . '&drilldown=message&id=' . (int) $row['study_id'] . '&preset=' . htmlspecialchars($input->getString('preset', '30d'), ENT_QUOTES) . '&location_id=' . (int) $this->locationId); ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars((string) ($row['title'] ?? 'ID #' . $row['study_id']), ENT_QUOTES); ?></td>
+                        <td class="text-end"><?php echo number_format((int) ($row['total'] ?? 0)); ?></td>
+                        <td class="text-end"><a href="<?php echo $drillUrl; ?>" class="btn btn-xs btn-outline-primary btn-sm py-0 px-2"><?php echo Text::_('JBS_ANA_DRILL_VIEW'); ?></a></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
     </div>
     <?php endif; ?>
@@ -445,9 +466,38 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
     </div>
     <?php endif; ?>
 
-    <!-- GDPR notice -->
+    <!-- Drill-down navigation buttons (overview only) -->
+    <?php if ($this->drilldown === '') : ?>
+    <div class="d-flex flex-wrap gap-2 mb-3">
+        <a href="<?php echo Route::_($baseUrl . '&drilldown=series&preset=' . htmlspecialchars($input->getString('preset', '30d'), ENT_QUOTES) . '&location_id=' . (int) $this->locationId); ?>"
+           class="btn btn-sm btn-outline-primary">
+            <i class="icon-list me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_DRILL_SERIES'); ?>
+        </a>
+        <a href="<?php echo Route::_($baseUrl . '&drilldown=media&preset=' . htmlspecialchars($input->getString('preset', '30d'), ENT_QUOTES) . '&location_id=' . (int) $this->locationId); ?>"
+           class="btn btn-sm btn-outline-secondary">
+            <i class="icon-play me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_DRILL_MEDIA'); ?>
+        </a>
+    </div>
+    <?php endif; ?>
+
+    <!-- Breadcrumb for drill-down levels -->
+    <?php if ($this->drilldown !== '') : ?>
+    <?php echo $this->loadTemplate('breadcrumb'); ?>
+    <?php endif; ?>
+
+    <?php if ($this->drilldown === 'series' && $this->drilldownId === 0) : ?>
+        <?php echo $this->loadTemplate('series_list'); ?>
+    <?php elseif ($this->drilldown === 'series' && $this->drilldownId > 0) : ?>
+        <?php echo $this->loadTemplate('series_detail'); ?>
+    <?php elseif ($this->drilldown === 'message' && $this->drilldownId > 0) : ?>
+        <?php echo $this->loadTemplate('message'); ?>
+    <?php elseif ($this->drilldown === 'media') : ?>
+        <?php echo $this->loadTemplate('media'); ?>
+    <?php else : ?>
+    <!-- GDPR notice (overview only) -->
     <p class="text-muted small mt-3">
         <i class="icon-lock me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_GDPR_NOTICE'); ?>
     </p>
+    <?php endif; ?>
 
 </div>

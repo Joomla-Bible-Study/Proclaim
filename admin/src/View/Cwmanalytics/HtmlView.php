@@ -24,7 +24,7 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 /**
- * Analytics dashboard view.
+ * Analytics dashboard view — supports overview + drill-down levels.
  *
  * @package  Proclaim.Admin
  * @since    10.1.0
@@ -40,6 +40,13 @@ class HtmlView extends BaseHtmlView
     /** @var int Active campus filter; 0 = all @since 10.1.0 */
     public int $locationId = 0;
 
+    /** @var string Current drill-down level: '', 'series', 'message', 'media' @since 10.1.0 */
+    public string $drilldown = '';
+
+    /** @var int Drill-down entity ID (series_id or study_id) @since 10.1.0 */
+    public int $drilldownId = 0;
+
+    // --- Overview data ---
     /** @var array{views: int, plays: int, downloads: int, sessions: int} @since 10.1.0 */
     public array $kpi = ['views' => 0, 'plays' => 0, 'downloads' => 0, 'sessions' => 0];
 
@@ -67,6 +74,34 @@ class HtmlView extends BaseHtmlView
     /** @var array<int, array<string, mixed>> @since 10.1.0 */
     public array $utmBreakdown = [];
 
+    // --- Series drill-down ---
+    /** @var array<int, array<string, mixed>> @since 10.1.0 */
+    public array $seriesList = [];
+
+    /** @var object|null @since 10.1.0 */
+    public ?object $seriesInfo = null;
+
+    /** @var array<int, array<string, mixed>> @since 10.1.0 */
+    public array $seriesMessages = [];
+
+    // --- Message drill-down ---
+    /** @var object|null @since 10.1.0 */
+    public ?object $studyInfo = null;
+
+    /** @var array{views: int, plays: int, downloads: int, sessions: int} @since 10.1.0 */
+    public array $studyKpi = ['views' => 0, 'plays' => 0, 'downloads' => 0, 'sessions' => 0];
+
+    /** @var array<int, array<string, mixed>> @since 10.1.0 */
+    public array $studyTimeSeries = [];
+
+    /** @var array<int, array<string, mixed>> @since 10.1.0 */
+    public array $studyMedia = [];
+
+    // --- Media type drill-down ---
+    /** @var array<int, array<string, mixed>> @since 10.1.0 */
+    public array $mediaTypeBreakdown = [];
+
+    // --- Shared ---
     /** @var array<int, array<string, mixed>> @since 10.1.0 */
     public array $locations = [];
 
@@ -134,7 +169,6 @@ class HtmlView extends BaseHtmlView
                 break;
         }
 
-        // Clamp to valid dates
         if ($this->dateStart > $this->dateEnd) {
             $this->dateStart = $this->dateEnd;
         }
@@ -142,10 +176,14 @@ class HtmlView extends BaseHtmlView
         // --- Campus filter ---
         $this->locationId = $input->getInt('location_id', 0);
 
+        // --- Drill-down params ---
+        $this->drilldown   = $input->getCmd('drilldown', '');
+        $this->drilldownId = $input->getInt('id', 0);
+
         /** @var CwmanalyticsModel $model */
         $model = $this->getModel();
 
-        // Non-super-admin: force to their first authorised campus if they try 0
+        // Non-super-admin: force to their first authorised campus
         if (!$this->isSuperAdmin && $this->locationId === 0) {
             $locations = $model->getLocations($user->getAuthorisedViewLevels());
 
@@ -154,29 +192,47 @@ class HtmlView extends BaseHtmlView
             }
         }
 
-        // --- Load campus list for filter dropdown ---
         $this->locations = $model->getLocations($this->isSuperAdmin ? [] : $user->getAuthorisedViewLevels());
 
-        // --- Query analytics data ---
         $s = $this->dateStart;
         $e = $this->dateEnd;
         $l = $this->locationId;
 
-        $this->kpi               = $model->getKpiTotals($s, $e, $l);
-        $this->timeSeries        = $model->getTimeSeries($s, $e, $l);
-        $this->topStudies        = $model->getTopStudies($s, $e, 10);
-        $this->referrerBreakdown = $model->getReferrerBreakdown($s, $e, $l);
-        $this->deviceBreakdown   = $model->getDeviceBreakdown($s, $e, $l);
-        $this->browserBreakdown  = $model->getBrowserBreakdown($s, $e, $l);
-        $this->osBreakdown       = $model->getOsBreakdown($s, $e, $l);
-        $this->languageBreakdown = $model->getLanguageBreakdown($s, $e, $l);
-        $this->utmBreakdown      = $model->getUtmBreakdown($s, $e, $l);
-
-        // --- Legacy / historical data ---
+        // --- Always load: legacy / record totals (used in overview and compact KPI strip) ---
         $this->hasTrackedEvents = $model->hasTrackedEvents();
         $this->firstEventDate   = $model->getFirstEventDate();
         $this->legacyKpi        = $model->getLegacyKpiTotals($l);
         $this->recordTotals     = $model->getRecordTotals($l);
+
+        // --- Load data for the active drill-down level ---
+        if ($this->drilldown === 'series' && $this->drilldownId > 0) {
+            // Series detail: messages inside one series
+            $this->seriesInfo    = $model->getSeriesInfo($this->drilldownId);
+            $this->seriesMessages = $model->getSeriesMessages($this->drilldownId, $s, $e);
+        } elseif ($this->drilldown === 'series') {
+            // Series list
+            $this->seriesList = $model->getSeriesList($s, $e, $l);
+        } elseif ($this->drilldown === 'message' && $this->drilldownId > 0) {
+            // Message detail
+            $this->studyInfo       = $model->getStudyInfo($this->drilldownId);
+            $this->studyKpi        = $model->getStudyKpi($this->drilldownId, $s, $e);
+            $this->studyTimeSeries = $model->getStudyTimeSeries($this->drilldownId, $s, $e);
+            $this->studyMedia      = $model->getStudyMediaFiles($this->drilldownId, $s, $e);
+        } elseif ($this->drilldown === 'media') {
+            // Media type breakdown
+            $this->mediaTypeBreakdown = $model->getMediaTypeBreakdown($s, $e, $l);
+        } else {
+            // Overview
+            $this->kpi               = $model->getKpiTotals($s, $e, $l);
+            $this->timeSeries        = $model->getTimeSeries($s, $e, $l);
+            $this->topStudies        = $model->getTopStudies($s, $e, 10);
+            $this->referrerBreakdown = $model->getReferrerBreakdown($s, $e, $l);
+            $this->deviceBreakdown   = $model->getDeviceBreakdown($s, $e, $l);
+            $this->browserBreakdown  = $model->getBrowserBreakdown($s, $e, $l);
+            $this->osBreakdown       = $model->getOsBreakdown($s, $e, $l);
+            $this->languageBreakdown = $model->getLanguageBreakdown($s, $e, $l);
+            $this->utmBreakdown      = $model->getUtmBreakdown($s, $e, $l);
+        }
 
         // --- Export URL ---
         $this->exportUrl = Route::_(

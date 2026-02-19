@@ -694,4 +694,300 @@ class CwmanalyticsModel extends BaseDatabaseModel
             // Fail open — show all if we can't determine user
         }
     }
+
+    /**
+     * Get all published series with their engagement totals for the date range.
+     *
+     * @since 10.1.0
+     */
+    public function getSeriesList(string $start, string $end, int $locationId = 0): array
+    {
+        try {
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true)
+                ->select([
+                    $db->quoteName('sr.id', 'series_id'),
+                    $db->quoteName('sr.series_text', 'title'),
+                    $db->quoteName('sr.thumb', 'thumb'),
+                    'COUNT(DISTINCT ' . $db->quoteName('s.id') . ') AS message_count',
+                    'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('page_view') . ' THEN 1 ELSE 0 END) AS views',
+                    'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) AS plays',
+                    'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END) AS downloads',
+                ])
+                ->from($db->quoteName('#__bsms_series', 'sr'))
+                ->leftJoin(
+                    $db->quoteName('#__bsms_studies', 's') .
+                    ' ON ' . $db->quoteName('s.series_id') . ' = ' . $db->quoteName('sr.id') .
+                    ' AND ' . $db->quoteName('s.published') . ' = 1'
+                )
+                ->leftJoin(
+                    $db->quoteName('#__bsms_analytics_events', 'e') .
+                    ' ON ' . $db->quoteName('e.study_id') . ' = ' . $db->quoteName('s.id') .
+                    ' AND ' . $db->quoteName('e.created') . ' >= ' . $db->quote($start . ' 00:00:00') .
+                    ' AND ' . $db->quoteName('e.created') . ' <= ' . $db->quote($end . ' 23:59:59')
+                )
+                ->where($db->quoteName('sr.published') . ' = 1')
+                ->group($db->quoteName('sr.id'))
+                ->order('(SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('page_view') . ' THEN 1 ELSE 0 END) + SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) + SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END)) DESC');
+
+            if ($locationId > 0) {
+                $query->where($db->quoteName('s.location_id') . ' = ' . (int) $locationId);
+            }
+
+            $db->setQuery($query, 0, 100);
+
+            return (array) ($db->loadAssocList() ?? []);
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Get series info (title, thumb) for breadcrumb display.
+     *
+     * @since 10.1.0
+     */
+    public function getSeriesInfo(int $seriesId): ?object
+    {
+        try {
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true)
+                ->select([$db->quoteName('id'), $db->quoteName('series_text', 'title'), $db->quoteName('thumb')])
+                ->from($db->quoteName('#__bsms_series'))
+                ->where($db->quoteName('id') . ' = ' . (int) $seriesId);
+            $db->setQuery($query);
+
+            return $db->loadObject() ?: null;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get published messages in a series with per-period engagement stats.
+     *
+     * @since 10.1.0
+     */
+    public function getSeriesMessages(int $seriesId, string $start, string $end): array
+    {
+        try {
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true)
+                ->select([
+                    $db->quoteName('s.id', 'study_id'),
+                    $db->quoteName('s.studytitle', 'title'),
+                    $db->quoteName('s.studydate', 'study_date'),
+                    $db->quoteName('s.hits', 'all_time_views'),
+                    'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('page_view') . ' THEN 1 ELSE 0 END) AS views',
+                    'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) AS plays',
+                    'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END) AS downloads',
+                ])
+                ->from($db->quoteName('#__bsms_studies', 's'))
+                ->leftJoin(
+                    $db->quoteName('#__bsms_analytics_events', 'e') .
+                    ' ON ' . $db->quoteName('e.study_id') . ' = ' . $db->quoteName('s.id') .
+                    ' AND ' . $db->quoteName('e.created') . ' >= ' . $db->quote($start . ' 00:00:00') .
+                    ' AND ' . $db->quoteName('e.created') . ' <= ' . $db->quote($end . ' 23:59:59')
+                )
+                ->where($db->quoteName('s.series_id') . ' = ' . (int) $seriesId)
+                ->where($db->quoteName('s.published') . ' = 1')
+                ->group($db->quoteName('s.id'))
+                ->order($db->quoteName('s.studydate') . ' DESC');
+            $db->setQuery($query);
+
+            return (array) ($db->loadAssocList() ?? []);
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Get study info (title, date, series title) for breadcrumb and message detail header.
+     *
+     * @since 10.1.0
+     */
+    public function getStudyInfo(int $studyId): ?object
+    {
+        try {
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true)
+                ->select([
+                    $db->quoteName('s.id'),
+                    $db->quoteName('s.studytitle', 'title'),
+                    $db->quoteName('s.studydate', 'study_date'),
+                    $db->quoteName('s.hits', 'all_time_views'),
+                    $db->quoteName('s.series_id'),
+                    $db->quoteName('sr.series_text', 'series_title'),
+                ])
+                ->from($db->quoteName('#__bsms_studies', 's'))
+                ->leftJoin(
+                    $db->quoteName('#__bsms_series', 'sr') .
+                    ' ON ' . $db->quoteName('sr.id') . ' = ' . $db->quoteName('s.series_id')
+                )
+                ->where($db->quoteName('s.id') . ' = ' . (int) $studyId);
+            $db->setQuery($query);
+
+            return $db->loadObject() ?: null;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get KPI totals for a single message.
+     *
+     * @return array{views: int, plays: int, downloads: int, sessions: int}
+     * @since 10.1.0
+     */
+    public function getStudyKpi(int $studyId, string $start, string $end): array
+    {
+        try {
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true)
+                ->select([
+                    'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('page_view') . ' THEN 1 ELSE 0 END) AS views',
+                    'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) AS plays',
+                    'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END) AS downloads',
+                    'COUNT(DISTINCT ' . $db->quoteName('session_hash') . ') AS sessions',
+                ])
+                ->from($db->quoteName('#__bsms_analytics_events'))
+                ->where($db->quoteName('study_id') . ' = ' . (int) $studyId)
+                ->where($db->quoteName('created') . ' >= ' . $db->quote($start . ' 00:00:00'))
+                ->where($db->quoteName('created') . ' <= ' . $db->quote($end . ' 23:59:59'));
+            $db->setQuery($query);
+            $row = $db->loadAssoc() ?? [];
+
+            return [
+                'views'     => (int) ($row['views'] ?? 0),
+                'plays'     => (int) ($row['plays'] ?? 0),
+                'downloads' => (int) ($row['downloads'] ?? 0),
+                'sessions'  => (int) ($row['sessions'] ?? 0),
+            ];
+        } catch (\Exception $e) {
+            return ['views' => 0, 'plays' => 0, 'downloads' => 0, 'sessions' => 0];
+        }
+    }
+
+    /**
+     * Get daily/weekly time-series for a single message.
+     *
+     * @since 10.1.0
+     */
+    public function getStudyTimeSeries(int $studyId, string $start, string $end): array
+    {
+        try {
+            $days   = (int) ((strtotime($end) - strtotime($start)) / 86400);
+            $format = $days <= 90 ? '%Y-%m-%d' : '%Y-%u';
+            $db     = $this->getDatabase();
+            $query  = $db->getQuery(true)
+                ->select([
+                    'DATE_FORMAT(' . $db->quoteName('created') . ', ' . $db->quote($format) . ') AS period',
+                    'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('page_view') . ' THEN 1 ELSE 0 END) AS views',
+                    'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) AS plays',
+                    'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END) AS downloads',
+                ])
+                ->from($db->quoteName('#__bsms_analytics_events'))
+                ->where($db->quoteName('study_id') . ' = ' . (int) $studyId)
+                ->where($db->quoteName('created') . ' >= ' . $db->quote($start . ' 00:00:00'))
+                ->where($db->quoteName('created') . ' <= ' . $db->quote($end . ' 23:59:59'))
+                ->group('period')
+                ->order('period ASC');
+            $db->setQuery($query);
+
+            return (array) ($db->loadAssocList() ?? []);
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Get media files for a study with period engagement stats.
+     *
+     * @since 10.1.0
+     */
+    public function getStudyMediaFiles(int $studyId, string $start, string $end): array
+    {
+        try {
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true)
+                ->select([
+                    $db->quoteName('m.id', 'media_id'),
+                    $db->quoteName('m.params', 'media_params'),
+                    $db->quoteName('m.plays', 'all_time_plays'),
+                    $db->quoteName('m.downloads', 'all_time_downloads'),
+                    $db->quoteName('m.ordering'),
+                    $db->quoteName('sv.server_name'),
+                    $db->quoteName('sv.type', 'server_type'),
+                    'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) AS period_plays',
+                    'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END) AS period_downloads',
+                ])
+                ->from($db->quoteName('#__bsms_mediafiles', 'm'))
+                ->leftJoin(
+                    $db->quoteName('#__bsms_servers', 'sv') .
+                    ' ON ' . $db->quoteName('sv.id') . ' = ' . $db->quoteName('m.server_id')
+                )
+                ->leftJoin(
+                    $db->quoteName('#__bsms_analytics_events', 'e') .
+                    ' ON ' . $db->quoteName('e.media_id') . ' = ' . $db->quoteName('m.id') .
+                    ' AND ' . $db->quoteName('e.created') . ' >= ' . $db->quote($start . ' 00:00:00') .
+                    ' AND ' . $db->quoteName('e.created') . ' <= ' . $db->quote($end . ' 23:59:59')
+                )
+                ->where($db->quoteName('m.study_id') . ' = ' . (int) $studyId)
+                ->where($db->quoteName('m.published') . ' = 1')
+                ->group($db->quoteName('m.id'))
+                ->order($db->quoteName('m.ordering') . ' ASC');
+            $db->setQuery($query);
+
+            return (array) ($db->loadAssocList() ?? []);
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Get engagement breakdown by media server type (YouTube, Vimeo, MP3, etc.).
+     *
+     * @since 10.1.0
+     */
+    public function getMediaTypeBreakdown(string $start, string $end, int $locationId = 0): array
+    {
+        try {
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true)
+                ->select([
+                    'COALESCE(' . $db->quoteName('sv.server_name') . ', ' . $db->quote('Unknown') . ') AS server_name',
+                    'COALESCE(' . $db->quoteName('sv.type') . ', ' . $db->quote('other') . ') AS server_type',
+                    'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) AS plays',
+                    'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END) AS downloads',
+                    'COUNT(DISTINCT ' . $db->quoteName('e.media_id') . ') AS media_count',
+                    'COUNT(DISTINCT ' . $db->quoteName('e.study_id') . ') AS study_count',
+                ])
+                ->from($db->quoteName('#__bsms_analytics_events', 'e'))
+                ->leftJoin(
+                    $db->quoteName('#__bsms_mediafiles', 'm') .
+                    ' ON ' . $db->quoteName('m.id') . ' = ' . $db->quoteName('e.media_id')
+                )
+                ->leftJoin(
+                    $db->quoteName('#__bsms_servers', 'sv') .
+                    ' ON ' . $db->quoteName('sv.id') . ' = ' . $db->quoteName('m.server_id')
+                )
+                ->where($db->quoteName('e.created') . ' >= ' . $db->quote($start . ' 00:00:00'))
+                ->where($db->quoteName('e.created') . ' <= ' . $db->quote($end . ' 23:59:59'))
+                ->where($db->quoteName('e.media_id') . ' IS NOT NULL')
+                ->group(['COALESCE(' . $db->quoteName('sv.server_name') . ', ' . $db->quote('Unknown') . ')', 'COALESCE(' . $db->quoteName('sv.type') . ', ' . $db->quote('other') . ')'])
+                ->order('(SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) + SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END)) DESC');
+
+            if ($locationId > 0) {
+                $query->where($db->quoteName('e.location_id') . ' = ' . (int) $locationId);
+            } else {
+                $this->applyLocationFilter($query, $db);
+            }
+
+            $db->setQuery($query, 0, 30);
+
+            return (array) ($db->loadAssocList() ?? []);
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
 }
