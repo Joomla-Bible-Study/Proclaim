@@ -506,7 +506,7 @@ div.JBSM .img-rounded {
   height: 100%;
   margin: 0;
   padding: 0;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center center;
 }
 .effects .jbsmimg .cwm-no-image {
@@ -705,20 +705,12 @@ p.expand {
 }
 
 @media only screen and (max-width: 520px) {
+  .effects {
+    padding-left: 0;
+    gap: 12px;
+  }
   .effects .jbsmimg {
-    width: 100%;
-  }
-  .effects .jbsmimg:nth-child(n),
-  .effects .jbsmimg:nth-child(2n),
-  .effects .jbsmimg:last-child {
-    margin-right: 0;
-  }
-  .effects .jbsmimg:first-child,
-  .effects .jbsmimg:nth-child(2n-1) {
-    margin-left: 0;
-  }
-  .effects .jbsmimg img {
-    margin: 0 auto;
+    width: calc(50% - 6px);
   }
 }
 

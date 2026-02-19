@@ -88,15 +88,11 @@ $imgAttribs = array_merge($this->attribs ?? [], ['loading' => 'lazy']);
     </div>
     <div class="clearfix"></div>
     <?php if ($this->params->get('show_pagination', 2)) : ?>
-        <div class="pagination pagination-centered w-100">
+        <div class="proclaim-pagination-bar">
             <?php if ($this->params->def('show_pagination_results', 1)) : ?>
-                <p class="counter float-end pt-3 pe-2">
-                    <?php echo $this->pagination->getPagesCounter(); ?>
-                </p>
+                <span class="proclaim-page-counter"><?php echo $this->pagination->getPagesCounter(); ?></span>
             <?php endif; ?>
-            <div class="pagination pagination-centered">
-                <?php echo $this->pagination->getPagesLinks(); ?>
-            </div>
+            <?php echo $this->pagination->getPagesLinks(); ?>
         </div>
     <?php endif; ?>
     <input type="hidden" name="task" value=""/>

@@ -30,6 +30,7 @@ use Joomla\CMS\Factory;
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('core')
     ->useScript('bootstrap.dropdown')
+    ->useScript('bootstrap.alert')
     ->useStyle('com_proclaim.general');
 
 $msg   = '';
@@ -149,15 +150,34 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             // Podcast task warning — only show when published podcasts exist and task is not enabled
             if (Cwmstats::hasPublishedPodcasts() && Cwmstats::getPodcastTaskRawState() !== 1) :
 ?>
-            <div class="col-12">
-                <div class="alert alert-warning">
+            <div class="col-12" id="proclaim-podcast-task-notice">
+                <div class="alert alert-warning alert-dismissible" role="alert">
                     <span class="icon-warning-circle" aria-hidden="true"></span>
                     <?php echo Text::_('JBS_CMN_PODCAST_TASK_WARNING'); ?>
                     <a href="<?php echo Route::_('index.php?option=com_scheduler&view=tasks'); ?>" class="alert-link" target="_blank">
                         <?php echo Text::_('JBS_CMN_PODCAST_TASK_STATUS'); ?>
                     </a>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<?php echo Text::_('JCLOSE'); ?>"></button>
                 </div>
             </div>
+            <?php
+            $wa->addInlineScript(<<<'JS'
+            (function () {
+                var KEY = 'proclaim_podcast_task_notice_dismissed';
+                var DAYS = 7;
+                var notice = document.getElementById('proclaim-podcast-task-notice');
+                if (!notice) return;
+                var stored = localStorage.getItem(KEY);
+                if (stored && (Date.now() - parseInt(stored, 10)) < DAYS * 86400000) {
+                    notice.style.display = 'none';
+                    return;
+                }
+                notice.addEventListener('closed.bs.alert', function () {
+                    localStorage.setItem(KEY, Date.now().toString());
+                });
+            })();
+            JS);
+            ?>
             <?php endif; ?>
         <?php
             // Location system wizard opt-in card — shown to super admins when wizard has not been configured

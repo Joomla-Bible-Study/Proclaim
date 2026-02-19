@@ -558,7 +558,7 @@ table.fbstat .col2 {
   gap: 0.5rem;
 }
 
-/* Centered Pagination */
+/* Centered Pagination (legacy — kept for any custom templates) */
 .pagination-centered,
 .pagelinks {
   display: flex;
@@ -568,36 +568,51 @@ table.fbstat .col2 {
   gap: 0.5rem;
 }
 
-/* Pagination Container - Modern styling with subtle separation */
-/* Uses --proclaim-accent-color if set by template, falls back to --color-accent */
-.pagination-container {
-  margin: 1.5rem 0;
-  padding: 1rem;
-  background: linear-gradient(to bottom, var(--color-background-light), var(--color-white));
-  border-top: 3px solid var(--proclaim-accent-color, var(--color-accent));
-  border-radius: 0 0 8px 8px;
-  box-shadow: 0 2px 8px var(--color-shadow-light);
+/* Proclaim Pagination Bar — counter + links side-by-side, centered */
+.proclaim-pagination-bar {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+
+.proclaim-pagination-bar .pagination {
+  margin-bottom: 0;
+}
+
+.proclaim-page-counter {
+  font-size: 0.875rem;
+  color: var(--bs-secondary-color, #6c757d);
+  white-space: nowrap;
+}
+
+/* Normalize disabled pagination button to match enabled button background */
+.proclaim-pagination-bar .page-item.disabled .page-link {
+  background-color: var(--bs-pagination-bg, #fff);
+  border-color: var(--bs-pagination-border-color, #dee2e6);
 }
 
 /* Mobile: compact wrapping pagination */
 @media (max-width: 767.98px) {
-  .proclaim-pagination .pagination {
+  .proclaim-pagination-bar .pagination {
     flex-wrap: wrap;
     justify-content: center;
     gap: 0.25rem;
   }
 
-  .proclaim-pagination .page-link {
+  .proclaim-pagination-bar .page-link {
     padding: 0.25rem 0.5rem;
     font-size: 0.8125rem;
     min-width: 2rem;
     text-align: center;
   }
+}
+
+/* Dark mode: warning alerts keep amber background, so btn-close stays black (cancel Bootstrap's auto-invert) */
+[data-bs-theme="dark"] .alert-warning .btn-close {
+  filter: none;
 }
 
 /* ==========================================================================

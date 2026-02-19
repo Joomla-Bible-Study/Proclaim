@@ -148,18 +148,11 @@ if ($showArchived === '1') : ?>
             'show_pagination'
         ) === '1'))
     ) : ?>
-                    <div class="pagination pagination-centered">
-                        <?php
-            if ($this->params->def('show_pagination_results', 1)) : ?>
-                            <p class="counter float-right">
-                                <?php
-                    echo $this->pagination->getPagesCounter(); ?>
-                            </p>
-                            <?php
-            endif; ?>
-
-                        <?php
-            echo $this->pagination->getPagesLinks(); ?>
+                    <div class="proclaim-pagination-bar">
+                        <?php if ($this->params->def('show_pagination_results', 1)) : ?>
+                            <span class="proclaim-page-counter"><?php echo $this->pagination->getPagesCounter(); ?></span>
+                        <?php endif; ?>
+                        <?php echo $this->pagination->getPagesLinks(); ?>
                     </div>
                     <?php
     endif; ?>
@@ -186,15 +179,11 @@ if ($this->items) {
         ($this->params->def('show_pagination', 2) === '2' || ($this->params->get(
             'show_pagination'
         ) === '2'))) : ?>
-                <div class="pagination pagination-centered w-100">
-                        <?php if ($this->params->def('show_pagination_results', 1)) : ?>
-                            <p class="counter float-end pt-3 pe-2">
-                                <?php echo $this->pagination->getPagesCounter(); ?>
-                            </p>
-                        <?php endif; ?>
-                    <div class="pagination pagination-centered">
-                        <?php echo $this->pagination->getPagesLinks(); ?>
-                    </div>
+                <div class="proclaim-pagination-bar">
+                    <?php if ($this->params->def('show_pagination_results', 1)) : ?>
+                        <span class="proclaim-page-counter"><?php echo $this->pagination->getPagesCounter(); ?></span>
+                    <?php endif; ?>
+                    <?php echo $this->pagination->getPagesLinks(); ?>
                 </div>
                 <?php endif; ?>
             <?php endif; ?>

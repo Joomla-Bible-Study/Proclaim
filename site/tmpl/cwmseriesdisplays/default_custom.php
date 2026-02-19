@@ -99,13 +99,9 @@ switch ($this->params->get('series_wrapcode')) {
         break;
 }
 ?>
-            <div class="pagination pagination-centered w-100">
-                <p class="counter float-end pt-3 pe-2">
-                    <?php echo $this->pagination->getPagesCounter(); ?>
-                </p>
-                <div class="pagination pagination-centered">
-                    <?php echo $this->pagination->getPagesLinks(); ?>
-                </div>
+            <div class="proclaim-pagination-bar">
+                <span class="proclaim-page-counter"><?php echo $this->pagination->getPagesCounter(); ?></span>
+                <?php echo $this->pagination->getPagesLinks(); ?>
             </div>
             <!--end of footer div-->
         </div>

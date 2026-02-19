@@ -19,7 +19,7 @@ use Joomla\CMS\Language\Text;
 
 // Add template accent color for pagination
 $accentColor = $this->params->get('backcolor', '#287585');
-$wa = $this->getDocument()->getWebAssetManager();
+$wa          = $this->getDocument()->getWebAssetManager();
 $wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
 
 ?>
@@ -63,6 +63,6 @@ foreach ($this->items as $study) {
     </div>
     <?php
 } ?>
-<div class="pagination-container pagelinks">
+<div class="proclaim-pagination-bar">
     <?php echo $this->pagination->getPageslinks(); ?>
 </div>
