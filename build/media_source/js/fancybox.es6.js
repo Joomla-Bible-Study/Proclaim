@@ -358,19 +358,6 @@ document.addEventListener("DOMContentLoaded", function () {
             var controls = this.getAttribute('controls') !== '0';
             var autoplay = this.getAttribute('autostart') === 'true';
 
-            // Build caption
-            var caption = '';
-            if (headerText || footerText) {
-                caption = '<div class="proclaim-fancybox-caption">';
-                if (headerText) {
-                    caption += '<div class="proclaim-fancybox-header">' + headerText + '</div>';
-                }
-                if (footerText) {
-                    caption += '<div class="proclaim-fancybox-footer">' + footerText + '</div>';
-                }
-                caption += '</div>';
-            }
-
             // Create audio overlay
             var overlay = document.createElement('div');
             overlay.className = 'proclaim-audio-overlay';
@@ -382,10 +369,23 @@ document.addEventListener("DOMContentLoaded", function () {
             wrapper.style.cssText = 'background:#1e1e2e;border-radius:12px;padding:24px;' +
                 'width:' + width + 'px;max-width:90vw;cursor:default;';
 
-            if (caption) {
+            // Build caption using DOM methods so user-supplied text is never parsed as HTML.
+            if (headerText || footerText) {
                 var captionDiv = document.createElement('div');
-                captionDiv.textContent = caption;
+                captionDiv.className = 'proclaim-fancybox-caption';
                 captionDiv.style.cssText = 'color:#fff;margin-bottom:16px;text-align:center;';
+                if (headerText) {
+                    var headerDiv = document.createElement('div');
+                    headerDiv.className = 'proclaim-fancybox-header';
+                    headerDiv.textContent = headerText;
+                    captionDiv.appendChild(headerDiv);
+                }
+                if (footerText) {
+                    var footerDiv = document.createElement('div');
+                    footerDiv.className = 'proclaim-fancybox-footer';
+                    footerDiv.textContent = footerText;
+                    captionDiv.appendChild(footerDiv);
+                }
                 wrapper.appendChild(captionDiv);
             }
 
@@ -398,7 +398,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 audio.autoplay = true;
             }
             var audioSource = document.createElement('source');
-            audioSource.src = audioSrc;
+            // Resolve against document base URI so relative paths work; only allow
+            // http/https/blob protocols to prevent javascript: URL injection.
+            try {
+                var resolvedUrl = new URL(audioSrc, document.baseURI);
+                if (resolvedUrl.protocol === 'https:' || resolvedUrl.protocol === 'http:' || resolvedUrl.protocol === 'blob:') {
+                    audioSource.src = resolvedUrl.href;
+                }
+            } catch (e) {
+                // Malformed URL — leave src unset so the browser shows a load error.
+            }
             audioSource.type = 'audio/mpeg';
             audio.appendChild(audioSource);
             wrapper.appendChild(audio);
