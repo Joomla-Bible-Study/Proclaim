@@ -181,7 +181,7 @@ class Cwmmedia
 
             if ($file_size > 1) {
                 $file_size = $this->convertFileSize($file_size, $params, $media);
-                $filesize  = '<span class="JBSMFilesize" style="display:inline;padding-left: 5px;">' .
+                $filesize  = '<span class="JBSMFilesize text-body-secondary small ms-1" style="white-space:nowrap;">' .
                 $file_size . '</span>';
             }
         }
@@ -193,11 +193,10 @@ class Cwmmedia
 
             case 1:
                 if ($downloadLink) {
-                    if ($filesize > 0) {
-                        $mediafile = $playerCode . '<div>' . $downloadLink . $filesize . '</div>';
-                    } else {
-                        $mediafile = $playerCode . '<div>' . $downloadLink .  '</div>';
-                    }
+                    $mediafile = '<div class="d-flex align-items-center gap-2">'
+                        . $playerCode
+                        . '<span class="text-nowrap">' . $downloadLink . ($filesize ?: '') . '</span>'
+                        . '</div>';
                 } else {
                     $mediafile = $playerCode;
                 }

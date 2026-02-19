@@ -29,7 +29,7 @@ $wa->useScript('keepalive')
         'proclaim.backup-restore',
         'com_proclaim/backup-restore.min.js',
         ['version' => 'auto'],
-        ['defer' => true],
+        ['defer'   => true],
         ['core']
     );
 
