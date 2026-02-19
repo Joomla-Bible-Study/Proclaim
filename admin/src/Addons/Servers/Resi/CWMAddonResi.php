@@ -69,41 +69,19 @@ class CWMAddonResi extends CWMAddon
             return '';
         }
 
-        // Extract account ID and video ID from various Resi URL formats
-        $patterns = [
-            // Player URL: player.resi.io/account-id/video-id
-            '/player\.resi\.io\/([^\/]+)\/([^\/?\s]+)/i',
-            // Watch URL: resi.io/watch/account-id/video-id
-            '/resi\.io\/watch\/([^\/]+)\/([^\/?\s]+)/i',
-            // App library: app.resi.io/library/account-id/video-id
-            '/app\.resi\.io\/library\/([^\/]+)\/([^\/?\s]+)/i',
-            // Live stream: live.resi.io/account-id
-            '/live\.resi\.io\/([^\/?\s]+)/i',
-        ];
-
-        foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $url, $matches)) {
-                $accountId = $matches[1];
-
-                // Check if this is a live stream (only account ID) or VOD (account + video ID)
-                if (isset($matches[2])) {
-                    // VOD with video ID
-                    $videoId = $matches[2];
-                    return '//player.resi.io/' . $accountId . '/' . $videoId;
-                }
-                // Live stream with only account ID
-                return '//player.resi.io/' . $accountId;
-
-            }
-        }
-
-        // If no match, check if it's already an embed URL
-        if (str_contains($url, 'player.resi.io')) {
-            // Remove protocol if present
+        // Resi's current embed format: control.resi.io/webplayer/video.html?id={base64}
+        // Users should paste this URL directly from Resi's embed/share dialog.
+        // Just strip the protocol — the full URL is already embed-ready.
+        if (str_contains($url, 'control.resi.io/webplayer/')) {
             return preg_replace('#^https?:#', '', $url);
         }
 
-        // Return original URL if no conversion possible
+        // Legacy player.resi.io embed URLs — pass through if already in embed form
+        if (str_contains($url, 'player.resi.io')) {
+            return preg_replace('#^https?:#', '', $url);
+        }
+
+        // Return original URL if no conversion possible — may still be a valid embed src
         return $url;
     }
 
@@ -118,11 +96,17 @@ class CWMAddonResi extends CWMAddon
      */
     public function extractResiAccountId(string $url): ?string
     {
+        // control.resi.io/webplayer/video.html?id={base64} — decode to get account UUID
+        if (preg_match('/[?&]id=([A-Za-z0-9+\/=]+)/', $url, $m)) {
+            $decoded = base64_decode($m[1], true);
+            if ($decoded && str_contains($decoded, ':')) {
+                return explode(':', $decoded)[0];
+            }
+        }
+
         $patterns = [
             '/player\.resi\.io\/([^\/]+)/i',
             '/live\.resi\.io\/([^\/?\s]+)/i',
-            '/resi\.io\/watch\/([^\/]+)/i',
-            '/app\.resi\.io\/library\/([^\/]+)/i',
         ];
 
         foreach ($patterns as $pattern) {
@@ -145,16 +129,16 @@ class CWMAddonResi extends CWMAddon
      */
     public function extractResiVideoId(string $url): ?string
     {
-        $patterns = [
-            '/player\.resi\.io\/[^\/]+\/([^\/?\s]+)/i',
-            '/resi\.io\/watch\/[^\/]+\/([^\/?\s]+)/i',
-            '/app\.resi\.io\/library\/[^\/]+\/([^\/?\s]+)/i',
-        ];
-
-        foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $url, $matches)) {
-                return $matches[1];
+        // control.resi.io/webplayer/video.html?id={base64} — decode to get video UUID
+        if (preg_match('/[?&]id=([A-Za-z0-9+\/=]+)/', $url, $m)) {
+            $decoded = base64_decode($m[1], true);
+            if ($decoded && str_contains($decoded, ':')) {
+                return explode(':', $decoded)[1];
             }
+        }
+
+        if (preg_match('/player\.resi\.io\/[^\/]+\/([^\/?\s]+)/i', $url, $matches)) {
+            return $matches[1];
         }
 
         return null;
@@ -252,8 +236,8 @@ class CWMAddonResi extends CWMAddon
                 ];
             }
 
-            // Test by constructing a valid player URL
-            $testUrl = 'https://player.resi.io/' . $accountId;
+            // Test by constructing a Resi webplayer URL (users provide embed URLs directly)
+            $testUrl = 'https://control.resi.io/webplayer/video.html?id=' . base64_encode($accountId);
 
             return [
                 'success'  => true,
