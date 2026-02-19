@@ -583,7 +583,7 @@
         .then(data => {
           if (data.total === 0) {
             document.getElementById('thumb-regen-counts').innerHTML =
-              `<div class="alert alert-info mb-0">No images found to regenerate.</div>`;
+              `<div class="alert alert-success mb-0"><i class="icon-checkmark me-1" aria-hidden="true"></i>${strings.thumbRegenAllDone}</div>`;
           } else {
             const parts = [];
             if (data.studies > 0) parts.push(strings.thumbRegenMessages.replace('%s', data.studies));
@@ -591,8 +591,9 @@
             if (data.series > 0) parts.push(strings.thumbRegenSeries.replace('%s', data.series));
             document.getElementById('thumb-regen-counts').innerHTML =
               `<div class="mb-0">${parts.join(', ')} (${data.total} total)</div>`;
-            document.getElementById('btn-start-thumb-regen').disabled = false;
           }
+          // Always enable — regeneration is a force-redo action regardless of count
+          document.getElementById('btn-start-thumb-regen').disabled = false;
         })
         .catch(() => {
           document.getElementById('thumb-regen-counts').innerHTML =

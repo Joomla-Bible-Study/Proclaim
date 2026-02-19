@@ -791,6 +791,7 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             'confirmDeleteLegacy'   => Text::_('JBS_ADM_CONFIRM_DELETE_LEGACY'),
             'deleting'              => Text::_('JBS_ADM_DELETING'),
             'thumbRegenComplete'    => Text::_('JBS_ADM_THUMB_REGEN_COMPLETE'),
+            'thumbRegenAllDone'     => Text::_('JBS_ADM_THUMB_REGEN_ALL_DONE'),
             'thumbRegenMessages'    => Text::_('JBS_ADM_THUMB_REGEN_COUNT_MESSAGES'),
             'thumbRegenTeachers'    => Text::_('JBS_ADM_THUMB_REGEN_COUNT_TEACHERS'),
             'thumbRegenSeries'      => Text::_('JBS_ADM_THUMB_REGEN_COUNT_SERIES'),
