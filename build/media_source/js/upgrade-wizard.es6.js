@@ -470,20 +470,27 @@
   };
 
   /**
-   * Switch to the Image Tools tab and reveal the post-upgrade notice.
+   * Switch to the Image Tools tab, reveal the post-upgrade notice,
+   * and auto-trigger the Image Migration Pipeline.
    */
   const goToImageTools = () => {
     const tabBtn = document.querySelector('button[data-bs-target="#imagetools"]');
     if (tabBtn) {
       tabBtn.click();
-      // Reveal the post-upgrade notice and scroll to it
+      // Reveal the post-upgrade notice and scroll to pipeline panel
       setTimeout(() => {
         const notice = document.getElementById('imagetools-post-upgrade-notice');
         if (notice) notice.style.display = '';
 
-        const panel = document.getElementById('imagetools');
-        if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const pipelinePanel = document.getElementById('imagetools-pipeline-panel');
+        if (pipelinePanel) pipelinePanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 150);
+
+      // Auto-trigger the migration pipeline after the tab finishes rendering
+      setTimeout(() => {
+        const pipelineBtn = document.getElementById('btn-run-pipeline');
+        if (pipelineBtn) pipelineBtn.click();
+      }, 400);
     }
   };
 
