@@ -68,49 +68,79 @@ use Joomla\CMS\Session\Session;
             </h3>
             <p class="text-muted"><?php echo Text::_('JBS_UPG_WIZARD_DESC'); ?></p>
 
-            <!-- Step Indicators -->
+            <!-- Step Indicators — each step has a badge + optional per-step Run button -->
             <ol class="list-group list-group-numbered mb-4" id="upgrade-steps">
                 <li class="list-group-item d-flex justify-content-between align-items-start" data-step="backup">
                     <div class="ms-2 me-auto">
                         <div class="fw-bold"><?php echo Text::_('JBS_UPG_STEP_BACKUP'); ?></div>
                         <small class="text-muted"><?php echo Text::_('JBS_UPG_STEP_BACKUP_DESC'); ?></small>
                     </div>
-                    <span class="badge bg-secondary" data-step-badge="backup"><?php echo Text::_('JBS_UPG_PENDING'); ?></span>
+                    <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary step-run-btn" data-step-run="backup" style="display:none;">
+                            <?php echo Text::_('JBS_UPG_RUN_STEP'); ?>
+                        </button>
+                        <span class="badge bg-secondary" data-step-badge="backup"><?php echo Text::_('JBS_UPG_PENDING'); ?></span>
+                    </div>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-start" data-step="params">
                     <div class="ms-2 me-auto">
                         <div class="fw-bold"><?php echo Text::_('JBS_UPG_STEP_PARAMS'); ?></div>
                         <small class="text-muted"><?php echo Text::_('JBS_UPG_STEP_PARAMS_DESC'); ?></small>
                     </div>
-                    <span class="badge bg-secondary" data-step-badge="params"><?php echo Text::_('JBS_UPG_PENDING'); ?></span>
+                    <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary step-run-btn" data-step-run="params" style="display:none;">
+                            <?php echo Text::_('JBS_UPG_RUN_STEP'); ?>
+                        </button>
+                        <span class="badge bg-secondary" data-step-badge="params"><?php echo Text::_('JBS_UPG_PENDING'); ?></span>
+                    </div>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-start" data-step="schema">
                     <div class="ms-2 me-auto">
                         <div class="fw-bold"><?php echo Text::_('JBS_UPG_STEP_SCHEMA'); ?></div>
                         <small class="text-muted"><?php echo Text::_('JBS_UPG_STEP_SCHEMA_DESC'); ?></small>
                     </div>
-                    <span class="badge bg-secondary" data-step-badge="schema"><?php echo Text::_('JBS_UPG_PENDING'); ?></span>
+                    <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary step-run-btn" data-step-run="schema" style="display:none;">
+                            <?php echo Text::_('JBS_UPG_RUN_STEP'); ?>
+                        </button>
+                        <span class="badge bg-secondary" data-step-badge="schema"><?php echo Text::_('JBS_UPG_PENDING'); ?></span>
+                    </div>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-start" data-step="data">
                     <div class="ms-2 me-auto">
                         <div class="fw-bold"><?php echo Text::_('JBS_UPG_STEP_DATA'); ?></div>
                         <small class="text-muted"><?php echo Text::_('JBS_UPG_STEP_DATA_DESC'); ?></small>
                     </div>
-                    <span class="badge bg-secondary" data-step-badge="data"><?php echo Text::_('JBS_UPG_PENDING'); ?></span>
+                    <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary step-run-btn" data-step-run="data" style="display:none;">
+                            <?php echo Text::_('JBS_UPG_RUN_STEP'); ?>
+                        </button>
+                        <span class="badge bg-secondary" data-step-badge="data"><?php echo Text::_('JBS_UPG_PENDING'); ?></span>
+                    </div>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-start" data-step="assets">
                     <div class="ms-2 me-auto">
                         <div class="fw-bold"><?php echo Text::_('JBS_UPG_STEP_ASSETS'); ?></div>
                         <small class="text-muted"><?php echo Text::_('JBS_UPG_STEP_ASSETS_DESC'); ?></small>
                     </div>
-                    <span class="badge bg-secondary" data-step-badge="assets"><?php echo Text::_('JBS_UPG_PENDING'); ?></span>
+                    <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary step-run-btn" data-step-run="assets" style="display:none;">
+                            <?php echo Text::_('JBS_UPG_RUN_STEP'); ?>
+                        </button>
+                        <span class="badge bg-secondary" data-step-badge="assets"><?php echo Text::_('JBS_UPG_PENDING'); ?></span>
+                    </div>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-start" data-step="verify">
                     <div class="ms-2 me-auto">
                         <div class="fw-bold"><?php echo Text::_('JBS_UPG_STEP_VERIFY'); ?></div>
                         <small class="text-muted"><?php echo Text::_('JBS_UPG_STEP_VERIFY_DESC'); ?></small>
                     </div>
-                    <span class="badge bg-secondary" data-step-badge="verify"><?php echo Text::_('JBS_UPG_PENDING'); ?></span>
+                    <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary step-run-btn" data-step-run="verify" style="display:none;">
+                            <?php echo Text::_('JBS_UPG_RUN_STEP'); ?>
+                        </button>
+                        <span class="badge bg-secondary" data-step-badge="verify"><?php echo Text::_('JBS_UPG_PENDING'); ?></span>
+                    </div>
                 </li>
             </ol>
 
@@ -126,7 +156,7 @@ use Joomla\CMS\Session\Session;
             <p class="text-center mb-3" id="upgrade-status-text" aria-live="polite"></p>
 
             <!-- Action Buttons -->
-            <div class="d-flex gap-2 justify-content-center">
+            <div class="d-flex gap-2 justify-content-center flex-wrap">
                 <button type="button" class="btn btn-primary btn-lg" id="btn-start-upgrade">
                     <i class="icon-upload me-1" aria-hidden="true"></i>
                     <?php echo Text::_('JBS_UPG_START'); ?>
@@ -147,6 +177,39 @@ use Joomla\CMS\Session\Session;
                 <?php echo Text::_('JBS_UPG_REPORT_TITLE'); ?>
             </h3>
             <div id="upgrade-report-content"></div>
+        </div>
+    </div>
+
+    <!-- Post-upgrade next steps (shown only on success) -->
+    <div class="col-12" id="upgrade-next-steps" style="display:none;">
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">
+                <i class="icon-checkmark me-2" aria-hidden="true"></i>
+                <?php echo Text::_('JBS_UPG_NEXT_STEPS_TITLE'); ?>
+            </h4>
+            <p><?php echo Text::_('JBS_UPG_NEXT_STEPS_DESC'); ?></p>
+            <hr>
+            <ol class="mb-3">
+                <li><strong><?php echo Text::_('JBS_UPG_NEXT_IMAGE_MIGRATION'); ?></strong>
+                    <br><small class="text-body-secondary"><?php echo Text::_('JBS_UPG_NEXT_IMAGE_MIGRATION_DESC'); ?></small>
+                </li>
+                <li><?php echo Text::_('JBS_UPG_NEXT_TEMPLATES'); ?>
+                    <br><small class="text-body-secondary"><?php echo Text::_('JBS_UPG_NEXT_TEMPLATES_DESC'); ?></small>
+                </li>
+                <li><?php echo Text::_('JBS_UPG_NEXT_FRONTEND'); ?>
+                    <br><small class="text-body-secondary"><?php echo Text::_('JBS_UPG_NEXT_FRONTEND_DESC'); ?></small>
+                </li>
+            </ol>
+            <div class="d-flex gap-2 flex-wrap">
+                <button type="button" class="btn btn-primary" id="btn-go-image-tools">
+                    <i class="icon-images me-1" aria-hidden="true"></i>
+                    <?php echo Text::_('JBS_UPG_NEXT_GO_IMAGE_TOOLS'); ?>
+                </button>
+                <button type="button" class="btn btn-outline-secondary" id="btn-reload-after-upgrade">
+                    <i class="icon-refresh me-1" aria-hidden="true"></i>
+                    <?php echo Text::_('JBS_UPG_RELOAD'); ?>
+                </button>
+            </div>
         </div>
     </div>
 </div>

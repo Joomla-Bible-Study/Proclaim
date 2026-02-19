@@ -85,6 +85,9 @@
       { id: 'verify',  task: 'upgradeVerifyXHR',   critical: true },
     ];
 
+    // Track which steps completed successfully so per-step buttons can show "Retry"
+    const stepState = {};
+
     let cancelled = false;
     let running = false;
 
@@ -116,6 +119,32 @@
           badge.classList.add('bg-secondary');
           badge.textContent = str('JBS_UPG_PENDING', 'Pending');
       }
+
+      stepState[stepId] = state;
+    };
+
+    /**
+     * Show or hide per-step run buttons.
+     * Buttons appear when the wizard is idle (not running full sequence).
+     *
+     * @param {boolean} show
+     */
+    const setStepButtons = (show) => {
+      document.querySelectorAll('.step-run-btn').forEach((btn) => {
+        const stepId = btn.dataset.stepRun;
+        if (!show) {
+          btn.style.display = 'none';
+          return;
+        }
+        // Show button with "Retry" label if step errored, otherwise "Run"
+        btn.style.display = '';
+        btn.textContent = stepState[stepId] === 'error'
+          ? str('JBS_UPG_RETRY_STEP', 'Retry')
+          : str('JBS_UPG_RUN_STEP', 'Run');
+
+        // Disable the button while this specific step is "done" (no-op to re-run a succeeded step)
+        btn.disabled = (stepState[stepId] === 'done');
+      });
     };
 
     /**
@@ -225,15 +254,50 @@
           }
         }
 
-        // Show the wizard panel
+        // Show the wizard panel and per-step run buttons
         const wizardPanel = document.getElementById('upgrade-wizard-panel');
         if (wizardPanel) wizardPanel.style.display = '';
+
+        setStepButtons(true);
 
       } catch (error) {
         clearChildren(statusEl);
         const errAlert = el('div', str('JBS_UPG_DETECT_ERROR', 'Detection failed') + ': ' + error.message, 'alert alert-danger');
         statusEl.appendChild(errAlert);
       }
+    };
+
+    /**
+     * Run a single step by step ID. Used by per-step Run/Retry buttons.
+     *
+     * @param {string} stepId
+     */
+    const runSingleStep = async (stepId) => {
+      if (running) return;
+
+      const step = STEPS.find((s) => s.id === stepId);
+      if (!step) return;
+
+      running = true;
+      setStepButtons(false);
+      const startBtn = document.getElementById('btn-start-upgrade');
+      if (startBtn) startBtn.disabled = true;
+
+      setBadge(stepId, 'active');
+      setStatus(str('JBS_UPG_RUNNING_STEP', 'Running') + ': ' + str('JBS_UPG_STEP_' + stepId.toUpperCase(), stepId));
+
+      try {
+        await ajaxCall(step.task);
+        setBadge(stepId, 'done');
+        setStatus(str('JBS_UPG_STEP_DONE', 'Step completed') + ': ' + str('JBS_UPG_STEP_' + stepId.toUpperCase(), stepId));
+      } catch (error) {
+        setBadge(stepId, 'error');
+        setStatus(str('JBS_UPG_STEP_FAILED', 'Step failed') + ': ' + error.message);
+      }
+
+      running = false;
+      setStepButtons(true);
+      if (startBtn) startBtn.disabled = false;
     };
 
     /**
@@ -249,6 +313,7 @@
 
       if (startBtn) startBtn.style.display = 'none';
       if (cancelBtn) cancelBtn.style.display = '';
+      setStepButtons(false);
 
       // Navigation guard
       const beforeUnloadHandler = (e) => {
@@ -301,12 +366,23 @@
       // Show report
       showReport(results, hasError, cancelled);
 
+      // Show next-steps panel on full success
+      if (!hasError && !cancelled) {
+        const nextSteps = document.getElementById('upgrade-next-steps');
+        if (nextSteps) nextSteps.style.display = '';
+      }
+
       // Reset buttons
       if (cancelBtn) cancelBtn.style.display = 'none';
-      if (startBtn && (hasError || cancelled)) {
+      if (startBtn) {
         startBtn.style.display = '';
-        startBtn.textContent = str('JBS_UPG_RETRY', 'Retry Upgrade');
+        if (hasError || cancelled) {
+          startBtn.textContent = str('JBS_UPG_RETRY', 'Retry Upgrade');
+        }
       }
+
+      // Show per-step buttons after run completes
+      setStepButtons(true);
 
       running = false;
     };
@@ -332,10 +408,10 @@
         summaryText = str('JBS_UPG_REPORT_CANCELLED', 'The upgrade was cancelled. You can safely retry.');
       } else if (hasError) {
         alertClass = 'alert-danger';
-        summaryText = str('JBS_UPG_REPORT_ERROR', 'The upgrade encountered an error. Check the details below and retry.');
+        summaryText = str('JBS_UPG_REPORT_ERROR', 'The upgrade encountered an error. Use the Retry button next to the failed step, or click Retry Upgrade to run all steps again.');
       } else {
         alertClass = 'alert-success';
-        summaryText = str('JBS_UPG_REPORT_SUCCESS', 'The upgrade completed successfully! Reload the page to continue.');
+        summaryText = str('JBS_UPG_REPORT_SUCCESS', 'The upgrade completed successfully! Review the next steps below.');
       }
 
       const summary = el('div', summaryText, 'alert ' + alertClass);
@@ -392,14 +468,25 @@
       table.appendChild(tbody);
       content.appendChild(table);
 
-      // Reload button on success
-      if (!hasError && !wasCancelled) {
-        const reloadBtn = el('button', str('JBS_UPG_RELOAD', 'Reload Page'), 'btn btn-success mt-3');
-        reloadBtn.addEventListener('click', () => window.location.reload());
-        content.appendChild(reloadBtn);
-      }
-
       panel.style.display = '';
+    };
+
+    /**
+     * Switch to the Image Tools tab and reveal the post-upgrade notice.
+     */
+    const goToImageTools = () => {
+      const tabBtn = document.querySelector('button[data-bs-target="#imagetools"]');
+      if (tabBtn) {
+        tabBtn.click();
+        // Reveal the post-upgrade notice and scroll to it
+        setTimeout(() => {
+          const notice = document.getElementById('imagetools-post-upgrade-notice');
+          if (notice) notice.style.display = '';
+
+          const panel = document.getElementById('imagetools');
+          if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 150);
+      }
     };
 
     /**
@@ -409,7 +496,7 @@
       // Only initialize if the upgrade wizard container exists
       if (!document.getElementById('upgrade-wizard')) return;
 
-      // Start button
+      // Start button (Run All)
       const startBtn = document.getElementById('btn-start-upgrade');
       if (startBtn) {
         startBtn.addEventListener('click', (e) => {
@@ -427,6 +514,22 @@
           setStatus(str('JBS_UPG_CANCELLING', 'Cancelling after current step...'));
         });
       }
+
+      // Per-step run buttons (delegated)
+      document.getElementById('upgrade-steps')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('.step-run-btn');
+        if (!btn || btn.disabled) return;
+        const stepId = btn.dataset.stepRun;
+        if (stepId) runSingleStep(stepId);
+      });
+
+      // Go to Image Tools button (post-success)
+      document.getElementById('btn-go-image-tools')?.addEventListener('click', goToImageTools);
+
+      // Reload button (post-success)
+      document.getElementById('btn-reload-after-upgrade')?.addEventListener('click', () => {
+        window.location.reload();
+      });
 
       // Listen for tab activation to trigger detection
       const tabLink = document.querySelector('button[data-bs-target="#upgrade"]');

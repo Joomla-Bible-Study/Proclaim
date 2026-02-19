@@ -99,6 +99,9 @@ if ($this->has9xSchema) {
     Text::script('JBS_UPG_STEP');
     Text::script('JBS_UPG_RESULT');
     Text::script('JBS_UPG_DETAILS');
+    Text::script('JBS_UPG_RUN_STEP');
+    Text::script('JBS_UPG_RETRY_STEP');
+    Text::script('JBS_UPG_STEP_DONE');
 }
 
 $app   = Factory::getApplication();
@@ -502,6 +505,15 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                 <strong><?php echo Text::_('JBS_ADM_OPERATION_IN_PROGRESS'); ?></strong>
             </div>
         </div>
+
+        <!-- Post-upgrade notice: shown when arriving from the upgrade wizard -->
+        <div id="imagetools-post-upgrade-notice" class="alert alert-warning alert-dismissible fade show mb-4" role="alert" style="display:none;">
+            <i class="icon-warning-2 me-2" aria-hidden="true"></i>
+            <strong><?php echo Text::_('JBS_ADM_POST_UPGRADE_NOTICE_TITLE'); ?></strong>
+            <?php echo Text::_('JBS_ADM_POST_UPGRADE_NOTICE_DESC'); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<?php echo Text::_('JCLOSE'); ?>"></button>
+        </div>
+
         <div class="row" id="imagetools">
             <!-- Image Migration Section (Step 1) -->
             <div class="col-12 col-lg-6">
