@@ -193,10 +193,11 @@ class Cwmmedia
 
             case 1:
                 if ($downloadLink) {
-                    $mediafile = '<div class="d-flex align-items-center gap-2">'
+                    $mediafile = '<span class="d-inline-flex align-items-center">'
                         . $playerCode
-                        . '<span class="text-nowrap">' . $downloadLink . ($filesize ?: '') . '</span>'
-                        . '</div>';
+                        . $downloadLink
+                        . ($filesize ?: '')
+                        . '</span>';
                 } else {
                     $mediafile = $playerCode;
                 }
