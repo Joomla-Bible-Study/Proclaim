@@ -16,7 +16,7 @@ const BATCH_FILES = [
 ];
 
 describe('Admin Batch Files', () => {
-    BATCH_FILES.forEach(({ name, file, task }) => {
+    BATCH_FILES.forEach(({ file, task }) => {
         describe(`${file.split('/').pop()}`, () => {
             describe('Batch Functionality', () => {
                 let mockSubmitForm;

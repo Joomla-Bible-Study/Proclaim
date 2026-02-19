@@ -82,6 +82,8 @@ export default defineConfig([
         files: ['tests/**/*.js', 'tests/**/*.mjs'],
         rules: {
             'no-undef': 'off',
+            // Test files access mock.calls[n] frequently; nested destructuring hurts readability
+            'prefer-destructuring': 'off',
         },
     },
 ]);

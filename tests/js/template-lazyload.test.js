@@ -70,7 +70,7 @@ describe('template-lazyload.es6.js', () => {
 
             // The "show" accordion should trigger a fetch
             expect(global.fetch).toHaveBeenCalled();
-            const fetchUrl = global.fetch.mock.calls[0][0];
+            const [fetchUrl] = global.fetch.mock.calls[0];
             expect(fetchUrl).toContain('fieldset=study_details');
             expect(fetchUrl).toContain('id=42');
         });
@@ -90,7 +90,7 @@ describe('template-lazyload.es6.js', () => {
             await new Promise(resolve => setTimeout(resolve, 0));
 
             expect(global.fetch).toHaveBeenCalled();
-            const fetchUrl = global.fetch.mock.calls[0][0];
+            const [fetchUrl] = global.fetch.mock.calls[0];
             expect(fetchUrl).toContain('fieldset=messages_list');
         });
 

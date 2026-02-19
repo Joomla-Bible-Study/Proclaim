@@ -127,7 +127,7 @@ describe('scripture-tooltip.es6.js', () => {
 
     describe('Keyboard interaction', () => {
         test('should respond to Escape key', () => {
-            const { mockPopoverInstance } = setupModule();
+            setupModule();
             const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
 
             document.body.dispatchEvent(event);
