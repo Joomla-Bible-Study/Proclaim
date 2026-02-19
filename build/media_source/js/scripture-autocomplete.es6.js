@@ -62,7 +62,7 @@
      */
     function findBookByName(name, books) {
         const lower = name.toLowerCase().trim();
-        return books.find(b => b.name.toLowerCase() === lower) || null;
+        return books.find((b) => b.name.toLowerCase() === lower) || null;
     }
 
     /**
@@ -113,9 +113,7 @@
         const lower = query.toLowerCase().trim();
         if (!lower) return [];
 
-        return books.filter(book => {
-            return book.name.toLowerCase().startsWith(lower);
-        }).slice(0, 10);
+        return books.filter((book) => book.name.toLowerCase().startsWith(lower)).slice(0, 10);
     }
 
     /**
@@ -200,7 +198,7 @@
                 const infoSpan = document.createElement('span');
                 infoSpan.style.cssText = 'font-size:11px;color:#6c757d;margin-left:12px;';
                 if (chapterCount > 0) {
-                    infoSpan.textContent = chapterCount + ' ch';
+                    infoSpan.textContent = `${chapterCount} ch`;
                 }
 
                 item.appendChild(nameSpan);
@@ -243,7 +241,7 @@
             if (index < 0 || index >= matches.length) return;
 
             const book = matches[index];
-            input.value = book.name + ' ';
+            input.value = `${book.name} `;
             hideDropdown();
             input.focus();
             updateState();
@@ -285,8 +283,8 @@
                     const maxV = getVerseCount(book.booknumber, ch, structure);
                     const maxCh = getChapterCount(book.booknumber, structure);
                     if (maxV > 0) {
-                        hintEl.textContent = 'End verse (ch ' + ch + ' has ' + maxV
-                            + ' verses) or chapter:verse (book has ' + maxCh + ' chapters)';
+                        hintEl.textContent = `End verse (ch ${ch} has ${maxV
+                        } verses) or chapter:verse (book has ${maxCh} chapters)`;
                     } else {
                         hintEl.textContent = 'Enter end verse or chapter:verse';
                     }
@@ -302,7 +300,7 @@
                     const ch = parseInt(m[2], 10);
                     const maxV = getVerseCount(book.booknumber, ch, structure);
                     if (maxV > 0) {
-                        hintEl.textContent = 'Chapter ' + ch + ' has ' + maxV + ' verses (KJV)';
+                        hintEl.textContent = `Chapter ${ch} has ${maxV} verses (KJV)`;
                     } else {
                         hintEl.textContent = '';
                     }
@@ -319,10 +317,10 @@
                     const maxCh = getChapterCount(book.booknumber, structure);
                     const maxV = getVerseCount(book.booknumber, ch, structure);
                     if (maxCh > 0 && maxV > 0) {
-                        hintEl.textContent = 'Type : for verses (ch ' + ch + ' has '
-                            + maxV + ' verses, book has ' + maxCh + ' chapters)';
+                        hintEl.textContent = `Type : for verses (ch ${ch} has ${
+                            maxV} verses, book has ${maxCh} chapters)`;
                     } else if (maxCh > 0) {
-                        hintEl.textContent = 'Book has ' + maxCh + ' chapters — type : for verses';
+                        hintEl.textContent = `Book has ${maxCh} chapters — type : for verses`;
                     } else {
                         hintEl.textContent = '';
                     }
@@ -337,7 +335,7 @@
                 if (exactBook) {
                     const maxCh = getChapterCount(exactBook.booknumber, structure);
                     if (maxCh > 0) {
-                        hintEl.textContent = exactBook.name + ' has ' + maxCh + ' chapters';
+                        hintEl.textContent = `${exactBook.name} has ${maxCh} chapters`;
                     }
                 } else {
                     hintEl.textContent = '';
@@ -358,7 +356,7 @@
                 // If so, the user has already selected the book and is now typing
                 // chapter/verse — don't re-show the dropdown.
                 const isExactBookMatch = books.some(
-                    b => b.name.toLowerCase() === bookPart.toLowerCase()
+                    (b) => b.name.toLowerCase() === bookPart.toLowerCase(),
                 );
 
                 if (items.length > 0 && items.length < books.length && !isExactBookMatch) {
@@ -393,6 +391,8 @@
                     break;
                 case 'Escape':
                     hideDropdown();
+                    break;
+                default:
                     break;
             }
         });
@@ -435,7 +435,7 @@
             allOptions.push({
                 value: select.options[i].value,
                 text: select.options[i].textContent,
-                element: select.options[i]
+                element: select.options[i],
             });
         }
 
@@ -477,12 +477,12 @@
                 const original = allOptions[i] ? allOptions[i].text : select.options[i].textContent;
 
                 if (i === select.selectedIndex && select.options[i].value) {
-                    select.options[i].textContent = '\u2713 ' + original;
+                    select.options[i].textContent = `\u2713 ${original}`;
                     select.options[i].style.backgroundColor = activeBg;
                     select.options[i].style.color = activeColor;
                     select.options[i].style.fontWeight = '600';
                 } else {
-                    select.options[i].textContent = '   ' + original;
+                    select.options[i].textContent = `   ${original}`;
                     select.options[i].style.backgroundColor = normalBg;
                     select.options[i].style.color = normalColor;
                     select.options[i].style.fontWeight = '';
@@ -508,7 +508,7 @@
         searchInput.addEventListener('input', () => {
             const query = searchInput.value.toLowerCase().trim();
 
-            allOptions.forEach(opt => {
+            allOptions.forEach((opt) => {
                 if (!opt.value) {
                     opt.element.style.display = '';
                     return;
@@ -528,7 +528,7 @@
             const selected = select.options[select.selectedIndex];
             if (selected && selected.value) {
                 searchInput.value = '';
-                allOptions.forEach(opt => {
+                allOptions.forEach((opt) => {
                     opt.element.style.display = '';
                 });
             }
@@ -539,7 +539,7 @@
      * Initialize search on all bible version selects.
      */
     function initAllVersionSearches() {
-        document.querySelectorAll('.bible-version-searchable').forEach(select => {
+        document.querySelectorAll('.bible-version-searchable').forEach((select) => {
             if (!select.dataset.versionSearchInit) {
                 initVersionSearch(select);
                 select.dataset.versionSearchInit = '1';
@@ -553,7 +553,7 @@
      * Initialize autocomplete on all current and future .scripture-autocomplete inputs.
      */
     function initAll() {
-        document.querySelectorAll('.scripture-autocomplete').forEach(input => {
+        document.querySelectorAll('.scripture-autocomplete').forEach((input) => {
             if (!input.dataset.scriptureInit) {
                 initAutocomplete(input);
                 input.dataset.scriptureInit = '1';
@@ -596,13 +596,13 @@
             if (row) {
                 // Small delay for DOM to be ready
                 setTimeout(() => {
-                    row.querySelectorAll('.scripture-autocomplete').forEach(input => {
+                    row.querySelectorAll('.scripture-autocomplete').forEach((input) => {
                         if (!input.dataset.scriptureInit) {
                             initAutocomplete(input);
                             input.dataset.scriptureInit = '1';
                         }
                     });
-                    row.querySelectorAll('.bible-version-searchable').forEach(select => {
+                    row.querySelectorAll('.bible-version-searchable').forEach((select) => {
                         if (!select.dataset.versionSearchInit) {
                             initVersionSearch(select);
                             select.dataset.versionSearchInit = '1';

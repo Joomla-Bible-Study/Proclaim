@@ -15,40 +15,40 @@
 
         // Column auto-detection aliases (field -> [aliases])
         const COLUMN_ALIASES = {
-            studytitle:       ['title', 'message title', 'sermon title', 'study title', 'message', 'sermon', 'name'],
-            studydate:        ['date', 'message date', 'sermon date', 'study date'],
-            teacher:          ['teacher', 'speaker', 'pastor', 'preacher', 'minister'],
-            series:           ['series', 'message series', 'sermon series', 'study series'],
-            location:         ['location', 'venue', 'church', 'campus'],
-            messagetype:      ['type', 'message type', 'category', 'sermon type'],
-            scripture:        ['scripture', 'passage', 'reference', 'bible ref'],
-            topics:           ['topic', 'topics', 'tag', 'tags', 'keyword', 'keywords'],
-            studyintro:       ['intro', 'introduction', 'summary', 'description', 'excerpt'],
-            studytext:        ['body', 'text', 'content', 'notes', 'message text', 'message notes', 'study text', 'sermon notes', 'transcript'],
-            studynumber:      ['number', 'message number', 'study number', 'sermon number', '#'],
-            published:        ['published', 'status', 'state', 'active'],
-            thumbnailm:       ['image', 'thumbnail', 'photo', 'picture'],
+            studytitle: ['title', 'message title', 'sermon title', 'study title', 'message', 'sermon', 'name'],
+            studydate: ['date', 'message date', 'sermon date', 'study date'],
+            teacher: ['teacher', 'speaker', 'pastor', 'preacher', 'minister'],
+            series: ['series', 'message series', 'sermon series', 'study series'],
+            location: ['location', 'venue', 'church', 'campus'],
+            messagetype: ['type', 'message type', 'category', 'sermon type'],
+            scripture: ['scripture', 'passage', 'reference', 'bible ref'],
+            topics: ['topic', 'topics', 'tag', 'tags', 'keyword', 'keywords'],
+            studyintro: ['intro', 'introduction', 'summary', 'description', 'excerpt'],
+            studytext: ['body', 'text', 'content', 'notes', 'message text', 'message notes', 'study text', 'sermon notes', 'transcript'],
+            studynumber: ['number', 'message number', 'study number', 'sermon number', '#'],
+            published: ['published', 'status', 'state', 'active'],
+            thumbnailm: ['image', 'thumbnail', 'photo', 'picture'],
             created_by_alias: ['author', 'created by'],
-            language:         ['language', 'lang'],
+            language: ['language', 'lang'],
         };
 
         const FIELD_LABELS = {
-            ignore:           '-- Ignore --',
-            studytitle:       'Title *',
-            studydate:        'Date',
-            teacher:          'Teacher',
-            series:           'Series',
-            location:         'Location',
-            messagetype:      'Type',
-            scripture:        'Scripture',
-            topics:           'Topics',
-            studyintro:       'Introduction',
-            studytext:        'Body',
-            studynumber:      'Number',
-            published:        'Published',
-            thumbnailm:       'Image',
+            ignore: '-- Ignore --',
+            studytitle: 'Title *',
+            studydate: 'Date',
+            teacher: 'Teacher',
+            series: 'Series',
+            location: 'Location',
+            messagetype: 'Type',
+            scripture: 'Scripture',
+            topics: 'Topics',
+            studyintro: 'Introduction',
+            studytext: 'Body',
+            studynumber: 'Number',
+            published: 'Published',
+            thumbnailm: 'Image',
             created_by_alias: 'Author',
-            language:         'Language',
+            language: 'Language',
         };
 
         const BATCH_SIZE = 25;
@@ -63,8 +63,9 @@
          */
         function parseCSV(text, delimiter = ',') {
             // Strip UTF-8 BOM
-            if (text.charCodeAt(0) === 0xFEFF) {
-                text = text.slice(1);
+            let csvText = text;
+            if (csvText.charCodeAt(0) === 0xFEFF) {
+                csvText = csvText.slice(1);
             }
 
             const rows = [];
@@ -73,49 +74,47 @@
             let inQuotes = false;
             let i = 0;
 
-            while (i < text.length) {
-                const ch = text[i];
+            while (i < csvText.length) {
+                const ch = csvText[i];
 
                 if (inQuotes) {
                     if (ch === '"') {
-                        if (i + 1 < text.length && text[i + 1] === '"') {
+                        if (i + 1 < csvText.length && csvText[i + 1] === '"') {
                             field += '"';
                             i += 2;
                         } else {
                             inQuotes = false;
-                            i++;
+                            i += 1;
                         }
                     } else {
                         field += ch;
-                        i++;
+                        i += 1;
                     }
+                } else if (ch === '"') {
+                    inQuotes = true;
+                    i += 1;
+                } else if (ch === delimiter) {
+                    row.push(field);
+                    field = '';
+                    i += 1;
+                } else if (ch === '\r') {
+                    row.push(field);
+                    field = '';
+                    rows.push(row);
+                    row = [];
+                    i += 1;
+                    if (i < csvText.length && csvText[i] === '\n') {
+                        i += 1;
+                    }
+                } else if (ch === '\n') {
+                    row.push(field);
+                    field = '';
+                    rows.push(row);
+                    row = [];
+                    i += 1;
                 } else {
-                    if (ch === '"') {
-                        inQuotes = true;
-                        i++;
-                    } else if (ch === delimiter) {
-                        row.push(field);
-                        field = '';
-                        i++;
-                    } else if (ch === '\r') {
-                        row.push(field);
-                        field = '';
-                        rows.push(row);
-                        row = [];
-                        i++;
-                        if (i < text.length && text[i] === '\n') {
-                            i++;
-                        }
-                    } else if (ch === '\n') {
-                        row.push(field);
-                        field = '';
-                        rows.push(row);
-                        row = [];
-                        i++;
-                    } else {
-                        field += ch;
-                        i++;
-                    }
+                    field += ch;
+                    i += 1;
                 }
             }
 
@@ -126,7 +125,7 @@
             }
 
             // Remove trailing empty rows
-            while (rows.length > 0 && rows[rows.length - 1].every(c => c.trim() === '')) {
+            while (rows.length > 0 && rows[rows.length - 1].every((c) => c.trim() === '')) {
                 rows.pop();
             }
 
@@ -139,9 +138,9 @@
         function detectDelimiter(text) {
             const firstLines = text.split(/\r?\n/).slice(0, 5).join('\n');
             const counts = {
-                ',':  (firstLines.match(/,/g) || []).length,
+                ',': (firstLines.match(/,/g) || []).length,
                 '\t': (firstLines.match(/\t/g) || []).length,
-                ';':  (firstLines.match(/;/g) || []).length,
+                ';': (firstLines.match(/;/g) || []).length,
             };
 
             let best = ',';
@@ -168,7 +167,7 @@
                 let matched = 'ignore';
 
                 for (const [field, aliases] of Object.entries(COLUMN_ALIASES)) {
-                    if (aliases.some(alias => normalized === alias || normalized.includes(alias))) {
+                    if (aliases.some((alias) => normalized === alias || normalized.includes(alias))) {
                         matched = field;
                         break;
                     }
@@ -260,7 +259,7 @@
                     const td = document.createElement('td');
                     td.className = 'small';
                     const val = row[i] || '';
-                    td.textContent = val.length > 60 ? val.substring(0, 57) + '...' : val;
+                    td.textContent = val.length > 60 ? `${val.substring(0, 57)}...` : val;
                     tr.appendChild(td);
                 }
 
@@ -288,7 +287,7 @@
             }
 
             // Bind mapping change events
-            previewTable.querySelectorAll('.csv-col-mapping').forEach(select => {
+            previewTable.querySelectorAll('.csv-col-mapping').forEach((select) => {
                 select.addEventListener('change', () => {
                     columnMappings[parseInt(select.dataset.col, 10)] = select.value;
                 });
@@ -305,7 +304,7 @@
 
             importRunning = true;
             const config = document.getElementById('csv-import-config');
-            const token = config.dataset.token;
+            const { token } = config.dataset;
 
             const hasHeader = document.getElementById('csv-first-row-header').checked;
             const dataRows = hasHeader ? parsedRows.slice(1) : parsedRows;
@@ -319,7 +318,7 @@
 
             // Collect settings
             const settings = {
-                auto_create:       document.getElementById('csv-auto-create').checked,
+                auto_create: document.getElementById('csv-auto-create').checked,
                 default_published: parseInt(document.getElementById('csv-default-published').value, 10),
                 duplicate_handling: document.getElementById('csv-duplicate-handling').value,
             };
@@ -365,13 +364,13 @@
                         `index.php?option=com_proclaim&task=cwmadmin.csvImportBatchXHR&${token}=1`,
                         {
                             method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
+                            headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
                                 rows: batch,
                                 mappings: columnMappings,
-                                settings: settings,
+                                settings,
                             }),
-                        }
+                        },
                     );
 
                     const result = await response.json();
@@ -397,8 +396,8 @@
                     });
                 }
 
-                progressBar.style.width = pct + '%';
-                progressBar.textContent = pct + '%';
+                progressBar.style.width = `${pct}%`;
+                progressBar.textContent = `${pct}%`;
             }
 
             // Complete
@@ -451,8 +450,8 @@
             // Auto-created entities table
             if (autoCreated.length > 0) {
                 const seen = new Set();
-                const unique = autoCreated.filter(e => {
-                    const key = e.type + ':' + e.id;
+                const unique = autoCreated.filter((e) => {
+                    const key = `${e.type}:${e.id}`;
 
                     if (seen.has(key)) {
                         return false;
@@ -495,7 +494,7 @@
                     const tdType = document.createElement('td');
                     const badge = document.createElement('span');
                     badge.className = 'badge bg-secondary';
-                    badge.textContent = str('JBS_CSV_TYPE_' + entity.type.toUpperCase()) || entity.type;
+                    badge.textContent = str(`JBS_CSV_TYPE_${entity.type.toUpperCase()}`) || entity.type;
                     tdType.appendChild(badge);
                     tr.appendChild(tdType);
 
@@ -512,7 +511,7 @@
                     icon.className = 'icon-pencil';
                     icon.setAttribute('aria-hidden', 'true');
                     link.appendChild(icon);
-                    link.appendChild(document.createTextNode(' ' + str('JBS_CSV_EDIT')));
+                    link.appendChild(document.createTextNode(` ${str('JBS_CSV_EDIT')}`));
                     tdLink.appendChild(link);
                     tr.appendChild(tdLink);
 
@@ -588,7 +587,7 @@
             col.className = 'col-auto';
 
             const card = document.createElement('div');
-            card.className = 'card ' + colorClass;
+            card.className = `card ${colorClass}`;
 
             const body = document.createElement('div');
             body.className = 'card-body py-2 px-3';
@@ -614,11 +613,11 @@
          */
         async function downloadTemplate() {
             const config = document.getElementById('csv-import-config');
-            const token = config.dataset.token;
+            const { token } = config.dataset;
 
             try {
                 const response = await fetch(
-                    `index.php?option=com_proclaim&task=cwmadmin.csvTemplateXHR&${token}=1`
+                    `index.php?option=com_proclaim&task=cwmadmin.csvTemplateXHR&${token}=1`,
                 );
                 const blob = await response.blob();
                 const url = URL.createObjectURL(blob);
@@ -629,7 +628,7 @@
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
-            } catch (e) {
+            } catch {
                 // Silently fail
             }
         }

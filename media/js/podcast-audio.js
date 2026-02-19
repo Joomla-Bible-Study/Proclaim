@@ -8,20 +8,20 @@
      * @since    10.1.0
      */
     window.loadVideo = function loadVideo(path) {
-        const audio   = document.querySelector('audio');
+        const audio = document.querySelector('audio');
         const loading = document.getElementById('audio-loading');
         let timeoutId;
 
         if (audio) {
             if (loading) {
                 loading.style.display = 'block';
-                loading.innerHTML     = (Joomla.Text._('JBS_CMN_LOADING') || 'Loading') + '...';
-                loading.className     = 'alert alert-info';
+                loading.innerHTML = `${Joomla.Text._('JBS_CMN_LOADING') || 'Loading'}...`;
+                loading.className = 'alert alert-info';
             }
 
             audio.src = path;
 
-            timeoutId = setTimeout(function () {
+            timeoutId = setTimeout(() => {
                 if (loading) {
                     loading.innerHTML = Joomla.Text._('JBS_CMN_LOADING_TIMEOUT') || 'Loading is taking longer than expected...';
                     loading.className = 'alert alert-warning';
@@ -48,7 +48,7 @@
         } else {
             const iframe = document.querySelector('iframe.playhit');
             if (iframe) {
-                console.log('Video/Iframe update not fully supported in this view for ' + path);
+                console.log(`Video/Iframe update not fully supported in this view for ${path}`);
             }
         }
     };

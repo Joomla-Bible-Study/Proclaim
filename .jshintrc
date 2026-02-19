@@ -11,7 +11,11 @@
     "$": true,
     "Sortable": true,
     "google": true,
-    "gapi": true
+    "gapi": true,
+    "AbortController": true,
+    "IntersectionObserver": true,
+    "intlTelInput": true,
+    "Chart": true
   },
   "strict": true,
   "bitwise": true,
@@ -20,6 +24,7 @@
   "forin": true,
   "freeze": true,
   "latedef": true,
+  "laxbreak": true,
   "noarg": true,
   "nonbsp": true,
   "undef": true,

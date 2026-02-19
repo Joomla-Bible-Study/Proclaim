@@ -94,10 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const doFetch = async (reference, version) => {
         const token = Joomla.getOptions('csrf.token') || '';
-        const url = ajaxBaseUrl +
-            `&reference=${encodeURIComponent(reference)}` +
-            `&version=${encodeURIComponent(version)}` +
-            `&${token}=1`;
+        const url = `${ajaxBaseUrl
+        }&reference=${encodeURIComponent(reference)}`
+            + `&version=${encodeURIComponent(version)}`
+            + `&${token}=1`;
 
         const response = await fetch(url);
 
@@ -150,9 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (errorMessage || provider) {
             const items = [];
-            if (version)      { items.push('Version: ' + version.toUpperCase()); }
-            if (provider)     { items.push('Provider: ' + provider); }
-            if (errorMessage) { items.push('Error: ' + errorMessage); }
+            if (version) { items.push(`Version: ${version.toUpperCase()}`); }
+            if (provider) { items.push(`Provider: ${provider}`); }
+            if (errorMessage) { items.push(`Error: ${errorMessage}`); }
 
             const details = document.createElement('details');
             details.className = 'mt-1 small';
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
         retryIcon.className = 'fas fa-redo';
         retryIcon.setAttribute('aria-hidden', 'true');
         retryBtn.appendChild(retryIcon);
-        retryBtn.appendChild(document.createTextNode(' ' + retryLabel));
+        retryBtn.appendChild(document.createTextNode(` ${retryLabel}`));
         banner.appendChild(retryBtn);
 
         const closeBtn = document.createElement('button');
@@ -209,13 +209,13 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const showRetryButton = (body, reference, version, copyright) => {
         // All content originates from our own CwmscriptureController server endpoint
-        body.innerHTML = '<p class="text-muted"><em>' +
-            txt('JBS_CMN_SCRIPTURE_UNAVAILABLE', 'Scripture text temporarily unavailable') +
-            '</em></p>' +
-            '<button type="button" class="btn btn-sm btn-outline-secondary scripture-retry-btn">' +
-            '<i class="fas fa-redo" aria-hidden="true"></i> ' +
-            txt('JBS_CMN_SCRIPTURE_RETRY', 'Try Again') +
-            '</button>';
+        body.innerHTML = `<p class="text-muted"><em>${
+            txt('JBS_CMN_SCRIPTURE_UNAVAILABLE', 'Scripture text temporarily unavailable')
+        }</em></p>`
+            + '<button type="button" class="btn btn-sm btn-outline-secondary scripture-retry-btn">'
+            + `<i class="fas fa-redo" aria-hidden="true"></i> ${
+                txt('JBS_CMN_SCRIPTURE_RETRY', 'Try Again')
+            }</button>`;
 
         if (copyright) {
             copyright.style.display = 'none';
@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else {
                         showRetryButton(body, reference, version, copyright);
                     }
-                } catch (error) {
+                } catch {
                     showRetryButton(body, reference, version, copyright);
                 }
             });
@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {string}      label     Display name for the toggle button
      */
     const fetchPassage = async (switcher, version, label) => {
-        const reference = switcher.dataset.reference;
+        const { reference } = switcher.dataset;
 
         // Switcher lives inside .scripture-text; find body/copyright as siblings
         const scriptureText = switcher.closest('.scripture-text');
@@ -332,7 +332,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!ajaxBaseUrl) {
             if (isDebug) {
-                // eslint-disable-next-line no-console
                 console.warn('[Proclaim] Scripture switcher: no AJAX URL configured');
             }
 
@@ -359,10 +358,10 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let attempt = 0; attempt <= MAX_AUTO_RETRIES; attempt++) {
             try {
                 if (attempt > 0) {
-                    body.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ' +
-                        '<em class="text-muted">' +
-                        txt('JBS_CMN_SCRIPTURE_SERVICE_BUSY', 'Bible service is temporarily busy. Retrying...') +
-                        '</em>';
+                    body.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> '
+                        + `<em class="text-muted">${
+                            txt('JBS_CMN_SCRIPTURE_SERVICE_BUSY', 'Bible service is temporarily busy. Retrying...')
+                        }</em>`;
                     await sleep(RETRY_DELAY_MS);
                 }
 
@@ -405,9 +404,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
 
                     return;
-                } else if (data.success && data.isIframe && data.iframeUrl) {
-                    const iframeHtml = `<iframe src="${data.iframeUrl}" width="100%" height="400" ` +
-                        `style="border:0;" title="Bible Passage"></iframe>`;
+                } if (data.success && data.isIframe && data.iframeUrl) {
+                    const iframeHtml = `<iframe src="${data.iframeUrl}" width="100%" height="400" `
+                        + 'style="border:0;" title="Bible Passage"></iframe>';
                     body.innerHTML = iframeHtml;
 
                     if (copyright) {
@@ -434,7 +433,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (!data.retryable || attempt >= MAX_AUTO_RETRIES) {
                     if (isDebug && data.message) {
-                        // eslint-disable-next-line no-console
                         console.warn('[Proclaim] Scripture fetch error:', data.message);
                     }
 
@@ -447,7 +445,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (attempt >= MAX_AUTO_RETRIES) {
                     if (isDebug) {
-                        // eslint-disable-next-line no-console
                         console.error('[Proclaim] Scripture fetch failed:', error.message || error);
                     }
 
@@ -710,7 +707,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         select.addEventListener('change', async (event) => {
             const version = event.target.value;
-            const reference = event.target.dataset.reference;
+            const { reference } = event.target.dataset;
             const container = event.target.closest('.scripture-version-switcher');
 
             if (!container) {
@@ -789,10 +786,10 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let attempt = 0; attempt <= MAX_AUTO_RETRIES; attempt++) {
                 try {
                     if (attempt > 0) {
-                        body.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ' +
-                            '<em class="text-muted">' +
-                            txt('JBS_CMN_SCRIPTURE_SERVICE_BUSY', 'Bible service is temporarily busy. Retrying...') +
-                            '</em>';
+                        body.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> '
+                            + `<em class="text-muted">${
+                                txt('JBS_CMN_SCRIPTURE_SERVICE_BUSY', 'Bible service is temporarily busy. Retrying...')
+                            }</em>`;
                         await sleep(RETRY_DELAY_MS);
                     }
 
@@ -832,9 +829,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
 
                         return;
-                    } else if (data.success && data.isIframe && data.iframeUrl) {
-                        body.innerHTML = `<iframe src="${data.iframeUrl}" width="100%" height="400" ` +
-                            `style="border:0;" title="Bible Passage"></iframe>`;
+                    } if (data.success && data.isIframe && data.iframeUrl) {
+                        body.innerHTML = `<iframe src="${data.iframeUrl}" width="100%" height="400" `
+                            + 'style="border:0;" title="Bible Passage"></iframe>';
 
                         if (copyright) {
                             copyright.style.display = 'none';
@@ -852,7 +849,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (!data.retryable || attempt >= MAX_AUTO_RETRIES) {
                         if (isDebug && data.message) {
-                            // eslint-disable-next-line no-console
                             console.warn('[Proclaim] Scripture fetch error:', data.message);
                         }
 
@@ -863,7 +859,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (attempt >= MAX_AUTO_RETRIES) {
                         if (isDebug) {
-                            // eslint-disable-next-line no-console
                             console.error('[Proclaim] Scripture fetch failed:', error.message || error);
                         }
 
@@ -901,8 +896,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const reference = container.dataset.reference;
-        const version = container.dataset.version;
+        const { reference } = container.dataset;
+        const { version } = container.dataset;
         const body = container.querySelector('.scripture-body');
         const copyright = container.querySelector('.scripture-copyright');
 
@@ -937,7 +932,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     showRetryButton(body, reference, version, copyright);
                 }
-            } catch (error) {
+            } catch {
                 showRetryButton(body, reference, version, copyright);
             }
         });

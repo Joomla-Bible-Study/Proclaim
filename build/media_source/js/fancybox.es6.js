@@ -8,7 +8,7 @@
 /* jshint esversion: 11, browser: true, globalstrict: true */
 /* globals Fancybox, YT, Vimeo */
 
-"use strict";
+'use strict';
 
 /**
  * Send an AJAX play-hit request for the given media file ID.
@@ -16,16 +16,16 @@
  *
  * @param {number|string} mediaId  The media file ID to record
  */
-var proclaimTrackedIds = {};
+const proclaimTrackedIds = {};
 
 // Resolve the site root from Joomla's <base href> so the AJAX URL is always
 // root-relative, even on multilingual sites where pages live under /en/, /es/, etc.
 // Falls back to '/' if no <base> tag is present (non-multilingual installs).
-var proclaimBaseUrl = (function () {
-    var base = document.querySelector('base');
+const proclaimBaseUrl = (function () {
+    const base = document.querySelector('base');
     if (!base) { return '/'; }
-    var href = base.href; // absolute URL, e.g. "https://example.com/"
-    return href.charAt(href.length - 1) === '/' ? href : href + '/';
+    const { href } = base; // absolute URL, e.g. "https://example.com/"
+    return href.charAt(href.length - 1) === '/' ? href : `${href}/`;
 }());
 
 function proclaimTrackPlay(mediaId) {
@@ -34,11 +34,11 @@ function proclaimTrackPlay(mediaId) {
     }
     proclaimTrackedIds[mediaId] = true;
 
-    var url = proclaimBaseUrl + 'index.php?option=com_proclaim&task=Cwmsermons.playHitAjax&id=' + encodeURIComponent(mediaId) + '&tmpl=component';
+    const url = `${proclaimBaseUrl}index.php?option=com_proclaim&task=Cwmsermons.playHitAjax&id=${encodeURIComponent(mediaId)}&tmpl=component`;
     if (typeof fetch !== 'undefined') {
-        fetch(url, { method: 'GET', credentials: 'same-origin' }).catch(function () {});
+        fetch(url, { method: 'GET', credentials: 'same-origin' }).catch(() => {});
     } else {
-        var xhr = new XMLHttpRequest();
+        const xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
         xhr.send();
     }
@@ -52,12 +52,12 @@ function proclaimTrackPlay(mediaId) {
 function proclaimInitYTPlayer(iframe, mediaId) {
     new YT.Player(iframe, {
         events: {
-            onStateChange: function (event) {
+            onStateChange(event) {
                 if (event.data === YT.PlayerState.PLAYING) {
                     proclaimTrackPlay(mediaId);
                 }
-            }
-        }
+            },
+        },
     });
 }
 
@@ -73,10 +73,10 @@ function proclaimInitYTPlayer(iframe, mediaId) {
 // Capture audio/video play events from .playhit/.hitplay containers.
 // Uses capture phase because 'play' does not bubble, and survives DOM
 // replacement by sermon-filters AJAX (innerHTML swaps destroy per-element listeners).
-document.addEventListener('play', function (e) {
-    var el = e.target;
+document.addEventListener('play', (e) => {
+    const el = e.target;
     if (el.tagName !== 'AUDIO' && el.tagName !== 'VIDEO') { return; }
-    var container = el.closest('.playhit[data-id], .hitplay[data-id]');
+    const container = el.closest('.playhit[data-id], .hitplay[data-id]');
     if (container) {
         proclaimTrackPlay(container.getAttribute('data-id'));
     }
@@ -87,14 +87,14 @@ document.addEventListener('play', function (e) {
  * Called after the SDK script loads and after any listing DOM replacement.
  */
 function proclaimInitVimeoPlayers() {
-    document.querySelectorAll('iframe.playhit[src*="vimeo.com"], iframe.hitplay[src*="vimeo.com"]').forEach(function (iframe) {
-        var mediaId = iframe.getAttribute('data-id');
+    document.querySelectorAll('iframe.playhit[src*="vimeo.com"], iframe.hitplay[src*="vimeo.com"]').forEach((iframe) => {
+        const mediaId = iframe.getAttribute('data-id');
         if (!mediaId || iframe.dataset.vimeoInited) {
             return;
         }
         iframe.dataset.vimeoInited = '1';
-        var player = new Vimeo.Player(iframe);
-        player.on('play', function () {
+        const player = new Vimeo.Player(iframe);
+        player.on('play', () => {
             proclaimTrackPlay(mediaId);
         });
     });
@@ -106,25 +106,25 @@ function proclaimInitVimeoPlayers() {
  */
 function proclaimSetupWistiaTracking() {
     window._wq = window._wq || [];
-    document.querySelectorAll('iframe.playhit[src*="wistia"], iframe.hitplay[src*="wistia"]').forEach(function (iframe) {
+    document.querySelectorAll('iframe.playhit[src*="wistia"], iframe.hitplay[src*="wistia"]').forEach((iframe) => {
         if (iframe.dataset.wistiaInited) {
             return;
         }
-        var src = iframe.getAttribute('src') || '';
-        var match = src.match(/\/embed\/iframe\/([a-zA-Z0-9]+)/);
+        const src = iframe.getAttribute('src') || '';
+        const match = src.match(/\/embed\/iframe\/([a-zA-Z0-9]+)/);
         if (!match) {
             return;
         }
         iframe.dataset.wistiaInited = '1';
-        var wistiaHash = match[1];
-        var mediaId = iframe.getAttribute('data-id');
+        const wistiaHash = match[1];
+        const mediaId = iframe.getAttribute('data-id');
         window._wq.push({
             id: wistiaHash,
-            onReady: function (video) {
-                video.bind('play', function () {
+            onReady(video) {
+                video.bind('play', () => {
                     proclaimTrackPlay(mediaId);
                 });
-            }
+            },
         });
     });
 }
@@ -139,24 +139,24 @@ function proclaimSetupWistiaTracking() {
  * Called on page load and after each listing AJAX update.
  */
 function proclaimSetupResiTracking() {
-    document.querySelectorAll('.proclaim-resi-overlay').forEach(function (overlay) {
+    document.querySelectorAll('.proclaim-resi-overlay').forEach((overlay) => {
         if (overlay.dataset.resiInited) {
             return;
         }
         overlay.dataset.resiInited = '1';
 
-        overlay.addEventListener('click', function () {
-            var mediaId = overlay.getAttribute('data-media-id');
+        overlay.addEventListener('click', () => {
+            const mediaId = overlay.getAttribute('data-media-id');
             if (mediaId) {
                 proclaimTrackPlay(mediaId);
             }
 
             // Swap autoplay param then reload the iframe so the video starts
-            var iframe = overlay.previousElementSibling;
+            const iframe = overlay.previousElementSibling;
             if (iframe && iframe.tagName === 'IFRAME') {
-                var src = iframe.getAttribute('src') || iframe.src;
+                let src = iframe.getAttribute('src') || iframe.src;
                 src = src.replace(/autoplay=false/i, 'autoplay=true')
-                         .replace(/autoplay=0\b/, 'autoplay=1');
+                    .replace(/autoplay=0\b/, 'autoplay=1');
                 iframe.src = src;
             }
 
@@ -167,11 +167,11 @@ function proclaimSetupResiTracking() {
 
 // Re-init third-party players after sermon-filters.es6.js replaces or appends listing content.
 // onYouTubeIframeAPIReady / Vimeo SDK onload each fire only once; new iframes need wrapping manually.
-document.addEventListener('proclaim:listing-updated', function () {
+document.addEventListener('proclaim:listing-updated', () => {
     // YouTube
     if (typeof YT !== 'undefined' && typeof YT.Player !== 'undefined') {
-        document.querySelectorAll('iframe.playhit[src*="youtube.com"], iframe.hitplay[src*="youtube.com"]').forEach(function (iframe) {
-            var mediaId = iframe.getAttribute('data-id');
+        document.querySelectorAll('iframe.playhit[src*="youtube.com"], iframe.hitplay[src*="youtube.com"]').forEach((iframe) => {
+            const mediaId = iframe.getAttribute('data-id');
             if (!mediaId || iframe.dataset.ytInited) {
                 return;
             }
@@ -190,12 +190,12 @@ document.addEventListener('proclaim:listing-updated', function () {
 });
 
 window.onYouTubeIframeAPIReady = function () {
-    document.querySelectorAll('iframe.playhit, iframe.hitplay').forEach(function (iframe) {
+    document.querySelectorAll('iframe.playhit, iframe.hitplay').forEach((iframe) => {
         if (!/(youtube\.com\/embed)/.test(iframe.src)) {
             return;
         }
 
-        var mediaId = iframe.getAttribute('data-id');
+        const mediaId = iframe.getAttribute('data-id');
         if (!mediaId) {
             return;
         }
@@ -205,11 +205,11 @@ window.onYouTubeIframeAPIReady = function () {
         // If the iframe was served from cache without enablejsapi=1, add it now.
         // This reloads the iframe, so we wait for the load event before wrapping.
         if (iframe.src.indexOf('enablejsapi=1') === -1) {
-            var sep = iframe.src.indexOf('?') >= 0 ? '&' : '?';
-            iframe.addEventListener('load', function () {
+            const sep = iframe.src.indexOf('?') >= 0 ? '&' : '?';
+            iframe.addEventListener('load', () => {
                 proclaimInitYTPlayer(iframe, mediaId);
             }, { once: true });
-            iframe.src = iframe.src + sep + 'enablejsapi=1';
+            iframe.src = `${iframe.src + sep}enablejsapi=1`;
             return;
         }
 
@@ -217,18 +217,18 @@ window.onYouTubeIframeAPIReady = function () {
     });
 };
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener('DOMContentLoaded', () => {
     // Load the YouTube IFrame API if any inline YouTube iframes are present.
     // This is deferred so it doesn't block page render.
     if (document.querySelector('iframe.playhit[src*="youtube.com"], iframe.hitplay[src*="youtube.com"]')) {
-        var ytScript = document.createElement('script');
+        const ytScript = document.createElement('script');
         ytScript.src = 'https://www.youtube.com/iframe_api';
         document.head.appendChild(ytScript);
     }
 
     // Load the Vimeo Player SDK and init players once it's ready.
     if (document.querySelector('iframe.playhit[src*="vimeo.com"], iframe.hitplay[src*="vimeo.com"]')) {
-        var vimeoScript = document.createElement('script');
+        const vimeoScript = document.createElement('script');
         vimeoScript.src = 'https://player.vimeo.com/api/player.js';
         vimeoScript.onload = function () { proclaimInitVimeoPlayers(); };
         document.head.appendChild(vimeoScript);
@@ -237,7 +237,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Set up Wistia _wq listeners then load E-v1.js asynchronously.
     if (document.querySelector('iframe.playhit[src*="wistia"], iframe.hitplay[src*="wistia"]')) {
         proclaimSetupWistiaTracking();
-        var wistiaScript = document.createElement('script');
+        const wistiaScript = document.createElement('script');
         wistiaScript.src = 'https://fast.wistia.com/assets/external/E-v1.js';
         wistiaScript.async = true;
         document.head.appendChild(wistiaScript);
@@ -249,13 +249,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Track clicks/plays on any element with playhit or hitplay class.
-    document.querySelectorAll('.playhit, .hitplay').forEach(function (element) {
+    document.querySelectorAll('.playhit, .hitplay').forEach((element) => {
         // Skip fancybox_player elements — they are tracked separately below
         if (element.classList.contains('fancybox_player')) {
             return;
         }
 
-        var mediaId = element.getAttribute('data-id');
+        const mediaId = element.getAttribute('data-id');
         if (!mediaId) {
             return;
         }
@@ -273,16 +273,16 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        element.addEventListener('click', function () {
+        element.addEventListener('click', () => {
             proclaimTrackPlay(mediaId);
         });
     });
 
     // Track clicks on fancybox_player elements before Fancybox processes them.
     // This captures the data-id reliably regardless of Fancybox's internal API.
-    document.querySelectorAll('.fancybox_player').forEach(function (element) {
+    document.querySelectorAll('.fancybox_player').forEach((element) => {
         element.addEventListener('click', function () {
-            var id = this.getAttribute('data-id');
+            const id = this.getAttribute('data-id');
             if (id) {
                 proclaimTrackPlay(id);
             }
@@ -303,40 +303,40 @@ document.addEventListener("DOMContentLoaded", function () {
             display: {
                 left: [],
                 middle: [],
-                right: ["close"]
-            }
+                right: ['close'],
+            },
         },
-        backdropClick: "close",
+        backdropClick: 'close',
         on: {
-            reveal: function (fancybox) {
+            reveal(fancybox) {
                 // Add error handlers for media elements
-                var container = fancybox.container;
+                const { container } = fancybox;
                 if (!container) {
                     return;
                 }
-                var mediaElement = container.querySelector('audio, video');
+                const mediaElement = container.querySelector('audio, video');
                 if (mediaElement) {
                     mediaElement.addEventListener('error', function () {
-                        var slide = this.closest('.fancybox__slide');
+                        const slide = this.closest('.fancybox__slide');
                         if (slide) {
-                            var errorDiv = document.createElement('div');
+                            const errorDiv = document.createElement('div');
                             errorDiv.className = 'proclaim-media-error';
                             errorDiv.style.cssText = 'padding:30px 20px;text-align:center;color:#fff;';
-                            errorDiv.innerHTML = '<p style="margin:0 0 10px;font-size:1.1em;font-weight:500;">Unable to load media file</p>' +
-                                '<p style="margin:0;font-size:0.9em;color:#888;">The requested file could not be found or is unavailable.</p>';
+                            errorDiv.innerHTML = '<p style="margin:0 0 10px;font-size:1.1em;font-weight:500;">Unable to load media file</p>'
+                                + '<p style="margin:0;font-size:0.9em;color:#888;">The requested file could not be found or is unavailable.</p>';
                             this.style.display = 'none';
                             this.parentNode.insertBefore(errorDiv, this.nextSibling);
                         }
                     });
                 }
-            }
-        }
+            },
+        },
     });
 
     // Handle audio files separately since Fancybox v6 has no native audio support.
     // Intercept clicks on audio elements before Fancybox processes them.
-    document.querySelectorAll('.fancybox_player').forEach(function (element) {
-        var src = element.getAttribute('data-src') || '';
+    document.querySelectorAll('.fancybox_player').forEach((element) => {
+        const src = element.getAttribute('data-src') || '';
         if (!/\.(mp3|m4a|ogg|wav)(\?|$)/i.test(src)) {
             return;
         }
@@ -346,42 +346,42 @@ document.addEventListener("DOMContentLoaded", function () {
             e.stopPropagation();
 
             // Track the play
-            var mediaId = this.getAttribute('data-id');
+            const mediaId = this.getAttribute('data-id');
             if (mediaId) {
                 proclaimTrackPlay(mediaId);
             }
 
-            var audioSrc = this.getAttribute('data-src');
-            var width = this.getAttribute('data-width') || this.getAttribute('pwidth') || '400';
-            var headerText = this.getAttribute('data-header') || '';
-            var footerText = this.getAttribute('data-footer') || '';
-            var controls = this.getAttribute('controls') !== '0';
-            var autoplay = this.getAttribute('autostart') === 'true';
+            const audioSrc = this.getAttribute('data-src');
+            const width = this.getAttribute('data-width') || this.getAttribute('pwidth') || '400';
+            const headerText = this.getAttribute('data-header') || '';
+            const footerText = this.getAttribute('data-footer') || '';
+            const controls = this.getAttribute('controls') !== '0';
+            const autoplay = this.getAttribute('autostart') === 'true';
 
             // Create audio overlay
-            var overlay = document.createElement('div');
+            const overlay = document.createElement('div');
             overlay.className = 'proclaim-audio-overlay';
-            overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;' +
-                'background:rgba(0,0,0,0.85);z-index:9999;display:flex;' +
-                'align-items:center;justify-content:center;cursor:pointer;';
+            overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;'
+                + 'background:rgba(0,0,0,0.85);z-index:9999;display:flex;'
+                + 'align-items:center;justify-content:center;cursor:pointer;';
 
-            var wrapper = document.createElement('div');
-            wrapper.style.cssText = 'background:#1e1e2e;border-radius:12px;padding:24px;' +
-                'width:' + width + 'px;max-width:90vw;cursor:default;';
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'background:#1e1e2e;border-radius:12px;padding:24px;'
+                + `width:${width}px;max-width:90vw;cursor:default;`;
 
             // Build caption using DOM methods so user-supplied text is never parsed as HTML.
             if (headerText || footerText) {
-                var captionDiv = document.createElement('div');
+                const captionDiv = document.createElement('div');
                 captionDiv.className = 'proclaim-fancybox-caption';
                 captionDiv.style.cssText = 'color:#fff;margin-bottom:16px;text-align:center;';
                 if (headerText) {
-                    var headerDiv = document.createElement('div');
+                    const headerDiv = document.createElement('div');
                     headerDiv.className = 'proclaim-fancybox-header';
                     headerDiv.textContent = headerText;
                     captionDiv.appendChild(headerDiv);
                 }
                 if (footerText) {
-                    var footerDiv = document.createElement('div');
+                    const footerDiv = document.createElement('div');
                     footerDiv.className = 'proclaim-fancybox-footer';
                     footerDiv.textContent = footerText;
                     captionDiv.appendChild(footerDiv);
@@ -389,7 +389,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 wrapper.appendChild(captionDiv);
             }
 
-            var audio = document.createElement('audio');
+            const audio = document.createElement('audio');
             audio.style.cssText = 'width:100%;';
             if (controls) {
                 audio.controls = true;
@@ -397,15 +397,15 @@ document.addEventListener("DOMContentLoaded", function () {
             if (autoplay) {
                 audio.autoplay = true;
             }
-            var audioSource = document.createElement('source');
+            const audioSource = document.createElement('source');
             // Resolve against document base URI so relative paths work; only allow
             // http/https/blob protocols to prevent javascript: URL injection.
             try {
-                var resolvedUrl = new URL(audioSrc, document.baseURI);
+                const resolvedUrl = new URL(audioSrc, document.baseURI);
                 if (resolvedUrl.protocol === 'https:' || resolvedUrl.protocol === 'http:' || resolvedUrl.protocol === 'blob:') {
                     audioSource.src = resolvedUrl.href;
                 }
-            } catch (e) {
+            } catch {
                 // Malformed URL — leave src unset so the browser shows a load error.
             }
             audioSource.type = 'audio/mpeg';
@@ -414,17 +414,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Track when the audio actually starts playing (belt-and-suspenders alongside click tracking above).
             // Deduplication in proclaimTrackPlay ensures only one event per page load per media ID.
-            audio.addEventListener('play', function () {
+            audio.addEventListener('play', () => {
                 proclaimTrackPlay(mediaId);
             });
 
             // Error handler
-            audio.addEventListener('error', function () {
+            audio.addEventListener('error', () => {
                 audio.style.display = 'none';
-                var errorDiv = document.createElement('div');
+                const errorDiv = document.createElement('div');
                 errorDiv.style.cssText = 'padding:20px;text-align:center;color:#fff;';
-                errorDiv.innerHTML = '<p style="margin:0 0 10px;font-size:1.1em;">Unable to load audio file</p>' +
-                    '<p style="margin:0;font-size:0.9em;color:#888;">The requested file could not be found.</p>';
+                errorDiv.innerHTML = '<p style="margin:0 0 10px;font-size:1.1em;">Unable to load audio file</p>'
+                    + '<p style="margin:0;font-size:0.9em;color:#888;">The requested file could not be found.</p>';
                 wrapper.appendChild(errorDiv);
             });
 
@@ -432,7 +432,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.body.appendChild(overlay);
 
             // Close on backdrop click or Escape
-            overlay.addEventListener('click', function (ev) {
+            overlay.addEventListener('click', (ev) => {
                 if (ev.target === overlay) {
                     audio.pause();
                     overlay.remove();

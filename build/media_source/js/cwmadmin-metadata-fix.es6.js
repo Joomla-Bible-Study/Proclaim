@@ -9,64 +9,64 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-((Joomla) => {
-  'use strict';
+(() => {
+    'use strict';
 
-  /**
+    /**
    * Metadata Fix Progress Manager
    */
-  class MetadataFixProgress {
-    constructor(options = {}) {
-      this.baseUrl = options.baseUrl || 'index.php';
-      this.token = options.token || '';
-      this.translations = options.translations || {};
+    class MetadataFixProgress {
+        constructor(options = {}) {
+            this.baseUrl = options.baseUrl || 'index.php';
+            this.token = options.token || '';
+            this.translations = options.translations || {};
 
-      this.files = [];
-      this.currentIndex = 0;
-      this.results = {
-        fixed: 0,
-        failed: 0,
-        skipped: 0,
-        fixedItems: [],
-        errors: []
-      };
-      this.isRunning = false;
-      this.isCancelled = false;
+            this.files = [];
+            this.currentIndex = 0;
+            this.results = {
+                fixed: 0,
+                failed: 0,
+                skipped: 0,
+                fixedItems: [],
+                errors: [],
+            };
+            this.isRunning = false;
+            this.isCancelled = false;
 
-      this.modal = null;
-      this.progressBar = null;
-      this.statusText = null;
-      this.resultsList = null;
-      this.startButton = null;
-      this.cancelButton = null;
-      this.closeButton = null;
-    }
+            this.modal = null;
+            this.progressBar = null;
+            this.statusText = null;
+            this.resultsList = null;
+            this.startButton = null;
+            this.cancelButton = null;
+            this.closeButton = null;
+        }
 
-    /**
+        /**
      * Initialize and show the progress modal
      */
-    async init() {
-      this.createModal();
-      this.showModal();
-      await this.loadFiles();
+        async init() {
+            this.createModal();
+            this.showModal();
+            await this.loadFiles();
 
-      // Auto-start if files were found
-      if (this.files.length > 0) {
-        this.start();
-      }
-    }
+            // Auto-start if files were found
+            if (this.files.length > 0) {
+                this.start();
+            }
+        }
 
-    /**
+        /**
      * Create the progress modal HTML
      */
-    createModal() {
-      // Remove existing modal if present
-      const existing = document.getElementById('metadataFixModal');
-      if (existing) {
-        existing.remove();
-      }
+        createModal() {
+            // Remove existing modal if present
+            const existing = document.getElementById('metadataFixModal');
+            if (existing) {
+                existing.remove();
+            }
 
-      const modalHtml = `
+            const modalHtml = `
         <div class="modal fade" id="metadataFixModal" tabindex="-1" aria-labelledby="metadataFixModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -114,248 +114,247 @@
         </div>
       `;
 
-      document.body.insertAdjacentHTML('beforeend', modalHtml);
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
 
-      this.modal = new bootstrap.Modal(document.getElementById('metadataFixModal'));
-      this.progressBar = document.getElementById('metadataFixProgressBar');
-      this.statusText = document.getElementById('metadataFixStatusText');
-      this.summaryDiv = document.getElementById('metadataFixSummary');
-      this.fixedCount = document.getElementById('metadataFixedCount');
-      this.failedCount = document.getElementById('metadataFailedCount');
-      this.skippedCount = document.getElementById('metadataSkippedCount');
-      this.cancelButton = document.getElementById('metadataFixCancel');
-      this.closeButton = document.getElementById('metadataFixClose');
+            this.modal = new bootstrap.Modal(document.getElementById('metadataFixModal'));
+            this.progressBar = document.getElementById('metadataFixProgressBar');
+            this.statusText = document.getElementById('metadataFixStatusText');
+            this.summaryDiv = document.getElementById('metadataFixSummary');
+            this.fixedCount = document.getElementById('metadataFixedCount');
+            this.failedCount = document.getElementById('metadataFailedCount');
+            this.skippedCount = document.getElementById('metadataSkippedCount');
+            this.cancelButton = document.getElementById('metadataFixCancel');
+            this.closeButton = document.getElementById('metadataFixClose');
 
-      // Event listeners
-      this.cancelButton.addEventListener('click', () => this.cancel());
+            // Event listeners
+            this.cancelButton.addEventListener('click', () => this.cancel());
 
-      // Re-validate when modal is closed (if any fixes were made)
-      document.getElementById('metadataFixModal').addEventListener('hidden.bs.modal', () => {
-        if (this.results.fixed > 0) {
-          this.revalidate();
+            // Re-validate when modal is closed (if any fixes were made)
+            document.getElementById('metadataFixModal').addEventListener('hidden.bs.modal', () => {
+                if (this.results.fixed > 0) {
+                    this.revalidate();
+                }
+            });
         }
-      });
-    }
 
-    /**
+        /**
      * Show the modal
      */
-    showModal() {
-      this.modal.show();
-    }
+        showModal() {
+            this.modal.show();
+        }
 
-    /**
+        /**
      * Load list of files needing metadata fix
      */
-    async loadFiles() {
-      try {
-        const response = await fetch(
-          `${this.baseUrl}?option=com_proclaim&task=cwmpodcasts.getMediaFilesForMetadata&${this.token}=1&format=json`,
-          { method: 'GET', headers: { 'Accept': 'application/json' } }
-        );
+        async loadFiles() {
+            try {
+                const response = await fetch(
+                    `${this.baseUrl}?option=com_proclaim&task=cwmpodcasts.getMediaFilesForMetadata&${this.token}=1&format=json`,
+                    { method: 'GET', headers: { Accept: 'application/json' } },
+                );
 
-        const data = await response.json();
+                const data = await response.json();
 
-        if (!data.success) {
-          throw new Error(data.message || 'Failed to load files');
+                if (!data.success) {
+                    throw new Error(data.message || 'Failed to load files');
+                }
+
+                this.files = data.data.files || [];
+
+                // Update UI
+                document.querySelector('#metadataFixStatus .spinner-border').style.display = 'none';
+
+                if (this.files.length === 0) {
+                    this.statusText.textContent = this.t('JBS_PDC_FIX_METADATA_NO_FILES');
+                    document.querySelector('#metadataFixStatus .spinner-border').style.display = 'none';
+                    this.closeButton.style.display = '';
+                } else {
+                    this.statusText.textContent = this.t('JBS_PDC_FIX_METADATA_FILES_FOUND').replace('%d', this.files.length);
+                    // Show summary counters and cancel button - auto-start will begin
+                    this.summaryDiv.style.display = '';
+                    this.closeButton.style.display = 'none';
+                    this.cancelButton.style.display = '';
+                }
+            } catch (error) {
+                this.statusText.textContent = `Error: ${error.message}`;
+                document.querySelector('#metadataFixStatus .spinner-border').style.display = 'none';
+                this.closeButton.style.display = '';
+            }
         }
 
-        this.files = data.data.files || [];
-        const hasFFprobe = data.data.ffprobe;
-        const hasYouTubeApi = data.data.youtube_api;
-
-        // Update UI
-        document.querySelector('#metadataFixStatus .spinner-border').style.display = 'none';
-
-        if (this.files.length === 0) {
-          this.statusText.textContent = this.t('JBS_PDC_FIX_METADATA_NO_FILES');
-          document.querySelector('#metadataFixStatus .spinner-border').style.display = 'none';
-          this.closeButton.style.display = '';
-        } else {
-          this.statusText.textContent = this.t('JBS_PDC_FIX_METADATA_FILES_FOUND').replace('%d', this.files.length);
-          // Show summary counters and cancel button - auto-start will begin
-          this.summaryDiv.style.display = '';
-          this.closeButton.style.display = 'none';
-          this.cancelButton.style.display = '';
-        }
-      } catch (error) {
-        this.statusText.textContent = `Error: ${error.message}`;
-        document.querySelector('#metadataFixStatus .spinner-border').style.display = 'none';
-        this.closeButton.style.display = '';
-      }
-    }
-
-    /**
+        /**
      * Start processing files
      */
-    async start() {
-      this.isRunning = true;
-      this.isCancelled = false;
-      this.currentIndex = 0;
-      this.results = { fixed: 0, failed: 0, skipped: 0, fixedItems: [], errors: [] };
+        async start() {
+            this.isRunning = true;
+            this.isCancelled = false;
+            this.currentIndex = 0;
+            this.results = {
+                fixed: 0, failed: 0, skipped: 0, fixedItems: [], errors: [],
+            };
 
-      // Process files one by one
-      for (let i = 0; i < this.files.length; i++) {
-        if (this.isCancelled) {
-          break;
+            // Process files one by one
+            for (let i = 0; i < this.files.length; i++) {
+                if (this.isCancelled) {
+                    break;
+                }
+
+                this.currentIndex = i;
+                const file = this.files[i];
+
+                // Update progress
+                const percent = Math.round(((i + 1) / this.files.length) * 100);
+                this.progressBar.style.width = `${percent}%`;
+                this.progressBar.textContent = `${i + 1} / ${this.files.length}`;
+                this.progressBar.setAttribute('aria-valuenow', percent);
+                this.statusText.textContent = file.title;
+
+                // Process single file
+                const result = await this.processFile(file.id);
+
+                // Update results and counters
+                if (result.type === 'fixed') {
+                    this.results.fixed += 1;
+                    this.fixedCount.textContent = this.results.fixed;
+                    // Track fixed messages
+                    this.results.fixedItems.push(result.message);
+                } else if (result.type === 'failed') {
+                    this.results.failed += 1;
+                    this.failedCount.textContent = this.results.failed;
+                    // Track error messages
+                    this.results.errors.push(result.message);
+                } else {
+                    this.results.skipped += 1;
+                    this.skippedCount.textContent = this.results.skipped;
+                }
+            }
+
+            // Done
+            this.isRunning = false;
+            this.onComplete();
         }
 
-        this.currentIndex = i;
-        const file = this.files[i];
-
-        // Update progress
-        const percent = Math.round(((i + 1) / this.files.length) * 100);
-        this.progressBar.style.width = `${percent}%`;
-        this.progressBar.textContent = `${i + 1} / ${this.files.length}`;
-        this.progressBar.setAttribute('aria-valuenow', percent);
-        this.statusText.textContent = file.title;
-
-        // Process single file
-        const result = await this.processFile(file.id);
-
-        // Update results and counters
-        if (result.type === 'fixed') {
-          this.results.fixed++;
-          this.fixedCount.textContent = this.results.fixed;
-          // Track fixed messages
-          this.results.fixedItems.push(result.message);
-        } else if (result.type === 'failed') {
-          this.results.failed++;
-          this.failedCount.textContent = this.results.failed;
-          // Track error messages
-          this.results.errors.push(result.message);
-        } else {
-          this.results.skipped++;
-          this.skippedCount.textContent = this.results.skipped;
-        }
-      }
-
-      // Done
-      this.isRunning = false;
-      this.onComplete();
-    }
-
-    /**
+        /**
      * Process a single file
      */
-    async processFile(mediaId) {
-      try {
-        const response = await fetch(
-          `${this.baseUrl}?option=com_proclaim&task=cwmpodcasts.fixSingleMetadata&media_id=${mediaId}&${this.token}=1&format=json`,
-          { method: 'GET', headers: { 'Accept': 'application/json' } }
-        );
+        async processFile(mediaId) {
+            try {
+                const response = await fetch(
+                    `${this.baseUrl}?option=com_proclaim&task=cwmpodcasts.fixSingleMetadata&media_id=${mediaId}&${this.token}=1&format=json`,
+                    { method: 'GET', headers: { Accept: 'application/json' } },
+                );
 
-        const data = await response.json();
+                const data = await response.json();
 
-        if (!data.success) {
-          return {
-            status: 'error',
-            message: data.message || 'Unknown error',
-            type: 'failed'
-          };
+                if (!data.success) {
+                    return {
+                        status: 'error',
+                        message: data.message || 'Unknown error',
+                        type: 'failed',
+                    };
+                }
+
+                return data.data;
+            } catch (error) {
+                return {
+                    status: 'error',
+                    message: error.message,
+                    type: 'failed',
+                };
+            }
         }
 
-        return data.data;
-      } catch (error) {
-        return {
-          status: 'error',
-          message: error.message,
-          type: 'failed'
-        };
-      }
-    }
-
-    /**
+        /**
      * Cancel processing
      */
-    cancel() {
-      this.isCancelled = true;
-      this.cancelButton.disabled = true;
-      this.cancelButton.textContent = 'Cancelling...';
-    }
+        cancel() {
+            this.isCancelled = true;
+            this.cancelButton.disabled = true;
+            this.cancelButton.textContent = 'Cancelling...';
+        }
 
-    /**
+        /**
      * Called when processing is complete
      */
-    onComplete() {
-      document.querySelector('#metadataFixStatus .spinner-border').style.display = 'none';
+        onComplete() {
+            document.querySelector('#metadataFixStatus .spinner-border').style.display = 'none';
 
-      if (this.isCancelled) {
-        this.statusText.textContent = this.t('JBS_PDC_FIX_METADATA_CANCELLED');
-        this.progressBar.classList.remove('progress-bar-animated');
-        this.progressBar.classList.add('bg-warning');
-      } else {
-        this.statusText.textContent = this.t('JBS_PDC_FIX_METADATA_COMPLETE_PROGRESS');
-        this.progressBar.classList.remove('progress-bar-animated');
-        this.progressBar.classList.add('bg-success');
-      }
+            if (this.isCancelled) {
+                this.statusText.textContent = this.t('JBS_PDC_FIX_METADATA_CANCELLED');
+                this.progressBar.classList.remove('progress-bar-animated');
+                this.progressBar.classList.add('bg-warning');
+            } else {
+                this.statusText.textContent = this.t('JBS_PDC_FIX_METADATA_COMPLETE_PROGRESS');
+                this.progressBar.classList.remove('progress-bar-animated');
+                this.progressBar.classList.add('bg-success');
+            }
 
-      // Update buttons
-      this.cancelButton.style.display = 'none';
-      this.closeButton.style.display = '';
-    }
+            // Update buttons
+            this.cancelButton.style.display = 'none';
+            this.closeButton.style.display = '';
+        }
 
-    /**
+        /**
      * Re-run validation by submitting the validate task
      */
-    async revalidate() {
-      // Store results in session first
-      try {
-        await fetch(
-          `${this.baseUrl}?option=com_proclaim&task=cwmpodcasts.storeFixResults&${this.token}=1&format=json`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-              fixed: this.results.fixed,
-              failed: this.results.failed,
-              skipped: this.results.skipped,
-              fixedItems: this.results.fixedItems,
-              errors: this.results.errors
-            })
-          }
-        );
-      } catch (e) {
-        // Continue with validation even if storing fails
-      }
+        async revalidate() {
+            // Store results in session first
+            try {
+                await fetch(
+                    `${this.baseUrl}?option=com_proclaim&task=cwmpodcasts.storeFixResults&${this.token}=1&format=json`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Accept: 'application/json',
+                        },
+                        body: JSON.stringify({
+                            fixed: this.results.fixed,
+                            failed: this.results.failed,
+                            skipped: this.results.skipped,
+                            fixedItems: this.results.fixedItems,
+                            errors: this.results.errors,
+                        }),
+                    },
+                );
+            } catch {
+                // Continue with validation even if storing fails
+            }
 
-      // Create a form to submit the validation task
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = `${this.baseUrl}?option=com_proclaim&task=cwmpodcasts.validate`;
+            // Create a form to submit the validation task
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `${this.baseUrl}?option=com_proclaim&task=cwmpodcasts.validate`;
 
-      // Add CSRF token
-      const tokenInput = document.createElement('input');
-      tokenInput.type = 'hidden';
-      tokenInput.name = this.token;
-      tokenInput.value = '1';
-      form.appendChild(tokenInput);
+            // Add CSRF token
+            const tokenInput = document.createElement('input');
+            tokenInput.type = 'hidden';
+            tokenInput.name = this.token;
+            tokenInput.value = '1';
+            form.appendChild(tokenInput);
 
-      document.body.appendChild(form);
-      form.submit();
-    }
+            document.body.appendChild(form);
+            form.submit();
+        }
 
-    /**
+        /**
      * Get translation
      */
-    t(key) {
-      return this.translations[key] || key;
-    }
+        t(key) {
+            return this.translations[key] || key;
+        }
 
-    /**
+        /**
      * Escape HTML
      */
-    escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
+        escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
     }
-  }
 
-  // Expose to global scope
-  window.MetadataFixProgress = MetadataFixProgress;
-
-})(Joomla);
+    // Expose to global scope
+    window.MetadataFixProgress = MetadataFixProgress;
+})();

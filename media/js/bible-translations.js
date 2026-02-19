@@ -22,7 +22,7 @@
             return;
         }
 
-        const token = config.dataset.token;
+        const { token } = config.dataset;
         const baseUrl = 'index.php?option=com_proclaim&task=cwmadmin.';
 
         // Escape HTML to prevent XSS when interpolating external data into innerHTML
@@ -35,56 +35,56 @@
 
         // Translated strings from data attributes
         const strings = {
-            loading:           config.dataset.strLoading,
-            noTranslations:    config.dataset.strNoTranslations,
-            loadError:         config.dataset.strLoadError,
-            title:             config.dataset.strTitle,
-            abbreviation:      config.dataset.strAbbreviation,
-            source:            config.dataset.strSource,
-            status:            config.dataset.strStatus,
-            verses:            config.dataset.strVerses,
-            installed:         config.dataset.strInstalled,
-            notInstalled:      config.dataset.strNotInstalled,
-            download:          config.dataset.strDownload,
-            downloading:       config.dataset.strDownloading,
-            remove:            config.dataset.strRemove,
-            downloadFailed:    config.dataset.strDownloadFailed,
-            confirmRemove:     config.dataset.strConfirmRemove,
-            bundledDone:       config.dataset.strBundledDone,
-            statusReady:       config.dataset.strStatusReady,
-            statusInstalled:   config.dataset.strStatusInstalled,
-            statusNone:        config.dataset.strStatusNone,
-            statusUnknown:     config.dataset.strStatusUnknown,
-            removeAll:         config.dataset.strRemoveAll,
-            confirmRemoveAll:  config.dataset.strConfirmRemoveAll,
-            size:              config.dataset.strSize,
-            totalSize:         config.dataset.strTotalSize,
-            syncing:           config.dataset.strSyncing,
-            syncComplete:      config.dataset.strSyncComplete,
-            syncFailed:        config.dataset.strSyncFailed,
-            gdprDisabled:      config.dataset.strGdprDisabled,
-            online:            config.dataset.strOnline,
-            language:          config.dataset.strLanguage,
-            allLanguages:      config.dataset.strAllLanguages,
-            filterAll:         config.dataset.strFilterAll,
-            filterInstalled:   config.dataset.strFilterInstalled,
+            loading: config.dataset.strLoading,
+            noTranslations: config.dataset.strNoTranslations,
+            loadError: config.dataset.strLoadError,
+            title: config.dataset.strTitle,
+            abbreviation: config.dataset.strAbbreviation,
+            source: config.dataset.strSource,
+            status: config.dataset.strStatus,
+            verses: config.dataset.strVerses,
+            installed: config.dataset.strInstalled,
+            notInstalled: config.dataset.strNotInstalled,
+            download: config.dataset.strDownload,
+            downloading: config.dataset.strDownloading,
+            remove: config.dataset.strRemove,
+            downloadFailed: config.dataset.strDownloadFailed,
+            confirmRemove: config.dataset.strConfirmRemove,
+            bundledDone: config.dataset.strBundledDone,
+            statusReady: config.dataset.strStatusReady,
+            statusInstalled: config.dataset.strStatusInstalled,
+            statusNone: config.dataset.strStatusNone,
+            statusUnknown: config.dataset.strStatusUnknown,
+            removeAll: config.dataset.strRemoveAll,
+            confirmRemoveAll: config.dataset.strConfirmRemoveAll,
+            size: config.dataset.strSize,
+            totalSize: config.dataset.strTotalSize,
+            syncing: config.dataset.strSyncing,
+            syncComplete: config.dataset.strSyncComplete,
+            syncFailed: config.dataset.strSyncFailed,
+            gdprDisabled: config.dataset.strGdprDisabled,
+            online: config.dataset.strOnline,
+            language: config.dataset.strLanguage,
+            allLanguages: config.dataset.strAllLanguages,
+            filterAll: config.dataset.strFilterAll,
+            filterInstalled: config.dataset.strFilterInstalled,
             filterNotInstalled: config.dataset.strFilterNotInstalled,
-            filterInUse:       config.dataset.strFilterInUse,
+            filterInUse: config.dataset.strFilterInUse,
             searchPlaceholder: config.dataset.strSearchPlaceholder,
-            usageCount:        config.dataset.strUsageCount,
-            usageBadge:        config.dataset.strUsageBadge,
-            suggested:         config.dataset.strSuggested,
-            showingCount:      config.dataset.strShowingCount,
-            suggestedDesc:     config.dataset.strSuggestedDesc,
-            onlineOnly:        config.dataset.strOnlineOnly,
-            onlineOnlyDesc:    config.dataset.strOnlineOnlyDesc,
-            coreTranslation:   config.dataset.strCoreTranslation,
-            coreCannotRemove:  config.dataset.strCoreCannotRemove,
+            usageCount: config.dataset.strUsageCount,
+            usageBadge: config.dataset.strUsageBadge,
+            suggested: config.dataset.strSuggested,
+            showingCount: config.dataset.strShowingCount,
+            suggestedDesc: config.dataset.strSuggestedDesc,
+            onlineOnly: config.dataset.strOnlineOnly,
+            onlineOnlyDesc: config.dataset.strOnlineOnlyDesc,
+            coreTranslation: config.dataset.strCoreTranslation,
+            coreCannotRemove: config.dataset.strCoreCannotRemove,
             providerDisableConfirm: config.dataset.strProviderDisableConfirm,
-            providerCleanupDone:    config.dataset.strProviderCleanupDone,
+            providerCleanupDone: config.dataset.strProviderCleanupDone,
         };
 
-        const gdprMode = parseInt(config.dataset.gdprMode) === 1;
+        const gdprMode = parseInt(config.dataset.gdprMode, 10) === 1;
 
         // Track whether bundled auto-download is running to prevent re-triggering
         let autoDownloadRunning = false;
@@ -129,13 +129,13 @@
         // Static badge for getbible provider
         injectBadge(
             'params_provider_getbible0',
-            `<span class="badge bg-success"><i class="icon-checkmark-circle" aria-hidden="true"></i> ${strings.statusReady}</span>`
+            `<span class="badge bg-success"><i class="icon-checkmark-circle" aria-hidden="true"></i> ${strings.statusReady}</span>`,
         );
 
         // Static badge for api.bible provider
         injectBadge(
             'params_provider_api_bible0',
-            `<span class="badge bg-info"><i class="icon-globe" aria-hidden="true"></i> ${strings.online}</span>`
+            `<span class="badge bg-info"><i class="icon-globe" aria-hidden="true"></i> ${strings.online}</span>`,
         );
 
         // --- GDPR overlay for external provider toggles ---
@@ -162,11 +162,9 @@
         /**
          * Count non-installed translations from a given source in the loaded data.
          */
-        const countNonInstalledBySource = (source) => {
-            return allTranslations.filter(
-                (t) => t.source === source && parseInt(t.installed) === 0 && parseInt(t.bundled) === 0
-            ).length;
-        };
+        const countNonInstalledBySource = (source) => allTranslations.filter(
+            (t) => t.source === source && parseInt(t.installed, 10) === 0 && parseInt(t.bundled, 10) === 0,
+        ).length;
 
         /**
          * Clean up non-installed translation entries when a provider is disabled.
@@ -176,7 +174,7 @@
                 .then((r) => r.json())
                 .then((result) => {
                     if (result.success && result.count > 0) {
-                        Joomla.renderMessages({'message': [result.message]});
+                        Joomla.renderMessages({ message: [result.message] });
                         loadTranslations(true);
                     }
                 })
@@ -251,12 +249,12 @@
 
                         if (result.success) {
                             statusEl.innerHTML = `<span class="text-success">${esc(strings.syncComplete.replace('%s', result.count))}</span>`;
-                            Joomla.renderMessages({'message': [result.message]});
+                            Joomla.renderMessages({ message: [result.message] });
                             loadTranslations(true);
                         } else {
                             const errMsg = result.message || strings.syncFailed;
                             statusEl.innerHTML = `<span class="text-danger">${esc(errMsg)}</span>`;
-                            Joomla.renderMessages({'error': [errMsg]});
+                            Joomla.renderMessages({ error: [errMsg] });
                         }
                     })
                     .catch((err) => {
@@ -309,14 +307,37 @@
 
         // Language name mapping for common ISO codes
         const languageNames = {
-            en: 'English', de: 'German', fr: 'French', es: 'Spanish',
-            pt: 'Portuguese', ru: 'Russian', it: 'Italian', hu: 'Hungarian',
-            ro: 'Romanian', ko: 'Korean', zh: 'Chinese', la: 'Latin',
-            nl: 'Dutch', no: 'Norwegian', cs: 'Czech', pl: 'Polish',
-            sv: 'Swedish', da: 'Danish', fi: 'Finnish', el: 'Greek',
-            he: 'Hebrew', ar: 'Arabic', ja: 'Japanese', hi: 'Hindi',
-            tr: 'Turkish', uk: 'Ukrainian', vi: 'Vietnamese', th: 'Thai',
-            af: 'Afrikaans', sw: 'Swahili', tl: 'Tagalog',
+            en: 'English',
+            de: 'German',
+            fr: 'French',
+            es: 'Spanish',
+            pt: 'Portuguese',
+            ru: 'Russian',
+            it: 'Italian',
+            hu: 'Hungarian',
+            ro: 'Romanian',
+            ko: 'Korean',
+            zh: 'Chinese',
+            la: 'Latin',
+            nl: 'Dutch',
+            no: 'Norwegian',
+            cs: 'Czech',
+            pl: 'Polish',
+            sv: 'Swedish',
+            da: 'Danish',
+            fi: 'Finnish',
+            el: 'Greek',
+            he: 'Hebrew',
+            ar: 'Arabic',
+            ja: 'Japanese',
+            hi: 'Hindi',
+            tr: 'Turkish',
+            uk: 'Ukrainian',
+            vi: 'Vietnamese',
+            th: 'Thai',
+            af: 'Afrikaans',
+            sw: 'Swahili',
+            tl: 'Tagalog',
         };
 
         const getLanguageName = (code) => {
@@ -460,7 +481,7 @@
         /**
          * Apply current filters to the stored translations and re-render the table.
          */
-        const applyFilters = () => {
+        function applyFilters() {
             const filtered = allTranslations.filter((t) => {
                 // Search filter: match name or abbreviation
                 if (filters.search) {
@@ -481,8 +502,8 @@
                 }
 
                 // Status filter
-                const isInstalled = parseInt(t.installed) === 1;
-                const usageCount = parseInt(t.usage_count) || 0;
+                const isInstalled = parseInt(t.installed, 10) === 1;
+                const usageCount = parseInt(t.usage_count, 10) || 0;
 
                 if (filters.status === 'installed' && !isInstalled) {
                     return false;
@@ -509,7 +530,7 @@
             }
 
             renderTranslationsTable(filtered, allTotalSize);
-        };
+        }
 
         /**
          * Fetch and render the translations table.
@@ -517,7 +538,7 @@
          * @param {boolean} silent  When true, skip the loading spinner (used after
          *                          auto-download so the table doesn't flash).
          */
-        const loadTranslations = (silent = false) => {
+        function loadTranslations(silent = false) {
             const container = document.getElementById('translations-list');
 
             // Lock height to prevent page bounce during refresh
@@ -556,7 +577,7 @@
                     container.innerHTML = `<div class="alert alert-warning">${strings.loadError}</div>`;
                     container.style.minHeight = '';
                 });
-        };
+        }
 
         /**
          * Format byte size to human-readable string.
@@ -572,16 +593,16 @@
 
             while (size >= 1024 && i < units.length - 1) {
                 size /= 1024;
-                i++;
+                i += 1;
             }
 
-            return size.toFixed(i > 0 ? 1 : 0) + ' ' + units[i];
+            return `${size.toFixed(i > 0 ? 1 : 0)} ${units[i]}`;
         };
 
         /**
          * Render the translations table from a filtered list.
          */
-        const renderTranslationsTable = (translations, totalSize) => {
+        function renderTranslationsTable(translations, totalSize) {
             const container = document.getElementById('translations-list');
 
             if (translations.length === 0) {
@@ -592,23 +613,23 @@
 
             // Separate suggested translations (in use, not installed, and downloadable — not api_bible)
             const suggested = translations.filter(
-                (t) => parseInt(t.usage_count) > 0 && parseInt(t.installed) === 0 && t.source !== 'api_bible'
+                (t) => parseInt(t.usage_count, 10) > 0 && parseInt(t.installed, 10) === 0 && t.source !== 'api_bible',
             );
             const rest = translations.filter(
-                (t) => !(parseInt(t.usage_count) > 0 && parseInt(t.installed) === 0 && t.source !== 'api_bible')
+                (t) => !(parseInt(t.usage_count, 10) > 0 && parseInt(t.installed, 10) === 0 && t.source !== 'api_bible'),
             );
 
             let html = '';
 
             // Suggested section (in use but not installed)
             if (suggested.length > 0) {
-                html += `<div class="alert alert-warning py-2 px-3 mb-2">`;
-                html += `<div class="d-flex align-items-center gap-2 mb-1">`;
-                html += `<i class="icon-notification" aria-hidden="true"></i>`;
+                html += '<div class="alert alert-warning py-2 px-3 mb-2">';
+                html += '<div class="d-flex align-items-center gap-2 mb-1">';
+                html += '<i class="icon-notification" aria-hidden="true"></i>';
                 html += `<strong>${strings.suggested}</strong>`;
-                html += `</div>`;
+                html += '</div>';
                 html += `<small>${strings.suggestedDesc}</small>`;
-                html += `</div>`;
+                html += '</div>';
                 html += buildTable(suggested, false, true);
             }
 
@@ -624,9 +645,9 @@
             bindTableButtons(container);
 
             // Show/hide "Remove All" button
-            const hasInstalled = allTranslations.some((t) => parseInt(t.installed) === 1);
+            const hasInstalled = allTranslations.some((t) => parseInt(t.installed, 10) === 1);
             updateRemoveAllVisibility(hasInstalled);
-        };
+        }
 
         /**
          * Build a table HTML string from a list of translations.
@@ -635,7 +656,7 @@
          * @param {boolean} showGroupHeaders Show language group headers
          * @param {boolean} isSuggested      Render as suggested (skip "Not installed" badge)
          */
-        const buildTable = (translations, showGroupHeaders, isSuggested = false) => {
+        function buildTable(translations, showGroupHeaders, isSuggested = false) {
             if (translations.length === 0) {
                 return '';
             }
@@ -675,9 +696,9 @@
                     html += `<tr class="table-active"><td colspan="7"><strong>${esc(lang)}</strong></td></tr>`;
                 }
 
-                const isInstalled = parseInt(t.installed) === 1;
-                const isBundled = parseInt(t.bundled) === 1;
-                const usageCount = parseInt(t.usage_count) || 0;
+                const isInstalled = parseInt(t.installed, 10) === 1;
+                const isBundled = parseInt(t.bundled, 10) === 1;
+                const usageCount = parseInt(t.usage_count, 10) || 0;
 
                 const isOnlineOnly = t.source === 'api_bible';
 
@@ -709,7 +730,7 @@
                 const verseCount = isInstalled ? t.verse_count : '-';
                 const dataSize = isInstalled
                     ? formatSize(t.data_size)
-                    : (t.estimated_size > 0 ? '~' + formatSize(t.estimated_size) : '-');
+                    : (t.estimated_size > 0 ? `~${formatSize(t.estimated_size)}` : '-');
 
                 let actionBtn;
 
@@ -738,12 +759,12 @@
 
             html += '</tbody></table></div>';
             return html;
-        };
+        }
 
         /**
          * Bind download and remove button event handlers within a container.
          */
-        const bindTableButtons = (container) => {
+        function bindTableButtons(container) {
             // Bind download buttons
             container.querySelectorAll('.btn-download-translation').forEach((btn) => {
                 btn.addEventListener('click', function () {
@@ -755,16 +776,16 @@
                         .then((r) => r.json())
                         .then((result) => {
                             if (result.success) {
-                                Joomla.renderMessages({'message': [result.message]});
+                                Joomla.renderMessages({ message: [result.message] });
                             } else {
-                                Joomla.renderMessages({'error': [result.message]});
+                                Joomla.renderMessages({ error: [result.message] });
                             }
 
                             loadTranslations(true);
                             refreshLocalBadge();
                         })
                         .catch(() => {
-                            Joomla.renderMessages({'error': [strings.downloadFailed]});
+                            Joomla.renderMessages({ error: [strings.downloadFailed] });
                             loadTranslations(true);
                         });
                 });
@@ -785,9 +806,9 @@
                         .then((r) => r.json())
                         .then((result) => {
                             if (result.success) {
-                                Joomla.renderMessages({'message': [result.message]});
+                                Joomla.renderMessages({ message: [result.message] });
                             } else {
-                                Joomla.renderMessages({'error': [result.message]});
+                                Joomla.renderMessages({ error: [result.message] });
                             }
 
                             loadTranslations(true);
@@ -798,28 +819,28 @@
                         });
                 });
             });
-        };
+        }
 
         /**
          * Show or hide the "Remove All" button.
          */
-        const updateRemoveAllVisibility = (hasInstalled) => {
+        function updateRemoveAllVisibility(hasInstalled) {
             const removeAllBtn = document.getElementById('btn-remove-all-translations');
 
             if (removeAllBtn) {
                 removeAllBtn.classList.toggle('d-none', !hasInstalled);
             }
-        };
+        }
 
         /**
          * Handle auto-downloading bundled translations that aren't installed yet.
          */
-        const handleBundledAutoDownload = (translations) => {
+        function handleBundledAutoDownload(translations) {
             if (autoDownloadRunning) {
                 return;
             }
 
-            const pending = translations.filter((t) => parseInt(t.bundled) === 1 && parseInt(t.installed) === 0);
+            const pending = translations.filter((t) => parseInt(t.bundled, 10) === 1 && parseInt(t.installed, 10) === 0);
 
             if (pending.length === 0) {
                 return;
@@ -838,9 +859,9 @@
             });
 
             autoDownloadBundled(pending);
-        };
+        }
 
-        const autoDownloadBundled = (queue) => {
+        function autoDownloadBundled(queue) {
             let index = 0;
             const downloaded = [];
 
@@ -849,7 +870,7 @@
                     autoDownloadRunning = false;
 
                     if (downloaded.length > 0) {
-                        Joomla.renderMessages({'message': [strings.bundledDone.replace('%s', downloaded.join(', '))]});
+                        Joomla.renderMessages({ message: [strings.bundledDone.replace('%s', downloaded.join(', '))] });
                     }
 
                     // Silent refresh — no spinner, just swap the table in place
@@ -859,7 +880,7 @@
                 }
 
                 const abbr = queue[index].abbreviation;
-                index++;
+                index += 1;
 
                 fetch(`${baseUrl}downloadTranslationXHR&${token}=1&abbreviation=${encodeURIComponent(abbr)}`)
                     .then((r) => r.json())
@@ -876,7 +897,7 @@
             };
 
             next();
-        };
+        }
 
         // Refresh button
         const refreshBtn = document.getElementById('btn-refresh-translations');
@@ -900,9 +921,9 @@
                     .then((r) => r.json())
                     .then((result) => {
                         if (result.success) {
-                            Joomla.renderMessages({'message': [result.message]});
+                            Joomla.renderMessages({ message: [result.message] });
                         } else {
-                            Joomla.renderMessages({'error': [result.message]});
+                            Joomla.renderMessages({ error: [result.message] });
                         }
 
                         removeAllBtn.disabled = false;

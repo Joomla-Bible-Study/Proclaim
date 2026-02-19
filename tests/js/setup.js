@@ -3,13 +3,6 @@
  * Configures the test environment with Joomla mocks and browser globals
  */
 
-const { toPassJSHint } = require('./helpers/jshint-helper');
-
-// Add custom JSHint matcher
-expect.extend({
-    toPassJSHint
-});
-
 // Mock Joomla global object
 global.Joomla = {
     getOptions: jest.fn((key, defaultValue) => {

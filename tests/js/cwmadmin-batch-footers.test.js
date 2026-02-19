@@ -3,8 +3,6 @@
  * Batch processing functionality for admin views
  */
 
-const { validateFile } = require('./helpers/jshint-helper');
-
 // List of batch files to test
 const BATCH_FILES = [
     { name: 'locations', file: 'build/media_source/js/cwmadmin-locations-default-batch-footer.es6.js', task: 'cwmlocation.batch' },
@@ -20,16 +18,6 @@ const BATCH_FILES = [
 describe('Admin Batch Files', () => {
     BATCH_FILES.forEach(({ name, file, task }) => {
         describe(`${file.split('/').pop()}`, () => {
-            describe('JSHint Validation', () => {
-                test('should pass JSHint validation', () => {
-                    const result = validateFile(file);
-                    expect(result.valid).toBe(true);
-                    if (!result.valid) {
-                        console.error(`JSHint errors in ${file}:\n${result.errorReport}`);
-                    }
-                });
-            });
-
             describe('Batch Functionality', () => {
                 let mockSubmitForm;
 

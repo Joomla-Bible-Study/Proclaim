@@ -68,7 +68,7 @@ class ProclaimAssetFix {
         }
 
         // Bind button clicks (always runs even if modal init fails)
-        document.querySelectorAll('[data-proclaim-action]').forEach(btn => {
+        document.querySelectorAll('[data-proclaim-action]').forEach((btn) => {
             btn.addEventListener('click', (e) => this.handleAction(e));
         });
     }
@@ -89,6 +89,8 @@ class ProclaimAssetFix {
                 break;
             case 'fix':
                 this.startFix();
+                break;
+            default:
                 break;
         }
     }
@@ -135,7 +137,7 @@ class ProclaimAssetFix {
 
         let html = '';
 
-        assets.forEach(asset => {
+        assets.forEach((asset) => {
             html += `
                 <tr>
                     <td>${this.escapeHtml(asset.realname)}</td>
@@ -237,7 +239,6 @@ class ProclaimAssetFix {
             setTimeout(() => {
                 this.closeModal();
             }, 3000);
-
         } catch (error) {
             this.showError(error.message);
         }
@@ -260,8 +261,8 @@ class ProclaimAssetFix {
                 const response = await this.fetchJson('fixAssetBatchXHR', {
                     table: table.name,
                     assetname: table.assetname,
-                    offset: offset,
-                    batchSize: this.batchSize
+                    offset,
+                    batchSize: this.batchSize,
                 });
 
                 if (!response.success) {
@@ -355,8 +356,8 @@ class ProclaimAssetFix {
         url.searchParams.set('format', 'json');
 
         // Add CSRF token
-        const tokenInput = document.querySelector('input[name^="csrf.token"]') ||
-                          document.querySelector('input[name][value="1"]');
+        const tokenInput = document.querySelector('input[name^="csrf.token"]')
+                          || document.querySelector('input[name][value="1"]');
         if (tokenInput) {
             url.searchParams.set(tokenInput.name, '1');
         }
@@ -369,15 +370,15 @@ class ProclaimAssetFix {
         const response = await fetch(url.toString(), {
             method: 'GET',
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
+                'X-Requested-With': 'XMLHttpRequest',
+            },
         });
 
         if (!response.ok) {
             if (response.status === 403 || response.status === 401) {
                 Joomla.renderMessages({
                     error: [Joomla.Text._('JLIB_ENVIRONMENT_SESSION_EXPIRED')
-                        || 'Your session has expired. Please log in again.']
+                        || 'Your session has expired. Please log in again.'],
                 });
                 setTimeout(() => { window.location.reload(); }, 3000);
                 throw new Error('Session expired');
@@ -389,7 +390,7 @@ class ProclaimAssetFix {
 
         try {
             return JSON.parse(text);
-        } catch (e) {
+        } catch {
             console.error('Invalid JSON response:', text);
             throw new Error('Invalid response from server');
         }

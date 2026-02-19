@@ -12,7 +12,7 @@
      * @license    GNU General Public License version 2 or later; see LICENSE.txt
      */
 
-    (function() {
+    (function () {
 
         /**
          * Check if a container is in a visible/active tab
@@ -21,19 +21,19 @@
          */
         function isContainerVisible(container) {
             // Check for Joomla 5 joomla-tab-element
-            var tabElement = container.closest('joomla-tab-element');
+            const tabElement = container.closest('joomla-tab-element');
             if (tabElement) {
                 return tabElement.hasAttribute('active');
             }
 
             // Check for Bootstrap tab-pane
-            var tabPane = container.closest('.tab-pane');
+            const tabPane = container.closest('.tab-pane');
             if (tabPane) {
                 return tabPane.classList.contains('active') || tabPane.classList.contains('show');
             }
 
             // Check for Bootstrap accordion
-            var accordion = container.closest('.accordion-collapse');
+            const accordion = container.closest('.accordion-collapse');
             if (accordion) {
                 return accordion.classList.contains('show');
             }
@@ -55,7 +55,7 @@
             container.dataset.initialized = 'true';
 
             // Remove loading indicator
-            var loading = container.querySelector('#layout-editor-loading');
+            const loading = container.querySelector('#layout-editor-loading');
             if (loading) {
                 loading.remove();
             }
@@ -69,7 +69,7 @@
                     showViewSettings: config.showViewSettings || false,
                     showContextTabs: false,
                     formId: container.closest('form')?.id || 'module-form',
-                    paramsPrefix: config.paramsPrefix || 'jform[params]'
+                    paramsPrefix: config.paramsPrefix || 'jform[params]',
                 });
             } else if (typeof window.LayoutEditor !== 'undefined') {
                 window.proclaimLayoutEditor = new window.LayoutEditor(container, {
@@ -78,7 +78,7 @@
                     showViewSettings: config.showViewSettings || false,
                     showContextTabs: false,
                     formId: container.closest('form')?.id || 'module-form',
-                    paramsPrefix: config.paramsPrefix || 'jform[params]'
+                    paramsPrefix: config.paramsPrefix || 'jform[params]',
                 });
             } else {
                 console.error('Layout Editor not loaded');
@@ -102,10 +102,10 @@
             }
 
             // Listen for Joomla 5 tab events
-            var joomlaTab = container.closest('joomla-tab');
+            const joomlaTab = container.closest('joomla-tab');
             if (joomlaTab) {
-                var tabElement = container.closest('joomla-tab-element');
-                var initOnShow = function(event) {
+                const tabElement = container.closest('joomla-tab-element');
+                const initOnShow = function (event) {
                     if (tabElement && (event.target === tabElement || tabElement.hasAttribute('active'))) {
                         initLayoutEditor(container, config);
                         joomlaTab.removeEventListener('joomla.tab.shown', initOnShow);
@@ -116,11 +116,11 @@
             }
 
             // Listen for Bootstrap tab events
-            var tabPane = container.closest('.tab-pane');
+            const tabPane = container.closest('.tab-pane');
             if (tabPane && tabPane.id) {
-                var tabButton = document.querySelector('[data-bs-target="#' + tabPane.id + '"], [href="#' + tabPane.id + '"]');
+                const tabButton = document.querySelector(`[data-bs-target="#${tabPane.id}"], [href="#${tabPane.id}"]`);
                 if (tabButton) {
-                    tabButton.addEventListener('shown.bs.tab', function() {
+                    tabButton.addEventListener('shown.bs.tab', () => {
                         initLayoutEditor(container, config);
                     }, { once: true });
                     return;
@@ -128,9 +128,9 @@
             }
 
             // Listen for Bootstrap accordion events
-            var accordion = container.closest('.accordion-collapse');
+            const accordion = container.closest('.accordion-collapse');
             if (accordion) {
-                accordion.addEventListener('shown.bs.collapse', function() {
+                accordion.addEventListener('shown.bs.collapse', () => {
                     initLayoutEditor(container, config);
                 }, { once: true });
                 return;
@@ -145,22 +145,22 @@
          */
         function initAllLayoutEditorFields() {
             // Find all Layout Editor field containers
-            var containers = document.querySelectorAll('.layout-editor-container[data-layout-editor-field]');
+            const containers = document.querySelectorAll('.layout-editor-container[data-layout-editor-field]');
 
-            containers.forEach(function(container) {
+            containers.forEach((container) => {
                 // Get configuration from data attributes
-                var config = {
+                const config = {
                     context: container.dataset.context || 'messages',
                     showViewSettings: container.dataset.showViewSettings === 'true',
                     paramsPrefix: container.dataset.paramsPrefix || 'jform[params]',
-                    lazyLoad: container.dataset.lazyInit === 'true'
+                    lazyLoad: container.dataset.lazyInit === 'true',
                 };
 
                 if (config.lazyLoad) {
                     setupLazyInit(container, config);
                 } else {
-                    var scheduleInit = window.requestIdleCallback || function(cb) { setTimeout(cb, 100); };
-                    scheduleInit(function() {
+                    const scheduleInit = window.requestIdleCallback || function (cb) { setTimeout(cb, 100); };
+                    scheduleInit(() => {
                         initLayoutEditor(container, config);
                     }, { timeout: 2000 });
                 }
@@ -178,8 +178,8 @@
         window.ProclaimLayoutEditorField = {
             init: initLayoutEditor,
             setupLazy: setupLazyInit,
-            isVisible: isContainerVisible
+            isVisible: isContainerVisible,
         };
-    })();
+    }());
 
 })();
