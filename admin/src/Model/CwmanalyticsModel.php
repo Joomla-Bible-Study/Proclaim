@@ -703,23 +703,25 @@ class CwmanalyticsModel extends BaseDatabaseModel
     public function getSeriesList(string $start, string $end, int $locationId = 0): array
     {
         try {
-            $db    = $this->getDatabase();
+            $db = $this->getDatabase();
+
+            // Scalar subquery for message_count avoids Cartesian product when
+            // also joining analytics events on series_id.
+            $msgCountSub = '(SELECT COUNT(*) FROM ' . $db->quoteName('#__bsms_studies', 'sc') .
+                ' WHERE ' . $db->quoteName('sc.series_id') . ' = ' . $db->quoteName('sr.id') .
+                ' AND ' . $db->quoteName('sc.published') . ' = 1) AS message_count';
+
             $query = $db->getQuery(true)
                 ->select([
                     $db->quoteName('sr.id', 'series_id'),
                     $db->quoteName('sr.series_text', 'title'),
                     $db->quoteName('sr.thumb', 'thumb'),
-                    'COUNT(DISTINCT ' . $db->quoteName('s.id') . ') AS message_count',
+                    $msgCountSub,
                     'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('page_view') . ' THEN 1 ELSE 0 END) AS views',
                     'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) AS plays',
                     'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END) AS downloads',
                 ])
                 ->from($db->quoteName('#__bsms_series', 'sr'))
-                ->leftJoin(
-                    $db->quoteName('#__bsms_studies', 's') .
-                    ' ON ' . $db->quoteName('s.series_id') . ' = ' . $db->quoteName('sr.id') .
-                    ' AND ' . $db->quoteName('s.published') . ' = 1'
-                )
                 ->leftJoin(
                     $db->quoteName('#__bsms_analytics_events', 'e') .
                     ' ON ' . $db->quoteName('e.series_id') . ' = ' . $db->quoteName('sr.id') .
@@ -731,7 +733,13 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 ->order('(SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('page_view') . ' THEN 1 ELSE 0 END) + SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) + SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END)) DESC');
 
             if ($locationId > 0) {
-                $query->where($db->quoteName('s.location_id') . ' = ' . (int) $locationId);
+                // Only show series that have at least one published message at this location
+                $query->where(
+                    'EXISTS (SELECT 1 FROM ' . $db->quoteName('#__bsms_studies', 'sl') .
+                    ' WHERE ' . $db->quoteName('sl.series_id') . ' = ' . $db->quoteName('sr.id') .
+                    ' AND ' . $db->quoteName('sl.location_id') . ' = ' . (int) $locationId .
+                    ' AND ' . $db->quoteName('sl.published') . ' = 1)'
+                );
             }
 
             $db->setQuery($query, 0, 100);
