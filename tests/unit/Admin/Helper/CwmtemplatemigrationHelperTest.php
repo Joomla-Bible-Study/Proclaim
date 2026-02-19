@@ -509,7 +509,7 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $h = makeMigHelper([$old]);
         $h->migrateFromVersion('0.0.0');
 
-        $params = $h->getParamsArray(1);
+        $params   = $h->getParamsArray(1);
         $expected = ['lteacher_id', 'lseries_id', 'lbooknumber', 'ltopic_id', 'lmessagetype', 'llocations'];
 
         foreach ($expected as $key) {
@@ -645,7 +645,7 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
 
         $params = $h->getParamsArray(1);
 
-        if (array_key_exists('backcolor', $params)) {
+        if (\array_key_exists('backcolor', $params)) {
             $this->assertSame('', $params['backcolor'], 'Empty color value must not be changed');
         }
 
@@ -709,7 +709,7 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
     public static function provideRowspanItemMap(): array
     {
         return [
-            'rowspanitem=1 → teacherimage'     => [1, 'teacherimage'],
+            'rowspanitem=1 → teacherimage'      => [1, 'teacherimage'],
             'rowspanitem=2 → thumbnail'         => [2, 'thumbnail'],
             'rowspanitem=3 → seriesthumbnail'   => [3, 'seriesthumbnail'],
             'rowspanitem=4 → teacherlargeimage' => [4, 'teacherlargeimage'],
@@ -748,9 +748,9 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
     public function testRowspanItemMigratesTwoContextPrefixes(): void
     {
         $h = makeMigHelper([[
-            'rowspanitem'     => '2',   // messages context → thumbnail
-            'rowspanitemspan' => '4',
-            'srowspanitem'    => '3',   // series context → seriesthumbnail
+            'rowspanitem'      => '2',   // messages context → thumbnail
+            'rowspanitemspan'  => '4',
+            'srowspanitem'     => '3',   // series context → seriesthumbnail
             'srowspanitemspan' => '4',
         ]]);
         $h->migrateRowspanImages();
@@ -767,9 +767,9 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
     {
         // thumbnail is already placed in row 2 — migration must not move it to row 1
         $h = makeMigHelper([[
-            'rowspanitem'    => '2',   // thumbnail
+            'rowspanitem'     => '2',   // thumbnail
             'rowspanitemspan' => '4',
-            'thumbnailrow'   => '2',   // already placed!
+            'thumbnailrow'    => '2',   // already placed!
         ]]);
         $h->migrateRowspanImages();
 

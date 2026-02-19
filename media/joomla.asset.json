@@ -417,6 +417,17 @@
             }
         },
         {
+            "name": "com_proclaim.cwmcpanel",
+            "type": "script",
+            "uri": "com_proclaim/cwmcpanel.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.scripture-switcher-css",
             "type": "style",
             "uri": "com_proclaim/scripture-switcher.css"

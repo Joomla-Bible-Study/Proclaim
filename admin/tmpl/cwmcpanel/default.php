@@ -62,24 +62,11 @@ $startTour = $input->getInt('startTour', 0);
 if ($startTour && $hasTour) {
     $tourId = $tourHelper->getTourId('com_proclaim_whats_new_10_1');
     if ($tourId) {
-        // Force start the tour
-        $wa->addInlineScript('
-            document.addEventListener("DOMContentLoaded", function() {
-                setTimeout(function() {
-                    if (typeof Joomla !== "undefined" && Joomla.guidedTours) {
-                        Joomla.guidedTours.startTour(' . $tourId . ');
-                    } else {
-                        // Fallback: try to click the button if it exists
-                        const btn = document.querySelector(".button-start-guidedtour[data-gt-uid=\'com_proclaim_whats_new_10_1\']");
-                        if (btn) {
-                            btn.click();
-                        }
-                    }
-                }, 500);
-            });
-        ');
+        $this->document->addScriptOptions('com_proclaim.cpanel', ['startTour' => (int) $tourId]);
     }
 }
+
+$wa->useScript('com_proclaim.cwmcpanel');
 ?>
 <!-- Header -->
 <form action="<?php
@@ -160,24 +147,6 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<?php echo Text::_('JCLOSE'); ?>"></button>
                 </div>
             </div>
-            <?php
-            $wa->addInlineScript(<<<'JS'
-            (function () {
-                var KEY = 'proclaim_podcast_task_notice_dismissed';
-                var DAYS = 7;
-                var notice = document.getElementById('proclaim-podcast-task-notice');
-                if (!notice) return;
-                var stored = localStorage.getItem(KEY);
-                if (stored && (Date.now() - parseInt(stored, 10)) < DAYS * 86400000) {
-                    notice.style.display = 'none';
-                    return;
-                }
-                notice.addEventListener('closed.bs.alert', function () {
-                    localStorage.setItem(KEY, Date.now().toString());
-                });
-            })();
-            JS);
-            ?>
             <?php endif; ?>
         <?php
             // Location system wizard opt-in card — shown to super admins when wizard has not been configured
