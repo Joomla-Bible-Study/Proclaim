@@ -10,10 +10,6 @@
  * unit tests from static strings, not from external input.
  */
 
-const { validateFile } = require('./helpers/jshint-helper');
-
-const SOURCE_FILE = 'build/media_source/js/sermon-filters.es6.js';
-
 // Track DOMContentLoaded handlers so we can clean them up between tests.
 // jest.resetModules() does NOT remove event listeners from `document`.
 var capturedDclHandler = null;
@@ -161,16 +157,6 @@ describe('sermon-filters.es6.js', () => {
         document.body.innerHTML = '';
         jest.restoreAllMocks();
         jest.resetModules();
-    });
-
-    describe('JSHint Validation', () => {
-        test('should pass JSHint validation', () => {
-            var result = validateFile(SOURCE_FILE);
-            expect(result.valid).toBe(true);
-            if (!result.valid) {
-                console.error('JSHint errors:\n' + result.errorReport);
-            }
-        });
     });
 
     describe('Initialization', () => {

@@ -1,13 +1,19 @@
-# IDE and Editor
-.idea/
-.run/
-*.icloud
+# IDE & System Related Files
+.buildpath
+.project
+.settings
+.DS_Store
+.idea
+.vscode
+.docker
+/docker-compose.yml
+/nbproject
+/.devcontainer
+/.github
+/.vscode
 
 # AI tooling
 .ai/
-
-# OS Files
-.DS_Store
 
 # Dependencies
 /libraries/vendor/
@@ -29,6 +35,7 @@ build/reports/
 /media/css/site/cwmcore.css
 /media/css/site/biblestudy.css
 com_proclaim/media/css/site/
+#/media
 
 # Local configuration
 /build.properties
@@ -45,6 +52,24 @@ test-results/
 # Language sync caches
 /build/.translation_cache.json
 /build/.source_cache.json
-!/docs/
-
 media/backup/*.sql
+
+# Languages
+/admin/language/*
+!/admin/language/en-GB
+/site/language/*
+!/site/language/en-GB
+
+# OSX
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Never ignore
+# Only apply this rule to the main repository's gitignore files
+!/.gitignore
+!/build/.gitignore

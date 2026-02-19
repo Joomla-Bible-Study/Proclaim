@@ -15,36 +15,36 @@
     (() => {
 
         /** Detect Joomla Atum dark mode */
-        const isDark = () => document.documentElement.getAttribute('data-bs-theme') === 'dark' ||
-            document.documentElement.classList.contains('theme-dark') ||
-            document.body.classList.contains('dark');
+        const isDark = () => document.documentElement.getAttribute('data-bs-theme') === 'dark'
+            || document.documentElement.classList.contains('theme-dark')
+            || document.body.classList.contains('dark');
 
         const PALETTE = [
             '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b',
             '#858796', '#6610f2', '#fd7e14', '#20c9a6', '#e83e8c',
         ];
 
-        const gridColor = () => isDark() ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.07)';
-        const textColor = () => isDark() ? '#c2c7d0' : '#5a5c69';
+        const gridColor = () => (isDark() ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.07)');
+        const textColor = () => (isDark() ? '#c2c7d0' : '#5a5c69');
 
         /** Build a line chart for the time-series panel */
         function buildLineChart(canvas, raw) {
             const colors = ['#4e73df', '#1cc88a', '#f6c23e'];
             const datasets = (raw.datasets || []).map((ds, i) => ({
-                label:           ds.label,
-                data:            ds.data,
-                borderColor:     colors[i % colors.length],
-                backgroundColor: colors[i % colors.length] + '22',
-                fill:            true,
-                tension:         0.3,
-                pointRadius:     raw.labels.length > 60 ? 0 : 3,
+                label: ds.label,
+                data: ds.data,
+                borderColor: colors[i % colors.length],
+                backgroundColor: `${colors[i % colors.length]}22`,
+                fill: true,
+                tension: 0.3,
+                pointRadius: raw.labels.length > 60 ? 0 : 3,
             }));
 
             return new window.Chart(canvas, {
                 type: 'line',
                 data: { labels: raw.labels, datasets },
                 options: {
-                    responsive:          true,
+                    responsive: true,
                     maintainAspectRatio: true,
                     plugins: {
                         legend: { labels: { color: textColor() } },
@@ -52,12 +52,12 @@
                     },
                     scales: {
                         x: {
-                            ticks:   { color: textColor(), maxTicksLimit: 12 },
-                            grid:    { color: gridColor() },
+                            ticks: { color: textColor(), maxTicksLimit: 12 },
+                            grid: { color: gridColor() },
                         },
                         y: {
-                            ticks:   { color: textColor() },
-                            grid:    { color: gridColor() },
+                            ticks: { color: textColor() },
+                            grid: { color: gridColor() },
                             beginAtZero: true,
                         },
                     },
@@ -70,16 +70,16 @@
             return new window.Chart(canvas, {
                 type: 'bar',
                 data: {
-                    labels:   raw.labels,
+                    labels: raw.labels,
                     datasets: [{
-                        label:           canvas.closest('.card')?.querySelector('.card-header')?.textContent?.trim() ?? '',
-                        data:            raw.data,
+                        label: canvas.closest('.card')?.querySelector('.card-header')?.textContent?.trim() ?? '',
+                        data: raw.data,
                         backgroundColor: PALETTE.slice(0, raw.data.length),
                     }],
                 },
                 options: {
-                    indexAxis:           'y',
-                    responsive:          true,
+                    indexAxis: 'y',
+                    responsive: true,
                     maintainAspectRatio: true,
                     plugins: {
                         legend: { display: false },
@@ -87,12 +87,12 @@
                     scales: {
                         x: {
                             ticks: { color: textColor() },
-                            grid:  { color: gridColor() },
+                            grid: { color: gridColor() },
                             beginAtZero: true,
                         },
                         y: {
                             ticks: { color: textColor() },
-                            grid:  { display: false },
+                            grid: { display: false },
                         },
                     },
                 },
@@ -104,12 +104,12 @@
             return new window.Chart(canvas, {
                 type: 'doughnut',
                 data: {
-                    labels:   raw.labels,
+                    labels: raw.labels,
                     datasets: [{
-                        data:            raw.data,
+                        data: raw.data,
                         backgroundColor: PALETTE.slice(0, raw.data.length),
-                        borderWidth:     2,
-                        borderColor:     isDark() ? '#1a1a2e' : '#ffffff',
+                        borderWidth: 2,
+                        borderColor: isDark() ? '#1a1a2e' : '#ffffff',
                     }],
                 },
                 options: {
@@ -117,7 +117,7 @@
                     plugins: {
                         legend: {
                             position: 'right',
-                            labels:   { color: textColor(), boxWidth: 12 },
+                            labels: { color: textColor(), boxWidth: 12 },
                         },
                     },
                 },
@@ -136,7 +136,7 @@
 
                 try {
                     raw = JSON.parse(canvas.dataset.cwmChartData || '{}');
-                } catch (e) {
+                } catch {
                     return;
                 }
 

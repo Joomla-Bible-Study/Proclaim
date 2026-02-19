@@ -713,8 +713,6 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
         $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('com_proclaim.admin-imagetools');
 
-// Language strings for imagetools JS are auto-registered via CwmlangHelper::registerAllForJs()
-// above and accessed directly via Joomla.Text._('JBS_ADM_KEY') in admin-imagetools.es6.js.
 ?>
         <div id="imagetools-config"
              data-token="<?php echo Session::getFormToken(); ?>"

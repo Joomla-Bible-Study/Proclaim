@@ -1,7 +1,6 @@
 (function () {
     'use strict';
 
-    /* global AbortController, IntersectionObserver */
     /* jshint latedef: nofunc */
     /**
      * Infinite Scroll / Load More for Frontend Series Listing
@@ -21,45 +20,45 @@
 
     document.addEventListener('DOMContentLoaded', () => {
 
-        var opts = Joomla.getOptions('com_proclaim.seriesScroll') || {};
+        const opts = Joomla.getOptions('com_proclaim.seriesScroll') || {};
 
         if (!opts.enabled || !opts.ajaxUrl || opts.paginationStyle === 'pagination') {
             return;
         }
 
-        var listContainer = document.getElementById('proclaim-series-list');
+        const listContainer = document.getElementById('proclaim-series-list');
 
         if (!listContainer) {
             return;
         }
 
-        var abortController = null;
-        var paginationStyle = opts.paginationStyle || 'pagination';
-        var pageLimit       = opts.limit || 20;
-        var currentOffset   = 0;
-        var totalItems      = opts.totalItems || 0;
-        var displayedCount  = Math.min(pageLimit, totalItems);
-        var isLoadingMore   = false;
-        var allItemsLoaded  = false;
-        var scrollObserver  = null;
+        let abortController = null;
+        const paginationStyle = opts.paginationStyle || 'pagination';
+        const pageLimit = opts.limit || 20;
+        let currentOffset = 0;
+        let totalItems = opts.totalItems || 0;
+        let displayedCount = Math.min(pageLimit, totalItems);
+        let isLoadingMore = false;
+        let allItemsLoaded = false;
+        let scrollObserver = null;
 
         // Infinite scroll threshold: after this many auto-loaded pages, pause and
         // require a manual "Load More" click.  0 = unlimited (never pause).
-        var scrollThreshold   = opts.scrollThreshold || 0;
-        var autoLoadedPages   = 0;
-        var scrollPaused      = false;
+        const scrollThreshold = opts.scrollThreshold || 0;
+        let autoLoadedPages = 0;
+        let scrollPaused = false;
 
         // DOM elements
-        var loadMoreContainer = document.getElementById('proclaim-load-more');
-        var loadMoreBtn       = loadMoreContainer ? loadMoreContainer.querySelector('button') : null;
-        var itemCounter       = document.getElementById('proclaim-item-counter');
-        var scrollSentinel    = document.getElementById('proclaim-scroll-sentinel');
+        const loadMoreContainer = document.getElementById('proclaim-load-more');
+        const loadMoreBtn = loadMoreContainer ? loadMoreContainer.querySelector('button') : null;
+        const itemCounter = document.getElementById('proclaim-item-counter');
+        const scrollSentinel = document.getElementById('proclaim-scroll-sentinel');
 
         /**
          * Helper to get translated text with fallback.
          */
         function txt(key, fallback) {
-            var result = Joomla.Text._(key, fallback);
+            const result = Joomla.Text._(key, fallback);
             return (result === key) ? fallback : result;
         }
 
@@ -70,8 +69,8 @@
             if (loadMoreBtn) {
                 loadMoreBtn.disabled = true;
                 loadMoreBtn.dataset.originalText = loadMoreBtn.textContent;
-                loadMoreBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" ' +
-                    'aria-hidden="true"></span>' + txt('JBS_CMN_LOADING', 'Loading...');
+                loadMoreBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" '
+                    + `aria-hidden="true"></span>${txt('JBS_CMN_LOADING', 'Loading...')}`;
             }
         }
 
@@ -96,7 +95,7 @@
             if (shown >= total) {
                 itemCounter.textContent = txt('JBS_CMN_ALL_ITEMS_LOADED', 'All items loaded');
             } else {
-                var template = txt('JBS_CMN_SHOWING_X_OF_Y', 'Showing %s of %s');
+                const template = txt('JBS_CMN_SHOWING_X_OF_Y', 'Showing %s of %s');
                 itemCounter.textContent = template.replace('%s', shown).replace('%s', total);
             }
         }
@@ -173,38 +172,38 @@
             currentOffset += pageLimit;
 
             // Track auto-loaded pages for threshold
-            var shouldPauseAfter = false;
+            let shouldPauseAfter = false;
 
             if (paginationStyle === 'infinite' && !manualClick) {
-                autoLoadedPages++;
+                autoLoadedPages += 1;
 
                 if (scrollThreshold > 0 && autoLoadedPages >= scrollThreshold) {
                     shouldPauseAfter = true;
                 }
             }
 
-            var url = opts.ajaxUrl + '&limitstart=' + currentOffset;
+            let url = `${opts.ajaxUrl}&limitstart=${currentOffset}`;
 
             if (opts.csrfToken) {
-                url += '&' + opts.csrfToken + '=1';
+                url += `&${opts.csrfToken}=1`;
             }
 
             try {
-                var response = await fetch(url, {
+                const response = await fetch(url, {
                     method: 'GET',
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json',
+                        Accept: 'application/json',
                     },
                     credentials: 'same-origin',
                     signal: abortController.signal,
                 });
 
                 if (!response.ok) {
-                    throw new Error('HTTP ' + response.status);
+                    throw new Error(`HTTP ${response.status}`);
                 }
 
-                var result = await response.json();
+                const result = await response.json();
 
                 if (!result.success) {
                     throw new Error(result.message || 'Unknown error');
@@ -212,18 +211,18 @@
 
                 // Append new items (server-side listing helper HTML, safe origin)
                 if (result.html) {
-                    var temp = document.createElement('div');
-                    temp.innerHTML = result.html; // eslint-disable-line -- safe: own server response
+                    const temp = document.createElement('div');
+                    temp.innerHTML = result.html;
 
                     // The listing helper renders .proclaim-item divs inside a
                     // .proclaim-listing wrapper. Extract items and append them
                     // to the existing listing container.
-                    var newListing = temp.querySelector('.proclaim-listing');
-                    var existingListing = listContainer.querySelector('.proclaim-listing');
+                    const newListing = temp.querySelector('.proclaim-listing');
+                    const existingListing = listContainer.querySelector('.proclaim-listing');
 
                     if (newListing && existingListing) {
-                        var items = newListing.querySelectorAll(':scope > .proclaim-item');
-                        items.forEach(function (item) {
+                        const items = newListing.querySelectorAll(':scope > .proclaim-item');
+                        items.forEach((item) => {
                             existingListing.appendChild(item);
                         });
                     } else {
@@ -237,7 +236,7 @@
                 updateCounter(displayedCount, totalItems);
 
                 // Check if we've loaded everything
-                var currentPage = Math.floor(currentOffset / pageLimit) + 1;
+                const currentPage = Math.floor(currentOffset / pageLimit) + 1;
                 if (currentPage >= result.pagesTotal || !result.html) {
                     handleAllItemsLoaded();
                 } else if (shouldPauseAfter) {
@@ -272,22 +271,22 @@
         if (loadMoreBtn) {
             // Load More button click handler (used in loadmore mode,
             // and in infinite mode after threshold is reached)
-            loadMoreBtn.addEventListener('click', function () {
+            loadMoreBtn.addEventListener('click', () => {
                 fetchNextPage(true);
             });
         }
 
         if (paginationStyle === 'infinite' && scrollSentinel) {
-            scrollObserver = new IntersectionObserver(function (entries) {
-                entries.forEach(function (entry) {
+            scrollObserver = new IntersectionObserver(((entries) => {
+                entries.forEach((entry) => {
                     if (entry.isIntersecting && !isLoadingMore && !allItemsLoaded) {
                         fetchNextPage();
                     }
                 });
-            }, {
+            }), {
                 root: null,
                 rootMargin: '200px',
-                threshold: 0
+                threshold: 0,
             });
 
             scrollObserver.observe(scrollSentinel);

@@ -7,8 +7,6 @@
  * Bible verse popover tooltips on scripture references
  */
 
-const { validateFile } = require('./helpers/jshint-helper');
-
 const SOURCE_FILE = 'build/media_source/js/scripture-tooltip.es6.js';
 
 /**
@@ -88,12 +86,6 @@ describe('scripture-tooltip.es6.js', () => {
         document.body.innerHTML = '';
         delete global.Joomla;
         delete global.bootstrap;
-    });
-
-    describe('JSHint Validation', () => {
-        test('should pass JSHint validation', () => {
-            validateFile(SOURCE_FILE);
-        });
     });
 
     describe('Initialization', () => {

@@ -18,7 +18,7 @@
              * @param {HTMLElement} container - The container element
              * @returns {Array} Array of focusable elements
              */
-            getFocusableElements: function(container) {
+            getFocusableElements(container) {
                 const focusableSelectors = [
                     'a[href]',
                     'button:not([disabled])',
@@ -26,18 +26,18 @@
                     'select:not([disabled])',
                     'textarea:not([disabled])',
                     '[tabindex]:not([tabindex="-1"])',
-                    '[contenteditable="true"]'
+                    '[contenteditable="true"]',
                 ].join(', ');
 
                 return Array.from(container.querySelectorAll(focusableSelectors))
-                    .filter(el => el.offsetParent !== null); // Only visible elements
+                    .filter((el) => el.offsetParent !== null); // Only visible elements
             },
 
             /**
              * Initialize focus trap for a modal
              * @param {HTMLElement|string} modal - Modal element or selector
              */
-            trapFocus: function(modal) {
+            trapFocus(modal) {
                 const modalElement = typeof modal === 'string' ? document.querySelector(modal) : modal;
                 if (!modalElement) { return; }
 
@@ -70,7 +70,7 @@
                     const currentFocusable = this.getFocusableElements(modalElement);
                     if (currentFocusable.length === 0) { return; }
 
-                    const first = currentFocusable[0];
+                    const [first] = currentFocusable;
                     const last = currentFocusable[currentFocusable.length - 1];
 
                     if (e.shiftKey) {
@@ -79,12 +79,10 @@
                             e.preventDefault();
                             last.focus();
                         }
-                    } else {
+                    } else if (document.activeElement === last) {
                         // Tab
-                        if (document.activeElement === last) {
-                            e.preventDefault();
-                            first.focus();
-                        }
+                        e.preventDefault();
+                        first.focus();
                     }
                 };
 
@@ -97,7 +95,7 @@
              * @param {HTMLElement|string} modal - Modal element or selector
              * @param {Function} handler - The keydown handler to remove (optional)
              */
-            releaseFocus: function(modal, handler) {
+            releaseFocus(modal, handler) {
                 const modalElement = typeof modal === 'string' ? document.querySelector(modal) : modal;
                 if (!modalElement) { return; }
 
@@ -121,7 +119,7 @@
              * @param {string} message - Message to announce
              * @param {string} priority - 'polite' or 'assertive'
              */
-            announce: function(message, priority = 'polite') {
+            announce(message, priority = 'polite') {
                 let announcer = document.getElementById('proclaim-a11y-announcer');
                 if (!announcer) {
                     announcer = document.createElement('div');
@@ -136,21 +134,21 @@
                 announcer.textContent = '';
                 // Use setTimeout to ensure screen readers pick up the change
                 setTimeout(() => { announcer.textContent = message; }, 100);
-            }
+            },
         };
 
         // Export to window
         window.ProclaimA11y = ProclaimA11y;
 
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.btnPlay').forEach(function (btn) {
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.btnPlay').forEach((btn) => {
                 btn.addEventListener('click', function (e) {
                     e.preventDefault();
                     const mediaId = this.getAttribute('alt');
-                    const mediaEl = document.getElementById('media-' + mediaId);
+                    const mediaEl = document.getElementById(`media-${mediaId}`);
 
-                    document.querySelectorAll('.inlinePlayer').forEach(function (el) {
-                        if (el.id !== 'media-' + mediaId) {
+                    document.querySelectorAll('.inlinePlayer').forEach((el) => {
+                        if (el.id !== `media-${mediaId}`) {
                             el.style.display = 'none';
                         }
                         el.innerHTML = '';
@@ -164,16 +162,16 @@
                         }
 
                         fetch('index.php?option=com_proclaim&view=cwmstudieslist&controller=cwmstudieslist&task=inlinePlayer&tmpl=component')
-                            .then(response => {
+                            .then((response) => {
                                 if (!response.ok) {
                                     throw new Error('Network response was not ok');
                                 }
                                 return response.text();
                             })
-                            .then(html => {
+                            .then((html) => {
                                 mediaEl.innerHTML = html;
                             })
-                            .catch(error => {
+                            .catch((error) => {
                                 console.error('Error loading content:', error);
                             });
                     }
@@ -182,7 +180,7 @@
 
             const addReferenceBtn = document.getElementById('addReference');
             if (addReferenceBtn) {
-                addReferenceBtn.addEventListener('click', function (e) {
+                addReferenceBtn.addEventListener('click', (e) => {
                     e.preventDefault();
                     const referenceTemplate = document.getElementById('reference');
                     if (!referenceTemplate) { return; }
@@ -216,7 +214,7 @@
             // Use event delegation for dynamically added delete buttons
             const referencesContainer = document.getElementById('references');
             if (referencesContainer) {
-                referencesContainer.addEventListener('click', function (e) {
+                referencesContainer.addEventListener('click', (e) => {
                     if (e.target.classList.contains('referenceDelete')) {
                         e.preventDefault();
                         const parent = e.target.closest('#reference');
@@ -227,9 +225,9 @@
                 });
             }
 
-            document.querySelectorAll('.imgChoose').forEach(function (el) {
+            document.querySelectorAll('.imgChoose').forEach((el) => {
                 el.addEventListener('change', function () {
-                    const targetImage = document.getElementById('img' + this.id);
+                    const targetImage = document.getElementById(`img${this.id}`);
                     if (!targetImage) { return; }
 
                     const src = targetImage.getAttribute('src');
@@ -239,7 +237,7 @@
                         activeDir.pop();
                     }
 
-                    if (parseInt(this.value) === 0) {
+                    if (parseInt(this.value, 10) === 0) {
                         targetImage.style.display = 'none';
                     } else {
                         targetImage.style.display = '';
@@ -255,32 +253,29 @@
                             '<': '&lt;',
                             '>': '&gt;',
                             '"': '&quot;',
-                            "'": '&#039;'
+                            "'": '&#039;',
                         };
-                        return String(str).replace(/[&<>"']/g, function (s) {
-                            return entityMap[s];
-                        });
+                        return String(str).replace(/[&<>"']/g, (s) => entityMap[s]);
                     };
 
                     if (activeDir.length > 0) {
-                        targetImage.setAttribute('src', activeDir.join('/') + '/' + escapeHtml(this.value));
+                        targetImage.setAttribute('src', `${activeDir.join('/')}/${escapeHtml(this.value)}`);
                     }
                 });
             });
 
             // Auto-initialize focus trap for Bootstrap modals
             // Listen for Bootstrap modal events
-            document.addEventListener('shown.bs.modal', function(e) {
+            document.addEventListener('shown.bs.modal', (e) => {
                 ProclaimA11y.trapFocus(e.target);
             });
 
-            document.addEventListener('hidden.bs.modal', function(e) {
+            document.addEventListener('hidden.bs.modal', (e) => {
                 ProclaimA11y.releaseFocus(e.target);
             });
         });
 
-        function decOnly(i)
-        {
+        function decOnly(i) {
             let t = i.value;
             if (t.length > 0) {
                 t = t.replace(/[^\d.]+/g, '');
@@ -288,56 +283,51 @@
 
             const s = t.split('.');
             if (s.length > 1) {
-                s[1] = s[0] + '.' + s[1];
+                s[1] = `${s[0]}.${s[1]}`;
                 s.shift();
             }
 
             i.value = s.join('');
         }
 
-        function bandwidth(bytees, type)
-        {
+        function bandwidth(bytees, type) {
             let value = bytees;
-            if (!isNaN(value) && (value !== '')) {
+            if (!Number.isNaN(Number(value)) && (value !== '')) {
                 switch (type.toUpperCase()) {
                     case 'KB':
                         value *= 1024;
                         break;
                     case 'MB':
-                        value *= Math.pow(1024, 2);
+                        value *= 1024 ** 2;
                         break;
                     case 'GB':
-                        value *= Math.pow(1024, 3);
+                        value *= 1024 ** 3;
                         break;
                     default:
                         return 'error';
                 }
 
-                return parseInt(value);
-            } else {
-                return 'error';
+                return parseInt(value, 10);
             }
+            return 'error';
         }
 
-        function transferFileSize()
-        {
+        function transferFileSize() {
             const size = document.getElementById('Text1').value;
             const ty = document.getElementById('Select1').value;
             const ss = bandwidth(size, ty);
             if (ss === 'error') {
                 alert('Numbers only please.');
                 return false;
-            } else {
-                document.getElementById('jform_params_size').value = ss;
-                return true;
             }
+            document.getElementById('jform_params_size').value = ss;
+            return true;
         }
 
         // Export utilities to window
         window.decOnly = decOnly;
         window.bandwidth = bandwidth;
         window.transferFileSize = transferFileSize;
-
-    })(window, window.document);
+    }(window, window.document));
 
 })();

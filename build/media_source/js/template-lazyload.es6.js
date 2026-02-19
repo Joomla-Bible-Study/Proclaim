@@ -26,7 +26,7 @@
 
         const textareas = container.querySelectorAll('textarea.mce_editable');
 
-        textareas.forEach(function(textarea) {
+        textareas.forEach((textarea) => {
             const editorId = textarea.id;
             if (!editorId) { return; }
 
@@ -51,24 +51,24 @@
                 branding: false,
                 promotion: false,
                 height: 300,
-                setup: function(editor) {
-                    editor.on('change', function() {
+                setup(editor) {
+                    editor.on('change', () => {
                         editor.save();
                     });
-                }
+                },
             };
 
             // Initialize TinyMCE
-            window.tinymce.init(config).then(function(editors) {
+            window.tinymce.init(config).then((editors) => {
                 if (editors && editors[0]) {
-                    const editor = editors[0];
+                    const [editor] = editors;
 
                     // Enable the toggle button
                     const wrapper = textarea.closest('.js-editor-tinymce');
                     const toggleBtn = wrapper ? wrapper.querySelector('.js-tiny-toggler-button') : null;
                     if (toggleBtn) {
                         toggleBtn.disabled = false;
-                        toggleBtn.addEventListener('click', function() {
+                        toggleBtn.addEventListener('click', () => {
                             if (editor.isHidden()) {
                                 editor.show();
                             } else {
@@ -81,11 +81,11 @@
                     if (window.Joomla && window.Joomla.editors && window.Joomla.editors.instances) {
                         window.Joomla.editors.instances[editorId] = {
                             id: editorId,
-                            getValue: function() { return editor.getContent(); },
-                            setValue: function(val) { editor.setContent(val); },
-                            getSelection: function() { return editor.selection.getContent(); },
-                            replaceSelection: function(val) { editor.execCommand('mceInsertContent', false, val); },
-                            disable: function(state) { editor.mode.set(state ? 'readonly' : 'design'); }
+                            getValue() { return editor.getContent(); },
+                            setValue(val) { editor.setContent(val); },
+                            getSelection() { return editor.selection.getContent(); },
+                            replaceSelection(val) { editor.execCommand('mceInsertContent', false, val); },
+                            disable(state) { editor.mode.set(state ? 'readonly' : 'design'); },
                         };
                     }
                 }
@@ -114,7 +114,7 @@
                 // Trigger custom event for any additional initialization
                 container.dispatchEvent(new CustomEvent('fieldsetLoaded', {
                     bubbles: true,
-                    detail: { fieldset: fieldsetName }
+                    detail: { fieldset: fieldsetName },
                 }));
 
                 resolve({ alreadyLoaded: true, fieldset: fieldsetName });
@@ -147,52 +147,52 @@
             // Show loading indicator
             container.innerHTML = '<div class="text-center p-4"><span class="spinner-border spinner-border-sm" role="status"></span> Loading...</div>';
 
-            const url = 'index.php?option=com_proclaim&task=cwmtemplate.loadFieldset&format=json' +
-                '&fieldset=' + encodeURIComponent(fieldsetName) +
-                '&id=' + templateId +
-                '&' + Joomla.getOptions('csrf.token', '') + '=1';
+            const url = 'index.php?option=com_proclaim&task=cwmtemplate.loadFieldset&format=json'
+                + `&fieldset=${encodeURIComponent(fieldsetName)
+                }&id=${templateId
+                }&${Joomla.getOptions('csrf.token', '')}=1`;
 
             fetch(url, {
                 method: 'GET',
                 headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
             })
-            .then(response => response.json())
-            .then(data => {
-                loadingFieldsets.delete(fieldsetName);
+                .then((response) => response.json())
+                .then((data) => {
+                    loadingFieldsets.delete(fieldsetName);
 
-                if (data.success) {
-                    loadedFieldsets.add(fieldsetName);
-                    fieldsetHtmlCache.set(fieldsetName, data.html);
-                    container.innerHTML = data.html;
+                    if (data.success) {
+                        loadedFieldsets.add(fieldsetName);
+                        fieldsetHtmlCache.set(fieldsetName, data.html);
+                        container.innerHTML = data.html;
 
-                    // Initialize any Joomla form elements
-                    if (typeof Joomla !== 'undefined' && Joomla.initCustomSelect) {
-                        Joomla.initCustomSelect(container);
+                        // Initialize any Joomla form elements
+                        if (typeof Joomla !== 'undefined' && Joomla.initCustomSelect) {
+                            Joomla.initCustomSelect(container);
+                        }
+
+                        // Initialize TinyMCE editors in loaded content
+                        initTinyMCEEditors(container);
+
+                        // Trigger custom event for any additional initialization
+                        container.dispatchEvent(new CustomEvent('fieldsetLoaded', {
+                            bubbles: true,
+                            detail: { fieldset: fieldsetName },
+                        }));
+
+                        resolve({ success: true, fieldset: fieldsetName });
+                    } else {
+                        container.innerHTML = `<div class="alert alert-danger">${data.error || 'Failed to load content'}</div>`;
+                        reject(new Error(data.error || 'Failed to load content'));
                     }
-
-                    // Initialize TinyMCE editors in loaded content
-                    initTinyMCEEditors(container);
-
-                    // Trigger custom event for any additional initialization
-                    container.dispatchEvent(new CustomEvent('fieldsetLoaded', {
-                        bubbles: true,
-                        detail: { fieldset: fieldsetName }
-                    }));
-
-                    resolve({ success: true, fieldset: fieldsetName });
-                } else {
-                    container.innerHTML = '<div class="alert alert-danger">' + (data.error || 'Failed to load content') + '</div>';
-                    reject(new Error(data.error || 'Failed to load content'));
-                }
-            })
-            .catch(error => {
-                loadingFieldsets.delete(fieldsetName);
-                container.innerHTML = '<div class="alert alert-danger">Error loading content: ' + error.message + '</div>';
-                console.error('Fieldset load error:', error);
-                reject(error);
-            });
+                })
+                .catch((error) => {
+                    loadingFieldsets.delete(fieldsetName);
+                    container.innerHTML = `<div class="alert alert-danger">Error loading content: ${error.message}</div>`;
+                    console.error('Fieldset load error:', error);
+                    reject(error);
+                });
         });
     }
 
@@ -219,7 +219,7 @@
      */
     function initAccordionLazyLoad() {
         // Find all accordion items with lazy-load data attribute
-        document.querySelectorAll('[data-lazy-fieldset]').forEach(function(accordion) {
+        document.querySelectorAll('[data-lazy-fieldset]').forEach((accordion) => {
             const fieldsetName = accordion.dataset.lazyFieldset;
             const collapseTarget = accordion.querySelector('.accordion-collapse');
             const contentContainer = accordion.querySelector('.accordion-body');
@@ -230,7 +230,7 @@
             }
 
             // Load when accordion is shown
-            collapseTarget.addEventListener('show.bs.collapse', function() {
+            collapseTarget.addEventListener('show.bs.collapse', () => {
                 loadFieldset(fieldsetName, contentContainer, templateId).catch(() => {
                     // Error already displayed in UI
                 });
@@ -250,22 +250,22 @@
      */
     function initTabLazyLoad() {
         // Find all tab panes with lazy-load data attribute
-        document.querySelectorAll('[data-lazy-tab]').forEach(function(tabPane) {
+        document.querySelectorAll('[data-lazy-tab]').forEach((tabPane) => {
             const fieldsets = tabPane.dataset.lazyTab.split(',');
             const templateId = parseInt(document.querySelector('input[name="jform[id]"]')?.value || '0', 10);
 
             // Find the tab button that controls this pane
             const tabId = tabPane.id;
-            const tabButton = document.querySelector('[data-bs-target="#' + tabId + '"], [href="#' + tabId + '"]');
+            const tabButton = document.querySelector(`[data-bs-target="#${tabId}"], [href="#${tabId}"]`);
 
             if (!tabButton) {
                 return;
             }
 
             // Load when tab is shown
-            tabButton.addEventListener('shown.bs.tab', function() {
-                fieldsets.forEach(function(fieldsetName) {
-                    const container = tabPane.querySelector('[data-fieldset-container="' + fieldsetName.trim() + '"]');
+            tabButton.addEventListener('shown.bs.tab', () => {
+                fieldsets.forEach((fieldsetName) => {
+                    const container = tabPane.querySelector(`[data-fieldset-container="${fieldsetName.trim()}"]`);
                     if (container) {
                         loadFieldset(fieldsetName.trim(), container, templateId).catch(() => {
                             // Error already displayed in UI
@@ -276,8 +276,8 @@
 
             // If tab is already active, load immediately
             if (tabPane.classList.contains('active') || tabPane.classList.contains('show')) {
-                fieldsets.forEach(function(fieldsetName) {
-                    const container = tabPane.querySelector('[data-fieldset-container="' + fieldsetName.trim() + '"]');
+                fieldsets.forEach((fieldsetName) => {
+                    const container = tabPane.querySelector(`[data-fieldset-container="${fieldsetName.trim()}"]`);
                     if (container) {
                         loadFieldset(fieldsetName.trim(), container, templateId).catch(() => {
                             // Error already displayed in UI
@@ -304,53 +304,53 @@
         fetch(url, {
             method: 'GET',
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
+                'X-Requested-With': 'XMLHttpRequest',
+            },
         })
-        .then(response => response.text())
-        .then(html => {
-            container.innerHTML = html;
+            .then((response) => response.text())
+            .then((html) => {
+                container.innerHTML = html;
 
-            // Execute any inline scripts in the loaded content
-            // (script tags don't execute automatically when set via innerHTML)
-            container.querySelectorAll('script').forEach(function(oldScript) {
-                const newScript = document.createElement('script');
-                // Copy attributes
-                Array.from(oldScript.attributes).forEach(function(attr) {
-                    newScript.setAttribute(attr.name, attr.value);
-                });
-                // Copy content
-                newScript.textContent = oldScript.textContent;
-                // Replace old script with new one to trigger execution
-                oldScript.parentNode.replaceChild(newScript, oldScript);
-            });
-
-            // Dispatch a custom event to signal that layout editor content is loaded
-            container.dispatchEvent(new CustomEvent('layoutEditorLoaded', {
-                bubbles: true
-            }));
-
-            // If layout editor script is already loaded, trigger initialization
-            if (typeof window.LayoutEditor !== 'undefined') {
-                const editorContainer = container.querySelector('#layout-editor-container');
-                if (editorContainer && !editorContainer.dataset.initialized) {
-                    // Remove the loading placeholder if present
-                    const loadingEl = document.getElementById('layout-editor-loading');
-                    if (loadingEl) {
-                        loadingEl.remove();
-                    }
-
-                    editorContainer.dataset.initialized = 'true';
-                    const initialContext = editorContainer.dataset.context || 'messages';
-                    window.proclaimLayoutEditor = new window.LayoutEditor(editorContainer, {
-                        context: initialContext
+                // Execute any inline scripts in the loaded content
+                // (script tags don't execute automatically when set via innerHTML)
+                container.querySelectorAll('script').forEach((oldScript) => {
+                    const newScript = document.createElement('script');
+                    // Copy attributes
+                    Array.from(oldScript.attributes).forEach((attr) => {
+                        newScript.setAttribute(attr.name, attr.value);
                     });
+                    // Copy content
+                    newScript.textContent = oldScript.textContent;
+                    // Replace old script with new one to trigger execution
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                });
+
+                // Dispatch a custom event to signal that layout editor content is loaded
+                container.dispatchEvent(new CustomEvent('layoutEditorLoaded', {
+                    bubbles: true,
+                }));
+
+                // If layout editor script is already loaded, trigger initialization
+                if (typeof window.LayoutEditor !== 'undefined') {
+                    const editorContainer = container.querySelector('#layout-editor-container');
+                    if (editorContainer && !editorContainer.dataset.initialized) {
+                    // Remove the loading placeholder if present
+                        const loadingEl = document.getElementById('layout-editor-loading');
+                        if (loadingEl) {
+                            loadingEl.remove();
+                        }
+
+                        editorContainer.dataset.initialized = 'true';
+                        const initialContext = editorContainer.dataset.context || 'messages';
+                        window.proclaimLayoutEditor = new window.LayoutEditor(editorContainer, {
+                            context: initialContext,
+                        });
+                    }
                 }
-            }
-        })
-        .catch(error => {
-            container.innerHTML = '<div class="alert alert-danger">Failed to load Layout Editor: ' + error.message + '</div>';
-        });
+            })
+            .catch((error) => {
+                container.innerHTML = `<div class="alert alert-danger">Failed to load Layout Editor: ${error.message}</div>`;
+            });
     }
 
     /**
@@ -363,7 +363,7 @@
             return;
         }
 
-        const loadUrl = container.dataset.loadUrl;
+        const { loadUrl } = container.dataset;
         if (!loadUrl) {
             return;
         }
@@ -395,7 +395,7 @@
 
         // Load when tab is shown for the first time
         // joomla-tab fires 'joomla.tab.shown' event when a tab is activated
-        const loadOnShow = function(event) {
+        const loadOnShow = function (event) {
             // Check if the shown tab is our tab
             if (event.target === tabElement || tabElement.hasAttribute('active')) {
                 loadLayoutEditorContent(container, loadUrl);
@@ -407,15 +407,15 @@
 
     // Export functions for use by other modules (e.g., layout editor)
     window.ProclaimLazyLoad = {
-        loadFieldset: loadFieldset,
-        isFieldsetLoaded: isFieldsetLoaded,
-        isFieldsetLoading: isFieldsetLoading,
-        loadLayoutEditorContent: loadLayoutEditorContent
+        loadFieldset,
+        isFieldsetLoaded,
+        isFieldsetLoading,
+        loadLayoutEditorContent,
     };
 
     // Initialize lazy loading on DOMContentLoaded
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             initAccordionLazyLoad();
             initTabLazyLoad();
             initLayoutEditorLazyLoad();
@@ -425,4 +425,4 @@
         initTabLazyLoad();
         initLayoutEditorLazyLoad();
     }
-})();
+}());

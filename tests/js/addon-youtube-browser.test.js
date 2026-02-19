@@ -3,22 +3,7 @@
  * YouTube Video Browser functionality
  */
 
-const { validateFile } = require('./helpers/jshint-helper');
-const path = require('path');
-
-const SOURCE_FILE = 'build/media_source/js/addon-youtube-browser.es6.js';
-
 describe('addon-youtube-browser.es6.js', () => {
-    describe('JSHint Validation', () => {
-        test('should pass JSHint validation', () => {
-            const result = validateFile(SOURCE_FILE);
-            expect(result.valid).toBe(true);
-            if (!result.valid) {
-                console.error('JSHint errors:\n' + result.errorReport);
-            }
-        });
-    });
-
     describe('YoutubeBrowser Module', () => {
         beforeEach(() => {
             // Set up DOM

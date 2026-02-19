@@ -37,13 +37,13 @@
          */
         const getCached = (ref, version) => {
             try {
-                const key = CACHE_PREFIX + ref + ':' + version;
+                const key = `${CACHE_PREFIX + ref}:${version}`;
                 const raw = sessionStorage.getItem(key);
 
                 if (raw) {
                     return JSON.parse(raw);
                 }
-            } catch (e) {
+            } catch {
                 // sessionStorage unavailable or parse error
             }
 
@@ -59,10 +59,10 @@
          */
         const setCache = (ref, version, data) => {
             try {
-                const key = CACHE_PREFIX + ref + ':' + version;
+                const key = `${CACHE_PREFIX + ref}:${version}`;
 
                 sessionStorage.setItem(key, JSON.stringify(data));
-            } catch (e) {
+            } catch {
                 // Storage full or unavailable
             }
         };
@@ -75,15 +75,15 @@
          */
         const buildContent = (data) => {
             if (!data.success || !data.text) {
-                return '<div class="proclaim-tooltip-error">'
-                    + Joomla.Text._('JBS_CMN_TOOLTIP_UNAVAILABLE', 'Passage unavailable')
-                    + '</div>';
+                return `<div class="proclaim-tooltip-error">${
+                Joomla.Text._('JBS_CMN_TOOLTIP_UNAVAILABLE', 'Passage unavailable')
+            }</div>`;
             }
 
-            let html = '<div class="proclaim-tooltip-body">' + data.text + '</div>';
+            let html = `<div class="proclaim-tooltip-body">${data.text}</div>`;
 
             if (data.copyright) {
-                html += '<div class="proclaim-tooltip-copyright">' + data.copyright + '</div>';
+                html += `<div class="proclaim-tooltip-copyright">${data.copyright}</div>`;
             }
 
             return html;
@@ -167,20 +167,20 @@
 
             try {
                 const token = Joomla.getOptions('csrf.token') || '';
-                const url = ajaxBaseUrl
-                    + '&reference=' + encodeURIComponent(ref)
-                    + '&version=' + encodeURIComponent(version)
-                    + '&' + token + '=1';
+                const url = `${ajaxBaseUrl
+            }&reference=${encodeURIComponent(ref)
+            }&version=${encodeURIComponent(version)
+            }&${token}=1`;
 
                 const response = await fetch(url);
                 const data = await response.json();
 
                 setCache(ref, version, data);
                 updatePopoverBody(pop, buildContent(data));
-            } catch (e) {
-                updatePopoverBody(pop, '<div class="proclaim-tooltip-error">'
-                    + Joomla.Text._('JBS_CMN_TOOLTIP_UNAVAILABLE', 'Passage unavailable')
-                    + '</div>');
+            } catch {
+                updatePopoverBody(pop, `<div class="proclaim-tooltip-error">${
+                Joomla.Text._('JBS_CMN_TOOLTIP_UNAVAILABLE', 'Passage unavailable')
+            }</div>`);
             }
         };
 
@@ -333,7 +333,6 @@
                 activeRef = null;
             }
         });
-
     });
 
 })();

@@ -64,19 +64,19 @@
         }
 
         // Hide all steps, show target
-        qsa('.wizard-step').forEach((el) => el.classList.remove('active'));
+        qsa('.wizard-step').forEach((stepEl) => stepEl.classList.remove('active'));
         const target = qs(`.wizard-step[data-step="${step}"]`);
         if (target) {
             target.classList.add('active');
         }
 
         // Update progress bar
-        const pct    = Math.round((step / TOTAL_STEPS) * 100);
-        const bar    = el('wizard-progress-bar');
-        const label  = el('wizard-step-label');
+        const pct = Math.round((step / TOTAL_STEPS) * 100);
+        const bar = el('wizard-progress-bar');
+        const label = el('wizard-step-label');
 
         if (bar) {
-            bar.style.width         = pct + '%';
+            bar.style.width = `${pct}%`;
             bar.setAttribute('aria-valuenow', pct);
         }
         if (label) {
@@ -133,7 +133,7 @@
         }
 
         const config = window.ProcWizard || {};
-        const url    = `${config.baseUrl}?option=com_proclaim&task=cwmlocationwizard.getStepData&step=4&${config.token}=1`;
+        const url = `${config.baseUrl}?option=com_proclaim&task=cwmlocationwizard.getStepData&step=4&${config.token}=1`;
 
         fetch(url)
             .then((r) => r.json())
@@ -150,7 +150,7 @@
                     return;
                 }
 
-                const linked   = teachers.filter((t) => t.user_id > 0);
+                const linked = teachers.filter((t) => t.user_id > 0);
                 const unlinked = teachers.filter((t) => !(t.user_id > 0));
 
                 let html = `<p class="mb-2"><strong>${linked.length}</strong> ${txt('JBS_WIZARD_TEACHERS_LINKED')} &nbsp;|&nbsp;
@@ -198,8 +198,8 @@
         }
 
         pendingMapping = collectMapping();
-        const config   = window.ProcWizard || {};
-        const url      = `${config.baseUrl}?option=com_proclaim&task=cwmlocationwizard.getStepData&step=5&${config.token}=1&mapping=${encodeURIComponent(JSON.stringify(pendingMapping))}`;
+        const config = window.ProcWizard || {};
+        const url = `${config.baseUrl}?option=com_proclaim&task=cwmlocationwizard.getStepData&step=5&${config.token}=1&mapping=${encodeURIComponent(JSON.stringify(pendingMapping))}`;
 
         fetch(url)
             .then((r) => r.json())
@@ -232,10 +232,10 @@
                 </div>`;
 
                 // Mapping detail table
-                const mapping  = d.mapping || {};
-                const locs     = (config.locations || []).reduce((m, l) => { m[l.id] = l.title; return m; }, {});
-                const grps     = (config.groups || []).reduce((m, g) => { m[g.id] = g.title; return m; }, {});
-                const locIds   = Object.keys(mapping);
+                const mapping = d.mapping || {};
+                const locs = (config.locations || []).reduce((m, l) => { m[l.id] = l.title; return m; }, {});
+                const grps = (config.groups || []).reduce((m, g) => { m[g.id] = g.title; return m; }, {});
+                const locIds = Object.keys(mapping);
 
                 if (locIds.length > 0) {
                     html += `<h6>${txt('JBS_WIZARD_MAPPING_SUMMARY')}</h6>
@@ -248,7 +248,7 @@
                                 </thead><tbody>`;
 
                     locIds.forEach((locId) => {
-                        const groupIds  = mapping[locId] || [];
+                        const groupIds = mapping[locId] || [];
                         const groupList = groupIds.map((gid) => grps[gid] || `#${gid}`).join(', ');
                         html += `<tr>
                             <td><strong>${escHtml(locs[locId] || locId)}</strong></td>
@@ -271,7 +271,7 @@
     // -------------------------------------------------------------------------
 
     function applyConfiguration() {
-        const msgEl  = el('wizard-processing-msg');
+        const msgEl = el('wizard-processing-msg');
         const config = window.ProcWizard || {};
 
         // Build form data
@@ -281,7 +281,7 @@
 
         fetch(`${config.baseUrl}?option=com_proclaim&task=cwmlocationwizard.apply`, {
             method: 'POST',
-            body:   formData,
+            body: formData,
         })
             .then((r) => r.json())
             .then((response) => {
@@ -298,11 +298,12 @@
 
                     const container = qs('.wizard-step[data-step="6"] .card-body');
                     if (container) {
-                        container.insertAdjacentHTML('beforeend',
+                        container.insertAdjacentHTML(
+                            'beforeend',
                             `<div class="alert alert-danger mt-3">${escHtml(response.message)}</div>
                              <button type="button" class="btn btn-secondary mt-2" id="wizard-back-from-error">
                                  <i class="fas fa-arrow-left me-1"></i>${txt('JPREV')}
-                             </button>`
+                             </button>`,
                         );
                         const backBtn = el('wizard-back-from-error');
                         if (backBtn) {
@@ -330,7 +331,7 @@
 
         fetch(`${config.baseUrl}?option=com_proclaim&task=cwmlocationwizard.dismiss`, {
             method: 'POST',
-            body:   formData,
+            body: formData,
         })
             .then((r) => r.json())
             .then((response) => {
@@ -359,7 +360,7 @@
     // -------------------------------------------------------------------------
 
     function seedCheckboxes() {
-        const config  = window.ProcWizard || {};
+        const config = window.ProcWizard || {};
         const mapping = config.savedMapping || {};
 
         Object.keys(mapping).forEach((locId) => {

@@ -3,21 +3,7 @@
  * Template form lazy-loading functionality
  */
 
-const { validateFile } = require('./helpers/jshint-helper');
-
-const SOURCE_FILE = 'build/media_source/js/template-lazyload.es6.js';
-
 describe('template-lazyload.es6.js', () => {
-    describe('JSHint Validation', () => {
-        test('should pass JSHint validation', () => {
-            const result = validateFile(SOURCE_FILE);
-            expect(result.valid).toBe(true);
-            if (!result.valid) {
-                console.error('JSHint errors:\n' + result.errorReport);
-            }
-        });
-    });
-
     describe('Lazy Loading Functionality', () => {
         beforeEach(() => {
             // Mock Joomla

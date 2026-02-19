@@ -10,8 +10,6 @@
  * unit testing purposes, not from external input.
  */
 
-const { validateFile } = require('./helpers/jshint-helper');
-
 const SOURCE_FILE = 'build/media_source/js/series-scroll.es6.js';
 
 var capturedDclHandler = null;
@@ -37,16 +35,6 @@ describe('series-scroll.es6.js', () => {
         document.body.innerHTML = '';
         jest.restoreAllMocks();
         jest.resetModules();
-    });
-
-    describe('JSHint Validation', () => {
-        test('should pass JSHint validation', () => {
-            var result = validateFile(SOURCE_FILE);
-            expect(result.valid).toBe(true);
-            if (!result.valid) {
-                console.error('JSHint errors:\n' + result.errorReport);
-            }
-        });
     });
 
     describe('Initialization', () => {

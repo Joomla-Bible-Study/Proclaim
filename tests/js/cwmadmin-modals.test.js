@@ -3,8 +3,6 @@
  * Modal selection functionality for admin views
  */
 
-const { validateFile } = require('./helpers/jshint-helper');
-
 // List of modal files to test
 const MODAL_FILES = [
     { name: 'locations', file: 'build/media_source/js/cwmadmin-locations-modal.es6.js', selectFn: 'jSelectLocations' },
@@ -18,16 +16,6 @@ const MODAL_FILES = [
 describe('Admin Modal Files', () => {
     MODAL_FILES.forEach(({ name, file, selectFn }) => {
         describe(`cwmadmin-${name}-modal.es6.js`, () => {
-            describe('JSHint Validation', () => {
-                test('should pass JSHint validation', () => {
-                    const result = validateFile(file);
-                    expect(result.valid).toBe(true);
-                    if (!result.valid) {
-                        console.error(`JSHint errors in ${file}:\n${result.errorReport}`);
-                    }
-                });
-            });
-
             describe('Modal Functionality', () => {
                 beforeEach(() => {
                     // Mock Joomla

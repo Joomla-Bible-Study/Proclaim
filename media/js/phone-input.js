@@ -34,9 +34,8 @@
                 preferredCountries: ['us', 'ca', 'gb', 'au', 'nz', 'za', 'ph', 'in', 'br', 'mx', 'de', 'kr', 'ng'],
             };
 
-            const options = Object.assign({}, defaults, opts);
+            const options = { ...defaults, ...opts };
 
-            // eslint-disable-next-line no-undef
             const iti = window.intlTelInput(input, options);
 
             // Store the full international number before form submit

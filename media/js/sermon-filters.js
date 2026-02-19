@@ -1,7 +1,6 @@
 (function () {
     'use strict';
 
-    /* global AbortController, IntersectionObserver */
     /* jshint latedef: nofunc */
     /**
      * AJAX Filtering & Searching for Frontend Sermon Listing
@@ -28,10 +27,10 @@
         }
 
         // DOM containers
-        const listContainer    = document.getElementById('proclaim-sermon-list');
-        const paginationTop    = document.getElementById('proclaim-pagination-top');
+        const listContainer = document.getElementById('proclaim-sermon-list');
+        const paginationTop = document.getElementById('proclaim-pagination-top');
         const paginationBottom = document.getElementById('proclaim-pagination-bottom');
-        const mainContent      = document.getElementById('proclaim-main-content');
+        const mainContent = document.getElementById('proclaim-main-content');
 
         if (!listContainer) {
             return;
@@ -51,27 +50,27 @@
 
         // Pagination style configuration
         const paginationStyle = opts.paginationStyle || 'pagination';
-        const pageLimit       = opts.limit || 20;
+        const pageLimit = opts.limit || 20;
 
         // Scroll/load-more state
-        let currentOffset   = 0;
-        let totalItems      = opts.totalItems || 0;
-        let displayedCount  = Math.min(pageLimit, totalItems);
-        let isLoadingMore   = false;
-        let allItemsLoaded  = false;
-        let scrollObserver  = null;
+        let currentOffset = 0;
+        let totalItems = opts.totalItems || 0;
+        let displayedCount = Math.min(pageLimit, totalItems);
+        let isLoadingMore = false;
+        let allItemsLoaded = false;
+        let scrollObserver = null;
 
         // Infinite scroll threshold: after this many auto-loaded pages, pause and
         // require a manual "Load More" click.  0 = unlimited (never pause).
-        const scrollThreshold     = opts.scrollThreshold || 0;
-        let   autoLoadedPages     = 0;
-        let   scrollPaused        = false;
+        const scrollThreshold = opts.scrollThreshold || 0;
+        let autoLoadedPages = 0;
+        let scrollPaused = false;
 
         // DOM elements for scroll modes
         const loadMoreContainer = document.getElementById('proclaim-load-more');
-        const loadMoreBtn       = loadMoreContainer ? loadMoreContainer.querySelector('button') : null;
-        const itemCounter       = document.getElementById('proclaim-item-counter');
-        const scrollSentinel    = document.getElementById('proclaim-scroll-sentinel');
+        const loadMoreBtn = loadMoreContainer ? loadMoreContainer.querySelector('button') : null;
+        const itemCounter = document.getElementById('proclaim-item-counter');
+        const scrollSentinel = document.getElementById('proclaim-scroll-sentinel');
 
         /**
          * Helper to get translated text with fallback.
@@ -81,7 +80,7 @@
          * @returns {string}
          */
         function txt(key, fallback) {
-            var result = Joomla.Text._(key, fallback);
+            const result = Joomla.Text._(key, fallback);
 
             // Joomla.Text._() returns the raw key when unregistered
             return (result === key) ? fallback : result;
@@ -96,10 +95,10 @@
          * @returns {string}
          */
         function buildQueryString(overrides) {
-            var data = new FormData(form);
-            var params = new URLSearchParams();
+            const data = new FormData(form);
+            const params = new URLSearchParams();
 
-            for (var pair of data.entries()) {
+            for (const pair of data.entries()) {
                 if (pair[1] !== '' && pair[1] !== null) {
                     params.set(pair[0], pair[1]);
                 } else if (pair[0].indexOf('filter') === 0 || pair[0].indexOf('list') === 0) {
@@ -109,11 +108,9 @@
 
             // Apply overrides (e.g. limitstart from pagination click)
             if (overrides) {
-                for (var key in overrides) {
-                    if (overrides.hasOwnProperty(key)) {
-                        params.set(key, overrides[key]);
-                    }
-                }
+                Object.keys(overrides).forEach((key) => {
+                    params.set(key, overrides[key]);
+                });
             }
 
             // Append CSRF token
@@ -132,10 +129,10 @@
 
             // Insert spinner if not already present
             if (!listContainer.querySelector('.proclaim-ajax-spinner')) {
-                var spinner = document.createElement('div');
+                const spinner = document.createElement('div');
                 spinner.className = 'proclaim-ajax-spinner';
-                spinner.innerHTML = '<div class="spinner-border text-primary" role="status">' +
-                    '<span class="visually-hidden">Loading...</span></div>';
+                spinner.innerHTML = '<div class="spinner-border text-primary" role="status">'
+                    + '<span class="visually-hidden">Loading...</span></div>';
                 listContainer.appendChild(spinner);
             }
         }
@@ -145,7 +142,7 @@
          */
         function hideLoading() {
             listContainer.classList.remove('proclaim-ajax-loading');
-            var spinner = listContainer.querySelector('.proclaim-ajax-spinner');
+            const spinner = listContainer.querySelector('.proclaim-ajax-spinner');
 
             if (spinner) {
                 spinner.remove();
@@ -159,8 +156,8 @@
             if (loadMoreBtn) {
                 loadMoreBtn.disabled = true;
                 loadMoreBtn.dataset.originalText = loadMoreBtn.textContent;
-                loadMoreBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" ' +
-                    'aria-hidden="true"></span>' + txt('JBS_CMN_LOADING', 'Loading...');
+                loadMoreBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" '
+                    + `aria-hidden="true"></span>${txt('JBS_CMN_LOADING', 'Loading...')}`;
             }
         }
 
@@ -188,7 +185,7 @@
             if (shown >= total) {
                 itemCounter.textContent = txt('JBS_CMN_ALL_ITEMS_LOADED', 'All items loaded');
             } else {
-                var template = txt('JBS_CMN_SHOWING_X_OF_Y', 'Showing %s of %s');
+                const template = txt('JBS_CMN_SHOWING_X_OF_Y', 'Showing %s of %s');
                 itemCounter.textContent = template.replace('%s', shown).replace('%s', total);
             }
         }
@@ -199,13 +196,13 @@
          * @param {URLSearchParams} params
          */
         function updateUrl(params) {
-            var url = new URL(window.location.href);
+            const url = new URL(window.location.href);
 
             // Clear existing search params
             url.search = '';
 
             // Re-apply relevant filter/list params
-            for (var pair of params.entries()) {
+            for (const pair of params.entries()) {
                 if (pair[0] !== 'task' && pair[0] !== 'format' && pair[1] !== '') {
                     url.searchParams.set(pair[0], pair[1]);
                 }
@@ -219,11 +216,11 @@
          * Safari sometimes throws on smooth scroll options; fall back to instant.
          */
         function scrollToList() {
-            var target = mainContent || listContainer;
+            const target = mainContent || listContainer;
 
             try {
                 target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } catch (ignore) {
+            } catch {
                 target.scrollIntoView(true);
             }
         }
@@ -232,14 +229,14 @@
          * Bind click handlers to pagination links.
          */
         function bindPaginationLinks() {
-            document.querySelectorAll('#proclaim-pagination-top a, #proclaim-pagination-bottom a').forEach(function (link) {
-                link.addEventListener('click', function (e) {
+            document.querySelectorAll('#proclaim-pagination-top a, #proclaim-pagination-bottom a').forEach((link) => {
+                link.addEventListener('click', (e) => {
                     e.preventDefault();
-                    var href = link.getAttribute('href') || '';
-                    var url = new URL(href, window.location.origin);
-                    var limitstart = url.searchParams.get('limitstart') || url.searchParams.get('start') || '0';
+                    const href = link.getAttribute('href') || '';
+                    const url = new URL(href, window.location.origin);
+                    const limitstart = url.searchParams.get('limitstart') || url.searchParams.get('start') || '0';
 
-                    fetchResults({ limitstart: limitstart });
+                    fetchResults({ limitstart });
                 });
             });
         }
@@ -250,14 +247,14 @@
          * @param {Object} result  The JSON response from filterAjax
          */
         function updatePagination(result) {
-            var paginationHtml = result.pagination || '';
-            var counterHtml    = result.pagesCounter || '';
+            const paginationHtml = result.pagination || '';
+            const counterHtml = result.pagesCounter || '';
 
             if (paginationTop) {
                 if (result.pagesTotal > 1) {
-                    paginationTop.innerHTML = '<div class="pagination pagination-centered">' +
-                        (counterHtml ? '<p class="counter float-right">' + counterHtml + '</p>' : '') +
-                        paginationHtml + '</div>';
+                    paginationTop.innerHTML = `<div class="pagination pagination-centered">${
+                    counterHtml ? `<p class="counter float-right">${counterHtml}</p>` : ''
+                }${paginationHtml}</div>`;
                 } else {
                     paginationTop.innerHTML = '';
                 }
@@ -265,10 +262,10 @@
 
             if (paginationBottom) {
                 if (result.pagesTotal > 1) {
-                    paginationBottom.innerHTML = '<nav class="pagination__wrapper" aria-label="Pagination">' +
-                        (counterHtml ? '<div class="text-end me-3">' + counterHtml + '</div>' : '') +
-                        '</nav>' +
-                        '<div class="pagination pagination-centered">' + paginationHtml + '</div>';
+                    paginationBottom.innerHTML = `<nav class="pagination__wrapper" aria-label="Pagination">${
+                    counterHtml ? `<div class="text-end me-3">${counterHtml}</div>` : ''
+                }</nav>`
+                        + `<div class="pagination pagination-centered">${paginationHtml}</div>`;
                 } else {
                     paginationBottom.innerHTML = '';
                 }
@@ -330,12 +327,12 @@
          * Reset scroll/load-more state when filters change.
          */
         function resetScrollState() {
-            currentOffset   = 0;
-            totalItems      = 0;
-            isLoadingMore   = false;
-            allItemsLoaded  = false;
+            currentOffset = 0;
+            totalItems = 0;
+            isLoadingMore = false;
+            allItemsLoaded = false;
             autoLoadedPages = 0;
-            scrollPaused    = false;
+            scrollPaused = false;
 
             if (loadMoreContainer) {
                 // In infinite mode, hide the button again (auto-scroll resumes)
@@ -374,24 +371,24 @@
                 showLoading();
             }
 
-            var qs = buildQueryString(overrides);
+            const qs = buildQueryString(overrides);
 
             try {
-                var response = await fetch(opts.ajaxUrl + '&' + qs, {
+                const response = await fetch(`${opts.ajaxUrl}&${qs}`, {
                     method: 'GET',
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json',
+                        Accept: 'application/json',
                     },
                     credentials: 'same-origin',
                     signal: abortController.signal,
                 });
 
                 if (!response.ok) {
-                    throw new Error('HTTP ' + response.status);
+                    throw new Error(`HTTP ${response.status}`);
                 }
 
-                var result = await response.json();
+                const result = await response.json();
 
                 if (!result.success) {
                     throw new Error(result.message || 'Unknown error');
@@ -400,19 +397,19 @@
                 if (appendMode) {
                     // Append new items to existing list
                     if (result.html) {
-                        var temp = document.createElement('div');
+                        const temp = document.createElement('div');
                         // Safe: result.html is from our own server-side listing helper
                         temp.innerHTML = result.html;
 
                         // The listing helper renders .proclaim-item divs inside a
                         // .proclaim-listing wrapper. Extract items and append them
                         // to the existing listing container.
-                        var newListing = temp.querySelector('.proclaim-listing');
-                        var existingListing = listContainer.querySelector('.proclaim-listing');
+                        const newListing = temp.querySelector('.proclaim-listing');
+                        const existingListing = listContainer.querySelector('.proclaim-listing');
 
                         if (newListing && existingListing) {
-                            var items = newListing.querySelectorAll(':scope > .proclaim-item');
-                            items.forEach(function (item) {
+                            const items = newListing.querySelectorAll(':scope > .proclaim-item');
+                            items.forEach((item) => {
                                 existingListing.appendChild(item);
                             });
                         } else {
@@ -430,7 +427,7 @@
                     updateCounter(displayedCount, totalItems);
 
                     // Check if we've loaded everything
-                    var currentPage = Math.floor(currentOffset / pageLimit) + 1;
+                    const currentPage = Math.floor(currentOffset / pageLimit) + 1;
 
                     if (currentPage >= result.pagesTotal || !result.html) {
                         handleAllItemsLoaded();
@@ -443,9 +440,9 @@
                     if (result.html) {
                         listContainer.innerHTML = result.html;
                     } else {
-                        listContainer.innerHTML = '<h4>' +
-                            txt('JBS_CMN_STUDY_NOT_FOUND', 'No results found') +
-                            '</h4><br />';
+                        listContainer.innerHTML = `<h4>${
+                        txt('JBS_CMN_STUDY_NOT_FOUND', 'No results found')
+                    }</h4><br />`;
                     }
 
                     // Notify fancybox.es6.js to re-init any YouTube iframes in new content.
@@ -516,11 +513,11 @@
 
             // Track auto-loaded pages for threshold (only for auto-scroll, not manual clicks)
             if (paginationStyle === 'infinite' && !manualClick) {
-                autoLoadedPages++;
+                autoLoadedPages += 1;
 
                 if (scrollThreshold > 0 && autoLoadedPages >= scrollThreshold) {
                     // Load this page, then pause after it completes
-                    fetchResults({ limitstart: currentOffset }, true).then(function () {
+                    fetchResults({ limitstart: currentOffset }, true).then(() => {
                         if (!allItemsLoaded) {
                             pauseInfiniteScroll();
                         }
@@ -537,7 +534,7 @@
         /**
          * Intercept form submission (triggered by Joomla searchtools on filter change).
          */
-        form.addEventListener('submit', function (e) {
+        form.addEventListener('submit', (e) => {
             e.preventDefault();
             // Reset to page 1 on filter/search change
             resetScrollState();
@@ -553,12 +550,12 @@
         /**
          * Debounced search input handler.
          */
-        var searchInput = form.querySelector('input[name="filter_search"], input[name="filter[search]"]');
+        const searchInput = form.querySelector('input[name="filter_search"], input[name="filter[search]"]');
 
         if (searchInput) {
-            searchInput.addEventListener('input', function () {
+            searchInput.addEventListener('input', () => {
                 clearTimeout(searchDebounceTimer);
-                searchDebounceTimer = setTimeout(function () {
+                searchDebounceTimer = setTimeout(() => {
                     resetScrollState();
                     fetchResults({ limitstart: 0 });
                 }, DEBOUNCE_MS);
@@ -568,8 +565,8 @@
         /**
          * Intercept filter dropdown changes.
          */
-        form.querySelectorAll('select[name^="filter_"], select[name^="filter["]').forEach(function (select) {
-            select.addEventListener('change', function () {
+        form.querySelectorAll('select[name^="filter_"], select[name^="filter["]').forEach((select) => {
+            select.addEventListener('change', () => {
                 resetScrollState();
                 fetchResults({ limitstart: 0 });
             });
@@ -578,8 +575,8 @@
         /**
          * Intercept sort/ordering changes.
          */
-        form.querySelectorAll('select[name^="list_"], select[name^="list["]').forEach(function (select) {
-            select.addEventListener('change', function () {
+        form.querySelectorAll('select[name^="list_"], select[name^="list["]').forEach((select) => {
+            select.addEventListener('change', () => {
                 resetScrollState();
                 fetchResults({ limitstart: 0 });
             });
@@ -595,23 +592,23 @@
         if (loadMoreBtn) {
             // Load More button click handler (used in loadmore mode,
             // and in infinite mode after threshold is reached)
-            loadMoreBtn.addEventListener('click', function () {
+            loadMoreBtn.addEventListener('click', () => {
                 loadNextPage(true);
             });
         }
 
         if (paginationStyle === 'infinite' && scrollSentinel) {
             // IntersectionObserver for infinite scroll
-            scrollObserver = new IntersectionObserver(function (entries) {
-                entries.forEach(function (entry) {
+            scrollObserver = new IntersectionObserver(((entries) => {
+                entries.forEach((entry) => {
                     if (entry.isIntersecting && !isLoadingMore && !allItemsLoaded) {
                         loadNextPage();
                     }
                 });
-            }, {
+            }), {
                 root: null,
                 rootMargin: '200px',
-                threshold: 0
+                threshold: 0,
             });
 
             scrollObserver.observe(scrollSentinel);
@@ -630,19 +627,19 @@
         /**
          * Handle browser back/forward navigation.
          */
-        window.addEventListener('popstate', function (e) {
+        window.addEventListener('popstate', (e) => {
             if (e.state && e.state.proclaimAjax) {
-                var url = new URL(window.location.href);
-                var overrides = {};
+                const url = new URL(window.location.href);
+                const overrides = {};
 
-                for (var pair of url.searchParams.entries()) {
-                    overrides[pair[0]] = pair[1];
+                for (const [key, value] of url.searchParams.entries()) {
+                    overrides[key] = value;
 
                     // Also sync form fields
-                    var field = form.querySelector('[name="' + pair[0] + '"]');
+                    const field = form.querySelector(`[name="${key}"]`);
 
                     if (field) {
-                        field.value = pair[1];
+                        field.value = value;
                     }
                 }
 

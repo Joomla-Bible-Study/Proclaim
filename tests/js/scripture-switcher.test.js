@@ -10,8 +10,6 @@
  * unit tests from static strings, not from external input.
  */
 
-const { validateFile } = require('./helpers/jshint-helper');
-
 const SOURCE_FILE = 'build/media_source/js/scripture-switcher.es6.js';
 
 // Track DOMContentLoaded handlers for cleanup
@@ -133,18 +131,6 @@ afterEach(function () {
     delete global.Joomla;
     delete global.fetch;
     jest.restoreAllMocks();
-});
-
-// --- JSHint validation ---
-describe('scripture-switcher JSHint', function () {
-    test('source passes JSHint', function () {
-        var result = validateFile(SOURCE_FILE);
-        expect(result.valid).toBe(true);
-        if (!result.valid) {
-            // eslint-disable-next-line no-console
-            console.error('JSHint errors:\n' + result.errorReport);
-        }
-    });
 });
 
 // --- Initialization tests ---

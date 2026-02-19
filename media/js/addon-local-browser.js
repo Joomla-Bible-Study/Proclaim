@@ -7,8 +7,7 @@
      * @description Local File Browser for Proclaim Media Files
      */
     /* jshint esversion: 6 */
-    /* global Joomla, bootstrap, Proclaim, console */
-    (function() {
+    (() => {
 
         window.Proclaim = window.Proclaim || {};
 
@@ -17,7 +16,7 @@
          * when the key is unregistered (Joomla.Text._() returns the raw key).
          */
         function txt(key, fallback) {
-            var val = Joomla.Text._(key);
+            const val = Joomla.Text._(key);
             return (val && val !== key) ? val : (fallback || key);
         }
 
@@ -37,9 +36,9 @@
             /**
              * Initialize and open the browser modal
              */
-            open: function() {
+            open() {
                 // Get server_id from the form
-                var serverField = document.getElementById('jform_server_id');
+                const serverField = document.getElementById('jform_server_id');
                 if (!serverField || !serverField.value) {
                     Joomla.renderMessages({ warning: ['Please select a server first.'] });
                     return;
@@ -60,36 +59,36 @@
             /**
              * Create the Bootstrap 5 modal
              */
-            createModal: function() {
+            createModal() {
                 if (document.getElementById('localBrowserModal')) {
                     document.getElementById('localBrowserModal').remove();
                 }
 
                 // Build modal using DOM API to avoid innerHTML with dynamic content
-                var modalEl = document.createElement('div');
+                const modalEl = document.createElement('div');
                 modalEl.className = 'modal fade';
                 modalEl.id = 'localBrowserModal';
                 modalEl.setAttribute('tabindex', '-1');
                 modalEl.setAttribute('aria-labelledby', 'localBrowserModalLabel');
 
-                var dialog = document.createElement('div');
+                const dialog = document.createElement('div');
                 dialog.className = 'modal-dialog modal-xl modal-dialog-scrollable';
 
-                var content = document.createElement('div');
+                const content = document.createElement('div');
                 content.className = 'modal-content';
 
                 // Header
-                var header = document.createElement('div');
+                const header = document.createElement('div');
                 header.className = 'modal-header';
-                var title = document.createElement('h5');
+                const title = document.createElement('h5');
                 title.className = 'modal-title';
                 title.id = 'localBrowserModalLabel';
-                var titleIcon = document.createElement('span');
+                const titleIcon = document.createElement('span');
                 titleIcon.className = 'icon-folder';
                 titleIcon.setAttribute('aria-hidden', 'true');
                 title.appendChild(titleIcon);
-                title.appendChild(document.createTextNode(' ' + txt('JBS_MED_LOCAL_BROWSER_TITLE', 'Browse Media Files')));
-                var closeBtn = document.createElement('button');
+                title.appendChild(document.createTextNode(` ${txt('JBS_MED_LOCAL_BROWSER_TITLE', 'Browse Media Files')}`));
+                const closeBtn = document.createElement('button');
                 closeBtn.type = 'button';
                 closeBtn.className = 'btn-close';
                 closeBtn.setAttribute('data-bs-dismiss', 'modal');
@@ -98,38 +97,46 @@
                 header.appendChild(closeBtn);
 
                 // Body
-                var body = document.createElement('div');
+                const body = document.createElement('div');
                 body.className = 'modal-body';
 
                 // Breadcrumb container
-                var breadcrumbDiv = document.createElement('div');
+                const breadcrumbDiv = document.createElement('div');
                 breadcrumbDiv.id = 'localBrowserBreadcrumb';
                 breadcrumbDiv.className = 'mb-3';
                 body.appendChild(breadcrumbDiv);
 
                 // Filter bar + search (static translated labels, safe to set via textContent)
-                var filterBar = document.createElement('div');
+                const filterBar = document.createElement('div');
                 filterBar.className = 'd-flex gap-2 mb-3 flex-wrap align-items-center';
 
-                var btnGroup = document.createElement('div');
+                const btnGroup = document.createElement('div');
                 btnGroup.className = 'btn-group';
                 btnGroup.setAttribute('role', 'group');
                 btnGroup.setAttribute('aria-label', 'File type filter');
 
-                var filters = [
-                    { filter: 'all', label: txt('JBS_MED_LOCAL_BROWSER_FILTER_ALL', 'All Files'), icon: null, active: true },
-                    { filter: 'audio', label: txt('JBS_MED_LOCAL_BROWSER_FILTER_AUDIO', 'Audio'), icon: 'icon-headphones', active: false },
-                    { filter: 'video', label: txt('JBS_MED_LOCAL_BROWSER_FILTER_VIDEO', 'Video'), icon: 'icon-play', active: false },
-                    { filter: 'document', label: txt('JBS_MED_LOCAL_BROWSER_FILTER_DOCS', 'Documents'), icon: 'icon-file', active: false }
+                const filters = [
+                    {
+                        filter: 'all', label: txt('JBS_MED_LOCAL_BROWSER_FILTER_ALL', 'All Files'), icon: null, active: true,
+                    },
+                    {
+                        filter: 'audio', label: txt('JBS_MED_LOCAL_BROWSER_FILTER_AUDIO', 'Audio'), icon: 'icon-headphones', active: false,
+                    },
+                    {
+                        filter: 'video', label: txt('JBS_MED_LOCAL_BROWSER_FILTER_VIDEO', 'Video'), icon: 'icon-play', active: false,
+                    },
+                    {
+                        filter: 'document', label: txt('JBS_MED_LOCAL_BROWSER_FILTER_DOCS', 'Documents'), icon: 'icon-file', active: false,
+                    },
                 ];
 
-                filters.forEach(function(f) {
-                    var btn = document.createElement('button');
+                filters.forEach((f) => {
+                    const btn = document.createElement('button');
                     btn.type = 'button';
-                    btn.className = 'btn btn-outline-secondary btn-sm' + (f.active ? ' active' : '');
+                    btn.className = `btn btn-outline-secondary btn-sm${f.active ? ' active' : ''}`;
                     btn.setAttribute('data-filter', f.filter);
                     if (f.icon) {
-                        var ico = document.createElement('span');
+                        const ico = document.createElement('span');
                         ico.className = f.icon;
                         ico.setAttribute('aria-hidden', 'true');
                         btn.appendChild(ico);
@@ -141,9 +148,9 @@
 
                 filterBar.appendChild(btnGroup);
 
-                var searchWrap = document.createElement('div');
+                const searchWrap = document.createElement('div');
                 searchWrap.className = 'ms-auto';
-                var searchInput = document.createElement('input');
+                const searchInput = document.createElement('input');
                 searchInput.type = 'text';
                 searchInput.id = 'localBrowserSearch';
                 searchInput.className = 'form-control form-control-sm';
@@ -155,7 +162,7 @@
                 body.appendChild(filterBar);
 
                 // File grid container
-                var grid = document.createElement('div');
+                const grid = document.createElement('div');
                 grid.id = 'localBrowserGrid';
                 body.appendChild(grid);
 
@@ -168,11 +175,11 @@
                 this.modal = new bootstrap.Modal(modalEl);
 
                 // Bind filter buttons
-                var self = this;
-                var filterBtns = modalEl.querySelectorAll('[data-filter]');
-                filterBtns.forEach(function(btn) {
-                    btn.addEventListener('click', function() {
-                        filterBtns.forEach(function(b) { b.classList.remove('active'); });
+                const self = this;
+                const filterBtns = modalEl.querySelectorAll('[data-filter]');
+                filterBtns.forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        filterBtns.forEach((b) => { b.classList.remove('active'); });
                         btn.classList.add('active');
                         self.currentFilter = btn.dataset.filter;
                         self.loadFiles(self.currentPath, self.currentFilter);
@@ -181,10 +188,10 @@
 
                 // Bind search input
                 if (searchInput) {
-                    var searchTimer = null;
-                    searchInput.addEventListener('input', function() {
+                    let searchTimer = null;
+                    searchInput.addEventListener('input', () => {
                         clearTimeout(searchTimer);
-                        searchTimer = setTimeout(function() {
+                        searchTimer = setTimeout(() => {
                             self.searchTerm = searchInput.value.toLowerCase();
                             self.filterVisibleFiles();
                         }, 200);
@@ -192,7 +199,7 @@
                 }
 
                 // Clean up search on modal hide
-                modalEl.addEventListener('hidden.bs.modal', function() {
+                modalEl.addEventListener('hidden.bs.modal', () => {
                     if (searchInput) {
                         searchInput.value = '';
                     }
@@ -203,42 +210,42 @@
             /**
              * Load files via AJAX
              */
-            loadFiles: function(path, filter) {
-                var self = this;
-                var grid = document.getElementById('localBrowserGrid');
+            loadFiles(path, filter) {
+                const self = this;
+                const grid = document.getElementById('localBrowserGrid');
                 if (!grid) {
                     return;
                 }
 
                 grid.textContent = '';
-                var spinner = document.createElement('div');
+                const spinner = document.createElement('div');
                 spinner.className = 'text-center p-4';
-                var spinnerIcon = document.createElement('span');
+                const spinnerIcon = document.createElement('span');
                 spinnerIcon.className = 'spinner-border';
                 spinnerIcon.setAttribute('role', 'status');
                 spinner.appendChild(spinnerIcon);
-                var loadingText = document.createElement('p');
+                const loadingText = document.createElement('p');
                 loadingText.className = 'mt-2 text-muted';
                 loadingText.textContent = txt('JBS_MED_LOCAL_BROWSER_LOADING', 'Loading files...');
                 spinner.appendChild(loadingText);
                 grid.appendChild(spinner);
 
-                var config = Joomla.getOptions('com_proclaim.mediafile') || {};
-                var token = config.token || '';
+                const config = Joomla.getOptions('com_proclaim.mediafile') || {};
+                const token = config.token || '';
 
-                var url = 'index.php?option=com_proclaim&task=cwmmediafile.xhr&type=local&handler=browseFiles' +
-                    '&server_id=' + encodeURIComponent(this.serverId) +
-                    '&path=' + encodeURIComponent(path || '') +
-                    '&filter=' + encodeURIComponent(filter || 'all') +
-                    '&' + encodeURIComponent(token) + '=1';
+                const url = 'index.php?option=com_proclaim&task=cwmmediafile.xhr&type=local&handler=browseFiles'
+                    + `&server_id=${encodeURIComponent(this.serverId)
+                }&path=${encodeURIComponent(path || '')
+                }&filter=${encodeURIComponent(filter || 'all')
+                }&${encodeURIComponent(token)}=1`;
 
                 Joomla.request({
-                    url: url,
+                    url,
                     method: 'GET',
                     headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                    onSuccess: function(response) {
+                    onSuccess(response) {
                         try {
-                            var data = JSON.parse(response);
+                            const data = JSON.parse(response);
                             if (data.success) {
                                 self.currentPath = path || '';
                                 self.basePath = data.basePath || '';
@@ -247,23 +254,23 @@
                             } else {
                                 self.showGridMessage(grid, 'alert-danger', data.error || 'Error loading files');
                             }
-                        } catch (e) {
+                        } catch {
                             self.showGridMessage(grid, 'alert-danger', 'Invalid response from server');
                         }
                     },
-                    onError: function() {
+                    onError() {
                         self.showGridMessage(grid, 'alert-danger', 'Network error loading files');
-                    }
+                    },
                 });
             },
 
             /**
              * Show a message inside the grid area using safe DOM methods
              */
-            showGridMessage: function(grid, alertClass, message) {
+            showGridMessage(grid, alertClass, message) {
                 grid.textContent = '';
-                var alert = document.createElement('div');
-                alert.className = 'alert ' + alertClass;
+                const alert = document.createElement('div');
+                alert.className = `alert ${alertClass}`;
                 alert.textContent = message;
                 grid.appendChild(alert);
             },
@@ -271,30 +278,30 @@
             /**
              * Render breadcrumb navigation using safe DOM methods
              */
-            renderBreadcrumb: function(currentPath, parentPath, basePath) {
-                var breadcrumb = document.getElementById('localBrowserBreadcrumb');
+            renderBreadcrumb(currentPath, parentPath, basePath) {
+                const breadcrumb = document.getElementById('localBrowserBreadcrumb');
                 if (!breadcrumb) {
                     return;
                 }
 
-                var self = this;
-                var parts = (currentPath || '').split('/').filter(function(p) { return p; });
-                var baseParts = (basePath || '').split('/').filter(function(p) { return p; });
+                const self = this;
+                const parts = (currentPath || '').split('/').filter((p) => p);
+                const baseParts = (basePath || '').split('/').filter((p) => p);
 
                 breadcrumb.textContent = '';
-                var nav = document.createElement('nav');
+                const nav = document.createElement('nav');
                 nav.setAttribute('aria-label', 'File browser breadcrumb');
-                var ol = document.createElement('ol');
+                const ol = document.createElement('ol');
                 ol.className = 'breadcrumb mb-0';
 
                 // Root link
-                var rootLi = document.createElement('li');
+                const rootLi = document.createElement('li');
                 rootLi.className = 'breadcrumb-item';
-                var rootLink = document.createElement('a');
+                const rootLink = document.createElement('a');
                 rootLink.href = '#';
                 rootLink.className = 'local-browser-nav';
                 rootLink.dataset.path = '';
-                var homeIcon = document.createElement('span');
+                const homeIcon = document.createElement('span');
                 homeIcon.className = 'icon-home';
                 homeIcon.setAttribute('aria-hidden', 'true');
                 rootLink.appendChild(homeIcon);
@@ -302,17 +309,17 @@
                 ol.appendChild(rootLi);
 
                 // Build path segments after the base path
-                var relativeParts = parts.slice(baseParts.length);
-                for (var i = 0; i < relativeParts.length; i++) {
-                    var segmentPath = relativeParts.slice(0, i + 1).join('/');
-                    var isLast = (i === relativeParts.length - 1);
-                    var li = document.createElement('li');
-                    li.className = 'breadcrumb-item' + (isLast ? ' active' : '');
+                const relativeParts = parts.slice(baseParts.length);
+                for (let i = 0; i < relativeParts.length; i += 1) {
+                    const segmentPath = relativeParts.slice(0, i + 1).join('/');
+                    const isLast = (i === relativeParts.length - 1);
+                    const li = document.createElement('li');
+                    li.className = `breadcrumb-item${isLast ? ' active' : ''}`;
 
                     if (isLast) {
                         li.textContent = relativeParts[i];
                     } else {
-                        var link = document.createElement('a');
+                        const link = document.createElement('a');
                         link.href = '#';
                         link.className = 'local-browser-nav';
                         link.dataset.path = segmentPath;
@@ -326,8 +333,8 @@
                 breadcrumb.appendChild(nav);
 
                 // Bind navigation links
-                breadcrumb.querySelectorAll('.local-browser-nav').forEach(function(navLink) {
-                    navLink.addEventListener('click', function(e) {
+                breadcrumb.querySelectorAll('.local-browser-nav').forEach((navLink) => {
+                    navLink.addEventListener('click', (e) => {
                         e.preventDefault();
                         self.loadFiles(navLink.dataset.path, self.currentFilter);
                     });
@@ -337,24 +344,24 @@
             /**
              * Render the file/folder grid using safe DOM methods
              */
-            renderGrid: function(folders, files) {
-                var grid = document.getElementById('localBrowserGrid');
+            renderGrid(folders, files) {
+                const grid = document.getElementById('localBrowserGrid');
                 if (!grid) {
                     return;
                 }
 
-                var self = this;
+                const self = this;
                 grid.textContent = '';
 
                 if ((!folders || !folders.length) && (!files || !files.length)) {
-                    var emptyDiv = document.createElement('div');
+                    const emptyDiv = document.createElement('div');
                     emptyDiv.className = 'text-center p-4 text-muted';
-                    var emptyIcon = document.createElement('span');
+                    const emptyIcon = document.createElement('span');
                     emptyIcon.className = 'icon-info-circle';
                     emptyIcon.style.fontSize = '2rem';
                     emptyIcon.setAttribute('aria-hidden', 'true');
                     emptyDiv.appendChild(emptyIcon);
-                    var emptyText = document.createElement('p');
+                    const emptyText = document.createElement('p');
                     emptyText.className = 'mt-2';
                     emptyText.textContent = txt('JBS_MED_LOCAL_BROWSER_EMPTY', 'No files found in this directory.');
                     emptyDiv.appendChild(emptyText);
@@ -362,33 +369,33 @@
                     return;
                 }
 
-                var row = document.createElement('div');
+                const row = document.createElement('div');
                 row.className = 'row g-2';
 
                 // Helper to create a card column
                 function createCol() {
-                    var col = document.createElement('div');
+                    const col = document.createElement('div');
                     col.className = 'col-lg-2 col-md-3 col-sm-4 col-6';
                     return col;
                 }
 
                 // Parent folder link
                 if (this.currentPath) {
-                    var upCol = createCol();
-                    var upCard = document.createElement('div');
+                    const upCol = createCol();
+                    const upCard = document.createElement('div');
                     upCard.className = 'card h-100 local-browser-item local-browser-folder';
                     upCard.setAttribute('role', 'button');
                     upCard.setAttribute('tabindex', '0');
                     upCard.dataset.pathUp = 'true';
-                    var upBody = document.createElement('div');
+                    const upBody = document.createElement('div');
                     upBody.className = 'card-body text-center p-2';
-                    var upIcon = document.createElement('span');
+                    const upIcon = document.createElement('span');
                     upIcon.className = 'icon-arrow-up';
                     upIcon.style.fontSize = '1.5rem';
                     upIcon.style.color = '#6c757d';
                     upIcon.setAttribute('aria-hidden', 'true');
                     upBody.appendChild(upIcon);
-                    var upLabel = document.createElement('p');
+                    const upLabel = document.createElement('p');
                     upLabel.className = 'card-text small text-truncate mt-1 mb-0';
                     upLabel.textContent = '..';
                     upBody.appendChild(upLabel);
@@ -399,23 +406,23 @@
 
                 // Folders
                 if (folders && folders.length) {
-                    for (var i = 0; i < folders.length; i++) {
-                        var folder = folders[i];
-                        var fCol = createCol();
-                        var fCard = document.createElement('div');
+                    for (let i = 0; i < folders.length; i += 1) {
+                        const folder = folders[i];
+                        const fCol = createCol();
+                        const fCard = document.createElement('div');
                         fCard.className = 'card h-100 local-browser-item local-browser-folder';
                         fCard.setAttribute('role', 'button');
                         fCard.setAttribute('tabindex', '0');
                         fCard.dataset.folderPath = folder.path;
-                        var fBody = document.createElement('div');
+                        const fBody = document.createElement('div');
                         fBody.className = 'card-body text-center p-2';
-                        var fIcon = document.createElement('span');
+                        const fIcon = document.createElement('span');
                         fIcon.className = 'icon-folder';
                         fIcon.style.fontSize = '1.5rem';
                         fIcon.style.color = '#ffc107';
                         fIcon.setAttribute('aria-hidden', 'true');
                         fBody.appendChild(fIcon);
-                        var fName = document.createElement('p');
+                        const fName = document.createElement('p');
                         fName.className = 'card-text small text-truncate mt-1 mb-0';
                         fName.title = folder.name;
                         fName.textContent = folder.name;
@@ -428,45 +435,45 @@
 
                 // Files
                 if (files && files.length) {
-                    for (var j = 0; j < files.length; j++) {
-                        var file = files[j];
-                        var fileCol = createCol();
+                    for (let j = 0; j < files.length; j += 1) {
+                        const file = files[j];
+                        const fileCol = createCol();
                         fileCol.className += ' local-browser-file-item';
                         fileCol.dataset.filename = file.name.toLowerCase();
 
-                        var fileCard = document.createElement('div');
+                        const fileCard = document.createElement('div');
                         fileCard.className = 'card h-100 local-browser-item local-browser-file';
                         fileCard.setAttribute('role', 'button');
                         fileCard.setAttribute('tabindex', '0');
                         fileCard.dataset.filePath = file.path;
                         fileCard.dataset.fileSize = file.size;
 
-                        var fileBody = document.createElement('div');
+                        const fileBody = document.createElement('div');
                         fileBody.className = 'card-body text-center p-2';
 
-                        var fileIcon = document.createElement('span');
+                        const fileIcon = document.createElement('span');
                         fileIcon.className = self.getFileIcon(file.category);
                         fileIcon.style.fontSize = '1.5rem';
                         fileIcon.style.color = self.getFileIconColor(file.category);
                         fileIcon.setAttribute('aria-hidden', 'true');
                         fileBody.appendChild(fileIcon);
 
-                        var fileName = document.createElement('p');
+                        const fileName = document.createElement('p');
                         fileName.className = 'card-text small text-truncate mt-1 mb-0';
                         fileName.title = file.name;
                         fileName.textContent = file.name;
                         fileBody.appendChild(fileName);
 
-                        var metaDiv = document.createElement('div');
+                        const metaDiv = document.createElement('div');
                         metaDiv.className = 'mt-1';
                         if (file.extension) {
-                            var badge = document.createElement('span');
+                            const badge = document.createElement('span');
                             badge.className = 'badge bg-light text-dark';
                             badge.textContent = file.extension.toUpperCase();
                             metaDiv.appendChild(badge);
                             metaDiv.appendChild(document.createTextNode(' '));
                         }
-                        var sizeSmall = document.createElement('small');
+                        const sizeSmall = document.createElement('small');
                         sizeSmall.className = 'text-muted';
                         sizeSmall.textContent = self.formatFileSize(file.size);
                         metaDiv.appendChild(sizeSmall);
@@ -481,7 +488,7 @@
                 grid.appendChild(row);
 
                 // Bind folder navigation
-                grid.querySelectorAll('.local-browser-folder').forEach(function(card) {
+                grid.querySelectorAll('.local-browser-folder').forEach((card) => {
                     function navigate() {
                         if (card.dataset.pathUp) {
                             self.navigateUp();
@@ -490,18 +497,18 @@
                         }
                     }
                     card.addEventListener('click', navigate);
-                    card.addEventListener('keydown', function(e) {
+                    card.addEventListener('keydown', (e) => {
                         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate(); }
                     });
                 });
 
                 // Bind file selection
-                grid.querySelectorAll('.local-browser-file').forEach(function(card) {
+                grid.querySelectorAll('.local-browser-file').forEach((card) => {
                     function doSelect() {
                         self.selectFile(card.dataset.filePath, parseInt(card.dataset.fileSize, 10) || 0);
                     }
                     card.addEventListener('click', doSelect);
-                    card.addEventListener('keydown', function(e) {
+                    card.addEventListener('keydown', (e) => {
                         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); doSelect(); }
                     });
                 });
@@ -515,36 +522,36 @@
             /**
              * Navigate up one directory
              */
-            navigateUp: function() {
+            navigateUp() {
                 if (!this.currentPath) {
                     return;
                 }
-                var parts = this.currentPath.split('/').filter(function(p) { return p; });
+                const parts = this.currentPath.split('/').filter((p) => p);
                 parts.pop();
-                var parentPath = parts.length > 0 ? parts.join('/').replace(this.basePath + '/', '').replace(this.basePath, '') : '';
+                const parentPath = parts.length > 0 ? parts.join('/').replace(`${this.basePath}/`, '').replace(this.basePath, '') : '';
                 this.loadFiles(parentPath, this.currentFilter);
             },
 
             /**
              * Check if a file path is an image based on its extension
              */
-            isImageFile: function(filePath) {
-                var ext = (filePath || '').split('.').pop().toLowerCase();
+            isImageFile(filePath) {
+                const ext = (filePath || '').split('.').pop().toLowerCase();
                 return this.imageExtensions.indexOf(ext) !== -1;
             },
 
             /**
              * Set the filename and size form fields (extracted for reuse)
              */
-            setFileFields: function(filePath, fileSize) {
-                var filenameField = document.getElementById('jform_params_filename');
+            setFileFields(filePath, fileSize) {
+                const filenameField = document.getElementById('jform_params_filename');
                 if (filenameField) {
                     filenameField.value = filePath;
                     filenameField.dispatchEvent(new Event('change', { bubbles: true }));
                 }
 
                 if (fileSize > 0) {
-                    var sizeField = document.getElementById('jform_params_size');
+                    const sizeField = document.getElementById('jform_params_size');
                     if (sizeField && (!sizeField.value || sizeField.value === '0')) {
                         sizeField.value = fileSize;
                         sizeField.dispatchEvent(new Event('change', { bubbles: true }));
@@ -555,8 +562,8 @@
             /**
              * Select a file — shows image prompt for images, direct set for others
              */
-            selectFile: function(filePath, fileSize) {
-                var self = this;
+            selectFile(filePath, fileSize) {
+                const self = this;
 
                 if (this.isImageFile(filePath)) {
                     // Close the file browser modal first
@@ -568,14 +575,14 @@
                     this.showImagePrompt(
                         filePath,
                         fileSize,
-                        function() {
+                        () => {
                             // "Use Existing" — reference in place
                             self.setFileFields(filePath, fileSize);
                         },
-                        function() {
+                        () => {
                             // "Copy for This Record" — server-side copy
                             self.copyFileAndSelect(filePath, fileSize);
-                        }
+                        },
                     );
                 } else {
                     // Non-image: set fields directly and close modal
@@ -590,39 +597,39 @@
              * Show a Bootstrap 5 modal prompting how to handle the selected image
              * Built using safe DOM methods to avoid XSS via innerHTML.
              */
-            showImagePrompt: function(filePath, fileSize, onUseExisting, onCopyForRecord) {
-                var modalId = 'imagePromptModal';
-                var existing = document.getElementById(modalId);
+            showImagePrompt(filePath, fileSize, onUseExisting, onCopyForRecord) {
+                const modalId = 'imagePromptModal';
+                const existing = document.getElementById(modalId);
                 if (existing) {
                     existing.remove();
                 }
 
-                var fileNameStr = filePath.split('/').pop();
+                const fileNameStr = filePath.split('/').pop();
 
                 // Build modal DOM
-                var modalEl = document.createElement('div');
+                const modalEl = document.createElement('div');
                 modalEl.className = 'modal fade';
                 modalEl.id = modalId;
                 modalEl.setAttribute('tabindex', '-1');
                 modalEl.setAttribute('aria-labelledby', 'imagePromptLabel');
 
-                var dialog = document.createElement('div');
+                const dialog = document.createElement('div');
                 dialog.className = 'modal-dialog modal-dialog-centered';
-                var content = document.createElement('div');
+                const content = document.createElement('div');
                 content.className = 'modal-content';
 
                 // Header
-                var header = document.createElement('div');
+                const header = document.createElement('div');
                 header.className = 'modal-header';
-                var title = document.createElement('h5');
+                const title = document.createElement('h5');
                 title.className = 'modal-title';
                 title.id = 'imagePromptLabel';
-                var titleIcon = document.createElement('span');
+                const titleIcon = document.createElement('span');
                 titleIcon.className = 'icon-image';
                 titleIcon.setAttribute('aria-hidden', 'true');
                 title.appendChild(titleIcon);
-                title.appendChild(document.createTextNode(' ' + txt('JBS_MED_LOCAL_BROWSER_IMAGE_PROMPT_TITLE', 'Image File Selected')));
-                var closeBtn = document.createElement('button');
+                title.appendChild(document.createTextNode(` ${txt('JBS_MED_LOCAL_BROWSER_IMAGE_PROMPT_TITLE', 'Image File Selected')}`));
+                const closeBtn = document.createElement('button');
                 closeBtn.type = 'button';
                 closeBtn.className = 'btn-close';
                 closeBtn.setAttribute('data-bs-dismiss', 'modal');
@@ -631,62 +638,62 @@
                 header.appendChild(closeBtn);
 
                 // Body
-                var body = document.createElement('div');
+                const body = document.createElement('div');
                 body.className = 'modal-body';
 
-                var desc = document.createElement('p');
+                const desc = document.createElement('p');
                 desc.className = 'text-muted mb-3';
                 desc.textContent = txt('JBS_MED_LOCAL_BROWSER_IMAGE_PROMPT_DESC', 'How would you like to use this image file?');
                 body.appendChild(desc);
 
-                var fileLabel = document.createElement('p');
+                const fileLabel = document.createElement('p');
                 fileLabel.className = 'fw-bold text-truncate mb-4';
                 fileLabel.title = fileNameStr;
-                var fileLabelIcon = document.createElement('span');
+                const fileLabelIcon = document.createElement('span');
                 fileLabelIcon.className = 'icon-file';
                 fileLabelIcon.setAttribute('aria-hidden', 'true');
                 fileLabel.appendChild(fileLabelIcon);
-                fileLabel.appendChild(document.createTextNode(' ' + fileNameStr));
+                fileLabel.appendChild(document.createTextNode(` ${fileNameStr}`));
                 body.appendChild(fileLabel);
 
-                var btnGrid = document.createElement('div');
+                const btnGrid = document.createElement('div');
                 btnGrid.className = 'd-grid gap-2';
 
                 // "Use Existing" button
-                var useExistingBtn = document.createElement('button');
+                const useExistingBtn = document.createElement('button');
                 useExistingBtn.type = 'button';
                 useExistingBtn.className = 'btn btn-outline-primary btn-lg text-start';
                 useExistingBtn.id = 'imagePromptUseExisting';
-                var ueIcon = document.createElement('span');
+                const ueIcon = document.createElement('span');
                 ueIcon.className = 'icon-link';
                 ueIcon.setAttribute('aria-hidden', 'true');
                 useExistingBtn.appendChild(ueIcon);
                 useExistingBtn.appendChild(document.createTextNode(' '));
-                var ueStrong = document.createElement('strong');
+                const ueStrong = document.createElement('strong');
                 ueStrong.textContent = txt('JBS_MED_LOCAL_BROWSER_USE_EXISTING', 'Use Existing');
                 useExistingBtn.appendChild(ueStrong);
                 useExistingBtn.appendChild(document.createElement('br'));
-                var ueSmall = document.createElement('small');
+                const ueSmall = document.createElement('small');
                 ueSmall.className = 'text-muted';
                 ueSmall.textContent = txt('JBS_MED_LOCAL_BROWSER_USE_EXISTING_DESC', 'Reference the original file in place (no copy)');
                 useExistingBtn.appendChild(ueSmall);
                 btnGrid.appendChild(useExistingBtn);
 
                 // "Copy for This Record" button
-                var copyBtn = document.createElement('button');
+                const copyBtn = document.createElement('button');
                 copyBtn.type = 'button';
                 copyBtn.className = 'btn btn-outline-success btn-lg text-start';
                 copyBtn.id = 'imagePromptCopyForRecord';
-                var cpIcon = document.createElement('span');
+                const cpIcon = document.createElement('span');
                 cpIcon.className = 'icon-copy';
                 cpIcon.setAttribute('aria-hidden', 'true');
                 copyBtn.appendChild(cpIcon);
                 copyBtn.appendChild(document.createTextNode(' '));
-                var cpStrong = document.createElement('strong');
+                const cpStrong = document.createElement('strong');
                 cpStrong.textContent = txt('JBS_MED_LOCAL_BROWSER_COPY_FOR_RECORD', 'Copy for This Record');
                 copyBtn.appendChild(cpStrong);
                 copyBtn.appendChild(document.createElement('br'));
-                var cpSmall = document.createElement('small');
+                const cpSmall = document.createElement('small');
                 cpSmall.className = 'text-muted';
                 cpSmall.textContent = txt('JBS_MED_LOCAL_BROWSER_COPY_FOR_RECORD_DESC', 'Create a unique copy so the original stays untouched');
                 copyBtn.appendChild(cpSmall);
@@ -700,16 +707,16 @@
                 modalEl.appendChild(dialog);
                 document.body.appendChild(modalEl);
 
-                var bsModal = new bootstrap.Modal(modalEl);
+                const bsModal = new bootstrap.Modal(modalEl);
 
                 // Clean up on hide
-                modalEl.addEventListener('hidden.bs.modal', function() {
+                modalEl.addEventListener('hidden.bs.modal', () => {
                     bsModal.dispose();
                     modalEl.remove();
                 });
 
                 // Bind "Use Existing"
-                useExistingBtn.addEventListener('click', function() {
+                useExistingBtn.addEventListener('click', () => {
                     bsModal.hide();
                     if (onUseExisting) {
                         onUseExisting();
@@ -717,7 +724,7 @@
                 });
 
                 // Bind "Copy for This Record"
-                copyBtn.addEventListener('click', function() {
+                copyBtn.addEventListener('click', () => {
                     bsModal.hide();
                     if (onCopyForRecord) {
                         onCopyForRecord();
@@ -730,25 +737,25 @@
             /**
              * Copy a file server-side via AJAX, then set the new path in the form
              */
-            copyFileAndSelect: function(filePath, fileSize) {
-                var self = this;
-                var config = Joomla.getOptions('com_proclaim.mediafile') || {};
-                var token = config.token || '';
+            copyFileAndSelect(filePath, fileSize) {
+                const self = this;
+                const config = Joomla.getOptions('com_proclaim.mediafile') || {};
+                const token = config.token || '';
 
                 Joomla.renderMessages({ info: [txt('JBS_MED_LOCAL_BROWSER_COPYING', 'Copying file...')] });
 
-                var url = 'index.php?option=com_proclaim&task=cwmmediafile.xhr&type=local&handler=copyFile' +
-                    '&server_id=' + encodeURIComponent(this.serverId) +
-                    '&file=' + encodeURIComponent(filePath) +
-                    '&' + encodeURIComponent(token) + '=1';
+                const url = 'index.php?option=com_proclaim&task=cwmmediafile.xhr&type=local&handler=copyFile'
+                    + `&server_id=${encodeURIComponent(this.serverId)
+                }&file=${encodeURIComponent(filePath)
+                }&${encodeURIComponent(token)}=1`;
 
                 Joomla.request({
-                    url: url,
+                    url,
                     method: 'GET',
                     headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                    onSuccess: function(response) {
+                    onSuccess(response) {
                         try {
-                            var data = JSON.parse(response);
+                            const data = JSON.parse(response);
                             if (data.success && data.newPath) {
                                 self.setFileFields(data.newPath, data.newSize || fileSize);
                                 Joomla.renderMessages({ message: ['File copied successfully.'] });
@@ -763,23 +770,23 @@
                             self.setFileFields(filePath, fileSize);
                         }
                     },
-                    onError: function() {
+                    onError() {
                         console.error('Copy request failed');
                         Joomla.renderMessages({ warning: [txt('JBS_MED_LOCAL_BROWSER_COPY_FAILED', 'Failed to copy file. Using original.')] });
                         self.setFileFields(filePath, fileSize);
-                    }
+                    },
                 });
             },
 
             /**
              * Filter visible files by search term
              */
-            filterVisibleFiles: function() {
-                var items = document.querySelectorAll('.local-browser-file-item');
-                var term = this.searchTerm;
+            filterVisibleFiles() {
+                const items = document.querySelectorAll('.local-browser-file-item');
+                const term = this.searchTerm;
 
-                items.forEach(function(item) {
-                    var filename = item.dataset.filename || '';
+                items.forEach((item) => {
+                    const filename = item.dataset.filename || '';
                     if (!term || filename.indexOf(term) !== -1) {
                         item.style.display = '';
                     } else {
@@ -791,7 +798,7 @@
             /**
              * Get icon class for file category
              */
-            getFileIcon: function(category) {
+            getFileIcon(category) {
                 if (category === 'audio') {
                     return 'icon-headphones';
                 }
@@ -804,7 +811,7 @@
             /**
              * Get icon color for file category
              */
-            getFileIconColor: function(category) {
+            getFileIconColor(category) {
                 if (category === 'audio') {
                     return '#198754';
                 }
@@ -817,19 +824,19 @@
             /**
              * Format file size to human-readable string
              */
-            formatFileSize: function(bytes) {
+            formatFileSize(bytes) {
                 if (!bytes || bytes === 0) {
                     return '0 B';
                 }
-                var units = ['B', 'KB', 'MB', 'GB'];
-                var i = 0;
-                var size = bytes;
+                const units = ['B', 'KB', 'MB', 'GB'];
+                let i = 0;
+                let size = bytes;
                 while (size >= 1024 && i < units.length - 1) {
                     size /= 1024;
-                    i++;
+                    i += 1;
                 }
-                return size.toFixed(i > 0 ? 1 : 0) + ' ' + units[i];
-            }
+                return `${size.toFixed(i > 0 ? 1 : 0)} ${units[i]}`;
+            },
         };
     })();
 
