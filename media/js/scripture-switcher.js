@@ -145,40 +145,51 @@
             const retryLabel = txt('JBS_CMN_SCRIPTURE_RETRY', 'Try Again');
             const detailsLabel = txt('JBS_CMN_SCRIPTURE_ERROR_DETAILS', 'Details');
 
-            // Build details section with safe text content
-            let detailsHtml = '';
+            // Build banner content using DOM methods so server-provided text is never parsed as HTML
+            const msgDiv = document.createElement('div');
+            msgDiv.textContent = mainMsg;
+            banner.appendChild(msgDiv);
 
             if (errorMessage || provider) {
                 const items = [];
+                if (version)      { items.push('Version: ' + version.toUpperCase()); }
+                if (provider)     { items.push('Provider: ' + provider); }
+                if (errorMessage) { items.push('Error: ' + errorMessage); }
 
-                if (version) {
-                    items.push('Version: ' + version.toUpperCase());
-                }
-
-                if (provider) {
-                    items.push('Provider: ' + provider);
-                }
-
-                if (errorMessage) {
-                    items.push('Error: ' + errorMessage);
-                }
-
-                detailsHtml = '<details class="mt-1 small"><summary>' + detailsLabel + '</summary><ul class="mb-0">' +
-                    items.map((item) => '<li>' + item + '</li>').join('') +
-                    '</ul></details>';
+                const details = document.createElement('details');
+                details.className = 'mt-1 small';
+                const summary = document.createElement('summary');
+                summary.textContent = detailsLabel;
+                details.appendChild(summary);
+                const ul = document.createElement('ul');
+                ul.className = 'mb-0';
+                items.forEach((item) => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    ul.appendChild(li);
+                });
+                details.appendChild(ul);
+                banner.appendChild(details);
             }
 
-            // All content originates from our own CwmscriptureController server endpoint
-            banner.innerHTML = '<div>' + mainMsg + '</div>' +
-                detailsHtml +
-                '<button type="button" class="btn btn-sm btn-outline-secondary scripture-retry-banner-btn mt-1 me-2">' +
-                '<i class="fas fa-redo" aria-hidden="true"></i> ' + retryLabel +
-                '</button>' +
-                '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+            const retryBtn = document.createElement('button');
+            retryBtn.type = 'button';
+            retryBtn.className = 'btn btn-sm btn-outline-secondary scripture-retry-banner-btn mt-1 me-2';
+            const retryIcon = document.createElement('i');
+            retryIcon.className = 'fas fa-redo';
+            retryIcon.setAttribute('aria-hidden', 'true');
+            retryBtn.appendChild(retryIcon);
+            retryBtn.appendChild(document.createTextNode(' ' + retryLabel));
+            banner.appendChild(retryBtn);
+
+            const closeBtn = document.createElement('button');
+            closeBtn.type = 'button';
+            closeBtn.className = 'btn-close';
+            closeBtn.setAttribute('data-bs-dismiss', 'alert');
+            closeBtn.setAttribute('aria-label', 'Close');
+            banner.appendChild(closeBtn);
 
             scriptureText.appendChild(banner);
-
-            const retryBtn = banner.querySelector('.scripture-retry-banner-btn');
 
             if (retryBtn && retryCallback) {
                 retryBtn.addEventListener('click', () => {

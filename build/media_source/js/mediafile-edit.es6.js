@@ -316,31 +316,6 @@
         var options = serverField.options;
         var currentValue = serverField.value;
 
-        // Build server cards HTML
-        var cardsHtml = '';
-        for (var i = 0; i < options.length; i++) {
-            var opt = options[i];
-            if (!opt.value) {
-                continue; // Skip placeholder options
-            }
-            var type = serverTypes[opt.value] || 'legacy';
-            var icon = getTypeIcon(type);
-            var desc = getTypeDescription(type);
-            var typeBadge = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
-            var isSelected = (opt.value === currentValue);
-            var selectedClass = isSelected ? ' border-primary' : '';
-            var selectedBadge = isSelected ? ' <span class="badge bg-primary ms-1">Current</span>' : '';
-
-            cardsHtml += '<div class="col-md-4 mb-3">' +
-                '<div class="card h-100 server-picker-card' + selectedClass + '" role="button" data-server-id="' + opt.value + '" style="cursor:pointer;transition:border-color 0.2s,box-shadow 0.2s;">' +
-                '<div class="card-body text-center">' +
-                '<span class="' + icon + '" style="font-size:2.5rem;" aria-hidden="true"></span>' +
-                '<h5 class="card-title mt-2">' + opt.text + selectedBadge + '</h5>' +
-                '<span class="badge bg-secondary">' + typeBadge + '</span>' +
-                '<p class="card-text text-muted small mt-2">' + desc + '</p>' +
-                '</div></div></div>';
-        }
-
         // Remove existing modal if present
         var existingModal = document.getElementById('serverPickerModal');
         if (existingModal) {
@@ -350,27 +325,87 @@
         // Determine if this is first selection (no addon loaded) — use static backdrop
         var hasAddon = previousServerValue && previousServerType;
         var backdropAttr = hasAddon ? '' : ' data-bs-backdrop="static" data-bs-keyboard="false"';
-        var closeBtn = hasAddon
-            ? '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>'
-            : '';
 
-        var modalHtml = '<div class="modal fade" id="serverPickerModal" tabindex="-1"' + backdropAttr + '>' +
+        // Insert static modal shell (no user content) then populate via DOM to prevent XSS
+        document.body.insertAdjacentHTML('beforeend',
+            '<div class="modal fade" id="serverPickerModal" tabindex="-1"' + backdropAttr + '>' +
             '<div class="modal-dialog modal-lg modal-dialog-centered">' +
             '<div class="modal-content">' +
             '<div class="modal-header">' +
-            '<h5 class="modal-title"><span class="icon-server" aria-hidden="true"></span> ' +
-            (config.selectServerTitle || 'Select a Server') + '</h5>' +
-            closeBtn +
+            '<h5 class="modal-title" id="serverPickerModalTitle"></h5>' +
+            (hasAddon ? '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' : '') +
             '</div>' +
             '<div class="modal-body">' +
-            '<p class="text-muted">' + (config.selectServerDesc || 'Choose which server to use for this media file.') + '</p>' +
-            '<div class="row">' + cardsHtml + '</div>' +
-            '</div>' +
-            '</div></div></div>';
-
-        document.body.insertAdjacentHTML('beforeend', modalHtml);
+            '<p class="text-muted" id="serverPickerModalDesc"></p>' +
+            '<div class="row" id="serverPickerModalCards"></div>' +
+            '</div></div></div></div>');
 
         var modalEl = document.getElementById('serverPickerModal');
+
+        // Populate text content safely
+        var titleEl = modalEl.querySelector('#serverPickerModalTitle');
+        var titleIcon = document.createElement('span');
+        titleIcon.className = 'icon-server';
+        titleIcon.setAttribute('aria-hidden', 'true');
+        titleEl.appendChild(titleIcon);
+        titleEl.appendChild(document.createTextNode(' ' + (config.selectServerTitle || 'Select a Server')));
+        modalEl.querySelector('#serverPickerModalDesc').textContent =
+            config.selectServerDesc || 'Choose which server to use for this media file.';
+
+        // Build server cards using DOM methods so opt.text is never parsed as HTML
+        var cardsContainer = modalEl.querySelector('#serverPickerModalCards');
+        for (var i = 0; i < options.length; i++) {
+            var opt = options[i];
+            if (!opt.value) { continue; }
+            var type = serverTypes[opt.value] || 'legacy';
+            var icon = getTypeIcon(type);
+            var desc = getTypeDescription(type);
+            var typeBadge = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+            var isSelected = (opt.value === currentValue);
+
+            var col = document.createElement('div');
+            col.className = 'col-md-4 mb-3';
+
+            var card = document.createElement('div');
+            card.className = 'card h-100 server-picker-card' + (isSelected ? ' border-primary' : '');
+            card.setAttribute('role', 'button');
+            card.dataset.serverId = opt.value;
+            card.style.cssText = 'cursor:pointer;transition:border-color 0.2s,box-shadow 0.2s;';
+
+            var cardBody = document.createElement('div');
+            cardBody.className = 'card-body text-center';
+
+            var iconSpan = document.createElement('span');
+            iconSpan.className = icon;
+            iconSpan.style.fontSize = '2.5rem';
+            iconSpan.setAttribute('aria-hidden', 'true');
+            cardBody.appendChild(iconSpan);
+
+            var title = document.createElement('h5');
+            title.className = 'card-title mt-2';
+            title.textContent = opt.text;
+            if (isSelected) {
+                var badge = document.createElement('span');
+                badge.className = 'badge bg-primary ms-1';
+                badge.textContent = 'Current';
+                title.appendChild(badge);
+            }
+            cardBody.appendChild(title);
+
+            var typeBadgeEl = document.createElement('span');
+            typeBadgeEl.className = 'badge bg-secondary';
+            typeBadgeEl.textContent = typeBadge;
+            cardBody.appendChild(typeBadgeEl);
+
+            var descEl = document.createElement('p');
+            descEl.className = 'card-text text-muted small mt-2';
+            descEl.textContent = desc;
+            cardBody.appendChild(descEl);
+
+            card.appendChild(cardBody);
+            col.appendChild(card);
+            cardsContainer.appendChild(col);
+        }
         var bsModal = new bootstrap.Modal(modalEl);
 
         // Bind card click events

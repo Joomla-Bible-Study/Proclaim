@@ -386,7 +386,7 @@
 
                 if (caption) {
                     var captionDiv = document.createElement('div');
-                    captionDiv.innerHTML = caption;
+                    captionDiv.textContent = caption;
                     captionDiv.style.cssText = 'color:#fff;margin-bottom:16px;text-align:center;';
                     wrapper.appendChild(captionDiv);
                 }
@@ -399,7 +399,10 @@
                 if (autoplay) {
                     audio.autoplay = true;
                 }
-                audio.innerHTML = '<source src="' + audioSrc + '" type="audio/mpeg">';
+                var audioSource = document.createElement('source');
+                audioSource.src = audioSrc;
+                audioSource.type = 'audio/mpeg';
+                audio.appendChild(audioSource);
                 wrapper.appendChild(audio);
 
                 // Track when the audio actually starts playing (belt-and-suspenders alongside click tracking above).
