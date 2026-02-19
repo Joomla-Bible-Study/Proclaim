@@ -532,31 +532,34 @@ class Cwmmedia
                         }
 
                         if (preg_match('/(youtube.com|youtu.be)/', $path) === 1) {
-                            $playercode = '<iframe class="playhit" data-id="' . $media->id . '" width="' . $player->playerwidth . '" height="' .
-                                $player->playerheight . '" src="' . $youtube->convertYoutube($path) .
-                                '" allow="autoplay; encrypted-media" allowfullscreen style="border: none"></iframe>';
+                            $playercode = '<div class="proclaim-video-wrap" style="position:relative;padding-bottom:56.25%;overflow:hidden;max-width:100%;">'
+                                . '<iframe class="playhit" data-id="' . $media->id . '" src="' . $youtube->convertYoutube($path) . '"'
+                                . ' allow="autoplay; encrypted-media" allowfullscreen'
+                                . ' style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>'
+                                . '</div>';
                         } elseif (preg_match('/(vimeo.com)/', $path) === 1) {
                             $vimeo      = new CWMAddonVimeo();
-                            $playercode = '<iframe class="playhit" data-id="' . $media->id . '" src="' . $vimeo->convertVimeo($path) .
-                                '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
-                                '" webkitallowfullscreen mozallowfullscreen allowfullscreen style="border: none"></iframe>';
+                            $playercode = '<div class="proclaim-video-wrap" style="position:relative;padding-bottom:56.25%;overflow:hidden;max-width:100%;">'
+                                . '<iframe class="playhit" data-id="' . $media->id . '" src="' . $vimeo->convertVimeo($path) . '"'
+                                . ' webkitallowfullscreen mozallowfullscreen allowfullscreen'
+                                . ' style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>'
+                                . '</div>';
                         } elseif (preg_match('/(wistia.com|wistia.net)/', $path) === 1) {
                             $wistia     = new CWMAddonWistia();
-                            $playercode = '<iframe class="playhit" data-id="' . $media->id . '" src="' . $wistia->convertWistia($path) .
-                                '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
-                                '" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" style="border: none"></iframe>';
+                            $playercode = '<div class="proclaim-video-wrap" style="position:relative;padding-bottom:56.25%;overflow:hidden;max-width:100%;">'
+                                . '<iframe class="playhit" data-id="' . $media->id . '" src="' . $wistia->convertWistia($path) . '"'
+                                . ' allow="autoplay; fullscreen" allowtransparency="true" frameborder="0"'
+                                . ' style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>'
+                                . '</div>';
                         } elseif (preg_match('/(resi.io)/', $path) === 1) {
                             $resi      = new CWMAddonResi();
                             $resiSrc   = $resi->convertResi($path);
-                            $w         = (int) $player->playerwidth;
-                            $h         = (int) $player->playerheight;
-                            // Wrap in a relative container with a transparent click-intercept overlay.
+                            // Wrap in a responsive 16:9 container with a transparent click-intercept overlay.
                             // The overlay captures the first user click (play button), tracks the play,
                             // then swaps autoplay=false → autoplay=true in the iframe src before removing
                             // itself — so the video starts seamlessly without a second click.
-                            $playercode = '<div class="proclaim-resi-container" style="position:relative;width:' . $w . 'px;height:' . $h . 'px;">'
+                            $playercode = '<div class="proclaim-resi-container proclaim-video-wrap" style="position:relative;padding-bottom:56.25%;overflow:hidden;max-width:100%;">'
                                 . '<iframe data-id="' . $media->id . '" src="' . $resiSrc . '"'
-                                . ' width="' . $w . '" height="' . $h . '"'
                                 . ' allow="autoplay; fullscreen" allowfullscreen'
                                 . ' style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>'
                                 . '<div class="proclaim-resi-overlay" data-media-id="' . $media->id . '"'
