@@ -318,6 +318,7 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
     <!-- ── END TRANSITION PANEL ──────────────────────────────────────────── -->
     <?php endif; ?>
 
+    <?php if ($isOverview) : ?>
     <!-- Line Chart: Views / Plays / Downloads over time -->
     <div class="card mb-3">
         <div class="card-header fw-semibold">
@@ -499,6 +500,7 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
         </div>
     </div>
     <?php endif; ?>
+    <?php endif; // $isOverview ?>
 
     <!-- Breadcrumb for sub-levels (series detail, message detail) -->
     <?php if (($this->drilldown === 'series' && $this->drilldownId > 0) || $this->drilldown === 'message') : ?>
