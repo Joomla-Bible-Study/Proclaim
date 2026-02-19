@@ -705,44 +705,37 @@ class CwmanalyticsModel extends BaseDatabaseModel
         try {
             $db = $this->getDatabase();
 
-            // Scalar subquery for message_count avoids Cartesian product when
-            // also joining analytics events on series_id.
-            $msgCountSub = '(SELECT COUNT(*) FROM ' . $db->quoteName('#__bsms_studies', 'sc') .
-                ' WHERE ' . $db->quoteName('sc.series_id') . ' = ' . $db->quoteName('sr.id') .
-                ' AND ' . $db->quoteName('sc.published') . ' = 1) AS message_count';
+            $locationFilter = $locationId > 0
+                ? ' AND EXISTS (SELECT 1 FROM ' . $db->quoteName('#__bsms_studies') . ' sl2'
+                  . ' WHERE sl2.' . $db->quoteName('series_id') . ' = sr.' . $db->quoteName('id')
+                  . ' AND sl2.' . $db->quoteName('location_id') . ' = ' . (int) $locationId
+                  . ' AND sl2.' . $db->quoteName('published') . ' = 1)'
+                : '';
 
-            $query = $db->getQuery(true)
-                ->select([
-                    $db->quoteName('sr.id', 'series_id'),
-                    $db->quoteName('sr.series_text', 'title'),
-                    $db->quoteName('sr.thumb', 'thumb'),
-                    $msgCountSub,
-                    'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('page_view') . ' THEN 1 ELSE 0 END) AS views',
-                    'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) AS plays',
-                    'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END) AS downloads',
-                ])
-                ->from($db->quoteName('#__bsms_series', 'sr'))
-                ->leftJoin(
-                    $db->quoteName('#__bsms_analytics_events', 'e') .
-                    ' ON ' . $db->quoteName('e.series_id') . ' = ' . $db->quoteName('sr.id') .
-                    ' AND ' . $db->quoteName('e.created') . ' >= ' . $db->quote($start . ' 00:00:00') .
-                    ' AND ' . $db->quoteName('e.created') . ' <= ' . $db->quote($end . ' 23:59:59')
-                )
-                ->where($db->quoteName('sr.published') . ' = 1')
-                ->group($db->quoteName('sr.id'))
-                ->order('(SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('page_view') . ' THEN 1 ELSE 0 END) + SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) + SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END)) DESC');
+            // Raw SQL avoids query-builder quirks with correlated scalar subqueries.
+            // One LEFT JOIN on series_id (no study JOIN) prevents Cartesian product.
+            $sql = 'SELECT'
+                . ' sr.' . $db->quoteName('id') . ' AS series_id,'
+                . ' sr.' . $db->quoteName('series_text') . ' AS title,'
+                . ' sr.' . $db->quoteName('thumb') . ','
+                . ' (SELECT COUNT(*) FROM ' . $db->quoteName('#__bsms_studies') . ' sc'
+                . '  WHERE sc.' . $db->quoteName('series_id') . ' = sr.' . $db->quoteName('id')
+                . '  AND sc.' . $db->quoteName('published') . ' = 1) AS message_count,'
+                . ' SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('page_view') . ' THEN 1 ELSE 0 END) AS views,'
+                . ' SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) AS plays,'
+                . ' SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END) AS downloads'
+                . ' FROM ' . $db->quoteName('#__bsms_series') . ' sr'
+                . ' LEFT JOIN ' . $db->quoteName('#__bsms_analytics_events') . ' e'
+                . '   ON e.' . $db->quoteName('series_id') . ' = sr.' . $db->quoteName('id')
+                . '   AND e.' . $db->quoteName('created') . ' >= ' . $db->quote($start . ' 00:00:00')
+                . '   AND e.' . $db->quoteName('created') . ' <= ' . $db->quote($end . ' 23:59:59')
+                . ' WHERE sr.' . $db->quoteName('published') . ' = 1'
+                . $locationFilter
+                . ' GROUP BY sr.' . $db->quoteName('id')
+                . ' ORDER BY (views + plays + downloads) DESC'
+                . ' LIMIT 100';
 
-            if ($locationId > 0) {
-                // Only show series that have at least one published message at this location
-                $query->where(
-                    'EXISTS (SELECT 1 FROM ' . $db->quoteName('#__bsms_studies', 'sl') .
-                    ' WHERE ' . $db->quoteName('sl.series_id') . ' = ' . $db->quoteName('sr.id') .
-                    ' AND ' . $db->quoteName('sl.location_id') . ' = ' . (int) $locationId .
-                    ' AND ' . $db->quoteName('sl.published') . ' = 1)'
-                );
-            }
-
-            $db->setQuery($query, 0, 100);
+            $db->setQuery($sql);
 
             return (array) ($db->loadAssocList() ?? []);
         } catch (\Exception $e) {
