@@ -548,155 +548,191 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             </div>
         </div>
 
-        <!-- Migration Tools section -->
-        <h4 class="border-bottom pb-2 mb-3 mt-2"><?php echo Text::_('JBS_ADM_IMAGETOOLS_MIGRATION_HEADING'); ?></h4>
-        <div class="row" id="imagetools">
-            <!-- Image Migration Section (Step 1) -->
-            <div class="col-12 col-lg-6">
-                <div class="cwmadmin-panel mb-4">
-                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_IMAGE_MIGRATION'); ?></h3>
-                    <p><?php echo Text::_('JBS_ADM_IMAGE_MIGRATION_DESC'); ?></p>
-                    <div id="migration-counts" class="mb-3">
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        <?php echo Text::_('JBS_ADM_LOADING'); ?>
-                    </div>
-                    <div id="migration-progress" class="mb-3" style="display:none;">
-                        <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar" style="width: 0%"></div>
-                        </div>
-                        <div class="mt-2" id="migration-status"></div>
-                    </div>
-                    <div id="migration-error-report" style="display:none;"></div>
-                    <button type="button" class="btn btn-primary" id="btn-start-migration" disabled>
-                        <i class="icon-refresh" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_START_MIGRATION'); ?>
+        <!-- Individual Tools (collapsible) -->
+        <div class="accordion accordion-flush mt-2" id="imagetools-accordion">
+
+            <!-- Migration Tools -->
+            <div class="accordion-item border-0 bg-transparent">
+                <h4 class="accordion-header" id="accordion-migration-heading">
+                    <button class="accordion-button collapsed bg-body-secondary rounded px-3 py-2 fw-semibold"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#accordion-migration"
+                            aria-expanded="false"
+                            aria-controls="accordion-migration">
+                        <?php echo Text::_('JBS_ADM_IMAGETOOLS_MIGRATION_HEADING'); ?>
                     </button>
+                </h4>
+                <div id="accordion-migration"
+                     class="accordion-collapse collapse"
+                     aria-labelledby="accordion-migration-heading">
+                    <div class="accordion-body px-0 pt-3 pb-0">
+                        <div class="row" id="imagetools">
+                            <!-- Image Migration Section -->
+                            <div class="col-12 col-lg-6">
+                                <div class="cwmadmin-panel mb-4">
+                                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_IMAGE_MIGRATION'); ?></h3>
+                                    <p><?php echo Text::_('JBS_ADM_IMAGE_MIGRATION_DESC'); ?></p>
+                                    <div id="migration-counts" class="mb-3">
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        <?php echo Text::_('JBS_ADM_LOADING'); ?>
+                                    </div>
+                                    <div id="migration-progress" class="mb-3" style="display:none;">
+                                        <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                            <div class="progress-bar" style="width: 0%"></div>
+                                        </div>
+                                        <div class="mt-2" id="migration-status"></div>
+                                    </div>
+                                    <div id="migration-error-report" style="display:none;"></div>
+                                    <button type="button" class="btn btn-primary" id="btn-start-migration" disabled>
+                                        <i class="icon-refresh" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_START_MIGRATION'); ?>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- WebP Generation Section -->
+                            <div class="col-12 col-lg-6">
+                                <div class="cwmadmin-panel mb-4">
+                                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_WEBP_GENERATION'); ?></h3>
+                                    <p><?php echo Text::_('JBS_ADM_WEBP_GENERATION_DESC'); ?></p>
+                                    <div id="webp-counts" class="mb-3">
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        <?php echo Text::_('JBS_ADM_LOADING'); ?>
+                                    </div>
+                                    <div id="webp-progress" class="mb-3" style="display:none;">
+                                        <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                            <div class="progress-bar bg-success" style="width: 0%"></div>
+                                        </div>
+                                        <div class="mt-2" id="webp-status"></div>
+                                    </div>
+                                    <button type="button" class="btn btn-success" id="btn-start-webp" disabled>
+                                        <i class="icon-images" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_GENERATE_WEBP'); ?>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Thumbnail Regeneration -->
+                        <div class="row mt-3" id="imagetools-row1b">
+                            <div class="col-12 col-lg-6">
+                                <div class="cwmadmin-panel mb-4">
+                                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_THUMB_REGENERATION'); ?></h3>
+                                    <p><?php echo Text::_('JBS_ADM_THUMB_REGENERATION_DESC'); ?></p>
+                                    <div id="thumb-regen-counts" class="mb-3">
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        <?php echo Text::_('JBS_ADM_LOADING'); ?>
+                                    </div>
+                                    <div id="thumb-regen-progress" class="mb-3" style="display:none;">
+                                        <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                            <div class="progress-bar bg-info" style="width: 0%"></div>
+                                        </div>
+                                        <div class="mt-2" id="thumb-regen-status"></div>
+                                    </div>
+                                    <button type="button" class="btn btn-info" id="btn-start-thumb-regen" disabled>
+                                        <i class="icon-refresh" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_REGENERATE_THUMBS'); ?>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Recover Bare-ID Folders -->
+                        <div class="row mt-3" id="imagetools-row1c">
+                            <div class="col-12 col-lg-6">
+                                <div class="cwmadmin-panel mb-4">
+                                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_RECOVER_IMAGES'); ?></h3>
+                                    <p><?php echo Text::_('JBS_ADM_RECOVER_IMAGES_DESC'); ?></p>
+                                    <div id="recovery-counts" class="mb-3">
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        <?php echo Text::_('JBS_ADM_LOADING'); ?>
+                                    </div>
+                                    <div id="recovery-progress" class="mb-3" style="display:none;">
+                                        <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                            <div class="progress-bar bg-warning" style="width: 0%"></div>
+                                        </div>
+                                        <div class="mt-2" id="recovery-status"></div>
+                                    </div>
+                                    <button type="button" class="btn btn-warning" id="btn-start-recovery" disabled>
+                                        <i class="icon-refresh" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_RECOVER_IMAGES_BTN'); ?>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- WebP Generation Section (Step 2) -->
-            <div class="col-12 col-lg-6">
-                <div class="cwmadmin-panel mb-4">
-                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_WEBP_GENERATION'); ?></h3>
-                    <p><?php echo Text::_('JBS_ADM_WEBP_GENERATION_DESC'); ?></p>
-                    <div id="webp-counts" class="mb-3">
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        <?php echo Text::_('JBS_ADM_LOADING'); ?>
-                    </div>
-                    <div id="webp-progress" class="mb-3" style="display:none;">
-                        <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar bg-success" style="width: 0%"></div>
+            <!-- Cleanup & Maintenance -->
+            <div class="accordion-item border-0 bg-transparent mt-1">
+                <h4 class="accordion-header" id="accordion-cleanup-heading">
+                    <button class="accordion-button collapsed bg-body-secondary rounded px-3 py-2 fw-semibold"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#accordion-cleanup"
+                            aria-expanded="false"
+                            aria-controls="accordion-cleanup">
+                        <?php echo Text::_('JBS_ADM_IMAGETOOLS_CLEANUP_HEADING'); ?>
+                    </button>
+                </h4>
+                <div id="accordion-cleanup"
+                     class="accordion-collapse collapse"
+                     aria-labelledby="accordion-cleanup-heading">
+                    <div class="accordion-body px-0 pt-3 pb-0">
+                        <div class="row" id="imagetools-row2">
+                            <div class="col-12 col-lg-6">
+                                <div class="cwmadmin-panel mb-4">
+                                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_CLEAR_UNRESOLVABLE'); ?></h3>
+                                    <p><?php echo Text::_('JBS_ADM_CLEAR_UNRESOLVABLE_DESC'); ?></p>
+                                    <div id="unresolvable-preview" class="mb-3" style="display:none;"></div>
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        <button type="button" class="btn btn-outline-secondary" id="btn-preview-unresolvable">
+                                            <i class="icon-search" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_PREVIEW_UNRESOLVABLE'); ?>
+                                        </button>
+                                        <button type="button" class="btn btn-warning" id="btn-clear-unresolvable" style="display:none;">
+                                            <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_CLEAR_UNRESOLVABLE_BTN'); ?>
+                                        </button>
+                                        <a href="index.php?option=com_proclaim&task=cwmadmin.downloadClearedLogXHR&<?php echo Session::getFormToken(); ?>=1"
+                                           class="btn btn-outline-secondary" id="btn-download-cleared-log" style="display:none;" download>
+                                            <i class="icon-download" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_DOWNLOAD_CLEARED_LOG'); ?>
+                                        </a>
+                                    </div>
+                                    <div id="unresolvable-status" class="mt-3" style="display:none;"></div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <div class="cwmadmin-panel mb-4">
+                                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_LEGACY_FILES'); ?></h3>
+                                    <p><?php echo Text::_('JBS_ADM_LEGACY_FILES_DESC'); ?></p>
+                                    <button type="button" class="btn btn-outline-secondary" id="btn-scan-legacy">
+                                        <i class="icon-search" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_SCAN_LEGACY'); ?>
+                                    </button>
+                                    <div id="legacy-results" class="mt-3" style="display:none;"></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mt-2" id="webp-status"></div>
-                    </div>
-                    <button type="button" class="btn btn-success" id="btn-start-webp" disabled>
-                        <i class="icon-images" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_GENERATE_WEBP'); ?>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <!-- Row 1b: Thumbnail Regeneration -->
-        <div class="row mt-3" id="imagetools-row1b">
-            <div class="col-12 col-lg-6">
-                <div class="cwmadmin-panel mb-4">
-                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_THUMB_REGENERATION'); ?></h3>
-                    <p><?php echo Text::_('JBS_ADM_THUMB_REGENERATION_DESC'); ?></p>
-                    <div id="thumb-regen-counts" class="mb-3">
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        <?php echo Text::_('JBS_ADM_LOADING'); ?>
-                    </div>
-                    <div id="thumb-regen-progress" class="mb-3" style="display:none;">
-                        <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar bg-info" style="width: 0%"></div>
+                        <!-- Orphan Cleanup -->
+                        <div class="row mt-3" id="imagetools-row3">
+                            <div class="col-12 col-lg-6">
+                                <div class="cwmadmin-panel mb-4">
+                                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_ORPHAN_CLEANUP'); ?></h3>
+                                    <p><?php echo Text::_('JBS_ADM_ORPHAN_CLEANUP_DESC'); ?></p>
+                                    <p class="text-muted small" id="orphan-step-indicator"><?php echo Text::_('JBS_ADM_ORPHAN_STEP1'); ?></p>
+                                    <div id="orphan-status" class="mb-3">
+                                        <button type="button" class="btn btn-secondary" id="btn-scan-orphans">
+                                            <i class="icon-search" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_SCAN_ORPHANS'); ?>
+                                        </button>
+                                    </div>
+                                    <div id="orphan-results" class="mb-3" style="display:none;">
+                                        <div class="alert alert-info" id="orphan-summary"></div>
+                                        <div id="orphan-list" class="cwmadmin-orphan-list table-responsive"></div>
+                                    </div>
+                                    <button type="button" class="btn btn-danger" id="btn-delete-orphans" style="display:none;">
+                                        <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_DELETE_SELECTED'); ?>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mt-2" id="thumb-regen-status"></div>
                     </div>
-                    <button type="button" class="btn btn-info" id="btn-start-thumb-regen" disabled>
-                        <i class="icon-refresh" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_REGENERATE_THUMBS'); ?>
-                    </button>
                 </div>
             </div>
-        </div>
-        <!-- Row 1c: Recover Bare-ID Folders -->
-        <div class="row mt-3" id="imagetools-row1c">
-            <div class="col-12 col-lg-6">
-                <div class="cwmadmin-panel mb-4">
-                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_RECOVER_IMAGES'); ?></h3>
-                    <p><?php echo Text::_('JBS_ADM_RECOVER_IMAGES_DESC'); ?></p>
-                    <div id="recovery-counts" class="mb-3">
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        <?php echo Text::_('JBS_ADM_LOADING'); ?>
-                    </div>
-                    <div id="recovery-progress" class="mb-3" style="display:none;">
-                        <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar bg-warning" style="width: 0%"></div>
-                        </div>
-                        <div class="mt-2" id="recovery-status"></div>
-                    </div>
-                    <button type="button" class="btn btn-warning" id="btn-start-recovery" disabled>
-                        <i class="icon-refresh" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_RECOVER_IMAGES_BTN'); ?>
-                    </button>
-                </div>
-            </div>
-        </div>
 
-        <!-- Cleanup & Maintenance section -->
-        <h4 class="border-bottom pb-2 mb-3 mt-4"><?php echo Text::_('JBS_ADM_IMAGETOOLS_CLEANUP_HEADING'); ?></h4>
-
-        <!-- Row 2: Post-Migration Review -->
-        <div class="row mt-0" id="imagetools-row2">
-            <div class="col-12 col-lg-6">
-                <div class="cwmadmin-panel mb-4">
-                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_CLEAR_UNRESOLVABLE'); ?></h3>
-                    <p><?php echo Text::_('JBS_ADM_CLEAR_UNRESOLVABLE_DESC'); ?></p>
-                    <div id="unresolvable-preview" class="mb-3" style="display:none;"></div>
-                    <div class="d-flex gap-2 flex-wrap">
-                        <button type="button" class="btn btn-outline-secondary" id="btn-preview-unresolvable">
-                            <i class="icon-search" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_PREVIEW_UNRESOLVABLE'); ?>
-                        </button>
-                        <button type="button" class="btn btn-warning" id="btn-clear-unresolvable" style="display:none;">
-                            <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_CLEAR_UNRESOLVABLE_BTN'); ?>
-                        </button>
-                        <a href="index.php?option=com_proclaim&task=cwmadmin.downloadClearedLogXHR&<?php echo Session::getFormToken(); ?>=1"
-                           class="btn btn-outline-secondary" id="btn-download-cleared-log" style="display:none;" download>
-                            <i class="icon-download" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_DOWNLOAD_CLEARED_LOG'); ?>
-                        </a>
-                    </div>
-                    <div id="unresolvable-status" class="mt-3" style="display:none;"></div>
-                </div>
-            </div>
-            <div class="col-12 col-lg-6">
-                <div class="cwmadmin-panel mb-4">
-                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_LEGACY_FILES'); ?></h3>
-                    <p><?php echo Text::_('JBS_ADM_LEGACY_FILES_DESC'); ?></p>
-                    <button type="button" class="btn btn-outline-secondary" id="btn-scan-legacy">
-                        <i class="icon-search" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_SCAN_LEGACY'); ?>
-                    </button>
-                    <div id="legacy-results" class="mt-3" style="display:none;"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Row 3: Orphan Cleanup (last step) -->
-        <div class="row mt-3" id="imagetools-row3">
-            <div class="col-12 col-lg-6">
-                <div class="cwmadmin-panel mb-4">
-                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_ORPHAN_CLEANUP'); ?></h3>
-                    <p><?php echo Text::_('JBS_ADM_ORPHAN_CLEANUP_DESC'); ?></p>
-                    <p class="text-muted small" id="orphan-step-indicator"><?php echo Text::_('JBS_ADM_ORPHAN_STEP1'); ?></p>
-                    <div id="orphan-status" class="mb-3">
-                        <button type="button" class="btn btn-secondary" id="btn-scan-orphans">
-                            <i class="icon-search" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_SCAN_ORPHANS'); ?>
-                        </button>
-                    </div>
-                    <div id="orphan-results" class="mb-3" style="display:none;">
-                        <div class="alert alert-info" id="orphan-summary"></div>
-                        <div id="orphan-list" class="cwmadmin-orphan-list table-responsive"></div>
-                    </div>
-                    <button type="button" class="btn btn-danger" id="btn-delete-orphans" style="display:none;">
-                        <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_DELETE_SELECTED'); ?>
-                    </button>
-                </div>
-            </div>
         </div>
 
         <?php

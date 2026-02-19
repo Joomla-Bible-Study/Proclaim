@@ -67,8 +67,8 @@
       if (!activeOperation) return;
       const target = e.target.closest('a[href], button[type="submit"], .nav-link, [data-bs-toggle="tab"]');
       if (!target) return;
-      // Allow clicks inside our own imagetools section
-      if (target.closest('#imagetools, #imagetools-row2, #imagetools-pipeline-panel')) return;
+      // Allow clicks inside our own imagetools section (including accordion toggles)
+      if (target.closest('#imagetools, #imagetools-row2, #imagetools-pipeline-panel, #imagetools-accordion')) return;
       e.preventDefault();
       e.stopPropagation();
     }
