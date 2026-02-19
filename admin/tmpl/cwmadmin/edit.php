@@ -568,28 +568,6 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                      aria-labelledby="accordion-migration-heading">
                     <div class="accordion-body px-0 pt-3 pb-0">
                         <div class="row" id="imagetools">
-                            <!-- Image Migration Section -->
-                            <div class="col-12 col-lg-6">
-                                <div class="cwmadmin-panel mb-4">
-                                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_IMAGE_MIGRATION'); ?></h3>
-                                    <p><?php echo Text::_('JBS_ADM_IMAGE_MIGRATION_DESC'); ?></p>
-                                    <div id="migration-counts" class="mb-3">
-                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                        <?php echo Text::_('JBS_ADM_LOADING'); ?>
-                                    </div>
-                                    <div id="migration-progress" class="mb-3" style="display:none;">
-                                        <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                            <div class="progress-bar" style="width: 0%"></div>
-                                        </div>
-                                        <div class="mt-2" id="migration-status"></div>
-                                    </div>
-                                    <div id="migration-error-report" style="display:none;"></div>
-                                    <button type="button" class="btn btn-primary" id="btn-start-migration" disabled>
-                                        <i class="icon-refresh" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_START_MIGRATION'); ?>
-                                    </button>
-                                </div>
-                            </div>
-
                             <!-- WebP Generation Section -->
                             <div class="col-12 col-lg-6">
                                 <div class="cwmadmin-panel mb-4">
@@ -733,6 +711,17 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                 </div>
             </div>
 
+        </div>
+
+        <!-- Hidden migration driver — used by the pipeline; no visible UI for standalone use -->
+        <div id="imagetools-migration-driver" style="display:none;" aria-hidden="true">
+            <div id="migration-counts"></div>
+            <div id="migration-progress">
+                <div class="progress"><div class="progress-bar" style="width: 0%"></div></div>
+                <div id="migration-status"></div>
+            </div>
+            <div id="migration-error-report"></div>
+            <button type="button" id="btn-start-migration" disabled></button>
         </div>
 
         <?php
