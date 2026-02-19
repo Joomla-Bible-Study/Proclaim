@@ -85,18 +85,52 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
 ?>
 <div class="container-fluid p-3">
 
+    <!-- View navigation tabs -->
+    <?php
+    $isOverview = $this->drilldown === '';
+    $isSeries   = $this->drilldown === 'series' || $this->drilldown === 'message';
+    $isMedia    = $this->drilldown === 'media';
+    $navParams  = '&preset=' . htmlspecialchars($this->preset, ENT_QUOTES) . '&location_id=' . (int) $this->locationId;
+    ?>
+    <ul class="nav nav-tabs mb-0" style="border-bottom:0">
+        <li class="nav-item">
+            <a href="<?php echo Route::_($baseUrl . $navParams); ?>"
+               class="nav-link<?php echo $isOverview ? ' active' : ''; ?>">
+                <i class="icon-chart-line me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_OVERVIEW'); ?>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<?php echo Route::_($baseUrl . '&drilldown=series' . $navParams); ?>"
+               class="nav-link<?php echo $isSeries ? ' active' : ''; ?>">
+                <i class="icon-list me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_DRILL_SERIES'); ?>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<?php echo Route::_($baseUrl . '&drilldown=media' . $navParams); ?>"
+               class="nav-link<?php echo $isMedia ? ' active' : ''; ?>">
+                <i class="icon-play me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_DRILL_MEDIA'); ?>
+            </a>
+        </li>
+    </ul>
+
     <!-- Filter bar -->
-    <div class="card mb-3">
+    <div class="card mb-3" style="border-top-left-radius:0">
         <div class="card-body py-2">
             <form method="get" class="d-flex flex-wrap align-items-center gap-2">
                 <input type="hidden" name="option" value="com_proclaim">
                 <input type="hidden" name="view" value="cwmanalytics">
+                <?php if ($this->drilldown !== '') : ?>
+                    <input type="hidden" name="drilldown" value="<?php echo htmlspecialchars($this->drilldown, ENT_QUOTES); ?>">
+                <?php endif; ?>
                 <input type="hidden" name="preset" id="cwm-ana-preset-input" value="custom">
 
                 <!-- Preset buttons -->
                 <div class="btn-group" role="group" aria-label="<?php echo Text::_('JBS_ANA_DATE_PRESET'); ?>">
                     <?php foreach ($presets as $key => $label) : ?>
-                        <a href="<?php echo Route::_($baseUrl . '&preset=' . $key . '&location_id=' . $this->locationId); ?>"
+                        <?php
+                        $presetHref = Route::_($baseUrl . '&preset=' . $key . '&location_id=' . $this->locationId . ($this->drilldown !== '' ? '&drilldown=' . htmlspecialchars($this->drilldown, ENT_QUOTES) : ''));
+                        ?>
+                        <a href="<?php echo $presetHref; ?>"
                            class="btn <?php echo $key === $this->preset ? 'btn-primary' : 'btn-outline-secondary'; ?>">
                             <?php echo Text::_($label); ?>
                         </a>
@@ -466,22 +500,8 @@ $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals]
     </div>
     <?php endif; ?>
 
-    <!-- Drill-down navigation buttons (overview only) -->
-    <?php if ($this->drilldown === '') : ?>
-    <div class="d-flex flex-wrap gap-2 mb-3">
-        <a href="<?php echo Route::_($baseUrl . '&drilldown=series&preset=' . htmlspecialchars($input->getString('preset', '30d'), ENT_QUOTES) . '&location_id=' . (int) $this->locationId); ?>"
-           class="btn btn-sm btn-outline-primary">
-            <i class="icon-list me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_DRILL_SERIES'); ?>
-        </a>
-        <a href="<?php echo Route::_($baseUrl . '&drilldown=media&preset=' . htmlspecialchars($input->getString('preset', '30d'), ENT_QUOTES) . '&location_id=' . (int) $this->locationId); ?>"
-           class="btn btn-sm btn-outline-secondary">
-            <i class="icon-play me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_DRILL_MEDIA'); ?>
-        </a>
-    </div>
-    <?php endif; ?>
-
-    <!-- Breadcrumb for drill-down levels -->
-    <?php if ($this->drilldown !== '') : ?>
+    <!-- Breadcrumb for sub-levels (series detail, message detail) -->
+    <?php if (($this->drilldown === 'series' && $this->drilldownId > 0) || $this->drilldown === 'message') : ?>
     <?php echo $this->loadTemplate('breadcrumb'); ?>
     <?php endif; ?>
 
