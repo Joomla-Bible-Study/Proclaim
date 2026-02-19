@@ -96,7 +96,8 @@ composer version -- -v 10.2.0-dev -c "New Codename"
 - `libraries/vendor/` - Composer dependencies (non-standard location)
 - `modules/` - Joomla modules (site and admin)
 - `plugins/` - Joomla plugins (finder, task)
-- `media/` - CSS, JS, and assets
+- `build/media_source/` - Source JS, CSS, images, and vendor libraries (committed to git)
+- `media/` - Generated JS/CSS/assets (gitignored; produced by `npm run build`)
 
 ### Joomla MVC Pattern
 
@@ -180,8 +181,13 @@ This project follows **PSR-12** coding standards. All code must pass PHP CS Fixe
 ## Development Setup
 
 1. Run `composer install --dev` to install dependencies
-2. Run `composer setup` for interactive configuration (or manually edit `build.properties`)
-3. Run `composer symlink` to link component to your Joomla installation
+2. Run `npm install && npm run build` to generate `media/` assets (JS, CSS, images, vendor libs)
+3. Run `composer setup` for interactive configuration (or manually edit `build.properties`)
+4. Run `composer symlink` to link component to your Joomla installation
+
+> **Note**: `media/js/`, `media/css/`, `media/images/`, `media/vendor/`, and `media/fancybox/` are
+> generated — they are gitignored and must be built locally. Source files live in `build/media_source/`.
+> Run `npm run build` after any changes to source JS/CSS.
 
 ## Documentation
 
