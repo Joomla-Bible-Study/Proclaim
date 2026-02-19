@@ -732,7 +732,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 . ' WHERE sr.' . $db->quoteName('published') . ' = 1'
                 . $locationFilter
                 . ' GROUP BY sr.' . $db->quoteName('id')
-                . ' ORDER BY (views + plays + downloads) DESC'
+                . ' ORDER BY COUNT(e.' . $db->quoteName('id') . ') DESC'
                 . ' LIMIT 100';
 
             $db->setQuery($sql);
