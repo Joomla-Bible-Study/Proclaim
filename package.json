@@ -51,9 +51,10 @@
     "last 2 major versions"
   ],
   "scripts": {
-    "build": "npm run build:js && npm run build:css",
+    "build": "npm run build:js && npm run build:css && npm run build:assets",
     "build:js": "rollup -c build/rollup.config.js",
     "build:css": "node build/build-css.js",
+    "build:assets": "node build/build-assets.js",
     "watch": "rollup -c build/rollup.config.js -w",
     "test": "node --no-deprecation node_modules/.bin/jest -c build/jest.config.js",
     "test:watch": "node --no-deprecation node_modules/.bin/jest -c build/jest.config.js --watch",
@@ -67,6 +68,7 @@
   "dependencies": {
     "chart.js": "^4.5.1",
     "core-js": "^3.48.0",
-    "intl-tel-input": "^26.5.1"
+    "intl-tel-input": "^26.5.1",
+    "sortablejs": "^1.15.0"
   }
 }

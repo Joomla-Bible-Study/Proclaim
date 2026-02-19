@@ -4,7 +4,7 @@ import globals from 'globals';
 
 export default defineConfig([
     {
-        ignores: ['**/node_modules/', '**/dist/', '**/reports/'],
+        ignores: ['**/vendor/', '**/node_modules/', '**/dist/', '**/reports/'],
     },
 
     // ESLint recommended base (no-unused-vars, no-undef, no-redeclare, etc.)

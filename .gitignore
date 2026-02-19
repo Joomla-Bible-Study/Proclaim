@@ -32,10 +32,14 @@ build/reports/
 # Generated files
 /admin/proclaim.xml
 /admin/proclaim.script.php
-/media/css/site/cwmcore.css
-/media/css/site/biblestudy.css
 com_proclaim/media/css/site/
-#/media
+
+# Generated media (built from build/media_source/ — run `npm run build` after clone)
+/media/js/
+/media/css/
+/media/images/
+/media/vendor/
+/media/fancybox/
 
 # Local configuration
 /build.properties
