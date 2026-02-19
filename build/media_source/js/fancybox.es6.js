@@ -130,32 +130,38 @@ function proclaimSetupWistiaTracking() {
 }
 
 /**
- * Resi has no public player SDK. Listen for postMessage events as best-effort.
- * Called once — the window listener persists across DOM replacements.
+ * Resi has no public player SDK. Instead, a transparent overlay div is rendered
+ * over the iframe (see Cwmmedia.php). On first click we:
+ *   1. Track the play
+ *   2. Swap autoplay=false → autoplay=true in the iframe src so the video starts
+ *   3. Remove the overlay so subsequent clicks reach the player controls directly
+ *
+ * Called on page load and after each listing AJAX update.
  */
 function proclaimSetupResiTracking() {
-    window.addEventListener('message', function (event) {
-        if (typeof event.origin !== 'string' || event.origin.indexOf('resi.io') === -1) {
+    document.querySelectorAll('.proclaim-resi-overlay').forEach(function (overlay) {
+        if (overlay.dataset.resiInited) {
             return;
         }
-        var data = event.data;
-        if (typeof data === 'string') {
-            try { data = JSON.parse(data); } catch (e) { return; }
-        }
-        if (!data || typeof data !== 'object') {
-            return;
-        }
-        // Match common video-player postMessage play-event shapes
-        var isPlay = data.event === 'play' || data.type === 'play' || data.action === 'play';
-        if (!isPlay) {
-            return;
-        }
-        document.querySelectorAll('iframe.playhit[src*="resi.io"], iframe.hitplay[src*="resi.io"]').forEach(function (iframe) {
-            var mediaId = iframe.getAttribute('data-id');
+        overlay.dataset.resiInited = '1';
+
+        overlay.addEventListener('click', function () {
+            var mediaId = overlay.getAttribute('data-media-id');
             if (mediaId) {
                 proclaimTrackPlay(mediaId);
             }
-        });
+
+            // Swap autoplay param then reload the iframe so the video starts
+            var iframe = overlay.previousElementSibling;
+            if (iframe && iframe.tagName === 'IFRAME') {
+                var src = iframe.getAttribute('src') || iframe.src;
+                src = src.replace(/autoplay=false/i, 'autoplay=true')
+                         .replace(/autoplay=0\b/, 'autoplay=1');
+                iframe.src = src;
+            }
+
+            overlay.remove();
+        }, { once: true });
     });
 }
 
@@ -179,7 +185,8 @@ document.addEventListener('proclaim:listing-updated', function () {
     }
     // Wistia — _wq handles timing; just push handlers for new iframes
     proclaimSetupWistiaTracking();
-    // Resi — window postMessage listener persists; no per-listing action needed
+    // Resi — re-init overlays for any newly inserted Resi players
+    proclaimSetupResiTracking();
 });
 
 window.onYouTubeIframeAPIReady = function () {
@@ -236,8 +243,8 @@ document.addEventListener("DOMContentLoaded", function () {
         document.head.appendChild(wistiaScript);
     }
 
-    // Set up best-effort Resi postMessage listener (window-level, fires once).
-    if (document.querySelector('iframe.playhit[src*="resi.io"], iframe.hitplay[src*="resi.io"]')) {
+    // Set up Resi click-intercept overlays.
+    if (document.querySelector('.proclaim-resi-overlay')) {
         proclaimSetupResiTracking();
     }
 
