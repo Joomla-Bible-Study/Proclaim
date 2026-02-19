@@ -93,8 +93,19 @@ class CwmanalyticsController extends BaseController
         $locationId = $app->getInput()->getInt('location_id', 0);
 
         /** @var CwmanalyticsModel $model */
-        $model = $this->getModel('Cwmanalytics', 'Administrator');
-        $model->exportCsv($start, $end, $locationId);
+        $model    = $this->getModel('Cwmanalytics', 'Administrator');
+        $csv      = $model->exportCsvString($start, $end, $locationId);
+        $filename = 'proclaim-analytics-' . $start . '-to-' . $end . '.csv';
+
+        // Clear Joomla's output buffer before sending the file download.
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Length: ' . strlen($csv));
+        echo $csv;
         $app->close();
     }
 }

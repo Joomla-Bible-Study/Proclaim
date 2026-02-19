@@ -574,44 +574,40 @@ class CwmanalyticsModel extends BaseDatabaseModel
      *
      * @since   10.1.0
      */
-    public function exportCsv(string $start, string $end, int $locationId = 0): void
+    public function exportCsvString(string $start, string $end, int $locationId = 0): string
     {
-        try {
-            $db    = $this->getDatabase();
-            $query = $db->getQuery(true)
-                ->select('*')
-                ->from($db->quoteName('#__bsms_analytics_events'))
-                ->where($db->quoteName('created') . ' >= ' . $db->quote($start . ' 00:00:00'))
-                ->where($db->quoteName('created') . ' <= ' . $db->quote($end . ' 23:59:59'))
-                ->order($db->quoteName('created') . ' ASC');
+        $db    = $this->getDatabase();
+        $query = $db->getQuery(true)
+            ->select('*')
+            ->from($db->quoteName('#__bsms_analytics_events'))
+            ->where($db->quoteName('created') . ' >= ' . $db->quote($start . ' 00:00:00'))
+            ->where($db->quoteName('created') . ' <= ' . $db->quote($end . ' 23:59:59'))
+            ->order($db->quoteName('created') . ' ASC');
 
-            if ($locationId > 0) {
-                $query->where($db->quoteName('location_id') . ' = ' . (int) $locationId);
-            } else {
-                $this->applyLocationFilter($query, $db);
-            }
-
-            $db->setQuery($query);
-            $rows = $db->loadAssocList() ?? [];
-
-            $filename = 'proclaim-analytics-' . $start . '-to-' . $end . '.csv';
-            header('Content-Type: text/csv; charset=utf-8');
-            header('Content-Disposition: attachment; filename="' . $filename . '"');
-
-            $out = fopen('php://output', 'w');
-
-            if (!empty($rows)) {
-                fputcsv($out, array_keys($rows[0]));
-
-                foreach ($rows as $row) {
-                    fputcsv($out, $row);
-                }
-            }
-
-            fclose($out);
-        } catch (\Exception $e) {
-            // Fail silently; controller will close the response
+        if ($locationId > 0) {
+            $query->where($db->quoteName('location_id') . ' = ' . (int) $locationId);
+        } else {
+            $this->applyLocationFilter($query, $db);
         }
+
+        $db->setQuery($query);
+        $rows = $db->loadAssocList() ?? [];
+
+        $tmp = fopen('php://temp', 'w');
+
+        if (!empty($rows)) {
+            fputcsv($tmp, array_keys($rows[0]));
+
+            foreach ($rows as $row) {
+                fputcsv($tmp, $row);
+            }
+        }
+
+        rewind($tmp);
+        $csv = stream_get_contents($tmp);
+        fclose($tmp);
+
+        return (string) $csv;
     }
 
     /**
