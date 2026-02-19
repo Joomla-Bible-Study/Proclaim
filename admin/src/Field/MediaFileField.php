@@ -51,9 +51,9 @@ class MediaFileField extends ListField
         if ($this->form->getValue('id')) {
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
-            $query->select($db->qn(['a.id', 'a.params']));
-            $query->from($db->qn('#__bsms_mediafiles', 'a'));
-            $query->where($db->qn('a.study_id') . ' = ' . (int) $this->form->getValue('id'));
+            $query->select($db->quoteName(['a.id', 'a.params']));
+            $query->from($db->quoteName('#__bsms_mediafiles', 'a'));
+            $query->where($db->quoteName('a.study_id') . ' = ' . (int) $this->form->getValue('id'));
             $db->setQuery((string)$query);
             $messages = $db->loadObjectList();
         } else {

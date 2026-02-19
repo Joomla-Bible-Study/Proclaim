@@ -49,9 +49,9 @@ class TeacherListField extends ListField
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select($db->qn('id') . ', ' . $db->qn('teachername'));
-        $query->from($db->qn('#__bsms_teachers'));
-        $query->order($db->qn('teachername'));
+        $query->select($db->quoteName('id') . ', ' . $db->quoteName('teachername'));
+        $query->from($db->quoteName('#__bsms_teachers'));
+        $query->order($db->quoteName('teachername'));
         $db->setQuery((string)$query);
         $teachers = $db->loadObjectList();
         $options  = [];

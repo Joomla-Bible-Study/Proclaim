@@ -134,14 +134,14 @@ class Cwmtranslated
         if ($topicItem && $topicItem->tp_id) {
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
-            $query->select($db->qn('#__bsms_topics.topic_text') . ', ' . $db->qn('#__bsms_topics.params', 'topic_params'))
-                ->from($db->qn('#__bsms_topics'))
+            $query->select($db->quoteName('#__bsms_topics.topic_text') . ', ' . $db->quoteName('#__bsms_topics.params', 'topic_params'))
+                ->from($db->quoteName('#__bsms_topics'))
                 ->leftJoin(
-                    $db->qn('#__bsms_studytopics') . ' ON (' . $db->qn('#__bsms_studytopics.study_id')
+                    $db->quoteName('#__bsms_studytopics') . ' ON (' . $db->quoteName('#__bsms_studytopics.study_id')
                     . ' = ' . $db->q($topicItem->id) . ')'
                 )
-                ->where($db->qn('published') . ' = 1')
-                ->where($db->qn('#__bsms_topics.id') . ' = ' . $db->qn('#__bsms_studytopics.topic_id'));
+                ->where($db->quoteName('published') . ' = 1')
+                ->where($db->quoteName('#__bsms_topics.id') . ' = ' . $db->quoteName('#__bsms_studytopics.topic_id'));
             $db->setQuery($query);
             $results = $db->loadObjectList();
             $output  = '';

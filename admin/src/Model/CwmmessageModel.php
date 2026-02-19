@@ -86,9 +86,9 @@ class CwmmessageModel extends AdminModel
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query->select('*')
-            ->from($db->qn('#__bsms_studytopics'))
-            ->where($db->qn('study_id') . ' = ' . (int) $study_id)
-            ->where($db->qn('topic_id') . ' = ' . (int) $topic_id);
+            ->from($db->quoteName('#__bsms_studytopics'))
+            ->where($db->quoteName('study_id') . ' = ' . (int) $study_id)
+            ->where($db->quoteName('topic_id') . ' = ' . (int) $topic_id);
         $db->setQuery($query);
         $tresult = $db->loadObject();
 
@@ -122,11 +122,11 @@ class CwmmessageModel extends AdminModel
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
 
-            $query->select($db->qn('topic.id') . ', ' . $db->qn('topic.topic_text') . ', ' . $db->qn('topic.params', 'topic_params'));
-            $query->from($db->qn('#__bsms_studytopics', 'studytopics'));
+            $query->select($db->quoteName('topic.id') . ', ' . $db->quoteName('topic.topic_text') . ', ' . $db->quoteName('topic.params', 'topic_params'));
+            $query->from($db->quoteName('#__bsms_studytopics', 'studytopics'));
 
-            $query->join('LEFT', $db->qn('#__bsms_topics', 'topic') . ' ON ' . $db->qn('topic.id') . ' = ' . $db->qn('studytopics.topic_id'));
-            $query->where($db->qn('studytopics.study_id') . ' = ' . (int)$id);
+            $query->join('LEFT', $db->quoteName('#__bsms_topics', 'topic') . ' ON ' . $db->quoteName('topic.id') . ' = ' . $db->quoteName('studytopics.topic_id'));
+            $query->where($db->quoteName('studytopics.study_id') . ' = ' . (int)$id);
 
             $db->setQuery($query->__toString());
             $topics = $db->loadObjectList();
@@ -158,8 +158,8 @@ class CwmmessageModel extends AdminModel
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
 
-        $query->select($db->qn('topic.id') . ', ' . $db->qn('topic.topic_text') . ', ' . $db->qn('topic.params', 'topic_params'));
-        $query->from($db->qn('#__bsms_topics', 'topic'));
+        $query->select($db->quoteName('topic.id') . ', ' . $db->quoteName('topic.topic_text') . ', ' . $db->quoteName('topic.params', 'topic_params'));
+        $query->from($db->quoteName('#__bsms_topics', 'topic'));
 
         $db->setQuery($query->__toString());
         $topics         = $db->loadObjectList();
@@ -191,7 +191,7 @@ class CwmmessageModel extends AdminModel
         $query = $db->getQuery(true);
 
         $query->select(
-            $db->qn(
+            $db->quoteName(
                 [
                     'm.id', 'm.language', 'm.published', 'm.createdate',
                     'm.params', 'm.access', 'm.ordering', 'm.metadata',
@@ -199,18 +199,18 @@ class CwmmessageModel extends AdminModel
                 ]
             )
         );
-        $query->from($db->qn('#__bsms_mediafiles', 'm'));
-        $query->where($db->qn('m.study_id') . ' = ' . (int) $this->getItem()->id);
-        $query->where('(' . $db->qn('m.published') . ' = 0 OR ' . $db->qn('m.published') . ' = 1)');
-        $query->order($db->qn('m.ordering') . ' ASC, ' . $db->qn('m.createdate') . ' DESC');
+        $query->from($db->quoteName('#__bsms_mediafiles', 'm'));
+        $query->where($db->quoteName('m.study_id') . ' = ' . (int) $this->getItem()->id);
+        $query->where('(' . $db->quoteName('m.published') . ' = 0 OR ' . $db->quoteName('m.published') . ' = 1)');
+        $query->order($db->quoteName('m.ordering') . ' ASC, ' . $db->quoteName('m.createdate') . ' DESC');
 
         // Join over the asset groups.
-        $query->select($db->qn('ag.title', 'access_level'));
-        $query->join('LEFT', $db->qn('#__viewlevels', 'ag') . ' ON ' . $db->qn('ag.id') . ' = ' . $db->qn('m.access'));
+        $query->select($db->quoteName('ag.title', 'access_level'));
+        $query->join('LEFT', $db->quoteName('#__viewlevels', 'ag') . ' ON ' . $db->quoteName('ag.id') . ' = ' . $db->quoteName('m.access'));
 
         // Join over the server to get name and type.
-        $query->select($db->qn(['s.server_name', 's.type'], ['server_name', 'server_type']));
-        $query->join('LEFT', $db->qn('#__bsms_servers', 's') . ' ON ' . $db->qn('s.id') . ' = ' . $db->qn('m.server_id'));
+        $query->select($db->quoteName(['s.server_name', 's.type'], ['server_name', 'server_type']));
+        $query->join('LEFT', $db->quoteName('#__bsms_servers', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('m.server_id'));
 
         $db->setQuery($query->__toString());
         $mediafiles = $db->loadObjectList();
@@ -1005,8 +1005,8 @@ class CwmmessageModel extends AdminModel
             if (empty($table->ordering)) {
                 $db    = Factory::getContainer()->get('DatabaseDriver');
                 $query = $db->getQuery(true)
-                    ->select('MAX(' . $db->qn('ordering') . ')')
-                    ->from($db->qn('#__bsms_studies'));
+                    ->select('MAX(' . $db->quoteName('ordering') . ')')
+                    ->from($db->quoteName('#__bsms_studies'));
                 $db->setQuery($query);
                 $max = $db->loadResult();
 

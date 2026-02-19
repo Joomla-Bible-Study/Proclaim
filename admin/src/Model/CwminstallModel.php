@@ -303,9 +303,9 @@ class CwminstallModel extends ListModel
             // Find Extension ID of Proclaim
             $query = $this->getDatabase()->getQuery(true);
             $query
-                ->select($this->getDatabase()->qn('extension_id'))
-                ->from($this->getDatabase()->qn('#__extensions'))
-                ->where($this->getDatabase()->qn('name') . ' = ' . $this->getDatabase()->q('com_proclaim'));
+                ->select($this->getDatabase()->quoteName('extension_id'))
+                ->from($this->getDatabase()->quoteName('#__extensions'))
+                ->where($this->getDatabase()->quoteName('name') . ' = ' . $this->getDatabase()->q('com_proclaim'));
             $this->getDatabase()->setQuery($query);
             $eid                 = $this->getDatabase()->loadResult();
             $this->biblestudyEid = $eid;
@@ -375,8 +375,8 @@ class CwminstallModel extends ListModel
             $query = $this->getDatabase()->getQuery(true);
             $query
                 ->delete()
-                ->from($this->getDatabase()->qn('#__schemas'))
-                ->where($this->getDatabase()->qn('extension_id') . ' = ' . (int) $eid);
+                ->from($this->getDatabase()->quoteName('#__schemas'))
+                ->where($this->getDatabase()->quoteName('extension_id') . ' = ' . (int) $eid);
             $this->getDatabase()->setQuery($query);
 
             if ($this->getDatabase()->execute()) {
@@ -416,9 +416,9 @@ class CwminstallModel extends ListModel
         // (from 10.0.0 era). Preserve messages managed by CwmguidedtourHelper which use
         // proper language keys (COM_PROCLAIM_*) and should retain their enabled/hidden state.
         $query = $this->getDatabase()->getQuery(true);
-        $query->delete($this->getDatabase()->qn('#__postinstall_messages'))
-            ->where($this->getDatabase()->qn('language_extension') . ' = ' . $this->getDatabase()->q('com_proclaim'))
-            ->where($this->getDatabase()->qn('title_key') . ' NOT LIKE ' . $this->getDatabase()->q('COM_PROCLAIM_%'));
+        $query->delete($this->getDatabase()->quoteName('#__postinstall_messages'))
+            ->where($this->getDatabase()->quoteName('language_extension') . ' = ' . $this->getDatabase()->q('com_proclaim'))
+            ->where($this->getDatabase()->quoteName('title_key') . ' NOT LIKE ' . $this->getDatabase()->q('COM_PROCLAIM_%'));
         $this->getDatabase()->setQuery($query);
         $this->getDatabase()->execute();
         Log::add('PostInstallCleanup', Log::INFO, 'com_proclaim');
@@ -985,7 +985,7 @@ class CwminstallModel extends ListModel
                 // Removes all other update URLs except the package URL.
                 $conditions = CwmmigrationHelper::rmoldurl();
                 $query      = $this->getDatabase()->getQuery(true);
-                $query->delete($this->getDatabase()->qn('#__update_sites'));
+                $query->delete($this->getDatabase()->quoteName('#__update_sites'));
                 $query->where($conditions, $glue = 'OR');
                 $this->getDatabase()->setQuery($query);
                 $this->getDatabase()->execute();
@@ -995,28 +995,28 @@ class CwminstallModel extends ListModel
                 // Find Extension ID of component
                 $query = $this->getDatabase()->getQuery(true);
                 $query
-                    ->select($this->getDatabase()->qn('extension_id'))
-                    ->from($this->getDatabase()->qn('#__extensions'))
-                    ->where($this->getDatabase()->qn('name') . ' = ' . $this->getDatabase()->q('com_proclaim'));
+                    ->select($this->getDatabase()->quoteName('extension_id'))
+                    ->from($this->getDatabase()->quoteName('#__extensions'))
+                    ->where($this->getDatabase()->quoteName('name') . ' = ' . $this->getDatabase()->q('com_proclaim'));
                 $this->getDatabase()->setQuery($query);
                 $eid = $this->getDatabase()->loadResult();
 
                 $conditions = [
-                    $this->getDatabase()->qn('name') . ' = ' .
+                    $this->getDatabase()->quoteName('name') . ' = ' .
                     $this->getDatabase()->q('Proclaim Package'),
                 ];
                 $query      = $this->getDatabase()->getQuery(true);
-                $query->delete($this->getDatabase()->qn('#__update_sites'));
+                $query->delete($this->getDatabase()->quoteName('#__update_sites'));
                 $query->where($conditions, $glue = 'OR');
                 $this->getDatabase()->setQuery($query);
                 $this->getDatabase()->execute();
 
                 $conditions = [
-                    $this->getDatabase()->qn('extension_id') . ' = ' .
+                    $this->getDatabase()->quoteName('extension_id') . ' = ' .
                     $this->getDatabase()->q($eid),
                 ];
                 $query      = $this->getDatabase()->getQuery(true);
-                $query->delete($this->getDatabase()->qn('#__update_sites_extensions'));
+                $query->delete($this->getDatabase()->quoteName('#__update_sites_extensions'));
                 $query->where($conditions, $glue = 'OR');
                 $this->getDatabase()->setQuery($query);
                 $this->getDatabase()->execute();
@@ -1084,8 +1084,8 @@ class CwminstallModel extends ListModel
         // Find the Last updated Version in the Update table
         $query = $this->getDatabase()->getQuery(true);
         $query
-            ->select($this->getDatabase()->qn('version'))
-            ->from($this->getDatabase()->qn('#__bsms_update'));
+            ->select($this->getDatabase()->quoteName('version'))
+            ->from($this->getDatabase()->quoteName('#__bsms_update'));
         $this->getDatabase()->setQuery($query);
         $updates = $this->getDatabase()->loadObjectList();
 
@@ -1116,8 +1116,8 @@ class CwminstallModel extends ListModel
         if ($this->getDatabase()->loadResult()) {
             $query = $this->getDatabase()->getQuery(true);
             $query->select('*')
-                ->from($this->getDatabase()->qn('#__bsms_admin'))
-                ->where($this->getDatabase()->qn('id') . ' = 1');
+                ->from($this->getDatabase()->quoteName('#__bsms_admin'))
+                ->where($this->getDatabase()->quoteName('id') . ' = 1');
             $this->getDatabase()->setQuery($query);
             $adminsettings = $this->getDatabase()->loadObject();
             $drop_tables   = $adminsettings->drop_tables;
@@ -1125,27 +1125,27 @@ class CwminstallModel extends ListModel
             if ($drop_tables > 0) {
                 // We must remove the assets manually each time
                 $query = $this->getDatabase()->getQuery(true);
-                $query->select($this->getDatabase()->qn('id'))
-                    ->from($this->getDatabase()->qn('#__assets'))
-                    ->where($this->getDatabase()->qn('name') . ' = ' . $this->getDatabase()->q(BIBLESTUDY_COMPONENT_NAME));
+                $query->select($this->getDatabase()->quoteName('id'))
+                    ->from($this->getDatabase()->quoteName('#__assets'))
+                    ->where($this->getDatabase()->quoteName('name') . ' = ' . $this->getDatabase()->q(BIBLESTUDY_COMPONENT_NAME));
                 $this->getDatabase()->setQuery($query);
                 $parent_id = $this->getDatabase()->loadResult();
                 $query     = $this->getDatabase()->getQuery(true);
 
                 if ($parent_id !== '0') {
                     $query->delete()
-                        ->from($this->getDatabase()->qn('#__assets'))
-                        ->where($this->getDatabase()->qn('parent_id') . ' = ' . $this->getDatabase()->q($parent_id))
-                        ->where($this->getDatabase()->qn('name') . ' != ' . $this->getDatabase()->q('root.1'));
+                        ->from($this->getDatabase()->quoteName('#__assets'))
+                        ->where($this->getDatabase()->quoteName('parent_id') . ' = ' . $this->getDatabase()->q($parent_id))
+                        ->where($this->getDatabase()->quoteName('name') . ' != ' . $this->getDatabase()->q('root.1'));
                     $this->getDatabase()->setQuery($query);
                     $this->getDatabase()->execute();
                 }
 
                 $query = $this->getDatabase()->getQuery(true);
                 $query->delete()
-                    ->from($this->getDatabase()->qn('#__assets'))
-                    ->where($this->getDatabase()->qn('name') . ' LIKE ' . $this->getDatabase()->q(BIBLESTUDY_COMPONENT_NAME))
-                    ->where($this->getDatabase()->qn('name') . ' != ' . $this->getDatabase()->q('root.1'));
+                    ->from($this->getDatabase()->quoteName('#__assets'))
+                    ->where($this->getDatabase()->quoteName('name') . ' LIKE ' . $this->getDatabase()->q(BIBLESTUDY_COMPONENT_NAME))
+                    ->where($this->getDatabase()->quoteName('name') . ' != ' . $this->getDatabase()->q('root.1'));
                 $this->getDatabase()->setQuery($query);
                 $this->getDatabase()->execute();
                 $buffer = file_get_contents(
@@ -1175,8 +1175,8 @@ class CwminstallModel extends ListModel
 
         // Post Install Messages Cleanup for Component
         $query = $this->getDatabase()->getQuery(true);
-        $query->delete($this->getDatabase()->qn('#__postinstall_messages'))
-            ->where($this->getDatabase()->qn('language_extension') . ' = ' . $this->getDatabase()->q('com_proclaim'));
+        $query->delete($this->getDatabase()->quoteName('#__postinstall_messages'))
+            ->where($this->getDatabase()->quoteName('language_extension') . ' = ' . $this->getDatabase()->q('com_proclaim'));
         $this->getDatabase()->setQuery($query);
         $this->getDatabase()->execute();
         Factory::getApplication()->enqueueMessage(

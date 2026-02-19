@@ -106,10 +106,10 @@ class Cwmbackup
 
         // Get com_proclaim row from extensions
         $query = $db->getQuery(true);
-        $query->select($db->qn(['extension_id', 'params']))
-            ->from($db->qn('#__extensions'))
-            ->where($db->qn('element') . ' = ' . $db->q('com_proclaim'))
-            ->where($db->qn('type') . ' = ' . $db->q('component'));
+        $query->select($db->quoteName(['extension_id', 'params']))
+            ->from($db->quoteName('#__extensions'))
+            ->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'))
+            ->where($db->quoteName('type') . ' = ' . $db->q('component'));
         $db->setQuery($query);
         $result = $db->loadObject();
 
@@ -121,10 +121,10 @@ class Cwmbackup
         $export = "\n-- --------------------------------------------------------\n";
         $export .= "-- Component Configuration (com_proclaim)\n";
         $export .= "-- --------------------------------------------------------\n\n";
-        $export .= "UPDATE " . $db->qn('#__extensions') . " SET ";
-        $export .= $db->qn('params') . " = " . $db->q($result->params);
-        $export .= " WHERE " . $db->qn('element') . " = " . $db->q('com_proclaim');
-        $export .= " AND " . $db->qn('type') . " = " . $db->q('component') . ";\n\n";
+        $export .= "UPDATE " . $db->quoteName('#__extensions') . " SET ";
+        $export .= $db->quoteName('params') . " = " . $db->q($result->params);
+        $export .= " WHERE " . $db->quoteName('element') . " = " . $db->q('com_proclaim');
+        $export .= " AND " . $db->quoteName('type') . " = " . $db->q('component') . ";\n\n";
 
         return $export;
     }
@@ -155,8 +155,8 @@ class Cwmbackup
         // Get all Proclaim tasks
         $query = $db->getQuery(true);
         $query->select('*')
-            ->from($db->qn('#__scheduler_tasks'))
-            ->where($db->qn('type') . ' LIKE ' . $db->q('proclaim.%'));
+            ->from($db->quoteName('#__scheduler_tasks'))
+            ->where($db->quoteName('type') . ' LIKE ' . $db->q('proclaim.%'));
         $db->setQuery($query);
         $results = $db->loadObjectList();
 
@@ -169,13 +169,13 @@ class Cwmbackup
         $export .= "-- --------------------------------------------------------\n\n";
 
         // DELETE existing Proclaim tasks (clean slate on restore)
-        $export .= "DELETE FROM " . $db->qn('#__scheduler_tasks');
-        $export .= " WHERE " . $db->qn('type') . " LIKE " . $db->q('proclaim.%') . ";\n\n";
+        $export .= "DELETE FROM " . $db->quoteName('#__scheduler_tasks');
+        $export .= " WHERE " . $db->quoteName('type') . " LIKE " . $db->q('proclaim.%') . ";\n\n";
 
         // INSERT each task
         foreach ($results as $task) {
             $data = [];
-            $export .= 'INSERT INTO ' . $db->qn('#__scheduler_tasks') . ' SET ';
+            $export .= 'INSERT INTO ' . $db->quoteName('#__scheduler_tasks') . ' SET ';
 
             foreach ($task as $key => $value) {
                 // Skip auto-increment id (will be regenerated on restore)
@@ -184,9 +184,9 @@ class Cwmbackup
                 }
 
                 if ($value === null) {
-                    $data[] = $db->qn($key) . " = NULL";
+                    $data[] = $db->quoteName($key) . " = NULL";
                 } else {
-                    $data[] = $db->qn($key) . " = " . $db->q($value);
+                    $data[] = $db->quoteName($key) . " = " . $db->q($value);
                 }
             }
 
@@ -327,13 +327,13 @@ class Cwmbackup
         $export = '';
 
         // Start of Tables
-        $export .= "--\n-- Table structure for table " . $db->qn($table) . "\n--\n\n";
+        $export .= "--\n-- Table structure for table " . $db->quoteName($table) . "\n--\n\n";
 
         // Drop the existing table
-        $export .= 'DROP TABLE IF EXISTS ' . $db->qn($table) . ";\n";
+        $export .= 'DROP TABLE IF EXISTS ' . $db->quoteName($table) . ";\n";
 
         // Create a new table definition based on the incoming database
-        $query = 'SHOW CREATE TABLE ' . $db->qn($table);
+        $query = 'SHOW CREATE TABLE ' . $db->quoteName($table);
         $db->setQuery($query);
         $table_def = $db->loadObject();
 
@@ -344,25 +344,25 @@ class Cwmbackup
             }
         }
 
-        $export .= "\n\n--\n-- Dumping data for table " . $db->qn($table) . "\n--\n\n";
+        $export .= "\n\n--\n-- Dumping data for table " . $db->quoteName($table) . "\n--\n\n";
 
         // Get the table rows and create insert statements from them
         $query = $db->getQuery(true);
         $query->select('*')
-            ->from($db->qn($table));
+            ->from($db->quoteName($table));
         $db->setQuery($query);
         $results = $db->loadObjectList();
 
         if ($results) {
             foreach ($results as $result) {
                 $data   = [];
-                $export .= 'INSERT INTO ' . $db->qn($table) . ' SET ';
+                $export .= 'INSERT INTO ' . $db->quoteName($table) . ' SET ';
 
                 foreach ($result as $key => $value) {
                     if ($value === null) {
-                        $data[] = $db->qn($key) . "=NULL";
+                        $data[] = $db->quoteName($key) . "=NULL";
                     } else {
-                        $data[] = $db->qn($key) . "=" . $db->q(trim(str_replace(["\r\n", "\r"], "\n", $value)));
+                        $data[] = $db->quoteName($key) . "=" . $db->q(trim(str_replace(["\r\n", "\r"], "\n", $value)));
                     }
                 }
 
@@ -403,13 +403,13 @@ class Cwmbackup
         $export = '';
 
         // Start of Tables
-        $export .= "--\n-- Table structure for table " . $db->qn($table) . "\n--\n\n";
+        $export .= "--\n-- Table structure for table " . $db->quoteName($table) . "\n--\n\n";
 
         // Drop the existing table
-        $export .= 'DROP TABLE IF EXISTS ' . $db->qn($table) . ";\n";
+        $export .= 'DROP TABLE IF EXISTS ' . $db->quoteName($table) . ";\n";
 
         // Create a new table definition based on the incoming database
-        $query = 'SHOW CREATE TABLE ' . $db->qn($table);
+        $query = 'SHOW CREATE TABLE ' . $db->quoteName($table);
         $db->setQuery($query);
         $table_def = $db->loadObject();
 
@@ -420,25 +420,25 @@ class Cwmbackup
             }
         }
 
-        $export .= "\n\n--\n-- Dumping data for table " . $db->qn($table) . "\n--\n\n";
+        $export .= "\n\n--\n-- Dumping data for table " . $db->quoteName($table) . "\n--\n\n";
 
         // Get the table rows and create insert statements from them
         $query = $db->getQuery(true);
         $query->select('*')
-            ->from($db->qn($table));
+            ->from($db->quoteName($table));
         $db->setQuery($query);
         $results = $db->loadObjectList();
 
         if ($results) {
             foreach ($results as $result) {
                 $data   = [];
-                $export .= 'INSERT INTO ' . $db->qn($table) . ' SET ';
+                $export .= 'INSERT INTO ' . $db->quoteName($table) . ' SET ';
 
                 foreach ($result as $key => $value) {
                     if ($value === null) {
-                        $data[] = $db->qn($key) . "=NULL";
+                        $data[] = $db->quoteName($key) . "=NULL";
                     } else {
-                        $data[] = $db->qn($key) . "=" . $db->q(trim(str_replace(["\r\n", "\r"], "\n", $value)));
+                        $data[] = $db->quoteName($key) . "=" . $db->q(trim(str_replace(["\r\n", "\r"], "\n", $value)));
                     }
                 }
 

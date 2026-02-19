@@ -64,11 +64,11 @@ class VirtuemartField extends ListField
 
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select($db->qn('v.virtuemart_product_id') . ', ' . $db->qn('v.product_name'));
-        $query->from($db->qn('#__virtuemart_products_' . VMLANG, 'v'));
-        $query->select($db->qn('p.product_sku'));
-        $query->join('LEFT', $db->qn('#__virtuemart_products', 'p') . ' ON ' . $db->qn('v.virtuemart_product_id') . ' = ' . $db->qn('p.virtuemart_product_id'));
-        $query->order($db->qn('v.virtuemart_product_id') . ' DESC');
+        $query->select($db->quoteName('v.virtuemart_product_id') . ', ' . $db->quoteName('v.product_name'));
+        $query->from($db->quoteName('#__virtuemart_products_' . VMLANG, 'v'));
+        $query->select($db->quoteName('p.product_sku'));
+        $query->join('LEFT', $db->quoteName('#__virtuemart_products', 'p') . ' ON ' . $db->quoteName('v.virtuemart_product_id') . ' = ' . $db->quoteName('p.virtuemart_product_id'));
+        $query->order($db->quoteName('v.virtuemart_product_id') . ' DESC');
         $db->setQuery((string)$query);
         $products = $db->loadObjectList();
         $options  = [];

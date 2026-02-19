@@ -378,15 +378,15 @@ final class Proclaim extends Adapter implements SubscriberInterface
         $db = $this->db;
 
         // Item ID
-        $query->select($db->qn('a.id'));
+        $query->select($db->quoteName('a.id'));
 
         // Item and category published state
-        $query->select($db->qn('a.' . $this->state_field, 'state') . ', ' . $db->qn('s.published', 'series_state'));
+        $query->select($db->quoteName('a.' . $this->state_field, 'state') . ', ' . $db->quoteName('s.published', 'series_state'));
 
         // Item and series access levels
-        $query->select($db->qn('a.access') . ', ' . $db->qn('s.access', 'series_access'))
-            ->from($db->qn($this->table, 'a'))
-            ->join('LEFT', $db->qn('#__bsms_series', 's') . ' ON ' . $db->qn('s.id') . ' = ' . $db->qn('a.series_id'));
+        $query->select($db->quoteName('a.access') . ', ' . $db->quoteName('s.access', 'series_access'))
+            ->from($db->quoteName($this->table, 'a'))
+            ->join('LEFT', $db->quoteName('#__bsms_series', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('a.series_id'));
 
         return $query;
     }
@@ -504,11 +504,11 @@ final class Proclaim extends Adapter implements SubscriberInterface
         // Add Topics
         $db    = $this->getDatabase();
         $query = $db->getQuery(true)
-            ->select($db->qn('t.topic_text'))
-            ->from($db->qn('#__bsms_topics', 't'))
-            ->join('INNER', $db->qn('#__bsms_studytopics', 'st') . ' ON ' . $db->qn('st.topic_id') . ' = ' . $db->qn('t.id'))
-            ->where($db->qn('st.study_id') . ' = ' . (int) $item->id)
-            ->where($db->qn('t.published') . ' = 1');
+            ->select($db->quoteName('t.topic_text'))
+            ->from($db->quoteName('#__bsms_topics', 't'))
+            ->join('INNER', $db->quoteName('#__bsms_studytopics', 'st') . ' ON ' . $db->quoteName('st.topic_id') . ' = ' . $db->quoteName('t.id'))
+            ->where($db->quoteName('st.study_id') . ' = ' . (int) $item->id)
+            ->where($db->quoteName('t.published') . ' = 1');
         $db->setQuery($query);
         $topics = $db->loadColumn();
 
@@ -528,9 +528,9 @@ final class Proclaim extends Adapter implements SubscriberInterface
         // Add Scripture/Book
         if (!empty($item->booknumber)) {
             $query = $db->getQuery(true)
-                ->select($db->qn('bookname'))
-                ->from($db->qn('#__bsms_books'))
-                ->where($db->qn('booknumber') . ' = ' . (int) $item->booknumber);
+                ->select($db->quoteName('bookname'))
+                ->from($db->quoteName('#__bsms_books'))
+                ->where($db->quoteName('booknumber') . ' = ' . (int) $item->booknumber);
             $db->setQuery($query);
             $bookname = $db->loadResult();
 
@@ -593,14 +593,14 @@ final class Proclaim extends Adapter implements SubscriberInterface
 
         // Check if we can use the supplied SQL query.
         $query = $query instanceof QueryInterface ? $query : $db->getQuery(true)
-            ->select($db->qn('a.id') . ', ' . $db->qn('a.studytitle', 'title') . ', ' . $db->qn('a.alias') . ', ' . $db->qn('a.studyintro', 'summary') . ', ' . $db->qn('a.studytext', 'body'))
-            ->select($db->qn('a.thumbnailm') . ', ' . $db->qn('a.series_id'))
-            ->select($db->qn('a.published', 'state') . ', ' . $db->qn('a.studydate', 'start_date') . ', ' . $db->qn('a.user_id'))
-            ->select($db->qn('a.language'))
-            ->select($db->qn('a.access') . ', ' . $db->qn('a.ordering') . ', ' . $db->qn('a.params'))
-            ->select($db->qn('a.publish_up', 'publish_start_date') . ', ' . $db->qn('a.publish_down', 'publish_end_date'))
-            ->select($db->qn(['a.booknumber', 'a.chapter_begin', 'a.verse_begin', 'a.chapter_end', 'a.verse_end']))
-            ->select($db->qn('s.series_text', 'series') . ', ' . $db->qn('s.published', 'series_state') . ', ' . $db->qn('s.access', 'series_access'));
+            ->select($db->quoteName('a.id') . ', ' . $db->quoteName('a.studytitle', 'title') . ', ' . $db->quoteName('a.alias') . ', ' . $db->quoteName('a.studyintro', 'summary') . ', ' . $db->quoteName('a.studytext', 'body'))
+            ->select($db->quoteName('a.thumbnailm') . ', ' . $db->quoteName('a.series_id'))
+            ->select($db->quoteName('a.published', 'state') . ', ' . $db->quoteName('a.studydate', 'start_date') . ', ' . $db->quoteName('a.user_id'))
+            ->select($db->quoteName('a.language'))
+            ->select($db->quoteName('a.access') . ', ' . $db->quoteName('a.ordering') . ', ' . $db->quoteName('a.params'))
+            ->select($db->quoteName('a.publish_up', 'publish_start_date') . ', ' . $db->quoteName('a.publish_down', 'publish_end_date'))
+            ->select($db->quoteName(['a.booknumber', 'a.chapter_begin', 'a.verse_begin', 'a.chapter_end', 'a.verse_end']))
+            ->select($db->quoteName('s.series_text', 'series') . ', ' . $db->quoteName('s.published', 'series_state') . ', ' . $db->quoteName('s.access', 'series_access'));
 
         // Handle the alias CASE WHEN portion of the query
         $case_when_item_alias = ' CASE WHEN ';
@@ -621,16 +621,16 @@ final class Proclaim extends Adapter implements SubscriberInterface
         $case_when_series_alias .= $s_id . ' END as seriesslug';
         $query->select($case_when_series_alias);
 
-        $query->select($db->qn('a.location_id') . ', ' . $db->qn('loc.location_text'))
-            ->select($db->qn('t.teachername', 'author'))
-            ->from($db->qn('#__bsms_studies', 'a'))
-            ->join('LEFT', $db->qn('#__bsms_study_teachers', 'stj') . ' ON '
-                . $db->qn('stj.study_id') . ' = ' . $db->qn('a.id')
-                . ' AND ' . $db->qn('stj.ordering') . ' = 0')
-            ->join('LEFT', $db->qn('#__bsms_teachers', 't') . ' ON '
-                . $db->qn('t.id') . ' = COALESCE(' . $db->qn('stj.teacher_id') . ', ' . $db->qn('a.teacher_id') . ')')
-            ->join('LEFT', $db->qn('#__bsms_series', 's') . ' ON ' . $db->qn('s.id') . ' = ' . $db->qn('a.series_id'))
-            ->join('LEFT', $db->qn('#__bsms_locations', 'loc') . ' ON ' . $db->qn('loc.id') . ' = ' . $db->qn('a.location_id'));
+        $query->select($db->quoteName('a.location_id') . ', ' . $db->quoteName('loc.location_text'))
+            ->select($db->quoteName('t.teachername', 'author'))
+            ->from($db->quoteName('#__bsms_studies', 'a'))
+            ->join('LEFT', $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+                . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('a.id')
+                . ' AND ' . $db->quoteName('stj.ordering') . ' = 0')
+            ->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON '
+                . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('a.teacher_id') . ')')
+            ->join('LEFT', $db->quoteName('#__bsms_series', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('a.series_id'))
+            ->join('LEFT', $db->quoteName('#__bsms_locations', 'loc') . ' ON ' . $db->quoteName('loc.id') . ' = ' . $db->quoteName('a.location_id'));
 
         return $query;
     }

@@ -418,6 +418,7 @@ class Cwmstats
      *
      * @return  string HTML list of download links
      *
+     * @throws \Exception
      * @since 9.0.0
      */
     public static function getDownloadsLastThreeMonths(): string
@@ -548,7 +549,7 @@ class Cwmstats
             CwmlocationHelper::applySecurityFilter($query, 's');
 
             $query->group($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
-                ->order($db->qn('added') . ' DESC');
+                ->order($db->quoteName('added') . ' DESC');
 
             $db->setQuery($query, 0, 10); // Get more to account for re-sorting if hits are included
             $rows = $db->loadObjectList();

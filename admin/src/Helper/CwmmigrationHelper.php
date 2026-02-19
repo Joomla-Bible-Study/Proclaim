@@ -48,11 +48,11 @@ class CwmmigrationHelper
 
         foreach ($replacements as $old => $new) {
             $query = $db->getQuery(true);
-            $query->update($db->qn('#__menu'))
-                ->set($db->qn('link') . ' = REPLACE(' . $db->qn('link') . ', ' . $db->q($old) . ', ' . $db->q($new) . ')')
-                ->where($db->qn('menutype') . ' != ' . $db->q('main'))
-                ->where($db->qn('link') . ' LIKE ' . $db->q('%com_proclaim%'))
-                ->where($db->qn('link') . ' LIKE ' . $db->q('%' . $old . '%'));
+            $query->update($db->quoteName('#__menu'))
+                ->set($db->quoteName('link') . ' = REPLACE(' . $db->quoteName('link') . ', ' . $db->q($old) . ', ' . $db->q($new) . ')')
+                ->where($db->quoteName('menutype') . ' != ' . $db->q('main'))
+                ->where($db->quoteName('link') . ' LIKE ' . $db->q('%com_proclaim%'))
+                ->where($db->quoteName('link') . ' LIKE ' . $db->q('%' . $old . '%'));
             $db->setQuery($query);
             $db->execute();
         }
@@ -91,11 +91,11 @@ class CwmmigrationHelper
         // Correct blank or not set records
         foreach ($tables as $table) {
             $query = $db->getQuery(true);
-            $query->update($db->qn($table['table']))
-                ->set($db->qn('access') . ' = ' . (int) $id)
+            $query->update($db->quoteName($table['table']))
+                ->set($db->quoteName('access') . ' = ' . (int) $id)
                 ->where(
-                    '(' . $db->qn('access') . ' = ' . $db->q('0') .
-                    ' OR ' . $db->qn('access') . ' = ' . $db->q(' ') . ')'
+                    '(' . $db->quoteName('access') . ' = ' . $db->q('0') .
+                    ' OR ' . $db->quoteName('access') . ' = ' . $db->q(' ') . ')'
                 );
             $db->setQuery($query);
             $db->execute();
@@ -125,9 +125,9 @@ class CwmmigrationHelper
         // Correct blank records
         foreach ($tables as $table) {
             $query = $db->getQuery(true);
-            $query->update($db->qn($table['table']))
-                ->set($db->qn('language') . ' = ' . $db->q('*'))
-                ->where($db->qn('language') . ' = ' . $db->q(''));
+            $query->update($db->quoteName($table['table']))
+                ->set($db->quoteName('language') . ' = ' . $db->q('*'))
+                ->where($db->quoteName('language') . ' = ' . $db->q(''));
             $db->setQuery($query);
             $db->execute();
         }
@@ -146,17 +146,17 @@ class CwmmigrationHelper
     {
         $db = Factory::getContainer()->get('DatabaseDriver');
         return [
-            $db->qn('name') . ' = ' .
+            $db->quoteName('name') . ' = ' .
             $db->q('Proclaim Module'),
-            $db->qn('name') . ' = ' .
+            $db->quoteName('name') . ' = ' .
             $db->q('Proclaim Podcast Module'),
-            $db->qn('name') . ' = ' .
+            $db->quoteName('name') . ' = ' .
             $db->q('Proclaim Finder Plg'),
-            $db->qn('name') . ' = ' .
+            $db->quoteName('name') . ' = ' .
             $db->q('Proclaim Backup Plg'),
-            $db->qn('name') . ' = ' .
+            $db->quoteName('name') . ' = ' .
             $db->q('Proclaim Podcast Plg'),
-            $db->qn('name') . ' = ' .
+            $db->quoteName('name') . ' = ' .
             $db->q('Proclaim'),
         ];
     }
@@ -176,7 +176,7 @@ class CwmmigrationHelper
         foreach ($tables as $table) {
             if (!str_contains($table['name'], '_bsms_timeset')) {
                 $query = $db->getQuery(true);
-                $query->select('*')->from($db->qn($table['name']));
+                $query->select('*')->from($db->quoteName($table['name']));
                 $db->setQuery($query);
                 $data = $db->loadObjectList();
 
@@ -252,9 +252,9 @@ class CwmmigrationHelper
         // Find Extension ID of a component
         $query = $db->getQuery(true);
         $query
-            ->select($db->qn('extension_id'))
-            ->from($db->qn('#__extensions'))
-            ->where($db->qn('name') . ' = ' . $db->q('com_proclaim'));
+            ->select($db->quoteName('extension_id'))
+            ->from($db->quoteName('#__extensions'))
+            ->where($db->quoteName('name') . ' = ' . $db->q('com_proclaim'));
         $db->setQuery($query);
         $biblestudyEid               = $db->loadResult();
         $message->extension_id       = $biblestudyEid;

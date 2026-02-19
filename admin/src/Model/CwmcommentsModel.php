@@ -156,7 +156,7 @@ class CwmcommentsModel extends ListModel
         $query->select(
             $this->getState(
                 'list.select',
-                implode(', ', $db->qn(
+                implode(', ', $db->quoteName(
                     [
                         'comment.id',
                         'comment.published',
@@ -174,23 +174,23 @@ class CwmcommentsModel extends ListModel
                 ))
             )
         );
-        $query->from($db->qn('#__bsms_comments', 'comment'));
+        $query->from($db->quoteName('#__bsms_comments', 'comment'));
 
         // Join over the language
-        $query->select($db->qn('l.title', 'language_title'));
-        $query->select($db->qn('l.image', 'language_image'));
+        $query->select($db->quoteName('l.title', 'language_title'));
+        $query->select($db->quoteName('l.image', 'language_image'));
         $query->join(
             'LEFT',
-            $db->qn('#__languages', 'l') . ' ON ' . $db->qn('l.lang_code') . ' = ' . $db->qn('comment.language')
+            $db->quoteName('#__languages', 'l') . ' ON ' . $db->quoteName('l.lang_code') . ' = ' . $db->quoteName('comment.language')
         );
 
         // Filter by published state
         $published = $this->getState('filter.published');
 
         if (is_numeric($published)) {
-            $query->where($db->qn('comment.published') . ' = ' . (int) $published);
+            $query->where($db->quoteName('comment.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->qn('comment.published') . ' = 0 OR ' . $db->qn('comment.published') . ' = 1)');
+            $query->where('(' . $db->quoteName('comment.published') . ' = 0 OR ' . $db->quoteName('comment.published') . ' = 1)');
         }
 
         // Filter by search in title.
@@ -198,47 +198,47 @@ class CwmcommentsModel extends ListModel
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where($db->qn('comment.id') . ' = ' . (int) substr($search, 3));
+                $query->where($db->quoteName('comment.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where('(' . $db->qn('study.studytitle') . ' LIKE ' . $search . ' OR ' . $db->qn('book.bookname') . ' LIKE ' . $search . ')');
+                $query->where('(' . $db->quoteName('study.studytitle') . ' LIKE ' . $search . ' OR ' . $db->quoteName('book.bookname') . ' LIKE ' . $search . ')');
             }
         }
 
         // Join over Studies
-        $query->select($db->qn('study.studytitle', 'studytitle'));
-        $query->select($db->qn('study.chapter_begin'));
-        $query->select($db->qn('study.studydate'));
-        $query->select($db->qn('study.booknumber'));
+        $query->select($db->quoteName('study.studytitle', 'studytitle'));
+        $query->select($db->quoteName('study.chapter_begin'));
+        $query->select($db->quoteName('study.studydate'));
+        $query->select($db->quoteName('study.booknumber'));
         $query->join(
             'LEFT',
-            $db->qn('#__bsms_studies', 'study') . ' ON ' . $db->qn('study.id') . ' = ' . $db->qn('comment.study_id')
+            $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.id') . ' = ' . $db->quoteName('comment.study_id')
         );
 
         // Join over books
-        $query->select($db->qn('book.bookname', 'bookname'));
+        $query->select($db->quoteName('book.bookname', 'bookname'));
         $query->join(
             'LEFT',
-            $db->qn('#__bsms_books', 'book') . ' ON ' . $db->qn('book.booknumber') . ' = ' . $db->qn('study.booknumber')
+            $db->quoteName('#__bsms_books', 'book') . ' ON ' . $db->quoteName('book.booknumber') . ' = ' . $db->quoteName('study.booknumber')
         );
 
         // Join over the asset groups.
-        $query->select($db->qn('ag.title', 'access_level'));
+        $query->select($db->quoteName('ag.title', 'access_level'));
         $query->join(
             'LEFT',
-            $db->qn('#__viewlevels', 'ag') . ' ON ' . $db->qn('ag.id') . ' = ' . $db->qn('comment.access')
+            $db->quoteName('#__viewlevels', 'ag') . ' ON ' . $db->quoteName('ag.id') . ' = ' . $db->quoteName('comment.access')
         );
 
         // Restrict non-admin users to their authorised view levels
         $user = $this->getCurrentUser();
 
         if (!$user->authorise('core.admin')) {
-            $query->whereIn($db->qn('comment.access'), $user->getAuthorisedViewLevels());
+            $query->whereIn($db->quoteName('comment.access'), $user->getAuthorisedViewLevels());
         }
 
         // Join over the users for the checked out user.
-        $query->select($db->qn('uc.name', 'editor'))
-            ->join('LEFT', $db->qn('#__users', 'uc') . ' ON ' . $db->qn('uc.id') . ' = ' . $db->qn('comment.checked_out'));
+        $query->select($db->quoteName('uc.name', 'editor'))
+            ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('comment.checked_out'));
 
         // Add the list ordering clause
         $orderCol  = $this->state->get('list.ordering', 'study.studytitle');

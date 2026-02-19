@@ -136,24 +136,24 @@ class CwmtopicsModel extends ListModel
         $query->select(
             $this->getState(
                 'list.select',
-                implode(', ', $db->qn(['topic.id', 'topic.topic_text', 'topic.published', 'topic.checked_out', 'topic.checked_out_time'])) . ', ' . $db->qn('topic.params', 'topic_params')
+                implode(', ', $db->quoteName(['topic.id', 'topic.topic_text', 'topic.published', 'topic.checked_out', 'topic.checked_out_time'])) . ', ' . $db->quoteName('topic.params', 'topic_params')
             )
         );
-        $query->from($db->qn('#__bsms_topics', 'topic'));
+        $query->from($db->quoteName('#__bsms_topics', 'topic'));
 
         // Join over the users for the checked out user.
-        $query->select($db->qn('uc.name', 'editor'))
-            ->join('LEFT', $db->qn('#__users', 'uc') . ' ON ' . $db->qn('uc.id') . ' = ' . $db->qn('topic.checked_out'));
+        $query->select($db->quoteName('uc.name', 'editor'))
+            ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('topic.checked_out'));
 
         // Filter by search in title.
         $search = $this->getState('filter.search');
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where($db->qn('topic.id') . ' = ' . (int) substr($search, 3));
+                $query->where($db->quoteName('topic.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where('(' . $db->qn('topic.topic_text') . ' LIKE ' . $search . ')');
+                $query->where('(' . $db->quoteName('topic.topic_text') . ' LIKE ' . $search . ')');
             }
         }
 
@@ -161,14 +161,14 @@ class CwmtopicsModel extends ListModel
         $published = $this->getState('filter.published');
 
         if (is_numeric($published)) {
-            $query->where($db->qn('topic.published') . ' = ' . (int) $published);
+            $query->where($db->quoteName('topic.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->qn('topic.published') . ' = 0 OR ' . $db->qn('topic.published') . ' = 1)');
+            $query->where('(' . $db->quoteName('topic.published') . ' = 0 OR ' . $db->quoteName('topic.published') . ' = 1)');
         }
 
         // Restrict non-admin users to their authorised view levels
         if (!$user->authorise('core.admin')) {
-            $query->whereIn($db->qn('topic.access'), $user->getAuthorisedViewLevels());
+            $query->whereIn($db->quoteName('topic.access'), $user->getAuthorisedViewLevels());
         }
 
         // Add the list ordering clause

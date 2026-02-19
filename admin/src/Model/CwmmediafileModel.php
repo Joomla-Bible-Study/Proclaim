@@ -98,7 +98,7 @@ class CwmmediafileModel extends AdminModel
 
         $db = Factory::getContainer()->get('DatabaseDriver');
 
-        if (!$row->move($direction, $db->qn('study_id') . ' = ' . (int)$row->study_id . ' AND ' . $db->qn('published') . ' >= 0')) {
+        if (!$row->move($direction, $db->quoteName('study_id') . ' = ' . (int)$row->study_id . ' AND ' . $db->quoteName('published') . ' >= 0')) {
             return false;
         }
 
@@ -961,7 +961,7 @@ class CwmmediafileModel extends AdminModel
             if (empty($table->ordering)) {
                 $db    = Factory::getContainer()->get('DatabaseDriver');
                 $query = $db->getQuery(true);
-                $query->select('MAX(' . $db->qn('ordering') . ')')->from($db->qn('#__bsms_mediafiles'));
+                $query->select('MAX(' . $db->quoteName('ordering') . ')')->from($db->quoteName('#__bsms_mediafiles'));
                 $db->setQuery($query);
                 $max = $db->loadResult();
 
@@ -1019,7 +1019,7 @@ class CwmmediafileModel extends AdminModel
     {
         $db          = Factory::getContainer()->get('DatabaseDriver');
         $condition   = [];
-        $condition[] = $db->qn('study_id') . ' = ' . (int)$table->study_id;
+        $condition[] = $db->quoteName('study_id') . ' = ' . (int)$table->study_id;
 
         return $condition;
     }

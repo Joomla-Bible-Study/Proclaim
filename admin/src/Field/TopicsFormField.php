@@ -98,10 +98,10 @@ class TopicsFormField extends FormField
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
 
-        $query->select($db->qn('id') . ', ' . $db->qn('topic_text') . ', ' . $db->qn('params', 'topic_params'))
-            ->from($db->qn('#__bsms_topics'))
-            ->where($db->qn('published') . ' = 1')
-            ->order($db->qn('topic_text') . ' ASC');
+        $query->select($db->quoteName('id') . ', ' . $db->quoteName('topic_text') . ', ' . $db->quoteName('params', 'topic_params'))
+            ->from($db->quoteName('#__bsms_topics'))
+            ->where($db->quoteName('published') . ' = 1')
+            ->order($db->quoteName('topic_text') . ' ASC');
 
         $db->setQuery($query);
         $topics  = $db->loadObjectList();
@@ -150,9 +150,9 @@ class TopicsFormField extends FormField
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
 
-        $query->select($db->qn('topic_id'))
-            ->from($db->qn('#__bsms_studytopics'))
-            ->where($db->qn('study_id') . ' = ' . (int)$messageId);
+        $query->select($db->quoteName('topic_id'))
+            ->from($db->quoteName('#__bsms_studytopics'))
+            ->where($db->quoteName('study_id') . ' = ' . (int)$messageId);
 
         $db->setQuery($query);
         $result = $db->loadColumn();

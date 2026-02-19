@@ -55,9 +55,9 @@ class DocmanField extends ListField
 
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select($db->qn('dm.docman_document_id') . ', ' . $db->qn('dm.title'));
-        $query->from($db->qn('#__docman_documents', 'dm'));
-        $query->order($db->qn('dm.docman_document_id') . ' DESC');
+        $query->select($db->quoteName('dm.docman_document_id') . ', ' . $db->quoteName('dm.title'));
+        $query->from($db->quoteName('#__docman_documents', 'dm'));
+        $query->order($db->quoteName('dm.docman_document_id') . ' DESC');
         $db->setQuery((string)$query);
         $docs    = $db->loadObjectList();
         $options = [];

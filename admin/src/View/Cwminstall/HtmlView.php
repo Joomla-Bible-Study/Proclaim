@@ -249,7 +249,7 @@ class HtmlView extends BaseHtmlView
                     foreach ($modules as $module => $modulePreferences) {
                         // Was the module already installed?
                         $sql = $db->getQuery(true);
-                        $sql->select('COUNT(*)')->from($db->qn('#__extensions'))->where($db->qn('name') . ' = ' . $db->q('mod_' . $module));
+                        $sql->select('COUNT(*)')->from($db->quoteName('#__extensions'))->where($db->quoteName('name') . ' = ' . $db->q('mod_' . $module));
                         $db->setQuery($sql);
                         $result                     = $db->loadResult();
                         $this->status->cwmmodules[] = array_merge(
@@ -287,9 +287,9 @@ class HtmlView extends BaseHtmlView
                     foreach ($plugins as $plugin => $published) {
                         $query = $db->getQuery(true);
                         $query->select('COUNT(*)')
-                            ->from($db->qn('#__extensions'))
-                            ->where($db->qn('folder') . ' = ' . $db->q($folder))
-                            ->where($db->qn('name') . ' = ' . $db->q('plg_' . $folder . '_' . $plugin));
+                            ->from($db->quoteName('#__extensions'))
+                            ->where($db->quoteName('folder') . ' = ' . $db->q($folder))
+                            ->where($db->quoteName('name') . ' = ' . $db->q('plg_' . $folder . '_' . $plugin));
                         $db->setQuery($query);
                         $result                     = $db->loadResult();
                         $this->status->cwmplugins[] = array_merge(

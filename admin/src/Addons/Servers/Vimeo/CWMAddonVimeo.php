@@ -288,6 +288,7 @@ class CWMAddonVimeo extends CWMAddon
      *
      * @return  array  Response with video metadata
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     protected function handleGetMetadataAction(): array

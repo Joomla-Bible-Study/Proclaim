@@ -105,7 +105,7 @@ class CwmdbHelper
 
                     // Check the field to see if it exists first
                     if (self::checkTables($table, $field) === true) {
-                        $query = 'ALTER TABLE ' . $db->qn($table) . ' DROP ' . $db->qn($field);
+                        $query = 'ALTER TABLE ' . $db->quoteName($table) . ' DROP ' . $db->quoteName($field);
 
                         if (!self::performDB($query, $from)) {
                             return false;
@@ -118,7 +118,7 @@ class CwmdbHelper
                         break;
                     }
 
-                    $query = 'ALTER TABLE ' . $db->qn($table) . ' ADD INDEX ' . $db->qn($field) . ' ' . $command;
+                    $query = 'ALTER TABLE ' . $db->quoteName($table) . ' ADD INDEX ' . $db->quoteName($field) . ' ' . $command;
 
                     if (!self::performDB($query, $from)) {
                         return false;
@@ -132,7 +132,7 @@ class CwmdbHelper
                     }
 
                     if (self::checkTables($table, $field) !== true) {
-                        $query = 'ALTER TABLE ' . $db->qn($table) . ' ADD ' . $db->qn($field) . ' ' . $command;
+                        $query = 'ALTER TABLE ' . $db->quoteName($table) . ' ADD ' . $db->quoteName($field) . ' ' . $command;
 
                         if (!self::performDB($query, $from)) {
                             return false;
@@ -146,7 +146,7 @@ class CwmdbHelper
                     }
 
                     if (self::checkTables($table, $field) !== true) {
-                        $query = 'ALTER TABLE ' . $db->qn($table) . ' ADD COLUMN' . $db->qn($field) . ' ' . $command;
+                        $query = 'ALTER TABLE ' . $db->quoteName($table) . ' ADD COLUMN' . $db->quoteName($field) . ' ' . $command;
 
                         if (!self::performDB($query, $from)) {
                             return false;
@@ -160,7 +160,7 @@ class CwmdbHelper
                     }
 
                     if (self::checkTables($table, $field) === true) {
-                        $query = 'ALTER TABLE ' . $db->qn($table) . ' MODIFY ' . $db->qn($field) . ' ' . $command;
+                        $query = 'ALTER TABLE ' . $db->quoteName($table) . ' MODIFY ' . $db->quoteName($field) . ' ' . $command;
 
                         if (!self::performDB($query, $from)) {
                             return false;
@@ -174,7 +174,7 @@ class CwmdbHelper
                     }
 
                     if (self::checkTables($table, $field) === true) {
-                        $query = 'ALTER TABLE ' . $db->qn($table) . ' CHANGE ' . $db->qn($field) . ' ' . $command;
+                        $query = 'ALTER TABLE ' . $db->quoteName($table) . ' CHANGE ' . $db->quoteName($field) . ' ' . $command;
 
                         if (!self::performDB($query, $from)) {
                             return false;
@@ -345,12 +345,12 @@ class CwmdbHelper
         // Start by getting existing Style
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select('*')->from($db->qn('#__bsms_styles'));
+        $query->select('*')->from($db->quoteName('#__bsms_styles'));
 
         if ($filename) {
-            $query->where($db->qn('filename') . ' = ' . $db->q($filename));
+            $query->where($db->quoteName('filename') . ' = ' . $db->q($filename));
         } else {
-            $query->where($db->qn('id') . ' = ' . (int)$id);
+            $query->where($db->quoteName('id') . ' = ' . (int)$id);
         }
 
         $db->setQuery($query);
@@ -392,12 +392,12 @@ class CwmdbHelper
         // No apply the new css back to the table
 
         $query = $db->getQuery(true);
-        $query->update($db->qn('#__bsms_styles'))->set($db->qn('stylecode') . ' = ' . $db->q($newcss));
+        $query->update($db->quoteName('#__bsms_styles'))->set($db->quoteName('stylecode') . ' = ' . $db->q($newcss));
 
         if ($filename) {
-            $query->where($db->qn('filename') . ' = ' . $db->q($filename));
+            $query->where($db->quoteName('filename') . ' = ' . $db->q($filename));
         } else {
-            $query->where($db->qn('id') . ' = ' . (int)$id);
+            $query->where($db->quoteName('id') . ' = ' . (int)$id);
         }
 
         $db->setQuery($query);
@@ -462,7 +462,7 @@ class CwmdbHelper
      * @throws \Exception
      * @since  7.0
      */
-    public static function resetdb($install = false): bool|int
+    public static function resetdb(bool $install = false): bool|int
     {
         $app  = Factory::getApplication();
         $db   = Factory::getContainer()->get('DatabaseDriver');
@@ -516,8 +516,8 @@ class CwmdbHelper
 
         // Remove old assets.
         $query = $db->getQuery(true);
-        $query->delete($db->qn('#__assets'))
-            ->where($db->qn('name') . ' LIKE ' . $db->q('com_proclaim.%'));
+        $query->delete($db->quoteName('#__assets'))
+            ->where($db->quoteName('name') . ' LIKE ' . $db->q('com_proclaim.%'));
         $db->setQuery($query);
         $db->execute();
 
@@ -542,15 +542,15 @@ class CwmdbHelper
         $app   = Factory::getApplication();
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select($db->qn('id'))->from($db->qn('#__bsms_studies'));
+        $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_studies'));
         $db->setQuery($query);
         $results = $db->loadObjectList();
 
         foreach ($results as $result) {
             $query = $db->getQuery(true);
-            $query->select($db->qn(['id', 'topic_id']))
-                ->from($db->qn('#__bsms_studytopics'))
-                ->where($db->qn('study_id') . ' = ' . (int) $result->id);
+            $query->select($db->quoteName(['id', 'topic_id']))
+                ->from($db->quoteName('#__bsms_studytopics'))
+                ->where($db->quoteName('study_id') . ' = ' . (int) $result->id);
             $db->setQuery($query);
             $resulta = $db->loadObjectList();
             $c       = \count($resulta);
@@ -560,11 +560,11 @@ class CwmdbHelper
 
                 foreach ($resulta as $study_topics) {
                     $query = $db->getQuery(true);
-                    $query->select($db->qn('id'))
-                        ->from($db->qn('#__bsms_studytopics'))
-                        ->where($db->qn('study_id') . ' = ' . (int) $result->id)
-                        ->where($db->qn('topic_id') . ' = ' . (int) $study_topics->topic_id)
-                        ->order($db->qn('id') . ' DESC');
+                    $query->select($db->quoteName('id'))
+                        ->from($db->quoteName('#__bsms_studytopics'))
+                        ->where($db->quoteName('study_id') . ' = ' . (int) $result->id)
+                        ->where($db->quoteName('topic_id') . ' = ' . (int) $study_topics->topic_id)
+                        ->order($db->quoteName('id') . ' DESC');
                     $db->setQuery($query);
                     $results = $db->loadObjectList();
                     $records = \count($results);
@@ -573,8 +573,8 @@ class CwmdbHelper
                         foreach ($results as $id) {
                             if ($t < $records) {
                                 $query = $db->getQuery(true);
-                                $query->delete($db->qn('#__bsms_studytopics'))
-                                    ->where($db->qn('id') . ' = ' . (int) $id->id);
+                                $query->delete($db->quoteName('#__bsms_studytopics'))
+                                    ->where($db->quoteName('id') . ' = ' . (int) $id->id);
                                 $db->setQuery($query);
 
                                 if (!$db->execute()) {

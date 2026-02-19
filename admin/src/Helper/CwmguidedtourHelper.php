@@ -491,11 +491,9 @@ class CwmguidedtourHelper
                     $count++;
                     Log::add('Updated guided tour: ' . $key, Log::INFO, 'com_proclaim');
                 }
-            } else {
-                if ($this->insertTour($key, $tour)) {
-                    $count++;
-                    Log::add('Registered guided tour: ' . $key, Log::INFO, 'com_proclaim');
-                }
+            } elseif ($this->insertTour($key, $tour)) {
+                $count++;
+                Log::add('Registered guided tour: ' . $key, Log::INFO, 'com_proclaim');
             }
         }
 

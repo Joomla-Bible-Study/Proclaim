@@ -161,7 +161,7 @@ class CwmImageCleanup
             return [];
         }
 
-        $query->select($db->qn('id'))->from($db->qn($table));
+        $query->select($db->quoteName('id'))->from($db->quoteName($table));
         $db->setQuery($query);
 
         $results = $db->loadColumn();

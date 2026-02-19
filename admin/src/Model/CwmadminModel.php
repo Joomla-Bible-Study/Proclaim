@@ -173,7 +173,7 @@ class CwmadminModel extends AdminModel
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query->select('*');
-        $query->from($db->qn('#__bsms_mediafiles'));
+        $query->from($db->quoteName('#__bsms_mediafiles'));
         $db->setQuery($query->__toString());
         $mediafiles = $db->loadObjectList();
 
@@ -264,14 +264,14 @@ class CwmadminModel extends AdminModel
         // Delete old row
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true)
-            ->delete($db->qn('#__schemas'))
-            ->where($db->qn('extension_id') . ' = ' . $db->q($extensionresult));
+            ->delete($db->quoteName('#__schemas'))
+            ->where($db->quoteName('extension_id') . ' = ' . $db->q($extensionresult));
         $db->setQuery($query);
         $db->execute();
 
         // Add new row
         $query->clear()
-            ->insert($db->qn('#__schemas'))
+            ->insert($db->quoteName('#__schemas'))
             ->columns($db->quoteName('extension_id') . ',' . $db->quoteName('version_id'))
             ->values($db->quote($extensionresult) . ', ' . $db->quote($schema));
         $db->setQuery($query);
@@ -297,8 +297,8 @@ class CwmadminModel extends AdminModel
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select($db->qn('extension_id'))->from($db->qn('#__extensions'))
-            ->where($db->qn('element') . ' = ' . $db->q('com_proclaim'));
+        $query->select($db->quoteName('extension_id'))->from($db->quoteName('#__extensions'))
+            ->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'));
         $db->setQuery($query);
         $result = $db->loadResult();
 
@@ -322,8 +322,8 @@ class CwmadminModel extends AdminModel
         $db              = Factory::getContainer()->get('DatabaseDriver');
         $query           = $db->getQuery(true);
         $extensionresult = $this->getExtentionId();
-        $query->select($db->qn('version_id'))->from($db->qn('#__schemas'))
-            ->where($db->qn('extension_id') . ' = ' . $db->q($extensionresult));
+        $query->select($db->quoteName('version_id'))->from($db->quoteName('#__schemas'))
+            ->where($db->quoteName('extension_id') . ' = ' . $db->q($extensionresult));
         $db->setQuery($query);
 
         return $db->loadResult();
@@ -463,7 +463,7 @@ class CwmadminModel extends AdminModel
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select($db->qn(['extension_id', 'name', 'element']))->from($db->qn('#__extensions'));
+        $query->select($db->quoteName(['extension_id', 'name', 'element']))->from($db->quoteName('#__extensions'));
         $db->setQuery($query);
 
         return $db->loadObjectList();
@@ -504,9 +504,9 @@ class CwmadminModel extends AdminModel
         }
 
         $query = $db->getQuery(true);
-        $query->select($db->qn(['id', 'params']))
-            ->from($db->qn('#__bsms_mediafiles'))
-            ->where($db->qn('published') . ' = ' . $db->q('1'));
+        $query->select($db->quoteName(['id', 'params']))
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('published') . ' = ' . $db->q('1'));
         $db->setQuery($query);
 
         foreach ($db->loadObjectList() as $media) {
@@ -554,9 +554,9 @@ class CwmadminModel extends AdminModel
                 $reg->set('player', $to);
 
                 $query = $db->getQuery(true);
-                $query->update($db->qn('#__bsms_mediafiles'))
-                    ->set($db->qn('params') . ' = ' . $db->q($reg->toString()))
-                    ->where($db->qn('id') . ' = ' . (int)$media->id);
+                $query->update($db->quoteName('#__bsms_mediafiles'))
+                    ->set($db->quoteName('params') . ' = ' . $db->q($reg->toString()))
+                    ->where($db->quoteName('id') . ' = ' . (int)$media->id);
                 $db->setQuery($query);
 
                 if (!$db->execute()) {

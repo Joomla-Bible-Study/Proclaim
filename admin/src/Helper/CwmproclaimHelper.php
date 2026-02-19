@@ -256,9 +256,9 @@ class CwmproclaimHelper
         // $db      = $driver->getDriver();
         $query = $db->getQuery(true);
 
-        $query->select('DISTINCT YEAR(' . $db->qn('createdate') . ') as value, YEAR(' . $db->qn('createdate') . ') as text');
-        $query->from($db->qn('#__bsms_mediafiles'));
-        $query->order($db->qn('value'));
+        $query->select('DISTINCT YEAR(' . $db->quoteName('createdate') . ') as value, YEAR(' . $db->quoteName('createdate') . ') as text');
+        $query->from($db->quoteName('#__bsms_mediafiles'));
+        $query->order($db->quoteName('value'));
 
         // Get the options.
         $db->setQuery($query);
@@ -286,14 +286,14 @@ class CwmproclaimHelper
         $db      = Factory::getContainer()->get('DatabaseDriver');
         $query   = $db->getQuery(true);
 
-        $query->select($db->qn('messageType.id', 'value') . ', ' . $db->qn('messageType.message_type', 'text'));
-        $query->from($db->qn('#__bsms_message_type', 'messageType'));
+        $query->select($db->quoteName('messageType.id', 'value') . ', ' . $db->quoteName('messageType.message_type', 'text'));
+        $query->from($db->quoteName('#__bsms_message_type', 'messageType'));
         $query->join(
             'INNER',
-            $db->qn('#__bsms_studies', 'study') . ' ON ' . $db->qn('study.messagetype') . ' = ' . $db->qn('messageType.id')
+            $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.messagetype') . ' = ' . $db->quoteName('messageType.id')
         );
-        $query->group($db->qn('messageType.id'));
-        $query->order($db->qn('messageType.message_type'));
+        $query->group($db->quoteName('messageType.id'));
+        $query->order($db->quoteName('messageType.message_type'));
 
         // Get the options.
         $db->setQuery($query);
@@ -321,9 +321,9 @@ class CwmproclaimHelper
         $db      = Factory::getContainer()->get('DatabaseDriver');
         $query   = $db->getQuery(true);
 
-        $query->select('DISTINCT YEAR(' . $db->qn('studydate') . ') as value, YEAR(' . $db->qn('studydate') . ') as text');
-        $query->from($db->qn('#__bsms_studies'));
-        $query->order($db->qn('value') . ' DESC');
+        $query->select('DISTINCT YEAR(' . $db->quoteName('studydate') . ') as value, YEAR(' . $db->quoteName('studydate') . ') as text');
+        $query->from($db->quoteName('#__bsms_studies'));
+        $query->order($db->quoteName('value') . ' DESC');
 
         // Get the options.
         $db->setQuery($query);
@@ -352,18 +352,18 @@ class CwmproclaimHelper
         $db      = $driver->getDriver();
         $query   = $db->getQuery(true);
 
-        $query->select($db->qn('teacher.id', 'value') . ', ' . $db->qn('teacher.teachername', 'text'));
-        $query->from($db->qn('#__bsms_teachers', 'teacher'));
+        $query->select($db->quoteName('teacher.id', 'value') . ', ' . $db->quoteName('teacher.teachername', 'text'));
+        $query->from($db->quoteName('#__bsms_teachers', 'teacher'));
         $query->join(
             'INNER',
-            $db->qn('#__bsms_study_teachers', 'stj') . ' ON ' . $db->qn('stj.teacher_id') . ' = ' . $db->qn('teacher.id')
+            $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON ' . $db->quoteName('stj.teacher_id') . ' = ' . $db->quoteName('teacher.id')
         );
         $query->join(
             'INNER',
-            $db->qn('#__bsms_studies', 'study') . ' ON ' . $db->qn('study.id') . ' = ' . $db->qn('stj.study_id')
+            $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.id') . ' = ' . $db->quoteName('stj.study_id')
         );
-        $query->group($db->qn('teacher.id'));
-        $query->order($db->qn('value') . ' ASC');
+        $query->group($db->quoteName('teacher.id'));
+        $query->order($db->quoteName('value') . ' ASC');
 
         // Get the options.
         $db->setQuery($query);
@@ -392,15 +392,15 @@ class CwmproclaimHelper
         $query   = $db->getQuery(true);
 
         $query->select(
-            $db->qn('book.booknumber', 'value') . ', ' . $db->qn('book.bookname', 'text') . ', ' . $db->qn('book.id')
+            $db->quoteName('book.booknumber', 'value') . ', ' . $db->quoteName('book.bookname', 'text') . ', ' . $db->quoteName('book.id')
         );
-        $query->from($db->qn('#__bsms_books', 'book'));
+        $query->from($db->quoteName('#__bsms_books', 'book'));
         $query->join(
             'INNER',
-            $db->qn('#__bsms_studies', 'study') . ' ON ' . $db->qn('study.booknumber') . ' = ' . $db->qn('book.booknumber')
+            $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.booknumber') . ' = ' . $db->quoteName('book.booknumber')
         );
-        $query->group($db->qn('book.id'));
-        $query->order($db->qn('value') . ' ASC');
+        $query->group($db->quoteName('book.id'));
+        $query->order($db->quoteName('value') . ' ASC');
 
         // Get the options.
         $db->setQuery($query);
@@ -432,14 +432,14 @@ class CwmproclaimHelper
         $db      = Factory::getContainer()->get('DatabaseDriver');
         $query   = $db->getQuery(true);
 
-        $query->select($db->qn('messageType.id', 'value') . ', ' . $db->qn('messageType.message_type', 'text'));
-        $query->from($db->qn('#__bsms_message_type', 'messageType'));
+        $query->select($db->quoteName('messageType.id', 'value') . ', ' . $db->quoteName('messageType.message_type', 'text'));
+        $query->from($db->quoteName('#__bsms_message_type', 'messageType'));
         $query->join(
             'INNER',
-            $db->qn('#__bsms_studies', 'study') . ' ON ' . $db->qn('study.messagetype') . ' = ' . $db->qn('messageType.id')
+            $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.messagetype') . ' = ' . $db->quoteName('messageType.id')
         );
-        $query->group($db->qn('messageType.id'));
-        $query->order($db->qn('text') . ' ASC');
+        $query->group($db->quoteName('messageType.id'));
+        $query->order($db->quoteName('text') . ' ASC');
 
         // Get the options.
         $db->setQuery($query);
@@ -467,9 +467,9 @@ class CwmproclaimHelper
         $db      = Factory::getContainer()->get('DatabaseDriver');
         $query   = $db->getQuery(true);
 
-        $query->select($db->qn('id', 'value') . ', ' . $db->qn('location_text', 'text'));
-        $query->from($db->qn('#__bsms_locations'));
-        $query->order($db->qn('location_text') . ' ASC');
+        $query->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('location_text', 'text'));
+        $query->from($db->quoteName('#__bsms_locations'));
+        $query->order($db->quoteName('location_text') . ' ASC');
 
         // Get the options.
         $db->setQuery($query);

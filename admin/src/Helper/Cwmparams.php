@@ -74,8 +74,8 @@ class Cwmparams
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
             $query->select('*')
-                ->from($db->qn('#__bsms_admin'))
-                ->where($db->qn('id') . ' = ' . 1);
+                ->from($db->quoteName('#__bsms_admin'))
+                ->where($db->quoteName('id') . ' = ' . 1);
             $db->setQuery($query);
             $admin = $db->loadObject();
 
@@ -125,9 +125,9 @@ class Cwmparams
             self::$templateId = $pk;
             $query            = $db->getQuery(true);
             $query->select('*')
-                ->from($db->qn('#__bsms_templates'))
-                ->where($db->qn('published') . ' = 1')
-                ->where($db->qn('id') . ' = ' . (int) self::$templateId);
+                ->from($db->quoteName('#__bsms_templates'))
+                ->where($db->quoteName('published') . ' = 1')
+                ->where($db->quoteName('id') . ' = ' . (int) self::$templateId);
             $db->setQuery($query);
             $template = $db->loadObject();
 
@@ -136,9 +136,9 @@ class Cwmparams
                 self::$templateId = 1;
                 $query            = $db->getQuery(true);
                 $query->select('*')
-                    ->from($db->qn('#__bsms_templates'))
-                    ->where($db->qn('published') . ' = 1')
-                    ->where($db->qn('id') . ' = ' . (int) self::$templateId);
+                    ->from($db->quoteName('#__bsms_templates'))
+                    ->where($db->quoteName('published') . ' = 1')
+                    ->where($db->quoteName('id') . ' = ' . (int) self::$templateId);
                 $db->setQuery($query);
                 $template = $db->loadObject();
             }
@@ -174,9 +174,9 @@ class Cwmparams
             // Read the existing component value(s)
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
-            $query->select($db->qn('params'))
-                ->from($db->qn('#__extensions'))
-                ->where($db->qn('name') . ' = ' . $db->q('com_proclaim'));
+            $query->select($db->quoteName('params'))
+                ->from($db->quoteName('#__extensions'))
+                ->where($db->quoteName('name') . ' = ' . $db->q('com_proclaim'));
             $db->setQuery($query);
             $params = json_decode($db->loadResult(), true, 512, JSON_THROW_ON_ERROR);
 
@@ -188,9 +188,9 @@ class Cwmparams
             // Store the combined new and existing values back as a JSON string
             $paramsString = json_encode($params, JSON_THROW_ON_ERROR);
             $query->clear();
-            $query->update($db->qn('#__extensions'))
-                ->set($db->qn('params') . ' = ' . $db->q($paramsString))
-                ->where($db->qn('name') . ' = ' . $db->q('com_proclaim'));
+            $query->update($db->quoteName('#__extensions'))
+                ->set($db->quoteName('params') . ' = ' . $db->q($paramsString))
+                ->where($db->quoteName('name') . ' = ' . $db->q('com_proclaim'));
             $db->setQuery($query);
             $db->execute();
         }

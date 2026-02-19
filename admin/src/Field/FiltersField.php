@@ -180,11 +180,11 @@ class FiltersField extends FormField
     {
         $db    = $this->getDatabase();
         $query = $db->getQuery(true)
-            ->select($db->qn('a.id', 'value') . ', ' . $db->qn('a.title', 'text') . ', COUNT(DISTINCT ' . $db->qn('b.id') . ') AS ' . $db->qn('level') . ', ' . $db->qn('a.parent_id', 'parent'))
-            ->from($db->qn('#__usergroups', 'a'))
-            ->join('LEFT', $db->qn('#__usergroups', 'b') . ' ON ' . $db->qn('a.lft') . ' > ' . $db->qn('b.lft') . ' AND ' . $db->qn('a.rgt') . ' < ' . $db->qn('b.rgt'))
-            ->group($db->qn(['a.id', 'a.title', 'a.lft']))
-            ->order($db->qn('a.lft') . ' ASC');
+            ->select($db->quoteName('a.id', 'value') . ', ' . $db->quoteName('a.title', 'text') . ', COUNT(DISTINCT ' . $db->quoteName('b.id') . ') AS ' . $db->quoteName('level') . ', ' . $db->quoteName('a.parent_id', 'parent'))
+            ->from($db->quoteName('#__usergroups', 'a'))
+            ->join('LEFT', $db->quoteName('#__usergroups', 'b') . ' ON ' . $db->quoteName('a.lft') . ' > ' . $db->quoteName('b.lft') . ' AND ' . $db->quoteName('a.rgt') . ' < ' . $db->quoteName('b.rgt'))
+            ->group($db->quoteName(['a.id', 'a.title', 'a.lft']))
+            ->order($db->quoteName('a.lft') . ' ASC');
         $db->setQuery($query);
 
         return $db->loadObjectList();

@@ -209,7 +209,7 @@ class CwmmessagesModel extends ListModel
         $query->select(
             $this->getState(
                 'list.select',
-                implode(', ', $db->qn(
+                implode(', ', $db->quoteName(
                     [
                         'study.id',
                         'study.published',
@@ -229,69 +229,69 @@ class CwmmessagesModel extends ListModel
                 ))
             )
         );
-        $query->from($db->qn('#__bsms_studies', 'study'));
+        $query->from($db->quoteName('#__bsms_studies', 'study'));
 
         // Join over the language
-        $query->select($db->qn('l.title', 'language_title'));
+        $query->select($db->quoteName('l.title', 'language_title'));
         $query->join(
             'LEFT',
-            $db->qn('#__languages', 'l') . ' ON ' . $db->qn('l.lang_code') . ' = ' . $db->qn('study.language')
+            $db->quoteName('#__languages', 'l') . ' ON ' . $db->quoteName('l.lang_code') . ' = ' . $db->quoteName('study.language')
         );
 
         // Join over Message Types
-        $query->select($db->qn('messageType.message_type', 'messageType'));
+        $query->select($db->quoteName('messageType.message_type', 'messageType'));
         $query->join(
             'LEFT',
-            $db->qn('#__bsms_message_type', 'messageType') . ' ON ' . $db->qn('messageType.id') . ' = ' . $db->qn('study.messagetype')
+            $db->quoteName('#__bsms_message_type', 'messageType') . ' ON ' . $db->quoteName('messageType.id') . ' = ' . $db->quoteName('study.messagetype')
         );
 
         // Join over Teachers (via junction table, primary teacher only; falls back to legacy teacher_id)
-        $query->select($db->qn('teacher.teachername', 'teachername'));
+        $query->select($db->quoteName('teacher.teachername', 'teachername'));
         $query->join(
             'LEFT',
-            $db->qn('#__bsms_study_teachers', 'stj') . ' ON ' . $db->qn('stj.study_id') . ' = ' . $db->qn('study.id')
-            . ' AND ' . $db->qn('stj.ordering') . ' = 0'
+            $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON ' . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('study.id')
+            . ' AND ' . $db->quoteName('stj.ordering') . ' = 0'
         );
         $query->join(
             'LEFT',
-            $db->qn('#__bsms_teachers', 'teacher') . ' ON ' . $db->qn('teacher.id')
-            . ' = COALESCE(' . $db->qn('stj.teacher_id') . ', ' . $db->qn('study.teacher_id') . ')'
+            $db->quoteName('#__bsms_teachers', 'teacher') . ' ON ' . $db->quoteName('teacher.id')
+            . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('study.teacher_id') . ')'
         );
 
         // Join over Series
-        $query->select($db->qn('series.series_text'));
-        $query->select($db->qn('series.id', 'series_id'));
+        $query->select($db->quoteName('series.series_text'));
+        $query->select($db->quoteName('series.id', 'series_id'));
         $query->join(
             'LEFT',
-            $db->qn('#__bsms_series', 'series') . ' ON ' . $db->qn('series.id') . ' = ' . $db->qn('study.series_id')
+            $db->quoteName('#__bsms_series', 'series') . ' ON ' . $db->quoteName('series.id') . ' = ' . $db->quoteName('study.series_id')
         );
 
         // Join over Location
-        $query->select($db->qn('locations.location_text'));
+        $query->select($db->quoteName('locations.location_text'));
         $query->join(
             'LEFT',
-            $db->qn('#__bsms_locations', 'locations') . ' ON ' . $db->qn('locations.id') . ' = ' . $db->qn('study.location_id')
+            $db->quoteName('#__bsms_locations', 'locations') . ' ON ' . $db->quoteName('locations.id') . ' = ' . $db->quoteName('study.location_id')
         );
 
         // Join over Plays/Downloads
         $query->select(
-            'SUM(' . $db->qn('mediafile.plays') . ') AS ' . $db->qn('totalplays')
-            . ', SUM(' . $db->qn('mediafile.downloads') . ') AS ' . $db->qn('totaldownloads')
-            . ', ' . $db->qn('mediafile.study_id')
+            'SUM(' . $db->quoteName('mediafile.plays') . ') AS ' . $db->quoteName('totalplays')
+            . ', SUM(' . $db->quoteName('mediafile.downloads') . ') AS ' . $db->quoteName('totaldownloads')
+            . ', ' . $db->quoteName('mediafile.study_id')
         );
         $query->join(
             'LEFT',
-            $db->qn('#__bsms_mediafiles', 'mediafile') . ' ON ' . $db->qn('mediafile.study_id') . ' = ' . $db->qn('study.id')
+            $db->quoteName('#__bsms_mediafiles', 'mediafile') . ' ON ' . $db->quoteName('mediafile.study_id') . ' = ' . $db->quoteName('study.id')
         );
-        $query->group($db->qn('study.id'));
+        $query->group($db->quoteName('study.id'));
 
         // Join over the users for the checked out user.
-        $query->select($db->qn('uc.name', 'editor'))
-            ->join('LEFT', $db->qn('#__users', 'uc') . ' ON ' . $db->qn('uc.id') . ' = ' . $db->qn('study.checked_out'));
+        $query->select($db->quoteName('uc.name', 'editor'))
+            ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('study.checked_out'));
 
         // Filter by access level.
         if ($access = $this->getState('filter.access')) {
-            $query->where($db->qn('study.access') . ' = ' . (int) $access);
+            $query->where($db->quoteName('study.access') . ' = ' . (int) $access);
         }
 
         // Apply hybrid security filter: location-based + Joomla view-level access
@@ -303,9 +303,9 @@ class CwmmessagesModel extends ListModel
         if (is_numeric($teacher)) {
             $tSubquery = $db->getQuery(true)
                 ->select('1')
-                ->from($db->qn('#__bsms_study_teachers', 'stf'))
-                ->where($db->qn('stf.study_id') . ' = ' . $db->qn('study.id'))
-                ->where($db->qn('stf.teacher_id') . ' = ' . (int) $teacher);
+                ->from($db->quoteName('#__bsms_study_teachers', 'stf'))
+                ->where($db->quoteName('stf.study_id') . ' = ' . $db->quoteName('study.id'))
+                ->where($db->quoteName('stf.teacher_id') . ' = ' . (int) $teacher);
             $query->where('EXISTS (' . $tSubquery . ')');
         }
 
@@ -313,30 +313,30 @@ class CwmmessagesModel extends ListModel
         $series = $this->getState('filter.series');
 
         if (is_numeric($series)) {
-            $query->where($db->qn('study.series_id') . ' = ' . (int) $series);
+            $query->where($db->quoteName('study.series_id') . ' = ' . (int) $series);
         }
 
         // Filter by message type
         $messageType = $this->getState('filter.messageType');
 
         if (is_numeric($messageType)) {
-            $query->where($db->qn('study.messageType') . ' = ' . (int) $messageType);
+            $query->where($db->quoteName('study.messageType') . ' = ' . (int) $messageType);
         }
 
         // Filter by Year
         $year = $this->getState('filter.year');
 
         if (!empty($year)) {
-            $query->where('YEAR(' . $db->qn('study.studydate') . ') = ' . (int) $year);
+            $query->where('YEAR(' . $db->quoteName('study.studydate') . ') = ' . (int) $year);
         }
 
         // Filter by published state
         $published = $this->getState('filter.published');
 
         if (is_numeric($published)) {
-            $query->where($db->qn('study.published') . ' = ' . (int) $published);
+            $query->where($db->quoteName('study.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->qn('study.published') . ' = 0 OR ' . $db->qn('study.published') . ' = 1 OR ' . $db->qn('study.published') . ' = 2)');
+            $query->where('(' . $db->quoteName('study.published') . ' = 0 OR ' . $db->quoteName('study.published') . ' = 1 OR ' . $db->quoteName('study.published') . ' = 2)');
         }
 
         // Filter by search in title.
@@ -344,11 +344,11 @@ class CwmmessagesModel extends ListModel
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where($db->qn('study.id') . ' = ' . (int) substr($search, 3));
+                $query->where($db->quoteName('study.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = '%' . str_replace(' ', '%', trim($search)) . '%';
                 $query->where(
-                    '(' . $db->qn('study.studytitle') . ' LIKE :search1 OR ' . $db->qn('study.alias') . ' LIKE :search2)'
+                    '(' . $db->quoteName('study.studytitle') . ' LIKE :search1 OR ' . $db->quoteName('study.alias') . ' LIKE :search2)'
                 )
                     ->bind([':search1', ':search2'], $search);
             }
@@ -358,7 +358,7 @@ class CwmmessagesModel extends ListModel
         $location = $this->getState('filter.location');
 
         if (is_numeric($location)) {
-            $query->where($db->qn('study.location_id') . ' = ' . (int) $location);
+            $query->where($db->quoteName('study.location_id') . ' = ' . (int) $location);
         }
 
         // Add the list ordering clause

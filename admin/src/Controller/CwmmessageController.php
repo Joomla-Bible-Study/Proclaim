@@ -63,9 +63,9 @@ class CwmmessageController extends FormController
         $id    = $input->get('id', 0, 'int');
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->update($db->qn('#__bsms_studies'))
-            ->set($db->qn('hits') . ' = ' . $db->q('0'))
-            ->where($db->qn('id') . ' = ' . (int)$id);
+        $query->update($db->quoteName('#__bsms_studies'))
+            ->set($db->quoteName('hits') . ' = ' . $db->q('0'))
+            ->where($db->quoteName('id') . ' = ' . (int)$id);
         $db->setQuery($query);
 
         if (!$db->execute()) {
@@ -149,8 +149,8 @@ class CwmmessageController extends FormController
         // Remove Exerting StudyTopics tags
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $qurey = $db->getQuery(true);
-        $qurey->delete($db->qn('#__bsms_studytopics'))
-            ->where($db->qn('study_id') . ' = ' . (int) $data['id']);
+        $qurey->delete($db->quoteName('#__bsms_studytopics'))
+            ->where($db->quoteName('study_id') . ' = ' . (int) $data['id']);
         $db->setQuery($qurey);
 
         if (!$db->execute()) {

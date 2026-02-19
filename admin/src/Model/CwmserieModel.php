@@ -154,9 +154,9 @@ class CwmserieModel extends AdminModel
         if (empty($this->teacher)) {
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true)
-                ->select($db->qn('id', 'value') . ', ' . $db->qn('teachername', 'text'))
-                ->from($db->qn('#__bsms_teachers'))
-                ->where($db->qn('published') . ' = 1');
+                ->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('teachername', 'text'))
+                ->from($db->quoteName('#__bsms_teachers'))
+                ->where($db->quoteName('published') . ' = 1');
             $this->teacher = $this->_getList($query);
         }
 
@@ -466,7 +466,7 @@ class CwmserieModel extends AdminModel
             if (empty($table->ordering)) {
                 $db    = Factory::getContainer()->get('DatabaseDriver');
                 $query = $db->getQuery(true);
-                $query->select('MAX(' . $db->qn('ordering') . ')')->from($db->qn('#__bsms_series'));
+                $query->select('MAX(' . $db->quoteName('ordering') . ')')->from($db->quoteName('#__bsms_series'));
                 $db->setQuery($query);
                 $max = $db->loadResult();
 
@@ -481,7 +481,7 @@ class CwmserieModel extends AdminModel
         if ($table->ordering == 0) {
             $table->ordering = 1;
             $db              = Factory::getContainer()->get('DatabaseDriver');
-            $table->reorder($db->qn('id') . ' = ' . (int)$table->id);
+            $table->reorder($db->quoteName('id') . ' = ' . (int)$table->id);
         }
     }
 
@@ -525,44 +525,44 @@ class CwmserieModel extends AdminModel
         $query = $db->getQuery(true);
 
         $query->select([
-            $db->qn('study.id'),
-            $db->qn('study.studytitle'),
-            $db->qn('study.studydate'),
-            $db->qn('study.published'),
-            $db->qn('study.access'),
+            $db->quoteName('study.id'),
+            $db->quoteName('study.studytitle'),
+            $db->quoteName('study.studydate'),
+            $db->quoteName('study.published'),
+            $db->quoteName('study.access'),
         ]);
-        $query->from($db->qn('#__bsms_studies', 'study'));
+        $query->from($db->quoteName('#__bsms_studies', 'study'));
 
         // Join over Teachers (via junction table, primary teacher; falls back to legacy teacher_id)
-        $query->select($db->qn('teacher.teachername'));
+        $query->select($db->quoteName('teacher.teachername'));
         $query->join(
             'LEFT',
-            $db->qn('#__bsms_study_teachers', 'stj') . ' ON ' . $db->qn('stj.study_id') . ' = ' . $db->qn('study.id')
-            . ' AND ' . $db->qn('stj.ordering') . ' = 0'
+            $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON ' . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('study.id')
+            . ' AND ' . $db->quoteName('stj.ordering') . ' = 0'
         );
         $query->join(
             'LEFT',
-            $db->qn('#__bsms_teachers', 'teacher') . ' ON ' . $db->qn('teacher.id')
-            . ' = COALESCE(' . $db->qn('stj.teacher_id') . ', ' . $db->qn('study.teacher_id') . ')'
+            $db->quoteName('#__bsms_teachers', 'teacher') . ' ON ' . $db->quoteName('teacher.id')
+            . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('study.teacher_id') . ')'
         );
 
         // Join over Location
-        $query->select($db->qn('loc.location_text'));
+        $query->select($db->quoteName('loc.location_text'));
         $query->join(
             'LEFT',
-            $db->qn('#__bsms_locations', 'loc') . ' ON ' . $db->qn('loc.id') . ' = ' . $db->qn('study.location_id')
+            $db->quoteName('#__bsms_locations', 'loc') . ' ON ' . $db->quoteName('loc.id') . ' = ' . $db->quoteName('study.location_id')
         );
 
-        $query->where($db->qn('study.series_id') . ' = ' . (int) $item->id);
+        $query->where($db->quoteName('study.series_id') . ' = ' . (int) $item->id);
 
         // Restrict non-admin users to their authorised view levels
         $user = $this->getCurrentUser();
 
         if (!$user->authorise('core.admin')) {
-            $query->whereIn($db->qn('study.access'), $user->getAuthorisedViewLevels());
+            $query->whereIn($db->quoteName('study.access'), $user->getAuthorisedViewLevels());
         }
 
-        $query->order($db->qn('study.studydate') . ' DESC');
+        $query->order($db->quoteName('study.studydate') . ' DESC');
 
         $db->setQuery($query);
 

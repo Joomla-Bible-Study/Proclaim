@@ -144,44 +144,44 @@ class CwmteachersModel extends ListModel
         $query = $db->getQuery(true);
         $user  = $this->getCurrentUser();
 
-        $query->select($this->getState('list.select', $db->qn('teacher') . '.*'));
-        $query->from($db->qn('#__bsms_teachers', 'teacher'));
+        $query->select($this->getState('list.select', $db->quoteName('teacher') . '.*'));
+        $query->from($db->quoteName('#__bsms_teachers', 'teacher'));
 
         // Join over the language
-        $query->select($db->qn('l.title', 'language_title'));
+        $query->select($db->quoteName('l.title', 'language_title'));
         $query->join(
             'LEFT',
-            $db->qn('#__languages', 'l') . ' ON ' . $db->qn('l.lang_code') . ' = ' . $db->qn('teacher.language')
+            $db->quoteName('#__languages', 'l') . ' ON ' . $db->quoteName('l.lang_code') . ' = ' . $db->quoteName('teacher.language')
         );
 
         // Join over the asset groups.
-        $query->select($db->qn('ag.title', 'access_level'));
+        $query->select($db->quoteName('ag.title', 'access_level'));
         $query->join(
             'LEFT',
-            $db->qn('#__viewlevels', 'ag') . ' ON ' . $db->qn('ag.id') . ' = ' . $db->qn('teacher.access')
+            $db->quoteName('#__viewlevels', 'ag') . ' ON ' . $db->quoteName('ag.id') . ' = ' . $db->quoteName('teacher.access')
         );
 
         // Join over the users for the checked out user.
-        $query->select($db->qn('uc.name', 'editor'))
-            ->join('LEFT', $db->qn('#__users', 'uc') . ' ON ' . $db->qn('uc.id') . ' = ' . $db->qn('teacher.checked_out'));
+        $query->select($db->quoteName('uc.name', 'editor'))
+            ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('teacher.checked_out'));
 
         // Filter by access level.
         if ($access = $this->getState('filter.access')) {
-            $query->where($db->qn('teacher.access') . ' = ' . (int) $access);
+            $query->where($db->quoteName('teacher.access') . ' = ' . (int) $access);
         }
 
         // Restrict non-admin users to their authorised view levels
         if (!$user->authorise('core.admin')) {
-            $query->whereIn($db->qn('teacher.access'), $user->getAuthorisedViewLevels());
+            $query->whereIn($db->quoteName('teacher.access'), $user->getAuthorisedViewLevels());
         }
 
         // Filter by published state
         $published = $this->getState('filter.published');
 
         if (is_numeric($published)) {
-            $query->where($db->qn('teacher.published') . ' = ' . (int) $published);
+            $query->where($db->quoteName('teacher.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->qn('teacher.published') . ' = 0 OR ' . $db->qn('teacher.published') . ' = 1)');
+            $query->where('(' . $db->quoteName('teacher.published') . ' = 0 OR ' . $db->quoteName('teacher.published') . ' = 1)');
         }
 
         // Filter by search in title.
@@ -189,10 +189,10 @@ class CwmteachersModel extends ListModel
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where($db->qn('teacher.id') . ' = ' . (int) substr($search, 3));
+                $query->where($db->quoteName('teacher.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where('(' . $db->qn('teacher.teachername') . ' LIKE ' . $search . ' OR ' . $db->qn('teacher.alias') . ' LIKE ' . $search . ')');
+                $query->where('(' . $db->quoteName('teacher.teachername') . ' LIKE ' . $search . ' OR ' . $db->quoteName('teacher.alias') . ' LIKE ' . $search . ')');
             }
         }
 

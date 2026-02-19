@@ -60,9 +60,9 @@ class Cwmalias
                 } else {
                     $alias = OutputFilter::stringURLSafe($r['title']);
                     $query = $db->getQuery(true);
-                    $query->update($db->qn($r['table']))
-                        ->set($db->qn('alias') . ' = ' . $db->q($alias))
-                        ->where($db->qn('id') . ' = ' . (int) $r['id']);
+                    $query->update($db->quoteName($r['table']))
+                        ->set($db->quoteName('alias') . ' = ' . $db->q($alias))
+                        ->where($db->quoteName('id') . ' = ' . (int) $r['id']);
                     $db->setQuery($query);
                     $db->execute();
                     $done++;
@@ -112,8 +112,8 @@ class Cwmalias
 
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select($db->qn('id') . ', ' . $db->qn('alias') . ', ' . $db->qn($title))
-            ->from($db->qn($table));
+        $query->select($db->quoteName('id') . ', ' . $db->quoteName('alias') . ', ' . $db->quoteName($title))
+            ->from($db->quoteName($table));
         $db->setQuery($query);
         $results = $db->loadObjectList();
 

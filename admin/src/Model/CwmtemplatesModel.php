@@ -72,11 +72,11 @@ class CwmtemplatesModel extends ListModel
         if (empty($this->templates)) {
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
-            $query->select($db->qn('id', 'value'))
-                ->select($db->qn('title', 'text'))
-                ->from($db->qn('#__bsms_templates'))
-                ->where($db->qn('published') . ' = 1')
-                ->order($db->qn('id') . ' ASC');
+            $query->select($db->quoteName('id', 'value'))
+                ->select($db->quoteName('title', 'text'))
+                ->from($db->quoteName('#__bsms_templates'))
+                ->where($db->quoteName('published') . ' = 1')
+                ->order($db->quoteName('id') . ' ASC');
             $this->templates = $this->_getList($query);
         }
 
@@ -95,10 +95,10 @@ class CwmtemplatesModel extends ListModel
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
 
-        $query->select($db->qn('template.type', 'text'));
-        $query->from($db->qn('#__bsms_templates', 'template'));
-        $query->group($db->qn('template.type'));
-        $query->order($db->qn('template.type'));
+        $query->select($db->quoteName('template.type', 'text'));
+        $query->from($db->quoteName('#__bsms_templates', 'template'));
+        $query->group($db->quoteName('template.type'));
+        $query->order($db->quoteName('template.type'));
 
         $db->setQuery($query->__toString());
 
@@ -154,22 +154,22 @@ class CwmtemplatesModel extends ListModel
         $query->select(
             $this->getState(
                 'list.select',
-                implode(', ', $db->qn(['template.id', 'template.published', 'template.title', 'template.checked_out', 'template.checked_out_time']))
+                implode(', ', $db->quoteName(['template.id', 'template.published', 'template.title', 'template.checked_out', 'template.checked_out_time']))
             )
         );
-        $query->from($db->qn('#__bsms_templates', 'template'));
+        $query->from($db->quoteName('#__bsms_templates', 'template'));
 
         // Join over the users for the checked out user.
-        $query->select($db->qn('uc.name', 'editor'))
-            ->join('LEFT', $db->qn('#__users', 'uc') . ' ON ' . $db->qn('uc.id') . ' = ' . $db->qn('template.checked_out'));
+        $query->select($db->quoteName('uc.name', 'editor'))
+            ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('template.checked_out'));
 
         // Filter by published state
         $published = $this->getState('filter.published');
 
         if (is_numeric($published)) {
-            $query->where($db->qn('template.published') . ' = ' . (int) $published);
+            $query->where($db->quoteName('template.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->qn('template.published') . ' = 0 OR ' . $db->qn('template.published') . ' = 1)');
+            $query->where('(' . $db->quoteName('template.published') . ' = 0 OR ' . $db->quoteName('template.published') . ' = 1)');
         }
 
         // Filter by search in filename or study title
@@ -177,16 +177,16 @@ class CwmtemplatesModel extends ListModel
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where($db->qn('template.id') . ' = ' . (int) substr($search, 3));
+                $query->where($db->quoteName('template.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where($db->qn('template.title') . ' LIKE ' . $search);
+                $query->where($db->quoteName('template.title') . ' LIKE ' . $search);
             }
         }
 
         // Restrict non-admin users to their authorised view levels
         if (!$user->authorise('core.admin')) {
-            $query->whereIn($db->qn('template.access'), $user->getAuthorisedViewLevels());
+            $query->whereIn($db->quoteName('template.access'), $user->getAuthorisedViewLevels());
         }
 
         // Add the list ordering clause

@@ -42,7 +42,7 @@ class Cwmssconvert
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query->select('*')
-            ->from($db->qn('#__sermon_sermons'));
+            ->from($db->quoteName('#__sermon_sermons'));
         $db->setQuery($query);
         $sermons = $db->loadObjectList();
 
@@ -50,7 +50,7 @@ class Cwmssconvert
 
         // Get a unique list of teacher ids
         $query = $db->getQuery(true);
-        $query->select($db->qn(['speaker_id', 'id', 'series_id']))->from($db->qn('#__sermon_sermons'))->group($db->qn('series_id'));
+        $query->select($db->quoteName(['speaker_id', 'id', 'series_id']))->from($db->quoteName('#__sermon_sermons'))->group($db->quoteName('series_id'));
         $db->setQuery($query);
         $seriesspeakers = $db->loadObjectList();
 
@@ -71,9 +71,9 @@ class Cwmssconvert
 
         $query = $db->getQuery(true);
         $query->select('*')
-            ->from($db->qn('#__bsms_servers'))
-            ->where($db->qn('published') . ' = 1')
-            ->order($db->qn('id') . ' DESC');
+            ->from($db->quoteName('#__bsms_servers'))
+            ->where($db->quoteName('published') . ' = 1')
+            ->order($db->quoteName('id') . ' DESC');
         $db->setQuery($query, 0, 1);
         $server         = $db->loadAssoc();
         $this->serverid = $server['id'];
@@ -81,7 +81,7 @@ class Cwmssconvert
         // Make the teachers
         $query = $db->getQuery(true);
         $query->select('*')
-            ->from($db->qn('#__sermon_speakers'));
+            ->from($db->quoteName('#__sermon_speakers'));
         $db->setQuery($query);
 
         $teachers = $db->loadObjectList();
@@ -112,7 +112,7 @@ class Cwmssconvert
 
             // Get the last teacherid
             $query = $db->getQuery(true);
-            $query->select($db->qn('id'))->from($db->qn('#__bsms_teachers'))->order($db->qn('id'));
+            $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_teachers'))->order($db->quoteName('id'));
             $db->setQuery($query, 0, 1);
             $lastteacher = $db->loadResult();
 
@@ -127,7 +127,7 @@ class Cwmssconvert
         // Series Records
         $query = $db->getQuery(true);
         $query->select('*')
-            ->from($db->qn('#__sermon_series'));
+            ->from($db->quoteName('#__sermon_series'));
         $db->setQuery($query);
         $series = $db->loadObjectList();
 
@@ -170,7 +170,7 @@ class Cwmssconvert
                     $result_table .= '<tr><td>' . Text::_('JBS_IBM_ERROR_OCCURED_SS_SERIES') . '</td></tr>';
                 } else {
                     $query = $db->getQuery(true);
-                    $query->select($db->qn('id'))->from($db->qn('#__bsms_studies'))->order($db->qn('id') . ' DESC');
+                    $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_studies'))->order($db->quoteName('id') . ' DESC');
                     $db->setQuery($query, 0, 1);
                     $lastseries = $db->loadResult();
 
@@ -191,22 +191,22 @@ class Cwmssconvert
 
         // Count the new numbers and report
         $query = $db->getQuery(true);
-        $query->select('COUNT(*)')->from($db->qn('#__bsms_studies'));
+        $query->select('COUNT(*)')->from($db->quoteName('#__bsms_studies'));
         $db->setQuery($query);
         $newstudies = $db->loadResult();
 
         $query = $db->getQuery(true);
-        $query->select('COUNT(*)')->from($db->qn('#__bsms_teachers'));
+        $query->select('COUNT(*)')->from($db->quoteName('#__bsms_teachers'));
         $db->setQuery($query);
         $newteachers = $db->loadResult();
 
         $query = $db->getQuery(true);
-        $query->select('COUNT(*)')->from($db->qn('#__bsms_series'));
+        $query->select('COUNT(*)')->from($db->quoteName('#__bsms_series'));
         $db->setQuery($query);
         $newseries = $db->loadResult();
 
         $query = $db->getQuery(true);
-        $query->select('COUNT(*)')->from($db->qn('#__bsms_mediafiles'));
+        $query->select('COUNT(*)')->from($db->quoteName('#__bsms_mediafiles'));
         $db->setQuery($query);
         $newmediafiles = $db->loadResult();
 
@@ -269,7 +269,7 @@ class Cwmssconvert
 
         $db->insertObject('#__bsms_studies', $data);
         $query = $db->getQuery(true);
-        $query->select($db->qn('id'))->from($db->qn('#__bsms_studies'))->order($db->qn('id') . ' DESC');
+        $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_studies'))->order($db->quoteName('id') . ' DESC');
 
         $db->setQuery($query, 0, 1);
         $study              = $db->loadAssoc();

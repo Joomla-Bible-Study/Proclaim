@@ -108,9 +108,9 @@ class Cwmhelper
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select($db->qn(['id', 'params']))
-            ->from($db->qn('#__bsms_mediafiles'))
-            ->where($db->qn('id') . ' = ' . (int) $id);
+        $query->select($db->quoteName(['id', 'params']))
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('id') . ' = ' . (int) $id);
 
         $db->setQuery($query);
         $media = $db->loadObject();

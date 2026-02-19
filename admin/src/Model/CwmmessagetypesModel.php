@@ -76,9 +76,9 @@ class CwmmessagetypesModel extends ListModel
         if (empty($this->deletes)) {
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
-            $query->select($db->qn('allowdeletes'))
-                ->from($db->qn('#__bsms_admin'))
-                ->where($db->qn('id') . ' = 1');
+            $query->select($db->quoteName('allowdeletes'))
+                ->from($db->quoteName('#__bsms_admin'))
+                ->where($db->quoteName('id') . ' = 1');
             $this->deletes = $this->_getList($query);
         }
 
@@ -194,7 +194,7 @@ class CwmmessagetypesModel extends ListModel
         $query->select(
             $this->getState(
                 'list.select',
-                implode(', ', $db->qn(
+                implode(', ', $db->quoteName(
                     [
                         'messagetype.id',
                         'messagetype.published',
@@ -209,23 +209,23 @@ class CwmmessagetypesModel extends ListModel
             )
         );
 
-        $query->from($db->qn('#__bsms_message_type', 'messagetype'));
+        $query->from($db->quoteName('#__bsms_message_type', 'messagetype'));
 
         // Join over the users for the checked out user.
-        $query->select($db->qn('uc.name', 'editor'))
-            ->join('LEFT', $db->qn('#__users', 'uc') . ' ON ' . $db->qn('uc.id') . ' = ' . $db->qn('messagetype.checked_out'));
+        $query->select($db->quoteName('uc.name', 'editor'))
+            ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('messagetype.checked_out'));
 
         // Filter by published state
         $published = $this->getState('filter.published');
 
         // Filter by access level.
         if ($access = $this->getState('filter.access')) {
-            $query->where($db->qn('messagetype.access') . ' = ' . (int) $access);
+            $query->where($db->quoteName('messagetype.access') . ' = ' . (int) $access);
         }
 
         // Restrict non-admin users to their authorised view levels
         if (!$user->authorise('core.admin')) {
-            $query->whereIn($db->qn('messagetype.access'), $user->getAuthorisedViewLevels());
+            $query->whereIn($db->quoteName('messagetype.access'), $user->getAuthorisedViewLevels());
         }
 
         // Filter by search in title.
@@ -233,17 +233,17 @@ class CwmmessagetypesModel extends ListModel
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where($db->qn('messagetype.id') . ' = ' . (int) substr($search, 3));
+                $query->where($db->quoteName('messagetype.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where($db->qn('messagetype.message_type') . ' LIKE ' . $search);
+                $query->where($db->quoteName('messagetype.message_type') . ' LIKE ' . $search);
             }
         }
 
         if (is_numeric($published)) {
-            $query->where($db->qn('messagetype.published') . ' = ' . (int) $published);
+            $query->where($db->quoteName('messagetype.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->qn('messagetype.published') . ' = 0 OR ' . $db->qn('messagetype.published') . ' = 1)');
+            $query->where('(' . $db->quoteName('messagetype.published') . ' = 0 OR ' . $db->quoteName('messagetype.published') . ' = 1)');
         }
 
         // Add the list ordering clause.

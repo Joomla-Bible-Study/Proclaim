@@ -49,10 +49,10 @@ class MessageTypeListField extends ListField
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select($db->qn('id') . ', ' . $db->qn('message_type'));
-        $query->from($db->qn('#__bsms_message_type'));
-        $query->where($db->qn('published') . ' = 1');
-        $query->order($db->qn('message_type'));
+        $query->select($db->quoteName('id') . ', ' . $db->quoteName('message_type'));
+        $query->from($db->quoteName('#__bsms_message_type'));
+        $query->where($db->quoteName('published') . ' = 1');
+        $query->order($db->quoteName('message_type'));
         $db->setQuery((string)$query);
         $messages = $db->loadObjectList();
         $options  = [];

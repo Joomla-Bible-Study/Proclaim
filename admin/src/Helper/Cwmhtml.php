@@ -29,37 +29,6 @@ use Joomla\CMS\Language\Text;
 class Cwmhtml
 {
     /**
-     * @var    array  Array containing information for loaded files
-     * @since  9.0.0
-     */
-    protected static array $loaded = [];
-
-    /**
-     * Method to get the field options.
-     *
-     * @return    object    The field option objects.
-     *
-     * @since    1.6
-     */
-    public static function playerList(): object
-    {
-        $options   = [];
-        $options[] = ['value' => '', 'text' => Text::_('JBS_CMN_USE_GLOBAL')];
-        $options[] = ['value' => 0, 'text' => Text::_('JBS_CMN_DIRECT_LINK')];
-        $options[] = ['value' => 1, 'text' => Text::_('JBS_CMN_USE_INTERNAL_PLAYER')];
-        $options[] = ['value' => 3, 'text' => Text::_('JBS_CMN_USE_AV')];
-        $options[] = ['value' => 7, 'text' => Text::_('JBS_CMN_USE_MP3_PLAYER')];
-        $options[] = ['value' => 8, 'text' => Text::_('JBS_CMN_USE_EMBED_CODE')];
-        $object    = new \stdClass();
-
-        foreach ($options as $key => $value) {
-            $object->$key = $value;
-        }
-
-        return $object;
-    }
-
-    /**
      * Display a batch widget for the player selector.
      *
      * @return  string  The necessary HTML for the widget.
@@ -126,7 +95,7 @@ class Cwmhtml
             '</label>',
             '<select name="batch[popup]" class="form-select" id="batch-popup">',
             '<option value="">' . Text::_('JBS_BAT_POPUP_NOCHANGE') . '</option>',
-            HTMLHelper::_('select.options', self::popuplist(), 'value', 'text'),
+            HTMLHelper::_('select.options', self::popupList(), 'value', 'text'),
             '</select>',
         ];
 
@@ -196,7 +165,7 @@ class Cwmhtml
             '</label>',
             '<select name="batch[teacher]" class="form-select" id="batch-teacher">',
             '<option value="">' . Text::_('JBS_BAT_TEACHER_NOCHANGE') . '</option>',
-            HTMLHelper::_('select.options', self::Teacherlist(), 'value', 'text'),
+            HTMLHelper::_('select.options', self::teacherList(), 'value', 'text'),
             '</select>',
         ];
 
@@ -216,9 +185,9 @@ class Cwmhtml
         $db      = Factory::getContainer()->get('DatabaseDriver');
         $query   = $db->getQuery(true);
 
-        $query->select($db->qn('id', 'value') . ', ' . $db->qn('teachername', 'text'));
-        $query->from($db->qn('#__bsms_teachers', 'a'));
-        $query->order($db->qn('a.teachername') . ' ASC');
+        $query->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('teachername', 'text'));
+        $query->from($db->quoteName('#__bsms_teachers', 'a'));
+        $query->order($db->quoteName('a.teachername') . ' ASC');
 
         // Get the options.
         $db->setQuery($query);
@@ -253,7 +222,7 @@ class Cwmhtml
             '</label>',
             '<select name="batch[messageType]" class="form-select" id="batch-messageType">',
             '<option value="">' . Text::_('JBS_BAT_MESSAGETYPE_NOCHANGE') . '</option>',
-            HTMLHelper::_('select.options', self::Messagetypelist(), 'value', 'text'),
+            HTMLHelper::_('select.options', self::messageTypeList(), 'value', 'text'),
             '</select>',
         ];
 
@@ -273,9 +242,9 @@ class Cwmhtml
         $db      = Factory::getContainer()->get('DatabaseDriver');
         $query   = $db->getQuery(true);
 
-        $query->select($db->qn('id', 'value') . ', ' . $db->qn('message_type', 'text'));
-        $query->from($db->qn('#__bsms_message_type', 'a'));
-        $query->order($db->qn('a.message_type') . ' ASC');
+        $query->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('message_type', 'text'));
+        $query->from($db->quoteName('#__bsms_message_type', 'a'));
+        $query->order($db->quoteName('a.message_type') . ' ASC');
 
         // Get the options.
         $db->setQuery($query);
@@ -310,7 +279,7 @@ class Cwmhtml
             '</label>',
             '<select name="batch[series]" class="form-select" id="batch-series">',
             '<option value="">' . Text::_('JBS_BAT_SERIES_NOCHANGE') . '</option>',
-            HTMLHelper::_('select.options', self::Serieslist(), 'value', 'text'),
+            HTMLHelper::_('select.options', self::seriesList(), 'value', 'text'),
             '</select>',
         ];
 
@@ -330,9 +299,9 @@ class Cwmhtml
         $db      = Factory::getContainer()->get('DatabaseDriver');
         $query   = $db->getQuery(true);
 
-        $query->select($db->qn('id', 'value') . ', ' . $db->qn('series_text', 'text'));
-        $query->from($db->qn('#__bsms_series', 'a'));
-        $query->order($db->qn('a.series_text') . ' ASC');
+        $query->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('series_text', 'text'));
+        $query->from($db->quoteName('#__bsms_series', 'a'));
+        $query->order($db->quoteName('a.series_text') . ' ASC');
 
         // Get the options.
         $db->setQuery($query);
@@ -392,17 +361,17 @@ class Cwmhtml
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true)
-            ->select($db->qn('id', 'value') . ', ' . $db->qn('location_text', 'text'))
-            ->from($db->qn('#__bsms_locations', 'a'))
-            ->where($db->qn('a.published') . ' = 1')
-            ->order($db->qn('a.location_text') . ' ASC');
+            ->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('location_text', 'text'))
+            ->from($db->quoteName('#__bsms_locations', 'a'))
+            ->where($db->quoteName('a.published') . ' = 1')
+            ->order($db->quoteName('a.location_text') . ' ASC');
 
         // If location filtering is enabled, restrict to accessible locations
         if (CwmlocationHelper::isEnabled()) {
             $accessible = CwmlocationHelper::getUserLocations();
 
             if (!empty($accessible)) {
-                $query->whereIn($db->qn('a.id'), $accessible);
+                $query->whereIn($db->quoteName('a.id'), $accessible);
             }
         }
 

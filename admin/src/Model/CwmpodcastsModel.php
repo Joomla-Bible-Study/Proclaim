@@ -149,7 +149,7 @@ class CwmpodcastsModel extends ListModel
         $query->select(
             $this->getState(
                 'list.select',
-                implode(', ', $db->qn(
+                implode(', ', $db->quoteName(
                     [
                         'podcast.id',
                         'podcast.published',
@@ -164,48 +164,48 @@ class CwmpodcastsModel extends ListModel
                 ))
             )
         );
-        $query->from($db->qn('#__bsms_podcast', 'podcast'));
+        $query->from($db->quoteName('#__bsms_podcast', 'podcast'));
 
         // Join over the language
-        $query->select($db->qn('l.title', 'language_title'));
+        $query->select($db->quoteName('l.title', 'language_title'));
         $query->join(
             'LEFT',
-            $db->qn('#__languages', 'l') . ' ON ' . $db->qn('l.lang_code') . ' = ' . $db->qn('podcast.language')
+            $db->quoteName('#__languages', 'l') . ' ON ' . $db->quoteName('l.lang_code') . ' = ' . $db->quoteName('podcast.language')
         );
 
         // Join over the asset groups.
-        $query->select($db->qn('ag.title', 'access_level'))
+        $query->select($db->quoteName('ag.title', 'access_level'))
             ->join(
                 'LEFT',
-                $db->qn('#__viewlevels', 'ag') . ' ON ' . $db->qn('ag.id') . ' = ' . $db->qn('podcast.access')
+                $db->quoteName('#__viewlevels', 'ag') . ' ON ' . $db->quoteName('ag.id') . ' = ' . $db->quoteName('podcast.access')
             );
 
         // Join over the users for the checked out user.
-        $query->select($db->qn('uc.name', 'editor'))
-            ->join('LEFT', $db->qn('#__users', 'uc') . ' ON ' . $db->qn('uc.id') . ' = ' . $db->qn('podcast.checked_out'));
+        $query->select($db->quoteName('uc.name', 'editor'))
+            ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('podcast.checked_out'));
 
         // Filter by access level.
         if ($access = $this->getState('filter.access')) {
-            $query->where($db->qn('podcast.access') . ' = ' . (int) $access);
+            $query->where($db->quoteName('podcast.access') . ' = ' . (int) $access);
         }
 
         // Restrict non-admin users to their authorised view levels
         if (!$user->authorise('core.admin')) {
-            $query->whereIn($db->qn('podcast.access'), $user->getAuthorisedViewLevels());
+            $query->whereIn($db->quoteName('podcast.access'), $user->getAuthorisedViewLevels());
         }
 
         // Filter by published state
         $published = $this->getState('filter.published');
 
         if (is_numeric($published)) {
-            $query->where($db->qn('podcast.published') . ' = ' . (int) $published);
+            $query->where($db->quoteName('podcast.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->qn('podcast.published') . ' = 0 OR ' . $db->qn('podcast.published') . ' = 1)');
+            $query->where('(' . $db->quoteName('podcast.published') . ' = 0 OR ' . $db->quoteName('podcast.published') . ' = 1)');
         }
 
         // Filter on the language.
         if ($language = $this->getState('filter.language')) {
-            $query->where($db->qn('podcast.language') . ' = ' . $db->quote($language));
+            $query->where($db->quoteName('podcast.language') . ' = ' . $db->quote($language));
         }
 
         // Filter by search in filename or study title
@@ -213,10 +213,10 @@ class CwmpodcastsModel extends ListModel
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where($db->qn('podcast.id') . ' = ' . (int) substr($search, 3));
+                $query->where($db->quoteName('podcast.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where('(' . $db->qn('podcast.title') . ' LIKE ' . $search . ' OR ' . $db->qn('podcast.description') . ' LIKE ' . $search . ')');
+                $query->where('(' . $db->quoteName('podcast.title') . ' LIKE ' . $search . ' OR ' . $db->quoteName('podcast.description') . ' LIKE ' . $search . ')');
             }
         }
 

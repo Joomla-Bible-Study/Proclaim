@@ -116,7 +116,7 @@ class ServerField extends FormField
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
             $query->select($db->quoteName('server_name'))
-                ->from($db->qn('#__bsms_servers'))
+                ->from($db->quoteName('#__bsms_servers'))
                 ->where($db->quoteName('id') . ' = :value')
                 ->bind(':value', $value, ParameterType::INTEGER);
             $db->setQuery($query);

@@ -729,7 +729,7 @@ class CwmbackupController extends FormController
                 // Get total count for this table
                 $query = $db->getQuery(true);
                 $query->select('COUNT(*)')
-                    ->from($db->qn($tableInfo['name']));
+                    ->from($db->quoteName($tableInfo['name']));
                 $db->setQuery($query);
                 $total = (int) $db->loadResult();
 
@@ -744,11 +744,11 @@ class CwmbackupController extends FormController
                     // Load a batch of records
                     $query = $db->getQuery(true);
                     $query->select(
-                        $db->qn('j.id') . ', ' . $db->qn('j.asset_id') . ', '
-                        . $db->qn('a.id', 'aid') . ', ' . $db->qn('a.parent_id') . ', ' . $db->qn('a.rules')
+                        $db->quoteName('j.id') . ', ' . $db->quoteName('j.asset_id') . ', '
+                        . $db->quoteName('a.id', 'aid') . ', ' . $db->quoteName('a.parent_id') . ', ' . $db->quoteName('a.rules')
                     )
-                        ->from($db->qn($tableInfo['name'], 'j'))
-                        ->leftJoin($db->qn('#__assets', 'a') . ' ON (' . $db->qn('a.id') . ' = ' . $db->qn('j.asset_id') . ')')
+                        ->from($db->quoteName($tableInfo['name'], 'j'))
+                        ->leftJoin($db->quoteName('#__assets', 'a') . ' ON (' . $db->quoteName('a.id') . ' = ' . $db->quoteName('j.asset_id') . ')')
                         ->setLimit($batchSize, $offset);
                     $db->setQuery($query);
                     $results = $db->loadObjectList();
@@ -798,25 +798,25 @@ class CwmbackupController extends FormController
         if (empty($item->asset_id) || $item->asset_id == 0 || empty($item->aid)) {
             // Check if asset already exists by name (in case asset_id just wasn't set)
             $query = $db->getQuery(true);
-            $query->select($db->qn('id'))
-                ->from($db->qn('#__assets'))
-                ->where($db->qn('name') . ' = ' . $db->quote($assetName));
+            $query->select($db->quoteName('id'))
+                ->from($db->quoteName('#__assets'))
+                ->where($db->quoteName('name') . ' = ' . $db->quote($assetName));
             $db->setQuery($query);
             $existingAssetId = $db->loadResult();
 
             if ($existingAssetId) {
                 // Asset exists, just update the record's asset_id
                 $query = $db->getQuery(true);
-                $query->update($db->qn($tableInfo['name']))
-                    ->set($db->qn('asset_id') . ' = ' . (int) $existingAssetId)
-                    ->where($db->qn('id') . ' = ' . (int) $item->id);
+                $query->update($db->quoteName($tableInfo['name']))
+                    ->set($db->quoteName('asset_id') . ' = ' . (int) $existingAssetId)
+                    ->where($db->quoteName('id') . ' = ' . (int) $item->id);
                 $db->setQuery($query);
                 $db->execute();
             } else {
                 // Create new asset
                 $query = $db->getQuery(true);
-                $query->insert($db->qn('#__assets'))
-                    ->columns($db->qn(['parent_id', 'level', 'name', 'title', 'rules']))
+                $query->insert($db->quoteName('#__assets'))
+                    ->columns($db->quoteName(['parent_id', 'level', 'name', 'title', 'rules']))
                     ->values(
                         (int) $parentId . ', 4, ' . $db->quote($assetName) . ', ' .
                         $db->quote($tableInfo['assetname'] . ' ' . $item->id) . ', ' .
@@ -828,9 +828,9 @@ class CwmbackupController extends FormController
 
                 // Update the record with new asset_id
                 $query = $db->getQuery(true);
-                $query->update($db->qn($tableInfo['name']))
-                    ->set($db->qn('asset_id') . ' = ' . (int) $newAssetId)
-                    ->where($db->qn('id') . ' = ' . (int) $item->id);
+                $query->update($db->quoteName($tableInfo['name']))
+                    ->set($db->quoteName('asset_id') . ' = ' . (int) $newAssetId)
+                    ->where($db->quoteName('id') . ' = ' . (int) $item->id);
                 $db->setQuery($query);
                 $db->execute();
             }
@@ -842,15 +842,15 @@ class CwmbackupController extends FormController
         if ($item->parent_id != $parentId || empty($item->rules)) {
             // Update the existing asset record
             $query = $db->getQuery(true);
-            $query->update($db->qn('#__assets'))
-                ->set($db->qn('parent_id') . ' = ' . (int) $parentId)
-                ->set($db->qn('name') . ' = ' . $db->quote($assetName));
+            $query->update($db->quoteName('#__assets'))
+                ->set($db->quoteName('parent_id') . ' = ' . (int) $parentId)
+                ->set($db->quoteName('name') . ' = ' . $db->quote($assetName));
 
             if (empty($item->rules)) {
-                $query->set($db->qn('rules') . ' = ' . $db->quote($defaultRules));
+                $query->set($db->quoteName('rules') . ' = ' . $db->quote($defaultRules));
             }
 
-            $query->where($db->qn('id') . ' = ' . (int) $item->asset_id);
+            $query->where($db->quoteName('id') . ' = ' . (int) $item->asset_id);
             $db->setQuery($query);
             $db->execute();
         }
@@ -912,9 +912,9 @@ class CwmbackupController extends FormController
         try {
             // Get all templatecode records
             $query = $db->getQuery(true);
-            $query->select($db->qn(['id', 'type', 'filename', 'templatecode']))
-                ->from($db->qn('#__bsms_templatecode'))
-                ->where($db->qn('published') . ' = 1');
+            $query->select($db->quoteName(['id', 'type', 'filename', 'templatecode']))
+                ->from($db->quoteName('#__bsms_templatecode'))
+                ->where($db->quoteName('published') . ' = 1');
             $db->setQuery($query);
             $records = $db->loadObjectList();
 

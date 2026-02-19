@@ -51,29 +51,29 @@ class Cwmrestore
 
         foreach ($backuptables as $backuptable) {
             if (substr_count($backuptable['name'], 'studies')) {
-                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('studytext') . ' BLOB';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('studytext') . ' BLOB';
                 $db->setQuery($query);
                 $db->execute();
 
-                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('studytext2') . ' BLOB';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('studytext2') . ' BLOB';
                 $db->setQuery($query);
                 $db->execute();
             }
 
             if (substr_count($backuptable['name'], 'podcast')) {
-                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('description') . ' BLOB';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('description') . ' BLOB';
                 $db->setQuery($query);
                 $db->execute();
             }
 
             if (substr_count($backuptable['name'], 'series')) {
-                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('description') . ' BLOB';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('description') . ' BLOB';
                 $db->setQuery($query);
                 $db->execute();
             }
 
             if (substr_count($backuptable['name'], 'teachers')) {
-                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('information') . ' BLOB';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('information') . ' BLOB';
                 $db->setQuery($query);
                 $db->execute();
             }
@@ -146,29 +146,29 @@ class Cwmrestore
 
         foreach ($backuptables as $backuptable) {
             if (substr_count($backuptable['name'], 'studies')) {
-                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('studytext') . ' TEXT';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('studytext') . ' TEXT';
                 $db->setQuery($query);
                 $db->execute();
 
-                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('studytext2') . ' TEXT';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('studytext2') . ' TEXT';
                 $db->setQuery($query);
                 $db->execute();
             }
 
             if (substr_count($backuptable['name'], 'podcast')) {
-                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('description') . ' TEXT';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('description') . ' TEXT';
                 $db->setQuery($query);
                 $db->execute();
             }
 
             if (substr_count($backuptable['name'], 'series')) {
-                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('description') . ' TEXT';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('description') . ' TEXT';
                 $db->setQuery($query);
                 $db->execute();
             }
 
             if (substr_count($backuptable['name'], 'teachers')) {
-                $query = 'ALTER TABLE ' . $db->qn($backuptable['name']) . ' MODIFY ' . $db->qn('information') . ' TEXT';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('information') . ' TEXT';
                 $db->setQuery($query);
                 $db->execute();
             }
@@ -234,9 +234,9 @@ class Cwmrestore
             if ($result) {
                 // Get Proclaim extension ID
                 $query = $this->dbo->getQuery(true);
-                $query->select($this->dbo->qn('extension_id'));
-                $query->from($this->dbo->qn('#__extensions'));
-                $query->where($this->dbo->qn('element') . ' = ' . $this->dbo->q('com_proclaim'));
+                $query->select($this->dbo->quoteName('extension_id'));
+                $query->from($this->dbo->quoteName('#__extensions'));
+                $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_proclaim'));
                 $this->dbo->setQuery($query);
                 $cid = (int) $this->dbo->loadResult();
 
@@ -559,7 +559,7 @@ class Cwmrestore
         $objects = self::getObjects();
 
         foreach ($objects as $object) {
-            $dropper = 'DROP TABLE IF EXISTS ' . $db->qn($object['name']);
+            $dropper = 'DROP TABLE IF EXISTS ' . $db->quoteName($object['name']);
             $db->setQuery($dropper);
             $db->execute();
         }
@@ -774,7 +774,7 @@ class Cwmrestore
                 $query = $db->getQuery(true);
                 $query->update($db->quoteName($table))
                     ->set($db->quoteName('created_by') . ' = ' . (int) $currentUserId)
-                    ->where($db->quoteName('created_by') . ' NOT IN (SELECT ' . $db->qn('id') . ' FROM ' . $db->qn('#__users') . ')')
+                    ->where($db->quoteName('created_by') . ' NOT IN (SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__users') . ')')
                     ->where($db->quoteName('created_by') . ' != 0');
                 $db->setQuery($query);
                 $db->execute();
@@ -784,7 +784,7 @@ class Cwmrestore
                 $query = $db->getQuery(true);
                 $query->update($db->quoteName($table))
                     ->set($db->quoteName('modified_by') . ' = ' . (int) $currentUserId)
-                    ->where($db->quoteName('modified_by') . ' NOT IN (SELECT ' . $db->qn('id') . ' FROM ' . $db->qn('#__users') . ')')
+                    ->where($db->quoteName('modified_by') . ' NOT IN (SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__users') . ')')
                     ->where($db->quoteName('modified_by') . ' != 0');
                 $db->setQuery($query);
                 $db->execute();
@@ -813,10 +813,10 @@ class Cwmrestore
 
         // Check component config (params should be substantial JSON)
         $query = $db->getQuery(true);
-        $query->select('LENGTH(' . $db->qn('params') . ')')
-            ->from($db->qn('#__extensions'))
-            ->where($db->qn('element') . ' = ' . $db->q('com_proclaim'))
-            ->where($db->qn('type') . ' = ' . $db->q('component'));
+        $query->select('LENGTH(' . $db->quoteName('params') . ')')
+            ->from($db->quoteName('#__extensions'))
+            ->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'))
+            ->where($db->quoteName('type') . ' = ' . $db->q('component'));
         $db->setQuery($query);
         $configSize = (int) $db->loadResult();
 
@@ -829,8 +829,8 @@ class Cwmrestore
         if (\in_array($schedulerTable, $tables, true)) {
             $query = $db->getQuery(true);
             $query->select('COUNT(*)')
-                ->from($db->qn('#__scheduler_tasks'))
-                ->where($db->qn('type') . ' LIKE ' . $db->q('proclaim.%'));
+                ->from($db->quoteName('#__scheduler_tasks'))
+                ->where($db->quoteName('type') . ' LIKE ' . $db->q('proclaim.%'));
             $db->setQuery($query);
             $tasksCount = (int) $db->loadResult();
         }

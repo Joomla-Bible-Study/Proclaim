@@ -229,14 +229,14 @@ class CwmteacherModel extends AdminModel
 
         if (!empty($record) && $this->getState('task') === 'trash') {
             $query = $db->getQuery(true);
-            $query->select($db->qn(['s.id', 's.studytitle']))
-                ->from($db->qn('#__bsms_studies', 's'))
+            $query->select($db->quoteName(['s.id', 's.studytitle']))
+                ->from($db->quoteName('#__bsms_studies', 's'))
                 ->innerJoin(
-                    $db->qn('#__bsms_study_teachers', 'st') . ' ON '
-                    . $db->qn('st.study_id') . ' = ' . $db->qn('s.id')
+                    $db->quoteName('#__bsms_study_teachers', 'st') . ' ON '
+                    . $db->quoteName('st.study_id') . ' = ' . $db->quoteName('s.id')
                 )
-                ->where($db->qn('st.teacher_id') . ' = ' . (int) $record->id)
-                ->where($db->qn('s.published') . ' != ' . $db->q('-2'));
+                ->where($db->quoteName('st.teacher_id') . ' = ' . (int) $record->id)
+                ->where($db->quoteName('s.published') . ' != ' . $db->q('-2'));
             $db->setQuery($query, 10);
             $studies = $db->loadObjectList();
 
@@ -409,13 +409,13 @@ class CwmteacherModel extends AdminModel
 
         // Iterate the items to delete each one.
         $query = $db->getQuery(true);
-        $query->select($db->qn(['s.id', 's.studytitle']))
-            ->from($db->qn('#__bsms_studies', 's'))
+        $query->select($db->quoteName(['s.id', 's.studytitle']))
+            ->from($db->quoteName('#__bsms_studies', 's'))
             ->innerJoin(
-                $db->qn('#__bsms_study_teachers', 'st') . ' ON '
-                . $db->qn('st.study_id') . ' = ' . $db->qn('s.id')
+                $db->quoteName('#__bsms_study_teachers', 'st') . ' ON '
+                . $db->quoteName('st.study_id') . ' = ' . $db->quoteName('s.id')
             )
-            ->where($db->qn('st.teacher_id') . ' = ' . (int) $record->id);
+            ->where($db->quoteName('st.teacher_id') . ' = ' . (int) $record->id);
         $db->setQuery($query);
         $studies = $db->loadObjectList();
 
@@ -487,7 +487,7 @@ class CwmteacherModel extends AdminModel
             if (empty($table->ordering)) {
                 $db    = Factory::getContainer()->get('DatabaseDriver');
                 $query = $db->getQuery(true);
-                $query->select('MAX(' . $db->qn('ordering') . ')')->from($db->qn('#__bsms_teachers'));
+                $query->select('MAX(' . $db->quoteName('ordering') . ')')->from($db->quoteName('#__bsms_teachers'));
                 $db->setQuery($query);
                 $max = $db->loadResult();
 
@@ -519,46 +519,46 @@ class CwmteacherModel extends AdminModel
         $query = $db->getQuery(true);
 
         $query->select([
-            $db->qn('study.id'),
-            $db->qn('study.studytitle'),
-            $db->qn('study.studydate'),
-            $db->qn('study.published'),
-            $db->qn('study.access'),
+            $db->quoteName('study.id'),
+            $db->quoteName('study.studytitle'),
+            $db->quoteName('study.studydate'),
+            $db->quoteName('study.published'),
+            $db->quoteName('study.access'),
         ]);
-        $query->from($db->qn('#__bsms_studies', 'study'));
+        $query->from($db->quoteName('#__bsms_studies', 'study'));
 
         // Join over Series
-        $query->select($db->qn('series.series_text'));
+        $query->select($db->quoteName('series.series_text'));
         $query->join(
             'LEFT',
-            $db->qn('#__bsms_series', 'series') . ' ON ' . $db->qn('series.id') . ' = ' . $db->qn('study.series_id')
+            $db->quoteName('#__bsms_series', 'series') . ' ON ' . $db->quoteName('series.id') . ' = ' . $db->quoteName('study.series_id')
         );
 
         // Join over Location
-        $query->select($db->qn('loc.location_text'));
+        $query->select($db->quoteName('loc.location_text'));
         $query->join(
             'LEFT',
-            $db->qn('#__bsms_locations', 'loc') . ' ON ' . $db->qn('loc.id') . ' = ' . $db->qn('study.location_id')
+            $db->quoteName('#__bsms_locations', 'loc') . ' ON ' . $db->quoteName('loc.id') . ' = ' . $db->quoteName('study.location_id')
         );
 
         // Filter by teacher via junction table OR legacy teacher_id
         $query->where(
-            '(' . $db->qn('study.id') . ' IN ('
+            '(' . $db->quoteName('study.id') . ' IN ('
             . $db->getQuery(true)
-                ->select($db->qn('st.study_id'))
-                ->from($db->qn('#__bsms_study_teachers', 'st'))
-                ->where($db->qn('st.teacher_id') . ' = ' . (int) $item->id)
-            . ') OR ' . $db->qn('study.teacher_id') . ' = ' . (int) $item->id . ')'
+                ->select($db->quoteName('st.study_id'))
+                ->from($db->quoteName('#__bsms_study_teachers', 'st'))
+                ->where($db->quoteName('st.teacher_id') . ' = ' . (int) $item->id)
+            . ') OR ' . $db->quoteName('study.teacher_id') . ' = ' . (int) $item->id . ')'
         );
 
         // Restrict non-admin users to their authorised view levels
         $user = $this->getCurrentUser();
 
         if (!$user->authorise('core.admin')) {
-            $query->whereIn($db->qn('study.access'), $user->getAuthorisedViewLevels());
+            $query->whereIn($db->quoteName('study.access'), $user->getAuthorisedViewLevels());
         }
 
-        $query->order($db->qn('study.studydate') . ' DESC');
+        $query->order($db->quoteName('study.studydate') . ' DESC');
 
         $db->setQuery($query, 0, 20);
 

@@ -115,15 +115,15 @@ class CwmtemplatesController extends AdminController
 
                         // Get new  record insert to change name
                         $query = $db->getQuery(true);
-                        $query->select($db->qn(['filename', 'id', 'type']))
-                            ->from($db->qn('#__bsms_templatecode'))
-                            ->order($db->qn('id') . ' DESC');
+                        $query->select($db->quoteName(['filename', 'id', 'type']))
+                            ->from($db->quoteName('#__bsms_templatecode'))
+                            ->order($db->quoteName('id') . ' DESC');
                         $db->setQuery($query, 0, 1);
                         $data  = $db->loadObject();
                         $query = $db->getQuery(true);
-                        $query->update($db->qn('#__bsms_styles'))
-                            ->set($db->qn('filename') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
-                            ->where($db->qn('id') . ' = ' . (int)$data->id);
+                        $query->update($db->quoteName('#__bsms_styles'))
+                            ->set($db->quoteName('filename') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
+                            ->where($db->quoteName('id') . ' = ' . (int)$data->id);
                         $this->performDB($query);
 
                         $tc++;
@@ -144,15 +144,15 @@ class CwmtemplatesController extends AdminController
 
                         // Get new  record insert to change name
                         $query = $db->getQuery(true);
-                        $query->select($db->qn(['id', 'title', 'params']))
-                            ->from($db->qn('#__bsms_templates'))
-                            ->order($db->qn('id') . ' DESC');
+                        $query->select($db->quoteName(['id', 'title', 'params']))
+                            ->from($db->quoteName('#__bsms_templates'))
+                            ->order($db->quoteName('id') . ' DESC');
                         $db->setQuery($query, 0, 1);
                         $data  = $db->loadObject();
                         $query = $db->getQuery(true);
-                        $query->update($db->qn('#__bsms_templates'))
-                            ->set($db->qn('title') . ' = ' . $db->q($data->title . '_copy' . $data->id))
-                            ->where($db->qn('id') . ' = ' . (int)$data->id);
+                        $query->update($db->quoteName('#__bsms_templates'))
+                            ->set($db->quoteName('title') . ' = ' . $db->q($data->title . '_copy' . $data->id))
+                            ->where($db->quoteName('id') . ' = ' . (int)$data->id);
                         $this->performDB($query);
                     }
                 }
@@ -161,9 +161,9 @@ class CwmtemplatesController extends AdminController
 
         // Get new  record insert to change name
         $query = $db->getQuery(true);
-        $query->select($db->qn(['id', 'type', 'filename']))
-            ->from($db->qn('#__bsms_templatecode'))
-            ->order($db->qn('id') . ' DESC');
+        $query->select($db->quoteName(['id', 'type', 'filename']))
+            ->from($db->quoteName('#__bsms_templatecode'))
+            ->order($db->quoteName('id') . ' DESC');
         $db->setQuery($query, 0, $tc);
         $data = $db->loadObjectList();
 
@@ -205,9 +205,9 @@ class CwmtemplatesController extends AdminController
 
         // Get new record insert to change name
         $query = $db->getQuery(true);
-        $query->select($db->qn(['id', 'title', 'params']))
-            ->from($db->qn('#__bsms_templates'))
-            ->order($db->qn('id'));
+        $query->select($db->quoteName(['id', 'title', 'params']))
+            ->from($db->quoteName('#__bsms_templates'))
+            ->order($db->quoteName('id'));
         $db->setQuery($query, 1);
         $data = $db->loadObject();
 
@@ -290,9 +290,9 @@ class CwmtemplatesController extends AdminController
 
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select($db->qn(['t.id', 't.type', 't.params', 't.title', 't.text']));
-        $query->from($db->qn('#__bsms_templates', 't'));
-        $query->where($db->qn('t.id') . ' = ' . (int) $exporttemplate);
+        $query->select($db->quoteName(['t.id', 't.type', 't.params', 't.title', 't.text']));
+        $query->from($db->quoteName('#__bsms_templates', 't'));
+        $query->where($db->quoteName('t.id') . ' = ' . (int) $exporttemplate);
         $db->setQuery($query);
         $result       = $db->loadObject();
         $objects[]    = $this->getExportSetting($result);
@@ -335,9 +335,9 @@ class CwmtemplatesController extends AdminController
         if ($css) {
             $objects = "--\n-- CSS Style Code\n--\n";
             $query2  = $db->getQuery(true);
-            $query2->select($db->qn('style') . '.*');
-            $query2->from($db->qn('#__bsms_styles', 'style'));
-            $query2->where($db->qn('style.filename') . ' = ' . $db->q($css));
+            $query2->select($db->quoteName('style') . '.*');
+            $query2->from($db->quoteName('#__bsms_styles', 'style'));
+            $query2->where($db->quoteName('style.filename') . ' = ' . $db->q($css));
             $db->setQuery($query2);
             $db->execute();
             $cssresult = $db->loadObject();
@@ -416,9 +416,9 @@ class CwmtemplatesController extends AdminController
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select($db->qn(['tc.id', 'tc.templatecode', 'tc.type', 'tc.filename']));
-        $query->from($db->qn('#__bsms_templatecode', 'tc'));
-        $query->where($db->qn('tc.filename') . ' = ' . $db->q($template));
+        $query->select($db->quoteName(['tc.id', 'tc.templatecode', 'tc.type', 'tc.filename']));
+        $query->from($db->quoteName('#__bsms_templatecode', 'tc'));
+        $query->where($db->quoteName('tc.filename') . ' = ' . $db->q($template));
         $db->setQuery($query);
 
         if (!$object = $db->loadObject()) {

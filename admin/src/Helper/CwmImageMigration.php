@@ -136,12 +136,12 @@ class CwmImageMigration
 
         switch ($type) {
             case 'studies':
-                $col = $db->qn('thumbnailm');
+                $col = $db->quoteName('thumbnailm');
                 $query->select(
-                    $db->qn('id') . ', ' . $db->qn('studytitle') . ', ' . $db->qn('alias') . ', '
-                    . $db->qn('thumbnailm', 'image_path') . ', ' . $db->qn('image', 'original_path')
+                    $db->quoteName('id') . ', ' . $db->quoteName('studytitle') . ', ' . $db->quoteName('alias') . ', '
+                    . $db->quoteName('thumbnailm', 'image_path') . ', ' . $db->quoteName('image', 'original_path')
                 )
-                    ->from($db->qn('#__bsms_studies'))
+                    ->from($db->quoteName('#__bsms_studies'))
                     ->where($col . ' IS NOT NULL')
                     ->where($col . ' != ' . $db->q(''))
                     ->where('LENGTH(' . $col . ') > 1')
@@ -150,14 +150,14 @@ class CwmImageMigration
                 break;
 
             case 'teachers':
-                $col = $db->qn('teacher_thumbnail');
+                $col = $db->quoteName('teacher_thumbnail');
                 $query->select(
-                    $db->qn('id') . ', ' . $db->qn('teachername') . ', ' . $db->qn('alias') . ', '
-                    . $db->qn('teacher_thumbnail', 'image_path') . ', '
-                    . 'COALESCE(' . $db->qn('teacher_image') . ', ' . $db->qn('image') . ') AS '
-                    . $db->qn('original_path')
+                    $db->quoteName('id') . ', ' . $db->quoteName('teachername') . ', ' . $db->quoteName('alias') . ', '
+                    . $db->quoteName('teacher_thumbnail', 'image_path') . ', '
+                    . 'COALESCE(' . $db->quoteName('teacher_image') . ', ' . $db->quoteName('image') . ') AS '
+                    . $db->quoteName('original_path')
                 )
-                    ->from($db->qn('#__bsms_teachers'))
+                    ->from($db->quoteName('#__bsms_teachers'))
                     ->where($col . ' IS NOT NULL')
                     ->where($col . ' != ' . $db->q(''))
                     ->where('LENGTH(' . $col . ') > 1')
@@ -166,12 +166,12 @@ class CwmImageMigration
                 break;
 
             case 'series':
-                $col = $db->qn('series_thumbnail');
+                $col = $db->quoteName('series_thumbnail');
                 $query->select(
-                    $db->qn('id') . ', ' . $db->qn('series_text', 'title') . ', ' . $db->qn('alias') . ', '
-                    . $db->qn('series_thumbnail', 'image_path') . ', ' . $db->qn('image', 'original_path')
+                    $db->quoteName('id') . ', ' . $db->quoteName('series_text', 'title') . ', ' . $db->quoteName('alias') . ', '
+                    . $db->quoteName('series_thumbnail', 'image_path') . ', ' . $db->quoteName('image', 'original_path')
                 )
-                    ->from($db->qn('#__bsms_series'))
+                    ->from($db->quoteName('#__bsms_series'))
                     ->where($col . ' IS NOT NULL')
                     ->where($col . ' != ' . $db->q(''))
                     ->where('LENGTH(' . $col . ') > 1')
@@ -230,21 +230,21 @@ class CwmImageMigration
 
         switch ($type) {
             case 'studies':
-                $query->select($db->qn(['studytitle', 'alias', 'thumbnailm', 'image']))
-                    ->from($db->qn('#__bsms_studies'))
-                    ->where($db->qn('id') . ' = ' . (int) $id);
+                $query->select($db->quoteName(['studytitle', 'alias', 'thumbnailm', 'image']))
+                    ->from($db->quoteName('#__bsms_studies'))
+                    ->where($db->quoteName('id') . ' = ' . (int) $id);
                 break;
 
             case 'teachers':
-                $query->select($db->qn(['teachername', 'alias', 'teacher_thumbnail', 'teacher_image', 'image']))
-                    ->from($db->qn('#__bsms_teachers'))
-                    ->where($db->qn('id') . ' = ' . (int) $id);
+                $query->select($db->quoteName(['teachername', 'alias', 'teacher_thumbnail', 'teacher_image', 'image']))
+                    ->from($db->quoteName('#__bsms_teachers'))
+                    ->where($db->quoteName('id') . ' = ' . (int) $id);
                 break;
 
             case 'series':
-                $query->select($db->qn(['series_text', 'alias', 'series_thumbnail', 'image']))
-                    ->from($db->qn('#__bsms_series'))
-                    ->where($db->qn('id') . ' = ' . (int) $id);
+                $query->select($db->quoteName(['series_text', 'alias', 'series_thumbnail', 'image']))
+                    ->from($db->quoteName('#__bsms_series'))
+                    ->where($db->quoteName('id') . ' = ' . (int) $id);
                 break;
 
             default:
@@ -438,25 +438,25 @@ class CwmImageMigration
 
         switch ($type) {
             case 'studies':
-                $query->update($db->qn('#__bsms_studies'))
-                    ->set($db->qn('thumbnailm') . ' = ' . $db->q($result['thumbnail']))
-                    ->set($db->qn('image') . ' = ' . $db->q($result['image']))
-                    ->where($db->qn('id') . ' = ' . (int) $id);
+                $query->update($db->quoteName('#__bsms_studies'))
+                    ->set($db->quoteName('thumbnailm') . ' = ' . $db->q($result['thumbnail']))
+                    ->set($db->quoteName('image') . ' = ' . $db->q($result['image']))
+                    ->where($db->quoteName('id') . ' = ' . (int) $id);
                 break;
 
             case 'teachers':
-                $query->update($db->qn('#__bsms_teachers'))
-                    ->set($db->qn('teacher_thumbnail') . ' = ' . $db->q($result['thumbnail']))
-                    ->set($db->qn('teacher_image') . ' = ' . $db->q($result['image']))
-                    ->set($db->qn('image') . ' = ' . $db->q($result['image']))
-                    ->where($db->qn('id') . ' = ' . (int) $id);
+                $query->update($db->quoteName('#__bsms_teachers'))
+                    ->set($db->quoteName('teacher_thumbnail') . ' = ' . $db->q($result['thumbnail']))
+                    ->set($db->quoteName('teacher_image') . ' = ' . $db->q($result['image']))
+                    ->set($db->quoteName('image') . ' = ' . $db->q($result['image']))
+                    ->where($db->quoteName('id') . ' = ' . (int) $id);
                 break;
 
             case 'series':
-                $query->update($db->qn('#__bsms_series'))
-                    ->set($db->qn('series_thumbnail') . ' = ' . $db->q($result['thumbnail']))
-                    ->set($db->qn('image') . ' = ' . $db->q($result['image']))
-                    ->where($db->qn('id') . ' = ' . (int) $id);
+                $query->update($db->quoteName('#__bsms_series'))
+                    ->set($db->quoteName('series_thumbnail') . ' = ' . $db->q($result['thumbnail']))
+                    ->set($db->quoteName('image') . ' = ' . $db->q($result['image']))
+                    ->where($db->quoteName('id') . ' = ' . (int) $id);
                 break;
         }
 
@@ -575,25 +575,25 @@ class CwmImageMigration
 
         switch ($type) {
             case 'studies':
-                $query->update($db->qn('#__bsms_studies'))
-                    ->set($db->qn('thumbnailm') . ' = ' . $db->q($thumbPath))
-                    ->set($db->qn('image') . ' = ' . $db->q($imagePath))
-                    ->where($db->qn('id') . ' = ' . (int) $id);
+                $query->update($db->quoteName('#__bsms_studies'))
+                    ->set($db->quoteName('thumbnailm') . ' = ' . $db->q($thumbPath))
+                    ->set($db->quoteName('image') . ' = ' . $db->q($imagePath))
+                    ->where($db->quoteName('id') . ' = ' . (int) $id);
                 break;
 
             case 'teachers':
-                $query->update($db->qn('#__bsms_teachers'))
-                    ->set($db->qn('teacher_thumbnail') . ' = ' . $db->q($thumbPath))
-                    ->set($db->qn('teacher_image') . ' = ' . $db->q($imagePath))
-                    ->set($db->qn('image') . ' = ' . $db->q($imagePath))
-                    ->where($db->qn('id') . ' = ' . (int) $id);
+                $query->update($db->quoteName('#__bsms_teachers'))
+                    ->set($db->quoteName('teacher_thumbnail') . ' = ' . $db->q($thumbPath))
+                    ->set($db->quoteName('teacher_image') . ' = ' . $db->q($imagePath))
+                    ->set($db->quoteName('image') . ' = ' . $db->q($imagePath))
+                    ->where($db->quoteName('id') . ' = ' . (int) $id);
                 break;
 
             case 'series':
-                $query->update($db->qn('#__bsms_series'))
-                    ->set($db->qn('series_thumbnail') . ' = ' . $db->q($thumbPath))
-                    ->set($db->qn('image') . ' = ' . $db->q($imagePath))
-                    ->where($db->qn('id') . ' = ' . (int) $id);
+                $query->update($db->quoteName('#__bsms_series'))
+                    ->set($db->quoteName('series_thumbnail') . ' = ' . $db->q($thumbPath))
+                    ->set($db->quoteName('image') . ' = ' . $db->q($imagePath))
+                    ->where($db->quoteName('id') . ' = ' . (int) $id);
                 break;
         }
 
@@ -666,22 +666,22 @@ class CwmImageMigration
 
         switch ($type) {
             case 'studies':
-                $query->update($db->qn('#__bsms_studies'))
-                    ->set($db->qn('thumbnailm') . ' = ' . $db->q(''))
-                    ->where($db->qn('id') . ' = ' . (int) $id);
+                $query->update($db->quoteName('#__bsms_studies'))
+                    ->set($db->quoteName('thumbnailm') . ' = ' . $db->q(''))
+                    ->where($db->quoteName('id') . ' = ' . (int) $id);
                 break;
 
             case 'teachers':
-                $query->update($db->qn('#__bsms_teachers'))
-                    ->set($db->qn('teacher_thumbnail') . ' = ' . $db->q(''))
-                    ->where($db->qn('id') . ' = ' . (int) $id);
+                $query->update($db->quoteName('#__bsms_teachers'))
+                    ->set($db->quoteName('teacher_thumbnail') . ' = ' . $db->q(''))
+                    ->where($db->quoteName('id') . ' = ' . (int) $id);
                 break;
 
             case 'series':
-                $query->update($db->qn('#__bsms_series'))
-                    ->set($db->qn('series_thumbnail') . ' = ' . $db->q(''))
-                    ->set($db->qn('image') . ' = ' . $db->q(''))
-                    ->where($db->qn('id') . ' = ' . (int) $id);
+                $query->update($db->quoteName('#__bsms_series'))
+                    ->set($db->quoteName('series_thumbnail') . ' = ' . $db->q(''))
+                    ->set($db->quoteName('image') . ' = ' . $db->q(''))
+                    ->where($db->quoteName('id') . ' = ' . (int) $id);
                 break;
         }
 
@@ -909,8 +909,8 @@ class CwmImageMigration
             // Load valid IDs for this type so we only count recoverable folders
             $table = self::REGEN_TYPE_CONFIG[$type]['table'];
             $query = $db->getQuery(true)
-                ->select($db->qn('id'))
-                ->from($db->qn($table));
+                ->select($db->quoteName('id'))
+                ->from($db->quoteName($table));
             $db->setQuery($query);
             $validIds = array_map('intval', $db->loadColumn() ?: []);
 
@@ -1021,21 +1021,21 @@ class CwmImageMigration
             // image comes from the filesystem, not the DB.
             switch ($type) {
                 case 'studies':
-                    $query->select($db->qn(['id', 'studytitle', 'alias']))
-                        ->from($db->qn('#__bsms_studies'))
-                        ->where($db->qn('id') . ' = ' . $id);
+                    $query->select($db->quoteName(['id', 'studytitle', 'alias']))
+                        ->from($db->quoteName('#__bsms_studies'))
+                        ->where($db->quoteName('id') . ' = ' . $id);
                     break;
 
                 case 'teachers':
-                    $query->select($db->qn(['id', 'teachername', 'alias']))
-                        ->from($db->qn('#__bsms_teachers'))
-                        ->where($db->qn('id') . ' = ' . $id);
+                    $query->select($db->quoteName(['id', 'teachername', 'alias']))
+                        ->from($db->quoteName('#__bsms_teachers'))
+                        ->where($db->quoteName('id') . ' = ' . $id);
                     break;
 
                 case 'series':
-                    $query->select($db->qn(['id', 'series_text', 'alias']))
-                        ->from($db->qn('#__bsms_series'))
-                        ->where($db->qn('id') . ' = ' . $id);
+                    $query->select($db->quoteName(['id', 'series_text', 'alias']))
+                        ->from($db->quoteName('#__bsms_series'))
+                        ->where($db->quoteName('id') . ' = ' . $id);
                     break;
             }
 
@@ -1099,25 +1099,25 @@ class CwmImageMigration
 
             switch ($type) {
                 case 'studies':
-                    $update->update($db->qn('#__bsms_studies'))
-                        ->set($db->qn('thumbnailm') . ' = ' . $db->q($thumbResult['thumbnail']))
-                        ->set($db->qn('image') . ' = ' . $db->q($thumbResult['image']))
-                        ->where($db->qn('id') . ' = ' . $id);
+                    $update->update($db->quoteName('#__bsms_studies'))
+                        ->set($db->quoteName('thumbnailm') . ' = ' . $db->q($thumbResult['thumbnail']))
+                        ->set($db->quoteName('image') . ' = ' . $db->q($thumbResult['image']))
+                        ->where($db->quoteName('id') . ' = ' . $id);
                     break;
 
                 case 'teachers':
-                    $update->update($db->qn('#__bsms_teachers'))
-                        ->set($db->qn('teacher_thumbnail') . ' = ' . $db->q($thumbResult['thumbnail']))
-                        ->set($db->qn('teacher_image') . ' = ' . $db->q($thumbResult['image']))
-                        ->set($db->qn('image') . ' = ' . $db->q($thumbResult['image']))
-                        ->where($db->qn('id') . ' = ' . $id);
+                    $update->update($db->quoteName('#__bsms_teachers'))
+                        ->set($db->quoteName('teacher_thumbnail') . ' = ' . $db->q($thumbResult['thumbnail']))
+                        ->set($db->quoteName('teacher_image') . ' = ' . $db->q($thumbResult['image']))
+                        ->set($db->quoteName('image') . ' = ' . $db->q($thumbResult['image']))
+                        ->where($db->quoteName('id') . ' = ' . $id);
                     break;
 
                 case 'series':
-                    $update->update($db->qn('#__bsms_series'))
-                        ->set($db->qn('series_thumbnail') . ' = ' . $db->q($thumbResult['thumbnail']))
-                        ->set($db->qn('image') . ' = ' . $db->q($thumbResult['image']))
-                        ->where($db->qn('id') . ' = ' . $id);
+                    $update->update($db->quoteName('#__bsms_series'))
+                        ->set($db->quoteName('series_thumbnail') . ' = ' . $db->q($thumbResult['thumbnail']))
+                        ->set($db->quoteName('image') . ' = ' . $db->q($thumbResult['image']))
+                        ->where($db->quoteName('id') . ' = ' . $id);
                     break;
             }
 

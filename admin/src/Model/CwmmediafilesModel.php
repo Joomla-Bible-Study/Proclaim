@@ -150,9 +150,9 @@ class CwmmediafilesModel extends ListModel
         if (empty($this->deletes)) {
             $db    = $this->getDatabase();
             $query = $db->getQuery(true);
-            $query->select($db->qn('allow_deletes'))
-                ->from($db->qn('#__bsms_admin'))
-                ->where($db->qn('id') . ' = 1');
+            $query->select($db->quoteName('allow_deletes'))
+                ->from($db->quoteName('#__bsms_admin'))
+                ->where($db->quoteName('id') . ' = 1');
             $this->deletes = $this->_getList($query);
         }
 
@@ -251,46 +251,46 @@ class CwmmediafilesModel extends ListModel
         $query->select(
             $this->getState(
                 'list.select',
-                $db->qn('mediafile') . '.*'
+                $db->quoteName('mediafile') . '.*'
             )
         );
 
-        $query->from($db->qn('#__bsms_mediafiles', 'mediafile'));
+        $query->from($db->quoteName('#__bsms_mediafiles', 'mediafile'));
 
         // Join over the language
-        $query->select($db->qn('l.title', 'language_title'));
+        $query->select($db->quoteName('l.title', 'language_title'));
         $query->join(
             'LEFT',
-            $db->qn('#__languages', 'l') . ' ON ' . $db->qn('l.lang_code') . ' = ' . $db->qn('mediafile.language')
+            $db->quoteName('#__languages', 'l') . ' ON ' . $db->quoteName('l.lang_code') . ' = ' . $db->quoteName('mediafile.language')
         );
 
         // Join over the studies
-        $query->select($db->qn('study.studytitle', 'studytitle'));
+        $query->select($db->quoteName('study.studytitle', 'studytitle'));
         $query->join(
             'LEFT',
-            $db->qn('#__bsms_studies', 'study') . ' ON ' . $db->qn('study.id') . ' = ' . $db->qn('mediafile.study_id')
+            $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.id') . ' = ' . $db->quoteName('mediafile.study_id')
         );
 
         // Join over servers
-        $query->select($db->qn('server.type', 'serverType'));
-        $query->select($db->qn('server.server_name', 'server_name'));
+        $query->select($db->quoteName('server.type', 'serverType'));
+        $query->select($db->quoteName('server.server_name', 'server_name'));
         $query->join(
             'LEFT',
-            $db->qn('#__bsms_servers', 'server') . ' ON ' . $db->qn('server.id') . ' = ' . $db->qn('mediafile.server_id')
+            $db->quoteName('#__bsms_servers', 'server') . ' ON ' . $db->quoteName('server.id') . ' = ' . $db->quoteName('mediafile.server_id')
         );
 
         // Join over the asset groups.
-        $query->select($db->qn('ag.title', 'access_level'));
+        $query->select($db->quoteName('ag.title', 'access_level'));
         $query->join(
             'LEFT',
-            $db->qn('#__viewlevels', 'ag') . ' ON ' . $db->qn('ag.id') . ' = ' . $db->qn('mediafile.access')
+            $db->quoteName('#__viewlevels', 'ag') . ' ON ' . $db->quoteName('ag.id') . ' = ' . $db->quoteName('mediafile.access')
         );
 
         // Join over the users for the checked out user.
-        $query->select($db->qn('uc.name', 'editor'))
+        $query->select($db->quoteName('uc.name', 'editor'))
             ->join(
                 'LEFT',
-                $db->qn('#__users', 'uc') . ' ON ' . $db->qn('uc.id') . ' = ' . $db->qn('mediafile.checked_out')
+                $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('mediafile.checked_out')
             );
 
         // Filter by published state
@@ -333,7 +333,7 @@ class CwmmediafilesModel extends ListModel
         $mediaYears = $this->getState('filter.mediaYears');
 
         if (!empty($mediaYears)) {
-            $query->where('YEAR(' . $db->qn('mediafile.createdate') . ') = ' . (int) $mediaYears);
+            $query->where('YEAR(' . $db->quoteName('mediafile.createdate') . ') = ' . (int) $mediaYears);
         }
 
         // Filter by search in title.

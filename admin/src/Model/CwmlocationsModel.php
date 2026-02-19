@@ -79,9 +79,9 @@ class CwmlocationsModel extends ListModel
         if (empty($this->deletes)) {
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true);
-            $query->select($db->qn('allow_deletes'))
-                ->from($db->qn('#__bsms_admin'))
-                ->where($db->qn('id') . ' = 1');
+            $query->select($db->quoteName('allow_deletes'))
+                ->from($db->quoteName('#__bsms_admin'))
+                ->where($db->quoteName('id') . ' = 1');
             $this->deletes = $this->_getList($query);
         }
 
@@ -196,25 +196,25 @@ class CwmlocationsModel extends ListModel
         $query->select(
             $this->getState(
                 'list.select',
-                implode(', ', $db->qn(['location.id', 'location.published', 'location.access', 'location.location_text', 'location.checked_out', 'location.checked_out_time']))
+                implode(', ', $db->quoteName(['location.id', 'location.published', 'location.access', 'location.location_text', 'location.checked_out', 'location.checked_out_time']))
             )
         );
-        $query->from($db->qn('#__bsms_locations', 'location'));
+        $query->from($db->quoteName('#__bsms_locations', 'location'));
 
         // Join over the asset groups.
-        $query->select($db->qn('ag.title', 'access_level'));
+        $query->select($db->quoteName('ag.title', 'access_level'));
         $query->join(
             'LEFT',
-            $db->qn('#__viewlevels', 'ag') . ' ON ' . $db->qn('ag.id') . ' = ' . $db->qn('location.access')
+            $db->quoteName('#__viewlevels', 'ag') . ' ON ' . $db->quoteName('ag.id') . ' = ' . $db->quoteName('location.access')
         );
 
         // Join over the users for the checked out user.
-        $query->select($db->qn('uc.name', 'editor'))
-            ->join('LEFT', $db->qn('#__users', 'uc') . ' ON ' . $db->qn('uc.id') . ' = ' . $db->qn('location.checked_out'));
+        $query->select($db->quoteName('uc.name', 'editor'))
+            ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('location.checked_out'));
 
         // Filter by access level.
         if ($access = $this->getState('filter.access')) {
-            $query->where($db->qn('location.access') . ' = ' . (int) $access);
+            $query->where($db->quoteName('location.access') . ' = ' . (int) $access);
         }
 
         // Apply location-based visibility filter (multi-campus support).
@@ -222,7 +222,7 @@ class CwmlocationsModel extends ListModel
         $visibleLocations = CwmlocationHelper::getUserLocations();
 
         if (!empty($visibleLocations)) {
-            $query->whereIn($db->qn('location.id'), $visibleLocations);
+            $query->whereIn($db->quoteName('location.id'), $visibleLocations);
         }
 
         // Filter by search in title.
@@ -230,10 +230,10 @@ class CwmlocationsModel extends ListModel
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where($db->qn('location.id') . ' = ' . (int) substr($search, 3));
+                $query->where($db->quoteName('location.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where($db->qn('location.location_text') . ' LIKE ' . $search);
+                $query->where($db->quoteName('location.location_text') . ' LIKE ' . $search);
             }
         }
 
@@ -241,9 +241,9 @@ class CwmlocationsModel extends ListModel
         $published = $this->getState('filter.published');
 
         if (is_numeric($published)) {
-            $query->where($db->qn('location.published') . ' = ' . (int) $published);
+            $query->where($db->quoteName('location.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(' . $db->qn('location.published') . ' = 0 OR ' . $db->qn('location.published') . ' = 1)');
+            $query->where('(' . $db->quoteName('location.published') . ' = 0 OR ' . $db->quoteName('location.published') . ' = 1)');
         }
 
         // Add the list ordering clause

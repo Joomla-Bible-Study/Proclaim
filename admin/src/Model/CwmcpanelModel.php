@@ -40,9 +40,9 @@ class CwmcpanelModel extends BaseModel
         $return = new \stdClass();
         $query  = $db->getQuery(true);
         $query->select('*');
-        $query->from($db->qn('#__extensions'));
-        $query->where($db->qn('element') . ' = ' . $db->q('com_proclaim'))
-            ->where($db->qn('type') . ' = ' . $db->q('component'));
+        $query->from($db->quoteName('#__extensions'));
+        $query->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'))
+            ->where($db->quoteName('type') . ' = ' . $db->q('component'));
         $db->setQuery($query);
 
         try {
@@ -85,9 +85,9 @@ class CwmcpanelModel extends BaseModel
         // Get the extension ID for our component
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
-        $query->select($db->qn('extension_id'))
-            ->from($db->qn('#__extensions'))
-            ->where($db->qn('element') . ' = ' . $db->q('com_proclaim'));
+        $query->select($db->quoteName('extension_id'))
+            ->from($db->quoteName('#__extensions'))
+            ->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'));
         $db->setQuery($query);
 
         try {
