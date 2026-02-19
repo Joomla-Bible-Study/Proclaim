@@ -326,14 +326,13 @@ class HtmlView extends BaseHtmlView
         $toolbar    = $this->getDocument()->getToolbar();
 
         ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'options');
-        $toolbar->preferences('com_proclaim', 'JBS_ADM_PERMISSIONS');
         ToolbarHelper::divider();
         $toolbar->apply('cwmadmin.apply');
         $toolbar->save('cwmadmin.save');
         $toolbar->cancel('cwmadmin.cancel');
         $toolbar->divider();
 
-        ToolbarHelper::inlinehelp();
+        $toolbar->preferences('com_proclaim', 'JBS_ADM_PERMISSIONS');
         ToolbarHelper::help('admin', true);
     }
 
