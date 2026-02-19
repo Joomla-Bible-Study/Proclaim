@@ -20,11 +20,10 @@ use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
-use Joomla\CMS\Uri\Uri;
 
 // Add template accent color for pagination
 $accentColor = $this->params->get('backcolor', '#287585');
-$wa = $this->getDocument()->getWebAssetManager();
+$wa          = $this->getDocument()->getWebAssetManager();
 $wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
 
 // Use pre-calculated values from HtmlView
@@ -105,10 +104,10 @@ if ($showArchived === '1') : ?>
                         echo '<i class="fas fa-bible fa-3x me-3"></i>';
                     }
                 }
-                if ($this->params->get('show_page_title') > 0) {
-                    echo '<h2 class="mb-0">' . $this->params->get('list_page_title') . '</h2>';
-                }
-                ?>
+            if ($this->params->get('show_page_title') > 0) {
+                echo '<h2 class="mb-0">' . $this->params->get('list_page_title') . '</h2>';
+            }
+            ?>
             </div>
             <?php
         } ?>
@@ -138,7 +137,7 @@ if ($showArchived === '1') : ?>
             // Search tools bar
             echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
 ?>
-            <?php // Top pagination (standard mode only) ?>
+            <?php // Top pagination (standard mode only)?>
             <?php if ($paginationStyle === 'pagination') : ?>
             <div id="proclaim-pagination-top" class="proclaim-pagination">
             <?php if (!empty($this->items)) : ?>
@@ -167,7 +166,7 @@ if ($showArchived === '1') : ?>
             <?php endif; ?>
             </div>
             <?php endif; ?>
-            <?php // Sermon listing ?>
+            <?php // Sermon listing?>
             <div id="proclaim-sermon-list" aria-live="polite">
             <?php
 if ($this->items) {
@@ -177,7 +176,7 @@ if ($this->items) {
 }
 ?>
             </div>
-            <?php // Bottom pagination (standard mode only) ?>
+            <?php // Bottom pagination (standard mode only)?>
             <?php if ($paginationStyle === 'pagination') : ?>
             <div id="proclaim-pagination-bottom" class="proclaim-pagination">
             <?php if (!empty($this->items)) : ?>
@@ -203,7 +202,7 @@ if ($this->items) {
             </div>
             <?php endif; ?>
 
-            <?php // Load More button (loadmore and infinite modes — in infinite mode, shown after auto-load threshold) ?>
+            <?php // Load More button (loadmore and infinite modes — in infinite mode, shown after auto-load threshold)?>
             <?php if ($paginationStyle === 'loadmore' || $paginationStyle === 'infinite') : ?>
             <div class="proclaim-load-more" id="proclaim-load-more"<?php if ($paginationStyle === 'infinite') : ?> style="display:none"<?php endif; ?>>
                 <button type="button" class="btn btn-outline-primary">
@@ -212,7 +211,7 @@ if ($this->items) {
             </div>
             <?php endif; ?>
 
-            <?php // Item counter and scroll sentinel (loadmore and infinite modes) ?>
+            <?php // Item counter and scroll sentinel (loadmore and infinite modes)?>
             <?php if ($paginationStyle !== 'pagination') : ?>
             <div class="proclaim-item-counter" id="proclaim-item-counter"></div>
             <div class="proclaim-scroll-sentinel" id="proclaim-scroll-sentinel"></div>

@@ -10,7 +10,9 @@
 
 namespace CWM\Plugin\Task\Proclaim\Extension;
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
+use CWM\Component\Proclaim\Administrator\Model\CwmanalyticsModel;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
@@ -61,6 +63,11 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             'langConstPrefix' => 'PLG_TASK_PROCLAIM_PUBLISH',
             'form'            => 'publish',
             'method'          => 'publish',
+        ],
+        'proclaim.analytics' => [
+            'langConstPrefix' => 'PLG_TASK_PROCLAIM_ANALYTICS',
+            'form'            => 'analytics',
+            'method'          => 'analyticsTask',
         ],
     ];
 
@@ -289,6 +296,100 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             }
 
             $this->logTask(Text::sprintf('PLG_TASK_PROCLAIM_PUBLISH_SUCCESS', $totalPublished, $totalExpired));
+        } catch (\Exception $e) {
+            try {
+                $this->logTask($e->getMessage());
+            } catch (\Exception $exception) {
+                return Status::KNOCKOUT;
+            }
+
+            return Status::KNOCKOUT;
+        }
+
+        return Status::OK;
+    }
+
+    /**
+     * Analytics rollup, purge, and optional email report.
+     *
+     * @param   ExecuteTaskEvent  $event
+     *
+     * @return int
+     *
+     * @since   10.1.0
+     */
+    private function analyticsTask(ExecuteTaskEvent $event): int
+    {
+        $params        = $event->getArgument('params');
+        $enableRollup  = (bool) ($params->enable_rollup ?? true);
+        $enablePurge   = (bool) ($params->enable_purge ?? true);
+        $retentionDays = (int) ($params->retention_days ?? 90);
+
+        $jLanguage = $this->getApplication()->getLanguage();
+        $jLanguage->load('plg_task_proclaim', JPATH_ADMINISTRATOR, 'en-GB', true, true);
+
+        try {
+            if ($enableRollup || $enablePurge) {
+                $result = CwmanalyticsHelper::rollupAndPurge($retentionDays);
+                $this->logTask(
+                    Text::sprintf(
+                        'PLG_TASK_PROCLAIM_ANALYTICS_ROLLUP_SUCCESS',
+                        $result['rolled'],
+                        $result['purged']
+                    )
+                );
+            }
+
+            $enableEmail = (bool) ($params->enable_email ?? false);
+            $reportEmail = trim((string) ($params->report_email ?? ''));
+            $reportDays  = (int) ($params->report_days ?? 30);
+
+            if ($enableEmail && $reportEmail !== '' && filter_var($reportEmail, FILTER_VALIDATE_EMAIL)) {
+                $start = date('Y-m-d', strtotime('-' . $reportDays . ' days'));
+                $end   = date('Y-m-d');
+
+                /** @var CwmanalyticsModel $analyticsModel */
+                $analyticsModel = Factory::getApplication()
+                    ->bootComponent('com_proclaim')
+                    ->getMVCFactory()
+                    ->createModel('Cwmanalytics', 'Administrator');
+
+                $kpi = $analyticsModel->getKpiTotals($start, $end);
+                $top = $analyticsModel->getTopStudies($start, $end, 5);
+
+                $body  = '<h2>' . Text::_('PLG_TASK_PROCLAIM_ANALYTICS_EMAIL_TITLE') . '</h2>';
+                $body .= '<p>' . Text::sprintf('PLG_TASK_PROCLAIM_ANALYTICS_EMAIL_PERIOD', $start, $end) . '</p>';
+                $body .= '<table border="1" cellpadding="5"><tr>';
+                $body .= '<th>' . Text::_('JBS_ANA_TOTAL_VIEWS') . '</th>';
+                $body .= '<th>' . Text::_('JBS_ANA_TOTAL_PLAYS') . '</th>';
+                $body .= '<th>' . Text::_('JBS_ANA_TOTAL_DOWNLOADS') . '</th></tr><tr>';
+                $body .= '<td>' . number_format($kpi['views']) . '</td>';
+                $body .= '<td>' . number_format($kpi['plays']) . '</td>';
+                $body .= '<td>' . number_format($kpi['downloads']) . '</td></tr></table>';
+
+                if (!empty($top)) {
+                    $body .= '<h3>' . Text::_('JBS_ANA_TOP_SERMONS') . '</h3><ol>';
+
+                    foreach ($top as $row) {
+                        $title = htmlspecialchars((string) ($row['title'] ?? 'ID #' . $row['study_id']), ENT_QUOTES);
+                        $body .= '<li>' . $title . ' (' . (int) ($row['total'] ?? 0) . ')</li>';
+                    }
+
+                    $body .= '</ol>';
+                }
+
+                try {
+                    $mailer = Factory::getMailer();
+                    $mailer->addRecipient($reportEmail);
+                    $mailer->setSubject(Text::_('PLG_TASK_PROCLAIM_ANALYTICS_EMAIL_SUBJECT'));
+                    $mailer->setBody($body);
+                    $mailer->isHTML(true);
+                    $mailer->Send();
+                    $this->logTask(Text::sprintf('PLG_TASK_PROCLAIM_ANALYTICS_EMAIL_SENT', $reportEmail));
+                } catch (\Exception $mailException) {
+                    $this->logTask('Analytics email failed: ' . $mailException->getMessage());
+                }
+            }
         } catch (\Exception $e) {
             try {
                 $this->logTask($e->getMessage());

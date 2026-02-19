@@ -60,6 +60,7 @@
         <folder>fancybox</folder>
         <folder>images</folder>
         <folder>js</folder>
+        <folder>vendor</folder>
     </media>
 
     <administration>
@@ -135,6 +136,11 @@
                   view="cwmtemplatecodes"
                   alt="Proclaim/TemplateCodes">
                 JBS_MNU_TEMPLATE_CODE_DISPLAY
+            </menu>
+            <menu link="option=com_proclaim&amp;view=cwmanalytics"
+                  view="cwmanalytics"
+                  alt="Proclaim/Analytics">
+                JBS_MNU_ANALYTICS_DISPLAY
             </menu>
             <!-- Instead of a link, you can specify individual link attributes -->
         </submenu>

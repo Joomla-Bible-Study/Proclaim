@@ -298,6 +298,29 @@
                servable_only="true"
                label="JBS_ADM_DEFAULT_BIBLE_VERSION"
                description="JBS_ADM_DEFAULT_BIBLE_VERSION_DESC"/>
+
+        <!-- Analytics settings -->
+        <field name="analytics_enabled" type="radio" default="1"
+               label="JBS_ANA_ENABLED_LABEL" description="JBS_ANA_ENABLED_DESC"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="analytics_gdpr_optout" type="radio" default="1"
+               label="JBS_ANA_GDPR_OPTOUT_LABEL" description="JBS_ANA_GDPR_OPTOUT_DESC"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="analytics_referrer_mode" type="list" default="type"
+               label="JBS_ANA_REFERRER_MODE_LABEL" description="JBS_ANA_REFERRER_MODE_DESC">
+            <option value="type">JBS_ANA_REFERRER_TYPE_ONLY</option>
+            <option value="domain">JBS_ANA_REFERRER_DOMAIN</option>
+            <option value="full">JBS_ANA_REFERRER_FULL_URL</option>
+        </field>
+        <field name="analytics_retention_days" type="number" default="90" min="7" max="3650" step="1"
+               label="JBS_ANA_RETENTION_LABEL" description="JBS_ANA_RETENTION_DESC"
+               filter="int"/>
     </fields>
     <fieldset>
         <field name="drop_tables" type="radio" default="0"

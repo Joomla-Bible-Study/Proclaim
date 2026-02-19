@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<fields name="params">
+		<fieldset name="analytics_settings" label="PLG_TASK_PROCLAIM_ANALYTICS_SETTINGS">
+
+			<field name="enable_rollup"
+				   type="radio"
+				   label="PLG_TASK_PROCLAIM_ANALYTICS_ROLLUP_LABEL"
+				   description="PLG_TASK_PROCLAIM_ANALYTICS_ROLLUP_DESC"
+				   default="1"
+				   class="btn-group btn-group-yesno">
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
+			</field>
+
+			<field name="enable_purge"
+				   type="radio"
+				   label="PLG_TASK_PROCLAIM_ANALYTICS_PURGE_LABEL"
+				   description="PLG_TASK_PROCLAIM_ANALYTICS_PURGE_DESC"
+				   default="1"
+				   class="btn-group btn-group-yesno">
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
+			</field>
+
+			<field name="retention_days"
+				   type="number"
+				   label="PLG_TASK_PROCLAIM_ANALYTICS_RETENTION_LABEL"
+				   description="PLG_TASK_PROCLAIM_ANALYTICS_RETENTION_DESC"
+				   default="90"
+				   min="7"
+				   max="3650"
+				   step="1"/>
+
+			<field name="enable_email"
+				   type="radio"
+				   label="PLG_TASK_PROCLAIM_ANALYTICS_EMAIL_LABEL"
+				   description="PLG_TASK_PROCLAIM_ANALYTICS_EMAIL_DESC"
+				   default="0"
+				   class="btn-group btn-group-yesno">
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
+			</field>
+
+			<field name="report_email"
+				   type="email"
+				   label="PLG_TASK_PROCLAIM_ANALYTICS_REPORT_EMAIL_LABEL"
+				   description="PLG_TASK_PROCLAIM_ANALYTICS_REPORT_EMAIL_DESC"
+				   default=""
+				   size="50"
+				   showon="enable_email:1"/>
+
+			<field name="report_days"
+				   type="number"
+				   label="PLG_TASK_PROCLAIM_ANALYTICS_REPORT_DAYS_LABEL"
+				   description="PLG_TASK_PROCLAIM_ANALYTICS_REPORT_DAYS_DESC"
+				   default="30"
+				   min="1"
+				   max="365"
+				   step="1"
+				   showon="enable_email:1"/>
+
+		</fieldset>
+	</fields>
+</form>

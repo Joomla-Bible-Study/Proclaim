@@ -6,6 +6,26 @@
     "license": "GPL-2.0-or-later",
     "assets": [
         {
+            "name": "com_proclaim.chart.js",
+            "type": "script",
+            "uri": "media/com_proclaim/vendor/chart.js/chart.umd.min.js",
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.cwmanalytics",
+            "type": "script",
+            "uri": "com_proclaim/cwmanalytics.min.js",
+            "dependencies": [
+                "core",
+                "com_proclaim.chart.js"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.location-wizard",
             "type": "script",
             "uri": "com_proclaim/location-wizard.min.js",

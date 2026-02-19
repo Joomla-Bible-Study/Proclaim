@@ -26,7 +26,6 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Filesystem\Folder;
 
@@ -190,6 +189,7 @@ class HtmlView extends BaseHtmlView
      */
     public bool $has9xSchema = false;
 
+
     /**
      * Form
      *
@@ -245,6 +245,7 @@ class HtmlView extends BaseHtmlView
         $this->playerstats = '';
         $this->assets      = $app->getInput()->get('checkassets', null, 'get');
         $this->popups      = '';
+
 
         // Get the list of backup files
         $path = JPATH_SITE . '/media/com_proclaim/backup';

@@ -16,12 +16,9 @@
 
 /** @var CWM\Component\Proclaim\Site\View\Cwmsermons\HtmlView $this */
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
-
 // Add template accent color for pagination
 $accentColor = $this->params->get('backcolor', '#287585');
-$wa = $this->getDocument()->getWebAssetManager();
+$wa          = $this->getDocument()->getWebAssetManager();
 $wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
 $wa->addInlineStyle('img { border-radius: 4px; }');
 

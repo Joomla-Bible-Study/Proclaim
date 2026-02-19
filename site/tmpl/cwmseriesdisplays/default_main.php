@@ -22,11 +22,10 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
-use Joomla\CMS\Uri\Uri;
 
 // Add template accent color for pagination
 $accentColor = $this->params->get('seriesdisplay_color', $this->params->get('backcolor', '#287585'));
-$wa = $this->getDocument()->getWebAssetManager();
+$wa          = $this->getDocument()->getWebAssetManager();
 $wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
 
 // Use pre-created values from HtmlView
@@ -87,7 +86,7 @@ if ($this->items) {
 ?>
                 </div>
 
-                <?php // Standard pagination ?>
+                <?php // Standard pagination?>
                 <?php if ($seriesPagStyle === 'pagination') : ?>
                 <div class="pagination-container pagelinks">
                     <?php
@@ -96,12 +95,12 @@ if ($this->items) {
             'JGLOBAL_DISPLAY_NUM'
         ) . $this->pagination->getLimitBox() . '</span>';
     }
-echo $this->pagination->getPageslinks();
-?>
+                    echo $this->pagination->getPageslinks();
+                    ?>
                 </div>
                 <?php endif; ?>
 
-                <?php // Load More button (loadmore and infinite modes — in infinite mode, shown after auto-load threshold) ?>
+                <?php // Load More button (loadmore and infinite modes — in infinite mode, shown after auto-load threshold)?>
                 <?php if ($seriesPagStyle === 'loadmore' || $seriesPagStyle === 'infinite') : ?>
                 <div class="proclaim-load-more" id="proclaim-load-more"<?php if ($seriesPagStyle === 'infinite') : ?> style="display:none"<?php endif; ?>>
                     <button type="button" class="btn btn-outline-primary">
@@ -110,7 +109,7 @@ echo $this->pagination->getPageslinks();
                 </div>
                 <?php endif; ?>
 
-                <?php // Item counter and scroll sentinel ?>
+                <?php // Item counter and scroll sentinel?>
                 <?php if ($seriesPagStyle !== 'pagination') : ?>
                 <div class="proclaim-item-counter" id="proclaim-item-counter"></div>
                 <div class="proclaim-scroll-sentinel" id="proclaim-scroll-sentinel"></div>

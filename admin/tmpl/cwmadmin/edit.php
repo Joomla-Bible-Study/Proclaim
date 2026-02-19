@@ -858,6 +858,30 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
 
+        <?php
+        echo HTMLHelper::_('uitab.addTab', 'myTab', 'analytics', Text::_('JBS_ANA_ANALYTICS')); ?>
+        <div class="row" id="analytics-tab">
+            <div class="col-12">
+                <div class="cwmadmin-panel mb-4">
+                    <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmanalytics'); ?>"
+                       class="btn btn-primary btn-lg">
+                        <i class="icon-chart-bar me-2" aria-hidden="true"></i>
+                        <?php echo Text::_('JBS_ANA_FULL_DASHBOARD'); ?>
+                    </a>
+                </div>
+
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ANA_TRACKING_SETTINGS'); ?></h3>
+                    <?php echo $this->form->renderField('analytics_enabled', 'params'); ?>
+                    <?php echo $this->form->renderField('analytics_gdpr_optout', 'params'); ?>
+                    <?php echo $this->form->renderField('analytics_referrer_mode', 'params'); ?>
+                    <?php echo $this->form->renderField('analytics_retention_days', 'params'); ?>
+                </div>
+            </div>
+        </div>
+        <?php
+        echo HTMLHelper::_('uitab.endTab'); ?>
+
         <!-- Track thumbnail sizes to fire event if they are changed -->
         <input type="hidden" id="thumbnail_teacher_size_old"
                value="<?php

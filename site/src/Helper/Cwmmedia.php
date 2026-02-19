@@ -497,6 +497,7 @@ class Cwmmedia
                         return $this->renderSB($media, $params, $player, $image, $path, true);
 
                     case 1: // Popup window
+                        CWMFancyBox::framework();
                         $playercode = "<a $colorStyle href=\"javascript:;\"" .
                             " onclick=\"window.open('index.php?option=com_proclaim&amp;player="
                             . $params->toObject()->player .
@@ -545,10 +546,22 @@ class Cwmmedia
                                 '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
                                 '" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" style="border: none"></iframe>';
                         } elseif (preg_match('/(resi.io)/', $path) === 1) {
-                            $resi       = new CWMAddonResi();
-                            $playercode = '<iframe class="playhit" data-id="' . $media->id . '" src="' . $resi->convertResi($path) .
-                                '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
-                                '" allow="autoplay; fullscreen" allowfullscreen style="border: none"></iframe>';
+                            $resi      = new CWMAddonResi();
+                            $resiSrc   = $resi->convertResi($path);
+                            $w         = (int) $player->playerwidth;
+                            $h         = (int) $player->playerheight;
+                            // Wrap in a relative container with a transparent click-intercept overlay.
+                            // The overlay captures the first user click (play button), tracks the play,
+                            // then swaps autoplay=false → autoplay=true in the iframe src before removing
+                            // itself — so the video starts seamlessly without a second click.
+                            $playercode = '<div class="proclaim-resi-container" style="position:relative;width:' . $w . 'px;height:' . $h . 'px;">'
+                                . '<iframe data-id="' . $media->id . '" src="' . $resiSrc . '"'
+                                . ' width="' . $w . '" height="' . $h . '"'
+                                . ' allow="autoplay; fullscreen" allowfullscreen'
+                                . ' style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>'
+                                . '<div class="proclaim-resi-overlay" data-media-id="' . $media->id . '"'
+                                . ' style="position:absolute;top:0;left:0;width:100%;height:100%;cursor:pointer;z-index:1;"></div>'
+                                . '</div>';
                         } else {
                             $playercode = CWMHtml5Inline::render($media, $params, $player, false, $template);
                         }
@@ -556,6 +569,7 @@ class Cwmmedia
                         break;
 
                     case 1: // Popup
+                        CWMFancyBox::framework();
                         // Add space for a pop-up window
                         $diff                 = $params->get('player_width') - $params->get('playerwidth');
                         $player->playerwidth += abs($diff) + 10;
@@ -577,10 +591,11 @@ class Cwmmedia
 
                 switch ($player->type) {
                     case 1: // This goes to the popup view
+                        CWMFancyBox::framework();
                         $playercode = "<a $colorStyle href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
                             . "&amp;view=cwmpopup&amp;player=3&amp;t=" . $template .
                             "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
-                            . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">" . $image . "</a>";
+                            . $player->playerheight . "'); return false\" class=\"jbsmplayerlink playhit\" data-id=\"" . $media->id . "\">" . $image . "</a>";
                         break;
 
                     case 2: // This plays the video inline
@@ -601,10 +616,12 @@ class Cwmmedia
                 return $this->getVirtuemart($media, $image);
 
             case 8: // Embed code
+                CWMFancyBox::framework();
+
                 return "<a $colorStyle href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
                     . "&amp;view=cwmpopup&amp;player=8&amp;t=" . $template .
                     "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
-                    . $player->playerheight . "'); return false\">" . $image . "</a>";
+                    . $player->playerheight . "'); return false\" class=\"jbsmplayerlink playhit\" data-id=\"" . $media->id . "\">" . $image . "</a>";
         }
 
         return false;
