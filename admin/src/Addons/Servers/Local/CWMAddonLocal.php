@@ -18,6 +18,8 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Local;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmuploadscript;
+use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -326,11 +328,12 @@ class CWMAddonLocal extends CWMAddon
             return ['success' => false, 'error' => 'Directory not found'];
         }
 
-        // Extension filters
-        $audioExts = ['mp3', 'm4a', 'ogg', 'oga', 'wav', 'flac', 'aac', 'wma'];
-        $videoExts = ['mp4', 'm4v', 'webm', 'ogv', 'mov', 'avi', 'mkv', 'wmv'];
-        $docExts   = ['pdf', 'doc', 'docx', 'ppt', 'pptx'];
-        $allExts   = array_merge($audioExts, $videoExts, $docExts);
+        // Extension filters — read from Proclaim config, categorized via Cwmmedia::getMimetypes()
+        $categories = $this->getExtensionsByCategory();
+        $audioExts  = $categories['audio'];
+        $videoExts  = $categories['video'];
+        $docExts    = $categories['doc'];
+        $allExts    = array_merge($audioExts, $videoExts, $docExts);
 
         // Determine which extensions to show
         $allowedExts = match ($filter) {
@@ -420,6 +423,69 @@ class CWMAddonLocal extends CWMAddon
             'currentPath' => $currentRel,
             'parentPath'  => $parentPath,
             'basePath'    => $basePath,
+        ];
+    }
+
+    /**
+     * Categorize allowed file extensions into audio, video, and document groups.
+     *
+     * Reads the `upload_extensions` param from Proclaim component configuration and
+     * cross-references with Cwmmedia::getMimetypes() to sort extensions by MIME category.
+     * Falls back to sensible defaults when the param is missing or a category is empty.
+     *
+     * @return  array{audio: string[], video: string[], doc: string[]}
+     *
+     * @since   10.1.0
+     */
+    protected function getExtensionsByCategory(): array
+    {
+        $defaultAudio = ['mp3', 'm4a', 'ogg', 'oga', 'wav', 'flac', 'aac', 'wma'];
+        $defaultVideo = ['mp4', 'm4v', 'webm', 'ogv', 'mov', 'avi', 'mkv', 'wmv'];
+        $defaultDoc   = ['pdf', 'doc', 'docx', 'ppt', 'pptx'];
+
+        $uploadExtensions = ComponentHelper::getParams('com_proclaim')
+            ->get('upload_extensions', '');
+
+        if (empty($uploadExtensions)) {
+            return ['audio' => $defaultAudio, 'video' => $defaultVideo, 'doc' => $defaultDoc];
+        }
+
+        // Build a flat extension→MIME map from the pipe-separated pattern keys in getMimetypes()
+        $mimeMap = [];
+
+        foreach ((new Cwmmedia())->getMimetypes() as $pattern => $mime) {
+            foreach (explode('|', $pattern) as $ext) {
+                $mimeMap[strtolower(trim($ext))] = $mime;
+            }
+        }
+
+        $audio = [];
+        $video = [];
+        $doc   = [];
+
+        foreach (explode(',', $uploadExtensions) as $raw) {
+            $ext = strtolower(trim($raw));
+
+            if (empty($ext)) {
+                continue;
+            }
+
+            $mime = $mimeMap[$ext] ?? '';
+
+            if (str_starts_with($mime, 'audio/')) {
+                $audio[] = $ext;
+            } elseif (str_starts_with($mime, 'video/')) {
+                $video[] = $ext;
+            } elseif (!empty($mime) && !str_starts_with($mime, 'image/')) {
+                // application/*, text/* → document; images excluded (not media files)
+                $doc[] = $ext;
+            }
+        }
+
+        return [
+            'audio' => $audio ?: $defaultAudio,
+            'video' => $video ?: $defaultVideo,
+            'doc'   => $doc ?: $defaultDoc,
         ];
     }
 

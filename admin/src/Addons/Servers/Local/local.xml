@@ -82,9 +82,6 @@
                    label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
                    class="inputbox" default="">
             </field>
-            <field name="mime_type" type="MimeType" extension="com_proclaim"
-                   label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
-                   class="inputbox"/>
         </fieldset>
         <fieldset name="parameters" label="JBS_ADDON_LOCAL_PARAMETERS">
             <field name="autostart" type="list"
