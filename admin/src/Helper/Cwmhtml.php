@@ -79,6 +79,22 @@ class Cwmhtml
     }
 
     /**
+     * Method to get the player field options.
+     *
+     * @return  array  The field option objects.
+     *
+     * @since   10.1.0
+     */
+    public static function playerlist(): array
+    {
+        return [
+            (object) ['value' => 0, 'text' => Text::_('JBS_CMN_DIRECT_LINK')],
+            (object) ['value' => 1, 'text' => Text::_('JBS_CMN_USE_INTERNAL_PLAYER')],
+            (object) ['value' => 8, 'text' => Text::_('JBS_CMN_USE_EMBED_CODE')],
+        ];
+    }
+
+    /**
      * Display a batch widget for the popup selector.
      *
      * @return  string  The necessary HTML for the widget.

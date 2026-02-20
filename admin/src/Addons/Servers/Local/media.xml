@@ -7,7 +7,7 @@
                    type="Media"
                    label="JBS_MED_FILENAME"
                    description="JBS_MED_USE_FILENAME_AS_PATH"
-                   directory="/images/biblestudy/media/"
+                   directory="biblestudy/media"
                    types="images,audios,videos,documents"
                    required="true"/>
             <field name="local_browse_btn"
