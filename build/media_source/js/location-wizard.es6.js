@@ -88,7 +88,7 @@
             const s = parseInt(lbl.dataset.step, 10);
             lbl.classList.toggle('fw-bold', s === step);
             lbl.classList.toggle('text-primary', s === step);
-            lbl.classList.toggle('text-muted', s !== step);
+            lbl.classList.toggle('text-body-secondary', s !== step);
         });
 
         // Lazy-load step content when entering certain steps
@@ -212,21 +212,21 @@
                 const d = response.data;
                 let html = `<div class="row g-3 text-center mb-3">
                     <div class="col-sm-4">
-                        <div class="card border-0 bg-light py-3">
+                        <div class="card border-0 bg-body-tertiary py-3">
                             <div class="display-6 fw-bold text-primary">${d.locations}</div>
-                            <div class="small text-muted">${txt('JBS_WIZARD_LOCATIONS')}</div>
+                            <div class="small text-body-secondary">${txt('JBS_WIZARD_LOCATIONS')}</div>
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <div class="card border-0 bg-light py-3">
+                        <div class="card border-0 bg-body-tertiary py-3">
                             <div class="display-6 fw-bold text-primary">${d.groups}</div>
-                            <div class="small text-muted">${txt('JBS_WIZARD_GROUP_ASSIGNMENTS')}</div>
+                            <div class="small text-body-secondary">${txt('JBS_WIZARD_GROUP_ASSIGNMENTS')}</div>
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <div class="card border-0 bg-${d.unmapped_locations > 0 ? 'warning' : 'light'} py-3">
-                            <div class="display-6 fw-bold text-${d.unmapped_locations > 0 ? 'dark' : 'success'}">${d.unmapped_locations}</div>
-                            <div class="small text-muted">${txt('JBS_WIZARD_UNMAPPED_LOCATIONS')}</div>
+                        <div class="card border-0 bg-${d.unmapped_locations > 0 ? 'warning-subtle' : 'body-tertiary'} py-3">
+                            <div class="display-6 fw-bold text-${d.unmapped_locations > 0 ? 'warning-emphasis' : 'success'}">${d.unmapped_locations}</div>
+                            <div class="small text-body-secondary">${txt('JBS_WIZARD_UNMAPPED_LOCATIONS')}</div>
                         </div>
                     </div>
                 </div>`;
@@ -240,7 +240,7 @@
                 if (locIds.length > 0) {
                     html += `<h6>${txt('JBS_WIZARD_MAPPING_SUMMARY')}</h6>
                              <table class="table table-sm table-bordered">
-                                <thead class="table-light">
+                                <thead>
                                     <tr>
                                         <th>${txt('JBS_WIZARD_LOCATION')}</th>
                                         <th>${txt('JBS_WIZARD_MAPPED_GROUPS')}</th>
@@ -252,7 +252,7 @@
                         const groupList = groupIds.map((gid) => grps[gid] || `#${gid}`).join(', ');
                         html += `<tr>
                             <td><strong>${escHtml(locs[locId] || locId)}</strong></td>
-                            <td>${escHtml(groupList) || '<em class="text-muted">none</em>'}</td>
+                            <td>${escHtml(groupList) || '<em class="text-body-secondary">none</em>'}</td>
                         </tr>`;
                     });
 
