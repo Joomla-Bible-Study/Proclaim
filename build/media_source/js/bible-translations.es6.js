@@ -153,6 +153,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Flag: true once the Scripture tab has been lazy-initialised.
+    // Declared early so cleanupProvider() can reference it safely.
+    let scriptureInitDone = false;
+
     // --- Provider disable cleanup ---
 
     /**
@@ -968,7 +972,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Lazy init: defer loading until the scripture tab is first shown.
     // Avoids firing AJAX on every page load when the user may not visit this tab.
-    let scriptureInitDone = false;
     function initScriptureTab() {
         if (scriptureInitDone) return;
         scriptureInitDone = true;

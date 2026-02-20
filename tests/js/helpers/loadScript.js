@@ -12,10 +12,11 @@ function loadScript(scriptPath) {
 }
 
 /**
- * Load cwmcore.js and expose its global functions
+ * Load cwmcore source and expose its global functions.
+ * Uses the committed ES6 source (not the built media/ output which is gitignored).
  */
 function loadCwmCore() {
-    const scriptPath = path.resolve(__dirname, '../../../media/js/cwmcore.js');
+    const scriptPath = path.resolve(__dirname, '../../../build/media_source/js/cwmcore.es6.js');
     const code = fs.readFileSync(scriptPath, 'utf8');
 
     try {

@@ -402,11 +402,9 @@
                     if (!data.success) {
                         if (data.error === 'no api_token') {
                             if (noToken) { noToken.classList.remove('d-none'); }
-                        } else {
-                            if (error) {
-                                error.textContent = data.error || 'Failed to load videos.';
-                                error.classList.remove('d-none');
-                            }
+                        } else if (error) {
+                            error.textContent = data.error || 'Failed to load videos.';
+                            error.classList.remove('d-none');
                         }
                         if (paginationBar) { paginationBar.classList.add('d-none'); }
                         return;
