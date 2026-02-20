@@ -462,8 +462,10 @@ class CwmadminModel extends AdminModel
     public function getSSorPI(): mixed
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName(['extension_id', 'name', 'element']))->from($db->quoteName('#__extensions'));
+        $query = $db->getQuery(true)
+            ->select($db->quoteName(['extension_id', 'name', 'element']))
+            ->from($db->quoteName('#__extensions'))
+            ->whereIn($db->quoteName('element'), ['com_sermonspeaker', 'com_preachit']);
         $db->setQuery($query);
 
         return $db->loadObjectList();

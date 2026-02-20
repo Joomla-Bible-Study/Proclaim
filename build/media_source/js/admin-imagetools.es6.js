@@ -1041,16 +1041,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Show download log button if a log file already exists (check via preview)
-    if (downloadLogBtn) {
-        fetch(`index.php?option=com_proclaim&task=cwmadmin.downloadClearedLogXHR&${token}=1`, { method: 'HEAD' })
-            .then((r) => {
-                if (r.ok && r.headers.get('content-type')?.includes('text/csv')) {
-                    downloadLogBtn.style.display = '';
-                }
-            })
-            .catch(() => {});
-    }
+    // Note: download log button visibility is checked inside initImagetoolsCounts() on tab show
 
     // ---- Pipeline ----
     function setPipelineBadge(stepId, state) {
@@ -1416,14 +1407,29 @@ document.addEventListener('DOMContentLoaded', () => {
         loadWebPCounts();
         loadThumbRegenCounts();
         loadRecoveryCounts();
+
+        // Check if a cleared-images log exists and show the download button if so
+        const downloadLogBtn = document.getElementById('btn-download-cleared-log');
+        if (downloadLogBtn) {
+            fetch(`index.php?option=com_proclaim&task=cwmadmin.downloadClearedLogXHR&${token}=1`, { method: 'HEAD' })
+                .then((r) => {
+                    if (r.ok && r.headers.get('content-type')?.includes('text/csv')) {
+                        downloadLogBtn.style.display = '';
+                    }
+                })
+                .catch(() => {});
+        }
     }
     document.addEventListener('shown.bs.tab', (e) => {
-        if (e.target.dataset.bsTarget === '#imagetools') initImagetoolsCounts();
+        const target = e.target.dataset.bsTarget || e.target.getAttribute('href');
+        if (target === '#imagetools') initImagetoolsCounts();
     });
-    // Handle hash-recall: tab may already be active on page load
-    if (document.getElementById('imagetools')?.classList.contains('active')) {
-        initImagetoolsCounts();
-    }
+    // setTimeout(0) lets Bootstrap's hash-recall apply 'active' before we check
+    setTimeout(() => {
+        if (!imagetoolsInitDone && document.getElementById('imagetools')?.classList.contains('active')) {
+            initImagetoolsCounts();
+        }
+    }, 0);
 
     // ---- Utility ----
     function formatBytes(bytes) {

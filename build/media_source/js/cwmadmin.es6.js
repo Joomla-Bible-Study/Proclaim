@@ -119,13 +119,16 @@
             };
 
             document.addEventListener('shown.bs.tab', (e) => {
-                if (e.target.dataset.bsTarget === '#playersettings') load();
+                const target = e.target.dataset.bsTarget || e.target.getAttribute('href');
+                if (target === '#playersettings') load();
             });
 
-            // Handle hash-recall: tab may already be active on page load
-            if (document.getElementById('playersettings')?.classList.contains('active')) {
-                load();
-            }
+            // setTimeout(0) lets Bootstrap's hash-recall apply 'active' before we check
+            setTimeout(() => {
+                if (!loaded && document.getElementById('playersettings')?.classList.contains('active')) {
+                    load();
+                }
+            }, 0);
         }
 
         /**

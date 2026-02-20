@@ -940,11 +940,17 @@ document.addEventListener('DOMContentLoaded', () => {
         refreshLocalBadge();
         loadTranslations();
     }
+    // Bootstrap 5 fires shown.bs.tab on the button/link that was clicked.
+    // Joomla may use either data-bs-target="#scripture" or href="#scripture".
     document.addEventListener('shown.bs.tab', (e) => {
-        if (e.target.dataset.bsTarget === '#scripture') initScriptureTab();
+        const target = e.target.dataset.bsTarget || e.target.getAttribute('href');
+        if (target === '#scripture') initScriptureTab();
     });
-    // Handle hash-recall: tab may already be active on page load
-    if (document.getElementById('scripture')?.classList.contains('active')) {
-        initScriptureTab();
-    }
+    // setTimeout(0) lets Bootstrap's hash-recall (recall:true) activate its tab
+    // before we check — otherwise the 'active' class isn't applied yet.
+    setTimeout(() => {
+        if (!scriptureInitDone && document.getElementById('scripture')?.classList.contains('active')) {
+            initScriptureTab();
+        }
+    }, 0);
 });
