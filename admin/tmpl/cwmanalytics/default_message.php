@@ -125,6 +125,63 @@ $tsJson = json_encode([
 </div>
 <?php endif; ?>
 
-<?php if (empty($this->studyTimeSeries) && empty($this->studyMedia) && !array_sum($this->studyKpi)) : ?>
+<!-- Platform stats for this message's media files -->
+<?php if (!empty($this->studyPlatformStats)) : ?>
+<div class="card mb-3">
+    <div class="card-header fw-semibold">
+        <i class="icon-globe me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_PLATFORM_STATS'); ?>
+        <span class="text-muted fw-normal small ms-2"><?php echo Text::_('JBS_ANA_PLATFORM_AUTO_SYNC_NOTE'); ?></span>
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-sm table-hover mb-0">
+            <thead>
+                <tr>
+                    <th><?php echo Text::_('JBS_ANA_PLATFORM'); ?></th>
+                    <th><?php echo Text::_('JBS_ANA_SERVER'); ?></th>
+                    <th class="text-end"><?php echo Text::_('JBS_ANA_PLATFORM_VIEWS'); ?></th>
+                    <th class="text-end"><?php echo Text::_('JBS_ANA_PLATFORM_PLAYS'); ?></th>
+                    <th class="text-end"><?php echo Text::_('JBS_ANA_PLATFORM_LIKES'); ?></th>
+                    <th class="text-end"><?php echo Text::_('JBS_ANA_PLATFORM_COMMENTS'); ?></th>
+                    <?php
+                    // Show Wistia-specific columns only if any row has them
+                    $hasWistia = false;
+                    foreach ($this->studyPlatformStats as $ps) {
+                        if ($ps['load_count'] !== null || $ps['hours_watched'] !== null) {
+                            $hasWistia = true;
+
+                            break;
+                        }
+                    }
+                    ?>
+                    <?php if ($hasWistia) : ?>
+                    <th class="text-end"><?php echo Text::_('JBS_ANA_PLATFORM_HOURS_WATCHED'); ?></th>
+                    <th class="text-end"><?php echo Text::_('JBS_ANA_PLATFORM_ENGAGEMENT'); ?></th>
+                    <?php endif; ?>
+                    <th class="text-end"><?php echo Text::_('JBS_ANA_PLATFORM_LAST_SYNCED'); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($this->studyPlatformStats as $ps) : ?>
+                <tr>
+                    <td><span class="badge bg-secondary"><?php echo htmlspecialchars(ucfirst((string) ($ps['platform'] ?? '')), ENT_QUOTES); ?></span></td>
+                    <td class="small"><?php echo htmlspecialchars((string) ($ps['server_name'] ?? ''), ENT_QUOTES); ?></td>
+                    <td class="text-end"><?php echo number_format((int) ($ps['view_count'] ?? 0)); ?></td>
+                    <td class="text-end"><?php echo number_format((int) ($ps['play_count'] ?? 0)); ?></td>
+                    <td class="text-end"><?php echo $ps['like_count'] !== null ? number_format((int) $ps['like_count']) : '—'; ?></td>
+                    <td class="text-end"><?php echo $ps['comment_count'] !== null ? number_format((int) $ps['comment_count']) : '—'; ?></td>
+                    <?php if ($hasWistia) : ?>
+                    <td class="text-end"><?php echo $ps['hours_watched'] !== null ? number_format((float) $ps['hours_watched'], 1) : '—'; ?></td>
+                    <td class="text-end"><?php echo $ps['engagement'] !== null ? number_format((float) $ps['engagement'], 1) . '%' : '—'; ?></td>
+                    <?php endif; ?>
+                    <td class="text-end text-muted small"><?php echo $ps['synced_at'] ? htmlspecialchars(substr((string) $ps['synced_at'], 0, 16), ENT_QUOTES) : '—'; ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+<?php endif; ?>
+
+<?php if (empty($this->studyTimeSeries) && empty($this->studyMedia) && empty($this->studyPlatformStats) && !array_sum($this->studyKpi)) : ?>
 <div class="alert alert-light"><?php echo Text::_('JBS_ANA_NO_DATA'); ?></div>
 <?php endif; ?>

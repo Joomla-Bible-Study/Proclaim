@@ -530,6 +530,9 @@ $showPeriodStrip     = $hasRealEvents;
         </div>
     </div>
     <?php endif; ?>
+
+    <!-- Platform Video Stats (YouTube, Vimeo, Wistia) -->
+    <?php echo $this->loadTemplate('platform'); ?>
     <?php endif; // $isOverview?>
 
     <!-- Breadcrumb for all drilldown levels -->

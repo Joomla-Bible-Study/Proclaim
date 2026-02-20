@@ -122,6 +122,92 @@
         });
     }
 
+    /** Initialise the Platform Stats Sync button */
+    function initSyncButton() {
+        const btn = document.getElementById('cwm-sync-platform-stats');
+
+        if (!btn) {
+            return;
+        }
+
+        let servers;
+
+        try {
+            servers = JSON.parse(btn.dataset.servers || '[]');
+        } catch {
+            return;
+        }
+
+        if (!servers.length) {
+            return;
+        }
+
+        const token = btn.dataset.token || '';
+        const batchLimit = parseInt(btn.dataset.batchLimit, 10) || 50;
+
+        btn.addEventListener('click', async () => {
+            btn.disabled = true;
+            const origHtml = btn.innerHTML;
+            let totalSynced = 0;
+            let totalRemaining = 0;
+            let totalErrors = 0;
+
+            for (let i = 0; i < servers.length; i += 1) {
+                const srv = servers[i];
+                const name = srv.server_name || srv.type;
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status"></span>'
+                    + Joomla.Text._('JBS_ANA_SYNCING') + ' ' + name + ' (' + (i + 1) + '/' + servers.length + ')...';
+
+                try {
+                    const url = 'index.php?option=com_proclaim&task=cwmadmin.addonAjax'
+                        + '&addon=' + encodeURIComponent(srv.type)
+                        + '&action=fetchStats'
+                        + '&server_id=' + srv.id
+                        + '&batch_limit=' + batchLimit
+                        + '&' + token + '=1';
+
+                    const resp = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'X-CSRF-Token': '1' },
+                    });
+
+                    if (resp.ok) {
+                        const data = await resp.json();
+
+                        if (data && data.data) {
+                            totalSynced += (data.data.synced || 0);
+                            totalRemaining += (data.data.remaining || 0);
+                        }
+                    } else {
+                        totalErrors += 1;
+                    }
+                } catch {
+                    totalErrors += 1;
+                }
+            }
+
+            btn.innerHTML = origHtml;
+            btn.disabled = false;
+
+            let msg = Joomla.Text._('JBS_ANA_SYNC_COMPLETE') + ' (' + totalSynced + ' videos)';
+
+            if (totalRemaining > 0) {
+                msg += ' — ' + totalRemaining + ' ' + Joomla.Text._('JBS_ANA_SYNC_REMAINING');
+            }
+
+            if (totalErrors === 0) {
+                Joomla.renderMessages({ success: [msg] });
+            } else {
+                Joomla.renderMessages({
+                    warning: [msg + ' (' + totalErrors + ' errors)'],
+                });
+            }
+
+            // Reload after brief delay so user sees the message
+            setTimeout(() => { window.location.reload(); }, 2000);
+        });
+    }
+
     /** Initialise all charts on the page */
     function initCharts() {
         if (!window.Chart) {
@@ -158,9 +244,14 @@
         });
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initCharts);
-    } else {
+    function init() {
         initCharts();
+        initSyncButton();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
     }
 })();

@@ -218,6 +218,152 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
+     * YouTube supports platform stats via the Data API v3 statistics endpoint.
+     *
+     * @return  bool
+     *
+     * @since   10.1.0
+     */
+    public function supportsStats(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Fetch video statistics from YouTube Data API for media linked to this server.
+     * Batches up to 50 video IDs per API call. When $batchLimit > 0, only the
+     * least-recently-synced videos are processed (never-synced first).
+     *
+     * @param   int  $serverId    The server record ID
+     * @param   int  $batchLimit  Max unique videos to sync (0 = unlimited)
+     *
+     * @return  array{success: bool, synced: int, remaining: int, errors: string[]}
+     *
+     * @since   10.1.0
+     */
+    public function fetchPlatformStats(int $serverId, int $batchLimit = 0): array
+    {
+        $config = $this->getServerConfig($serverId);
+        $apiKey = $config['api_key'] ?? '';
+
+        if (empty($apiKey)) {
+            return ['success' => false, 'synced' => 0, 'remaining' => 0, 'errors' => ['YouTube: No API key configured']];
+        }
+
+        $totalMedia = static::getMediaVideoCount($serverId);
+        $mediaRows  = static::getMediaVideoIds($serverId, 'filename', $batchLimit, 'youtube');
+
+        if (empty($mediaRows)) {
+            return ['success' => true, 'synced' => 0, 'remaining' => 0, 'errors' => []];
+        }
+
+        // Extract YouTube video IDs from embed URLs stored in params.filename
+        $videoMap = []; // videoId => [media_id, ...]
+
+        foreach ($mediaRows as $row) {
+            $videoId = $this->extractYoutubeVideoId($row['video_id']);
+
+            if ($videoId !== null) {
+                $videoMap[$videoId][] = $row['media_id'];
+            }
+        }
+
+        // Apply batch limit to unique videos (not media rows, since multiple media can share one video)
+        if ($batchLimit > 0 && \count($videoMap) > $batchLimit) {
+            $videoMap = \array_slice($videoMap, 0, $batchLimit, true);
+        }
+
+        if (empty($videoMap)) {
+            return ['success' => true, 'synced' => 0, 'remaining' => 0, 'errors' => []];
+        }
+
+        $synced = 0;
+        $errors = [];
+
+        try {
+            $client = new Google\Client();
+            $client->setApplicationName('Proclaim');
+            $client->setDeveloperKey($apiKey);
+
+            $youtube = new YouTube($client);
+
+            // Batch: YouTube allows up to 50 IDs per call
+            $chunks = array_chunk(array_keys($videoMap), 50);
+
+            foreach ($chunks as $idBatch) {
+                try {
+                    $response = @$youtube->videos->listVideos('statistics', [
+                        'id' => implode(',', $idBatch),
+                    ]);
+
+                    foreach ($response->items as $item) {
+                        $vid   = $item->id;
+                        $stats = $item->statistics;
+
+                        foreach ($videoMap[$vid] ?? [] as $mediaId) {
+                            static::upsertPlatformStats(
+                                $mediaId,
+                                $serverId,
+                                'youtube',
+                                $vid,
+                                [
+                                    'view_count'    => (int) ($stats->viewCount ?? 0),
+                                    'play_count'    => (int) ($stats->viewCount ?? 0),
+                                    'like_count'    => (int) ($stats->likeCount ?? 0),
+                                    'comment_count' => (int) ($stats->commentCount ?? 0),
+                                ]
+                            );
+                            $synced++;
+                        }
+                    }
+                } catch (Exception $e) {
+                    $errors[] = 'YouTube batch: ' . $e->getMessage();
+                }
+            }
+
+            static::updateServerSyncTimestamp($serverId);
+        } catch (\Exception $e) {
+            $errors[] = 'YouTube: ' . $e->getMessage();
+        }
+
+        $remaining = max(0, $totalMedia - $synced);
+
+        return ['success' => empty($errors), 'synced' => $synced, 'remaining' => $remaining, 'errors' => $errors];
+    }
+
+    /**
+     * Extract YouTube video ID from any YouTube URL format.
+     *
+     * @param   string  $url  URL or embed URL
+     *
+     * @return  string|null  The video ID or null
+     *
+     * @since   10.1.0
+     */
+    private function extractYoutubeVideoId(string $url): ?string
+    {
+        $patterns = [
+            '/(?:youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/',
+            '/(?:youtube\.com\/watch\?v=)([a-zA-Z0-9_-]+)/',
+            '/(?:youtu\.be\/)([a-zA-Z0-9_-]+)/',
+            '/(?:youtube\.com\/live\/)([a-zA-Z0-9_-]+)/',
+        ];
+
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $url, $matches)) {
+                return $matches[1];
+            }
+        }
+
+        // If it looks like a bare video ID (11 chars, alphanumeric + - _)
+        if (preg_match('/^[a-zA-Z0-9_-]{11}$/', $url)) {
+            return $url;
+        }
+
+        return null;
+    }
+
+    /**
      * Get available AJAX actions for this addon
      *
      * @return  array  List of available action names

@@ -10,6 +10,7 @@
 
 namespace CWM\Plugin\Task\Proclaim\Extension;
 
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Administrator\Model\CwmanalyticsModel;
@@ -68,6 +69,11 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             'langConstPrefix' => 'PLG_TASK_PROCLAIM_ANALYTICS',
             'form'            => 'analytics',
             'method'          => 'analyticsTask',
+        ],
+        'proclaim.platformstats' => [
+            'langConstPrefix' => 'PLG_TASK_PROCLAIM_PLATFORMSTATS',
+            'form'            => 'platformstats',
+            'method'          => 'platformStatsTask',
         ],
     ];
 
@@ -388,6 +394,81 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                     $this->logTask(Text::sprintf('PLG_TASK_PROCLAIM_ANALYTICS_EMAIL_SENT', $reportEmail));
                 } catch (\Exception $mailException) {
                     $this->logTask('Analytics email failed: ' . $mailException->getMessage());
+                }
+            }
+        } catch (\Exception $e) {
+            try {
+                $this->logTask($e->getMessage());
+            } catch (\Exception $exception) {
+                return Status::KNOCKOUT;
+            }
+
+            return Status::KNOCKOUT;
+        }
+
+        return Status::OK;
+    }
+
+    /**
+     * Sync video statistics from external platforms (YouTube, Vimeo, Wistia, etc.).
+     *
+     * Discovers all stats-capable servers and calls their fetchPlatformStats() method.
+     *
+     * @param   ExecuteTaskEvent  $event
+     *
+     * @return  int
+     *
+     * @since   10.1.0
+     */
+    private function platformStatsTask(ExecuteTaskEvent $event): int
+    {
+        $jLanguage = $this->getApplication()->getLanguage();
+        $jLanguage->load('plg_task_proclaim', JPATH_ADMINISTRATOR, 'en-GB', true, true);
+
+        $params     = $event->getArgument('params') ?? new \stdClass();
+        $batchLimit = (int) ($params->batch_limit ?? 50);
+
+        try {
+            $servers = CWMAddon::getStatsCapableServers();
+
+            if (empty($servers)) {
+                $this->logTask(Text::_('PLG_TASK_PROCLAIM_PLATFORMSTATS_NO_SERVERS'));
+
+                return Status::OK;
+            }
+
+            $totalSynced    = 0;
+            $totalRemaining = 0;
+            $errors         = [];
+
+            foreach ($servers as $srv) {
+                try {
+                    $addon  = CWMAddon::getInstance($srv['type']);
+                    $result = $addon->fetchPlatformStats((int) $srv['id'], $batchLimit);
+
+                    if ($result['success']) {
+                        $totalSynced += $result['synced'];
+                    }
+
+                    $totalRemaining += ($result['remaining'] ?? 0);
+
+                    if (!empty($result['errors'])) {
+                        $errors = array_merge($errors, $result['errors']);
+                    }
+                } catch (\Exception $e) {
+                    $errors[] = ($srv['server_name'] ?? $srv['type']) . ': ' . $e->getMessage();
+                }
+            }
+
+            $this->logTask(Text::sprintf('PLG_TASK_PROCLAIM_PLATFORMSTATS_RESULT', $totalSynced, \count($errors)));
+
+            if ($totalRemaining > 0) {
+                $this->logTask(Text::sprintf('PLG_TASK_PROCLAIM_PLATFORMSTATS_REMAINING', $totalRemaining));
+            }
+
+            if (!empty($errors)) {
+                foreach ($errors as $err) {
+                    $this->logTask('  - ' . $err);
                 }
             }
         } catch (\Exception $e) {

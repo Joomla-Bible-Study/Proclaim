@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="params">
+        <fieldset name="platformstats_settings" label="PLG_TASK_PROCLAIM_PLATFORMSTATS_SETTINGS">
+            <field name="note" type="note"
+                   description="PLG_TASK_PROCLAIM_PLATFORMSTATS_NOTE" />
+
+            <field name="batch_limit" type="number"
+                   label="PLG_TASK_PROCLAIM_PLATFORMSTATS_BATCH_LABEL"
+                   description="PLG_TASK_PROCLAIM_PLATFORMSTATS_BATCH_DESC"
+                   default="50"
+                   min="5"
+                   max="500"
+                   step="5" />
+        </fieldset>
+    </fields>
+</form>

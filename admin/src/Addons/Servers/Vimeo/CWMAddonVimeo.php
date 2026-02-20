@@ -185,6 +185,137 @@ class CWMAddonVimeo extends CWMAddon
     }
 
     /**
+     * Vimeo supports platform stats via the Vimeo API.
+     *
+     * @return  bool
+     *
+     * @since   10.1.0
+     */
+    public function supportsStats(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Fetch video statistics from Vimeo API for media linked to this server.
+     * Batches up to 100 video IDs per API call. When $batchLimit > 0, only the
+     * least-recently-synced videos are processed (never-synced first).
+     *
+     * @param   int  $serverId    The server record ID
+     * @param   int  $batchLimit  Max unique videos to sync (0 = unlimited)
+     *
+     * @return  array{success: bool, synced: int, remaining: int, errors: string[]}
+     *
+     * @since   10.1.0
+     */
+    public function fetchPlatformStats(int $serverId, int $batchLimit = 0): array
+    {
+        $accessToken = $this->getServerAccessToken($serverId);
+
+        if (empty($accessToken)) {
+            return ['success' => false, 'synced' => 0, 'remaining' => 0, 'errors' => ['Vimeo: No access token configured']];
+        }
+
+        $totalMedia = static::getMediaVideoCount($serverId);
+        $mediaRows  = static::getMediaVideoIds($serverId, 'filename', $batchLimit, 'vimeo');
+
+        if (empty($mediaRows)) {
+            return ['success' => true, 'synced' => 0, 'remaining' => 0, 'errors' => []];
+        }
+
+        // Extract Vimeo video IDs from embed URLs
+        $videoMap = [];
+
+        foreach ($mediaRows as $row) {
+            $videoId = $this->extractVimeoVideoId($row['video_id']);
+
+            if ($videoId !== null) {
+                $videoMap[$videoId][] = $row['media_id'];
+            }
+        }
+
+        // Apply batch limit to unique videos
+        if ($batchLimit > 0 && \count($videoMap) > $batchLimit) {
+            $videoMap = \array_slice($videoMap, 0, $batchLimit, true);
+        }
+
+        if (empty($videoMap)) {
+            return ['success' => true, 'synced' => 0, 'remaining' => 0, 'errors' => []];
+        }
+
+        $synced  = 0;
+        $errors  = [];
+        $factory = new HttpFactory();
+        $http    = $factory->getHttp();
+        $headers = [
+            'Authorization' => 'Bearer ' . $accessToken,
+            'Accept'        => 'application/vnd.vimeo.*+json;version=3.4',
+        ];
+
+        // Vimeo batch: filter by URIs (up to 100 per call)
+        $chunks = array_chunk(array_keys($videoMap), 100);
+
+        foreach ($chunks as $idBatch) {
+            $uris = implode(',', array_map(fn ($id) => '/videos/' . $id, $idBatch));
+
+            try {
+                $params = http_build_query([
+                    'uris'   => $uris,
+                    'fields' => 'uri,stats',
+                ]);
+
+                $response = $http->get('https://api.vimeo.com/videos?' . $params, $headers);
+
+                if ($response->code !== 200) {
+                    $errors[] = 'Vimeo API error: HTTP ' . $response->code;
+
+                    continue;
+                }
+
+                $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
+
+                foreach ($data['data'] ?? [] as $video) {
+                    $vid = null;
+
+                    if (preg_match('/\/videos\/(\d+)/', $video['uri'] ?? '', $m)) {
+                        $vid = $m[1];
+                    }
+
+                    if ($vid === null || !isset($videoMap[$vid])) {
+                        continue;
+                    }
+
+                    $plays = (int) ($video['stats']['plays'] ?? 0);
+
+                    foreach ($videoMap[$vid] as $mediaId) {
+                        static::upsertPlatformStats(
+                            $mediaId,
+                            $serverId,
+                            'vimeo',
+                            $vid,
+                            [
+                                'view_count' => $plays,
+                                'play_count' => $plays,
+                            ]
+                        );
+                        $synced++;
+                    }
+                }
+            } catch (\Exception $e) {
+                $errors[] = 'Vimeo batch: ' . $e->getMessage();
+            }
+        }
+
+        if ($synced > 0) {
+            static::updateServerSyncTimestamp($serverId);
+        }
+
+        $remaining = max(0, $totalMedia - $synced);
+
+        return ['success' => empty($errors), 'synced' => $synced, 'remaining' => $remaining, 'errors' => $errors];
+    }
+
+    /**
      * Get available AJAX actions for this addon
      *
      * @return  array  List of available action names
