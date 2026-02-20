@@ -336,6 +336,11 @@
             }
         },
         {
+            "name": "com_proclaim.print-report",
+            "type": "style",
+            "uri": "com_proclaim/proclaim-print.min.css"
+        },
+        {
             "name": "com_proclaim.podcast",
             "type": "style",
             "uri": "com_proclaim/podcast.min.css"

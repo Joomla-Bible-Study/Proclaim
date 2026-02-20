@@ -22,6 +22,13 @@ use Joomla\CMS\Session\Session;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmanalytics\HtmlView $this */
 
+// --- Print mode: render clean report and return ---
+if ($this->isPrint) {
+    echo $this->loadTemplate('print');
+
+    return;
+}
+
 $input    = Factory::getApplication()->getInput();
 $presets  = ['7d' => 'JBS_ANA_LAST_7_DAYS', '30d' => 'JBS_ANA_LAST_30_DAYS', '90d' => 'JBS_ANA_LAST_90_DAYS', '1y' => 'JBS_ANA_LAST_YEAR'];
 $baseUrl  = 'index.php?option=com_proclaim&view=cwmanalytics';
@@ -163,9 +170,32 @@ $navParams      = '&preset=' . htmlspecialchars($this->preset, ENT_QUOTES) . '&l
                     <i class="icon-search me-1" aria-hidden="true"></i><?php echo Text::_('JSEARCH_FILTER_SUBMIT'); ?>
                 </button>
 
+                <?php
+                // Build print URL: same view + current params + tmpl=component&print=1
+                // Use false for xhtml param so Route::_ returns raw & (needed for window.open)
+                $printParams = '&preset=' . urlencode($this->preset)
+                    . '&date_start=' . urlencode($this->dateStart)
+                    . '&date_end=' . urlencode($this->dateEnd)
+                    . '&location_id=' . (int) $this->locationId;
+
+                if ($this->drilldown !== '') {
+                    $printParams .= '&drilldown=' . urlencode($this->drilldown);
+                }
+
+                if ($this->drilldownId > 0) {
+                    $printParams .= '&id=' . (int) $this->drilldownId;
+                }
+
+                $printUrl = Route::_($baseUrl . $printParams . '&tmpl=component&print=1', false);
+                ?>
                 <a href="<?php echo htmlspecialchars($this->exportUrl . $token, ENT_QUOTES); ?>"
                    class="btn btn-sm btn-outline-success ms-auto">
                     <i class="icon-download me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_EXPORT_CSV'); ?>
+                </a>
+                <a href="<?php echo htmlspecialchars($printUrl, ENT_QUOTES); ?>"
+                   onclick="window.open(this.href,'printAnalytics','width=900,height=700,scrollbars=yes');return false;"
+                   class="btn btn-sm btn-outline-secondary">
+                    <i class="icon-print me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_PRINT_REPORT'); ?>
                 </a>
             </form>
         </div>
