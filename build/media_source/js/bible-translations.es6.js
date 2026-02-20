@@ -77,7 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
         onlineOnlyDesc: config.dataset.strOnlineOnlyDesc,
         coreTranslation: config.dataset.strCoreTranslation,
         coreCannotRemove: config.dataset.strCoreCannotRemove,
-        providerDisableConfirm: config.dataset.strProviderDisableConfirm,
         providerCleanupDone: config.dataset.strProviderCleanupDone,
     };
 
@@ -157,14 +156,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Provider disable cleanup ---
 
     /**
-     * Count non-installed translations from a given source in the loaded data.
-     */
-    const countNonInstalledBySource = (source) => allTranslations.filter(
-        (t) => t.source === source && parseInt(t.installed, 10) === 0 && parseInt(t.bundled, 10) === 0,
-    ).length;
-
-    /**
      * Clean up non-installed translation entries when a provider is disabled.
+     *
+     * Always fires immediately — never relies on the client-side allTranslations
+     * cache, which may be empty if the Scripture tab hasn't been visited yet.
+     * The server safely returns count=0 when nothing needs removing.
      */
     const cleanupProvider = (source) => {
         fetch(`${baseUrl}cleanupProviderXHR&${token}=1&source=${encodeURIComponent(source)}`)
@@ -172,7 +168,11 @@ document.addEventListener('DOMContentLoaded', () => {
             .then((result) => {
                 if (result.success && result.count > 0) {
                     Joomla.renderMessages({ message: [result.message] });
-                    loadTranslations(true);
+
+                    // Only refresh the list if the Scripture tab has already been initialised
+                    if (scriptureInitDone) {
+                        loadTranslations(true);
+                    }
                 }
             })
             .catch(() => {
@@ -181,7 +181,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /**
-     * Attach provider toggle listeners for disable warnings.
+     * Attach provider toggle listeners — trigger cleanup immediately on disable.
+     *
+     * Does NOT depend on allTranslations being loaded. The user may toggle the
+     * provider radio before ever visiting the Scripture tab, so any client-side
+     * count would be unreliable. The server-side cleanup is idempotent and safe.
      */
     const attachProviderToggle = (fieldName, source) => {
         const radios = document.querySelectorAll(`input[name="${fieldName}"]`);
@@ -193,11 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                const pendingCount = countNonInstalledBySource(source);
-
-                if (pendingCount > 0 && confirm(strings.providerDisableConfirm.replace('%s', pendingCount))) {
-                    cleanupProvider(source);
-                }
+                cleanupProvider(source);
             });
         });
     };

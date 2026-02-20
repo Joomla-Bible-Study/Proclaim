@@ -84,7 +84,7 @@ class CWMAddonVimeo extends CWMAddon
 
         foreach ($patterns as $pattern) {
             if (preg_match($pattern, $url, $matches)) {
-                return '//player.vimeo.com/video/' . $matches[1];
+                return 'https://player.vimeo.com/video/' . $matches[1];
             }
         }
 

@@ -81,7 +81,7 @@ class CWMAddonWistia extends CWMAddon
 
         foreach ($patterns as $pattern) {
             if (preg_match($pattern, $url, $matches)) {
-                return '//fast.wistia.net/embed/iframe/' . $matches[1];
+                return 'https://fast.wistia.net/embed/iframe/' . $matches[1];
             }
         }
 
