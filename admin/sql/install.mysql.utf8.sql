@@ -1010,6 +1010,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_bible_translations` (
     `bundled`      TINYINT(1)       NOT NULL DEFAULT 0 COMMENT '1 if shipped with the component',
     `verse_count`  INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Number of verses stored locally',
     `estimated_size` INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Estimated text size in bytes before download',
+    `data_size`    BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Actual stored size in bytes (cached after download)',
     `copyright`    TEXT COMMENT 'Copyright notice for this translation',
     PRIMARY KEY (`id`),
     UNIQUE KEY `idx_abbreviation` (`abbreviation`),

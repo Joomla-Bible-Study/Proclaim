@@ -2200,38 +2200,14 @@ class CwmadminController extends FormController
 
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
 
-            // Main translations list — no JOIN so this is always fast
+            // data_size is a cached column updated after each download/remove —
+            // no expensive SUM(LENGTH(text)) scan of the verses table needed.
             $query = $db->getQuery(true)
-                ->select($db->quoteName(['t.abbreviation', 't.name', 't.language', 't.installed', 't.verse_count', 't.source', 't.bundled', 't.estimated_size']))
+                ->select($db->quoteName(['t.abbreviation', 't.name', 't.language', 't.installed', 't.verse_count', 't.source', 't.bundled', 't.estimated_size', 't.data_size']))
                 ->from($db->quoteName('#__bsms_bible_translations', 't'))
                 ->order($db->quoteName('t.name') . ' ASC');
             $db->setQuery($query);
             $translations = $db->loadObjectList();
-
-            // Compute actual stored size only for installed translations.
-            // Scanning all verse rows for non-installed translations is expensive
-            // and unnecessary since the JS already falls back to estimated_size for them.
-            $sizeMaps           = [];
-            $installedAbbrs     = array_values(
-                array_map(
-                    static fn ($t) => $t->abbreviation,
-                    array_filter($translations, static fn ($t) => (int) $t->installed === 1)
-                )
-            );
-
-            if (!empty($installedAbbrs)) {
-                $sizeQuery = $db->getQuery(true)
-                    ->select($db->quoteName('v.translation'))
-                    ->select('SUM(LENGTH(' . $db->quoteName('v.text') . ')) AS ' . $db->quoteName('data_size'))
-                    ->from($db->quoteName('#__bsms_bible_verses', 'v'))
-                    ->whereIn($db->quoteName('v.translation'), $installedAbbrs)
-                    ->group($db->quoteName('v.translation'));
-                $db->setQuery($sizeQuery);
-
-                foreach ($db->loadObjectList() as $row) {
-                    $sizeMaps[$row->translation] = (int) $row->data_size;
-                }
-            }
 
             // Build usage counts from studies table (separate query, fail-safe)
             $usageCounts = [];
@@ -2266,12 +2242,11 @@ class CwmadminController extends FormController
                 // bible_version columns may not exist yet — usage counts stay empty
             }
 
-            // Attach data_size and usage counts to each translation row
+            // Sum total installed size from the cached column; attach usage counts
             $totalSize = 0;
 
             foreach ($translations as $t) {
-                $t->data_size    = $sizeMaps[$t->abbreviation] ?? 0;
-                $totalSize += $t->data_size;
+                $totalSize += (int) $t->data_size;
                 $t->usage_count  = $usageCounts[$t->abbreviation] ?? 0;
             }
 

@@ -940,17 +940,32 @@ document.addEventListener('DOMContentLoaded', () => {
         refreshLocalBadge();
         loadTranslations();
     }
-    // Bootstrap 5 fires shown.bs.tab on the button/link that was clicked.
-    // Joomla may use either data-bs-target="#scripture" or href="#scripture".
+
+    // 1. shown.bs.tab — catches user clicks and Bootstrap-fired recalls.
     document.addEventListener('shown.bs.tab', (e) => {
         const target = e.target.dataset.bsTarget || e.target.getAttribute('href');
         if (target === '#scripture') initScriptureTab();
     });
-    // setTimeout(0) lets Bootstrap's hash-recall (recall:true) activate its tab
-    // before we check — otherwise the 'active' class isn't applied yet.
+
+    // 2. setTimeout(0) — catches recalls that fire during DOMContentLoaded
+    //    before our shown.bs.tab listener was registered.
     setTimeout(() => {
         if (!scriptureInitDone && document.getElementById('scripture')?.classList.contains('active')) {
             initScriptureTab();
         }
     }, 0);
+
+    // 3. MutationObserver — belt-and-suspenders for Joomla recalls that bypass
+    //    Bootstrap events (e.g. direct class manipulation after our setTimeout).
+    const scripturePane = document.getElementById('scripture');
+
+    if (scripturePane) {
+        const observer = new MutationObserver(() => {
+            if (!scriptureInitDone && scripturePane.classList.contains('active')) {
+                observer.disconnect();
+                initScriptureTab();
+            }
+        });
+        observer.observe(scripturePane, { attributes: true, attributeFilter: ['class'] });
+    }
 });

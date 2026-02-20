@@ -107,6 +107,7 @@ class BibleImporter
 
         $db         = Factory::getContainer()->get(DatabaseInterface::class);
         $totalCount = 0;
+        $totalSize  = 0;
         $batch      = [];
         $metadata   = [];
 
@@ -159,7 +160,8 @@ class BibleImporter
                         continue;
                     }
 
-                    $batch[] = [
+                    $totalSize += \strlen($verseData['text']);
+                    $batch[]    = [
                         'translation' => $abbreviation,
                         'book'        => $bookNr,
                         'chapter'     => $chapterNumber,
@@ -182,8 +184,8 @@ class BibleImporter
             $totalCount += \count($batch);
         }
 
-        // Update translation record
-        self::updateTranslationRecord($abbreviation, $totalCount, $metadata);
+        // Update translation record (data_size cached here, no expensive SUM query later)
+        self::updateTranslationRecord($abbreviation, $totalCount, $metadata, $totalSize);
 
         return $totalCount;
     }
@@ -208,6 +210,7 @@ class BibleImporter
 
         $db         = Factory::getContainer()->get(DatabaseInterface::class);
         $totalCount = 0;
+        $totalSize  = 0;
         $batch      = [];
 
         // Remove existing verses for this translation
@@ -229,7 +232,8 @@ class BibleImporter
                         continue;
                     }
 
-                    $batch[] = [
+                    $totalSize += \strlen($verseData['text']);
+                    $batch[]    = [
                         'translation' => $abbreviation,
                         'book'        => $bookNr,
                         'chapter'     => $chapterNumber,
@@ -252,12 +256,12 @@ class BibleImporter
             $totalCount += \count($batch);
         }
 
-        // Update translation record
+        // Update translation record (data_size cached here, no expensive SUM query later)
         $metadata = [
             'translation' => $data['translation'] ?? strtoupper($abbreviation),
             'lang'        => $data['lang'] ?? 'en',
         ];
-        self::updateTranslationRecord($abbreviation, $totalCount, $metadata);
+        self::updateTranslationRecord($abbreviation, $totalCount, $metadata, $totalSize);
 
         return $totalCount;
     }
@@ -307,6 +311,7 @@ class BibleImporter
             ->update($db->quoteName('#__bsms_bible_translations'))
             ->set($db->quoteName('installed') . ' = 0')
             ->set($db->quoteName('verse_count') . ' = 0')
+            ->set($db->quoteName('data_size') . ' = 0')
             ->where($db->quoteName('abbreviation') . ' = :abbr')
             ->bind(':abbr', $abbreviation);
         $db->setQuery($query);
@@ -347,6 +352,7 @@ class BibleImporter
             ->update($db->quoteName('#__bsms_bible_translations'))
             ->set($db->quoteName('installed') . ' = 0')
             ->set($db->quoteName('verse_count') . ' = 0')
+            ->set($db->quoteName('data_size') . ' = 0')
             ->where($db->quoteName('installed') . ' = 1')
             ->where($db->quoteName('bundled') . ' = 0');
         $db->setQuery($query);
@@ -574,7 +580,7 @@ class BibleImporter
      *
      * @since  10.1.0
      */
-    private static function updateTranslationRecord(string $abbreviation, int $verseCount, array $metadata): void
+    private static function updateTranslationRecord(string $abbreviation, int $verseCount, array $metadata, int $dataSize = 0): void
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
@@ -596,17 +602,19 @@ class BibleImporter
                 ->update($db->quoteName('#__bsms_bible_translations'))
                 ->set($db->quoteName('installed') . ' = 1')
                 ->set($db->quoteName('verse_count') . ' = :count')
+                ->set($db->quoteName('data_size') . ' = :size')
                 ->set($db->quoteName('name') . ' = :name')
                 ->set($db->quoteName('language') . ' = :lang')
                 ->set($db->quoteName('copyright') . ' = :copy')
                 ->where($db->quoteName('abbreviation') . ' = :abbr')
                 ->bind(':count', $verseCount, ParameterType::INTEGER)
+                ->bind(':size', $dataSize, ParameterType::INTEGER)
                 ->bind(':name', $name)
                 ->bind(':lang', $language)
                 ->bind(':copy', $copyright)
                 ->bind(':abbr', $abbreviation);
         } else {
-            $columns = ['abbreviation', 'name', 'language', 'source', 'installed', 'verse_count', 'copyright'];
+            $columns = ['abbreviation', 'name', 'language', 'source', 'installed', 'verse_count', 'data_size', 'copyright'];
             $query   = $db->getQuery(true)
                 ->insert($db->quoteName('#__bsms_bible_translations'))
                 ->columns($db->quoteName($columns))
@@ -617,6 +625,7 @@ class BibleImporter
                     . $db->quote('getbible') . ', '
                     . '1, '
                     . (int) $verseCount . ', '
+                    . (int) $dataSize . ', '
                     . $db->quote($copyright)
                 );
         }
