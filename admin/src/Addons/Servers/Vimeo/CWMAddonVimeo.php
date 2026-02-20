@@ -333,7 +333,7 @@ class CWMAddonVimeo extends CWMAddon
     {
         $html = '';
 
-        foreach ($media_form->getFieldset('files_settings') as $field) {
+        foreach ($media_form->getFieldset('general') as $field) {
             if ($new && isset($media_form->s_params[$field->fieldname])) {
                 $field->setValue($media_form->s_params[$field->fieldname]);
             }

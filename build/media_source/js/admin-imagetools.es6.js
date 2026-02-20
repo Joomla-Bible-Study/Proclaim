@@ -1409,7 +1409,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadRecoveryCounts();
 
         // Check if a cleared-images log exists and show the download button if so
-        const downloadLogBtn = document.getElementById('btn-download-cleared-log');
+        // downloadLogBtn already declared in outer scope (line ~937)
         if (downloadLogBtn) {
             fetch(`index.php?option=com_proclaim&task=cwmadmin.downloadClearedLogXHR&${token}=1`, { method: 'HEAD' })
                 .then((r) => {

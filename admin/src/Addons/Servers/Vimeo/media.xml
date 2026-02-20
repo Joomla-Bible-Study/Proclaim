@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <media>
     <fields name="params">
-        <fieldset name="general">
+        <fieldset name="general" addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Vimeo\Field">
             <field name="filename"
                    type="text"
                    label="JBS_ADDON_VIMEO_URL"
                    description="JBS_ADDON_VIMEO_URL_DISC"
                    class="inputbox"
                    required="true"/>
+            <field name="vimeo_browse_btn"
+                   type="VimeoBrowseBtn"
+                   class="vimeo-browse-container"
+                   label=""
+                   description=""/>
             <field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
                    description="JBS_MED_INTERNAL_POPUP_DESC"
                    class="form-select-color-state"
