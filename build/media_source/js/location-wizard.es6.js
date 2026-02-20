@@ -20,6 +20,8 @@
     let currentStep = 1;
     /** @type {Object.<string, number[]>} locationId → groupId[] */
     let pendingMapping = {};
+    /** @type {Object.<string, string>} groupId → preset ('full'|'editor'|'none') */
+    let pendingPermissions = {};
 
     // -------------------------------------------------------------------------
     // DOM helpers
@@ -93,7 +95,7 @@
 
         // Lazy-load step content when entering certain steps
         if (step === 4) {
-            loadTeachers();
+            loadPermissions();
         }
         if (step === 5) {
             loadPreview();
@@ -123,68 +125,96 @@
     }
 
     // -------------------------------------------------------------------------
-    // Step 4 — teacher list
+    // Step 4 — admin permissions
     // -------------------------------------------------------------------------
 
-    function loadTeachers() {
-        const container = el('wizard-teachers-container');
+    /**
+     * Preset definitions with their language keys.
+     */
+    const PRESETS = [
+        { value: 'none', labelKey: 'JBS_WIZARD_PRESET_NOCHANGE', descKey: 'JBS_WIZARD_PRESET_NOCHANGE_DESC' },
+        { value: 'full', labelKey: 'JBS_WIZARD_PRESET_FULL', descKey: 'JBS_WIZARD_PRESET_FULL_DESC' },
+        { value: 'editor', labelKey: 'JBS_WIZARD_PRESET_EDITOR', descKey: 'JBS_WIZARD_PRESET_EDITOR_DESC' },
+    ];
+
+    /**
+     * Populate the permissions UI from the current mapping state.
+     * No AJAX needed — group data is already in window.ProcWizard.groups.
+     */
+    function loadPermissions() {
+        const container = el('wizard-permissions-container');
         if (!container) {
             return;
         }
 
         const config = window.ProcWizard || {};
-        const url = `${config.baseUrl}?option=com_proclaim&task=cwmlocationwizard.getStepData&step=4&${config.token}=1`;
+        const mapping = collectMapping();
 
-        fetch(url)
-            .then((r) => r.json())
-            .then((response) => {
-                if (!response.success) {
-                    container.innerHTML = `<div class="alert alert-danger">${response.message}</div>`;
-                    return;
-                }
+        // Collect the union of all mapped group IDs
+        const mappedGroupIds = new Set();
+        Object.values(mapping).forEach((gids) => {
+            gids.forEach((gid) => mappedGroupIds.add(gid));
+        });
 
-                const teachers = response.data.teachers || [];
+        if (mappedGroupIds.size === 0) {
+            container.innerHTML = `<div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                ${txt('JBS_WIZARD_NO_MAPPED_GROUPS')}
+            </div>`;
+            return;
+        }
 
-                if (teachers.length === 0) {
-                    container.innerHTML = `<div class="alert alert-info">${txt('JBS_WIZARD_NO_TEACHERS')}</div>`;
-                    return;
-                }
+        // Build group lookup
+        const groupMap = (config.groups || []).reduce((m, g) => { m[g.id] = g.title; return m; }, {});
 
-                const linked = teachers.filter((t) => t.user_id > 0);
-                const unlinked = teachers.filter((t) => !(t.user_id > 0));
+        let html = '<div class="table-responsive"><table class="table table-sm align-middle">';
+        html += `<thead class="table-dark"><tr>
+                    <th>${txt('JBS_WIZARD_GROUP_NAME')}</th>
+                    <th>${txt('JBS_WIZARD_MAPPED_GROUPS_PERMISSIONS')}</th>
+                 </tr></thead><tbody>`;
 
-                let html = `<p class="mb-2"><strong>${linked.length}</strong> ${txt('JBS_WIZARD_TEACHERS_LINKED')} &nbsp;|&nbsp;
-                             <strong>${unlinked.length}</strong> ${txt('JBS_WIZARD_TEACHERS_UNLINKED')}</p>`;
+        mappedGroupIds.forEach((gid) => {
+            const groupName = groupMap[gid] || `#${gid}`;
+            const saved = pendingPermissions[String(gid)] || 'none';
 
-                html += '<div class="table-responsive"><table class="table table-sm table-striped">';
-                html += `<thead class="table-dark"><tr>
-                            <th>${txt('JBS_WIZARD_TEACHER')}</th>
-                            <th>${txt('JBS_WIZARD_USER_ACCOUNT')}</th>
-                         </tr></thead><tbody>`;
+            html += `<tr>
+                <td><strong>${escHtml(groupName)}</strong></td>
+                <td>
+                    <div class="d-flex flex-wrap gap-2">`;
 
-                teachers.forEach((t) => {
-                    const userCell = t.user_id > 0
-                        ? `<span class="badge bg-success">${t.user_name || t.user_id}</span>`
-                        : `<span class="badge bg-secondary">${txt('JBS_WIZARD_NOT_LINKED')}</span>`;
-                    html += `<tr><td>${escHtml(t.teacher)}</td><td>${userCell}</td></tr>`;
-                });
+            PRESETS.forEach((preset) => {
+                const radioId = `perm_${gid}_${preset.value}`;
+                const checked = (saved === preset.value) ? 'checked' : '';
+                const label = txt(preset.labelKey, preset.value);
+                const desc = txt(preset.descKey, '');
 
-                html += '</tbody></table></div>';
-
-                if (unlinked.length > 0) {
-                    html += `<div class="alert alert-warning mb-0">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
-                        ${txt('JBS_WIZARD_UNLINKED_HINT')}
-                        <a href="${config.baseUrl}?option=com_proclaim&view=cwmteachers" class="alert-link">
-                            ${txt('JBS_WIZARD_MANAGE_TEACHERS')}</a>
-                    </div>`;
-                }
-
-                container.innerHTML = html;
-            })
-            .catch((err) => {
-                container.innerHTML = `<div class="alert alert-danger">${txt('JERROR_AN_ERROR_HAS_OCCURRED')}: ${escHtml(err.message)}</div>`;
+                html += `<div class="form-check form-check-inline" title="${escHtml(desc)}">
+                    <input class="form-check-input wizard-perm-radio"
+                           type="radio" name="perm_${gid}"
+                           id="${radioId}" value="${preset.value}"
+                           data-group="${gid}" ${checked}>
+                    <label class="form-check-label small" for="${radioId}">${escHtml(label)}</label>
+                </div>`;
             });
+
+            html += `</div></td></tr>`;
+        });
+
+        html += '</tbody></table></div>';
+        container.innerHTML = html;
+    }
+
+    /**
+     * Read selected permission presets from the radio buttons.
+     *
+     * @returns {Object.<string, string>} groupId → preset
+     */
+    function collectPermissions() {
+        const result = {};
+        qsa('.wizard-perm-radio:checked').forEach((radio) => {
+            result[String(radio.dataset.group)] = radio.value;
+        });
+        return result;
     }
 
     // -------------------------------------------------------------------------
@@ -198,6 +228,7 @@
         }
 
         pendingMapping = collectMapping();
+        pendingPermissions = collectPermissions();
         const config = window.ProcWizard || {};
         const url = `${config.baseUrl}?option=com_proclaim&task=cwmlocationwizard.getStepData&step=5&${config.token}=1&mapping=${encodeURIComponent(JSON.stringify(pendingMapping))}`;
 
@@ -259,6 +290,31 @@
                     html += '</tbody></table>';
                 }
 
+                // Permissions summary
+                const permEntries = Object.entries(pendingPermissions).filter(([, v]) => v !== 'none');
+                if (permEntries.length > 0) {
+                    const presetLabels = {
+                        full: txt('JBS_WIZARD_PRESET_FULL', 'Full Access'),
+                        editor: txt('JBS_WIZARD_PRESET_EDITOR', 'Content Editor'),
+                    };
+
+                    html += `<h6 class="mt-3">${txt('JBS_WIZARD_MAPPED_GROUPS_PERMISSIONS', 'Permissions')}</h6>
+                             <table class="table table-sm table-bordered">
+                                <thead><tr>
+                                    <th>${txt('JBS_WIZARD_GROUP_NAME')}</th>
+                                    <th>${txt('JBS_WIZARD_MAPPED_GROUPS_PERMISSIONS', 'Permissions')}</th>
+                                </tr></thead><tbody>`;
+
+                    permEntries.forEach(([gid, preset]) => {
+                        html += `<tr>
+                            <td><strong>${escHtml(grps[gid] || '#' + gid)}</strong></td>
+                            <td><span class="badge bg-${preset === 'full' ? 'success' : 'info'}">${escHtml(presetLabels[preset] || preset)}</span></td>
+                        </tr>`;
+                    });
+
+                    html += '</tbody></table>';
+                }
+
                 container.innerHTML = html;
             })
             .catch((err) => {
@@ -278,6 +334,7 @@
         const formData = new FormData();
         formData.append(config.token, '1');
         formData.append('mapping', JSON.stringify(pendingMapping));
+        formData.append('permissions', JSON.stringify(pendingPermissions));
 
         fetch(`${config.baseUrl}?option=com_proclaim&task=cwmlocationwizard.apply`, {
             method: 'POST',
@@ -387,6 +444,10 @@
                 // On step 3, collect mapping before moving forward
                 if (currentStep === 3) {
                     pendingMapping = collectMapping();
+                }
+                // On step 4, collect permissions before moving forward
+                if (currentStep === 4) {
+                    pendingPermissions = collectPermissions();
                 }
                 goToStep(currentStep + 1);
             });

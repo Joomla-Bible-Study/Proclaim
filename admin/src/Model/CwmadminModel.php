@@ -88,10 +88,7 @@ class CwmadminModel extends AdminModel
      */
     public function getForm($data = [], $loadData = true): mixed
     {
-        if (empty($data)) {
-            $this->getItem();
-        }
-
+        // No eager getItem() — loadFormData() handles it and AdminModel caches the result.
         // Get the form.
         $form = $this->loadForm('com_proclaim.admin', 'admin', ['control' => 'jform', 'load_data' => $loadData]);
 

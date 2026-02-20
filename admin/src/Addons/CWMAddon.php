@@ -492,9 +492,16 @@ abstract class CWMAddon
     public static function getStatsCapableServers(): array
     {
         /** @var DatabaseDriver $db */
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $columns = $db->getTableColumns('#__bsms_servers');
+        $select  = [$db->quoteName('id'), $db->quoteName('server_name'), $db->quoteName('type')];
+
+        if (isset($columns['stats_synced_at'])) {
+            $select[] = $db->quoteName('stats_synced_at');
+        }
+
         $query = $db->getQuery(true)
-            ->select([$db->quoteName('id'), $db->quoteName('server_name'), $db->quoteName('type'), $db->quoteName('stats_synced_at')])
+            ->select($select)
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('published') . ' = 1');
         $db->setQuery($query);

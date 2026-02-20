@@ -112,41 +112,6 @@ class CwmlocationwizardModel extends BaseDatabaseModel
     }
 
     /**
-     * Return teachers along with their user-account link status.
-     *
-     * Returns objects with: id, teacher, user_id (may be null / 0), user_name.
-     *
-     * @return  array
-     *
-     * @since   10.1.0
-     */
-    public function getTeachers(): array
-    {
-        $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $columns = $db->getTableColumns('#__bsms_teachers');
-        $hasLink = isset($columns['user_id']);
-
-        $query = $db->getQuery(true)
-            ->select([$db->quoteName('t.id'), $db->quoteName('t.teacher')])
-            ->from($db->quoteName('#__bsms_teachers', 't'))
-            ->where($db->quoteName('t.published') . ' = 1')
-            ->order($db->quoteName('t.teacher') . ' ASC');
-
-        if ($hasLink) {
-            $query->select($db->quoteName('t.user_id'))
-                ->select($db->quoteName('u.name', 'user_name'))
-                ->join('LEFT', $db->quoteName('#__users', 'u') . ' ON ' . $db->quoteName('u.id') . ' = ' . $db->quoteName('t.user_id'));
-        } else {
-            // No user_id column yet — return placeholder
-            $query->select('0 AS user_id')->select('\'\' AS user_name');
-        }
-
-        $db->setQuery($query);
-
-        return $db->loadObjectList() ?: [];
-    }
-
-    /**
      * Return a preview summary of the changes the wizard will apply.
      *
      * Uses the pending mapping from the session (if available), falling
@@ -188,15 +153,17 @@ class CwmlocationwizardModel extends BaseDatabaseModel
      * Apply the wizard configuration.
      *
      * Saves the group-to-location mapping to component params, enables location
-     * filtering, and marks the wizard as complete.
+     * filtering, marks the wizard as complete, and optionally sets component-level
+     * ACL permissions for mapped groups.
      *
-     * @param   array  $mapping  Group-to-location mapping: { locationId: [groupId...] }.
+     * @param   array  $mapping      Group-to-location mapping: { locationId: [groupId...] }.
+     * @param   array  $permissions  Permission presets per group: { groupId: 'full'|'editor'|'none' }.
      *
      * @return  bool  True on success.
      *
      * @since   10.1.0
      */
-    public function applyWizard(array $mapping): bool
+    public function applyWizard(array $mapping, array $permissions = []): bool
     {
         try {
             $db     = Factory::getContainer()->get(DatabaseInterface::class);
@@ -216,6 +183,11 @@ class CwmlocationwizardModel extends BaseDatabaseModel
             $db->setQuery($query);
             $db->execute();
 
+            // Apply component-level ACL permissions for mapped groups
+            if (!empty($permissions)) {
+                $this->applyPermissions($permissions);
+            }
+
             // Reset per-request location cache so new mapping takes effect immediately
             CwmlocationHelper::resetCache();
 
@@ -225,6 +197,75 @@ class CwmlocationwizardModel extends BaseDatabaseModel
 
             return false;
         }
+    }
+
+    /**
+     * Set component-level Joomla ACL permissions for mapped user groups.
+     *
+     * Permissions are set on the com_proclaim asset and cascade to all entity
+     * types (messages, teachers, series, etc.) unless individually overridden.
+     *
+     * @param   array  $permissions  { groupId: 'full'|'editor'|'none', ... }
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function applyPermissions(array $permissions): void
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Load current component asset rules
+        $query = $db->getQuery(true)
+            ->select([$db->quoteName('id'), $db->quoteName('rules')])
+            ->from($db->quoteName('#__assets'))
+            ->where($db->quoteName('name') . ' = ' . $db->quote('com_proclaim'));
+
+        $db->setQuery($query);
+        $asset = $db->loadObject();
+
+        if (!$asset) {
+            return;
+        }
+
+        $rules = json_decode($asset->rules ?? '{}', true) ?: [];
+
+        // Preset definitions — actions and their allowed values
+        $presets = [
+            'full' => [
+                'core.manage'   => 1, 'core.create' => 1, 'core.edit' => 1,
+                'core.edit.own' => 1, 'core.edit.state' => 1, 'core.delete' => 1,
+            ],
+            'editor' => [
+                'core.manage'   => 1, 'core.create' => 1, 'core.edit' => 1,
+                'core.edit.own' => 1,
+            ],
+        ];
+
+        foreach ($permissions as $groupId => $preset) {
+            if ($preset === 'none' || !isset($presets[$preset])) {
+                continue;
+            }
+
+            $groupStr = (string) $groupId;
+
+            foreach ($presets[$preset] as $action => $value) {
+                if (!isset($rules[$action])) {
+                    $rules[$action] = [];
+                }
+
+                $rules[$action][$groupStr] = $value;
+            }
+        }
+
+        // Save updated rules
+        $query = $db->getQuery(true)
+            ->update($db->quoteName('#__assets'))
+            ->set($db->quoteName('rules') . ' = ' . $db->quote(json_encode($rules)))
+            ->where($db->quoteName('id') . ' = ' . (int) $asset->id);
+
+        $db->setQuery($query);
+        $db->execute();
     }
 
     /**

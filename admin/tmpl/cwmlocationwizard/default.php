@@ -302,21 +302,20 @@ $wa->addInlineScript(
         </div>
 
         <!-- ============================================================
-             Step 4: Teacher Review
+             Step 4: Admin Permissions
              ============================================================ -->
         <div class="wizard-step card shadow-sm" data-step="4">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">
-                    <i class="fas fa-chalkboard-teacher me-2"></i>
+                    <i class="fas fa-shield-alt me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_STEP4_TITLE'); ?>
                 </h4>
             </div>
             <div class="card-body">
                 <p><?php echo Text::_('JBS_WIZARD_STEP4_INTRO'); ?></p>
 
-                <div id="wizard-teachers-container">
+                <div id="wizard-permissions-container">
                     <div class="text-center py-4 text-body-secondary">
-                        <div class="spinner-border spinner-border-sm me-2" role="status"></div>
                         <?php echo Text::_('JBS_CMN_LOADING'); ?>
                     </div>
                 </div>

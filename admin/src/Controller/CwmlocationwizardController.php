@@ -111,8 +111,10 @@ class CwmlocationwizardController extends BaseController
             $this->sendJsonResponse(false, Text::_('JERROR_ALERTNOAUTHOR'));
         }
 
-        $rawMapping = $input->post->get('mapping', '{}', 'raw');
-        $mapping    = [];
+        $rawMapping     = $input->post->get('mapping', '{}', 'raw');
+        $rawPermissions = $input->post->get('permissions', '{}', 'raw');
+        $mapping        = [];
+        $permissions    = [];
 
         if (\is_string($rawMapping)) {
             $decoded = json_decode($rawMapping, true);
@@ -122,7 +124,15 @@ class CwmlocationwizardController extends BaseController
             }
         }
 
-        // Sanitise: keys must be int-string location IDs, values must be int arrays
+        if (\is_string($rawPermissions)) {
+            $decoded = json_decode($rawPermissions, true);
+
+            if (\is_array($decoded)) {
+                $permissions = $decoded;
+            }
+        }
+
+        // Sanitise mapping: keys must be int-string location IDs, values must be int arrays
         $sanitised = [];
 
         foreach ($mapping as $locationId => $groupIds) {
@@ -135,10 +145,24 @@ class CwmlocationwizardController extends BaseController
             $sanitised[(string) $locId] = array_map('intval', (array) $groupIds);
         }
 
+        // Sanitise permissions: keys must be int group IDs, values must be valid presets
+        $validPresets         = ['full', 'editor', 'none'];
+        $sanitisedPermissions = [];
+
+        foreach ($permissions as $groupId => $preset) {
+            $gid = (int) $groupId;
+
+            if ($gid <= 0 || !\in_array($preset, $validPresets, true)) {
+                continue;
+            }
+
+            $sanitisedPermissions[$gid] = $preset;
+        }
+
         /** @var \CWM\Component\Proclaim\Administrator\Model\CwmlocationwizardModel $model */
         $model = $this->getModel('Cwmlocationwizard');
 
-        if ($model->applyWizard($sanitised)) {
+        if ($model->applyWizard($sanitised, $sanitisedPermissions)) {
             $this->sendJsonResponse(true, Text::_('JBS_WIZARD_APPLY_SUCCESS'), [
                 'redirect' => 'index.php?option=com_proclaim&view=cwmlocations',
             ]);
@@ -206,10 +230,6 @@ class CwmlocationwizardController extends BaseController
                     'groups'    => $model->getGroups(),
                     'mapping'   => $model->getCurrentMapping(),
                 ];
-                break;
-
-            case 4:
-                $data = ['teachers' => $model->getTeachers()];
                 break;
 
             case 5:
