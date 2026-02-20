@@ -288,21 +288,20 @@ class CWMAddonLocal extends CWMAddon
         $db->setQuery($query);
         $serverParams = $db->loadResult();
 
-        $reg      = new Registry($serverParams ?: '{}');
-        $basePath = $reg->get('path', 'images/biblestudy/media');
-        $basePath = trim($basePath, '/');
+        // Use Proclaim's configured upload path (set in component config → Upload Path field).
+        // The server params Registry has no 'path' key — we always fell through to the hardcoded
+        // default before. Now we read the actual admin-configured value instead.
+        $uploadPath = ComponentHelper::getParams('com_proclaim')->get('uploadpath', '/images/biblestudy/media/');
+        $basePath   = trim($uploadPath, '/');
 
         // Build absolute base path
         $absBase = Path::clean(JPATH_SITE . '/' . $basePath);
 
         if (!is_dir($absBase)) {
             return [
-                'success'     => true,
-                'files'       => [],
-                'folders'     => [],
-                'currentPath' => $basePath,
-                'parentPath'  => null,
-                'basePath'    => $basePath,
+                'success' => false,
+                'error'   => 'Media directory not found: ' . $basePath
+                    . '. Create the directory on the server or update Upload Path in Proclaim → Configuration.',
             ];
         }
 
@@ -534,9 +533,8 @@ class CWMAddonLocal extends CWMAddon
         $db->setQuery($query);
         $serverParams = $db->loadResult();
 
-        $reg      = new Registry($serverParams ?: '{}');
-        $basePath = $reg->get('path', 'images/biblestudy/media');
-        $basePath = trim($basePath, '/');
+        $uploadPath = ComponentHelper::getParams('com_proclaim')->get('uploadpath', '/images/biblestudy/media/');
+        $basePath   = trim($uploadPath, '/');
 
         // Build absolute path for the source file
         $absBase = Path::clean(JPATH_SITE . '/' . $basePath);
