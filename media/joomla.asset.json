@@ -478,23 +478,6 @@
             }
         },
         {
-            "name": "com_proclaim.addon-local-browser",
-            "type": "script",
-            "uri": "com_proclaim/addon-local-browser.min.js",
-            "dependencies": [
-                "core",
-                "bootstrap.modal"
-            ],
-            "attributes": {
-                "type": "module"
-            }
-        },
-        {
-            "name": "com_proclaim.addon-local-browser",
-            "type": "style",
-            "uri": "com_proclaim/addon-local-browser.css"
-        },
-        {
             "name": "com_proclaim.sermon-filters",
             "type": "script",
             "uri": "com_proclaim/sermon-filters.min.js",
