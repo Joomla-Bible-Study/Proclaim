@@ -32,103 +32,118 @@ use Joomla\Registry\Registry;
  */
 class CwmteacherTable extends Table
 {
-    /**
-     * Teacher Name
-     *
-     * @var string|null
-     *
-     * @since 9.0.0
-     */
-    public ?string $teachername = null;
-
-    /** @var string Alias
-     *
-     * @since 9.0.0
-     */
-    public string $alias = '';
-
-    /** @var string Ordering
-     *
-     * @since 9.0.0
-     */
-    public string $ordering = '';
-
-    /**
-     * @var int
-     * @since 9.0.0
-     */
+    /** @var int @since 9.0.0 */
     public int $id = 0;
 
-    /**
-     * Created date
-     *
-     * @var string|null
-     * @since 10.1.0
-     */
-    public ?string $created = null;
+    /** @var string|null @since 9.0.0 */
+    public ?string $teachername = null;
 
-    /**
-     * Created by user ID
-     *
-     * @var int|null
-     * @since 10.1.0
-     */
-    public ?int $created_by = null;
+    /** @var string @since 9.0.0 */
+    public string $alias = '';
 
-    /**
-     * Created by alias
-     *
-     * @var string
-     * @since 10.1.0
-     */
-    public string $created_by_alias = '';
+    /** @var string|null Teacher title/honorific @since 7.0.0 */
+    public ?string $title = null;
 
-    /**
-     * Modified date
-     *
-     * @var string|null
-     * @since 10.1.0
-     */
-    public ?string $modified = null;
+    /** @var string|null @since 7.0.0 */
+    public ?string $phone = null;
 
-    /**
-     * Modified by user ID
-     *
-     * @var int|null
-     * @since 10.1.0
-     */
-    public ?int $modified_by = null;
+    /** @var string|null @since 7.0.0 */
+    public ?string $email = null;
 
-    /**
-     * Teacher thumbnail path
-     *
-     * @var string|null
-     * @since 10.2.0
-     */
+    /** @var string|null @since 7.0.0 */
+    public ?string $website = null;
+
+    /** @var string|null Bio/information text @since 7.0.0 */
+    public ?string $information = null;
+
+    /** @var string|null Legacy image path @since 7.0.0 */
+    public ?string $image = null;
+
+    /** @var string|null Full teacher image path @since 7.0.0 */
+    public ?string $teacher_image = null;
+
+    /** @var string|null Teacher thumbnail path @since 10.2.0 */
     public ?string $teacher_thumbnail = null;
 
-    /**
-     * Social links JSON
-     *
-     * @var string|null
-     * @since 10.1.0
-     */
+    /** @var string|null Short bio @since 7.0.0 */
+    public ?string $short = null;
+
+    /** @var string @since 9.0.0 */
+    public string $ordering = '';
+
+    /** @var int Show in listings @since 7.0.0 */
+    public int $list_show = 1;
+
+    /** @var int @since 7.0.0 */
+    public int $published = 1;
+
+    /** @var int|null FK to #__assets @since 7.0.0 */
+    public ?int $asset_id = null;
+
+    /** @var int Access view level @since 7.0.0 */
+    public int $access = 1;
+
+    /** @var string Language code @since 7.0.0 */
+    public string $language = '';
+
+    /** @var string|null @since 7.0.0 */
+    public ?string $facebooklink = null;
+
+    /** @var string|null @since 7.0.0 */
+    public ?string $twitterlink = null;
+
+    /** @var string|null @since 7.0.0 */
+    public ?string $bloglink = null;
+
+    /** @var string|null @since 7.0.0 */
+    public ?string $link1 = null;
+
+    /** @var string|null @since 7.0.0 */
+    public ?string $linklabel1 = null;
+
+    /** @var string|null @since 7.0.0 */
+    public ?string $link2 = null;
+
+    /** @var string|null @since 7.0.0 */
+    public ?string $linklabel2 = null;
+
+    /** @var string|null @since 7.0.0 */
+    public ?string $link3 = null;
+
+    /** @var string|null @since 7.0.0 */
+    public ?string $linklabel3 = null;
+
+    /** @var int|null Contact ID @since 7.0.0 */
+    public ?int $contact = null;
+
+    /** @var string|null Mailing address @since 7.0.0 */
+    public ?string $address = null;
+
+    /** @var string|null Social links JSON @since 10.1.0 */
     public ?string $social_links = null;
 
-    /**
-     * Checked out user ID
-     *
-     * @var int|null
-     * @since 10.1.0
-     */
+    /** @var int|null Show on landing page @since 7.0.0 */
+    public ?int $landing_show = null;
+
+    /** @var string|null @since 10.1.0 */
+    public ?string $created = null;
+
+    /** @var int|null @since 10.1.0 */
+    public ?int $created_by = null;
+
+    /** @var string @since 10.1.0 */
+    public string $created_by_alias = '';
+
+    /** @var string|null @since 10.1.0 */
+    public ?string $modified = null;
+
+    /** @var int|null @since 10.1.0 */
+    public ?int $modified_by = null;
+
+    /** @var int|null @since 10.1.0 */
     public ?int $checked_out = null;
 
-    /**
-     * Checked out time
-     *
-     * @var string|null
-     * @since 10.1.0
-     */
+    /** @var string|null @since 10.1.0 */
     public ?string $checked_out_time = null;
 
     /**

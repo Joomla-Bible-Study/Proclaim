@@ -740,7 +740,8 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
             ]]);
             $h->migrateRowspanImages();
 
-            $params = json_decode(reset($h->getSavedParams()), true);
+            $saved  = $h->getSavedParams();
+            $params = json_decode(reset($saved), true);
             $this->assertSame($modern, $params['teacherimagecustom'] ?? '', "{$legacy} must become {$modern}");
         }
     }
