@@ -53,14 +53,15 @@
      * Get icon class for a server type
      */
     function getTypeIcon(type) {
-        const typeLower = (type || '').toLowerCase();
-        if (typeLower === 'local') {
-            return 'icon-folder';
-        }
-        if (typeLower === 'youtube') {
-            return 'icon-play';
-        }
-        return 'icon-cloud';
+        const icons = {
+            local:   'fas fa-server',
+            youtube: 'fab fa-youtube',
+            vimeo:   'fab fa-vimeo',
+            wistia:  'fas fa-play-circle',
+            resi:    'fas fa-signal',
+            legacy:  'fas fa-archive',
+        };
+        return icons[(type || '').toLowerCase()] || 'fas fa-cloud';
     }
 
     /**

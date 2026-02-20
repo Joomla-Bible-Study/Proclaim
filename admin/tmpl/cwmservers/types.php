@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Types html
+ * Types html - card-based server type picker
  *
  * @package    Proclaim.Admin
  * @copyright  (C) 2026 CWM Team All rights reserved
@@ -15,10 +16,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Layout\LayoutHelper;
-use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 
 $app = Factory::getApplication();
@@ -31,127 +29,67 @@ if ($app->isClient('site')) {
 
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('core')
-    ->useScript('multiselect')
-    ->useScript('com_proclaim.cwmadmin-types-modal')
     ->addInlineScript(
-        "setType = function(type) {
-		window.parent.Joomla.submitbutton('cwmserver.setType', type);
-		window.parent.Joomla.Modal.getCurrent().close();
-	}"
+        "window.setType = function(type) {
+            window.parent.Joomla.submitbutton('cwmserver.setType', type);
+            window.parent.Joomla.Modal.getCurrent().close();
+        };"
+    )
+    ->addInlineStyle(
+        '.server-type-card:hover, .server-type-card:focus {
+            border-color: var(--bs-primary) !important;
+            box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.15);
+            outline: none;
+        }'
     );
-
-$function  = $app->getInput()->getCmd('function', 'jSelectType');
-$editor    = $app->getInput()->getCmd('editor', '');
-$listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
-$onclick   = $this->escape($function);
-$multilang = Multilanguage::isEnabled();
 
 $this->recordId = $app->getInput()->getInt('recordId');
 
-if (!empty($editor)) {
-    // This view is used also in com_menus. Load the xtd script only if the editor is set!
-    $this->document->addScriptOptions('xtd-types', ['editor' => $editor]);
-    $onclick = "jSelectType";
-}
+// Icon and brand color per server type key (lowercase addon directory name)
+$typeIcons = [
+    'local'   => ['icon' => 'fas fa-server',      'color' => '#555555'],
+    'youtube' => ['icon' => 'fab fa-youtube',      'color' => '#FF0000'],
+    'vimeo'   => ['icon' => 'fab fa-vimeo',        'color' => '#1AB7EA'],
+    'wistia'  => ['icon' => 'fas fa-play-circle',  'color' => '#54BBFF'],
+    'resi'    => ['icon' => 'fas fa-signal',       'color' => '#00AEEF'],
+    'legacy'  => ['icon' => 'fas fa-archive',      'color' => '#888888'],
+];
 ?>
-<div class="container-popup">
-    <form action="<?php
-    echo Route::_(
-        'index.php?option=com_proclaim&view=cwmservers&layout=types&tmpl=component&function=' .
-        $function . '&' . Session::getFormToken() . '=1&editor=' . $editor
-    ); ?>" method="post" name="adminForm"
-          id="adminForm">
-
-        <?php
-        echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
-
-        <?php
-        if (empty($this->types)) : ?>
-            <div class="alert alert-info">
-                <span class="icon-info-circle" aria-hidden="true"></span><span
-                        class="visually-hidden"><?php
-                    echo Text::_('INFO'); ?></span>
-                <?php
-                echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
-            </div>
-        <?php else : ?>
-            <table class="table table-sm">
-                <caption class="visually-hidden">
-                    <?php
-                    echo Text::_('JBS_CMN_MESSAGE_TABLE_CAPTION'); ?>,
-                    <span id="orderedBy"><?php
-                        echo Text::_('JGLOBAL_SORTED_BY'); ?> </span>,
-                    <span id="filteredBy"><?php
-                        echo Text::_('JGLOBAL_FILTERED_BY'); ?></span>
-                </caption>
-                <thead>
-                <tr>
-                    <th scope="col" class="w-1 text-center">
-                        <?php
-                        echo Text::_('JBS_CMN_ICON'); ?>
-                    </th>
-                    <th scope="col" class="title">
-                        <?php
-                        echo HTMLHelper::_('searchtools.sort', 'JBS_CMN_TITLE', 'type.title', $listDirn, $listOrder); ?>
-                    </th>
-                    <th scope="col" class="w-25">
-                        <?php
-                        echo HTMLHelper::_(
-                            'searchtools.sort',
-                            'JBS_CMN_SERIES',
-                            'type.description',
-                            $listDirn,
-                            $listOrder
-                        ); ?>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php
-                foreach ($this->types as $i => $item) : ?>
-                    <tr class="row<?php
-                    echo $i % 2; ?>">
-                        <td class="nowrap small d-none d-md-table-cell">
-                            <img class="float-left" style="padding: 5px;" src="<?php
-                            echo $item->image_url; ?>"
-                                 alt="<?php
-                                 echo $item->title; ?>"
-                        </td>
-                        <th scope="row">
-                            <?php
-                            $attribs = 'data-function="' . $this->escape($onclick) . '"'
-                                . ' data-id="' . $item->name . '"'
-                                . ' data-title="' . $this->escape($item->title) . '"'
-                                . ' data-uri="' . $this->escape($item->name) . '"'
-                                . ' data-language="0"';
-                    ?>
-                            <a class="select-link" href="javascript:void(0)" <?php
-                    echo $attribs; ?>
-                               onclick="setType('<?php
-                       echo base64_encode(
-                           json_encode(['id' => $this->recordId, 'name' => $item->name])
-                       ); ?>')">
-                                <?php
-                           echo $this->escape($item->title); ?>
-                            </a>
-                        </th>
-                        <td class="small d-none d-md-table-cell">
-                            <?php
-                       echo $this->escape($item->description); ?>
-                        </td>
-                    </tr>
-                <?php
-                endforeach; ?>
-                </tbody>
-            </table>
-        <?php
-        endif; ?>
-        <input type="hidden" name="task" value=""/>
-        <input type="hidden" name="boxchecked" value="0"/>
-        <input type="hidden" name="forcedLanguage" value="<?php
-        echo $app->getInput()->get('forcedLanguage', '', 'CMD'); ?>">
-        <?php
-        echo HTMLHelper::_('form.token'); ?>
-    </form>
+<div class="container-fluid p-3">
+    <?php if (empty($this->types)) : ?>
+        <div class="alert alert-info">
+            <span class="icon-info-circle" aria-hidden="true"></span>
+            <?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+        </div>
+    <?php else : ?>
+        <h6 class="text-body-secondary mb-3"><?php echo Text::_('JBS_CMN_SELECT_SERVERTYPE'); ?></h6>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+            <?php foreach ($this->types as $item) :
+                $typeKey  = strtolower($item->name);
+                $iconData = $typeIcons[$typeKey] ?? ['icon' => 'fas fa-plug', 'color' => '#555555'];
+                $encoded  = base64_encode(json_encode(['id' => $this->recordId, 'name' => $item->name]));
+            ?>
+                <div class="col">
+                    <div class="card h-100 border-2 server-type-card"
+                         role="button"
+                         tabindex="0"
+                         style="cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s;"
+                         onclick="window.setType('<?php echo $this->escape($encoded); ?>')"
+                         onkeypress="if(event.key==='Enter'||event.key===' ')window.setType('<?php echo $this->escape($encoded); ?>')">
+                        <div class="card-body text-center py-4">
+                            <div class="mb-3">
+                                <span class="<?php echo $this->escape($iconData['icon']); ?> fa-3x"
+                                      style="color: <?php echo $this->escape($iconData['color']); ?>;"
+                                      aria-hidden="true"></span>
+                            </div>
+                            <h5 class="card-title mb-1"><?php echo $this->escape($item->title); ?></h5>
+                            <p class="card-text text-body-secondary small mb-0"><?php echo $this->escape($item->description); ?></p>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+    <input type="hidden" name="task" value=""/>
+    <?php echo HTMLHelper::_('form.token'); ?>
 </div>
