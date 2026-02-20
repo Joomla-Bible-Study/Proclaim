@@ -58,12 +58,6 @@ test-results/
 /build/.source_cache.json
 media/backup/*.sql
 
-# Languages
-/admin/language/*
-!/admin/language/en-GB
-/site/language/*
-!/site/language/en-GB
-
 # OSX
 ._*
 .Spotlight-V100
