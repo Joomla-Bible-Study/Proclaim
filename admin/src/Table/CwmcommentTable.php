@@ -186,6 +186,29 @@ class CwmcommentTable extends Table
     }
 
     /**
+     * Bind form data to the table, casting typed properties to prevent PHP 8.3 TypeError.
+     *
+     * @param   array|object  $array   Data to bind
+     * @param   array|string  $ignore  Fields to ignore
+     *
+     * @return  bool
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function bind($array, $ignore = ''): bool
+    {
+        if (\is_array($array)) {
+            // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
+            if (isset($array['asset_id'])) {
+                $array['asset_id'] = $array['asset_id'] !== '' ? (int) $array['asset_id'] : null;
+            }
+        }
+
+        return parent::bind($array, $ignore);
+    }
+
+    /**
      * Method to store a row in the database from the Table instance properties.
      * If a primary key value is set, the row with that primary key value will be
      * updated with the instance property values.  If no primary key value is set
