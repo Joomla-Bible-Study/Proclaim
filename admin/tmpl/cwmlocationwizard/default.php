@@ -34,7 +34,7 @@ $scenarioLabel = $scenarioLabels[$this->scenario] ?? $this->scenario;
 
 // Serialize data for JS
 $locationsJson  = json_encode(array_map(static function ($loc) {
-    return ['id' => (int) $loc->id, 'title' => $loc->location];
+    return ['id' => (int) $loc->id, 'title' => $loc->location_text];
 }, $this->locations), JSON_THROW_ON_ERROR);
 
 $groupsJson = json_encode(array_map(static function ($grp) {
@@ -250,7 +250,7 @@ $wa->addInlineScript(
                     <div class="card mb-3">
                         <div class="card-header py-2">
                             <strong><i class="fas fa-map-marker-alt me-2 text-primary"></i>
-                                <?php echo htmlspecialchars($loc->location); ?></strong>
+                                <?php echo htmlspecialchars($loc->location_text); ?></strong>
                         </div>
                         <div class="card-body py-2">
                             <p class="small text-muted mb-2"><?php echo Text::_('JBS_WIZARD_SELECT_GROUPS'); ?></p>

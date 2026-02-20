@@ -60,9 +60,9 @@ class CwmlocationwizardModel extends BaseDatabaseModel
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
-            ->select([$db->quoteName('id'), $db->quoteName('location'), $db->quoteName('published'), $db->quoteName('access')])
+            ->select([$db->quoteName('id'), $db->quoteName('location_text'), $db->quoteName('published'), $db->quoteName('access')])
             ->from($db->quoteName('#__bsms_locations'))
-            ->order($db->quoteName('location') . ' ASC');
+            ->order($db->quoteName('location_text') . ' ASC');
 
         $db->setQuery($query);
 
