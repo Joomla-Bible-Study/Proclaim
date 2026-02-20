@@ -194,6 +194,35 @@ $generated = Text::sprintf('JBS_ANA_REPORT_GENERATED', date('Y-m-d H:i'));
     </table>
     <?php endif; ?>
 
+    <!-- Platform Video Stats -->
+    <?php if (!empty($this->platformStats)) : ?>
+    <h2><?php echo Text::_('JBS_ANA_PLATFORM_STATS'); ?></h2>
+    <table class="report-table">
+        <thead>
+            <tr>
+                <th><?php echo Text::_('JBS_ANA_PLATFORM'); ?></th>
+                <th class="col-number"><?php echo Text::_('JBS_ANA_PLATFORM_VIDEOS_SYNCED'); ?></th>
+                <th class="col-number"><?php echo Text::_('JBS_ANA_PLATFORM_VIEWS'); ?></th>
+                <th class="col-number"><?php echo Text::_('JBS_ANA_PLATFORM_PLAYS'); ?></th>
+                <th class="col-number"><?php echo Text::_('JBS_ANA_PLATFORM_LIKES'); ?></th>
+                <th class="col-number"><?php echo Text::_('JBS_ANA_PLATFORM_LAST_SYNCED'); ?></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($this->platformStats as $row) : ?>
+            <tr>
+                <td><?php echo htmlspecialchars(ucfirst((string) ($row['platform'] ?? '')), ENT_QUOTES); ?></td>
+                <td class="col-number"><?php echo number_format((int) ($row['media_count'] ?? 0)); ?></td>
+                <td class="col-number"><?php echo number_format((int) ($row['total_views'] ?? 0)); ?></td>
+                <td class="col-number"><?php echo number_format((int) ($row['total_plays'] ?? 0)); ?></td>
+                <td class="col-number"><?php echo $row['total_likes'] !== null ? number_format((int) $row['total_likes']) : '—'; ?></td>
+                <td class="col-number"><?php echo $row['last_synced'] ? htmlspecialchars(substr((string) $row['last_synced'], 0, 16), ENT_QUOTES) : '—'; ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php endif; ?>
+
     <!-- Browser & OS (side by side) -->
     <?php if (!empty($this->browserBreakdown) || !empty($this->osBreakdown)) : ?>
     <div class="report-columns">
@@ -385,7 +414,36 @@ $generated = Text::sprintf('JBS_ANA_REPORT_GENERATED', date('Y-m-d H:i'));
     </table>
     <?php endif; ?>
 
-    <?php if (empty($this->studyMedia) && !array_sum($this->studyKpi)) : ?>
+    <!-- Platform Stats for this message -->
+    <?php if (!empty($this->studyPlatformStats)) : ?>
+    <h3><?php echo Text::_('JBS_ANA_PLATFORM_STATS'); ?></h3>
+    <table class="report-table">
+        <thead>
+            <tr>
+                <th><?php echo Text::_('JBS_ANA_PLATFORM'); ?></th>
+                <th><?php echo Text::_('JBS_ANA_SERVER'); ?></th>
+                <th class="col-number"><?php echo Text::_('JBS_ANA_PLATFORM_VIEWS'); ?></th>
+                <th class="col-number"><?php echo Text::_('JBS_ANA_PLATFORM_PLAYS'); ?></th>
+                <th class="col-number"><?php echo Text::_('JBS_ANA_PLATFORM_LIKES'); ?></th>
+                <th class="col-number"><?php echo Text::_('JBS_ANA_PLATFORM_LAST_SYNCED'); ?></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($this->studyPlatformStats as $ps) : ?>
+            <tr>
+                <td><?php echo htmlspecialchars(ucfirst((string) ($ps['platform'] ?? '')), ENT_QUOTES); ?></td>
+                <td><?php echo htmlspecialchars((string) ($ps['server_name'] ?? ''), ENT_QUOTES); ?></td>
+                <td class="col-number"><?php echo number_format((int) ($ps['view_count'] ?? 0)); ?></td>
+                <td class="col-number"><?php echo number_format((int) ($ps['play_count'] ?? 0)); ?></td>
+                <td class="col-number"><?php echo $ps['like_count'] !== null ? number_format((int) $ps['like_count']) : '—'; ?></td>
+                <td class="col-number"><?php echo $ps['synced_at'] ? htmlspecialchars(substr((string) $ps['synced_at'], 0, 16), ENT_QUOTES) : '—'; ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php endif; ?>
+
+    <?php if (empty($this->studyMedia) && empty($this->studyPlatformStats) && !array_sum($this->studyKpi)) : ?>
         <p class="report-empty"><?php echo Text::_('JBS_ANA_REPORT_NO_DATA'); ?></p>
     <?php endif; ?>
 

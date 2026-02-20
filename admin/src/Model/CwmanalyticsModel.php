@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\Database\QueryInterface;
@@ -933,6 +934,119 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 ->where($db->quoteName('m.published') . ' = 1')
                 ->group($db->quoteName('m.id'))
                 ->order($db->quoteName('m.ordering') . ' ASC');
+            $db->setQuery($query);
+
+            return (array) ($db->loadAssocList() ?? []);
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Get all published servers whose addon supports stats retrieval.
+     *
+     * Delegates to the addon base class for auto-discovery.
+     *
+     * @return  array
+     *
+     * @since   10.1.0
+     */
+    public function getStatsCapableServers(): array
+    {
+        try {
+            return CWMAddon::getStatsCapableServers();
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Get platform statistics summary aggregated by platform.
+     *
+     * @param   int  $locationId  Filter by campus; 0 = all.
+     *
+     * @return  array
+     *
+     * @since   10.1.0
+     */
+    public function getPlatformStatsSummary(int $locationId = 0): array
+    {
+        try {
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true)
+                ->select([
+                    $db->quoteName('ps.platform'),
+                    'COUNT(*) AS media_count',
+                    'SUM(' . $db->quoteName('ps.view_count') . ') AS total_views',
+                    'SUM(' . $db->quoteName('ps.play_count') . ') AS total_plays',
+                    'SUM(' . $db->quoteName('ps.like_count') . ') AS total_likes',
+                    'MAX(' . $db->quoteName('ps.synced_at') . ') AS last_synced',
+                ])
+                ->from($db->quoteName('#__bsms_platform_stats', 'ps'));
+
+            if ($locationId > 0) {
+                $query->leftJoin(
+                    $db->quoteName('#__bsms_mediafiles', 'm') .
+                    ' ON ' . $db->quoteName('m.id') . ' = ' . $db->quoteName('ps.media_id')
+                )
+                ->leftJoin(
+                    $db->quoteName('#__bsms_studies', 's') .
+                    ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('m.study_id')
+                )
+                ->where($db->quoteName('s.location_id') . ' = ' . (int) $locationId);
+            }
+
+            $query->group($db->quoteName('ps.platform'))
+                ->order('total_views DESC');
+
+            $db->setQuery($query);
+
+            return (array) ($db->loadAssocList() ?? []);
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Get per-media platform stats for a specific study.
+     *
+     * @param   int  $studyId  The study ID.
+     *
+     * @return  array
+     *
+     * @since   10.1.0
+     */
+    public function getPlatformStatsForStudy(int $studyId): array
+    {
+        try {
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true)
+                ->select([
+                    $db->quoteName('ps.media_id'),
+                    $db->quoteName('ps.platform'),
+                    $db->quoteName('ps.platform_id'),
+                    $db->quoteName('ps.view_count'),
+                    $db->quoteName('ps.play_count'),
+                    $db->quoteName('ps.like_count'),
+                    $db->quoteName('ps.comment_count'),
+                    $db->quoteName('ps.load_count'),
+                    $db->quoteName('ps.hours_watched'),
+                    $db->quoteName('ps.engagement'),
+                    $db->quoteName('ps.synced_at'),
+                    $db->quoteName('sv.server_name'),
+                ])
+                ->from($db->quoteName('#__bsms_platform_stats', 'ps'))
+                ->leftJoin(
+                    $db->quoteName('#__bsms_mediafiles', 'm') .
+                    ' ON ' . $db->quoteName('m.id') . ' = ' . $db->quoteName('ps.media_id')
+                )
+                ->leftJoin(
+                    $db->quoteName('#__bsms_servers', 'sv') .
+                    ' ON ' . $db->quoteName('sv.id') . ' = ' . $db->quoteName('ps.server_id')
+                )
+                ->where($db->quoteName('m.study_id') . ' = ' . (int) $studyId)
+                ->order($db->quoteName('ps.platform') . ' ASC');
+
             $db->setQuery($query);
 
             return (array) ($db->loadAssocList() ?? []);

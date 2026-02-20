@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseDriver;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 
@@ -292,6 +293,7 @@ abstract class CWMAddon
      *
      * This method dispatches to the appropriate handler method based on the action name.
      * Handler methods should be named handle{ActionName}Action (e.g., handleTestApiAction).
+     * The 'fetchStats' action is handled by the base class for all stats-capable addons.
      *
      * @param   string  $action  The action name to handle
      *
@@ -302,6 +304,26 @@ abstract class CWMAddon
      */
     public function handleAjaxAction(string $action): array
     {
+        // Base class handles fetchStats for all stats-capable addons
+        if ($action === 'fetchStats') {
+            if (!$this->supportsStats()) {
+                return [
+                    'success' => false,
+                    'error'   => Text::sprintf('JBS_CMN_ADDON_ACTION_NOT_SUPPORTED', $action, $this->type),
+                ];
+            }
+
+            $app        = Factory::getApplication();
+            $serverId   = $app->getInput()->getInt('server_id', 0);
+            $batchLimit = $app->getInput()->getInt('batch_limit', 50);
+
+            if (!$serverId) {
+                return ['success' => false, 'error' => 'No server ID provided'];
+            }
+
+            return $this->fetchPlatformStats($serverId, $batchLimit);
+        }
+
         $availableActions = $this->getAjaxActions();
 
         if (!\in_array($action, $availableActions, true)) {
@@ -423,6 +445,247 @@ abstract class CWMAddon
                 'error'   => $e->getMessage(),
             ]);
         }
+    }
+
+    /**
+     * Whether this addon supports fetching external platform statistics.
+     * Override in child class and return true to enable stats sync.
+     *
+     * @return  bool
+     *
+     * @since   10.1.0
+     */
+    public function supportsStats(): bool
+    {
+        return false;
+    }
+
+    /**
+     * Fetch platform statistics for media files linked to the given server.
+     * Override in child class to implement platform-specific API calls.
+     *
+     * When $batchLimit > 0, only the N least-recently-synced videos are processed
+     * per invocation. Never-synced videos are prioritised. This prevents API quota
+     * exhaustion on large libraries; the scheduled task gradually covers all videos
+     * over successive runs.
+     *
+     * @param   int  $serverId    The server record ID
+     * @param   int  $batchLimit  Max videos to sync this run (0 = unlimited)
+     *
+     * @return  array{success: bool, synced: int, remaining: int, errors: string[]}
+     *
+     * @since   10.1.0
+     */
+    public function fetchPlatformStats(int $serverId, int $batchLimit = 0): array
+    {
+        return ['success' => true, 'synced' => 0, 'remaining' => 0, 'errors' => []];
+    }
+
+    /**
+     * Get all published servers whose addon supports stats retrieval.
+     * Used by both the manual sync button and the scheduled task.
+     *
+     * @return  array
+     *
+     * @since   10.1.0
+     */
+    public static function getStatsCapableServers(): array
+    {
+        /** @var DatabaseDriver $db */
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select([$db->quoteName('id'), $db->quoteName('server_name'), $db->quoteName('type'), $db->quoteName('stats_synced_at')])
+            ->from($db->quoteName('#__bsms_servers'))
+            ->where($db->quoteName('published') . ' = 1');
+        $db->setQuery($query);
+        $servers = $db->loadAssocList() ?? [];
+
+        return array_values(array_filter($servers, function ($srv) {
+            try {
+                $addon = static::getInstance($srv['type']);
+
+                return $addon->supportsStats();
+            } catch (\RuntimeException) {
+                return false;
+            }
+        }));
+    }
+
+    /**
+     * UPSERT a platform stats row. Used by addon fetchPlatformStats() implementations.
+     *
+     * @param   int     $mediaId     Media file ID
+     * @param   int     $serverId    Server ID
+     * @param   string  $platform    Platform type (youtube, vimeo, wistia)
+     * @param   string  $platformId  Video ID/hash on the platform
+     * @param   array   $stats       Associative array of stat columns to set
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    protected static function upsertPlatformStats(
+        int $mediaId,
+        int $serverId,
+        string $platform,
+        string $platformId,
+        array $stats
+    ): void {
+        /** @var DatabaseDriver $db */
+        $db  = Factory::getContainer()->get('DatabaseDriver');
+        $now = Factory::getDate()->toSql();
+
+        $columns = ['media_id', 'server_id', 'platform', 'platform_id', 'synced_at'];
+        $values  = [
+            (int) $mediaId,
+            (int) $serverId,
+            $db->quote($platform),
+            $db->quote($platformId),
+            $db->quote($now),
+        ];
+
+        $updates = [$db->quoteName('synced_at') . ' = ' . $db->quote($now)];
+
+        $statColumns = [
+            'view_count', 'play_count', 'like_count', 'comment_count',
+            'load_count', 'hours_watched', 'engagement',
+        ];
+
+        foreach ($statColumns as $col) {
+            if (isset($stats[$col])) {
+                $columns[] = $col;
+
+                if ($stats[$col] === null) {
+                    $values[] = 'NULL';
+                } elseif (\is_float($stats[$col])) {
+                    $values[] = $db->quote(number_format($stats[$col], 2, '.', ''));
+                } else {
+                    $values[] = (int) $stats[$col];
+                }
+
+                $updates[] = $db->quoteName($col) . ' = VALUES(' . $db->quoteName($col) . ')';
+            }
+        }
+
+        $sql = 'INSERT INTO ' . $db->quoteName('#__bsms_platform_stats')
+            . ' (' . implode(', ', array_map([$db, 'quoteName'], $columns)) . ')'
+            . ' VALUES (' . implode(', ', $values) . ')'
+            . ' ON DUPLICATE KEY UPDATE ' . implode(', ', $updates);
+
+        $db->setQuery($sql);
+        $db->execute();
+    }
+
+    /**
+     * Update the stats_synced_at timestamp on a server record.
+     *
+     * @param   int  $serverId  The server ID
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    protected static function updateServerSyncTimestamp(int $serverId): void
+    {
+        /** @var DatabaseDriver $db */
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $now   = Factory::getDate()->toSql();
+        $query = $db->getQuery(true)
+            ->update($db->quoteName('#__bsms_servers'))
+            ->set($db->quoteName('stats_synced_at') . ' = ' . $db->quote($now))
+            ->where($db->quoteName('id') . ' = ' . (int) $serverId);
+        $db->setQuery($query);
+        $db->execute();
+    }
+
+    /**
+     * Get media files linked to a server with their video IDs extracted from params.
+     *
+     * When $batchLimit > 0 and $platform is set, results are ordered by sync
+     * priority: never-synced media first, then oldest-synced. This allows
+     * incremental syncing over multiple scheduled task runs without hitting
+     * API quotas.
+     *
+     * @param   int     $serverId    The server record ID
+     * @param   string  $paramKey    The params key holding the video identifier (default: 'filename')
+     * @param   int     $batchLimit  Max rows to return (0 = unlimited)
+     * @param   string  $platform    Platform name for sync-priority ordering (e.g. 'youtube')
+     *
+     * @return  array  Array of [media_id, video_id] pairs
+     *
+     * @since   10.1.0
+     */
+    protected static function getMediaVideoIds(
+        int $serverId,
+        string $paramKey = 'filename',
+        int $batchLimit = 0,
+        string $platform = ''
+    ): array {
+        /** @var DatabaseDriver $db */
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select([$db->quoteName('m.id'), $db->quoteName('m.params')])
+            ->from($db->quoteName('#__bsms_mediafiles', 'm'))
+            ->where($db->quoteName('m.server_id') . ' = ' . (int) $serverId)
+            ->where($db->quoteName('m.published') . ' = 1');
+
+        // When batching, LEFT JOIN platform_stats for sync-priority ordering
+        if ($batchLimit > 0 && $platform !== '') {
+            $query->leftJoin(
+                $db->quoteName('#__bsms_platform_stats', 'ps')
+                . ' ON ' . $db->quoteName('ps.media_id') . ' = ' . $db->quoteName('m.id')
+                . ' AND ' . $db->quoteName('ps.platform') . ' = ' . $db->quote($platform)
+            );
+
+            // Never-synced first (NULL synced_at), then oldest-synced
+            $query->order($db->quoteName('ps.synced_at') . ' IS NULL DESC')
+                ->order($db->quoteName('ps.synced_at') . ' ASC');
+
+            // Fetch extra rows to account for media with invalid/missing video IDs
+            $query->setLimit((int) ceil($batchLimit * 1.5));
+        }
+
+        $db->setQuery($query);
+        $rows = $db->loadAssocList() ?? [];
+
+        $result = [];
+
+        foreach ($rows as $row) {
+            $params  = new Registry($row['params'] ?? '');
+            $videoId = trim((string) $params->get($paramKey, ''));
+
+            if ($videoId !== '') {
+                $result[] = [
+                    'media_id' => (int) $row['id'],
+                    'video_id' => $videoId,
+                ];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Count total published media files linked to a server (for remaining calculation).
+     *
+     * @param   int  $serverId  The server record ID
+     *
+     * @return  int
+     *
+     * @since   10.1.0
+     */
+    protected static function getMediaVideoCount(int $serverId): int
+    {
+        /** @var DatabaseDriver $db */
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('server_id') . ' = ' . (int) $serverId)
+            ->where($db->quoteName('published') . ' = 1');
+        $db->setQuery($query);
+
+        return (int) $db->loadResult();
     }
 
     /**

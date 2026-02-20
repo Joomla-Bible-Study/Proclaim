@@ -174,6 +174,122 @@ class CWMAddonWistia extends CWMAddon
     }
 
     /**
+     * Wistia supports platform stats via the Wistia Stats API.
+     *
+     * @return  bool
+     *
+     * @since   10.1.0
+     */
+    public function supportsStats(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Fetch video statistics from Wistia Stats API for media linked to this server.
+     * Per-video endpoint (no batch); rate-limited to ~600/min.
+     * When $batchLimit > 0, only the least-recently-synced videos are processed.
+     *
+     * @param   int  $serverId    The server record ID
+     * @param   int  $batchLimit  Max unique videos to sync (0 = unlimited)
+     *
+     * @return  array{success: bool, synced: int, remaining: int, errors: string[]}
+     *
+     * @since   10.1.0
+     */
+    public function fetchPlatformStats(int $serverId, int $batchLimit = 0): array
+    {
+        $apiToken = $this->getServerApiToken($serverId);
+
+        if (empty($apiToken)) {
+            return ['success' => false, 'synced' => 0, 'remaining' => 0, 'errors' => ['Wistia: No API token configured']];
+        }
+
+        $totalMedia = static::getMediaVideoCount($serverId);
+        $mediaRows  = static::getMediaVideoIds($serverId, 'filename', $batchLimit, 'wistia');
+
+        if (empty($mediaRows)) {
+            return ['success' => true, 'synced' => 0, 'remaining' => 0, 'errors' => []];
+        }
+
+        // Extract Wistia media hashes from embed URLs
+        $videoMap = [];
+
+        foreach ($mediaRows as $row) {
+            $hash = $this->extractWistiaMediaHash($row['video_id']);
+
+            if ($hash !== null) {
+                $videoMap[$hash][] = $row['media_id'];
+            }
+        }
+
+        // Apply batch limit to unique videos
+        if ($batchLimit > 0 && \count($videoMap) > $batchLimit) {
+            $videoMap = \array_slice($videoMap, 0, $batchLimit, true);
+        }
+
+        if (empty($videoMap)) {
+            return ['success' => true, 'synced' => 0, 'remaining' => 0, 'errors' => []];
+        }
+
+        $synced  = 0;
+        $errors  = [];
+        $factory = new HttpFactory();
+        $http    = $factory->getHttp();
+        $headers = [
+            'Authorization' => 'Bearer ' . $apiToken,
+        ];
+
+        foreach ($videoMap as $hash => $mediaIds) {
+            try {
+                $response = $http->get(
+                    'https://api.wistia.com/v1/medias/' . rawurlencode($hash) . '/stats.json',
+                    $headers
+                );
+
+                if ($response->code !== 200) {
+                    $errors[] = 'Wistia stats for ' . $hash . ': HTTP ' . $response->code;
+
+                    continue;
+                }
+
+                $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
+
+                foreach ($mediaIds as $mediaId) {
+                    static::upsertPlatformStats(
+                        $mediaId,
+                        $serverId,
+                        'wistia',
+                        $hash,
+                        [
+                            'play_count'    => (int) ($data['play_count'] ?? 0),
+                            'load_count'    => (int) ($data['load_count'] ?? 0),
+                            'hours_watched' => (float) ($data['hours_watched'] ?? 0.0),
+                            'engagement'    => isset($data['load_count']) && $data['load_count'] > 0
+                                ? round(($data['play_count'] ?? 0) / $data['load_count'] * 100, 2)
+                                : null,
+                        ]
+                    );
+                    $synced++;
+                }
+
+                // Rate limit: ~100ms between calls (stays well within 600/min)
+                usleep(100000);
+            } catch (\Exception $e) {
+                $errors[] = 'Wistia ' . $hash . ': ' . $e->getMessage();
+            }
+        }
+
+        if ($synced > 0) {
+            static::updateServerSyncTimestamp($serverId);
+        }
+
+        $remaining = max(0, $totalMedia - $synced);
+
+        return ['success' => empty($errors), 'synced' => $synced, 'remaining' => $remaining, 'errors' => $errors];
+    }
+
+    /**
      * Get available AJAX actions for this addon
      *
      * @return  array  List of available action names

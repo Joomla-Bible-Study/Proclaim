@@ -104,6 +104,16 @@ class HtmlView extends BaseHtmlView
     /** @var array<int, array<string, mixed>> @since 10.1.0 */
     public array $mediaTypeBreakdown = [];
 
+    // --- Platform stats ---
+    /** @var array<int, array<string, mixed>> Summary by platform @since 10.1.0 */
+    public array $platformStats = [];
+
+    /** @var array<int, array<string, mixed>> Stats-capable servers for sync button @since 10.1.0 */
+    public array $videoServers = [];
+
+    /** @var array<int, array<string, mixed>> Per-media platform stats for message drill-down @since 10.1.0 */
+    public array $studyPlatformStats = [];
+
     // --- Shared ---
     /** @var array<int, array<string, mixed>> @since 10.1.0 */
     public array $locations = [];
@@ -211,6 +221,10 @@ class HtmlView extends BaseHtmlView
         $this->legacyKpi        = $model->getLegacyKpiTotals($l);
         $this->recordTotals     = $model->getRecordTotals($l);
 
+        // --- Platform stats (always load for overview + sync button) ---
+        $this->videoServers  = $model->getStatsCapableServers();
+        $this->platformStats = $model->getPlatformStatsSummary($l);
+
         // --- Load data for the active drill-down level ---
         if ($this->drilldown === 'series' && $this->drilldownId > 0) {
             // Series detail: messages inside one series
@@ -221,10 +235,11 @@ class HtmlView extends BaseHtmlView
             $this->seriesList = $model->getSeriesList($s, $e, $l);
         } elseif ($this->drilldown === 'message' && $this->drilldownId > 0) {
             // Message detail
-            $this->studyInfo       = $model->getStudyInfo($this->drilldownId);
-            $this->studyKpi        = $model->getStudyKpi($this->drilldownId, $s, $e);
-            $this->studyTimeSeries = $model->getStudyTimeSeries($this->drilldownId, $s, $e);
-            $this->studyMedia      = $model->getStudyMediaFiles($this->drilldownId, $s, $e);
+            $this->studyInfo          = $model->getStudyInfo($this->drilldownId);
+            $this->studyKpi           = $model->getStudyKpi($this->drilldownId, $s, $e);
+            $this->studyTimeSeries    = $model->getStudyTimeSeries($this->drilldownId, $s, $e);
+            $this->studyMedia         = $model->getStudyMediaFiles($this->drilldownId, $s, $e);
+            $this->studyPlatformStats = $model->getPlatformStatsForStudy($this->drilldownId);
         } elseif ($this->drilldown === 'media') {
             // Media type breakdown
             $this->mediaTypeBreakdown = $model->getMediaTypeBreakdown($s, $e, $l);
