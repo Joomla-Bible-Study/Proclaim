@@ -16,14 +16,13 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
 
 /**
  * Helper for auto-loading component language strings into JavaScript.
  *
- * Parses the component's .ini language file once and registers all keys
- * via Text::script() so they are available as Joomla.Text._('KEY') in JS.
- * Also caches parsed keys for the request lifetime so multiple calls are cheap.
+ * Parses the component's .ini language file once and bulk-registers all keys
+ * into the document's joomla.jtext script options so they are available as
+ * Joomla.Text._('KEY') in JS. Caches parsed keys for the request lifetime.
  *
  * Usage (in any template):
  *   CwmlangHelper::registerAllForJs();
@@ -36,21 +35,36 @@ class CwmlangHelper
     private static ?array $cachedKeys = null;
 
     /**
-     * Register all component language string keys via Text::script() so that
-     * every JBS_* key is available in JavaScript as Joomla.Text._('KEY').
+     * Bulk-register all component language keys so that every JBS_* key is
+     * available in JavaScript as Joomla.Text._('KEY').
      *
-     * Looks for the language file in the standard Joomla install paths and the
-     * component's own language directory (dev symlink support). Falls back to
-     * en-GB if the current language file is not found.
+     * Uses a single addScriptOptions() call instead of one Text::script() per
+     * key. Text::script() calls deprecated Factory::getDocument() and
+     * Factory::getLanguage() on every invocation; with ~2400 keys that produces
+     * ~14 000 deprecation notices and ~150 MB of debug-plugin memory overhead.
      *
      * @return void
      * @since  10.1.0
      */
     public static function registerAllForJs(): void
     {
+        $app  = Factory::getApplication();
+        $lang = $app->getLanguage();
+        $doc  = $app->getDocument();
+
+        // Ensure the Joomla.Text JS class is loaded (WAM dependency, non-deprecated).
+        $doc->getWebAssetManager()->useScript('core');
+
+        // Merge all component keys into the existing joomla.jtext script options in
+        // one pass. Text::script() would call deprecated Factory::getDocument() and
+        // Factory::getLanguage() once per key (~2400 calls = ~14 000 deprecation notices).
+        $existing = $doc->getScriptOptions('joomla.jtext') ?: [];
+
         foreach (self::getAllKeys() as $key) {
-            Text::script($key);
+            $existing[strtoupper($key)] = $lang->_($key);
         }
+
+        $doc->addScriptOptions('joomla.jtext', $existing, false);
     }
 
     /**

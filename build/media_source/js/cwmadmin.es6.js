@@ -118,14 +118,13 @@
                 this.loadPopupStats();
             };
 
-            document.addEventListener('shown.bs.tab', (e) => {
-                const target = e.target.dataset.bsTarget || e.target.getAttribute('href');
-                if (target === '#playersettings') load();
+            document.addEventListener('joomla.tab.shown', (e) => {
+                if (e.target.getAttribute('aria-controls') === 'playersettings') load();
             });
 
-            // setTimeout(0) lets Bootstrap's hash-recall apply 'active' before we check
+            // DOMContentLoaded fires after joomla-tab recall; check active attribute (not CSS class)
             setTimeout(() => {
-                if (!loaded && document.getElementById('playersettings')?.classList.contains('active')) {
+                if (!loaded && document.getElementById('playersettings')?.hasAttribute('active')) {
                     load();
                 }
             }, 0);

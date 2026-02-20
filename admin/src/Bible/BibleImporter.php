@@ -60,6 +60,14 @@ class BibleImporter
     private const HTTP_TIMEOUT = 120;
 
     /**
+     * Cached result of whether the data_size column exists.
+     *
+     * @var  bool|null
+     * @since  10.1.0
+     */
+    private static ?bool $hasDataSize = null;
+
+    /**
      * Download and import a translation from GetBible.net API.
      *
      * Fetches the book list, then downloads each book and inserts verses.
@@ -311,9 +319,13 @@ class BibleImporter
             ->update($db->quoteName('#__bsms_bible_translations'))
             ->set($db->quoteName('installed') . ' = 0')
             ->set($db->quoteName('verse_count') . ' = 0')
-            ->set($db->quoteName('data_size') . ' = 0')
             ->where($db->quoteName('abbreviation') . ' = :abbr')
             ->bind(':abbr', $abbreviation);
+
+        if (self::hasDataSizeColumn()) {
+            $query->set($db->quoteName('data_size') . ' = 0');
+        }
+
         $db->setQuery($query);
         $db->execute();
     }
@@ -352,9 +364,12 @@ class BibleImporter
             ->update($db->quoteName('#__bsms_bible_translations'))
             ->set($db->quoteName('installed') . ' = 0')
             ->set($db->quoteName('verse_count') . ' = 0')
-            ->set($db->quoteName('data_size') . ' = 0')
             ->where($db->quoteName('installed') . ' = 1')
             ->where($db->quoteName('bundled') . ' = 0');
+
+        if (self::hasDataSizeColumn()) {
+            $query->set($db->quoteName('data_size') . ' = 0');
+        }
         $db->setQuery($query);
         $db->execute();
 
@@ -570,11 +585,39 @@ class BibleImporter
     }
 
     /**
+     * Check whether the data_size column exists on the translations table.
+     *
+     * The column was added in 10.1.0 and may not exist on databases that
+     * haven't run the migration yet.  Result is cached for the request.
+     *
+     * @return  bool
+     *
+     * @since  10.1.0
+     */
+    private static function hasDataSizeColumn(): bool
+    {
+        if (self::$hasDataSize !== null) {
+            return self::$hasDataSize;
+        }
+
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
+        $rows = $db->setQuery(
+            'SHOW COLUMNS FROM ' . $db->quoteName('#__bsms_bible_translations')
+            . ' LIKE ' . $db->quote('data_size')
+        )->loadObjectList();
+
+        self::$hasDataSize = \count($rows) > 0;
+
+        return self::$hasDataSize;
+    }
+
+    /**
      * Update or create the translation record in #__bsms_bible_translations.
      *
      * @param   string  $abbreviation  Translation abbreviation
      * @param   int     $verseCount    Number of verses imported
      * @param   array   $metadata      Metadata array with 'translation' and 'lang' keys
+     * @param   int     $dataSize      Total stored text size in bytes
      *
      * @return  void
      *
@@ -597,37 +640,46 @@ class BibleImporter
         $db->setQuery($query);
         $exists = (int) $db->loadResult() > 0;
 
+        $withSize = self::hasDataSizeColumn();
+
         if ($exists) {
             $query = $db->getQuery(true)
                 ->update($db->quoteName('#__bsms_bible_translations'))
                 ->set($db->quoteName('installed') . ' = 1')
                 ->set($db->quoteName('verse_count') . ' = :count')
-                ->set($db->quoteName('data_size') . ' = :size')
                 ->set($db->quoteName('name') . ' = :name')
                 ->set($db->quoteName('language') . ' = :lang')
                 ->set($db->quoteName('copyright') . ' = :copy')
                 ->where($db->quoteName('abbreviation') . ' = :abbr')
                 ->bind(':count', $verseCount, ParameterType::INTEGER)
-                ->bind(':size', $dataSize, ParameterType::INTEGER)
                 ->bind(':name', $name)
                 ->bind(':lang', $language)
                 ->bind(':copy', $copyright)
                 ->bind(':abbr', $abbreviation);
+
+            if ($withSize) {
+                $query->set($db->quoteName('data_size') . ' = :size')
+                    ->bind(':size', $dataSize, ParameterType::INTEGER);
+            }
         } else {
-            $columns = ['abbreviation', 'name', 'language', 'source', 'installed', 'verse_count', 'data_size', 'copyright'];
-            $query   = $db->getQuery(true)
+            $columns = ['abbreviation', 'name', 'language', 'source', 'installed', 'verse_count', 'copyright'];
+            $values  = $db->quote($abbreviation) . ', '
+                . $db->quote($name) . ', '
+                . $db->quote($language) . ', '
+                . $db->quote('getbible') . ', '
+                . '1, '
+                . (int) $verseCount . ', '
+                . $db->quote($copyright);
+
+            if ($withSize) {
+                $columns[] = 'data_size';
+                $values   .= ', ' . (int) $dataSize;
+            }
+
+            $query = $db->getQuery(true)
                 ->insert($db->quoteName('#__bsms_bible_translations'))
                 ->columns($db->quoteName($columns))
-                ->values(
-                    $db->quote($abbreviation) . ', '
-                    . $db->quote($name) . ', '
-                    . $db->quote($language) . ', '
-                    . $db->quote('getbible') . ', '
-                    . '1, '
-                    . (int) $verseCount . ', '
-                    . (int) $dataSize . ', '
-                    . $db->quote($copyright)
-                );
+                ->values($values);
         }
 
         $db->setQuery($query);

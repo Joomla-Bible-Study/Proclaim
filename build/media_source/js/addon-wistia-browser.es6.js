@@ -1,22 +1,22 @@
 /**
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
- * @description Vimeo Video Browser for Proclaim Media Files
+ * @description Wistia Video Browser for Proclaim Media Files
  */
 (() => {
     'use strict';
 
     window.Proclaim = window.Proclaim || {};
 
-    window.Proclaim.VimeoBrowser = {
+    window.Proclaim.WistiaBrowser = {
         modal: null,
         serverId: null,
         currentPage: 1,
         totalPages: 1,
-        searchQuery: '',
-        selectedFolder: '',
+        searchName: '',
+        selectedProject: 0,
         activeTab: 'browse',
-        currentLookupId: null,
+        currentLookupHash: null,
         currentLookupUrl: null,
 
         init() {
@@ -24,81 +24,81 @@
         },
 
         createModal() {
-            if (document.getElementById('vimeoBrowserModal')) {
+            if (document.getElementById('wistiaBrowserModal')) {
                 return;
             }
 
-            const modalHtml = '<div class="modal fade" id="vimeoBrowserModal" tabindex="-1" aria-labelledby="vimeoBrowserModalLabel">'
+            const modalHtml = '<div class="modal fade" id="wistiaBrowserModal" tabindex="-1" aria-labelledby="wistiaBrowserModalLabel">'
                 + '<div class="modal-dialog modal-xl modal-dialog-scrollable">'
                 + '<div class="modal-content">'
                 + '<div class="modal-header">'
-                + '<h5 class="modal-title" id="vimeoBrowserModalLabel"><span class="icon-video" aria-hidden="true"></span> Browse Vimeo Videos</h5>'
+                + '<h5 class="modal-title" id="wistiaBrowserModalLabel"><span class="icon-video" aria-hidden="true"></span> Browse Wistia Videos</h5>'
                 + '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>'
                 + '</div>'
                 + '<div class="modal-body">'
                 // Bootstrap tabs nav
-                + '<ul class="nav nav-tabs mb-3" id="vimeoBrowserTabs" role="tablist">'
+                + '<ul class="nav nav-tabs mb-3" id="wistiaBrowserTabs" role="tablist">'
                 + '<li class="nav-item" role="presentation">'
-                + '<button class="nav-link active" id="vimeoBrowseTab" data-bs-toggle="tab" data-bs-target="#vimeoBrowsePane" type="button" role="tab" aria-controls="vimeoBrowsePane" aria-selected="true">Browse My Videos</button>'
+                + '<button class="nav-link active" id="wistiaBrowseTab" data-bs-toggle="tab" data-bs-target="#wistiaBrowsePane" type="button" role="tab" aria-controls="wistiaBrowsePane" aria-selected="true">Browse My Videos</button>'
                 + '</li>'
                 + '<li class="nav-item" role="presentation">'
-                + '<button class="nav-link" id="vimeoLookupTab" data-bs-toggle="tab" data-bs-target="#vimeoLookupPane" type="button" role="tab" aria-controls="vimeoLookupPane" aria-selected="false">Lookup by URL</button>'
+                + '<button class="nav-link" id="wistiaLookupTab" data-bs-toggle="tab" data-bs-target="#wistiaLookupPane" type="button" role="tab" aria-controls="wistiaLookupPane" aria-selected="false">Lookup by URL</button>'
                 + '</li>'
                 + '</ul>'
                 // Tab panes
-                + '<div class="tab-content" id="vimeoBrowserTabContent">'
+                + '<div class="tab-content" id="wistiaBrowserTabContent">'
                 // Browse tab
-                + '<div class="tab-pane fade show active" id="vimeoBrowsePane" role="tabpanel" aria-labelledby="vimeoBrowseTab">'
-                + '<div class="vimeo-filters-container mb-3">'
+                + '<div class="tab-pane fade show active" id="wistiaBrowsePane" role="tabpanel" aria-labelledby="wistiaBrowseTab">'
+                + '<div class="wistia-filters-container mb-3">'
                 + '<div class="row g-2">'
                 + '<div class="col-md-4">'
-                + '<select id="vimeoFolderSelect" class="form-select"><option value="">All Videos</option></select>'
+                + '<select id="wistiaProjectSelect" class="form-select"><option value="0">All Projects</option></select>'
                 + '</div>'
                 + '<div class="col-md-5">'
                 + '<div class="input-group">'
-                + '<input type="text" id="vimeoSearchInput" class="form-control" placeholder="Search videos..." aria-label="Search videos">'
-                + '<button class="btn btn-outline-secondary" type="button" id="vimeoSearchBtn"><span class="icon-search" aria-hidden="true"></span></button>'
+                + '<input type="text" id="wistiaSearchInput" class="form-control" placeholder="Search by name..." aria-label="Search videos">'
+                + '<button class="btn btn-outline-secondary" type="button" id="wistiaSearchBtn"><span class="icon-search" aria-hidden="true"></span></button>'
                 + '</div>'
                 + '</div>'
                 + '<div class="col-md-3">'
-                + '<button class="btn btn-outline-secondary w-100" type="button" id="vimeoResetBtn"><span class="icon-refresh" aria-hidden="true"></span> Reset</button>'
+                + '<button class="btn btn-outline-secondary w-100" type="button" id="wistiaResetBtn"><span class="icon-refresh" aria-hidden="true"></span> Reset</button>'
                 + '</div>'
                 + '</div>'
                 + '</div>'
-                + '<div id="vimeoNoToken" class="alert alert-warning d-none">'
-                + 'No Vimeo access token configured. Please add one in the server settings, or use the <strong>Lookup by URL</strong> tab to paste a URL directly.'
+                + '<div id="wistiaNoToken" class="alert alert-warning d-none">'
+                + 'No Wistia API token configured. Please add one in the server settings, or use the <strong>Lookup by URL</strong> tab to paste a URL directly.'
                 + '</div>'
-                + '<div id="vimeoBrowseError" class="alert alert-danger d-none"></div>'
-                + '<div id="vimeoBrowseLoading" class="text-center py-4 d-none">'
+                + '<div id="wistiaBrowseError" class="alert alert-danger d-none"></div>'
+                + '<div id="wistiaBrowseLoading" class="text-center py-4 d-none">'
                 + '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>'
                 + '<p class="mt-2">Loading videos...</p>'
                 + '</div>'
-                + '<div id="vimeoNoResults" class="alert alert-info d-none">No videos found.</div>'
-                + '<div id="vimeoVideoGrid" class="row row-cols-1 row-cols-md-3 g-3"></div>'
+                + '<div id="wistiaNoResults" class="alert alert-info d-none">No videos found.</div>'
+                + '<div id="wistiaVideoGrid" class="row row-cols-1 row-cols-md-3 g-3"></div>'
                 + '</div>'
                 // Lookup tab
-                + '<div class="tab-pane fade" id="vimeoLookupPane" role="tabpanel" aria-labelledby="vimeoLookupTab">'
-                + '<p class="text-muted small">Paste a Vimeo URL or video ID to look up the video details and auto-fill the URL field.</p>'
+                + '<div class="tab-pane fade" id="wistiaLookupPane" role="tabpanel" aria-labelledby="wistiaLookupTab">'
+                + '<p class="text-muted small">Paste a Wistia URL or media hash to look up the video details and auto-fill the URL field.</p>'
                 + '<div class="input-group mb-3">'
-                + '<input type="text" id="vimeoLookupInput" class="form-control" placeholder="https://vimeo.com/123456789 or video ID" aria-label="Vimeo URL or ID">'
-                + '<button class="btn btn-primary" type="button" id="vimeoLookupBtn"><span class="icon-search" aria-hidden="true"></span> Look Up</button>'
+                + '<input type="text" id="wistiaLookupInput" class="form-control" placeholder="https://home.wistia.com/medias/abc123xyz or media hash" aria-label="Wistia URL or hash">'
+                + '<button class="btn btn-primary" type="button" id="wistiaLookupBtn"><span class="icon-search" aria-hidden="true"></span> Look Up</button>'
                 + '</div>'
-                + '<div id="vimeoLookupLoading" class="text-center py-3 d-none">'
+                + '<div id="wistiaLookupLoading" class="text-center py-3 d-none">'
                 + '<div class="spinner-border text-primary spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>'
                 + ' Fetching video details...'
                 + '</div>'
-                + '<div id="vimeoLookupError" class="alert alert-danger d-none"></div>'
-                + '<div id="vimeoLookupResult" class="card d-none">'
+                + '<div id="wistiaLookupError" class="alert alert-danger d-none"></div>'
+                + '<div id="wistiaLookupResult" class="card d-none">'
                 + '<div class="row g-0">'
                 + '<div class="col-md-4">'
-                + '<img id="vimeoResultThumbnail" src="" class="img-fluid rounded-start" alt="Video thumbnail">'
+                + '<img id="wistiaResultThumbnail" src="" class="img-fluid rounded-start" alt="Video thumbnail">'
                 + '</div>'
                 + '<div class="col-md-8">'
                 + '<div class="card-body">'
-                + '<h6 class="card-title" id="vimeoResultTitle"></h6>'
-                + '<p class="card-text small text-muted" id="vimeoResultAuthor"></p>'
-                + '<p class="card-text small text-muted" id="vimeoResultDuration"></p>'
-                + '<button type="button" class="btn btn-primary" id="vimeoUseBtn"><span class="icon-checkmark" aria-hidden="true"></span> Use This Video</button>'
+                + '<h6 class="card-title" id="wistiaResultTitle"></h6>'
+                + '<p class="card-text small text-muted" id="wistiaResultAuthor"></p>'
+                + '<p class="card-text small text-muted" id="wistiaResultDuration"></p>'
+                + '<button type="button" class="btn btn-primary" id="wistiaUseBtn"><span class="icon-checkmark" aria-hidden="true"></span> Use This Video</button>'
                 + '</div>'
                 + '</div>'
                 + '</div>'
@@ -108,10 +108,10 @@
                 + '</div>'
                 // Footer with pagination
                 + '<div class="modal-footer">'
-                + '<div id="vimeoPaginationBar" class="me-auto d-flex align-items-center gap-2 d-none">'
-                + '<button type="button" class="btn btn-secondary" id="vimeoPrevBtn" disabled><span class="icon-arrow-left" aria-hidden="true"></span> Previous</button>'
-                + '<span id="vimeoPaginationInfo" class="text-muted small"></span>'
-                + '<button type="button" class="btn btn-secondary" id="vimeoNextBtn" disabled>Next <span class="icon-arrow-right" aria-hidden="true"></span></button>'
+                + '<div id="wistiaPaginationBar" class="me-auto d-flex align-items-center gap-2 d-none">'
+                + '<button type="button" class="btn btn-secondary" id="wistiaPrevBtn" disabled><span class="icon-arrow-left" aria-hidden="true"></span> Previous</button>'
+                + '<span id="wistiaPaginationInfo" class="text-muted small"></span>'
+                + '<button type="button" class="btn btn-secondary" id="wistiaNextBtn" disabled>Next <span class="icon-arrow-right" aria-hidden="true"></span></button>'
                 + '</div>'
                 + '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>'
                 + '</div>'
@@ -121,7 +121,7 @@
 
             document.body.insertAdjacentHTML('beforeend', modalHtml);
 
-            const modalEl = document.getElementById('vimeoBrowserModal');
+            const modalEl = document.getElementById('wistiaBrowserModal');
             modalEl.addEventListener('hidden.bs.modal', () => {
                 const backdrops = document.querySelectorAll('.modal-backdrop');
                 backdrops.forEach((backdrop) => { backdrop.remove(); });
@@ -137,63 +137,63 @@
             const self = this;
 
             // Browse tab: search button
-            const searchBtn = document.getElementById('vimeoSearchBtn');
+            const searchBtn = document.getElementById('wistiaSearchBtn');
             if (searchBtn) {
                 const newBtn = searchBtn.cloneNode(true);
                 searchBtn.parentNode.replaceChild(newBtn, searchBtn);
                 newBtn.addEventListener('click', () => {
-                    self.searchQuery = document.getElementById('vimeoSearchInput').value;
+                    self.searchName = document.getElementById('wistiaSearchInput').value;
                     self.currentPage = 1;
                     self.loadVideos();
                 });
             }
 
             // Browse tab: search input enter key
-            const searchInput = document.getElementById('vimeoSearchInput');
+            const searchInput = document.getElementById('wistiaSearchInput');
             if (searchInput) {
                 const newInput = searchInput.cloneNode(true);
                 searchInput.parentNode.replaceChild(newInput, searchInput);
                 newInput.addEventListener('keypress', function handleKeypress(e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
-                        self.searchQuery = this.value;
+                        self.searchName = this.value;
                         self.currentPage = 1;
                         self.loadVideos();
                     }
                 });
             }
 
-            // Browse tab: folder select
-            const folderSelect = document.getElementById('vimeoFolderSelect');
-            if (folderSelect) {
-                const newSelect = folderSelect.cloneNode(true);
-                folderSelect.parentNode.replaceChild(newSelect, folderSelect);
-                newSelect.addEventListener('change', function handleFolderChange() {
-                    self.selectedFolder = this.value;
+            // Browse tab: project select
+            const projectSelect = document.getElementById('wistiaProjectSelect');
+            if (projectSelect) {
+                const newSelect = projectSelect.cloneNode(true);
+                projectSelect.parentNode.replaceChild(newSelect, projectSelect);
+                newSelect.addEventListener('change', function handleProjectChange() {
+                    self.selectedProject = parseInt(this.value, 10) || 0;
                     self.currentPage = 1;
                     self.loadVideos();
                 });
             }
 
             // Browse tab: reset button
-            const resetBtn = document.getElementById('vimeoResetBtn');
+            const resetBtn = document.getElementById('wistiaResetBtn');
             if (resetBtn) {
                 const newResetBtn = resetBtn.cloneNode(true);
                 resetBtn.parentNode.replaceChild(newResetBtn, resetBtn);
                 newResetBtn.addEventListener('click', () => {
-                    const si = document.getElementById('vimeoSearchInput');
-                    const fs = document.getElementById('vimeoFolderSelect');
+                    const si = document.getElementById('wistiaSearchInput');
+                    const ps = document.getElementById('wistiaProjectSelect');
                     if (si) { si.value = ''; }
-                    if (fs) { fs.value = ''; }
-                    self.searchQuery = '';
-                    self.selectedFolder = '';
+                    if (ps) { ps.value = '0'; }
+                    self.searchName = '';
+                    self.selectedProject = 0;
                     self.currentPage = 1;
                     self.loadVideos();
                 });
             }
 
             // Pagination: prev
-            const prevBtn = document.getElementById('vimeoPrevBtn');
+            const prevBtn = document.getElementById('wistiaPrevBtn');
             if (prevBtn) {
                 const newPrevBtn = prevBtn.cloneNode(true);
                 prevBtn.parentNode.replaceChild(newPrevBtn, prevBtn);
@@ -206,7 +206,7 @@
             }
 
             // Pagination: next
-            const nextBtn = document.getElementById('vimeoNextBtn');
+            const nextBtn = document.getElementById('wistiaNextBtn');
             if (nextBtn) {
                 const newNextBtn = nextBtn.cloneNode(true);
                 nextBtn.parentNode.replaceChild(newNextBtn, nextBtn);
@@ -219,7 +219,7 @@
             }
 
             // Lookup tab: look up button
-            const lookupBtn = document.getElementById('vimeoLookupBtn');
+            const lookupBtn = document.getElementById('wistiaLookupBtn');
             if (lookupBtn) {
                 const newLookupBtn = lookupBtn.cloneNode(true);
                 lookupBtn.parentNode.replaceChild(newLookupBtn, lookupBtn);
@@ -227,7 +227,7 @@
             }
 
             // Lookup tab: enter key
-            const lookupInput = document.getElementById('vimeoLookupInput');
+            const lookupInput = document.getElementById('wistiaLookupInput');
             if (lookupInput) {
                 const newLookupInput = lookupInput.cloneNode(true);
                 lookupInput.parentNode.replaceChild(newLookupInput, lookupInput);
@@ -240,35 +240,31 @@
             }
 
             // Lookup tab: use this video button
-            const useBtn = document.getElementById('vimeoUseBtn');
+            const useBtn = document.getElementById('wistiaUseBtn');
             if (useBtn) {
                 const newUseBtn = useBtn.cloneNode(true);
                 useBtn.parentNode.replaceChild(newUseBtn, useBtn);
                 newUseBtn.addEventListener('click', () => { self.selectLookupVideo(); });
             }
 
-            // Tab switch: hide pagination bar when switching to Lookup tab
-            const lookupTabBtn = document.getElementById('vimeoLookupTab');
+            // Tab switch: hide pagination when switching to Lookup tab
+            const lookupTabBtn = document.getElementById('wistiaLookupTab');
             if (lookupTabBtn) {
                 lookupTabBtn.addEventListener('shown.bs.tab', () => {
                     self.activeTab = 'lookup';
-                    const paginationBar = document.getElementById('vimeoPaginationBar');
-                    if (paginationBar) {
-                        paginationBar.classList.add('d-none');
-                    }
+                    const paginationBar = document.getElementById('wistiaPaginationBar');
+                    if (paginationBar) { paginationBar.classList.add('d-none'); }
                 });
             }
 
-            // Tab switch: show pagination bar on browse tab if we have pages
-            const browseTabBtn = document.getElementById('vimeoBrowseTab');
+            // Tab switch: show pagination when returning to Browse tab
+            const browseTabBtn = document.getElementById('wistiaBrowseTab');
             if (browseTabBtn) {
                 browseTabBtn.addEventListener('shown.bs.tab', () => {
                     self.activeTab = 'browse';
                     if (self.totalPages > 1) {
-                        const paginationBar = document.getElementById('vimeoPaginationBar');
-                        if (paginationBar) {
-                            paginationBar.classList.remove('d-none');
-                        }
+                        const paginationBar = document.getElementById('wistiaPaginationBar');
+                        if (paginationBar) { paginationBar.classList.remove('d-none'); }
                     }
                 });
             }
@@ -280,13 +276,13 @@
 
             this.init();
 
-            // Auto-search from study title (same pattern as YouTube)
+            // Auto-search from study title
             const studyTitleField = document.getElementById('jform_study_id_name');
             if (studyTitleField && studyTitleField.value) {
                 const studyTitle = studyTitleField.value;
                 if (studyTitle.toLowerCase().indexOf('select') === -1) {
-                    this.searchQuery = studyTitle;
-                    const searchInput = document.getElementById('vimeoSearchInput');
+                    this.searchName = studyTitle;
+                    const searchInput = document.getElementById('wistiaSearchInput');
                     if (searchInput) {
                         searchInput.value = studyTitle;
                     }
@@ -295,7 +291,7 @@
 
             // Pre-fill lookup input with existing URL if any
             const filenameField = document.querySelector('[name="jform[params][filename]"]');
-            const lookupInput = document.getElementById('vimeoLookupInput');
+            const lookupInput = document.getElementById('wistiaLookupInput');
             if (filenameField && filenameField.value && lookupInput) {
                 lookupInput.value = filenameField.value;
             }
@@ -305,32 +301,32 @@
             this.activeTab = 'browse';
 
             // Ensure browse tab is active
-            const browseTabBtn = document.getElementById('vimeoBrowseTab');
+            const browseTabBtn = document.getElementById('wistiaBrowseTab');
             if (browseTabBtn && typeof bootstrap !== 'undefined') {
                 const tab = new bootstrap.Tab(browseTabBtn);
                 tab.show();
             }
 
-            const modalEl = document.getElementById('vimeoBrowserModal');
+            const modalEl = document.getElementById('wistiaBrowserModal');
             if (modalEl && typeof bootstrap !== 'undefined') {
                 this.modal = new bootstrap.Modal(modalEl);
                 this.modal.show();
-                this.loadFolders();
+                this.loadProjects();
                 this.loadVideos();
             }
         },
 
-        loadFolders() {
+        loadProjects() {
             if (!this.serverId) {
                 return;
             }
 
-            const folderSelect = document.getElementById('vimeoFolderSelect');
-            if (!folderSelect) {
+            const projectSelect = document.getElementById('wistiaProjectSelect');
+            if (!projectSelect) {
                 return;
             }
 
-            const url = `index.php?option=com_proclaim&task=cwmmediafile.xhr&type=vimeo&handler=fetchFolders&server_id=${encodeURIComponent(this.serverId)}&${Joomla.getOptions('csrf.token')}=1`;
+            const url = `index.php?option=com_proclaim&task=cwmmediafile.xhr&type=wistia&handler=fetchProjects&server_id=${encodeURIComponent(this.serverId)}&${Joomla.getOptions('csrf.token')}=1`;
 
             fetch(url)
                 .then((response) => {
@@ -343,31 +339,30 @@
                     return response.json();
                 })
                 .then((data) => {
-                    if (data.success && data.folders && data.folders.length > 0) {
-                        // Remove all options except first (All Videos)
-                        while (folderSelect.options.length > 1) {
-                            folderSelect.remove(1);
+                    if (data.success && data.projects && data.projects.length > 0) {
+                        while (projectSelect.options.length > 1) {
+                            projectSelect.remove(1);
                         }
-                        data.folders.forEach((folder) => {
+                        data.projects.forEach((project) => {
                             const option = document.createElement('option');
-                            option.value = folder.folderId;
-                            option.textContent = folder.title;
-                            folderSelect.appendChild(option);
+                            option.value = project.projectId;
+                            option.textContent = project.title;
+                            projectSelect.appendChild(option);
                         });
                     }
                 })
                 .catch((err) => {
-                    console.error('Failed to load Vimeo folders:', err);
+                    console.error('Failed to load Wistia projects:', err);
                 });
         },
 
         loadVideos() {
-            const grid = document.getElementById('vimeoVideoGrid');
-            const loading = document.getElementById('vimeoBrowseLoading');
-            const error = document.getElementById('vimeoBrowseError');
-            const noResults = document.getElementById('vimeoNoResults');
-            const noToken = document.getElementById('vimeoNoToken');
-            const paginationBar = document.getElementById('vimeoPaginationBar');
+            const grid = document.getElementById('wistiaVideoGrid');
+            const loading = document.getElementById('wistiaBrowseLoading');
+            const error = document.getElementById('wistiaBrowseError');
+            const noResults = document.getElementById('wistiaNoResults');
+            const noToken = document.getElementById('wistiaNoToken');
+            const paginationBar = document.getElementById('wistiaPaginationBar');
             const self = this;
 
             if (!this.serverId) {
@@ -382,13 +377,13 @@
             if (noResults) { noResults.classList.add('d-none'); }
             if (noToken) { noToken.classList.add('d-none'); }
 
-            let url = `index.php?option=com_proclaim&task=cwmmediafile.xhr&type=vimeo&handler=fetchVideos&server_id=${encodeURIComponent(this.serverId)}&page=${this.currentPage}&${Joomla.getOptions('csrf.token')}=1`;
+            let url = `index.php?option=com_proclaim&task=cwmmediafile.xhr&type=wistia&handler=fetchVideos&server_id=${encodeURIComponent(this.serverId)}&page=${this.currentPage}&${Joomla.getOptions('csrf.token')}=1`;
 
-            if (this.searchQuery) {
-                url += `&query=${encodeURIComponent(this.searchQuery)}`;
+            if (this.searchName) {
+                url += `&name=${encodeURIComponent(this.searchName)}`;
             }
-            if (this.selectedFolder) {
-                url += `&folder_id=${encodeURIComponent(this.selectedFolder)}`;
+            if (this.selectedProject) {
+                url += `&project_id=${encodeURIComponent(this.selectedProject)}`;
             }
 
             fetch(url, { signal: AbortSignal.timeout(30000) })
@@ -405,8 +400,7 @@
                     if (loading) { loading.classList.add('d-none'); }
 
                     if (!data.success) {
-                        // Show no-token notice for missing access token
-                        if (data.error === 'no access_token') {
+                        if (data.error === 'no api_token') {
                             if (noToken) { noToken.classList.remove('d-none'); }
                         } else {
                             if (error) {
@@ -427,10 +421,9 @@
                     self.totalPages = data.totalPages || 1;
                     self.renderVideos(data.videos);
 
-                    // Update pagination controls
-                    const prevBtn = document.getElementById('vimeoPrevBtn');
-                    const nextBtn = document.getElementById('vimeoNextBtn');
-                    const infoEl = document.getElementById('vimeoPaginationInfo');
+                    const prevBtn = document.getElementById('wistiaPrevBtn');
+                    const nextBtn = document.getElementById('wistiaNextBtn');
+                    const infoEl = document.getElementById('wistiaPaginationInfo');
 
                     if (prevBtn) { prevBtn.disabled = self.currentPage <= 1; }
                     if (nextBtn) { nextBtn.disabled = self.currentPage >= self.totalPages; }
@@ -438,7 +431,6 @@
                         infoEl.textContent = `Page ${self.currentPage} of ${self.totalPages} (${data.total} videos)`;
                     }
 
-                    // Show pagination bar only when on browse tab
                     if (paginationBar && self.activeTab === 'browse') {
                         paginationBar.classList.remove('d-none');
                     }
@@ -453,7 +445,7 @@
         },
 
         renderVideos(videos) {
-            const grid = document.getElementById('vimeoVideoGrid');
+            const grid = document.getElementById('wistiaVideoGrid');
             const self = this;
 
             videos.forEach((video) => {
@@ -464,7 +456,7 @@
                     ? `<img src="${self.escapeAttr(video.thumbnail)}" class="card-img-top" style="aspect-ratio:16/9;object-fit:cover" alt="${self.escapeAttr(video.title)}">`
                     : `<div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="aspect-ratio:16/9"><span class="icon-video text-white" style="font-size:2rem" aria-hidden="true"></span></div>`;
 
-                card.innerHTML = `<div class="card h-100 vimeo-video-card" data-video-link="${self.escapeAttr(video.link)}" data-title="${self.escapeAttr(video.title)}">`
+                card.innerHTML = `<div class="card h-100 wistia-video-card" data-video-link="${self.escapeAttr(video.link)}" data-title="${self.escapeAttr(video.title)}">`
                     + '<div class="position-relative">'
                     + thumbHtml
                     + '</div>'
@@ -479,7 +471,7 @@
 
                 const selectBtn = card.querySelector('.select-video-btn');
                 selectBtn.addEventListener('click', function selectVideoHandler() {
-                    const cardEl = this.closest('.vimeo-video-card');
+                    const cardEl = this.closest('.wistia-video-card');
                     self.selectVideo(cardEl.dataset.videoLink, cardEl.dataset.title);
                 });
 
@@ -505,21 +497,21 @@
         },
 
         lookupVideo() {
-            const input = document.getElementById('vimeoLookupInput');
+            const input = document.getElementById('wistiaLookupInput');
             if (!input || !input.value.trim()) {
                 return;
             }
 
             const query = input.value.trim();
-            const videoId = this.extractVideoId(query);
-            const errorEl = document.getElementById('vimeoLookupError');
-            const loading = document.getElementById('vimeoLookupLoading');
-            const result = document.getElementById('vimeoLookupResult');
+            const mediaHash = this.extractMediaHash(query);
+            const errorEl = document.getElementById('wistiaLookupError');
+            const loading = document.getElementById('wistiaLookupLoading');
+            const result = document.getElementById('wistiaLookupResult');
             const self = this;
 
-            if (!videoId) {
+            if (!mediaHash) {
                 if (errorEl) {
-                    errorEl.textContent = 'Could not extract a Vimeo video ID from that input. Please paste a full Vimeo URL (e.g. https://vimeo.com/123456789) or a numeric video ID.';
+                    errorEl.textContent = 'Could not extract a Wistia media hash from that input. Please paste a full Wistia URL (e.g. https://home.wistia.com/medias/abc123xyz) or a media hash.';
                     errorEl.classList.remove('d-none');
                 }
                 if (result) { result.classList.add('d-none'); }
@@ -530,7 +522,7 @@
             if (result) { result.classList.add('d-none'); }
             if (loading) { loading.classList.remove('d-none'); }
 
-            const url = `index.php?option=com_proclaim&task=cwmmediafile.xhr&type=vimeo&handler=getMetadata&video_id=${encodeURIComponent(videoId)}&${Joomla.getOptions('csrf.token')}=1`;
+            const url = `index.php?option=com_proclaim&task=cwmmediafile.xhr&type=wistia&handler=getMetadata&media_hash=${encodeURIComponent(mediaHash)}&${Joomla.getOptions('csrf.token')}=1`;
 
             fetch(url)
                 .then((response) => {
@@ -547,14 +539,14 @@
 
                     if (!data.success || !data.metadata) {
                         if (errorEl) {
-                            errorEl.textContent = data.error || 'Failed to load video details. The video may be private or the ID may be incorrect.';
+                            errorEl.textContent = data.error || 'Failed to load video details. The video may be private or the hash may be incorrect.';
                             errorEl.classList.remove('d-none');
                         }
                         return;
                     }
 
-                    self.currentLookupId = videoId;
-                    self.currentLookupUrl = `https://vimeo.com/${videoId}`;
+                    self.currentLookupHash = mediaHash;
+                    self.currentLookupUrl = `https://home.wistia.com/medias/${mediaHash}`;
                     self.showLookupResult(data.metadata);
                 })
                 .catch((err) => {
@@ -567,11 +559,11 @@
         },
 
         showLookupResult(metadata) {
-            const result = document.getElementById('vimeoLookupResult');
-            const title = document.getElementById('vimeoResultTitle');
-            const thumbnail = document.getElementById('vimeoResultThumbnail');
-            const author = document.getElementById('vimeoResultAuthor');
-            const duration = document.getElementById('vimeoResultDuration');
+            const result = document.getElementById('wistiaLookupResult');
+            const title = document.getElementById('wistiaResultTitle');
+            const thumbnail = document.getElementById('wistiaResultThumbnail');
+            const author = document.getElementById('wistiaResultAuthor');
+            const duration = document.getElementById('wistiaResultDuration');
 
             if (title) { title.textContent = metadata.title || 'Untitled'; }
             if (thumbnail && metadata.thumbnail) {
@@ -594,7 +586,7 @@
                 filenameField.value = this.currentLookupUrl;
             }
 
-            const title = document.getElementById('vimeoResultTitle');
+            const title = document.getElementById('wistiaResultTitle');
             const videoTitle = (title && title.textContent) ? title.textContent : this.currentLookupUrl;
 
             if (this.modal) {
@@ -608,26 +600,22 @@
             }
         },
 
-        extractVideoId(input) {
-            // Numeric ID
-            if (/^\d+$/.test(input)) {
+        extractMediaHash(input) {
+            // Alphanumeric hash (no slashes or dots)
+            if (/^[a-z0-9]+$/i.test(input) && input.length >= 6) {
                 return input;
             }
 
-            // Standard: vimeo.com/123456789
-            let match = input.match(/vimeo\.com\/(\d+)/);
+            // Standard: wistia.com/medias/abc123xyz
+            let match = input.match(/wistia\.com\/medias\/([a-z0-9]+)/i);
             if (match) { return match[1]; }
 
-            // Player: player.vimeo.com/video/123456789
-            match = input.match(/player\.vimeo\.com\/video\/(\d+)/);
+            // Embed: fast.wistia.net/embed/iframe/abc123xyz
+            match = input.match(/fast\.wistia\.net\/embed\/iframe\/([a-z0-9]+)/i);
             if (match) { return match[1]; }
 
-            // Channels: vimeo.com/channels/name/123456789
-            match = input.match(/vimeo\.com\/channels\/[^/]+\/(\d+)/);
-            if (match) { return match[1]; }
-
-            // Groups: vimeo.com/groups/name/videos/123456789
-            match = input.match(/vimeo\.com\/groups\/[^/]+\/videos\/(\d+)/);
+            // wistia.net/medias/abc123xyz
+            match = input.match(/wistia\.net\/medias\/([a-z0-9]+)/i);
             if (match) { return match[1]; }
 
             return null;
@@ -657,12 +645,12 @@
     };
 
     document.addEventListener('DOMContentLoaded', () => {
-        const browseBtn = document.getElementById('vimeo-browse-btn');
+        const browseBtn = document.getElementById('wistia-browse-btn');
         if (browseBtn) {
             const newBrowseBtn = browseBtn.cloneNode(true);
             browseBtn.parentNode.replaceChild(newBrowseBtn, browseBtn);
             newBrowseBtn.addEventListener('click', () => {
-                Proclaim.VimeoBrowser.open();
+                Proclaim.WistiaBrowser.open();
             });
         }
     });

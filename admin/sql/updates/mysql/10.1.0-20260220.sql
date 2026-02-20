@@ -1,7 +1,10 @@
 --
--- Teacher social links: add social_links column for unlimited link storage (JSON subform).
--- Legacy columns (facebooklink, twitterlink, bloglink, link1-3, linklabel1-3, website)
--- are preserved for frontend backward compatibility.
+-- Cache actual stored size in bible_translations to avoid expensive
+-- SUM(LENGTH(text)) scans on the bible_verses table at display time.
+-- data_size is set once after each download and cleared on remove.
 --
 
-ALTER TABLE `#__bsms_teachers` ADD COLUMN `social_links` TEXT DEFAULT NULL AFTER `address`;
+ALTER TABLE `#__bsms_bible_translations`
+    ADD COLUMN `data_size` BIGINT UNSIGNED NOT NULL DEFAULT 0
+        COMMENT 'Actual stored size in bytes (cached after download)'
+        AFTER `estimated_size`;

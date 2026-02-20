@@ -201,7 +201,37 @@ class CWMAddonVimeo extends CWMAddon
         return [
             'testApi',
             'getMetadata',
+            'fetchVideos',
+            'fetchFolders',
         ];
+    }
+
+    /**
+     * Get the Vimeo access token for a server by ID
+     *
+     * @param   int  $serverId  The server record ID
+     *
+     * @return  string  The access token, or empty string if not found
+     *
+     * @since   10.1.0
+     */
+    private function getServerAccessToken(int $serverId): string
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('params'))
+            ->from($db->quoteName('#__bsms_servers'))
+            ->where($db->quoteName('id') . ' = ' . $serverId);
+        $db->setQuery($query);
+        $paramsJson = $db->loadResult();
+
+        if (!$paramsJson) {
+            return '';
+        }
+
+        $params = json_decode($paramsJson, true);
+
+        return $params['access_token'] ?? '';
     }
 
     /**
@@ -226,25 +256,8 @@ class CWMAddonVimeo extends CWMAddon
             ];
         }
 
-        // Load server params
         try {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
-            $query = $db->getQuery(true)
-                ->select($db->quoteName('params'))
-                ->from($db->quoteName('#__bsms_servers'))
-                ->where($db->quoteName('id') . ' = ' . (int) $serverId);
-            $db->setQuery($query);
-            $paramsJson = $db->loadResult();
-
-            if (!$paramsJson) {
-                return [
-                    'success' => false,
-                    'error'   => Text::_('JBS_ADDON_VIMEO_SERVER_NOT_FOUND'),
-                ];
-            }
-
-            $params      = json_decode($paramsJson, true);
-            $accessToken = $params['access_token'] ?? '';
+            $accessToken = $this->getServerAccessToken($serverId);
 
             if (empty($accessToken)) {
                 return [
@@ -355,6 +368,195 @@ class CWMAddonVimeo extends CWMAddon
                 'success' => false,
                 'error'   => $e->getMessage(),
             ];
+        }
+    }
+
+    /**
+     * AJAX handler: fetch paginated videos from the authenticated user's Vimeo account
+     *
+     * @param   Input  $input  Request input
+     *
+     * @return  array  Response with videos array and pagination metadata
+     *
+     * @since   10.1.0
+     */
+    public function fetchVideos(Input $input): array
+    {
+        $serverId = $input->getInt('server_id', 0);
+
+        if (!$serverId) {
+            return ['success' => false, 'error' => 'No server ID provided'];
+        }
+
+        $accessToken = $this->getServerAccessToken($serverId);
+
+        if (empty($accessToken)) {
+            return ['success' => false, 'error' => 'no access_token'];
+        }
+
+        $page     = max(1, $input->getInt('page', 1));
+        $query    = $input->getString('query', '');
+        $folderId = $input->getString('folder_id', '');
+
+        $http    = HttpFactory::getHttp();
+        $headers = [
+            'Authorization' => 'Bearer ' . $accessToken,
+            'Accept'        => 'application/vnd.vimeo.*+json;version=3.4',
+        ];
+
+        $params = [
+            'per_page'  => 12,
+            'page'      => $page,
+            'sort'      => 'date',
+            'direction' => 'desc',
+            'fields'    => 'uri,name,duration,pictures,link,created_time',
+        ];
+
+        if (!empty($query)) {
+            $params['query'] = $query;
+        }
+
+        $endpoint = empty($folderId)
+            ? 'https://api.vimeo.com/me/videos'
+            : 'https://api.vimeo.com/me/projects/' . rawurlencode($folderId) . '/videos';
+
+        try {
+            $response = $http->get($endpoint . '?' . http_build_query($params), $headers);
+
+            if ($response->code !== 200) {
+                return ['success' => false, 'error' => 'Vimeo API error (HTTP ' . $response->code . ')'];
+            }
+
+            $data = json_decode($response->body, true);
+
+            if (!$data) {
+                return ['success' => false, 'error' => 'Invalid API response'];
+            }
+
+            $videos = [];
+
+            foreach ($data['data'] ?? [] as $video) {
+                // Extract video ID from URI (e.g., /videos/123456789)
+                $videoId = '';
+
+                if (preg_match('/\/videos\/(\d+)/', $video['uri'] ?? '', $m)) {
+                    $videoId = $m[1];
+                }
+
+                // Pick thumbnail: first size with width >= 295px
+                $thumbnail = '';
+
+                foreach ($video['pictures']['sizes'] ?? [] as $size) {
+                    if (($size['width'] ?? 0) >= 295) {
+                        // Strip query string from thumbnail URL
+                        $thumb = $size['link'] ?? '';
+                        $pos   = strpos($thumb, '?');
+
+                        if ($pos !== false) {
+                            $thumb = substr($thumb, 0, $pos);
+                        }
+
+                        $thumbnail = $thumb;
+                        break;
+                    }
+                }
+
+                $videos[] = [
+                    'videoId'   => $videoId,
+                    'title'     => $video['name'] ?? '',
+                    'thumbnail' => $thumbnail,
+                    'duration'  => $video['duration'] ?? 0,
+                    'link'      => $video['link'] ?? '',
+                    'createdAt' => $video['created_time'] ?? '',
+                ];
+            }
+
+            $total      = $data['total'] ?? 0;
+            $perPage    = 12;
+            $totalPages = $total > 0 ? (int) ceil($total / $perPage) : 1;
+
+            return [
+                'success'    => true,
+                'videos'     => $videos,
+                'total'      => $total,
+                'page'       => $page,
+                'perPage'    => $perPage,
+                'totalPages' => $totalPages,
+            ];
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * AJAX handler: fetch folders (projects) from the authenticated user's Vimeo account
+     *
+     * @param   Input  $input  Request input
+     *
+     * @return  array  Response with folders array
+     *
+     * @since   10.1.0
+     */
+    public function fetchFolders(Input $input): array
+    {
+        $serverId = $input->getInt('server_id', 0);
+
+        if (!$serverId) {
+            return ['success' => false, 'error' => 'No server ID provided'];
+        }
+
+        $accessToken = $this->getServerAccessToken($serverId);
+
+        if (empty($accessToken)) {
+            return ['success' => false, 'error' => 'no access_token'];
+        }
+
+        $http    = HttpFactory::getHttp();
+        $headers = [
+            'Authorization' => 'Bearer ' . $accessToken,
+            'Accept'        => 'application/vnd.vimeo.*+json;version=3.4',
+        ];
+
+        try {
+            $response = $http->get(
+                'https://api.vimeo.com/me/projects?per_page=100&fields=uri,name',
+                $headers
+            );
+
+            if ($response->code !== 200) {
+                return ['success' => false, 'error' => 'Vimeo API error (HTTP ' . $response->code . ')'];
+            }
+
+            $data = json_decode($response->body, true);
+
+            if (!$data) {
+                return ['success' => false, 'error' => 'Invalid API response'];
+            }
+
+            $folders = [];
+
+            foreach ($data['data'] ?? [] as $project) {
+                // Extract folder ID from URI (e.g., /users/12345/projects/67890)
+                $folderId = '';
+
+                if (preg_match('/\/projects\/(\d+)/', $project['uri'] ?? '', $m)) {
+                    $folderId = $m[1];
+                }
+
+                if ($folderId) {
+                    $folders[] = [
+                        'folderId' => $folderId,
+                        'title'    => $project['name'] ?? '',
+                    ];
+                }
+            }
+
+            return [
+                'success' => true,
+                'folders' => $folders,
+            ];
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 

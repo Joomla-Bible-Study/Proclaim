@@ -52,7 +52,7 @@ return new class () implements ServiceProviderInterface {
             function (Container $container) {
                 // Gate: Proclaim requires PHP 8.3+. If running on an older version,
                 // return a minimal stub so the site doesn't crash with a parse error.
-                if (version_compare(PHP_VERSION, '8.3.0', '<')) {
+                if (PHP_VERSION_ID < 80300) {
                     try {
                         $app = Factory::getApplication();
 

@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <media>
     <fields name="params">
-        <fieldset name="general">
+        <fieldset name="general" addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Wistia\Field">
             <field name="filename"
                    type="text"
                    label="JBS_ADDON_WISTIA_URL"
                    description="JBS_ADDON_WISTIA_URL_DISC"
                    class="inputbox"
                    required="true"/>
+            <field name="wistia_browse_btn"
+                   type="WistiaBrowseBtn"
+                   class="wistia-browse-container"
+                   label=""
+                   description=""/>
             <field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
                    description="JBS_MED_INTERNAL_POPUP_DESC"
                    class="form-select-color-state"

@@ -758,7 +758,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const verseCount = isInstalled ? t.verse_count : '-';
             const dataSize = isInstalled
-                ? formatSize(t.data_size)
+                ? formatSize(t.data_size || 0)
                 : (t.estimated_size > 0 ? `~${formatSize(t.estimated_size)}` : '-');
 
             let actionBtn;
@@ -976,31 +976,29 @@ document.addEventListener('DOMContentLoaded', () => {
         loadTranslations();
     }
 
-    // 1. shown.bs.tab — catches user clicks and Bootstrap-fired recalls.
-    document.addEventListener('shown.bs.tab', (e) => {
-        const target = e.target.dataset.bsTarget || e.target.getAttribute('href');
-        if (target === '#scripture') initScriptureTab();
+    // 1. joomla.tab.shown — catches user clicks and Joomla tab recall events.
+    document.addEventListener('joomla.tab.shown', (e) => {
+        if (e.target.getAttribute('aria-controls') === 'scripture') initScriptureTab();
     });
 
     // 2. setTimeout(0) — catches recalls that fire during DOMContentLoaded
-    //    before our shown.bs.tab listener was registered.
+    //    before our joomla.tab.shown listener was registered.
     setTimeout(() => {
-        if (!scriptureInitDone && document.getElementById('scripture')?.classList.contains('active')) {
+        if (!scriptureInitDone && document.getElementById('scripture')?.hasAttribute('active')) {
             initScriptureTab();
         }
     }, 0);
 
-    // 3. MutationObserver — belt-and-suspenders for Joomla recalls that bypass
-    //    Bootstrap events (e.g. direct class manipulation after our setTimeout).
+    // 3. MutationObserver — belt-and-suspenders for late active attribute changes.
     const scripturePane = document.getElementById('scripture');
 
     if (scripturePane) {
         const observer = new MutationObserver(() => {
-            if (!scriptureInitDone && scripturePane.classList.contains('active')) {
+            if (!scriptureInitDone && scripturePane.hasAttribute('active')) {
                 observer.disconnect();
                 initScriptureTab();
             }
         });
-        observer.observe(scripturePane, { attributes: true, attributeFilter: ['class'] });
+        observer.observe(scripturePane, { attributes: true, attributeFilter: ['active'] });
     }
 });

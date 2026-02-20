@@ -1420,13 +1420,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(() => {});
         }
     }
-    document.addEventListener('shown.bs.tab', (e) => {
-        const target = e.target.dataset.bsTarget || e.target.getAttribute('href');
-        if (target === '#imagetools') initImagetoolsCounts();
+    document.addEventListener('joomla.tab.shown', (e) => {
+        if (e.target.getAttribute('aria-controls') === 'imagetools') initImagetoolsCounts();
     });
-    // setTimeout(0) lets Bootstrap's hash-recall apply 'active' before we check
+    // DOMContentLoaded fires after joomla-tab recall; check active attribute (not CSS class)
     setTimeout(() => {
-        if (!imagetoolsInitDone && document.getElementById('imagetools')?.classList.contains('active')) {
+        if (!imagetoolsInitDone && document.getElementById('imagetools')?.hasAttribute('active')) {
             initImagetoolsCounts();
         }
     }, 0);

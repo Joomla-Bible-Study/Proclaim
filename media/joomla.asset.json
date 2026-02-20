@@ -94,6 +94,18 @@
             }
         },
         {
+            "name": "com_proclaim.addon-wistia-browser",
+            "type": "script",
+            "uri": "com_proclaim/addon-wistia-browser.min.js",
+            "dependencies": [
+                "core",
+                "bootstrap.modal"
+            ],
+            "attributes": {
+                "type": "module"
+            }
+        },
+        {
             "name": "com_proclaim.cwmadmin-mediafiles-batch",
             "type": "script",
             "uri": "com_proclaim/cwmadmin-mediafiles-default-batch-footer.min.js",
