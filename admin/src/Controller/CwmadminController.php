@@ -2139,6 +2139,10 @@ class CwmadminController extends FormController
             return;
         }
 
+        // Release session lock so concurrent AJAX calls (e.g. getTranslationsXHR
+        // firing at the same time) don't serialise behind each other.
+        session_write_close();
+
         try {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
@@ -2181,6 +2185,9 @@ class CwmadminController extends FormController
 
             return;
         }
+
+        // Release session lock so concurrent AJAX calls don't serialise.
+        session_write_close();
 
         try {
             // Auto-seed GetBible catalog if provider is enabled but catalog is depleted
@@ -2285,6 +2292,8 @@ class CwmadminController extends FormController
             return;
         }
 
+        session_write_close();
+
         $abbreviation = $app->getInput()->getCmd('abbreviation', '');
 
         if (empty($abbreviation)) {
@@ -2342,6 +2351,8 @@ class CwmadminController extends FormController
             return;
         }
 
+        session_write_close();
+
         $abbreviation = $app->getInput()->getCmd('abbreviation', '');
 
         if (empty($abbreviation)) {
@@ -2388,6 +2399,8 @@ class CwmadminController extends FormController
             return;
         }
 
+        session_write_close();
+
         try {
             $count = BibleImporter::removeAllTranslations();
 
@@ -2429,6 +2442,8 @@ class CwmadminController extends FormController
 
             return;
         }
+
+        session_write_close();
 
         try {
             $admin  = Cwmparams::getAdmin();

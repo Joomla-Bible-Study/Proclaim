@@ -277,9 +277,19 @@ document.addEventListener('DOMContentLoaded', () => {
      * Refresh the local provider badge with current translation count.
      */
     const refreshLocalBadge = () => {
-        fetch(`${baseUrl}getScriptureStatusXHR&${token}=1`)
-            .then((response) => response.json())
+        const ctrl = new AbortController();
+        const tid  = setTimeout(() => ctrl.abort(), 10000);
+
+        fetch(`${baseUrl}getScriptureStatusXHR&${token}=1`, { signal: ctrl.signal })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                return response.json();
+            })
             .then((data) => {
+                clearTimeout(tid);
                 const badge = document.getElementById('local-provider-status');
 
                 if (data.local_count > 0) {
@@ -290,7 +300,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     badge.innerHTML = `<i class="icon-warning" aria-hidden="true"></i> ${strings.statusNone}`;
                 }
             })
-            .catch(() => {
+            .catch((err) => {
+                clearTimeout(tid);
+                console.error('[Proclaim] refreshLocalBadge error:', err);
                 const badge = document.getElementById('local-provider-status');
                 badge.className = 'badge bg-secondary ms-3';
                 badge.textContent = strings.statusUnknown;
@@ -542,11 +554,32 @@ document.addEventListener('DOMContentLoaded', () => {
             container.innerHTML = `<div class="text-center py-3"><span class="spinner-border spinner-border-sm" role="status"></span> ${strings.loading}</div>`;
         }
 
-        fetch(`${baseUrl}getTranslationsXHR&${token}=1`)
-            .then((r) => r.json())
+        const ctrl = new AbortController();
+        const tid  = setTimeout(() => ctrl.abort(), 15000);
+
+        fetch(`${baseUrl}getTranslationsXHR&${token}=1`, { signal: ctrl.signal })
+            .then((r) => {
+                if (!r.ok) {
+                    throw new Error(`HTTP ${r.status} ${r.statusText}`);
+                }
+
+                return r.json();
+            })
             .then((data) => {
-                if (!data.success || !data.translations || data.translations.length === 0) {
+                clearTimeout(tid);
+
+                if (!data.success) {
+                    console.error('[Proclaim] getTranslationsXHR:', data.message);
+                    container.innerHTML = `<div class="alert alert-warning">${esc(data.message || strings.loadError)}</div>`;
+                    container.style.minHeight = '';
+
+                    return;
+                }
+
+                if (!data.translations || data.translations.length === 0) {
                     container.innerHTML = `<p class="text-muted">${strings.noTranslations}</p>`;
+                    container.style.minHeight = '';
+
                     return;
                 }
 
@@ -567,7 +600,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Release locked height
                 container.style.minHeight = '';
             })
-            .catch(() => {
+            .catch((err) => {
+                clearTimeout(tid);
+                console.error('[Proclaim] loadTranslations error:', err);
                 container.innerHTML = `<div class="alert alert-warning">${strings.loadError}</div>`;
                 container.style.minHeight = '';
             });
