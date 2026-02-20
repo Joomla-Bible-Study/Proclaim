@@ -1042,10 +1042,12 @@
         <fieldset name="TEACHERDETAILS" label="JBS_TPL_TEACHERDETAILS" layoutContext="teachers,teacherDetails"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 
-            <field name="show_teacher_studies" type="list" default="1"
+            <field name="show_teacher_studies" type="list" default="0"
                    label="JBS_TPL_TEACHER_SHOW_TEACHER_STUDIES" description="JBS_TPL_TEACHER_SHOW_TEACHER_STUDIES_DESC">
                 <option value="0">JBS_TPL_HIDE_STUDY</option>
                 <option value="2">JBS_TPL_SHOW_STUDIES_STUDIESLIST</option>
+                <option value="3">JBS_TPL_SHOW_STUDIES_CARDS</option>
+                <option value="4">JBS_TPL_SHOW_STUDIES_LIST</option>
             </field>
             <field name="studies" type="int" default=""
                    label="JBS_TPL_TEACHER_STUDIES" description="JBS_TPL_TEACHER_STUDIES_DESC"/>
