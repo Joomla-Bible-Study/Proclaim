@@ -26,6 +26,8 @@ use Joomla\CMS\Router\Route;
 $app   = Factory::getApplication();
 $input = $app->getInput();
 
+$isNewRecord = ((int)$this->item->id === 0 && empty($this->item->type));
+
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
@@ -44,6 +46,15 @@ $wa->useScript('keepalive')
 		}
 	}"
     );
+
+if ($isNewRecord) {
+    $wa->addInlineScript(
+        "document.addEventListener('DOMContentLoaded', function () {
+            var btn = document.getElementById('jform_type_select');
+            if (btn) { btn.click(); }
+        });"
+    );
+}
 ?>
 <form action="<?php
 echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (int)$this->item->id); ?>"

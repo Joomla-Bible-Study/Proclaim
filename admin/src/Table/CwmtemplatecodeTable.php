@@ -193,6 +193,11 @@ class CwmtemplatecodeTable extends Table
             $this->setRules($rules);
         }
 
+        // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
+        if (isset($src['asset_id'])) {
+            $src['asset_id'] = $src['asset_id'] !== '' ? (int) $src['asset_id'] : null;
+        }
+
         return parent::bind($src, $ignore);
     }
 

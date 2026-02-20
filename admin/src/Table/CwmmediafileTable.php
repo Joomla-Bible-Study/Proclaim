@@ -250,6 +250,11 @@ class CwmmediafileTable extends Table
             $array['params'] = (string)$registry;
         }
 
+        // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
+        if (isset($array['asset_id'])) {
+            $array['asset_id'] = $array['asset_id'] !== '' ? (int) $array['asset_id'] : null;
+        }
+
         // Bind the podcast_id
         if (isset($array['podcast_id']) && \is_array($array['podcast_id'])) {
             $array['podcast_id'] = implode(',', $array['podcast_id']);

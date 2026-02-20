@@ -34,7 +34,15 @@ use Joomla\Event\SubscriberInterface;
 final class Proclaim extends CMSPlugin implements SubscriberInterface
 {
     /**
-     * Minimum PHP version required by Proclaim.
+     * Minimum PHP version ID required by Proclaim (8.3.0 = 80300).
+     *
+     * @var int
+     * @since 10.1.0
+     */
+    private const MIN_PHP_ID = 80300;
+
+    /**
+     * Minimum PHP version as a display string for error messages.
      *
      * @var string
      * @since 10.1.0
@@ -121,7 +129,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         }
 
         // PHP version warning
-        if (version_compare(PHP_VERSION, self::MIN_PHP, '<')) {
+        if (PHP_VERSION_ID < self::MIN_PHP_ID) {
             $app->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
             $app->enqueueMessage(
@@ -163,7 +171,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         }
 
         // Component must be functional (PHP >= 8.3)
-        if (version_compare(PHP_VERSION, self::MIN_PHP, '<')) {
+        if (PHP_VERSION_ID < self::MIN_PHP_ID) {
             return;
         }
 

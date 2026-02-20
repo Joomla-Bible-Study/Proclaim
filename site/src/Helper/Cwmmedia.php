@@ -859,7 +859,7 @@ class Cwmmedia
     {
         return (string) preg_replace(
             "/\s*[a-zA-Z\/\/:\.]*viemo.com\/([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i",
-            "//player.vimeo.com/video/$2",
+            "https://player.vimeo.com/video/$2",
             $string
         );
     }

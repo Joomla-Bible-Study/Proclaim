@@ -18,6 +18,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmupgradeHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -137,7 +138,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             // Podcast task warning — only show when published podcasts exist and task is not enabled
             if (Cwmstats::hasPublishedPodcasts() && Cwmstats::getPodcastTaskRawState() !== 1) :
 ?>
-            <div class="col-12" id="proclaim-podcast-task-notice">
+            <div class="col-12 d-none" id="proclaim-podcast-task-notice">
                 <div class="alert alert-warning alert-dismissible" role="alert">
                     <span class="icon-warning-circle" aria-hidden="true"></span>
                     <?php echo Text::_('JBS_CMN_PODCAST_TASK_WARNING'); ?>
@@ -161,6 +162,25 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                     <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmlocationwizard'); ?>"
                        class="btn btn-primary btn-sm">
                         <?php echo Text::_('JBS_CPL_WIZARD_BUTTON'); ?>
+                    </a>
+                </div>
+            </div>
+        <?php endif; ?>
+        <?php
+            // Database schema out-of-sync warning
+            $schemaGap = CwmupgradeHelper::isSchemaOutOfDate();
+            if ($schemaGap) :
+        ?>
+            <div class="col-12">
+                <div class="alert alert-warning">
+                    <span class="icon-warning-circle" aria-hidden="true"></span>
+                    <strong><?php echo Text::_('JBS_CPL_SCHEMA_OUT_OF_SYNC'); ?></strong>
+                    <p class="mb-1">
+                        <?php echo Text::sprintf('JBS_CPL_SCHEMA_OUT_OF_SYNC_DESC', $schemaGap['current'], $schemaGap['expected']); ?>
+                    </p>
+                    <a href="<?php echo Route::_('index.php?option=com_installer&view=database'); ?>"
+                       class="btn btn-warning btn-sm">
+                        <?php echo Text::_('JBS_CPL_SCHEMA_FIX_BUTTON'); ?>
                     </a>
                 </div>
             </div>

@@ -231,6 +231,11 @@ class CwmserverTable extends Table
             $this->setRules($rules);
         }
 
+        // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
+        if (isset($array['asset_id'])) {
+            $array['asset_id'] = $array['asset_id'] !== '' ? (int) $array['asset_id'] : null;
+        }
+
         return parent::bind($array, $ignore);
     }
 

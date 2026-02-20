@@ -1085,6 +1085,9 @@ class CwmadminController extends FormController
             return;
         }
 
+        // Release session lock so concurrent AJAX calls don't serialise.
+        session_write_close();
+
         try {
             $counts = CwmImageMigration::getMigrationCounts();
             echo json_encode($counts, JSON_THROW_ON_ERROR);
@@ -1327,6 +1330,9 @@ class CwmadminController extends FormController
             return;
         }
 
+        // Release session lock so concurrent AJAX calls don't serialise.
+        session_write_close();
+
         $logFile = CwmImageMigration::getClearedLogPath();
 
         if (!is_file($logFile)) {
@@ -1438,6 +1444,9 @@ class CwmadminController extends FormController
             return;
         }
 
+        // Release session lock so concurrent AJAX calls don't serialise.
+        session_write_close();
+
         try {
             $counts = CwmImageMigration::getWebPMigrationCounts();
             echo json_encode($counts, JSON_THROW_ON_ERROR);
@@ -1511,6 +1520,9 @@ class CwmadminController extends FormController
 
             return;
         }
+
+        // Release session lock so concurrent AJAX calls don't serialise.
+        session_write_close();
 
         try {
             $counts = CwmImageMigration::getThumbRegenerationCounts();
@@ -1587,6 +1599,9 @@ class CwmadminController extends FormController
 
             return;
         }
+
+        // Release session lock so concurrent AJAX calls don't serialise.
+        session_write_close();
 
         try {
             $counts = CwmImageMigration::getRecoveryCounts();
@@ -1720,6 +1735,9 @@ class CwmadminController extends FormController
             return;
         }
 
+        // Release session lock so concurrent AJAX calls don't serialise.
+        session_write_close();
+
         try {
             $html = Cwmstats::getPlayers();
 
@@ -1759,6 +1777,9 @@ class CwmadminController extends FormController
 
             return;
         }
+
+        // Release session lock so concurrent AJAX calls don't serialise.
+        session_write_close();
 
         try {
             $html = Cwmstats::getPopups();
@@ -2139,6 +2160,10 @@ class CwmadminController extends FormController
             return;
         }
 
+        // Release session lock so concurrent AJAX calls (e.g. getTranslationsXHR
+        // firing at the same time) don't serialise behind each other.
+        session_write_close();
+
         try {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
@@ -2182,6 +2207,9 @@ class CwmadminController extends FormController
             return;
         }
 
+        // Release session lock so concurrent AJAX calls don't serialise.
+        session_write_close();
+
         try {
             // Auto-seed GetBible catalog if provider is enabled but catalog is depleted
             try {
@@ -2200,16 +2228,24 @@ class CwmadminController extends FormController
 
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
 
+            // data_size is a cached column added in 10.1.0 — may not exist yet
+            // if the migration hasn't run.  Detect once and fall back gracefully.
+            $hasDataSize = !empty(
+                $db->setQuery(
+                    'SHOW COLUMNS FROM ' . $db->quoteName('#__bsms_bible_translations')
+                    . ' LIKE ' . $db->quote('data_size')
+                )->loadObjectList()
+            );
+
+            $cols = ['t.abbreviation', 't.name', 't.language', 't.installed', 't.verse_count', 't.source', 't.bundled', 't.estimated_size'];
+
+            if ($hasDataSize) {
+                $cols[] = 't.data_size';
+            }
+
             $query = $db->getQuery(true)
-                ->select($db->quoteName(['t.abbreviation', 't.name', 't.language', 't.installed', 't.verse_count', 't.source', 't.bundled', 't.estimated_size']))
-                ->select('COALESCE(SUM(LENGTH(' . $db->quoteName('v.text') . ')), 0) AS ' . $db->quoteName('data_size'))
+                ->select($db->quoteName($cols))
                 ->from($db->quoteName('#__bsms_bible_translations', 't'))
-                ->join(
-                    'LEFT',
-                    $db->quoteName('#__bsms_bible_verses', 'v')
-                    . ' ON ' . $db->quoteName('v.translation') . ' = ' . $db->quoteName('t.abbreviation')
-                )
-                ->group($db->quoteName('t.id'))
                 ->order($db->quoteName('t.name') . ' ASC');
             $db->setQuery($query);
             $translations = $db->loadObjectList();
@@ -2247,12 +2283,12 @@ class CwmadminController extends FormController
                 // bible_version columns may not exist yet — usage counts stay empty
             }
 
-            // Calculate total size and attach usage counts
+            // Sum total installed size from the cached column; attach usage counts
             $totalSize = 0;
 
             foreach ($translations as $t) {
-                $totalSize += (int) $t->data_size;
-                $t->usage_count = $usageCounts[$t->abbreviation] ?? 0;
+                $totalSize += (int) ($t->data_size ?? 0);
+                $t->usage_count  = $usageCounts[$t->abbreviation] ?? 0;
             }
 
             echo json_encode([
@@ -2289,6 +2325,8 @@ class CwmadminController extends FormController
 
             return;
         }
+
+        session_write_close();
 
         $abbreviation = $app->getInput()->getCmd('abbreviation', '');
 
@@ -2347,6 +2385,8 @@ class CwmadminController extends FormController
             return;
         }
 
+        session_write_close();
+
         $abbreviation = $app->getInput()->getCmd('abbreviation', '');
 
         if (empty($abbreviation)) {
@@ -2393,6 +2433,8 @@ class CwmadminController extends FormController
             return;
         }
 
+        session_write_close();
+
         try {
             $count = BibleImporter::removeAllTranslations();
 
@@ -2434,6 +2476,8 @@ class CwmadminController extends FormController
 
             return;
         }
+
+        session_write_close();
 
         try {
             $admin  = Cwmparams::getAdmin();

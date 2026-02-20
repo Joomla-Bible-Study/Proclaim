@@ -77,7 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
         onlineOnlyDesc: config.dataset.strOnlineOnlyDesc,
         coreTranslation: config.dataset.strCoreTranslation,
         coreCannotRemove: config.dataset.strCoreCannotRemove,
-        providerDisableConfirm: config.dataset.strProviderDisableConfirm,
         providerCleanupDone: config.dataset.strProviderCleanupDone,
     };
 
@@ -157,14 +156,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Provider disable cleanup ---
 
     /**
-     * Count non-installed translations from a given source in the loaded data.
-     */
-    const countNonInstalledBySource = (source) => allTranslations.filter(
-        (t) => t.source === source && parseInt(t.installed, 10) === 0 && parseInt(t.bundled, 10) === 0,
-    ).length;
-
-    /**
      * Clean up non-installed translation entries when a provider is disabled.
+     *
+     * Always fires immediately — never relies on the client-side allTranslations
+     * cache, which may be empty if the Scripture tab hasn't been visited yet.
+     * The server safely returns count=0 when nothing needs removing.
      */
     const cleanupProvider = (source) => {
         fetch(`${baseUrl}cleanupProviderXHR&${token}=1&source=${encodeURIComponent(source)}`)
@@ -172,7 +168,11 @@ document.addEventListener('DOMContentLoaded', () => {
             .then((result) => {
                 if (result.success && result.count > 0) {
                     Joomla.renderMessages({ message: [result.message] });
-                    loadTranslations(true);
+
+                    // Only refresh the list if the Scripture tab has already been initialised
+                    if (scriptureInitDone) {
+                        loadTranslations(true);
+                    }
                 }
             })
             .catch(() => {
@@ -181,7 +181,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /**
-     * Attach provider toggle listeners for disable warnings.
+     * Attach provider toggle listeners — trigger cleanup immediately on disable.
+     *
+     * Does NOT depend on allTranslations being loaded. The user may toggle the
+     * provider radio before ever visiting the Scripture tab, so any client-side
+     * count would be unreliable. The server-side cleanup is idempotent and safe.
      */
     const attachProviderToggle = (fieldName, source) => {
         const radios = document.querySelectorAll(`input[name="${fieldName}"]`);
@@ -193,11 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                const pendingCount = countNonInstalledBySource(source);
-
-                if (pendingCount > 0 && confirm(strings.providerDisableConfirm.replace('%s', pendingCount))) {
-                    cleanupProvider(source);
-                }
+                cleanupProvider(source);
             });
         });
     };
@@ -277,9 +277,19 @@ document.addEventListener('DOMContentLoaded', () => {
      * Refresh the local provider badge with current translation count.
      */
     const refreshLocalBadge = () => {
-        fetch(`${baseUrl}getScriptureStatusXHR&${token}=1`)
-            .then((response) => response.json())
+        const ctrl = new AbortController();
+        const tid  = setTimeout(() => ctrl.abort(), 10000);
+
+        fetch(`${baseUrl}getScriptureStatusXHR&${token}=1`, { signal: ctrl.signal })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                return response.json();
+            })
             .then((data) => {
+                clearTimeout(tid);
                 const badge = document.getElementById('local-provider-status');
 
                 if (data.local_count > 0) {
@@ -290,15 +300,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     badge.innerHTML = `<i class="icon-warning" aria-hidden="true"></i> ${strings.statusNone}`;
                 }
             })
-            .catch(() => {
+            .catch((err) => {
+                clearTimeout(tid);
+                console.error('[Proclaim] refreshLocalBadge error:', err);
                 const badge = document.getElementById('local-provider-status');
                 badge.className = 'badge bg-secondary ms-3';
                 badge.textContent = strings.statusUnknown;
             });
     };
-
-    // Initial badge load
-    refreshLocalBadge();
 
     // --- Local translations management ---
 
@@ -545,11 +554,32 @@ document.addEventListener('DOMContentLoaded', () => {
             container.innerHTML = `<div class="text-center py-3"><span class="spinner-border spinner-border-sm" role="status"></span> ${strings.loading}</div>`;
         }
 
-        fetch(`${baseUrl}getTranslationsXHR&${token}=1`)
-            .then((r) => r.json())
+        const ctrl = new AbortController();
+        const tid  = setTimeout(() => ctrl.abort(), 15000);
+
+        fetch(`${baseUrl}getTranslationsXHR&${token}=1`, { signal: ctrl.signal })
+            .then((r) => {
+                if (!r.ok) {
+                    throw new Error(`HTTP ${r.status} ${r.statusText}`);
+                }
+
+                return r.json();
+            })
             .then((data) => {
-                if (!data.success || !data.translations || data.translations.length === 0) {
+                clearTimeout(tid);
+
+                if (!data.success) {
+                    console.error('[Proclaim] getTranslationsXHR:', data.message);
+                    container.innerHTML = `<div class="alert alert-warning">${esc(data.message || strings.loadError)}</div>`;
+                    container.style.minHeight = '';
+
+                    return;
+                }
+
+                if (!data.translations || data.translations.length === 0) {
                     container.innerHTML = `<p class="text-muted">${strings.noTranslations}</p>`;
+                    container.style.minHeight = '';
+
                     return;
                 }
 
@@ -570,7 +600,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Release locked height
                 container.style.minHeight = '';
             })
-            .catch(() => {
+            .catch((err) => {
+                clearTimeout(tid);
+                console.error('[Proclaim] loadTranslations error:', err);
                 container.innerHTML = `<div class="alert alert-warning">${strings.loadError}</div>`;
                 container.style.minHeight = '';
             });
@@ -726,7 +758,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const verseCount = isInstalled ? t.verse_count : '-';
             const dataSize = isInstalled
-                ? formatSize(t.data_size)
+                ? formatSize(t.data_size || 0)
                 : (t.estimated_size > 0 ? `~${formatSize(t.estimated_size)}` : '-');
 
             let actionBtn;
@@ -934,6 +966,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Initial load (show spinner on first load)
-    loadTranslations();
+    // Lazy init: defer loading until the scripture tab is first shown.
+    // Avoids firing AJAX on every page load when the user may not visit this tab.
+    let scriptureInitDone = false;
+    function initScriptureTab() {
+        if (scriptureInitDone) return;
+        scriptureInitDone = true;
+        refreshLocalBadge();
+        loadTranslations();
+    }
+
+    // 1. joomla.tab.shown — catches user clicks and Joomla tab recall events.
+    document.addEventListener('joomla.tab.shown', (e) => {
+        if (e.target.getAttribute('aria-controls') === 'scripture') initScriptureTab();
+    });
+
+    // 2. setTimeout(0) — catches recalls that fire during DOMContentLoaded
+    //    before our joomla.tab.shown listener was registered.
+    setTimeout(() => {
+        if (!scriptureInitDone && document.getElementById('scripture')?.hasAttribute('active')) {
+            initScriptureTab();
+        }
+    }, 0);
+
+    // 3. MutationObserver — belt-and-suspenders for late active attribute changes.
+    const scripturePane = document.getElementById('scripture');
+
+    if (scripturePane) {
+        const observer = new MutationObserver(() => {
+            if (!scriptureInitDone && scripturePane.hasAttribute('active')) {
+                observer.disconnect();
+                initScriptureTab();
+            }
+        });
+        observer.observe(scripturePane, { attributes: true, attributeFilter: ['active'] });
+    }
 });
