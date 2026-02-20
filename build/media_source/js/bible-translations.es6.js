@@ -297,9 +297,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     };
 
-    // Initial badge load
-    refreshLocalBadge();
-
     // --- Local translations management ---
 
     // Language name mapping for common ISO codes
@@ -934,6 +931,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Initial load (show spinner on first load)
-    loadTranslations();
+    // Lazy init: defer loading until the scripture tab is first shown.
+    // Avoids firing AJAX on every page load when the user may not visit this tab.
+    let scriptureInitDone = false;
+    function initScriptureTab() {
+        if (scriptureInitDone) return;
+        scriptureInitDone = true;
+        refreshLocalBadge();
+        loadTranslations();
+    }
+    document.addEventListener('shown.bs.tab', (e) => {
+        if (e.target.dataset.bsTarget === '#scripture') initScriptureTab();
+    });
+    // Handle hash-recall: tab may already be active on page load
+    if (document.getElementById('scripture')?.classList.contains('active')) {
+        initScriptureTab();
+    }
 });

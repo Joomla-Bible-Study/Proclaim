@@ -76,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', blockNavigation, true);
 
     // ---- Image Migration ----
-    loadMigrationCounts();
 
     function loadMigrationCounts() {
         return fetch(`index.php?option=com_proclaim&task=cwmadmin.getMigrationCountsXHR&${token}=1`)
@@ -434,7 +433,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ---- WebP Generation ----
-    loadWebPCounts();
 
     function loadWebPCounts() {
         return fetch(`index.php?option=com_proclaim&task=cwmadmin.getWebPCountsXHR&${token}=1`)
@@ -569,7 +567,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ---- Thumbnail & WebP Regeneration (studies + teachers + series) ----
-    loadThumbRegenCounts();
 
     function loadThumbRegenCounts() {
         fetch(`index.php?option=com_proclaim&task=cwmadmin.getThumbRegenCountXHR&${token}=1`)
@@ -690,7 +687,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let recoveryTotals = {
         studies: 0, teachers: 0, series: 0, total: 0,
     };
-    loadRecoveryCounts();
 
     function loadRecoveryCounts() {
         return fetch(`index.php?option=com_proclaim&task=cwmadmin.getRecoveryCountsXHR&${token}=1`)
@@ -1409,6 +1405,24 @@ document.addEventListener('DOMContentLoaded', () => {
             setCleanupStatus(Joomla.Text._('JBS_ADM_CLEANUP_PIPELINE_CANCELLING'));
             cancelCleanupPipelineBtn.disabled = true;
         });
+    }
+
+    // ---- Lazy init: defer count loading until imagetools tab is first shown ----
+    let imagetoolsInitDone = false;
+    function initImagetoolsCounts() {
+        if (imagetoolsInitDone) return;
+        imagetoolsInitDone = true;
+        loadMigrationCounts();
+        loadWebPCounts();
+        loadThumbRegenCounts();
+        loadRecoveryCounts();
+    }
+    document.addEventListener('shown.bs.tab', (e) => {
+        if (e.target.dataset.bsTarget === '#imagetools') initImagetoolsCounts();
+    });
+    // Handle hash-recall: tab may already be active on page load
+    if (document.getElementById('imagetools')?.classList.contains('active')) {
+        initImagetoolsCounts();
     }
 
     // ---- Utility ----

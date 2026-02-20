@@ -32,8 +32,7 @@
             this.form = document.getElementById('item-admin');
             this.createLiveRegion();
             this.bindEvents();
-            this.loadPlayerStats();
-            this.loadPopupStats();
+            this.setupLazyStats();
             this.setupJoomlaSubmitbutton();
         }
 
@@ -104,6 +103,29 @@
             }
 
             return response.json();
+        }
+
+        /**
+     * Defer player/popup stat loading until the Player Settings tab is shown.
+     * Avoids firing 2 AJAX calls on every page load.
+     */
+        setupLazyStats() {
+            let loaded = false;
+            const load = () => {
+                if (loaded) return;
+                loaded = true;
+                this.loadPlayerStats();
+                this.loadPopupStats();
+            };
+
+            document.addEventListener('shown.bs.tab', (e) => {
+                if (e.target.dataset.bsTarget === '#playersettings') load();
+            });
+
+            // Handle hash-recall: tab may already be active on page load
+            if (document.getElementById('playersettings')?.classList.contains('active')) {
+                load();
+            }
         }
 
         /**

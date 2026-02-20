@@ -66,8 +66,8 @@ class CwmlangHelper
             return self::$cachedKeys;
         }
 
-        $lang    = Factory::getApplication()->getLanguage();
-        $tag     = $lang->getTag();
+        $lang     = Factory::getApplication()->getLanguage();
+        $tag      = $lang->getTag();
         $baseName = $tag . '.com_proclaim.ini';
         $fallback = 'en-GB.com_proclaim.ini';
 
