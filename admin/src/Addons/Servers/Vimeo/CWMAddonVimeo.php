@@ -18,7 +18,9 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Vimeo;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Language\Text;
+use Joomla\Input\Input;
 
 /**
  * Vimeo Server Addon
@@ -145,7 +147,7 @@ class CWMAddonVimeo extends CWMAddon
     {
         try {
             $url      = 'https://vimeo.com/api/oembed.json?url=https://vimeo.com/' . $videoId;
-            $http     = Factory::getApplication()->getHttpFactory()->getHttp();
+            $http     = HttpFactory::getHttp();
             $response = $http->get($url);
 
             if ($response->code !== 200) {
@@ -252,7 +254,7 @@ class CWMAddonVimeo extends CWMAddon
             }
 
             // Test API connection by getting user info
-            $http    = $app->getHttpFactory()->getHttp();
+            $http    = HttpFactory::getHttp();
             $headers = [
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Accept'        => 'application/vnd.vimeo.*+json;version=3.4',
@@ -295,6 +297,43 @@ class CWMAddonVimeo extends CWMAddon
     {
         $app     = Factory::getApplication();
         $input   = $app->getInput();
+        $videoId = $input->getString('video_id', '');
+
+        if (empty($videoId)) {
+            return [
+                'success' => false,
+                'error'   => Text::_('JBS_ADDON_VIMEO_NO_VIDEO_ID'),
+            ];
+        }
+
+        try {
+            $metadata = $this->getVideoMetadata($videoId);
+
+            return [
+                'success'  => true,
+                'metadata' => $metadata,
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'error'   => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * AJAX handler: retrieve Vimeo video metadata via oEmbed (no auth required)
+     *
+     * Called by the controller via cwmmediafile.xhr&type=vimeo&handler=getMetadata
+     *
+     * @param   Input  $input  Request input
+     *
+     * @return  array  Response with success flag and metadata
+     *
+     * @since   10.1.0
+     */
+    public function getMetadata(Input $input): array
+    {
         $videoId = $input->getString('video_id', '');
 
         if (empty($videoId)) {

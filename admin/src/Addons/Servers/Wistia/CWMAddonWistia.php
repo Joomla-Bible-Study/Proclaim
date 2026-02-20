@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Wistia;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Language\Text;
 
 /**
@@ -143,7 +144,7 @@ class CWMAddonWistia extends CWMAddon
         try {
             $videoUrl = 'https://home.wistia.com/medias/' . $mediaHash;
             $url      = 'https://fast.wistia.com/oembed?url=' . urlencode($videoUrl);
-            $http     = Factory::getApplication()->getHttpFactory()->getHttp();
+            $http     = HttpFactory::getHttp();
             $response = $http->get($url);
 
             if ($response->code !== 200) {
@@ -250,7 +251,7 @@ class CWMAddonWistia extends CWMAddon
             }
 
             // Test API connection by getting account info
-            $http    = $app->getHttpFactory()->getHttp();
+            $http    = HttpFactory::getHttp();
             $headers = [
                 'Authorization' => 'Bearer ' . $apiToken,
             ];
