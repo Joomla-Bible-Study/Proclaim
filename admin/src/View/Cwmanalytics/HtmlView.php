@@ -114,6 +114,9 @@ class HtmlView extends BaseHtmlView
     /** @var string Export URL for CSV download @since 10.1.0 */
     public string $exportUrl = '';
 
+    /** @var bool True when rendering the print-optimized report @since 10.1.0 */
+    public bool $isPrint = false;
+
     /** @var array{views: int, plays: int, downloads: int} All-time totals from monthly aggregates @since 10.1.0 */
     public array $legacyKpi = ['views' => 0, 'plays' => 0, 'downloads' => 0];
 
@@ -247,14 +250,23 @@ class HtmlView extends BaseHtmlView
             false
         );
 
-        // --- Toolbar ---
-        ToolbarHelper::title(Text::_('JBS_ANA_ANALYTICS_DASHBOARD'), 'bar-chart');
-        ToolbarHelper::back('JTOOLBAR_BACK', Route::_('index.php?option=com_proclaim'));
+        // --- Print mode detection ---
+        $this->isPrint = $input->getBool('print', false);
 
         $wa = $this->getDocument()->getWebAssetManager();
-        $wa->useScript('com_proclaim.chart.js')
-            ->useScript('com_proclaim.cwmanalytics')
-            ->useStyle('com_proclaim.general');
+
+        if ($this->isPrint) {
+            // Print report: load on all media (not just @media print) for the popup
+            $wa->useStyle('com_proclaim.print-report');
+        } else {
+            // Normal dashboard: toolbar + chart assets
+            ToolbarHelper::title(Text::_('JBS_ANA_ANALYTICS_DASHBOARD'), 'bar-chart');
+            ToolbarHelper::back('JTOOLBAR_BACK', Route::_('index.php?option=com_proclaim'));
+
+            $wa->useScript('com_proclaim.chart.js')
+                ->useScript('com_proclaim.cwmanalytics')
+                ->useStyle('com_proclaim.general');
+        }
 
         parent::display($tpl);
     }
