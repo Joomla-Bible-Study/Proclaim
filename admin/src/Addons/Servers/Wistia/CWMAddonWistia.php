@@ -18,7 +18,9 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Wistia;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Language\Text;
+use Joomla\Input\Input;
 
 /**
  * Wistia Server Addon
@@ -80,7 +82,7 @@ class CWMAddonWistia extends CWMAddon
 
         foreach ($patterns as $pattern) {
             if (preg_match($pattern, $url, $matches)) {
-                return '//fast.wistia.net/embed/iframe/' . $matches[1];
+                return 'https://fast.wistia.net/embed/iframe/' . $matches[1];
             }
         }
 
@@ -143,7 +145,7 @@ class CWMAddonWistia extends CWMAddon
         try {
             $videoUrl = 'https://home.wistia.com/medias/' . $mediaHash;
             $url      = 'https://fast.wistia.com/oembed?url=' . urlencode($videoUrl);
-            $http     = Factory::getApplication()->getHttpFactory()->getHttp();
+            $http     = HttpFactory::getHttp();
             $response = $http->get($url);
 
             if ($response->code !== 200) {
@@ -197,7 +199,37 @@ class CWMAddonWistia extends CWMAddon
         return [
             'testApi',
             'getMetadata',
+            'fetchVideos',
+            'fetchProjects',
         ];
+    }
+
+    /**
+     * Get the Wistia API token for a server by ID
+     *
+     * @param   int  $serverId  The server record ID
+     *
+     * @return  string  The API token, or empty string if not found
+     *
+     * @since   10.1.0
+     */
+    private function getServerApiToken(int $serverId): string
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('params'))
+            ->from($db->quoteName('#__bsms_servers'))
+            ->where($db->quoteName('id') . ' = ' . $serverId);
+        $db->setQuery($query);
+        $paramsJson = $db->loadResult();
+
+        if (!$paramsJson) {
+            return '';
+        }
+
+        $params = json_decode($paramsJson, true);
+
+        return $params['api_token'] ?? '';
     }
 
     /**
@@ -222,25 +254,8 @@ class CWMAddonWistia extends CWMAddon
             ];
         }
 
-        // Load server params
         try {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
-            $query = $db->getQuery(true)
-                ->select($db->quoteName('params'))
-                ->from($db->quoteName('#__bsms_servers'))
-                ->where($db->quoteName('id') . ' = ' . (int) $serverId);
-            $db->setQuery($query);
-            $paramsJson = $db->loadResult();
-
-            if (!$paramsJson) {
-                return [
-                    'success' => false,
-                    'error'   => Text::_('JBS_ADDON_WISTIA_SERVER_NOT_FOUND'),
-                ];
-            }
-
-            $params   = json_decode($paramsJson, true);
-            $apiToken = $params['api_token'] ?? '';
+            $apiToken = $this->getServerApiToken($serverId);
 
             if (empty($apiToken)) {
                 return [
@@ -250,7 +265,7 @@ class CWMAddonWistia extends CWMAddon
             }
 
             // Test API connection by getting account info
-            $http    = $app->getHttpFactory()->getHttp();
+            $http    = HttpFactory::getHttp();
             $headers = [
                 'Authorization' => 'Bearer ' . $apiToken,
             ];
@@ -316,6 +331,217 @@ class CWMAddonWistia extends CWMAddon
     }
 
     /**
+     * AJAX handler: retrieve Wistia video metadata via oEmbed (no auth required)
+     *
+     * Called by the controller via cwmmediafile.xhr&type=wistia&handler=getMetadata
+     *
+     * @param   Input  $input  Request input
+     *
+     * @return  array  Response with success flag and metadata
+     *
+     * @since   10.1.0
+     */
+    public function getMetadata(Input $input): array
+    {
+        $mediaHash = $input->getString('media_hash', '');
+
+        if (empty($mediaHash)) {
+            return [
+                'success' => false,
+                'error'   => Text::_('JBS_ADDON_WISTIA_NO_MEDIA_HASH'),
+            ];
+        }
+
+        try {
+            $metadata = $this->getVideoMetadata($mediaHash);
+
+            return [
+                'success'  => true,
+                'metadata' => $metadata,
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'error'   => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * AJAX handler: fetch paginated videos from the authenticated Wistia account
+     *
+     * @param   Input  $input  Request input
+     *
+     * @return  array  Response with videos array and pagination metadata
+     *
+     * @since   10.1.0
+     */
+    public function fetchVideos(Input $input): array
+    {
+        $serverId = $input->getInt('server_id', 0);
+
+        if (!$serverId) {
+            return ['success' => false, 'error' => 'No server ID provided'];
+        }
+
+        $apiToken = $this->getServerApiToken($serverId);
+
+        if (empty($apiToken)) {
+            return ['success' => false, 'error' => 'no api_token'];
+        }
+
+        $page      = max(1, $input->getInt('page', 1));
+        $name      = $input->getString('name', '');
+        $projectId = $input->getInt('project_id', 0);
+
+        $params = [
+            'page'           => $page,
+            'per_page'       => 12,
+            'sort_by'        => 'updated',
+            'sort_direction' => 'desc',
+            'type'           => 'Video',
+        ];
+
+        if (!empty($name)) {
+            $params['name'] = $name;
+        }
+
+        if ($projectId) {
+            $params['project_id'] = $projectId;
+        }
+
+        $http    = HttpFactory::getHttp();
+        $headers = [
+            'Authorization' => 'Bearer ' . $apiToken,
+        ];
+
+        try {
+            $response = $http->get(
+                'https://api.wistia.com/v1/medias.json?' . http_build_query($params),
+                $headers
+            );
+
+            if ($response->code !== 200) {
+                return ['success' => false, 'error' => 'Wistia API error (HTTP ' . $response->code . ')'];
+            }
+
+            $data = json_decode($response->body, true);
+
+            if (!is_array($data)) {
+                return ['success' => false, 'error' => 'Invalid API response'];
+            }
+
+            // Total count is in the WTotal-Count response header
+            $total = 0;
+
+            foreach ((array) $response->headers as $headerName => $headerValue) {
+                if (strtolower((string) $headerName) === 'wtotal-count') {
+                    $total = (int) (is_array($headerValue) ? $headerValue[0] : $headerValue);
+                    break;
+                }
+            }
+
+            // Fallback if header not present
+            if ($total === 0) {
+                $total = count($data);
+            }
+
+            $videos = [];
+
+            foreach ($data as $media) {
+                $thumbnail = $media['thumbnail']['url'] ?? '';
+
+                $videos[] = [
+                    'hashedId'  => $media['hashed_id'] ?? '',
+                    'title'     => $media['name'] ?? '',
+                    'thumbnail' => $thumbnail,
+                    'duration'  => (int) round((float) ($media['duration'] ?? 0)),
+                    'link'      => 'https://home.wistia.com/medias/' . ($media['hashed_id'] ?? ''),
+                    'createdAt' => $media['updated'] ?? '',
+                ];
+            }
+
+            $perPage    = 12;
+            $totalPages = $total > 0 ? (int) ceil($total / $perPage) : 1;
+
+            return [
+                'success'    => true,
+                'videos'     => $videos,
+                'total'      => $total,
+                'page'       => $page,
+                'perPage'    => $perPage,
+                'totalPages' => $totalPages,
+            ];
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * AJAX handler: fetch projects from the authenticated Wistia account
+     *
+     * @param   Input  $input  Request input
+     *
+     * @return  array  Response with projects array
+     *
+     * @since   10.1.0
+     */
+    public function fetchProjects(Input $input): array
+    {
+        $serverId = $input->getInt('server_id', 0);
+
+        if (!$serverId) {
+            return ['success' => false, 'error' => 'No server ID provided'];
+        }
+
+        $apiToken = $this->getServerApiToken($serverId);
+
+        if (empty($apiToken)) {
+            return ['success' => false, 'error' => 'no api_token'];
+        }
+
+        $http    = HttpFactory::getHttp();
+        $headers = [
+            'Authorization' => 'Bearer ' . $apiToken,
+        ];
+
+        try {
+            $response = $http->get(
+                'https://api.wistia.com/v1/projects.json?per_page=100&sort_by=name&sort_direction=asc',
+                $headers
+            );
+
+            if ($response->code !== 200) {
+                return ['success' => false, 'error' => 'Wistia API error (HTTP ' . $response->code . ')'];
+            }
+
+            $data = json_decode($response->body, true);
+
+            if (!is_array($data)) {
+                return ['success' => false, 'error' => 'Invalid API response'];
+            }
+
+            $projects = [];
+
+            foreach ($data as $project) {
+                if (isset($project['id'])) {
+                    $projects[] = [
+                        'projectId' => (int) $project['id'],
+                        'title'     => $project['name'] ?? '',
+                    ];
+                }
+            }
+
+            return [
+                'success'  => true,
+                'projects' => $projects,
+            ];
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
      * Render general fieldset fields
      *
      * @param   object  $media_form  Media files form
@@ -329,7 +555,7 @@ class CWMAddonWistia extends CWMAddon
     {
         $html = '';
 
-        foreach ($media_form->getFieldset('files_settings') as $field) {
+        foreach ($media_form->getFieldset('general') as $field) {
             if ($new && isset($media_form->s_params[$field->fieldname])) {
                 $field->setValue($media_form->s_params[$field->fieldname]);
             }

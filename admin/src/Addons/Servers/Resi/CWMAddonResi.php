@@ -71,14 +71,14 @@ class CWMAddonResi extends CWMAddon
 
         // Resi's current embed format: control.resi.io/webplayer/video.html?id={base64}
         // Users should paste this URL directly from Resi's embed/share dialog.
-        // Just strip the protocol — the full URL is already embed-ready.
+        // Ensure https:// prefix — fancybox requires absolute URLs.
         if (str_contains($url, 'control.resi.io/webplayer/')) {
-            return preg_replace('#^https?:#', '', $url);
+            return preg_replace('#^(https?:)?//#', 'https://', $url);
         }
 
         // Legacy player.resi.io embed URLs — pass through if already in embed form
         if (str_contains($url, 'player.resi.io')) {
-            return preg_replace('#^https?:#', '', $url);
+            return preg_replace('#^(https?:)?//#', 'https://', $url);
         }
 
         // Return original URL if no conversion possible — may still be a valid embed src
@@ -266,7 +266,7 @@ class CWMAddonResi extends CWMAddon
     {
         $html = '';
 
-        foreach ($media_form->getFieldset('files_settings') as $field) {
+        foreach ($media_form->getFieldset('general') as $field) {
             if ($new && isset($media_form->s_params[$field->fieldname])) {
                 $field->setValue($media_form->s_params[$field->fieldname]);
             }

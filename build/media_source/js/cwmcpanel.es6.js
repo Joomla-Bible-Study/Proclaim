@@ -27,10 +27,13 @@
 
         const stored = localStorage.getItem(KEY);
 
+        // If dismissed within the snooze window, leave the notice hidden (d-none stays).
         if (stored && (Date.now() - parseInt(stored, 10)) < DAYS * 86400000) {
-            notice.style.display = 'none';
             return;
         }
+
+        // Not snoozed — reveal the notice (it starts hidden to avoid flash).
+        notice.classList.remove('d-none');
 
         const alert = notice.querySelector('.alert');
 

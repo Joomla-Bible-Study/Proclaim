@@ -76,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', blockNavigation, true);
 
     // ---- Image Migration ----
-    loadMigrationCounts();
 
     function loadMigrationCounts() {
         return fetch(`index.php?option=com_proclaim&task=cwmadmin.getMigrationCountsXHR&${token}=1`)
@@ -434,7 +433,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ---- WebP Generation ----
-    loadWebPCounts();
 
     function loadWebPCounts() {
         return fetch(`index.php?option=com_proclaim&task=cwmadmin.getWebPCountsXHR&${token}=1`)
@@ -569,7 +567,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ---- Thumbnail & WebP Regeneration (studies + teachers + series) ----
-    loadThumbRegenCounts();
 
     function loadThumbRegenCounts() {
         fetch(`index.php?option=com_proclaim&task=cwmadmin.getThumbRegenCountXHR&${token}=1`)
@@ -690,7 +687,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let recoveryTotals = {
         studies: 0, teachers: 0, series: 0, total: 0,
     };
-    loadRecoveryCounts();
 
     function loadRecoveryCounts() {
         return fetch(`index.php?option=com_proclaim&task=cwmadmin.getRecoveryCountsXHR&${token}=1`)
@@ -1045,16 +1041,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Show download log button if a log file already exists (check via preview)
-    if (downloadLogBtn) {
-        fetch(`index.php?option=com_proclaim&task=cwmadmin.downloadClearedLogXHR&${token}=1`, { method: 'HEAD' })
-            .then((r) => {
-                if (r.ok && r.headers.get('content-type')?.includes('text/csv')) {
-                    downloadLogBtn.style.display = '';
-                }
-            })
-            .catch(() => {});
-    }
+    // Note: download log button visibility is checked inside initImagetoolsCounts() on tab show
 
     // ---- Pipeline ----
     function setPipelineBadge(stepId, state) {
@@ -1410,6 +1397,38 @@ document.addEventListener('DOMContentLoaded', () => {
             cancelCleanupPipelineBtn.disabled = true;
         });
     }
+
+    // ---- Lazy init: defer count loading until imagetools tab is first shown ----
+    let imagetoolsInitDone = false;
+    function initImagetoolsCounts() {
+        if (imagetoolsInitDone) return;
+        imagetoolsInitDone = true;
+        loadMigrationCounts();
+        loadWebPCounts();
+        loadThumbRegenCounts();
+        loadRecoveryCounts();
+
+        // Check if a cleared-images log exists and show the download button if so
+        // downloadLogBtn already declared in outer scope (line ~937)
+        if (downloadLogBtn) {
+            fetch(`index.php?option=com_proclaim&task=cwmadmin.downloadClearedLogXHR&${token}=1`, { method: 'HEAD' })
+                .then((r) => {
+                    if (r.ok && r.headers.get('content-type')?.includes('text/csv')) {
+                        downloadLogBtn.style.display = '';
+                    }
+                })
+                .catch(() => {});
+        }
+    }
+    document.addEventListener('joomla.tab.shown', (e) => {
+        if (e.target.getAttribute('aria-controls') === 'imagetools') initImagetoolsCounts();
+    });
+    // DOMContentLoaded fires after joomla-tab recall; check active attribute (not CSS class)
+    setTimeout(() => {
+        if (!imagetoolsInitDone && document.getElementById('imagetools')?.hasAttribute('active')) {
+            initImagetoolsCounts();
+        }
+    }, 0);
 
     // ---- Utility ----
     function formatBytes(bytes) {

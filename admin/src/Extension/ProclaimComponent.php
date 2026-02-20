@@ -103,7 +103,14 @@ class ProclaimComponent extends MVCComponent implements
      * @since   4.0.0
      */
     /**
-     * Minimum PHP version required for Proclaim
+     * Minimum PHP version ID required for Proclaim (8.3.0 = 80300).
+     *
+     * @since 10.1.0
+     */
+    public const int MIN_PHP_VERSION_ID = 80300;
+
+    /**
+     * Minimum PHP version as a display string for error messages.
      *
      * @since 10.1.0
      */
@@ -112,7 +119,7 @@ class ProclaimComponent extends MVCComponent implements
     public function boot(ContainerInterface $container): void
     {
         // Check PHP version requirement
-        if (version_compare(PHP_VERSION, self::MIN_PHP_VERSION, '<')) {
+        if (PHP_VERSION_ID < self::MIN_PHP_VERSION_ID) {
             // Always load Proclaim API if it exists.
             $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 

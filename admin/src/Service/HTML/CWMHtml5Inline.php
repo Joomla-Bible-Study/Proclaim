@@ -10,7 +10,6 @@
 namespace CWM\Component\Proclaim\Administrator\Service\HTML;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 

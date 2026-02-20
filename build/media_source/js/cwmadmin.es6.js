@@ -32,8 +32,7 @@
             this.form = document.getElementById('item-admin');
             this.createLiveRegion();
             this.bindEvents();
-            this.loadPlayerStats();
-            this.loadPopupStats();
+            this.setupLazyStats();
             this.setupJoomlaSubmitbutton();
         }
 
@@ -104,6 +103,31 @@
             }
 
             return response.json();
+        }
+
+        /**
+     * Defer player/popup stat loading until the Player Settings tab is shown.
+     * Avoids firing 2 AJAX calls on every page load.
+     */
+        setupLazyStats() {
+            let loaded = false;
+            const load = () => {
+                if (loaded) return;
+                loaded = true;
+                this.loadPlayerStats();
+                this.loadPopupStats();
+            };
+
+            document.addEventListener('joomla.tab.shown', (e) => {
+                if (e.target.getAttribute('aria-controls') === 'playersettings') load();
+            });
+
+            // DOMContentLoaded fires after joomla-tab recall; check active attribute (not CSS class)
+            setTimeout(() => {
+                if (!loaded && document.getElementById('playersettings')?.hasAttribute('active')) {
+                    load();
+                }
+            }, 0);
         }
 
         /**
