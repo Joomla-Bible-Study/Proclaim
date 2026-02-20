@@ -780,6 +780,78 @@ a:not([class]) {
 }
 
 /* ==========================================================================
+   Teacher Detail — Card Grid Mode
+   ========================================================================== */
+
+.proclaim-teacher-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.proclaim-teacher-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.proclaim-teacher-card-img {
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background-color: var(--color-background-light);
+}
+
+.proclaim-teacher-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.proclaim-teacher-card-img picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.proclaim-teacher-card-img picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.proclaim-teacher-card .card-title a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.proclaim-teacher-card .card-title a:hover {
+  text-decoration: underline;
+}
+
+.proclaim-teacher-card-scripture {
+  color: var(--color-scripture);
+  font-weight: 600;
+}
+
+.proclaim-teacher-card-intro {
+  font-size: 0.875rem;
+  color: var(--color-gray-dark);
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   Teacher Detail — Simple List Mode
+   ========================================================================== */
+
+.proclaim-teacher-list-row:last-child {
+  border-bottom: none !important;
+}
+
+.proclaim-teacher-list-row:hover {
+  background-color: var(--color-background-light);
+}
+
+/* ==========================================================================
    Archive Display Styles
    ========================================================================== */
 
@@ -971,5 +1043,12 @@ a:not([class]) {
     display: block;
     width: 100%;
     margin-bottom: 1rem;
+  }
+
+  /* Teacher simple list — stack columns on mobile */
+  .proclaim-teacher-list-row .col-md-2,
+  .proclaim-teacher-list-row .col-md-5 {
+    padding-top: 0;
+    padding-bottom: 0;
   }
 }
