@@ -157,23 +157,8 @@ class CWMHtml5Inline
             $popupMarg = $params->get('popupmargin', '50');
         }
 
-        if ($params->get('media_popout_yes', true)) {
-            $popoutText = $params->get('media_popout_text', Text::_('JBS_CMN_POPOUT'));
-        } else {
-            $popoutText = '';
-        }
-
         if ($popup || $params->get('pcplaylist')) {
             $render .= "</div>";
-        } elseif ($popoutText) {
-            // Add space for a popup window
-            $player->playerwidth += 20;
-            $player->playerheight += $popupMarg;
-            $render .= "<a href=\"#\" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
-                . $player->player . "&amp;view=cwmpopup&amp;t=" . $t . "&amp;mediaid=" . $media->id
-                . "&amp;tmpl=component', 'newwindow', 'width="
-                . $player->playerwidth . ",height=" .
-                $player->playerheight . "'); return false\">" . $popoutText . "</a>";
         }
 
         if (isset($media->headertext)) {

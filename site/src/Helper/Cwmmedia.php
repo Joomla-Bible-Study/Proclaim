@@ -147,6 +147,37 @@ class Cwmmedia
         $playerCode   = $this->getPlayerCode($params, $player, $image, $media);
         $downloadLink = $this->getFluidDownloadLink($media, $params, $template);
 
+        // Generate a popout link for inline HTML5 audio/video players.
+        // Moved out of CWMHtml5Inline::render() so it can be placed alongside
+        // the download link in a row below the player (instead of inline with it).
+        $popoutLink      = '';
+        $filename        = (string) ($media->params->get('filename') ?? '');
+        $isVideoPlatform = substr_count($filename, 'youtube') || substr_count($filename, 'youtu.be')
+            || substr_count($filename, 'vimeo.com')
+            || substr_count($filename, 'wistia.com') || substr_count($filename, 'wistia.net')
+            || substr_count($filename, 'resi.io');
+        $isHtml5Inline = ((int) $player->player === 7 || (int) $player->player === 1)
+            && (int) $player->type === 2;
+
+        if ($isHtml5Inline && !$isVideoPlatform && $params->get('media_popout_yes', true)) {
+            $popoutText = $params->get('media_popout_text', Text::_('JBS_CMN_POPOUT'));
+
+            if ($popoutText) {
+                $tId          = Factory::getApplication()->getInput()->getInt('t', 1);
+                $popoutWidth  = (int) $player->playerwidth + 20;
+                $popoutHeight = (int) $player->playerheight + (int) $params->get('popupmargin', 50);
+                $popoutLink   = '<a href="#"'
+                    . ' title="' . htmlspecialchars($popoutText, ENT_QUOTES, 'UTF-8') . '"'
+                    . " onclick=\"window.open('index.php?option=com_proclaim&amp;player="
+                    . (int) $player->player . '&amp;view=cwmpopup&amp;t=' . $tId
+                    . '&amp;mediaid=' . (int) $media->id
+                    . "&amp;tmpl=component', 'newwindow', 'width="
+                    . $popoutWidth . ',height=' . $popoutHeight . "'); return false\">"
+                    . '<span class="fas fa-external-link-alt" aria-hidden="true"></span>'
+                    . '</a>';
+            }
+        }
+
         $link_type = 0;
 
         if ($media->params->get('link_type') === '0' || $media->params->get('link_type')) {
@@ -163,6 +194,8 @@ class Cwmmedia
         if ($params->get('pcplaylist')) {
             $link_type = 0;
         }
+
+        $filesize = '';
 
         if ($link_type < 2 && $params->get('show_filesize') > 0) {
             $file_size = (int)$media->params->get('size', 0);
@@ -192,12 +225,10 @@ class Cwmmedia
                 break;
 
             case 1:
-                if ($downloadLink) {
-                    $mediafile = '<span class="d-inline-flex align-items-center">'
-                        . $playerCode
-                        . $downloadLink
-                        . ($filesize ?: '')
-                        . '</span>';
+                if ($downloadLink || $popoutLink) {
+                    $actions   = '<div class="d-flex align-items-center gap-2">'
+                        . $popoutLink . $downloadLink . $filesize . '</div>';
+                    $mediafile = '<div class="d-flex flex-column gap-1">' . $playerCode . $actions . '</div>';
                 } else {
                     $mediafile = $playerCode;
                 }
@@ -208,7 +239,12 @@ class Cwmmedia
                 break;
 
             case 3:
-                $mediafile = $playerCode . $downloadLink;
+                if ($popoutLink) {
+                    $actions   = '<div class="d-flex align-items-center gap-2">' . $popoutLink . $downloadLink . '</div>';
+                    $mediafile = '<div class="d-flex flex-column gap-1">' . $playerCode . $actions . '</div>';
+                } else {
+                    $mediafile = $playerCode . $downloadLink;
+                }
                 break;
         }
 
