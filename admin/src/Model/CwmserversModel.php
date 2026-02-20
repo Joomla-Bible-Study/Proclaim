@@ -164,6 +164,9 @@ class CwmserversModel extends ListModel
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
 
+        $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
+        $this->setState('filter.location', $location);
+
         // List state information.
         parent::populateState($ordering, $direction);
     }
@@ -237,6 +240,17 @@ class CwmserversModel extends ListModel
             } else {
                 // Location system disabled — standard Joomla access-level filter
                 $query->whereIn($db->quoteName('server.access'), $user->getAuthorisedViewLevels());
+            }
+        }
+
+        // Filter by location
+        if (isset($columns['location_id'])) {
+            $location = $this->getState('filter.location');
+
+            if (is_numeric($location)) {
+                $locationVal = (int) $location;
+                $query->where($db->quoteName('server.location_id') . ' = :locationId')
+                    ->bind(':locationId', $locationVal, \Joomla\Database\ParameterType::INTEGER);
             }
         }
 
