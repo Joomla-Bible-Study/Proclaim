@@ -12,10 +12,10 @@
 namespace CWM\Component\Proclaim\Administrator\Bible;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Log\Log;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
+use Joomla\Http\HttpFactory;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -86,13 +86,17 @@ class BibleImporter
             ['com_proclaim.bible']
         );
 
-        $http = HttpFactory::getHttp();
+        $factory  = new HttpFactory();
+        $http     = $factory->getHttp();
+        $headers  = [
+            'Accept' => 'application/json',
+        ];
 
         // Fetch list of books for this translation
         $booksUrl = self::API_BASE_URL . $abbreviation . '/books.json';
 
         try {
-            $response = $http->get($booksUrl, [], self::HTTP_TIMEOUT);
+            $response = $http->get($booksUrl, $headers, self::HTTP_TIMEOUT);
 
             if ($response->code !== 200) {
                 Log::add('BibleImporter: HTTP ' . $response->code . ' fetching book list for "' . $abbreviation . '"', Log::ERROR, 'com_proclaim.bible');
@@ -673,7 +677,7 @@ class BibleImporter
 
             if ($withSize) {
                 $columns[] = 'data_size';
-                $values   .= ', ' . (int) $dataSize;
+                $values .= ', ' . (int) $dataSize;
             }
 
             $query = $db->getQuery(true)

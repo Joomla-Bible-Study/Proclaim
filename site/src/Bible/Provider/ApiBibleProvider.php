@@ -13,8 +13,8 @@ namespace CWM\Component\Proclaim\Site\Bible\Provider;
 
 use CWM\Component\Proclaim\Site\Bible\AbstractBibleProvider;
 use CWM\Component\Proclaim\Site\Bible\BiblePassageResult;
-use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Log\Log;
+use Joomla\Http\HttpFactory;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -357,7 +357,8 @@ class ApiBibleProvider extends AbstractBibleProvider
     private function httpGetWithApiKey(string $url, int $timeout = 15): ?string
     {
         try {
-            $http     = HttpFactory::getHttp();
+            $factory  = new HttpFactory();
+            $http     = $factory->getHttp();
             $response = $http->get($url, ['api-key' => $this->apiKey], $timeout);
 
             if ($response->code === 200) {

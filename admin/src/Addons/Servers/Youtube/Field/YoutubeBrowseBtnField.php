@@ -53,11 +53,11 @@ class YoutubeBrowseBtnField extends FormField
      *
      * @return  string  The field input markup.
      *
+     * @throws \Exception
      * @since   10.0.0
      */
     protected function getInput(): string
     {
-        /** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
         $wa->useScript('com_proclaim.addon-youtube-browser');
 

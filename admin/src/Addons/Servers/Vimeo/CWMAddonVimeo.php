@@ -18,8 +18,8 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Vimeo;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Language\Text;
+use Joomla\Http\HttpFactory;
 use Joomla\Input\Input;
 
 /**
@@ -147,27 +147,22 @@ class CWMAddonVimeo extends CWMAddon
     {
         try {
             $url      = 'https://vimeo.com/api/oembed.json?url=https://vimeo.com/' . $videoId;
-            $http     = HttpFactory::getHttp();
-            $response = $http->get($url);
+            $factory  = new HttpFactory();
+            $http     = $factory->getHttp();
+            $headers  = [
+                'Accept' => 'application/json',
+            ];
 
-            if ($response->code !== 200) {
-                return [
-                    'title'       => '',
-                    'description' => '',
-                    'thumbnail'   => '',
-                    'duration'    => 0,
-                ];
-            }
+            try {
+                $response = $http->get($url, $headers);
 
-            $data = json_decode($response->body, true);
+                if ($response->code !== 200) {
+                    throw new \RuntimeException('Vimeo oEmbed error: HTTP ' . $response->code);
+                }
 
-            if (!$data) {
-                return [
-                    'title'       => '',
-                    'description' => '',
-                    'thumbnail'   => '',
-                    'duration'    => 0,
-                ];
+                $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\Exception $e) {
+                return ['success' => false, 'error' => $e->getMessage()];
             }
 
             return [
@@ -211,8 +206,9 @@ class CWMAddonVimeo extends CWMAddon
      *
      * @param   int  $serverId  The server record ID
      *
-     * @return  string  The access token, or empty string if not found
+     * @return  string  The access token or empty string if not found
      *
+     * @throws \JsonException
      * @since   10.1.0
      */
     private function getServerAccessToken(int $serverId): string
@@ -229,7 +225,11 @@ class CWMAddonVimeo extends CWMAddon
             return '';
         }
 
-        $params = json_decode($paramsJson, true);
+        try {
+            $params = json_decode($paramsJson, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            return '';
+        }
 
         return $params['access_token'] ?? '';
     }
@@ -241,6 +241,7 @@ class CWMAddonVimeo extends CWMAddon
      *
      * @return  array  Response with success status
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     protected function handleTestApiAction(): array
@@ -267,8 +268,9 @@ class CWMAddonVimeo extends CWMAddon
             }
 
             // Test API connection by getting user info
-            $http    = HttpFactory::getHttp();
-            $headers = [
+            $factory  = new HttpFactory();
+            $http     = $factory->getHttp();
+            $headers  = [
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Accept'        => 'application/vnd.vimeo.*+json;version=3.4',
             ];
@@ -282,7 +284,7 @@ class CWMAddonVimeo extends CWMAddon
                 ];
             }
 
-            $data = json_decode($response->body, true);
+            $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
 
             return [
                 'success' => true,
@@ -388,18 +390,19 @@ class CWMAddonVimeo extends CWMAddon
             return ['success' => false, 'error' => 'No server ID provided'];
         }
 
-        $accessToken = $this->getServerAccessToken($serverId);
-
-        if (empty($accessToken)) {
-            return ['success' => false, 'error' => 'no access_token'];
+        try {
+            $accessToken = $this->getServerAccessToken($serverId);
+        } catch (\JsonException $e) {
+            return ['success' => false, 'error' => 'no access_token'. $e->getMessage()];
         }
 
         $page     = max(1, $input->getInt('page', 1));
         $query    = $input->getString('query', '');
         $folderId = $input->getString('folder_id', '');
 
-        $http    = HttpFactory::getHttp();
-        $headers = [
+        $factory  = new HttpFactory();
+        $http     = $factory->getHttp();
+        $headers  = [
             'Authorization' => 'Bearer ' . $accessToken,
             'Accept'        => 'application/vnd.vimeo.*+json;version=3.4',
         ];
@@ -427,7 +430,7 @@ class CWMAddonVimeo extends CWMAddon
                 return ['success' => false, 'error' => 'Vimeo API error (HTTP ' . $response->code . ')'];
             }
 
-            $data = json_decode($response->body, true);
+            $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
 
             if (!$data) {
                 return ['success' => false, 'error' => 'Invalid API response'];
@@ -495,6 +498,7 @@ class CWMAddonVimeo extends CWMAddon
      *
      * @return  array  Response with folders array
      *
+     * @throws \JsonException
      * @since   10.1.0
      */
     public function fetchFolders(Input $input): array
@@ -505,13 +509,14 @@ class CWMAddonVimeo extends CWMAddon
             return ['success' => false, 'error' => 'No server ID provided'];
         }
 
-        $accessToken = $this->getServerAccessToken($serverId);
-
-        if (empty($accessToken)) {
-            return ['success' => false, 'error' => 'no access_token'];
+        try {
+            $accessToken = $this->getServerAccessToken($serverId);
+        } catch (\JsonException $e) {
+            return ['success' => false, 'error' => 'no access_token'. $e->getMessage()];
         }
 
-        $http    = HttpFactory::getHttp();
+        $factory = new HttpFactory();
+        $http    = $factory->getHttp();
         $headers = [
             'Authorization' => 'Bearer ' . $accessToken,
             'Accept'        => 'application/vnd.vimeo.*+json;version=3.4',
@@ -527,7 +532,7 @@ class CWMAddonVimeo extends CWMAddon
                 return ['success' => false, 'error' => 'Vimeo API error (HTTP ' . $response->code . ')'];
             }
 
-            $data = json_decode($response->body, true);
+            $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
 
             if (!$data) {
                 return ['success' => false, 'error' => 'Invalid API response'];

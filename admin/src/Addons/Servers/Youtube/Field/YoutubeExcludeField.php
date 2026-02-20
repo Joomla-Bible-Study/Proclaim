@@ -131,8 +131,14 @@ class YoutubeExcludeField extends FormField
      */
     protected function getJavaScript(string $serverField, array $excludedIds): string
     {
-        $baseUrl      = Uri::base() . 'index.php?option=com_proclaim&task=cwmserver.addonAjax&addon=youtube&action=fetchUpcoming&format=raw';
-        $excludedJson = json_encode($excludedIds);
+        $token   = Factory::getApplication()->getSession()->getFormToken();
+        $baseUrl = Uri::base() . 'index.php?option=com_proclaim&task=cwmserver.addonAjax&addon=youtube&action=fetchUpcoming&format=raw&' . $token . '=1';
+
+        try {
+            $excludedJson = json_encode($excludedIds, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            $excludedJson = '[]';
+        }
 
         $js = <<<JS
 <script>

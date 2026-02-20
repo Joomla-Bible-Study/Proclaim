@@ -161,15 +161,15 @@ class CWMAddonYoutube extends CWMAddon
 
     /**
      * @param $key
-     * @param $playlistID
-     * @param $pageToken
-     * @param $maxResults
+     * @param   string  $playlistID
+     * @param   string  $pageToken
+     * @param   int  $maxResults
      *
      *
      * @throws Exception
      * @since version
      */
-    public function buildPlaylistList($key, $playlistID = 'UULyz8iEvzxyhKEBzOTs6bJQ', $pageToken = 'EAAaI1BUOkNESWlFREUzUVRSQ09EQkdSVUV6UWprM09EVW9BVkFC', $maxResults = 50): void
+    public function buildPlaylistList($key, string $playlistID, string $pageToken, int $maxResults = 50): void
     {
         $client = new Google\Client();
         $client->setApplicationName("Client_Library_Examples");
@@ -209,11 +209,11 @@ class CWMAddonYoutube extends CWMAddon
             alt='Thumbnail for the video " . $video->snippet->title . "'><br>
 
         <strong>Title:</strong>
-        " . $video->snippet->title . "
+        " . $video->snippet->title . '
         <br>
         <strong>Video ID:</strong>
-        " . $video->snippet->resourceId->videoId . "
-    </div>";
+        ' . $video->snippet->resourceId->videoId . '
+    </div>';
         }
     }
 
@@ -845,7 +845,7 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
-     * Fetch upcoming videos for exclusion list (AJAX handler)
+     * Fetch upcoming videos for an exclusion list (AJAX handler)
      *
      * @param   int  $serverId  The server ID
      *

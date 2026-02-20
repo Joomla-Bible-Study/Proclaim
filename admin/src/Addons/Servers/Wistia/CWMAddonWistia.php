@@ -18,8 +18,8 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Wistia;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Language\Text;
+use Joomla\Http\HttpFactory;
 use Joomla\Input\Input;
 
 /**
@@ -142,49 +142,35 @@ class CWMAddonWistia extends CWMAddon
      */
     public function getVideoMetadata(string $mediaHash): array
     {
+        $videoUrl = 'https://home.wistia.com/medias/' . $mediaHash;
+        $url      = 'https://fast.wistia.com/oembed?url=' . urlencode($videoUrl);
+        $factory  = new HttpFactory();
+        $http     = $factory->getHttp();
+        $headers  = [
+            'Accept' => 'application/json',
+        ];
+
         try {
-            $videoUrl = 'https://home.wistia.com/medias/' . $mediaHash;
-            $url      = 'https://fast.wistia.com/oembed?url=' . urlencode($videoUrl);
-            $http     = HttpFactory::getHttp();
-            $response = $http->get($url);
+            $response = $http->get($url, $headers);
 
             if ($response->code !== 200) {
-                return [
-                    'title'       => '',
-                    'description' => '',
-                    'thumbnail'   => '',
-                    'duration'    => 0,
-                ];
+                throw new \RuntimeException('Wistia oEmbed error: HTTP ' . $response->code);
             }
 
-            $data = json_decode($response->body, true);
-
-            if (!$data) {
-                return [
-                    'title'       => '',
-                    'description' => '',
-                    'thumbnail'   => '',
-                    'duration'    => 0,
-                ];
-            }
-
-            return [
-                'title'       => $data['title'] ?? '',
-                'description' => $data['description'] ?? '',
-                'thumbnail'   => $data['thumbnail_url'] ?? '',
-                'duration'    => $data['duration'] ?? 0,
-                'author'      => $data['author_name'] ?? '',
-                'width'       => $data['width'] ?? 0,
-                'height'      => $data['height'] ?? 0,
-            ];
+            $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
-            return [
-                'title'       => '',
-                'description' => '',
-                'thumbnail'   => '',
-                'duration'    => 0,
-            ];
+            throw new \RuntimeException('Wistia oEmbed error: ' . $e->getMessage());
         }
+
+        return [
+            'title'       => $data['title'] ?? '',
+            'description' => $data['description'] ?? '',
+            'thumbnail'   => $data['thumbnail_url'] ?? '',
+            'duration'    => $data['duration'] ?? 0,
+            'author'      => $data['author_name'] ?? '',
+            'width'       => $data['width'] ?? 0,
+            'height'      => $data['height'] ?? 0,
+        ];
     }
 
     /**
@@ -227,7 +213,11 @@ class CWMAddonWistia extends CWMAddon
             return '';
         }
 
-        $params = json_decode($paramsJson, true);
+        try {
+            $params = json_decode($paramsJson, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            return '';
+        }
 
         return $params['api_token'] ?? '';
     }
@@ -239,6 +229,7 @@ class CWMAddonWistia extends CWMAddon
      *
      * @return  array  Response with success status
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     protected function handleTestApiAction(): array
@@ -265,7 +256,8 @@ class CWMAddonWistia extends CWMAddon
             }
 
             // Test API connection by getting account info
-            $http    = HttpFactory::getHttp();
+            $factory = new HttpFactory();
+            $http    = $factory->getHttp();
             $headers = [
                 'Authorization' => 'Bearer ' . $apiToken,
             ];
@@ -279,7 +271,7 @@ class CWMAddonWistia extends CWMAddon
                 ];
             }
 
-            $data = json_decode($response->body, true);
+            $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
 
             return [
                 'success' => true,
@@ -300,6 +292,7 @@ class CWMAddonWistia extends CWMAddon
      *
      * @return  array  Response with video metadata
      *
+     * @throws \Exception
      * @since   10.1.0
      */
     protected function handleGetMetadataAction(): array
@@ -410,7 +403,8 @@ class CWMAddonWistia extends CWMAddon
             $params['project_id'] = $projectId;
         }
 
-        $http    = HttpFactory::getHttp();
+        $factory = new HttpFactory();
+        $http    = $factory->getHttp();
         $headers = [
             'Authorization' => 'Bearer ' . $apiToken,
         ];
@@ -425,9 +419,9 @@ class CWMAddonWistia extends CWMAddon
                 return ['success' => false, 'error' => 'Wistia API error (HTTP ' . $response->code . ')'];
             }
 
-            $data = json_decode($response->body, true);
+            $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
 
-            if (!is_array($data)) {
+            if (!\is_array($data)) {
                 return ['success' => false, 'error' => 'Invalid API response'];
             }
 
@@ -436,14 +430,14 @@ class CWMAddonWistia extends CWMAddon
 
             foreach ((array) $response->headers as $headerName => $headerValue) {
                 if (strtolower((string) $headerName) === 'wtotal-count') {
-                    $total = (int) (is_array($headerValue) ? $headerValue[0] : $headerValue);
+                    $total = (int) (\is_array($headerValue) ? $headerValue[0] : $headerValue);
                     break;
                 }
             }
 
             // Fallback if header not present
             if ($total === 0) {
-                $total = count($data);
+                $total = \count($data);
             }
 
             $videos = [];
@@ -500,7 +494,8 @@ class CWMAddonWistia extends CWMAddon
             return ['success' => false, 'error' => 'no api_token'];
         }
 
-        $http    = HttpFactory::getHttp();
+        $factory = new HttpFactory();
+        $http    = $factory->getHttp();
         $headers = [
             'Authorization' => 'Bearer ' . $apiToken,
         ];
@@ -515,9 +510,9 @@ class CWMAddonWistia extends CWMAddon
                 return ['success' => false, 'error' => 'Wistia API error (HTTP ' . $response->code . ')'];
             }
 
-            $data = json_decode($response->body, true);
+            $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
 
-            if (!is_array($data)) {
+            if (!\is_array($data)) {
                 return ['success' => false, 'error' => 'Invalid API response'];
             }
 

@@ -12,9 +12,9 @@
 namespace CWM\Component\Proclaim\Site\Bible;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Log\Log;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Http\HttpFactory;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -344,7 +344,8 @@ abstract class AbstractBibleProvider implements BibleProviderInterface
     protected function httpGet(string $url, int $timeout = 10): ?string
     {
         $this->lastErrorTransient = false;
-        $http                     = HttpFactory::getHttp();
+        $factory                  = new HttpFactory();
+        $http                     = $factory->getHttp();
         $host                     = strtok($url, '?');
 
         for ($attempt = 1; $attempt <= self::HTTP_MAX_RETRIES; $attempt++) {
