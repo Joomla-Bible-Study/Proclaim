@@ -192,6 +192,11 @@ class CwmserverTable extends Table
             throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_SERVER_NAME_REQUIRED'));
         }
 
+        // Normalise "Shared" sentinel (-1) to NULL for DB storage
+        if ($this->location_id !== null && $this->location_id <= 0) {
+            $this->location_id = null;
+        }
+
         return parent::check();
     }
 

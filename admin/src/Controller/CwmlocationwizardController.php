@@ -107,7 +107,7 @@ class CwmlocationwizardController extends BaseController
         $app   = Factory::getApplication();
         $input = $app->getInput();
 
-        if (!$app->getIdentity()->authorise('core.admin', 'com_proclaim')) {
+        if (!$app->getIdentity()->authorise('core.admin')) {
             $this->sendJsonResponse(false, Text::_('JERROR_ALERTNOAUTHOR'));
         }
 
@@ -185,7 +185,7 @@ class CwmlocationwizardController extends BaseController
             $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
         }
 
-        if (!Factory::getApplication()->getIdentity()->authorise('core.admin', 'com_proclaim')) {
+        if (!Factory::getApplication()->getIdentity()->authorise('core.admin')) {
             $this->sendJsonResponse(false, Text::_('JERROR_ALERTNOAUTHOR'));
         }
 

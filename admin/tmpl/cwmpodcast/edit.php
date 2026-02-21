@@ -57,6 +57,7 @@ $wa->useScript('keepalive')
             </div>
             <div class="col-lg-3">
                 <?php echo $this->form->renderField('published'); ?>
+                <?php echo $this->form->renderField('location_id'); ?>
                 <?php echo $this->form->renderField('language'); ?>
                 <?php echo $this->form->renderField('detailstemplateid'); ?>
             </div>

@@ -201,10 +201,10 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
         $hiddenViews = [];
 
-        // Hide admin-only views from non-admin users
+        // Hide admin-only views from non-admin users (global Super Admin only)
         $user = $this->getApplication()->getIdentity();
 
-        if ($user && !$user->authorise('core.admin', 'com_proclaim')) {
+        if ($user && !$user->authorise('core.admin')) {
             $hiddenViews = array_merge($hiddenViews, self::ADMIN_ONLY_VIEWS);
         }
 
@@ -219,11 +219,13 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             return;
         }
 
-        // Build CSS selectors targeting each hidden view's sidebar link
+        // Build CSS selectors targeting each hidden view's sidebar link.
+        // Match both view= URLs (list views) and task= URLs (edit views like cwmadmin).
         $selectors = [];
 
         foreach ($hiddenViews as $view) {
             $selectors[] = 'li:has(> a[href*="view=' . $view . '"])';
+            $selectors[] = 'li:has(> a[href*="task=' . $view . '."])';
         }
 
         $css = implode(",\n", $selectors) . ' { display: none !important; }';

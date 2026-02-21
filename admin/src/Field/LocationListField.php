@@ -77,8 +77,12 @@ class LocationListField extends ListField
             $allowedIds = CwmlocationHelper::getUserAccessibleLocationsForEdit(0, $currentId);
         }
 
+        // Check if this field allows "global" (no location) — e.g. podcasts, servers
+        $allowGlobal = ((string) ($this->element['global'] ?? '')) === 'true';
+
         // Auto-default for new records (non-admin, location system enabled)
-        if (empty($this->value) && $enabled && !$isAdmin && !empty($allowedIds)) {
+        // Skip when global is allowed — NULL/-1 is a valid "all campuses" choice
+        if (empty($this->value) && $enabled && !$isAdmin && !empty($allowedIds) && !$allowGlobal) {
             $userLocations = CwmlocationHelper::getUserLocations();
 
             if (\count($userLocations) >= 1) {
@@ -128,7 +132,9 @@ class LocationListField extends ListField
         $user    = Factory::getApplication()->getIdentity();
         $enabled = CwmlocationHelper::isEnabled();
 
-        if ($enabled && !$user->authorise('core.admin')) {
+        $allowGlobal = ((string) ($this->element['global'] ?? '')) === 'true';
+
+        if ($enabled && !$user->authorise('core.admin') && !$allowGlobal) {
             $userLocations = CwmlocationHelper::getUserLocations();
 
             if (\count($userLocations) === 1) {

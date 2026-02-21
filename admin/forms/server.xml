@@ -19,7 +19,7 @@
                description="JBS_SVR_SERVER_NAME_DESC" size="50" required="true" filter="trim"/>
 
         <field name="location_id" type="LocationList" label="JBS_CMN_LOCATION"
-               description="JBS_SVR_LOCATION_DESC">
+               description="JBS_SVR_LOCATION_DESC" global="true">
             <option value="-1">JBS_SVR_SHARED</option>
         </field>
 

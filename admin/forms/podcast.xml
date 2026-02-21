@@ -44,8 +44,8 @@
         <field name="podcastlanguage" type="language" label="JBS_PDC_PODCAST_LANGUAGE"/>
 
         <field name="location_id" type="LocationList" label="JBS_CMN_LOCATION"
-               description="JBS_FLD_LOCATION_DESC">
-            <option value="-1">JBS_CMN_SELECT_LOCATION</option>
+               description="JBS_FLD_LOCATION_DESC" global="true">
+            <option value="-1">JBS_CMN_GLOBAL_ALL_CAMPUSES</option>
         </field>
 
         <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"

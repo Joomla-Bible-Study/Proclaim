@@ -230,8 +230,8 @@ class HtmlView extends BaseHtmlView
     {
         $app      = Factory::getApplication();
 
-        // Admin Center requires core.admin — campus editors/viewers are redirected
-        if (!$app->getIdentity()->authorise('core.admin', 'com_proclaim')) {
+        // Admin Center requires global Super Admin — campus editors/viewers are redirected
+        if (!$app->getIdentity()->authorise('core.admin')) {
             $app->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'warning');
             $app->redirect('index.php?option=com_proclaim&view=cwmcpanel');
 

@@ -222,7 +222,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             <h2 class="text-center">
                 <?php echo Text::_('JBS_CPL_MENUE_LINKS'); ?>
             </h2>
-            <?php $isAdmin = $cpanelUser->authorise('core.admin', 'com_proclaim'); ?>
+            <?php $isAdmin = $cpanelUser->authorise('core.admin'); ?>
             <div class="container">
                 <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3 justify-content-center">
                     <?php if ($isAdmin) : ?>

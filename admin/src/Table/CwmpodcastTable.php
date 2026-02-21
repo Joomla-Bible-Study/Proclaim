@@ -367,6 +367,11 @@ class CwmpodcastTable extends Table
             throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_TITLE_REQUIRED'));
         }
 
+        // Normalise "Global (All Campuses)" sentinel to NULL for DB storage
+        if ($this->location_id !== null && $this->location_id <= 0) {
+            $this->location_id = null;
+        }
+
         // Auto-prepend https:// to URL fields missing a schema
         foreach (['website', 'podcastlink', 'alternatelink'] as $field) {
             if (!empty($this->$field) && !preg_match('#^[a-z][a-z0-9+\-.]*://#i', $this->$field)) {

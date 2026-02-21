@@ -71,7 +71,7 @@ class CwmadminController extends FormController
     #[\Override]
     public function execute($task): mixed
     {
-        if (!Factory::getApplication()->getIdentity()->authorise('core.admin', 'com_proclaim')) {
+        if (!Factory::getApplication()->getIdentity()->authorise('core.admin')) {
             $this->setRedirect(
                 Route::_('index.php?option=com_proclaim&view=cwmcpanel', false),
                 Text::_('JERROR_ALERTNOAUTHOR'),
