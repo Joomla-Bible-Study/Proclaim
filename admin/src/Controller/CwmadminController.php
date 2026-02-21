@@ -56,6 +56,35 @@ class CwmadminController extends FormController
     protected $view_list = 'cwmcpanel';
 
     /**
+     * Gate ALL admin center actions behind core.admin.
+     *
+     * Campus editors/viewers only have core.manage — they must not reach
+     * any admin center task (tools, backup, restore, conversions, etc.).
+     *
+     * @param   string  $task  The task to execute.
+     *
+     * @return  mixed
+     *
+     * @throws  \Exception
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function execute($task): mixed
+    {
+        if (!Factory::getApplication()->getIdentity()->authorise('core.admin', 'com_proclaim')) {
+            $this->setRedirect(
+                Route::_('index.php?option=com_proclaim&view=cwmcpanel', false),
+                Text::_('JERROR_ALERTNOAUTHOR'),
+                'warning'
+            );
+
+            return null;
+        }
+
+        return parent::execute($task);
+    }
+
+    /**
      * Tools to change the player or pop-up
      *
      * @return void
