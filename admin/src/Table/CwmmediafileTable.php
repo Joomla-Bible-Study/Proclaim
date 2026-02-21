@@ -95,7 +95,7 @@ class CwmmediafileTable extends Table
      * @var int
      * @since 9.0.0
      */
-    public int $hits = 0;
+    public ?int $hits = 0;
 
     /**
      * Published
@@ -103,7 +103,7 @@ class CwmmediafileTable extends Table
      * @var int
      * @since    7.0.0
      */
-    public int $published = 1;
+    public ?int $published = 1;
 
     /**
      * Comment Text
@@ -119,7 +119,7 @@ class CwmmediafileTable extends Table
      * @var int
      * @since 9.0.0
      */
-    public int $downloads = 0;
+    public ?int $downloads = 0;
 
     /**
      * Plays
@@ -127,7 +127,7 @@ class CwmmediafileTable extends Table
      * @var int
      * @since 9.0.0
      */
-    public int $plays = 0;
+    public ?int $plays = 0;
 
     /**
      * Media configuration
@@ -183,7 +183,7 @@ class CwmmediafileTable extends Table
      * @var string
      * @since 10.0.0
      */
-    public string $created_by_alias = '';
+    public ?string $created_by_alias = '';
 
     /**
      * Modified date

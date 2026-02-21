@@ -45,7 +45,7 @@ class CwmlocationTable extends Table
      * @var int
      * @since    7.0.0
      */
-    public int $published = 1;
+    public ?int $published = 1;
 
     /**
      * Location Text
@@ -109,7 +109,7 @@ class CwmlocationTable extends Table
      * @var string
      * @since    10.0.0
      */
-    public string $created_by_alias = '';
+    public ?string $created_by_alias = '';
 
     /**
      * Modified date

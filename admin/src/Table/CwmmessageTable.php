@@ -234,7 +234,7 @@ class CwmmessageTable extends Table
      *
      * @since 9.0.0
      */
-    public int $comments = 1;
+    public ?int $comments = 1;
 
     /**
      * Hits
@@ -243,7 +243,7 @@ class CwmmessageTable extends Table
      *
      * @since 9.0.0
      */
-    public int $hits = 0;
+    public ?int $hits = 0;
 
     /**
      * User ID
@@ -403,13 +403,13 @@ class CwmmessageTable extends Table
      *
      * @since 9.0.0
      */
-    public int $published = 1;
+    public ?int $published = 1;
 
     /** @var string Publish Up
      *
      * @since 9.0.0
      */
-    public string $publish_up = '0000-00-00 00:00:00';
+    public ?string $publish_up = '0000-00-00 00:00:00';
 
     /** @var string|null Publish Down
      *
@@ -439,7 +439,7 @@ class CwmmessageTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public string $created_by_alias = '';
+    public ?string $created_by_alias = '';
 
     /**
      * Modified date

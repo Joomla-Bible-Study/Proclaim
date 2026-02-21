@@ -99,7 +99,7 @@ class CwmserieTable extends Table
      *
      * @since 9.0.0
      */
-    public int $published = 1;
+    public ?int $published = 1;
 
     /**
      * Asset ID
@@ -163,7 +163,7 @@ class CwmserieTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public string $created_by_alias = '';
+    public ?string $created_by_alias = '';
 
     /**
      * Modified date
@@ -187,7 +187,7 @@ class CwmserieTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public string $publish_up = '0000-00-00 00:00:00';
+    public ?string $publish_up = '0000-00-00 00:00:00';
 
     /**
      * Publish down date
@@ -195,7 +195,7 @@ class CwmserieTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public string $publish_down = '0000-00-00 00:00:00';
+    public ?string $publish_down = '0000-00-00 00:00:00';
 
     /**
      * Podcast Show
@@ -203,7 +203,7 @@ class CwmserieTable extends Table
      * @var int
      * @since 10.1.0
      */
-    public int $podcast_show = 0;
+    public ?int $podcast_show = 0;
 
     /**
      * Checked out user ID

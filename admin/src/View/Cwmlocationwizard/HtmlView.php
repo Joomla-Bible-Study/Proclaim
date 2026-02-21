@@ -92,10 +92,10 @@ class HtmlView extends BaseHtmlView
         /** @var \CWM\Component\Proclaim\Administrator\Model\CwmlocationwizardModel $model */
         $model = $this->getModel();
 
-        $this->detectionInfo  = $model->getDetectionInfo();
-        $this->scenario       = $this->detectionInfo['scenario'];
-        $this->locations      = $model->getLocations();
-        $this->groups         = $model->getGroups();
+        $this->detectionInfo      = $model->getDetectionInfo();
+        $this->scenario           = $this->detectionInfo['scenario'];
+        $this->locations          = $model->getLocations();
+        $this->groups             = $model->getGroups();
         $this->currentMapping     = $model->getCurrentMapping();
         $this->currentPermissions = $model->getCurrentPermissions();
 
