@@ -616,27 +616,40 @@ table.fbstat .col2 {
 }
 
 /* ==========================================================================
-   Dark Mode: Analytics table fixes
+   Dark Mode: Bootstrap table-secondary fix
    ========================================================================== */
 
-/* table-secondary (archived / external rows) is too bright in dark mode.
-   Use subtle white overlay so the row stands out without blinding. */
-[data-bs-theme="dark"] .table .table-secondary,
-[data-bs-theme="dark"] .table .table-secondary > td,
-[data-bs-theme="dark"] .table .table-secondary > th {
-  --bs-table-bg: rgba(255, 255, 255, 0.04);
-  --bs-table-hover-bg: rgba(255, 255, 255, 0.07);
+/* Bootstrap's table-secondary renders #e2e3e5 background even in dark mode.
+   Override both the custom property AND the resolved background-color so the
+   row is a subtle tint instead of a blinding light gray. */
+[data-bs-theme="dark"] .table > :not(caption) > tr.table-secondary > td,
+[data-bs-theme="dark"] .table > :not(caption) > tr.table-secondary > th {
+  --bs-table-bg: rgba(255, 255, 255, 0.04) !important;
+  --bs-table-color: var(--bs-body-color);
+  background-color: rgba(255, 255, 255, 0.04) !important;
   color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] .table > :not(caption) > tr.table-secondary:hover > td,
+[data-bs-theme="dark"] .table > :not(caption) > tr.table-secondary:hover > th {
+  --bs-table-bg: rgba(255, 255, 255, 0.07) !important;
+  background-color: rgba(255, 255, 255, 0.07) !important;
 }
 
 /* Prefers-color-scheme fallback (for templates not using data-bs-theme) */
 @media (prefers-color-scheme: dark) {
-  html:not([data-bs-theme="light"]) .table .table-secondary,
-  html:not([data-bs-theme="light"]) .table .table-secondary > td,
-  html:not([data-bs-theme="light"]) .table .table-secondary > th {
-    --bs-table-bg: rgba(255, 255, 255, 0.04);
-    --bs-table-hover-bg: rgba(255, 255, 255, 0.07);
+  html:not([data-bs-theme="light"]) .table > :not(caption) > tr.table-secondary > td,
+  html:not([data-bs-theme="light"]) .table > :not(caption) > tr.table-secondary > th {
+    --bs-table-bg: rgba(255, 255, 255, 0.04) !important;
+    --bs-table-color: var(--bs-body-color);
+    background-color: rgba(255, 255, 255, 0.04) !important;
     color: var(--bs-body-color);
+  }
+
+  html:not([data-bs-theme="light"]) .table > :not(caption) > tr.table-secondary:hover > td,
+  html:not([data-bs-theme="light"]) .table > :not(caption) > tr.table-secondary:hover > th {
+    --bs-table-bg: rgba(255, 255, 255, 0.07) !important;
+    background-color: rgba(255, 255, 255, 0.07) !important;
   }
 }
 
