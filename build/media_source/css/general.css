@@ -616,6 +616,31 @@ table.fbstat .col2 {
 }
 
 /* ==========================================================================
+   Dark Mode: Analytics table fixes
+   ========================================================================== */
+
+/* table-secondary (archived / external rows) is too bright in dark mode.
+   Use subtle white overlay so the row stands out without blinding. */
+[data-bs-theme="dark"] .table .table-secondary,
+[data-bs-theme="dark"] .table .table-secondary > td,
+[data-bs-theme="dark"] .table .table-secondary > th {
+  --bs-table-bg: rgba(255, 255, 255, 0.04);
+  --bs-table-hover-bg: rgba(255, 255, 255, 0.07);
+  color: var(--bs-body-color);
+}
+
+/* Prefers-color-scheme fallback (for templates not using data-bs-theme) */
+@media (prefers-color-scheme: dark) {
+  html:not([data-bs-theme="light"]) .table .table-secondary,
+  html:not([data-bs-theme="light"]) .table .table-secondary > td,
+  html:not([data-bs-theme="light"]) .table .table-secondary > th {
+    --bs-table-bg: rgba(255, 255, 255, 0.04);
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.07);
+    color: var(--bs-body-color);
+  }
+}
+
+/* ==========================================================================
    CWM Admin View Styles
    ========================================================================== */
 
