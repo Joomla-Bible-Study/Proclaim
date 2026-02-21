@@ -18,11 +18,18 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Response\JsonResponse;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Helper for counting published/archived/total records across entity tables.
  *
- * Used by QuickIcon AJAX endpoints and Cwmstats.
+ * Used by QuickIcon AJAX endpoints, Cwmstats, and CPanel dashboard.
+ *
+ * Location modes for multi-campus filtering:
+ * - null      — no filtering (super-admin callers, CPanel stats)
+ * - 'location' — table has location_id column; filter by user's accessible locations
+ * - 'study'   — table is mediafiles; JOIN to studies for location filtering
+ * - 'access'  — table has access column only; filter by user's view levels
  *
  * @since  10.1.0
  */
@@ -42,26 +49,31 @@ class CwmcountHelper
      * Results are cached per request to avoid duplicate queries when
      * sendQuickIconResponse() or the cpanel stats call this multiple times.
      *
-     * @param   string  $tableName  Full Joomla table name (e.g. '#__bsms_studies')
-     * @param   int     $state      Published state value (1 = published, 2 = archived, etc.)
+     * @param   string       $tableName     Full Joomla table name (e.g. '#__bsms_studies')
+     * @param   int          $state         Published state value (1 = published, 2 = archived, etc.)
+     * @param   string|null  $locationMode  Location filtering mode (null, 'location', 'study', 'access')
      *
      * @return  int
      *
      * @since   10.1.0
      */
-    public static function getCountByState(string $tableName, int $state = 1): int
+    public static function getCountByState(string $tableName, int $state = 1, ?string $locationMode = null): int
     {
-        $key = $tableName . ':' . $state;
+        $suffix = self::buildCacheKeySuffix($locationMode);
+        $key    = $tableName . ':' . $state . $suffix;
 
         if (isset(self::$cache[$key])) {
             return self::$cache[$key];
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select('COUNT(*)')
-            ->from($db->quoteName($tableName))
-            ->where($db->quoteName('published') . ' = ' . $state);
+            ->from($db->quoteName($tableName, 't'))
+            ->where($db->quoteName('t.published') . ' = ' . $state);
+
+        self::applyLocationFilter($query, $db, $locationMode);
+
         $db->setQuery($query);
 
         self::$cache[$key] = (int) $db->loadResult();
@@ -74,25 +86,30 @@ class CwmcountHelper
      *
      * Results are cached per request.
      *
-     * @param   string  $tableName  Full Joomla table name
+     * @param   string       $tableName     Full Joomla table name
+     * @param   string|null  $locationMode  Location filtering mode (null, 'location', 'study', 'access')
      *
      * @return  int
      *
      * @since   10.1.0
      */
-    public static function getTotalCount(string $tableName): int
+    public static function getTotalCount(string $tableName, ?string $locationMode = null): int
     {
-        $key = $tableName . ':total';
+        $suffix = self::buildCacheKeySuffix($locationMode);
+        $key    = $tableName . ':total' . $suffix;
 
         if (isset(self::$cache[$key])) {
             return self::$cache[$key];
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select('COUNT(*)')
-            ->from($db->quoteName($tableName))
-            ->where($db->quoteName('published') . ' != -2');
+            ->from($db->quoteName($tableName, 't'))
+            ->where($db->quoteName('t.published') . ' != -2');
+
+        self::applyLocationFilter($query, $db, $locationMode);
+
         $db->setQuery($query);
 
         self::$cache[$key] = (int) $db->loadResult();
@@ -103,18 +120,19 @@ class CwmcountHelper
     /**
      * Send a standard QuickIcon JSON response with published, archived, and total counts.
      *
-     * @param   string  $tableName  Full Joomla table name
-     * @param   string  $langKey    Language key base (e.g. 'COM_PROCLAIM_N_QUICKICON_MESSAGES')
+     * @param   string       $tableName     Full Joomla table name
+     * @param   string       $langKey       Language key base (e.g. 'COM_PROCLAIM_N_QUICKICON_MESSAGES')
+     * @param   string|null  $locationMode  Location filtering mode (null, 'location', 'study', 'access')
      *
      * @return  void
      *
      * @since   10.1.0
      */
-    public static function sendQuickIconResponse(string $tableName, string $langKey): void
+    public static function sendQuickIconResponse(string $tableName, string $langKey, ?string $locationMode = null): void
     {
-        $published = self::getCountByState($tableName, 1);
-        $archived  = self::getCountByState($tableName, 2);
-        $total     = self::getTotalCount($tableName);
+        $published = self::getCountByState($tableName, 1, $locationMode);
+        $archived  = self::getCountByState($tableName, 2, $locationMode);
+        $total     = self::getTotalCount($tableName, $locationMode);
 
         $result = [
             'amount'   => $published,
@@ -125,5 +143,110 @@ class CwmcountHelper
         ];
 
         echo new JsonResponse($result);
+    }
+
+    /**
+     * Apply location/access filtering to a count query based on the mode.
+     *
+     * Super admins always bypass filtering. When the location system is disabled,
+     * 'location' and 'study' modes fall back to no filtering.
+     *
+     * @param   \Joomla\Database\QueryInterface  $query         The query to modify.
+     * @param   DatabaseInterface                $db            The database driver.
+     * @param   string|null                      $locationMode  Filtering mode.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private static function applyLocationFilter($query, $db, ?string $locationMode): void
+    {
+        if ($locationMode === null) {
+            return;
+        }
+
+        try {
+            $user = Factory::getApplication()->getIdentity();
+        } catch (\Exception $e) {
+            return;
+        }
+
+        if (!$user || $user->authorise('core.admin')) {
+            return;
+        }
+
+        switch ($locationMode) {
+            case 'location':
+                // Table has location_id — filter by user's accessible locations
+                if (CwmlocationHelper::isEnabled()) {
+                    $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+                    if (!empty($accessible)) {
+                        $query->where(
+                            '(' . $db->quoteName('t.location_id') . ' IS NULL'
+                            . ' OR ' . $db->quoteName('t.location_id') . ' IN ('
+                            . implode(',', array_map('intval', $accessible)) . '))'
+                        );
+                    }
+                }
+
+                // Also filter by access view levels
+                $query->whereIn($db->quoteName('t.access'), $user->getAuthorisedViewLevels());
+                break;
+
+            case 'study':
+                // Mediafiles — JOIN to studies for location + access filtering
+                $query->leftJoin(
+                    $db->quoteName('#__bsms_studies', 's')
+                    . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('t.study_id')
+                );
+
+                if (CwmlocationHelper::isEnabled()) {
+                    $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+                    if (!empty($accessible)) {
+                        $query->where(
+                            '(' . $db->quoteName('s.location_id') . ' IS NULL'
+                            . ' OR ' . $db->quoteName('s.location_id') . ' IN ('
+                            . implode(',', array_map('intval', $accessible)) . '))'
+                        );
+                    }
+                }
+
+                // Mediafile's own access level
+                $query->whereIn($db->quoteName('t.access'), $user->getAuthorisedViewLevels());
+                break;
+
+            case 'access':
+                // Table has access column only (teachers, topics, etc.)
+                $query->whereIn($db->quoteName('t.access'), $user->getAuthorisedViewLevels());
+                break;
+        }
+    }
+
+    /**
+     * Build a cache key suffix that incorporates the user and location mode,
+     * so different users get separate cached counts.
+     *
+     * @param   string|null  $locationMode  The filtering mode.
+     *
+     * @return  string
+     *
+     * @since   10.1.0
+     */
+    private static function buildCacheKeySuffix(?string $locationMode): string
+    {
+        if ($locationMode === null) {
+            return '';
+        }
+
+        try {
+            $user = Factory::getApplication()->getIdentity();
+            $uid  = $user ? (int) $user->id : 0;
+        } catch (\Exception $e) {
+            $uid = 0;
+        }
+
+        return ':' . $locationMode . ':u' . $uid;
     }
 }

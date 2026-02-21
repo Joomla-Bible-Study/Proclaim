@@ -36,7 +36,7 @@ class CwmserversController extends AdminController
      */
     public function getQuickIconServers(): void
     {
-        CwmcountHelper::sendQuickIconResponse('#__bsms_servers', 'COM_PROCLAIM_N_QUICKICON_SERVERS');
+        CwmcountHelper::sendQuickIconResponse('#__bsms_servers', 'COM_PROCLAIM_N_QUICKICON_SERVERS', 'location');
     }
 
     /**

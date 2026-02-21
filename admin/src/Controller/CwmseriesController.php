@@ -86,6 +86,6 @@ class CwmseriesController extends AdminController
      */
     public function getQuickIconSeries(): void
     {
-        CwmcountHelper::sendQuickIconResponse('#__bsms_series', 'COM_PROCLAIM_N_QUICKICON_SERIES');
+        CwmcountHelper::sendQuickIconResponse('#__bsms_series', 'COM_PROCLAIM_N_QUICKICON_SERIES', 'location');
     }
 }

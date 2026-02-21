@@ -88,7 +88,7 @@ class CwmmessagesController extends AdminController
      */
     public function getQuickIconMessage(): void
     {
-        CwmcountHelper::sendQuickIconResponse('#__bsms_studies', 'COM_PROCLAIM_N_QUICKICON_MESSAGES');
+        CwmcountHelper::sendQuickIconResponse('#__bsms_studies', 'COM_PROCLAIM_N_QUICKICON_MESSAGES', 'location');
     }
 
     /**

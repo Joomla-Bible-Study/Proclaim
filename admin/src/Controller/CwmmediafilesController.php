@@ -57,7 +57,7 @@ class CwmmediafilesController extends AdminController
      */
     public function getQuickIconMediaFiles(): void
     {
-        CwmcountHelper::sendQuickIconResponse('#__bsms_mediafiles', 'COM_PROCLAIM_N_QUICKICON_MEDIAFILES');
+        CwmcountHelper::sendQuickIconResponse('#__bsms_mediafiles', 'COM_PROCLAIM_N_QUICKICON_MEDIAFILES', 'study');
     }
 
     /**
