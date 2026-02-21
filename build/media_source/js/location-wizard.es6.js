@@ -135,6 +135,7 @@
         { value: 'none', labelKey: 'JBS_WIZARD_PRESET_NOCHANGE', descKey: 'JBS_WIZARD_PRESET_NOCHANGE_DESC' },
         { value: 'full', labelKey: 'JBS_WIZARD_PRESET_FULL', descKey: 'JBS_WIZARD_PRESET_FULL_DESC' },
         { value: 'editor', labelKey: 'JBS_WIZARD_PRESET_EDITOR', descKey: 'JBS_WIZARD_PRESET_EDITOR_DESC' },
+        { value: 'viewer', labelKey: 'JBS_WIZARD_PRESET_VIEWER', descKey: 'JBS_WIZARD_PRESET_VIEWER_DESC' },
     ];
 
     /**
@@ -296,6 +297,7 @@
                     const presetLabels = {
                         full: txt('JBS_WIZARD_PRESET_FULL', 'Full Access'),
                         editor: txt('JBS_WIZARD_PRESET_EDITOR', 'Content Editor'),
+                        viewer: txt('JBS_WIZARD_PRESET_VIEWER', 'Viewer (Edit Own)'),
                     };
 
                     html += `<h6 class="mt-3">${txt('JBS_WIZARD_MAPPED_GROUPS_PERMISSIONS', 'Permissions')}</h6>
@@ -308,7 +310,7 @@
                     permEntries.forEach(([gid, preset]) => {
                         html += `<tr>
                             <td><strong>${escHtml(grps[gid] || '#' + gid)}</strong></td>
-                            <td><span class="badge bg-${preset === 'full' ? 'success' : 'info'}">${escHtml(presetLabels[preset] || preset)}</span></td>
+                            <td><span class="badge bg-${preset === 'full' ? 'success' : preset === 'viewer' ? 'secondary' : 'info'}">${escHtml(presetLabels[preset] || preset)}</span></td>
                         </tr>`;
                     });
 

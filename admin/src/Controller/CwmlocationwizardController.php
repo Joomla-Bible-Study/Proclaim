@@ -146,7 +146,7 @@ class CwmlocationwizardController extends BaseController
         }
 
         // Sanitise permissions: keys must be int group IDs, values must be valid presets
-        $validPresets         = ['full', 'editor', 'none'];
+        $validPresets         = ['full', 'editor', 'viewer', 'none'];
         $sanitisedPermissions = [];
 
         foreach ($permissions as $groupId => $preset) {

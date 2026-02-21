@@ -240,6 +240,9 @@ class CwmlocationwizardModel extends BaseDatabaseModel
                 'core.manage'   => 1, 'core.create' => 1, 'core.edit' => 1,
                 'core.edit.own' => 1,
             ],
+            'viewer' => [
+                'core.manage'   => 1, 'core.create' => 1, 'core.edit.own' => 1,
+            ],
         ];
 
         foreach ($permissions as $groupId => $preset) {

@@ -9,6 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlangHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -17,6 +18,8 @@ use Joomla\CMS\Session\Session;
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmlocationwizard\HtmlView $this */
 
 \defined('_JEXEC') or die();
+
+CwmlangHelper::registerAllForJs();
 
 $wa    = $this->getDocument()->getWebAssetManager();
 $token = Session::getFormToken();
