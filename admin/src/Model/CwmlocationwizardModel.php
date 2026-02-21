@@ -112,6 +112,88 @@ class CwmlocationwizardModel extends BaseDatabaseModel
     }
 
     /**
+     * Read existing component-level ACL rules and detect which preset each group matches.
+     *
+     * Reverse-engineers the `#__assets` rules for `com_proclaim` and compares each
+     * group's allowed actions against the known presets. Returns a map of groupId → preset
+     * so the wizard can pre-select the correct radio button.
+     *
+     * @return  array<string, string>  groupId → 'full'|'editor'|'viewer'|'none'
+     *
+     * @since   10.1.0
+     */
+    public function getCurrentPermissions(): array
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('rules'))
+            ->from($db->quoteName('#__assets'))
+            ->where($db->quoteName('name') . ' = ' . $db->quote('com_proclaim'));
+
+        $db->setQuery($query);
+        $rulesJson = $db->loadResult();
+
+        if (!$rulesJson) {
+            return [];
+        }
+
+        $rules = json_decode($rulesJson, true) ?: [];
+
+        // Preset definitions — must match applyPermissions()
+        $presets = [
+            'full' => [
+                'core.manage'   => 1, 'core.create' => 1, 'core.edit' => 1,
+                'core.edit.own' => 1, 'core.edit.state' => 1, 'core.delete' => 1,
+            ],
+            'editor' => [
+                'core.manage'   => 1, 'core.create' => 1, 'core.edit' => 1,
+                'core.edit.own' => 1,
+            ],
+            'viewer' => [
+                'core.manage'   => 1, 'core.create' => 1, 'core.edit.own' => 1,
+            ],
+        ];
+
+        // Collect all group IDs that appear in any action rule
+        $allGroupIds = [];
+
+        foreach ($rules as $actionRules) {
+            if (\is_array($actionRules)) {
+                foreach (array_keys($actionRules) as $gid) {
+                    $allGroupIds[(string) $gid] = true;
+                }
+            }
+        }
+
+        $result = [];
+
+        foreach (array_keys($allGroupIds) as $groupStr) {
+            // Build this group's actual permission set
+            $groupActions = [];
+
+            foreach ($rules as $action => $actionRules) {
+                if (\is_array($actionRules) && isset($actionRules[$groupStr]) && (int) $actionRules[$groupStr] === 1) {
+                    $groupActions[$action] = 1;
+                }
+            }
+
+            // Match against presets (check most specific first)
+            $matched = 'none';
+
+            foreach ($presets as $presetName => $presetActions) {
+                if ($groupActions === $presetActions) {
+                    $matched = $presetName;
+                    break;
+                }
+            }
+
+            $result[$groupStr] = $matched;
+        }
+
+        return $result;
+    }
+
+    /**
      * Return a preview summary of the changes the wizard will apply.
      *
      * Uses the pending mapping from the session (if available), falling

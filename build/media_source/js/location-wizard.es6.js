@@ -82,7 +82,9 @@
             bar.setAttribute('aria-valuenow', pct);
         }
         if (label) {
-            label.textContent = txt('JBS_WIZARD_STEP_OF', `Step ${step} of ${TOTAL_STEPS}`);
+            // JBS_WIZARD_STEP_OF = "Step %1$d of %2$d" — apply sprintf-style replacement
+            const tpl = txt('JBS_WIZARD_STEP_OF', `Step ${step} of ${TOTAL_STEPS}`);
+            label.textContent = tpl.replace('%1$d', step).replace('%2$d', TOTAL_STEPS);
         }
 
         // Update step indicator labels
@@ -439,6 +441,12 @@
 
     function init() {
         seedCheckboxes();
+
+        // Seed permissions from saved component asset rules
+        const savedPerms = (window.ProcWizard || {}).savedPermissions || {};
+        Object.keys(savedPerms).forEach((gid) => {
+            pendingPermissions[String(gid)] = savedPerms[gid];
+        });
 
         // Next buttons
         qsa('.wizard-next-btn').forEach((btn) => {

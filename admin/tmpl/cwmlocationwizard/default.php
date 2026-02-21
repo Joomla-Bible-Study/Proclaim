@@ -44,7 +44,8 @@ $groupsJson = json_encode(array_map(static function ($grp) {
     return ['id' => (int) $grp->id, 'title' => $grp->title];
 }, $this->groups), JSON_THROW_ON_ERROR);
 
-$mappingJson = json_encode($this->currentMapping, JSON_THROW_ON_ERROR);
+$mappingJson     = json_encode($this->currentMapping, JSON_THROW_ON_ERROR);
+$permissionsJson = json_encode($this->currentPermissions, JSON_THROW_ON_ERROR);
 
 $wa->addInlineScript(
     'window.ProcWizard = {
@@ -53,7 +54,8 @@ $wa->addInlineScript(
         scenario: ' . json_encode($this->scenario) . ',
         locations: ' . $locationsJson . ',
         groups: ' . $groupsJson . ',
-        savedMapping: ' . $mappingJson . '
+        savedMapping: ' . $mappingJson . ',
+        savedPermissions: ' . $permissionsJson . '
     };'
 );
 ?>
