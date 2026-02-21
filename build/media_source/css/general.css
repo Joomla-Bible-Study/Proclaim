@@ -625,9 +625,9 @@ table.fbstat .col2 {
 [data-bs-theme="dark"] .table > :not(caption) > tr.table-secondary > td,
 [data-bs-theme="dark"] .table > :not(caption) > tr.table-secondary > th {
   --bs-table-bg: rgba(255, 255, 255, 0.04) !important;
-  --bs-table-color: var(--bs-body-color);
+  --bs-table-color: var(--bs-body-color) !important;
   background-color: rgba(255, 255, 255, 0.04) !important;
-  color: var(--bs-body-color);
+  color: var(--bs-body-color) !important;
 }
 
 [data-bs-theme="dark"] .table > :not(caption) > tr.table-secondary:hover > td,
@@ -641,9 +641,9 @@ table.fbstat .col2 {
   html:not([data-bs-theme="light"]) .table > :not(caption) > tr.table-secondary > td,
   html:not([data-bs-theme="light"]) .table > :not(caption) > tr.table-secondary > th {
     --bs-table-bg: rgba(255, 255, 255, 0.04) !important;
-    --bs-table-color: var(--bs-body-color);
+    --bs-table-color: var(--bs-body-color) !important;
     background-color: rgba(255, 255, 255, 0.04) !important;
-    color: var(--bs-body-color);
+    color: var(--bs-body-color) !important;
   }
 
   html:not([data-bs-theme="light"]) .table > :not(caption) > tr.table-secondary:hover > td,
