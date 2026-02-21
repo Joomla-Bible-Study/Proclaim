@@ -47,7 +47,15 @@ class CwmpodcastTable extends Table
      *
      * @since 9.0.0
      */
-    public int $published = 1;
+    public ?int $published = 1;
+
+    /**
+     * Location ID (multi-campus)
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $location_id = null;
 
     /**
      * Title
@@ -273,7 +281,7 @@ class CwmpodcastTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public string $created_by_alias = '';
+    public ?string $created_by_alias = '';
 
     /**
      * Modified date
@@ -357,6 +365,11 @@ class CwmpodcastTable extends Table
     {
         if (trim($this->title ?? '') === '') {
             throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_TITLE_REQUIRED'));
+        }
+
+        // Normalise "Global (All Campuses)" sentinel to NULL for DB storage
+        if ($this->location_id !== null && $this->location_id <= 0) {
+            $this->location_id = null;
         }
 
         // Auto-prepend https:// to URL fields missing a schema

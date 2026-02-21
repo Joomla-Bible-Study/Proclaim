@@ -61,6 +61,14 @@ class HtmlView extends BaseHtmlView
     public array $currentMapping = [];
 
     /**
+     * Current group permissions detected from component asset rules.
+     *
+     * @var    array<string, string>  groupId → 'full'|'editor'|'viewer'|'none'
+     * @since  10.1.0
+     */
+    public array $currentPermissions = [];
+
+    /**
      * Detection info returned from model::getDetectionInfo().
      *
      * @var    array
@@ -84,11 +92,12 @@ class HtmlView extends BaseHtmlView
         /** @var \CWM\Component\Proclaim\Administrator\Model\CwmlocationwizardModel $model */
         $model = $this->getModel();
 
-        $this->detectionInfo  = $model->getDetectionInfo();
-        $this->scenario       = $this->detectionInfo['scenario'];
-        $this->locations      = $model->getLocations();
-        $this->groups         = $model->getGroups();
-        $this->currentMapping = $model->getCurrentMapping();
+        $this->detectionInfo      = $model->getDetectionInfo();
+        $this->scenario           = $this->detectionInfo['scenario'];
+        $this->locations          = $model->getLocations();
+        $this->groups             = $model->getGroups();
+        $this->currentMapping     = $model->getCurrentMapping();
+        $this->currentPermissions = $model->getCurrentPermissions();
 
         // Register JS translation keys
         Text::script('JBS_WIZARD_APPLY_SUCCESS');

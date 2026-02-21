@@ -284,7 +284,10 @@ class ProclaimIconHelper
                 $this->buttons[$key][] = $tmp;
             }
 
-            if ($params->get('show_admin')) {
+            // Administration requires global Super Admin
+            $user = $application->getIdentity();
+
+            if ($params->get('show_admin') && $user && $user->authorise('core.admin')) {
                 $tmp = [
                     'image'  => 'icon-big icon-options fa-3x',
                     'link'   => Route::_('index.php?option=com_proclaim&view=cwmadmin'),

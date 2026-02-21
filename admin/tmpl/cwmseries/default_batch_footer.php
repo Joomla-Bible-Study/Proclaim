@@ -21,14 +21,14 @@ use Joomla\CMS\Language\Text;
 $published = $this->state->get('filter.published');
 
 $wa = $this->getDocument()->getWebAssetManager();
-$wa->useScript('com_proclaim.cwmadmin-series-batch');
+$wa->useScript('com_proclaim.cwmadmin-batch-footer');
 
 ?>
 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
     <?php
     echo Text::_('JCANCEL'); ?>
 </button>
-<button type="submit" id='batch-submit-button-id' class="btn btn-success" data-submit-task='serie.batch'>
+<button type="submit" id='batch-submit-button-id' class="btn btn-success" data-submit-task='cwmserie.batch'>
     <?php
     echo Text::_('JGLOBAL_BATCH_PROCESS'); ?>
 </button>

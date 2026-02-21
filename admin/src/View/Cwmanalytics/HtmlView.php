@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmanalytics;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Model\CwmanalyticsModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -121,6 +122,9 @@ class HtmlView extends BaseHtmlView
     /** @var bool True if the current user is a super-admin @since 10.1.0 */
     public bool $isSuperAdmin = false;
 
+    /** @var bool True when the campus dropdown should be displayed @since 10.1.0 */
+    public bool $showCampusDropdown = false;
+
     /** @var string Export URL for CSV download @since 10.1.0 */
     public string $exportUrl = '';
 
@@ -200,16 +204,21 @@ class HtmlView extends BaseHtmlView
         /** @var CwmanalyticsModel $model */
         $model = $this->getModel();
 
-        // Non-super-admin: force to their first authorised campus
-        if (!$this->isSuperAdmin && $this->locationId === 0) {
-            $locations = $model->getLocations($user->getAuthorisedViewLevels());
+        // Non-super-admin: resolve accessible locations via CwmlocationHelper
+        if (!$this->isSuperAdmin && CwmlocationHelper::isEnabled() && $this->locationId === 0) {
+            $userLocationIds = CwmlocationHelper::getUserLocations((int) $user->id);
 
-            if (!empty($locations)) {
-                $this->locationId = (int) $locations[0]->id;
+            if (!empty($userLocationIds)) {
+                $this->locationId = $userLocationIds[0];
             }
         }
 
+        // Load locations for dropdown: super-admin sees all, others see their accessible set
         $this->locations = $model->getLocations($this->isSuperAdmin ? [] : $user->getAuthorisedViewLevels());
+
+        // Show campus dropdown to super-admins or multi-campus users
+        $this->showCampusDropdown = $this->isSuperAdmin
+            || (\count($this->locations) > 1 && CwmlocationHelper::isEnabled());
 
         $s = $this->dateStart;
         $e = $this->dateEnd;
@@ -247,7 +256,7 @@ class HtmlView extends BaseHtmlView
             // Overview
             $this->kpi               = $model->getKpiTotals($s, $e, $l);
             $this->timeSeries        = $model->getTimeSeries($s, $e, $l);
-            $this->topStudies        = $model->getTopStudies($s, $e, 10);
+            $this->topStudies        = $model->getTopStudies($s, $e, 10, $l);
             $this->referrerBreakdown = $model->getReferrerBreakdown($s, $e, $l);
             $this->deviceBreakdown   = $model->getDeviceBreakdown($s, $e, $l);
             $this->browserBreakdown  = $model->getBrowserBreakdown($s, $e, $l);

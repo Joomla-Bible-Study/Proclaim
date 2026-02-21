@@ -152,11 +152,13 @@ $navParams      = '&preset=' . htmlspecialchars($this->preset, ENT_QUOTES) . '&l
                 <input type="date" name="date_end" class="form-control form-control-sm" style="width:140px"
                        value="<?php echo htmlspecialchars($this->dateEnd, ENT_QUOTES); ?>">
 
-                <!-- Campus filter (super-admin only) -->
-                <?php if ($this->isSuperAdmin && !empty($this->locations)) : ?>
+                <!-- Campus filter (super-admin or multi-campus user) -->
+                <?php if ($this->showCampusDropdown && !empty($this->locations)) : ?>
                     <label class="ms-2 me-1 fw-semibold small"><?php echo Text::_('JBS_ANA_CAMPUS'); ?></label>
                     <select name="location_id" class="form-select form-select-sm" style="width:160px">
-                        <option value="0"><?php echo Text::_('JBS_ANA_ALL_CAMPUSES'); ?></option>
+                        <?php if ($this->isSuperAdmin) : ?>
+                            <option value="0"><?php echo Text::_('JBS_ANA_ALL_CAMPUSES'); ?></option>
+                        <?php endif; ?>
                         <?php foreach ($this->locations as $loc) : ?>
                             <option value="<?php echo (int) $loc->id; ?>"
                                 <?php echo $this->locationId === (int) $loc->id ? ' selected' : ''; ?>>

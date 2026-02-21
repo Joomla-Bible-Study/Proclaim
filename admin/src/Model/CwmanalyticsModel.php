@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\Database\QueryInterface;
@@ -83,6 +84,21 @@ class CwmanalyticsModel extends BaseDatabaseModel
         try {
             $db = $this->getDatabase();
 
+            // Resolve accessible location IDs for non-admin users
+            $accessibleIds = [];
+
+            if ($locationId === 0) {
+                try {
+                    $user = Factory::getApplication()->getIdentity();
+
+                    if ($user && !$user->authorise('core.admin') && CwmlocationHelper::isEnabled()) {
+                        $accessibleIds = CwmlocationHelper::getUserLocations((int) $user->id);
+                    }
+                } catch (\Exception $e) {
+                    // Fail open
+                }
+            }
+
             // Page views from studies
             $q = $db->getQuery(true)
                 ->select('SUM(' . $db->quoteName('hits') . ')')
@@ -90,6 +106,12 @@ class CwmanalyticsModel extends BaseDatabaseModel
 
             if ($locationId > 0) {
                 $q->where($db->quoteName('location_id') . ' = ' . (int) $locationId);
+            } elseif (!empty($accessibleIds)) {
+                $q->where(
+                    '(' . $db->quoteName('location_id') . ' IS NULL'
+                    . ' OR ' . $db->quoteName('location_id') . ' IN ('
+                    . implode(',', array_map('intval', $accessibleIds)) . '))'
+                );
             }
 
             $db->setQuery($q);
@@ -108,6 +130,15 @@ class CwmanalyticsModel extends BaseDatabaseModel
                     $db->quoteName('#__bsms_studies', 's') .
                     ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('m.study_id')
                 )->where($db->quoteName('s.location_id') . ' = ' . (int) $locationId);
+            } elseif (!empty($accessibleIds)) {
+                $q2->leftJoin(
+                    $db->quoteName('#__bsms_studies', 's') .
+                    ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('m.study_id')
+                )->where(
+                    '(' . $db->quoteName('s.location_id') . ' IS NULL'
+                    . ' OR ' . $db->quoteName('s.location_id') . ' IN ('
+                    . implode(',', array_map('intval', $accessibleIds)) . '))'
+                );
             }
 
             $db->setQuery($q2);
@@ -215,15 +246,16 @@ class CwmanalyticsModel extends BaseDatabaseModel
     /**
      * Get top studies by combined engagement (views + plays + downloads).
      *
-     * @param   string  $start   Start date (Y-m-d).
-     * @param   string  $end     End date (Y-m-d).
-     * @param   int     $limit   Maximum results.
+     * @param   string  $start       Start date (Y-m-d).
+     * @param   string  $end         End date (Y-m-d).
+     * @param   int     $limit       Maximum results.
+     * @param   int     $locationId  Filter by campus; 0 = all authorised.
      *
      * @return  array<int, array{study_id: int, title: string, total: int}>
      *
      * @since   10.1.0
      */
-    public function getTopStudies(string $start, string $end, int $limit = 10): array
+    public function getTopStudies(string $start, string $end, int $limit = 10, int $locationId = 0): array
     {
         try {
             $db    = $this->getDatabase();
@@ -240,8 +272,15 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 )
                 ->where($db->quoteName('e.created') . ' >= ' . $db->quote($start . ' 00:00:00'))
                 ->where($db->quoteName('e.created') . ' <= ' . $db->quote($end . ' 23:59:59'))
-                ->where($db->quoteName('e.study_id') . ' IS NOT NULL')
-                ->group($db->quoteName('e.study_id'))
+                ->where($db->quoteName('e.study_id') . ' IS NOT NULL');
+
+            if ($locationId > 0) {
+                $query->where($db->quoteName('e.location_id') . ' = ' . (int) $locationId);
+            } else {
+                $this->applyLocationFilter($query, $db);
+            }
+
+            $query->group($db->quoteName('e.study_id'))
                 ->order('total DESC');
             $db->setQuery($query, 0, (int) $limit);
 
@@ -413,6 +452,8 @@ class CwmanalyticsModel extends BaseDatabaseModel
 
             if ($locationId > 0) {
                 $query->where($db->quoteName('location_id') . ' = ' . (int) $locationId);
+            } else {
+                $this->applyLocationFilter($query, $db);
             }
 
             $db->setQuery($query);
@@ -676,15 +717,15 @@ class CwmanalyticsModel extends BaseDatabaseModel
         try {
             $user = Factory::getApplication()->getIdentity();
 
-            if ($user && !$user->authorise('core.admin')) {
-                $levels = $user->getAuthorisedViewLevels();
+            if ($user && !$user->authorise('core.admin') && CwmlocationHelper::isEnabled()) {
+                $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
 
-                if (!empty($levels)) {
-                    $query->leftJoin(
-                        $db->quoteName('#__bsms_locations', 'loc_sec') .
-                        ' ON ' . $db->quoteName('loc_sec.id') . ' = ' . $db->quoteName('location_id')
-                    )
-                    ->whereIn($db->quoteName('loc_sec.access'), $levels);
+                if (!empty($accessible)) {
+                    $query->where(
+                        '(' . $db->quoteName('location_id') . ' IS NULL'
+                        . ' OR ' . $db->quoteName('location_id') . ' IN ('
+                        . implode(',', array_map('intval', $accessible)) . '))'
+                    );
                 }
             }
         } catch (\Exception $e) {
@@ -984,7 +1025,29 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 ])
                 ->from($db->quoteName('#__bsms_platform_stats', 'ps'));
 
+            // Resolve whether we need the study join for location filtering
+            $needsStudyJoin = false;
+            $accessibleIds  = [];
+
             if ($locationId > 0) {
+                $needsStudyJoin = true;
+            } else {
+                try {
+                    $user = Factory::getApplication()->getIdentity();
+
+                    if ($user && !$user->authorise('core.admin') && CwmlocationHelper::isEnabled()) {
+                        $accessibleIds = CwmlocationHelper::getUserLocations((int) $user->id);
+
+                        if (!empty($accessibleIds)) {
+                            $needsStudyJoin = true;
+                        }
+                    }
+                } catch (\Exception $e) {
+                    // Fail open
+                }
+            }
+
+            if ($needsStudyJoin) {
                 $query->leftJoin(
                     $db->quoteName('#__bsms_mediafiles', 'm') .
                     ' ON ' . $db->quoteName('m.id') . ' = ' . $db->quoteName('ps.media_id')
@@ -992,8 +1055,17 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 ->leftJoin(
                     $db->quoteName('#__bsms_studies', 's') .
                     ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('m.study_id')
-                )
-                ->where($db->quoteName('s.location_id') . ' = ' . (int) $locationId);
+                );
+
+                if ($locationId > 0) {
+                    $query->where($db->quoteName('s.location_id') . ' = ' . (int) $locationId);
+                } elseif (!empty($accessibleIds)) {
+                    $query->where(
+                        '(' . $db->quoteName('s.location_id') . ' IS NULL'
+                        . ' OR ' . $db->quoteName('s.location_id') . ' IN ('
+                        . implode(',', array_map('intval', $accessibleIds)) . '))'
+                    );
+                }
             }
 
             $query->group($db->quoteName('ps.platform'))

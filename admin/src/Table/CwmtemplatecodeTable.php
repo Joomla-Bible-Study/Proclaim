@@ -51,6 +51,14 @@ class CwmtemplatecodeTable extends Table
     public ?string $filename = null;
 
     /**
+     * Location ID (multi-campus)
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $location_id = null;
+
+    /**
      * Type
      *
      * @var string|null
@@ -90,7 +98,7 @@ class CwmtemplatecodeTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public string $created_by_alias = '';
+    public ?string $created_by_alias = '';
 
     /**
      * Modified date

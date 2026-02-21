@@ -19,7 +19,7 @@ use Joomla\CMS\Language\Text;
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmpodcasts\HtmlView $this */
 
 $wa = $this->getDocument()->getWebAssetManager();
-$wa->useScript('com_proclaim.cwmadmin-podcasts-batch');
+$wa->useScript('com_proclaim.cwmadmin-batch-footer');
 ?>
 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
     <?php

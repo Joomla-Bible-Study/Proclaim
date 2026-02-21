@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
@@ -107,6 +108,7 @@ class CwmseriesModel extends ListModel
         $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->getUserStateFromRequest($this->context . '.filter.level', 'filter_level', 0, 'int');
         $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
+        $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
 
         // List state information.
         parent::populateState($ordering, $direction);
@@ -137,6 +139,7 @@ class CwmseriesModel extends ListModel
         $id .= ':' . serialize($this->getState('filter.access'));
         $id .= ':' . $this->getState('filter.published');
         $id .= ':' . $this->getState('filter.language');
+        $id .= ':' . $this->getState('filter.location');
 
         return parent::getStoreId($id);
     }
@@ -210,9 +213,42 @@ class CwmseriesModel extends ListModel
             $query->whereIn($db->quoteName('series.access'), $access);
         }
 
-        // Restrict non-admin users to their authorised view levels
+        // Join location name for display (graceful — column may not exist on older installs)
+        $columns = $db->getTableColumns('#__bsms_series');
+
+        if (isset($columns['location_id'])) {
+            $query->select($db->quoteName('loc.location_text', 'location_text'))
+                ->join('LEFT', $db->quoteName('#__bsms_locations', 'loc'), $db->quoteName('loc.id') . ' = ' . $db->quoteName('series.location_id'));
+        }
+
+        // Restrict non-admin users: hybrid location + access-level filter
         if (!$user->authorise('core.admin')) {
-            $query->whereIn($db->quoteName('series.access'), $user->getAuthorisedViewLevels());
+            if (CwmlocationHelper::isEnabled() && isset($columns['location_id'])) {
+                $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+                if (!empty($accessible)) {
+                    $inClause = implode(',', array_map('intval', $accessible));
+                    $query->where(
+                        '(' . $db->quoteName('series.location_id') . ' IS NULL'
+                        . ' OR ' . $db->quoteName('series.location_id') . ' IN (' . $inClause . '))'
+                    );
+                } else {
+                    $query->where($db->quoteName('series.location_id') . ' IS NULL');
+                }
+            } else {
+                $query->whereIn($db->quoteName('series.access'), $user->getAuthorisedViewLevels());
+            }
+        }
+
+        // Filter by location (dropdown)
+        if (isset($columns['location_id'])) {
+            $location = $this->getState('filter.location');
+
+            if (is_numeric($location)) {
+                $locationVal = (int) $location;
+                $query->where($db->quoteName('series.location_id') . ' = :locationId')
+                    ->bind(':locationId', $locationVal, ParameterType::INTEGER);
+            }
         }
 
         // Filter by published state

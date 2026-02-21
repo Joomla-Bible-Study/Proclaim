@@ -99,7 +99,15 @@ class CwmserieTable extends Table
      *
      * @since 9.0.0
      */
-    public int $published = 1;
+    public ?int $published = 1;
+
+    /**
+     * Location ID (multi-campus)
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $location_id = null;
 
     /**
      * Asset ID
@@ -163,7 +171,7 @@ class CwmserieTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public string $created_by_alias = '';
+    public ?string $created_by_alias = '';
 
     /**
      * Modified date
@@ -187,7 +195,7 @@ class CwmserieTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public string $publish_up = '0000-00-00 00:00:00';
+    public ?string $publish_up = '0000-00-00 00:00:00';
 
     /**
      * Publish down date
@@ -195,7 +203,7 @@ class CwmserieTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public string $publish_down = '0000-00-00 00:00:00';
+    public ?string $publish_down = '0000-00-00 00:00:00';
 
     /**
      * Podcast Show
@@ -203,7 +211,7 @@ class CwmserieTable extends Table
      * @var int
      * @since 10.1.0
      */
-    public int $podcast_show = 0;
+    public ?int $podcast_show = 0;
 
     /**
      * Checked out user ID
@@ -270,6 +278,11 @@ class CwmserieTable extends Table
     {
         if (trim($this->series_text ?? '') === '') {
             throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_SERIES_NAME_REQUIRED'));
+        }
+
+        // Normalise "Select Location" sentinel (-1) to NULL for DB storage
+        if ($this->location_id !== null && $this->location_id <= 0) {
+            $this->location_id = null;
         }
 
         // Sanitise publish dates — empty strings are invalid for NOT NULL DATETIME columns

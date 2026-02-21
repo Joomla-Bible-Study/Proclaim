@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -39,6 +40,7 @@ class CwmtemplateModel extends AdminModel
      */
     protected $batch_commands = [
         'assetgroup_id' => 'batchAccess',
+        'location'      => 'batchLocation',
     ];
 
     /**
@@ -82,13 +84,37 @@ class CwmtemplateModel extends AdminModel
      */
     public function copy(array $cid): bool
     {
+        $user   = Factory::getApplication()->getIdentity();
+        $userId = (int) $user->id;
+
+        // Non-admin users get their first accessible location assigned to copies
+        $copyLocationId = null;
+
+        if (!$user->authorise('core.admin') && CwmlocationHelper::isEnabled()) {
+            $userLocations  = CwmlocationHelper::getUserLocations($userId);
+            $copyLocationId = !empty($userLocations) ? (int) $userLocations[0] : null;
+        }
+
         foreach ($cid as $id) {
             $tmplCurr = Factory::getApplication()->bootComponent('com_proclaim')
                 ->getMVCFactory()->createTable('Cwmtemplate', 'Administrator');
 
             $tmplCurr->load($id);
-            $tmplCurr->id    = 0;
-            $tmplCurr->title .= ' - copy';
+            $tmplCurr->id               = 0;
+            $tmplCurr->title             .= ' - copy';
+            $tmplCurr->created_by        = $userId;
+            $tmplCurr->created_by_alias  = '';
+            $tmplCurr->created           = null;
+            $tmplCurr->modified          = null;
+            $tmplCurr->modified_by       = null;
+            $tmplCurr->checked_out       = null;
+            $tmplCurr->checked_out_time  = null;
+            $tmplCurr->asset_id          = null;
+
+            // Assign the cloner's campus location so they own the copy
+            if ($copyLocationId !== null) {
+                $tmplCurr->location_id = $copyLocationId;
+            }
 
             if (!$tmplCurr->store()) {
                 throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
@@ -210,6 +236,54 @@ class CwmtemplateModel extends AdminModel
             $table->modified    = $date->toSql();
             $table->modified_by = $user->id;
         }
+    }
+
+    /**
+     * Batch set location for a list of templates.
+     *
+     * @param   string  $value     The location ID (or 0/empty to clear).
+     * @param   array   $pks       An array of row IDs.
+     * @param   array   $contexts  An array of item contexts.
+     *
+     * @return  bool  True if successful.
+     *
+     * @throws  \RuntimeException  When the user lacks edit or location access.
+     * @throws  \Exception
+     * @since   10.1.0
+     */
+    protected function batchLocation(string $value, array $pks, array $contexts): bool
+    {
+        $user       = Factory::getApplication()->getIdentity();
+        $locationId = (int) $value;
+
+        // Validate location access when the system is enabled
+        if ($locationId > 0 && CwmlocationHelper::isEnabled() && !$user->authorise('core.admin')) {
+            $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+            if (!empty($accessible) && !\in_array($locationId, $accessible, true)) {
+                throw new \RuntimeException(Text::_('JBS_BAT_LOCATION_ACCESS_DENIED'));
+            }
+        }
+
+        $table = $this->getTable();
+
+        foreach ($pks as $pk) {
+            if ($user->authorise('core.edit', $contexts[$pk])) {
+                $table->reset();
+                $table->load($pk);
+                $table->location_id = $locationId > 0 ? $locationId : null;
+
+                if (!$table->store()) {
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                }
+            } else {
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+            }
+        }
+
+        $this->cleanCache();
+
+        return true;
     }
 
     /**

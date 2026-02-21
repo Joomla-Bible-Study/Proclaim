@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -53,6 +54,34 @@ class PodcastsField extends ListField
             ->from($db->quoteName('#__bsms_podcast'))
             ->where($db->quoteName('published') . ' = 1')
             ->order($db->quoteName('title') . ' ASC');
+
+        // Filter by location for non-admin users (graceful — column may not exist)
+        $user    = Factory::getApplication()->getIdentity();
+        $columns = $db->getTableColumns('#__bsms_podcast');
+
+        if (!$user->authorise('core.admin')) {
+            if (CwmlocationHelper::isEnabled() && isset($columns['location_id'])) {
+                $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+                if (!empty($accessible)) {
+                    $inClause = implode(',', array_map('intval', $accessible));
+                    $query->extendWhere(
+                        'AND',
+                        [
+                            $db->quoteName('location_id') . ' IS NULL',
+                            $db->quoteName('location_id') . ' IN (' . $inClause . ')',
+                        ],
+                        'OR'
+                    );
+                } else {
+                    $query->where($db->quoteName('location_id') . ' IS NULL');
+                }
+            }
+
+            // Standard Joomla access-level filter
+            $query->whereIn($db->quoteName('access'), $user->getAuthorisedViewLevels());
+        }
+
         $db->setQuery($query);
         $podcasts = $db->loadObjectList();
         $options  = [];

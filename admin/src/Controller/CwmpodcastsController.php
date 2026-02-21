@@ -350,6 +350,6 @@ class CwmpodcastsController extends AdminController
      */
     public function getQuickIconPodcasts(): void
     {
-        CwmcountHelper::sendQuickIconResponse('#__bsms_podcast', 'COM_PROCLAIM_N_QUICKICON_PODCASTS');
+        CwmcountHelper::sendQuickIconResponse('#__bsms_podcast', 'COM_PROCLAIM_N_QUICKICON_PODCASTS', 'location');
     }
 }

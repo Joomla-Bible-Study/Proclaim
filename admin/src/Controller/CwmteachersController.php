@@ -86,6 +86,6 @@ class CwmteachersController extends AdminController
      */
     public function getQuickIconTeachers(): void
     {
-        CwmcountHelper::sendQuickIconResponse('#__bsms_teachers', 'COM_PROCLAIM_N_QUICKICON_TEACHERS');
+        CwmcountHelper::sendQuickIconResponse('#__bsms_teachers', 'COM_PROCLAIM_N_QUICKICON_TEACHERS', 'access');
     }
 }

@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 
@@ -134,6 +135,9 @@ class CwmtemplatesModel extends ListModel
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
+        $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
+        $this->setState('filter.location', $location);
+
         // List state information.
         parent::populateState($ordering, $direction);
     }
@@ -184,9 +188,42 @@ class CwmtemplatesModel extends ListModel
             }
         }
 
-        // Restrict non-admin users to their authorised view levels
+        // Join location name for display (graceful — column may not exist on older installs)
+        $columns = $db->getTableColumns('#__bsms_templates');
+
+        if (isset($columns['location_id'])) {
+            $query->select($db->quoteName('loc.location_text', 'location_text'))
+                ->join('LEFT', $db->quoteName('#__bsms_locations', 'loc') . ' ON ' . $db->quoteName('loc.id') . ' = ' . $db->quoteName('template.location_id'));
+        }
+
+        // Restrict non-admin users: hybrid location + access-level filter
         if (!$user->authorise('core.admin')) {
-            $query->whereIn($db->quoteName('template.access'), $user->getAuthorisedViewLevels());
+            if (CwmlocationHelper::isEnabled() && isset($columns['location_id'])) {
+                $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+                if (!empty($accessible)) {
+                    $inClause = implode(',', array_map('intval', $accessible));
+                    $query->where(
+                        '(' . $db->quoteName('template.location_id') . ' IS NULL'
+                        . ' OR ' . $db->quoteName('template.location_id') . ' IN (' . $inClause . '))'
+                    );
+                } else {
+                    $query->where($db->quoteName('template.location_id') . ' IS NULL');
+                }
+            } else {
+                $query->whereIn($db->quoteName('template.access'), $user->getAuthorisedViewLevels());
+            }
+        }
+
+        // Filter by location (dropdown)
+        if (isset($columns['location_id'])) {
+            $location = $this->getState('filter.location');
+
+            if (is_numeric($location)) {
+                $locationVal = (int) $location;
+                $query->where($db->quoteName('template.location_id') . ' = :locationId')
+                    ->bind(':locationId', $locationVal, \Joomla\Database\ParameterType::INTEGER);
+            }
         }
 
         // Add the list ordering clause

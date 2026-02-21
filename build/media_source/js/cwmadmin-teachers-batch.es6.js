@@ -15,7 +15,7 @@
     const submitTask = (task) => {
         const form = document.getElementById(formId);
 
-        if (form && task === 'cwmteachers.batch') {
+        if (form && task === 'cwmteacher.batch') {
             submitForm(task, form);
         }
     };

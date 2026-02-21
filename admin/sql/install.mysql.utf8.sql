@@ -333,8 +333,10 @@ CREATE TABLE IF NOT EXISTS `#__bsms_servers`
     `asset_id`    INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
     `access`      INT(10) UNSIGNED NOT NULL DEFAULT '1',
     `type`             CHAR(255)        NOT NULL,
+    `location_id`      INT(3)                    DEFAULT NULL,
     `params`           TEXT             NOT NULL,
     `media`            TEXT             NOT NULL,
+    `stats_synced_at`  DATETIME                  DEFAULT NULL,
     `created`          DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
     `created_by`       INT(10) UNSIGNED NOT NULL DEFAULT '0',
     `created_by_alias` VARCHAR(255)     NOT NULL DEFAULT '',
@@ -345,10 +347,38 @@ CREATE TABLE IF NOT EXISTS `#__bsms_servers`
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`),
-    KEY `idx_checkout` (`checked_out`)
+    KEY `idx_checkout` (`checked_out`),
+    KEY `idx_location_published` (`location_id`, `published`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `#__bsms_platform_stats`
+--
+
+CREATE TABLE IF NOT EXISTS `#__bsms_platform_stats`
+(
+    `id`             INT UNSIGNED  NOT NULL AUTO_INCREMENT,
+    `media_id`       INT UNSIGNED  NOT NULL COMMENT 'FK to #__bsms_mediafiles',
+    `server_id`      INT UNSIGNED  NOT NULL COMMENT 'FK to #__bsms_servers',
+    `platform`       VARCHAR(20)   NOT NULL COMMENT 'Server type: youtube, vimeo, wistia',
+    `platform_id`    VARCHAR(100)  NOT NULL COMMENT 'Video ID/hash on the platform',
+    `view_count`     INT UNSIGNED  NOT NULL DEFAULT 0,
+    `play_count`     INT UNSIGNED  NOT NULL DEFAULT 0,
+    `like_count`     INT UNSIGNED           DEFAULT NULL,
+    `comment_count`  INT UNSIGNED           DEFAULT NULL,
+    `load_count`     INT UNSIGNED           DEFAULT NULL COMMENT 'Page loads (Wistia)',
+    `hours_watched`  DECIMAL(10,2)          DEFAULT NULL,
+    `engagement`     DECIMAL(5,2)           DEFAULT NULL COMMENT 'Play rate percentage',
+    `synced_at`      DATETIME      NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_media_platform` (`media_id`, `platform`),
+    KEY `idx_server` (`server_id`),
+    KEY `idx_platform` (`platform`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -561,6 +591,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templatecode`
 (
     `id`           INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `published`    TINYINT(3)       NOT NULL DEFAULT '1',
+    `location_id`  INT(3)                    DEFAULT NULL,
     `type`         TINYINT(3)       NOT NULL,
     `filename`     TEXT             NOT NULL,
     `asset_id`         INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
@@ -573,7 +604,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templatecode`
     `checked_out_time` DATETIME                  DEFAULT NULL,
     `templatecode`     MEDIUMTEXT       NOT NULL,
     PRIMARY KEY (`id`),
-    KEY `idx_checkout` (`checked_out`)
+    KEY `idx_checkout` (`checked_out`),
+    KEY `idx_templatecode_location` (`location_id`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
@@ -603,10 +635,12 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templates`
     `checked_out`      INT(10) UNSIGNED NOT NULL DEFAULT 0,
     `checked_out_time` DATETIME                  DEFAULT NULL,
     `access`           INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `location_id`      INT(3)                    DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`),
-    KEY `idx_checkout` (`checked_out`)
+    KEY `idx_checkout` (`checked_out`),
+    KEY `idx_template_location` (`location_id`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;

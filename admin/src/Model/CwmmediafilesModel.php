@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
@@ -321,6 +322,9 @@ class CwmmediafilesModel extends ListModel
         if (!$user->authorise('core.admin')) {
             $query->whereIn($db->quoteName('mediafile.access'), $user->getAuthorisedViewLevels());
         }
+
+        // Restrict by parent study's location + access (multi-campus security)
+        CwmlocationHelper::applySecurityFilter($query, 'study');
 
         // Filter by study title
         //        $study = $this->getState('filter.study_id');

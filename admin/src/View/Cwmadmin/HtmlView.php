@@ -229,6 +229,15 @@ class HtmlView extends BaseHtmlView
     public function display($tpl = null): void
     {
         $app      = Factory::getApplication();
+
+        // Admin Center requires global Super Admin — campus editors/viewers are redirected
+        if (!$app->getIdentity()->authorise('core.admin')) {
+            $app->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'warning');
+            $app->redirect('index.php?option=com_proclaim&view=cwmcpanel');
+
+            return;
+        }
+
         $language = $app->getLanguage();
         $language->load('com_installer');
 

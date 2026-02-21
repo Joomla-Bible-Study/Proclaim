@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Table\CwmserverTable;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
@@ -58,6 +59,7 @@ class CwmserverModel extends AdminModel
      */
     protected $batch_commands = [
         'assetgroup_id' => 'batchAccess',
+        'location'      => 'batchLocation',
     ];
     /**
      * Data
@@ -367,6 +369,59 @@ class CwmserverModel extends AdminModel
         }
 
         return parent::canEditState($record);
+    }
+
+    /**
+     * Batch-update the location for a group of servers.
+     *
+     * When the location system is enabled, non-admin users may only assign
+     * locations they have visibility over. Empty string = no change,
+     * 0 = clear (set NULL).
+     *
+     * @param   string  $value     The new location ID, or '' to clear.
+     * @param   array   $pks       An array of primary key IDs.
+     * @param   array   $contexts  An array of item contexts.
+     *
+     * @return  bool  True if successful.
+     *
+     * @throws  \RuntimeException  When the user lacks edit or location access.
+     * @throws  \Exception
+     * @since   10.1.0
+     */
+    protected function batchLocation(string $value, array $pks, array $contexts): bool
+    {
+        $user       = Factory::getApplication()->getIdentity();
+        $locationId = (int) $value;
+
+        // Validate location access when the system is enabled
+        if ($locationId > 0 && CwmlocationHelper::isEnabled() && !$user->authorise('core.admin')) {
+            $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+            if (!empty($accessible) && !\in_array($locationId, $accessible, true)) {
+                throw new \RuntimeException(Text::_('JBS_BAT_LOCATION_ACCESS_DENIED'));
+            }
+        }
+
+        /** @var CwmserverTable $table */
+        $table = $this->getTable();
+
+        foreach ($pks as $pk) {
+            if ($user->authorise('core.edit', $contexts[$pk])) {
+                $table->reset();
+                $table->load($pk);
+                $table->location_id = $locationId > 0 ? $locationId : null;
+
+                if (!$table->store()) {
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                }
+            } else {
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+            }
+        }
+
+        $this->cleanCache();
+
+        return true;
     }
 
     /**

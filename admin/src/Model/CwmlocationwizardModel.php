@@ -60,9 +60,9 @@ class CwmlocationwizardModel extends BaseDatabaseModel
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
-            ->select([$db->quoteName('id'), $db->quoteName('location'), $db->quoteName('published'), $db->quoteName('access')])
+            ->select([$db->quoteName('id'), $db->quoteName('location_text'), $db->quoteName('published'), $db->quoteName('access')])
             ->from($db->quoteName('#__bsms_locations'))
-            ->order($db->quoteName('location') . ' ASC');
+            ->order($db->quoteName('location_text') . ' ASC');
 
         $db->setQuery($query);
 
@@ -108,42 +108,94 @@ class CwmlocationwizardModel extends BaseDatabaseModel
             return \is_array($decoded) ? $decoded : [];
         }
 
+        // Registry::get() returns stdClass for nested objects — convert to array
+        if ($raw instanceof \stdClass) {
+            return json_decode(json_encode($raw), true) ?: [];
+        }
+
         return \is_array($raw) ? $raw : [];
     }
 
     /**
-     * Return teachers along with their user-account link status.
+     * Read existing component-level ACL rules and detect which preset each group matches.
      *
-     * Returns objects with: id, teacher, user_id (may be null / 0), user_name.
+     * Reverse-engineers the `#__assets` rules for `com_proclaim` and compares each
+     * group's allowed actions against the known presets. Returns a map of groupId → preset
+     * so the wizard can pre-select the correct radio button.
      *
-     * @return  array
+     * @return  array<string, string>  groupId → 'full'|'editor'|'viewer'|'none'
      *
      * @since   10.1.0
      */
-    public function getTeachers(): array
+    public function getCurrentPermissions(): array
     {
-        $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $columns = $db->getTableColumns('#__bsms_teachers');
-        $hasLink = isset($columns['user_id']);
-
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
-            ->select([$db->quoteName('t.id'), $db->quoteName('t.teacher')])
-            ->from($db->quoteName('#__bsms_teachers', 't'))
-            ->where($db->quoteName('t.published') . ' = 1')
-            ->order($db->quoteName('t.teacher') . ' ASC');
-
-        if ($hasLink) {
-            $query->select($db->quoteName('t.user_id'))
-                ->select($db->quoteName('u.name', 'user_name'))
-                ->join('LEFT', $db->quoteName('#__users', 'u') . ' ON ' . $db->quoteName('u.id') . ' = ' . $db->quoteName('t.user_id'));
-        } else {
-            // No user_id column yet — return placeholder
-            $query->select('0 AS user_id')->select('\'\' AS user_name');
-        }
+            ->select($db->quoteName('rules'))
+            ->from($db->quoteName('#__assets'))
+            ->where($db->quoteName('name') . ' = ' . $db->quote('com_proclaim'));
 
         $db->setQuery($query);
+        $rulesJson = $db->loadResult();
 
-        return $db->loadObjectList() ?: [];
+        if (!$rulesJson) {
+            return [];
+        }
+
+        $rules = json_decode($rulesJson, true) ?: [];
+
+        // Preset definitions — must match applyPermissions()
+        $presets = [
+            'full' => [
+                'core.manage'   => 1, 'core.create' => 1, 'core.edit' => 1,
+                'core.edit.own' => 1, 'core.edit.state' => 1, 'core.delete' => 1,
+            ],
+            'editor' => [
+                'core.manage'   => 1, 'core.create' => 1, 'core.edit' => 1,
+                'core.edit.own' => 1,
+            ],
+            'viewer' => [
+                'core.manage' => 1, 'core.create' => 1, 'core.edit.own' => 1,
+            ],
+        ];
+
+        // Collect all group IDs that appear in any action rule
+        $allGroupIds = [];
+
+        foreach ($rules as $actionRules) {
+            if (\is_array($actionRules)) {
+                foreach (array_keys($actionRules) as $gid) {
+                    $allGroupIds[(string) $gid] = true;
+                }
+            }
+        }
+
+        $result = [];
+
+        foreach (array_keys($allGroupIds) as $groupStr) {
+            // Build this group's actual permission set
+            $groupActions = [];
+
+            foreach ($rules as $action => $actionRules) {
+                if (\is_array($actionRules) && isset($actionRules[$groupStr]) && (int) $actionRules[$groupStr] === 1) {
+                    $groupActions[$action] = 1;
+                }
+            }
+
+            // Match against presets (check most specific first)
+            $matched = 'none';
+
+            foreach ($presets as $presetName => $presetActions) {
+                if ($groupActions === $presetActions) {
+                    $matched = $presetName;
+                    break;
+                }
+            }
+
+            $result[$groupStr] = $matched;
+        }
+
+        return $result;
     }
 
     /**
@@ -188,15 +240,17 @@ class CwmlocationwizardModel extends BaseDatabaseModel
      * Apply the wizard configuration.
      *
      * Saves the group-to-location mapping to component params, enables location
-     * filtering, and marks the wizard as complete.
+     * filtering, marks the wizard as complete, and optionally sets component-level
+     * ACL permissions for mapped groups.
      *
-     * @param   array  $mapping  Group-to-location mapping: { locationId: [groupId...] }.
+     * @param   array  $mapping      Group-to-location mapping: { locationId: [groupId...] }.
+     * @param   array  $permissions  Permission presets per group: { groupId: 'full'|'editor'|'none' }.
      *
      * @return  bool  True on success.
      *
      * @since   10.1.0
      */
-    public function applyWizard(array $mapping): bool
+    public function applyWizard(array $mapping, array $permissions = []): bool
     {
         try {
             $db     = Factory::getContainer()->get(DatabaseInterface::class);
@@ -216,6 +270,11 @@ class CwmlocationwizardModel extends BaseDatabaseModel
             $db->setQuery($query);
             $db->execute();
 
+            // Apply component-level ACL permissions for mapped groups
+            if (!empty($permissions)) {
+                $this->applyPermissions($permissions);
+            }
+
             // Reset per-request location cache so new mapping takes effect immediately
             CwmlocationHelper::resetCache();
 
@@ -225,6 +284,78 @@ class CwmlocationwizardModel extends BaseDatabaseModel
 
             return false;
         }
+    }
+
+    /**
+     * Set component-level Joomla ACL permissions for mapped user groups.
+     *
+     * Permissions are set on the com_proclaim asset and cascade to all entity
+     * types (messages, teachers, series, etc.) unless individually overridden.
+     *
+     * @param   array  $permissions  { groupId: 'full'|'editor'|'none', ... }
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function applyPermissions(array $permissions): void
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Load current component asset rules
+        $query = $db->getQuery(true)
+            ->select([$db->quoteName('id'), $db->quoteName('rules')])
+            ->from($db->quoteName('#__assets'))
+            ->where($db->quoteName('name') . ' = ' . $db->quote('com_proclaim'));
+
+        $db->setQuery($query);
+        $asset = $db->loadObject();
+
+        if (!$asset) {
+            return;
+        }
+
+        $rules = json_decode($asset->rules ?? '{}', true) ?: [];
+
+        // Preset definitions — actions and their allowed values
+        $presets = [
+            'full' => [
+                'core.manage'   => 1, 'core.create' => 1, 'core.edit' => 1,
+                'core.edit.own' => 1, 'core.edit.state' => 1, 'core.delete' => 1,
+            ],
+            'editor' => [
+                'core.manage'   => 1, 'core.create' => 1, 'core.edit' => 1,
+                'core.edit.own' => 1,
+            ],
+            'viewer' => [
+                'core.manage' => 1, 'core.create' => 1, 'core.edit.own' => 1,
+            ],
+        ];
+
+        foreach ($permissions as $groupId => $preset) {
+            if ($preset === 'none' || !isset($presets[$preset])) {
+                continue;
+            }
+
+            $groupStr = (string) $groupId;
+
+            foreach ($presets[$preset] as $action => $value) {
+                if (!isset($rules[$action])) {
+                    $rules[$action] = [];
+                }
+
+                $rules[$action][$groupStr] = $value;
+            }
+        }
+
+        // Save updated rules
+        $query = $db->getQuery(true)
+            ->update($db->quoteName('#__assets'))
+            ->set($db->quoteName('rules') . ' = ' . $db->quote(json_encode($rules)))
+            ->where($db->quoteName('id') . ' = ' . (int) $asset->id);
+
+        $db->setQuery($query);
+        $db->execute();
     }
 
     /**

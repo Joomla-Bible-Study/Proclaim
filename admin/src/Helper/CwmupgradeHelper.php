@@ -33,11 +33,16 @@ use Joomla\Registry\Registry;
  */
 class CwmupgradeHelper
 {
+    /** @var array|null Request-level cache for detect9xSchema() result */
+    private static ?array $cached9xDetection = null;
+
     /**
      * Detect whether a 9.x schema exists in the current database.
      *
      * Checks for the presence of `#__bsms_version` or `#__bsms_schemaversion`
-     * tables which only exist in Proclaim 9.x and earlier.
+     * tables which only exist in Proclaim 9.x and earlier.  Uses targeted
+     * SHOW TABLES queries instead of getTableList() to avoid loading the full
+     * table catalogue into memory on every page load.
      *
      * @return  array{detected: bool, version: string, record_counts: array}
      *
@@ -45,18 +50,21 @@ class CwmupgradeHelper
      */
     public static function detect9xSchema(): array
     {
-        $db        = Factory::getContainer()->get('DatabaseDriver');
-        $prefix    = $db->getPrefix();
-        $tableList = $db->getTableList();
+        if (self::$cached9xDetection !== null) {
+            return self::$cached9xDetection;
+        }
 
-        $versionTable       = $prefix . 'bsms_version';
-        $schemaVersionTable = $prefix . 'bsms_schemaversion';
+        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $prefix = $db->getPrefix();
 
-        $hasVersionTable       = \in_array($versionTable, $tableList, true);
-        $hasSchemaVersionTable = \in_array($schemaVersionTable, $tableList, true);
+        // Targeted existence check — avoids loading ALL table names
+        $hasVersionTable       = self::tableExists($db, $prefix . 'bsms_version');
+        $hasSchemaVersionTable = self::tableExists($db, $prefix . 'bsms_schemaversion');
 
         if (!$hasVersionTable && !$hasSchemaVersionTable) {
-            return ['detected' => false, 'version' => '', 'record_counts' => []];
+            self::$cached9xDetection = ['detected' => false, 'version' => '', 'record_counts' => []];
+
+            return self::$cached9xDetection;
         }
 
         // Try to read the version from the 9.x tables
@@ -90,11 +98,36 @@ class CwmupgradeHelper
             }
         }
 
-        return [
+        self::$cached9xDetection = [
             'detected'      => true,
             'version'       => $version,
             'record_counts' => [],
         ];
+
+        return self::$cached9xDetection;
+    }
+
+    /**
+     * Check whether a specific table exists using SHOW TABLES LIKE.
+     *
+     * Much cheaper than getTableList() which loads ALL table names.
+     *
+     * @param   object  $db         Database driver instance.
+     * @param   string  $tableName  Full table name (with prefix).
+     *
+     * @return  bool
+     *
+     * @since   10.1.0
+     */
+    private static function tableExists(object $db, string $tableName): bool
+    {
+        try {
+            $db->setQuery('SHOW TABLES LIKE ' . $db->quote($tableName));
+
+            return $db->loadResult() !== null;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**

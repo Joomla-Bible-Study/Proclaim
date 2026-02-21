@@ -59,6 +59,17 @@
             }
         },
         {
+            "name": "com_proclaim.cwmadmin-batch-footer",
+            "type": "script",
+            "uri": "com_proclaim/cwmadmin-batch-footer.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "type": "module"
+            }
+        },
+        {
             "name": "com_proclaim.cwmadmin-messages-batch",
             "type": "script",
             "uri": "com_proclaim/cwmadmin-messages-default-batch-footer.min.js",

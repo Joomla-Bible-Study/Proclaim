@@ -43,7 +43,7 @@ class CwmcommentTable extends Table
      * @var int
      * @since 7.0.0
      */
-    public int $published = 1;
+    public ?int $published = 1;
 
     /**
      * Study ID
@@ -139,7 +139,7 @@ class CwmcommentTable extends Table
      * @var string
      * @since 10.0.0
      */
-    public string $created_by_alias = '';
+    public ?string $created_by_alias = '';
 
     /**
      * Modified date

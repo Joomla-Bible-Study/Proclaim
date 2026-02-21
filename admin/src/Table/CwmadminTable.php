@@ -35,7 +35,7 @@ class CwmadminTable extends Table
      * @var int
      * @since    7.0.0
      */
-    public int $id = 0;
+    public ?int $id = 0;
 
     /**
      * Drop Tables
@@ -43,7 +43,7 @@ class CwmadminTable extends Table
      * @var int
      * @since    7.0.0
      */
-    public int $drop_tables = 0;
+    public ?int $drop_tables = 0;
 
     /**
      * Params
@@ -67,7 +67,7 @@ class CwmadminTable extends Table
      * @var int
      * @since    7.0.0
      */
-    public int $access = 0;
+    public ?int $access = 0;
 
     /**
      * Install State

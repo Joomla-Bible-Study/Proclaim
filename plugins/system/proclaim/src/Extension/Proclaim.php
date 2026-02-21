@@ -81,6 +81,21 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     ];
 
     /**
+     * Views hidden from the admin submenu for non-admin users (require core.admin).
+     *
+     * @var string[]
+     * @since 10.1.0
+     */
+    private const ADMIN_ONLY_VIEWS = [
+        'cwmadmin',
+        'cwmservers',
+        'cwmlocations',
+        'cwmmessagetypes',
+        'cwmtopics',
+        'cwmcomments',
+    ];
+
+    /**
      * Cached Simple Mode state for this request (null = not yet loaded).
      *
      * @var ?bool
@@ -184,15 +199,33 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                 ->useScript('com_proclaim.admin-shortcuts');
         }
 
-        if (!$this->isSimpleModeEnabled()) {
+        $hiddenViews = [];
+
+        // Hide admin-only views from non-admin users (global Super Admin only)
+        $user = $this->getApplication()->getIdentity();
+
+        if ($user && !$user->authorise('core.admin')) {
+            $hiddenViews = array_merge($hiddenViews, self::ADMIN_ONLY_VIEWS);
+        }
+
+        // Hide Simple Mode views
+        if ($this->isSimpleModeEnabled()) {
+            $hiddenViews = array_merge($hiddenViews, self::SIMPLE_MODE_HIDDEN_VIEWS);
+        }
+
+        $hiddenViews = array_unique($hiddenViews);
+
+        if (empty($hiddenViews)) {
             return;
         }
 
-        // Build CSS selectors targeting each hidden view's sidebar link
+        // Build CSS selectors targeting each hidden view's sidebar link.
+        // Match both view= URLs (list views) and task= URLs (edit views like cwmadmin).
         $selectors = [];
 
-        foreach (self::SIMPLE_MODE_HIDDEN_VIEWS as $view) {
+        foreach ($hiddenViews as $view) {
             $selectors[] = 'li:has(> a[href*="view=' . $view . '"])';
+            $selectors[] = 'li:has(> a[href*="task=' . $view . '."])';
         }
 
         $css = implode(",\n", $selectors) . ' { display: none !important; }';

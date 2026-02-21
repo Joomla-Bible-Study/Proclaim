@@ -102,11 +102,7 @@ class ServerListField extends ListField
     #[\Override]
     protected function getInput(): string
     {
-        // Ensure options (and serverTypeMap) are populated
-        if (empty($this->serverTypeMap)) {
-            $this->getOptions();
-        }
-
+        // parent::getInput() calls getOptions() internally, which populates serverTypeMap
         $html = parent::getInput();
 
         // Inject data-server-types JSON attribute onto the <select> element

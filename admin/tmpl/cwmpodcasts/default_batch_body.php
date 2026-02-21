@@ -33,5 +33,8 @@ use Joomla\CMS\Layout\LayoutHelper;
         <div class="form-group col-md-6">
             <?php echo Cwmhtml::linkType(); ?>
         </div>
+        <div class="form-group col-md-6">
+            <?php echo Cwmhtml::location(); ?>
+        </div>
     </div>
 </div>

@@ -222,8 +222,10 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             <h2 class="text-center">
                 <?php echo Text::_('JBS_CPL_MENUE_LINKS'); ?>
             </h2>
+            <?php $isAdmin = $cpanelUser->authorise('core.admin'); ?>
             <div class="container">
                 <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3 justify-content-center">
+                    <?php if ($isAdmin) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmadmin'); ?>"
                            title="<?php echo Text::_('JBS_CMN_ADMINISTRATION'); ?>" class="cpanel-btn">
@@ -231,6 +233,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                             <span><?php echo Text::_('JBS_CMN_ADMINISTRATION'); ?></span>
                         </a>
                     </div>
+                    <?php endif; ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmmessages'); ?>"
                            title="<?php echo Text::_('JBS_CMN_STUDIES'); ?>" class="cpanel-btn">
@@ -259,7 +262,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                             <span><?php echo Text::_('JBS_CMN_SERIES'); ?></span>
                         </a>
                     </div>
-                    <?php if (!$simple->mode) : ?>
+                    <?php if (!$simple->mode && $isAdmin) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmmessagetypes'); ?>"
                            title="<?php echo Text::_('JBS_CMN_MESSAGETYPES'); ?>" class="cpanel-btn">
@@ -267,6 +270,8 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                             <span><?php echo Text::_('JBS_CMN_MESSAGETYPES'); ?></span>
                         </a>
                     </div>
+                    <?php endif; ?>
+                    <?php if ($isAdmin) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmlocations'); ?>"
                            title="<?php echo Text::_('JBS_CMN_LOCATIONS'); ?>" class="cpanel-btn">
@@ -274,6 +279,8 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                             <span><?php echo Text::_('JBS_CMN_LOCATIONS'); ?></span>
                         </a>
                     </div>
+                    <?php endif; ?>
+                    <?php if (!$simple->mode && $isAdmin) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmtopics'); ?>"
                            title="<?php echo Text::_('JBS_CMN_TOPICS'); ?>" class="cpanel-btn">
@@ -289,6 +296,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                         </a>
                     </div>
                     <?php endif; ?>
+                    <?php if ($isAdmin) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmservers'); ?>"
                            title="<?php echo Text::_('JBS_CMN_SERVERS'); ?>" class="cpanel-btn">
@@ -296,6 +304,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                             <span><?php echo Text::_('JBS_CMN_SERVERS'); ?></span>
                         </a>
                     </div>
+                    <?php endif; ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmpodcasts'); ?>"
                            title="<?php echo Text::_('JBS_CMN_PODCASTS'); ?>" class="cpanel-btn">
@@ -331,6 +340,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
         </div>
         <div class="clearfix" style="margin:10px;"></div>
         <!-- BEGIN: STATS -->
+        <?php if ($isAdmin) : ?>
         <div class="fbstatscover d-none d-md-block">
             <h1 class="text-center"><?php echo Text::_('JBS_CPL_GENERAL_STAT'); ?></h1>
             <table class="table table-striped table-responsive table-hover">
@@ -415,6 +425,7 @@ $entityStats = [
                 </tbody>
             </table>
         </div>
+        <?php endif; ?>
         <div style="clear: both;"></div>
     </div>
     <?php

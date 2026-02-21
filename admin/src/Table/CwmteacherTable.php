@@ -32,14 +32,14 @@ use Joomla\Registry\Registry;
  */
 class CwmteacherTable extends Table
 {
-    /** @var int @since 9.0.0 */
-    public int $id = 0;
+    /** @var int|null @since 9.0.0 */
+    public ?int $id = 0;
 
     /** @var string|null @since 9.0.0 */
     public ?string $teachername = null;
 
-    /** @var string @since 9.0.0 */
-    public string $alias = '';
+    /** @var string|null @since 9.0.0 */
+    public ?string $alias = '';
 
     /** @var string|null Teacher title/honorific @since 7.0.0 */
     public ?string $title = null;
@@ -68,23 +68,23 @@ class CwmteacherTable extends Table
     /** @var string|null Short bio @since 7.0.0 */
     public ?string $short = null;
 
-    /** @var string @since 9.0.0 */
-    public string $ordering = '';
+    /** @var string|null @since 9.0.0 */
+    public ?string $ordering = '';
 
-    /** @var int Show in listings @since 7.0.0 */
-    public int $list_show = 1;
+    /** @var int|null Show in listings @since 7.0.0 */
+    public ?int $list_show = 1;
 
-    /** @var int @since 7.0.0 */
-    public int $published = 1;
+    /** @var int|null @since 7.0.0 */
+    public ?int $published = 1;
 
     /** @var int|null FK to #__assets @since 7.0.0 */
     public ?int $asset_id = null;
 
-    /** @var int Access view level @since 7.0.0 */
-    public int $access = 1;
+    /** @var int|null Access view level @since 7.0.0 */
+    public ?int $access = 1;
 
-    /** @var string Language code @since 7.0.0 */
-    public string $language = '';
+    /** @var string|null Language code @since 7.0.0 */
+    public ?string $language = '';
 
     /** @var string|null @since 7.0.0 */
     public ?string $facebooklink = null;
@@ -131,8 +131,8 @@ class CwmteacherTable extends Table
     /** @var int|null @since 10.1.0 */
     public ?int $created_by = null;
 
-    /** @var string @since 10.1.0 */
-    public string $created_by_alias = '';
+    /** @var string|null @since 10.1.0 */
+    public ?string $created_by_alias = '';
 
     /** @var string|null @since 10.1.0 */
     public ?string $modified = null;

@@ -9,6 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlangHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -17,6 +18,8 @@ use Joomla\CMS\Session\Session;
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmlocationwizard\HtmlView $this */
 
 \defined('_JEXEC') or die();
+
+CwmlangHelper::registerAllForJs();
 
 $wa    = $this->getDocument()->getWebAssetManager();
 $token = Session::getFormToken();
@@ -34,14 +37,15 @@ $scenarioLabel = $scenarioLabels[$this->scenario] ?? $this->scenario;
 
 // Serialize data for JS
 $locationsJson  = json_encode(array_map(static function ($loc) {
-    return ['id' => (int) $loc->id, 'title' => $loc->location];
+    return ['id' => (int) $loc->id, 'title' => $loc->location_text];
 }, $this->locations), JSON_THROW_ON_ERROR);
 
 $groupsJson = json_encode(array_map(static function ($grp) {
     return ['id' => (int) $grp->id, 'title' => $grp->title];
 }, $this->groups), JSON_THROW_ON_ERROR);
 
-$mappingJson = json_encode($this->currentMapping, JSON_THROW_ON_ERROR);
+$mappingJson     = json_encode($this->currentMapping, JSON_THROW_ON_ERROR);
+$permissionsJson = json_encode($this->currentPermissions, JSON_THROW_ON_ERROR);
 
 $wa->addInlineScript(
     'window.ProcWizard = {
@@ -50,7 +54,8 @@ $wa->addInlineScript(
         scenario: ' . json_encode($this->scenario) . ',
         locations: ' . $locationsJson . ',
         groups: ' . $groupsJson . ',
-        savedMapping: ' . $mappingJson . '
+        savedMapping: ' . $mappingJson . ',
+        savedPermissions: ' . $permissionsJson . '
     };'
 );
 ?>
@@ -64,7 +69,7 @@ $wa->addInlineScript(
         <div class="card mb-4 shadow-sm">
             <div class="card-body py-3">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <strong class="text-muted small" id="wizard-step-label">
+                    <strong class="text-body-secondary small" id="wizard-step-label">
                         <?php echo Text::sprintf('JBS_WIZARD_STEP_OF', 1, 7); ?>
                     </strong>
                     <button type="button" class="btn btn-sm btn-outline-secondary" id="wizard-dismiss-btn">
@@ -96,7 +101,7 @@ $wa->addInlineScript(
 
                     foreach ($steps as $idx => $label):
                         $num    = $idx + 1;
-                        $active = $num === 1 ? 'fw-bold text-primary' : 'text-muted';
+                        $active = $num === 1 ? 'fw-bold text-primary' : 'text-body-secondary';
                     ?>
                     <span class="small wizard-step-label <?php echo $active; ?>" data-step="<?php echo $num; ?>"
                           title="<?php echo htmlspecialchars($label); ?>">
@@ -126,7 +131,7 @@ $wa->addInlineScript(
                     <i class="fas fa-<?php echo $this->scenario === '2C' ? 'info-circle' : 'exclamation-triangle'; ?> me-3 mt-1 fa-lg"></i>
                     <div>
                         <strong><?php echo Text::sprintf('JBS_WIZARD_DETECTED', $scenarioLabel); ?></strong><br>
-                        <span class="text-muted small" id="wizard-scenario-desc">
+                        <span class="small opacity-75" id="wizard-scenario-desc">
                             <?php echo Text::_($this->detectionInfo['description_key']); ?>
                         </span>
                     </div>
@@ -135,28 +140,28 @@ $wa->addInlineScript(
                 <!-- Detection stats -->
                 <div class="row g-3 mb-3">
                     <div class="col-sm-4">
-                        <div class="card border-0 bg-light text-center py-3">
+                        <div class="card border-0 bg-body-tertiary text-center py-3">
                             <div class="display-6 fw-bold text-primary"><?php echo (int) $this->detectionInfo['locations']; ?></div>
-                            <div class="small text-muted"><?php echo Text::_('JBS_WIZARD_LOCATIONS'); ?></div>
+                            <div class="text-body-secondary"><?php echo Text::_('JBS_WIZARD_LOCATIONS'); ?></div>
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <div class="card border-0 bg-light text-center py-3">
+                        <div class="card border-0 bg-body-tertiary text-center py-3">
                             <div class="display-6 fw-bold text-primary"><?php echo \count($this->groups); ?></div>
-                            <div class="small text-muted"><?php echo Text::_('JBS_WIZARD_GROUPS'); ?></div>
+                            <div class="text-body-secondary"><?php echo Text::_('JBS_WIZARD_GROUPS'); ?></div>
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <div class="card border-0 bg-light text-center py-3">
+                        <div class="card border-0 bg-body-tertiary text-center py-3">
                             <div class="display-6 fw-bold text-<?php echo empty($this->currentMapping) ? 'warning' : 'success'; ?>">
                                 <?php echo empty($this->currentMapping) ? Text::_('JBS_WIZARD_NONE') : Text::_('JBS_WIZARD_YES'); ?>
                             </div>
-                            <div class="small text-muted"><?php echo Text::_('JBS_WIZARD_MAPPING_EXISTS'); ?></div>
+                            <div class="text-body-secondary"><?php echo Text::_('JBS_WIZARD_MAPPING_EXISTS'); ?></div>
                         </div>
                     </div>
                 </div>
 
-                <p class="text-muted mb-0">
+                <p class="text-body-secondary mb-0">
                     <i class="fas fa-clock me-1"></i>
                     <?php echo Text::_('JBS_WIZARD_TIME_ESTIMATE'); ?>
                 </p>
@@ -193,7 +198,7 @@ $wa->addInlineScript(
                         <tbody>
                             <?php if (empty($this->groups)): ?>
                             <tr>
-                                <td colspan="2" class="text-center text-muted">
+                                <td colspan="2" class="text-center text-body-secondary">
                                     <?php echo Text::_('JBS_WIZARD_NO_GROUPS'); ?>
                                 </td>
                             </tr>
@@ -250,10 +255,10 @@ $wa->addInlineScript(
                     <div class="card mb-3">
                         <div class="card-header py-2">
                             <strong><i class="fas fa-map-marker-alt me-2 text-primary"></i>
-                                <?php echo htmlspecialchars($loc->location); ?></strong>
+                                <?php echo htmlspecialchars($loc->location_text); ?></strong>
                         </div>
                         <div class="card-body py-2">
-                            <p class="small text-muted mb-2"><?php echo Text::_('JBS_WIZARD_SELECT_GROUPS'); ?></p>
+                            <p class="small text-body-secondary mb-2"><?php echo Text::_('JBS_WIZARD_SELECT_GROUPS'); ?></p>
                             <div class="row g-2">
                                 <?php foreach ($this->groups as $grp): ?>
                                 <?php
@@ -302,21 +307,20 @@ $wa->addInlineScript(
         </div>
 
         <!-- ============================================================
-             Step 4: Teacher Review
+             Step 4: Admin Permissions
              ============================================================ -->
         <div class="wizard-step card shadow-sm" data-step="4">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">
-                    <i class="fas fa-chalkboard-teacher me-2"></i>
+                    <i class="fas fa-shield-alt me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_STEP4_TITLE'); ?>
                 </h4>
             </div>
             <div class="card-body">
                 <p><?php echo Text::_('JBS_WIZARD_STEP4_INTRO'); ?></p>
 
-                <div id="wizard-teachers-container">
-                    <div class="text-center py-4 text-muted">
-                        <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                <div id="wizard-permissions-container">
+                    <div class="text-center py-4 text-body-secondary">
                         <?php echo Text::_('JBS_CMN_LOADING'); ?>
                     </div>
                 </div>
@@ -351,7 +355,7 @@ $wa->addInlineScript(
 
                 <!-- Preview summary - populated by JS -->
                 <div id="wizard-preview-container">
-                    <div class="text-center py-4 text-muted">
+                    <div class="text-center py-4 text-body-secondary">
                         <div class="spinner-border spinner-border-sm me-2" role="status"></div>
                         <?php echo Text::_('JBS_CMN_LOADING'); ?>
                     </div>
@@ -392,7 +396,7 @@ $wa->addInlineScript(
                          role="progressbar"
                          style="width: 100%;"></div>
                 </div>
-                <p class="text-muted small mt-3"><?php echo Text::_('JBS_WIZARD_DO_NOT_CLOSE'); ?></p>
+                <p class="text-body-secondary small mt-3"><?php echo Text::_('JBS_WIZARD_DO_NOT_CLOSE'); ?></p>
             </div>
         </div>
 
@@ -409,7 +413,7 @@ $wa->addInlineScript(
             <div class="card-body text-center py-4">
                 <i class="fas fa-check-circle text-success mb-4" style="font-size: 5rem;"></i>
                 <h4><?php echo Text::_('JBS_WIZARD_COMPLETE_HEADING'); ?></h4>
-                <p class="text-muted"><?php echo Text::_('JBS_WIZARD_COMPLETE_DESC'); ?></p>
+                <p class="text-body-secondary"><?php echo Text::_('JBS_WIZARD_COMPLETE_DESC'); ?></p>
 
                 <div class="row g-3 justify-content-center mt-2">
                     <div class="col-sm-auto">

@@ -38,7 +38,7 @@ class CwmtemplateTable extends Table
      *
      * @since 9.0.0
      */
-    public int $id = 0;
+    public ?int $id = 0;
 
     /**
      * Type
@@ -65,7 +65,7 @@ class CwmtemplateTable extends Table
      *
      * @since 9.0.0
      */
-    public int $published = 1;
+    public ?int $published = 1;
 
     /**
      * Params
@@ -120,6 +120,14 @@ class CwmtemplateTable extends Table
     public ?int $access = null;
 
     /**
+     * Location ID (multi-campus)
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $location_id = null;
+
+    /**
      * Created date
      *
      * @var string|null
@@ -141,7 +149,7 @@ class CwmtemplateTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public string $created_by_alias = '';
+    public ?string $created_by_alias = '';
 
     /**
      * Modified date

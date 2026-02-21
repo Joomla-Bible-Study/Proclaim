@@ -56,7 +56,7 @@ class CwmserverTable extends Table
      *
      * @since 9.0.0
      */
-    public int $published = 1;
+    public ?int $published = 1;
 
     /**
      * Asset ID
@@ -130,7 +130,7 @@ class CwmserverTable extends Table
      * @var string
      * @since 10.1.0
      */
-    public string $created_by_alias = '';
+    public ?string $created_by_alias = '';
 
     /**
      * Modified date
@@ -190,6 +190,11 @@ class CwmserverTable extends Table
     {
         if (trim($this->server_name ?? '') === '') {
             throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_SERVER_NAME_REQUIRED'));
+        }
+
+        // Normalise "Shared" sentinel (-1) to NULL for DB storage
+        if ($this->location_id !== null && $this->location_id <= 0) {
+            $this->location_id = null;
         }
 
         return parent::check();
