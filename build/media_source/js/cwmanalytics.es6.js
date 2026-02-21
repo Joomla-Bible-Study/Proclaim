@@ -203,6 +203,13 @@
                 });
             }
 
+            // Scroll to the message so the user sees it before reload
+            const msgEl = document.getElementById('system-message-container');
+
+            if (msgEl) {
+                msgEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
             // Reload after brief delay so user sees the message
             setTimeout(() => { window.location.reload(); }, 2000);
         });
@@ -244,9 +251,68 @@
         });
     }
 
+    /** Initialise the Local / Combined engagement toggle */
+    function initEngagementToggle() {
+        const localBtn    = document.getElementById('cwm-engage-local');
+        const combinedBtn = document.getElementById('cwm-engage-combined');
+
+        if (!localBtn || !combinedBtn) {
+            return;
+        }
+
+        const canvas    = document.getElementById('cwm-chart-topstudies');
+        const localTbl  = document.getElementById('cwm-topstudies-local-tbl');
+        const combTbl   = document.getElementById('cwm-topstudies-combined-tbl');
+        let chartInst   = null;
+
+        // Find the existing Chart.js instance on this canvas
+        if (canvas && window.Chart) {
+            chartInst = window.Chart.getChart(canvas);
+        }
+
+        function switchView(mode) {
+            const isLocal = mode === 'local';
+            const btn     = isLocal ? localBtn : combinedBtn;
+            let raw;
+
+            try {
+                raw = JSON.parse(btn.dataset.chartData || '{}');
+            } catch {
+                return;
+            }
+
+            // Swap button styles
+            localBtn.classList.toggle('btn-primary', isLocal);
+            localBtn.classList.toggle('btn-outline-secondary', !isLocal);
+            combinedBtn.classList.toggle('btn-primary', !isLocal);
+            combinedBtn.classList.toggle('btn-outline-secondary', isLocal);
+
+            // Swap tables
+            if (localTbl) {
+                localTbl.style.display  = isLocal ? '' : 'none';
+            }
+
+            if (combTbl) {
+                combTbl.style.display   = isLocal ? 'none' : '';
+            }
+
+            // Rebuild chart with new data
+            if (chartInst && raw.labels) {
+                chartInst.data.labels                = raw.labels;
+                chartInst.data.datasets[0].data      = raw.data;
+                chartInst.data.datasets[0].backgroundColor = PALETTE.slice(0, raw.data.length);
+                chartInst.update();
+            }
+        }
+
+        localBtn.addEventListener('click', () => switchView('local'));
+        combinedBtn.addEventListener('click', () => switchView('combined'));
+    }
+
     function init() {
         initCharts();
         initSyncButton();
+        initEngagementToggle();
     }
 
     if (document.readyState === 'loading') {
