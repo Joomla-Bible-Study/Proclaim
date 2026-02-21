@@ -241,7 +241,7 @@ class CwmlocationwizardModel extends BaseDatabaseModel
                 'core.edit.own' => 1,
             ],
             'viewer' => [
-                'core.manage'   => 1, 'core.edit.own' => 1,
+                'core.manage'   => 1, 'core.create' => 1, 'core.edit.own' => 1,
             ],
         ];
 
