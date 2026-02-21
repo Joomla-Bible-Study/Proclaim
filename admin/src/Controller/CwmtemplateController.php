@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
@@ -49,20 +50,44 @@ class CwmtemplateController extends FormController
     {
         $recordId = (int) ($data[$key] ?? 0);
         $user     = Factory::getApplication()->getIdentity();
+        $isAdmin  = $user->authorise('core.admin');
 
-        // Non-admin users must have access to the item's view level
-        if (!$user->authorise('core.admin') && $recordId > 0) {
+        if (!$isAdmin && $recordId > 0) {
             $db    = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true)
-                ->select($db->quoteName('access'))
+                ->select([$db->quoteName('access'), $db->quoteName('location_id')])
                 ->from($db->quoteName('#__bsms_templates'))
                 ->where($db->quoteName('id') . ' = :rid')
                 ->bind(':rid', $recordId, ParameterType::INTEGER);
             $db->setQuery($query);
-            $access = (int) $db->loadResult();
+            $row = $db->loadObject();
+
+            if (!$row) {
+                return false;
+            }
+
+            // View-level access check
+            $access = (int) $row->access;
 
             if ($access && !\in_array($access, $user->getAuthorisedViewLevels())) {
                 return false;
+            }
+
+            // Location-based access check: non-admins can only edit templates
+            // assigned to their campus. Global templates (location_id = 0/NULL)
+            // are read-only — campus users must clone them first.
+            if (CwmlocationHelper::isEnabled()) {
+                $locationId = (int) ($row->location_id ?? 0);
+
+                if ($locationId === 0) {
+                    return false;
+                }
+
+                $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+                if (!empty($accessible) && !\in_array($locationId, $accessible, true)) {
+                    return false;
+                }
             }
         }
 

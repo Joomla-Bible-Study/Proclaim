@@ -225,13 +225,9 @@ class CwmserversModel extends ListModel
                 if (!empty($accessible)) {
                     // Show shared (NULL) servers + servers belonging to user's accessible locations
                     $inClause = implode(',', array_map('intval', $accessible));
-                    $query->extendWhere(
-                        'AND',
-                        [
-                            $db->quoteName('server.location_id') . ' IS NULL',
-                            $db->quoteName('server.location_id') . ' IN (' . $inClause . ')',
-                        ],
-                        'OR'
+                    $query->where(
+                        '(' . $db->quoteName('server.location_id') . ' IS NULL'
+                        . ' OR ' . $db->quoteName('server.location_id') . ' IN (' . $inClause . '))'
                     );
                 } else {
                     // No campus access — only shared (NULL) servers

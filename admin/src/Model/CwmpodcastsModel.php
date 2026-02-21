@@ -209,13 +209,9 @@ class CwmpodcastsModel extends ListModel
 
                 if (!empty($accessible)) {
                     $inClause = implode(',', array_map('intval', $accessible));
-                    $query->extendWhere(
-                        'AND',
-                        [
-                            $db->quoteName('podcast.location_id') . ' IS NULL',
-                            $db->quoteName('podcast.location_id') . ' IN (' . $inClause . ')',
-                        ],
-                        'OR'
+                    $query->where(
+                        '(' . $db->quoteName('podcast.location_id') . ' IS NULL'
+                        . ' OR ' . $db->quoteName('podcast.location_id') . ' IN (' . $inClause . '))'
                     );
                 } else {
                     $query->where($db->quoteName('podcast.location_id') . ' IS NULL');

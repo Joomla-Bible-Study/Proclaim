@@ -203,13 +203,9 @@ class CwmtemplatesModel extends ListModel
 
                 if (!empty($accessible)) {
                     $inClause = implode(',', array_map('intval', $accessible));
-                    $query->extendWhere(
-                        'AND',
-                        [
-                            $db->quoteName('template.location_id') . ' IS NULL',
-                            $db->quoteName('template.location_id') . ' IN (' . $inClause . ')',
-                        ],
-                        'OR'
+                    $query->where(
+                        '(' . $db->quoteName('template.location_id') . ' IS NULL'
+                        . ' OR ' . $db->quoteName('template.location_id') . ' IN (' . $inClause . '))'
                     );
                 } else {
                     $query->where($db->quoteName('template.location_id') . ' IS NULL');

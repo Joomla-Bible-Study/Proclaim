@@ -255,13 +255,9 @@ class CwmcommentsModel extends ListModel
 
                 if (!empty($accessible)) {
                     $inClause = implode(',', array_map('intval', $accessible));
-                    $query->extendWhere(
-                        'AND',
-                        [
-                            $db->quoteName('study.location_id') . ' IS NULL',
-                            $db->quoteName('study.location_id') . ' IN (' . $inClause . ')',
-                        ],
-                        'OR'
+                    $query->where(
+                        '(' . $db->quoteName('study.location_id') . ' IS NULL'
+                        . ' OR ' . $db->quoteName('study.location_id') . ' IN (' . $inClause . '))'
                     );
                 } else {
                     $query->where($db->quoteName('study.location_id') . ' IS NULL');

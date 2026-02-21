@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -82,7 +83,16 @@ class CwmtemplateModel extends AdminModel
      */
     public function copy(array $cid): bool
     {
-        $userId = (int) Factory::getApplication()->getIdentity()->id;
+        $user   = Factory::getApplication()->getIdentity();
+        $userId = (int) $user->id;
+
+        // Non-admin users get their first accessible location assigned to copies
+        $copyLocationId = null;
+
+        if (!$user->authorise('core.admin') && CwmlocationHelper::isEnabled()) {
+            $userLocations  = CwmlocationHelper::getUserLocations($userId);
+            $copyLocationId = !empty($userLocations) ? (int) $userLocations[0] : null;
+        }
 
         foreach ($cid as $id) {
             $tmplCurr = Factory::getApplication()->bootComponent('com_proclaim')
@@ -99,6 +109,11 @@ class CwmtemplateModel extends AdminModel
             $tmplCurr->checked_out       = null;
             $tmplCurr->checked_out_time  = null;
             $tmplCurr->asset_id          = null;
+
+            // Assign the cloner's campus location so they own the copy
+            if ($copyLocationId !== null) {
+                $tmplCurr->location_id = $copyLocationId;
+            }
 
             if (!$tmplCurr->store()) {
                 throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
