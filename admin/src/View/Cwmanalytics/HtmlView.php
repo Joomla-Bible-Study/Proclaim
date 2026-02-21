@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmanalytics;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlangHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Model\CwmanalyticsModel;
 use Joomla\CMS\Factory;
@@ -59,6 +60,9 @@ class HtmlView extends BaseHtmlView
 
     /** @var array<int, array<string, mixed>> @since 10.1.0 */
     public array $topStudies = [];
+
+    /** @var array<int, array<string, mixed>> Combined local + platform engagement @since 10.1.0 */
+    public array $topStudiesCombined = [];
 
     /** @var array<int, array<string, mixed>> @since 10.1.0 */
     public array $referrerBreakdown = [];
@@ -256,7 +260,8 @@ class HtmlView extends BaseHtmlView
             // Overview
             $this->kpi               = $model->getKpiTotals($s, $e, $l);
             $this->timeSeries        = $model->getTimeSeries($s, $e, $l);
-            $this->topStudies        = $model->getTopStudies($s, $e, 10, $l);
+            $this->topStudies         = $model->getTopStudies($s, $e, 10, $l);
+            $this->topStudiesCombined = $model->getTopStudiesCombined($s, $e, 10, $l);
             $this->referrerBreakdown = $model->getReferrerBreakdown($s, $e, $l);
             $this->deviceBreakdown   = $model->getDeviceBreakdown($s, $e, $l);
             $this->browserBreakdown  = $model->getBrowserBreakdown($s, $e, $l);
@@ -289,7 +294,12 @@ class HtmlView extends BaseHtmlView
 
             $wa->useScript('com_proclaim.chart.js')
                 ->useScript('com_proclaim.cwmanalytics')
+                ->useScript('com_proclaim.platform-stats')
                 ->useStyle('com_proclaim.general');
+
+            CwmlangHelper::registerAllForJs();
+            Text::script('JCANCEL');
+            Text::script('JLIB_HTML_PLEASE_WAIT');
         }
 
         parent::display($tpl);
