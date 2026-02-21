@@ -19,6 +19,14 @@
             >
                 <option value="">JOPTION_SELECT_PUBLISHED</option>
             </field>
+            <field
+                    name="location"
+                    type="LocationList"
+                    label="JBS_CMN_SELECT_LOCATION"
+                    class="js-select-submit-on-change"
+            >
+                <option value="">JBS_CMN_SELECT_LOCATION</option>
+            </field>
         </fields>
     </fieldset>
     <fields name="list">

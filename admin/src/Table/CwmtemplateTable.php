@@ -120,6 +120,14 @@ class CwmtemplateTable extends Table
     public ?int $access = null;
 
     /**
+     * Location ID (multi-campus)
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $location_id = null;
+
+    /**
      * Created date
      *
      * @var string|null

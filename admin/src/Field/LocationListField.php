@@ -16,12 +16,21 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 
 /**
- * Location List Form Field class for the Proclaim component
+ * Location List Form Field class for the Proclaim component.
+ *
+ * Role-aware behaviour:
+ * - Super admins see all published locations, no auto-default.
+ * - Single-campus users see their location as read-only text.
+ * - Multi-campus users see a dropdown limited to their accessible locations with auto-default.
+ * - When the location system is disabled, all users see every location (original behaviour).
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
@@ -47,21 +56,101 @@ class LocationListField extends ListField
     #[\Override]
     protected function getOptions(): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName('id') . ', ' . $db->quoteName('location_text'));
-        $query->from($db->quoteName('#__bsms_locations'));
-        $query->order($db->quoteName('location_text'));
-        $db->setQuery((string)$query);
-        $messages = $db->loadObjectList();
-        $options  = [];
+        $user      = Factory::getApplication()->getIdentity();
+        $isAdmin   = $user->authorise('core.admin');
+        $enabled   = CwmlocationHelper::isEnabled();
+        $currentId = (int) $this->value;
 
-        if ($messages) {
-            foreach ($messages as $message) {
-                $options[] = HTMLHelper::_('select.option', $message->id, $message->location_text);
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select([$db->quoteName('id'), $db->quoteName('location_text')])
+            ->from($db->quoteName('#__bsms_locations'))
+            ->where($db->quoteName('published') . ' = 1')
+            ->order($db->quoteName('location_text'));
+        $db->setQuery($query);
+        $rows = $db->loadObjectList() ?: [];
+
+        // Determine accessible location IDs for non-admin users when filtering is on
+        $allowedIds = [];
+
+        if ($enabled && !$isAdmin) {
+            $allowedIds = CwmlocationHelper::getUserAccessibleLocationsForEdit(0, $currentId);
+        }
+
+        // Auto-default for new records (non-admin, location system enabled)
+        if (empty($this->value) && $enabled && !$isAdmin && !empty($allowedIds)) {
+            $userLocations = CwmlocationHelper::getUserLocations();
+
+            if (\count($userLocations) >= 1) {
+                $this->value = $userLocations[0];
             }
         }
 
-        return array_merge(parent::getOptions(), $options);
+        $options = parent::getOptions();
+
+        foreach ($rows as $row) {
+            $id = (int) $row->id;
+
+            if ($enabled && !$isAdmin && !empty($allowedIds)) {
+                if (!\in_array($id, $allowedIds, true)) {
+                    if ($id !== $currentId) {
+                        continue;
+                    }
+
+                    // Show inaccessible current value as disabled so it is not silently lost
+                    $opt          = HTMLHelper::_('select.option', $id, $row->location_text);
+                    $opt->disable = true;
+                    $options[]    = $opt;
+
+                    continue;
+                }
+            }
+
+            $options[] = HTMLHelper::_('select.option', $id, $row->location_text);
+        }
+
+        return $options;
+    }
+
+    /**
+     * Render the field input.
+     *
+     * For single-campus users the location is shown as read-only text with a
+     * hidden input so the value still submits with the form.
+     *
+     * @return  string  The field input markup.
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    protected function getInput(): string
+    {
+        $user    = Factory::getApplication()->getIdentity();
+        $enabled = CwmlocationHelper::isEnabled();
+
+        if ($enabled && !$user->authorise('core.admin')) {
+            $userLocations = CwmlocationHelper::getUserLocations();
+
+            if (\count($userLocations) === 1) {
+                $locationId = (int) $userLocations[0];
+
+                $db    = Factory::getContainer()->get(DatabaseInterface::class);
+                $query = $db->getQuery(true)
+                    ->select($db->quoteName('location_text'))
+                    ->from($db->quoteName('#__bsms_locations'))
+                    ->where($db->quoteName('id') . ' = ' . $locationId);
+                $db->setQuery($query);
+                $name = $db->loadResult() ?: Text::_('JBS_CMN_LOCATION');
+
+                $html  = '<input type="text" value="' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '" '
+                       . 'class="form-control" readonly disabled />';
+                $html .= '<input type="hidden" name="' . $this->name . '" '
+                       . 'value="' . $locationId . '" />';
+
+                return $html;
+            }
+        }
+
+        return parent::getInput();
     }
 }

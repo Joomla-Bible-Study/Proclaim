@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 
@@ -79,6 +80,9 @@ class CwmtemplatecodesModel extends ListModel
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
+        $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
+        $this->setState('filter.location', $location);
+
         // List state information.
         parent::populateState($ordering, $direction);
     }
@@ -94,6 +98,7 @@ class CwmtemplatecodesModel extends ListModel
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
+        $user  = $this->getCurrentUser();
 
         $query->select(
             $this->getState(
@@ -127,6 +132,46 @@ class CwmtemplatecodesModel extends ListModel
                     '(' . $db->quoteName('templatecode.filename') . ' LIKE ' . $search
                     . ' OR ' . $db->quoteName('templatecode.templatecode') . ' LIKE ' . $search . ')'
                 );
+            }
+        }
+
+        // Join location name for display (graceful — column may not exist on older installs)
+        $columns = $db->getTableColumns('#__bsms_templatecode');
+
+        if (isset($columns['location_id'])) {
+            $query->select($db->quoteName('loc.location_text', 'location_text'))
+                ->join('LEFT', $db->quoteName('#__bsms_locations', 'loc') . ' ON ' . $db->quoteName('loc.id') . ' = ' . $db->quoteName('templatecode.location_id'));
+        }
+
+        // Restrict non-admin users: location-based filter when enabled
+        if (!$user->authorise('core.admin')) {
+            if (CwmlocationHelper::isEnabled() && isset($columns['location_id'])) {
+                $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+                if (!empty($accessible)) {
+                    $inClause = implode(',', array_map('intval', $accessible));
+                    $query->extendWhere(
+                        'AND',
+                        [
+                            $db->quoteName('templatecode.location_id') . ' IS NULL',
+                            $db->quoteName('templatecode.location_id') . ' IN (' . $inClause . ')',
+                        ],
+                        'OR'
+                    );
+                } else {
+                    $query->where($db->quoteName('templatecode.location_id') . ' IS NULL');
+                }
+            }
+        }
+
+        // Filter by location (dropdown)
+        if (isset($columns['location_id'])) {
+            $location = $this->getState('filter.location');
+
+            if (is_numeric($location)) {
+                $locationVal = (int) $location;
+                $query->where($db->quoteName('templatecode.location_id') . ' = :locationId')
+                    ->bind(':locationId', $locationVal, \Joomla\Database\ParameterType::INTEGER);
             }
         }
 

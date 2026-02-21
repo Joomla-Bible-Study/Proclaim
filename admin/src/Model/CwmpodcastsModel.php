@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 
@@ -75,6 +76,7 @@ class CwmpodcastsModel extends ListModel
         $id .= ':' . serialize($this->getState('filter.access'));
         $id .= ':' . $this->getState('filter.published');
         $id .= ':' . $this->getState('filter.language');
+        $id .= ':' . $this->getState('filter.location');
 
         return parent::getStoreId($id);
     }
@@ -123,6 +125,9 @@ class CwmpodcastsModel extends ListModel
 
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
+
+        $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
+        $this->setState('filter.location', $location);
 
         parent::populateState($ordering, $direction);
 
@@ -184,14 +189,51 @@ class CwmpodcastsModel extends ListModel
         $query->select($db->quoteName('uc.name', 'editor'))
             ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('podcast.checked_out'));
 
-        // Filter by access level.
+        // Join location name for display (graceful — column may not exist on older installs)
+        $columns = $db->getTableColumns('#__bsms_podcast');
+
+        if (isset($columns['location_id'])) {
+            $query->select($db->quoteName('loc.location_text', 'location_text'))
+                ->join('LEFT', $db->quoteName('#__bsms_locations', 'loc') . ' ON ' . $db->quoteName('loc.id') . ' = ' . $db->quoteName('podcast.location_id'));
+        }
+
+        // Filter by access level (dropdown).
         if ($access = $this->getState('filter.access')) {
             $query->where($db->quoteName('podcast.access') . ' = ' . (int) $access);
         }
 
-        // Restrict non-admin users to their authorised view levels
+        // Restrict non-admin users: hybrid location + access-level filter
         if (!$user->authorise('core.admin')) {
-            $query->whereIn($db->quoteName('podcast.access'), $user->getAuthorisedViewLevels());
+            if (CwmlocationHelper::isEnabled() && isset($columns['location_id'])) {
+                $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+                if (!empty($accessible)) {
+                    $inClause = implode(',', array_map('intval', $accessible));
+                    $query->extendWhere(
+                        'AND',
+                        [
+                            $db->quoteName('podcast.location_id') . ' IS NULL',
+                            $db->quoteName('podcast.location_id') . ' IN (' . $inClause . ')',
+                        ],
+                        'OR'
+                    );
+                } else {
+                    $query->where($db->quoteName('podcast.location_id') . ' IS NULL');
+                }
+            } else {
+                $query->whereIn($db->quoteName('podcast.access'), $user->getAuthorisedViewLevels());
+            }
+        }
+
+        // Filter by location (dropdown)
+        if (isset($columns['location_id'])) {
+            $location = $this->getState('filter.location');
+
+            if (is_numeric($location)) {
+                $locationVal = (int) $location;
+                $query->where($db->quoteName('podcast.location_id') . ' = :locationId')
+                    ->bind(':locationId', $locationVal, \Joomla\Database\ParameterType::INTEGER);
+            }
         }
 
         // Filter by published state

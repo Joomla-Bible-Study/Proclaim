@@ -591,6 +591,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templatecode`
 (
     `id`           INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `published`    TINYINT(3)       NOT NULL DEFAULT '1',
+    `location_id`  INT(3)                    DEFAULT NULL,
     `type`         TINYINT(3)       NOT NULL,
     `filename`     TEXT             NOT NULL,
     `asset_id`         INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
@@ -603,7 +604,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templatecode`
     `checked_out_time` DATETIME                  DEFAULT NULL,
     `templatecode`     MEDIUMTEXT       NOT NULL,
     PRIMARY KEY (`id`),
-    KEY `idx_checkout` (`checked_out`)
+    KEY `idx_checkout` (`checked_out`),
+    KEY `idx_templatecode_location` (`location_id`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
@@ -633,10 +635,12 @@ CREATE TABLE IF NOT EXISTS `#__bsms_templates`
     `checked_out`      INT(10) UNSIGNED NOT NULL DEFAULT 0,
     `checked_out_time` DATETIME                  DEFAULT NULL,
     `access`           INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `location_id`      INT(3)                    DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`),
-    KEY `idx_checkout` (`checked_out`)
+    KEY `idx_checkout` (`checked_out`),
+    KEY `idx_template_location` (`location_id`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;

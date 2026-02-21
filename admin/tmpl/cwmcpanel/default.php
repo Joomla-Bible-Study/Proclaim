@@ -312,7 +312,6 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                             <span><?php echo Text::_('JBS_CMN_PODCASTS'); ?></span>
                         </a>
                     </div>
-                    <?php if ($isAdmin) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmanalytics'); ?>"
                            title="<?php echo Text::_('JBS_ANA_ANALYTICS'); ?>" class="cpanel-btn">
@@ -320,8 +319,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                             <span><?php echo Text::_('JBS_ANA_ANALYTICS'); ?></span>
                         </a>
                     </div>
-                    <?php endif; ?>
-                    <?php if (!$simple->mode && $isAdmin) : ?>
+                    <?php if (!$simple->mode) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmtemplates'); ?>"
                            title="<?php echo Text::_('JBS_CMN_TEMPLATES'); ?>" class="cpanel-btn">

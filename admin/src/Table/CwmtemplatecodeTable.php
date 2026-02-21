@@ -51,6 +51,14 @@ class CwmtemplatecodeTable extends Table
     public ?string $filename = null;
 
     /**
+     * Location ID (multi-campus)
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $location_id = null;
+
+    /**
      * Type
      *
      * @var string|null

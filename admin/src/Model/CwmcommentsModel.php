@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 
@@ -96,6 +97,9 @@ class CwmcommentsModel extends ListModel
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
 
+        $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
+        $this->setState('filter.location', $location);
+
         $formSubmited = $app->getInput()->post->get('form_submited');
 
         // Gets the value of a user state variable and sets it in the session
@@ -135,6 +139,7 @@ class CwmcommentsModel extends ListModel
         $id .= ':' . serialize($this->getState('filter.access'));
         $id .= ':' . $this->getState('filter.published');
         $id .= ':' . $this->getState('filter.language');
+        $id .= ':' . $this->getState('filter.location');
 
         return parent::getStoreId($id);
     }
@@ -229,11 +234,52 @@ class CwmcommentsModel extends ListModel
             $db->quoteName('#__viewlevels', 'ag') . ' ON ' . $db->quoteName('ag.id') . ' = ' . $db->quoteName('comment.access')
         );
 
+        // Filter by access level (dropdown — was defined in XML but never applied to query)
+        $access = $this->getState('filter.access');
+
+        if (is_numeric($access)) {
+            $query->where($db->quoteName('comment.access') . ' = ' . (int) $access);
+        }
+
         // Restrict non-admin users to their authorised view levels
         $user = $this->getCurrentUser();
 
         if (!$user->authorise('core.admin')) {
             $query->whereIn($db->quoteName('comment.access'), $user->getAuthorisedViewLevels());
+
+            // Location-based filtering via parent study
+            $studyColumns = $db->getTableColumns('#__bsms_studies');
+
+            if (CwmlocationHelper::isEnabled() && isset($studyColumns['location_id'])) {
+                $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+                if (!empty($accessible)) {
+                    $inClause = implode(',', array_map('intval', $accessible));
+                    $query->extendWhere(
+                        'AND',
+                        [
+                            $db->quoteName('study.location_id') . ' IS NULL',
+                            $db->quoteName('study.location_id') . ' IN (' . $inClause . ')',
+                        ],
+                        'OR'
+                    );
+                } else {
+                    $query->where($db->quoteName('study.location_id') . ' IS NULL');
+                }
+            }
+        }
+
+        // Filter by location (dropdown) via parent study
+        $studyColumns = $studyColumns ?? $db->getTableColumns('#__bsms_studies');
+
+        if (isset($studyColumns['location_id'])) {
+            $location = $this->getState('filter.location');
+
+            if (is_numeric($location)) {
+                $locationVal = (int) $location;
+                $query->where($db->quoteName('study.location_id') . ' = :locationId')
+                    ->bind(':locationId', $locationVal, \Joomla\Database\ParameterType::INTEGER);
+            }
         }
 
         // Join over the users for the checked out user.

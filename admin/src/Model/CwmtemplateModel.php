@@ -82,13 +82,23 @@ class CwmtemplateModel extends AdminModel
      */
     public function copy(array $cid): bool
     {
+        $userId = (int) Factory::getApplication()->getIdentity()->id;
+
         foreach ($cid as $id) {
             $tmplCurr = Factory::getApplication()->bootComponent('com_proclaim')
                 ->getMVCFactory()->createTable('Cwmtemplate', 'Administrator');
 
             $tmplCurr->load($id);
-            $tmplCurr->id    = 0;
-            $tmplCurr->title .= ' - copy';
+            $tmplCurr->id               = 0;
+            $tmplCurr->title             .= ' - copy';
+            $tmplCurr->created_by        = $userId;
+            $tmplCurr->created_by_alias  = '';
+            $tmplCurr->created           = null;
+            $tmplCurr->modified          = null;
+            $tmplCurr->modified_by       = null;
+            $tmplCurr->checked_out       = null;
+            $tmplCurr->checked_out_time  = null;
+            $tmplCurr->asset_id          = null;
 
             if (!$tmplCurr->store()) {
                 throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));

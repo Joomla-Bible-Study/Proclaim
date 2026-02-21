@@ -93,9 +93,6 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         'cwmmessagetypes',
         'cwmtopics',
         'cwmcomments',
-        'cwmtemplates',
-        'cwmtemplatecodes',
-        'cwmanalytics',
     ];
 
     /**

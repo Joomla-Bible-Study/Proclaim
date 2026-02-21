@@ -50,6 +50,14 @@ class CwmpodcastTable extends Table
     public ?int $published = 1;
 
     /**
+     * Location ID (multi-campus)
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $location_id = null;
+
+    /**
      * Title
      *
      * @var string|null
