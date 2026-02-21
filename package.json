@@ -67,6 +67,7 @@
     "lint:js": "eslint --config build/eslint.config.mjs --max-warnings=0 build/media_source/js/ tests/js/ tests/e2e/"
   },
   "dependencies": {
+    "@fancyapps/ui": "^6.1.11",
     "chart.js": "^4.5.1",
     "core-js": "^3.48.0",
     "intl-tel-input": "^26.5.1"
