@@ -22,13 +22,14 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@types/jest": "^30.0.0",
     "csso": "^5.0.5",
-    "eslint": "^10.0.0",
+    "eslint": "^10.0.1",
     "globals": "^15.14.0",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
     "jshint": "^2.13.6",
-    "rollup": "^4.57.1",
+    "rollup": "^4.58.0",
     "rollup-plugin-gzip": "^4.1.1",
+    "sortablejs": "^1.15.7",
     "terser": "^5.46.0"
   },
   "babel": {
@@ -68,7 +69,6 @@
   "dependencies": {
     "chart.js": "^4.5.1",
     "core-js": "^3.48.0",
-    "intl-tel-input": "^26.5.1",
-    "sortablejs": "^1.15.0"
+    "intl-tel-input": "^26.5.1"
   }
 }
