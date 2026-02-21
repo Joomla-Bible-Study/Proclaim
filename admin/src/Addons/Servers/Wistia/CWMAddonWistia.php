@@ -186,6 +186,79 @@ class CWMAddonWistia extends CWMAddon
     }
 
     /**
+     * Wistia supports description sync via PUT API.
+     *
+     * @return  bool
+     *
+     * @since   10.1.0
+     */
+    public function supportsDescriptionSync(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Push a description to a Wistia video via PUT API.
+     *
+     * @param   int     $mediaId      The media file ID
+     * @param   string  $description  The description text
+     *
+     * @return  array{success: bool, error?: string}
+     *
+     * @since   10.1.0
+     */
+    public function syncDescription(int $mediaId, string $description): array
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select([$db->quoteName('params'), $db->quoteName('server_id')])
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
+        $db->setQuery($query);
+        $row = $db->loadObject();
+
+        if (!$row) {
+            return ['success' => false, 'error' => 'Media file not found'];
+        }
+
+        $params   = json_decode($row->params ?? '{}', true) ?: [];
+        $hashedId = trim($params['filename'] ?? '');
+
+        if (empty($hashedId)) {
+            return ['success' => false, 'error' => 'Could not extract Wistia hashed ID'];
+        }
+
+        $apiToken = $this->getServerApiToken((int) $row->server_id);
+
+        if (empty($apiToken)) {
+            return ['success' => false, 'error' => 'No Wistia API token configured'];
+        }
+
+        try {
+            $http     = (new \Joomla\Http\HttpFactory())->getHttp();
+            $headers  = [
+                'Authorization' => 'Bearer ' . $apiToken,
+                'Content-Type'  => 'application/x-www-form-urlencoded',
+            ];
+
+            $body     = http_build_query(['description' => $description]);
+            $response = $http->put(
+                'https://api.wistia.com/v1/medias/' . rawurlencode($hashedId) . '.json',
+                $body,
+                $headers
+            );
+
+            if ($response->code >= 200 && $response->code < 300) {
+                return ['success' => true];
+            }
+
+            return ['success' => false, 'error' => 'Wistia API error: HTTP ' . $response->code];
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
      * Fetch video statistics from Wistia Stats API for media linked to this server.
      * Per-video endpoint (no batch); rate-limited to ~600/min.
      * When $batchLimit > 0, only the least-recently-synced videos are processed.

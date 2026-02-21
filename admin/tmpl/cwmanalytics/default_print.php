@@ -106,6 +106,12 @@ $generated = Text::sprintf('JBS_ANA_REPORT_GENERATED', date('Y-m-d H:i'));
             <div class="kpi-value"><?php echo number_format($this->recordTotals['downloads']); ?></div>
             <div class="kpi-label"><?php echo Text::_('JBS_ANA_TOTAL_DOWNLOADS'); ?></div>
         </div>
+        <?php if (($this->recordTotals['external_plays'] ?? 0) > 0) : ?>
+        <div class="kpi-box">
+            <div class="kpi-value"><?php echo number_format($this->recordTotals['external_plays']); ?></div>
+            <div class="kpi-label"><?php echo Text::_('JBS_MED_EXTERNAL_PLAYS'); ?></div>
+        </div>
+        <?php endif; ?>
     </div>
 
     <!-- Period Totals -->
@@ -130,21 +136,31 @@ $generated = Text::sprintf('JBS_ANA_REPORT_GENERATED', date('Y-m-d H:i'));
     </div>
 
     <!-- Top Studies -->
-    <?php if (!empty($this->topStudies)) : ?>
-    <h2><?php echo Text::_('JBS_ANA_REPORT_TOP_STUDIES'); ?></h2>
+    <?php $printTopData = !empty($this->topStudiesCombined) ? $this->topStudiesCombined : $this->topStudies; ?>
+    <?php $printHasCombined = !empty($this->topStudiesCombined); ?>
+    <?php if (!empty($printTopData)) : ?>
+    <h2><?php echo Text::_('JBS_ANA_REPORT_TOP_STUDIES'); ?><?php echo $printHasCombined ? ' (' . Text::_('JBS_ANA_ENGAGE_COMBINED') . ')' : ''; ?></h2>
     <table class="report-table">
         <thead>
             <tr>
                 <th class="col-rank"><?php echo Text::_('JBS_ANA_REPORT_RANK'); ?></th>
                 <th><?php echo Text::_('JBS_ANA_MESSAGE_TITLE'); ?></th>
-                <th class="col-number"><?php echo Text::_('JBS_ANA_REPORT_ENGAGEMENT'); ?></th>
+                <?php if ($printHasCombined) : ?>
+                <th class="col-number"><?php echo Text::_('JBS_MED_LOCAL_PLAYS'); ?></th>
+                <th class="col-number"><?php echo Text::_('JBS_MED_PLATFORM_PLAYS'); ?></th>
+                <?php endif; ?>
+                <th class="col-number"><?php echo Text::_('JBS_MED_TOTAL_REACH'); ?></th>
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($this->topStudies as $i => $row) : ?>
+        <?php foreach ($printTopData as $i => $row) : ?>
             <tr>
                 <td class="col-rank"><?php echo $i + 1; ?></td>
                 <td><?php echo htmlspecialchars((string) ($row['title'] ?? 'ID #' . $row['study_id']), ENT_QUOTES); ?></td>
+                <?php if ($printHasCombined) : ?>
+                <td class="col-number"><?php echo number_format((int) ($row['local_total'] ?? 0)); ?></td>
+                <td class="col-number"><?php echo number_format((int) ($row['platform_plays'] ?? 0)); ?></td>
+                <?php endif; ?>
                 <td class="col-number"><?php echo number_format((int) ($row['total'] ?? 0)); ?></td>
             </tr>
         <?php endforeach; ?>
@@ -281,23 +297,46 @@ $generated = Text::sprintf('JBS_ANA_REPORT_GENERATED', date('Y-m-d H:i'));
     <?php if (empty($this->seriesList)) : ?>
         <p class="report-empty"><?php echo Text::_('JBS_ANA_REPORT_NO_DATA'); ?></p>
     <?php else : ?>
+    <?php
+    $printSeriesHasPlatform = false;
+
+    foreach ($this->seriesList as $sr) {
+        if ((int) ($sr['platform_plays'] ?? 0) > 0) {
+            $printSeriesHasPlatform = true;
+
+            break;
+        }
+    }
+    ?>
     <table class="report-table">
         <thead>
             <tr>
                 <th><?php echo Text::_('JBS_ANA_SERIES_TITLE'); ?></th>
                 <th class="col-number"><?php echo Text::_('JBS_ANA_MESSAGES'); ?></th>
                 <th class="col-number"><?php echo Text::_('JBS_ANA_VIEWS'); ?></th>
-                <th class="col-number"><?php echo Text::_('JBS_ANA_PLAYS'); ?></th>
+                <th class="col-number"><?php echo Text::_('JBS_MED_LOCAL_PLAYS'); ?></th>
+                <?php if ($printSeriesHasPlatform) : ?>
+                <th class="col-number"><?php echo Text::_('JBS_MED_PLATFORM_PLAYS'); ?></th>
+                <th class="col-number"><?php echo Text::_('JBS_MED_TOTAL_REACH'); ?></th>
+                <?php endif; ?>
                 <th class="col-number"><?php echo Text::_('JBS_ANA_DOWNLOADS'); ?></th>
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($this->seriesList as $row) : ?>
+        <?php foreach ($this->seriesList as $row) :
+            $localPlays    = (int) ($row['plays'] ?? 0);
+            $platformPlays = (int) ($row['platform_plays'] ?? 0);
+            $totalReach    = $localPlays + $platformPlays;
+        ?>
             <tr>
                 <td><?php echo htmlspecialchars((string) ($row['title'] ?? ''), ENT_QUOTES); ?></td>
                 <td class="col-number"><?php echo (int) ($row['message_count'] ?? 0); ?></td>
                 <td class="col-number"><?php echo number_format((int) ($row['views'] ?? 0)); ?></td>
-                <td class="col-number"><?php echo number_format((int) ($row['plays'] ?? 0)); ?></td>
+                <td class="col-number"><?php echo number_format($localPlays); ?></td>
+                <?php if ($printSeriesHasPlatform) : ?>
+                <td class="col-number"><?php echo $platformPlays > 0 ? number_format($platformPlays) : '—'; ?></td>
+                <td class="col-number"><?php echo number_format($totalReach); ?></td>
+                <?php endif; ?>
                 <td class="col-number"><?php echo number_format((int) ($row['downloads'] ?? 0)); ?></td>
             </tr>
         <?php endforeach; ?>
@@ -315,6 +354,17 @@ $generated = Text::sprintf('JBS_ANA_REPORT_GENERATED', date('Y-m-d H:i'));
     <?php if (empty($this->seriesMessages)) : ?>
         <p class="report-empty"><?php echo Text::_('JBS_ANA_REPORT_NO_DATA'); ?></p>
     <?php else : ?>
+    <?php
+    $printDetailHasPlatform = false;
+
+    foreach ($this->seriesMessages as $sm) {
+        if ((int) ($sm['platform_plays'] ?? 0) > 0) {
+            $printDetailHasPlatform = true;
+
+            break;
+        }
+    }
+    ?>
     <table class="report-table">
         <thead>
             <tr>
@@ -322,18 +372,30 @@ $generated = Text::sprintf('JBS_ANA_REPORT_GENERATED', date('Y-m-d H:i'));
                 <th><?php echo Text::_('JBS_ANA_DATE'); ?></th>
                 <th class="col-number"><?php echo Text::_('JBS_ANA_ALL_TIME_VIEWS'); ?></th>
                 <th class="col-number"><?php echo Text::_('JBS_ANA_VIEWS'); ?></th>
-                <th class="col-number"><?php echo Text::_('JBS_ANA_PLAYS'); ?></th>
+                <th class="col-number"><?php echo Text::_('JBS_MED_LOCAL_PLAYS'); ?></th>
+                <?php if ($printDetailHasPlatform) : ?>
+                <th class="col-number"><?php echo Text::_('JBS_MED_PLATFORM_PLAYS'); ?></th>
+                <th class="col-number"><?php echo Text::_('JBS_MED_TOTAL_REACH'); ?></th>
+                <?php endif; ?>
                 <th class="col-number"><?php echo Text::_('JBS_ANA_DOWNLOADS'); ?></th>
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($this->seriesMessages as $row) : ?>
+        <?php foreach ($this->seriesMessages as $row) :
+            $localPlays    = (int) ($row['plays'] ?? 0);
+            $platformPlays = (int) ($row['platform_plays'] ?? 0);
+            $totalReach    = $localPlays + $platformPlays;
+        ?>
             <tr>
                 <td><?php echo htmlspecialchars((string) ($row['title'] ?? ''), ENT_QUOTES); ?></td>
                 <td><?php echo htmlspecialchars(substr((string) ($row['study_date'] ?? ''), 0, 10), ENT_QUOTES); ?></td>
                 <td class="col-number"><?php echo number_format((int) ($row['all_time_views'] ?? 0)); ?></td>
                 <td class="col-number"><?php echo number_format((int) ($row['views'] ?? 0)); ?></td>
-                <td class="col-number"><?php echo number_format((int) ($row['plays'] ?? 0)); ?></td>
+                <td class="col-number"><?php echo number_format($localPlays); ?></td>
+                <?php if ($printDetailHasPlatform) : ?>
+                <td class="col-number"><?php echo $platformPlays > 0 ? number_format($platformPlays) : '—'; ?></td>
+                <td class="col-number"><?php echo number_format($totalReach); ?></td>
+                <?php endif; ?>
                 <td class="col-number"><?php echo number_format((int) ($row['downloads'] ?? 0)); ?></td>
             </tr>
         <?php endforeach; ?>
@@ -383,16 +445,31 @@ $generated = Text::sprintf('JBS_ANA_REPORT_GENERATED', date('Y-m-d H:i'));
 
     <!-- Media Files -->
     <?php if (!empty($this->studyMedia)) : ?>
+    <?php
+        $printHasPlatform = false;
+
+        foreach ($this->studyMedia as $pmf) {
+            if ((int) ($pmf['platform_play_count'] ?? 0) > 0) {
+                $printHasPlatform = true;
+
+                break;
+            }
+        }
+    ?>
     <h3><?php echo Text::_('JBS_ANA_MEDIA_FILES'); ?></h3>
     <table class="report-table">
         <thead>
             <tr>
                 <th><?php echo Text::_('JBS_ANA_SERVER'); ?></th>
                 <th><?php echo Text::_('JBS_ANA_MEDIA_LABEL'); ?></th>
-                <th class="col-number"><?php echo Text::_('JBS_ANA_PERIOD_PLAYS'); ?></th>
-                <th class="col-number"><?php echo Text::_('JBS_ANA_ALL_TIME_PLAYS'); ?></th>
-                <th class="col-number"><?php echo Text::_('JBS_ANA_PERIOD_DOWNLOADS'); ?></th>
+                <th class="col-number"><?php echo Text::_('JBS_MED_LOCAL_PLAYS'); ?></th>
+                <?php if ($printHasPlatform) : ?>
+                <th class="col-number"><?php echo Text::_('JBS_MED_PLATFORM_PLAYS'); ?></th>
+                <th class="col-number"><?php echo Text::_('JBS_MED_EXTERNAL_PLAYS'); ?></th>
+                <th class="col-number"><?php echo Text::_('JBS_MED_TOTAL_REACH'); ?></th>
+                <?php endif; ?>
                 <th class="col-number"><?php echo Text::_('JBS_ANA_ALL_TIME_DOWNLOADS'); ?></th>
+                <th><?php echo Text::_('JBS_MED_CONTENT_ORIGIN'); ?></th>
             </tr>
         </thead>
         <tbody>
@@ -400,14 +477,19 @@ $generated = Text::sprintf('JBS_ANA_REPORT_GENERATED', date('Y-m-d H:i'));
             <?php
             $mparams    = new Registry($mf['media_params'] ?? '');
             $mediaLabel = $mparams->get('media_button_text', '') ?: '#' . (int) $mf['media_id'];
+            $isExt      = (int) ($mf['content_origin'] ?? 0) === 1;
             ?>
             <tr>
                 <td><?php echo htmlspecialchars((string) ($mf['server_name'] ?? ''), ENT_QUOTES); ?></td>
                 <td><?php echo htmlspecialchars((string) $mediaLabel, ENT_QUOTES); ?></td>
-                <td class="col-number"><?php echo number_format((int) ($mf['period_plays'] ?? 0)); ?></td>
                 <td class="col-number"><?php echo number_format((int) ($mf['all_time_plays'] ?? 0)); ?></td>
-                <td class="col-number"><?php echo number_format((int) ($mf['period_downloads'] ?? 0)); ?></td>
+                <?php if ($printHasPlatform) : ?>
+                <td class="col-number"><?php echo number_format((int) ($mf['platform_play_count'] ?? 0)); ?></td>
+                <td class="col-number"><?php echo number_format((int) ($mf['external_plays'] ?? 0)); ?></td>
+                <td class="col-number"><?php echo number_format((int) ($mf['total_reach'] ?? 0)); ?></td>
+                <?php endif; ?>
                 <td class="col-number"><?php echo number_format((int) ($mf['all_time_downloads'] ?? 0)); ?></td>
+                <td><?php echo $isExt ? Text::_('JBS_MED_ORIGIN_EXTERNAL') : Text::_('JBS_MED_ORIGIN_MINISTRY'); ?></td>
             </tr>
         <?php endforeach; ?>
         </tbody>
@@ -457,15 +539,30 @@ $generated = Text::sprintf('JBS_ANA_REPORT_GENERATED', date('Y-m-d H:i'));
         <p class="report-empty"><?php echo Text::_('JBS_ANA_REPORT_NO_DATA'); ?></p>
     <?php else : ?>
     <?php
+    $printMediaHasPlatform = false;
+
+    foreach ($this->mediaTypeBreakdown as $mr) {
+        if ((int) ($mr['platform_plays'] ?? 0) > 0) {
+            $printMediaHasPlatform = true;
+
+            break;
+        }
+    }
+
     $grandTotal = array_sum(array_column($this->mediaTypeBreakdown, 'plays'))
-        + array_sum(array_column($this->mediaTypeBreakdown, 'downloads'));
+        + array_sum(array_column($this->mediaTypeBreakdown, 'downloads'))
+        + ($printMediaHasPlatform ? array_sum(array_column($this->mediaTypeBreakdown, 'platform_plays')) : 0);
     ?>
     <table class="report-table">
         <thead>
             <tr>
                 <th><?php echo Text::_('JBS_ANA_SERVER'); ?></th>
                 <th><?php echo Text::_('JBS_ANA_SERVER_TYPE'); ?></th>
-                <th class="col-number"><?php echo Text::_('JBS_ANA_PLAYS'); ?></th>
+                <th class="col-number"><?php echo Text::_('JBS_MED_LOCAL_PLAYS'); ?></th>
+                <?php if ($printMediaHasPlatform) : ?>
+                <th class="col-number"><?php echo Text::_('JBS_MED_PLATFORM_PLAYS'); ?></th>
+                <th class="col-number"><?php echo Text::_('JBS_MED_TOTAL_REACH'); ?></th>
+                <?php endif; ?>
                 <th class="col-number"><?php echo Text::_('JBS_ANA_DOWNLOADS'); ?></th>
                 <th class="col-number"><?php echo Text::_('JBS_ANA_UNIQUE_MEDIA'); ?></th>
                 <th class="col-number"><?php echo Text::_('JBS_ANA_MESSAGES'); ?></th>
@@ -473,15 +570,21 @@ $generated = Text::sprintf('JBS_ANA_REPORT_GENERATED', date('Y-m-d H:i'));
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($this->mediaTypeBreakdown as $row) : ?>
-            <?php
-            $rowTotal = (int) ($row['plays'] ?? 0) + (int) ($row['downloads'] ?? 0);
-            $pct      = $grandTotal > 0 ? round($rowTotal / $grandTotal * 100, 1) : 0;
-            ?>
+        <?php foreach ($this->mediaTypeBreakdown as $row) :
+            $localPlays    = (int) ($row['plays'] ?? 0);
+            $platformPlays = (int) ($row['platform_plays'] ?? 0);
+            $totalReach    = $localPlays + $platformPlays;
+            $rowTotal      = $totalReach + (int) ($row['downloads'] ?? 0);
+            $pct           = $grandTotal > 0 ? round($rowTotal / $grandTotal * 100, 1) : 0;
+        ?>
             <tr>
                 <td><?php echo htmlspecialchars((string) ($row['server_name'] ?? 'Unknown'), ENT_QUOTES); ?></td>
                 <td><?php echo htmlspecialchars((string) ($row['server_type'] ?? ''), ENT_QUOTES); ?></td>
-                <td class="col-number"><?php echo number_format((int) ($row['plays'] ?? 0)); ?></td>
+                <td class="col-number"><?php echo number_format($localPlays); ?></td>
+                <?php if ($printMediaHasPlatform) : ?>
+                <td class="col-number"><?php echo $platformPlays > 0 ? number_format($platformPlays) : '—'; ?></td>
+                <td class="col-number"><?php echo number_format($totalReach); ?></td>
+                <?php endif; ?>
                 <td class="col-number"><?php echo number_format((int) ($row['downloads'] ?? 0)); ?></td>
                 <td class="col-number"><?php echo number_format((int) ($row['media_count'] ?? 0)); ?></td>
                 <td class="col-number"><?php echo number_format((int) ($row['study_count'] ?? 0)); ?></td>

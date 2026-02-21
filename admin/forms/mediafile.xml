@@ -39,6 +39,13 @@
                description="JBS_MED_CHOOSE_PODCAST_DESC" multiple="true" default="">
         </field>
 
+        <field name="content_origin" type="radio" label="JBS_MED_CONTENT_ORIGIN"
+               description="JBS_MED_CONTENT_ORIGIN_DESC" default="0"
+               class="btn-group btn-group-yesno" layout="joomla.form.field.radio.switcher">
+            <option value="0">JBS_MED_ORIGIN_MINISTRY</option>
+            <option value="1">JBS_MED_ORIGIN_EXTERNAL</option>
+        </field>
+
         <field name="language"
                type="contentlanguage"
                label="JFIELD_LANGUAGE_LABEL">

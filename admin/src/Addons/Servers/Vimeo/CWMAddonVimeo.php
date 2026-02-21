@@ -185,6 +185,77 @@ class CWMAddonVimeo extends CWMAddon
     }
 
     /**
+     * Vimeo supports description sync via PATCH API.
+     *
+     * @return  bool
+     *
+     * @since   10.1.0
+     */
+    public function supportsDescriptionSync(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Push a description to a Vimeo video via PATCH API.
+     *
+     * @param   int     $mediaId      The media file ID
+     * @param   string  $description  The description text
+     *
+     * @return  array{success: bool, error?: string}
+     *
+     * @since   10.1.0
+     */
+    public function syncDescription(int $mediaId, string $description): array
+    {
+        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select([$db->quoteName('params'), $db->quoteName('server_id')])
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
+        $db->setQuery($query);
+        $row = $db->loadObject();
+
+        if (!$row) {
+            return ['success' => false, 'error' => 'Media file not found'];
+        }
+
+        $params  = json_decode($row->params ?? '{}', true) ?: [];
+        $videoId = $this->extractVimeoVideoId($params['filename'] ?? '');
+
+        if (!$videoId) {
+            return ['success' => false, 'error' => 'Could not extract Vimeo video ID'];
+        }
+
+        $accessToken = $this->getServerAccessToken((int) $row->server_id);
+
+        if (empty($accessToken)) {
+            return ['success' => false, 'error' => 'No Vimeo access token configured'];
+        }
+
+        try {
+            $factory  = new HttpFactory();
+            $http     = $factory->getHttp();
+            $headers  = [
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type'  => 'application/json',
+                'Accept'        => 'application/vnd.vimeo.*+json;version=3.4',
+            ];
+
+            $body     = json_encode(['description' => $description], JSON_THROW_ON_ERROR);
+            $response = $http->patch('https://api.vimeo.com/videos/' . $videoId, $body, $headers);
+
+            if ($response->code >= 200 && $response->code < 300) {
+                return ['success' => true];
+            }
+
+            return ['success' => false, 'error' => 'Vimeo API error: HTTP ' . $response->code];
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
      * Vimeo supports platform stats via the Vimeo API.
      *
      * @return  bool

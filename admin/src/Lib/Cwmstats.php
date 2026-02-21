@@ -87,13 +87,14 @@ class Cwmstats
     /**
      * Total plays of media files per study
      *
-     * @param   int  $id  ID number of study
+     * @param   int   $id               ID number of study
+     * @param   bool  $includePlatform  Include platform plays for ministry-created media
      *
      * @return int Total plays from the media
      *
      * @since 9.0.0
      */
-    public static function totalPlays(int $id): int
+    public static function totalPlays(int $id, bool $includePlatform = false): int
     {
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
@@ -102,6 +103,18 @@ class Cwmstats
             ->from($db->quoteName('#__bsms_mediafiles', 'm'))
             ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('m.study_id') . ' = ' . $db->quoteName('s.id'))
             ->where($db->quoteName('m.study_id') . ' = ' . (int) $id);
+
+        if ($includePlatform) {
+            $query->select(
+                '+ COALESCE(SUM(CASE WHEN ' . $db->quoteName('m.content_origin') . ' = 0 THEN '
+                . $db->quoteName('ps.play_count') . ' ELSE 0 END), 0)'
+            );
+            $query->leftJoin(
+                $db->quoteName('#__bsms_platform_stats', 'ps')
+                . ' ON ' . $db->quoteName('ps.media_id') . ' = ' . $db->quoteName('m.id')
+            );
+        }
+
         $db->setQuery($query);
 
         return (int) $db->loadResult();
@@ -545,6 +558,18 @@ class Cwmstats
                 ->join('INNER', $db->quoteName('#__bsms_mediafiles', 'mf') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
                 ->where($db->quoteName('mf.published') . ' = 1');
 
+            // LEFT JOIN platform stats for format_popular >= 2 (ministry-created content only)
+            if ($format >= 2) {
+                $query->select(
+                    'COALESCE(SUM(CASE WHEN ' . $db->quoteName('mf.content_origin') . ' = 0 THEN '
+                    . $db->quoteName('ps.play_count') . ' ELSE 0 END), 0) AS platform_plays'
+                );
+                $query->leftJoin(
+                    $db->quoteName('#__bsms_platform_stats', 'ps')
+                    . ' ON ' . $db->quoteName('ps.media_id') . ' = ' . $db->quoteName('mf.id')
+                );
+            }
+
             // Apply hybrid security filter: location-based + Joomla view-level access
             CwmlocationHelper::applySecurityFilter($query, 's');
 
@@ -557,7 +582,16 @@ class Cwmstats
             $final = [];
 
             foreach ($rows as $row) {
-                $total   = ($format < 1) ? ((int) $row->added + (int) $row->hits) : (int) $row->added;
+                $platformPlays = (int) ($row->platform_plays ?? 0);
+
+                $total = match ($format) {
+                    0       => (int) $row->added + (int) $row->hits,
+                    1       => (int) $row->added,
+                    2       => (int) $row->added + $platformPlays,
+                    3       => (int) $row->added + (int) $row->hits + $platformPlays,
+                    default => (int) $row->added,
+                };
+
                 $link    = ' <a href="' . Route::_('index.php?option=com_proclaim&task=message.edit&id=' . (int) $row->id) . '">' .
                     htmlspecialchars($row->studytitle, ENT_QUOTES, 'UTF-8') . '</a> ' . date('Y-m-d', strtotime($row->studydate)) . '<br>';
                 $final[] = ['total' => $total, 'link' => $link];
@@ -948,8 +982,21 @@ class Cwmstats
             ->from($db->quoteName('#__bsms_mediafiles', 'm'))
             ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('m.study_id') . ' = ' . $db->quoteName('s.id'))
             ->where($db->quoteName('m.published') . ' = 1')
-            ->where($db->quoteName('s.published') . ' = 1')
-            ->group($db->quoteName(['s.id', 's.studytitle', 's.alias', 's.hits', 's.studydate', 's.access']));
+            ->where($db->quoteName('s.published') . ' = 1');
+
+        // LEFT JOIN platform stats for format_popular >= 2 (ministry-created content only)
+        if ($format >= 2) {
+            $query->select(
+                'COALESCE(SUM(CASE WHEN ' . $db->quoteName('m.content_origin') . ' = 0 THEN '
+                . $db->quoteName('ps.play_count') . ' ELSE 0 END), 0) AS platform_plays'
+            );
+            $query->leftJoin(
+                $db->quoteName('#__bsms_platform_stats', 'ps')
+                . ' ON ' . $db->quoteName('ps.media_id') . ' = ' . $db->quoteName('m.id')
+            );
+        }
+
+        $query->group($db->quoteName(['s.id', 's.studytitle', 's.alias', 's.hits', 's.studydate', 's.access']));
 
         $db->setQuery($query);
         $items = $db->loadObjectList() ?: [];
@@ -965,8 +1012,17 @@ class Cwmstats
                 continue;
             }
 
-            $name  = $item->studytitle ?: $item->id;
-            $total = ($format < 1) ? ((int) $item->added + (int) $item->hits) : (int) $item->added;
+            $name          = $item->studytitle ?: $item->id;
+            $platformPlays = (int) ($item->platform_plays ?? 0);
+
+            $total = match ($format) {
+                0       => (int) $item->added + (int) $item->hits,
+                1       => (int) $item->added,
+                2       => (int) $item->added + $platformPlays,
+                3       => (int) $item->added + (int) $item->hits + $platformPlays,
+                default => (int) $item->added,
+            };
+
             $slug  = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
                 . str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
 

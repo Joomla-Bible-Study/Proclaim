@@ -167,6 +167,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles`
     `comment`          TEXT,
     `downloads`        INT(10)                   DEFAULT '0',
     `plays`            INT(10)                   DEFAULT '0',
+    `content_origin`   TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '0=ministry-created, 1=external/third-party',
     `params`           TEXT,
     `asset_id`         INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
     `access`           INT(10) UNSIGNED NOT NULL DEFAULT '1',

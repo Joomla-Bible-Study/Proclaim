@@ -26,6 +26,18 @@
             }
         },
         {
+            "name": "com_proclaim.platform-stats",
+            "type": "script",
+            "uri": "com_proclaim/platform-stats.min.js",
+            "dependencies": [
+                "core",
+                "bootstrap.modal"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.location-wizard",
             "type": "script",
             "uri": "com_proclaim/location-wizard.min.js",

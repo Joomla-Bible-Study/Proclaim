@@ -8,6 +8,8 @@
  *   body.view-cwmsermon    — detail page body class
  *   .proclaim-main-content — outer content wrapper
  *   .proclaim-item         — the detail item wrapper
+ *   a.fancybox_player      — fancybox media player links (class "fancybox_player playhit")
+ *   .fancybox__container   — fancybox modal overlay when active
  */
 
 const { test, expect } = require('@playwright/test');
@@ -73,5 +75,37 @@ test.describe('Site Sermon Detail', () => {
         // These may not be present for every sermon — just verify no JS errors
         const errors = await page.evaluate(() => window.__proclaim_errors || []);
         expect(errors).toHaveLength(0);
+    });
+
+    test('fancybox media player opens on click', async ({ page }) => {
+        await page.goto('/?option=com_proclaim&view=cwmsermons', { waitUntil: 'networkidle' });
+
+        const firstLink = page.locator('.proclaim-item a').first();
+
+        if (await firstLink.count() === 0) {
+            test.skip(true, 'No sermon records found — skipping fancybox test');
+            return;
+        }
+
+        await firstLink.click();
+        await page.waitForLoadState('networkidle');
+
+        // Look for fancybox player links on the detail page
+        const playerLink = page.locator('a.fancybox_player').first();
+
+        if (await playerLink.count() === 0) {
+            test.skip(true, 'No fancybox media players on this sermon');
+            return;
+        }
+
+        await playerLink.click();
+
+        // Fancybox v6 creates a .fancybox__container overlay
+        const fancyboxContainer = page.locator('.fancybox__container');
+        await expect(fancyboxContainer).toBeVisible({ timeout: 10000 });
+
+        // Close fancybox via the close button or Escape key
+        await page.keyboard.press('Escape');
+        await expect(fancyboxContainer).not.toBeVisible({ timeout: 5000 });
     });
 });

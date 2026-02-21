@@ -448,6 +448,35 @@ abstract class CWMAddon
     }
 
     /**
+     * Whether this addon supports pushing descriptions to the platform via API.
+     * Override in child class and return true to enable description sync.
+     *
+     * @return  bool
+     *
+     * @since   10.1.0
+     */
+    public function supportsDescriptionSync(): bool
+    {
+        return false;
+    }
+
+    /**
+     * Push a description to a video on the platform.
+     * Override in child class to implement platform-specific API calls.
+     *
+     * @param   int     $mediaId      The media file ID (to look up platform video ID)
+     * @param   string  $description  The description text to push
+     *
+     * @return  array{success: bool, error?: string}
+     *
+     * @since   10.1.0
+     */
+    public function syncDescription(int $mediaId, string $description): array
+    {
+        return ['success' => false, 'error' => 'Not supported by this addon'];
+    }
+
+    /**
      * Whether this addon supports fetching external platform statistics.
      * Override in child class and return true to enable stats sync.
      *
@@ -626,15 +655,21 @@ abstract class CWMAddon
         int $serverId,
         string $paramKey = 'filename',
         int $batchLimit = 0,
-        string $platform = ''
+        string $platform = '',
+        bool $includeArchived = true
     ): array {
         /** @var DatabaseDriver $db */
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true)
             ->select([$db->quoteName('m.id'), $db->quoteName('m.params')])
             ->from($db->quoteName('#__bsms_mediafiles', 'm'))
-            ->where($db->quoteName('m.server_id') . ' = ' . (int) $serverId)
-            ->where($db->quoteName('m.published') . ' = 1');
+            ->where($db->quoteName('m.server_id') . ' = ' . (int) $serverId);
+
+        if ($includeArchived) {
+            $query->whereIn($db->quoteName('m.published'), [1, 2]);
+        } else {
+            $query->where($db->quoteName('m.published') . ' = 1');
+        }
 
         // When batching, LEFT JOIN platform_stats for sync-priority ordering
         if ($batchLimit > 0 && $platform !== '') {
@@ -673,23 +708,30 @@ abstract class CWMAddon
     }
 
     /**
-     * Count total published media files linked to a server (for remaining calculation).
+     * Count published (and optionally archived) media files linked to a server.
      *
-     * @param   int  $serverId  The server record ID
+     * @param   int   $serverId         The server record ID
+     * @param   bool  $includeArchived  Include archived media (state 2) — default true
      *
      * @return  int
      *
      * @since   10.1.0
      */
-    protected static function getMediaVideoCount(int $serverId): int
+    protected static function getMediaVideoCount(int $serverId, bool $includeArchived = true): int
     {
         /** @var DatabaseDriver $db */
         $db    = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true)
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_mediafiles'))
-            ->where($db->quoteName('server_id') . ' = ' . (int) $serverId)
-            ->where($db->quoteName('published') . ' = 1');
+            ->where($db->quoteName('server_id') . ' = ' . (int) $serverId);
+
+        if ($includeArchived) {
+            $query->whereIn($db->quoteName('published'), [1, 2]);
+        } else {
+            $query->where($db->quoteName('published') . ' = 1');
+        }
+
         $db->setQuery($query);
 
         return (int) $db->loadResult();

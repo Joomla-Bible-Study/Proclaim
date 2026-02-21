@@ -79,7 +79,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
      */
     public function getRecordTotals(int $locationId = 0): array
     {
-        $result = ['views' => 0, 'plays' => 0, 'downloads' => 0];
+        $result = ['views' => 0, 'plays' => 0, 'downloads' => 0, 'platform_plays' => 0, 'external_plays' => 0];
 
         try {
             $db = $this->getDatabase();
@@ -145,6 +145,43 @@ class CwmanalyticsModel extends BaseDatabaseModel
             $row                 = $db->loadAssoc() ?? [];
             $result['plays']     = (int) ($row['plays'] ?? 0);
             $result['downloads'] = (int) ($row['downloads'] ?? 0);
+
+            // Platform plays for ministry-created media (external plays = platform - local)
+            $q3 = $db->getQuery(true)
+                ->select([
+                    'COALESCE(SUM(' . $db->quoteName('ps.play_count') . '), 0) AS platform_plays',
+                    'GREATEST(COALESCE(SUM(' . $db->quoteName('ps.play_count') . '), 0)'
+                    . ' - COALESCE(SUM(' . $db->quoteName('m2.plays') . '), 0), 0) AS external_plays',
+                ])
+                ->from($db->quoteName('#__bsms_platform_stats', 'ps'))
+                ->leftJoin(
+                    $db->quoteName('#__bsms_mediafiles', 'm2') .
+                    ' ON ' . $db->quoteName('m2.id') . ' = ' . $db->quoteName('ps.media_id')
+                )
+                ->where($db->quoteName('m2.content_origin') . ' = 0')
+                ->where($db->quoteName('m2.published') . ' = 1');
+
+            if ($locationId > 0 || !empty($accessibleIds)) {
+                $q3->leftJoin(
+                    $db->quoteName('#__bsms_studies', 's2') .
+                    ' ON ' . $db->quoteName('s2.id') . ' = ' . $db->quoteName('m2.study_id')
+                );
+
+                if ($locationId > 0) {
+                    $q3->where($db->quoteName('s2.location_id') . ' = ' . (int) $locationId);
+                } elseif (!empty($accessibleIds)) {
+                    $q3->where(
+                        '(' . $db->quoteName('s2.location_id') . ' IS NULL'
+                        . ' OR ' . $db->quoteName('s2.location_id') . ' IN ('
+                        . implode(',', array_map('intval', $accessibleIds)) . '))'
+                    );
+                }
+            }
+
+            $db->setQuery($q3);
+            $psRow                     = $db->loadAssoc() ?? [];
+            $result['platform_plays']  = (int) ($psRow['platform_plays'] ?? 0);
+            $result['external_plays']  = (int) ($psRow['external_plays'] ?? 0);
         } catch (\Exception $e) {
             // Return zeros
         }
@@ -282,6 +319,83 @@ class CwmanalyticsModel extends BaseDatabaseModel
 
             $query->group($db->quoteName('e.study_id'))
                 ->order('total DESC');
+            $db->setQuery($query, 0, (int) $limit);
+
+            return (array) ($db->loadAssocList() ?? []);
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Get top studies combining local analytics events with platform stats.
+     *
+     * Merges local event counts with platform play counts (for ministry-created
+     * media only) to provide a comprehensive engagement ranking.  Each row
+     * includes `local_total`, `platform_plays`, and the combined `total`.
+     *
+     * @param   string  $start       Start date (Y-m-d).
+     * @param   string  $end         End date (Y-m-d).
+     * @param   int     $limit       Maximum results.
+     * @param   int     $locationId  Filter by campus; 0 = all authorised.
+     *
+     * @return  array<int, array{study_id: int, title: string, local_total: int, platform_plays: int, total: int}>
+     *
+     * @since   10.1.0
+     */
+    public function getTopStudiesCombined(string $start, string $end, int $limit = 10, int $locationId = 0): array
+    {
+        try {
+            $db = $this->getDatabase();
+
+            // Sub-query 1: local analytics events per study (within date range)
+            $localSub = $db->getQuery(true)
+                ->select([
+                    $db->quoteName('e.study_id'),
+                    'COUNT(*) AS local_total',
+                ])
+                ->from($db->quoteName('#__bsms_analytics_events', 'e'))
+                ->where($db->quoteName('e.created') . ' >= ' . $db->quote($start . ' 00:00:00'))
+                ->where($db->quoteName('e.created') . ' <= ' . $db->quote($end . ' 23:59:59'))
+                ->where($db->quoteName('e.study_id') . ' IS NOT NULL');
+
+            if ($locationId > 0) {
+                $localSub->where($db->quoteName('e.location_id') . ' = ' . (int) $locationId);
+            }
+
+            $localSub->group($db->quoteName('e.study_id'));
+
+            // Sub-query 2: platform play counts per study (all-time, ministry-created only)
+            $platSub = $db->getQuery(true)
+                ->select([
+                    $db->quoteName('mf.study_id'),
+                    'COALESCE(SUM(' . $db->quoteName('ps.play_count') . '), 0) AS platform_plays',
+                ])
+                ->from($db->quoteName('#__bsms_platform_stats', 'ps'))
+                ->innerJoin(
+                    $db->quoteName('#__bsms_mediafiles', 'mf') .
+                    ' ON ' . $db->quoteName('mf.id') . ' = ' . $db->quoteName('ps.media_id')
+                )
+                ->where($db->quoteName('mf.content_origin') . ' = 0')
+                ->where($db->quoteName('mf.study_id') . ' IS NOT NULL')
+                ->group($db->quoteName('mf.study_id'));
+
+            // Outer query: FULL OUTER JOIN (emulated via LEFT JOIN + UNION)
+            // Using a single query with LEFT JOINs from studies to both sub-queries
+            $query = $db->getQuery(true)
+                ->select([
+                    $db->quoteName('s.id', 'study_id'),
+                    $db->quoteName('s.studytitle', 'title'),
+                    'COALESCE(loc.local_total, 0) AS local_total',
+                    'COALESCE(plat.platform_plays, 0) AS platform_plays',
+                    '(COALESCE(loc.local_total, 0) + COALESCE(plat.platform_plays, 0)) AS total',
+                ])
+                ->from($db->quoteName('#__bsms_studies', 's'))
+                ->leftJoin('(' . $localSub . ') AS loc ON loc.study_id = ' . $db->quoteName('s.id'))
+                ->leftJoin('(' . $platSub . ') AS plat ON plat.study_id = ' . $db->quoteName('s.id'))
+                ->where('(COALESCE(loc.local_total, 0) + COALESCE(plat.platform_plays, 0)) > 0')
+                ->order('total DESC');
+
             $db->setQuery($query, 0, (int) $limit);
 
             return (array) ($db->loadAssocList() ?? []);
@@ -758,10 +872,17 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 . ' sr.' . $db->quoteName('series_thumbnail') . ' AS thumb,'
                 . ' (SELECT COUNT(*) FROM ' . $db->quoteName('#__bsms_studies') . ' sc'
                 . '  WHERE sc.' . $db->quoteName('series_id') . ' = sr.' . $db->quoteName('id')
-                . '  AND sc.' . $db->quoteName('published') . ' = 1) AS message_count,'
+                . '  AND sc.' . $db->quoteName('published') . ' IN (1, 2)) AS message_count,'
                 . ' SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('page_view') . ' THEN 1 ELSE 0 END) AS views,'
                 . ' SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) AS plays,'
-                . ' SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END) AS downloads'
+                . ' SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END) AS downloads,'
+                . ' COALESCE((SELECT SUM(ps2.play_count)'
+                . '  FROM ' . $db->quoteName('#__bsms_platform_stats') . ' ps2'
+                . '  INNER JOIN ' . $db->quoteName('#__bsms_mediafiles') . ' mf2'
+                . '    ON mf2.id = ps2.media_id AND mf2.content_origin = 0'
+                . '  INNER JOIN ' . $db->quoteName('#__bsms_studies') . ' st2'
+                . '    ON st2.id = mf2.study_id'
+                . '  WHERE st2.series_id = sr.id), 0) AS platform_plays'
                 . ' FROM ' . $db->quoteName('#__bsms_series') . ' sr'
                 . ' LEFT JOIN ' . $db->quoteName('#__bsms_analytics_events') . ' e'
                 . '   ON e.' . $db->quoteName('series_id') . ' = sr.' . $db->quoteName('id')
@@ -810,16 +931,28 @@ class CwmanalyticsModel extends BaseDatabaseModel
     public function getSeriesMessages(int $seriesId, string $start, string $end): array
     {
         try {
-            $db    = $this->getDatabase();
+            $db = $this->getDatabase();
+
+            // Correlated sub-select for platform play counts per study (ministry-created only)
+            $platformSub = 'COALESCE((SELECT SUM(ps2.' . $db->quoteName('play_count') . ')'
+                . ' FROM ' . $db->quoteName('#__bsms_platform_stats') . ' ps2'
+                . ' INNER JOIN ' . $db->quoteName('#__bsms_mediafiles') . ' mf2'
+                . '   ON mf2.' . $db->quoteName('id') . ' = ps2.' . $db->quoteName('media_id')
+                . '   AND mf2.' . $db->quoteName('content_origin') . ' = 0'
+                . ' WHERE mf2.' . $db->quoteName('study_id') . ' = ' . $db->quoteName('s.id')
+                . '), 0)';
+
             $query = $db->getQuery(true)
                 ->select([
                     $db->quoteName('s.id', 'study_id'),
                     $db->quoteName('s.studytitle', 'title'),
                     $db->quoteName('s.studydate', 'study_date'),
+                    $db->quoteName('s.published'),
                     $db->quoteName('s.hits', 'all_time_views'),
                     'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('page_view') . ' THEN 1 ELSE 0 END) AS views',
                     'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) AS plays',
                     'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END) AS downloads',
+                    $platformSub . ' AS platform_plays',
                 ])
                 ->from($db->quoteName('#__bsms_studies', 's'))
                 ->leftJoin(
@@ -829,7 +962,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                     ' AND ' . $db->quoteName('e.created') . ' <= ' . $db->quote($end . ' 23:59:59')
                 )
                 ->where($db->quoteName('s.series_id') . ' = ' . (int) $seriesId)
-                ->where($db->quoteName('s.published') . ' = 1')
+                ->whereIn($db->quoteName('s.published'), [1, 2])
                 ->group($db->quoteName('s.id'))
                 ->order($db->quoteName('s.studydate') . ' DESC');
             $db->setQuery($query);
@@ -954,11 +1087,15 @@ class CwmanalyticsModel extends BaseDatabaseModel
                     $db->quoteName('m.params', 'media_params'),
                     $db->quoteName('m.plays', 'all_time_plays'),
                     $db->quoteName('m.downloads', 'all_time_downloads'),
+                    $db->quoteName('m.content_origin'),
                     $db->quoteName('m.ordering'),
                     $db->quoteName('sv.server_name'),
                     $db->quoteName('sv.type', 'server_type'),
                     'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) AS period_plays',
                     'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END) AS period_downloads',
+                    'COALESCE(MAX(' . $db->quoteName('ps.play_count') . '), 0) AS platform_play_count',
+                    'GREATEST(COALESCE(MAX(' . $db->quoteName('ps.play_count') . '), 0) - ' . $db->quoteName('m.plays') . ', 0) AS external_plays',
+                    $db->quoteName('m.plays') . ' + GREATEST(COALESCE(MAX(' . $db->quoteName('ps.play_count') . '), 0) - ' . $db->quoteName('m.plays') . ', 0) AS total_reach',
                 ])
                 ->from($db->quoteName('#__bsms_mediafiles', 'm'))
                 ->leftJoin(
@@ -970,6 +1107,10 @@ class CwmanalyticsModel extends BaseDatabaseModel
                     ' ON ' . $db->quoteName('e.media_id') . ' = ' . $db->quoteName('m.id') .
                     ' AND ' . $db->quoteName('e.created') . ' >= ' . $db->quote($start . ' 00:00:00') .
                     ' AND ' . $db->quoteName('e.created') . ' <= ' . $db->quote($end . ' 23:59:59')
+                )
+                ->leftJoin(
+                    $db->quoteName('#__bsms_platform_stats', 'ps') .
+                    ' ON ' . $db->quoteName('ps.media_id') . ' = ' . $db->quoteName('m.id')
                 )
                 ->where($db->quoteName('m.study_id') . ' = ' . (int) $studyId)
                 ->where($db->quoteName('m.published') . ' = 1')
@@ -1136,6 +1277,16 @@ class CwmanalyticsModel extends BaseDatabaseModel
     {
         try {
             $db    = $this->getDatabase();
+
+            // Correlated sub-select for platform play counts per server (ministry-created only)
+            $platformSub = 'COALESCE((SELECT SUM(ps2.' . $db->quoteName('play_count') . ')'
+                . ' FROM ' . $db->quoteName('#__bsms_platform_stats') . ' ps2'
+                . ' INNER JOIN ' . $db->quoteName('#__bsms_mediafiles') . ' mf2'
+                . '   ON mf2.' . $db->quoteName('id') . ' = ps2.' . $db->quoteName('media_id')
+                . '   AND mf2.' . $db->quoteName('content_origin') . ' = 0'
+                . ' WHERE mf2.' . $db->quoteName('server_id') . ' = sv.' . $db->quoteName('id')
+                . '), 0)';
+
             $query = $db->getQuery(true)
                 ->select([
                     'COALESCE(' . $db->quoteName('sv.server_name') . ', ' . $db->quote('Unknown') . ') AS server_name',
@@ -1144,6 +1295,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                     'SUM(CASE WHEN ' . $db->quoteName('e.event_type') . ' = ' . $db->quote('download') . ' THEN 1 ELSE 0 END) AS downloads',
                     'COUNT(DISTINCT ' . $db->quoteName('e.media_id') . ') AS media_count',
                     'COUNT(DISTINCT ' . $db->quoteName('e.study_id') . ') AS study_count',
+                    $platformSub . ' AS platform_plays',
                 ])
                 ->from($db->quoteName('#__bsms_analytics_events', 'e'))
                 ->leftJoin(

@@ -64,9 +64,12 @@ class CwmstatsCacheTest extends IntegrationTestCase
         $ref    = new \ReflectionMethod(Cwmstats::class, 'totalPlays');
         $params = $ref->getParameters();
 
-        $this->assertCount(1, $params);
+        $this->assertCount(2, $params);
         $this->assertEquals('id', $params[0]->getName());
         $this->assertParamTypeName('int', $params[0]);
+        $this->assertEquals('includePlatform', $params[1]->getName());
+        $this->assertTrue($params[1]->isOptional(), 'includePlatform must be optional');
+        $this->assertParamTypeName('bool', $params[1]);
         $this->assertReturnTypeName('int', $ref);
     }
 

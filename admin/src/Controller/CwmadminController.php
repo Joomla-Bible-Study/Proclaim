@@ -15,10 +15,12 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Bible\BibleImporter;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmcsvimportHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmdescriptionHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageCleanup;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
@@ -649,6 +651,124 @@ class CwmadminController extends FormController
             echo json_encode(['success' => true, 'updated' => $db->getAffectedRows()]);
         } else {
             echo json_encode(['success' => false, 'error' => Text::_('JBS_CMN_ERROR_RESETTING_PLAYS')]);
+        }
+
+        $this->app->close();
+    }
+
+    /**
+     * Get formatted video description for a study — AJAX endpoint.
+     *
+     * Returns the description text for preview/copy operations.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public function getVideoDescriptionXHR(): void
+    {
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->app->close();
+
+            return;
+        }
+
+        // Release session lock for concurrent requests
+        $this->app->getSession()->close();
+
+        $studyId = $this->input->getInt('study_id', 0);
+
+        if (!$studyId) {
+            echo json_encode(['success' => false, 'error' => 'No study ID provided']);
+            $this->app->close();
+
+            return;
+        }
+
+        try {
+            $description = CwmdescriptionHelper::buildVideoDescription($studyId);
+
+            echo json_encode(['success' => true, 'description' => $description]);
+        } catch (\Exception $e) {
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+
+        $this->app->close();
+    }
+
+    /**
+     * Push description to a video platform — AJAX endpoint.
+     *
+     * Accepts study_id and media_id, builds the description, and pushes via addon API.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public function syncVideoDescriptionXHR(): void
+    {
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->app->close();
+
+            return;
+        }
+
+        // Release session lock for concurrent requests
+        $this->app->getSession()->close();
+
+        $studyId = $this->input->getInt('study_id', 0);
+        $mediaId = $this->input->getInt('media_id', 0);
+
+        if (!$studyId || !$mediaId) {
+            echo json_encode(['success' => false, 'error' => 'Missing study_id or media_id']);
+            $this->app->close();
+
+            return;
+        }
+
+        try {
+            $description = $this->input->getString('description', '');
+
+            if (empty($description)) {
+                $description = CwmdescriptionHelper::buildVideoDescription($studyId);
+            }
+
+            // Look up the server type for this media file
+            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('sv.type'))
+                ->from($db->quoteName('#__bsms_mediafiles', 'm'))
+                ->leftJoin(
+                    $db->quoteName('#__bsms_servers', 'sv') .
+                    ' ON ' . $db->quoteName('sv.id') . ' = ' . $db->quoteName('m.server_id')
+                )
+                ->where($db->quoteName('m.id') . ' = ' . (int) $mediaId);
+            $db->setQuery($query);
+            $serverType = $db->loadResult();
+
+            if (empty($serverType)) {
+                echo json_encode(['success' => false, 'error' => 'Could not determine server type']);
+                $this->app->close();
+
+                return;
+            }
+
+            $addon = CWMAddon::getInstance($serverType);
+
+            if (!$addon->supportsDescriptionSync()) {
+                echo json_encode(['success' => false, 'error' => 'This platform does not support description sync']);
+                $this->app->close();
+
+                return;
+            }
+
+            $result = $addon->syncDescription($mediaId, $description);
+
+            echo json_encode($result);
+        } catch (\Exception $e) {
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
         }
 
         $this->app->close();
