@@ -108,6 +108,11 @@ class CwmlocationwizardModel extends BaseDatabaseModel
             return \is_array($decoded) ? $decoded : [];
         }
 
+        // Registry::get() returns stdClass for nested objects — convert to array
+        if ($raw instanceof \stdClass) {
+            return json_decode(json_encode($raw), true) ?: [];
+        }
+
         return \is_array($raw) ? $raw : [];
     }
 
