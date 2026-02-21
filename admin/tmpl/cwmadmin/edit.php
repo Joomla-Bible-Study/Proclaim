@@ -184,6 +184,12 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                             <i class="icon-database" aria-hidden="true"></i>
                             <span><?php echo Text::_('JBS_ADM_DATABASE'); ?></span>
                         </a>
+                        <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmlocationwizard'); ?>"
+                           class="cwmadmin-action-card"
+                           title="<?php echo Text::_('JBS_ADM_LOCATION_WIZARD'); ?>">
+                            <i class="icon-location" aria-hidden="true"></i>
+                            <span><?php echo Text::_('JBS_ADM_LOCATION_WIZARD'); ?></span>
+                        </a>
                     </div>
                 </div>
             </div>
