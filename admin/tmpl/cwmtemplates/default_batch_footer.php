@@ -19,7 +19,7 @@
 use Joomla\CMS\Language\Text;
 
 $wa = $this->getDocument()->getWebAssetManager();
-$wa->useScript('com_proclaim.cwmadmin-templates-batch');
+$wa->useScript('com_proclaim.cwmadmin-batch-footer');
 ?>
 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
     <?php

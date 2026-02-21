@@ -21,7 +21,7 @@ use Joomla\CMS\Language\Text;
 $published = $this->state->get('filter.published');
 
 $wa = $this->getDocument()->getWebAssetManager();
-$wa->useScript('com_proclaim.cwmadmin-locations-batch');
+$wa->useScript('com_proclaim.cwmadmin-batch-footer');
 ?>
 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
     <?php

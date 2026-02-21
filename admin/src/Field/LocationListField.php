@@ -80,9 +80,13 @@ class LocationListField extends ListField
         // Check if this field allows "global" (no location) — e.g. podcasts, servers
         $allowGlobal = ((string) ($this->element['global'] ?? '')) === 'true';
 
-        // Auto-default for new records (non-admin, location system enabled)
-        // Skip when global is allowed — NULL/-1 is a valid "all campuses" choice
-        if (empty($this->value) && $enabled && !$isAdmin && !empty($allowedIds) && !$allowGlobal) {
+        // Auto-default for NEW records only (non-admin, location system enabled).
+        // Skip when global is allowed — NULL/-1 is a valid "all campuses" choice.
+        // Never auto-default for existing records — prevents silently reassigning
+        // an unlocated record to the first editor's campus on save.
+        $isNewRecord = empty($this->form->getValue('id'));
+
+        if ($isNewRecord && empty($this->value) && $enabled && !$isAdmin && !empty($allowedIds) && !$allowGlobal) {
             $userLocations = CwmlocationHelper::getUserLocations();
 
             if (\count($userLocations) >= 1) {
@@ -138,22 +142,29 @@ class LocationListField extends ListField
             $userLocations = CwmlocationHelper::getUserLocations();
 
             if (\count($userLocations) === 1) {
-                $locationId = (int) $userLocations[0];
+                $locationId  = (int) $userLocations[0];
+                $isNewRecord = empty($this->form->getValue('id'));
+                $currentVal  = (int) $this->value;
 
-                $db    = Factory::getContainer()->get(DatabaseInterface::class);
-                $query = $db->getQuery(true)
-                    ->select($db->quoteName('location_text'))
-                    ->from($db->quoteName('#__bsms_locations'))
-                    ->where($db->quoteName('id') . ' = ' . $locationId);
-                $db->setQuery($query);
-                $name = $db->loadResult() ?: Text::_('JBS_CMN_LOCATION');
+                // Show read-only for new records (auto-assign) or existing records
+                // already at this campus.  Never force a campus on existing records
+                // that currently have no location — show the dropdown instead.
+                if ($isNewRecord || $currentVal === $locationId) {
+                    $db    = Factory::getContainer()->get(DatabaseInterface::class);
+                    $query = $db->getQuery(true)
+                        ->select($db->quoteName('location_text'))
+                        ->from($db->quoteName('#__bsms_locations'))
+                        ->where($db->quoteName('id') . ' = ' . $locationId);
+                    $db->setQuery($query);
+                    $name = $db->loadResult() ?: Text::_('JBS_CMN_LOCATION');
 
-                $html  = '<input type="text" value="' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '" '
-                       . 'class="form-control" readonly disabled />';
-                $html .= '<input type="hidden" name="' . $this->name . '" '
-                       . 'value="' . $locationId . '" />';
+                    $html  = '<input type="text" value="' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '" '
+                           . 'class="form-control" readonly disabled />';
+                    $html .= '<input type="hidden" name="' . $this->name . '" '
+                           . 'value="' . $locationId . '" />';
 
-                return $html;
+                    return $html;
+                }
             }
         }
 

@@ -280,6 +280,11 @@ class CwmserieTable extends Table
             throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_SERIES_NAME_REQUIRED'));
         }
 
+        // Normalise "Select Location" sentinel (-1) to NULL for DB storage
+        if ($this->location_id !== null && $this->location_id <= 0) {
+            $this->location_id = null;
+        }
+
         // Sanitise publish dates — empty strings are invalid for NOT NULL DATETIME columns
         if (empty($this->publish_up)) {
             $this->publish_up = $this->getDatabase()->getNullDate();

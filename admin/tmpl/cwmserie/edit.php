@@ -70,6 +70,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                 <?php echo $this->form->renderField('pc_show'); ?>
                 <?php echo $this->form->renderField('image', null, $imageDefault); ?>
                 <?php echo $this->form->renderField('published'); ?>
+                <?php echo $this->form->renderField('location_id'); ?>
                 <?php echo $this->form->renderField('access'); ?>
                 <?php echo $this->form->renderField('language'); ?>
             </div>

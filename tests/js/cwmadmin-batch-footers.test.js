@@ -3,20 +3,20 @@
  * Batch processing functionality for admin views
  */
 
-// List of batch files to test
-const BATCH_FILES = [
+// Entity-specific batch files (legacy, kept for backward compat)
+const LEGACY_BATCH_FILES = [
     { name: 'locations', file: 'build/media_source/js/cwmadmin-locations-default-batch-footer.es6.js', task: 'cwmlocation.batch' },
     { name: 'mediafiles', file: 'build/media_source/js/cwmadmin-mediafiles-default-batch-footer.es6.js', task: 'cwmmediafile.batch' },
     { name: 'messages', file: 'build/media_source/js/cwmadmin-messages-default-batch-footer.es6.js', task: 'cwmmessage.batch' },
     { name: 'podcasts', file: 'build/media_source/js/cwmadmin-podcasts-default-batch-footer.es6.js', task: 'cwmpodcast.batch' },
     { name: 'servers', file: 'build/media_source/js/cwmadmin-servers-default-batch-footer.es6.js', task: 'cwmserver.batch' },
     { name: 'templates', file: 'build/media_source/js/cwmadmin-templates-default-batch-footer.es6.js', task: 'cwmtemplate.batch' },
-    { name: 'series-batch', file: 'build/media_source/js/cwmadmin-series-batch.es6.js', task: 'cwmseries.batch' },
-    { name: 'teachers-batch', file: 'build/media_source/js/cwmadmin-teachers-batch.es6.js', task: 'cwmteachers.batch' }
+    { name: 'series-batch', file: 'build/media_source/js/cwmadmin-series-batch.es6.js', task: 'cwmserie.batch' },
+    { name: 'teachers-batch', file: 'build/media_source/js/cwmadmin-teachers-batch.es6.js', task: 'cwmteacher.batch' }
 ];
 
-describe('Admin Batch Files', () => {
-    BATCH_FILES.forEach(({ file, task }) => {
+describe('Legacy Entity-Specific Batch Files', () => {
+    LEGACY_BATCH_FILES.forEach(({ file, task }) => {
         describe(`${file.split('/').pop()}`, () => {
             describe('Batch Functionality', () => {
                 let mockSubmitForm;
@@ -99,5 +99,110 @@ describe('Admin Batch Files', () => {
                 });
             });
         });
+    });
+});
+
+// Generic batch footer handler (used by all views)
+describe('Generic Batch Footer (cwmadmin-batch-footer.es6.js)', () => {
+    const GENERIC_FILE = 'build/media_source/js/cwmadmin-batch-footer.es6.js';
+
+    // All entity tasks that should work with the generic handler
+    const BATCH_TASKS = [
+        'cwmmessage.batch',
+        'cwmmediafile.batch',
+        'cwmserver.batch',
+        'cwmpodcast.batch',
+        'cwmtemplate.batch',
+        'cwmlocation.batch',
+        'cwmserie.batch',
+        'cwmteacher.batch',
+        'cwmcomment.batch',
+        'cwmmessagetype.batch',
+    ];
+
+    let mockSubmitForm;
+
+    beforeEach(() => {
+        mockSubmitForm = jest.fn();
+        global.Joomla = {
+            submitform: mockSubmitForm
+        };
+        jest.resetModules();
+    });
+
+    afterEach(() => {
+        delete global.Joomla;
+        jest.resetModules();
+    });
+
+    test('should initialize without errors', () => {
+        document.body.innerHTML = '<form id="adminForm"></form>';
+
+        expect(() => {
+            require(`../../${GENERIC_FILE}`);
+            document.dispatchEvent(new Event('DOMContentLoaded'));
+        }).not.toThrow();
+    });
+
+    BATCH_TASKS.forEach((task) => {
+        test(`should submit ${task} correctly`, () => {
+            document.body.innerHTML = `
+                <form id="adminForm">
+                    <input type="hidden" name="task" value="" />
+                </form>
+                <button id="batch-submit-button-id" data-submit-task="${task}">
+                    Process
+                </button>
+            `;
+
+            require(`../../${GENERIC_FILE}`);
+            document.dispatchEvent(new Event('DOMContentLoaded'));
+
+            document.getElementById('batch-submit-button-id').click();
+
+            expect(mockSubmitForm).toHaveBeenCalledWith(task, expect.any(Object));
+        });
+    });
+
+    test('should reject tasks that do not end with .batch', () => {
+        document.body.innerHTML = `
+            <form id="adminForm">
+                <input type="hidden" name="task" value="" />
+            </form>
+            <button id="batch-submit-button-id" data-submit-task="cwmmessage.delete">
+                Process
+            </button>
+        `;
+
+        require(`../../${GENERIC_FILE}`);
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+
+        document.getElementById('batch-submit-button-id').click();
+
+        expect(mockSubmitForm).not.toHaveBeenCalled();
+    });
+
+    test('should not submit if form is missing', () => {
+        document.body.innerHTML = `
+            <button id="batch-submit-button-id" data-submit-task="cwmserie.batch">
+                Process
+            </button>
+        `;
+
+        require(`../../${GENERIC_FILE}`);
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+
+        document.getElementById('batch-submit-button-id').click();
+
+        expect(mockSubmitForm).not.toHaveBeenCalled();
+    });
+
+    test('should handle missing button gracefully', () => {
+        document.body.innerHTML = '<form id="adminForm"></form>';
+
+        expect(() => {
+            require(`../../${GENERIC_FILE}`);
+            document.dispatchEvent(new Event('DOMContentLoaded'));
+        }).not.toThrow();
     });
 });

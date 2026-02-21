@@ -14,6 +14,7 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmhtml;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Layout\LayoutHelper;
 
@@ -27,6 +28,11 @@ use Joomla\CMS\Layout\LayoutHelper;
         <?php endif; ?>
         <div class="form-group col-md-6">
             <?php echo LayoutHelper::render('joomla.html.batch.access', []); ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-12">
+            <?php echo Cwmhtml::location(); ?>
         </div>
     </div>
 </div>
