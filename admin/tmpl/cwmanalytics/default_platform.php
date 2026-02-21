@@ -35,7 +35,7 @@ $token       = Session::getFormToken();
         <?php echo Text::_('JBS_ANA_PLATFORM_STATS'); ?>
         <?php if ($hasServers) : ?>
         <button type="button"
-                class="btn btn-sm btn-outline-primary ms-auto"
+                class="btn btn-sm btn-primary ms-auto"
                 id="cwm-sync-platform-stats"
                 data-servers="<?php echo $serversJson; ?>"
                 data-token="<?php echo $token; ?>"
@@ -76,10 +76,10 @@ $token       = Session::getFormToken();
                             <td>
                                 <span class="badge bg-secondary"><?php echo htmlspecialchars(ucfirst((string) ($row['platform'] ?? '')), ENT_QUOTES); ?></span>
                             </td>
-                            <td class="text-end"><?php echo number_format((int) ($row['media_count'] ?? 0)); ?></td>
-                            <td class="text-end"><?php echo number_format((int) ($row['total_views'] ?? 0)); ?></td>
-                            <td class="text-end"><?php echo number_format((int) ($row['total_plays'] ?? 0)); ?></td>
-                            <td class="text-end"><?php echo $row['total_likes'] !== null ? number_format((int) $row['total_likes']) : '—'; ?></td>
+                            <td class="text-end text-body"><?php echo number_format((int) ($row['media_count'] ?? 0)); ?></td>
+                            <td class="text-end text-body"><?php echo number_format((int) ($row['total_views'] ?? 0)); ?></td>
+                            <td class="text-end text-body"><?php echo number_format((int) ($row['total_plays'] ?? 0)); ?></td>
+                            <td class="text-end text-body"><?php echo $row['total_likes'] !== null ? number_format((int) $row['total_likes']) : '—'; ?></td>
                             <td class="text-end text-muted small">
                                 <?php echo $row['last_synced'] ? htmlspecialchars(substr((string) $row['last_synced'], 0, 16), ENT_QUOTES) : '—'; ?>
                             </td>

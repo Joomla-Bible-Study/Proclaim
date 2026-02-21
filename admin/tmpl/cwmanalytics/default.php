@@ -78,7 +78,7 @@ foreach ($this->deviceBreakdown as $row) {
 
 $deviceJson = json_encode(['labels' => $devLabels, 'data' => $devCounts], JSON_THROW_ON_ERROR);
 
-// Top studies bar chart
+// Top studies bar chart — Local only
 $studyLabels = [];
 $studyTotals = [];
 
@@ -89,6 +89,25 @@ foreach ($this->topStudies as $row) {
 }
 
 $topStudiesJson = json_encode(['labels' => $studyLabels, 'data' => $studyTotals], JSON_THROW_ON_ERROR);
+
+// Top studies bar chart — Combined (local + platform)
+$combLabels = [];
+$combTotals = [];
+
+foreach ($this->topStudiesCombined as $row) {
+    $title       = htmlspecialchars(substr((string) ($row['title'] ?? 'ID #' . $row['study_id']), 0, 40), ENT_QUOTES);
+    $combLabels[] = $title;
+    $combTotals[] = (int) ($row['total'] ?? 0);
+}
+
+$topStudiesCombinedJson = json_encode(['labels' => $combLabels, 'data' => $combTotals], JSON_THROW_ON_ERROR);
+$hasCombinedData        = !empty($this->topStudiesCombined);
+
+// "Local Site Only" badge — shown next to headers of sections that can't include platform data
+$localBadge = !empty($this->platformStats)
+    ? ' <span class="badge bg-body-secondary text-body-secondary fw-normal ms-2" style="font-size:.7rem">'
+      . Text::_('JBS_ANA_LOCAL_SITE_ONLY') . '</span>'
+    : '';
 ?>
 <div class="container-fluid p-3">
 
@@ -223,6 +242,11 @@ $showPeriodStrip     = $hasRealEvents;
         ['icon' => 'icon-play',     'label' => 'JBS_ANA_TOTAL_PLAYS',     'value' => $this->recordTotals['plays'],     'class' => 'text-success'],
         ['icon' => 'icon-download', 'label' => 'JBS_ANA_TOTAL_DOWNLOADS', 'value' => $this->recordTotals['downloads'], 'class' => 'text-warning'],
     ];
+
+    // Add External Plays KPI if platform stats exist
+    if (($this->recordTotals['external_plays'] ?? 0) > 0) {
+        $kpiCards[] = ['icon' => 'icon-globe', 'label' => 'JBS_MED_EXTERNAL_PLAYS', 'value' => $this->recordTotals['external_plays'], 'class' => 'text-info'];
+    }
 ?>
         <?php foreach ($kpiCards as $card) : ?>
             <div class="col-6 col-md-4">
@@ -354,7 +378,7 @@ $showPeriodStrip     = $hasRealEvents;
     <!-- Line Chart: Views / Plays / Downloads over time -->
     <div class="card mb-3">
         <div class="card-header fw-semibold">
-            <i class="icon-chart-line me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_ENGAGEMENT_OVER_TIME'); ?>
+            <i class="icon-chart-line me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_ENGAGEMENT_OVER_TIME'); ?><?php echo $localBadge; ?>
         </div>
         <div class="card-body">
             <canvas id="cwm-chart-timeseries" height="80"
@@ -365,18 +389,77 @@ $showPeriodStrip     = $hasRealEvents;
     </div>
 
     <!-- Bar Chart + Table: Top 10 sermons -->
-    <?php if (!empty($this->topStudies)) : ?>
-    <div class="card mb-3">
-        <div class="card-header fw-semibold">
-            <i class="icon-star me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_TOP_SERMONS'); ?>
+    <?php if (!empty($this->topStudies) || !empty($this->topStudiesCombined)) : ?>
+    <div class="card mb-3" id="cwm-top-engagement-card">
+        <div class="card-header fw-semibold d-flex align-items-center">
+            <div>
+                <i class="icon-star me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_TOP_SERMONS'); ?>
+            </div>
+            <?php if ($hasCombinedData) : ?>
+            <div class="ms-auto btn-group btn-group-sm" role="group" aria-label="<?php echo Text::_('JBS_ANA_ENGAGEMENT_MODE'); ?>">
+                <button type="button" class="btn btn-outline-secondary" id="cwm-engage-local"
+                        data-chart-data="<?php echo htmlspecialchars($topStudiesJson, ENT_QUOTES); ?>"
+                        title="<?php echo Text::_('JBS_ANA_ENGAGE_LOCAL_DESC'); ?>">
+                    <?php echo Text::_('JBS_ANA_ENGAGE_LOCAL'); ?>
+                </button>
+                <button type="button" class="btn btn-primary" id="cwm-engage-combined"
+                        data-chart-data="<?php echo htmlspecialchars($topStudiesCombinedJson, ENT_QUOTES); ?>"
+                        title="<?php echo Text::_('JBS_ANA_ENGAGE_COMBINED_DESC'); ?>">
+                    <?php echo Text::_('JBS_ANA_ENGAGE_COMBINED'); ?>
+                </button>
+            </div>
+            <?php endif; ?>
         </div>
         <div class="card-body">
             <canvas id="cwm-chart-topstudies" height="80"
                     data-cwm-chart="bar"
-                    data-cwm-chart-data="<?php echo htmlspecialchars($topStudiesJson, ENT_QUOTES); ?>">
+                    data-cwm-chart-data="<?php echo htmlspecialchars($hasCombinedData ? $topStudiesCombinedJson : $topStudiesJson, ENT_QUOTES); ?>">
             </canvas>
         </div>
         <div class="card-body p-0">
+            <?php if ($hasCombinedData) : ?>
+            <!-- Combined table (default when platform stats exist) -->
+            <table class="table table-sm table-hover mb-0" id="cwm-topstudies-combined-tbl">
+                <thead><tr>
+                    <th><?php echo Text::_('JBS_ANA_MESSAGE_TITLE'); ?></th>
+                    <th class="text-end"><?php echo Text::_('JBS_MED_LOCAL_PLAYS'); ?></th>
+                    <th class="text-end"><?php echo Text::_('JBS_MED_PLATFORM_PLAYS'); ?></th>
+                    <th class="text-end fw-bold"><?php echo Text::_('JBS_MED_TOTAL_REACH'); ?></th>
+                    <th></th>
+                </tr></thead>
+                <tbody>
+                <?php foreach ($this->topStudiesCombined as $row) : ?>
+                    <?php $drillUrl = Route::_($baseUrl . '&drilldown=message&id=' . (int) $row['study_id'] . '&preset=' . htmlspecialchars($input->getString('preset', '30d'), ENT_QUOTES) . '&location_id=' . (int) $this->locationId); ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars((string) ($row['title'] ?? 'ID #' . $row['study_id']), ENT_QUOTES); ?></td>
+                        <td class="text-end text-success"><?php echo number_format((int) ($row['local_total'] ?? 0)); ?></td>
+                        <td class="text-end text-info"><?php echo number_format((int) ($row['platform_plays'] ?? 0)); ?></td>
+                        <td class="text-end fw-bold text-body"><?php echo number_format((int) ($row['total'] ?? 0)); ?></td>
+                        <td class="text-end"><a href="<?php echo $drillUrl; ?>" class="btn btn-sm btn-primary py-0 px-2"><?php echo Text::_('JBS_ANA_DRILL_VIEW'); ?></a></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+            <!-- Local-only table (hidden by default) -->
+            <table class="table table-sm table-hover mb-0" id="cwm-topstudies-local-tbl" style="display:none">
+                <thead><tr>
+                    <th><?php echo Text::_('JBS_ANA_MESSAGE_TITLE'); ?></th>
+                    <th class="text-end"><?php echo Text::_('JBS_ANA_COUNT'); ?></th>
+                    <th></th>
+                </tr></thead>
+                <tbody>
+                <?php foreach ($this->topStudies as $row) : ?>
+                    <?php $drillUrl = Route::_($baseUrl . '&drilldown=message&id=' . (int) $row['study_id'] . '&preset=' . htmlspecialchars($input->getString('preset', '30d'), ENT_QUOTES) . '&location_id=' . (int) $this->locationId); ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars((string) ($row['title'] ?? 'ID #' . $row['study_id']), ENT_QUOTES); ?></td>
+                        <td class="text-end text-body"><?php echo number_format((int) ($row['total'] ?? 0)); ?></td>
+                        <td class="text-end"><a href="<?php echo $drillUrl; ?>" class="btn btn-sm btn-primary py-0 px-2"><?php echo Text::_('JBS_ANA_DRILL_VIEW'); ?></a></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?php else : ?>
+            <!-- Local-only table (no platform stats available) -->
             <table class="table table-sm table-hover mb-0">
                 <thead><tr>
                     <th><?php echo Text::_('JBS_ANA_MESSAGE_TITLE'); ?></th>
@@ -388,12 +471,13 @@ $showPeriodStrip     = $hasRealEvents;
                     <?php $drillUrl = Route::_($baseUrl . '&drilldown=message&id=' . (int) $row['study_id'] . '&preset=' . htmlspecialchars($input->getString('preset', '30d'), ENT_QUOTES) . '&location_id=' . (int) $this->locationId); ?>
                     <tr>
                         <td><?php echo htmlspecialchars((string) ($row['title'] ?? 'ID #' . $row['study_id']), ENT_QUOTES); ?></td>
-                        <td class="text-end"><?php echo number_format((int) ($row['total'] ?? 0)); ?></td>
-                        <td class="text-end"><a href="<?php echo $drillUrl; ?>" class="btn btn-xs btn-outline-primary btn-sm py-0 px-2"><?php echo Text::_('JBS_ANA_DRILL_VIEW'); ?></a></td>
+                        <td class="text-end text-body"><?php echo number_format((int) ($row['total'] ?? 0)); ?></td>
+                        <td class="text-end"><a href="<?php echo $drillUrl; ?>" class="btn btn-sm btn-primary py-0 px-2"><?php echo Text::_('JBS_ANA_DRILL_VIEW'); ?></a></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
             </table>
+            <?php endif; ?>
         </div>
     </div>
     <?php endif; ?>
@@ -403,7 +487,7 @@ $showPeriodStrip     = $hasRealEvents;
         <div class="col-12 col-md-6">
             <div class="card h-100">
                 <div class="card-header fw-semibold">
-                    <i class="icon-share me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_TRAFFIC_SOURCES'); ?>
+                    <i class="icon-share me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_TRAFFIC_SOURCES'); ?><?php echo $localBadge; ?>
                 </div>
                 <div class="card-body d-flex justify-content-center">
                     <?php if (!empty($this->referrerBreakdown)) : ?>
@@ -420,7 +504,7 @@ $showPeriodStrip     = $hasRealEvents;
         <div class="col-12 col-md-6">
             <div class="card h-100">
                 <div class="card-header fw-semibold">
-                    <i class="icon-laptop me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_DEVICE_BREAKDOWN'); ?>
+                    <i class="icon-laptop me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_DEVICE_BREAKDOWN'); ?><?php echo $localBadge; ?>
                 </div>
                 <div class="card-body d-flex justify-content-center">
                     <?php if (!empty($this->deviceBreakdown)) : ?>
@@ -441,7 +525,7 @@ $showPeriodStrip     = $hasRealEvents;
         <?php if (!empty($this->browserBreakdown)) : ?>
         <div class="col-12 col-md-4">
             <div class="card h-100">
-                <div class="card-header fw-semibold"><?php echo Text::_('JBS_ANA_BROWSERS'); ?></div>
+                <div class="card-header fw-semibold"><?php echo Text::_('JBS_ANA_BROWSERS'); ?><?php echo $localBadge; ?></div>
                 <div class="card-body p-0">
                     <table class="table table-sm table-hover mb-0">
                         <thead><tr><th><?php echo Text::_('JBS_ANA_BROWSER'); ?></th><th class="text-end"><?php echo Text::_('JBS_ANA_COUNT'); ?></th></tr></thead>
@@ -449,7 +533,7 @@ $showPeriodStrip     = $hasRealEvents;
                         <?php foreach ($this->browserBreakdown as $row) : ?>
                             <tr>
                                 <td><?php echo htmlspecialchars((string) ($row['browser'] ?? 'other'), ENT_QUOTES); ?></td>
-                                <td class="text-end"><?php echo number_format((int) ($row['count'] ?? 0)); ?></td>
+                                <td class="text-end text-body"><?php echo number_format((int) ($row['count'] ?? 0)); ?></td>
                             </tr>
                         <?php endforeach; ?>
                         </tbody>
@@ -462,7 +546,7 @@ $showPeriodStrip     = $hasRealEvents;
         <?php if (!empty($this->osBreakdown)) : ?>
         <div class="col-12 col-md-4">
             <div class="card h-100">
-                <div class="card-header fw-semibold"><?php echo Text::_('JBS_ANA_OS'); ?></div>
+                <div class="card-header fw-semibold"><?php echo Text::_('JBS_ANA_OS'); ?><?php echo $localBadge; ?></div>
                 <div class="card-body p-0">
                     <table class="table table-sm table-hover mb-0">
                         <thead><tr><th><?php echo Text::_('JBS_ANA_OPERATING_SYSTEM'); ?></th><th class="text-end"><?php echo Text::_('JBS_ANA_COUNT'); ?></th></tr></thead>
@@ -470,7 +554,7 @@ $showPeriodStrip     = $hasRealEvents;
                         <?php foreach ($this->osBreakdown as $row) : ?>
                             <tr>
                                 <td><?php echo htmlspecialchars((string) ($row['os'] ?? 'other'), ENT_QUOTES); ?></td>
-                                <td class="text-end"><?php echo number_format((int) ($row['count'] ?? 0)); ?></td>
+                                <td class="text-end text-body"><?php echo number_format((int) ($row['count'] ?? 0)); ?></td>
                             </tr>
                         <?php endforeach; ?>
                         </tbody>
@@ -483,7 +567,7 @@ $showPeriodStrip     = $hasRealEvents;
         <?php if (!empty($this->languageBreakdown)) : ?>
         <div class="col-12 col-md-4">
             <div class="card h-100">
-                <div class="card-header fw-semibold"><?php echo Text::_('JBS_ANA_LANGUAGES'); ?></div>
+                <div class="card-header fw-semibold"><?php echo Text::_('JBS_ANA_LANGUAGES'); ?><?php echo $localBadge; ?></div>
                 <div class="card-body p-0">
                     <table class="table table-sm table-hover mb-0">
                         <thead><tr><th><?php echo Text::_('JBS_ANA_LANGUAGE'); ?></th><th class="text-end"><?php echo Text::_('JBS_ANA_COUNT'); ?></th></tr></thead>
@@ -491,7 +575,7 @@ $showPeriodStrip     = $hasRealEvents;
                         <?php foreach ($this->languageBreakdown as $row) : ?>
                             <tr>
                                 <td><?php echo htmlspecialchars((string) ($row['language'] ?? ''), ENT_QUOTES); ?></td>
-                                <td class="text-end"><?php echo number_format((int) ($row['count'] ?? 0)); ?></td>
+                                <td class="text-end text-body"><?php echo number_format((int) ($row['count'] ?? 0)); ?></td>
                             </tr>
                         <?php endforeach; ?>
                         </tbody>
@@ -506,7 +590,7 @@ $showPeriodStrip     = $hasRealEvents;
     <?php if (!empty($this->utmBreakdown)) : ?>
     <div class="card mb-3">
         <div class="card-header fw-semibold">
-            <i class="icon-tag me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_UTM_CAMPAIGNS'); ?>
+            <i class="icon-tag me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_UTM_CAMPAIGNS'); ?><?php echo $localBadge; ?>
         </div>
         <div class="card-body p-0">
             <table class="table table-sm table-hover mb-0">
@@ -524,7 +608,7 @@ $showPeriodStrip     = $hasRealEvents;
                         <td><?php echo htmlspecialchars((string) ($row['utm_source'] ?? ''), ENT_QUOTES); ?></td>
                         <td><?php echo htmlspecialchars((string) ($row['utm_medium'] ?? ''), ENT_QUOTES); ?></td>
                         <td><?php echo htmlspecialchars((string) ($row['utm_campaign'] ?? ''), ENT_QUOTES); ?></td>
-                        <td class="text-end"><?php echo number_format((int) ($row['count'] ?? 0)); ?></td>
+                        <td class="text-end text-body"><?php echo number_format((int) ($row['count'] ?? 0)); ?></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>

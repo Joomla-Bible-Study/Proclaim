@@ -27,6 +27,17 @@ $preset  = Factory::getApplication()->getInput()->getString('preset', '30d');
     <?php if (empty($this->seriesList)) : ?>
         <div class="card-body"><p class="text-muted mb-0"><?php echo Text::_('JBS_ANA_NO_DATA'); ?></p></div>
     <?php else : ?>
+    <?php
+        $hasPlatform = false;
+
+        foreach ($this->seriesList as $r) {
+            if ((int) ($r['platform_plays'] ?? 0) > 0) {
+                $hasPlatform = true;
+
+                break;
+            }
+        }
+    ?>
     <div class="card-body p-0">
         <table class="table table-sm table-hover mb-0">
             <thead>
@@ -34,14 +45,23 @@ $preset  = Factory::getApplication()->getInput()->getString('preset', '30d');
                     <th><?php echo Text::_('JBS_ANA_SERIES_TITLE'); ?></th>
                     <th class="text-center"><?php echo Text::_('JBS_ANA_MESSAGES'); ?></th>
                     <th class="text-end"><?php echo Text::_('JBS_ANA_VIEWS'); ?></th>
-                    <th class="text-end"><?php echo Text::_('JBS_ANA_PLAYS'); ?></th>
+                    <th class="text-end"><?php echo Text::_('JBS_MED_LOCAL_PLAYS'); ?></th>
+                    <?php if ($hasPlatform) : ?>
+                    <th class="text-end"><?php echo Text::_('JBS_MED_PLATFORM_PLAYS'); ?></th>
+                    <th class="text-end"><?php echo Text::_('JBS_MED_TOTAL_REACH'); ?></th>
+                    <?php endif; ?>
                     <th class="text-end"><?php echo Text::_('JBS_ANA_DOWNLOADS'); ?></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
             <?php foreach ($this->seriesList as $row) : ?>
-                <?php $drillUrl = Route::_($baseUrl . '&drilldown=series&id=' . (int) $row['series_id'] . '&preset=' . $preset . '&location_id=' . (int) $this->locationId); ?>
+                <?php
+                    $drillUrl       = Route::_($baseUrl . '&drilldown=series&id=' . (int) $row['series_id'] . '&preset=' . $preset . '&location_id=' . (int) $this->locationId);
+                    $platformPlays  = (int) ($row['platform_plays'] ?? 0);
+                    $localPlays     = (int) ($row['plays'] ?? 0);
+                    $totalReach     = $localPlays + $platformPlays;
+                ?>
                 <tr>
                     <td>
                         <a href="<?php echo $drillUrl; ?>" class="fw-semibold text-decoration-none">
@@ -49,11 +69,15 @@ $preset  = Factory::getApplication()->getInput()->getString('preset', '30d');
                         </a>
                     </td>
                     <td class="text-center text-muted"><?php echo (int) ($row['message_count'] ?? 0); ?></td>
-                    <td class="text-end"><?php echo number_format((int) ($row['views'] ?? 0)); ?></td>
-                    <td class="text-end text-success"><?php echo number_format((int) ($row['plays'] ?? 0)); ?></td>
+                    <td class="text-end text-body"><?php echo number_format((int) ($row['views'] ?? 0)); ?></td>
+                    <td class="text-end text-success"><?php echo number_format($localPlays); ?></td>
+                    <?php if ($hasPlatform) : ?>
+                    <td class="text-end text-info"><?php echo $platformPlays > 0 ? number_format($platformPlays) : '—'; ?></td>
+                    <td class="text-end fw-bold text-body"><?php echo number_format($totalReach); ?></td>
+                    <?php endif; ?>
                     <td class="text-end text-warning"><?php echo number_format((int) ($row['downloads'] ?? 0)); ?></td>
                     <td class="text-end">
-                        <a href="<?php echo $drillUrl; ?>" class="btn btn-sm btn-outline-primary py-0 px-2">
+                        <a href="<?php echo $drillUrl; ?>" class="btn btn-sm btn-primary py-0 px-2">
                             <?php echo Text::_('JBS_ANA_DRILL_VIEW'); ?> &rsaquo;
                         </a>
                     </td>

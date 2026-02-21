@@ -51,13 +51,28 @@ $mediaChartJson = json_encode(['labels' => $mediaLabels, 'data' => $mediaPlays],
     <?php endif; ?>
 
     <!-- Table -->
+    <?php
+        $hasPlatform = false;
+
+        foreach ($this->mediaTypeBreakdown as $r) {
+            if ((int) ($r['platform_plays'] ?? 0) > 0) {
+                $hasPlatform = true;
+
+                break;
+            }
+        }
+    ?>
     <div class="card-body p-0">
         <table class="table table-sm table-hover mb-0">
             <thead>
                 <tr>
                     <th><?php echo Text::_('JBS_ANA_SERVER'); ?></th>
                     <th><?php echo Text::_('JBS_ANA_SERVER_TYPE'); ?></th>
-                    <th class="text-end"><?php echo Text::_('JBS_ANA_PLAYS'); ?></th>
+                    <th class="text-end"><?php echo Text::_('JBS_MED_LOCAL_PLAYS'); ?></th>
+                    <?php if ($hasPlatform) : ?>
+                    <th class="text-end"><?php echo Text::_('JBS_MED_PLATFORM_PLAYS'); ?></th>
+                    <th class="text-end"><?php echo Text::_('JBS_MED_TOTAL_REACH'); ?></th>
+                    <?php endif; ?>
                     <th class="text-end"><?php echo Text::_('JBS_ANA_DOWNLOADS'); ?></th>
                     <th class="text-end"><?php echo Text::_('JBS_ANA_UNIQUE_MEDIA'); ?></th>
                     <th class="text-end"><?php echo Text::_('JBS_ANA_MESSAGES'); ?></th>
@@ -66,15 +81,25 @@ $mediaChartJson = json_encode(['labels' => $mediaLabels, 'data' => $mediaPlays],
             </thead>
             <tbody>
             <?php
-            $grandTotal = array_sum(array_column($this->mediaTypeBreakdown, 'plays')) + array_sum(array_column($this->mediaTypeBreakdown, 'downloads'));
+            $grandTotal = array_sum(array_column($this->mediaTypeBreakdown, 'plays'))
+                + array_sum(array_column($this->mediaTypeBreakdown, 'downloads'))
+                + ($hasPlatform ? array_sum(array_column($this->mediaTypeBreakdown, 'platform_plays')) : 0);
+
             foreach ($this->mediaTypeBreakdown as $row) :
-                $rowTotal = (int) ($row['plays'] ?? 0) + (int) ($row['downloads'] ?? 0);
-                $pct      = $grandTotal > 0 ? round($rowTotal / $grandTotal * 100, 1) : 0;
+                $localPlays    = (int) ($row['plays'] ?? 0);
+                $platformPlays = (int) ($row['platform_plays'] ?? 0);
+                $totalReach    = $localPlays + $platformPlays;
+                $rowTotal      = $totalReach + (int) ($row['downloads'] ?? 0);
+                $pct           = $grandTotal > 0 ? round($rowTotal / $grandTotal * 100, 1) : 0;
             ?>
                 <tr>
                     <td class="fw-semibold"><?php echo htmlspecialchars((string) ($row['server_name'] ?? 'Unknown'), ENT_QUOTES); ?></td>
                     <td class="text-muted small"><?php echo htmlspecialchars((string) ($row['server_type'] ?? ''), ENT_QUOTES); ?></td>
-                    <td class="text-end text-success"><?php echo number_format((int) ($row['plays'] ?? 0)); ?></td>
+                    <td class="text-end text-success"><?php echo number_format($localPlays); ?></td>
+                    <?php if ($hasPlatform) : ?>
+                    <td class="text-end text-info"><?php echo $platformPlays > 0 ? number_format($platformPlays) : '—'; ?></td>
+                    <td class="text-end fw-bold text-body"><?php echo number_format($totalReach); ?></td>
+                    <?php endif; ?>
                     <td class="text-end text-warning"><?php echo number_format((int) ($row['downloads'] ?? 0)); ?></td>
                     <td class="text-end text-muted"><?php echo number_format((int) ($row['media_count'] ?? 0)); ?></td>
                     <td class="text-end text-muted"><?php echo number_format((int) ($row['study_count'] ?? 0)); ?></td>

@@ -82,12 +82,76 @@ $tsJson = json_encode([
 </div>
 <?php endif; ?>
 
-<!-- Media files breakdown -->
+<!-- Unified media files breakdown (local + platform stats merged) -->
 <?php if (!empty($this->studyMedia)) : ?>
-<div class="card mb-3">
-    <div class="card-header fw-semibold">
-        <i class="icon-play me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_MEDIA_FILES'); ?>
-        <span class="text-muted fw-normal small ms-2"><?php echo Text::_('JBS_ANA_MEDIA_HOW_VIBING'); ?></span>
+<?php
+    // Check if any media file has platform stats
+    $hasPlatformStats = false;
+    $hasExternalMedia = false;
+    $allExternal      = true;
+
+    foreach ($this->studyMedia as $mf) {
+        if ((int) ($mf['platform_play_count'] ?? 0) > 0) {
+            $hasPlatformStats = true;
+        }
+
+        if ((int) ($mf['content_origin'] ?? 0) === 1) {
+            $hasExternalMedia = true;
+        } else {
+            $allExternal = false;
+        }
+    }
+
+    // Build platform stats index by media_id for additional detail columns
+    $platformIndex = [];
+
+    if (!empty($this->studyPlatformStats)) {
+        foreach ($this->studyPlatformStats as $ps) {
+            $platformIndex[(int) $ps['media_id']] = $ps;
+        }
+    }
+
+    // Build sync-capable media list for JS (Vimeo/Wistia support API sync)
+    $syncMedia     = [];
+    $syncPlatforms = ['vimeo', 'wistia'];
+
+    foreach ($this->studyMedia as $mf) {
+        if ((int) ($mf['content_origin'] ?? 0) === 1) {
+            continue;
+        }
+
+        $platform = '';
+
+        if (isset($platformIndex[(int) $mf['media_id']])) {
+            $platform = strtolower((string) ($platformIndex[(int) $mf['media_id']]['platform'] ?? ''));
+        }
+
+        if (in_array($platform, $syncPlatforms, true)) {
+            $syncMedia[] = [
+                'mediaId'    => (int) $mf['media_id'],
+                'platform'   => $platform,
+                'canSync'    => true,
+                'serverName' => (string) ($mf['server_name'] ?? ''),
+            ];
+        }
+    }
+
+    $syncMediaJson = htmlspecialchars(json_encode($syncMedia, JSON_THROW_ON_ERROR), ENT_QUOTES);
+?>
+<div class="card mb-3" data-sync-media="<?php echo $syncMediaJson; ?>">
+    <div class="card-header fw-semibold d-flex align-items-center">
+        <div>
+            <i class="icon-play me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_MEDIA_FILES'); ?>
+            <span class="text-muted fw-normal small ms-2"><?php echo Text::_('JBS_ANA_MEDIA_HOW_VIBING'); ?></span>
+        </div>
+        <?php if (!$allExternal && !empty($this->studyInfo)) : ?>
+        <button type="button" class="btn btn-sm btn-outline-secondary ms-auto"
+                data-desc-action="true"
+                data-study-id="<?php echo (int) $this->studyInfo->id; ?>"
+                title="<?php echo Text::_('JBS_MED_SYNC_DESC'); ?>">
+            <i class="icon-copy me-1" aria-hidden="true"></i><?php echo Text::_('JBS_MED_COPY_DESC'); ?>
+        </button>
+        <?php endif; ?>
     </div>
     <div class="card-body p-0">
         <table class="table table-sm table-hover mb-0">
@@ -96,27 +160,47 @@ $tsJson = json_encode([
                     <th>#</th>
                     <th><?php echo Text::_('JBS_ANA_SERVER'); ?></th>
                     <th><?php echo Text::_('JBS_ANA_MEDIA_LABEL'); ?></th>
+                    <th class="text-end"><?php echo Text::_('JBS_MED_LOCAL_PLAYS'); ?></th>
+                    <?php if ($hasPlatformStats) : ?>
+                    <th class="text-end"><?php echo Text::_('JBS_MED_PLATFORM_PLAYS'); ?></th>
+                    <th class="text-end"><?php echo Text::_('JBS_MED_EXTERNAL_PLAYS'); ?></th>
+                    <th class="text-end"><?php echo Text::_('JBS_MED_TOTAL_REACH'); ?></th>
+                    <?php endif; ?>
                     <th class="text-end"><?php echo Text::_('JBS_ANA_PERIOD_PLAYS'); ?></th>
-                    <th class="text-end"><?php echo Text::_('JBS_ANA_ALL_TIME_PLAYS'); ?></th>
-                    <th class="text-end"><?php echo Text::_('JBS_ANA_PERIOD_DOWNLOADS'); ?></th>
                     <th class="text-end"><?php echo Text::_('JBS_ANA_ALL_TIME_DOWNLOADS'); ?></th>
+                    <th class="text-center"><?php echo Text::_('JBS_MED_CONTENT_ORIGIN'); ?></th>
                 </tr>
             </thead>
             <tbody>
             <?php foreach ($this->studyMedia as $i => $mf) : ?>
                 <?php
-                    $mparams    = new Registry($mf['media_params'] ?? '');
-                    $mediaLabel = $mparams->get('media_button_text', '') ?: '#' . (int) $mf['media_id'];
-                    $serverName = htmlspecialchars((string) ($mf['server_name'] ?? '—'), ENT_QUOTES);
+                    $mparams         = new Registry($mf['media_params'] ?? '');
+                    $mediaLabel      = $mparams->get('media_button_text', '') ?: '#' . (int) $mf['media_id'];
+                    $serverName      = htmlspecialchars((string) ($mf['server_name'] ?? '—'), ENT_QUOTES);
+                    $isExternal      = (int) ($mf['content_origin'] ?? 0) === 1;
+                    $platformPlays   = (int) ($mf['platform_play_count'] ?? 0);
+                    $externalPlays   = (int) ($mf['external_plays'] ?? 0);
+                    $totalReach      = (int) ($mf['total_reach'] ?? 0);
                 ?>
-                <tr>
+                <tr<?php echo $isExternal ? ' class="table-secondary"' : ''; ?>>
                     <td class="text-muted"><?php echo $i + 1; ?></td>
                     <td class="small"><?php echo $serverName; ?></td>
                     <td><?php echo htmlspecialchars((string) $mediaLabel, ENT_QUOTES); ?></td>
-                    <td class="text-end text-success fw-semibold"><?php echo number_format((int) ($mf['period_plays'] ?? 0)); ?></td>
-                    <td class="text-end text-muted small"><?php echo number_format((int) ($mf['all_time_plays'] ?? 0)); ?></td>
-                    <td class="text-end text-warning"><?php echo number_format((int) ($mf['period_downloads'] ?? 0)); ?></td>
-                    <td class="text-end text-muted small"><?php echo number_format((int) ($mf['all_time_downloads'] ?? 0)); ?></td>
+                    <td class="text-end text-success fw-semibold"><?php echo number_format((int) ($mf['all_time_plays'] ?? 0)); ?></td>
+                    <?php if ($hasPlatformStats) : ?>
+                    <td class="text-end text-body"><?php echo $platformPlays > 0 ? number_format($platformPlays) : '—'; ?></td>
+                    <td class="text-end text-info fw-semibold"><?php echo $externalPlays > 0 ? number_format($externalPlays) : '—'; ?></td>
+                    <td class="text-end fw-bold text-body"><?php echo $totalReach > 0 ? number_format($totalReach) : '—'; ?></td>
+                    <?php endif; ?>
+                    <td class="text-end text-muted small"><?php echo number_format((int) ($mf['period_plays'] ?? 0)); ?></td>
+                    <td class="text-end text-warning"><?php echo number_format((int) ($mf['all_time_downloads'] ?? 0)); ?></td>
+                    <td class="text-center">
+                        <?php if ($isExternal) : ?>
+                            <span class="badge bg-secondary"><?php echo Text::_('JBS_MED_ORIGIN_EXTERNAL'); ?></span>
+                        <?php else : ?>
+                            <span class="badge bg-success"><?php echo Text::_('JBS_MED_ORIGIN_MINISTRY'); ?></span>
+                        <?php endif; ?>
+                    </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
@@ -125,7 +209,7 @@ $tsJson = json_encode([
 </div>
 <?php endif; ?>
 
-<!-- Platform stats for this message's media files -->
+<!-- Platform stats detail for this message's media files -->
 <?php if (!empty($this->studyPlatformStats)) : ?>
 <div class="card mb-3">
     <div class="card-header fw-semibold">
@@ -165,13 +249,13 @@ $tsJson = json_encode([
                 <tr>
                     <td><span class="badge bg-secondary"><?php echo htmlspecialchars(ucfirst((string) ($ps['platform'] ?? '')), ENT_QUOTES); ?></span></td>
                     <td class="small"><?php echo htmlspecialchars((string) ($ps['server_name'] ?? ''), ENT_QUOTES); ?></td>
-                    <td class="text-end"><?php echo number_format((int) ($ps['view_count'] ?? 0)); ?></td>
-                    <td class="text-end"><?php echo number_format((int) ($ps['play_count'] ?? 0)); ?></td>
-                    <td class="text-end"><?php echo $ps['like_count'] !== null ? number_format((int) $ps['like_count']) : '—'; ?></td>
-                    <td class="text-end"><?php echo $ps['comment_count'] !== null ? number_format((int) $ps['comment_count']) : '—'; ?></td>
+                    <td class="text-end text-body"><?php echo number_format((int) ($ps['view_count'] ?? 0)); ?></td>
+                    <td class="text-end text-body"><?php echo number_format((int) ($ps['play_count'] ?? 0)); ?></td>
+                    <td class="text-end text-body"><?php echo $ps['like_count'] !== null ? number_format((int) $ps['like_count']) : '—'; ?></td>
+                    <td class="text-end text-body"><?php echo $ps['comment_count'] !== null ? number_format((int) $ps['comment_count']) : '—'; ?></td>
                     <?php if ($hasWistia) : ?>
-                    <td class="text-end"><?php echo $ps['hours_watched'] !== null ? number_format((float) $ps['hours_watched'], 1) : '—'; ?></td>
-                    <td class="text-end"><?php echo $ps['engagement'] !== null ? number_format((float) $ps['engagement'], 1) . '%' : '—'; ?></td>
+                    <td class="text-end text-body"><?php echo $ps['hours_watched'] !== null ? number_format((float) $ps['hours_watched'], 1) : '—'; ?></td>
+                    <td class="text-end text-body"><?php echo $ps['engagement'] !== null ? number_format((float) $ps['engagement'], 1) . '%' : '—'; ?></td>
                     <?php endif; ?>
                     <td class="text-end text-muted small"><?php echo $ps['synced_at'] ? htmlspecialchars(substr((string) $ps['synced_at'], 0, 16), ENT_QUOTES) : '—'; ?></td>
                 </tr>

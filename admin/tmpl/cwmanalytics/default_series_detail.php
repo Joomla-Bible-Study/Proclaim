@@ -31,6 +31,17 @@ $seriesTitle  = htmlspecialchars((string) ($this->seriesInfo->title ?? ''), ENT_
     <?php if (empty($this->seriesMessages)) : ?>
         <div class="card-body"><p class="text-muted mb-0"><?php echo Text::_('JBS_ANA_NO_DATA'); ?></p></div>
     <?php else : ?>
+    <?php
+        $hasPlatform = false;
+
+        foreach ($this->seriesMessages as $r) {
+            if ((int) ($r['platform_plays'] ?? 0) > 0) {
+                $hasPlatform = true;
+
+                break;
+            }
+        }
+    ?>
     <div class="card-body p-0">
         <table class="table table-sm table-hover mb-0">
             <thead>
@@ -39,27 +50,44 @@ $seriesTitle  = htmlspecialchars((string) ($this->seriesInfo->title ?? ''), ENT_
                     <th><?php echo Text::_('JBS_ANA_DATE'); ?></th>
                     <th class="text-end"><?php echo Text::_('JBS_ANA_ALL_TIME_VIEWS'); ?></th>
                     <th class="text-end"><?php echo Text::_('JBS_ANA_VIEWS'); ?></th>
-                    <th class="text-end"><?php echo Text::_('JBS_ANA_PLAYS'); ?></th>
+                    <th class="text-end"><?php echo Text::_('JBS_MED_LOCAL_PLAYS'); ?></th>
+                    <?php if ($hasPlatform) : ?>
+                    <th class="text-end"><?php echo Text::_('JBS_MED_PLATFORM_PLAYS'); ?></th>
+                    <th class="text-end"><?php echo Text::_('JBS_MED_TOTAL_REACH'); ?></th>
+                    <?php endif; ?>
                     <th class="text-end"><?php echo Text::_('JBS_ANA_DOWNLOADS'); ?></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
             <?php foreach ($this->seriesMessages as $row) : ?>
-                <?php $drillUrl = Route::_($baseUrl . '&drilldown=message&id=' . (int) $row['study_id'] . '&preset=' . $preset . '&location_id=' . (int) $this->locationId); ?>
-                <tr>
+                <?php
+                    $drillUrl      = Route::_($baseUrl . '&drilldown=message&id=' . (int) $row['study_id'] . '&preset=' . $preset . '&location_id=' . (int) $this->locationId);
+                    $platformPlays = (int) ($row['platform_plays'] ?? 0);
+                    $localPlays    = (int) ($row['plays'] ?? 0);
+                    $totalReach    = $localPlays + $platformPlays;
+                ?>
+                <?php $isArchived = (int) ($row['published'] ?? 1) === 2; ?>
+                <tr<?php echo $isArchived ? ' class="table-secondary"' : ''; ?>>
                     <td>
                         <a href="<?php echo $drillUrl; ?>" class="fw-semibold text-decoration-none">
                             <?php echo htmlspecialchars((string) ($row['title'] ?? ''), ENT_QUOTES); ?>
                         </a>
+                        <?php if ($isArchived) : ?>
+                            <span class="badge bg-warning text-dark ms-1"><?php echo Text::_('JBS_ANA_STATUS_ARCHIVED'); ?></span>
+                        <?php endif; ?>
                     </td>
                     <td class="text-muted small"><?php echo htmlspecialchars(substr((string) ($row['study_date'] ?? ''), 0, 10), ENT_QUOTES); ?></td>
                     <td class="text-end text-muted small"><?php echo number_format((int) ($row['all_time_views'] ?? 0)); ?></td>
-                    <td class="text-end"><?php echo number_format((int) ($row['views'] ?? 0)); ?></td>
-                    <td class="text-end text-success"><?php echo number_format((int) ($row['plays'] ?? 0)); ?></td>
+                    <td class="text-end text-body"><?php echo number_format((int) ($row['views'] ?? 0)); ?></td>
+                    <td class="text-end text-success"><?php echo number_format($localPlays); ?></td>
+                    <?php if ($hasPlatform) : ?>
+                    <td class="text-end text-info"><?php echo $platformPlays > 0 ? number_format($platformPlays) : '—'; ?></td>
+                    <td class="text-end fw-bold text-body"><?php echo number_format($totalReach); ?></td>
+                    <?php endif; ?>
                     <td class="text-end text-warning"><?php echo number_format((int) ($row['downloads'] ?? 0)); ?></td>
                     <td class="text-end">
-                        <a href="<?php echo $drillUrl; ?>" class="btn btn-sm btn-outline-primary py-0 px-2">
+                        <a href="<?php echo $drillUrl; ?>" class="btn btn-sm btn-primary py-0 px-2">
                             <?php echo Text::_('JBS_ANA_DRILL_VIEW'); ?> &rsaquo;
                         </a>
                     </td>
