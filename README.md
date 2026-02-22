@@ -10,7 +10,7 @@ A Joomla 5+ component for managing and displaying Bible studies and sermons, dev
 
 | Latest Release                                                                                                                                                    | License                                                                                                                          | Joomla                                                                                    |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
-| [![Latest Release](https://img.shields.io/github/v/release/Joomla-Bible-Study/Proclaim)](https://github.com/Joomla-Bible-Study/Proclaim/releases/latest) | [![License](https://img.shields.io/github/license/Joomla-Bible-Study/Proclaim)](LICENSE.txt) | [![Joomla](https://img.shields.io/badge/Joomla-5.1.0+-blue)](https://www.joomla.org/) |
+| [![Latest Release](https://img.shields.io/github/v/release/Joomla-Bible-Study/Proclaim)](https://github.com/Joomla-Bible-Study/Proclaim/releases/latest) | [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue)](LICENSE.txt) | [![Joomla](https://img.shields.io/badge/Joomla-5.1.0+-blue)](https://www.joomla.org/) |
 
 | Branch      | Description                                           |
 |-------------|-------------------------------------------------------|
@@ -27,7 +27,7 @@ This repository is the source code for development. For a ready-to-install packa
 ## Features
 
 - **Content Organization** -- Manage studies by series, teachers, locations, and topics
-- **Media Support** -- Audio playback, YouTube, Vimeo, Wistia, and Resi.io integration
+- **Media Support** -- Audio playback, YouTube, Vimeo, Wistia, Resi.io, Dailymotion, Rumble, SoundCloud, and Facebook integration
 - **Podcasting** -- Built-in podcast feed generation with per-series RSS
 - **Multi-Campus** -- Location-based content isolation with per-campus access levels
 - **Analytics** -- Play/download tracking, Chart.js dashboard, CSV export, printable reports
