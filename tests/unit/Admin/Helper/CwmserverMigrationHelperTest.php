@@ -198,6 +198,11 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
                 'https://d123456.cloudfront.net/media/sermon.mp4', '', '', '', 'local',
             ],
 
+            // Player type 7 = legacy audio
+            'player type 7 = local' => [
+                'sermon.mp3', '', 'audio/mpeg', '7', 'local',
+            ],
+
             // Unknown
             'empty everything' => [
                 '', '', '', '', 'unknown',
@@ -246,6 +251,96 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
             ['article_id' => '', 'docMan_id' => '0', 'virtueMart_id' => '7']
         );
         self::assertSame('virtuemart', $result);
+    }
+
+    // -------------------------------------------------------------------------
+    // detectContentType() with AllVideos shortcodes
+    // -------------------------------------------------------------------------
+
+    /**
+     * @dataProvider allVideosShortcodeProvider
+     */
+    public function testDetectContentTypeWithAllVideosShortcode(
+        string $mediacode,
+        string $player,
+        string $expected
+    ): void {
+        $result = CwmserverMigrationHelper::detectContentType('', $mediacode, '', $player);
+        self::assertSame($expected, $result);
+    }
+
+    /**
+     * @return array<string, array{string, string, string}>
+     */
+    public static function allVideosShortcodeProvider(): array
+    {
+        return [
+            'youtube shortcode' => [
+                '{youtube}dQw4w9WgXcQ{/youtube}', '2', 'youtube',
+            ],
+            'youtubewide shortcode' => [
+                '{youtubewide}dQw4w9WgXcQ{/youtubewide}', '3', 'youtube',
+            ],
+            'youtubehd shortcode' => [
+                '{youtubehd}dQw4w9WgXcQ{/youtubehd}', '2', 'youtube',
+            ],
+            'vimeo shortcode' => [
+                '{vimeo}123456789{/vimeo}', '2', 'vimeo',
+            ],
+            'dailymotion shortcode' => [
+                '{dailymotion}x7tgad0{/dailymotion}', '2', 'dailymotion',
+            ],
+            'soundcloud shortcode' => [
+                '{soundcloud}artist/track{/soundcloud}', '3', 'soundcloud',
+            ],
+            'rumble shortcode' => [
+                '{rumble}v1abc23{/rumble}', '2', 'rumble',
+            ],
+            'mp3 shortcode = local' => [
+                '{mp3}sermon.mp3{/mp3}', '2', 'local',
+            ],
+            'mp4 shortcode = local' => [
+                '{mp4}sermon.mp4{/mp4}', '3', 'local',
+            ],
+            'flv shortcode = local' => [
+                '{flv}video.flv{/flv}', '2', 'local',
+            ],
+            'player 2 unrecognized shortcode = embed' => [
+                '{customtag}something{/customtag}', '2', 'embed',
+            ],
+            'player 3 unrecognized shortcode = embed' => [
+                '{unknowntag}data{/unknowntag}', '3', 'embed',
+            ],
+            'youtube dash placeholder (use filename)' => [
+                '{youtube}-{/youtube}', '2', 'youtube',
+            ],
+            'vimeo dash placeholder' => [
+                '{vimeo}-{/vimeo}', '3', 'vimeo',
+            ],
+        ];
+    }
+
+    public function testAllVideosShortcodeOverridesUrlInFilename(): void
+    {
+        // Shortcode in mediacode says YouTube, even though filename is empty
+        $result = CwmserverMigrationHelper::detectContentType(
+            '',
+            '{youtube}dQw4w9WgXcQ{/youtube}',
+            '',
+            '2'
+        );
+        self::assertSame('youtube', $result);
+    }
+
+    public function testPlayerType7DetectsAsLocal(): void
+    {
+        $result = CwmserverMigrationHelper::detectContentType(
+            'sermon.mp3',
+            '',
+            'audio/mpeg',
+            '7'
+        );
+        self::assertSame('local', $result);
     }
 
     public function testDetectContentTypeLegacyIdTakesPriorityOverUrl(): void
@@ -690,5 +785,134 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
 
         // Also includes 'unknown'
         self::assertArrayHasKey('unknown', CwmserverMigrationHelper::TYPE_LABELS);
+    }
+
+    // -------------------------------------------------------------------------
+    // extractAllVideosContent() tests
+    // -------------------------------------------------------------------------
+
+    /**
+     * @dataProvider allVideosContentProvider
+     */
+    public function testExtractAllVideosContent(string $mediacode, string $expected): void
+    {
+        $result = CwmserverMigrationHelper::extractAllVideosContent($mediacode);
+        self::assertSame($expected, $result);
+    }
+
+    /**
+     * @return array<string, array{string, string}>
+     */
+    public static function allVideosContentProvider(): array
+    {
+        return [
+            'youtube bare ID' => [
+                '{youtube}dQw4w9WgXcQ{/youtube}', 'dQw4w9WgXcQ',
+            ],
+            'vimeo numeric ID' => [
+                '{vimeo}123456789{/vimeo}', '123456789',
+            ],
+            'dailymotion ID' => [
+                '{dailymotion}x7tgad0{/dailymotion}', 'x7tgad0',
+            ],
+            'mp3 filename' => [
+                '{mp3}sermon.mp3{/mp3}', 'sermon.mp3',
+            ],
+            'dash placeholder returns empty' => [
+                '{youtube}-{/youtube}', '',
+            ],
+            'vimeo dash placeholder returns empty' => [
+                '{vimeo}-{/vimeo}', '',
+            ],
+            'empty mediacode' => [
+                '', '',
+            ],
+            'no shortcode tags' => [
+                '<iframe src="https://example.com"></iframe>', '',
+            ],
+            'URL inside shortcode' => [
+                '{youtube}https://youtu.be/dQw4w9WgXcQ{/youtube}', 'https://youtu.be/dQw4w9WgXcQ',
+            ],
+        ];
+    }
+
+    // -------------------------------------------------------------------------
+    // transformParams() with AllVideos bare IDs
+    // -------------------------------------------------------------------------
+
+    public function testTransformParamsYoutubeFromAllVideos(): void
+    {
+        $params = [
+            'filename'  => '',
+            'mediacode' => '{youtube}dQw4w9WgXcQ{/youtube}',
+            'player'    => '2',
+        ];
+
+        $result = CwmserverMigrationHelper::transformParams($params, 'youtube');
+
+        self::assertSame('//www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1', $result['filename']);
+        self::assertSame('1', $result['player']);
+        self::assertSame('', $result['mediacode']);
+    }
+
+    public function testTransformParamsVimeoFromAllVideos(): void
+    {
+        $params = [
+            'filename'  => '',
+            'mediacode' => '{vimeo}123456789{/vimeo}',
+            'player'    => '2',
+        ];
+
+        $result = CwmserverMigrationHelper::transformParams($params, 'vimeo');
+
+        self::assertSame('//player.vimeo.com/video/123456789', $result['filename']);
+        self::assertSame('1', $result['player']);
+        self::assertSame('', $result['mediacode']);
+    }
+
+    public function testTransformParamsDailymotionFromAllVideos(): void
+    {
+        $params = [
+            'filename'  => '',
+            'mediacode' => '{dailymotion}x7tgad0{/dailymotion}',
+            'player'    => '3',
+        ];
+
+        $result = CwmserverMigrationHelper::transformParams($params, 'dailymotion');
+
+        self::assertSame('//www.dailymotion.com/embed/video/x7tgad0', $result['filename']);
+        self::assertSame('1', $result['player']);
+        self::assertSame('', $result['mediacode']);
+    }
+
+    public function testTransformParamsYoutubeAllVideosDashUsesFilename(): void
+    {
+        // Dash placeholder means "use filename field" — should fall back
+        $params = [
+            'filename'  => 'https://www.youtube.com/watch?v=abc123',
+            'mediacode' => '{youtube}-{/youtube}',
+            'player'    => '2',
+        ];
+
+        $result = CwmserverMigrationHelper::transformParams($params, 'youtube');
+
+        self::assertSame('//www.youtube.com/embed/abc123?enablejsapi=1', $result['filename']);
+        self::assertSame('1', $result['player']);
+    }
+
+    public function testTransformParamsAllVideosPlayer2ToEmbed(): void
+    {
+        // Unrecognized AllVideos shortcode → embed, preserve mediacode
+        $params = [
+            'filename'  => 'https://example.com/video',
+            'mediacode' => '{customtag}something{/customtag}',
+            'player'    => '2',
+        ];
+
+        $result = CwmserverMigrationHelper::transformParams($params, 'embed');
+
+        self::assertSame('https://example.com/video', $result['filename']);
+        self::assertSame('8', $result['player']);
+        self::assertSame('{customtag}something{/customtag}', $result['mediacode']);
     }
 }

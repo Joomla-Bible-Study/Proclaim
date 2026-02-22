@@ -159,11 +159,41 @@ class CwmserverMigrationHelper
     }
 
     /**
+     * AllVideos shortcode tag-to-type map.
+     *
+     * Maps AllVideos Reloaded shortcode names to migration target types.
+     *
+     * @var    array<string, string>
+     * @since  10.1.0
+     */
+    private const ALLVIDEOS_TAG_MAP = [
+        'youtube'     => 'youtube',
+        'youtubewide' => 'youtube',
+        'youtubehd'   => 'youtube',
+        'vimeo'       => 'vimeo',
+        'dailymotion' => 'dailymotion',
+        'soundcloud'  => 'soundcloud',
+        'rumble'      => 'rumble',
+    ];
+
+    /**
+     * AllVideos shortcode tags that represent local media files.
+     *
+     * @var    string[]
+     * @since  10.1.0
+     */
+    private const ALLVIDEOS_LOCAL_TAGS = [
+        'mp3', 'mp4', 'flv', 'wmv', 'wma', 'ogg', 'ogv', 'webm', 'wav',
+        'divx', 'mov', 'swf', 'avi', 'aac',
+    ];
+
+    /**
      * Detect the actual content platform from media file data.
      *
-     * Priority: Legacy player overrides (4/5/6) > YouTube > Vimeo > Wistia > Resi
-     *           > SoundCloud > Dailymotion > Rumble > VirtueMart > DOCman > Article
-     *           > Embed (iframe) > Local > Unknown
+     * Priority: Legacy player overrides (4/5/6) > AllVideos shortcodes (player 2/3)
+     *           > YouTube > Vimeo > Wistia > Resi > SoundCloud > Dailymotion > Rumble
+     *           > VirtueMart > DOCman > Article > Embed (iframe) > Player 7 (audio)
+     *           > Local > Unknown
      *
      * @param   string  $filename    The filename/URL from media params
      * @param   string  $mediacode   The embed code from media params
@@ -196,8 +226,25 @@ class CwmserverMigrationHelper
             return 'virtuemart';
         }
 
+        // AllVideos shortcodes: {youtube}ID{/youtube}, {vimeo}ID{/vimeo}, etc.
+        // Used with player types 2/3 (AllVideos Reloaded popup/inline)
+        if (!empty($mediacode) && preg_match('/\{(\w+)\}/', $mediacode, $avMatch)) {
+            $tag = strtolower($avMatch[1]);
+
+            if (isset(self::ALLVIDEOS_TAG_MAP[$tag])) {
+                return self::ALLVIDEOS_TAG_MAP[$tag];
+            }
+
+            if (\in_array($tag, self::ALLVIDEOS_LOCAL_TAGS, true)) {
+                return 'local';
+            }
+        }
+
+        // Player types 2/3 without recognized shortcode — check URL patterns first,
+        // then fall back to embed
+        $isAllVideosPlayer = ($player === '2' || $player === '3');
+
         $combined = $filename . ' ' . $mediacode;
-        $lower    = strtolower($combined);
 
         // YouTube
         if (preg_match('/youtu(be\.com|\.be)\//i', $combined)
@@ -275,6 +322,16 @@ class CwmserverMigrationHelper
         // Player type 8 = embed code (even without iframe tag in mediacode)
         if ($player === '8' && !empty($mediacode)) {
             return 'embed';
+        }
+
+        // AllVideos player types 2/3 with unrecognized content → embed
+        if ($isAllVideosPlayer && !empty($mediacode)) {
+            return 'embed';
+        }
+
+        // Player type 7 = legacy simple audio player → local
+        if ($player === '7') {
+            return 'local';
         }
 
         // Local file detection: relative paths, no known platform domain
@@ -545,16 +602,31 @@ class CwmserverMigrationHelper
             }
         }
 
+        // Extract AllVideos shortcode content (bare ID between tags)
+        $avContent = self::extractAllVideosContent($mediacode);
+
         switch ($targetType) {
             case 'youtube':
-                $videoId             = self::extractYoutubeId($filename . ' ' . $mediacode);
+                $videoId = self::extractYoutubeId($filename . ' ' . $mediacode);
+
+                // Fall back to AllVideos bare ID: {youtube}dQw4w9WgXcQ{/youtube}
+                if ($videoId === null && !empty($avContent) && preg_match('/^[a-zA-Z0-9_-]+$/', $avContent)) {
+                    $videoId = $avContent;
+                }
+
                 $result['filename']  = $videoId ? '//www.youtube.com/embed/' . $videoId . '?enablejsapi=1' : $filename;
                 $result['player']    = '1';
                 $result['mediacode'] = '';
                 break;
 
             case 'vimeo':
-                $videoId             = self::extractVimeoId($filename . ' ' . $mediacode);
+                $videoId = self::extractVimeoId($filename . ' ' . $mediacode);
+
+                // Fall back to AllVideos bare ID: {vimeo}123456789{/vimeo}
+                if ($videoId === null && !empty($avContent) && preg_match('/^\d+$/', $avContent)) {
+                    $videoId = $avContent;
+                }
+
                 $result['filename']  = $videoId ? '//player.vimeo.com/video/' . $videoId : $filename;
                 $result['player']    = '1';
                 $result['mediacode'] = '';
@@ -589,14 +661,26 @@ class CwmserverMigrationHelper
                 break;
 
             case 'dailymotion':
-                $videoId             = self::extractDailymotionId($filename . ' ' . $mediacode);
+                $videoId = self::extractDailymotionId($filename . ' ' . $mediacode);
+
+                // Fall back to AllVideos bare ID: {dailymotion}x7tgad0{/dailymotion}
+                if ($videoId === null && !empty($avContent) && preg_match('/^[a-z0-9]+$/i', $avContent)) {
+                    $videoId = $avContent;
+                }
+
                 $result['filename']  = $videoId ? '//www.dailymotion.com/embed/video/' . $videoId : $filename;
                 $result['player']    = '1';
                 $result['mediacode'] = '';
                 break;
 
             case 'rumble':
-                $embedId             = self::extractRumbleId($filename . ' ' . $mediacode);
+                $embedId = self::extractRumbleId($filename . ' ' . $mediacode);
+
+                // Fall back to AllVideos bare ID: {rumble}v1abc23{/rumble}
+                if ($embedId === null && !empty($avContent) && preg_match('/^v[a-z0-9]+$/i', $avContent)) {
+                    $embedId = $avContent;
+                }
+
                 $result['filename']  = $embedId ? '//rumble.com/embed/' . $embedId . '/' : $filename;
                 $result['player']    = '1';
                 $result['mediacode'] = '';
@@ -841,6 +925,41 @@ class CwmserverMigrationHelper
         }
 
         return null;
+    }
+
+    /**
+     * Extract the content from an AllVideos shortcode.
+     *
+     * Parses shortcodes like `{youtube}dQw4w9WgXcQ{/youtube}` and returns
+     * the content between the opening and closing tags (the bare video ID).
+     * Returns empty string for dash-only content (`{youtube}-{/youtube}`)
+     * since the dash is a placeholder meaning "use the filename field".
+     *
+     * @param   string  $mediacode  The mediacode field value
+     *
+     * @return  string  The shortcode content, or empty string if not found
+     *
+     * @since   10.1.0
+     */
+    public static function extractAllVideosContent(string $mediacode): string
+    {
+        if (empty($mediacode)) {
+            return '';
+        }
+
+        // Match {tagname}CONTENT{/tagname}
+        if (preg_match('/\{(\w+)\}([^{]*)\{\/\1\}/', $mediacode, $matches)) {
+            $content = trim($matches[2]);
+
+            // Dash is a placeholder meaning "use filename" — not a real ID
+            if ($content === '-') {
+                return '';
+            }
+
+            return $content;
+        }
+
+        return '';
     }
 
     /**
