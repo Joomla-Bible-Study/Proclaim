@@ -1273,4 +1273,148 @@ class CwmmigrationHelper
 
         return $db->loadObjectList() ?: [];
     }
+
+    // -------------------------------------------------------------------------
+    // Legacy Server Auto-Migration
+    // -------------------------------------------------------------------------
+
+    /**
+     * Automatically migrate all media files from Legacy servers to core server addons.
+     *
+     * For each legacy server, scans media files, detects their content type,
+     * creates a new core server per type, migrates all files, and unpublishes
+     * empty legacy servers afterward.
+     *
+     * @return  array{migrated: int, servers_created: int, unpublished: int, errors: string[]}
+     *
+     * @since   10.1.0
+     */
+    public static function migrateLegacyServers(): array
+    {
+        $report = [
+            'migrated'        => 0,
+            'servers_created' => 0,
+            'unpublished'     => 0,
+            'errors'          => [],
+        ];
+
+        // Scan legacy servers
+        $servers = CwmserverMigrationHelper::scanLegacyServers();
+
+        if (empty($servers)) {
+            Log::add('No legacy servers found — skipping migration', Log::INFO, 'com_proclaim');
+
+            return $report;
+        }
+
+        $totalFiles = 0;
+
+        foreach ($servers as $server) {
+            $totalFiles += $server['total'];
+        }
+
+        if ($totalFiles === 0) {
+            // No media files on legacy servers — just unpublish them
+            $cleanup               = CwmserverMigrationHelper::unpublishEmptyLegacyServers();
+            $report['unpublished'] = $cleanup['unpublished'];
+
+            return $report;
+        }
+
+        // Get existing core servers to avoid creating duplicates
+        $existing = CwmserverMigrationHelper::getExistingServersByType();
+
+        // Track created servers per type so we reuse them across legacy servers
+        $targetServerIds = [];
+
+        foreach ($servers as $server) {
+            if ($server['total'] === 0) {
+                continue;
+            }
+
+            foreach ($server['types'] as $detectedType => $count) {
+                if ($count === 0) {
+                    continue;
+                }
+
+                // Determine target type
+                $targetType = $detectedType === 'unknown' ? 'embed' : $detectedType;
+
+                // Resolve target server: reuse existing or create new
+                if (!isset($targetServerIds[$targetType])) {
+                    if (!empty($existing[$targetType])) {
+                        // Use the first existing server of this type
+                        $targetServerIds[$targetType] = $existing[$targetType][0]['id'];
+                    } else {
+                        // Create a new server
+                        $label = CwmserverMigrationHelper::TYPE_LABELS[$targetType] ?? $targetType;
+
+                        try {
+                            $newId = CwmserverMigrationHelper::createServerForType(
+                                $targetType,
+                                $label . ' (Migrated)'
+                            );
+                            $targetServerIds[$targetType] = $newId;
+                            $report['servers_created']++;
+                        } catch (\Exception $e) {
+                            $report['errors'][] = 'Failed to create ' . $targetType . ' server: ' . $e->getMessage();
+
+                            continue;
+                        }
+                    }
+                }
+
+                $targetServerId = $targetServerIds[$targetType];
+
+                // Migrate in batches
+                $offset = 0;
+                $limit  = 25;
+
+                while (true) {
+                    $ids = CwmserverMigrationHelper::getLegacyMediaFileIds(
+                        $server['id'],
+                        $detectedType,
+                        $offset,
+                        $limit
+                    );
+
+                    if (empty($ids)) {
+                        break;
+                    }
+
+                    $batchResult = CwmserverMigrationHelper::migrateMediaBatch(
+                        $ids,
+                        $targetServerId,
+                        $targetType,
+                        $server['params']
+                    );
+
+                    $report['migrated'] += $batchResult['migrated'];
+                    $report['errors']    = array_merge($report['errors'], $batchResult['errors']);
+
+                    // If we got fewer IDs than the limit, this group is exhausted
+                    if (\count($ids) < $limit) {
+                        break;
+                    }
+
+                    $offset += $limit;
+                }
+            }
+        }
+
+        // Unpublish empty legacy servers
+        $cleanup               = CwmserverMigrationHelper::unpublishEmptyLegacyServers();
+        $report['unpublished'] = $cleanup['unpublished'];
+
+        Log::add(
+            'Auto-migrated ' . $report['migrated'] . ' media files from legacy servers'
+            . ' (' . $report['servers_created'] . ' new servers, '
+            . $report['unpublished'] . ' unpublished, '
+            . \count($report['errors']) . ' errors)',
+            Log::INFO,
+            'com_proclaim'
+        );
+
+        return $report;
+    }
 }
