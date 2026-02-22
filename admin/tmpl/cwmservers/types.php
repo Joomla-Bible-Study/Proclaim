@@ -55,6 +55,7 @@ $typeIcons = [
     'soundcloud'  => ['icon' => 'fab fa-soundcloud',  'color' => '#FF5500'],
     'dailymotion' => ['icon' => 'fas fa-play-circle', 'color' => '#00D2F3'],
     'rumble'      => ['icon' => 'fas fa-play-circle', 'color' => '#85C742'],
+    'facebook'    => ['icon' => 'fab fa-facebook',    'color' => '#1877F2'],
     'embed'       => ['icon' => 'fas fa-code',        'color' => '#666666'],
     'article'     => ['icon' => 'fas fa-newspaper',  'color' => '#1C3D5C'],
     'virtuemart'  => ['icon' => 'fas fa-shopping-cart', 'color' => '#2B71B8'],
