@@ -162,12 +162,13 @@ class CwmlocationwizardController extends BaseController
         /** @var \CWM\Component\Proclaim\Administrator\Model\CwmlocationwizardModel $model */
         $model = $this->getModel('Cwmlocationwizard');
 
-        if ($model->applyWizard($sanitised, $sanitisedPermissions)) {
+        try {
+            $model->applyWizard($sanitised, $sanitisedPermissions);
             $this->sendJsonResponse(true, Text::_('JBS_WIZARD_APPLY_SUCCESS'), [
                 'redirect' => 'index.php?option=com_proclaim&view=cwmlocations',
             ]);
-        } else {
-            $this->sendJsonResponse(false, $model->getError() ?: Text::_('JBS_WIZARD_APPLY_ERROR'));
+        } catch (\RuntimeException $e) {
+            $this->sendJsonResponse(false, $e->getMessage() ?: Text::_('JBS_WIZARD_APPLY_ERROR'));
         }
     }
 
@@ -192,10 +193,11 @@ class CwmlocationwizardController extends BaseController
         /** @var \CWM\Component\Proclaim\Administrator\Model\CwmlocationwizardModel $model */
         $model = $this->getModel('Cwmlocationwizard');
 
-        if ($model->dismiss()) {
+        try {
+            $model->dismiss();
             $this->sendJsonResponse(true, Text::_('JBS_WIZARD_DISMISSED'));
-        } else {
-            $this->sendJsonResponse(false, $model->getError() ?: Text::_('JERROR_AN_ERROR_HAS_OCCURRED'));
+        } catch (\RuntimeException $e) {
+            $this->sendJsonResponse(false, $e->getMessage() ?: Text::_('JERROR_AN_ERROR_HAS_OCCURRED'));
         }
     }
 

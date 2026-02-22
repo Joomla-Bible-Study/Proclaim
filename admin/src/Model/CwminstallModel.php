@@ -41,13 +41,13 @@ class CwminstallModel extends ListModel
      *
      * @since 7.1
      */
-    public $totalSteps = 0;
+    public int $totalSteps = 0;
 
     /** @var int Number of Versions already processed
      *
      * @since 7.1
      */
-    public $doneSteps = 0;
+    public int $doneSteps = 0;
 
     /**
      * @var string
@@ -55,11 +55,11 @@ class CwminstallModel extends ListModel
      */
     public string $step = '';
 
-    /** @var string Running Now
+    /** @var ?string Running Now
      *
      * @since 7.1
      */
-    public $running = null;
+    public ?string $running = null;
 
     /** @var array Call stack for the Visioning System.
      *

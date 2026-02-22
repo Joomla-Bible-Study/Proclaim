@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmtemplate;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwmtemplateModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
@@ -33,34 +34,34 @@ class HtmlView extends BaseHtmlView
     /**
      * State
      *
-     * @var array
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Item
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $item;
+    protected ?object $item = null;
 
     /**
      * Form
      *
-     * @var object
+     * @var ?\Joomla\CMS\Form\Form
      * @since    7.0.0
      */
-    protected $form;
+    protected ?\Joomla\CMS\Form\Form $form = null;
 
     /**
      * Can Do
      *
-     * @var object
+     * @var      ?object
      * @since    7.0.0
      */
-    protected $canDo;
+    protected ?object $canDo = null;
 
     /**
      * Execute and display a template script.
@@ -76,9 +77,13 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $this->item  = $this->get('Item');
-        $this->state = $this->get('State');
-        $this->form  = $this->get("Form");
+        /** @var CwmtemplateModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->item  = $model->getItem();
+        $this->state = $model->getState();
+        $this->form  = $model->getForm();
         $this->canDo = ContentHelper::getActions('com_proclaim', 'template', (int)$this->item->id);
 
         $this->setLayout("edit");

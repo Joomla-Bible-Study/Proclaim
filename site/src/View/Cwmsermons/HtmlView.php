@@ -44,7 +44,7 @@ class HtmlView extends BaseHtmlView
      *
      * @since 7.0
      */
-    public $document;
+    public ?object $document = null;
 
     /**
      * Form object for search filters
@@ -52,7 +52,7 @@ class HtmlView extends BaseHtmlView
      * @var  Form|null
      * @since 9.1.4
      */
-    public $filterForm;
+    public ?Form $filterForm = null;
 
     /**
      * The active search filters
@@ -60,128 +60,128 @@ class HtmlView extends BaseHtmlView
      * @var  array|null
      * @since 9.1.4
      */
-    public $activeFilters;
+    public ?array $activeFilters = null;
 
     /** @var array|null
      *
      * @since 7.0
      */
-    protected $items = null;
+    protected ?array $items = null;
 
     /** @var object|null
      *
      * @since 7.0
      */
-    protected $pagination = null;
+    protected ?object $pagination = null;
 
     /** @var Registry|null
      *
      * @since 7.0
      */
-    protected $state = null;
+    protected ?Registry $state = null;
 
     /**
      * @var object|null
      *
      * @since 7.0
      */
-    protected $admin;
+    protected ?object $admin = null;
 
     /** @var Registry|null
      *
      * @since 7.0
      */
-    protected $params;
+    protected ?Registry $params = null;
 
     /** @var object|null
      *
      * @since 7.0
      */
-    protected $study;
+    protected ?object $study = null;
 
     /** @var string|null
      *
      * @since 7.0
      */
-    protected $subscribe;
+    protected ?string $subscribe = null;
 
     /** @var string|null
      *
      * @since 7.0
      */
-    protected $series;
+    protected ?string $series = null;
 
     /** @var string|null
      *
      * @since 7.0
      */
-    protected $teachers;
+    protected ?string $teachers = null;
 
     /** @var string|null
      *
      * @since 7.0
      */
-    protected $messageTypes;
+    protected ?string $messageTypes = null;
 
     /** @var string|null
      *
      * @since 7.0
      */
-    protected $years;
+    protected ?string $years = null;
 
     /** @var string|null
      *
      * @since 7.0
      */
-    protected $locations;
+    protected ?string $locations = null;
 
     /** @var string|null
      *
      * @since 7.0
      */
-    protected $topics;
+    protected ?string $topics = null;
 
     /** @var string|null
      *
      * @since 7.0
      */
-    protected $orders;
+    protected ?string $orders = null;
 
     /** @var string|null
      *
      * @since 7.0
      */
-    protected $books;
+    protected ?string $books = null;
 
     /** @var object|null
      *
      * @since 7.0
      */
-    protected $template;
+    protected ?object $template = null;
 
     /** @var array|null
      *
      * @since 7.0
      */
-    protected $topic;
+    protected ?array $topic = null;
 
     /** @var object|null
      *
      * @since 7.0
      */
-    protected $main;
+    protected ?object $main = null;
 
     /** @var object|null
      *
      * @since 7.0
      */
-    protected $page;
+    protected ?object $page = null;
 
     /** @var string|null
      *
      * @since 7.0
      */
-    protected $request_url;
+    protected ?string $request_url = null;
 
     /**
      * Pagination limit box HTML
@@ -189,7 +189,7 @@ class HtmlView extends BaseHtmlView
      * @var string|null
      * @since 7.0
      */
-    protected $limitbox;
+    protected ?string $limitbox = null;
 
     /**
      * Main image HTML string

@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmservers;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwmserversModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
@@ -36,40 +37,56 @@ class HtmlView extends BaseHtmlView
     /**
      * Items
      *
-     * @var object
+     * @var ?array
      * @since    7.0.0
      */
-    protected $items;
+    protected ?array $items = null;
 
     /**
-     * @var object
+     * @var mixed
      * @since 7.0.0
      */
-    protected $types;
+    protected mixed $types = null;
 
     /**
      * Pagination
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $pagination;
+    protected ?object $pagination = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Can Do
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $canDo;
+    protected ?object $canDo = null;
+
+    /**
+     * Filter Form
+     *
+     * @var ?\Joomla\CMS\Form\Form
+     * @since    7.0.0
+     */
+    public ?\Joomla\CMS\Form\Form $filterForm = null;
+
+    /**
+     * Active Filters
+     *
+     * @var ?array
+     * @since    7.0.0
+     */
+    public ?array $activeFilters = null;
 
     /**
      * Execute and display a template script.
@@ -85,16 +102,20 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $this->items         = $this->get('Items');
-        $this->pagination    = $this->get('Pagination');
-        $this->state         = $this->get('State');
+        /** @var CwmserversModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->items         = $model->getItems();
+        $this->pagination    = $model->getPagination();
+        $this->state         = $model->getState();
         $this->canDo         = ContentHelper::getActions('com_proclaim', 'server');
-        $this->types         = $this->get('ServerOptions');
-        $this->filterForm    = $this->get('FilterForm');
-        $this->activeFilters = $this->get('ActiveFilters');
+        $this->types         = $model->getServerOptions();
+        $this->filterForm    = $model->getFilterForm();
+        $this->activeFilters = $model->getActiveFilters();
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 

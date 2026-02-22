@@ -38,7 +38,7 @@ class HtmlView extends BaseHtmlView
      * @var array|null
      * @since 9.1.4
      */
-    public $activeFilters;
+    public ?array $activeFilters = null;
 
     /**
      * Filter form object
@@ -46,7 +46,7 @@ class HtmlView extends BaseHtmlView
      * @var \Joomla\CMS\Form\Form|null
      * @since 9.1.4
      */
-    public $filterForm;
+    public ?\Joomla\CMS\Form\Form $filterForm = null;
 
     /**
      * Server types options
@@ -54,7 +54,7 @@ class HtmlView extends BaseHtmlView
      * @var array|null
      * @since 7.0
      */
-    public $types;
+    public ?array $types = null;
 
     /**
      * Items
@@ -63,7 +63,7 @@ class HtmlView extends BaseHtmlView
      *
      * @since 7.0
      */
-    protected $items;
+    protected ?array $items = null;
 
     /**
      * Pagination
@@ -72,7 +72,7 @@ class HtmlView extends BaseHtmlView
      *
      * @since 7.0
      */
-    protected $pagination;
+    protected ?object $pagination = null;
 
     /**
      * State
@@ -81,7 +81,7 @@ class HtmlView extends BaseHtmlView
      *
      * @since 7.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Can Do
@@ -90,19 +90,19 @@ class HtmlView extends BaseHtmlView
      *
      * @since 7.0
      */
-    protected $canDo;
+    protected ?object $canDo = null;
 
     /** @var  array|null Filter Levels
      *
      * @since 7.0
      */
-    protected $f_levels;
+    protected ?array $f_levels = null;
 
     /** @var  object|null Side Bar
      *
      * @since 7.0
      */
-    protected $sidebar;
+    protected ?object $sidebar = null;
 
     /**
      * Execute and display a template script.

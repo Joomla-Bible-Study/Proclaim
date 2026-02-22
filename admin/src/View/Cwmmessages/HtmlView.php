@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmmessages;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
+use CWM\Component\Proclaim\Administrator\Model\CwmmessagesModel;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
@@ -76,6 +77,14 @@ class HtmlView extends BaseHtmlView
      */
     protected array $activeFilters;
     /**
+     * Can Do
+     *
+     * @var ?object
+     * @since    7.0.0
+     */
+    public ?object $canDo = null;
+
+    /**
      * All transition, which can be executed of one if the items
      *
      * @var  array
@@ -105,21 +114,25 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $this->items         = $this->get('Items');
-        $this->pagination    = $this->get('Pagination');
-        $this->state         = $this->get('State');
+        /** @var CwmmessagesModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->items         = $model->getItems();
+        $this->pagination    = $model->getPagination();
+        $this->state         = $model->getState();
         $this->canDo         = ContentHelper::getActions('com_proclaim', 'message');
-        $this->filterForm    = $this->get('FilterForm');
-        $this->activeFilters = $this->get('ActiveFilters');
+        $this->filterForm    = $model->getFilterForm();
+        $this->activeFilters = $model->getActiveFilters();
 
         if (ComponentHelper::getParams('com_proclaim')->get('workflow_enabled')) {
             PluginHelper::importPlugin('workflow');
 
-            $this->transitions = $this->get('Transitions');
+            $this->transitions = $model->getTransitions();
         }
 
         // Check for errors.
-        if ($this->transitions === false || \count($errors = $this->get('Errors'))) {
+        if ($this->transitions === false || \count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 

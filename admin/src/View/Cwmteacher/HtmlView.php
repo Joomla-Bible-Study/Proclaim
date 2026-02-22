@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmteacher;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Model\CwmteacherModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
@@ -36,26 +37,34 @@ class HtmlView extends BaseHtmlView
     /**
      * Item
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    public $item;
+    public ?object $item = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    public $state;
+    public ?object $state = null;
 
     /**
      * Can Do
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    public $canDo;
+    public ?object $canDo = null;
+
+    /**
+     * Form
+     *
+     * @var ?\Joomla\CMS\Form\Form
+     * @since    7.0.0
+     */
+    public ?\Joomla\CMS\Form\Form $form = null;
 
     /**
      * Admin params
@@ -87,9 +96,13 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $this->form  = $this->get("Form");
-        $this->item  = $this->get("Item");
-        $this->state = $this->get("State");
+        /** @var CwmteacherModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->form  = $model->getForm();
+        $this->item  = $model->getItem();
+        $this->state = $model->getState();
         $this->canDo = ContentHelper::getActions('com_proclaim', 'teacher', (int)$this->item->id);
 
         // Load the Admin settings as Registry
@@ -100,11 +113,11 @@ class HtmlView extends BaseHtmlView
 
         // Load messages belonging to this teacher (only for existing records)
         if (!empty($this->item->id) && $this->item->id > 0) {
-            $this->messages = $this->get('Messages');
+            $this->messages = $model->getMessages();
         }
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 

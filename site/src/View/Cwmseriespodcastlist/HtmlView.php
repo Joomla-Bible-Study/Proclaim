@@ -34,7 +34,7 @@ class HtmlView extends BaseHtmlView
      * @var object|null
      * @since 7.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Items array
@@ -42,7 +42,7 @@ class HtmlView extends BaseHtmlView
      * @var array|null
      * @since 7.0
      */
-    protected $items;
+    protected ?array $items = null;
 
     /**
      * Template object
@@ -50,7 +50,7 @@ class HtmlView extends BaseHtmlView
      * @var object|null
      * @since 7.0
      */
-    protected $template;
+    protected ?object $template = null;
 
     /**
      * Parameters

@@ -30,6 +30,7 @@ $wa->useScript('keepalive')
     ->useScript('com_proclaim.cwmadmin')
     ->useScript('com_proclaim.bible-translations')
     ->useScript('com_proclaim.csv-import')
+    ->useScript('com_proclaim.server-migration')
     ->useStyle('com_proclaim.general');
 
 // Auto-register all component language strings for JavaScript.
@@ -847,6 +848,12 @@ echo HTMLHelper::_('uitab.endTab'); ?>
         <?php
 echo HTMLHelper::_('uitab.addTab', 'myTab', 'csvimport', Text::_('JBS_CSV_TAB_TITLE')); ?>
         <?php echo $this->loadTemplate('csvimport'); ?>
+        <?php
+echo HTMLHelper::_('uitab.endTab'); ?>
+
+        <?php
+echo HTMLHelper::_('uitab.addTab', 'myTab', 'servermigration', Text::_('JBS_SMG_TAB_TITLE')); ?>
+        <?php echo $this->loadTemplate('servermigration'); ?>
         <?php
 echo HTMLHelper::_('uitab.endTab'); ?>
 

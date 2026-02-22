@@ -250,40 +250,32 @@ class CwmlocationwizardModel extends BaseDatabaseModel
      *
      * @since   10.1.0
      */
-    public function applyWizard(array $mapping, array $permissions = []): bool
+    public function applyWizard(array $mapping, array $permissions = []): void
     {
-        try {
-            $db     = Factory::getContainer()->get(DatabaseInterface::class);
-            $params = ComponentHelper::getParams('com_proclaim');
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
+        $params = ComponentHelper::getParams('com_proclaim');
 
-            // Save the mapping as JSON
-            $params->set('location_group_mapping', json_encode($mapping, JSON_THROW_ON_ERROR));
-            $params->set('enable_location_filtering', 1);
-            $params->set('location_system_dismissed', 0);
+        // Save the mapping as JSON
+        $params->set('location_group_mapping', json_encode($mapping, JSON_THROW_ON_ERROR));
+        $params->set('enable_location_filtering', 1);
+        $params->set('location_system_dismissed', 0);
 
-            $query = $db->getQuery(true)
-                ->update($db->quoteName('#__extensions'))
-                ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
-                ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
-                ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
+        $query = $db->getQuery(true)
+            ->update($db->quoteName('#__extensions'))
+            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
+            ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
+            ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
 
-            $db->setQuery($query);
-            $db->execute();
+        $db->setQuery($query);
+        $db->execute();
 
-            // Apply component-level ACL permissions for mapped groups
-            if (!empty($permissions)) {
-                $this->applyPermissions($permissions);
-            }
-
-            // Reset per-request location cache so new mapping takes effect immediately
-            CwmlocationHelper::resetCache();
-
-            return true;
-        } catch (\Exception $e) {
-            $this->setError($e->getMessage());
-
-            return false;
+        // Apply component-level ACL permissions for mapped groups
+        if (!empty($permissions)) {
+            $this->applyPermissions($permissions);
         }
+
+        // Reset per-request location cache so new mapping takes effect immediately
+        CwmlocationHelper::resetCache();
     }
 
     /**
@@ -364,33 +356,26 @@ class CwmlocationwizardModel extends BaseDatabaseModel
      * Sets location_system_dismissed = 1 in component params so the wizard
      * banner in the admin CPanel is hidden permanently.
      *
-     * @return  bool  True on success.
+     * @return  void
      *
+     * @throws  \RuntimeException  On database error.
      * @since   10.1.0
      */
-    public function dismiss(): bool
+    public function dismiss(): void
     {
-        try {
-            $db     = Factory::getContainer()->get(DatabaseInterface::class);
-            $params = ComponentHelper::getParams('com_proclaim');
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
+        $params = ComponentHelper::getParams('com_proclaim');
 
-            $params->set('location_system_dismissed', 1);
+        $params->set('location_system_dismissed', 1);
 
-            $query = $db->getQuery(true)
-                ->update($db->quoteName('#__extensions'))
-                ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
-                ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
-                ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
+        $query = $db->getQuery(true)
+            ->update($db->quoteName('#__extensions'))
+            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
+            ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
+            ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
 
-            $db->setQuery($query);
-            $db->execute();
-
-            return true;
-        } catch (\Exception $e) {
-            $this->setError($e->getMessage());
-
-            return false;
-        }
+        $db->setQuery($query);
+        $db->execute();
     }
 
     /**

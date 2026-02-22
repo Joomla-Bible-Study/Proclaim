@@ -70,15 +70,15 @@ class CwmserieModel extends AdminModel
      * @var string
      * @since  4.0.0
      */
-    protected $formName = 'serie';
-    protected $teacher;
+    protected string $formName = 'serie';
+    protected mixed $teacher;
     /**
      * Items data
      *
      * @var  object|bool
      * @since 10.0.0
      */
-    private $data;
+    private mixed $data;
 
     /**
      * Abstract method for getting the form from the model.

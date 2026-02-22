@@ -52,7 +52,7 @@ class CwmtemplatecodeModel extends AdminModel
      * @var string
      * @since  4.0.0
      */
-    protected $formName = 'templatecode';
+    protected string $formName = 'templatecode';
 
     /**
      * Method to get the record form.

@@ -39,11 +39,11 @@ class HtmlView extends BaseHtmlView
     /**
      * Document
      *
-     * @var Document
+     * @var ?Document
      *
      * @since 7.0
      */
-    public $document;
+    public ?Document $document = null;
 
     /**
      * Template Table

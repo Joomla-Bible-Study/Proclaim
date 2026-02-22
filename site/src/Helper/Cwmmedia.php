@@ -436,10 +436,14 @@ class Cwmmedia
             $player->player = (int)$params->get('player', 0);
         }
 
+        // @deprecated 10.1.0 Player type 3 mapped to 2 (AllVideos). Will be removed in 11.0.0.
         if ($player->player === 3) {
             $player->player = 2;
         }
 
+        // @deprecated 10.1.0 Legacy docMan_id/article_id/virtueMart_id player overrides.
+        //             Use core server addons (DOCman, Article, VirtueMart) instead.
+        //             Will be removed in 11.0.0.
         if ((int)$params->get('docMan_id') !== 0) {
             $player->player = 4;
         }
@@ -624,6 +628,8 @@ class Cwmmedia
 
                 return $playercode;
 
+                // @deprecated 10.1.0 AllVideos player types. Use the Embed server addon instead.
+                //             Will be removed in 11.0.0.
             case 2: // All Videos Reloaded
             case 3:
                 $playercode = '';
@@ -645,6 +651,8 @@ class Cwmmedia
 
                 return $playercode;
 
+                // @deprecated 10.1.0 Legacy player types 4/5/6. Use DOCman, Article, VirtueMart
+                //             server addons instead. Will be removed in 11.0.0.
             case 4: // Docman
                 return $this->getDocman($media, $image);
 
@@ -853,6 +861,8 @@ class Cwmmedia
      *
      * @return string
      *
+     * @deprecated  10.1.0  Use CWMAddonVimeo::convertVimeo() instead. Will be removed in 11.0.0.
+     *
      * @since 9.1.3
      */
     public function convertVimeo(string $string): string
@@ -871,6 +881,10 @@ class Cwmmedia
      * @param   object  $media      Media info
      *
      * @return string
+     *
+     * @deprecated  10.1.0  AllVideos support is no longer maintained.
+     *              Use the Embed server addon for custom embed codes.
+     *              Will be removed in 11.0.0.
      *
      * @since 9.0.0
      */
@@ -908,6 +922,9 @@ class Cwmmedia
      *
      * @return string
      *
+     * @deprecated  10.1.0  Use the DOCman server addon instead.
+     *              Legacy servers will be removed in 11.0.0.
+     *
      * @throws \Exception
      * @since 9.0.0
      */
@@ -926,6 +943,9 @@ class Cwmmedia
      *
      * @return string
      *
+     * @deprecated  10.1.0  Use the Article server addon instead.
+     *              Legacy servers will be removed in 11.0.0.
+     *
      * @since 9.0.0
      */
     public function getArticle(object $media, string $image): string
@@ -941,6 +961,9 @@ class Cwmmedia
      * @param   string  $image  Image
      *
      * @return string
+     *
+     * @deprecated  10.1.0  Use the VirtueMart server addon instead.
+     *              Legacy servers will be removed in 11.0.0.
      *
      * @since 9.0.0
      */

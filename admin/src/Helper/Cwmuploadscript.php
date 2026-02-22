@@ -34,8 +34,8 @@ use Joomla\Input\Input;
  */
 class Cwmuploadscript
 {
-    public $runtimeScript;
-    public $runtime;
+    public mixed $runtimeScript;
+    public mixed $runtime;
 
     /**
      * @var string

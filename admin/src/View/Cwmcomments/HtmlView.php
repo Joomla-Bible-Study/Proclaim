@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmcomments;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwmcommentsModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
@@ -33,40 +34,40 @@ use Joomla\Component\Content\Administrator\Extension\ContentComponent;
  */
 class HtmlView extends BaseHtmlView
 {
-    public $filterForm;
-    public $activeFilters;
+    public ?\Joomla\CMS\Form\Form $filterForm = null;
+    public ?array $activeFilters              = null;
     /**
      * Items
      *
-     * @var array
+     * @var ?array
      *
      * @since 9.0.0
      */
-    protected $items;
+    protected ?array $items = null;
     /**
      * Pagination
      *
-     * @var object
+     * @var ?object
      *
      * @since 9.0.0
      */
-    protected $pagination;
+    protected ?object $pagination = null;
     /**
      * State
      *
-     * @var object
+     * @var ?object
      *
      * @since 9.0.0
      */
-    protected $state;
+    protected ?object $state = null;
     /**
      * Filter Levels
      *
-     * @var string
+     * @var ?array
      *
      * @since 9.0.0
      */
-    protected $f_levels;
+    protected ?array $f_levels = null;
 
     /**
      * Execute and display a template script.
@@ -82,15 +83,18 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $this->items      = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
-        $this->state      = $this->get('State');
+        /** @var CwmcommentsModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
 
-        $this->filterForm    = $this->get('FilterForm');
-        $this->activeFilters = $this->get('ActiveFilters');
+        $this->items         = $model->getItems();
+        $this->pagination    = $model->getPagination();
+        $this->state         = $model->getState();
+        $this->filterForm    = $model->getFilterForm();
+        $this->activeFilters = $model->getActiveFilters();
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 

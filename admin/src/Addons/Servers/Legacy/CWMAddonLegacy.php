@@ -24,8 +24,11 @@ use Joomla\CMS\Language\Text;
 /**
  * Class CWMAddonLegacy
  *
- * @package  Proclaim.Admin
- * @since    9.0.0
+ * @package     Proclaim.Admin
+ * @since       9.0.0
+ * @deprecated  10.1.0  Legacy servers will be removed in 11.0.0.
+ *              Use the Server Migration tool in Admin Center to migrate
+ *              media files to core server addons (YouTube, Vimeo, Local, etc.).
  */
 class CWMAddonLegacy extends CWMAddon
 {

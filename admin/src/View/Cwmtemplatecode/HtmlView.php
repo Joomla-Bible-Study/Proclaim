@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmtemplatecode;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwmtemplatecodeModel;
 use Joomla\CMS\Client\ClientHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
@@ -37,55 +38,55 @@ class HtmlView extends BaseHtmlView
      * @var string
      * @since    7.0.0
      */
-    public $defaultcode;
+    public string $defaultcode = '';
 
     /**
      * Type
      *
-     * @var string
+     * @var mixed
      * @since    7.0.0
      */
-    public $type;
+    public mixed $type = null;
 
     /**
      * Can Do
      *
-     * @var object
+     * @var     ?object
      * @since    7.0.0
      */
-    public $canDo;
+    public ?object $canDo = null;
 
     /**
      * Form
      *
-     * @var mixed
+     * @var ?\Joomla\CMS\Form\Form
      * @since    7.0.0
      */
-    protected $form;
+    protected ?\Joomla\CMS\Form\Form $form = null;
 
     /**
      * Item
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $item;
+    protected ?object $item = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Defaults
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $defaults;
+    protected ?object $defaults = null;
 
     /**
      * Execute and display a template script.
@@ -101,8 +102,12 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $this->form = $this->get("Form");
-        $item       = $this->get("Item");
+        /** @var CwmtemplatecodeModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->form = $model->getForm();
+        $item       = $model->getItem();
 
         if ((int)$item->id === 0) {
             ClientHelper::setCredentialsFromRequest('ftp');
@@ -114,11 +119,11 @@ class HtmlView extends BaseHtmlView
         $this->type = null;
 
         if ($item->id !== 0) {
-            $this->type = $this->get('Type');
+            $this->type = $model->getType();
         }
 
         $this->item  = $item;
-        $this->state = $this->get("State");
+        $this->state = $model->getState();
         $this->canDo = ContentHelper::getActions('com_proclaim', 'templatecode', (int)$this->item->id);
 
         $this->setLayout("edit");

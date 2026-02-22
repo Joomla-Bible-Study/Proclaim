@@ -51,8 +51,15 @@ $typeIcons = [
     'youtube' => ['icon' => 'fab fa-youtube',      'color' => '#FF0000'],
     'vimeo'   => ['icon' => 'fab fa-vimeo',        'color' => '#1AB7EA'],
     'wistia'  => ['icon' => 'fas fa-play-circle',  'color' => '#54BBFF'],
-    'resi'    => ['icon' => 'fas fa-signal',       'color' => '#00AEEF'],
-    'legacy'  => ['icon' => 'fas fa-archive',      'color' => '#888888'],
+    'resi'        => ['icon' => 'fas fa-signal',       'color' => '#00AEEF'],
+    'soundcloud'  => ['icon' => 'fab fa-soundcloud',  'color' => '#FF5500'],
+    'dailymotion' => ['icon' => 'fas fa-play-circle', 'color' => '#00D2F3'],
+    'rumble'      => ['icon' => 'fas fa-play-circle', 'color' => '#85C742'],
+    'embed'       => ['icon' => 'fas fa-code',        'color' => '#666666'],
+    'article'     => ['icon' => 'fas fa-newspaper',  'color' => '#1C3D5C'],
+    'virtuemart'  => ['icon' => 'fas fa-shopping-cart', 'color' => '#2B71B8'],
+    'docman'      => ['icon' => 'fas fa-file-alt',   'color' => '#5C6BC0'],
+    'legacy'      => ['icon' => 'fas fa-archive',     'color' => '#888888'],
 ];
 ?>
 <div class="container-fluid p-3">

@@ -37,13 +37,13 @@ class Cwmpodcast
 {
     /**
      * @var int
-     * @since version
+     * @since 7.0.0
      */
     private int $templateid = 0;
 
     /**
-     * @var null
-     * @since version
+     * @var mixed
+     * @since 7.0.0
      */
     private $template = null;
 
@@ -2892,15 +2892,6 @@ class Cwmpodcast
         return (int)(((144 * $bitrate * 1000) / $sample_rate) + $padding_bit);
     }
 
-    /**
-     * Remove Http from URL
-     *
-     * @param   string  $url  Url of website
-     *
-     * @return string
-     *
-     * @since version
-     */
     /**
      * Check if a URL is a YouTube video URL.
      *

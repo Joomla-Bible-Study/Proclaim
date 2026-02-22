@@ -167,7 +167,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      *
      * @throws Exception
-     * @since version
+     * @since 9.0.0
      */
     public function buildPlaylistList($key, string $playlistID, string $pageToken, int $maxResults = 50): void
     {

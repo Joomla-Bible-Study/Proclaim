@@ -148,6 +148,57 @@ class CwmpIconvert
      */
     public int $podcasts;
 
+    /** @var int Folders not added count @since 10.1.0 */
+    public int $fnoadd = 0;
+
+    /** @var int Folders added count @since 10.1.0 */
+    public int $fadd = 0;
+
+    /** @var int Teachers not added count @since 10.1.0 */
+    public int $tnoadd = 0;
+
+    /** @var int Teachers added count @since 10.1.0 */
+    public int $tadd = 0;
+
+    /** @var int Series not added count @since 10.1.0 */
+    public int $srnoadd = 0;
+
+    /** @var int Series added count @since 10.1.0 */
+    public int $sradd = 0;
+
+    /** @var int Podcasts not added count @since 10.1.0 */
+    public int $pnoadd = 0;
+
+    /** @var int Podcasts added count @since 10.1.0 */
+    public int $padd = 0;
+
+    /** @var int Locations not added count @since 10.1.0 */
+    public int $lnoadd = 0;
+
+    /** @var int Locations added count @since 10.1.0 */
+    public int $ladd = 0;
+
+    /** @var int Studies not added count @since 10.1.0 */
+    public int $snoadd = 0;
+
+    /** @var int Studies added count @since 10.1.0 */
+    public int $sadd = 0;
+
+    /** @var int Media not added count @since 10.1.0 */
+    public int $mnoadd = 0;
+
+    /** @var int Media added count @since 10.1.0 */
+    public int $madd = 0;
+
+    /** @var int|null Generic teacher ID @since 10.1.0 */
+    public ?int $genericteacher = null;
+
+    /** @var int|null Legacy video server ID @since 10.1.0 */
+    public ?int $legacyvideo = null;
+
+    /** @var int|null YouTube server ID @since 10.1.0 */
+    public ?int $youtube = null;
+
     /**
      * Convert PreachIT
      *

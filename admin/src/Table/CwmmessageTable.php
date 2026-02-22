@@ -230,7 +230,7 @@ class CwmmessageTable extends Table
     /**
      * Comments
      *
-     * @var int
+     * @var ?int
      *
      * @since 9.0.0
      */
@@ -239,7 +239,7 @@ class CwmmessageTable extends Table
     /**
      * Hits
      *
-     * @var int
+     * @var ?int
      *
      * @since 9.0.0
      */
@@ -399,13 +399,13 @@ class CwmmessageTable extends Table
     /**
      * Published
      *
-     * @var int
+     * @var ?int
      *
      * @since 9.0.0
      */
     public ?int $published = 1;
 
-    /** @var string Publish Up
+    /** @var ?string Publish Up
      *
      * @since 9.0.0
      */
@@ -436,7 +436,7 @@ class CwmmessageTable extends Table
     /**
      * Created by alias
      *
-     * @var string
+     * @var ?string
      * @since 10.1.0
      */
     public ?string $created_by_alias = '';
@@ -499,8 +499,10 @@ class CwmmessageTable extends Table
     public ?int $download_id = null;
 
     /**
+     * Message type name
+     *
      * @var ?string
-     * @since version
+     * @since 10.1.0
      */
     public ?string $message_type = null;
 
