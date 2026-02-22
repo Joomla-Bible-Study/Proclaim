@@ -44,6 +44,7 @@ class CwmserverMigrationHelper
         'soundcloud',
         'dailymotion',
         'rumble',
+        'facebook',
         'embed',
         'article',
         'virtuemart',
@@ -65,6 +66,7 @@ class CwmserverMigrationHelper
         'soundcloud'  => 'SoundCloud',
         'dailymotion' => 'Dailymotion',
         'rumble'      => 'Rumble',
+        'facebook'    => 'Facebook',
         'embed'       => 'Embed / iFrame',
         'article'     => 'Article',
         'virtuemart'  => 'VirtueMart',
@@ -291,6 +293,16 @@ class CwmserverMigrationHelper
         // Rumble
         if (preg_match('/rumble\.com/i', $combined)) {
             return 'rumble';
+        }
+
+        // Facebook
+        if (preg_match('/facebook\.com\/.+\/videos\//i', $combined)
+            || preg_match('/facebook\.com\/watch\?v=/i', $combined)
+            || preg_match('/facebook\.com\/reel\//i', $combined)
+            || preg_match('/facebook\.com\/plugins\/video\.php/i', $combined)
+            || preg_match('/fb\.watch\//i', $combined)
+        ) {
+            return 'facebook';
         }
 
         // VirtueMart (Joomla e-commerce digital downloads)
@@ -883,6 +895,53 @@ class CwmserverMigrationHelper
                 $result['mediacode'] = '';
                 break;
 
+            case 'facebook':
+                $sourceQuery = self::extractSourceUrlParams($combined, 'facebook');
+
+                // If already an embed URL, extract the href param as the source URL
+                if (str_contains(strtolower($filename), 'facebook.com/plugins/video.php')) {
+                    $embedParts = parse_url($filename);
+                    $embedQuery = [];
+
+                    if (!empty($embedParts['query'])) {
+                        parse_str($embedParts['query'], $embedQuery);
+                    }
+
+                    // Use href param as the clean source, or keep the embed URL
+                    $sourceUrl          = !empty($embedQuery['href']) ? urldecode($embedQuery['href']) : $filename;
+                    $result['filename'] = 'https://www.facebook.com/plugins/video.php?href='
+                        . urlencode($sourceUrl) . '&show_text=false';
+
+                    // Map embed params to form fields
+                    $sourceQuery = $embedQuery;
+                } else {
+                    // Convert any Facebook URL to embed format
+                    $result['filename'] = 'https://www.facebook.com/plugins/video.php?href='
+                        . urlencode($filename) . '&show_text=false';
+                }
+
+                // Map extracted URL params → embed option form fields
+                $fbParamMap = [
+                    'show_text' => 'fb_show_text',
+                    'muted'     => 'fb_muted',
+                    'lazy'      => 'fb_lazy',
+                    't'         => 'fb_t',
+                ];
+
+                foreach ($fbParamMap as $urlParam => $formField) {
+                    if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
+                        $result[$formField] = $sourceQuery[$urlParam];
+                    }
+                }
+
+                if (isset($sourceQuery['autoplay']) && $sourceQuery['autoplay'] === 'true') {
+                    $result['autostart'] = 'true';
+                }
+
+                $result['player']    = '1';
+                $result['mediacode'] = '';
+                break;
+
             case 'embed':
                 $result['filename']  = $filename;
                 $result['player']    = '8';
@@ -1147,6 +1206,7 @@ class CwmserverMigrationHelper
             'dailymotion' => '/(?:https?:)?\/\/(?:www\.)?dailymotion\.com\/[^\s"\'<>]+/',
             'rumble'      => '/(?:https?:)?\/\/(?:www\.)?rumble\.com\/[^\s"\'<>]+/',
             'soundcloud'  => '/(?:https?:)?\/\/(?:w\.)?soundcloud\.com\/[^\s"\'<>]+/',
+            'facebook'    => '/(?:https?:)?\/\/(?:www\.)?(?:facebook\.com|fb\.watch)\/[^\s"\'<>]+/',
         ];
 
         if (!isset($patterns[$platform]) || empty($text)) {

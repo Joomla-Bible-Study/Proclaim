@@ -785,8 +785,8 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     {
         $expected = [
             'youtube', 'vimeo', 'wistia', 'resi',
-            'soundcloud', 'dailymotion', 'rumble', 'embed',
-            'article', 'virtuemart', 'docman', 'local',
+            'soundcloud', 'dailymotion', 'rumble', 'facebook',
+            'embed', 'article', 'virtuemart', 'docman', 'local',
         ];
 
         self::assertSame($expected, CwmserverMigrationHelper::TARGET_TYPES);
