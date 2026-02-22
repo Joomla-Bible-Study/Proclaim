@@ -177,14 +177,14 @@ class CWMAddonLocal extends CWMAddon
     /**
      * Render Fields for general view.
      *
-     * @param object  $media_form  Medea files form
-     * @param bool    $new         If media is new
+     * @param   object  $media_form  Medea files form
+     * @param bool      $new         If media is new
      *
      * @return string
      *
      * @since 9.1.3
      */
-    public function renderGeneral($media_form, bool $new): string
+    public function renderGeneral(object $media_form, bool $new): string
     {
         $html   = '';
         $fields = $media_form->getFieldset('general');
@@ -209,14 +209,14 @@ class CWMAddonLocal extends CWMAddon
     /**
      * Render Layout and fields
      *
-     * @param object  $media_form  Media files form
-     * @param bool    $new         If media is new
+     * @param   object  $media_form  Media files form
+     * @param bool      $new         If media is new
      *
      * @return string
      *
      * @since 9.1.3
      */
-    public function render($media_form, bool $new): string
+    public function render(object $media_form, bool $new): string
     {
         $html = HTMLHelper::_('uitab.addTab', 'myTab', 'options', Text::_('JBS_ADDON_MEDIA_OPTIONS_LABEL'));
         $html .= $this->renderOptionsFields($media_form, $new);

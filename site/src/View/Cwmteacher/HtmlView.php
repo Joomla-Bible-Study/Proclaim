@@ -39,7 +39,7 @@ class HtmlView extends BaseHtmlView
      *
      * @since 7.0
      */
-    public $document = null;
+    public ?Document $document = null;
 
     /** @var  object|null Item
      *
@@ -81,7 +81,7 @@ class HtmlView extends BaseHtmlView
      *
      * @since 7.0
      */
-    protected $print = null;
+    protected bool|string|null $print = null;
 
     /** @var  array|null Studies
      *

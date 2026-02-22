@@ -60,6 +60,17 @@
             }
         },
         {
+            "name": "com_proclaim.server-migration",
+            "type": "script",
+            "uri": "com_proclaim/server-migration.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "type": "module"
+            }
+        },
+        {
             "name": "com_proclaim.admin-imagetools",
             "type": "script",
             "uri": "com_proclaim/admin-imagetools.min.js",

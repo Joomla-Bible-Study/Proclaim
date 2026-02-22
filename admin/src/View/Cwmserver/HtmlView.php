@@ -12,6 +12,7 @@
 namespace CWM\Component\Proclaim\Administrator\View\Cwmserver;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Model\CwmserverModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
@@ -34,50 +35,50 @@ class HtmlView extends BaseHtmlView
     /**
      * Form
      *
-     * @var object
+     * @var ?\Joomla\CMS\Form\Form
      * @since    7.0.0
      */
-    protected $form;
+    protected ?\Joomla\CMS\Form\Form $form = null;
 
     /**
      * Server form
      *
-     * @var string
+     * @var mixed
      * @since    7.0.0
      */
-    protected $server_form;
+    protected mixed $server_form = null;
 
     /**
      * Item
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $item;
+    protected ?object $item = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Admin
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $admin;
+    protected ?object $admin = null;
 
     /**
      * Can Do
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $canDo;
+    protected ?object $canDo = null;
 
     /**
      * Execute and display a template script.
@@ -93,14 +94,18 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $this->form        = $this->get("form");
-        $this->state       = $this->get("State");
-        $this->item        = $this->get("Item");
+        /** @var CwmserverModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->form        = $model->getForm();
+        $this->state       = $model->getState();
+        $this->item        = $model->getItem();
         $this->canDo       = ContentHelper::getActions('com_proclaim', 'server', (int)$this->item->id);
-        $this->server_form = $this->get('AddonServerForm');
+        $this->server_form = $model->getAddonServerForm();
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 

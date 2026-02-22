@@ -88,11 +88,12 @@ class HtmlView extends BaseHtmlView
         $model = Factory::getApplication()->bootComponent('com_proclaim')
             ->getMVCFactory()->createModel('Cwmadmin', 'Administrator');
         $this->setModel($model, true);
+        $model->setUseExceptions(true);
 
         // Get data from the model
-        $this->form  = $this->get("Form");
-        $this->item  = $this->get("Item");
-        $this->state = $this->get("State");
+        $this->form  = $model->getForm();
+        $this->item  = $model->getItem();
+        $this->state = $model->getState();
         $this->canDo = ContentHelper::getActions('com_proclaim');
 
         // Get the list of backup files

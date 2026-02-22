@@ -12,6 +12,7 @@
 namespace CWM\Component\Proclaim\Administrator\View\Cwmtopic;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Model\CwmtopicModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
@@ -33,7 +34,7 @@ class HtmlView extends BaseHtmlView
     /**
      * Form
      *
-     * @var object
+     * @var mixed
      * @since    7.0.0
      */
     protected mixed $form;
@@ -41,34 +42,34 @@ class HtmlView extends BaseHtmlView
     /**
      * Item
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $item;
+    protected ?object $item = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Defaults
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $defaults;
+    protected ?object $defaults = null;
 
     /**
      * Can Do
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $canDo;
+    protected ?object $canDo = null;
 
     /**
      * Execute and display a template script.
@@ -84,13 +85,17 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $this->form  = $this->get("Form");
-        $this->item  = $this->get("Item");
-        $this->state = $this->get("State");
+        /** @var CwmtopicModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->form  = $model->getForm();
+        $this->item  = $model->getItem();
+        $this->state = $model->getState();
         $this->canDo = ContentHelper::getActions('com_proclaim', 'topic', (int)$this->item->id);
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new \RuntimeException(implode("\n", $errors), 500);
         }
 

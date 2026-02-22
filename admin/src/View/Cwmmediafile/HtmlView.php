@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmmediafile;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\Helper\ContentHelper;
@@ -35,41 +36,49 @@ use Joomla\Registry\Registry;
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var object
+    /** @var ?object
      * @since    7.0.0
      */
-    public $canDo;
+    public ?object $canDo = null;
 
-    /** @var Registry
+    /** @var ?Registry
      * @since    7.0.0
      */
-    public $admin_params;
+    public ?Registry $admin_params = null;
 
-    /** @var object
+    /** @var mixed
      * @since    7.0.0
      */
-    public $media_form;
+    public mixed $media_form = null;
 
-    /** @var object
+    /** @var ?object
      * @since    7.0.0
      */
-    public $item;
-    /** @var object
+    public ?object $item = null;
+    /** @var mixed
      * @since    9.1.3
      */
-    public $addon;
-    /** @var Registry
+    public mixed $addon = null;
+
+    /**
+     * Form
+     *
+     * @var ?\Joomla\CMS\Form\Form
      * @since    7.0.0
      */
-    protected $state;
-    /** @var object
+    public ?\Joomla\CMS\Form\Form $form = null;
+    /** @var ?Registry
      * @since    7.0.0
      */
-    protected $admin;
-    /** @var object
+    protected ?Registry $state = null;
+    /** @var ?object
      * @since    7.0.0
      */
-    protected $options;
+    protected ?object $admin = null;
+    /** @var ?object
+     * @since    7.0.0
+     */
+    protected ?object $options = null;
 
     /**
      * Execute and display a template script.
@@ -85,11 +94,15 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
+        /** @var CwmmediafileModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
         $app                = Factory::getApplication();
-        $this->form         = $this->get("Form");
-        $media_form         = $this->get("MediaForm");
-        $this->item         = $this->get("Item");
-        $this->state        = $this->get("State");
+        $this->form         = $model->getForm();
+        $media_form         = $model->getMediaForm();
+        $this->item         = $model->getItem();
+        $this->state        = $model->getState();
         $this->canDo        = ContentHelper::getActions('com_proclaim', 'mediafile', (int)$this->item->id);
         $this->admin_params = $this->state->get('administrator');
 
@@ -159,7 +172,7 @@ class HtmlView extends BaseHtmlView
         $app->getDocument()->getWebAssetManager()->useScript('com_proclaim.cwmcorejs');
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 

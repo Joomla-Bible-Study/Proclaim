@@ -50,7 +50,7 @@ class HtmlView extends BaseHtmlView
      *
      * @since 7.0
      */
-    public $document;
+    public ?Document $document = null;
 
     /**
      * Params

@@ -24,6 +24,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmdescriptionHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageCleanup;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\CwmupgradeHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
@@ -1160,7 +1161,7 @@ class CwmadminController extends FormController
      * @return bool
      *
      * @throws \Exception
-     * @since version
+     * @since 9.0.0
      */
     public function submit(?int $key = null, ?string $urlVar = null): bool
     {
@@ -2909,6 +2910,212 @@ class CwmadminController extends FormController
         $app->sendHeaders();
 
         echo $csv;
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Scan legacy servers and classify media files by detected platform.
+     *
+     * Returns scan results + existing core servers for the configuration step.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function serverMigrationScanXHR(): void
+    {
+        session_write_close();
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $servers  = CwmserverMigrationHelper::scanLegacyServers();
+            $existing = CwmserverMigrationHelper::getExistingServersByType();
+
+            echo json_encode([
+                'success'  => true,
+                'servers'  => $servers,
+                'existing' => $existing,
+                'labels'   => CwmserverMigrationHelper::TYPE_LABELS,
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Migrate a batch of media files from a legacy server to a target server.
+     *
+     * Expects POST JSON with: legacyServerId, detectedType, targetServerId,
+     * targetType, offset, limit, legacyServerParams.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function serverMigrationBatchXHR(): void
+    {
+        session_write_close();
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $rawInput = file_get_contents('php://input');
+        $data     = json_decode($rawInput, true);
+
+        if (!\is_array($data)) {
+            echo json_encode(['success' => false, 'message' => 'Invalid request body'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $legacyServerId     = (int) ($data['legacyServerId'] ?? 0);
+        $detectedType       = $data['detectedType'] ?? '';
+        $targetServerId     = (int) ($data['targetServerId'] ?? 0);
+        $targetType         = $data['targetType'] ?? '';
+        $offset             = (int) ($data['offset'] ?? 0);
+        $limit              = (int) ($data['limit'] ?? 25);
+        $legacyServerParams = $data['legacyServerParams'] ?? [];
+
+        try {
+            $ids    = CwmserverMigrationHelper::getLegacyMediaFileIds($legacyServerId, $detectedType, $offset, $limit);
+            $result = CwmserverMigrationHelper::migrateMediaBatch($ids, $targetServerId, $targetType, $legacyServerParams);
+
+            echo json_encode([
+                'success'  => true,
+                'migrated' => $result['migrated'],
+                'errors'   => $result['errors'],
+                'fetched'  => \count($ids),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Create a new core server of a given type.
+     *
+     * Expects POST JSON with: type, name, locationId (optional).
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function serverMigrationCreateServerXHR(): void
+    {
+        session_write_close();
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $rawInput = file_get_contents('php://input');
+        $data     = json_decode($rawInput, true);
+
+        if (!\is_array($data) || empty($data['type']) || empty($data['name'])) {
+            echo json_encode(['success' => false, 'message' => 'Missing type or name'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $serverId = CwmserverMigrationHelper::createServerForType(
+                $data['type'],
+                $data['name'],
+                isset($data['locationId']) ? (int) $data['locationId'] : null
+            );
+
+            echo json_encode([
+                'success'  => true,
+                'serverId' => $serverId,
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Unpublish empty legacy servers after migration.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function serverMigrationCleanupXHR(): void
+    {
+        session_write_close();
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $result = CwmserverMigrationHelper::unpublishEmptyLegacyServers();
+
+            echo json_encode([
+                'success'     => true,
+                'unpublished' => $result['unpublished'],
+                'skipped'     => $result['skipped'],
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
 
         $app->close();
     }

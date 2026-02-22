@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmassets;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwmassetsModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -37,7 +38,7 @@ class HtmlView extends BaseHtmlView
      * @var array
      * @since 9.0.0
      */
-    public $assets;
+    public array $assets;
 
     /**
      * Model state
@@ -45,7 +46,7 @@ class HtmlView extends BaseHtmlView
      * @var object
      * @since 9.0.0
      */
-    public $state;
+    public object $state;
 
     /**
      * Execute and display a template script.
@@ -60,11 +61,15 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
+        /** @var CwmassetsModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
         $app     = Factory::getApplication();
         $session = $app->getSession();
 
         // Get data from the model
-        $this->state  = $this->get("State");
+        $this->state  = $model->getState();
         $this->assets = $session->get('checklists', [], 'CWM');
 
         $this->setLayout('edit');
@@ -90,7 +95,8 @@ class HtmlView extends BaseHtmlView
 
         ToolbarHelper::title(Text::_('JBS_ADM_ASSET_TABLE_NAME'), 'shield-alt');
 
-        $toolbar = Toolbar::getInstance();
+        /** @var Toolbar $toolbar */
+        $toolbar = $this->getDocument()->getToolbar();
 
         // Add home button to cpanel
         $toolbar->linkButton('home', 'JBS_CMN_HOME')

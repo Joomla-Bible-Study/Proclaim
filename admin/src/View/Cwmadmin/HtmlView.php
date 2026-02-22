@@ -51,39 +51,39 @@ class HtmlView extends BaseHtmlView
      * @var string
      * @since    7.0.0
      */
-    public $version;
+    public string $version = '';
 
     /**
      * Can Do
      *
-     * @var string
+     * @var ?object
      * @since    7.0.0
      */
-    public $canDo;
+    public ?object $canDo = null;
 
     /**
      * Change Set
      *
-     * @var string
+     * @var mixed
      * @since    7.0.0
      */
-    public $changeSet;
+    public mixed $changeSet = null;
 
     /**
      * Errors
      *
-     * @var string
+     * @var mixed
      * @since    7.0.0
      */
-    public $errors;
+    public mixed $errors = null;
 
     /**
      * Results
      *
-     * @var string
+     * @var mixed
      * @since    7.0.0
      */
-    public $results;
+    public mixed $results = null;
 
     /**
      * Schema Version
@@ -139,15 +139,15 @@ class HtmlView extends BaseHtmlView
      * @var string
      * @since    7.0.0
      */
-    public $playerstats;
+    public string $playerstats = '';
 
     /**
      * Assets
      *
-     * @var string
+     * @var mixed
      * @since    7.0.0
      */
-    public $assets;
+    public mixed $assets = null;
 
     /**
      * Popups
@@ -155,7 +155,7 @@ class HtmlView extends BaseHtmlView
      * @var string
      * @since    7.0.0
      */
-    public $popups;
+    public string $popups = '';
 
     /**
      * SS
@@ -163,15 +163,15 @@ class HtmlView extends BaseHtmlView
      * @var string
      * @since    7.0.0
      */
-    public $ss;
+    public string $ss = '';
 
     /**
      * Lists
      *
-     * @var string
+     * @var array
      * @since    7.0.0
      */
-    public $lists;
+    public array $lists = [];
 
     /**
      * PI
@@ -179,7 +179,7 @@ class HtmlView extends BaseHtmlView
      * @var string
      * @since    7.0.0
      */
-    public $pi;
+    public string $pi = '';
 
     /**
      * Whether a 9.x schema was detected in the database
@@ -193,26 +193,26 @@ class HtmlView extends BaseHtmlView
     /**
      * Form
      *
-     * @var Form
+     * @var ?Form
      * @since    7.0.0
      */
-    protected $form;
+    protected ?Form $form = null;
 
     /**
      * Item
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $item;
+    protected ?object $item = null;
 
     /**
      * State
      *
-     * @var Registry
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Execute and display a template script.
@@ -238,13 +238,17 @@ class HtmlView extends BaseHtmlView
             return;
         }
 
+        /** @var \CWM\Component\Proclaim\Administrator\Model\CwmadminModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
         $language = $app->getLanguage();
         $language->load('com_installer');
 
         // Get data from the model
-        $this->form  = $this->get("Form");
-        $this->item  = $this->get("Item");
-        $this->state = $this->get("State");
+        $this->form  = $model->getForm();
+        $this->item  = $model->getItem();
+        $this->state = $model->getState();
         $this->canDo = ContentHelper::getActions('com_proclaim', 'cwmadmin', (int)$this->item->id);
 
         // End for a database
@@ -291,7 +295,7 @@ class HtmlView extends BaseHtmlView
         $this->ss = Text::_('JBS_IBM_NO_SERMON_SPEAKER_FOUND');
         $this->pi = Text::_('JBS_IBM_NO_PREACHIT_FOUND');
 
-        $extensions = $this->get('SSorPI');
+        $extensions = $model->getSSorPI();
 
         foreach ($extensions as $extension) {
             if ($extension->element === 'com_sermonspeaker') {

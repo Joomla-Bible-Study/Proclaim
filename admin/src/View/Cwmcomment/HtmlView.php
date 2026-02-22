@@ -16,7 +16,9 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmcomment;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwmcommentModel;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
@@ -34,45 +36,45 @@ class HtmlView extends BaseHtmlView
     /**
      * Can Do
      *
-     * @var object
+     * @var   ?object
      *
      * @since 9.0.0
      */
-    public $canDo;
+    public ?object $canDo = null;
 
     /**
      * Form Data
      *
-     * @var object
+     * @var ?Form
      *
      * @since 9.0.0
      */
-    protected $form;
+    protected ?Form $form = null;
 
     /**
      * Item
      *
-     * @var object
+     * @var ?object
      *
      * @since 9.0.0
      */
-    protected $item;
+    protected ?object $item = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      *
      * @since 9.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Display the view
      *
      * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
      *
-     * @return  void  A string if successful, otherwise a Error object.
+     * @return  void  A string if successful, otherwise an Error object.
      *
      * @throws \Exception
      * @since  9.0.0
@@ -80,13 +82,17 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $this->form  = $this->get("Form");
-        $this->item  = $this->get("Item");
-        $this->state = $this->get("State");
+        /** @var CwmcommentModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->form  = $model->getForm();
+        $this->item  = $model->getItem();
+        $this->state = $model->getState();
         $this->canDo = ContentHelper::getActions('com_proclaim', 'comment', (int)$this->item->id);
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 

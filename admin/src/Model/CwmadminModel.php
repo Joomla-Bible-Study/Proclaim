@@ -67,13 +67,13 @@ class CwmadminModel extends AdminModel
      * @var string
      * @since  4.0.0
      */
-    protected $formName = 'cwmcpanel';
+    protected string $formName = 'cwmcpanel';
 
     /**
      * @var null
      * @since 7.0
      */
-    protected $changeSet = null;
+    protected mixed $changeSet = null;
 
     /**
      * Gets the form from the XML file.
@@ -365,15 +365,15 @@ class CwmadminModel extends AdminModel
      */
     public function getCompVersion(): string
     {
-        $jversion = '';
+        $version  = '';
         $file     = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
         $xml      = simplexml_load_string(file_get_contents($file));
 
         if ($xml) {
-            $jversion = (string)$xml->version;
+            $version = (string)$xml->version;
         }
 
-        return $jversion;
+        return $version;
     }
 
     /**
@@ -511,37 +511,37 @@ class CwmadminModel extends AdminModel
         foreach ($db->loadObjectList() as $media) {
             $count++;
             $search = false;
-            $isfrom = '';
+            $from   = '';
             $reg    = new Registry();
             $reg->loadString($media->params);
             $filename  = $reg->get('filename', '');
-            $mediacode = $reg->get('mediacode');
+            $mediaCode = $reg->get('mediacode');
 
             $extension = substr($filename, strrpos($filename, '.') + 1);
 
             if ($from === 'http' && str_contains($filename, 'http')) {
                 $reg->set('mime_type', ' ');
-                $isfrom = 'http';
+                $from   = 'http';
                 $search = true;
             }
 
-            if (!empty($mediacode) && $from === 'mediacode') {
+            if (!empty($mediaCode) && $from === 'mediacode') {
                 $reg->set('mime_type', ' ');
-                $isfrom = 'mediacode';
+                $from   = 'mediacode';
                 $search = true;
             }
 
             if (str_contains($key, $extension) || $reg->get('mime_type', 0) == $from) {
                 $reg->set('mime_type', $from);
-                $isfrom = 'Extenstion';
+                $from   = 'Extenstion';
                 $search = true;
             }
 
-            if ($search && !empty($isfrom)) {
+            if ($search && !empty($from)) {
                 $account++;
 
                 if (JBSMDEBUG) {
-                    $msg .= ' From: ' . $isfrom . '<br />';
+                    $msg .= ' From: ' . $from . '<br />';
 
                     if ($reg->get('mime_type', 0) == $from) {
                         $msg .= ' MimeType: ' . $reg->get('mime_type') . '<br />';

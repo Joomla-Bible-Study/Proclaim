@@ -36,7 +36,7 @@ class CwmteacherModel extends ItemModel
      *
      * @since 7.0
      */
-    protected string $context = 'com_proclaim.teacher';
+    protected $context = 'com_proclaim.teacher';
 
     /**
      * Method to get study data.

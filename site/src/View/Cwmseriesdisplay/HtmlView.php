@@ -44,7 +44,7 @@ class HtmlView extends BaseHtmlView
      *
      * @since 7.0
      */
-    protected $state = null;
+    protected ?Registry $state = null;
 
     /**
      * Item
@@ -53,7 +53,7 @@ class HtmlView extends BaseHtmlView
      *
      * @since 7.0
      */
-    protected $item = null;
+    protected ?object $item = null;
 
     /**
      * Items
@@ -62,7 +62,7 @@ class HtmlView extends BaseHtmlView
      *
      * @since 7.0
      */
-    protected $items = null;
+    protected ?object $items = null;
 
     /**
      * Pagination
@@ -71,67 +71,67 @@ class HtmlView extends BaseHtmlView
      *
      * @since 7.0
      */
-    protected $pagination = null;
+    protected ?object $pagination = null;
 
     /** @var  object|null Admin
      *
      * @since 7.0
      */
-    protected $admin = null;
+    protected ?object $admin = null;
 
     /** @var  Registry|null Admin Params
      *
      * @since 7.0
      */
-    protected $adminParams = null;
+    protected ?Registry $adminParams = null;
 
     /** @var  object|null Page
      *
      * @since 7.0
      */
-    protected $page = null;
+    protected ?object $page = null;
 
     /** @var  object|null Series Studies
      *
      * @since 7.0
      */
-    protected $seriesstudies = null;
+    protected ?object $seriesstudies = null;
 
     /** @var  CwmtemplateTable|null Template
      *
      * @since 7.0
      */
-    protected $template = null;
+    protected ?CwmtemplateTable $template = null;
 
     /** @var  Registry|null Params
      *
      * @since 7.0
      */
-    protected $params = null;
+    protected ?Registry $params = null;
 
     /** @var  string|null Article
      *
      * @since 7.0
      */
-    protected $article = null;
+    protected ?string $article = null;
 
     /** @var  string|null Passage Link
      *
      * @since 7.0
      */
-    protected $passageLink = null;
+    protected ?string $passageLink = null;
 
     /** @var  object|null Studies
      *
      * @since 7.0
      */
-    protected $studies = null;
+    protected ?object $studies = null;
 
     /** @var  string|null Request URL
      *
      * @since 7.0
      */
-    protected $requestUrl = null;
+    protected ?string $requestUrl = null;
 
     /**
      * Listing helper instance for template use

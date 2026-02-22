@@ -70,7 +70,7 @@ class HtmlView extends BaseHtmlView
      *
      * @since 7.0
      */
-    protected $user;
+    protected ?\Joomla\CMS\User\User $user = null;
 
     /** @var  string|null Passage
      *
@@ -140,7 +140,7 @@ class HtmlView extends BaseHtmlView
      * @var \Joomla\CMS\Form\Form|null
      * @since 9.2.3
      */
-    public $form;
+    public ?\Joomla\CMS\Form\Form $form = null;
 
     /**
      * Captcha enabled flag

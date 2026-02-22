@@ -39,7 +39,7 @@ class CwmseriespodcastdisplayModel extends ItemModel
      *
      * @since 7.0
      */
-    protected string $context = 'com_proclaim.podcastdisplay';
+    protected $context = 'com_proclaim.podcastdisplay';
 
     /**
      * Cached studies query (avoids rebuilding for getTotal).

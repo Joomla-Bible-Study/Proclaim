@@ -12,6 +12,7 @@
 namespace CWM\Component\Proclaim\Administrator\View\Cwmarchive;
 
 // Check to ensure this file is included in Joomla!
+use CWM\Component\Proclaim\Administrator\Model\CwmarchiveModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -46,7 +47,11 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $this->form = $this->get("Form");
+        /** @var CwmarchiveModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->form = $model->getForm();
 
         $this->setLayout('edit');
 

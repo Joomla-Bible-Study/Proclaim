@@ -24,6 +24,7 @@ use Joomla\CMS\Installer\InstallerHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\Component\Installer\Administrator\Model\DatabaseModel;
+use Joomla\Component\Joomlaupdate\Administrator\Model\UpdateModel;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Filesystem\Path;
@@ -190,13 +191,13 @@ class Cwmrestore
     public function importdb($parent): bool|array
     {
         $input         = Factory::getApplication()->getInput();
-        $installtype   = $input->getPath('install_directory');
-        $backuprestore = $input->getWord('backuprestore', '');
-        $this->dbo     = Factory::getContainer()->get('DatabaseDriver');
+        $installType   = $input->getPath('install_directory');
+        $backupRestore = $input->getWord('backuprestore', '');
+        $dBo           = Factory::getContainer()->get('DatabaseDriver');
 
         // Restore form prior backup files located on the server.
-        if (substr_count($backuprestore, '.sql')) {
-            $restored      = self::restoreDB($backuprestore);
+        if (substr_count($backupRestore, '.sql')) {
+            $restored      = self::restoreDB($backupRestore);
 
             if ($restored) {
                 return true;
@@ -206,7 +207,7 @@ class Cwmrestore
 
         // Start finding how to restore files.
         if (
-            !empty($installtype) && $installtype !== '/' && $installtype !== Factory::getApplication()->getConfig()->get(
+            !empty($installType) && $installType !== '/' && $installType !== Factory::getApplication()->getConfig()->get(
                 'tmp_path'
             ) . '/'
         ) {
@@ -233,12 +234,12 @@ class Cwmrestore
 
             if ($result) {
                 // Get Proclaim extension ID
-                $query = $this->dbo->getQuery(true);
-                $query->select($this->dbo->quoteName('extension_id'));
-                $query->from($this->dbo->quoteName('#__extensions'));
-                $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_proclaim'));
-                $this->dbo->setQuery($query);
-                $cid = (int) $this->dbo->loadResult();
+                $query = $dBo->getQuery(true);
+                $query->select($dBo->quoteName('extension_id'));
+                $query->from($dBo->quoteName('#__extensions'));
+                $query->where($dBo->quoteName('element') . ' = ' . $dBo->q('com_proclaim'));
+                $dBo->setQuery($query);
+                $cid = (int) $dBo->loadResult();
 
                 // Reset #__schemas so DatabaseModel::fix() re-runs all migrations.
                 // The restore replaced all bsms_* tables with backup data, but
@@ -262,7 +263,7 @@ class Cwmrestore
                 // Fix object ownership for migrated data
                 self::fixOwnershipAfterRestore();
 
-                /** @var \Joomla\Component\Joomlaupdate\Administrator\Model\UpdateModel $updateModel */
+                /** @var UpdateModel $updateModel */
                 $updateModel = Factory::getApplication()->bootComponent('com_joomlaupdate')
                     ->getMVCFactory()->createModel('Update', 'Administrator', ['ignore_request' => true]);
                 $updateModel->purge();
@@ -305,23 +306,23 @@ class Cwmrestore
         $query = file_get_contents(JPATH_SITE . '/media/com_proclaim/backup/' . $backuprestore);
 
         // Check to see if this is a backup from an old DB and not a migration
-        $isold   = substr_count($query, '#__bsms_admin_genesis');
-        $isnot   = substr_count($query, '#__bsms_studies');
-        $iscernt = substr_count($query, BIBLESTUDY_VERSION_UPDATEFILE);
+        $sold    = substr_count($query, '#__bsms_admin_genesis');
+        $isNot   = substr_count($query, '#__bsms_studies');
+        $isCent  = substr_count($query, BIBLESTUDY_VERSION_UPDATEFILE);
 
-        if ($isold !== 0 && $isnot === 0) {
+        if ($sold !== 0 && $isNot === 0) {
             $app->enqueueMessage(Text::_('JBS_IBM_OLD_DB'), 'warning');
 
             return false;
         }
 
-        if ($isnot === 0) {
+        if ($isNot === 0) {
             $app->enqueueMessage(Text::_('JBS_IBM_NOT_DB'), 'warning');
 
             return false;
         }
 
-        if (!$iscernt) {
+        if (!$isCent) {
             $app->enqueueMessage(basename($backuprestore), 'warning');
             $app->enqueueMessage(Text::_('JBS_IBM_NOT_CURENT_DB'), 'warning');
 
@@ -427,7 +428,7 @@ class Cwmrestore
         $input = $app->getInput();
 
         // Get the uploaded file information
-        $userfile = $input->files->get('importdb', null, 'raw');
+        $userFile = $input->files->get('importdb', null, 'raw');
 
         // Make sure that file uploads are enabled in PHP
         if (!(bool)\ini_get('file_uploads')) {
@@ -444,14 +445,14 @@ class Cwmrestore
         }
 
         // If there is no uploaded file, we have a problem...
-        if (!\is_array($userfile)) {
+        if (!\is_array($userFile)) {
             $app->enqueueMessage(Text::_('JBS_CMN_NO_FILE_SELECTED'), 'warning');
 
             return false;
         }
 
         // Is the PHP tmp directory missing?
-        if ($userfile['error'] && ($userfile['error'] == UPLOAD_ERR_NO_TMP_DIR)) {
+        if ($userFile['error'] && ($userFile['error'] == UPLOAD_ERR_NO_TMP_DIR)) {
             $app->enqueueMessage(
                 Text::_('JBS_IBM_ERROR_UPLOAD_FAILED') . '<br />' . Text::_(
                     'JBS_IBM_ERROR_UPLOAD_FAILED_PHPUPLOADNOTSET',
@@ -463,7 +464,7 @@ class Cwmrestore
         }
 
         // Is the max upload size too small in php.ini?
-        if ($userfile['error'] && ($userfile['error'] == UPLOAD_ERR_INI_SIZE)) {
+        if ($userFile['error'] && ($userFile['error'] == UPLOAD_ERR_INI_SIZE)) {
             $app->enqueueMessage(
                 Text::_('JBS_IBM_ERROR_UPLOAD_FAILED') . '<br />' . Text::_(
                     'JBS_IBM_ERROR_UPLOAD_FAILED_SMALLUPLOADSIZE',
@@ -475,7 +476,7 @@ class Cwmrestore
         }
 
         // Check if there was a problem uploading the file.
-        if ($userfile['error'] || $userfile['size'] < 1) {
+        if ($userFile['error'] || $userFile['size'] < 1) {
             $app->enqueueMessage(Text::_('JBS_IBM_ERROR_UPLOAD_FAILED'), 'warning');
 
             return false;
@@ -483,8 +484,8 @@ class Cwmrestore
 
         // Build the appropriate paths
         $config   = Factory::getApplication()->getConfig();
-        $tmp_dest = $config->get('tmp_path') . '/' . $userfile['name'];
-        $tmp_src  = $userfile['tmp_name'];
+        $tmp_dest = $config->get('tmp_path') . '/' . $userFile['name'];
+        $tmp_src  = $userFile['tmp_name'];
 
         // Move an uploaded file.
         File::upload($tmp_src, $tmp_dest, false, true);
@@ -531,24 +532,24 @@ class Cwmrestore
             return false;
         }
         // Check if sql file is for Joomla! Bible Studies
-        $isold   = substr_count($query, '#__bsms_admin_genesis');
-        $isnot   = substr_count($query, '#__bsms_studies');
-        $iscernt = substr_count($query, BIBLESTUDY_VERSION_UPDATEFILE);
+        $sold    = substr_count($query, '#__bsms_admin_genesis');
+        $isNot   = substr_count($query, '#__bsms_studies');
+        $isCent  = substr_count($query, BIBLESTUDY_VERSION_UPDATEFILE);
 
-        if ($isold !== 0 && $isnot === 0) {
+        if ($sold !== 0 && $isNot === 0) {
             $app->enqueueMessage(Text::_('JBS_IBM_OLD_DB'), 'warning');
 
             return false;
         }
 
-        if ($isnot === 0) {
+        if ($isNot === 0) {
             $app->enqueueMessage('Extracted file: ' . basename($tmp_src), 'warning');
             $app->enqueueMessage(Text::_('JBS_IBM_NOT_DB'), 'warning');
 
             return false;
         }
 
-        if (($iscernt === 0) && ($parent !== true)) {
+        if (($isCent === 0) && ($parent !== true)) {
             // Way to check if a file came from a restore and is current.
             $app->enqueueMessage(Text::_('JBS_IBM_NOT_CURENT_DB'), 'warning');
 
@@ -597,7 +598,7 @@ class Cwmrestore
      * After a restore, the bsms_* tables come from the backup but #__schemas
      * (a Joomla core table) still holds the version from before the restore.
      * This mismatch causes DatabaseModel::fix() to skip migrations, leaving
-     * tables that were added after the backup was created missing entirely.
+     * tables that were added after the backup was created are missing entirely.
      *
      * @param   int  $extensionId  The Proclaim extension ID
      *
@@ -630,7 +631,7 @@ class Cwmrestore
      *
      * DatabaseModel::fix() only runs SQL DDL via Joomla's ChangeSet — it skips
      * UPDATE/DELETE/INSERT statements. This method runs the PHP finish steps
-     * that handle data migration the ChangeSet cannot.
+     * that handles data migration, the ChangeSet cannot.
      *
      * @return  void
      *

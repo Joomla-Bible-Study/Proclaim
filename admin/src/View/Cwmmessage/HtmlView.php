@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\BibleStructure;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
+use CWM\Component\Proclaim\Administrator\Model\CwmmessageModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
@@ -39,34 +40,34 @@ class HtmlView extends BaseHtmlView
     /**
      * Form
      *
-     * @var mixed
+     * @var ?\Joomla\CMS\Form\Form
      * @since    7.0.0
      */
-    protected $form;
+    protected ?\Joomla\CMS\Form\Form $form = null;
 
     /**
      * Item
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $item;
+    protected ?object $item = null;
 
     /**
      * Admin
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $admin;
+    protected ?object $admin = null;
 
     /**
      * Can Do
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $canDo;
+    protected ?object $canDo = null;
 
     /**
      * Media Files
@@ -79,18 +80,26 @@ class HtmlView extends BaseHtmlView
     /**
      * Admin Params
      *
-     * @var Registry
+     * @var ?Registry
      * @since    7.0.0
      */
-    protected $admin_params;
+    protected ?Registry $admin_params = null;
 
     /**
      * Simple mode object
      *
-     * @var   object
+     * @var   ?object
      * @since 9.2.3
      */
-    protected $simple;
+    protected ?object $simple = null;
+
+    /**
+     * State
+     *
+     * @var ?object
+     * @since    7.0.0
+     */
+    protected ?object $state = null;
 
     /**
      * Execute and display a template script.
@@ -106,16 +115,20 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $this->form       = $this->get("Form");
-        $this->item       = $this->get("Item");
+        /** @var CwmmessageModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->form       = $model->getForm();
+        $this->item       = $model->getItem();
         $this->canDo      = ContentHelper::getActions('com_proclaim', 'message', (int)$this->item->id);
         $input            = Factory::getApplication()->getInput();
         $option           = $input->get('option', '', 'cmd');
-        $this->mediafiles = $this->get('MediaFiles');
-        $this->state      = $this->get('State');
+        $this->mediafiles = $model->getMediaFiles();
+        $this->state      = $model->getState();
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 

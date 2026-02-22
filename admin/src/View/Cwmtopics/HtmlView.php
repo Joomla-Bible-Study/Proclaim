@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmtopics;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwmtopicsModel;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -35,10 +36,10 @@ class HtmlView extends BaseHtmlView
     /**
      * Filter Levels
      *
-     * @var array
+     * @var ?array
      * @since    7.0.0
      */
-    public $f_levels;
+    public ?array $f_levels = null;
 
     /**
      * Side Bar
@@ -46,39 +47,47 @@ class HtmlView extends BaseHtmlView
      * @var string
      * @since    7.0.0
      */
-    public $sidebar;
+    public string $sidebar = '';
+
+    /**
+     * Filter Form
+     *
+     * @var ?\Joomla\CMS\Form\Form
+     * @since    7.0.0
+     */
+    public ?\Joomla\CMS\Form\Form $filterForm = null;
 
     /**
      * Items
      *
-     * @var array
+     * @var ?array
      * @since    7.0.0
      */
-    protected $items;
+    protected ?array $items = null;
 
     /**
      * Pagination
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $pagination;
+    protected ?object $pagination = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Can Do
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $canDo;
+    protected ?object $canDo = null;
 
     /**
      * Execute and display a template script.
@@ -94,20 +103,22 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $items            = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
-        $this->state      = $this->get('State');
+        /** @var CwmtopicsModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
 
-        $this->filterForm = $this->get('FilterForm');
+        $items            = $model->getItems();
+        $this->pagination = $model->getPagination();
+        $this->state      = $model->getState();
+        $this->filterForm = $model->getFilterForm();
         $this->canDo      = ContentHelper::getActions('com_proclaim');
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
-        $modelView   = $this->getModel();
-        $this->items = $modelView->getTranslated($items);
+        $this->items = $model->getTranslated($items);
 
         // We don't need toolbar in the modal window.
         if ($this->getLayout() !== 'modal') {

@@ -258,16 +258,16 @@ class HtmlView extends BaseHtmlView
             $this->mediaTypeBreakdown = $model->getMediaTypeBreakdown($s, $e, $l);
         } else {
             // Overview
-            $this->kpi               = $model->getKpiTotals($s, $e, $l);
-            $this->timeSeries        = $model->getTimeSeries($s, $e, $l);
+            $this->kpi                = $model->getKpiTotals($s, $e, $l);
+            $this->timeSeries         = $model->getTimeSeries($s, $e, $l);
             $this->topStudies         = $model->getTopStudies($s, $e, 10, $l);
             $this->topStudiesCombined = $model->getTopStudiesCombined($s, $e, 10, $l);
-            $this->referrerBreakdown = $model->getReferrerBreakdown($s, $e, $l);
-            $this->deviceBreakdown   = $model->getDeviceBreakdown($s, $e, $l);
-            $this->browserBreakdown  = $model->getBrowserBreakdown($s, $e, $l);
-            $this->osBreakdown       = $model->getOsBreakdown($s, $e, $l);
-            $this->languageBreakdown = $model->getLanguageBreakdown($s, $e, $l);
-            $this->utmBreakdown      = $model->getUtmBreakdown($s, $e, $l);
+            $this->referrerBreakdown  = $model->getReferrerBreakdown($s, $e, $l);
+            $this->deviceBreakdown    = $model->getDeviceBreakdown($s, $e, $l);
+            $this->browserBreakdown   = $model->getBrowserBreakdown($s, $e, $l);
+            $this->osBreakdown        = $model->getOsBreakdown($s, $e, $l);
+            $this->languageBreakdown  = $model->getLanguageBreakdown($s, $e, $l);
+            $this->utmBreakdown       = $model->getUtmBreakdown($s, $e, $l);
         }
 
         // --- Export URL (false = raw &, not &amp; — template handles escaping) ---

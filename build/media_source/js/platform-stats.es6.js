@@ -194,7 +194,7 @@
 
                 const token = getToken();
                 let successes = 0;
-                let errors = [];
+                const errors = [];
 
                 for (const checkbox of targets) {
                     const mediaId = parseInt(checkbox.value, 10);

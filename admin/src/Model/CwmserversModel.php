@@ -117,6 +117,13 @@ class CwmserversModel extends ListModel
                 // Create the reverse lookup for Endpoint type to Endpoint name
                 $this->rlu_type[strtolower($server)] = (string)$xml->name;
 
+                // Legacy addon is kept for existing servers but hidden from the type picker
+                if (strtolower($server) === 'legacy') {
+                    unset($xml);
+
+                    continue;
+                }
+
                 $o              = new \stdClass();
                 $o->id          = $i;
                 $o->type        = (string)$xml['type'];

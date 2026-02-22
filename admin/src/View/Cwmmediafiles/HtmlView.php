@@ -12,6 +12,7 @@
 namespace CWM\Component\Proclaim\Administrator\View\Cwmmediafiles;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Model\CwmmediafilesModel;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
@@ -38,60 +39,68 @@ use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 class HtmlView extends BaseHtmlView
 {
     /**
-     * Media Types
-     *
-     * @var string
-     * @since    7.0.0
-     */
-    public $mediatypes;
-
-    /**
      * Can Do
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    public $canDo;
+    public ?object $canDo = null;
 
     /**
-     * Filter Levers
+     * Filter Levels
+     *
+     * @var ?array
+     * @since    7.0.0
+     */
+    public ?array $f_levels = null;
+
+    /**
+     * Side Bar
      *
      * @var string
      * @since    7.0.0
      */
-    public $f_levels;
+    public string $sidebar = '';
 
     /**
-     * Side Bare
+     * Filter Form
      *
-     * @var string
+     * @var ?\Joomla\CMS\Form\Form
      * @since    7.0.0
      */
-    public $sidebar;
+    public ?\Joomla\CMS\Form\Form $filterForm = null;
+
+    /**
+     * Active Filters
+     *
+     * @var ?array
+     * @since    7.0.0
+     */
+    public ?array $activeFilters = null;
 
     /**
      * Items
      *
-     * @var array
+     * @var ?array
      * @since    7.0.0
      */
-    protected $items;
+    protected ?array $items = null;
 
     /**
      * Pagination
      *
-     * @var array
+     * @var ?object
      * @since    7.0.0
      */
-    protected $pagination;
+    protected ?object $pagination = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * All transitions, which can be executed of one if the items
@@ -123,22 +132,25 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $this->items         = $this->get('Items');
-        $this->pagination    = $this->get('Pagination');
-        $this->state         = $this->get('State');
+        /** @var CwmmediafilesModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->items         = $model->getItems();
+        $this->pagination    = $model->getPagination();
+        $this->state         = $model->getState();
         $this->canDo         = ContentHelper::getActions('com_proclaim', 'message');
-        $this->mediatypes    = $this->get('Mediatypes');
-        $this->filterForm    = $this->get('FilterForm');
-        $this->activeFilters = $this->get('ActiveFilters');
+        $this->filterForm    = $model->getFilterForm();
+        $this->activeFilters = $model->getActiveFilters();
 
         if (ComponentHelper::getParams('com_proclaim')->get('workflow_enabled')) {
             PluginHelper::importPlugin('workflow');
 
-            $this->transitions = $this->get('Transitions');
+            $this->transitions = $model->getTransitions();
         }
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 

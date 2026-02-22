@@ -136,7 +136,12 @@ Use the [Issues](https://github.com/Joomla-Bible-Study/Proclaim/issues) section 
 
 ## License
 
+CWM Proclaim is distributed under the GNU General Public License version 2 or later.
 See [LICENSE.txt](LICENSE.txt) for details.
+
+This software includes third-party components with their own license terms.
+See [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) for details, including
+important information about Fancybox licensing for commercial use.
 
 ## Copyright
 

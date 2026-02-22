@@ -71,14 +71,14 @@ class CWMAddonYoutube extends CWMAddon
     /**
      * Render Fields for a general view.
      *
-     * @param object  $media_form  Medea files form
-     * @param bool    $new         If media is new
+     * @param   object  $media_form  Medea files form
+     * @param bool      $new         If media is new
      *
      * @return string
      *
      * @since 9.1.3
      */
-    public function renderGeneral($media_form, bool $new): string
+    public function renderGeneral(object $media_form, bool $new): string
     {
         // Load YouTube browser JavaScript
         HTMLHelper::_('script', 'media/com_proclaim/js/addon-youtube-browser.js', ['version' => 'auto']);
@@ -106,20 +106,108 @@ class CWMAddonYoutube extends CWMAddon
     /**
      * Render Layout and fields
      *
-     * @param object  $media_form  Media files form
-     * @param bool    $new         If media is new
+     * @param   object  $media_form  Media files form
+     * @param bool      $new         If media is new
      *
      * @return string
      *
      * @since 9.1.3
      */
-    public function render($media_form, bool $new): string
+    public function render(object $media_form, bool $new): string
     {
         $html = HTMLHelper::_('uitab.addTab', 'myTab', 'options', Text::_('JBS_ADDON_MEDIA_OPTIONS_LABEL'));
         $html .= $this->renderOptionsFields($media_form, $new);
         $html .= HTMLHelper::_('uitab.endTab');
 
         return $html;
+    }
+
+    /**
+     * URL patterns that identify YouTube content.
+     *
+     * @return  string[]
+     *
+     * @since   10.1.0
+     */
+    public function getUrlPatterns(): array
+    {
+        return ['/(youtube\.com|youtu\.be)/i'];
+    }
+
+    /**
+     * Build a YouTube embed URL with all form field params applied.
+     *
+     * @param   string    $filename     The raw YouTube URL
+     * @param   Registry  $mediaParams  Merged template + media params
+     *
+     * @return  string  The embed-ready URL with query params
+     *
+     * @since   10.1.0
+     */
+    public function buildEmbedUrl(string $filename, Registry $mediaParams): string
+    {
+        $baseUrl = $this->convertYoutube($filename);
+        $parts   = parse_url($baseUrl);
+        $query   = [];
+
+        if (!empty($parts['query'])) {
+            parse_str($parts['query'], $query);
+        }
+
+        // Map existing autostart → YouTube autoplay
+        $autostart = $mediaParams->get('autostart', '');
+
+        if ($autostart === 'true') {
+            $query['autoplay'] = '1';
+        } elseif ($autostart === 'false') {
+            $query['autoplay'] = '0';
+        }
+
+        // Platform-specific form fields → URL params
+        $fieldMap = [
+            'yt_mute'        => 'mute',
+            'yt_start'       => 'start',
+            'yt_end'         => 'end',
+            'yt_loop'        => 'loop',
+            'yt_controls'    => 'controls',
+            'yt_rel'         => 'rel',
+            'yt_cc'          => 'cc_load_policy',
+            'yt_playsinline' => 'playsinline',
+        ];
+
+        foreach ($fieldMap as $formField => $urlParam) {
+            $val = $mediaParams->get($formField, '');
+
+            if ($val !== '') {
+                $query[$urlParam] = $val;
+            }
+        }
+
+        $query['enablejsapi'] = '1';
+
+        return strtok($baseUrl, '?') . '?' . http_build_query($query);
+    }
+
+    /**
+     * Render inline YouTube player (responsive 16:9 iframe).
+     *
+     * @param   string    $url          The raw YouTube URL
+     * @param   Registry  $mediaParams  Merged template + media params
+     * @param   int       $mediaId      The media file ID
+     *
+     * @return  string  Complete player HTML
+     *
+     * @since   10.1.0
+     */
+    public function renderInlinePlayer(string $url, Registry $mediaParams, int $mediaId): string
+    {
+        $embedUrl = $this->buildEmbedUrl($url, $mediaParams);
+
+        return '<div class="proclaim-video-wrap" style="position:relative;padding-bottom:56.25%;overflow:hidden;max-width:100%;">'
+            . '<iframe class="playhit" data-id="' . $mediaId . '" src="' . htmlspecialchars($embedUrl, ENT_QUOTES, 'UTF-8') . '"'
+            . ' allow="autoplay; encrypted-media" allowfullscreen'
+            . ' style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>'
+            . '</div>';
     }
 
     /**
@@ -167,7 +255,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      *
      * @throws Exception
-     * @since version
+     * @since 9.0.0
      */
     public function buildPlaylistList($key, string $playlistID, string $pageToken, int $maxResults = 50): void
     {

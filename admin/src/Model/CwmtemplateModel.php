@@ -101,7 +101,7 @@ class CwmtemplateModel extends AdminModel
 
             $tmplCurr->load($id);
             $tmplCurr->id               = 0;
-            $tmplCurr->title             .= ' - copy';
+            $tmplCurr->title .= ' - copy';
             $tmplCurr->created_by        = $userId;
             $tmplCurr->created_by_alias  = '';
             $tmplCurr->created           = null;

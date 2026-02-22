@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwminstall;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwminstallModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -58,14 +59,22 @@ class HtmlView extends BaseHtmlView
     public string $version = '0.0.0';
 
     public array $query = [];
-    /** @var string Start of installation
+    /** @var ?object Start of installation
      * @since    7.0.0
      */
-    public $state;
-    /** @var object Status
+    public ?object $state = null;
+    /** @var ?object Status
      * @since    7.0.0
      */
-    public $status;
+    public ?object $status = null;
+    /** @var string Start step name
+     * @since    7.0.0
+     */
+    public string $start = '';
+    /** @var bool|string Scan state
+     * @since    7.0.0
+     */
+    public mixed $scanstate = false;
     /** @var array The pre-versions sub sql array to process
      * @since    7.0.0
      */
@@ -78,10 +87,10 @@ class HtmlView extends BaseHtmlView
      * @since    7.0.0
      */
     protected bool $more;
-    /** @var  string Percentage
+    /** @var int|float Percentage
      * @since    7.0.0
      */
-    protected $percentage;
+    protected int|float $percentage = 0;
     /** @var string Type of process
      * @since    7.0.0
      */
@@ -116,11 +125,15 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
+        /** @var CwminstallModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
         $app             = Factory::getApplication();
         $this->scanstate = $app->getInput()->get('scanstate', false);
 
         // Get data from the model
-        $this->state = $this->get("State");
+        $this->state = $model->getState();
         $layout      = $app->getInput()->get('layout', 'default');
         $task        = $app->getInput()->get('task', 'execute');
 
@@ -150,7 +163,7 @@ class HtmlView extends BaseHtmlView
 
         // Install systems setup files
         // @todo need to move to a helper as this is call do many times.
-        $this->installsetup();
+        $this->installSetup();
 
         $this->addToolbar();
 

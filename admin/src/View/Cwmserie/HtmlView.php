@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmserie;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Model\CwmserieModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
@@ -86,8 +87,12 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $this->form  = $this->get("Form");
-        $this->item  = $this->get("Item");
+        /** @var CwmserieModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->form  = $model->getForm();
+        $this->item  = $model->getItem();
         $this->canDo = ContentHelper::getActions('com_proclaim', 'serie', (int)$this->item->id);
         $admin       = Cwmparams::getAdmin();
         $registry    = new Registry();
@@ -96,11 +101,11 @@ class HtmlView extends BaseHtmlView
 
         // Load messages belonging to this series (only for existing records)
         if (!empty($this->item->id) && $this->item->id > 0) {
-            $this->messages = $this->get('Messages');
+            $this->messages = $model->getMessages();
         }
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 

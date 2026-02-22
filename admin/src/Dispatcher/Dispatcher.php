@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Administrator\Dispatcher;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Dispatcher\ComponentDispatcher;
 
 /**
@@ -52,6 +53,20 @@ class Dispatcher extends ComponentDispatcher
             }
 
             require_once $api;
+        }
+
+        // Gate: require license acceptance before any admin access.
+        $view = $this->input->getCmd('view', '');
+        $task = $this->input->getCmd('task', '');
+
+        if (
+            $view !== 'cwmlicense'
+            && !str_starts_with($task, 'cwmlicense.')
+            && !ComponentHelper::getParams('com_proclaim')->get('license_accepted', '0')
+        ) {
+            $this->app->redirect('index.php?option=com_proclaim&view=cwmlicense');
+
+            return;
         }
 
         parent::dispatch();

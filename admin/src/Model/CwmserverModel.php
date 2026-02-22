@@ -74,7 +74,7 @@ class CwmserverModel extends AdminModel
      * @since 9.0.0
      * @todo  need to look into this and see if we need it still.
      */
-    private $event_after_upload;
+    private mixed $event_after_upload;
 
     /**
      * Constructor

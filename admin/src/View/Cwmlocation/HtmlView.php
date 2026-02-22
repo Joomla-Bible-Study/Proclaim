@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmlocation;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwmlocationModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
@@ -33,34 +34,42 @@ class HtmlView extends BaseHtmlView
     /**
      * Item
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $item;
+    protected ?object $item = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Defaults
      *
-     * @var array
+     * @var ?array
      * @since    7.0.0
      */
-    protected $defaults;
+    protected ?array $defaults = null;
 
     /**
      * Can Do
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $canDo;
+    protected ?object $canDo = null;
+
+    /**
+     * Form
+     *
+     * @var ?\Joomla\CMS\Form\Form
+     * @since    7.0.0
+     */
+    public ?\Joomla\CMS\Form\Form $form = null;
 
     /**
      * Execute and display a template script.
@@ -76,9 +85,13 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $this->form  = $this->get("Form");
-        $this->item  = $this->get("Item");
-        $this->state = $this->get("State");
+        /** @var CwmlocationModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->form  = $model->getForm();
+        $this->item  = $model->getItem();
+        $this->state = $model->getState();
         $this->canDo = ContentHelper::getActions('com_proclaim', 'location', (int)$this->item->id);
 
         $this->setLayout("edit");

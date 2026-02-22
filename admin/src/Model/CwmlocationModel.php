@@ -146,7 +146,7 @@ class CwmlocationModel extends AdminModel
 
             // Block if content is assigned to this location
             if ($usage['messages'] > 0 || $usage['series'] > 0 || $usage['podcasts'] > 0) {
-                $this->setError(
+                throw new \RuntimeException(
                     Text::sprintf(
                         'JBS_ERROR_LOCATION_IN_USE',
                         $usage['messages'],
@@ -154,15 +154,11 @@ class CwmlocationModel extends AdminModel
                         $usage['podcasts']
                     )
                 );
-
-                return false;
             }
 
             // Block if this location is referenced in the group mapping config
             if ($this->isInGroupMapping($pk)) {
-                $this->setError(Text::_('JBS_ERROR_LOCATION_IN_GROUP_MAPPING'));
-
-                return false;
+                throw new \RuntimeException(Text::_('JBS_ERROR_LOCATION_IN_GROUP_MAPPING'));
             }
         }
 

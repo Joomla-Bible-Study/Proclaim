@@ -41,13 +41,13 @@ class CwminstallModel extends ListModel
      *
      * @since 7.1
      */
-    public $totalSteps = 0;
+    public int $totalSteps = 0;
 
     /** @var int Number of Versions already processed
      *
      * @since 7.1
      */
-    public $doneSteps = 0;
+    public int $doneSteps = 0;
 
     /**
      * @var string
@@ -55,11 +55,11 @@ class CwminstallModel extends ListModel
      */
     public string $step = '';
 
-    /** @var string Running Now
+    /** @var ?string Running Now
      *
      * @since 7.1
      */
-    public $running = null;
+    public ?string $running = null;
 
     /** @var array Call stack for the Visioning System.
      *
@@ -266,6 +266,7 @@ class CwminstallModel extends ListModel
             'populatestudyteachers',
             'fixteacheraliases',
             'migrateaccesstolocations',
+            'migratelegacyservers',
             'registerguidedtours',
             'rmoldurl',
             'setupdateurl',
@@ -973,6 +974,16 @@ class CwminstallModel extends ListModel
                 Log::add('Location migration: scenario=' . $report['scenario']
                     . ' locations=' . $report['locations_created']
                     . ' messages=' . $report['messages_updated'], Log::INFO, 'com_proclaim');
+                break;
+            case 'migratelegacyservers':
+                $report        = CwmmigrationHelper::migrateLegacyServers();
+                $this->running = 'Migrate Legacy Servers (' . $report['migrated'] . ' files'
+                    . ', ' . $report['servers_created'] . ' servers created'
+                    . ', ' . $report['unpublished'] . ' unpublished)';
+                Log::add('Legacy server migration: ' . $report['migrated'] . ' files migrated'
+                    . ', ' . $report['servers_created'] . ' servers created'
+                    . ', ' . $report['unpublished'] . ' legacy servers unpublished'
+                    . ', ' . \count($report['errors']) . ' errors', Log::INFO, 'com_proclaim');
                 break;
             case 'registerguidedtours':
                 $tourHelper    = new CwmguidedtourHelper();

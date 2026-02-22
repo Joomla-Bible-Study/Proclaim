@@ -100,5 +100,49 @@
                 <option value="false">JNO</option>
             </field>
         </fieldset>
+        <fieldset name="embed_options" label="JBS_ADDON_YOUTUBE_EMBED_OPTIONS">
+            <field name="yt_mute" type="list" default=""
+                   label="JBS_ADDON_YOUTUBE_MUTE" description="JBS_ADDON_YOUTUBE_MUTE_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field name="yt_start" type="text" default=""
+                   label="JBS_ADDON_YOUTUBE_START" description="JBS_ADDON_YOUTUBE_START_DESC"
+                   hint="e.g. 30"/>
+            <field name="yt_end" type="text" default=""
+                   label="JBS_ADDON_YOUTUBE_END" description="JBS_ADDON_YOUTUBE_END_DESC"
+                   hint="e.g. 120"/>
+            <field name="yt_loop" type="list" default=""
+                   label="JBS_ADDON_YOUTUBE_LOOP" description="JBS_ADDON_YOUTUBE_LOOP_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field name="yt_controls" type="list" default=""
+                   label="JBS_ADDON_YOUTUBE_CONTROLS" description="JBS_ADDON_YOUTUBE_CONTROLS_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="0">JHIDE</option>
+                <option value="1">JSHOW</option>
+            </field>
+            <field name="yt_rel" type="list" default=""
+                   label="JBS_ADDON_YOUTUBE_REL" description="JBS_ADDON_YOUTUBE_REL_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field name="yt_cc" type="list" default=""
+                   label="JBS_ADDON_YOUTUBE_CC" description="JBS_ADDON_YOUTUBE_CC_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field name="yt_playsinline" type="list" default=""
+                   label="JBS_ADDON_YOUTUBE_PLAYSINLINE" description="JBS_ADDON_YOUTUBE_PLAYSINLINE_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+        </fieldset>
     </fields>
 </media>

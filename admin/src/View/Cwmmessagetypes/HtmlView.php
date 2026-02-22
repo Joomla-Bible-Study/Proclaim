@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmmessagetypes;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwmmessagetypesModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
@@ -36,42 +37,50 @@ class HtmlView extends BaseHtmlView
     /**
      * Filter Levels
      *
-     * @var array
+     * @var ?array
      * @since    7.0.0
      */
-    public $f_levels;
+    public ?array $f_levels = null;
 
     /**
      * Side Bar
      *
-     * @var object
+     * @var string
      * @since    7.0.0
      */
-    public $sidebar;
+    public string $sidebar = '';
+
+    /**
+     * Filter Form
+     *
+     * @var ?\Joomla\CMS\Form\Form
+     * @since    7.0.0
+     */
+    public ?\Joomla\CMS\Form\Form $filterForm = null;
 
     /**
      * Items
      *
-     * @var object
+     * @var ?array
      * @since    7.0.0
      */
-    protected $items;
+    protected ?array $items = null;
 
     /**
      * Pagination
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $pagination;
+    protected ?object $pagination = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Execute and display a template script.
@@ -87,14 +96,17 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $this->items      = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
-        $this->state      = $this->get('State');
+        /** @var CwmmessagetypesModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
 
-        $this->filterForm = $this->get('FilterForm');
+        $this->items      = $model->getItems();
+        $this->pagination = $model->getPagination();
+        $this->state      = $model->getState();
+        $this->filterForm = $model->getFilterForm();
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 

@@ -43,7 +43,7 @@ class CwmsermonModel extends FormModel
      *
      * @since 7.0
      */
-    protected string $context = 'com_proclaim.sermon';
+    protected $context = 'com_proclaim.sermon';
 
     /**
      * Method to increment the hit counter for the study

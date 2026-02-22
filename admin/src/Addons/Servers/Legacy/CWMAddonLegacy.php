@@ -24,8 +24,11 @@ use Joomla\CMS\Language\Text;
 /**
  * Class CWMAddonLegacy
  *
- * @package  Proclaim.Admin
- * @since    9.0.0
+ * @package     Proclaim.Admin
+ * @since       9.0.0
+ * @deprecated  10.1.0  Legacy servers will be removed in 11.0.0.
+ *              Use the Server Migration tool in Admin Center to migrate
+ *              media files to core server addons (YouTube, Vimeo, Local, etc.).
  */
 class CWMAddonLegacy extends CWMAddon
 {
@@ -63,14 +66,14 @@ class CWMAddonLegacy extends CWMAddon
     /**
      * Render Fields for the general view.
      *
-     * @param object  $media_form  Media files form
-     * @param bool    $new         If media is new
+     * @param   object  $media_form  Media files form
+     * @param bool      $new         If media is new
      *
      * @return string
      *
      * @since 9.1.3
      */
-    public function renderGeneral($media_form, bool $new): string
+    public function renderGeneral(object $media_form, bool $new): string
     {
         $html = '';
 
@@ -92,14 +95,14 @@ class CWMAddonLegacy extends CWMAddon
     /**
      * Render Layout and fields
      *
-     * @param object  $media_form  Media files form
-     * @param bool    $new         If the media is new
+     * @param   object  $media_form  Media files form
+     * @param bool      $new         If the media is new
      *
      * @return string
      *
      * @since 9.1.3
      */
-    public function render($media_form, bool $new): string
+    public function render(object $media_form, bool $new): string
     {
         $html = HTMLHelper::_('uitab.addTab', 'myTab', 'options', Text::_('JBS_ADDON_MEDIA_OPTIONS_LABEL'));
         $html .= $this->renderOptionsFields($media_form, $new);

@@ -42,19 +42,19 @@ class HtmlView extends BaseHtmlView
      *
      * @since 7.0
      */
-    protected $admin;
+    protected ?object $admin = null;
 
     /** @var  array|null Items
      *
      * @since 7.0
      */
-    protected $items;
+    protected ?array $items = null;
 
     /** @var  object|null Template
      *
      * @since 7.0
      */
-    protected $template;
+    protected ?object $template = null;
 
     /** @var Pagination|null  Pagination
      *
@@ -106,7 +106,7 @@ class HtmlView extends BaseHtmlView
      * @var array|null
      * @since 10.0.0
      */
-    public $activeFilters;
+    public ?array $activeFilters = null;
 
     /**
      * Listing helper instance for template use

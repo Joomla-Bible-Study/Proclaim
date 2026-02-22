@@ -52,7 +52,7 @@ class CwmmessagetypeTable extends Table
     /**
      * Published
      *
-     * @var int
+     * @var ?int
      *
      * @since 9.0.0
      */
@@ -110,7 +110,7 @@ class CwmmessagetypeTable extends Table
     /**
      * Created by alias
      *
-     * @var string
+     * @var ?string
      * @since 10.1.0
      */
     public ?string $created_by_alias = '';
@@ -132,8 +132,10 @@ class CwmmessagetypeTable extends Table
     public ?int $modified_by = null;
 
     /**
+     * Message type name
+     *
      * @var ?string
-     * @since version
+     * @since 10.1.0
      */
     public ?string $message_type = null;
 

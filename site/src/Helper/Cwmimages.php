@@ -451,7 +451,7 @@ class Cwmimages
      *
      * @return object
      *
-     * @since version
+     * @since 9.0.0
      */
     public static function extracted(?string $image1, ?string $image2, string $folder): object
     {

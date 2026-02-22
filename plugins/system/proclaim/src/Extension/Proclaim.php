@@ -321,6 +321,12 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             return;
         }
 
+        // Skip list navigation (pagination, filtering, sorting) — these are
+        // read-only POST submissions that Joomla list views use by default
+        if ($task === '' || $task === 'display') {
+            return;
+        }
+
         $params = $this->getAdminParams();
         $max    = (int) ($params['rate_limit_max'] ?? self::DEFAULT_RATE_LIMIT_MAX);
         $window = (int) ($params['rate_limit_window'] ?? self::DEFAULT_RATE_LIMIT_WINDOW);

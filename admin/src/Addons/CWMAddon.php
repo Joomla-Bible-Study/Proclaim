@@ -199,26 +199,26 @@ abstract class CWMAddon
     /**
      * Render Fields for a general view.
      *
-     * @param object $media_form Media files form
-     * @param bool $new If media is new
+     * @param   object  $media_form  Media files form
+     * @param bool      $new         If media is new
      *
      * @return string
      *
      * @since 9.1.3
      */
-    abstract public function renderGeneral($media_form, bool $new): string;
+    abstract public function renderGeneral(object $media_form, bool $new): string;
 
     /**
      * Render Layout and fields (full tab with addTab/endTab wrappers)
      *
-     * @param object $media_form Media files form
-     * @param bool $new If media is new
+     * @param   object  $media_form  Media files form
+     * @param bool      $new         If media is new
      *
      * @return string
      *
      * @since 9.1.3
      */
-    abstract public function render($media_form, bool $new): string;
+    abstract public function render(object $media_form, bool $new): string;
 
     /**
      * Render non-general fieldset fields WITHOUT tab wrappers.
@@ -233,7 +233,7 @@ abstract class CWMAddon
      *
      * @since   10.1.0
      */
-    public function renderOptionsFields($media_form, bool $new): string
+    public function renderOptionsFields(object $media_form, bool $new): string
     {
         $html = '<div class="row">';
 
@@ -735,6 +735,157 @@ abstract class CWMAddon
         $db->setQuery($query);
 
         return (int) $db->loadResult();
+    }
+
+    /**
+     * URL regex patterns this addon can render. Override in child classes.
+     * Used by resolveForUrl() to find the correct addon for a given URL.
+     *
+     * @return  string[]
+     *
+     * @since   10.1.0
+     */
+    public function getUrlPatterns(): array
+    {
+        return [];
+    }
+
+    /**
+     * Build the complete embed URL with all form field params applied.
+     * Override in each platform addon.
+     *
+     * @param   string    $filename     The raw URL/filename
+     * @param   Registry  $mediaParams  Merged template + media params
+     *
+     * @return  string  The embed-ready URL
+     *
+     * @since   10.1.0
+     */
+    public function buildEmbedUrl(string $filename, Registry $mediaParams): string
+    {
+        return $filename;
+    }
+
+    /**
+     * Render inline player HTML (responsive iframe/embed).
+     * Override in each platform addon.
+     *
+     * @param   string    $url          The raw URL/filename
+     * @param   Registry  $mediaParams  Merged template + media params
+     * @param   int       $mediaId      The media file ID (for play tracking)
+     *
+     * @return  string  Complete player HTML, or empty to fall back to CWMHtml5Inline
+     *
+     * @since   10.1.0
+     */
+    public function renderInlinePlayer(string $url, Registry $mediaParams, int $mediaId): string
+    {
+        return '';
+    }
+
+    /**
+     * Render fancybox/squeezebox link HTML.
+     * Default implementation works for most platforms — only override if custom behavior needed.
+     *
+     * @param   string    $url          The raw URL/filename
+     * @param   Registry  $mediaParams  Merged template + media params
+     * @param   int       $mediaId      The media file ID
+     * @param   string    $image        The thumbnail image HTML
+     * @param   string    $headerText   Popup header text (already escaped)
+     * @param   string    $footerText   Popup footer text (already escaped)
+     *
+     * @return  string  Complete fancybox link HTML
+     *
+     * @since   10.1.0
+     */
+    public function renderFancyboxLink(
+        string $url,
+        Registry $mediaParams,
+        int $mediaId,
+        string $image,
+        string $headerText,
+        string $footerText
+    ): string {
+        $embedUrl = $this->buildEmbedUrl($url, $mediaParams);
+
+        return '<a class="fancybox_player playhit" data-id="' . $mediaId
+            . '" aria-hidden="false" data-src="' . htmlspecialchars($embedUrl, ENT_QUOTES, 'UTF-8')
+            . '" data-header="' . $headerText . '" data-footer="' . $footerText
+            . '" data-options=\'{"autoplay":"' . (int) $mediaParams->get('autostart', false)
+            . '","controls":"' . (int) $mediaParams->get('controls') . '"}\' href="javascript:;">'
+            . $image . '</a>';
+    }
+
+    /**
+     * Render popup player HTML (iframe with explicit dimensions).
+     * Default implementation works for most platforms.
+     *
+     * @param   string    $url          The raw URL/filename
+     * @param   Registry  $mediaParams  Merged template + media params
+     * @param   string    $width        Player width
+     * @param   string    $height       Player height
+     *
+     * @return  string  Complete popup player HTML
+     *
+     * @since   10.1.0
+     */
+    public function renderPopupPlayer(string $url, Registry $mediaParams, string $width, string $height): string
+    {
+        $embedUrl = $this->buildEmbedUrl($url, $mediaParams);
+
+        return '<iframe width="' . $width . '" height="' . $height
+            . '" src="' . htmlspecialchars($embedUrl, ENT_QUOTES, 'UTF-8')
+            . '" style="border:0;" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+    }
+
+    /** @var array|null Cached addon instances for URL resolution */
+    private static ?array $urlAddonCache = null;
+
+    /**
+     * Resolve which addon handles a URL by scanning all Servers/ subdirectories
+     * and checking getUrlPatterns() on each addon. Results are cached per-request.
+     *
+     * @param   string  $url  The URL to match against addon patterns
+     *
+     * @return  static|null  The matching addon instance, or null
+     *
+     * @since   10.1.0
+     */
+    public static function resolveForUrl(string $url): ?static
+    {
+        if (self::$urlAddonCache === null) {
+            self::$urlAddonCache = [];
+            $serverDir           = BIBLESTUDY_PATH_ADMIN . '/src/Addons/Servers';
+
+            if (is_dir($serverDir)) {
+                foreach (scandir($serverDir) as $dir) {
+                    if ($dir === '.' || $dir === '..' || !is_dir($serverDir . '/' . $dir)) {
+                        continue;
+                    }
+
+                    try {
+                        $addon    = static::getInstance(strtolower($dir));
+                        $patterns = $addon->getUrlPatterns();
+
+                        if (!empty($patterns)) {
+                            self::$urlAddonCache[] = ['addon' => $addon, 'patterns' => $patterns];
+                        }
+                    } catch (\RuntimeException) {
+                        continue;
+                    }
+                }
+            }
+        }
+
+        foreach (self::$urlAddonCache as $entry) {
+            foreach ($entry['patterns'] as $pattern) {
+                if (preg_match($pattern, $url)) {
+                    return $entry['addon'];
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
