@@ -18,7 +18,6 @@ namespace CWM\Component\Proclaim\Site\View\Cwmterms;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Document\Document;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -42,15 +41,6 @@ class HtmlView extends BaseHtmlView
      * @since 7.0
      */
     public ?object $media = null;
-
-    /**
-     * Document
-     *
-     * @var Document|null
-     *
-     * @since 7.0
-     */
-    public ?Document $document = null;
 
     /**
      * Params

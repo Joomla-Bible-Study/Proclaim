@@ -20,7 +20,6 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
-use Joomla\CMS\Document\Document;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -35,12 +34,6 @@ use Joomla\Registry\Registry;
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var  Document|null Print
-     *
-     * @since 7.0
-     */
-    public ?Document $document = null;
-
     /** @var  object|null Item
      *
      * @since 7.0

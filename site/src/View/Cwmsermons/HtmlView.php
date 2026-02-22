@@ -40,12 +40,6 @@ use Joomla\Registry\Registry;
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var object|null
-     *
-     * @since 7.0
-     */
-    public ?object $document = null;
-
     /**
      * Form object for search filters
      *
