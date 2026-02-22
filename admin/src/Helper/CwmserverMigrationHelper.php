@@ -604,37 +604,62 @@ class CwmserverMigrationHelper
 
         // Extract AllVideos shortcode content (bare ID between tags)
         $avContent = self::extractAllVideosContent($mediacode);
+        $combined  = $filename . ' ' . $mediacode;
 
         switch ($targetType) {
             case 'youtube':
-                $videoId = self::extractYoutubeId($filename . ' ' . $mediacode);
+                $videoId     = self::extractYoutubeId($combined);
+                $sourceQuery = self::extractSourceUrlParams($combined, 'youtube');
 
                 // Fall back to AllVideos bare ID: {youtube}dQw4w9WgXcQ{/youtube}
                 if ($videoId === null && !empty($avContent) && preg_match('/^[a-zA-Z0-9_-]+$/', $avContent)) {
                     $videoId = $avContent;
                 }
 
-                $result['filename']  = $videoId ? '//www.youtube.com/embed/' . $videoId . '?enablejsapi=1' : $filename;
+                if ($videoId) {
+                    // Merge source params (start, autoplay, loop, rel, etc.) with enablejsapi
+                    unset($sourceQuery['v']);
+                    $mergedParams       = array_merge($sourceQuery, ['enablejsapi' => '1']);
+                    $result['filename'] = '//www.youtube.com/embed/' . $videoId . '?' . http_build_query($mergedParams);
+                } else {
+                    $result['filename'] = $filename;
+                }
+
                 $result['player']    = '1';
                 $result['mediacode'] = '';
                 break;
 
             case 'vimeo':
-                $videoId = self::extractVimeoId($filename . ' ' . $mediacode);
+                $videoId     = self::extractVimeoId($combined);
+                $sourceQuery = self::extractSourceUrlParams($combined, 'vimeo');
 
                 // Fall back to AllVideos bare ID: {vimeo}123456789{/vimeo}
                 if ($videoId === null && !empty($avContent) && preg_match('/^\d+$/', $avContent)) {
                     $videoId = $avContent;
                 }
 
-                $result['filename']  = $videoId ? '//player.vimeo.com/video/' . $videoId : $filename;
+                if ($videoId) {
+                    $base               = '//player.vimeo.com/video/' . $videoId;
+                    $result['filename'] = !empty($sourceQuery) ? $base . '?' . http_build_query($sourceQuery) : $base;
+                } else {
+                    $result['filename'] = $filename;
+                }
+
                 $result['player']    = '1';
                 $result['mediacode'] = '';
                 break;
 
             case 'wistia':
-                $hash                = self::extractWistiaHash($filename . ' ' . $mediacode);
-                $result['filename']  = $hash ? 'https://fast.wistia.net/embed/iframe/' . $hash : $filename;
+                $hash        = self::extractWistiaHash($combined);
+                $sourceQuery = self::extractSourceUrlParams($combined, 'wistia');
+
+                if ($hash) {
+                    $base               = 'https://fast.wistia.net/embed/iframe/' . $hash;
+                    $result['filename'] = !empty($sourceQuery) ? $base . '?' . http_build_query($sourceQuery) : $base;
+                } else {
+                    $result['filename'] = $filename;
+                }
+
                 $result['player']    = '1';
                 $result['mediacode'] = '';
                 break;
@@ -646,14 +671,25 @@ class CwmserverMigrationHelper
                 break;
 
             case 'soundcloud':
+                $sourceQuery         = self::extractSourceUrlParams($combined, 'soundcloud');
                 $result['filename']  = $filename;
                 $result['player']    = '1';
                 $result['mediacode'] = '';
 
-                // Convert to embed URL if needed
-                if (str_contains(strtolower($filename), 'soundcloud.com')
-                    && !str_contains(strtolower($filename), 'w.soundcloud.com/player')
-                ) {
+                // If already an embed player URL with params, preserve it
+                if (str_contains(strtolower($filename), 'w.soundcloud.com/player')) {
+                    break;
+                }
+
+                // If iframe in mediacode had an embed URL, extract and use it
+                if (!empty($mediacode) && preg_match('/src=["\']([^"\']*w\.soundcloud\.com\/player[^"\']*)["\']/', $mediacode, $scMatch)) {
+                    $result['filename'] = $scMatch[1];
+
+                    break;
+                }
+
+                // Convert track URL to embed, using defaults
+                if (str_contains(strtolower($filename), 'soundcloud.com')) {
                     $result['filename'] = '//w.soundcloud.com/player/?url=' . urlencode($filename)
                         . '&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false';
                 }
@@ -661,27 +697,41 @@ class CwmserverMigrationHelper
                 break;
 
             case 'dailymotion':
-                $videoId = self::extractDailymotionId($filename . ' ' . $mediacode);
+                $videoId     = self::extractDailymotionId($combined);
+                $sourceQuery = self::extractSourceUrlParams($combined, 'dailymotion');
 
                 // Fall back to AllVideos bare ID: {dailymotion}x7tgad0{/dailymotion}
                 if ($videoId === null && !empty($avContent) && preg_match('/^[a-z0-9]+$/i', $avContent)) {
                     $videoId = $avContent;
                 }
 
-                $result['filename']  = $videoId ? '//www.dailymotion.com/embed/video/' . $videoId : $filename;
+                if ($videoId) {
+                    $base               = '//www.dailymotion.com/embed/video/' . $videoId;
+                    $result['filename'] = !empty($sourceQuery) ? $base . '?' . http_build_query($sourceQuery) : $base;
+                } else {
+                    $result['filename'] = $filename;
+                }
+
                 $result['player']    = '1';
                 $result['mediacode'] = '';
                 break;
 
             case 'rumble':
-                $embedId = self::extractRumbleId($filename . ' ' . $mediacode);
+                $embedId     = self::extractRumbleId($combined);
+                $sourceQuery = self::extractSourceUrlParams($combined, 'rumble');
 
                 // Fall back to AllVideos bare ID: {rumble}v1abc23{/rumble}
                 if ($embedId === null && !empty($avContent) && preg_match('/^v[a-z0-9]+$/i', $avContent)) {
                     $embedId = $avContent;
                 }
 
-                $result['filename']  = $embedId ? '//rumble.com/embed/' . $embedId . '/' : $filename;
+                if ($embedId) {
+                    $base               = '//rumble.com/embed/' . $embedId . '/';
+                    $result['filename'] = !empty($sourceQuery) ? $base . '?' . http_build_query($sourceQuery) : $base;
+                } else {
+                    $result['filename'] = $filename;
+                }
+
                 $result['player']    = '1';
                 $result['mediacode'] = '';
                 break;
@@ -925,6 +975,51 @@ class CwmserverMigrationHelper
         }
 
         return null;
+    }
+
+    /**
+     * Extract URL query parameters from a platform-specific URL in the source text.
+     *
+     * Finds the first URL matching the given platform and parses its query string.
+     * This preserves user-configured embed params (autoplay, start, loop, color, etc.)
+     * that would otherwise be lost when rebuilding the embed URL from just the video ID.
+     *
+     * @param   string  $text      Combined filename + mediacode text
+     * @param   string  $platform  Platform identifier (youtube, vimeo, wistia, dailymotion, rumble, soundcloud)
+     *
+     * @return  array  Associative array of query parameters, empty if none found
+     *
+     * @since   10.1.0
+     */
+    public static function extractSourceUrlParams(string $text, string $platform): array
+    {
+        $patterns = [
+            'youtube'     => '/(?:https?:)?\/\/(?:www\.)?(?:youtube\.com|youtu\.be)\/[^\s"\'<>]+/',
+            'vimeo'       => '/(?:https?:)?\/\/(?:player\.)?vimeo\.com\/[^\s"\'<>]+/',
+            'wistia'      => '/(?:https?:)?\/\/(?:fast\.)?wistia\.(?:com|net)\/[^\s"\'<>]+/',
+            'dailymotion' => '/(?:https?:)?\/\/(?:www\.)?dailymotion\.com\/[^\s"\'<>]+/',
+            'rumble'      => '/(?:https?:)?\/\/(?:www\.)?rumble\.com\/[^\s"\'<>]+/',
+            'soundcloud'  => '/(?:https?:)?\/\/(?:w\.)?soundcloud\.com\/[^\s"\'<>]+/',
+        ];
+
+        if (!isset($patterns[$platform]) || empty($text)) {
+            return [];
+        }
+
+        if (!preg_match($patterns[$platform], $text, $match)) {
+            return [];
+        }
+
+        $url   = $match[0];
+        $parts = parse_url($url);
+
+        if (empty($parts['query'])) {
+            return [];
+        }
+
+        parse_str($parts['query'], $queryParams);
+
+        return $queryParams;
     }
 
     /**

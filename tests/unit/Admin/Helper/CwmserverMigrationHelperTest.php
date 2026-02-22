@@ -915,6 +915,198 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('1', $result['player']);
     }
 
+    // -------------------------------------------------------------------------
+    // transformParams() preserves embed URL query params
+    // -------------------------------------------------------------------------
+
+    public function testTransformParamsYoutubePreservesIframeParams(): void
+    {
+        $params = [
+            'filename'  => '',
+            'mediacode' => '<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&start=30&loop=1&rel=0" allowfullscreen></iframe>',
+            'player'    => '8',
+        ];
+
+        $result = CwmserverMigrationHelper::transformParams($params, 'youtube');
+
+        self::assertStringContainsString('dQw4w9WgXcQ', $result['filename']);
+        self::assertStringContainsString('enablejsapi=1', $result['filename']);
+        self::assertStringContainsString('autoplay=1', $result['filename']);
+        self::assertStringContainsString('start=30', $result['filename']);
+        self::assertStringContainsString('loop=1', $result['filename']);
+        self::assertStringContainsString('rel=0', $result['filename']);
+        self::assertSame('1', $result['player']);
+        self::assertSame('', $result['mediacode']);
+    }
+
+    public function testTransformParamsYoutubePreservesWatchUrlParams(): void
+    {
+        $params = [
+            'filename'  => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=45&list=PLabc',
+            'mediacode' => '',
+            'player'    => '0',
+        ];
+
+        $result = CwmserverMigrationHelper::transformParams($params, 'youtube');
+
+        self::assertStringContainsString('dQw4w9WgXcQ', $result['filename']);
+        self::assertStringContainsString('enablejsapi=1', $result['filename']);
+        self::assertStringContainsString('t=45', $result['filename']);
+        self::assertStringContainsString('list=PLabc', $result['filename']);
+        // The 'v' param should not be in the rebuilt embed URL
+        self::assertStringNotContainsString('v=dQw4w9WgXcQ', $result['filename']);
+    }
+
+    public function testTransformParamsVimeoPreservesIframeParams(): void
+    {
+        $params = [
+            'filename'  => '',
+            'mediacode' => '<iframe src="https://player.vimeo.com/video/123456789?color=FF0000&title=0&byline=0&portrait=0" allowfullscreen></iframe>',
+            'player'    => '8',
+        ];
+
+        $result = CwmserverMigrationHelper::transformParams($params, 'vimeo');
+
+        self::assertStringContainsString('123456789', $result['filename']);
+        self::assertStringContainsString('color=FF0000', $result['filename']);
+        self::assertStringContainsString('title=0', $result['filename']);
+        self::assertStringContainsString('byline=0', $result['filename']);
+        self::assertStringContainsString('portrait=0', $result['filename']);
+    }
+
+    public function testTransformParamsWistiaPreservesParams(): void
+    {
+        $params = [
+            'filename'  => 'https://fast.wistia.net/embed/iframe/abc123xyz?autoPlay=true&controlsVisibleOnLoad=false',
+            'mediacode' => '',
+        ];
+
+        $result = CwmserverMigrationHelper::transformParams($params, 'wistia');
+
+        self::assertStringContainsString('abc123xyz', $result['filename']);
+        self::assertStringContainsString('autoPlay=true', $result['filename']);
+        self::assertStringContainsString('controlsVisibleOnLoad=false', $result['filename']);
+    }
+
+    public function testTransformParamsDailymotionPreservesParams(): void
+    {
+        $params = [
+            'filename'  => '',
+            'mediacode' => '<iframe src="https://www.dailymotion.com/embed/video/x7tgad0?autoplay=1&mute=1&start=15"></iframe>',
+            'player'    => '8',
+        ];
+
+        $result = CwmserverMigrationHelper::transformParams($params, 'dailymotion');
+
+        self::assertStringContainsString('x7tgad0', $result['filename']);
+        self::assertStringContainsString('autoplay=1', $result['filename']);
+        self::assertStringContainsString('mute=1', $result['filename']);
+        self::assertStringContainsString('start=15', $result['filename']);
+    }
+
+    public function testTransformParamsRumblePreservesParams(): void
+    {
+        $params = [
+            'filename'  => 'https://rumble.com/embed/v1abc23/?pub=abc&autoplay=2',
+            'mediacode' => '',
+        ];
+
+        $result = CwmserverMigrationHelper::transformParams($params, 'rumble');
+
+        self::assertStringContainsString('v1abc23', $result['filename']);
+        self::assertStringContainsString('pub=abc', $result['filename']);
+        self::assertStringContainsString('autoplay=2', $result['filename']);
+    }
+
+    public function testTransformParamsSoundcloudPreservesEmbedUrl(): void
+    {
+        // If someone had a full SoundCloud embed URL in an iframe, preserve it
+        $embedUrl = '//w.soundcloud.com/player/?url=https%3A//soundcloud.com/artist/track&color=%23ff5500&auto_play=true&hide_related=true';
+        $params   = [
+            'filename'  => '',
+            'mediacode' => '<iframe src="' . $embedUrl . '"></iframe>',
+            'player'    => '8',
+        ];
+
+        $result = CwmserverMigrationHelper::transformParams($params, 'soundcloud');
+
+        self::assertSame($embedUrl, $result['filename']);
+        self::assertSame('1', $result['player']);
+    }
+
+    public function testTransformParamsCleanUrlNoExtraParams(): void
+    {
+        // Clean URLs without params should still produce clean output (no trailing ?)
+        $params = [
+            'filename'  => 'https://vimeo.com/123456789',
+            'mediacode' => '',
+        ];
+
+        $result = CwmserverMigrationHelper::transformParams($params, 'vimeo');
+
+        self::assertSame('//player.vimeo.com/video/123456789', $result['filename']);
+        self::assertStringNotContainsString('?', $result['filename']);
+    }
+
+    // -------------------------------------------------------------------------
+    // extractSourceUrlParams() tests
+    // -------------------------------------------------------------------------
+
+    public function testExtractSourceUrlParamsYoutubeWatch(): void
+    {
+        $params = CwmserverMigrationHelper::extractSourceUrlParams(
+            'https://www.youtube.com/watch?v=abc123&start=30&autoplay=1',
+            'youtube'
+        );
+
+        self::assertSame('abc123', $params['v']);
+        self::assertSame('30', $params['start']);
+        self::assertSame('1', $params['autoplay']);
+    }
+
+    public function testExtractSourceUrlParamsYoutubeEmbed(): void
+    {
+        $params = CwmserverMigrationHelper::extractSourceUrlParams(
+            '<iframe src="https://www.youtube.com/embed/abc123?autoplay=1&loop=1&rel=0"></iframe>',
+            'youtube'
+        );
+
+        self::assertSame('1', $params['autoplay']);
+        self::assertSame('1', $params['loop']);
+        self::assertSame('0', $params['rel']);
+    }
+
+    public function testExtractSourceUrlParamsVimeo(): void
+    {
+        $params = CwmserverMigrationHelper::extractSourceUrlParams(
+            '<iframe src="https://player.vimeo.com/video/123?color=FF0000&title=0"></iframe>',
+            'vimeo'
+        );
+
+        self::assertSame('FF0000', $params['color']);
+        self::assertSame('0', $params['title']);
+    }
+
+    public function testExtractSourceUrlParamsNoParams(): void
+    {
+        $params = CwmserverMigrationHelper::extractSourceUrlParams(
+            'https://vimeo.com/123456789',
+            'vimeo'
+        );
+
+        self::assertSame([], $params);
+    }
+
+    public function testExtractSourceUrlParamsUnknownPlatform(): void
+    {
+        $params = CwmserverMigrationHelper::extractSourceUrlParams(
+            'https://example.com/video?id=123',
+            'unknown'
+        );
+
+        self::assertSame([], $params);
+    }
+
     public function testTransformParamsAllVideosPlayer2ToEmbed(): void
     {
         // Unrecognized AllVideos shortcode → embed, preserve mediacode
