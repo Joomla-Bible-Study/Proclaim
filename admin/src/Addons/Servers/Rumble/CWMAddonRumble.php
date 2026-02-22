@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Rumble;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use Joomla\Registry\Registry;
 
 /**
  * Rumble Server Addon
@@ -43,6 +44,85 @@ class CWMAddonRumble extends CWMAddon
      * @since 10.1.0
      */
     protected $description = 'Used for Rumble server access';
+
+    /**
+     * URL patterns that identify Rumble content.
+     *
+     * @return  string[]
+     *
+     * @since   10.1.0
+     */
+    public function getUrlPatterns(): array
+    {
+        return ['/(rumble\.com)/i'];
+    }
+
+    /**
+     * Build a Rumble embed URL with all form field params applied.
+     *
+     * @param   string    $filename     The raw Rumble URL
+     * @param   Registry  $mediaParams  Merged template + media params
+     *
+     * @return  string  The embed-ready URL with query params
+     *
+     * @since   10.1.0
+     */
+    public function buildEmbedUrl(string $filename, Registry $mediaParams): string
+    {
+        $baseUrl = $this->convertRumble($filename);
+        $parts   = parse_url($baseUrl);
+        $query   = [];
+
+        if (!empty($parts['query'])) {
+            parse_str($parts['query'], $query);
+        }
+
+        // Rumble uses autoplay=2 for autoplay
+        $autostart = $mediaParams->get('autostart', '');
+
+        if ($autostart === 'true') {
+            $query['autoplay'] = '2';
+        } elseif ($autostart === 'false') {
+            $query['autoplay'] = '0';
+        }
+
+        $fieldMap = [
+            'rb_rel' => 'rel',
+            'rb_pub' => 'pub',
+        ];
+
+        foreach ($fieldMap as $formField => $urlParam) {
+            $val = $mediaParams->get($formField, '');
+
+            if ($val !== '') {
+                $query[$urlParam] = $val;
+            }
+        }
+
+        return strtok($baseUrl, '?') . (!empty($query) ? '?' . http_build_query($query) : '');
+    }
+
+    /**
+     * Render inline Rumble player (responsive 16:9 iframe).
+     *
+     * @param   string    $url          The raw Rumble URL
+     * @param   Registry  $mediaParams  Merged template + media params
+     * @param   int       $mediaId      The media file ID
+     *
+     * @return  string  Complete player HTML
+     *
+     * @since   10.1.0
+     */
+    public function renderInlinePlayer(string $url, Registry $mediaParams, int $mediaId): string
+    {
+        $embedUrl = $this->buildEmbedUrl($url, $mediaParams);
+
+        return '<div class="proclaim-video-wrap" style="position:relative;padding-bottom:56.25%;overflow:hidden;max-width:100%;">'
+            . '<iframe class="playhit rumble" data-id="' . $mediaId . '" src="' . htmlspecialchars($embedUrl, ENT_QUOTES, 'UTF-8') . '"'
+            . ' allow="autoplay; encrypted-media" allowfullscreen'
+            . ' style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>'
+            . '</div>';
+    }
 
     /**
      * Convert Rumble URL to embed format
@@ -101,7 +181,7 @@ class CWMAddonRumble extends CWMAddon
      *
      * @since   10.1.0
      */
-    public function renderGeneral($media_form, bool $new): string
+    public function renderGeneral(object $media_form, bool $new): string
     {
         $html = '';
 
@@ -126,7 +206,7 @@ class CWMAddonRumble extends CWMAddon
      *
      * @since   10.1.0
      */
-    public function render($media_form, bool $new): string
+    public function render(object $media_form, bool $new): string
     {
         $html = '<div class="tab-pane" id="rumble">';
         $html .= $this->renderOptionsFields($media_form, $new);

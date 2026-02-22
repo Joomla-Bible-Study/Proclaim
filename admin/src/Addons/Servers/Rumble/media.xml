@@ -94,5 +94,16 @@
                 <option value="false">JNO</option>
             </field>
         </fieldset>
+        <fieldset name="embed_options" label="JBS_ADDON_RUMBLE_EMBED_OPTIONS">
+            <field name="rb_rel" type="list" default=""
+                   label="JBS_ADDON_RUMBLE_REL" description="JBS_ADDON_RUMBLE_REL_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="0">JNO</option>
+                <option value="5">JYES</option>
+            </field>
+            <field name="rb_pub" type="text" default=""
+                   label="JBS_ADDON_RUMBLE_PUB" description="JBS_ADDON_RUMBLE_PUB_DESC"
+                   hint="e.g. yourpublishercode"/>
+        </fieldset>
     </fields>
 </media>

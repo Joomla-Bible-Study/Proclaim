@@ -99,5 +99,57 @@
                 <option value="false">JNO</option>
             </field>
         </fieldset>
+        <fieldset name="embed_options" label="JBS_ADDON_WISTIA_EMBED_OPTIONS">
+            <field name="ws_muted" type="list" default=""
+                   label="JBS_ADDON_WISTIA_MUTED" description="JBS_ADDON_WISTIA_MUTED_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="false">JNO</option>
+                <option value="true">JYES</option>
+            </field>
+            <field name="ws_player_color" type="text" default=""
+                   label="JBS_ADDON_WISTIA_PLAYER_COLOR" description="JBS_ADDON_WISTIA_PLAYER_COLOR_DESC"
+                   hint="e.g. 54bbff"/>
+            <field name="ws_controls_visible" type="list" default=""
+                   label="JBS_ADDON_WISTIA_CONTROLS_VISIBLE" description="JBS_ADDON_WISTIA_CONTROLS_VISIBLE_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="false">JHIDE</option>
+                <option value="true">JSHOW</option>
+            </field>
+            <field name="ws_playbar" type="list" default=""
+                   label="JBS_ADDON_WISTIA_PLAYBAR" description="JBS_ADDON_WISTIA_PLAYBAR_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="false">JHIDE</option>
+                <option value="true">JSHOW</option>
+            </field>
+            <field name="ws_end_behavior" type="list" default=""
+                   label="JBS_ADDON_WISTIA_END_BEHAVIOR" description="JBS_ADDON_WISTIA_END_BEHAVIOR_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="default">JBS_ADDON_WISTIA_END_DEFAULT</option>
+                <option value="reset">JBS_ADDON_WISTIA_END_RESET</option>
+                <option value="loop">JBS_ADDON_WISTIA_END_LOOP</option>
+            </field>
+            <field name="ws_dnt" type="list" default=""
+                   label="JBS_ADDON_WISTIA_DNT" description="JBS_ADDON_WISTIA_DNT_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="false">JNO</option>
+                <option value="true">JYES</option>
+            </field>
+            <field name="ws_time" type="text" default=""
+                   label="JBS_ADDON_WISTIA_TIME" description="JBS_ADDON_WISTIA_TIME_DESC"
+                   hint="e.g. 30"/>
+            <field name="ws_resumable" type="list" default=""
+                   label="JBS_ADDON_WISTIA_RESUMABLE" description="JBS_ADDON_WISTIA_RESUMABLE_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="false">JNO</option>
+                <option value="true">JYES</option>
+                <option value="auto">JBS_ADDON_WISTIA_RESUMABLE_AUTO</option>
+            </field>
+            <field name="ws_speed" type="list" default=""
+                   label="JBS_ADDON_WISTIA_SPEED" description="JBS_ADDON_WISTIA_SPEED_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="false">JNO</option>
+                <option value="true">JYES</option>
+            </field>
+        </fieldset>
     </fields>
 </media>

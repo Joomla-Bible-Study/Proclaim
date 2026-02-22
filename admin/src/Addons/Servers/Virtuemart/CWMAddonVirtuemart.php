@@ -68,7 +68,7 @@ class CWMAddonVirtuemart extends CWMAddon
      *
      * @since   10.1.0
      */
-    public function renderGeneral($media_form, bool $new): string
+    public function renderGeneral(object $media_form, bool $new): string
     {
         $html = '';
 
@@ -93,7 +93,7 @@ class CWMAddonVirtuemart extends CWMAddon
      *
      * @since   10.1.0
      */
-    public function render($media_form, bool $new): string
+    public function render(object $media_form, bool $new): string
     {
         $html = '<div class="tab-pane" id="virtuemart">';
         $html .= $this->renderOptionsFields($media_form, $new);

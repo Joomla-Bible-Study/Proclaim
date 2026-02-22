@@ -14,6 +14,7 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Site\View\Cwmpopup\HtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -57,12 +58,11 @@ if ($player === 1 || $player === 7 || $playerParam === 1) {
     $width  = $this->playerwidth;
     $height = $this->playerheight;
 
-    if (preg_match('/(youtube.com|youtu.be)/', $path) === 1) {
-        $src = $this->getMedia->convertYoutube($path);
-        echo '<iframe width="' . $width . '" height="' . $height . '" src="' . $src . '" style="border:0;" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
-    } elseif (preg_match('/(vimeo.com)/', $path) === 1) {
-        $src = $this->getMedia->convertVimeo($path);
-        echo '<iframe src="' . $src . '" width="' . $width . '" height="' . $height . '" style="border:0;" allowfullscreen></iframe>';
+    // Addon-owned rendering: resolve URL to addon for popup player
+    $addon = CWMAddon::resolveForUrl($path);
+
+    if ($addon) {
+        echo $addon->renderPopupPlayer($path, $this->params, $width, $height);
     } else {
         echo '<audio controls autoplay><source src="' . $path . '" type="audio/mp3"></audio>';
     }

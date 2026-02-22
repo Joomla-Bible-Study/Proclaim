@@ -94,5 +94,28 @@
                 <option value="false">JNO</option>
             </field>
         </fieldset>
+        <fieldset name="embed_options" label="JBS_ADDON_RESI_EMBED_OPTIONS">
+            <field name="ri_controls" type="list" default=""
+                   label="JBS_ADDON_RESI_CONTROLS" description="JBS_ADDON_RESI_CONTROLS_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="0">JHIDE</option>
+                <option value="1">JSHOW</option>
+            </field>
+            <field name="ri_loop" type="list" default=""
+                   label="JBS_ADDON_RESI_LOOP" description="JBS_ADDON_RESI_LOOP_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field name="ri_start_pos" type="text" default=""
+                   label="JBS_ADDON_RESI_START_POS" description="JBS_ADDON_RESI_START_POS_DESC"
+                   hint="e.g. 30"/>
+            <field name="ri_background" type="list" default=""
+                   label="JBS_ADDON_RESI_BACKGROUND" description="JBS_ADDON_RESI_BACKGROUND_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+        </fieldset>
     </fields>
 </media>

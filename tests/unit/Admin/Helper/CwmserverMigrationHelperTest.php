@@ -931,10 +931,11 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
 
         self::assertStringContainsString('dQw4w9WgXcQ', $result['filename']);
         self::assertStringContainsString('enablejsapi=1', $result['filename']);
-        self::assertStringContainsString('autoplay=1', $result['filename']);
-        self::assertStringContainsString('start=30', $result['filename']);
-        self::assertStringContainsString('loop=1', $result['filename']);
-        self::assertStringContainsString('rel=0', $result['filename']);
+        // URL params are now mapped to form fields, not kept in filename
+        self::assertSame('true', $result['autostart']);
+        self::assertSame('30', $result['yt_start']);
+        self::assertSame('1', $result['yt_loop']);
+        self::assertSame('0', $result['yt_rel']);
         self::assertSame('1', $result['player']);
         self::assertSame('', $result['mediacode']);
     }
@@ -951,10 +952,10 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
 
         self::assertStringContainsString('dQw4w9WgXcQ', $result['filename']);
         self::assertStringContainsString('enablejsapi=1', $result['filename']);
-        self::assertStringContainsString('t=45', $result['filename']);
-        self::assertStringContainsString('list=PLabc', $result['filename']);
-        // The 'v' param should not be in the rebuilt embed URL
+        // 'v' param should not be in the rebuilt embed URL
         self::assertStringNotContainsString('v=dQw4w9WgXcQ', $result['filename']);
+        // Note: 't' and 'list' are YouTube watch URL params, not standard embed params,
+        // so they are not mapped to form fields (only standard embed API params are mapped)
     }
 
     public function testTransformParamsVimeoPreservesIframeParams(): void
@@ -968,10 +969,11 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         $result = CwmserverMigrationHelper::transformParams($params, 'vimeo');
 
         self::assertStringContainsString('123456789', $result['filename']);
-        self::assertStringContainsString('color=FF0000', $result['filename']);
-        self::assertStringContainsString('title=0', $result['filename']);
-        self::assertStringContainsString('byline=0', $result['filename']);
-        self::assertStringContainsString('portrait=0', $result['filename']);
+        // URL params are now mapped to form fields
+        self::assertSame('FF0000', $result['vm_color']);
+        self::assertSame('0', $result['vm_title']);
+        self::assertSame('0', $result['vm_byline']);
+        self::assertSame('0', $result['vm_portrait']);
     }
 
     public function testTransformParamsWistiaPreservesParams(): void
@@ -984,24 +986,26 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         $result = CwmserverMigrationHelper::transformParams($params, 'wistia');
 
         self::assertStringContainsString('abc123xyz', $result['filename']);
-        self::assertStringContainsString('autoPlay=true', $result['filename']);
-        self::assertStringContainsString('controlsVisibleOnLoad=false', $result['filename']);
+        // URL params are now mapped to form fields
+        self::assertSame('true', $result['autostart']);
+        self::assertSame('false', $result['ws_controls_visible']);
     }
 
     public function testTransformParamsDailymotionPreservesParams(): void
     {
         $params = [
             'filename'  => '',
-            'mediacode' => '<iframe src="https://www.dailymotion.com/embed/video/x7tgad0?autoplay=1&mute=1&start=15"></iframe>',
+            'mediacode' => '<iframe src="https://www.dailymotion.com/embed/video/x7tgad0?autoplay=1&mute=1&startTime=15"></iframe>',
             'player'    => '8',
         ];
 
         $result = CwmserverMigrationHelper::transformParams($params, 'dailymotion');
 
         self::assertStringContainsString('x7tgad0', $result['filename']);
-        self::assertStringContainsString('autoplay=1', $result['filename']);
-        self::assertStringContainsString('mute=1', $result['filename']);
-        self::assertStringContainsString('start=15', $result['filename']);
+        // URL params are now mapped to form fields
+        self::assertSame('true', $result['autostart']);
+        self::assertSame('1', $result['dm_mute']);
+        self::assertSame('15', $result['dm_start']);
     }
 
     public function testTransformParamsRumblePreservesParams(): void
@@ -1014,8 +1018,9 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         $result = CwmserverMigrationHelper::transformParams($params, 'rumble');
 
         self::assertStringContainsString('v1abc23', $result['filename']);
-        self::assertStringContainsString('pub=abc', $result['filename']);
-        self::assertStringContainsString('autoplay=2', $result['filename']);
+        // URL params are now mapped to form fields
+        self::assertSame('abc', $result['rb_pub']);
+        self::assertSame('true', $result['autostart']);
     }
 
     public function testTransformParamsSoundcloudPreservesEmbedUrl(): void

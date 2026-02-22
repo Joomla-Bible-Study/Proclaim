@@ -16,9 +16,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Addons\Servers\Resi\CWMAddonResi;
-use CWM\Component\Proclaim\Administrator\Addons\Servers\Vimeo\CWMAddonVimeo;
-use CWM\Component\Proclaim\Administrator\Addons\Servers\Wistia\CWMAddonWistia;
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Service\HTML\CWMFancyBox;
@@ -511,7 +509,6 @@ class Cwmmedia
 
         $input      = Factory::getApplication()->getInput();
         $template   = $input->getInt('t', '1');
-        $youtube    = new CWMAddonYoutube();
         $colorStyle = ($media->params->get("media_button_color")) ? ' style="color:' . $media->params->get("media_button_color") . '"' : '';
 
         // Here we get more information about the particular media file
@@ -571,41 +568,14 @@ class Cwmmedia
                             }
                         }
 
-                        if (preg_match('/(youtube.com|youtu.be)/', $path) === 1) {
-                            $playercode = '<div class="proclaim-video-wrap" style="position:relative;padding-bottom:56.25%;overflow:hidden;max-width:100%;">'
-                                . '<iframe class="playhit" data-id="' . $media->id . '" src="' . $youtube->convertYoutube($path) . '"'
-                                . ' allow="autoplay; encrypted-media" allowfullscreen'
-                                . ' style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>'
-                                . '</div>';
-                        } elseif (preg_match('/(vimeo.com)/', $path) === 1) {
-                            $vimeo      = new CWMAddonVimeo();
-                            $playercode = '<div class="proclaim-video-wrap" style="position:relative;padding-bottom:56.25%;overflow:hidden;max-width:100%;">'
-                                . '<iframe class="playhit" data-id="' . $media->id . '" src="' . $vimeo->convertVimeo($path) . '"'
-                                . ' webkitallowfullscreen mozallowfullscreen allowfullscreen'
-                                . ' style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>'
-                                . '</div>';
-                        } elseif (preg_match('/(wistia.com|wistia.net)/', $path) === 1) {
-                            $wistia     = new CWMAddonWistia();
-                            $playercode = '<div class="proclaim-video-wrap" style="position:relative;padding-bottom:56.25%;overflow:hidden;max-width:100%;">'
-                                . '<iframe class="playhit" data-id="' . $media->id . '" src="' . $wistia->convertWistia($path) . '"'
-                                . ' allow="autoplay; fullscreen" allowtransparency="true" frameborder="0"'
-                                . ' style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>'
-                                . '</div>';
-                        } elseif (preg_match('/(resi.io)/', $path) === 1) {
-                            $resi      = new CWMAddonResi();
-                            $resiSrc   = $resi->convertResi($path);
-                            // Wrap in a responsive 16:9 container with a transparent click-intercept overlay.
-                            // The overlay captures the first user click (play button), tracks the play,
-                            // then swaps autoplay=false → autoplay=true in the iframe src before removing
-                            // itself — so the video starts seamlessly without a second click.
-                            $playercode = '<div class="proclaim-resi-container proclaim-video-wrap" style="position:relative;padding-bottom:56.25%;overflow:hidden;max-width:100%;">'
-                                . '<iframe data-id="' . $media->id . '" src="' . $resiSrc . '"'
-                                . ' allow="autoplay; fullscreen" allowfullscreen'
-                                . ' style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>'
-                                . '<div class="proclaim-resi-overlay" data-media-id="' . $media->id . '"'
-                                . ' style="position:absolute;top:0;left:0;width:100%;height:100%;cursor:pointer;z-index:1;"></div>'
-                                . '</div>';
-                        } else {
+                        // Addon-owned rendering: resolve URL to addon, let it build embed + HTML
+                        $addon = CWMAddon::resolveForUrl($path);
+
+                        if ($addon) {
+                            $playercode = $addon->renderInlinePlayer($path, $params, $media->id);
+                        }
+
+                        if (empty($playercode)) {
                             $playercode = CWMHtml5Inline::render($media, $params, $player, false, $template);
                         }
 
@@ -792,48 +762,11 @@ class Cwmmedia
         $headerText = htmlspecialchars($this->getPopupHeader($media, $params), ENT_QUOTES, 'UTF-8');
         $footerText = htmlspecialchars($this->getPopupFooter($media, $params), ENT_QUOTES, 'UTF-8');
 
-        // Handle YouTube
-        if (preg_match('/(youtube.com|youtu.be)/', $path) === 1) {
-            $path = (new CWMAddonYoutube())->convertYoutube($path);
-            $data = '<a class="fancybox_player playhit" data-id="' . $media->id .
-                '" aria-hidden="false" data-src="' . $path .
-                '" data-header="' . $headerText . '" data-footer="' . $footerText .
-                '" data-options=\'{"autoplay" : "' . (int)$params->get('autostart', false) .
-                '", "controls" : "' . (int)$params->get('controls') . '"}\'  href="javascript:;">' . $image . '</a>';
-            return $data;
-        }
+        // Addon-owned rendering: resolve URL to addon for fancybox link
+        $addon = CWMAddon::resolveForUrl($path);
 
-        // Handle Vimeo
-        if (preg_match('/(vimeo.com)/', $path) === 1) {
-            $path = (new CWMAddonVimeo())->convertVimeo($path);
-            $data = '<a class="fancybox_player playhit" data-id="' . $media->id .
-                '" aria-hidden="false" data-src="' . $path .
-                '" data-header="' . $headerText . '" data-footer="' . $footerText .
-                '" data-options=\'{"autoplay" : "' . (int)$params->get('autostart', false) .
-                '", "controls" : "' . (int)$params->get('controls') . '"}\'  href="javascript:;">' . $image . '</a>';
-            return $data;
-        }
-
-        // Handle Wistia
-        if (preg_match('/(wistia.com|wistia.net)/', $path) === 1) {
-            $path = (new CWMAddonWistia())->convertWistia($path);
-            $data = '<a class="fancybox_player playhit" data-id="' . $media->id .
-                '" aria-hidden="false" data-src="' . $path .
-                '" data-header="' . $headerText . '" data-footer="' . $footerText .
-                '" data-options=\'{"autoplay" : "' . (int)$params->get('autostart', false) .
-                '", "controls" : "' . (int)$params->get('controls') . '"}\'  href="javascript:;">' . $image . '</a>';
-            return $data;
-        }
-
-        // Handle Resi.io
-        if (preg_match('/(resi.io)/', $path) === 1) {
-            $path = (new CWMAddonResi())->convertResi($path);
-            $data = '<a class="fancybox_player playhit" data-id="' . $media->id .
-                '" aria-hidden="false" data-src="' . $path .
-                '" data-header="' . $headerText . '" data-footer="' . $footerText .
-                '" data-options=\'{"autoplay" : "' . (int)$params->get('autostart', false) .
-                '", "controls" : "' . (int)$params->get('controls') . '"}\'  href="javascript:;">' . $image . '</a>';
-            return $data;
+        if ($addon) {
+            return $addon->renderFancyboxLink($path, $params, $media->id, $image, $headerText, $footerText);
         }
 
         // Player attributes - jwplayer_* params are deprecated, kept for backward compatibility

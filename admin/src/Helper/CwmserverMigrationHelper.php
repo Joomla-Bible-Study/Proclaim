@@ -617,12 +617,33 @@ class CwmserverMigrationHelper
                 }
 
                 if ($videoId) {
-                    // Merge source params (start, autoplay, loop, rel, etc.) with enablejsapi
-                    unset($sourceQuery['v']);
-                    $mergedParams       = array_merge($sourceQuery, ['enablejsapi' => '1']);
-                    $result['filename'] = '//www.youtube.com/embed/' . $videoId . '?' . http_build_query($mergedParams);
+                    // Clean embed URL — form fields handle params now
+                    $result['filename'] = '//www.youtube.com/embed/' . $videoId . '?enablejsapi=1';
                 } else {
                     $result['filename'] = $filename;
+                }
+
+                // Map extracted URL params → embed option form fields
+                $ytParamMap = [
+                    'mute'           => 'yt_mute',
+                    'start'          => 'yt_start',
+                    'end'            => 'yt_end',
+                    'loop'           => 'yt_loop',
+                    'controls'       => 'yt_controls',
+                    'rel'            => 'yt_rel',
+                    'cc_load_policy' => 'yt_cc',
+                    'playsinline'    => 'yt_playsinline',
+                ];
+
+                foreach ($ytParamMap as $urlParam => $formField) {
+                    if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
+                        $result[$formField] = $sourceQuery[$urlParam];
+                    }
+                }
+
+                // Map autoplay → autostart (existing field)
+                if (isset($sourceQuery['autoplay']) && $sourceQuery['autoplay'] === '1') {
+                    $result['autostart'] = 'true';
                 }
 
                 $result['player']    = '1';
@@ -639,10 +660,34 @@ class CwmserverMigrationHelper
                 }
 
                 if ($videoId) {
-                    $base               = '//player.vimeo.com/video/' . $videoId;
-                    $result['filename'] = !empty($sourceQuery) ? $base . '?' . http_build_query($sourceQuery) : $base;
+                    // Clean embed URL — form fields handle params now
+                    $result['filename'] = '//player.vimeo.com/video/' . $videoId;
                 } else {
                     $result['filename'] = $filename;
+                }
+
+                // Map extracted URL params → embed option form fields
+                $vmParamMap = [
+                    'muted'      => 'vm_muted',
+                    'loop'       => 'vm_loop',
+                    'controls'   => 'vm_controls',
+                    'color'      => 'vm_color',
+                    'title'      => 'vm_title',
+                    'byline'     => 'vm_byline',
+                    'portrait'   => 'vm_portrait',
+                    'dnt'        => 'vm_dnt',
+                    'background' => 'vm_background',
+                    'speed'      => 'vm_speed',
+                ];
+
+                foreach ($vmParamMap as $urlParam => $formField) {
+                    if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
+                        $result[$formField] = $sourceQuery[$urlParam];
+                    }
+                }
+
+                if (isset($sourceQuery['autoplay']) && $sourceQuery['autoplay'] === '1') {
+                    $result['autostart'] = 'true';
                 }
 
                 $result['player']    = '1';
@@ -654,10 +699,33 @@ class CwmserverMigrationHelper
                 $sourceQuery = self::extractSourceUrlParams($combined, 'wistia');
 
                 if ($hash) {
-                    $base               = 'https://fast.wistia.net/embed/iframe/' . $hash;
-                    $result['filename'] = !empty($sourceQuery) ? $base . '?' . http_build_query($sourceQuery) : $base;
+                    // Clean embed URL — form fields handle params now
+                    $result['filename'] = 'https://fast.wistia.net/embed/iframe/' . $hash;
                 } else {
                     $result['filename'] = $filename;
+                }
+
+                // Map extracted URL params → embed option form fields
+                $wsParamMap = [
+                    'muted'                 => 'ws_muted',
+                    'playerColor'           => 'ws_player_color',
+                    'controlsVisibleOnLoad' => 'ws_controls_visible',
+                    'playbar'               => 'ws_playbar',
+                    'endVideoBehavior'      => 'ws_end_behavior',
+                    'doNotTrack'            => 'ws_dnt',
+                    'time'                  => 'ws_time',
+                    'resumable'             => 'ws_resumable',
+                    'playbackRateControl'   => 'ws_speed',
+                ];
+
+                foreach ($wsParamMap as $urlParam => $formField) {
+                    if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
+                        $result[$formField] = $sourceQuery[$urlParam];
+                    }
+                }
+
+                if (isset($sourceQuery['autoPlay']) && $sourceQuery['autoPlay'] === 'true') {
+                    $result['autostart'] = 'true';
                 }
 
                 $result['player']    = '1';
@@ -668,6 +736,32 @@ class CwmserverMigrationHelper
                 $result['filename']  = $filename;
                 $result['player']    = '1';
                 $result['mediacode'] = '';
+
+                // Extract query params from Resi embed URL if present
+                $resiParts = parse_url($filename);
+
+                if (!empty($resiParts['query'])) {
+                    $resiQuery  = [];
+                    parse_str($resiParts['query'], $resiQuery);
+
+                    $riParamMap = [
+                        'controls'   => 'ri_controls',
+                        'loop'       => 'ri_loop',
+                        'startPos'   => 'ri_start_pos',
+                        'background' => 'ri_background',
+                    ];
+
+                    foreach ($riParamMap as $urlParam => $formField) {
+                        if (isset($resiQuery[$urlParam]) && $resiQuery[$urlParam] !== '') {
+                            $result[$formField] = $resiQuery[$urlParam];
+                        }
+                    }
+
+                    if (isset($resiQuery['autoplay']) && $resiQuery['autoplay'] === '1') {
+                        $result['autostart'] = 'true';
+                    }
+                }
+
                 break;
 
             case 'soundcloud':
@@ -675,6 +769,25 @@ class CwmserverMigrationHelper
                 $result['filename']  = $filename;
                 $result['player']    = '1';
                 $result['mediacode'] = '';
+
+                // Map extracted URL params → embed option form fields
+                $scParamMap = [
+                    'color'         => 'sc_color',
+                    'hide_related'  => 'sc_hide_related',
+                    'show_comments' => 'sc_show_comments',
+                    'show_user'     => 'sc_show_user',
+                    'visual'        => 'sc_visual',
+                ];
+
+                foreach ($scParamMap as $urlParam => $formField) {
+                    if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
+                        $result[$formField] = $sourceQuery[$urlParam];
+                    }
+                }
+
+                if (isset($sourceQuery['auto_play']) && $sourceQuery['auto_play'] === 'true') {
+                    $result['autostart'] = 'true';
+                }
 
                 // If already an embed player URL with params, preserve it
                 if (str_contains(strtolower($filename), 'w.soundcloud.com/player')) {
@@ -706,10 +819,28 @@ class CwmserverMigrationHelper
                 }
 
                 if ($videoId) {
-                    $base               = '//www.dailymotion.com/embed/video/' . $videoId;
-                    $result['filename'] = !empty($sourceQuery) ? $base . '?' . http_build_query($sourceQuery) : $base;
+                    // Clean embed URL — form fields handle params now
+                    $result['filename'] = '//www.dailymotion.com/embed/video/' . $videoId;
                 } else {
                     $result['filename'] = $filename;
+                }
+
+                // Map extracted URL params → embed option form fields
+                $dmParamMap = [
+                    'mute'      => 'dm_mute',
+                    'startTime' => 'dm_start',
+                    'loop'      => 'dm_loop',
+                    'scaleMode' => 'dm_scale',
+                ];
+
+                foreach ($dmParamMap as $urlParam => $formField) {
+                    if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
+                        $result[$formField] = $sourceQuery[$urlParam];
+                    }
+                }
+
+                if (isset($sourceQuery['autoplay']) && $sourceQuery['autoplay'] === '1') {
+                    $result['autostart'] = 'true';
                 }
 
                 $result['player']    = '1';
@@ -726,10 +857,26 @@ class CwmserverMigrationHelper
                 }
 
                 if ($embedId) {
-                    $base               = '//rumble.com/embed/' . $embedId . '/';
-                    $result['filename'] = !empty($sourceQuery) ? $base . '?' . http_build_query($sourceQuery) : $base;
+                    // Clean embed URL — form fields handle params now
+                    $result['filename'] = '//rumble.com/embed/' . $embedId . '/';
                 } else {
                     $result['filename'] = $filename;
+                }
+
+                // Map extracted URL params → embed option form fields
+                $rbParamMap = [
+                    'rel' => 'rb_rel',
+                    'pub' => 'rb_pub',
+                ];
+
+                foreach ($rbParamMap as $urlParam => $formField) {
+                    if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
+                        $result[$formField] = $sourceQuery[$urlParam];
+                    }
+                }
+
+                if (isset($sourceQuery['autoplay']) && $sourceQuery['autoplay'] === '2') {
+                    $result['autostart'] = 'true';
                 }
 
                 $result['player']    = '1';

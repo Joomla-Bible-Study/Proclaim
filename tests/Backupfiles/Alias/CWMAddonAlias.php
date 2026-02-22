@@ -75,7 +75,7 @@ class CWMAlias extends CWMAddon
         return "hello from amazon";
     }
 
-    protected function renderGeneral($media_form, bool $new): string
+    protected function renderGeneral(object $media_form, bool $new): string
     {
         $html   = '';
         $fields = $media_form->getFieldset('general');
@@ -106,7 +106,7 @@ class CWMAlias extends CWMAddon
         return $html;
     }
 
-    protected function render($media_form, bool $new): string
+    protected function render(object $media_form, bool $new): string
     {
         $html = HTMLHelper::_('uitab.addTab', 'myTab', 'options', Text::_('Options'));
 

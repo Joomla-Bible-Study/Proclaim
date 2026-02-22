@@ -94,5 +94,28 @@
                 <option value="false">JNO</option>
             </field>
         </fieldset>
+        <fieldset name="embed_options" label="JBS_ADDON_DAILYMOTION_EMBED_OPTIONS">
+            <field name="dm_mute" type="list" default=""
+                   label="JBS_ADDON_DAILYMOTION_MUTE" description="JBS_ADDON_DAILYMOTION_MUTE_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="false">JNO</option>
+                <option value="true">JYES</option>
+            </field>
+            <field name="dm_start" type="text" default=""
+                   label="JBS_ADDON_DAILYMOTION_START" description="JBS_ADDON_DAILYMOTION_START_DESC"
+                   hint="e.g. 30"/>
+            <field name="dm_loop" type="list" default=""
+                   label="JBS_ADDON_DAILYMOTION_LOOP" description="JBS_ADDON_DAILYMOTION_LOOP_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="false">JNO</option>
+                <option value="true">JYES</option>
+            </field>
+            <field name="dm_scale" type="list" default=""
+                   label="JBS_ADDON_DAILYMOTION_SCALE" description="JBS_ADDON_DAILYMOTION_SCALE_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="fit">JBS_ADDON_DAILYMOTION_SCALE_FIT</option>
+                <option value="fill">JBS_ADDON_DAILYMOTION_SCALE_FILL</option>
+            </field>
+        </fieldset>
     </fields>
 </media>

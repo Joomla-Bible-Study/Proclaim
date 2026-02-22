@@ -97,5 +97,34 @@
                 <option value="false">JNO</option>
             </field>
         </fieldset>
+        <fieldset name="embed_options" label="JBS_ADDON_SOUNDCLOUD_EMBED_OPTIONS">
+            <field name="sc_color" type="text" default=""
+                   label="JBS_ADDON_SOUNDCLOUD_COLOR" description="JBS_ADDON_SOUNDCLOUD_COLOR_DESC"
+                   hint="e.g. %23ff5500"/>
+            <field name="sc_hide_related" type="list" default=""
+                   label="JBS_ADDON_SOUNDCLOUD_HIDE_RELATED" description="JBS_ADDON_SOUNDCLOUD_HIDE_RELATED_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="false">JNO</option>
+                <option value="true">JYES</option>
+            </field>
+            <field name="sc_show_comments" type="list" default=""
+                   label="JBS_ADDON_SOUNDCLOUD_SHOW_COMMENTS" description="JBS_ADDON_SOUNDCLOUD_SHOW_COMMENTS_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="false">JHIDE</option>
+                <option value="true">JSHOW</option>
+            </field>
+            <field name="sc_show_user" type="list" default=""
+                   label="JBS_ADDON_SOUNDCLOUD_SHOW_USER" description="JBS_ADDON_SOUNDCLOUD_SHOW_USER_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="false">JHIDE</option>
+                <option value="true">JSHOW</option>
+            </field>
+            <field name="sc_visual" type="list" default=""
+                   label="JBS_ADDON_SOUNDCLOUD_VISUAL" description="JBS_ADDON_SOUNDCLOUD_VISUAL_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="false">JNO</option>
+                <option value="true">JYES</option>
+            </field>
+        </fieldset>
     </fields>
 </media>
