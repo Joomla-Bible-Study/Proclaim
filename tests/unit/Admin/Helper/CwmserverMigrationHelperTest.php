@@ -84,6 +84,9 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
             'wistia .com URL' => [
                 'https://myaccount.wistia.com/medias/abc123', '', '', '', 'wistia',
             ],
+            'wistia in mediacode' => [
+                '', '<iframe src="https://fast.wistia.net/embed/iframe/abc123xyz"></iframe>', '', '', 'wistia',
+            ],
 
             // Resi URLs
             'resi stream URL' => [
@@ -92,6 +95,9 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
             'resi rfrn.tv URL' => [
                 'https://rfrn.tv/embed/abc123', '', '', '', 'resi',
             ],
+            'resi in mediacode' => [
+                '', '<iframe src="https://control.resi.io/webplayer/video.html?id=abc"></iframe>', '', '', 'resi',
+            ],
 
             // SoundCloud URLs
             'soundcloud track URL' => [
@@ -99,6 +105,9 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
             ],
             'soundcloud embed URL' => [
                 '//w.soundcloud.com/player/?url=https%3A//soundcloud.com/artist/track', '', '', '', 'soundcloud',
+            ],
+            'soundcloud in mediacode' => [
+                '', '<iframe src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/artist/track"></iframe>', '', '', 'soundcloud',
             ],
 
             // Dailymotion URLs
@@ -111,6 +120,9 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
             'dailymotion embed URL' => [
                 '//www.dailymotion.com/embed/video/x7tgad0', '', '', '', 'dailymotion',
             ],
+            'dailymotion in mediacode' => [
+                '', '<iframe src="https://www.dailymotion.com/embed/video/x7tgad0"></iframe>', '', '', 'dailymotion',
+            ],
 
             // Rumble URLs
             'rumble embed URL' => [
@@ -118,6 +130,9 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
             ],
             'rumble standard URL' => [
                 'https://rumble.com/v1abc23-some-video-title.html', '', '', '', 'rumble',
+            ],
+            'rumble in mediacode' => [
+                '', '<iframe src="https://rumble.com/embed/v1abc23/"></iframe>', '', '', 'rumble',
             ],
 
             // VirtueMart URLs
