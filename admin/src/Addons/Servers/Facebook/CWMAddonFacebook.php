@@ -160,6 +160,7 @@ class CWMAddonFacebook extends CWMAddon
      * - https://www.facebook.com/PageName/videos/123456789/
      * - https://www.facebook.com/watch?v=123456789
      * - https://www.facebook.com/reel/123456789
+     * - https://www.facebook.com/events/123456789/
      * - https://fb.watch/abc123/
      *
      * @param   string  $url  The Facebook URL to convert

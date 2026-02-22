@@ -296,11 +296,8 @@ class CwmserverMigrationHelper
         }
 
         // Facebook
-        if (preg_match('/facebook\.com\/.+\/videos\//i', $combined)
-            || preg_match('/facebook\.com\/watch\?v=/i', $combined)
-            || preg_match('/facebook\.com\/reel\//i', $combined)
-            || preg_match('/facebook\.com\/plugins\/video\.php/i', $combined)
-            || preg_match('/fb\.watch\//i', $combined)
+        if (preg_match('/facebook\.com/i', $combined)
+            || preg_match('/fb\.watch/i', $combined)
         ) {
             return 'facebook';
         }

@@ -36,6 +36,7 @@
         soundcloud: 'warning',
         dailymotion: 'info',
         rumble: 'success',
+        facebook: 'primary',
         embed: 'secondary',
         article: 'dark',
         virtuemart: 'primary',
