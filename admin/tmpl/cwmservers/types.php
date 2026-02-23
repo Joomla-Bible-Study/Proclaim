@@ -48,6 +48,7 @@ $this->recordId = $app->getInput()->getInt('recordId');
 // Icon and brand color per server type key (lowercase addon directory name)
 $typeIcons = [
     'local'   => ['icon' => 'fas fa-server',      'color' => '#555555'],
+    'direct'  => ['icon' => 'fas fa-link',        'color' => '#2E7D32'],
     'youtube' => ['icon' => 'fab fa-youtube',      'color' => '#FF0000'],
     'vimeo'   => ['icon' => 'fab fa-vimeo',        'color' => '#1AB7EA'],
     'wistia'  => ['icon' => 'fas fa-play-circle',  'color' => '#54BBFF'],

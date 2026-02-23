@@ -1062,7 +1062,15 @@ class CwmImageMigration
 
             if (is_dir($aliasIdDir) && self::dirHasImageFiles($aliasIdDir)) {
                 self::cleanupBareIdFolder($absDir);
-                $result['recovered']++;
+
+                // Only count as recovered if the bare-ID folder was actually removed.
+                // If cleanup failed (e.g. permissions), skip it to avoid an infinite
+                // loop where the same folder is "recovered" every batch.
+                if (!is_dir($absDir) || !self::dirHasImageFiles($absDir)) {
+                    $result['recovered']++;
+                } else {
+                    $result['skipped']++;
+                }
 
                 continue;
             }
@@ -1126,7 +1134,13 @@ class CwmImageMigration
 
             // Clean up the old bare-ID folder
             self::cleanupBareIdFolder($absDir);
-            $result['recovered']++;
+
+            // Only count as recovered if cleanup actually removed the folder
+            if (!is_dir($absDir) || !self::dirHasImageFiles($absDir)) {
+                $result['recovered']++;
+            } else {
+                $result['skipped']++;
+            }
         }
 
         return $result;

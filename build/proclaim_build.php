@@ -504,6 +504,8 @@ function doBuild(bool $verbose = false): void
         'media/css/site/cwmcore.css',
         // Exclude dev files
         'media/js/joomla.d.ts',
+        // Exclude Composer vendor (dev-only)
+        'libraries/vendor',
     ];
 
     // File extensions to exclude (dev/debug files)
@@ -558,6 +560,11 @@ function doBuild(bool $verbose = false): void
             if (\in_array($ext, $excludeExts, true)) {
                 $excludeFile = true;
             }
+        }
+
+        // Exclude SQL files from media/backup/ (database backups)
+        if (!$excludeFile && str_starts_with($relativePath, 'media/backup/') && pathinfo($relativePath, PATHINFO_EXTENSION) === 'sql') {
+            $excludeFile = true;
         }
 
         if ($excludeFile) {

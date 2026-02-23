@@ -216,15 +216,15 @@ class CwmserverMigrationHelper
         array $allParams = []
     ): string {
         // Legacy player type overrides (set via docMan_id/article_id/virtueMart_id params)
-        if ($player === '4' || (!empty($allParams['docMan_id']) && $allParams['docMan_id'] !== '0')) {
+        if ($player === '4' || (!empty($allParams['docMan_id']) && $allParams['docMan_id'] !== '0' && $allParams['docMan_id'] !== '-1')) {
             return 'docman';
         }
 
-        if ($player === '5' || (!empty($allParams['article_id']) && $allParams['article_id'] !== '0' && $allParams['article_id'] !== '')) {
+        if ($player === '5' || (!empty($allParams['article_id']) && $allParams['article_id'] !== '0' && $allParams['article_id'] !== '-1' && $allParams['article_id'] !== '')) {
             return 'article';
         }
 
-        if ($player === '6' || (!empty($allParams['virtueMart_id']) && $allParams['virtueMart_id'] !== '0')) {
+        if ($player === '6' || (!empty($allParams['virtueMart_id']) && $allParams['virtueMart_id'] !== '0' && $allParams['virtueMart_id'] !== '-1')) {
             return 'virtuemart';
         }
 
@@ -416,7 +416,7 @@ class CwmserverMigrationHelper
      *
      * @return  int  The new server ID
      *
-     * @throws  \RuntimeException  On failure
+     * @throws  \RuntimeException|\Exception  On failure
      *
      * @since   10.1.0
      */
@@ -1297,6 +1297,6 @@ class CwmserverMigrationHelper
         // Strip any http(s):// prefix for local files
         $stripped = preg_replace('/^https?:\/\/[^\/]+\//i', '', $filename);
 
-        return $stripped !== null ? $stripped : $filename;
+        return $stripped ?? $filename;
     }
 }

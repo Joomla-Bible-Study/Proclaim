@@ -21,6 +21,8 @@ use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
+use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
+use CWM\Component\Proclaim\Site\Helper\Cwmhelper;
 
 /**
  * Abstract Server class
@@ -293,13 +295,13 @@ abstract class CWMAddon
      *
      * This method dispatches to the appropriate handler method based on the action name.
      * Handler methods should be named handle{ActionName}Action (e.g., handleTestApiAction).
-     * The 'fetchStats' action is handled by the base class for all stats-capable addons.
+     * The base class handles the 'fetchStats' action for all stats-capable addons.
      *
      * @param   string  $action  The action name to handle
      *
-     * @return  array  Response data array with 'success' key and additional data
+     * @return  array  Response data array with a 'success' key and additional data
      *
-     * @throws  \RuntimeException  If the action is not supported
+     * @throws  \RuntimeException|\Exception  If the action is not supported
      * @since   10.0.0
      */
     public function handleAjaxAction(string $action): array
@@ -347,7 +349,7 @@ abstract class CWMAddon
     }
 
     /**
-     * Prepare environment for AJAX response (suppress errors, clear buffers)
+     * Prepare the environment for AJAX response (suppress errors, clear buffers)
      *
      * Call this at the start of an AJAX handler to ensure clean JSON output.
      *
@@ -449,7 +451,7 @@ abstract class CWMAddon
 
     /**
      * Whether this addon supports pushing descriptions to the platform via API.
-     * Override in child class and return true to enable description sync.
+     * Override in a child class and return true to enable description sync.
      *
      * @return  bool
      *
@@ -545,6 +547,90 @@ abstract class CWMAddon
                 return false;
             }
         }));
+    }
+
+    /**
+     * Detect metadata for a file.
+     *
+     * @param   Registry    $params      Media params (modified in place)
+     * @param   object      $server      Server object
+     * @param   string      $set_path    Server path prefix
+     * @param   Registry    $path        Server params
+     * @param   Cwmpodcast  $jbspodcast  Podcast helper
+     * @param   bool        $needsSize   Whether size needs detection
+     * @param   bool        $needsMime   Whether MIME type needs detection
+     * @param   bool        $needsDuration Whether duration needs detection
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    public function detectMetadata(Registry $params, object $server, string $set_path, Registry $path, Cwmpodcast $jbspodcast, bool $needsSize, bool $needsMime, bool $needsDuration): void
+    {
+        // Default implementation does nothing
+    }
+
+    /**
+     * Detect metadata for a remote file via HTTP headers and FFprobe.
+     *
+     * @param   Registry    $params         Media params (modified in place)
+     * @param   string      $remoteUrl      File URL
+     * @param   Cwmpodcast  $jbspodcast     Podcast helper
+     * @param   bool        $needsSize      Whether size needs detection
+     * @param   bool        $needsMimeType  Whether MIME type needs detection
+     * @param   bool        $needsDuration  Whether duration needs detection
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    protected function detectRemoteMetadata(Registry $params, string $remoteUrl, Cwmpodcast $jbspodcast, bool $needsSize, bool $needsMimeType, bool $needsDuration): void
+    {
+        // Ensure URL has protocol
+        if (!str_contains($remoteUrl, '://')) {
+            $remoteUrl = 'https://' . ltrim($remoteUrl, '/');
+        }
+
+        // Get HTTP headers for size and MIME type
+        if ($needsSize || $needsMimeType) {
+            $size = Cwmhelper::getRemoteFileSize($remoteUrl);
+            if ($needsSize && $size > 0) {
+                $params->set('size', $size);
+            }
+
+            // Try to get MIME type from extension if still needed
+            if ($needsMimeType) {
+                $path = parse_url($remoteUrl, PHP_URL_PATH);
+                $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+                $mimeTypes = [
+                    'mp3'  => 'audio/mpeg',
+                    'mp4'  => 'video/mp4',
+                    'm4a'  => 'audio/mp4',
+                    'm4v'  => 'video/mp4',
+                    'ogg'  => 'audio/ogg',
+                    'oga'  => 'audio/ogg',
+                    'ogv'  => 'video/ogg',
+                    'wav'  => 'audio/wav',
+                    'webm' => 'video/webm',
+                    'flac' => 'audio/flac',
+                    'aac'  => 'audio/aac',
+                ];
+                if (isset($mimeTypes[$extension])) {
+                    $params->set('mime_type', $mimeTypes[$extension]);
+                }
+            }
+        }
+
+        // Try FFprobe for duration
+        if ($needsDuration) {
+            $durationSeconds = $jbspodcast->getDurationWithFFprobe($remoteUrl);
+            if ($durationSeconds > 0) {
+                $duration = $jbspodcast->formatTime($durationSeconds);
+                $params->set('media_hours', str_pad((string) $duration->hours, 2, '0', STR_PAD_LEFT));
+                $params->set('media_minutes', str_pad((string) $duration->minutes, 2, '0', STR_PAD_LEFT));
+                $params->set('media_seconds', str_pad((string) $duration->seconds, 2, '0', STR_PAD_LEFT));
+            }
+        }
     }
 
     /**
