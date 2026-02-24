@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Wistia;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Http\HttpFactory;
@@ -868,5 +869,61 @@ class CWMAddonWistia extends CWMAddon
     {
         // Wistia videos are referenced by URL, not uploaded
         return false;
+    }
+
+    /**
+     * Detect metadata for a Wistia video via oEmbed (no auth required).
+     *
+     * @param   Registry    $params      Media params (modified in place)
+     * @param   object      $server      Server object
+     * @param   string      $set_path    Server path prefix
+     * @param   Registry    $path        Server params
+     * @param   Cwmpodcast  $jbspodcast  Podcast helper
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function detectMetadata(Registry $params, object $server, string $set_path, Registry $path, Cwmpodcast $jbspodcast): void
+    {
+        $filename = $params->get('filename');
+
+        if (empty($filename)) {
+            return;
+        }
+
+        ['needsMime' => $needsMime, 'needsDuration' => $needsDuration] = $this->needsDetection($params);
+
+        if ($needsMime) {
+            $params->set('mime_type', 'video/mp4');
+        }
+
+        if (!$needsDuration && !empty($params->get('title'))) {
+            return;
+        }
+
+        $mediaHash = $this->extractWistiaMediaHash($filename);
+
+        if (!$mediaHash) {
+            return;
+        }
+
+        try {
+            $metadata = $this->getVideoMetadata($mediaHash);
+
+            if (!empty($metadata['duration']) && $needsDuration) {
+                $duration = $jbspodcast->formatTime((int) round((float) $metadata['duration']));
+                $params->set('media_hours', str_pad((string) $duration->hours, 2, '0', STR_PAD_LEFT));
+                $params->set('media_minutes', str_pad((string) $duration->minutes, 2, '0', STR_PAD_LEFT));
+                $params->set('media_seconds', str_pad((string) $duration->seconds, 2, '0', STR_PAD_LEFT));
+            }
+
+            if (empty($params->get('title')) && !empty($metadata['title'])) {
+                $params->set('title', $metadata['title']);
+            }
+        } catch (\Exception $e) {
+            // oEmbed failure is non-fatal
+        }
     }
 }

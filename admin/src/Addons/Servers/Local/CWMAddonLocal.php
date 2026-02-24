@@ -17,7 +17,9 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Local;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmuploadscript;
+use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
@@ -223,6 +225,96 @@ class CWMAddonLocal extends CWMAddon
         $html .= HTMLHelper::_('uitab.endTab');
 
         return $html;
+    }
+
+
+    /**
+     * Detect metadata for a local file.
+     *
+     * @param   Registry    $params      Media params (modified in place)
+     * @param   object      $server      Server object
+     * @param   string      $set_path    Server path prefix
+     * @param   Registry    $path        Server params
+     * @param   Cwmpodcast  $jbspodcast  Podcast helper
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function detectMetadata(Registry $params, object $server, string $set_path, Registry $path, Cwmpodcast $jbspodcast): void
+    {
+        $filename = $params->get('filename');
+
+        if (empty($filename)) {
+            return;
+        }
+
+        // Build local file path
+        $path_server = Cwmhelper::mediaBuildUrl($set_path, $filename, $params, false, false, true);
+        $prefix      = \Joomla\CMS\Uri\Uri::root();
+        $nohttp      = $jbspodcast->removeHttp($prefix);
+        $siteinfo    = strpos($path_server, $nohttp);
+
+        if ($siteinfo !== false) {
+            $localPath = JPATH_SITE . '/' . substr($path_server, \strlen($nohttp));
+        } else {
+            $localPath = $path_server;
+        }
+
+        if (!is_file($localPath)) {
+            return;
+        }
+
+        ['needsSize' => $needsSize, 'needsMime' => $needsMime, 'needsDuration' => $needsDuration] = $this->needsDetection($params);
+
+        if (!$needsSize && !$needsMime && !$needsDuration) {
+            return;
+        }
+
+        // File size
+        if ($needsSize) {
+            $size = filesize($localPath);
+
+            if ($size !== false && $size > 0) {
+                $params->set('size', $size);
+            }
+        }
+
+        // MIME type: try real detection first, fall back to extension
+        if ($needsMime) {
+            $mimeType = null;
+
+            if (\function_exists('mime_content_type')) {
+                $mimeType = mime_content_type($localPath);
+
+                if ($mimeType === 'application/octet-stream') {
+                    $mimeType = null;
+                }
+            }
+
+            if (!$mimeType && class_exists('finfo')) {
+                $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+                $mimeType = $finfo->file($localPath);
+
+                if ($mimeType === 'application/octet-stream') {
+                    $mimeType = null;
+                }
+            }
+
+            if (!$mimeType) {
+                $mimeType = $this->getMimeTypeFromExtension($localPath);
+            }
+
+            if ($mimeType) {
+                $params->set('mime_type', $mimeType);
+            }
+        }
+
+        // Duration
+        if ($needsDuration) {
+            $this->setDurationFromFFprobe($params, $localPath, $jbspodcast);
+        }
     }
 
 }

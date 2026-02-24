@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Direct;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmuploadscript;
+use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
@@ -131,4 +132,25 @@ class CWMAddonDirect extends CWMAddon
 
         return '<a href="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '"' . $targetAttr . '>' . $text . '</a>';
     }
+
+    /**
+     * Detect metadata for a direct link (noop).
+     *
+     * @param   Registry    $params      Media params
+     * @param   object      $server      Server object
+     * @param   string      $set_path    Server path prefix
+     * @param   Registry    $path        Server params
+     * @param   Cwmpodcast  $jbspodcast  Podcast helper
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function detectMetadata(Registry $params, object $server, string $set_path, Registry $path, Cwmpodcast $jbspodcast): void
+    {
+        // Direct links do not support automatic metadata detection.
+        // Users must enter size/duration manually if needed.
+    }
+
 }

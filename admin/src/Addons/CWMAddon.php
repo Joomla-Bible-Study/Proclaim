@@ -16,13 +16,13 @@ namespace CWM\Component\Proclaim\Administrator\Addons;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
-use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
-use CWM\Component\Proclaim\Site\Helper\Cwmhelper;
 
 /**
  * Abstract Server class
@@ -540,9 +540,7 @@ abstract class CWMAddon
 
         return array_values(array_filter($servers, function ($srv) {
             try {
-                $addon = static::getInstance($srv['type']);
-
-                return $addon->supportsStats();
+                return static::getInstance($srv['type'])->supportsStats();
             } catch (\RuntimeException) {
                 return false;
             }
@@ -557,79 +555,151 @@ abstract class CWMAddon
      * @param   string      $set_path    Server path prefix
      * @param   Registry    $path        Server params
      * @param   Cwmpodcast  $jbspodcast  Podcast helper
-     * @param   bool        $needsSize   Whether size needs detection
-     * @param   bool        $needsMime   Whether MIME type needs detection
-     * @param   bool        $needsDuration Whether duration needs detection
      *
      * @return  void
      *
-     * @since   10.3.0
+     * @since   10.1.0
      */
-    public function detectMetadata(Registry $params, object $server, string $set_path, Registry $path, Cwmpodcast $jbspodcast, bool $needsSize, bool $needsMime, bool $needsDuration): void
+    public function detectMetadata(Registry $params, object $server, string $set_path, Registry $path, Cwmpodcast $jbspodcast): void
     {
         // Default implementation does nothing
     }
 
     /**
-     * Detect metadata for a remote file via HTTP headers and FFprobe.
+     * Get MIME type from file extension.
      *
-     * @param   Registry    $params         Media params (modified in place)
-     * @param   string      $remoteUrl      File URL
-     * @param   Cwmpodcast  $jbspodcast     Podcast helper
-     * @param   bool        $needsSize      Whether size needs detection
-     * @param   bool        $needsMimeType  Whether MIME type needs detection
-     * @param   bool        $needsDuration  Whether duration needs detection
+     * @param   string  $filename  Filename or URL
+     *
+     * @return  string|null
+     *
+     * @since   10.1.0
+     */
+    protected function getMimeTypeFromExtension(string $filename): ?string
+    {
+        $path      = parse_url($filename, PHP_URL_PATH);
+        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+        $mimeTypes = [
+            'mp3'  => 'audio/mpeg',
+            'mp4'  => 'video/mp4',
+            'm4a'  => 'audio/mp4',
+            'm4v'  => 'video/mp4',
+            'ogg'  => 'audio/ogg',
+            'oga'  => 'audio/ogg',
+            'ogv'  => 'video/ogg',
+            'wav'  => 'audio/wav',
+            'webm' => 'video/webm',
+            'flac' => 'audio/flac',
+            'aac'  => 'audio/aac',
+            'pdf'  => 'application/pdf',
+        ];
+
+        return $mimeTypes[$extension] ?? null;
+    }
+
+    /**
+     * Set duration params using FFprobe.
+     *
+     * @param   Registry    $params      Media params (modified in place)
+     * @param   string      $url         File URL or path
+     * @param   Cwmpodcast  $jbspodcast  Podcast helper
      *
      * @return  void
      *
-     * @since   10.3.0
+     * @since   10.1.0
      */
-    protected function detectRemoteMetadata(Registry $params, string $remoteUrl, Cwmpodcast $jbspodcast, bool $needsSize, bool $needsMimeType, bool $needsDuration): void
+    protected function setDurationFromFFprobe(Registry $params, string $url, Cwmpodcast $jbspodcast): void
     {
+        $durationSeconds = $jbspodcast->getDurationWithFFprobe($url);
+
+        // Fallback to getMediaDuration for local files
+        if ($durationSeconds <= 0 && is_file($url)) {
+            $durationSeconds = $jbspodcast->getMediaDuration($url);
+        }
+
+        if ($durationSeconds > 0) {
+            $duration = $jbspodcast->formatTime($durationSeconds);
+            $params->set('media_hours', str_pad((string) $duration->hours, 2, '0', STR_PAD_LEFT));
+            $params->set('media_minutes', str_pad((string) $duration->minutes, 2, '0', STR_PAD_LEFT));
+            $params->set('media_seconds', str_pad((string) $duration->seconds, 2, '0', STR_PAD_LEFT));
+        }
+    }
+
+    /**
+     * Check which metadata fields need detection.
+     *
+     * @param   Registry  $params  Media params
+     *
+     * @return  array{needsSize: bool, needsMime: bool, needsDuration: bool}
+     *
+     * @since   10.1.0
+     */
+    protected function needsDetection(Registry $params): array
+    {
+        $hours   = $params->get('media_hours', '00');
+        $minutes = $params->get('media_minutes', '00');
+        $seconds = $params->get('media_seconds', '00');
+
+        return [
+            'needsSize'     => empty($params->get('size', 0)) || (int) $params->get('size', 0) < 1000,
+            'needsMime'     => empty($params->get('mime_type')),
+            'needsDuration' => ($hours === '00' && $minutes === '00' && $seconds === '00'),
+        ];
+    }
+
+    /**
+     * Detect metadata for a remote file via HTTP headers and FFprobe.
+     *
+     * Shared helper for addons that host downloadable remote files (Legacy, etc.).
+     * Detects file size via HTTP Content-Length, MIME type from extension, and
+     * duration via FFprobe.
+     *
+     * @param   Registry    $params      Media params (modified in place)
+     * @param   string      $remoteUrl   File URL (protocol is added if missing)
+     * @param   Cwmpodcast  $jbspodcast  Podcast helper
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    protected function detectRemoteMetadata(Registry $params, string $remoteUrl, Cwmpodcast $jbspodcast): void
+    {
+        if (empty($remoteUrl)) {
+            return;
+        }
+
         // Ensure URL has protocol
         if (!str_contains($remoteUrl, '://')) {
             $remoteUrl = 'https://' . ltrim($remoteUrl, '/');
         }
 
-        // Get HTTP headers for size and MIME type
-        if ($needsSize || $needsMimeType) {
-            $size = Cwmhelper::getRemoteFileSize($remoteUrl);
-            if ($needsSize && $size > 0) {
-                $params->set('size', $size);
-            }
+        ['needsSize' => $needsSize, 'needsMime' => $needsMime, 'needsDuration' => $needsDuration] = $this->needsDetection($params);
 
-            // Try to get MIME type from extension if still needed
-            if ($needsMimeType) {
-                $path = parse_url($remoteUrl, PHP_URL_PATH);
-                $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-                $mimeTypes = [
-                    'mp3'  => 'audio/mpeg',
-                    'mp4'  => 'video/mp4',
-                    'm4a'  => 'audio/mp4',
-                    'm4v'  => 'video/mp4',
-                    'ogg'  => 'audio/ogg',
-                    'oga'  => 'audio/ogg',
-                    'ogv'  => 'video/ogg',
-                    'wav'  => 'audio/wav',
-                    'webm' => 'video/webm',
-                    'flac' => 'audio/flac',
-                    'aac'  => 'audio/aac',
-                ];
-                if (isset($mimeTypes[$extension])) {
-                    $params->set('mime_type', $mimeTypes[$extension]);
-                }
+        if (!$needsSize && !$needsMime && !$needsDuration) {
+            return;
+        }
+
+        // Get file size via HTTP Content-Length header
+        if ($needsSize) {
+            $size = Cwmhelper::getRemoteFileSize($remoteUrl);
+
+            if ($size > 0) {
+                $params->set('size', $size);
             }
         }
 
-        // Try FFprobe for duration
-        if ($needsDuration) {
-            $durationSeconds = $jbspodcast->getDurationWithFFprobe($remoteUrl);
-            if ($durationSeconds > 0) {
-                $duration = $jbspodcast->formatTime($durationSeconds);
-                $params->set('media_hours', str_pad((string) $duration->hours, 2, '0', STR_PAD_LEFT));
-                $params->set('media_minutes', str_pad((string) $duration->minutes, 2, '0', STR_PAD_LEFT));
-                $params->set('media_seconds', str_pad((string) $duration->seconds, 2, '0', STR_PAD_LEFT));
+        // MIME type from file extension
+        if ($needsMime) {
+            $mime = $this->getMimeTypeFromExtension($remoteUrl);
+
+            if ($mime) {
+                $params->set('mime_type', $mime);
             }
+        }
+
+        // Duration via FFprobe
+        if ($needsDuration) {
+            $this->setDurationFromFFprobe($params, $remoteUrl, $jbspodcast);
         }
     }
 

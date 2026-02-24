@@ -20,6 +20,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
+use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Google;
 use Google\Service\Exception;
 use Google\Service\YouTube;
@@ -1211,4 +1212,88 @@ class CWMAddonYoutube extends CWMAddon
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
+
+    /**
+     * Detect metadata for a YouTube video.
+     *
+     * @param   Registry    $params      Media params (modified in place)
+     * @param   object      $server      Server object
+     * @param   string      $set_path    Server path prefix
+     * @param   Registry    $path        Server params
+     * @param   Cwmpodcast  $jbspodcast  Podcast helper
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function detectMetadata(Registry $params, object $server, string $set_path, Registry $path, Cwmpodcast $jbspodcast): void
+    {
+        $filename = $params->get('filename');
+
+        if (empty($filename)) {
+            return;
+        }
+
+        ['needsMime' => $needsMime, 'needsDuration' => $needsDuration] = $this->needsDetection($params);
+
+        // Set MIME type (video/mp4 is the standard enclosure type for podcast feeds)
+        if ($needsMime) {
+            $params->set('mime_type', 'video/mp4');
+        }
+
+        // Only detect duration and title for YouTube (size is irrelevant for streaming)
+        if (!$needsDuration && !empty($params->get('title'))) {
+            return;
+        }
+
+        $serverParams = new Registry($server->params);
+        $apiKey       = $serverParams->get('api_key');
+
+        if (empty($apiKey)) {
+            return;
+        }
+
+        $videoId = $this->extractYoutubeVideoId($filename);
+
+        if (empty($videoId)) {
+            return;
+        }
+
+        try {
+            $client = new Google\Client();
+            $client->setApplicationName('Proclaim');
+            $client->setDeveloperKey($apiKey);
+
+            $youtube  = new YouTube($client);
+            $response = $youtube->videos->listVideos('snippet,contentDetails', [
+                'id' => $videoId,
+            ]);
+
+            if (!empty($response->items)) {
+                $item = $response->items[0];
+
+                // Set Title if empty
+                if (empty($params->get('title'))) {
+                    $params->set('title', $item->snippet->title);
+                }
+
+                // Set Duration
+                if ($needsDuration) {
+                    $durationISO = $item->contentDetails->duration;
+                    try {
+                        $interval = new \DateInterval($durationISO);
+                        $params->set('media_hours', str_pad((string) $interval->h, 2, '0', STR_PAD_LEFT));
+                        $params->set('media_minutes', str_pad((string) $interval->i, 2, '0', STR_PAD_LEFT));
+                        $params->set('media_seconds', str_pad((string) $interval->s, 2, '0', STR_PAD_LEFT));
+                    } catch (\Exception $e) {
+                        // Ignore invalid duration format
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            // Log or ignore error
+        }
+    }
+
 }

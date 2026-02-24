@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Facebook;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\Registry\Registry;
 
 /**
@@ -269,5 +270,26 @@ class CWMAddonFacebook extends CWMAddon
     protected function upload(?array $data): mixed
     {
         return false;
+    }
+
+    /**
+     * Detect metadata for a Facebook video (MIME default only).
+     *
+     * @param   Registry    $params      Media params (modified in place)
+     * @param   object      $server      Server object
+     * @param   string      $set_path    Server path prefix
+     * @param   Registry    $path        Server params
+     * @param   Cwmpodcast  $jbspodcast  Podcast helper
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function detectMetadata(Registry $params, object $server, string $set_path, Registry $path, Cwmpodcast $jbspodcast): void
+    {
+        if (empty($params->get('mime_type'))) {
+            $params->set('mime_type', 'video/mp4');
+        }
     }
 }
