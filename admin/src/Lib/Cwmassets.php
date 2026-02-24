@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Asset Fix class
@@ -107,7 +108,7 @@ class Cwmassets
         }
 
         // Parent asset doesn't exist - need to create it
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Find the root asset to use as parent
         $query = $db->getQuery(true);
@@ -164,7 +165,7 @@ class Cwmassets
     public static function parentId(): int
     {
         if (!self::$parent_id) {
-            $db = Factory::getContainer()->get('DatabaseDriver');
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             // First, get the new parent_id
             $query = $db->getQuery(true);
@@ -190,7 +191,7 @@ class Cwmassets
      */
     private static function setAsset(object $data, string $assetName): void
     {
-        $db         = Factory::getContainer()->get('DatabaseDriver');
+        $db         = Factory::getContainer()->get(DatabaseInterface::class);
         $AssetTable = '\CWM\Component\Proclaim\Administrator\Table\Cwm' . $assetName . 'Table';
         $table      = new $AssetTable($db);
 
@@ -242,7 +243,7 @@ class Cwmassets
      */
     private static function deleteAsset(object $data): bool
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         if (isset($data->asset_id)) {
             if ((int)$data->asset_id >= 2 && (int)$data->asset_id !== self::$parent_id) {
@@ -268,7 +269,7 @@ class Cwmassets
      */
     public static function build(): object
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get the names of the JBS tables
         $objects = self::getassetObjects();

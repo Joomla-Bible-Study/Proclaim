@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -295,7 +296,7 @@ class CWMAddonResi extends CWMAddon
 
         // Load server params
         try {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
                 ->select($db->quoteName('params'))
                 ->from($db->quoteName('#__bsms_servers'))

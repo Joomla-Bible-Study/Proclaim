@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -47,7 +48,7 @@ class Cwmdownload
         $app        = Factory::getApplication();
         $input      = Factory::getApplication()->getInput();
         $templateId = $input->get('t', '1', 'int');
-        $db         = Factory::getContainer()->get('DatabaseDriver');
+        $db         = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get the template so we can find a protocol
         $query = $db->getQuery(true);
@@ -225,7 +226,7 @@ class Cwmdownload
      */
     protected function hitDownloads(int $mid): bool
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->update($db->quoteName('#__bsms_mediafiles'))
             ->set($db->quoteName('downloads') . ' = ' . $db->quoteName('downloads') . ' + 1')

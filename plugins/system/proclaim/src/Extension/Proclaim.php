@@ -18,6 +18,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Router\Route;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Event\SubscriberInterface;
 
 /**
@@ -377,7 +378,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     private function getAdminParams(): array
     {
         try {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
                 ->select($db->quoteName('params'))
                 ->from($db->quoteName('#__bsms_admin'))
@@ -411,7 +412,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         }
 
         try {
-            $db        = Factory::getContainer()->get('DatabaseDriver');
+            $db        = Factory::getContainer()->get(DatabaseInterface::class);
             $prefix    = $db->getPrefix();
             $tableList = $db->getTableList();
 

@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Class script to convert SermonSpeaker 5.2 to Proclaim
@@ -39,7 +40,7 @@ class Cwmssconvert
      */
     public function convertSS(): string
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('*')
             ->from($db->quoteName('#__sermon_sermons'));
@@ -231,7 +232,7 @@ class Cwmssconvert
      */
     public function newStudies($sermon, $seriesspeakers): void
     {
-        $db   = Factory::getContainer()->get('DatabaseDriver');
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
         $data = new \stdClass();
 
         foreach ($seriesspeakers as $speakers) {

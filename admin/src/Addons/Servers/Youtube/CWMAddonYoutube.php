@@ -27,6 +27,7 @@ use Google\Service\YouTube;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
@@ -504,7 +505,7 @@ class CWMAddonYoutube extends CWMAddon
         $serverId = $app->getInput()->getInt('server_id', 0);
 
         // Verify this is a YouTube server
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select($db->quoteName('type'))
             ->from($db->quoteName('#__bsms_servers'))
@@ -610,7 +611,7 @@ class CWMAddonYoutube extends CWMAddon
      */
     protected function getServerConfig(int $serverId): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_servers'))

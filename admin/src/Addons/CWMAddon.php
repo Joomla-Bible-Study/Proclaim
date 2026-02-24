@@ -20,7 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 
@@ -522,8 +522,7 @@ abstract class CWMAddon
      */
     public static function getStatsCapableServers(): array
     {
-        /** @var DatabaseDriver $db */
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $columns = $db->getTableColumns('#__bsms_servers');
         $select  = [$db->quoteName('id'), $db->quoteName('server_name'), $db->quoteName('type')];
 
@@ -535,8 +534,7 @@ abstract class CWMAddon
             ->select($select)
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('published') . ' = 1');
-        $db->setQuery($query);
-        $servers = $db->loadAssocList() ?? [];
+        $servers = $db->setQuery($query)->loadAssocList() ?? [];
 
         return array_values(array_filter($servers, function ($srv) {
             try {
@@ -723,8 +721,7 @@ abstract class CWMAddon
         string $platformId,
         array $stats
     ): void {
-        /** @var DatabaseDriver $db */
-        $db  = Factory::getContainer()->get('DatabaseDriver');
+        $db  = Factory::getContainer()->get(DatabaseInterface::class);
         $now = Factory::getDate()->toSql();
 
         $columns = ['media_id', 'server_id', 'platform', 'platform_id', 'synced_at'];
@@ -764,8 +761,7 @@ abstract class CWMAddon
             . ' VALUES (' . implode(', ', $values) . ')'
             . ' ON DUPLICATE KEY UPDATE ' . implode(', ', $updates);
 
-        $db->setQuery($sql);
-        $db->execute();
+        $db->setQuery($sql)->execute();
     }
 
     /**
@@ -779,15 +775,13 @@ abstract class CWMAddon
      */
     protected static function updateServerSyncTimestamp(int $serverId): void
     {
-        /** @var DatabaseDriver $db */
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $now   = Factory::getDate()->toSql();
         $query = $db->getQuery(true)
             ->update($db->quoteName('#__bsms_servers'))
             ->set($db->quoteName('stats_synced_at') . ' = ' . $db->quote($now))
-            ->where($db->quoteName('id') . ' = ' . (int) $serverId);
-        $db->setQuery($query);
-        $db->execute();
+            ->where($db->quoteName('id') . ' = ' . $serverId);
+        $db->setQuery($query)->execute();
     }
 
     /**
@@ -814,8 +808,7 @@ abstract class CWMAddon
         string $platform = '',
         bool $includeArchived = true
     ): array {
-        /** @var DatabaseDriver $db */
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select([$db->quoteName('m.id'), $db->quoteName('m.params')])
             ->from($db->quoteName('#__bsms_mediafiles', 'm'))
@@ -843,8 +836,7 @@ abstract class CWMAddon
             $query->setLimit((int) ceil($batchLimit * 1.5));
         }
 
-        $db->setQuery($query);
-        $rows = $db->loadAssocList() ?? [];
+        $rows = $db->setQuery($query)->loadAssocList() ?? [];
 
         $result = [];
 
@@ -875,8 +867,7 @@ abstract class CWMAddon
      */
     protected static function getMediaVideoCount(int $serverId, bool $includeArchived = true): int
     {
-        /** @var DatabaseDriver $db */
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_mediafiles'))
@@ -888,9 +879,7 @@ abstract class CWMAddon
             $query->where($db->quoteName('published') . ' = 1');
         }
 
-        $db->setQuery($query);
-
-        return (int) $db->loadResult();
+        return (int) $db->setQuery($query)->loadResult();
     }
 
     /**
@@ -941,7 +930,7 @@ abstract class CWMAddon
 
     /**
      * Render fancybox/squeezebox link HTML.
-     * Default implementation works for most platforms — only override if custom behavior needed.
+     * The default implementation works for most platforms — only overrides if custom behavior is needed.
      *
      * @param   string    $url          The raw URL/filename
      * @param   Registry  $mediaParams  Merged template + media params
@@ -994,7 +983,12 @@ abstract class CWMAddon
             . '" style="border:0;" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
     }
 
-    /** @var array|null Cached addon instances for URL resolution */
+    /**
+     * Cached addon instances for URL resolution.
+     *
+     * @var   array|null
+     * @since 10.1.0
+     */
     private static ?array $urlAddonCache = null;
 
     /**
@@ -1045,7 +1039,11 @@ abstract class CWMAddon
     }
 
     /**
-     * Load addon language file
+     * Load the addon language file.
+     *
+     * Loads from Servers/{Type}/language/{tag}/{tag}.jbs_addon_{type}.ini.
+     * Falls back to en-GB automatically when the active locale file is missing
+     * (Joomla Language::load $default parameter).
      *
      * @return  void
      *

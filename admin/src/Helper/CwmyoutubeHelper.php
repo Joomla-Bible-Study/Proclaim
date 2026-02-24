@@ -83,8 +83,7 @@ class CwmyoutubeHelper
             return null;
         }
 
-        /** @var DatabaseInterface $db */
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         $searchName = $db->quote('%' . $db->escape($teacherName, true) . '%');
         $exactName  = $db->quote($teacherName);
@@ -121,8 +120,7 @@ class CwmyoutubeHelper
             return null;
         }
 
-        /** @var DatabaseInterface $db */
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         $searchTitle = $db->quote('%' . $db->escape($messageTitle, true) . '%');
         $exactTitle  = $db->quote($messageTitle);
@@ -238,8 +236,7 @@ class CwmyoutubeHelper
         $matches  = [];
         $seenIds  = [];
 
-        /** @var DatabaseInterface $db */
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Search using different parts of the title
         $searchTerms = array_filter([$parsed['part1'], $parsed['part2'], $videoTitle]);

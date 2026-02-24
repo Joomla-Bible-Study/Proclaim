@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Database\QueryInterface;
 
 /**
@@ -820,13 +821,13 @@ class CwmanalyticsModel extends BaseDatabaseModel
      * Apply campus (location) security filter for non-super-admin users.
      *
      * @param   QueryInterface                   $query  The database query.
-     * @param   \Joomla\Database\DatabaseDriver  $db     Database driver.
+     * @param   DatabaseInterface  $db     Database driver.
      *
      * @return  void
      *
      * @since   10.1.0
      */
-    private function applyLocationFilter(QueryInterface $query, \Joomla\Database\DatabaseDriver $db): void
+    private function applyLocationFilter(QueryInterface $query, DatabaseInterface $db): void
     {
         try {
             $user = Factory::getApplication()->getIdentity();

@@ -141,7 +141,7 @@ class CwmadminController extends FormController
             return;
         }
 
-        $db   = Factory::getContainer()->get('DatabaseDriver');
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
         $msg  = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
         $post = $this->input->post->get('jform', [], 'array');
         $reg  = new Registry();
@@ -198,7 +198,7 @@ class CwmadminController extends FormController
             return;
         }
 
-        $db   = Factory::getContainer()->get('DatabaseDriver');
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
         $post = $this->input->post->get('jform', [], 'array');
         $reg  = new Registry();
         $reg->loadArray($post['params']);
@@ -260,7 +260,7 @@ class CwmadminController extends FormController
 
         $post    = $this->input->post->get('jform', [], 'raw');
         $decoded = json_decode($post['mediaimage'], true, 512, JSON_THROW_ON_ERROR);
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->getQuery(true);
         $query->select($db->quoteName(['id', 'params']))
             ->from($db->quoteName('#__bsms_mediafiles'));
@@ -474,7 +474,7 @@ class CwmadminController extends FormController
             return;
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $msg   = null;
         $query = $db->getQuery(true);
         $query->update($db->quoteName('#__bsms_mediafiles'))
@@ -509,7 +509,7 @@ class CwmadminController extends FormController
         }
 
         $msg   = null;
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->update($db->quoteName('#__bsms_mediafiles'))
             ->set($db->quoteName('downloads') . ' = 0')
@@ -544,7 +544,7 @@ class CwmadminController extends FormController
         }
 
         $msg   = null;
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->update($db->quoteName('#__bsms_mediafiles'))
             ->set($db->quoteName('plays') . ' = 0')
@@ -577,7 +577,7 @@ class CwmadminController extends FormController
             return;
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->update($db->quoteName('#__bsms_mediafiles'))
             ->set($db->quoteName('hits') . ' = 0')
@@ -609,7 +609,7 @@ class CwmadminController extends FormController
             return;
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->update($db->quoteName('#__bsms_mediafiles'))
             ->set($db->quoteName('downloads') . ' = 0')
@@ -641,7 +641,7 @@ class CwmadminController extends FormController
             return;
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->update($db->quoteName('#__bsms_mediafiles'))
             ->set($db->quoteName('plays') . ' = 0')
@@ -737,7 +737,7 @@ class CwmadminController extends FormController
             }
 
             // Look up the server type for this media file
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
                 ->select($db->quoteName('sv.type'))
                 ->from($db->quoteName('#__bsms_mediafiles', 'm'))
@@ -953,7 +953,7 @@ class CwmadminController extends FormController
 
         // Create table tablename_new like tablename; -> this will copy the structure...
         // Insert into tablename_new select * from tablename; -> this would copy all the data
-        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $tables = $db->getTableList();
         $prefix = $db->getPrefix();
 
@@ -2078,7 +2078,7 @@ class CwmadminController extends FormController
         }
 
         try {
-            $db = Factory::getContainer()->get('DatabaseDriver');
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             // Use optimized batch update with JSON functions
             // This replaces the N+1 query pattern with a single UPDATE
@@ -2149,7 +2149,7 @@ class CwmadminController extends FormController
         }
 
         try {
-            $db = Factory::getContainer()->get('DatabaseDriver');
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             // Handle legacy value mapping (100 = 0, etc.)
             $searchFrom  = $from;
@@ -2244,7 +2244,7 @@ class CwmadminController extends FormController
         }
 
         try {
-            $db = Factory::getContainer()->get('DatabaseDriver');
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             // Get all media files with matching media type
             $query = $db->getQuery(true)

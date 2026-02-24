@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Templates model class
@@ -71,7 +72,7 @@ class CwmtemplatesModel extends ListModel
     public function getTemplates(): array
     {
         if (empty($this->templates)) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true);
             $query->select($db->quoteName('id', 'value'))
                 ->select($db->quoteName('title', 'text'))
@@ -93,7 +94,7 @@ class CwmtemplatesModel extends ListModel
      */
     public function getTypes(): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
         $query->select($db->quoteName('template.type', 'text'));
@@ -151,7 +152,7 @@ class CwmtemplatesModel extends ListModel
      */
     protected function getListQuery(): mixed
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $user  = $this->getCurrentUser();
 

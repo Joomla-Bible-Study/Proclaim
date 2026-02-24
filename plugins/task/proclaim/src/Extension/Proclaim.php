@@ -22,6 +22,7 @@ use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\Component\Scheduler\Administrator\Event\ExecuteTaskEvent;
 use Joomla\Component\Scheduler\Administrator\Task\Status;
 use Joomla\Component\Scheduler\Administrator\Traits\TaskPluginTrait;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Event\DispatcherInterface;
 use Joomla\Event\SubscriberInterface;
 
@@ -215,7 +216,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         $interval  = $params->get('archive_interval', 'year');
 
         try {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true);
 
             // Calculate cutoff date
@@ -266,7 +267,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         }
 
         try {
-            $db       = Factory::getContainer()->get('DatabaseDriver');
+            $db       = Factory::getContainer()->get(DatabaseInterface::class);
             $nowDate  = Factory::getDate()->toSql();
             $nullDate = $db->getNullDate();
 

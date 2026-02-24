@@ -27,6 +27,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -224,7 +225,7 @@ class CwmteacherModel extends AdminModel
      */
     protected function canEditState($record): bool
     {
-        $db   = Factory::getContainer()->get('DatabaseDriver');
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
         $text = '';
 
         if (!empty($record) && $this->getState('task') === 'trash') {
@@ -402,7 +403,7 @@ class CwmteacherModel extends AdminModel
     protected function canDelete($record): bool
     {
         $app        = Factory::getApplication();
-        $db         = Factory::getContainer()->get('DatabaseDriver');
+        $db         = Factory::getContainer()->get(DatabaseInterface::class);
         $user       = $app->getIdentity();
         $canDoState = $user->authorise('core.edit.state', $this->option);
         $text       = '';
@@ -485,7 +486,7 @@ class CwmteacherModel extends AdminModel
 
             // Set ordering to the last item if not set
             if (empty($table->ordering)) {
-                $db    = Factory::getContainer()->get('DatabaseDriver');
+                $db    = Factory::getContainer()->get(DatabaseInterface::class);
                 $query = $db->getQuery(true);
                 $query->select('MAX(' . $db->quoteName('ordering') . ')')->from($db->quoteName('#__bsms_teachers'));
                 $db->setQuery($query);
@@ -515,7 +516,7 @@ class CwmteacherModel extends AdminModel
             return [];
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
         $query->select([

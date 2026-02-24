@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Http\HttpFactory;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
@@ -296,7 +297,7 @@ class CWMAddonVimeo extends CWMAddon
      */
     public function syncDescription(int $mediaId, string $description): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select([$db->quoteName('params'), $db->quoteName('server_id')])
             ->from($db->quoteName('#__bsms_mediafiles'))
@@ -358,13 +359,14 @@ class CWMAddonVimeo extends CWMAddon
     /**
      * Fetch video statistics from Vimeo API for media linked to this server.
      * Batches up to 100 video IDs per API call. When $batchLimit > 0, only the
-     * least-recently-synced videos are processed (never-synced first).
+     * least-recently synced videos are processed (never-synced first).
      *
      * @param   int  $serverId    The server record ID
      * @param   int  $batchLimit  Max unique videos to sync (0 = unlimited)
      *
      * @return  array{success: bool, synced: int, remaining: int, errors: string[]}
      *
+     * @throws \JsonException
      * @since   10.1.0
      */
     public function fetchPlatformStats(int $serverId, int $batchLimit = 0): array
@@ -503,7 +505,7 @@ class CWMAddonVimeo extends CWMAddon
      */
     private function getServerAccessToken(int $serverId): string
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_servers'))

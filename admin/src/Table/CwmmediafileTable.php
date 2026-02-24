@@ -22,7 +22,7 @@ use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Table\Table;
-use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -220,7 +220,7 @@ class CwmmediafileTable extends Table
     /**
      * Constructor
      *
-     * @param   DatabaseDriver  $db  Database connector object
+     * @param   DatabaseInterface  $db  Database connector object
      *
      * @since    7.0.0
      */

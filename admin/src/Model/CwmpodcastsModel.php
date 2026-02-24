@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Podcasts model class
@@ -147,7 +148,7 @@ class CwmpodcastsModel extends ListModel
      */
     protected function getListQuery(): mixed
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $user  = $this->getCurrentUser();
 

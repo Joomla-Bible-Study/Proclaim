@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Server List Form Field class for the Proclaim component
@@ -65,7 +66,7 @@ class ServerListField extends ListField
     #[\Override]
     protected function getOptions(): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select($db->quoteName(['id', 'server_name', 'type']))
             ->from($db->quoteName('#__bsms_servers'))

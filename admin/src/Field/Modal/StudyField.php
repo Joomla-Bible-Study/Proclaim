@@ -21,6 +21,7 @@ use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
 /**
@@ -128,7 +129,7 @@ class StudyField extends FormField
         $urlNew    = $linkSerie . '&amp;task=cwmmessage.add';
 
         if ($value) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
                 ->select($db->quoteName('studytitle') . 'AS name')
                 ->from($db->quoteName('#__bsms_studies'))

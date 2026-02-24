@@ -25,7 +25,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Table\Table;
-use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -509,7 +509,7 @@ class CwmmessageTable extends Table
     /**
      * Constructor.
      *
-     * @param   DatabaseDriver  $db  Database connector object
+     * @param   DatabaseInterface  $db  Database connector object
      *
      * @since 9.0.0
      */

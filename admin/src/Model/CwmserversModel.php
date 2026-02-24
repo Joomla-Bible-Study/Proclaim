@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Database\QueryInterface;
 use Joomla\Filesystem\Folder;
 
@@ -188,7 +189,7 @@ class CwmserversModel extends ListModel
      */
     protected function getListQuery(): QueryInterface|string
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $user  = $this->getCurrentUser();
 

@@ -22,7 +22,6 @@ use Joomla\CMS\Installer\InstallerScript;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Session\Session;
-use Joomla\Database\DatabaseDriver;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
@@ -96,11 +95,11 @@ class com_proclaimInstallerScript extends InstallerScript
     protected $release = '10.1.0';
 
     /**
-     * @var   DatabaseDriver|DatabaseInterface|null
+     * @var   DatabaseInterface|null
      *
      * @since 7.2.0
      */
-    protected DatabaseDriver|null|DatabaseInterface $dbo;
+    protected DatabaseInterface|null $dbo;
 
     /**
      * Minimum PHP version required to install the extension
@@ -422,7 +421,7 @@ class com_proclaimInstallerScript extends InstallerScript
             }
         }
 
-        $this->dbo = Factory::getContainer()->get('DatabaseDriver');
+        $this->dbo = Factory::getContainer()->get(DatabaseInterface::class);
     }
 
     /**
@@ -772,7 +771,7 @@ class com_proclaimInstallerScript extends InstallerScript
         // Detect 9.x legacy schema and warn the user to run the upgrade wizard
         if ($type === 'install') {
             try {
-                $db        = Factory::getContainer()->get('DatabaseDriver');
+                $db        = Factory::getContainer()->get(DatabaseInterface::class);
                 $prefix    = $db->getPrefix();
                 $tableList = $db->getTableList();
 
@@ -1347,7 +1346,7 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     private function migrateStudyImageParams(): void
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select($db->qn(['id', 'params']))
             ->from($db->qn('#__bsms_studies'))

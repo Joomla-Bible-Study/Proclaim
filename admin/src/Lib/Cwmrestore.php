@@ -25,6 +25,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\Component\Installer\Administrator\Model\DatabaseModel;
 use Joomla\Component\Joomlaupdate\Administrator\Model\UpdateModel;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Filesystem\Path;
@@ -48,7 +49,7 @@ class Cwmrestore
     {
         $backuptables = self::getObjects();
 
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         foreach ($backuptables as $backuptable) {
             if (substr_count($backuptable['name'], 'studies')) {
@@ -109,7 +110,7 @@ class Cwmrestore
      */
     protected static function getObjects(): array
     {
-        $db        = Factory::getContainer()->get('DatabaseDriver');
+        $db        = Factory::getContainer()->get(DatabaseInterface::class);
         $tables    = $db->getTableList();
         $prefix    = $db->getPrefix();
         $prelength = \strlen($prefix);
@@ -143,7 +144,7 @@ class Cwmrestore
     {
         $backuptables = self::getObjects();
 
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         foreach ($backuptables as $backuptable) {
             if (substr_count($backuptable['name'], 'studies')) {
@@ -193,7 +194,7 @@ class Cwmrestore
         $input         = Factory::getApplication()->getInput();
         $installType   = $input->getPath('install_directory');
         $backupRestore = $input->getWord('backuprestore', '');
-        $dBo           = Factory::getContainer()->get('DatabaseDriver');
+        $dBo           = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Restore form prior backup files located on the server.
         if (substr_count($backupRestore, '.sql')) {
@@ -297,7 +298,7 @@ class Cwmrestore
     public static function restoreDB($backuprestore): bool
     {
         $app = Factory::getApplication();
-        $db  = Factory::getContainer()->get('DatabaseDriver');
+        $db  = Factory::getContainer()->get(DatabaseInterface::class);
         /**
          * Attempt to increase the maximum execution time for PHP scripts with a check for safe_mode.
          */
@@ -521,7 +522,7 @@ class Cwmrestore
     protected static function installdb(string $tmp_src, bool $parent = true): bool
     {
         $app = Factory::getApplication();
-        $db  = Factory::getContainer()->get('DatabaseDriver');
+        $db  = Factory::getContainer()->get(DatabaseInterface::class);
 
         $query = file_get_contents($tmp_src);
 
@@ -608,7 +609,7 @@ class Cwmrestore
      */
     protected static function resetSchemaVersion(int $extensionId): void
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Delete the current schema entry
         $query = $db->getQuery(true);
@@ -748,7 +749,7 @@ class Cwmrestore
     protected static function fixOwnershipAfterRestore(): void
     {
         $app = Factory::getApplication();
-        $db  = Factory::getContainer()->get('DatabaseDriver');
+        $db  = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get the current user ID (the person doing the restore)
         $currentUserId = $app->getIdentity()->id;
@@ -810,7 +811,7 @@ class Cwmrestore
      */
     public static function verifyRestoreIntegrity(): array
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Check component config (params should be substantial JSON)
         $query = $db->getQuery(true);

@@ -21,6 +21,7 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 // This is the popup window for the teachings.  We could put anything in this window.
@@ -87,7 +88,7 @@ class HtmlView extends BaseHtmlView
         $template           = Cwmparams::getTemplateparams();
         $this->params       = $template->params;
         $this->termstext    = $this->params->get('terms');
-        $db                 = Factory::getContainer()->get('DatabaseDriver');
+        $db                 = Factory::getContainer()->get(DatabaseInterface::class);
         $query              = $db->getQuery(true);
         $query->select('*');
         $query->from($db->quoteName('#__bsms_mediafiles'));

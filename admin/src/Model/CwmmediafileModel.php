@@ -27,6 +27,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 
@@ -94,7 +95,7 @@ class CwmmediafileModel extends AdminModel
             return false;
         }
 
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         if (!$row->move($direction, $db->quoteName('study_id') . ' = ' . (int)$row->study_id . ' AND ' . $db->quoteName('published') . ' >= 0')) {
             return false;
@@ -159,7 +160,7 @@ class CwmmediafileModel extends AdminModel
             $recordId = (int) ($data['id'] ?? 0);
 
             if ($recordId > 0) {
-                $db       = Factory::getContainer()->get('DatabaseDriver');
+                $db       = Factory::getContainer()->get(DatabaseInterface::class);
                 $oldQuery = $db->getQuery(true)
                     ->select($db->quoteName('params'))
                     ->from($db->quoteName('#__bsms_mediafiles'))
@@ -720,7 +721,7 @@ class CwmmediafileModel extends AdminModel
 
             // Set ordering to the last item if not set
             if (empty($table->ordering)) {
-                $db    = Factory::getContainer()->get('DatabaseDriver');
+                $db    = Factory::getContainer()->get(DatabaseInterface::class);
                 $query = $db->getQuery(true);
                 $query->select('MAX(' . $db->quoteName('ordering') . ')')->from($db->quoteName('#__bsms_mediafiles'));
                 $db->setQuery($query);
@@ -778,7 +779,7 @@ class CwmmediafileModel extends AdminModel
      */
     protected function getReorderConditions($table): array
     {
-        $db          = Factory::getContainer()->get('DatabaseDriver');
+        $db          = Factory::getContainer()->get(DatabaseInterface::class);
         $condition   = [];
         $condition[] = $db->quoteName('study_id') . ' = ' . (int)$table->study_id;
 

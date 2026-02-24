@@ -54,7 +54,7 @@ class Cwmlanding
             } catch (\Exception $e) {
                 throw new \RuntimeException('Unable to load Application: ' . $e->getMessage());
             }
-            $this->db   = Factory::getContainer()->get('DatabaseDriver');
+            $this->db   = Factory::getContainer()->get(DatabaseInterface::class);
             $this->user = $this->app->getIdentity();
         }
     }

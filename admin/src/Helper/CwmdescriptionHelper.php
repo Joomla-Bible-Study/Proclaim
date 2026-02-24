@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Helper for building formatted video descriptions for platform sync/copy.
@@ -40,7 +41,7 @@ class CwmdescriptionHelper
      */
     public static function buildVideoDescription(int $studyId): string
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select([
                 $db->quoteName('s.id'),
@@ -128,7 +129,7 @@ class CwmdescriptionHelper
      */
     private static function getScriptureReferences(int $studyId): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select([
                 $db->quoteName('b.bookname'),

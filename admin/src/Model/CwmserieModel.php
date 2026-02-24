@@ -28,6 +28,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -165,7 +166,7 @@ class CwmserieModel extends AdminModel
     public function getTeacher(): mixed
     {
         if (empty($this->teacher)) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
                 ->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('teachername', 'text'))
                 ->from($db->quoteName('#__bsms_teachers'))
@@ -477,7 +478,7 @@ class CwmserieModel extends AdminModel
 
             // Set ordering to the last item if not set
             if (empty($table->ordering)) {
-                $db    = Factory::getContainer()->get('DatabaseDriver');
+                $db    = Factory::getContainer()->get(DatabaseInterface::class);
                 $query = $db->getQuery(true);
                 $query->select('MAX(' . $db->quoteName('ordering') . ')')->from($db->quoteName('#__bsms_series'));
                 $db->setQuery($query);
@@ -493,7 +494,7 @@ class CwmserieModel extends AdminModel
 
         if ($table->ordering == 0) {
             $table->ordering = 1;
-            $db              = Factory::getContainer()->get('DatabaseDriver');
+            $db              = Factory::getContainer()->get(DatabaseInterface::class);
             $table->reorder($db->quoteName('id') . ' = ' . (int)$table->id);
         }
     }
@@ -583,7 +584,7 @@ class CwmserieModel extends AdminModel
             return [];
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
         $query->select([

@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Migration Helper class
@@ -36,7 +37,7 @@ class CwmmigrationHelper
      */
     public static function fixMenus(): bool
     {
-        $db           = Factory::getContainer()->get('DatabaseDriver');
+        $db           = Factory::getContainer()->get(DatabaseInterface::class);
         $replacements = [
             'teacherlist'    => 'cwmteachers',
             'teacherdisplay' => 'cwmteacher',
@@ -69,7 +70,7 @@ class CwmmigrationHelper
      */
     public static function fixemptyaccess(): bool
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         // Tables to fix
         $tables = [
             ['table' => '#__bsms_admin'],
@@ -112,7 +113,7 @@ class CwmmigrationHelper
      */
     public static function fixemptylanguage(): bool
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         // Tables to fix
         $tables = [
             ['table' => '#__bsms_comments'],
@@ -144,7 +145,7 @@ class CwmmigrationHelper
      */
     public static function rmoldurl(): array
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         return [
             $db->quoteName('name') . ' = ' .
             $db->q('Proclaim Module'),
@@ -170,7 +171,7 @@ class CwmmigrationHelper
      */
     public static function fixImport(): void
     {
-        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $tables = CwmdbHelper::getObjects();
 
         foreach ($tables as $table) {
@@ -248,7 +249,7 @@ class CwmmigrationHelper
      */
     public static function postInstallMessages(object $message): void
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         // Find Extension ID of a component
         $query = $db->getQuery(true);
         $query
@@ -279,7 +280,7 @@ class CwmmigrationHelper
      */
     public static function migrateDeprecatedPlayers(): int
     {
-        $db           = Factory::getContainer()->get('DatabaseDriver');
+        $db           = Factory::getContainer()->get(DatabaseInterface::class);
         $totalUpdated = 0;
 
         // Deprecated player values to migrate to HTML5 Player (1)
@@ -324,7 +325,7 @@ class CwmmigrationHelper
      */
     public static function fixTeacherAliases(): int
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $fixed = 0;
 
         // Step 1: Ensure every teacher has an alias
@@ -482,7 +483,7 @@ class CwmmigrationHelper
      */
     public static function populateStudyTeachers(): int
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Check if junction table exists
         $junctionTable = str_replace('#__', $db->getPrefix(), '#__bsms_study_teachers');
@@ -526,7 +527,7 @@ class CwmmigrationHelper
      */
     public static function seedBibleTranslations(): int
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Check if the table exists
         $tableName = str_replace('#__', $db->getPrefix(), '#__bsms_bible_translations');
@@ -642,7 +643,7 @@ class CwmmigrationHelper
      */
     public static function reconcileBibleTranslations(): void
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Check both tables exist
         $prefix     = $db->getPrefix();
@@ -720,7 +721,7 @@ class CwmmigrationHelper
      */
     public static function fixMediafileLegacyPaths(): int
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         $replacements = [
             // JSON-escaped form: media\/com_biblestudy\/ → media\/com_proclaim\/
@@ -864,7 +865,7 @@ class CwmmigrationHelper
      */
     public static function getMessagesWithLocations(): int
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_studies'))
@@ -885,7 +886,7 @@ class CwmmigrationHelper
      */
     public static function getDistinctNonPublicAccessLevels(): array
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Subquery: distinct non-Public access values used by published messages
         $sub = $db->getQuery(true)
@@ -913,7 +914,7 @@ class CwmmigrationHelper
      */
     public static function getPublishedLocationCount(): int
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_locations'))
@@ -939,7 +940,7 @@ class CwmmigrationHelper
      */
     public static function createLocationFromAccess(\stdClass $accessLevel): int
     {
-        $db   = Factory::getContainer()->get('DatabaseDriver');
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
         $name = trim((string) $accessLevel->title);
 
         // Check for existing location with this name
@@ -998,7 +999,7 @@ class CwmmigrationHelper
             }
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->update($db->quoteName('#__extensions'))
             ->set($db->quoteName('params') . ' = ' . $db->quote(json_encode($existing, JSON_THROW_ON_ERROR)))
@@ -1024,7 +1025,7 @@ class CwmmigrationHelper
             return 0;
         }
 
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $updated = 0;
 
         foreach ($locationMap as $accessId => $locationId) {
@@ -1051,7 +1052,7 @@ class CwmmigrationHelper
      */
     public static function normalizeAccessLevelsToPublic(): int
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->update($db->quoteName('#__bsms_studies'))
             ->set($db->quoteName('access') . ' = 1')
@@ -1081,7 +1082,7 @@ class CwmmigrationHelper
             return [];
         }
 
-        $db  = Factory::getContainer()->get('DatabaseDriver');
+        $db  = Factory::getContainer()->get(DatabaseInterface::class);
         $ids = array_map('intval', array_keys($locationMap));
 
         $query = $db->getQuery(true)
@@ -1123,7 +1124,7 @@ class CwmmigrationHelper
      */
     public static function validateExistingLocations(): bool
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         $orphanQuery = $db->getQuery(true)
             ->select('COUNT(*)')
@@ -1156,7 +1157,7 @@ class CwmmigrationHelper
      */
     public static function createDefaultLocation(): int
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Reuse existing location if any are present
         $query = $db->getQuery(true)
@@ -1199,7 +1200,7 @@ class CwmmigrationHelper
             return 0;
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->update($db->quoteName('#__bsms_studies'))
             ->set($db->quoteName('location_id') . ' = ' . $locationId)
@@ -1223,7 +1224,7 @@ class CwmmigrationHelper
      */
     public static function countLinkedTeachers(): int
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // The user_id column may not exist yet — handle gracefully
         $columns = $db->getTableColumns('#__bsms_teachers');
@@ -1250,7 +1251,7 @@ class CwmmigrationHelper
      */
     public static function getUnlinkedTeachers(): array
     {
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $columns = $db->getTableColumns('#__bsms_teachers');
 
         if (!isset($columns['user_id'])) {

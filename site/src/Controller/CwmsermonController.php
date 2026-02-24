@@ -21,6 +21,7 @@ use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 use PHPMailer\PHPMailer\Exception;
@@ -300,7 +301,7 @@ class CwmsermonController extends FormController
         $comment_mailfrom  = $config->get('mailfrom');
 
         $comment_livesite = Uri::root();
-        $db               = Factory::getContainer()->get('DatabaseDriver');
+        $db               = Factory::getContainer()->get(DatabaseInterface::class);
         $query            = $db->getQuery(true);
         $query->select($db->quoteName(['id', 'studytitle', 'studydate']))
             ->from($db->quoteName('#__bsms_studies'))

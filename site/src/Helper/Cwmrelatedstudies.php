@@ -21,6 +21,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -67,7 +68,7 @@ class Cwmrelatedstudies
             return false;
         }
 
-        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $user   = Factory::getApplication()->getIdentity();
         $groups = $user->getAuthorisedViewLevels();
 

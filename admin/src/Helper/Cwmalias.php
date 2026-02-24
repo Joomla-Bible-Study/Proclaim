@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\OutputFilter;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Class for updating the alias in certain tables
@@ -45,7 +46,7 @@ class Cwmalias
     public static function updateAlias(): int
     {
         $done    = 0;
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $objects = self::getObjects();
         $results = [];
 
@@ -110,7 +111,7 @@ class Cwmalias
             return false;
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select($db->quoteName('id') . ', ' . $db->quoteName('alias') . ', ' . $db->quoteName($title))
             ->from($db->quoteName($table));

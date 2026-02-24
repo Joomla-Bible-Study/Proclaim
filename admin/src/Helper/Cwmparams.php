@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -71,7 +72,7 @@ class Cwmparams
             } catch (\Exception $e) {
                 echo $e->getMessage();
             }
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true);
             $query->select('*')
                 ->from($db->quoteName('#__bsms_admin'))
@@ -115,7 +116,7 @@ class Cwmparams
      */
     public static function getTemplateparams(?int $pk = null): object
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         if (!$pk) {
             $pk = Factory::getApplication()->getInput()->getInt('t', '1');
@@ -172,7 +173,7 @@ class Cwmparams
     {
         if (\count($paramArray) > 0) {
             // Read the existing component value(s)
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true);
             $query->select($db->quoteName('params'))
                 ->from($db->quoteName('#__extensions'))

@@ -21,6 +21,7 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Proclaim Helper class
@@ -251,7 +252,7 @@ class CwmproclaimHelper
     public static function getMediaYears(): array
     {
         $options = [];
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
 
         // $db      = $driver->getDriver();
         $query = $db->getQuery(true);
@@ -283,7 +284,7 @@ class CwmproclaimHelper
     public static function getMessageTypes(): array
     {
         $options = [];
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->getQuery(true);
 
         $query->select($db->quoteName('messageType.id', 'value') . ', ' . $db->quoteName('messageType.message_type', 'text'));
@@ -318,7 +319,7 @@ class CwmproclaimHelper
     public static function getStudyYears(): array
     {
         $options = [];
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->getQuery(true);
 
         $query->select('DISTINCT YEAR(' . $db->quoteName('studydate') . ') as value, YEAR(' . $db->quoteName('studydate') . ') as text');
@@ -348,7 +349,7 @@ class CwmproclaimHelper
     public static function getTeachers(): array
     {
         $options = [];
-        $driver  = Factory::getContainer()->get('DatabaseDriver');
+        $driver  = Factory::getContainer()->get(DatabaseInterface::class);
         $db      = $driver->getDriver();
         $query   = $db->getQuery(true);
 
@@ -388,7 +389,7 @@ class CwmproclaimHelper
     public static function getStudyBooks(): array
     {
         $options = [];
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->getQuery(true);
 
         $query->select(
@@ -429,7 +430,7 @@ class CwmproclaimHelper
     public static function getStudyMediaTypes(): array
     {
         $options = [];
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->getQuery(true);
 
         $query->select($db->quoteName('messageType.id', 'value') . ', ' . $db->quoteName('messageType.message_type', 'text'));
@@ -464,7 +465,7 @@ class CwmproclaimHelper
     public static function getStudyLocations(): array
     {
         $options = [];
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->getQuery(true);
 
         $query->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('location_text', 'text'));

@@ -20,6 +20,7 @@ use http\Exception\RuntimeException;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -132,7 +133,7 @@ class Cwmtranslated
     {
         // Check if there should be topics at all to save time
         if ($topicItem && $topicItem->tp_id) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true);
             $query->select($db->quoteName('#__bsms_topics.topic_text') . ', ' . $db->quoteName('#__bsms_topics.params', 'topic_params'))
                 ->from($db->quoteName('#__bsms_topics'))

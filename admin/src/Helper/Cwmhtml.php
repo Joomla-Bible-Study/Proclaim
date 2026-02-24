@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -198,7 +199,7 @@ class Cwmhtml
     public static function teacherList(): ?array
     {
         $options = null;
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->getQuery(true);
 
         $query->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('teachername', 'text'));
@@ -255,7 +256,7 @@ class Cwmhtml
     public static function messageTypeList(): ?array
     {
         $options = null;
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->getQuery(true);
 
         $query->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('message_type', 'text'));
@@ -312,7 +313,7 @@ class Cwmhtml
     public static function seriesList(): ?array
     {
         $options = null;
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->getQuery(true);
 
         $query->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('series_text', 'text'));
@@ -375,7 +376,7 @@ class Cwmhtml
      */
     public static function locationList(): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('location_text', 'text'))
             ->from($db->quoteName('#__bsms_locations', 'a'))

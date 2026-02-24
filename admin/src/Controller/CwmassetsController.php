@@ -24,6 +24,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Session\Session;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Controller for Assets
@@ -170,7 +171,7 @@ class CwmassetsController extends BaseController
             $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
         }
 
-        $db          = Factory::getContainer()->get('DatabaseDriver');
+        $db          = Factory::getContainer()->get(DatabaseInterface::class);
         $assetTables = Cwmassets::getAssetObjects();
 
         // Ensure parent asset exists
@@ -232,7 +233,7 @@ class CwmassetsController extends BaseController
             $this->sendJsonResponse(false, 'Missing table or assetname parameter');
         }
 
-        $db       = Factory::getContainer()->get('DatabaseDriver');
+        $db       = Factory::getContainer()->get(DatabaseInterface::class);
         $parentId = Cwmassets::ensureParentAsset();
 
         if (!$parentId) {
@@ -373,7 +374,7 @@ class CwmassetsController extends BaseController
         }
 
         try {
-            $db         = Factory::getContainer()->get('DatabaseDriver');
+            $db         = Factory::getContainer()->get(DatabaseInterface::class);
             $assetTable = new \Joomla\CMS\Table\Asset($db);
             $assetTable->rebuild();
 
