@@ -22,6 +22,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\User\CurrentUserInterface;
 use Joomla\CMS\Versioning\VersionableModelTrait;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Controller for Archive
@@ -71,7 +72,7 @@ class CwmarchiveModel extends AdminModel
      */
     public function doArchive(): string
     {
-        $db         = Factory::getContainer()->get('DatabaseDriver');
+        $db         = Factory::getContainer()->get(DatabaseInterface::class);
         $query      = $db->getQuery(true);
         $studies    = 0;
         $mediafiles = 0;

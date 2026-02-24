@@ -22,6 +22,7 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * class Assets model
@@ -357,7 +358,7 @@ class CwmassetsModel extends ListModel
     public function checkAssets(): array
     {
         $return = [];
-        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
 
         // First get the new parent_id
         if ($this->parent_id === 0) {

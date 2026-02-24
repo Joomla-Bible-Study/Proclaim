@@ -764,15 +764,27 @@ def prune_redundant_keys(source_file, target_file):
             msg_parts.append(f"{removed_obsolete} obsolete")
         print(f"  Removed {' + '.join(msg_parts)} keys from {os.path.basename(target_file)}")
 
-def process_directory(base_path, file_patterns):
+def process_directory(base_path, file_patterns, known_locales=None):
     """
     Process all languages in the base path.
+    If known_locales is provided, creates missing locale directories so that
+    new addon language folders (with only en-GB) get all project locales.
     """
     lang_dirs = get_language_dirs(base_path)
     if 'en-GB' not in lang_dirs:
         return
 
     source_lang = 'en-GB'
+
+    # Ensure all known project locales have directories in this language folder
+    if known_locales:
+        for locale in known_locales:
+            locale_dir = os.path.join(base_path, locale)
+            if not os.path.exists(locale_dir):
+                os.makedirs(locale_dir, exist_ok=True)
+        # Re-scan after creating directories
+        lang_dirs = get_language_dirs(base_path)
+
     target_langs = [lang for lang in lang_dirs if lang != source_lang]
 
     for file_pattern in file_patterns:
@@ -830,11 +842,31 @@ def process_directory(base_path, file_patterns):
         # After processing all target languages, update the source cache
         update_source_cache(file_key, source_map)
 
+def discover_project_locales(root_dir):
+    """
+    Discover all project locales from the main admin/language/ directory.
+    Returns a sorted list of locale codes (e.g., ['cs-CZ', 'de-DE', 'en-GB', ...]).
+    """
+    admin_lang_dir = os.path.join(root_dir, 'admin', 'language')
+    if os.path.exists(admin_lang_dir):
+        locales = get_language_dirs(admin_lang_dir)
+        if locales:
+            return sorted(locales)
+
+    # Fallback: use all locales from LANG_CODE_MAP
+    return sorted(LANG_CODE_MAP.keys())
+
+
 def scan_and_process(root_dir):
     """
     Recursively scans for 'language' directories and processes them.
+    Discovers project locales from admin/language/ and ensures addon
+    language directories include all locales (creating missing dirs).
     Ignores 'vendor' and 'node_modules' directories.
     """
+    known_locales = discover_project_locales(root_dir)
+    print(f"Project locales: {', '.join(known_locales)}")
+
     for dirpath, dirnames, filenames in os.walk(root_dir):
         # Modify dirnames in-place to skip ignored directories
         if 'vendor' in dirnames:
@@ -855,7 +887,7 @@ def scan_and_process(root_dir):
 
                 if patterns:
                     print(f"\nProcessing languages in {lang_path}")
-                    process_directory(lang_path, patterns)
+                    process_directory(lang_path, patterns, known_locales)
 
 if __name__ == "__main__":
     import sys

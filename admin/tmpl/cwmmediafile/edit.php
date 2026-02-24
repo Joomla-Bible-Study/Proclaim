@@ -57,6 +57,7 @@ $this->getDocument()->addScriptOptions('com_proclaim.mediafile', [
     'selectServerTitle' => Text::_('JBS_MED_SELECT_SERVER_TITLE'),
     'selectServerDesc'  => Text::_('JBS_MED_SELECT_SERVER_DESC'),
     'serverTypeLocalDesc'  => Text::_('JBS_MED_SERVER_TYPE_LOCAL_DESC'),
+    'serverTypeDirectDesc' => Text::_('JBS_MED_SERVER_TYPE_DIRECT_DESC'),
     'serverTypeYoutubeDesc' => Text::_('JBS_MED_SERVER_TYPE_YOUTUBE_DESC'),
     'serverTypeLegacyDesc'  => Text::_('JBS_MED_SERVER_TYPE_LEGACY_DESC'),
     'selectLabel'           => Text::_('JSELECT'),

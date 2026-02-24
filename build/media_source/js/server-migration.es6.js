@@ -154,7 +154,7 @@
         // Build results table
         let html = '<table class="table table-striped table-sm">';
         html += '<thead><tr>';
-        html += `<th>${Joomla.Text._('JBS_SVR_SERVER')}</th>`;
+        html += `<th>${Joomla.Text._('JBS_SVR_SERVER_NAME')}</th>`;
         html += `<th class="text-center">${Joomla.Text._('JBS_SMG_MEDIA_COUNT')}</th>`;
         html += `<th>${Joomla.Text._('JBS_SMG_DETECTED_TYPES')}</th>`;
         html += '</tr></thead><tbody>';

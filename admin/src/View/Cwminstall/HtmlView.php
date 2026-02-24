@@ -21,6 +21,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * View class for Install
@@ -250,7 +251,7 @@ class HtmlView extends BaseHtmlView
         ];
 
         // -- General settings
-        $db                       = Factory::getContainer()->get('DatabaseDriver');
+        $db                       = Factory::getContainer()->get(DatabaseInterface::class);
         $this->status             = new \stdClass();
         $this->status->cwmmodules = [];
         $this->status->cwmplugins = [];

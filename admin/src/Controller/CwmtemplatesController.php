@@ -24,6 +24,7 @@ use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Session\Session;
 use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Registry\Registry;
 
@@ -93,7 +94,7 @@ class CwmtemplatesController extends AdminController
         // Move uploaded file
         move_uploaded_file($tmp_src, $tmp_dest);
 
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         $query   = file_get_contents(JPATH_SITE . '/tmp/' . $userfile['name']);
         $queries = DatabaseDriver::splitSql($query);
@@ -259,7 +260,7 @@ class CwmtemplatesController extends AdminController
      */
     private function performDB(string $query): void
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $db->setQuery($query);
         $db->execute();
     }
@@ -288,7 +289,7 @@ class CwmtemplatesController extends AdminController
             $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select($db->quoteName(['t.id', 't.type', 't.params', 't.title', 't.text']));
         $query->from($db->quoteName('#__bsms_templates', 't'));
@@ -327,7 +328,7 @@ class CwmtemplatesController extends AdminController
         $registry = new Registry();
         $registry->loadString($result->params);
         $params  = $registry;
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $objects = '';
         $css     = $params->get('css');
         $css     = substr($css, 0, -4);
@@ -414,7 +415,7 @@ class CwmtemplatesController extends AdminController
      */
     public function getTemplate($template): bool|string
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select($db->quoteName(['tc.id', 'tc.templatecode', 'tc.type', 'tc.filename']));
         $query->from($db->quoteName('#__bsms_templatecode', 'tc'));

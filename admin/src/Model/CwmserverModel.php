@@ -25,6 +25,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 
@@ -192,7 +193,7 @@ class CwmserverModel extends AdminModel
      */
     public function save($data): bool
     {
-        $db         = Factory::getContainer()->get('DatabaseDriver');
+        $db         = Factory::getContainer()->get(DatabaseInterface::class);
         $text       = '';
 
         // Sanitize server_name to prevent XSS attacks

@@ -18,7 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Table\Table;
-use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * StudyTopics table class
@@ -76,7 +76,7 @@ class CwmstudytopicsTable extends Table
      * be overridden by child classes to explicitly set the table and key fields
      * for a particular database table.
      *
-     * @param   DatabaseDriver  $db  JDatabase connector object.
+     * @param   DatabaseInterface  $db  JDatabase connector object.
      *
      * @since   11.1
      */

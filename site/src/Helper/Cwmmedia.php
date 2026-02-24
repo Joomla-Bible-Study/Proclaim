@@ -27,6 +27,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -1087,7 +1088,7 @@ class Cwmmedia
      */
     public function hitPlay(int $id): bool
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->update($db->quoteName('#__bsms_mediafiles'))
             ->set($db->quoteName('plays') . ' = ' . $db->quoteName('plays') . ' + 1')
@@ -1128,7 +1129,7 @@ class Cwmmedia
             return [];
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select(
             $db->quoteName('#__bsms_mediafiles') . '.*, ' . $db->quoteName('#__bsms_servers.params', 'sparams') . ','
@@ -1204,7 +1205,7 @@ class Cwmmedia
     public function getMediaRows2(int $id): object|bool
     {
         // We use this for the popup view because it relies on the media file's id rather than the study_id field above
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select(
             $db->quoteName('#__bsms_mediafiles') . '.*, ' . $db->quoteName('#__bsms_servers.params', 'sparams') . ','

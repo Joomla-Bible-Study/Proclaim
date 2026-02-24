@@ -19,6 +19,7 @@ use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Folder;
 use Joomla\Filesystem\Path;
 
@@ -128,7 +129,7 @@ class CwmImageMigration
      */
     public static function getRecordsNeedingMigration(string $type): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
         // SQL exclusion for core component images
@@ -225,7 +226,7 @@ class CwmImageMigration
      */
     public static function migrateRecordById(string $type, int $id): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
         switch ($type) {
@@ -433,7 +434,7 @@ class CwmImageMigration
         }
 
         // Update database
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
         switch ($type) {
@@ -567,7 +568,7 @@ class CwmImageMigration
      */
     private static function updateDbFromExistingFiles(string $type, int $id, array $existing): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
         $thumbPath = $existing['thumbnail'];
@@ -661,7 +662,7 @@ class CwmImageMigration
         // Log the cleared value before wiping it
         self::logClearedImage($type, $id, $oldPath, $title);
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
         switch ($type) {
@@ -890,7 +891,7 @@ class CwmImageMigration
      */
     public static function getRecoveryCounts(): array
     {
-        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $counts = ['studies' => 0, 'teachers' => 0, 'series' => 0];
 
         foreach (array_keys(self::REGEN_TYPE_CONFIG) as $type) {
@@ -985,7 +986,7 @@ class CwmImageMigration
             return $result;
         }
 
-        $db        = Factory::getContainer()->get('DatabaseDriver');
+        $db        = Factory::getContainer()->get(DatabaseInterface::class);
         $params    = Cwmparams::getAdmin()->params;
         $thumbSize = (int) $params->get($cfg['sizeParam'], $cfg['sizeDefault']);
         $processed = 0;
@@ -1062,7 +1063,15 @@ class CwmImageMigration
 
             if (is_dir($aliasIdDir) && self::dirHasImageFiles($aliasIdDir)) {
                 self::cleanupBareIdFolder($absDir);
-                $result['recovered']++;
+
+                // Only count as recovered if the bare-ID folder was actually removed.
+                // If cleanup failed (e.g. permissions), skip it to avoid an infinite
+                // loop where the same folder is "recovered" every batch.
+                if (!is_dir($absDir) || !self::dirHasImageFiles($absDir)) {
+                    $result['recovered']++;
+                } else {
+                    $result['skipped']++;
+                }
 
                 continue;
             }
@@ -1126,7 +1135,13 @@ class CwmImageMigration
 
             // Clean up the old bare-ID folder
             self::cleanupBareIdFolder($absDir);
-            $result['recovered']++;
+
+            // Only count as recovered if cleanup actually removed the folder
+            if (!is_dir($absDir) || !self::dirHasImageFiles($absDir)) {
+                $result['recovered']++;
+            } else {
+                $result['skipped']++;
+            }
         }
 
         return $result;
@@ -1733,7 +1748,7 @@ class CwmImageMigration
      */
     public static function getThumbRegenerationCounts(): array
     {
-        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $counts = [];
 
         foreach (self::REGEN_TYPE_CONFIG as $type => $cfg) {
@@ -1816,7 +1831,7 @@ class CwmImageMigration
             return ['processed' => 0, 'errors' => 0, 'remaining' => 0, 'errorDetails' => ['Invalid type: ' . $type]];
         }
 
-        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $params = Cwmparams::getAdmin()->params;
         $size   = $sizeOverride > 0 ? $sizeOverride : (int) $params->get($cfg['sizeParam'], $cfg['sizeDefault']);
         $result = ['processed' => 0, 'errors' => 0, 'remaining' => 0, 'errorDetails' => []];

@@ -23,6 +23,7 @@ use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
 /**
@@ -61,7 +62,7 @@ class CwmmessageController extends FormController
         $msg   = null;
         $input = $this->input;
         $id    = $input->get('id', 0, 'int');
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->update($db->quoteName('#__bsms_studies'))
             ->set($db->quoteName('hits') . ' = ' . $db->q('0'))
@@ -147,7 +148,7 @@ class CwmmessageController extends FormController
         });
 
         // Remove Exerting StudyTopics tags
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $qurey = $db->getQuery(true);
         $qurey->delete($db->quoteName('#__bsms_studytopics'))
             ->where($db->quoteName('study_id') . ' = ' . (int) $data['id']);
@@ -234,7 +235,7 @@ class CwmmessageController extends FormController
 
         // Non-admin users must have access to the item's view level
         if (!$user->authorise('core.admin') && $recordId > 0) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
                 ->select($db->quoteName('access'))
                 ->from($db->quoteName('#__bsms_studies'))

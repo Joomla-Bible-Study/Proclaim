@@ -27,6 +27,7 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -437,7 +438,7 @@ class Cwmlisting
      */
     public function getMediaFiles(array $medias): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select(
             $db->quoteName('#__bsms_mediafiles') . '.*, '
@@ -1925,7 +1926,7 @@ class Cwmlisting
             return self::$bookNameCache[$booknumber];
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select($db->quoteName('bookname'))
             ->from($db->quoteName('#__bsms_books'))
@@ -2339,7 +2340,7 @@ class Cwmlisting
     public function getOtherlinks($id3, $islink, $params): string
     {
         $link  = '';
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select($db->quoteName('#__bsms_mediafiles') . '.*')
             ->from($db->quoteName('#__bsms_mediafiles'))

@@ -32,6 +32,7 @@ use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\Component\Installer\Administrator\Model\DatabaseModel;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Filesystem\Path;
@@ -440,7 +441,7 @@ class CwmbackupController extends FormController
         }
 
         // Split into queries
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $queries = $db->splitSql($content);
 
         // Store queries in session for batch processing
@@ -488,7 +489,7 @@ class CwmbackupController extends FormController
         $start        = $batch * $batchSize;
         $batchQueries = \array_slice($queries, $start, $batchSize);
 
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // For the first batch, drop existing tables (preserving downloaded Bible verse data)
         if ($batch === 0) {
@@ -646,7 +647,7 @@ class CwmbackupController extends FormController
      */
     private function fixSchemaAfterRestore(): bool
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Find the Proclaim extension ID
         $query = $db->getQuery(true);
@@ -699,7 +700,7 @@ class CwmbackupController extends FormController
      */
     private function fixAssetsLightweight(): void
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get or create the com_proclaim parent asset
         $parentId = Cwmassets::ensureParentAsset();
@@ -906,7 +907,7 @@ class CwmbackupController extends FormController
      */
     private function recreateTemplatecodeFiles(): int
     {
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $created = 0;
 
         try {

@@ -17,8 +17,10 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Vimeo;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Http\HttpFactory;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
@@ -295,7 +297,7 @@ class CWMAddonVimeo extends CWMAddon
      */
     public function syncDescription(int $mediaId, string $description): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select([$db->quoteName('params'), $db->quoteName('server_id')])
             ->from($db->quoteName('#__bsms_mediafiles'))
@@ -357,13 +359,14 @@ class CWMAddonVimeo extends CWMAddon
     /**
      * Fetch video statistics from Vimeo API for media linked to this server.
      * Batches up to 100 video IDs per API call. When $batchLimit > 0, only the
-     * least-recently-synced videos are processed (never-synced first).
+     * least-recently synced videos are processed (never-synced first).
      *
      * @param   int  $serverId    The server record ID
      * @param   int  $batchLimit  Max unique videos to sync (0 = unlimited)
      *
      * @return  array{success: bool, synced: int, remaining: int, errors: string[]}
      *
+     * @throws \JsonException
      * @since   10.1.0
      */
     public function fetchPlatformStats(int $serverId, int $batchLimit = 0): array
@@ -502,7 +505,7 @@ class CWMAddonVimeo extends CWMAddon
      */
     private function getServerAccessToken(int $serverId): string
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_servers'))
@@ -911,5 +914,62 @@ class CWMAddonVimeo extends CWMAddon
     {
         // Vimeo videos are referenced by URL, not uploaded
         return false;
+    }
+
+    /**
+     * Detect metadata for a Vimeo video via oEmbed (no auth required).
+     *
+     * @param   Registry    $params      Media params (modified in place)
+     * @param   object      $server      Server object
+     * @param   string      $set_path    Server path prefix
+     * @param   Registry    $path        Server params
+     * @param   Cwmpodcast  $jbspodcast  Podcast helper
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function detectMetadata(Registry $params, object $server, string $set_path, Registry $path, Cwmpodcast $jbspodcast): void
+    {
+        $filename = $params->get('filename');
+
+        if (empty($filename)) {
+            return;
+        }
+
+        ['needsMime' => $needsMime, 'needsDuration' => $needsDuration] = $this->needsDetection($params);
+
+        if ($needsMime) {
+            $params->set('mime_type', 'video/mp4');
+        }
+
+        // Only fetch oEmbed if we still need duration or title
+        if (!$needsDuration && !empty($params->get('title'))) {
+            return;
+        }
+
+        $videoId = $this->extractVimeoVideoId($filename);
+
+        if (!$videoId) {
+            return;
+        }
+
+        try {
+            $metadata = $this->getVideoMetadata($videoId);
+
+            if (!empty($metadata['duration']) && $needsDuration) {
+                $duration = $jbspodcast->formatTime((int) $metadata['duration']);
+                $params->set('media_hours', str_pad((string) $duration->hours, 2, '0', STR_PAD_LEFT));
+                $params->set('media_minutes', str_pad((string) $duration->minutes, 2, '0', STR_PAD_LEFT));
+                $params->set('media_seconds', str_pad((string) $duration->seconds, 2, '0', STR_PAD_LEFT));
+            }
+
+            if (empty($params->get('title')) && !empty($metadata['title'])) {
+                $params->set('title', $metadata['title']);
+            }
+        } catch (\Exception $e) {
+            // oEmbed failure is non-fatal
+        }
     }
 }

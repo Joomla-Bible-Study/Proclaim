@@ -37,7 +37,7 @@ CREATE TABLE `#__bsms_update`
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
 
-INSERT INTO `#__bsms_update` (`version`) VALUES ('10.1.0-20251225');
+INSERT INTO `#__bsms_update` (`version`) VALUES ('10.1.0-20260228');
 
 -- --------------------------------------------------------
 
@@ -247,6 +247,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast`
     `editor_email`            VARCHAR(150)              DEFAULT NULL,
     `podcastlimit`            INT(5)                    DEFAULT NULL,
     `published`               TINYINT(3)       NOT NULL DEFAULT '1',
+    `location_id`             INT(3)                    DEFAULT NULL,
     `episodetitle`            INT(11)                   DEFAULT NULL,
     `custom`                  VARCHAR(200)              DEFAULT NULL,
     `detailstemplateid`       INT(11)                   DEFAULT NULL,
@@ -271,7 +272,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast`
     PRIMARY KEY (`id`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`),
-    KEY `idx_checkout` (`checked_out`)
+    KEY `idx_checkout` (`checked_out`),
+    KEY `idx_podcast_location` (`location_id`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
@@ -288,6 +290,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_series`
     `series_text`      TEXT,
     `alias`            VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
     `teacher`          INT(3)                                                    DEFAULT NULL,
+    `location_id`      INT(3)                                                    DEFAULT NULL,
     `description`      TEXT,
     `series_thumbnail` VARCHAR(255)                                              DEFAULT NULL,
     `image`            TEXT                                                       DEFAULT NULL,
@@ -315,7 +318,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_series`
     KEY `idx_createdby` (`created_by`),
     KEY `idx_published_access` (`published`, `access`),
     KEY `idx_teacher_published` (`teacher`, `published`),
-    KEY `idx_published_dates` (`published`, `publish_up`, `publish_down`)
+    KEY `idx_published_dates` (`published`, `publish_up`, `publish_down`),
+    KEY `idx_series_location` (`location_id`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
@@ -455,6 +459,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies`
     KEY `idx_published_access_series` (`published`, `access`, `series_id`, `studydate`),
     KEY `idx_teacher_published` (`teacher_id`, `published`, `studydate`),
     KEY `idx_location_published` (`location_id`, `published`),
+    KEY `idx_location_pub_date` (`location_id`, `published`, `studydate`),
+    KEY `idx_location_access` (`location_id`, `access`),
     KEY `idx_published_dates` (`published`, `publish_up`, `publish_down`),
     KEY `idx_messagetype_published` (`messagetype`, `published`),
     KEY `idx_booknumber_published` (`booknumber`, `published`),
@@ -1078,6 +1084,66 @@ CREATE TABLE IF NOT EXISTS `#__bsms_bible_verses` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `#__bsms_analytics_events`
+--
+
+CREATE TABLE IF NOT EXISTS `#__bsms_analytics_events` (
+    `id`              INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `study_id`        INT UNSIGNED NULL DEFAULT NULL COMMENT 'FK #__bsms_studies',
+    `series_id`       INT UNSIGNED NULL DEFAULT NULL COMMENT 'FK #__bsms_series',
+    `media_id`        INT UNSIGNED NULL DEFAULT NULL COMMENT 'FK #__bsms_mediafiles',
+    `location_id`     INT UNSIGNED NULL DEFAULT NULL COMMENT 'Campus from content record',
+    `event_type`      ENUM('page_view','play','download','outbound_click') NOT NULL,
+    `referrer_type`   ENUM('direct','organic','social','email','internal','other') NULL DEFAULT NULL,
+    `referrer_url`    VARCHAR(2048) NULL DEFAULT NULL COMMENT 'Consent-required',
+    `referrer_domain` VARCHAR(255) NULL DEFAULT NULL COMMENT 'Consent-required',
+    `utm_source`      VARCHAR(255) NULL DEFAULT NULL,
+    `utm_medium`      VARCHAR(255) NULL DEFAULT NULL,
+    `utm_campaign`    VARCHAR(255) NULL DEFAULT NULL,
+    `country_code`    CHAR(2) NULL DEFAULT NULL COMMENT 'ISO from GeoLite2; IP never stored',
+    `device_type`     ENUM('desktop','mobile','tablet','unknown') NULL DEFAULT NULL,
+    `browser`         VARCHAR(50) NULL DEFAULT NULL,
+    `os`              VARCHAR(50) NULL DEFAULT NULL,
+    `language`        VARCHAR(10) NULL DEFAULT NULL,
+    `is_guest`        TINYINT(1) NULL DEFAULT NULL COMMENT '0=logged in, 1=guest',
+    `session_hash`    VARCHAR(64) NULL DEFAULT NULL COMMENT 'SHA-256 of session ID; consent-required',
+    `created`         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `idx_study_created`    (`study_id`, `created`),
+    KEY `idx_media_created`    (`media_id`, `created`),
+    KEY `idx_location_created` (`location_id`, `created`),
+    KEY `idx_event_created`    (`event_type`, `created`),
+    KEY `idx_series_created`   (`series_id`, `created`),
+    KEY `idx_country_created`  (`country_code`, `created`),
+    KEY `idx_device_created`   (`device_type`, `created`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Table structure for table `#__bsms_analytics_monthly`
+--
+
+CREATE TABLE IF NOT EXISTS `#__bsms_analytics_monthly` (
+    `id`            INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `study_id`      INT UNSIGNED NULL DEFAULT NULL,
+    `series_id`     INT UNSIGNED NULL DEFAULT NULL,
+    `media_id`      INT UNSIGNED NULL DEFAULT NULL,
+    `location_id`   INT UNSIGNED NULL DEFAULT NULL,
+    `event_type`    ENUM('page_view','play','download','outbound_click') NOT NULL,
+    `referrer_type` ENUM('direct','organic','social','email','internal','other') NULL DEFAULT NULL,
+    `country_code`  CHAR(2) NULL DEFAULT NULL,
+    `device_type`   ENUM('desktop','mobile','tablet','unknown') NULL DEFAULT NULL,
+    `year`          SMALLINT UNSIGNED NOT NULL,
+    `month`         TINYINT UNSIGNED NOT NULL,
+    `count`         INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_aggregate` (
+        `series_id`, `study_id`, `media_id`, `location_id`,
+        `event_type`, `referrer_type`, `country_code`, `device_type`,
+        `year`, `month`
+    )
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
 -- Table structure for table `#__bsms_scripture_cache`
 --
 
@@ -1120,3 +1186,15 @@ VALUES
     ('cornilescu', 'Cornilescu Bible', 'ro', 'getbible', 0, 0, 3900000),
     ('korean', 'Korean Bible', 'ko', 'getbible', 0, 0, 3800000),
     ('cus', 'Chinese Union Simplified', 'zh', 'getbible', 0, 0, 2500000);
+
+-- Register Proclaim entity types with Joomla Action Logs
+INSERT IGNORE INTO `#__action_log_config` (`type_title`, `type_alias`, `id_holder`, `title_holder`, `table_name`, `text_prefix`)
+VALUES
+    ('message', 'com_proclaim.message', 'id', 'studytitle', '#__bsms_studies', 'COM_PROCLAIM'),
+    ('teacher', 'com_proclaim.teacher', 'id', 'teachername', '#__bsms_teachers', 'COM_PROCLAIM'),
+    ('server', 'com_proclaim.server', 'id', 'server_name', '#__bsms_servers', 'COM_PROCLAIM'),
+    ('podcast', 'com_proclaim.podcast', 'id', 'title', '#__bsms_podcast', 'COM_PROCLAIM'),
+    ('template', 'com_proclaim.template', 'id', 'title', '#__bsms_templates', 'COM_PROCLAIM');
+
+-- Register Proclaim extension with Joomla Action Logs
+INSERT IGNORE INTO `#__action_logs_extensions` (`extension`) VALUES ('com_proclaim');

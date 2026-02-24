@@ -25,6 +25,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -96,7 +97,7 @@ class Cwmstats
      */
     public static function totalPlays(int $id, bool $includePlatform = false): int
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query
             ->select('SUM(' . $db->quoteName('m.plays') . ')')
@@ -145,7 +146,7 @@ class Cwmstats
             self::$total_messages_start = $start;
             self::$total_messages_end   = $end;
 
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true);
             $query
                 ->select('COUNT(*)')
@@ -197,7 +198,7 @@ class Cwmstats
         // L2: persistent cache across requests (TTL: 15 min)
         $pc     = self::getPersistentCache();
         $result = $pc->get(function () use ($start, $end) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true);
             $query
                 ->select('COUNT(*)')
@@ -251,7 +252,7 @@ class Cwmstats
         // L2: persistent cache across requests (TTL: 15 min)
         $pc     = self::getPersistentCache();
         $result = $pc->get(function () {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true);
             $query
                 ->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
@@ -319,7 +320,7 @@ class Cwmstats
         $result = $pc->get(function () {
             $month      = mktime(0, 0, 0, (int) date("m") - 1, (int) date("d"), (int) date("Y"));
             $last_month = date("Y-m-d 00:00:01", $month);
-            $db         = Factory::getContainer()->get('DatabaseDriver');
+            $db         = Factory::getContainer()->get(DatabaseInterface::class);
             $query      = $db->getQuery(true);
             $query
                 ->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
@@ -390,7 +391,7 @@ class Cwmstats
         // L2: persistent cache across requests (TTL: 15 min)
         $pc     = self::getPersistentCache();
         $result = $pc->get(function () {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true);
             $query
                 ->select($db->quoteName(['mf.downloads']))
@@ -453,7 +454,7 @@ class Cwmstats
         $result = $pc->get(function () {
             $month     = mktime(0, 0, 0, (int) date("m") - 3, (int) date("d"), (int) date("Y"));
             $lastmonth = date("Y-m-d 00:00:01", $month);
-            $db        = Factory::getContainer()->get('DatabaseDriver');
+            $db        = Factory::getContainer()->get(DatabaseInterface::class);
             $query     = $db->getQuery(true);
             $query
                 ->select($db->quoteName(['mf.downloads']))
@@ -506,7 +507,7 @@ class Cwmstats
             return self::$cache['totalDownloads'];
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query
             ->select('SUM(' . $db->quoteName('downloads') . ')')
@@ -549,7 +550,7 @@ class Cwmstats
         $result = $pc->get(function () {
             $admin  = Cwmparams::getAdmin();
             $format = (int) $admin->params->get('format_popular', 0);
-            $db     = Factory::getContainer()->get('DatabaseDriver');
+            $db     = Factory::getContainer()->get(DatabaseInterface::class);
 
             $query = $db->getQuery(true);
             $query->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
@@ -640,7 +641,7 @@ class Cwmstats
             return self::$mediaStats;
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
         // Use SQL to extract and count player/popup values directly from JSON params
@@ -712,7 +713,7 @@ class Cwmstats
             'popup_squeezebox' => 0,
         ];
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_mediafiles'))
@@ -855,7 +856,7 @@ class Cwmstats
             return self::$cache['podcastTaskRawState'];
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query
             ->select($db->quoteName(['id', 'state']))
@@ -943,7 +944,7 @@ class Cwmstats
             return self::$cache['hasPublishedPodcasts'];
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query
             ->select('COUNT(*)')
@@ -975,7 +976,7 @@ class Cwmstats
         $limit  = (int) $admin->params->get('popular_limit', 25);
         $format = (int) $admin->params->get('format_popular', 0);
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select($db->quoteName(['s.id', 's.studytitle', 's.alias', 's.hits', 's.studydate', 's.access']))
             ->select('SUM(' . $db->quoteName('m.downloads') . ' + ' . $db->quoteName('m.plays') . ') as added')

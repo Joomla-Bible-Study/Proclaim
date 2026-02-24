@@ -24,6 +24,7 @@ use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 use Joomla\Utilities\ArrayHelper;
 
@@ -53,7 +54,7 @@ class CwmtemplateController extends FormController
         $isAdmin  = $user->authorise('core.admin');
 
         if (!$isAdmin && $recordId > 0) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
                 ->select([$db->quoteName('access'), $db->quoteName('location_id')])
                 ->from($db->quoteName('#__bsms_templates'))

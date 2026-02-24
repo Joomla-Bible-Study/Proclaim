@@ -9,6 +9,9 @@ VALUES
     ('podcast', 'com_proclaim.podcast', 'id', 'title', '#__bsms_podcast', 'COM_PROCLAIM'),
     ('template', 'com_proclaim.template', 'id', 'title', '#__bsms_templates', 'COM_PROCLAIM');
 
+-- Register Proclaim extension with Joomla Action Logs
+INSERT IGNORE INTO `#__action_logs_extensions` (`extension`) VALUES ('com_proclaim');
+
 --
 -- Performance indexes based on query pattern analysis
 -- Priority 1: High-impact composite indexes for core query patterns

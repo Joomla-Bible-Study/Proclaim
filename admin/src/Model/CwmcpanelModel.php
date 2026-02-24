@@ -12,6 +12,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseModel;
 use Joomla\Component\Postinstall\Administrator\Model\MessagesModel;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -36,7 +37,7 @@ class CwmcpanelModel extends BaseModel
     public function getData(): ?object
     {
         // Get version information
-        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $return = new \stdClass();
         $query  = $db->getQuery(true);
         $query->select('*');
@@ -83,7 +84,7 @@ class CwmcpanelModel extends BaseModel
 
         // Get the extension ID
         // Get the extension ID for our component
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select($db->quoteName('extension_id'))
             ->from($db->quoteName('#__extensions'))

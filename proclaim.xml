@@ -47,6 +47,7 @@
 
     <files folder="site">
         <folder>forms</folder>
+        <folder>layouts</folder>
         <folder>src</folder>
         <folder>tmpl</folder>
     </files>
@@ -57,7 +58,6 @@
         <filename>index.html</filename>
         <folder>backup</folder>
         <folder>css</folder>
-        <folder>fancybox</folder>
         <folder>images</folder>
         <folder>js</folder>
         <folder>vendor</folder>

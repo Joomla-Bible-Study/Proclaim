@@ -19,7 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Table\Table;
-use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Table class for Comment
@@ -176,11 +176,11 @@ class CwmcommentTable extends Table
     /**
      * Constructor
      *
-     * @param   DatabaseDriver  $db  Database connector object
+     * @param   DatabaseInterface  $db  Database connector object
      *
      * @since   7.0.0
      */
-    public function __construct(DatabaseDriver $db)
+    public function __construct(DatabaseInterface $db)
     {
         parent::__construct('#__bsms_comments', 'id', $db);
     }

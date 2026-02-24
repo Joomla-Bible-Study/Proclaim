@@ -1,4 +1,3 @@
-/* jshint node: true, esversion: 11 */
 "use strict";
 
 const resolve = require('@rollup/plugin-node-resolve');

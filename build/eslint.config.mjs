@@ -4,11 +4,20 @@ import globals from 'globals';
 
 export default defineConfig([
     {
-        ignores: ['**/vendor/', '**/node_modules/', '**/dist/', '**/reports/'],
+        ignores: ['**/vendor/', '**/node_modules/', '**/dist/', '**/reports/', 'media/'],
     },
 
     // ESLint recommended base (no-unused-vars, no-undef, no-redeclare, etc.)
     js.configs.recommended,
+
+    {
+        files: ['**/*.js', '**/*.mjs'],
+        languageOptions: {
+            globals: {
+                ...globals.node,
+            },
+        },
+    },
 
     {
         files: ['**/*.js', '**/*.mjs', '**/*.es6.js'],

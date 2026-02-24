@@ -25,6 +25,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Location model class
@@ -212,7 +213,7 @@ class CwmlocationModel extends AdminModel
      */
     private function countByLocationId(string $table, int $locationId): int
     {
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $columns = $db->getTableColumns($table);
 
         if (!isset($columns['location_id'])) {

@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -49,7 +50,7 @@ class MediaFileField extends ListField
     protected function getOptions(): array
     {
         if ($this->form->getValue('id')) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true);
             $query->select($db->quoteName(['a.id', 'a.params']));
             $query->from($db->quoteName('#__bsms_mediafiles', 'a'));

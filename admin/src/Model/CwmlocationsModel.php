@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Locations model class
@@ -77,7 +78,7 @@ class CwmlocationsModel extends ListModel
     public function getDeletes(): array
     {
         if (empty($this->deletes)) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true);
             $query->select($db->quoteName('allow_deletes'))
                 ->from($db->quoteName('#__bsms_admin'))
@@ -190,7 +191,7 @@ class CwmlocationsModel extends ListModel
      */
     protected function getListQuery(): mixed
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
         $query->select(

@@ -1,5 +1,3 @@
-/* jshint node: true, esversion: 11 */
-
 /**
  * Jest configuration for Proclaim JavaScript testing
  * Optimized for PhpStorm integration

@@ -17,8 +17,10 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Resi;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -294,7 +296,7 @@ class CWMAddonResi extends CWMAddon
 
         // Load server params
         try {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
                 ->select($db->quoteName('params'))
                 ->from($db->quoteName('#__bsms_servers'))
@@ -392,5 +394,26 @@ class CWMAddonResi extends CWMAddon
     {
         // Resi.io videos are referenced by URL, not uploaded
         return false;
+    }
+
+    /**
+     * Detect metadata for a Resi video (MIME default only).
+     *
+     * @param   Registry    $params      Media params (modified in place)
+     * @param   object      $server      Server object
+     * @param   string      $set_path    Server path prefix
+     * @param   Registry    $path        Server params
+     * @param   Cwmpodcast  $jbspodcast  Podcast helper
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function detectMetadata(Registry $params, object $server, string $set_path, Registry $path, Cwmpodcast $jbspodcast): void
+    {
+        if (empty($params->get('mime_type'))) {
+            $params->set('mime_type', 'video/mp4');
+        }
     }
 }

@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -117,7 +118,7 @@ class CwmnotificationHelper
      */
     protected static function getStudyDetails(int $studyId): ?object
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select($db->quoteName(['s.studytitle', 's.studydate', 'b.bookname']))
             ->from($db->quoteName('#__bsms_studies', 's'))

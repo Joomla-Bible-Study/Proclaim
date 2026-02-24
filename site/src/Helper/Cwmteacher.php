@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use Joomla\CMS\Factory;
 use Joomla\Component\Contact\Site\Model\ContactModel;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -55,7 +56,7 @@ class Cwmteacher extends Cwmlisting
         }
 
         if (!empty($teacherIDs)) {
-            $database = Factory::getContainer()->get('DatabaseDriver');
+            $database = Factory::getContainer()->get(DatabaseInterface::class);
             $query    = $database->getQuery(true);
             $query->select('*')
                 ->from($database->quoteName('#__bsms_teachers'))

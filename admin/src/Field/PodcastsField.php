@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Podcasts List Form Field class for the Proclaim component
@@ -48,7 +49,7 @@ class PodcastsField extends ListField
     #[\Override]
     protected function getOptions(): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select($db->quoteName(['id', 'title']))
             ->from($db->quoteName('#__bsms_podcast'))

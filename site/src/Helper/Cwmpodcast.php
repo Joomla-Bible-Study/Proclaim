@@ -23,6 +23,7 @@ use Joomla\CMS\Client\ClientHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
@@ -80,7 +81,7 @@ class Cwmpodcast
     public function makePodcasts(): string
     {
         $msg  = [];
-        $db   = Factory::getContainer()->get('DatabaseDriver');
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
         $year = '(' . date('Y') . ')';
         $date = date('r');
 
@@ -429,7 +430,7 @@ class Cwmpodcast
             $set_limit = 300;
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select(
             [
@@ -657,7 +658,7 @@ class Cwmpodcast
     public function validateAllPodcasts(): array
     {
         $results = [];
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get all published podcasts
         $query = $db->getQuery(true);
@@ -733,7 +734,7 @@ class Cwmpodcast
         }
 
         // Check for associated media files
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_mediafiles'))
@@ -852,7 +853,7 @@ class Cwmpodcast
     protected function validatePodcastMedia(int $podcastId): array
     {
         $warnings = [];
-        $db       = Factory::getContainer()->get('DatabaseDriver');
+        $db       = Factory::getContainer()->get(DatabaseInterface::class);
 
         $query = $db->getQuery(true);
         $query->select($db->quoteName(['mf.id', 'mf.params', 's.studytitle', 's.studyintro']))
@@ -1072,7 +1073,7 @@ class Cwmpodcast
         $skipped = 0;
         $details = [];
 
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get media files with missing duration
         $query = $db->getQuery(true);
@@ -1344,7 +1345,7 @@ class Cwmpodcast
      */
     public function getMediaFilesNeedingDuration(?int $podcastId = null): array
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         $query = $db->getQuery(true);
         $query->select($db->quoteName(['mf.id', 'mf.params', 's.studytitle']))
@@ -1394,7 +1395,7 @@ class Cwmpodcast
      */
     public function fixSingleMediaDuration(int $mediaId): array
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get the media file
         $query = $db->getQuery(true);
@@ -1627,7 +1628,7 @@ class Cwmpodcast
      */
     public function getMediaFilesNeedingMetadata(?int $podcastId = null): array
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         $query = $db->getQuery(true);
         $query->select($db->quoteName(['mf.id', 'mf.params', 's.studytitle']))
@@ -1698,7 +1699,7 @@ class Cwmpodcast
      */
     public function fixSingleMediaMetadata(int $mediaId): array
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get the media file
         $query = $db->getQuery(true);
@@ -2971,7 +2972,7 @@ class Cwmpodcast
      */
     public function getYouTubeApiKey(): ?string
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Find a YouTube server with an API key
         $query = $db->getQuery(true);

@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -183,7 +184,7 @@ class Cwmserieslist extends Cwmlisting
      */
     public function getSeriesstudiesDBO(int $id, Registry $params, int $limit = 0): array
     {
-        $db       = Factory::getContainer()->get('DatabaseDriver');
+        $db       = Factory::getContainer()->get(DatabaseInterface::class);
         $user     = Factory::getApplication()->getIdentity();
         $language = $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*');
 

@@ -27,6 +27,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 class CwmpIconvert
@@ -243,7 +244,7 @@ class CwmpIconvert
         $oldid               = 0;
 
         //drop sample table entries in Proclaim!
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $db->truncateTable('#__bsms_studies');
         $db->truncateTable('#__bsms_teachers');
         $db->truncateTable('#__bsms_mediafiles');
@@ -255,7 +256,7 @@ class CwmpIconvert
 
         $uri   = Uri::getInstance();
         $url   = $uri->getHost();
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('*')->from($db->quoteName('#__bsms_servers'));
         $db->setQuery($query);
@@ -272,7 +273,7 @@ class CwmpIconvert
             $db->execute();
         }
         //Convert comments
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('*')->from($db->quoteName('#__picomments'));
         $db->setQuery($query);
@@ -732,7 +733,7 @@ class CwmpIconvert
      */
     public function insertMedia($pi, $type, $newid, $oldid): bool
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('*')->from($db->quoteName('#__pifilepath'));
         $db->setQuery($query);
@@ -958,7 +959,7 @@ class CwmpIconvert
     private function insertPodcast($pi): mixed
     {
         $podtest = 0;
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->getQuery(true);
         $query->select('*')->from($db->quoteName('#__pipodcast'))->where($db->quoteName('published') . ' = 1');
         $db->setQuery($query);
@@ -1154,7 +1155,7 @@ class CwmpIconvert
      */
     private function insertMediaRecord($mediafiles): bool
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         if (!$db->insertObject('#__bsms_mediafiles', $mediafiles, 'id')) {
             return false;
         }
@@ -1178,7 +1179,7 @@ class CwmpIconvert
             return false;
         }
 
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         foreach ($this->picomments as $pi) {
             if ($pi->id == $oldid) {

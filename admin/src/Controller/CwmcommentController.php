@@ -20,6 +20,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
 /**
@@ -95,7 +96,7 @@ class CwmcommentController extends FormController
 
         // Non-admin users must have access to the item's view level
         if (!$user->authorise('core.admin') && $recordId > 0) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
                 ->select($db->quoteName('access'))
                 ->from($db->quoteName('#__bsms_comments'))

@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Analytics helper — GDPR-aware event logging and scheduled maintenance.
@@ -164,7 +165,7 @@ class CwmanalyticsHelper
                 $referrerUrl = substr($destUrl, 0, 2048);
             }
 
-            $db  = Factory::getContainer()->get('DatabaseDriver');
+            $db  = Factory::getContainer()->get(DatabaseInterface::class);
             $now = (new \DateTime('now', new \DateTimeZone('UTC')))->format('Y-m-d H:i:s');
 
             $query = $db->getQuery(true)
@@ -383,7 +384,7 @@ class CwmanalyticsHelper
         $result = ['rolled' => 0, 'purged' => 0];
 
         try {
-            $db     = Factory::getContainer()->get('DatabaseDriver');
+            $db     = Factory::getContainer()->get(DatabaseInterface::class);
             $cutoff = (new \DateTime('now', new \DateTimeZone('UTC')))
                 ->modify('-' . (int) $retentionDays . ' days')
                 ->format('Y-m-d H:i:s');
@@ -455,7 +456,7 @@ class CwmanalyticsHelper
         }
 
         try {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
                 ->select($db->quoteName('series_id'))
                 ->from($db->quoteName('#__bsms_studies'))
@@ -484,7 +485,7 @@ class CwmanalyticsHelper
         }
 
         try {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
                 ->select($db->quoteName('study_id'))
                 ->from($db->quoteName('#__bsms_mediafiles'))
@@ -510,7 +511,7 @@ class CwmanalyticsHelper
     private static function resolveLocationId(int $studyId, int $mediaId): int
     {
         try {
-            $db = Factory::getContainer()->get('DatabaseDriver');
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             if ($studyId > 0) {
                 $query = $db->getQuery(true)

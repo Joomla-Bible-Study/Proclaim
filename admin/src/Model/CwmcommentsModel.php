@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Comments model class
@@ -154,7 +155,7 @@ class CwmcommentsModel extends ListModel
     protected function getListQuery(): mixed
     {
         // Create a new query object.
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Select the required fields from the table.
         $query = $db->getQuery(true);

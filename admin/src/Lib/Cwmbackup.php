@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Version;
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
@@ -102,7 +103,7 @@ class Cwmbackup
      */
     public function getComponentConfigExport(): string
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get com_proclaim row from extensions
         $query = $db->getQuery(true);
@@ -141,7 +142,7 @@ class Cwmbackup
      */
     public function getScheduledTasksExport(): string
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Check if scheduler_tasks table exists (Joomla 4+)
         $tables         = $db->getTableList();
@@ -320,7 +321,7 @@ class Cwmbackup
             set_time_limit(\ini_get('max_execution_time'));
         }
 
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get the prefix
         $prefix = $db->getPrefix();
@@ -396,7 +397,7 @@ class Cwmbackup
             set_time_limit(\ini_get('max_execution_time'));
         }
 
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get the prefix
         $prefix = $db->getPrefix();

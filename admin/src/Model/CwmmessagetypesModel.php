@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * MessageType model class
@@ -74,7 +75,7 @@ class CwmmessagetypesModel extends ListModel
     public function getDeletes(): array
     {
         if (empty($this->deletes)) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true);
             $query->select($db->quoteName('allowdeletes'))
                 ->from($db->quoteName('#__bsms_admin'))
@@ -187,7 +188,7 @@ class CwmmessagetypesModel extends ListModel
      */
     protected function getListQuery(): mixed
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $user  = $this->getCurrentUser();
 

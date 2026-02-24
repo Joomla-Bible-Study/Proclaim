@@ -33,6 +33,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Workflow\Workflow;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -83,7 +84,7 @@ class CwmmessageModel extends AdminModel
      */
     public function isDuplicate(int $study_id, int $topic_id): bool
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('*')
             ->from($db->quoteName('#__bsms_studytopics'))
@@ -119,7 +120,7 @@ class CwmmessageModel extends AdminModel
         }
 
         if ($id > 0) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true);
 
             $query->select($db->quoteName('topic.id') . ', ' . $db->quoteName('topic.topic_text') . ', ' . $db->quoteName('topic.params', 'topic_params'));
@@ -155,7 +156,7 @@ class CwmmessageModel extends AdminModel
      */
     public function getAlltopics(): string
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
         $query->select($db->quoteName('topic.id') . ', ' . $db->quoteName('topic.topic_text') . ', ' . $db->quoteName('topic.params', 'topic_params'));
@@ -187,7 +188,7 @@ class CwmmessageModel extends AdminModel
      */
     public function getMediaFiles(): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
         $query->select(
@@ -1003,7 +1004,7 @@ class CwmmessageModel extends AdminModel
 
             // Set ordering to the last item if not set
             if (empty($table->ordering)) {
-                $db    = Factory::getContainer()->get('DatabaseDriver');
+                $db    = Factory::getContainer()->get(DatabaseInterface::class);
                 $query = $db->getQuery(true)
                     ->select('MAX(' . $db->quoteName('ordering') . ')')
                     ->from($db->quoteName('#__bsms_studies'));

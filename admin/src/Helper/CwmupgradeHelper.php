@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Lib\CwmscriptureMigration;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\DatabaseModel;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -54,7 +55,7 @@ class CwmupgradeHelper
             return self::$cached9xDetection;
         }
 
-        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $prefix = $db->getPrefix();
 
         // Targeted existence check — avoids loading ALL table names
@@ -157,7 +158,7 @@ class CwmupgradeHelper
      */
     public static function get9xInfo(): array
     {
-        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $tables = CwmdbHelper::getObjects();
         $counts = [];
 
@@ -192,7 +193,7 @@ class CwmupgradeHelper
      */
     public static function convertIniToJson(): array
     {
-        $db        = Factory::getContainer()->get('DatabaseDriver');
+        $db        = Factory::getContainer()->get(DatabaseInterface::class);
         $tables    = CwmdbHelper::getObjects();
         $converted = 0;
         $skipped   = 0;
@@ -259,7 +260,7 @@ class CwmupgradeHelper
      */
     public static function resetSchemaVersion(): bool
     {
-        $db  = Factory::getContainer()->get('DatabaseDriver');
+        $db  = Factory::getContainer()->get(DatabaseInterface::class);
         $cid = self::getExtensionId();
 
         if (!$cid) {
@@ -471,7 +472,7 @@ class CwmupgradeHelper
      */
     public static function verify(): array
     {
-        $db        = Factory::getContainer()->get('DatabaseDriver');
+        $db        = Factory::getContainer()->get(DatabaseInterface::class);
         $prefix    = $db->getPrefix();
         $tableList = $db->getTableList();
         $checks    = [];
@@ -542,7 +543,7 @@ class CwmupgradeHelper
      */
     public static function cleanup9xArtifacts(): int
     {
-        $db        = Factory::getContainer()->get('DatabaseDriver');
+        $db        = Factory::getContainer()->get(DatabaseInterface::class);
         $prefix    = $db->getPrefix();
         $tableList = $db->getTableList();
         $dropped   = 0;
@@ -585,7 +586,7 @@ class CwmupgradeHelper
     public static function isSchemaOutOfDate(): ?array
     {
         try {
-            $db  = Factory::getContainer()->get('DatabaseDriver');
+            $db  = Factory::getContainer()->get(DatabaseInterface::class);
             $cid = self::getExtensionId();
 
             if (!$cid) {
@@ -650,7 +651,7 @@ class CwmupgradeHelper
      */
     private static function getExtensionId(): int
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select($db->quoteName('extension_id'))
             ->from($db->quoteName('#__extensions'))

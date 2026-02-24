@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Folder;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
@@ -147,7 +148,7 @@ class CwmImageCleanup
      */
     private static function getValidIds(string $type): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
         $table = match ($type) {
@@ -356,7 +357,7 @@ class CwmImageCleanup
         }
 
         // Count other media records referencing the same filename + server
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_mediafiles'))

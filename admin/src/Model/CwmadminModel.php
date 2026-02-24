@@ -29,6 +29,7 @@ use Joomla\CMS\Session\Session;
 use Joomla\CMS\Table\Extension as ExtensionTable;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Versioning\VersionableModelTrait;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -167,7 +168,7 @@ class CwmadminModel extends AdminModel
      */
     public function getMediaFiles(): mixed
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('*');
         $query->from($db->quoteName('#__bsms_mediafiles'));
@@ -228,7 +229,7 @@ class CwmadminModel extends AdminModel
         }
 
         try {
-            $this->changeSet = ChangeSet::getInstance(Factory::getContainer()->get('DatabaseDriver'), $folder);
+            $this->changeSet = ChangeSet::getInstance(Factory::getContainer()->get(DatabaseInterface::class), $folder);
         } catch (\RuntimeException $e) {
             Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
 
@@ -259,7 +260,7 @@ class CwmadminModel extends AdminModel
         }
 
         // Delete old row
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->delete($db->quoteName('#__schemas'))
             ->where($db->quoteName('extension_id') . ' = ' . $db->q($extensionresult));
@@ -292,7 +293,7 @@ class CwmadminModel extends AdminModel
      */
     public function getExtentionId(): string
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select($db->quoteName('extension_id'))->from($db->quoteName('#__extensions'))
             ->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'));
@@ -316,7 +317,7 @@ class CwmadminModel extends AdminModel
      */
     public function getSchemaVersion(): mixed
     {
-        $db              = Factory::getContainer()->get('DatabaseDriver');
+        $db              = Factory::getContainer()->get(DatabaseInterface::class);
         $query           = $db->getQuery(true);
         $extensionresult = $this->getExtentionId();
         $query->select($db->quoteName('version_id'))->from($db->quoteName('#__schemas'))
@@ -336,7 +337,7 @@ class CwmadminModel extends AdminModel
      */
     public function fixUpdateVersion(): mixed
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $table = new ExtensionTable($db);
         $table->load($this->getExtentionId());
         $cache         = new Registry($table->manifest_cache);
@@ -385,7 +386,7 @@ class CwmadminModel extends AdminModel
      */
     public function fixDefaultTextFilters(): mixed
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $table = new ExtensionTable($db);
         $table->load($table->find(['name' => 'com_proclaim']));
 
@@ -429,7 +430,7 @@ class CwmadminModel extends AdminModel
      */
     public function getUpdateVersion(): mixed
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $table = new ExtensionTable($db);
         $table->load($this->getExtentionId());
 
@@ -458,7 +459,7 @@ class CwmadminModel extends AdminModel
      */
     public function getSSorPI(): mixed
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select($db->quoteName(['extension_id', 'name', 'element']))
             ->from($db->quoteName('#__extensions'))
@@ -483,7 +484,7 @@ class CwmadminModel extends AdminModel
             throw new \Exception(Text::_('JINVALID_TOKEN'));
         }
 
-        $db   = Factory::getContainer()->get('DatabaseDriver');
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
         $msg  = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
         $post = Factory::getApplication()->getInput()->post->get('jform', [], 'array');
         $reg  = new Registry();

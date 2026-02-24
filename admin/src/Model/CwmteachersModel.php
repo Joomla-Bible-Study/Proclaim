@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Database\QueryInterface;
 
 /**
@@ -140,7 +141,7 @@ class CwmteachersModel extends ListModel
      */
     protected function getListQuery(): mixed
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $user  = $this->getCurrentUser();
 

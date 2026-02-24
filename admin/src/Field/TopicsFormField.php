@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Form Field class for the Topics using Choices.js with free tagging support
@@ -95,7 +96,7 @@ class TopicsFormField extends FormField
      */
     protected function getAllTopics(): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
         $query->select($db->quoteName('id') . ', ' . $db->quoteName('topic_text') . ', ' . $db->quoteName('params', 'topic_params'))
@@ -147,7 +148,7 @@ class TopicsFormField extends FormField
             return [];
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
         $query->select($db->quoteName('topic_id'))

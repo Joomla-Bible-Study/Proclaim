@@ -60,7 +60,7 @@ class CwmdbHelper
      */
     public static function checkIfTable($cktable): bool
     {
-        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $tables = $db->getTableList();
         $prefix = $db->getPrefix();
 
@@ -89,7 +89,7 @@ class CwmdbHelper
      */
     public static function alterDB(array $tables, ?string $from = null): bool
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         foreach ($tables as $t) {
             $type    = strtolower($t['type']);
@@ -198,7 +198,7 @@ class CwmdbHelper
      */
     public static function checkTables($table, $field): bool
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         $fields = $db->getTableColumns($table, 'false');
 
@@ -229,7 +229,7 @@ class CwmdbHelper
             return false;
         }
 
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $db->setQuery($query, 0, $limit);
 
         if (!$db->execute()) {
@@ -284,7 +284,7 @@ class CwmdbHelper
      */
     public static function getObjects(): array
     {
-        $db        = Factory::getContainer()->get('DatabaseDriver');
+        $db        = Factory::getContainer()->get(DatabaseInterface::class);
         $tables    = $db->getTableList();
         $prefix    = $db->getPrefix();
         $prelength = \strlen($prefix);
@@ -311,7 +311,7 @@ class CwmdbHelper
     public static function getInstallState(): bool
     {
         if (!\is_bool(self::$install_state)) {
-            $db = Factory::getContainer()->get('DatabaseDriver');
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             // Check if JBSM can be found from the database
             $table = $db->getPrefix() . 'bsms_admin';
@@ -343,7 +343,7 @@ class CwmdbHelper
         $app = Factory::getApplication();
 
         // Start by getting existing Style
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('*')->from($db->quoteName('#__bsms_styles'));
 
@@ -432,7 +432,7 @@ class CwmdbHelper
      */
     public static function reloadtable(object $result, string $table = 'Style'): bool
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Store new Recorder so it can be seen.
         $table = Factory::getApplication()
@@ -465,7 +465,7 @@ class CwmdbHelper
     public static function resetdb(bool $install = false): bool|int
     {
         $app  = Factory::getApplication();
-        $db   = Factory::getContainer()->get('DatabaseDriver');
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
         $path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_proclaim/sql';
 
         $files = str_replace('.sql', '', Folder::files($path, '\.sql$'));
@@ -540,7 +540,7 @@ class CwmdbHelper
     public static function cleanStudyTopics(): void
     {
         $app   = Factory::getApplication();
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_studies'));
         $db->setQuery($query);

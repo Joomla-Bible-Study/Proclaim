@@ -16,11 +16,10 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageCleanup;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
-use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
@@ -28,7 +27,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
-use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 
@@ -96,7 +95,7 @@ class CwmmediafileModel extends AdminModel
             return false;
         }
 
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         if (!$row->move($direction, $db->quoteName('study_id') . ' = ' . (int)$row->study_id . ' AND ' . $db->quoteName('published') . ' >= 0')) {
             return false;
@@ -161,7 +160,7 @@ class CwmmediafileModel extends AdminModel
             $recordId = (int) ($data['id'] ?? 0);
 
             if ($recordId > 0) {
-                $db       = Factory::getContainer()->get('DatabaseDriver');
+                $db       = Factory::getContainer()->get(DatabaseInterface::class);
                 $oldQuery = $db->getQuery(true)
                     ->select($db->quoteName('params'))
                     ->from($db->quoteName('#__bsms_mediafiles'))
@@ -213,249 +212,12 @@ class CwmmediafileModel extends AdminModel
 
         $jbspodcast = new Cwmpodcast();
 
-        // Check what needs to be detected
-        $needsSize     = empty($params->get('size', 0)) || (int) $params->get('size', 0) < 1000;
-        $needsMimeType = empty($params->get('mime_type'));
-        $hours         = $params->get('media_hours', '00');
-        $minutes       = $params->get('media_minutes', '00');
-        $seconds       = $params->get('media_seconds', '00');
-        $needsDuration = ($hours === '00' && $minutes === '00' && $seconds === '00');
+        // Load the Addon for this server type
+        $addon = CWMAddon::getInstance($server->type);
 
-        // Nothing to detect
-        if (!$needsSize && !$needsMimeType && !$needsDuration) {
-            return;
-        }
-
-        // Check if this is a YouTube URL
-        if ($jbspodcast->isYouTubeUrl($filename)) {
-            $this->detectYouTubeMetadata($params, $filename, $jbspodcast, $needsDuration);
-            return;
-        }
-
-        // Determine if file is local or remote
-        $isLocalFilename = str_starts_with($filename, '/')
-            || preg_match('/^[a-z]:\\\\/i', $filename)
-            || preg_match('/^(images|media|files|modules|components|administrator|tmp|cache|logs)\//i', $filename)
-            || !preg_match('/^(www\.)?[a-z0-9-]+\.[a-z]{2,}/i', $filename);
-
-        if (!$isLocalFilename && Cwmmedia::isExternal($filename)) {
-            // Remote file - try to get metadata via HTTP headers and FFprobe
-            $this->detectRemoteMetadata($params, $filename, $jbspodcast, $needsSize, $needsMimeType, $needsDuration);
-            return;
-        }
-
-        // Build local file path
-        $path_server = Cwmhelper::mediaBuildUrl($set_path, $filename, $params, false, false, true);
-        $prefix      = Uri::root();
-        $nohttp      = $jbspodcast->removeHttp($prefix);
-        $siteinfo    = strpos($path_server, $nohttp);
-
-        if ($siteinfo !== false) {
-            $localPath = JPATH_SITE . '/' . substr($path_server, \strlen($nohttp));
-        } else {
-            $localPath = $path_server;
-        }
-
-        // Check if the constructed path looks like a remote URL
-        $isLocalPath = preg_match('/^(images|media|files|modules|components|administrator|tmp|cache|logs)\//i', $localPath)
-            || str_starts_with($localPath, '/')
-            || str_starts_with($localPath, JPATH_SITE)
-            || preg_match('/^[a-z]:\\\\/i', $localPath);
-
-        if (!$isLocalPath && preg_match('/^(www\.)?[a-z0-9]([a-z0-9-]*[a-z0-9])?\.[a-z]{2,}(\/|$)/i', $localPath)) {
-            // Path resolved to a remote URL
-            $this->detectRemoteMetadata($params, $localPath, $jbspodcast, $needsSize, $needsMimeType, $needsDuration);
-            return;
-        }
-
-        // Local file - detect metadata directly
-        $this->detectLocalMetadata($params, $localPath, $jbspodcast, $needsSize, $needsMimeType, $needsDuration);
-    }
-
-    /**
-     * Detect metadata for a YouTube video.
-     *
-     * @param   Registry    $params       Media params (modified in place)
-     * @param   string      $filename     YouTube URL
-     * @param   Cwmpodcast  $jbspodcast   Podcast helper
-     * @param   bool        $needsDuration Whether duration needs detection
-     *
-     * @return  void
-     *
-     * @since   10.2.0
-     */
-    protected function detectYouTubeMetadata(Registry $params, string $filename, Cwmpodcast $jbspodcast, bool $needsDuration): void
-    {
-        // Set default MIME type for YouTube
-        if (empty($params->get('mime_type'))) {
-            $params->set('mime_type', 'video/mp4');
-        }
-
-        // Get duration via YouTube API if needed
-        if ($needsDuration) {
-            $videoId = $jbspodcast->extractYouTubeVideoId($filename);
-            $apiKey  = $jbspodcast->getYouTubeApiKey();
-
-            if ($videoId && $apiKey) {
-                $durationSeconds = $jbspodcast->getYouTubeDuration($videoId, $apiKey);
-
-                if ($durationSeconds > 0) {
-                    $duration = $jbspodcast->formatTime($durationSeconds);
-                    $params->set('media_hours', str_pad((string) $duration->hours, 2, '0', STR_PAD_LEFT));
-                    $params->set('media_minutes', str_pad((string) $duration->minutes, 2, '0', STR_PAD_LEFT));
-                    $params->set('media_seconds', str_pad((string) $duration->seconds, 2, '0', STR_PAD_LEFT));
-                }
-            }
-        }
-    }
-
-    /**
-     * Detect metadata for a remote file via HTTP headers and FFprobe.
-     *
-     * @param   Registry    $params         Media params (modified in place)
-     * @param   string      $path           File URL/path
-     * @param   Cwmpodcast  $jbspodcast     Podcast helper
-     * @param   bool        $needsSize      Whether size needs detection
-     * @param   bool        $needsMimeType  Whether MIME type needs detection
-     * @param   bool        $needsDuration  Whether duration needs detection
-     *
-     * @return  void
-     *
-     * @since   10.2.0
-     */
-    protected function detectRemoteMetadata(Registry $params, string $path, Cwmpodcast $jbspodcast, bool $needsSize, bool $needsMimeType, bool $needsDuration): void
-    {
-        // Build full URL
-        $remoteUrl = $path;
-        if (!str_contains($remoteUrl, '://')) {
-            $remoteUrl = 'https://' . ltrim($remoteUrl, '/');
-        }
-
-        // Get HTTP headers for size and MIME type
-        if ($needsSize || $needsMimeType) {
-            $size = Cwmhelper::getRemoteFileSize($remoteUrl);
-            if ($needsSize && $size > 0) {
-                $params->set('size', $size);
-            }
-
-            // Try to get MIME type from extension if still needed
-            if ($needsMimeType) {
-                $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-                $mimeTypes = [
-                    'mp3'  => 'audio/mpeg',
-                    'mp4'  => 'video/mp4',
-                    'm4a'  => 'audio/mp4',
-                    'm4v'  => 'video/mp4',
-                    'ogg'  => 'audio/ogg',
-                    'oga'  => 'audio/ogg',
-                    'ogv'  => 'video/ogg',
-                    'wav'  => 'audio/wav',
-                    'webm' => 'video/webm',
-                    'flac' => 'audio/flac',
-                    'aac'  => 'audio/aac',
-                ];
-                if (isset($mimeTypes[$extension])) {
-                    $params->set('mime_type', $mimeTypes[$extension]);
-                }
-            }
-        }
-
-        // Try FFprobe for duration
-        if ($needsDuration) {
-            $durationSeconds = $jbspodcast->getDurationWithFFprobe($remoteUrl);
-            if ($durationSeconds > 0) {
-                $duration = $jbspodcast->formatTime($durationSeconds);
-                $params->set('media_hours', str_pad((string) $duration->hours, 2, '0', STR_PAD_LEFT));
-                $params->set('media_minutes', str_pad((string) $duration->minutes, 2, '0', STR_PAD_LEFT));
-                $params->set('media_seconds', str_pad((string) $duration->seconds, 2, '0', STR_PAD_LEFT));
-            }
-        }
-    }
-
-    /**
-     * Detect metadata for a local file.
-     *
-     * @param   Registry    $params         Media params (modified in place)
-     * @param   string      $localPath      Local file path
-     * @param   Cwmpodcast  $jbspodcast     Podcast helper
-     * @param   bool        $needsSize      Whether size needs detection
-     * @param   bool        $needsMimeType  Whether MIME type needs detection
-     * @param   bool        $needsDuration  Whether duration needs detection
-     *
-     * @return  void
-     *
-     * @since   10.2.0
-     */
-    protected function detectLocalMetadata(Registry $params, string $localPath, Cwmpodcast $jbspodcast, bool $needsSize, bool $needsMimeType, bool $needsDuration): void
-    {
-        // Check if file exists
-        if (!is_file($localPath)) {
-            return;
-        }
-
-        // Get file size
-        if ($needsSize) {
-            $size = filesize($localPath);
-            if ($size !== false && $size > 0) {
-                $params->set('size', $size);
-            }
-        }
-
-        // Get MIME type
-        if ($needsMimeType) {
-            $mimeType = null;
-
-            // Try mime_content_type
-            if (\function_exists('mime_content_type')) {
-                $mimeType = mime_content_type($localPath);
-                if ($mimeType === 'application/octet-stream') {
-                    $mimeType = null;
-                }
-            }
-
-            // Try finfo
-            if (!$mimeType && class_exists('finfo')) {
-                $finfo    = new \finfo(FILEINFO_MIME_TYPE);
-                $mimeType = $finfo->file($localPath);
-                if ($mimeType === 'application/octet-stream') {
-                    $mimeType = null;
-                }
-            }
-
-            // Fall back to extension
-            if (!$mimeType) {
-                $extension = strtolower(pathinfo($localPath, PATHINFO_EXTENSION));
-                $mimeTypes = [
-                    'mp3'  => 'audio/mpeg',
-                    'mp4'  => 'video/mp4',
-                    'm4a'  => 'audio/mp4',
-                    'm4v'  => 'video/mp4',
-                    'ogg'  => 'audio/ogg',
-                    'oga'  => 'audio/ogg',
-                    'ogv'  => 'video/ogg',
-                    'wav'  => 'audio/wav',
-                    'webm' => 'video/webm',
-                    'flac' => 'audio/flac',
-                    'aac'  => 'audio/aac',
-                    'pdf'  => 'application/pdf',
-                ];
-                $mimeType = $mimeTypes[$extension] ?? null;
-            }
-
-            if ($mimeType) {
-                $params->set('mime_type', $mimeType);
-            }
-        }
-
-        // Get duration
-        if ($needsDuration) {
-            $durationSeconds = $jbspodcast->getMediaDuration($localPath);
-            if ($durationSeconds > 0) {
-                $duration = $jbspodcast->formatTime($durationSeconds);
-                $params->set('media_hours', str_pad((string) $duration->hours, 2, '0', STR_PAD_LEFT));
-                $params->set('media_minutes', str_pad((string) $duration->minutes, 2, '0', STR_PAD_LEFT));
-                $params->set('media_seconds', str_pad((string) $duration->seconds, 2, '0', STR_PAD_LEFT));
-            }
+        if ($addon) {
+            // Delegate metadata detection to the addon
+            $addon->detectMetadata($params, $server, $set_path, $path, $jbspodcast);
         }
     }
 
@@ -959,7 +721,7 @@ class CwmmediafileModel extends AdminModel
 
             // Set ordering to the last item if not set
             if (empty($table->ordering)) {
-                $db    = Factory::getContainer()->get('DatabaseDriver');
+                $db    = Factory::getContainer()->get(DatabaseInterface::class);
                 $query = $db->getQuery(true);
                 $query->select('MAX(' . $db->quoteName('ordering') . ')')->from($db->quoteName('#__bsms_mediafiles'));
                 $db->setQuery($query);
@@ -1017,7 +779,7 @@ class CwmmediafileModel extends AdminModel
      */
     protected function getReorderConditions($table): array
     {
-        $db          = Factory::getContainer()->get('DatabaseDriver');
+        $db          = Factory::getContainer()->get(DatabaseInterface::class);
         $condition   = [];
         $condition[] = $db->quoteName('study_id') . ' = ' . (int)$table->study_id;
 

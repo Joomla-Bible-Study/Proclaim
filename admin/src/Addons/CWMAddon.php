@@ -16,9 +16,11 @@ namespace CWM\Component\Proclaim\Administrator\Addons;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 
@@ -293,13 +295,13 @@ abstract class CWMAddon
      *
      * This method dispatches to the appropriate handler method based on the action name.
      * Handler methods should be named handle{ActionName}Action (e.g., handleTestApiAction).
-     * The 'fetchStats' action is handled by the base class for all stats-capable addons.
+     * The base class handles the 'fetchStats' action for all stats-capable addons.
      *
      * @param   string  $action  The action name to handle
      *
-     * @return  array  Response data array with 'success' key and additional data
+     * @return  array  Response data array with a 'success' key and additional data
      *
-     * @throws  \RuntimeException  If the action is not supported
+     * @throws  \RuntimeException|\Exception  If the action is not supported
      * @since   10.0.0
      */
     public function handleAjaxAction(string $action): array
@@ -347,7 +349,7 @@ abstract class CWMAddon
     }
 
     /**
-     * Prepare environment for AJAX response (suppress errors, clear buffers)
+     * Prepare the environment for AJAX response (suppress errors, clear buffers)
      *
      * Call this at the start of an AJAX handler to ensure clean JSON output.
      *
@@ -449,7 +451,7 @@ abstract class CWMAddon
 
     /**
      * Whether this addon supports pushing descriptions to the platform via API.
-     * Override in child class and return true to enable description sync.
+     * Override in a child class and return true to enable description sync.
      *
      * @return  bool
      *
@@ -520,8 +522,7 @@ abstract class CWMAddon
      */
     public static function getStatsCapableServers(): array
     {
-        /** @var DatabaseDriver $db */
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $columns = $db->getTableColumns('#__bsms_servers');
         $select  = [$db->quoteName('id'), $db->quoteName('server_name'), $db->quoteName('type')];
 
@@ -533,18 +534,171 @@ abstract class CWMAddon
             ->select($select)
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('published') . ' = 1');
-        $db->setQuery($query);
-        $servers = $db->loadAssocList() ?? [];
+        $servers = $db->setQuery($query)->loadAssocList() ?? [];
 
         return array_values(array_filter($servers, function ($srv) {
             try {
-                $addon = static::getInstance($srv['type']);
-
-                return $addon->supportsStats();
+                return static::getInstance($srv['type'])->supportsStats();
             } catch (\RuntimeException) {
                 return false;
             }
         }));
+    }
+
+    /**
+     * Detect metadata for a file.
+     *
+     * @param   Registry    $params      Media params (modified in place)
+     * @param   object      $server      Server object
+     * @param   string      $set_path    Server path prefix
+     * @param   Registry    $path        Server params
+     * @param   Cwmpodcast  $jbspodcast  Podcast helper
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public function detectMetadata(Registry $params, object $server, string $set_path, Registry $path, Cwmpodcast $jbspodcast): void
+    {
+        // Default implementation does nothing
+    }
+
+    /**
+     * Get MIME type from file extension.
+     *
+     * @param   string  $filename  Filename or URL
+     *
+     * @return  string|null
+     *
+     * @since   10.1.0
+     */
+    protected function getMimeTypeFromExtension(string $filename): ?string
+    {
+        $path      = parse_url($filename, PHP_URL_PATH);
+        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+        $mimeTypes = [
+            'mp3'  => 'audio/mpeg',
+            'mp4'  => 'video/mp4',
+            'm4a'  => 'audio/mp4',
+            'm4v'  => 'video/mp4',
+            'ogg'  => 'audio/ogg',
+            'oga'  => 'audio/ogg',
+            'ogv'  => 'video/ogg',
+            'wav'  => 'audio/wav',
+            'webm' => 'video/webm',
+            'flac' => 'audio/flac',
+            'aac'  => 'audio/aac',
+            'pdf'  => 'application/pdf',
+        ];
+
+        return $mimeTypes[$extension] ?? null;
+    }
+
+    /**
+     * Set duration params using FFprobe.
+     *
+     * @param   Registry    $params      Media params (modified in place)
+     * @param   string      $url         File URL or path
+     * @param   Cwmpodcast  $jbspodcast  Podcast helper
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    protected function setDurationFromFFprobe(Registry $params, string $url, Cwmpodcast $jbspodcast): void
+    {
+        $durationSeconds = $jbspodcast->getDurationWithFFprobe($url);
+
+        // Fallback to getMediaDuration for local files
+        if ($durationSeconds <= 0 && is_file($url)) {
+            $durationSeconds = $jbspodcast->getMediaDuration($url);
+        }
+
+        if ($durationSeconds > 0) {
+            $duration = $jbspodcast->formatTime($durationSeconds);
+            $params->set('media_hours', str_pad((string) $duration->hours, 2, '0', STR_PAD_LEFT));
+            $params->set('media_minutes', str_pad((string) $duration->minutes, 2, '0', STR_PAD_LEFT));
+            $params->set('media_seconds', str_pad((string) $duration->seconds, 2, '0', STR_PAD_LEFT));
+        }
+    }
+
+    /**
+     * Check which metadata fields need detection.
+     *
+     * @param   Registry  $params  Media params
+     *
+     * @return  array{needsSize: bool, needsMime: bool, needsDuration: bool}
+     *
+     * @since   10.1.0
+     */
+    protected function needsDetection(Registry $params): array
+    {
+        $hours   = $params->get('media_hours', '00');
+        $minutes = $params->get('media_minutes', '00');
+        $seconds = $params->get('media_seconds', '00');
+
+        return [
+            'needsSize'     => empty($params->get('size', 0)) || (int) $params->get('size', 0) < 1000,
+            'needsMime'     => empty($params->get('mime_type')),
+            'needsDuration' => ($hours === '00' && $minutes === '00' && $seconds === '00'),
+        ];
+    }
+
+    /**
+     * Detect metadata for a remote file via HTTP headers and FFprobe.
+     *
+     * Shared helper for addons that host downloadable remote files (Legacy, etc.).
+     * Detects file size via HTTP Content-Length, MIME type from extension, and
+     * duration via FFprobe.
+     *
+     * @param   Registry    $params      Media params (modified in place)
+     * @param   string      $remoteUrl   File URL (protocol is added if missing)
+     * @param   Cwmpodcast  $jbspodcast  Podcast helper
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    protected function detectRemoteMetadata(Registry $params, string $remoteUrl, Cwmpodcast $jbspodcast): void
+    {
+        if (empty($remoteUrl)) {
+            return;
+        }
+
+        // Ensure URL has protocol
+        if (!str_contains($remoteUrl, '://')) {
+            $remoteUrl = 'https://' . ltrim($remoteUrl, '/');
+        }
+
+        ['needsSize' => $needsSize, 'needsMime' => $needsMime, 'needsDuration' => $needsDuration] = $this->needsDetection($params);
+
+        if (!$needsSize && !$needsMime && !$needsDuration) {
+            return;
+        }
+
+        // Get file size via HTTP Content-Length header
+        if ($needsSize) {
+            $size = Cwmhelper::getRemoteFileSize($remoteUrl);
+
+            if ($size > 0) {
+                $params->set('size', $size);
+            }
+        }
+
+        // MIME type from file extension
+        if ($needsMime) {
+            $mime = $this->getMimeTypeFromExtension($remoteUrl);
+
+            if ($mime) {
+                $params->set('mime_type', $mime);
+            }
+        }
+
+        // Duration via FFprobe
+        if ($needsDuration) {
+            $this->setDurationFromFFprobe($params, $remoteUrl, $jbspodcast);
+        }
     }
 
     /**
@@ -567,8 +721,7 @@ abstract class CWMAddon
         string $platformId,
         array $stats
     ): void {
-        /** @var DatabaseDriver $db */
-        $db  = Factory::getContainer()->get('DatabaseDriver');
+        $db  = Factory::getContainer()->get(DatabaseInterface::class);
         $now = Factory::getDate()->toSql();
 
         $columns = ['media_id', 'server_id', 'platform', 'platform_id', 'synced_at'];
@@ -608,8 +761,7 @@ abstract class CWMAddon
             . ' VALUES (' . implode(', ', $values) . ')'
             . ' ON DUPLICATE KEY UPDATE ' . implode(', ', $updates);
 
-        $db->setQuery($sql);
-        $db->execute();
+        $db->setQuery($sql)->execute();
     }
 
     /**
@@ -623,15 +775,13 @@ abstract class CWMAddon
      */
     protected static function updateServerSyncTimestamp(int $serverId): void
     {
-        /** @var DatabaseDriver $db */
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $now   = Factory::getDate()->toSql();
         $query = $db->getQuery(true)
             ->update($db->quoteName('#__bsms_servers'))
             ->set($db->quoteName('stats_synced_at') . ' = ' . $db->quote($now))
-            ->where($db->quoteName('id') . ' = ' . (int) $serverId);
-        $db->setQuery($query);
-        $db->execute();
+            ->where($db->quoteName('id') . ' = ' . $serverId);
+        $db->setQuery($query)->execute();
     }
 
     /**
@@ -658,8 +808,7 @@ abstract class CWMAddon
         string $platform = '',
         bool $includeArchived = true
     ): array {
-        /** @var DatabaseDriver $db */
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select([$db->quoteName('m.id'), $db->quoteName('m.params')])
             ->from($db->quoteName('#__bsms_mediafiles', 'm'))
@@ -687,8 +836,7 @@ abstract class CWMAddon
             $query->setLimit((int) ceil($batchLimit * 1.5));
         }
 
-        $db->setQuery($query);
-        $rows = $db->loadAssocList() ?? [];
+        $rows = $db->setQuery($query)->loadAssocList() ?? [];
 
         $result = [];
 
@@ -719,8 +867,7 @@ abstract class CWMAddon
      */
     protected static function getMediaVideoCount(int $serverId, bool $includeArchived = true): int
     {
-        /** @var DatabaseDriver $db */
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_mediafiles'))
@@ -732,9 +879,7 @@ abstract class CWMAddon
             $query->where($db->quoteName('published') . ' = 1');
         }
 
-        $db->setQuery($query);
-
-        return (int) $db->loadResult();
+        return (int) $db->setQuery($query)->loadResult();
     }
 
     /**
@@ -785,7 +930,7 @@ abstract class CWMAddon
 
     /**
      * Render fancybox/squeezebox link HTML.
-     * Default implementation works for most platforms — only override if custom behavior needed.
+     * The default implementation works for most platforms — only overrides if custom behavior is needed.
      *
      * @param   string    $url          The raw URL/filename
      * @param   Registry  $mediaParams  Merged template + media params
@@ -838,7 +983,12 @@ abstract class CWMAddon
             . '" style="border:0;" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
     }
 
-    /** @var array|null Cached addon instances for URL resolution */
+    /**
+     * Cached addon instances for URL resolution.
+     *
+     * @var   array|null
+     * @since 10.1.0
+     */
     private static ?array $urlAddonCache = null;
 
     /**
@@ -889,7 +1039,11 @@ abstract class CWMAddon
     }
 
     /**
-     * Load addon language file
+     * Load the addon language file.
+     *
+     * Loads from Servers/{Type}/language/{tag}/{tag}.jbs_addon_{type}.ini.
+     * Falls back to en-GB automatically when the active locale file is missing
+     * (Joomla Language::load $default parameter).
      *
      * @return  void
      *

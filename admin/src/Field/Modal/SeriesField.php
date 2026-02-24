@@ -21,6 +21,7 @@ use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
 /**
@@ -127,7 +128,7 @@ class SeriesField extends FormField
         $urlNew    = $linkSerie . '&amp;task=cwmserie.add';
 
         if ($value) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
                 ->select($db->quoteName('series_text') . 'AS name')
                 ->from($db->quoteName('#__bsms_series'))
