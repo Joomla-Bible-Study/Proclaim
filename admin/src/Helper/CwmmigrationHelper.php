@@ -1257,7 +1257,7 @@ class CwmmigrationHelper
         if (!isset($columns['user_id'])) {
             // All teachers are "unlinked" if the column doesn't exist yet
             $query = $db->getQuery(true)
-                ->select([$db->quoteName('id'), $db->quoteName('name')])
+                ->select([$db->quoteName('id'), $db->quoteName('teachername', 'name')])
                 ->from($db->quoteName('#__bsms_teachers'))
                 ->where($db->quoteName('published') . ' = 1');
             $db->setQuery($query);

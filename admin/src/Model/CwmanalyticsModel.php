@@ -49,10 +49,10 @@ class CwmanalyticsModel extends BaseDatabaseModel
         try {
             $db    = $this->getDatabase();
             $query = $db->getQuery(true)
-                ->select([$db->quoteName('id'), $db->quoteName('name')])
+                ->select([$db->quoteName('id'), $db->quoteName('location_text', 'name')])
                 ->from($db->quoteName('#__bsms_locations'))
                 ->where($db->quoteName('published') . ' = 1')
-                ->order($db->quoteName('name') . ' ASC');
+                ->order($db->quoteName('location_text') . ' ASC');
 
             if (!empty($viewLevels)) {
                 $query->whereIn($db->quoteName('access'), $viewLevels);
