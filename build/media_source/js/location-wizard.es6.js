@@ -235,8 +235,7 @@
         const config = window.ProcWizard || {};
         const url = `${config.baseUrl}?option=com_proclaim&task=cwmlocationwizard.getStepData&step=5&${config.token}=1&mapping=${encodeURIComponent(JSON.stringify(pendingMapping))}`;
 
-        fetch(url)
-            .then((r) => r.json())
+        window.ProclaimFetch.fetchJson(url, {}, { timeout: 30000, retries: 1 })
             .then((response) => {
                 if (!response.success) {
                     container.innerHTML = `<div class="alert alert-danger">${response.message}</div>`;
@@ -340,11 +339,11 @@
         formData.append('mapping', JSON.stringify(pendingMapping));
         formData.append('permissions', JSON.stringify(pendingPermissions));
 
-        fetch(`${config.baseUrl}?option=com_proclaim&task=cwmlocationwizard.apply`, {
-            method: 'POST',
-            body: formData,
-        })
-            .then((r) => r.json())
+        window.ProclaimFetch.fetchJson(
+            `${config.baseUrl}?option=com_proclaim&task=cwmlocationwizard.apply`,
+            { method: 'POST', body: formData },
+            { timeout: 30000, retries: 1 },
+        )
             .then((response) => {
                 if (response.success) {
                     if (msgEl) {
@@ -390,11 +389,11 @@
         const formData = new FormData();
         formData.append(config.token, '1');
 
-        fetch(`${config.baseUrl}?option=com_proclaim&task=cwmlocationwizard.dismiss`, {
-            method: 'POST',
-            body: formData,
-        })
-            .then((r) => r.json())
+        window.ProclaimFetch.fetchJson(
+            `${config.baseUrl}?option=com_proclaim&task=cwmlocationwizard.dismiss`,
+            { method: 'POST', body: formData },
+            { timeout: 30000, retries: 1 },
+        )
             .then((response) => {
                 if (response.success) {
                     window.location.href = `${config.baseUrl}?option=com_proclaim`;

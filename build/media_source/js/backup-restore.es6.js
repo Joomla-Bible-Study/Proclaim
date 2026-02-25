@@ -286,37 +286,11 @@
                 },
             };
 
-            const response = await fetch(url, { ...defaultOptions, ...options });
-
-            if (!response.ok) {
-                if (response.status === 403 || response.status === 401) {
-                    Joomla.renderMessages({
-                        error: [Joomla.Text._('JLIB_ENVIRONMENT_SESSION_EXPIRED')
-              || 'Your session has expired. Please log in again.'],
-                    });
-                    setTimeout(() => { window.location.reload(); }, 3000);
-                    throw new Error('Session expired');
-                }
-                // Try to get the response body for debugging
-                let errorDetail = '';
-                try {
-                    const text = await response.text();
-                    console.error('Server response:', text);
-                    // Try to parse as JSON for structured error
-                    try {
-                        const json = JSON.parse(text);
-                        errorDetail = json.message || json.error || text.substring(0, 200);
-                    } catch {
-                        // Not JSON, use text (truncated)
-                        errorDetail = text.substring(0, 500);
-                    }
-                } catch {
-                    errorDetail = 'Could not read response';
-                }
-                throw new Error(`HTTP ${response.status}: ${errorDetail}`);
-            }
-
-            return response.json();
+            return window.ProclaimFetch.fetchJson(
+                url,
+                { ...defaultOptions, ...options },
+                { timeout: 60000, retries: 0 },
+            );
         }
 
         /**
@@ -431,21 +405,11 @@
                     formData.append(Joomla.getOptions('csrf.token'), '1');
 
                     const uploadUrl = 'index.php?option=com_proclaim&task=cwmbackup.uploadImportFileXHR&format=json';
-                    const response = await fetch(uploadUrl, {
-                        method: 'POST',
-                        body: formData,
-                    });
-
-                    if (response.status === 403 || response.status === 401) {
-                        Joomla.renderMessages({
-                            error: [Joomla.Text._('JLIB_ENVIRONMENT_SESSION_EXPIRED')
-                || 'Your session has expired. Please log in again.'],
-                        });
-                        setTimeout(() => { window.location.reload(); }, 3000);
-                        throw new Error('Session expired');
-                    }
-
-                    const uploadResult = await response.json();
+                    const uploadResult = await window.ProclaimFetch.fetchJson(
+                        uploadUrl,
+                        { method: 'POST', body: formData },
+                        { timeout: 60000, retries: 0 },
+                    );
 
                     if (!uploadResult.success) {
                         throw new Error(uploadResult.message || 'Failed to upload file');

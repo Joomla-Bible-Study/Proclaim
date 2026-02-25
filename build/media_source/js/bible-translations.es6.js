@@ -167,8 +167,11 @@ document.addEventListener('DOMContentLoaded', () => {
      * The server safely returns count=0 when nothing needs removing.
      */
     const cleanupProvider = (source) => {
-        fetch(`${baseUrl}cleanupProviderXHR&${token}=1&source=${encodeURIComponent(source)}`)
-            .then((r) => r.json())
+        window.ProclaimFetch.fetchJson(
+            `${baseUrl}cleanupProviderXHR&${token}=1&source=${encodeURIComponent(source)}`,
+            {},
+            { timeout: 30000, retries: 1 },
+        )
             .then((result) => {
                 if (result.success && result.count > 0) {
                     Joomla.renderMessages({ message: [result.message] });
@@ -243,8 +246,11 @@ document.addEventListener('DOMContentLoaded', () => {
             syncBtn.disabled = true;
             statusEl.innerHTML = `<span class="spinner-border spinner-border-sm" role="status"></span> ${strings.syncing}`;
 
-            fetch(`${baseUrl}syncApiBibleTranslationsXHR&${token}=1`)
-                .then((r) => r.json())
+            window.ProclaimFetch.fetchJson(
+                `${baseUrl}syncApiBibleTranslationsXHR&${token}=1`,
+                {},
+                { timeout: 30000, retries: 1 },
+            )
                 .then((result) => {
                     syncBtn.disabled = false;
 
@@ -281,19 +287,12 @@ document.addEventListener('DOMContentLoaded', () => {
      * Refresh the local provider badge with current translation count.
      */
     const refreshLocalBadge = () => {
-        const ctrl = new AbortController();
-        const tid  = setTimeout(() => ctrl.abort(), 10000);
-
-        fetch(`${baseUrl}getScriptureStatusXHR&${token}=1`, { signal: ctrl.signal })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-
-                return response.json();
-            })
+        window.ProclaimFetch.fetchJson(
+            `${baseUrl}getScriptureStatusXHR&${token}=1`,
+            {},
+            { timeout: 30000, retries: 1 },
+        )
             .then((data) => {
-                clearTimeout(tid);
                 const badge = document.getElementById('local-provider-status');
 
                 if (data.local_count > 0) {
@@ -305,7 +304,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .catch((err) => {
-                clearTimeout(tid);
                 console.error('[Proclaim] refreshLocalBadge error:', err);
                 const badge = document.getElementById('local-provider-status');
                 badge.className = 'badge bg-secondary ms-3';
@@ -558,20 +556,12 @@ document.addEventListener('DOMContentLoaded', () => {
             container.innerHTML = `<div class="text-center py-3"><span class="spinner-border spinner-border-sm" role="status"></span> ${strings.loading}</div>`;
         }
 
-        const ctrl = new AbortController();
-        const tid  = setTimeout(() => ctrl.abort(), 15000);
-
-        fetch(`${baseUrl}getTranslationsXHR&${token}=1`, { signal: ctrl.signal })
-            .then((r) => {
-                if (!r.ok) {
-                    throw new Error(`HTTP ${r.status} ${r.statusText}`);
-                }
-
-                return r.json();
-            })
+        window.ProclaimFetch.fetchJson(
+            `${baseUrl}getTranslationsXHR&${token}=1`,
+            {},
+            { timeout: 30000, retries: 1 },
+        )
             .then((data) => {
-                clearTimeout(tid);
-
                 if (!data.success) {
                     console.error('[Proclaim] getTranslationsXHR:', data.message);
                     container.innerHTML = `<div class="alert alert-warning">${esc(data.message || strings.loadError)}</div>`;
@@ -605,7 +595,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 container.style.minHeight = '';
             })
             .catch((err) => {
-                clearTimeout(tid);
                 console.error('[Proclaim] loadTranslations error:', err);
                 container.innerHTML = `<div class="alert alert-warning">${strings.loadError}</div>`;
                 container.style.minHeight = '';
@@ -805,8 +794,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.disabled = true;
                 this.innerHTML = `<span class="spinner-border spinner-border-sm" role="status"></span> ${strings.downloading}`;
 
-                fetch(`${baseUrl}downloadTranslationXHR&${token}=1&abbreviation=${encodeURIComponent(abbr)}`)
-                    .then((r) => r.json())
+                window.ProclaimFetch.fetchJson(
+                    `${baseUrl}downloadTranslationXHR&${token}=1&abbreviation=${encodeURIComponent(abbr)}`,
+                    {},
+                    { timeout: 60000, retries: 1 },
+                )
                     .then((result) => {
                         if (result.success) {
                             Joomla.renderMessages({ message: [result.message] });
@@ -835,8 +827,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 this.disabled = true;
 
-                fetch(`${baseUrl}removeTranslationXHR&${token}=1&abbreviation=${encodeURIComponent(abbr)}`)
-                    .then((r) => r.json())
+                window.ProclaimFetch.fetchJson(
+                    `${baseUrl}removeTranslationXHR&${token}=1&abbreviation=${encodeURIComponent(abbr)}`,
+                    {},
+                    { timeout: 30000, retries: 1 },
+                )
                     .then((result) => {
                         if (result.success) {
                             Joomla.renderMessages({ message: [result.message] });
@@ -915,8 +910,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const abbr = queue[index].abbreviation;
             index += 1;
 
-            fetch(`${baseUrl}downloadTranslationXHR&${token}=1&abbreviation=${encodeURIComponent(abbr)}`)
-                .then((r) => r.json())
+            window.ProclaimFetch.fetchJson(
+                `${baseUrl}downloadTranslationXHR&${token}=1&abbreviation=${encodeURIComponent(abbr)}`,
+                {},
+                { timeout: 60000, retries: 1 },
+            )
                 .then((result) => {
                     if (result.success) {
                         downloaded.push(abbr.toUpperCase());
@@ -950,8 +948,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             removeAllBtn.disabled = true;
 
-            fetch(`${baseUrl}removeAllTranslationsXHR&${token}=1`)
-                .then((r) => r.json())
+            window.ProclaimFetch.fetchJson(
+                `${baseUrl}removeAllTranslationsXHR&${token}=1`,
+                {},
+                { timeout: 30000, retries: 1 },
+            )
                 .then((result) => {
                     if (result.success) {
                         Joomla.renderMessages({ message: [result.message] });

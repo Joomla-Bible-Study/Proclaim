@@ -18,6 +18,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // change on every call as images are migrated/recovered/converted.
     const noCache = { cache: 'no-store' };
 
+    /** Fetch JSON via ProclaimFetch with no-cache + timeout + 1 retry */
+    const cwmFetch = (url, opts = {}) => window.ProclaimFetch.fetchJson(
+        url, { ...noCache, ...opts }, { timeout: 30000, retries: 1 },
+    );
+
     // Store counts for progress calculation
     let migrationTotals = {
         studies: 0, teachers: 0, series: 0, total: 0,
@@ -82,8 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ---- Image Migration ----
 
     function loadMigrationCounts() {
-        return fetch(`index.php?option=com_proclaim&task=cwmadmin.getMigrationCountsXHR&${token}=1`, noCache)
-            .then((r) => r.json())
+        return cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.getMigrationCountsXHR&${token}=1`)
             .then((data) => {
                 migrationTotals = data;
 
@@ -254,8 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const excludeParam = typeFailedIds.length > 0 ? `&exclude=${typeFailedIds.join(',')}` : '';
 
-            fetch(`index.php?option=com_proclaim&task=cwmadmin.getMigrationBatchXHR&${token}=1&type=${type}&limit=5${excludeParam}`, noCache)
-                .then((r) => r.json())
+            cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.getMigrationBatchXHR&${token}=1&type=${type}&limit=5${excludeParam}`)
                 .then((data) => {
                     // No more records to process for this type (PHP already excluded failed IDs)
                     if (data.records.length === 0) {
@@ -271,8 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const promises = data.records.map((record) => {
                         const recordTitle = record.studytitle || record.teachername || record.title || '';
 
-                        return fetch(`index.php?option=com_proclaim&task=cwmadmin.migrateRecordXHR&${token}=1&type=${type}&id=${record.id}`, noCache)
-                            .then((r) => r.json())
+                        return cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.migrateRecordXHR&${token}=1&type=${type}&id=${record.id}`)
                             .then((result) => {
                                 if (result.success) {
                                     totalMigrated += 1;
@@ -360,8 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.disabled = true;
         btn.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${Joomla.Text._('JBS_ADM_SCANNING')}`;
 
-        fetch(`index.php?option=com_proclaim&task=cwmadmin.getOrphanedFoldersXHR&${token}=1`, noCache)
-            .then((r) => r.json())
+        cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.getOrphanedFoldersXHR&${token}=1`)
             .then((data) => {
                 btn.disabled = false;
                 btn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${Joomla.Text._('JBS_ADM_SCAN_ORPHANS')}`;
@@ -422,12 +423,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const params = new URLSearchParams();
         selected.forEach((path) => params.append('paths[]', path));
 
-        fetch(`index.php?option=com_proclaim&task=cwmadmin.deleteOrphanedFoldersXHR&${token}=1`, {
+        cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.deleteOrphanedFoldersXHR&${token}=1`, {
             method: 'POST',
             body: params,
-            cache: 'no-store',
         })
-            .then((r) => r.json())
             .then(() => {
                 activeOperation = null;
                 setOperationRunning(false);
@@ -440,8 +439,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ---- WebP Generation ----
 
     function loadWebPCounts() {
-        return fetch(`index.php?option=com_proclaim&task=cwmadmin.getWebPCountsXHR&${token}=1`, noCache)
-            .then((r) => r.json())
+        return cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.getWebPCountsXHR&${token}=1`)
             .then((data) => {
                 webpTotals = data;
 
@@ -518,20 +516,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function convertBatch(type, typeConverted) {
-            fetch(`index.php?option=com_proclaim&task=cwmadmin.migrateToWebPXHR&${token}=1&type=${type}&limit=5`, noCache)
-                .then((r) => {
-                    if (!r.ok) throw new Error(`HTTP ${r.status}: ${r.statusText}`);
-                    return r.text();
-                })
-                .then((text) => {
-                    let data;
-                    try {
-                        data = JSON.parse(text);
-                    } catch {
-                        // PHP returned non-JSON (fatal error, HTML error page)
-                        throw new Error(`Invalid response: ${text.substring(0, 200)}`);
-                    }
-
+            cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.migrateToWebPXHR&${token}=1&type=${type}&limit=5`)
+                .then((data) => {
                     // PHP-level error (exception caught in controller)
                     if (data.error) {
                         statusEl.innerHTML = `<span class="text-danger">${Joomla.Text._('JBS_ADM_WEBP_ERROR')}: ${data.error}</span>`;
@@ -574,8 +560,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ---- Thumbnail & WebP Regeneration (studies + teachers + series) ----
 
     function loadThumbRegenCounts() {
-        fetch(`index.php?option=com_proclaim&task=cwmadmin.getThumbRegenCountXHR&${token}=1`, noCache)
-            .then((r) => r.json())
+        cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.getThumbRegenCountXHR&${token}=1`)
             .then((data) => {
                 if (data.total === 0) {
                     document.getElementById('thumb-regen-counts').innerHTML = `<div class="alert alert-success mb-0"><i class="icon-checkmark me-1" aria-hidden="true"></i>${Joomla.Text._('JBS_ADM_THUMB_REGEN_ALL_DONE')}</div>`;
@@ -608,8 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let totalErrors = 0;
 
         // Re-fetch counts for accurate progress
-        fetch(`index.php?option=com_proclaim&task=cwmadmin.getThumbRegenCountXHR&${token}=1`, noCache)
-            .then((r) => r.json())
+        cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.getThumbRegenCountXHR&${token}=1`)
             .then((data) => {
                 const grandTotal = data.total;
                 const types = ['studies', 'teachers', 'series'].filter((t) => data[t] > 0);
@@ -646,19 +630,8 @@ document.addEventListener('DOMContentLoaded', () => {
             function processTypeBatch() {
                 statusEl.innerHTML = `${Joomla.Text._('JBS_ADM_REGENERATING')} ${currentType}... <strong>${totalProcessed}</strong> / ${grandTotal}`;
 
-                fetch(`index.php?option=com_proclaim&task=cwmadmin.regenerateThumbsXHR&${token}=1&type=${currentType}&limit=10&offset=${offset}`, noCache)
-                    .then((r) => {
-                        if (!r.ok) throw new Error(`HTTP ${r.status}: ${r.statusText}`);
-                        return r.text();
-                    })
-                    .then((text) => {
-                        let data;
-                        try {
-                            data = JSON.parse(text);
-                        } catch {
-                            throw new Error(`Invalid response: ${text.substring(0, 200)}`);
-                        }
-
+                cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.regenerateThumbsXHR&${token}=1&type=${currentType}&limit=10&offset=${offset}`)
+                    .then((data) => {
                         if (data.error) {
                             statusEl.innerHTML = `<span class="text-danger">Error: ${data.error}</span>`;
                             activeOperation = null;
@@ -694,8 +667,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     function loadRecoveryCounts() {
-        return fetch(`index.php?option=com_proclaim&task=cwmadmin.getRecoveryCountsXHR&${token}=1`, noCache)
-            .then((r) => r.json())
+        return cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.getRecoveryCountsXHR&${token}=1`)
             .then((data) => {
                 recoveryTotals = data;
 
@@ -782,8 +754,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function recoverBatch(type) {
-            fetch(`index.php?option=com_proclaim&task=cwmadmin.recoverBareIdFoldersXHR&${token}=1&type=${type}&limit=10`, noCache)
-                .then((r) => r.json())
+            cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.recoverBareIdFoldersXHR&${token}=1&type=${type}&limit=10`)
                 .then((data) => {
                     totalRecovered += data.recovered;
                     totalErrors += data.errors;
@@ -825,8 +796,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${Joomla.Text._('JBS_ADM_SCANNING')}`;
         const resultsEl = document.getElementById('legacy-results');
 
-        fetch(`index.php?option=com_proclaim&task=cwmadmin.getLegacyFolderReportXHR&${token}=1`, noCache)
-            .then((r) => r.json())
+        cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.getLegacyFolderReportXHR&${token}=1`)
             .then((data) => {
                 btn.disabled = false;
                 btn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${Joomla.Text._('JBS_ADM_SCAN_LEGACY')}`;
@@ -907,12 +877,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         const params = new URLSearchParams();
                         selected.forEach((path) => params.append('paths[]', path));
 
-                        fetch(`index.php?option=com_proclaim&task=cwmadmin.deleteLegacyFoldersXHR&${token}=1`, {
+                        cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.deleteLegacyFoldersXHR&${token}=1`, {
                             method: 'POST',
                             body: params,
-                            cache: 'no-store',
                         })
-                            .then((r) => r.json())
                             .then((result) => {
                                 delLegacyBtn.disabled = false;
                                 delLegacyBtn.innerHTML = `<i class="icon-trash" aria-hidden="true"></i> ${Joomla.Text._('JBS_ADM_DELETE_SELECTED')}`;
@@ -952,8 +920,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (clearBtn) clearBtn.style.display = 'none';
             if (unresStatusEl) unresStatusEl.style.display = 'none';
 
-            fetch(`index.php?option=com_proclaim&task=cwmadmin.getUnresolvableCountXHR&${token}=1`, noCache)
-                .then((r) => r.json())
+            cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.getUnresolvableCountXHR&${token}=1`)
                 .then((data) => {
                     previewBtn.disabled = false;
                     previewBtn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${Joomla.Text._('JBS_ADM_PREVIEW_UNRESOLVABLE')}`;
@@ -1011,8 +978,7 @@ document.addEventListener('DOMContentLoaded', () => {
             clearBtn.disabled = true;
             clearBtn.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${Joomla.Text._('JBS_ADM_CLEARING')}`;
 
-            fetch(`index.php?option=com_proclaim&task=cwmadmin.clearUnresolvableXHR&${token}=1`, noCache)
-                .then((r) => r.json())
+            cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.clearUnresolvableXHR&${token}=1`)
                 .then((data) => {
                     clearBtn.style.display = 'none';
 
@@ -1278,14 +1244,14 @@ document.addEventListener('DOMContentLoaded', () => {
             setCleanupBadge('unresolvable', 'running');
             setCleanupStatus(Joomla.Text._('JBS_ADM_CLEANUP_PIPELINE_RUNNING'));
 
-            const unresData = await fetch(
-                `index.php?option=com_proclaim&task=cwmadmin.getUnresolvableCountXHR&${token}=1`, noCache,
-            ).then((r) => r.json());
+            const unresData = await cwmFetch(
+                `index.php?option=com_proclaim&task=cwmadmin.getUnresolvableCountXHR&${token}=1`,
+            );
 
             if (unresData.count > 0) {
-                const clearResult = await fetch(
-                    `index.php?option=com_proclaim&task=cwmadmin.clearUnresolvableXHR&${token}=1`, noCache,
-                ).then((r) => r.json());
+                const clearResult = await cwmFetch(
+                    `index.php?option=com_proclaim&task=cwmadmin.clearUnresolvableXHR&${token}=1`,
+                );
                 if (clearResult.success) {
                     setCleanupBadge('unresolvable', 'done');
                     setCleanupStatus(Joomla.Text._('JBS_ADM_CLEANUP_PIPELINE_CLEARED').replace('%s', clearResult.cleared));
@@ -1304,9 +1270,9 @@ document.addEventListener('DOMContentLoaded', () => {
             setCleanupBadge('legacy', 'running');
             setCleanupStatus(Joomla.Text._('JBS_ADM_CLEANUP_PIPELINE_RUNNING'));
 
-            const legacyData = await fetch(
-                `index.php?option=com_proclaim&task=cwmadmin.getLegacyFolderReportXHR&${token}=1`, noCache,
-            ).then((r) => r.json());
+            const legacyData = await cwmFetch(
+                `index.php?option=com_proclaim&task=cwmadmin.getLegacyFolderReportXHR&${token}=1`,
+            );
 
             if (legacyData.total_files > 0) {
                 const shouldDelete = await showCleanupConfirm(legacyData.total_files, 'JBS_ADM_CLEANUP_PIPELINE_CONFIRM_LEGACY');
@@ -1316,10 +1282,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     paths.forEach((p) => params.append('paths[]', p));
                     activeOperation = 'legacy';
                     setOperationRunning(true);
-                    const result = await fetch(
+                    const result = await cwmFetch(
                         `index.php?option=com_proclaim&task=cwmadmin.deleteLegacyFoldersXHR&${token}=1`,
-                        { method: 'POST', body: params, cache: 'no-store' },
-                    ).then((r) => r.json());
+                        { method: 'POST', body: params },
+                    );
                     activeOperation = null;
                     setOperationRunning(false);
                     setCleanupBadge('legacy', result.deleted > 0 ? 'done' : 'error');
@@ -1337,9 +1303,9 @@ document.addEventListener('DOMContentLoaded', () => {
             setCleanupBadge('orphans', 'running');
             setCleanupStatus(Joomla.Text._('JBS_ADM_CLEANUP_PIPELINE_RUNNING'));
 
-            const orphanData = await fetch(
-                `index.php?option=com_proclaim&task=cwmadmin.getOrphanedFoldersXHR&${token}=1`, noCache,
-            ).then((r) => r.json());
+            const orphanData = await cwmFetch(
+                `index.php?option=com_proclaim&task=cwmadmin.getOrphanedFoldersXHR&${token}=1`,
+            );
 
             const orphanCount = orphanData.totals ? orphanData.totals.folders : 0;
 
@@ -1356,10 +1322,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     paths.forEach((p) => params.append('paths[]', p));
                     activeOperation = 'orphan';
                     setOperationRunning(true);
-                    await fetch(
+                    await cwmFetch(
                         `index.php?option=com_proclaim&task=cwmadmin.deleteOrphanedFoldersXHR&${token}=1`,
-                        { method: 'POST', body: params, cache: 'no-store' },
-                    ).then((r) => r.json());
+                        { method: 'POST', body: params },
+                    );
                     activeOperation = null;
                     setOperationRunning(false);
                     setCleanupBadge('orphans', 'done');
@@ -1417,7 +1383,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Check if a cleared-images log exists and show the download button if so
         // downloadLogBtn already declared in outer scope (line ~937)
         if (downloadLogBtn) {
-            fetch(`index.php?option=com_proclaim&task=cwmadmin.downloadClearedLogXHR&${token}=1`, { method: 'HEAD', cache: 'no-store' })
+            window.ProclaimFetch.fetch(`index.php?option=com_proclaim&task=cwmadmin.downloadClearedLogXHR&${token}=1`, { method: 'HEAD', cache: 'no-store' }, { timeout: 30000, retries: 1 })
                 .then((r) => {
                     if (r.ok && r.headers.get('content-type')?.includes('text/csv')) {
                         downloadLogBtn.style.display = '';

@@ -99,7 +99,9 @@ document.addEventListener('DOMContentLoaded', () => {
             + `&version=${encodeURIComponent(version)}`
             + `&${token}=1`;
 
-        const response = await fetch(url);
+        const response = await window.ProclaimFetch.fetch(
+            url, {}, { timeout: 15000, retries: 0 },
+        );
 
         if (!response.ok) {
             return { success: false, retryable: true, message: `HTTP ${response.status}` };

@@ -87,11 +87,11 @@
       }&format=json`;
 
         // AJAX check
-        fetch(url, {
-            method: 'GET',
-            headers: { 'X-Requested-With': 'XMLHttpRequest' },
-        })
-            .then((r) => r.json())
+        window.ProclaimFetch.fetchJson(
+            url,
+            { method: 'GET', headers: { 'X-Requested-With': 'XMLHttpRequest' } },
+            { timeout: 30000, retries: 0 },
+        )
             .then((data) => {
                 if (!data.success || !data.hasFiles) {
                     origSubmitbutton(task);

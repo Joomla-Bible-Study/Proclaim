@@ -166,20 +166,15 @@
                         + '&batch_limit=' + batchLimit
                         + '&' + token + '=1';
 
-                    const resp = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'X-CSRF-Token': '1' },
-                    });
+                    const data = await window.ProclaimFetch.fetchJson(
+                        url,
+                        { method: 'POST', headers: { 'X-CSRF-Token': '1' } },
+                        { timeout: 30000, retries: 1 },
+                    );
 
-                    if (resp.ok) {
-                        const data = await resp.json();
-
-                        if (data && data.data) {
-                            totalSynced += (data.data.synced || 0);
-                            totalRemaining += (data.data.remaining || 0);
-                        }
-                    } else {
-                        totalErrors += 1;
+                    if (data && data.data) {
+                        totalSynced += (data.data.synced || 0);
+                        totalRemaining += (data.data.remaining || 0);
                     }
                 } catch {
                     totalErrors += 1;

@@ -187,15 +187,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    Accept: 'application/json',
+            const response = await window.ProclaimFetch.fetch(
+                url,
+                {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        Accept: 'application/json',
+                    },
+                    credentials: 'same-origin',
                 },
-                credentials: 'same-origin',
-                signal: abortController.signal,
-            });
+                { timeout: 15000, retries: 1, signal: abortController.signal },
+            );
 
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}`);
@@ -246,6 +249,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             console.warn('Proclaim series scroll error:', err.message);
+
+            // Show user-visible error banner
+            const errorBanner = document.createElement('div');
+            errorBanner.className = 'alert alert-warning mt-2 small';
+            errorBanner.textContent = err.name === 'TimeoutError'
+                ? 'Loading timed out. Please try again.'
+                : 'Failed to load more items. Please try again.';
+            listContainer.appendChild(errorBanner);
+            setTimeout(() => errorBanner.remove(), 5000);
+
             // Revert offset on error so user can retry
             currentOffset -= pageLimit;
         }

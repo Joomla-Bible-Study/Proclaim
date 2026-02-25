@@ -169,8 +169,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }&version=${encodeURIComponent(version)
             }&${token}=1`;
 
-            const response = await fetch(url);
-            const data = await response.json();
+            const data = await window.ProclaimFetch.fetchJson(
+                url, {}, { timeout: 15000, retries: 1 },
+            );
 
             setCache(ref, version, data);
             updatePopoverBody(pop, buildContent(data));

@@ -13,6 +13,7 @@
 
     const loadedFieldsets = new Set();
     const loadingFieldsets = new Set();
+    const loadingPromises = new Map();
     const fieldsetHtmlCache = new Map();
 
     /**
@@ -122,23 +123,23 @@
             }
 
             if (loadingFieldsets.has(fieldsetName)) {
-                // Wait for existing load to complete
-                const checkInterval = setInterval(() => {
-                    if (loadedFieldsets.has(fieldsetName) && fieldsetHtmlCache.has(fieldsetName)) {
-                        clearInterval(checkInterval);
-                        container.innerHTML = fieldsetHtmlCache.get(fieldsetName);
-
-                        // Initialize any Joomla form elements
-                        if (typeof Joomla !== 'undefined' && Joomla.initCustomSelect) {
-                            Joomla.initCustomSelect(container);
+                // Wait for existing load to complete via shared Promise
+                const pending = loadingPromises.get(fieldsetName);
+                if (pending) {
+                    pending.then(() => {
+                        if (fieldsetHtmlCache.has(fieldsetName)) {
+                            container.innerHTML = fieldsetHtmlCache.get(fieldsetName);
+                            if (typeof Joomla !== 'undefined' && Joomla.initCustomSelect) {
+                                Joomla.initCustomSelect(container);
+                            }
+                            resolve({ alreadyLoaded: true, fieldset: fieldsetName });
+                        } else {
+                            reject(new Error('Fieldset load was cancelled'));
                         }
-
-                        resolve({ alreadyLoaded: true, fieldset: fieldsetName });
-                    } else if (!loadingFieldsets.has(fieldsetName)) {
-                        clearInterval(checkInterval);
-                        reject(new Error('Fieldset load was cancelled'));
-                    }
-                }, 100);
+                    }).catch(reject);
+                } else {
+                    reject(new Error('Fieldset load was cancelled'));
+                }
                 return;
             }
 
@@ -152,15 +153,14 @@
                 }&id=${templateId
                 }&${Joomla.getOptions('csrf.token', '')}=1`;
 
-            fetch(url, {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-            })
-                .then((response) => response.json())
+            const fetchPromise = window.ProclaimFetch.fetchJson(
+                url,
+                { method: 'GET', headers: { 'X-Requested-With': 'XMLHttpRequest' } },
+                { timeout: 30000, retries: 1 },
+            )
                 .then((data) => {
                     loadingFieldsets.delete(fieldsetName);
+                    loadingPromises.delete(fieldsetName);
 
                     if (data.success) {
                         loadedFieldsets.add(fieldsetName);
@@ -189,10 +189,13 @@
                 })
                 .catch((error) => {
                     loadingFieldsets.delete(fieldsetName);
+                    loadingPromises.delete(fieldsetName);
                     container.innerHTML = `<div class="alert alert-danger">Error loading content: ${error.message}</div>`;
                     console.error('Fieldset load error:', error);
                     reject(error);
                 });
+
+            loadingPromises.set(fieldsetName, fetchPromise);
         });
     }
 
@@ -301,12 +304,11 @@
 
         container.dataset.loaded = 'true';
 
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-        })
+        window.ProclaimFetch.fetch(
+            url,
+            { method: 'GET', headers: { 'X-Requested-With': 'XMLHttpRequest' } },
+            { timeout: 30000, retries: 1 },
+        )
             .then((response) => response.text())
             .then((html) => {
                 container.innerHTML = html;

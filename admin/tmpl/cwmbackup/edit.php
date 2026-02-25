@@ -30,7 +30,7 @@ $wa->useScript('keepalive')
         'com_proclaim/backup-restore.min.js',
         ['version' => 'auto'],
         ['defer'   => true],
-        ['core']
+        ['core', 'com_proclaim.cwm-fetch']
     );
 
 // Add language strings for JavaScript

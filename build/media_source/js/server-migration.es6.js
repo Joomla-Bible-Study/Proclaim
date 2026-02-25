@@ -11,7 +11,7 @@
 (() => {
     'use strict';
 
-    const BATCH_SIZE = 25;
+    const BATCH_SIZE = 15;
 
     /** @type {object|null} Scan results from the server */
     let scanData = null;
@@ -73,12 +73,15 @@
      * @returns {Promise<object>}
      */
     async function postJson(task, body) {
-        const response = await fetch(ajaxUrl(task), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body),
-        });
-        return response.json();
+        return window.ProclaimFetch.fetchJson(
+            ajaxUrl(task),
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            },
+            { timeout: 30000, retries: 1 },
+        );
     }
 
     /**
@@ -88,8 +91,11 @@
      * @returns {Promise<object>}
      */
     async function getJson(task) {
-        const response = await fetch(ajaxUrl(task));
-        return response.json();
+        return window.ProclaimFetch.fetchJson(
+            ajaxUrl(task),
+            {},
+            { timeout: 30000, retries: 2 },
+        );
     }
 
     // =========================================================================
@@ -276,6 +282,12 @@
 
         migrating = true;
 
+        const beforeUnload = (e) => {
+            e.preventDefault();
+            e.returnValue = '';
+        };
+        window.addEventListener('beforeunload', beforeUnload);
+
         const progressPanel = document.getElementById('smg-progress-panel');
         const progressBar = document.getElementById('smg-progress-bar');
         const progressText = document.getElementById('smg-progress-text');
@@ -386,6 +398,7 @@
         progressBar.textContent = '100%';
         progressBar.classList.remove('progress-bar-animated');
 
+        window.removeEventListener('beforeunload', beforeUnload);
         migrating = false;
         showReport(migratedTotal, totalFiles, allErrors);
     }

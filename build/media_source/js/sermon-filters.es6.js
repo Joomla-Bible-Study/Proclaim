@@ -372,15 +372,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const qs = buildQueryString(overrides);
 
         try {
-            const response = await fetch(`${opts.ajaxUrl}&${qs}`, {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    Accept: 'application/json',
+            const response = await window.ProclaimFetch.fetch(
+                `${opts.ajaxUrl}&${qs}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        Accept: 'application/json',
+                    },
+                    credentials: 'same-origin',
                 },
-                credentials: 'same-origin',
-                signal: abortController.signal,
-            });
+                { timeout: 15000, retries: 0, signal: abortController.signal },
+            );
 
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}`);

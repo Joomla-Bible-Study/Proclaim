@@ -59,19 +59,15 @@
    * @param {string} task  Controller task name
    * @returns {Promise<Object>}
    */
-    const ajaxCall = async (task) => {
-        const response = await fetch(buildUrl(task), {
+    const ajaxCall = async (task) => window.ProclaimFetch.fetchJson(
+        buildUrl(task),
+        {
             method: 'GET',
             headers: { 'X-Requested-With': 'XMLHttpRequest' },
             credentials: 'same-origin',
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        return response.json();
-    };
+        },
+        { timeout: 60000, retries: 0 },
+    );
 
     // Step definitions: order matters
     const STEPS = [

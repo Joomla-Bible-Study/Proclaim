@@ -6,6 +6,17 @@
     "license": "GPL-2.0-or-later",
     "assets": [
         {
+            "name": "com_proclaim.cwm-fetch",
+            "type": "script",
+            "uri": "com_proclaim/cwm-fetch.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.chart.js",
             "type": "script",
             "uri": "media/com_proclaim/vendor/chart.js/chart.umd.min.js",
@@ -19,6 +30,7 @@
             "uri": "com_proclaim/cwmanalytics.min.js",
             "dependencies": [
                 "core",
+                "com_proclaim.cwm-fetch",
                 "com_proclaim.chart.js"
             ],
             "attributes": {
@@ -31,6 +43,7 @@
             "uri": "com_proclaim/platform-stats.min.js",
             "dependencies": [
                 "core",
+                "com_proclaim.cwm-fetch",
                 "bootstrap.modal"
             ],
             "attributes": {
@@ -42,7 +55,8 @@
             "type": "script",
             "uri": "com_proclaim/location-wizard.min.js",
             "dependencies": [
-                "core"
+                "core",
+                "com_proclaim.cwm-fetch"
             ],
             "attributes": {
                 "defer": true
@@ -53,7 +67,8 @@
             "type": "script",
             "uri": "com_proclaim/csv-import.min.js",
             "dependencies": [
-                "core"
+                "core",
+                "com_proclaim.cwm-fetch"
             ],
             "attributes": {
                 "type": "module"
@@ -64,7 +79,8 @@
             "type": "script",
             "uri": "com_proclaim/server-migration.min.js",
             "dependencies": [
-                "core"
+                "core",
+                "com_proclaim.cwm-fetch"
             ],
             "attributes": {
                 "type": "module"
@@ -75,7 +91,8 @@
             "type": "script",
             "uri": "com_proclaim/admin-imagetools.min.js",
             "dependencies": [
-                "core"
+                "core",
+                "com_proclaim.cwm-fetch"
             ],
             "attributes": {
                 "type": "module"
@@ -288,6 +305,7 @@
             "uri": "com_proclaim/cwmadmin.min.js",
             "dependencies": [
                 "core",
+                "com_proclaim.cwm-fetch",
                 "bootstrap.modal"
             ],
             "attributes": {
@@ -403,7 +421,8 @@
             "type": "script",
             "uri": "com_proclaim/template-lazyload.js",
             "dependencies": [
-                "core"
+                "core",
+                "com_proclaim.cwm-fetch"
             ],
             "attributes": {
                 "defer": true
@@ -500,7 +519,8 @@
             "type": "script",
             "uri": "com_proclaim/scripture-switcher.js",
             "dependencies": [
-                "core"
+                "core",
+                "com_proclaim.cwm-fetch"
             ],
             "attributes": {
                 "defer": true
@@ -511,7 +531,8 @@
             "type": "script",
             "uri": "com_proclaim/bible-translations.js",
             "dependencies": [
-                "core"
+                "core",
+                "com_proclaim.cwm-fetch"
             ],
             "attributes": {
                 "defer": true
@@ -545,7 +566,8 @@
             "type": "script",
             "uri": "com_proclaim/sermon-filters.min.js",
             "dependencies": [
-                "core"
+                "core",
+                "com_proclaim.cwm-fetch"
             ],
             "attributes": {
                 "defer": true
@@ -561,7 +583,8 @@
             "type": "script",
             "uri": "com_proclaim/series-scroll.min.js",
             "dependencies": [
-                "core"
+                "core",
+                "com_proclaim.cwm-fetch"
             ],
             "attributes": {
                 "defer": true
@@ -578,6 +601,7 @@
             "uri": "com_proclaim/scripture-tooltip.js",
             "dependencies": [
                 "core",
+                "com_proclaim.cwm-fetch",
                 "bootstrap.popover"
             ],
             "attributes": {
@@ -594,7 +618,8 @@
             "type": "script",
             "uri": "com_proclaim/upgrade-wizard.min.js",
             "dependencies": [
-                "core"
+                "core",
+                "com_proclaim.cwm-fetch"
             ],
             "attributes": {
                 "type": "module"
@@ -606,6 +631,7 @@
             "uri": "com_proclaim/delete-confirm.min.js",
             "dependencies": [
                 "core",
+                "com_proclaim.cwm-fetch",
                 "bootstrap.modal"
             ],
             "attributes": {

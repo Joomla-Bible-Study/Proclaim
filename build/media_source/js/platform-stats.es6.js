@@ -46,16 +46,11 @@
             + '&study_id=' + studyId
             + '&' + token + '=1';
 
-        const resp = await fetch(url, {
-            method: 'GET',
-            headers: { 'X-CSRF-Token': '1' },
-        });
-
-        if (!resp.ok) {
-            throw new Error('HTTP ' + resp.status);
-        }
-
-        return resp.json();
+        return window.ProclaimFetch.fetchJson(
+            url,
+            { method: 'GET', headers: { 'X-CSRF-Token': '1' } },
+            { timeout: 30000, retries: 1 },
+        );
     }
 
     /**
@@ -206,16 +201,18 @@
                             + '&media_id=' + mediaId
                             + '&' + token + '=1';
 
-                        const resp = await fetch(url, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                                'X-CSRF-Token': '1',
+                        const data = await window.ProclaimFetch.fetchJson(
+                            url,
+                            {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                    'X-CSRF-Token': '1',
+                                },
+                                body: 'description=' + encodeURIComponent(text),
                             },
-                            body: 'description=' + encodeURIComponent(text),
-                        });
-
-                        const data = await resp.json();
+                            { timeout: 30000, retries: 1 },
+                        );
 
                         if (data.success) {
                             successes += 1;

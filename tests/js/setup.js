@@ -28,6 +28,16 @@ global.fetch = jest.fn(() =>
     })
 );
 
+// Mock ProclaimFetch — delegates to global.fetch so existing test mocks work.
+// Full ProclaimFetch behavior (timeout, retry, gatekeeper) is tested in cwm-fetch.test.js.
+window.ProclaimFetch = {
+    fetch: (url, fetchOpts) => global.fetch(url, fetchOpts || {}),
+    fetchJson: (url, fetchOpts) => global.fetch(url, fetchOpts || {}).then((r) => r.json()),
+    ADMIN_TIMEOUT: 30000,
+    FRONTEND_TIMEOUT: 15000,
+    LONG_TIMEOUT: 60000,
+};
+
 // Mock window.alert and window.confirm
 global.alert = jest.fn();
 global.confirm = jest.fn(() => true);

@@ -49,7 +49,7 @@
         language: 'Language',
     };
 
-    const BATCH_SIZE = 25;
+    const BATCH_SIZE = 10;
 
     let parsedRows = [];
     let columnMappings = [];
@@ -358,7 +358,7 @@
                 .replace('%d', totalRows);
 
             try {
-                const response = await fetch(
+                const result = await window.ProclaimFetch.fetchJson(
                     `index.php?option=com_proclaim&task=cwmadmin.csvImportBatchXHR&${token}=1`,
                     {
                         method: 'POST',
@@ -369,9 +369,8 @@
                             settings,
                         }),
                     },
+                    { timeout: 30000, retries: 1 },
                 );
-
-                const result = await response.json();
 
                 totalImported += result.imported || 0;
                 totalSkipped += result.skipped || 0;
@@ -614,8 +613,10 @@
         const { token } = config.dataset;
 
         try {
-            const response = await fetch(
+            const response = await window.ProclaimFetch.fetch(
                 `index.php?option=com_proclaim&task=cwmadmin.csvTemplateXHR&${token}=1`,
+                {},
+                { timeout: 30000, retries: 1 },
             );
             const blob = await response.blob();
             const url = URL.createObjectURL(blob);

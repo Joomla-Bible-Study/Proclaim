@@ -34,6 +34,11 @@
      * @returns {boolean}
      */
     function isRetryable(error, response) {
+        // Honour explicit retryable flag set by fetchJson
+        if (error && error.retryable === false) {
+            return false;
+        }
+
         // Never retry user-initiated aborts
         if (error && error.name === 'AbortError') {
             return false;
@@ -120,31 +125,28 @@
      *
      * @param {number} timeout       Timeout in ms
      * @param {AbortSignal|null} callerSignal  Optional caller-provided AbortSignal
-     * @returns {{ controller: AbortController, clear: Function }}
+     * @returns {{ controller: AbortController, clear: Function, timedOut: Function }}
      */
     function createTimeoutController(timeout, callerSignal) {
         const controller = new AbortController();
         let timer = null;
+        let _timedOut = false;
 
         // Start the timeout
         if (timeout > 0) {
             timer = setTimeout(() => {
-                const err = new DOMException(
-                    `Request timed out after ${timeout}ms`,
-                    'TimeoutError',
-                );
-
-                controller.abort(err);
+                _timedOut = true;
+                controller.abort();
             }, timeout);
         }
 
         // Link caller's abort signal
         if (callerSignal) {
             if (callerSignal.aborted) {
-                controller.abort(callerSignal.reason);
+                controller.abort();
             } else {
                 callerSignal.addEventListener('abort', () => {
-                    controller.abort(callerSignal.reason);
+                    controller.abort();
                 }, { once: true });
             }
         }
@@ -157,28 +159,24 @@
                     timer = null;
                 }
             },
+            /** @returns {boolean} Whether the abort was caused by timeout */
+            timedOut() {
+                return _timedOut;
+            },
         };
     }
 
     /**
-     * Normalise an abort error so callers see a consistent TimeoutError
-     * for timeouts and AbortError for user-initiated aborts.
+     * Create a TimeoutError from a timeout state.
      *
-     * @param {Error} error
+     * @param {number} timeout  The timeout duration in ms
      * @returns {Error}
      */
-    function normaliseAbortError(error) {
-        if (error && error.name === 'AbortError') {
-            // Check if it was our timeout (DOMException with TimeoutError name)
-            if (error.message && error.message.includes('timed out')) {
-                const te = new Error(error.message);
-                te.name = 'TimeoutError';
+    function makeTimeoutError(timeout) {
+        const err = new Error(`Request timed out after ${timeout}ms`);
+        err.name = 'TimeoutError';
 
-                return te;
-            }
-        }
-
-        return error;
+        return err;
     }
 
     /**
@@ -197,7 +195,7 @@
         let delay = retryDelay;
 
         for (let attempt = 0; attempt <= retries; attempt += 1) {
-            const { controller, clear } = createTimeoutController(timeout, callerSignal);
+            const { controller, clear, timedOut } = createTimeoutController(timeout, callerSignal);
 
             try {
                 const mergedOpts = {
@@ -213,7 +211,8 @@
             } catch (error) {
                 clear();
 
-                const normError = normaliseAbortError(error);
+                // Convert timeout aborts into TimeoutError
+                const normError = timedOut() ? makeTimeoutError(timeout) : error;
 
                 // If caller aborted, throw immediately — no retry
                 if (callerSignal && callerSignal.aborted) {
@@ -251,7 +250,7 @@
         let delay = retryDelay;
 
         for (let attempt = 0; attempt <= retries; attempt += 1) {
-            const { controller, clear } = createTimeoutController(timeout, callerSignal);
+            const { controller, clear, timedOut } = createTimeoutController(timeout, callerSignal);
 
             try {
                 const mergedOpts = {
@@ -289,8 +288,9 @@
                 if (!response.ok) {
                     const err = new Error('HTTP ' + response.status + ': ' + response.statusText);
                     err.status = response.status;
+                    err.retryable = isRetryable(null, response);
 
-                    if (!isRetryable(null, response) || attempt >= retries) {
+                    if (!err.retryable || attempt >= retries) {
                         throw err;
                     }
 
@@ -306,7 +306,8 @@
             } catch (error) {
                 clear();
 
-                const normError = normaliseAbortError(error);
+                // Convert timeout aborts into TimeoutError
+                const normError = timedOut() ? makeTimeoutError(timeout) : error;
 
                 // If caller aborted, throw immediately
                 if (callerSignal && callerSignal.aborted) {
