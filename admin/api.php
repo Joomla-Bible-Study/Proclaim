@@ -54,7 +54,6 @@ if (is_file($manifestFile) && is_readable($manifestFile)) {
 }
 
 \define('BIBLESTUDY_VERSION', $manifestVersion);
-const BIBLESTUDY_VERSION_UPDATEFILE = 'Proclaim Version ' . BIBLESTUDY_VERSION;
 
 // Default values
 const BIBLESTUDY_COMPONENT_NAME = 'com_proclaim';

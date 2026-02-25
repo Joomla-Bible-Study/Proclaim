@@ -309,7 +309,6 @@ class Cwmrestore
         // Check to see if this is a backup from an old DB and not a migration
         $sold    = substr_count($query, '#__bsms_admin_genesis');
         $isNot   = substr_count($query, '#__bsms_studies');
-        $isCent  = substr_count($query, BIBLESTUDY_VERSION_UPDATEFILE);
 
         if ($sold !== 0 && $isNot === 0) {
             $app->enqueueMessage(Text::_('JBS_IBM_OLD_DB'), 'warning');
@@ -319,13 +318,6 @@ class Cwmrestore
 
         if ($isNot === 0) {
             $app->enqueueMessage(Text::_('JBS_IBM_NOT_DB'), 'warning');
-
-            return false;
-        }
-
-        if (!$isCent) {
-            $app->enqueueMessage(basename($backuprestore), 'warning');
-            $app->enqueueMessage(Text::_('JBS_IBM_NOT_CURENT_DB'), 'warning');
 
             return false;
         }
@@ -535,7 +527,6 @@ class Cwmrestore
         // Check if sql file is for Joomla! Bible Studies
         $sold    = substr_count($query, '#__bsms_admin_genesis');
         $isNot   = substr_count($query, '#__bsms_studies');
-        $isCent  = substr_count($query, BIBLESTUDY_VERSION_UPDATEFILE);
 
         if ($sold !== 0 && $isNot === 0) {
             $app->enqueueMessage(Text::_('JBS_IBM_OLD_DB'), 'warning');
@@ -546,13 +537,6 @@ class Cwmrestore
         if ($isNot === 0) {
             $app->enqueueMessage('Extracted file: ' . basename($tmp_src), 'warning');
             $app->enqueueMessage(Text::_('JBS_IBM_NOT_DB'), 'warning');
-
-            return false;
-        }
-
-        if (($isCent === 0) && ($parent !== true)) {
-            // Way to check if a file came from a restore and is current.
-            $app->enqueueMessage(Text::_('JBS_IBM_NOT_CURENT_DB'), 'warning');
 
             return false;
         }

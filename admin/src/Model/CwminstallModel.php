@@ -256,7 +256,6 @@ class CwminstallModel extends ListModel
 
         // Set Finishing Steps
         $this->finish     = [
-            'updateversion',
             'fixassets',
             'fixmenus',
             'fixemptyaccess',
@@ -917,13 +916,6 @@ class CwminstallModel extends ListModel
         $app = Factory::getApplication();
 
         switch ($step) {
-            case 'updateversion':
-                $update = $this->getUpdateVersion();
-
-                // Set new Schema Version
-                $this->setSchemaVersion($update, $this->biblestudyEid);
-                $this->running = 'Update Version';
-                break;
             case 'fixassets':
                 // Final step is to fix assets by building what needs to be fixed.
                 $string             = Cwmassets::build();
@@ -1082,32 +1074,40 @@ class CwminstallModel extends ListModel
     }
 
     /**
-     * Returns Update Version form Table
+     * Returns the current schema version from #__schemas
      *
-     * @return string Returns the Last Version in the #_bsms_update table
+     * @return string The schema version for Proclaim, or BIBLESTUDY_VERSION as fallback
      *
-     * @since 7.1
+     * @since 10.1.0
      */
     private function getUpdateVersion(): string
     {
-        // Default Version Pull
-        $return = BIBLESTUDY_VERSION;
+        $eid = $this->biblestudyEid;
 
-        // Find the Last updated Version in the Update table
-        $query = $this->getDatabase()->getQuery(true);
-        $query
-            ->select($this->getDatabase()->quoteName('version'))
-            ->from($this->getDatabase()->quoteName('#__bsms_update'));
-        $this->getDatabase()->setQuery($query);
-        $updates = $this->getDatabase()->loadObjectList();
-
-        $lastUpdate = end($updates);
-
-        if (isset($lastUpdate->version)) {
-            $return = $lastUpdate->version;
+        if (!$eid) {
+            $query = $this->getDatabase()->getQuery(true)
+                ->select($this->getDatabase()->quoteName('extension_id'))
+                ->from($this->getDatabase()->quoteName('#__extensions'))
+                ->where($this->getDatabase()->quoteName('name') . ' = ' . $this->getDatabase()->q('com_proclaim'));
+            $this->getDatabase()->setQuery($query);
+            $eid                 = (int) $this->getDatabase()->loadResult();
+            $this->biblestudyEid = $eid;
         }
 
-        return $return;
+        if ($eid) {
+            $query = $this->getDatabase()->getQuery(true)
+                ->select($this->getDatabase()->quoteName('version_id'))
+                ->from($this->getDatabase()->quoteName('#__schemas'))
+                ->where($this->getDatabase()->quoteName('extension_id') . ' = ' . $eid);
+            $this->getDatabase()->setQuery($query);
+            $version = $this->getDatabase()->loadResult();
+
+            if ($version) {
+                return $version;
+            }
+        }
+
+        return BIBLESTUDY_VERSION;
     }
 
     /**

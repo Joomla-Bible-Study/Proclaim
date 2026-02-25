@@ -293,7 +293,13 @@ class CwmdbHelper
 
         foreach ($tables as $table) {
             if (str_contains($table, $prefix) && str_contains($table, $bsms)) {
-                $table     = substr_replace($table, '#__', 0, $prelength);
+                $table = substr_replace($table, '#__', 0, $prelength);
+
+                // Skip legacy version tracking table (replaced by #__schemas)
+                if ($table === '#__bsms_update') {
+                    continue;
+                }
+
                 $objects[] = ['name' => $table];
             }
         }
