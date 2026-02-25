@@ -68,10 +68,10 @@ class HtmlView extends BaseHtmlView
      * @since    7.0.0
      */
     public ?object $status = null;
-    /** @var string Start step name
+    /** @var array Array of Install Task
      * @since    7.0.0
      */
-    public string $start = '';
+    public array $start = [];
     /** @var bool|string Scan state
      * @since    7.0.0
      */
