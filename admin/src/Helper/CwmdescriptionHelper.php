@@ -108,13 +108,6 @@ class CwmdescriptionHelper
         );
         $lines[] = 'Watch on our site: ' . $url;
 
-        // Site name
-        $siteName = Factory::getApplication()->get('sitename', '');
-
-        if (!empty($siteName)) {
-            $lines[] = $siteName;
-        }
-
         return implode("\n", $lines);
     }
 

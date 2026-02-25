@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\User\User;
 use Joomla\Database\DatabaseInterface;
 
 /**
@@ -1058,12 +1059,13 @@ class CwmcsvimportHelper
             return 0;
         }
 
-        // No access check needed when location system is disabled
+        // No access check needed when a location system is disabled
         if (!CwmlocationHelper::isEnabled()) {
             return $locationId;
         }
 
         $app    = Factory::getApplication();
+        /** @var User $user */
         $user   = $userId > 0
             ? Factory::getContainer()->get('user.factory')->loadUserById($userId)
             : $app->getIdentity();

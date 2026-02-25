@@ -19,6 +19,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Response\JsonResponse;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\QueryInterface;
 
 /**
  * Helper for counting published/archived/total records across entity tables.
@@ -151,15 +152,15 @@ class CwmcountHelper
      * Super admins always bypass filtering. When the location system is disabled,
      * 'location' and 'study' modes fall back to no filtering.
      *
-     * @param   \Joomla\Database\QueryInterface  $query         The query to modify.
-     * @param   DatabaseInterface                $db            The database driver.
-     * @param   string|null                      $locationMode  Filtering mode.
+     * @param   QueryInterface     $query         The query to modify.
+     * @param   DatabaseInterface  $db            The database driver.
+     * @param   string|null        $locationMode  Filtering mode.
      *
      * @return  void
      *
      * @since   10.1.0
      */
-    private static function applyLocationFilter($query, $db, ?string $locationMode): void
+    private static function applyLocationFilter(QueryInterface $query, DatabaseInterface $db, ?string $locationMode): void
     {
         if ($locationMode === null) {
             return;
@@ -242,7 +243,7 @@ class CwmcountHelper
 
         try {
             $user = Factory::getApplication()->getIdentity();
-            $uid  = $user ? (int) $user->id : 0;
+            $uid  = (int) $user?->id;
         } catch (\Exception $e) {
             $uid = 0;
         }

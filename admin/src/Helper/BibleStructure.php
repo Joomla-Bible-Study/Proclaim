@@ -34,7 +34,7 @@ class BibleStructure
      * @var array<int, int[]>
      * @since 10.1.0
      */
-    private const VERSE_COUNTS = [
+    private const array VERSE_COUNTS = [
         // ── Old Testament ──────────────────────────────────────────────
         // Genesis
         101 => [31,25,24,26,32,22,24,22,29,32,32,20,18,24,21,16,27,25,6,8,
@@ -225,85 +225,6 @@ class BibleStructure
         // Baruch
         173 => [22,35,38,37,9,73],
     ];
-
-    /**
-     * Get the number of chapters in a book.
-     *
-     * @param   int  $booknumber  Book number (101-173)
-     *
-     * @return  int  Chapter count, or 0 if book not found
-     *
-     * @since  10.1.0
-     */
-    public static function getChapterCount(int $booknumber): int
-    {
-        if (!isset(self::VERSE_COUNTS[$booknumber])) {
-            return 0;
-        }
-
-        return \count(self::VERSE_COUNTS[$booknumber]);
-    }
-
-    /**
-     * Get the number of verses in a specific chapter.
-     *
-     * @param   int  $booknumber  Book number (101-173)
-     * @param   int  $chapter     Chapter number (1-based)
-     *
-     * @return  int  Verse count, or 0 if not found
-     *
-     * @since  10.1.0
-     */
-    public static function getVerseCount(int $booknumber, int $chapter): int
-    {
-        if (!isset(self::VERSE_COUNTS[$booknumber])) {
-            return 0;
-        }
-
-        $chapters = self::VERSE_COUNTS[$booknumber];
-        $index    = $chapter - 1;
-
-        if ($index < 0 || $index >= \count($chapters)) {
-            return 0;
-        }
-
-        return $chapters[$index];
-    }
-
-    /**
-     * Validate that a chapter number is valid for a book.
-     *
-     * @param   int  $booknumber  Book number (101-173)
-     * @param   int  $chapter     Chapter number (1-based)
-     *
-     * @return  bool
-     *
-     * @since  10.1.0
-     */
-    public static function isValidChapter(int $booknumber, int $chapter): bool
-    {
-        $max = self::getChapterCount($booknumber);
-
-        return $max > 0 && $chapter >= 1 && $chapter <= $max;
-    }
-
-    /**
-     * Validate that a verse number is valid for a book chapter.
-     *
-     * @param   int  $booknumber  Book number (101-173)
-     * @param   int  $chapter     Chapter number (1-based)
-     * @param   int  $verse       Verse number (1-based)
-     *
-     * @return  bool
-     *
-     * @since  10.1.0
-     */
-    public static function isValidVerse(int $booknumber, int $chapter, int $verse): bool
-    {
-        $max = self::getVerseCount($booknumber, $chapter);
-
-        return $max > 0 && $verse >= 1 && $verse <= $max;
-    }
 
     /**
      * Get the Bible structure data formatted for JavaScript consumption.

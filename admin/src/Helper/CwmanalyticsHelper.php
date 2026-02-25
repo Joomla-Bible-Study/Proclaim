@@ -84,7 +84,8 @@ class CwmanalyticsHelper
 
             // Bail if tracking is disabled entirely
             try {
-                $params = Cwmparams::getInstance();
+                $admin  = Cwmparams::getAdmin();
+                $params = $admin->params;
 
                 if (!$params->get('analytics_enabled', '1')) {
                     return;
@@ -120,7 +121,7 @@ class CwmanalyticsHelper
                 $language = substr(trim(explode(';', $parts[0])[0]), 0, 10);
             }
 
-            // Auto-resolve study_id from media file when not provided
+            // Auto-resolve study_id from a media file when not provided
             if ($studyId === 0 && $mediaId > 0) {
                 $studyId = self::resolveStudyId($mediaId);
             }
@@ -245,7 +246,7 @@ class CwmanalyticsHelper
         try {
             $siteHost = strtolower(ltrim(Uri::getInstance()->getHost(), 'www.'));
         } catch (\Throwable $e) {
-            // In CLI / unit-test context there is no request URI
+            // In the CLI / unit-test context, there is no request URI
         }
 
         if ($siteHost !== '' && $host === $siteHost) {
@@ -272,7 +273,7 @@ class CwmanalyticsHelper
     }
 
     /**
-     * Classify a User-Agent string into device/browser/OS.
+     * Classify a User-Agent string into a device/browser/OS.
      * The raw UA string is never stored; only these classified values are.
      *
      * @param   string  $ua  Raw User-Agent header value.
@@ -345,7 +346,8 @@ class CwmanalyticsHelper
     public static function isOptedOut(): bool
     {
         try {
-            $params = Cwmparams::getInstance();
+            $admin  = Cwmparams::getAdmin();
+            $params = $admin->params;
 
             if (!$params->get('analytics_gdpr_optout', '1')) {
                 return false;

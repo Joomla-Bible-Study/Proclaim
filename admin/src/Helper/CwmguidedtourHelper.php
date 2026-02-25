@@ -846,7 +846,7 @@ class CwmguidedtourHelper
     }
 
     /**
-     * Add a new post-install message definition at runtime.
+     * Add a new post-installation message definition at runtime.
      *
      * @param   string  $key      Message key
      * @param   array   $message  Message definition

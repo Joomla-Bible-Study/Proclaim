@@ -57,11 +57,11 @@ class CwmlocationHelper
      */
     public static function getUserLocations(int $userId = 0): array
     {
-        $app  = Factory::getApplication();
-        $user = $userId ? $app->getIdentity() : Factory::getContainer()->get('user.factory')->loadUserById($userId);
+        $app = Factory::getApplication();
 
-        // Use current user when no ID supplied
-        if ($userId === 0) {
+        if ($userId > 0) {
+            $user = Factory::getContainer()->get('user.factory')->loadUserById($userId);
+        } else {
             $user   = $app->getIdentity();
             $userId = (int) $user->id;
         }
