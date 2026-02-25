@@ -78,10 +78,10 @@ class CwmtemplatecodesModel extends ListModel
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
 
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '');
         $this->setState('filter.search', $search);
 
-        $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
+        $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location', '');
         $this->setState('filter.location', $location);
 
         // List state information.

@@ -75,7 +75,7 @@ class HtmlView extends BaseHtmlView
      * @var array
      * @since    7.0.0
      */
-    protected array $activeFilters;
+    public array $activeFilters;
     /**
      * Can Do
      *

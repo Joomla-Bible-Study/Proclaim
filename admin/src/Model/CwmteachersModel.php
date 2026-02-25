@@ -101,7 +101,7 @@ class CwmteachersModel extends ListModel
         $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
         $this->setState('filter.access', $access);
 
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '');
         $this->setState('filter.search', $search);
 
         // List state information.

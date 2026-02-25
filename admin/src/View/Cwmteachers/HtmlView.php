@@ -86,6 +86,14 @@ class HtmlView extends BaseHtmlView
     public ?\Joomla\CMS\Form\Form $filterForm = null;
 
     /**
+     * Active Filters
+     *
+     * @var ?array
+     * @since    7.0.0
+     */
+    public ?array $activeFilters = null;
+
+    /**
      * Execute and display a template script.
      *
      * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
@@ -103,11 +111,12 @@ class HtmlView extends BaseHtmlView
         $model = $this->getModel();
         $model->setUseExceptions(true);
 
-        $this->items      = $model->getItems();
-        $this->pagination = $model->getPagination();
-        $this->state      = $model->getState();
-        $this->filterForm = $model->getFilterForm();
-        $this->canDo      = ContentHelper::getActions('com_proclaim', 'teacher');
+        $this->items         = $model->getItems();
+        $this->pagination    = $model->getPagination();
+        $this->state         = $model->getState();
+        $this->filterForm    = $model->getFilterForm();
+        $this->activeFilters = $model->getActiveFilters();
+        $this->canDo         = ContentHelper::getActions('com_proclaim', 'teacher');
 
         // Check for errors.
         if (\count($errors = $model->getErrors())) {
@@ -120,6 +129,7 @@ class HtmlView extends BaseHtmlView
 
             // We do not need to filter by language when multilingual is disabled
             if (!Multilanguage::isEnabled()) {
+                unset($this->activeFilters['language']);
                 $this->filterForm->removeField('language', 'filter');
             }
         }

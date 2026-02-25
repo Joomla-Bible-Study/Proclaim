@@ -127,16 +127,16 @@ class CwmtemplatesModel extends ListModel
             $this->context .= '.' . $layout;
         }
 
-        $type = $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type');
+        $type = $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '');
         $this->setState('filter.type', $type);
 
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
 
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '');
         $this->setState('filter.search', $search);
 
-        $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
+        $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location', '');
         $this->setState('filter.location', $location);
 
         // List state information.

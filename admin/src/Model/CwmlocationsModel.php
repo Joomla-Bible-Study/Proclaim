@@ -152,7 +152,7 @@ class CwmlocationsModel extends ListModel
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
 
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '');
         $this->setState('filter.search', $search);
 
         $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'int');
@@ -161,8 +161,8 @@ class CwmlocationsModel extends ListModel
         $formSubmited = $app->getInput()->post->get('form_submited');
 
         // Gets the value of a user state variable and sets it in the session
-        $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
-        $this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id');
+        $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '');
+        $this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id', '');
 
         if ($formSubmited) {
             $access = $app->getInput()->post->get('access');

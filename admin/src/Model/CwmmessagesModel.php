@@ -143,22 +143,22 @@ class CwmmessagesModel extends ListModel
         $params = ComponentHelper::getParams('com_proclaim');
         $this->setState('params', $params);
 
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '');
         $this->setState('filter.search', $search);
 
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
 
-        $teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher');
+        $teacher = $this->getUserStateFromRequest($this->context . '.filter.teacher', 'filter_teacher', '');
         $this->setState('filter.teacher', $teacher);
 
-        $series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series');
+        $series = $this->getUserStateFromRequest($this->context . '.filter.series', 'filter_series', '');
         $this->setState('filter.series', $series);
 
-        $messageType = $this->getUserStateFromRequest($this->context . '.filter.messagetype', 'filter_messagetype');
+        $messageType = $this->getUserStateFromRequest($this->context . '.filter.messagetype', 'filter_messagetype', '');
         $this->setState('filter.messagetype', $messageType);
 
-        $year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year');
+        $year = $this->getUserStateFromRequest($this->context . '.filter.year', 'filter_year', '');
         $this->setState('filter.year', $year);
 
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
@@ -167,14 +167,14 @@ class CwmmessagesModel extends ListModel
         $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'int');
         $this->setState('filter.access', $access);
 
-        $location = $this->getUserStateFromRequest($this->context . 'filter.location', 'filter_location');
+        $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location', '');
         $this->setState('filter.location', $location);
 
         $formSubmited = $app->getInput()->post->get('form_submited');
 
         // Gets the value of a user state variable and sets it in the session
-        $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
-        $this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id');
+        $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '');
+        $this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id', '');
 
         if ($formSubmited) {
             $access = $app->getInput()->post->get('access');
@@ -318,10 +318,10 @@ class CwmmessagesModel extends ListModel
         }
 
         // Filter by message type
-        $messageType = $this->getState('filter.messageType');
+        $messageType = $this->getState('filter.messagetype');
 
         if (is_numeric($messageType)) {
-            $query->where($db->quoteName('study.messageType') . ' = ' . (int) $messageType);
+            $query->where($db->quoteName('study.messagetype') . ' = ' . (int) $messageType);
         }
 
         // Filter by Year

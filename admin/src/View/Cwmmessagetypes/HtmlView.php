@@ -59,6 +59,14 @@ class HtmlView extends BaseHtmlView
     public ?\Joomla\CMS\Form\Form $filterForm = null;
 
     /**
+     * Active Filters
+     *
+     * @var ?array
+     * @since    7.0.0
+     */
+    public ?array $activeFilters = null;
+
+    /**
      * Items
      *
      * @var ?array
@@ -100,10 +108,11 @@ class HtmlView extends BaseHtmlView
         $model = $this->getModel();
         $model->setUseExceptions(true);
 
-        $this->items      = $model->getItems();
-        $this->pagination = $model->getPagination();
-        $this->state      = $model->getState();
-        $this->filterForm = $model->getFilterForm();
+        $this->items         = $model->getItems();
+        $this->pagination    = $model->getPagination();
+        $this->state         = $model->getState();
+        $this->filterForm    = $model->getFilterForm();
+        $this->activeFilters = $model->getActiveFilters();
 
         // Check for errors.
         if (\count($errors = $model->getErrors())) {

@@ -115,10 +115,10 @@ class CwmpodcastsModel extends ListModel
             $this->context .= '.' . $forcedLanguage;
         }
 
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '');
         $this->setState('filter.search', $search);
 
-        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
+        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '');
         $this->setState('filter.access', $access);
 
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
@@ -127,7 +127,7 @@ class CwmpodcastsModel extends ListModel
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
 
-        $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
+        $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location', '');
         $this->setState('filter.location', $location);
 
         parent::populateState($ordering, $direction);

@@ -201,13 +201,13 @@ class CwmmediafilesModel extends ListModel
         $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'int');
         $this->setState('filter.access', $access);
 
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '');
         $this->setState('filter.search', $search);
 
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
 
-        $mediaYears = $this->getUserStateFromRequest($this->context . '.filter.mediaYears', 'filter_mediaYears');
+        $mediaYears = $this->getUserStateFromRequest($this->context . '.filter.mediaYears', 'filter_mediaYears', '');
         $this->setState('filter.mediaYears', $mediaYears);
 
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
@@ -216,8 +216,8 @@ class CwmmediafilesModel extends ListModel
         $formSubmitted = $app->getInput()->post->get('form_submitted');
 
         // Gets the value of a user state variable and sets it in the session
-        $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
-        $this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id');
+        $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '');
+        $this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id', '');
 
         if ($formSubmitted) {
             $access = $app->getInput()->post->get('access');

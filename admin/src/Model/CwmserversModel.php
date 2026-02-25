@@ -172,7 +172,7 @@ class CwmserversModel extends ListModel
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
 
-        $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
+        $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location', '');
         $this->setState('filter.location', $location);
 
         // List state information.

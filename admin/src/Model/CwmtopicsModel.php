@@ -94,7 +94,7 @@ class CwmtopicsModel extends ListModel
             $this->context .= '.' . $layout;
         }
 
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '');
         $this->setState('filter.search', $search);
 
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
