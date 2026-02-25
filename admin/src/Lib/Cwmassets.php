@@ -92,7 +92,11 @@ class Cwmassets
     }
 
     /**
-     * Ensure the com_proclaim parent asset exists, create if missing
+     * Ensure the com_proclaim parent asset exists, create if missing.
+     *
+     * NOTE: This method does its own direct DB lookup instead of calling
+     * parentId() to avoid infinite recursion (parentId → ensureParentAsset
+     * → parentId → ...).
      *
      * @return int Parent asset ID, or 0 on failure
      *
@@ -100,15 +104,28 @@ class Cwmassets
      */
     public static function ensureParentAsset(): int
     {
-        // First try to find existing asset
-        $parentId = self::parentId();
+        // Check static cache first
+        if (self::$parent_id > 0) {
+            return self::$parent_id;
+        }
 
-        if ($parentId) {
-            return $parentId;
+        // Direct DB lookup (NOT via parentId() — that would cause recursion)
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__assets'))
+            ->where($db->quoteName('name') . ' = ' . $db->quote('com_proclaim'));
+        $db->setQuery($query);
+        $existingId = (int) $db->loadResult();
+
+        if ($existingId > 0) {
+            self::$parent_id = $existingId;
+
+            return $existingId;
         }
 
         // Parent asset doesn't exist - need to create it
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Find the root asset to use as parent
         $query = $db->getQuery(true);
@@ -156,27 +173,58 @@ class Cwmassets
     }
 
     /**
-     * Set Parent ID
+     * Get the com_proclaim parent asset ID, creating it if missing.
      *
-     * @return int Parent ID
+     * CRITICAL: This method MUST never return 0.  All 14 Table classes call
+     * this from _getAssetParentId().  Returning 0 tells Joomla's nested-set
+     * engine to insert the asset at the root level (parent_id = 0, level = 0).
+     * When that malformed asset is later deleted, the cascading lft/rgt
+     * adjustment wipes out every node in the tree — including root.1 —
+     * destroying all Joomla permissions.
+     *
+     * Fallback chain: com_proclaim asset → create it → root asset (1).
+     *
+     * @return int Parent asset ID (always > 0)
      *
      * @since 9.0.0
      */
     public static function parentId(): int
     {
-        if (!self::$parent_id) {
-            $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-            // First, get the new parent_id
-            $query = $db->getQuery(true);
-            $query->select($db->quoteName('id'))
-                ->from($db->quoteName('#__assets'))
-                ->where($db->quoteName('name') . ' = ' . $db->q('com_proclaim'));
-            $db->setQuery($query);
-            self::$parent_id = $db->loadResult();
+        if (self::$parent_id > 0) {
+            return self::$parent_id;
         }
 
-        return (int)self::$parent_id;
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__assets'))
+            ->where($db->quoteName('name') . ' = ' . $db->quote('com_proclaim'));
+        $db->setQuery($query);
+        $result = (int) $db->loadResult();
+
+        if ($result > 0) {
+            self::$parent_id = $result;
+
+            return self::$parent_id;
+        }
+
+        // Parent missing — try to create it
+        $created = self::ensureParentAsset();
+
+        if ($created > 0) {
+            return $created;
+        }
+
+        // Last resort: use the Joomla root asset (id=1) so we never
+        // return 0 and corrupt the nested-set tree
+        Log::add(
+            'com_proclaim parent asset missing and could not be created — falling back to root asset',
+            Log::ERROR,
+            'com_proclaim'
+        );
+
+        return 1;
     }
 
     /**
