@@ -164,7 +164,7 @@ class CwmmessagesModel extends ListModel
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
 
-        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'int');
+        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '');
         $this->setState('filter.access', $access);
 
         $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location', '');

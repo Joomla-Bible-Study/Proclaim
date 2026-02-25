@@ -155,7 +155,7 @@ class CwmlocationsModel extends ListModel
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '');
         $this->setState('filter.search', $search);
 
-        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'int');
+        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '');
         $this->setState('filter.access', $access);
 
         $formSubmited = $app->getInput()->post->get('form_submited');

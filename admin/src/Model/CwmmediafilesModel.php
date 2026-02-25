@@ -198,7 +198,7 @@ class CwmmediafilesModel extends ListModel
         $params = ComponentHelper::getParams('com_proclaim');
         $this->setState('params', $params);
 
-        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'int');
+        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '');
         $this->setState('filter.access', $access);
 
         $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '');

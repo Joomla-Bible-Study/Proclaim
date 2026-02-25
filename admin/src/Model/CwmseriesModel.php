@@ -104,9 +104,9 @@ class CwmseriesModel extends ListModel
         $this->setState('params', $params);
 
         $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '');
-        $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
+        $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '');
         $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
-        $this->getUserStateFromRequest($this->context . '.filter.level', 'filter_level', 0, 'int');
+        $this->getUserStateFromRequest($this->context . '.filter.level', 'filter_level', '');
         $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location', '');
 

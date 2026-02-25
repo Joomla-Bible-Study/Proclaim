@@ -52,13 +52,15 @@ class CwmmessagetypesModel extends ListModel
                 'messagetype.id',
                 'published',
                 'messagetype.published',
-                'mesage_type',
-                'messagetype.message_type,',
+                'message_type',
+                'messagetype.message_type',
                 'ordering',
                 'messagetype.ordering',
                 'access',
                 'messagetype.access',
                 'access_level',
+                'language',
+                'messagetype.language',
             ];
         }
 
@@ -128,7 +130,7 @@ class CwmmessagetypesModel extends ListModel
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
 
-        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
+        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '');
         $this->setState('filter.access', $access);
 
         $formSubmited = $app->getInput()->post->get('form_submited');
