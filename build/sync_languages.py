@@ -21,7 +21,7 @@ FORCE_RETRANSLATE = False
 
 # 1Password configuration - standard item name for the API key
 OP_ITEM_NAME = "Google Translate API - Proclaim"
-OP_VAULT = os.environ.get('OP_VAULT', 'Private')  # Default vault, can override with env var
+OP_VAULT = os.environ.get('OP_VAULT', 'CWM')  # Default vault, can override with env var
 
 # Google Translate API key - loaded in order of priority:
 # 1. GOOGLE_TRANSLATE_API_KEY environment variable
@@ -34,8 +34,15 @@ def check_op_cli():
     try:
         import subprocess
         result = subprocess.run(['op', '--version'], capture_output=True, text=True, timeout=5)
-        return result.returncode == 0
-    except:
+        if result.returncode != 0:
+            return False
+        # Verify authentication — op whoami fails if not signed in
+        auth = subprocess.run(['op', 'whoami'], capture_output=True, text=True, timeout=5)
+        if auth.returncode != 0:
+            print("  1Password CLI is installed but not signed in. Run: op signin")
+            return False
+        return True
+    except Exception:
         return False
 
 def get_api_key_from_op(item_ref=None):
@@ -49,26 +56,26 @@ def get_api_key_from_op(item_ref=None):
         # Use provided reference directly
         cmd = ['op', 'read', item_ref]
     else:
-        # Use standard item name - search specific vault if set, otherwise all vaults
-        # Note: --reveal is required to get the actual credential value
-        if os.environ.get('OP_VAULT'):
-            cmd = ['op', 'item', 'get', OP_ITEM_NAME, '--vault', OP_VAULT, '--fields', 'credential', '--format', 'json', '--reveal']
-        else:
-            # Search all vaults
-            cmd = ['op', 'item', 'get', OP_ITEM_NAME, '--fields', 'credential', '--format', 'json', '--reveal']
+        # Try configured vault first, then fall back to all-vault search
+        cmd = ['op', 'item', 'get', OP_ITEM_NAME, '--vault', OP_VAULT, '--fields', 'credential', '--format', 'json', '--reveal']
 
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
+
+        # If vault-specific lookup failed, retry across all vaults
+        if result.returncode != 0 and not item_ref:
+            cmd = ['op', 'item', 'get', OP_ITEM_NAME, '--fields', 'credential', '--format', 'json', '--reveal']
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
+
         if result.returncode == 0:
             if item_ref:
                 return result.stdout.strip()
             else:
                 # Parse JSON response
-                import json
                 data = json.loads(result.stdout)
                 return data.get('value', '') if isinstance(data, dict) else result.stdout.strip()
         return None
-    except:
+    except Exception:
         return None
 
 def create_op_item(api_key, vault=None):
@@ -417,6 +424,28 @@ def translate_batch(texts, target_lang, source_lang='en'):
         # Small delay to avoid rate limiting
         time.sleep(0.1)
 
+    except urllib.error.HTTPError as e:
+        body = ''
+        try:
+            body = e.read().decode('utf-8', errors='replace')
+        except Exception:
+            pass
+        print(f"    Batch translation error: {e} (chars={len(data)}, texts={len(uncached_texts)})")
+        if body:
+            try:
+                err_json = json.loads(body)
+                reason = err_json.get('error', {}).get('message', body[:200])
+                print(f"      Reason: {reason}")
+            except json.JSONDecodeError:
+                print(f"      Response: {body[:200]}")
+        if e.code == 403:
+            # Rate limit or quota — back off before next request
+            print("      Backing off 5 seconds...")
+            time.sleep(5)
+        # Return originals for failed translations
+        for i in uncached_indices:
+            if results[i] is None:
+                results[i] = texts[i]
     except Exception as e:
         print(f"    Batch translation error: {e}")
         # Return originals for failed translations
